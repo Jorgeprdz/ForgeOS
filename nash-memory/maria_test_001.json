@@ -1,0 +1,48 @@
+{
+  "prospectId": "MARIA_TEST_001",
+  "personality": "PROTECTOR",
+  "knownMotivators": [
+    "FAMILIA",
+    "SEGURIDAD"
+  ],
+  "conversationHistory": [
+    {
+      "date": "2026-06-02T17:11:10.340Z",
+      "channel": "whatsapp",
+      "direction": "OUTBOUND",
+      "message": "Hola María, quería abrir una conversación breve."
+    },
+    {
+      "date": "2026-06-02T17:11:10.343Z",
+      "channel": "whatsapp",
+      "direction": "INBOUND",
+      "message": "Ahorita no tengo dinero."
+    }
+  ],
+  "objectionHistory": [
+    {
+      "date": "2026-06-02T17:11:10.346Z",
+      "objection": "Ahorita no tengo dinero.",
+      "type": "FINANCIAL",
+      "intent": "VALUE_NOT_CLEAR"
+    },
+    {
+      "date": "2026-06-02T17:11:10.349Z",
+      "objection": "Sí me interesa, pero está caro.",
+      "type": "FINANCIAL",
+      "intent": "VALUE_NOT_CLEAR"
+    }
+  ],
+  "actionHistory": [
+    {
+      "date": "2026-06-02T17:11:10.352Z",
+      "action": "FOLLOWUP_SENT",
+      "outcome": "NO_RESPONSE"
+    }
+  ],
+  "lastContactDate": "2026-06-02T17:11:10.352Z",
+  "lastAction": "FOLLOWUP_SENT",
+  "lastOutcome": "NO_RESPONSE",
+  "createdAt": "2026-06-02T17:11:10.320Z",
+  "updatedAt": "2026-06-02T17:11:10.354Z"
+}
