@@ -1,0 +1,81 @@
+{
+  "product": "VIDA_MUJER",
+  "currency": "UDI",
+
+  "insured": {
+    "age": 31,
+    "gender": "F"
+  },
+
+  "basicSumAssuredUDI": 35000,
+
+  "annualPremiumUDI": 2855.36,
+
+  "survivalSchedule": {
+    "year5": 1750,
+    "year7": 1750,
+    "year9": 1750,
+    "year11": 1750,
+    "year13": 1750,
+    "year15": 1750,
+    "year17": 1750,
+    "year20": 28000,
+    "totalUDI": 40250
+  },
+
+  "guaranteedValues": [
+    { "year": 5,  "cashValueUDI": 4200  },
+    { "year": 10, "cashValueUDI": 9800  },
+    { "year": 15, "cashValueUDI": 16800 },
+    { "year": 20, "cashValueUDI": 24500 }
+  ],
+
+  "PCF": {
+    "contracted": true,
+    "sumAssuredUDI": 35000
+  },
+
+  "PEP": {
+    "recommended": true,
+    "sumAssuredUDI": 17500
+  },
+
+  "CLP": {
+    "recommended": true,
+    "sumAssuredUDI": 10000
+  },
+
+  "BIT": {
+    "recommended": true,
+    "sumAssuredUDI": 35000
+  },
+
+  "BITC": {
+    "recommended": true,
+    "sumAssuredUDI": 35000
+  },
+
+  "CPV": {
+    "recommended": true,
+    "sumAssuredUDI": 35000
+  },
+
+  "PII": {
+    "recommended": true,
+    "sumAssuredUDI": 35000
+  },
+
+  "ADAPTA": {
+    "recommended": true
+  },
+
+  "AVE": {
+    "contracted": false,
+    "rescueValueUDI": 0
+  },
+
+  "projectionAssumptions": {
+    "currentUDI": 8.70,
+    "annualUDIGrowth": 0.04
+  }
+}

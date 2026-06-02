@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.local
+.env.production
+
+*.log
+
+cache/
+tmp/
+
+*.pdf
+*.zip
+
+forge-full-inventory.txt
+
+.DS_Store
+Thumbs.db

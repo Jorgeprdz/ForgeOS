@@ -1,0 +1,67 @@
+{
+  "product": "VIDA_MUJER",
+  "currency": "UDI",
+  "currentUDI": 8.7,
+  "insuredAge": 31,
+  "basicSumAssuredUDI": 35000,
+  "annualPremiumUDI": 2855.36,
+  "paymentYears": 20,
+  "survivalDotales": [
+    {
+      "year": 5,
+      "percent": 5
+    },
+    {
+      "year": 7,
+      "percent": 5
+    },
+    {
+      "year": 9,
+      "percent": 5
+    },
+    {
+      "year": 11,
+      "percent": 5
+    },
+    {
+      "year": 13,
+      "percent": 5
+    },
+    {
+      "year": 15,
+      "percent": 5
+    },
+    {
+      "year": 17,
+      "percent": 5
+    },
+    {
+      "year": 20,
+      "percent": 80
+    }
+  ],
+  "guaranteedValues": [],
+  "hasGuaranteedValues": false,
+  "diseaseCoverages": [
+    {
+      "disease": "Cáncer femenino",
+      "coverage": "PCF",
+      "sumAssuredUDI": 35000
+    },
+    {
+      "disease": "Enfermedades graves de la mujer",
+      "coverage": "PEP",
+      "sumAssuredUDI": 17500
+    },
+    {
+      "disease": "Cirugía o tratamiento cubierto",
+      "coverage": "CLP",
+      "sumAssuredUDI": 10000
+    },
+    {
+      "disease": "Invalidez total y permanente",
+      "coverage": "BIT / BITC",
+      "sumAssuredUDI": 35000
+    }
+  ]
+}

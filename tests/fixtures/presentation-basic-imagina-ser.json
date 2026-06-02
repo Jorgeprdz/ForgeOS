@@ -1,0 +1,24 @@
+{
+  "extractedFields": {
+    "productName": "Imagina Ser",
+    "carrierName": "Seguros Monterrey",
+    "currentAge": 35,
+    "currency": "MXN",
+    "premium": 2500
+  },
+  "rates": {},
+  "productLibrary": [
+    {
+      "id": "imagina-ser",
+      "canonicalName": "Imagina Ser",
+      "carrierName": "Seguros Monterrey New York Life",
+      "aliases": [
+        "imagina ser",
+        "plan imagina ser"
+      ]
+    }
+  ],
+  "currentUdiValue": 8.7,
+  "projectionRates": {},
+  "maxMilestones": 5
+}

@@ -1,0 +1,22 @@
+{
+  "cachedAt": "2026-06-02T02:31:42.015Z",
+  "rates": {
+    "UDI_MXN": {
+      "seriesId": "SP68257",
+      "title": "Valor de UDIS",
+      "date": "10/06/2026",
+      "value": 8.82994,
+      "source": "BANXICO_SIE_API",
+      "mode": "LATEST_VERIFIED"
+    },
+    "USD_MXN_FIX": {
+      "seriesId": "SF43718",
+      "title": "Tipo de cambio                                          Pesos por dólar E.U.A. Tipo de cambio para solventar obligaciones denominadas en moneda extranjera Fecha de determinación (FIX)",
+      "date": "01/06/2026",
+      "value": 17.378,
+      "source": "BANXICO_SIE_API",
+      "mode": "LATEST_VERIFIED"
+    }
+  },
+  "cacheStatus": "CACHE_REFRESHED"
+}

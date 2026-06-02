@@ -1,0 +1,206 @@
+import {
+    calcularEstadoConcursos
+} from './smnyl-concursos-engine.js';
+
+const state = {
+    data: null
+};
+
+export function renderConcursos() {
+
+    return `
+        <div id="concursos-root">
+
+            <div class="glass-widget" style="padding:20px; margin-bottom:20px;">
+                <h2 style="margin:0 0 16px 0;">
+                    🏆 Concursos SMNYL
+                </h2>
+
+                <div id="concursos-loading">
+                    Calculando producción...
+                </div>
+
+                <div id="concursos-content"></div>
+            </div>
+
+        </div>
+    `;
+}
+
+export async function bindConcursosEvents() {
+
+    state.data =
+        await calcularEstadoConcursos();
+
+    renderDashboard();
+}
+
+function money(n) {
+
+    return new Intl.NumberFormat(
+        'es-MX',
+        {
+            style: 'currency',
+            currency: 'MXN',
+            maximumFractionDigits: 0
+        }
+    ).format(n || 0);
+}
+
+function card(title, value, color = '#007AFF') {
+
+    return `
+        <div
+            class="glass-widget"
+            style="
+                padding:16px;
+                border:1px solid ${color}30;
+            "
+        >
+            <div
+                style="
+                    font-size:11px;
+                    color:var(--text-secondary);
+                    margin-bottom:8px;
+                    text-transform:uppercase;
+                "
+            >
+                ${title}
+            </div>
+
+            <div
+                style="
+                    font-size:24px;
+                    font-weight:800;
+                    color:${color};
+                "
+            >
+                ${value}
+            </div>
+        </div>
+    `;
+}
+
+function renderDashboard() {
+
+    const root =
+        document.getElementById(
+            'concursos-content'
+        );
+
+    const d = state.data;
+
+    if (!root || !d) return;
+
+    document.getElementById(
+        'concursos-loading'
+    ).style.display = 'none';
+
+    root.innerHTML = `
+
+        <div
+            style="
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:12px;
+                margin-bottom:20px;
+            "
+        >
+
+            ${card(
+                'Producción Vida',
+                money(d.resumen.produccionVida),
+                '#007AFF'
+            )}
+
+            ${card(
+                'Producción GMM',
+                money(d.resumen.produccionGMM),
+                '#34C759'
+            )}
+
+            ${card(
+                'Renovación',
+                money(d.resumen.produccionRenovacion),
+                '#FF9500'
+            )}
+
+            ${card(
+                'Bonos Estimados',
+                money(d.resumen.totalBonos),
+                '#AF52DE'
+            )}
+
+        </div>
+
+        <div
+            class="glass-widget"
+            style="padding:16px;"
+        >
+
+            <h3 style="margin-top:0;">
+                📊 Detalle Bonos
+            </h3>
+
+            ${renderBono(
+                'Bono Vida',
+                d.bonos.vida
+            )}
+
+            ${renderBono(
+                'Bono GMM',
+                d.bonos.gmm
+            )}
+
+            ${renderBono(
+                'Bono Renovación',
+                d.bonos.renovacion
+            )}
+
+        </div>
+    `;
+}
+
+function renderBono(
+    titulo,
+    bono
+) {
+
+    return `
+        <div
+            style="
+                padding:14px 0;
+                border-bottom:1px solid rgba(255,255,255,0.08);
+            "
+        >
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    margin-bottom:6px;
+                "
+            >
+                <strong>${titulo}</strong>
+
+                <strong style="color:#34C759;">
+                    ${money(bono.bono)}
+                </strong>
+            </div>
+
+            <div
+                style="
+                    font-size:12px;
+                    color:var(--text-secondary);
+                "
+            >
+                ${
+                    bono.alcanzado
+                        ? 'Meta alcanzada'
+                        : `Faltan ${money(bono.faltante)}`
+                }
+            </div>
+
+        </div>
+    `;
+}
