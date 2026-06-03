@@ -456,6 +456,83 @@ Rules:
 
 ---
 
+## Advisor Experience Domain
+
+Status:
+
+- PLANNED
+- ARCHITECTURE APPROVED
+- NO IMPLEMENTED
+
+Source:
+
+- `FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md`
+
+Purpose:
+
+Own adoption, learning, discovery and progression of the advisor across Forge.
+
+Responsibilities:
+
+- Advisor Setup
+- Benvenù Experience
+- Advisor Baseline Snapshot
+- Progressive Discovery
+- Clippy Engine
+- Feature Learning State
+- Contextual Help Signals
+- Revenue Intelligence Introduction
+- Command Palette Introduction
+- Candy Crush Experience
+
+Boundaries:
+
+- Advisor Experience is not UI decoration.
+- Advisor Experience is not a chatbot.
+- Advisor Experience is not a corporate tutorial.
+- Advisor Experience does not own Revenue Intelligence rules.
+- Advisor Experience does not own Mick behavior scoring.
+- Advisor Experience does not own Compensation calculations.
+- Advisor Experience consumes business domains but does not duplicate their logic.
+
+Dependencies:
+
+- Revenue Intelligence
+- Mick / Behavior Intelligence
+- Compensation Intelligence
+- Command OS
+- Policy & Sales Operations
+- Learning Intelligence
+- Shared Commercial Domain
+
+Adoption Rules:
+
+- Forge must create value before asking for manual work.
+- Benvenù must produce durable value such as Advisor Baseline Snapshot, first action, product focus or revenue introduction.
+- First experience must not look or behave like a generic CRM onboarding flow.
+
+Learning Rules:
+
+- Learning is measured by behavior, not screens viewed.
+- Feature learning states include unseen, introduced, tried, completed_with_help, completed_without_help, learned, suppressed and needs_refresh.
+- A feature should stop teaching itself when the advisor can complete the work without help.
+
+Contextual Help Rules:
+
+- Clippy Engine must be contextual, non-invasive and non-interruptive.
+- Clippy Engine must never block work.
+- Clippy Engine must never repeat irrelevant information.
+- Clippy Engine must never teach a function already learned.
+- Contextual help may explain, orient or reveal capabilities, but must not invent recommendations, products or financial values.
+
+Adaptive Difficulty Rules:
+
+- Candy Crush Experience reduces complexity when the advisor is frustrated.
+- Candy Crush Experience increases challenge when the advisor progresses.
+- Forge must never be so difficult that it causes abandonment or so easy that it creates complacency.
+
+---
+
 ## Manager & Team Intelligence
 
 Future Major Area
@@ -477,6 +554,10 @@ Includes:
 - Compensation Intelligence
 - Conservation Intelligence
 - Economic Motivation Intelligence
+- Advisor Experience
+- Benvenù Experience
+- Clippy Engine
+- Candy Crush Experience
 
 ---
 

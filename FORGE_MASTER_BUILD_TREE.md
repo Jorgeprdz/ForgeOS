@@ -192,4 +192,18 @@
 ├── 🔵 Sync Engine
 ├── 🔵 Audit Engine
 └── 🔵 Security Layer
+
+
+🔵 11 ADVISOR EXPERIENCE
+│
+├── 🔵 Advisor Setup
+├── 🔵 Benvenù Experience
+├── 🔵 Advisor Baseline Snapshot
+├── 🔵 Progressive Discovery
+├── 🔵 Clippy Engine
+├── 🔵 Feature Learning State
+├── 🔵 Contextual Help Signals
+├── 🔵 Revenue Intelligence Introduction
+├── 🔵 Command Palette Introduction
+└── 🔵 Candy Crush Experience
 ```

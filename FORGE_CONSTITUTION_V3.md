@@ -62,10 +62,14 @@ If the answer is no, the feature should be questioned.
 |-----------|-------------|--------|
 | **Decision Clarity First** | Every output must answer *what it means*, *what options exist*, and *what should happen next*. | `[Repository + Constitutional]` – Decision‑Intelligence First (repo) + explicit “Decision Clarity First”. |
 | **Intelligence Must Lead To Action** | Raw information is useless; all intelligence engines must culminate in a concrete recommendation (who to contact, what risk, next best action). | `[Repository + Constitutional]` – Decision‑Intelligence First (repo) + explicit “Intelligence Must Lead To Action”. |
-| **Advisor First** | The advisor is the primary customer; the system augments—*does not replace*—the advisor. | `[Repository + Constitutional]` – Advisor‑Centric Empowerment (repo) + explicit “Advisor First”. |
+| **Advisor First** | The advisor is the primary customer; the manager is secondary and exists to help develop the advisor. The system augments—*does not replace*—the advisor. | `[Repository + Constitutional]` – Advisor‑Centric Empowerment (repo) + explicit “Advisor First”. |
+| **Value Before Work** | Forge should create clear value before asking for manual capture, setup, configuration, or effort. Requested data must enable a decision or action. | `[Constitutional]`. |
+| **Learning By Doing** | Learning is measured by completed behavior, repeated execution, and reduced friction, not by screens viewed. | `[Constitutional]`. |
+| **Economic Clarity** | Commercial metrics should translate into money earned, money potential, or money at risk when explicit data and confirmed rules support it. | `[Constitutional]`. |
 | **No Invented Data** | The system never fabricates products, benefits, rates, or assumptions. Missing evidence must be reported as uncertainty. | `[Constitutional]`. |
 | **No Projection Without Explicit Rates** | Future value projections are allowed only when rates are known and calculations reproducible; otherwise the projection stays unknown. | `[Constitutional]`. |
 | **Product Semantics > Number Extraction** | Understanding *what a product means* precedes any numeric handling; numbers alone are insufficient. | `[Constitutional]`. |
+| **Production Events Principle** | Production Events are facts; Career, Contest, Compensation, Conservation, and Manager Intelligence are rule-based interpretations of those facts. | `[Constitutional]`. |
 | **Every Feature Must Improve Sales Capability** | Before a feature is approved, it must demonstrably help advisors sell more, retain clients, generate referrals, make better decisions, or improve client experience. | `[Repository + Constitutional]` – Strategic Prioritization by Revenue Impact (repo) + explicit “Every Feature Must Improve Sales Capability”. |
 | **The Best Advisor for Advisors** | Forge should continuously evolve toward becoming the best advisor an advisor can have. | `[Constitutional]` |
 
@@ -93,6 +97,9 @@ If the answer is no, the feature should be questioned.
 | **Shared Knowledge vs. Private Data Separation** | Product knowledge resides in a shared library; user‑specific data stays isolated. | `[Constitutional]`. |
 | **No OCR/Number‑Extraction‑Only Processing** | OCR is allowed only as a *pre‑processing* step; downstream logic must attach product meaning. | `[Constitutional]`. |
 | **Best Advisor for Advisors** | All product features must be assessed for how they help Forge be the best advisor for advisors. | `[Constitutional]` |
+| **Benvenù Principle** | The first Forge experience must create adoption and signal that Forge is not another CRM; it must not be a form, PDF, corporate tutorial, or training flow. | `[Constitutional]`. |
+| **Clippy Principle** | Contextual help must be non-invasive, non-interruptive, relevant, and withdrawn when the advisor has learned. | `[Constitutional]`. |
+| **Candy Crush Experience Principle** | Forge adapts learning, discovery, goals, coaching, and complexity to the advisor's current level: never so hard that it causes abandonment, never so easy that it creates complacency. | `[Constitutional]`. |
 | **No Invented Data** | (Repeated for emphasis under product scope). | `[Constitutional]`. |
 
 ---
@@ -130,6 +137,11 @@ If the answer is no, the feature should be questioned.
 | **Advisor‑Centric Empowerment** | The system augments the advisor, never replaces human judgment. | `[Repository + Constitutional]`. |
 | **Empathetic Interaction Philosophy** | UI/UX should convey warmth, rapport, and respect (Patch Adams, Hitch roles). | `[Repository]`. |
 | **Advisor‑First Design** | The advisor is the primary customer; UI flows prioritize advisor efficiency. | `[Constitutional]`. |
+| **Value Before Work** | Advisor flows should produce value before requesting effort, capture, or configuration. | `[Constitutional]`. |
+| **Learning By Doing** | Advisor learning is proven by behavior and task completion, not exposure to educational screens. | `[Constitutional]`. |
+| **Progressive Discovery** | Forge capabilities should be revealed in context as they become useful, not dumped into a traditional onboarding path. | `[Constitutional]`. |
+| **Contextual Help** | Help appears only when useful, never blocks commercial work, and is suppressed when already learned. | `[Constitutional]`. |
+| **Adaptive Difficulty** | Forge should reduce complexity during frustration and increase challenge during progress. | `[Constitutional]`. |
 | **Best Advisor for Advisors** | Evaluate every change against the constitutional vision of becoming the best advisor for advisors. | `[Constitutional]` |
 
 ---
