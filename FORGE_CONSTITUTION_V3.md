@@ -247,7 +247,96 @@ Every engine output, UI report, or recommendation must answer the three question
 
 ---
 
-## 17. Constitutional Amendments Process
+## 17. Constitution Amendment v1.1 - Ratified Principles
+
+Forge Constitution Amendment v1.1 is ratified as constitutional doctrine.
+
+Full text:
+`docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.1.md`
+
+The amendment formalizes the discoveries from Foundation Lock, Shared Commercial Model, Compensation Intelligence, Advisor Experience, Forecast Intelligence and Business Planning Intelligence.
+
+### Capture Once Principle
+
+Forge must become the primary operational source. No user should capture the same data twice. If Forge can infer, import, extract or derive a reliable data point, Forge must not request duplicate manual capture.
+
+Excel files, PDFs, institutional formats and reports are derived views or evidence. They are not competing systems of record.
+
+### Forecasts Are Suggestions, Facts Are Facts
+
+Forge must clearly separate facts, metrics, forecasts, interpretations and recommendations.
+
+A forecast helps make decisions. It is not a guarantee, not confirmed production, not confirmed income and not confirmed qualification.
+
+### Business Planning Principle
+
+Forge must convert goals into executable plans.
+
+Approved planning chain:
+
+```text
+Goal
+Forecast
+Gap
+Actions
+```
+
+Planning must be based on historicals, current pipeline, installed capacity, observed behavior and active rules. It must not be based on arbitrary estimates.
+
+### Economic Clarity Extension
+
+Commercial gaps should translate into economic impact when sufficient evidence exists.
+
+Forge may explain:
+
+- Income potential
+- Expected income
+- Income at risk
+
+Forge must not invent values. Uncertainty must be explicit.
+
+### Causal Clarity Principle
+
+Forge must explain the causal chain that connects action to result whenever possible.
+
+The advisor should understand why an action matters, not only what to do.
+
+### Learning Through Reasoning Principle
+
+Reading does not imply learning. Understanding implies learning.
+
+Forge must favor comprehension, reflection and reasoning over passive consumption. Learning is measured by observable behavior and observable understanding, not by exposure.
+
+### Advisor Development Principle
+
+Forge must not only produce better outcomes. It must help develop better advisors, managers and partners.
+
+The intelligence of the system should transfer progressively to the user. The goal is growth, not dependency.
+
+### Rule Pack Separation Principle
+
+Forge Core contains universal primitives.
+
+Rule Packs contain interpretations specific to a carrier, distribution channel, commercial model, contest, compensation plan, career system, promotion path, KPI framework, activity model or recognition structure.
+
+SMNYL Agency 2026 is the first validated Rule Pack. It is not Forge Core.
+
+Canonical hierarchy:
+
+```text
+Carrier
+Distribution Channel
+Rule Pack
+Rules
+```
+
+Production Events are facts. Rule Packs interpret facts.
+
+Forge Core never hardcodes carrier-specific groups, bonuses, contests, careers, promotions, compensation formulas, conservation formulas, KPI names, activity rules or recognition rules.
+
+---
+
+## 18. Constitutional Amendments Process
 
 1. **Propose Amendment** – Any contributor submits a markdown change to `FORGE_CONSTITUTION_V3.md` in a feature branch.
 2. **Council Review** – The Forge Council evaluates the proposal against existing directives and business goals.
