@@ -1,0 +1,14 @@
+{
+  "marketEvidenceId": "MARKET_EVIDENCE_STRONG_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_STRONG_001",
+  "projectId": "PROJECT200_STRONG_MARKET_DEMO_001",
+  "project200Size": 180,
+  "project30Size": 30,
+  "rdaCount": 5,
+  "marketStrength": "HIGH",
+  "marketAccessibility": "HIGH",
+  "responseRate": 64,
+  "capturedAt": "2026-06-03T15:45:00.000Z",
+  "notes": "Strong synthetic market evidence. Stored values only, not calculated.",
+  "scenario": "market_strong"
+}

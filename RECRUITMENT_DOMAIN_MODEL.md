@@ -10,6 +10,28 @@ Recruitment is a lifecycle, not a single pipeline.
 
 A person may be referred more than once, evaluated by different managers, enter multiple offices, receive a key, lose a key, reactivate a key, and eventually convert to advisor or never convert. Forge must preserve that history.
 
+## Evidence Principle
+
+Recruitment evidence must preserve source.
+
+Allowed evidence sources:
+
+- `MANAGER_INPUT`
+- `CANDIDATE_SELF_REPORT`
+- `ACTIVITY_LOG`
+- `DOCUMENT_UPLOAD`
+- `AUDIO_TRANSCRIPT`
+- `AI_EXTRACTION`
+- `SYSTEM_CALCULATION`
+
+Rules:
+
+- Forge can suggest evidence.
+- The manager confirms evidence before it becomes decision-grade.
+- Evidence should remain auditable even when a recommendation changes.
+- Never ask for manual capture if Forge can infer, extract or register the same evidence automatically from reliable source data.
+- AI extraction can help structure evidence, but AI does not decide candidate advancement, selection, precontract readiness or conversion.
+
 ## Mandatory Conceptual Model
 
 ```text

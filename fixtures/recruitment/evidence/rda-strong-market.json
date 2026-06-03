@@ -1,0 +1,12 @@
+{
+  "rdaId": "RDA_STRONG_MARKET_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_STRONG_001",
+  "name": "Synthetic RDA Strong Contact",
+  "relationship": "Former commercial manager",
+  "sourceAdvisor": "ADVISOR_EVIDENCE_DEMO_001",
+  "contactStatus": "CONTACTED",
+  "appointmentStatus": "SCHEDULED",
+  "createdAt": "2026-06-03T15:30:00.000Z",
+  "notes": "Warm relationship and clear willingness to meet.",
+  "scenario": "market_strong"
+}

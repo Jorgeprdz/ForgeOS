@@ -1,0 +1,12 @@
+{
+  "rdaId": "RDA_WEAK_MARKET_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_WEAK_001",
+  "name": "Synthetic RDA Weak Contact",
+  "relationship": "Distant acquaintance",
+  "sourceAdvisor": null,
+  "contactStatus": "NOT_CONTACTED",
+  "appointmentStatus": "NOT_SCHEDULED",
+  "createdAt": "2026-06-03T15:30:00.000Z",
+  "notes": "Candidate is unsure whether this person would answer.",
+  "scenario": "market_weak"
+}

@@ -72,6 +72,8 @@ function findBestSchemaForFixture(fixtureName, schemas) {
     .replace(/-expired$/, "")
     .replace(/-reactivated$/, "")
     .replace(/-success$/, "")
+    .replace(/-high$/, "")
+    .replace(/-low$/, "")
     .replace(/-standard$/, "")
     .replace(/-light$/, "")
     .replace(/-strict$/, "")
@@ -81,10 +83,17 @@ function findBestSchemaForFixture(fixtureName, schemas) {
     .replace(/-office-change$/, "")
     .replace(/-full-demo$/, "");
 
-  const exact = schemas.find(schema => normalizedFixture === schema.baseName);
+  const orderedSchemas = schemas
+    .slice()
+    .sort((left, right) => right.baseName.length - left.baseName.length);
+
+  const exact = orderedSchemas.find(schema => normalizedFixture === schema.baseName);
   if (exact) return exact;
 
-  return schemas.find(schema => normalizedFixture.includes(schema.baseName) || schema.baseName.includes(normalizedFixture)) || null;
+  const evidenceAlias = orderedSchemas.find(schema => `${normalizedFixture}-evidence` === schema.baseName);
+  if (evidenceAlias) return evidenceAlias;
+
+  return orderedSchemas.find(schema => normalizedFixture.includes(schema.baseName) || schema.baseName.includes(normalizedFixture)) || null;
 }
 
 function printList(items, emptyLabel = "None") {

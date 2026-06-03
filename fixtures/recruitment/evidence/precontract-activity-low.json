@@ -1,0 +1,25 @@
+{
+  "activityEvidenceId": "PRECONTRACT_ACTIVITY_LOW_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_WEAK_001",
+  "cycleId": "PRECONTRACT_CYCLE_EVIDENCE_WEAK_001",
+  "capturedAt": "2026-06-03T16:00:00.000Z",
+  "calls": 4,
+  "referrals": 0,
+  "rda": 0,
+  "initialInterviews": 1,
+  "closingInterviews": 0,
+  "applications": 0,
+  "paidPolicies": 0,
+  "trainingSessions": 1,
+  "certifications": [],
+  "evaluations": [
+    {
+      "evaluationType": "ROLE_PLAY",
+      "status": "MISSED",
+      "notes": "Candidate did not attend scheduled script review."
+    }
+  ],
+  "twentyFivePointScore": 6,
+  "notes": "Low activity synthetic fixture. Stored values only.",
+  "scenario": "low_activity"
+}

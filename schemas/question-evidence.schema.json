@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/question-evidence.schema.json",
+  "title": "Forge Question Evidence",
+  "description": "Evidence captured from a specific interview question. It maps question to evidence to detected signal without calculating a score.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["questionEvidenceId", "candidateId", "question", "evidence", "detectedSignal", "category", "confidence", "capturedAt"],
+  "properties": {
+    "questionEvidenceId": {
+      "type": "string",
+      "description": "Stable evidence identifier.",
+      "examples": ["QUESTION_EVIDENCE_DEMO_001"]
+    },
+    "interviewId": {
+      "type": ["string", "null"],
+      "description": "Interview where this evidence was captured.",
+      "examples": ["INTERVIEW_EVIDENCE_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate related to this evidence.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "question": {
+      "type": "string",
+      "description": "Question asked during the interview.",
+      "examples": ["What goals have you not completed yet?"]
+    },
+    "answer": {
+      "type": ["string", "null"],
+      "description": "Candidate answer or summary. Must be observed, not invented.",
+      "examples": ["Candidate described an unfinished business goal and what needs to change."]
+    },
+    "evidence": {
+      "type": "string",
+      "description": "Human-readable observed evidence extracted from the answer.",
+      "examples": ["Candidate owned the missed goal and named a corrective action."]
+    },
+    "detectedSignal": {
+      "type": "string",
+      "description": "Signal detected from the evidence.",
+      "examples": ["perseverance"]
+    },
+    "category": {
+      "type": "string",
+      "description": "Evidence category or assessment domain.",
+      "enum": ["HARD_FACTOR", "VITAL_FACTOR", "COACHABILITY", "MARKET", "PRECONTRACT_ACTIVITY", "INTERVIEW_PROCESS", "OTHER"],
+      "examples": ["VITAL_FACTOR"]
+    },
+    "assessmentDimension": {
+      "type": ["string", "null"],
+      "description": "Candidate assessment dimension linked to the signal.",
+      "examples": ["vitalFactors.successHistory"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Confidence in the evidence mapping. This is not a candidate score.",
+      "examples": [82]
+    },
+    "capturedAt": {
+      "type": "string",
+      "description": "ISO timestamp when evidence was captured.",
+      "examples": ["2026-06-03T15:00:00.000Z"]
+    },
+    "source": {
+      "type": ["string", "null"],
+      "description": "Source of the evidence.",
+      "examples": ["SELECTION_INTERVIEW"]
+    }
+  },
+  "examples": [
+    {
+      "questionEvidenceId": "QUESTION_EVIDENCE_DEMO_001",
+      "interviewId": "INTERVIEW_EVIDENCE_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "question": "What goals have you not completed yet?",
+      "answer": "Candidate described an unfinished business goal and what needs to change.",
+      "evidence": "Candidate owned the missed goal and named a corrective action.",
+      "detectedSignal": "perseverance",
+      "category": "VITAL_FACTOR",
+      "assessmentDimension": "vitalFactors.successHistory",
+      "confidence": 82,
+      "capturedAt": "2026-06-03T15:00:00.000Z",
+      "source": "SELECTION_INTERVIEW"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "projectId": "PROJECT200_WEAK_MARKET_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_WEAK_001",
+  "prospects": [
+    {
+      "name": "Synthetic Prospect Weak 001",
+      "relationship": "Distant acquaintance",
+      "contactStatus": "NOT_CONTACTED",
+      "nasat": {
+        "need": "Unknown.",
+        "assurability": "Unknown.",
+        "solvency": "Unknown.",
+        "accessibility": "Weak access.",
+        "takesDecision": "Unknown."
+      }
+    }
+  ],
+  "createdAt": "2026-06-03T15:30:00.000Z",
+  "notes": "Synthetic weak market fixture with limited access and weak NASAT evidence.",
+  "scenario": "market_weak"
+}

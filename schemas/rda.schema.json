@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/rda.schema.json",
+  "title": "Forge RDA",
+  "description": "Referido de Asesor evidence record. Stores advisor-referral evidence without calculating market quality.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["rdaId", "candidateId", "name", "relationship", "contactStatus", "appointmentStatus", "createdAt"],
+  "properties": {
+    "rdaId": {
+      "type": "string",
+      "description": "Stable RDA identifier.",
+      "examples": ["RDA_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate associated with this RDA.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Synthetic or real-world RDA name as captured by the manager.",
+      "examples": ["RDA Demo Contact"]
+    },
+    "relationship": {
+      "type": "string",
+      "description": "Relationship between candidate and RDA.",
+      "examples": ["Former manager"]
+    },
+    "sourceAdvisor": {
+      "type": ["string", "null"],
+      "description": "Advisor or manager who sourced or validated the RDA.",
+      "examples": ["ADVISOR_DEMO_001"]
+    },
+    "contactStatus": {
+      "type": "string",
+      "description": "Contact status.",
+      "enum": ["NOT_CONTACTED", "CONTACTED", "UNREACHABLE", "DECLINED", "UNKNOWN"],
+      "examples": ["CONTACTED"]
+    },
+    "appointmentStatus": {
+      "type": "string",
+      "description": "Appointment status related to this RDA.",
+      "enum": ["NOT_SCHEDULED", "SCHEDULED", "COMPLETED", "NO_SHOW", "CANCELLED", "UNKNOWN"],
+      "examples": ["SCHEDULED"]
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "ISO timestamp when the RDA was captured.",
+      "examples": ["2026-06-03T15:00:00.000Z"]
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Observed notes about this RDA.",
+      "examples": ["Candidate has a warm relationship with this person."]
+    }
+  },
+  "examples": [
+    {
+      "rdaId": "RDA_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "name": "RDA Demo Contact",
+      "relationship": "Former manager",
+      "sourceAdvisor": "ADVISOR_DEMO_001",
+      "contactStatus": "CONTACTED",
+      "appointmentStatus": "SCHEDULED",
+      "createdAt": "2026-06-03T15:00:00.000Z",
+      "notes": "Candidate has a warm relationship with this person."
+    }
+  ]
+}

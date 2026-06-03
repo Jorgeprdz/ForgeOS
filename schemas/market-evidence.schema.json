@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/market-evidence.schema.json",
+  "title": "Forge Market Evidence",
+  "description": "Market evidence used by Candidate Assessment and Recruitment Intelligence. This contract stores market facts without calculating them.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["marketEvidenceId", "candidateId", "project200Size", "project30Size", "rdaCount", "marketStrength", "marketAccessibility", "responseRate", "capturedAt"],
+  "properties": {
+    "marketEvidenceId": {
+      "type": "string",
+      "description": "Stable market evidence identifier.",
+      "examples": ["MARKET_EVIDENCE_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate associated with this market evidence.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "projectId": {
+      "type": ["string", "null"],
+      "description": "Related Project 200 identifier.",
+      "examples": ["PROJECT200_DEMO_001"]
+    },
+    "project200Size": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Stored Project 200 size. Do not calculate in this schema.",
+      "examples": [180]
+    },
+    "project30Size": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Stored best-30 market size.",
+      "examples": [30]
+    },
+    "rdaCount": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Stored RDA count.",
+      "examples": [5]
+    },
+    "marketStrength": {
+      "type": "string",
+      "description": "Observed market strength.",
+      "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"],
+      "examples": ["HIGH"]
+    },
+    "marketAccessibility": {
+      "type": "string",
+      "description": "Observed accessibility of the market.",
+      "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"],
+      "examples": ["HIGH"]
+    },
+    "responseRate": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Observed response rate percentage when available. Do not calculate in this schema.",
+      "examples": [62]
+    },
+    "capturedAt": {
+      "type": "string",
+      "description": "ISO timestamp when market evidence was captured.",
+      "examples": ["2026-06-03T15:00:00.000Z"]
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Observed market notes.",
+      "examples": ["Strong natural market and warm referral access."]
+    }
+  },
+  "examples": [
+    {
+      "marketEvidenceId": "MARKET_EVIDENCE_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "projectId": "PROJECT200_DEMO_001",
+      "project200Size": 180,
+      "project30Size": 30,
+      "rdaCount": 5,
+      "marketStrength": "HIGH",
+      "marketAccessibility": "HIGH",
+      "responseRate": 62,
+      "capturedAt": "2026-06-03T15:00:00.000Z",
+      "notes": "Strong natural market and warm referral access."
+    }
+  ]
+}

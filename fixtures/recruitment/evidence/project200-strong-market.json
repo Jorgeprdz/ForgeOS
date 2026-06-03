@@ -1,0 +1,33 @@
+{
+  "projectId": "PROJECT200_STRONG_MARKET_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_STRONG_001",
+  "prospects": [
+    {
+      "name": "Synthetic Prospect Strong 001",
+      "relationship": "Friend",
+      "contactStatus": "CONTACTED",
+      "nasat": {
+        "need": "Family protection conversation is relevant.",
+        "assurability": "Unknown but no risk observed.",
+        "solvency": "Stable professional income.",
+        "accessibility": "Warm contact.",
+        "takesDecision": "Decision maker."
+      }
+    },
+    {
+      "name": "Synthetic Prospect Strong 002",
+      "relationship": "Former coworker",
+      "contactStatus": "NOT_CONTACTED",
+      "nasat": {
+        "need": "Savings and retirement conversation may be relevant.",
+        "assurability": "Unknown.",
+        "solvency": "Business owner.",
+        "accessibility": "Direct phone access.",
+        "takesDecision": "Likely decision maker."
+      }
+    }
+  ],
+  "createdAt": "2026-06-03T15:30:00.000Z",
+  "notes": "Synthetic strong market fixture with warm access and NASAT evidence.",
+  "scenario": "market_strong"
+}

@@ -1,0 +1,39 @@
+{
+  "interviewEvidenceId": "INTERVIEW_EVIDENCE_STRONG_DEMO_001",
+  "interviewId": "INTERVIEW_STRONG_DEMO_001",
+  "applicationId": "APPLICATION_EVIDENCE_STRONG_001",
+  "candidateId": "CANDIDATE_EVIDENCE_STRONG_001",
+  "phase": "SELECTION_INTERVIEW",
+  "date": "2026-06-03T15:00:00.000Z",
+  "interviewer": {
+    "interviewerId": "MANAGER_EVIDENCE_DEMO_001",
+    "name": "Manager Evidence Demo",
+    "role": "MANAGER"
+  },
+  "questionEvidence": [
+    {
+      "questionEvidenceId": "QUESTION_EVIDENCE_STRONG_DEMO_001",
+      "question": "Why are you willing to consider this career?",
+      "answer": "Candidate connected the career with income growth, independence and long-term development.",
+      "evidence": "Candidate gave a specific motivation for considering the advisor career.",
+      "detectedSignal": "motivation",
+      "category": "VITAL_FACTOR",
+      "assessmentDimension": "vitalFactors.drive",
+      "confidence": 88
+    },
+    {
+      "questionEvidenceId": "QUESTION_EVIDENCE_STRONG_DEMO_002",
+      "question": "How do you know when you have done a good job?",
+      "answer": "Candidate described internal standards and client outcomes.",
+      "evidence": "Candidate uses internal quality standards, not only external praise.",
+      "detectedSignal": "internalValidation",
+      "category": "VITAL_FACTOR",
+      "assessmentDimension": "vitalFactors.character",
+      "confidence": 82
+    }
+  ],
+  "strengths": ["Clear money motivation", "Strong self-awareness", "Accepts selection process"],
+  "risks": ["Needs continued market validation"],
+  "recommendation": "ADVANCE",
+  "scenario": "strong_candidate"
+}

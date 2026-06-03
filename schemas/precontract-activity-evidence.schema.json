@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/precontract-activity-evidence.schema.json",
+  "title": "Forge Precontract Activity Evidence",
+  "description": "Operational activity evidence during precontract. Stores observed values only and does not calculate readiness.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["activityEvidenceId", "candidateId", "capturedAt", "calls", "referrals", "rda", "initialInterviews", "closingInterviews", "applications", "paidPolicies", "trainingSessions", "certifications", "evaluations", "twentyFivePointScore"],
+  "properties": {
+    "activityEvidenceId": {
+      "type": "string",
+      "description": "Stable activity evidence identifier.",
+      "examples": ["PRECONTRACT_ACTIVITY_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate associated with this activity evidence.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "cycleId": {
+      "type": ["string", "null"],
+      "description": "Precontract cycle related to this evidence when available.",
+      "examples": ["PRECONTRACT_CYCLE_DEMO_001"]
+    },
+    "capturedAt": {
+      "type": "string",
+      "description": "ISO timestamp when activity evidence was captured.",
+      "examples": ["2026-06-03T15:00:00.000Z"]
+    },
+    "calls": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Calls made. Stored, not calculated.",
+      "examples": [45]
+    },
+    "referrals": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Referrals obtained. Stored, not calculated.",
+      "examples": [14]
+    },
+    "rda": {
+      "type": "number",
+      "minimum": 0,
+      "description": "RDA count. Stored, not calculated.",
+      "examples": [5]
+    },
+    "initialInterviews": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Initial interviews completed or recorded.",
+      "examples": [10]
+    },
+    "closingInterviews": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Closing interviews completed or recorded.",
+      "examples": [4]
+    },
+    "applications": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Applications or requests generated.",
+      "examples": [3]
+    },
+    "paidPolicies": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Paid policies from explicit production data.",
+      "examples": [2]
+    },
+    "trainingSessions": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Training sessions attended.",
+      "examples": [6]
+    },
+    "certifications": {
+      "type": "array",
+      "description": "Certifications or training milestones observed.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": { "type": "string", "examples": ["CA1"] },
+          "status": { "type": "string", "examples": ["COMPLETED"] },
+          "completedAt": { "type": ["string", "null"], "examples": ["2026-06-03T15:00:00.000Z"] }
+        }
+      }
+    },
+    "evaluations": {
+      "type": "array",
+      "description": "Observed evaluations, role-plays, FOD reviews or manager checks.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "evaluationType": { "type": "string", "examples": ["ROLE_PLAY"] },
+          "status": { "type": "string", "examples": ["COMPLETED"] },
+          "notes": { "type": ["string", "null"], "examples": ["Script memorization reviewed."] }
+        }
+      }
+    },
+    "twentyFivePointScore": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Stored 25-point activity score. Do not calculate in this schema.",
+      "examples": [25]
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Observed operational notes.",
+      "examples": ["High activity with completed training sessions."]
+    }
+  },
+  "examples": [
+    {
+      "activityEvidenceId": "PRECONTRACT_ACTIVITY_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "cycleId": "PRECONTRACT_CYCLE_DEMO_001",
+      "capturedAt": "2026-06-03T15:00:00.000Z",
+      "calls": 45,
+      "referrals": 14,
+      "rda": 5,
+      "initialInterviews": 10,
+      "closingInterviews": 4,
+      "applications": 3,
+      "paidPolicies": 2,
+      "trainingSessions": 6,
+      "certifications": [{ "name": "CA1", "status": "COMPLETED", "completedAt": "2026-06-03T15:00:00.000Z" }],
+      "evaluations": [{ "evaluationType": "ROLE_PLAY", "status": "COMPLETED", "notes": "Script memorization reviewed." }],
+      "twentyFivePointScore": 25,
+      "notes": "High activity with completed training sessions."
+    }
+  ]
+}

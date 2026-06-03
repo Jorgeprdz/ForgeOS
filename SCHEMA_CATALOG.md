@@ -292,6 +292,169 @@ Notes:
 - Interviews belong to applications.
 - No-shows, reschedules, scores, risks and recommendations should persist.
 - Interview recommendation is decision support, not automatic approval.
+- Known mismatch: this compatibility schema still uses generic phases, while `schemas/interview-evidence.schema.json` uses business phases: `INITIAL_INTERVIEW`, `SELECTION_INTERVIEW`, `CAREER_INTERVIEW`, `ADDITIONAL_INTERVIEW`.
+
+### `schemas/question-evidence.schema.json`
+
+Question-level evidence captured during interviews.
+
+Required:
+
+- `questionEvidenceId`
+- `candidateId`
+- `question`
+- `evidence`
+- `detectedSignal`
+- `category`
+- `confidence`
+- `capturedAt`
+
+Used by:
+
+- Interview Intelligence
+- Candidate Assessment
+- Recruitment Intelligence
+
+Notes:
+
+- Maps question → evidence → detected signal.
+- Stores observed evidence and confidence in the mapping, not a candidate score.
+- Evidence should retain source context and must not invent candidate facts.
+
+### `schemas/interview-evidence.schema.json`
+
+Complete interview evidence package.
+
+Required:
+
+- `interviewEvidenceId`
+- `interviewId`
+- `candidateId`
+- `phase`
+- `date`
+- `interviewer`
+- `questionEvidence`
+- `recommendation`
+
+Used by:
+
+- Interview Intelligence
+- Candidate Assessment inputs
+- Recruitment lifecycle review
+
+Notes:
+
+- Supports business phases: `INITIAL_INTERVIEW`, `SELECTION_INTERVIEW`, `CAREER_INTERVIEW`, `ADDITIONAL_INTERVIEW`.
+- Preserves question-level evidence, strengths, risks and recommendation.
+- Recommendation is decision support, not automatic approval.
+
+### `schemas/rda.schema.json`
+
+Referido de Asesor evidence record.
+
+Required:
+
+- `rdaId`
+- `candidateId`
+- `name`
+- `relationship`
+- `contactStatus`
+- `appointmentStatus`
+- `createdAt`
+
+Used by:
+
+- Recruitment Intelligence
+- Market evidence
+- Precontract activity review
+
+Notes:
+
+- RDA is a relationship and market-access signal.
+- Contact and appointment status are stored evidence, not calculated market quality.
+
+### `schemas/project200.schema.json`
+
+Initial market list evidence.
+
+Required:
+
+- `projectId`
+- `candidateId`
+- `prospects`
+- `createdAt`
+
+Used by:
+
+- Candidate Assessment market quality
+- Recruitment Intelligence
+- Precontract readiness review
+
+Notes:
+
+- Each prospect can store relationship and NASAT evidence.
+- Project 200 size alone does not prove market quality or success.
+
+### `schemas/market-evidence.schema.json`
+
+Market evidence for recruitment and candidate assessment.
+
+Required:
+
+- `marketEvidenceId`
+- `candidateId`
+- `project200Size`
+- `project30Size`
+- `rdaCount`
+- `marketStrength`
+- `marketAccessibility`
+- `responseRate`
+- `capturedAt`
+
+Used by:
+
+- Candidate Assessment
+- Recruitment Intelligence
+- Manager review
+
+Notes:
+
+- Stores observed market facts only.
+- Does not calculate market strength, accessibility or response probability.
+- Separates market size from market quality.
+
+### `schemas/precontract-activity-evidence.schema.json`
+
+Operational evidence during precontract.
+
+Required:
+
+- `activityEvidenceId`
+- `candidateId`
+- `capturedAt`
+- `calls`
+- `referrals`
+- `rda`
+- `initialInterviews`
+- `closingInterviews`
+- `applications`
+- `paidPolicies`
+- `trainingSessions`
+- `certifications`
+- `evaluations`
+- `twentyFivePointScore`
+
+Used by:
+
+- Precontract Intelligence
+- Mick / Behavior Intelligence
+- Manager coaching review
+
+Notes:
+
+- Stores activity evidence only; it does not calculate readiness.
+- `twentyFivePointScore` is the JSON field for the 25-point activity signal.
+- Activity is a behavior predictor, not just a result.
 
 ### `schemas/manager-assignment.schema.json`
 
@@ -488,6 +651,7 @@ Notes:
 - Some legacy modules use ESM exports while newer NASH and Relationship modules use CommonJS.
 - Timestamps are not normalized: some files use epoch numbers, others use strings or null.
 - There is no shared confidence object; reports use raw `confidence` numbers in several places.
+- `schemas/interview.schema.json` uses generic interview phases, while `schemas/interview-evidence.schema.json` uses business phases: `INITIAL_INTERVIEW`, `SELECTION_INTERVIEW`, `CAREER_INTERVIEW`, `ADDITIONAL_INTERVIEW`.
 
 ## Duplicated Fields
 
@@ -535,3 +699,7 @@ Notes:
    - Validate policy and prospect fixtures.
 
 8. Do not refactor existing engines until schema contracts are approved and fixtures exist.
+
+9. Align `schemas/interview.schema.json` phases with business interview phases after Interview Evidence contracts are accepted.
+
+10. Add source metadata consistently to future evidence contracts so manager-confirmed evidence can be distinguished from self-report, activity logs, document uploads, transcripts, AI extraction and system calculation.

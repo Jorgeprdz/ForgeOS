@@ -1,0 +1,14 @@
+{
+  "marketEvidenceId": "MARKET_EVIDENCE_WEAK_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_WEAK_001",
+  "projectId": "PROJECT200_WEAK_MARKET_DEMO_001",
+  "project200Size": 24,
+  "project30Size": 5,
+  "rdaCount": 0,
+  "marketStrength": "LOW",
+  "marketAccessibility": "LOW",
+  "responseRate": 8,
+  "capturedAt": "2026-06-03T15:45:00.000Z",
+  "notes": "Weak synthetic market evidence. Stored values only, not calculated.",
+  "scenario": "market_weak"
+}

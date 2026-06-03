@@ -378,6 +378,188 @@ Scenario:
 - Positive: emphasizes quality and approval before conversion.
 - Risk: stricter requirements can slow conversion.
 
+## Recruitment Evidence Fixtures
+
+Folder:
+
+- `fixtures/recruitment/evidence/`
+
+Purpose:
+
+- Store synthetic evidence fixtures for Interview Intelligence, Market Evidence, RDA, Project 200 and Precontract Activity Evidence.
+- These fixtures prove that Forge can preserve verifiable evidence instead of only storing scores.
+
+### `fixtures/recruitment/evidence/question-evidence-strong-candidate.json`
+
+Represents question-level evidence for a strong candidate.
+
+Can feed:
+
+- Question Evidence validation
+- Interview Intelligence inputs
+- Candidate Assessment evidence mapping
+
+Scenario:
+
+- Positive: candidate shows ownership and perseverance.
+- Risk: evidence still needs manager confirmation.
+
+### `fixtures/recruitment/evidence/question-evidence-weak-candidate.json`
+
+Represents question-level evidence for a weak candidate.
+
+Can feed:
+
+- Coachability evidence tests
+- Interview risk mapping
+
+Scenario:
+
+- Positive: weak evidence is explicitly captured instead of inferred.
+- Risk: missed assignment before selection interview.
+
+### `fixtures/recruitment/evidence/interview-evidence-strong-candidate.json`
+
+Represents complete interview evidence for a strong candidate.
+
+Can feed:
+
+- Interview Evidence validation
+- Candidate Assessment inputs
+- Recruitment review
+
+Scenario:
+
+- Positive: motivation, internal standards and process acceptance are documented.
+- Risk: market validation still needs follow-up.
+
+### `fixtures/recruitment/evidence/interview-evidence-weak-candidate.json`
+
+Represents complete interview evidence for a weak candidate.
+
+Can feed:
+
+- Interview Evidence validation
+- Manager review scenarios
+
+Scenario:
+
+- Positive: risks are explicit and auditable.
+- Risk: low money motivation and missed assignments.
+
+### `fixtures/recruitment/evidence/rda-strong-market.json`
+
+Represents strong RDA evidence.
+
+Can feed:
+
+- RDA validation
+- Market Evidence review
+
+Scenario:
+
+- Positive: warm relationship and scheduled appointment.
+- Risk: still requires actual contact outcome.
+
+### `fixtures/recruitment/evidence/rda-weak-market.json`
+
+Represents weak RDA evidence.
+
+Can feed:
+
+- RDA validation
+- Weak market scenarios
+
+Scenario:
+
+- Positive: weak evidence is stored as weak evidence, not inflated.
+- Risk: distant relationship and no appointment.
+
+### `fixtures/recruitment/evidence/project200-strong-market.json`
+
+Represents strong Project 200 evidence.
+
+Can feed:
+
+- Project 200 validation
+- NASAT evidence mapping
+
+Scenario:
+
+- Positive: warm access and usable NASAT evidence.
+- Risk: Project 200 size still does not guarantee success.
+
+### `fixtures/recruitment/evidence/project200-weak-market.json`
+
+Represents weak Project 200 evidence.
+
+Can feed:
+
+- Project 200 validation
+- Weak market review
+
+Scenario:
+
+- Positive: weak NASAT evidence remains visible.
+- Risk: low access and unknown decision power.
+
+### `fixtures/recruitment/evidence/market-evidence-strong.json`
+
+Represents strong market evidence.
+
+Can feed:
+
+- Market Evidence validation
+- Candidate market quality review
+
+Scenario:
+
+- Positive: strong Project 200 size, Project 30, RDA count, accessibility and response rate are stored.
+- Risk: values are stored evidence and must not be treated as automatic success.
+
+### `fixtures/recruitment/evidence/market-evidence-weak.json`
+
+Represents weak market evidence.
+
+Can feed:
+
+- Market Evidence validation
+- Coaching or rejection review
+
+Scenario:
+
+- Positive: weak market facts are explicit.
+- Risk: low response rate and limited RDA.
+
+### `fixtures/recruitment/evidence/precontract-activity-high.json`
+
+Represents high precontract activity evidence.
+
+Can feed:
+
+- Precontract Activity Evidence validation
+- Mick / Behavior Intelligence future tests
+- Manager coaching review
+
+Scenario:
+
+- Positive: high calls, referrals, RDA, interviews, applications, paid policies, training and 25-point activity.
+- Risk: activity still requires quality review.
+
+### `fixtures/recruitment/evidence/precontract-activity-low.json`
+
+Represents low precontract activity evidence.
+
+Can feed:
+
+- Precontract Activity Evidence validation
+- Precontract risk review
+
+Scenario:
+
+- Positive: low activity is captured explicitly.
+- Risk: low calls, no RDA, no paid policies and missed role-play.
+
 ## Gaps Found
 
 - No schema validation library is installed or declared, so `fixture-validation-test.js` performs structural checks without full JSON Schema validation.
@@ -389,8 +571,9 @@ Scenario:
 - There is no shared fixture index or loader.
 - Precontract fixture now treats days, policy minimums and commission minimums as Organization Profile / Office Rules Config values, not Forge constants.
 - Recruitment lifecycle fixtures now exist, but they are validated by a structural test rather than full JSON Schema validation.
-- Interview is represented inside the full lifecycle fixture, but there is not yet a standalone `interview.schema.json`.
+- Interview is represented inside the full lifecycle fixture, and evidence-specific interview fixtures now exist under `fixtures/recruitment/evidence/`.
 - Organization profile and office rules config fixtures now exist, while precontract cycle fixtures still keep snapshots for historical audit.
+- Evidence fixtures now exist under `fixtures/recruitment/evidence/`, but current tests are structural and do not perform full JSON Schema validation.
 
 ## Recommendations
 

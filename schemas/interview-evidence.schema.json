@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/interview-evidence.schema.json",
+  "title": "Forge Interview Evidence",
+  "description": "Complete evidence package captured from a recruitment interview. Stores observed evidence, not only scores.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["interviewEvidenceId", "interviewId", "candidateId", "phase", "date", "interviewer", "questionEvidence", "recommendation"],
+  "properties": {
+    "interviewEvidenceId": {
+      "type": "string",
+      "description": "Stable interview evidence identifier.",
+      "examples": ["INTERVIEW_EVIDENCE_DEMO_001"]
+    },
+    "interviewId": {
+      "type": "string",
+      "description": "Interview record identifier.",
+      "examples": ["INTERVIEW_DEMO_001"]
+    },
+    "applicationId": {
+      "type": ["string", "null"],
+      "description": "Recruitment application related to the interview.",
+      "examples": ["APPLICATION_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate being interviewed.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "phase": {
+      "type": "string",
+      "description": "Business interview phase.",
+      "enum": ["INITIAL_INTERVIEW", "SELECTION_INTERVIEW", "CAREER_INTERVIEW", "ADDITIONAL_INTERVIEW"],
+      "examples": ["SELECTION_INTERVIEW"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO timestamp or date for interview evidence.",
+      "examples": ["2026-06-03T15:00:00.000Z"]
+    },
+    "interviewer": {
+      "type": "object",
+      "description": "Interviewer identity.",
+      "additionalProperties": true,
+      "required": ["interviewerId"],
+      "properties": {
+        "interviewerId": { "type": "string", "examples": ["MANAGER_DEMO_001"] },
+        "name": { "type": ["string", "null"], "examples": ["Manager Demo"] },
+        "role": { "type": ["string", "null"], "examples": ["MANAGER"] }
+      }
+    },
+    "questionEvidence": {
+      "type": "array",
+      "description": "Question-level evidence captured during the interview.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["question", "evidence", "detectedSignal", "category", "confidence"]
+      },
+      "examples": [
+        [
+          {
+            "question": "Why are you willing to consider this career?",
+            "evidence": "Candidate connected career to income growth and independence.",
+            "detectedSignal": "motivation",
+            "category": "VITAL_FACTOR",
+            "confidence": 85
+          }
+        ]
+      ]
+    },
+    "strengths": {
+      "type": "array",
+      "description": "Observed strengths.",
+      "items": { "type": "string" },
+      "examples": [["Clear money motivation", "Strong failure recovery"]]
+    },
+    "risks": {
+      "type": "array",
+      "description": "Observed interview risks.",
+      "items": { "type": "string" },
+      "examples": [["Needs market list validation"]]
+    },
+    "recommendation": {
+      "type": "string",
+      "description": "Interview recommendation. This is decision support, not automatic approval.",
+      "enum": ["ADVANCE", "WATCH", "COACH", "REJECT", "RESCHEDULE", "NEEDS_MORE_DATA"],
+      "examples": ["ADVANCE"]
+    }
+  },
+  "examples": [
+    {
+      "interviewEvidenceId": "INTERVIEW_EVIDENCE_DEMO_001",
+      "interviewId": "INTERVIEW_DEMO_001",
+      "applicationId": "APPLICATION_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "phase": "SELECTION_INTERVIEW",
+      "date": "2026-06-03T15:00:00.000Z",
+      "interviewer": {
+        "interviewerId": "MANAGER_DEMO_001",
+        "name": "Manager Demo",
+        "role": "MANAGER"
+      },
+      "questionEvidence": [
+        {
+          "question": "Why are you willing to consider this career?",
+          "evidence": "Candidate connected career to income growth and independence.",
+          "detectedSignal": "motivation",
+          "category": "VITAL_FACTOR",
+          "confidence": 85
+        }
+      ],
+      "strengths": ["Clear money motivation"],
+      "risks": ["Needs market list validation"],
+      "recommendation": "ADVANCE"
+    }
+  ]
+}

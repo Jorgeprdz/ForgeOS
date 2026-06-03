@@ -1,0 +1,15 @@
+{
+  "questionEvidenceId": "QUESTION_EVIDENCE_WEAK_DEMO_001",
+  "interviewId": "INTERVIEW_WEAK_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_WEAK_001",
+  "question": "Did you read the assigned materials?",
+  "answer": "Candidate did not read the materials and could not explain the next interview purpose.",
+  "evidence": "Candidate missed a basic process assignment before selection interview.",
+  "detectedSignal": "missesAssignments",
+  "category": "COACHABILITY",
+  "assessmentDimension": "coachabilitySignals.completesAssignments",
+  "confidence": 90,
+  "capturedAt": "2026-06-03T15:00:00.000Z",
+  "source": "SELECTION_INTERVIEW",
+  "scenario": "weak_candidate"
+}

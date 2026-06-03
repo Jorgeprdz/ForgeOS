@@ -10,6 +10,19 @@
 
 ## FORGE OS
 
+## Foundation Sprint Status
+
+```text
+🟢 Forge Foundation Sprint
+├── 🟢 Schema Foundation
+├── 🟢 Fixture Foundation
+├── 🟢 Recruitment Domain Model
+├── 🟢 Recruitment Knowledge Base
+├── 🟢 Candidate Assessment Foundation
+├── 🟢 Interview + Market Evidence Contracts
+└── 🔵 Mick / Behavior Intelligence
+```
+
 ```text
 🟢 01 REVENUE GENERATION ENGINE
 │
@@ -132,8 +145,12 @@
 ├── 🔵 Team Activity Tracking
 ├── 🔵 Advisor Scorecards
 ├── 🔵 Team Performance Engine
-├── 🔵 Recruitment Lifecycle Domain
+├── 🟢 Recruitment Lifecycle Domain
+├── 🟢 Recruitment Knowledge Base
+├── 🟢 Candidate Assessment Foundation
+├── 🟢 Interview + Market Evidence Contracts
 ├── 🔵 Precontract Lifecycle Engine
+├── 🔵 Mick / Behavior Intelligence
 ├── 🔵 Coaching Suggestions
 ├── 🔵 Activity Alerts
 └── 🔵 Manager Notifications

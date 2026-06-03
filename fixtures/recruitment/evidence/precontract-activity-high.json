@@ -1,0 +1,36 @@
+{
+  "activityEvidenceId": "PRECONTRACT_ACTIVITY_HIGH_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_STRONG_001",
+  "cycleId": "PRECONTRACT_CYCLE_EVIDENCE_STRONG_001",
+  "capturedAt": "2026-06-03T16:00:00.000Z",
+  "calls": 52,
+  "referrals": 18,
+  "rda": 5,
+  "initialInterviews": 12,
+  "closingInterviews": 5,
+  "applications": 4,
+  "paidPolicies": 3,
+  "trainingSessions": 7,
+  "certifications": [
+    {
+      "name": "CA1",
+      "status": "COMPLETED",
+      "completedAt": "2026-06-03T16:00:00.000Z"
+    }
+  ],
+  "evaluations": [
+    {
+      "evaluationType": "ROLE_PLAY",
+      "status": "COMPLETED",
+      "notes": "Script memorization reviewed."
+    },
+    {
+      "evaluationType": "FOD",
+      "status": "COMPLETED",
+      "notes": "Observed field demonstration completed."
+    }
+  ],
+  "twentyFivePointScore": 25,
+  "notes": "High activity synthetic fixture. Stored values only.",
+  "scenario": "high_activity"
+}

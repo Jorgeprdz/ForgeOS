@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/project200.schema.json",
+  "title": "Forge Project 200",
+  "description": "Initial market list evidence for recruitment and advisor development.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["projectId", "candidateId", "prospects", "createdAt"],
+  "properties": {
+    "projectId": {
+      "type": "string",
+      "description": "Stable Project 200 identifier.",
+      "examples": ["PROJECT200_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate associated with this market list.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "prospects": {
+      "type": "array",
+      "description": "Known people included in the candidate market list.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["name", "relationship", "nasat"],
+        "properties": {
+          "name": { "type": "string", "examples": ["Prospect Demo 001"] },
+          "relationship": { "type": "string", "examples": ["Friend"] },
+          "contactStatus": { "type": ["string", "null"], "examples": ["NOT_CONTACTED"] },
+          "nasat": {
+            "type": "object",
+            "description": "NASAT market quality evidence. Stores observed evidence only.",
+            "additionalProperties": true,
+            "properties": {
+              "need": { "type": ["string", "boolean", "null"], "examples": ["Possible family protection need"] },
+              "assurability": { "type": ["string", "boolean", "null"], "examples": ["Unknown"] },
+              "solvency": { "type": ["string", "boolean", "null"], "examples": ["Stable professional income"] },
+              "accessibility": { "type": ["string", "boolean", "null"], "examples": ["Warm contact"] },
+              "takesDecision": { "type": ["string", "boolean", "null"], "examples": ["Decision maker"] }
+            }
+          }
+        }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "ISO timestamp when the project list was captured.",
+      "examples": ["2026-06-03T15:00:00.000Z"]
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Observed notes about Project 200 quality.",
+      "examples": ["Strong natural market with several warm contacts."]
+    }
+  },
+  "examples": [
+    {
+      "projectId": "PROJECT200_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "prospects": [
+        {
+          "name": "Prospect Demo 001",
+          "relationship": "Friend",
+          "contactStatus": "NOT_CONTACTED",
+          "nasat": {
+            "need": "Possible family protection need",
+            "assurability": "Unknown",
+            "solvency": "Stable professional income",
+            "accessibility": "Warm contact",
+            "takesDecision": "Decision maker"
+          }
+        }
+      ],
+      "createdAt": "2026-06-03T15:00:00.000Z",
+      "notes": "Strong natural market with several warm contacts."
+    }
+  ]
+}

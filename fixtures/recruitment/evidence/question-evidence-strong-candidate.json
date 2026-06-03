@@ -1,0 +1,15 @@
+{
+  "questionEvidenceId": "QUESTION_EVIDENCE_STRONG_DEMO_001",
+  "interviewId": "INTERVIEW_STRONG_DEMO_001",
+  "candidateId": "CANDIDATE_EVIDENCE_STRONG_001",
+  "question": "What goals have you not completed yet?",
+  "answer": "Candidate described a business goal that was delayed and explained the specific discipline needed to complete it.",
+  "evidence": "Candidate showed ownership, ambition and self-awareness about an unfinished goal.",
+  "detectedSignal": "perseverance",
+  "category": "VITAL_FACTOR",
+  "assessmentDimension": "vitalFactors.successHistory",
+  "confidence": 86,
+  "capturedAt": "2026-06-03T15:00:00.000Z",
+  "source": "SELECTION_INTERVIEW",
+  "scenario": "strong_candidate"
+}

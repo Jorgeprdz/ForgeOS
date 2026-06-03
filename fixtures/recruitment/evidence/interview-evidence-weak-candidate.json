@@ -1,0 +1,39 @@
+{
+  "interviewEvidenceId": "INTERVIEW_EVIDENCE_WEAK_DEMO_001",
+  "interviewId": "INTERVIEW_WEAK_DEMO_001",
+  "applicationId": "APPLICATION_EVIDENCE_WEAK_001",
+  "candidateId": "CANDIDATE_EVIDENCE_WEAK_001",
+  "phase": "SELECTION_INTERVIEW",
+  "date": "2026-06-03T16:00:00.000Z",
+  "interviewer": {
+    "interviewerId": "MANAGER_EVIDENCE_DEMO_001",
+    "name": "Manager Evidence Demo",
+    "role": "MANAGER"
+  },
+  "questionEvidence": [
+    {
+      "questionEvidenceId": "QUESTION_EVIDENCE_WEAK_DEMO_001",
+      "question": "Did you read the assigned materials?",
+      "answer": "Candidate did not read the materials.",
+      "evidence": "Candidate missed a basic assignment.",
+      "detectedSignal": "missesAssignments",
+      "category": "COACHABILITY",
+      "assessmentDimension": "coachabilitySignals.completesAssignments",
+      "confidence": 90
+    },
+    {
+      "questionEvidenceId": "QUESTION_EVIDENCE_WEAK_DEMO_002",
+      "question": "What is your first-year income goal?",
+      "answer": "Candidate could not state an income goal.",
+      "evidence": "Candidate lacks a concrete income expectation.",
+      "detectedSignal": "lowMoneyMotivation",
+      "category": "VITAL_FACTOR",
+      "assessmentDimension": "vitalFactors.moneyMotivation",
+      "confidence": 78
+    }
+  ],
+  "strengths": [],
+  "risks": ["Did not complete assigned reading", "No clear income goal", "Needs manager review"],
+  "recommendation": "WATCH",
+  "scenario": "weak_candidate"
+}

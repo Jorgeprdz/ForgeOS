@@ -265,7 +265,23 @@ Consistency
 ### Mick
 
 Role:
-Coaching
+Behavior Intelligence
+
+Focus:
+
+- Habits
+- Discipline
+- Consistency
+- Coachability
+- Activity generation
+- Execution patterns
+
+Rules:
+
+- Mick is not a motivational module.
+- Mick measures actions that produce results, not only the results themselves.
+- Mick tracks whether the advisor, candidate, precontract candidate or manager does the behaviors that create commercial outcomes.
+- Mick applies across Recruitment, Precontract, Advisor and Manager workflows.
 
 ---
 
@@ -411,6 +427,7 @@ Includes:
 - Interview Intelligence
 - Precontract Intelligence
 - Precontract Lifecycle Engine
+- Mick / Behavior Intelligence
 - Training Intelligence
 - Development Intelligence
 - Team Intelligence
