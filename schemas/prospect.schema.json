@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/prospect.schema.json",
+  "title": "Forge Prospect",
+  "description": "Prospect contract used by NASH, first contact, followup and conversion intelligence.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["prospectId", "name", "status"],
+  "properties": {
+    "prospectId": {
+      "type": "string",
+      "description": "Stable prospect identifier.",
+      "examples": ["PROSPECT_MARIA_001"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Prospect display name.",
+      "examples": ["Maria Garcia"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Prospect commercial status.",
+      "enum": ["NEW", "CONTACTED", "RESPONDED", "DISCOVERY", "PRESENTATION", "NEGOTIATION", "CLIENT", "LOST", "INACTIVE"],
+      "examples": ["RESPONDED"]
+    },
+    "advisorId": {
+      "type": ["string", "null"],
+      "description": "Assigned advisor.",
+      "examples": ["ADVISOR_JORGE_001"]
+    },
+    "source": {
+      "type": ["string", "null"],
+      "description": "Prospect source.",
+      "examples": ["warm_market"]
+    },
+    "channel": {
+      "type": ["string", "null"],
+      "description": "Primary contact channel.",
+      "examples": ["WHATSAPP"]
+    },
+    "phone": {
+      "type": ["string", "null"],
+      "description": "Phone number when available.",
+      "examples": ["+525500000000"]
+    },
+    "email": {
+      "type": ["string", "null"],
+      "description": "Email when available.",
+      "examples": ["maria@example.com"]
+    },
+    "age": {
+      "type": ["number", "null"],
+      "description": "Age when known.",
+      "examples": [38]
+    },
+    "occupation": {
+      "type": ["string", "null"],
+      "description": "Occupation or commercial context.",
+      "examples": ["Architect"]
+    },
+    "maritalStatus": {
+      "type": ["string", "null"],
+      "description": "Marital status when known.",
+      "examples": ["MARRIED"]
+    },
+    "children": {
+      "type": ["number", "null"],
+      "description": "Number of children when known.",
+      "examples": [2]
+    },
+    "notes": {
+      "type": "array",
+      "description": "Context notes used by NASH and relationship engines.",
+      "items": { "type": "string" },
+      "examples": [["Has children", "Values family protection"]]
+    },
+    "knownMotivators": {
+      "type": "array",
+      "description": "Known buying or relationship motivators.",
+      "items": { "type": "string" },
+      "examples": [["family_security", "peace_of_mind"]]
+    },
+    "createdAt": {
+      "type": ["string", "number", "null"],
+      "description": "Creation timestamp.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    }
+  },
+  "examples": [
+    {
+      "prospectId": "PROSPECT_MARIA_001",
+      "name": "Maria Garcia",
+      "status": "RESPONDED",
+      "advisorId": "ADVISOR_JORGE_001",
+      "source": "warm_market",
+      "channel": "WHATSAPP",
+      "age": 38,
+      "occupation": "Architect",
+      "maritalStatus": "MARRIED",
+      "children": 2,
+      "notes": ["Has children", "Values family protection"]
+    }
+  ]
+}

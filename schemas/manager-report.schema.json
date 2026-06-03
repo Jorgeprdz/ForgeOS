@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/manager-report.schema.json",
+  "title": "Forge Manager Report",
+  "description": "Manager-facing intelligence contract for coaching, risk and team development.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["managerId", "reportType", "generatedAt", "summary", "recommendedActions"],
+  "properties": {
+    "managerId": {
+      "type": "string",
+      "description": "Manager receiving the report.",
+      "examples": ["MANAGER_001"]
+    },
+    "teamId": {
+      "type": ["string", "null"],
+      "description": "Team identifier when applicable.",
+      "examples": ["TEAM_NORTH_001"]
+    },
+    "reportType": {
+      "type": "string",
+      "enum": ["ADVISOR_ALERT", "TEAM_INTELLIGENCE", "CANDIDATE_REVIEW", "PRECONTRACT_PROGRESS", "COACHING_PLAN"],
+      "examples": ["TEAM_INTELLIGENCE"]
+    },
+    "generatedAt": {
+      "type": "string",
+      "description": "ISO timestamp for report generation.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short manager-facing explanation.",
+      "examples": ["Two advisors need followup coaching this week."]
+    },
+    "advisorIds": {
+      "type": "array",
+      "description": "Advisors included in the report.",
+      "items": { "type": "string" },
+      "examples": [["ADVISOR_001", "ADVISOR_002"]]
+    },
+    "riskLevel": {
+      "type": ["string", "null"],
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL", null],
+      "description": "Manager action urgency.",
+      "examples": ["HIGH"]
+    },
+    "coachingPriorities": {
+      "type": "array",
+      "description": "Skills or behaviors to coach.",
+      "items": { "type": "string" },
+      "examples": [["FOLLOWUP_DISCIPLINE", "CLOSING_CLARITY"]]
+    },
+    "recommendedActions": {
+      "type": "array",
+      "description": "Concrete manager actions.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["action", "reason"],
+        "properties": {
+          "action": { "type": "string", "examples": ["RUN_FOLLOWUP_DRILL"] },
+          "reason": { "type": "string", "examples": ["Advisor has multiple no-response outcomes."] },
+          "ownerId": { "type": ["string", "null"], "examples": ["MANAGER_001"] },
+          "dueDate": { "type": ["string", "null"], "examples": ["2026-06-07"] }
+        }
+      }
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "examples": [76]
+    }
+  },
+  "examples": [
+    {
+      "managerId": "MANAGER_001",
+      "teamId": "TEAM_NORTH_001",
+      "reportType": "TEAM_INTELLIGENCE",
+      "generatedAt": "2026-06-03T12:00:00.000Z",
+      "summary": "Two advisors need followup coaching this week.",
+      "advisorIds": ["ADVISOR_001", "ADVISOR_002"],
+      "riskLevel": "HIGH",
+      "coachingPriorities": ["FOLLOWUP_DISCIPLINE"],
+      "recommendedActions": [
+        {
+          "action": "RUN_FOLLOWUP_DRILL",
+          "reason": "Advisor has multiple no-response outcomes.",
+          "ownerId": "MANAGER_001",
+          "dueDate": "2026-06-07"
+        }
+      ],
+      "confidence": 76
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/precontract.schema.json",
+  "title": "Forge Precontract",
+  "description": "Precontract progress contract based on AGENTS.md business rules.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["precontractId", "candidateId", "managerId", "startDate", "deadlineDate", "progress", "contractReadiness"],
+  "properties": {
+    "precontractId": {
+      "type": "string",
+      "description": "Stable precontract process identifier.",
+      "examples": ["PRECONTRACT_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate in precontract process.",
+      "examples": ["CANDIDATE_001"]
+    },
+    "advisorId": {
+      "type": ["string", "null"],
+      "description": "Advisor identifier if already assigned.",
+      "examples": ["ADVISOR_TEMP_001"]
+    },
+    "managerId": {
+      "type": "string",
+      "description": "Responsible manager.",
+      "examples": ["MANAGER_001"]
+    },
+    "startDate": {
+      "type": "string",
+      "description": "Precontract start date.",
+      "examples": ["2026-06-01"]
+    },
+    "deadlineDate": {
+      "type": "string",
+      "description": "90-day deadline date.",
+      "examples": ["2026-08-30"]
+    },
+    "businessRules": {
+      "type": "object",
+      "description": "Official precontract thresholds from AGENTS.md.",
+      "additionalProperties": true,
+      "properties": {
+        "windowDays": { "type": "number", "const": 90, "examples": [90] },
+        "minimumPolicies": { "type": "number", "const": 8, "examples": [8] },
+        "minimumCommissionsMxn": { "type": "number", "const": 24000, "examples": [24000] }
+      },
+      "examples": [
+        {
+          "windowDays": 90,
+          "minimumPolicies": 8,
+          "minimumCommissionsMxn": 24000
+        }
+      ]
+    },
+    "progress": {
+      "type": "object",
+      "description": "Current measurable progress. Values must come from explicit data.",
+      "additionalProperties": true,
+      "required": ["policiesIssued", "commissionsMxn"],
+      "properties": {
+        "policiesIssued": { "type": "number", "minimum": 0, "examples": [5] },
+        "commissionsMxn": { "type": "number", "minimum": 0, "examples": [15000] },
+        "daysElapsed": { "type": ["number", "null"], "minimum": 0, "examples": [42] },
+        "daysRemaining": { "type": ["number", "null"], "minimum": 0, "examples": [48] }
+      }
+    },
+    "contractReadiness": {
+      "type": "string",
+      "enum": ["READY", "ON_TRACK", "AT_RISK", "NOT_READY", "UNKNOWN"],
+      "description": "Readiness classification.",
+      "examples": ["AT_RISK"]
+    },
+    "risk": {
+      "type": ["string", "null"],
+      "enum": ["LOW", "MEDIUM", "HIGH", "UNKNOWN", null],
+      "description": "Precontract success risk.",
+      "examples": ["MEDIUM"]
+    },
+    "probabilityOfSuccess": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Probability estimate from explicit progress and rules.",
+      "examples": [62]
+    },
+    "nextAction": {
+      "type": "object",
+      "description": "Manager action to move precontract forward.",
+      "additionalProperties": true,
+      "required": ["action", "reason"],
+      "properties": {
+        "action": { "type": "string", "examples": ["REVIEW_PIPELINE"] },
+        "reason": { "type": "string", "examples": ["Candidate needs three more policies before the deadline."] }
+      }
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "examples": [70]
+    }
+  },
+  "examples": [
+    {
+      "precontractId": "PRECONTRACT_001",
+      "candidateId": "CANDIDATE_001",
+      "managerId": "MANAGER_001",
+      "startDate": "2026-06-01",
+      "deadlineDate": "2026-08-30",
+      "businessRules": {
+        "windowDays": 90,
+        "minimumPolicies": 8,
+        "minimumCommissionsMxn": 24000
+      },
+      "progress": {
+        "policiesIssued": 5,
+        "commissionsMxn": 15000,
+        "daysElapsed": 42,
+        "daysRemaining": 48
+      },
+      "contractReadiness": "AT_RISK",
+      "risk": "MEDIUM",
+      "probabilityOfSuccess": 62,
+      "nextAction": {
+        "action": "REVIEW_PIPELINE",
+        "reason": "Candidate needs three more policies before the deadline."
+      },
+      "confidence": 70
+    }
+  ]
+}

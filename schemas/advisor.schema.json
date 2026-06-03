@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/advisor.schema.json",
+  "title": "Forge Advisor",
+  "description": "Official advisor identity and commercial profile contract for Forge OS.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["advisorId", "name", "status"],
+  "properties": {
+    "advisorId": {
+      "type": "string",
+      "description": "Stable advisor identifier used by NASH, manager intelligence, activity and performance reports.",
+      "examples": ["ADVISOR_JORGE_001"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Advisor display name.",
+      "examples": ["Jorge Perez"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Commercial lifecycle status for the advisor.",
+      "enum": ["CANDIDATE", "PRECONTRACT", "ACTIVE", "SENIOR_ADVISOR", "MANAGER", "DIRECTOR", "INACTIVE"],
+      "examples": ["ACTIVE"]
+    },
+    "managerId": {
+      "type": ["string", "null"],
+      "description": "Manager or leader responsible for this advisor.",
+      "examples": ["MANAGER_001"]
+    },
+    "primaryTrait": {
+      "type": "string",
+      "description": "Primary sales DNA or advisor style trait.",
+      "examples": ["CONSULTIVE"]
+    },
+    "secondaryTraits": {
+      "type": "array",
+      "description": "Secondary advisor traits.",
+      "items": { "type": "string" },
+      "examples": [["RELATIONSHIP_BUILDER", "DISCIPLINED_FOLLOWUP"]]
+    },
+    "preferredChannels": {
+      "type": "array",
+      "description": "Preferred commercial contact channels.",
+      "items": { "type": "string" },
+      "examples": [["WHATSAPP", "PHONE"]]
+    },
+    "strongestStage": {
+      "type": "string",
+      "description": "Strongest sales process stage.",
+      "examples": ["FOLLOWUP"]
+    },
+    "weakestStage": {
+      "type": "string",
+      "description": "Weakest sales process stage requiring coaching.",
+      "examples": ["CLOSING"]
+    },
+    "performanceScore": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Current advisor performance score when available.",
+      "examples": [74]
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Confidence in advisor profile or report values.",
+      "examples": [80]
+    },
+    "createdAt": {
+      "type": ["string", "number", "null"],
+      "description": "Creation timestamp. Existing modules may use epoch numbers or ISO strings.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    },
+    "updatedAt": {
+      "type": ["string", "number", "null"],
+      "description": "Last update timestamp. Existing modules may use epoch numbers or ISO strings.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    }
+  },
+  "examples": [
+    {
+      "advisorId": "ADVISOR_JORGE_001",
+      "name": "Jorge Perez",
+      "status": "ACTIVE",
+      "managerId": "MANAGER_001",
+      "primaryTrait": "CONSULTIVE",
+      "secondaryTraits": ["RELATIONSHIP_BUILDER"],
+      "preferredChannels": ["WHATSAPP"],
+      "strongestStage": "FOLLOWUP",
+      "weakestStage": "CLOSING",
+      "performanceScore": 74,
+      "confidence": 80
+    }
+  ]
+}

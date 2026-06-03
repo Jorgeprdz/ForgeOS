@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/policy.schema.json",
+  "title": "Forge Policy",
+  "description": "Policy contract used by policy operations, relationship intelligence and product intelligence.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["policyId", "clientId", "policyNumber", "productName"],
+  "properties": {
+    "policyId": {
+      "type": "string",
+      "description": "Stable policy identifier. Existing modules may expose this as id.",
+      "examples": ["POLICY_001"]
+    },
+    "id": {
+      "type": ["string", "null"],
+      "description": "Legacy or module-local policy identifier.",
+      "examples": ["POL-VIDA-001"]
+    },
+    "clientId": {
+      "type": "string",
+      "description": "Owner client identifier.",
+      "examples": ["CLIENT_MARIA_001"]
+    },
+    "policyNumber": {
+      "type": "string",
+      "description": "Carrier policy number.",
+      "examples": ["VIDA-001"]
+    },
+    "productName": {
+      "type": "string",
+      "description": "Product name from documentation or policy record. Must not be invented.",
+      "examples": ["Vida Proteccion"]
+    },
+    "carrier": {
+      "type": "object",
+      "description": "Carrier information.",
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": ["string", "null"], "examples": ["CARRIER_001"] },
+        "name": { "type": ["string", "null"], "examples": ["SMNYL"] },
+        "productName": { "type": ["string", "null"], "examples": ["Vida Proteccion"] }
+      }
+    },
+    "financial": {
+      "type": "object",
+      "description": "Financial values must come from explicit data. No projections without rates.",
+      "additionalProperties": true,
+      "properties": {
+        "currency": { "type": "string", "examples": ["MXN"] },
+        "premium": { "type": ["number", "null"], "examples": [2500] },
+        "paymentFrequency": { "type": ["string", "null"], "examples": ["MONTHLY"] },
+        "sumInsured": { "type": ["number", "null"], "examples": [1000000] }
+      }
+    },
+    "renewalDate": {
+      "type": ["string", "null"],
+      "description": "Renewal date in ISO or local date format.",
+      "examples": ["2026-06-25"]
+    },
+    "nextReviewDate": {
+      "type": ["string", "null"],
+      "description": "Next relationship or policy review date.",
+      "examples": ["2026-06-15"]
+    },
+    "nextPaymentDate": {
+      "type": ["string", "null"],
+      "description": "Next payment due date.",
+      "examples": ["2026-06-07"]
+    },
+    "status": {
+      "type": ["string", "null"],
+      "description": "Operational policy status.",
+      "examples": ["ACTIVE"]
+    },
+    "policyIssued": {
+      "type": ["boolean", "null"],
+      "description": "Whether the policy has been issued.",
+      "examples": [true]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Source and audit metadata.",
+      "additionalProperties": true
+    }
+  },
+  "examples": [
+    {
+      "policyId": "POLICY_001",
+      "id": "POL-VIDA-001",
+      "clientId": "CLIENT_MARIA_001",
+      "policyNumber": "VIDA-001",
+      "productName": "Vida Proteccion",
+      "carrier": {
+        "name": "SMNYL",
+        "productName": "Vida Proteccion"
+      },
+      "financial": {
+        "currency": "MXN",
+        "premium": 2500,
+        "paymentFrequency": "MONTHLY",
+        "sumInsured": 1000000
+      },
+      "renewalDate": "2026-06-25",
+      "nextReviewDate": "2026-06-15",
+      "status": "ACTIVE",
+      "policyIssued": true
+    }
+  ]
+}

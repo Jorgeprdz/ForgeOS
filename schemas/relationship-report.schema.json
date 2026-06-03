@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/relationship-report.schema.json",
+  "title": "Forge Relationship Report",
+  "description": "Contract for Relationship Intelligence master output.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["engine", "version", "clientId", "nextAction", "opportunities", "confidence"],
+  "properties": {
+    "engine": {
+      "type": "string",
+      "const": "RELATIONSHIP_MASTER_ENGINE",
+      "examples": ["RELATIONSHIP_MASTER_ENGINE"]
+    },
+    "version": {
+      "type": "string",
+      "examples": ["1.0"]
+    },
+    "clientId": {
+      "type": "string",
+      "examples": ["CLIENT_MARIA_001"]
+    },
+    "nextAction": {
+      "type": "object",
+      "description": "Authoritative relationship next action.",
+      "additionalProperties": true,
+      "required": ["nextAction"],
+      "properties": {
+        "nextAction": { "type": "string", "examples": ["SCHEDULE_REVIEW"] },
+        "actionReason": { "type": ["string", "null"], "examples": ["Policy review is due soon."] },
+        "priority": { "type": ["string", "null"], "examples": ["HIGH"] }
+      }
+    },
+    "opportunities": {
+      "type": "array",
+      "description": "Relationship opportunities detected from existing data.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "type": { "type": ["string", "null"], "examples": ["REVIEW_OPPORTUNITY"] },
+          "reason": { "type": ["string", "null"], "examples": ["Upcoming policy review."] },
+          "priority": { "type": ["string", "null"], "examples": ["HIGH"] }
+        }
+      }
+    },
+    "lifeEvents": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "detectedEvents": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+      }
+    },
+    "referralOpportunity": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "referralLikelihood": { "type": ["string", "null"], "examples": ["HIGH"] },
+        "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+      }
+    },
+    "relationshipHealth": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "relationshipHealth": { "type": ["string", "null"], "examples": ["GREEN"] },
+        "riskFactors": { "type": "array", "items": { "type": "string" } },
+        "recommendation": { "type": ["string", "null"] }
+      }
+    },
+    "engagement": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "engagementScore": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "lastInteraction": { "type": ["string", "object", "null"] }
+      }
+    },
+    "reviewRecommendation": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "reviewNeeded": { "type": ["boolean", "null"], "examples": [true] },
+        "reason": { "type": ["string", "null"] }
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "examples": [82]
+    }
+  },
+  "examples": [
+    {
+      "engine": "RELATIONSHIP_MASTER_ENGINE",
+      "version": "1.0",
+      "clientId": "CLIENT_MARIA_001",
+      "nextAction": {
+        "nextAction": "SCHEDULE_REVIEW",
+        "actionReason": "Policy review is due soon.",
+        "priority": "HIGH"
+      },
+      "opportunities": [
+        {
+          "type": "REVIEW_OPPORTUNITY",
+          "reason": "Upcoming policy review.",
+          "priority": "HIGH"
+        }
+      ],
+      "lifeEvents": {
+        "detectedEvents": [],
+        "confidence": 70
+      },
+      "referralOpportunity": {
+        "referralLikelihood": "HIGH",
+        "confidence": 85
+      },
+      "relationshipHealth": {
+        "relationshipHealth": "GREEN",
+        "riskFactors": [],
+        "recommendation": "Maintain proactive contact."
+      },
+      "engagement": {
+        "engagementScore": 90,
+        "lastInteraction": "2026-06-01"
+      },
+      "reviewRecommendation": {
+        "reviewNeeded": true,
+        "reason": "Review date is close."
+      },
+      "confidence": 82
+    }
+  ]
+}

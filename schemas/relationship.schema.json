@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/relationship.schema.json",
+  "title": "Forge Relationship",
+  "description": "Client relationship contract used by Relationship Intelligence.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["clientId", "name", "relationshipStatus"],
+  "properties": {
+    "clientId": {
+      "type": "string",
+      "description": "Stable client identifier.",
+      "examples": ["CLIENT_MARIA_001"]
+    },
+    "id": {
+      "type": ["string", "null"],
+      "description": "Legacy or module-local client identifier.",
+      "examples": ["CLIENT_MARIA_001"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Client display name.",
+      "examples": ["Maria Garcia"]
+    },
+    "advisorId": {
+      "type": ["string", "null"],
+      "description": "Assigned advisor.",
+      "examples": ["ADVISOR_JORGE_001"]
+    },
+    "relationshipStatus": {
+      "type": "string",
+      "description": "Current relationship status.",
+      "enum": ["ACTIVE_CLIENT", "AT_RISK", "REVIEW_DUE", "NEW_CLIENT", "INACTIVE", "UNKNOWN"],
+      "examples": ["ACTIVE_CLIENT"]
+    },
+    "relationshipHealth": {
+      "type": ["string", "null"],
+      "enum": ["GREEN", "YELLOW", "ORANGE", "RED", "UNKNOWN", null],
+      "description": "Relationship health classification.",
+      "examples": ["GREEN"]
+    },
+    "relationshipScore": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Numeric relationship score when available.",
+      "examples": [88]
+    },
+    "preferredChannel": {
+      "type": ["string", "null"],
+      "description": "Preferred client communication channel.",
+      "examples": ["WHATSAPP"]
+    },
+    "clientSince": {
+      "type": ["string", "null"],
+      "description": "Date relationship began.",
+      "examples": ["2020-01-15"]
+    },
+    "policyCount": {
+      "type": ["number", "null"],
+      "description": "Number of policies linked to the client.",
+      "examples": [2]
+    },
+    "relationshipHistory": {
+      "type": "array",
+      "description": "Interaction history used by relationship and engagement engines.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "date": { "type": ["string", "null"], "examples": ["2026-06-01"] },
+          "direction": { "type": ["string", "null"], "examples": ["INBOUND"] },
+          "message": { "type": ["string", "null"], "examples": ["Thanks for following up."] },
+          "outcome": { "type": ["string", "null"], "examples": ["POSITIVE"] }
+        }
+      }
+    },
+    "notes": {
+      "type": ["string", "array", "null"],
+      "description": "Relationship notes.",
+      "examples": ["Recent positive interaction."]
+    }
+  },
+  "examples": [
+    {
+      "clientId": "CLIENT_MARIA_001",
+      "id": "CLIENT_MARIA_001",
+      "name": "Maria Garcia",
+      "advisorId": "ADVISOR_JORGE_001",
+      "relationshipStatus": "ACTIVE_CLIENT",
+      "relationshipHealth": "GREEN",
+      "relationshipScore": 88,
+      "preferredChannel": "WHATSAPP",
+      "clientSince": "2020-01-15",
+      "policyCount": 2,
+      "relationshipHistory": [
+        {
+          "date": "2026-06-01",
+          "direction": "INBOUND",
+          "message": "Thanks for following up.",
+          "outcome": "POSITIVE"
+        }
+      ]
+    }
+  ]
+}

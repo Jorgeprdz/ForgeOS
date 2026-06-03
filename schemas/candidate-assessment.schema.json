@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/candidate-assessment.schema.json",
+  "title": "Forge Candidate Assessment",
+  "description": "Decision-support contract for manager candidate evaluation.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["candidateId", "assessmentId", "overallScore", "recommendation", "riskLevel"],
+  "properties": {
+    "assessmentId": {
+      "type": "string",
+      "description": "Stable assessment identifier.",
+      "examples": ["ASSESSMENT_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate being assessed.",
+      "examples": ["CANDIDATE_001"]
+    },
+    "managerId": {
+      "type": ["string", "null"],
+      "description": "Manager or evaluator.",
+      "examples": ["MANAGER_001"]
+    },
+    "overallScore": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Overall producer potential score.",
+      "examples": [82]
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["ADVANCE", "WATCH", "REJECT", "NEEDS_MORE_DATA"],
+      "description": "Assessment recommendation. This is decision support, not automatic hiring.",
+      "examples": ["ADVANCE"]
+    },
+    "riskLevel": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "UNKNOWN"],
+      "examples": ["MEDIUM"]
+    },
+    "hardFactorScores": {
+      "type": "object",
+      "description": "Scored hard factors from AGENTS.md.",
+      "additionalProperties": { "type": ["number", "string", "null"] },
+      "examples": [
+        {
+          "age": 80,
+          "marriage": 70,
+          "yearsLivingInTown": 85,
+          "career": 78,
+          "employmentStatus": 75
+        }
+      ]
+    },
+    "vitalFactorScores": {
+      "type": "object",
+      "description": "Scored vital factors from AGENTS.md.",
+      "additionalProperties": { "type": ["number", "string", "null"] },
+      "examples": [
+        {
+          "mentalAgility": 82,
+          "drive": 88,
+          "energy": 80,
+          "moneyMotivation": 76,
+          "character": 90,
+          "successHistory": 78,
+          "retentionPotential": 84
+        }
+      ]
+    },
+    "strengths": {
+      "type": "array",
+      "description": "Observed strengths.",
+      "items": { "type": "string" },
+      "examples": [["High drive", "Strong local network"]]
+    },
+    "risks": {
+      "type": "array",
+      "description": "Observed candidate risks.",
+      "items": { "type": "string" },
+      "examples": [["Limited insurance sales exposure"]]
+    },
+    "nextAction": {
+      "type": "object",
+      "description": "Manager action after assessment.",
+      "additionalProperties": true,
+      "required": ["action", "reason"],
+      "properties": {
+        "action": { "type": "string", "examples": ["SCHEDULE_SECOND_INTERVIEW"] },
+        "reason": { "type": "string", "examples": ["Strong drive and retention potential."] }
+      }
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "examples": [72]
+    }
+  },
+  "examples": [
+    {
+      "assessmentId": "ASSESSMENT_001",
+      "candidateId": "CANDIDATE_001",
+      "managerId": "MANAGER_001",
+      "overallScore": 82,
+      "recommendation": "ADVANCE",
+      "riskLevel": "MEDIUM",
+      "strengths": ["High drive", "Strong local network"],
+      "risks": ["Limited insurance sales exposure"],
+      "nextAction": {
+        "action": "SCHEDULE_SECOND_INTERVIEW",
+        "reason": "Strong drive and retention potential."
+      },
+      "confidence": 72
+    }
+  ]
+}

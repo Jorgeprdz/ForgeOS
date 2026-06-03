@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/candidate.schema.json",
+  "title": "Forge Candidate",
+  "description": "Candidate profile contract for recruitment and career intelligence.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["candidateId", "name", "status"],
+  "properties": {
+    "candidateId": {
+      "type": "string",
+      "description": "Stable candidate identifier.",
+      "examples": ["CANDIDATE_001"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Candidate display name.",
+      "examples": ["Ana Lopez"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Candidate pipeline status.",
+      "enum": ["NEW", "SCREENING", "INTERVIEWING", "PRECONTRACT", "REJECTED", "CONVERTED", "INACTIVE"],
+      "examples": ["SCREENING"]
+    },
+    "managerId": {
+      "type": ["string", "null"],
+      "description": "Recruiting or development manager.",
+      "examples": ["MANAGER_001"]
+    },
+    "hardFactors": {
+      "type": "object",
+      "description": "Observable candidate context from AGENTS.md.",
+      "additionalProperties": true,
+      "properties": {
+        "age": { "type": ["number", "null"], "examples": [32] },
+        "maritalStatus": { "type": ["string", "null"], "examples": ["MARRIED"] },
+        "yearsLivingInTown": { "type": ["number", "null"], "examples": [8] },
+        "career": { "type": ["string", "null"], "examples": ["Account Executive"] },
+        "employmentStatus": { "type": ["string", "null"], "examples": ["EMPLOYED"] }
+      },
+      "examples": [
+        {
+          "age": 32,
+          "maritalStatus": "MARRIED",
+          "yearsLivingInTown": 8,
+          "career": "Account Executive",
+          "employmentStatus": "EMPLOYED"
+        }
+      ]
+    },
+    "vitalFactors": {
+      "type": "object",
+      "description": "Manager-observed producer potential factors from AGENTS.md.",
+      "additionalProperties": true,
+      "properties": {
+        "mentalAgility": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "examples": [82] },
+        "drive": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "examples": [88] },
+        "energy": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "examples": [80] },
+        "moneyMotivation": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "examples": [76] },
+        "character": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "examples": [90] },
+        "successHistory": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "examples": [78] },
+        "retentionPotential": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "examples": [84] }
+      }
+    },
+    "source": {
+      "type": ["string", "null"],
+      "description": "Origin of candidate record.",
+      "examples": ["manager_referral"]
+    },
+    "createdAt": {
+      "type": ["string", "number", "null"],
+      "description": "Creation timestamp.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    },
+    "updatedAt": {
+      "type": ["string", "number", "null"],
+      "description": "Last update timestamp.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    }
+  },
+  "examples": [
+    {
+      "candidateId": "CANDIDATE_001",
+      "name": "Ana Lopez",
+      "status": "SCREENING",
+      "managerId": "MANAGER_001",
+      "hardFactors": {
+        "age": 32,
+        "maritalStatus": "MARRIED",
+        "yearsLivingInTown": 8,
+        "career": "Account Executive",
+        "employmentStatus": "EMPLOYED"
+      },
+      "vitalFactors": {
+        "mentalAgility": 82,
+        "drive": 88,
+        "energy": 80,
+        "moneyMotivation": 76,
+        "character": 90,
+        "successHistory": 78,
+        "retentionPotential": 84
+      }
+    }
+  ]
+}
