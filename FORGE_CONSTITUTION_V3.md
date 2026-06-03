@@ -33,6 +33,27 @@
 
 **Source:** `[Repository]` – Vision section of `AGENTS.md` and the architecture of the NASH and Relationship engines.
 
+## Constitutional Vision Statement
+
+Forge OS does not aspire to become the best CRM for advisors.
+
+Forge OS aspires to become:
+
+"The Best Advisor for Advisors."
+
+This statement is now considered a constitutional-level principle.
+
+**Meaning:**
+- Forge exists to augment advisors.
+- Forge exists to help advisors make better decisions.
+- Forge exists to help advisors sell more, retain more clients, generate more referrals, and create better client experiences.
+- Forge should transform information into judgment, recommendations, and action.
+- Every feature, engine, workflow, recommendation, report, dashboard, and intelligence layer should be evaluated against a single question:
+
+"Does this help Forge become the best advisor an advisor can have?"
+
+If the answer is no, the feature should be questioned.
+
 ---
 
 ## 4. Prime Directives
@@ -46,6 +67,7 @@
 | **No Projection Without Explicit Rates** | Future value projections are allowed only when rates are known and calculations reproducible; otherwise the projection stays unknown. | `[Constitutional]`. |
 | **Product Semantics > Number Extraction** | Understanding *what a product means* precedes any numeric handling; numbers alone are insufficient. | `[Constitutional]`. |
 | **Every Feature Must Improve Sales Capability** | Before a feature is approved, it must demonstrably help advisors sell more, retain clients, generate referrals, make better decisions, or improve client experience. | `[Repository + Constitutional]` – Strategic Prioritization by Revenue Impact (repo) + explicit “Every Feature Must Improve Sales Capability”. |
+| **The Best Advisor for Advisors** | Forge should continuously evolve toward becoming the best advisor an advisor can have. | `[Constitutional]` |
 
 ---
 
@@ -70,6 +92,7 @@
 | **Heuristics Rationale Documentation** | Hard‑coded regexes and lookup tables must be accompanied by rationale comments (future documentation). | `[Repository]` – Presence of extensive pattern lists. |
 | **Shared Knowledge vs. Private Data Separation** | Product knowledge resides in a shared library; user‑specific data stays isolated. | `[Constitutional]`. |
 | **No OCR/Number‑Extraction‑Only Processing** | OCR is allowed only as a *pre‑processing* step; downstream logic must attach product meaning. | `[Constitutional]`. |
+| **Best Advisor for Advisors** | All product features must be assessed for how they help Forge be the best advisor for advisors. | `[Constitutional]` |
 | **No Invented Data** | (Repeated for emphasis under product scope). | `[Constitutional]`. |
 
 ---
@@ -107,6 +130,7 @@
 | **Advisor‑Centric Empowerment** | The system augments the advisor, never replaces human judgment. | `[Repository + Constitutional]`. |
 | **Empathetic Interaction Philosophy** | UI/UX should convey warmth, rapport, and respect (Patch Adams, Hitch roles). | `[Repository]`. |
 | **Advisor‑First Design** | The advisor is the primary customer; UI flows prioritize advisor efficiency. | `[Constitutional]`. |
+| **Best Advisor for Advisors** | Evaluate every change against the constitutional vision of becoming the best advisor for advisors. | `[Constitutional]` |
 
 ---
 
@@ -156,6 +180,7 @@ Every engine output, UI report, or recommendation must answer the three question
 3. **What should happen next?** – Concrete next‑best‑action guidance, backed by confidence.
 
 **Source:** `[Constitutional]` (Decision Clarity First) & `[Repository]` (engine outputs).
+- Before approving any feature, ask: "Does this move Forge closer to becoming the best advisor for advisors?"
 
 ---
 
