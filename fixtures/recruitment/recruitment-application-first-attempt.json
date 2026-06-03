@@ -1,0 +1,35 @@
+{
+  "applicationId": "APPLICATION_DEMO_FIRST_001",
+  "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+  "candidateId": "CANDIDATE_DEMO_001",
+  "applicationStatus": "REJECTED",
+  "source": "manager_referral",
+  "currentManagerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_FIRST_001",
+  "currentOfficeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_FIRST_001",
+  "assessmentIds": ["ASSESSMENT_DEMO_FIRST_001"],
+  "interviewIds": ["INTERVIEW_DEMO_FIRST_001"],
+  "precontractCycleIds": ["PRECONTRACT_CYCLE_DEMO_EXPIRED_001"],
+  "eventHistory": [
+    {
+      "eventType": "APPLICATION_CREATED",
+      "occurredAt": "2026-01-05T15:00:00.000Z",
+      "actorId": "MANAGER_DEMO_001"
+    },
+    {
+      "eventType": "CANDIDATE_REJECTED",
+      "occurredAt": "2026-04-20T18:00:00.000Z",
+      "actorId": "MANAGER_DEMO_001",
+      "notes": "First attempt closed after key expiration and insufficient activity."
+    }
+  ],
+  "positiveScenario": {
+    "signal": "AUDITABLE_FIRST_ATTEMPT",
+    "reason": "The attempt is closed but remains attached to the durable recruit identity."
+  },
+  "riskScenario": {
+    "signal": "PREVIOUS_FAILURE",
+    "reason": "The first attempt ended with expired key and low activity."
+  },
+  "createdAt": "2026-01-05T15:00:00.000Z",
+  "updatedAt": "2026-04-20T18:00:00.000Z"
+}

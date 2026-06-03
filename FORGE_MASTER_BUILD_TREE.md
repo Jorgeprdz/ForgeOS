@@ -132,6 +132,8 @@
 ├── 🔵 Team Activity Tracking
 ├── 🔵 Advisor Scorecards
 ├── 🔵 Team Performance Engine
+├── 🔵 Recruitment Lifecycle Domain
+├── 🔵 Precontract Lifecycle Engine
 ├── 🔵 Coaching Suggestions
 ├── 🔵 Activity Alerts
 └── 🔵 Manager Notifications

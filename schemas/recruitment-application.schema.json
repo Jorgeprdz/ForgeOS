@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/recruitment-application.schema.json",
+  "title": "Forge Recruitment Application",
+  "description": "One attempt for a durable recruit identity to enter the advisor career path.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["applicationId", "recruitIdentityId", "candidateId", "applicationStatus", "createdAt"],
+  "properties": {
+    "applicationId": {
+      "type": "string",
+      "description": "Specific recruitment attempt identifier.",
+      "examples": ["APPLICATION_DEMO_001"]
+    },
+    "recruitIdentityId": {
+      "type": "string",
+      "description": "Durable person identity. This survives multiple applications.",
+      "examples": ["RECRUIT_IDENTITY_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate record for this attempt. Not permanent person identity.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "applicationStatus": {
+      "type": "string",
+      "enum": ["NEW", "SCREENING", "INTERVIEWING", "ASSESSED", "SELECTED", "PRECONTRACT", "ON_HOLD", "REJECTED", "WITHDRAWN", "CONVERTED", "ARCHIVED"],
+      "description": "Current state of this recruitment attempt.",
+      "examples": ["PRECONTRACT"]
+    },
+    "source": {
+      "type": ["string", "null"],
+      "description": "Recruitment source.",
+      "examples": ["manager_referral"]
+    },
+    "currentManagerAssignmentId": {
+      "type": ["string", "null"],
+      "description": "Current manager assignment for this application.",
+      "examples": ["MANAGER_ASSIGNMENT_DEMO_001"]
+    },
+    "currentOfficeAssignmentId": {
+      "type": ["string", "null"],
+      "description": "Current office assignment for this application.",
+      "examples": ["OFFICE_ASSIGNMENT_DEMO_001"]
+    },
+    "assessmentIds": {
+      "type": "array",
+      "description": "Candidate assessment records linked to this application.",
+      "items": { "type": "string" },
+      "examples": [["ASSESSMENT_DEMO_001"]]
+    },
+    "interviewIds": {
+      "type": "array",
+      "description": "Interview records linked to this application.",
+      "items": { "type": "string" },
+      "examples": [["INTERVIEW_DEMO_001"]]
+    },
+    "precontractCycleIds": {
+      "type": "array",
+      "description": "Precontract cycles linked to this application.",
+      "items": { "type": "string" },
+      "examples": [["PRECONTRACT_CYCLE_DEMO_001"]]
+    },
+    "eventHistory": {
+      "type": "array",
+      "description": "Critical lifecycle events. Current state plus event history is the required hybrid lifecycle model.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["eventType", "occurredAt"],
+        "properties": {
+          "eventType": { "type": "string", "examples": ["APPLICATION_CREATED"] },
+          "occurredAt": { "type": "string", "examples": ["2026-06-03T12:00:00.000Z"] },
+          "actorId": { "type": ["string", "null"], "examples": ["MANAGER_DEMO_001"] },
+          "notes": { "type": ["string", "null"], "examples": ["Application created from manager referral."] }
+        }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "ISO timestamp when application was created.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    },
+    "updatedAt": {
+      "type": ["string", "null"],
+      "description": "ISO timestamp when application was last updated.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    }
+  },
+  "examples": [
+    {
+      "applicationId": "APPLICATION_DEMO_001",
+      "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "applicationStatus": "PRECONTRACT",
+      "source": "manager_referral",
+      "currentManagerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_001",
+      "currentOfficeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_001",
+      "assessmentIds": ["ASSESSMENT_DEMO_001"],
+      "interviewIds": ["INTERVIEW_DEMO_001"],
+      "precontractCycleIds": ["PRECONTRACT_CYCLE_DEMO_001"],
+      "eventHistory": [
+        {
+          "eventType": "APPLICATION_CREATED",
+          "occurredAt": "2026-06-03T12:00:00.000Z",
+          "actorId": "MANAGER_DEMO_001"
+        }
+      ],
+      "createdAt": "2026-06-03T12:00:00.000Z",
+      "updatedAt": "2026-06-03T12:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "applicationId": "APPLICATION_DEMO_MANAGER_CHANGE_001",
+  "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_002",
+  "candidateId": "CANDIDATE_DEMO_MANAGER_CHANGE_001",
+  "applicationStatus": "PRECONTRACT",
+  "source": "office_walk_in",
+  "currentManagerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_CHANGE_002",
+  "currentOfficeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_CHANGE_001",
+  "assessmentIds": ["ASSESSMENT_DEMO_MANAGER_CHANGE_001"],
+  "interviewIds": ["INTERVIEW_DEMO_MANAGER_CHANGE_001"],
+  "precontractCycleIds": ["PRECONTRACT_CYCLE_DEMO_MANAGER_CHANGE_001"],
+  "managerAssignments": [
+    {
+      "managerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_CHANGE_001",
+      "managerId": "MANAGER_DEMO_001",
+      "assignmentStatus": "ENDED",
+      "assignmentReason": "INITIAL_OWNER",
+      "startedAt": "2026-04-01T10:00:00.000Z",
+      "endedAt": "2026-05-01T10:00:00.000Z"
+    },
+    {
+      "managerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_CHANGE_002",
+      "managerId": "MANAGER_DEMO_002",
+      "previousManagerId": "MANAGER_DEMO_001",
+      "assignmentStatus": "ACTIVE",
+      "assignmentReason": "MANAGER_TRANSFER",
+      "startedAt": "2026-05-01T10:00:00.000Z",
+      "endedAt": null
+    }
+  ],
+  "eventHistory": [
+    {
+      "eventType": "MANAGER_ASSIGNED",
+      "occurredAt": "2026-04-01T10:00:00.000Z",
+      "actorId": "DIRECTOR_DEMO_001"
+    },
+    {
+      "eventType": "MANAGER_CHANGED",
+      "occurredAt": "2026-05-01T10:00:00.000Z",
+      "actorId": "DIRECTOR_DEMO_001",
+      "notes": "Candidate moved to a manager with stronger precontract coaching capacity."
+    }
+  ],
+  "positiveScenario": {
+    "signal": "OWNERSHIP_AUDITABLE",
+    "reason": "Manager change is preserved as assignment history."
+  },
+  "riskScenario": {
+    "signal": "ATTRIBUTION_RISK",
+    "reason": "Progress could be attributed to the wrong manager without assignment history."
+  },
+  "createdAt": "2026-04-01T10:00:00.000Z",
+  "updatedAt": "2026-05-01T10:00:00.000Z"
+}

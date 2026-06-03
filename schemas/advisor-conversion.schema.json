@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/advisor-conversion.schema.json",
+  "title": "Forge Advisor Conversion",
+  "description": "Conversion event from recruitment application or precontract cycle into advisor.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["advisorConversionId", "applicationId", "recruitIdentityId", "candidateId", "advisorId", "conversionStatus", "convertedAt"],
+  "properties": {
+    "advisorConversionId": {
+      "type": "string",
+      "examples": ["ADVISOR_CONVERSION_DEMO_001"]
+    },
+    "applicationId": {
+      "type": "string",
+      "examples": ["APPLICATION_DEMO_001"]
+    },
+    "recruitIdentityId": {
+      "type": "string",
+      "examples": ["RECRUIT_IDENTITY_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate attempt that converted. Not durable person identity.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "cycleId": {
+      "type": ["string", "null"],
+      "description": "Precontract cycle that produced conversion when applicable.",
+      "examples": ["PRECONTRACT_CYCLE_DEMO_001"]
+    },
+    "advisorId": {
+      "type": "string",
+      "description": "Advisor identity created or linked by conversion.",
+      "examples": ["ADVISOR_DEMO_001"]
+    },
+    "managerId": {
+      "type": ["string", "null"],
+      "examples": ["MANAGER_DEMO_001"]
+    },
+    "officeId": {
+      "type": ["string", "null"],
+      "examples": ["OFFICE_DEMO_001"]
+    },
+    "conversionStatus": {
+      "type": "string",
+      "enum": ["PENDING", "COMPLETED", "REVERSED"],
+      "examples": ["COMPLETED"]
+    },
+    "convertedAt": {
+      "type": "string",
+      "examples": ["2026-08-18T12:00:00.000Z"]
+    },
+    "contractSignedAt": {
+      "type": ["string", "null"],
+      "examples": ["2026-08-18T12:00:00.000Z"]
+    },
+    "ruleSnapshot": {
+      "type": ["object", "null"],
+      "description": "Rules snapshot used to evaluate conversion readiness. Do not recalculate historical conversion under newer rules.",
+      "additionalProperties": true
+    },
+    "conversionReason": {
+      "type": ["string", "null"],
+      "examples": ["Candidate met the configured office readiness criteria."]
+    },
+    "eventHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["eventType", "occurredAt"],
+        "properties": {
+          "eventType": { "type": "string", "examples": ["ADVISOR_CONVERSION_COMPLETED"] },
+          "occurredAt": { "type": "string", "examples": ["2026-08-18T12:00:00.000Z"] },
+          "actorId": { "type": ["string", "null"], "examples": ["MANAGER_DEMO_001"] }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "advisorConversionId": "ADVISOR_CONVERSION_DEMO_001",
+      "applicationId": "APPLICATION_DEMO_001",
+      "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "cycleId": "PRECONTRACT_CYCLE_DEMO_001",
+      "advisorId": "ADVISOR_DEMO_001",
+      "managerId": "MANAGER_DEMO_001",
+      "officeId": "OFFICE_DEMO_001",
+      "conversionStatus": "COMPLETED",
+      "convertedAt": "2026-08-18T12:00:00.000Z",
+      "contractSignedAt": "2026-08-18T12:00:00.000Z",
+      "conversionReason": "Candidate met the configured office readiness criteria.",
+      "eventHistory": [
+        {
+          "eventType": "ADVISOR_CONVERSION_COMPLETED",
+          "occurredAt": "2026-08-18T12:00:00.000Z",
+          "actorId": "MANAGER_DEMO_001"
+        }
+      ]
+    }
+  ]
+}

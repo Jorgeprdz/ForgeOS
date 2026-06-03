@@ -1,0 +1,39 @@
+{
+  "applicationId": "APPLICATION_DEMO_REENTRY_001",
+  "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+  "candidateId": "CANDIDATE_DEMO_REENTRY_001",
+  "applicationStatus": "PRECONTRACT",
+  "source": "reentry_review",
+  "currentManagerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_REENTRY_002",
+  "currentOfficeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_REENTRY_001",
+  "assessmentIds": ["ASSESSMENT_DEMO_REENTRY_001"],
+  "interviewIds": ["INTERVIEW_DEMO_REENTRY_001"],
+  "precontractCycleIds": ["PRECONTRACT_CYCLE_DEMO_ACTIVE_001", "PRECONTRACT_CYCLE_DEMO_REACTIVATED_001"],
+  "eventHistory": [
+    {
+      "eventType": "RE_ENTRY_REQUESTED",
+      "occurredAt": "2026-05-10T14:00:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    },
+    {
+      "eventType": "PREVIOUS_HISTORY_ATTACHED",
+      "occurredAt": "2026-05-10T14:05:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    },
+    {
+      "eventType": "APPLICATION_CREATED",
+      "occurredAt": "2026-05-11T10:00:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    }
+  ],
+  "positiveScenario": {
+    "signal": "REENTRY_REVIEWED",
+    "reason": "Reentry application references previous history before precontract work continues."
+  },
+  "riskScenario": {
+    "signal": "REENTRY_WITH_PRIOR_EXPIRATION",
+    "reason": "The recruit has one prior expired cycle and needs stricter coaching."
+  },
+  "createdAt": "2026-05-11T10:00:00.000Z",
+  "updatedAt": "2026-06-18T12:00:00.000Z"
+}

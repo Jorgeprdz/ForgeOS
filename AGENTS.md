@@ -406,9 +406,11 @@ Future Major Area
 Includes:
 
 - Recruitment Intelligence
+- Recruitment Lifecycle Domain
 - Candidate Intelligence
 - Interview Intelligence
 - Precontract Intelligence
+- Precontract Lifecycle Engine
 - Training Intelligence
 - Development Intelligence
 - Team Intelligence
@@ -445,13 +447,58 @@ Help managers identify future producers.
 
 ---
 
+## Recruitment Lifecycle Domain
+
+Conceptual Model:
+
+RecruitIdentity
+→ RecruitmentApplication[]
+→ CandidateAssessment[]
+→ Interview[]
+→ ManagerAssignment[]
+→ OfficeAssignment[]
+→ PrecontractCycle[]
+→ AdvisorConversion?
+
+Principles:
+
+- RecruitIdentity is the durable person identity.
+- candidateId is not permanent identity.
+- applicationId represents one attempt to enter.
+- cycleId represents one precontract cycle.
+- Manager and office changes are assignments or events, not overwrites.
+- Each precontract cycle stores the rules snapshot used at that time.
+- Historical cycles must not be recalculated with new rules except as separate analysis.
+- Recruitment uses a hybrid lifecycle: current state plus critical event history.
+
+---
+
 ## Precontract Intelligence
 
-Business Rules:
+Precontract Lifecycle Engine:
 
-- 90 day window
-- 8 policies minimum
-- $24,000 MXN commissions minimum
+Precontract is not a fixed 90-day rule.
+
+It must support:
+
+- Informal activity before key activation
+- Key activation date
+- Configurable official window
+- Key expiration
+- Key reactivation
+- Multiple precontract cycles
+- Accumulated lifecycle history
+
+Rules Source:
+
+- Organization Profile
+- Office Rules Config
+
+Do not hardcode:
+
+- Days
+- Minimum number of policies
+- Minimum commission amount
 
 Outputs:
 
@@ -459,6 +506,8 @@ Outputs:
 - Risk
 - Progress
 - Probability of Success
+- Lifecycle Stage
+- Cycle History
 
 ---
 

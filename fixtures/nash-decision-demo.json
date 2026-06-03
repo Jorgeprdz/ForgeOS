@@ -1,0 +1,89 @@
+{
+  "engine": "NASH_MASTER_INTELLIGENCE_ENGINE",
+  "version": "1.0",
+  "advisor": {
+    "advisorId": "ADVISOR_DEMO_001",
+    "performanceScore": 78,
+    "biggestBottleneck": "CLOSING"
+  },
+  "prospect": {
+    "prospectId": "PROSPECT_DEMO_001",
+    "context": {
+      "name": "Maria Demo",
+      "channel": "WHATSAPP",
+      "notes": [
+        "Synthetic prospect for NASH testing.",
+        "Values family protection."
+      ]
+    },
+    "memoryPatterns": {
+      "conversations": 2,
+      "objections": 1,
+      "lastOutcome": "NEEDS_RESPONSE"
+    }
+  },
+  "personality": {
+    "personality": "PROTECTOR",
+    "confidence": 85
+  },
+  "intent": {
+    "rawText": "No tengo dinero ahorita.",
+    "primaryIntent": "REAL_BUDGET_CONSTRAINT",
+    "confidence": 80,
+    "possibleIntents": ["REAL_BUDGET_CONSTRAINT", "VALUE_NOT_CLEAR"],
+    "commercialSignal": "OBJECTION",
+    "recommendedStrategy": "Validate cash flow and clarify priority.",
+    "psychology": "Prospect may have a real short-term liquidity concern.",
+    "nextBestActionHint": "Ask a short clarifying question."
+  },
+  "objection": {
+    "type": "FINANCIAL",
+    "text": "No tengo dinero ahorita.",
+    "response": "Entiendo. Antes de hablar de montos, vale la pena separar si es flujo de este mes o si no ves prioridad todavia."
+  },
+  "psychology": {
+    "visibleObjection": "No tengo dinero ahorita.",
+    "probableIntent": "REAL_BUDGET_CONSTRAINT",
+    "personality": "PROTECTOR",
+    "psychology": "Puede existir una limitacion real de flujo. La respuesta debe validar la situacion y explorar opciones sin presionar.",
+    "recommendedStrategy": "Validar flujo y explorar escenarios.",
+    "risk": "Presionar puede generar rechazo o culpa."
+  },
+  "recommendedResponse": "Entiendo. Antes de hablar de montos, vale la pena separar si es flujo de este mes o si no ves prioridad todavia.",
+  "nextBestAction": {
+    "action": "ASK_CLARIFYING_QUESTION",
+    "reason": "Clarify whether the objection is temporary cash flow or low priority.",
+    "priority": "HIGH"
+  },
+  "advisorInsight": {
+    "learningInsight": "Advisor should keep the next message short and action-oriented.",
+    "recommendation": "Avoid sending a long PDF as the first reaction.",
+    "performanceScore": 78,
+    "biggestBottleneck": "CLOSING",
+    "strongestArea": "DISCOVERY"
+  },
+  "coachingInsight": {
+    "advisorId": "ADVISOR_DEMO_001",
+    "coachingPriority": "OBJECTION_CLARITY",
+    "recommendedDrill": "Practice one-question budget clarification."
+  },
+  "managerInsight": {
+    "advisorId": "ADVISOR_DEMO_001",
+    "alertLevel": "MEDIUM",
+    "message": "Advisor should improve objection response precision."
+  },
+  "teamInsight": {
+    "teamRisk": "LOW",
+    "advisorsNeedingCoaching": ["ADVISOR_DEMO_001"],
+    "advisorsPerformingWell": []
+  },
+  "positiveScenario": {
+    "signal": "CLEAR_INTENT",
+    "reason": "Intent and next best action are specific."
+  },
+  "riskScenario": {
+    "signal": "PRESSURE_RISK",
+    "reason": "A pushy response could increase resistance."
+  },
+  "confidence": 78
+}

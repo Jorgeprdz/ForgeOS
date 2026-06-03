@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/recruit-identity.schema.json",
+  "title": "Forge Recruit Identity",
+  "description": "Durable person identity across all recruitment attempts. candidateId is not permanent identity.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["recruitIdentityId", "displayName", "identityStatus"],
+  "properties": {
+    "recruitIdentityId": {
+      "type": "string",
+      "description": "Durable person identity used across applications, reentries, offices and managers.",
+      "examples": ["RECRUIT_IDENTITY_DEMO_001"]
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Recruit display name.",
+      "examples": ["Sofia Martinez"]
+    },
+    "identityStatus": {
+      "type": "string",
+      "enum": ["ACTIVE", "DUPLICATE_REVIEW", "MERGED_DUPLICATE", "DO_NOT_RECRUIT", "ARCHIVED"],
+      "description": "Status of the durable recruit identity.",
+      "examples": ["ACTIVE"]
+    },
+    "canonicalCandidateIds": {
+      "type": "array",
+      "description": "Candidate IDs associated with this person across attempts.",
+      "items": { "type": "string" },
+      "examples": [["CANDIDATE_DEMO_001"]]
+    },
+    "applicationIds": {
+      "type": "array",
+      "description": "Recruitment applications linked to this identity.",
+      "items": { "type": "string" },
+      "examples": [["APPLICATION_DEMO_001"]]
+    },
+    "knownOfficeIds": {
+      "type": "array",
+      "description": "Offices previously associated with this identity.",
+      "items": { "type": "string" },
+      "examples": [["OFFICE_DEMO_001"]]
+    },
+    "knownManagerIds": {
+      "type": "array",
+      "description": "Managers previously associated with this identity.",
+      "items": { "type": "string" },
+      "examples": [["MANAGER_DEMO_001"]]
+    },
+    "duplicateReview": {
+      "type": "object",
+      "description": "Duplicate review metadata when identity matching is uncertain.",
+      "additionalProperties": true,
+      "properties": {
+        "status": { "type": ["string", "null"], "examples": ["CLEAR"] },
+        "matchedRecruitIdentityIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": [[]]
+        },
+        "reviewedAt": { "type": ["string", "null"], "examples": ["2026-06-03T12:00:00.000Z"] },
+        "reviewedBy": { "type": ["string", "null"], "examples": ["MANAGER_DEMO_001"] }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "ISO timestamp when identity was created.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    },
+    "updatedAt": {
+      "type": "string",
+      "description": "ISO timestamp when identity was last updated.",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    }
+  },
+  "examples": [
+    {
+      "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+      "displayName": "Sofia Martinez",
+      "identityStatus": "ACTIVE",
+      "canonicalCandidateIds": ["CANDIDATE_DEMO_001"],
+      "applicationIds": ["APPLICATION_DEMO_001"],
+      "knownOfficeIds": ["OFFICE_DEMO_001"],
+      "knownManagerIds": ["MANAGER_DEMO_001"],
+      "duplicateReview": {
+        "status": "CLEAR",
+        "matchedRecruitIdentityIds": [],
+        "reviewedAt": "2026-06-03T12:00:00.000Z",
+        "reviewedBy": "MANAGER_DEMO_001"
+      },
+      "createdAt": "2026-06-03T12:00:00.000Z",
+      "updatedAt": "2026-06-03T12:00:00.000Z"
+    }
+  ]
+}

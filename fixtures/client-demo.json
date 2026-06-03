@@ -1,0 +1,25 @@
+{
+  "clientId": "CLIENT_DEMO_001",
+  "id": "CLIENT_DEMO_001",
+  "name": "Carla Demo",
+  "advisorId": "ADVISOR_DEMO_001",
+  "relationshipStatus": "ACTIVE_CLIENT",
+  "relationshipHealth": "YELLOW",
+  "relationshipScore": 72,
+  "preferredChannel": "WHATSAPP",
+  "clientSince": "2021-04-15T00:00:00.000Z",
+  "policyCount": 2,
+  "phone": "+525500000002",
+  "email": "carla.demo@example.test",
+  "notes": "Synthetic client with positive engagement but upcoming review risk.",
+  "positiveScenario": {
+    "signal": "POSITIVE_RECENT_RESPONSE",
+    "reason": "Client responded positively in the last interaction."
+  },
+  "riskScenario": {
+    "signal": "REVIEW_DUE_SOON",
+    "reason": "One policy review date is approaching."
+  },
+  "createdAt": "2026-06-03T12:00:00.000Z",
+  "updatedAt": "2026-06-03T12:00:00.000Z"
+}

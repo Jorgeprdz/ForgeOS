@@ -1,0 +1,56 @@
+{
+  "applicationId": "APPLICATION_DEMO_OFFICE_CHANGE_001",
+  "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_003",
+  "candidateId": "CANDIDATE_DEMO_OFFICE_CHANGE_001",
+  "applicationStatus": "PRECONTRACT",
+  "source": "referral_network",
+  "currentManagerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_OFFICE_CHANGE_001",
+  "currentOfficeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_CHANGE_002",
+  "assessmentIds": ["ASSESSMENT_DEMO_OFFICE_CHANGE_001"],
+  "interviewIds": ["INTERVIEW_DEMO_OFFICE_CHANGE_001"],
+  "precontractCycleIds": ["PRECONTRACT_CYCLE_DEMO_OFFICE_CHANGE_001"],
+  "officeAssignments": [
+    {
+      "officeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_CHANGE_001",
+      "officeId": "OFFICE_DEMO_001",
+      "assignmentStatus": "ENDED",
+      "assignmentReason": "INITIAL_OFFICE",
+      "officeRulesConfigId": "OFFICE_RULES_DEMO_001",
+      "startedAt": "2026-03-05T11:00:00.000Z",
+      "endedAt": "2026-04-10T11:00:00.000Z"
+    },
+    {
+      "officeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_CHANGE_002",
+      "officeId": "OFFICE_DEMO_002",
+      "previousOfficeId": "OFFICE_DEMO_001",
+      "assignmentStatus": "ACTIVE",
+      "assignmentReason": "OFFICE_TRANSFER",
+      "officeRulesConfigId": "OFFICE_RULES_DEMO_002",
+      "startedAt": "2026-04-10T11:00:00.000Z",
+      "endedAt": null
+    }
+  ],
+  "eventHistory": [
+    {
+      "eventType": "OFFICE_ASSIGNED",
+      "occurredAt": "2026-03-05T11:00:00.000Z",
+      "actorId": "DIRECTOR_DEMO_001"
+    },
+    {
+      "eventType": "OFFICE_CHANGED",
+      "occurredAt": "2026-04-10T11:00:00.000Z",
+      "actorId": "DIRECTOR_DEMO_001",
+      "notes": "Candidate transferred offices; rule snapshots must remain cycle-specific."
+    }
+  ],
+  "positiveScenario": {
+    "signal": "OFFICE_TRANSFER_AUDITABLE",
+    "reason": "Office change preserves assignment history and rule config lineage."
+  },
+  "riskScenario": {
+    "signal": "RULE_SHOPPING_RISK",
+    "reason": "Office transfer could be used to seek easier rules if not reviewed."
+  },
+  "createdAt": "2026-03-05T11:00:00.000Z",
+  "updatedAt": "2026-04-10T11:00:00.000Z"
+}

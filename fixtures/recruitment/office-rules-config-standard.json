@@ -1,0 +1,56 @@
+{
+  "rulesConfigId": "OFFICE_RULES_STANDARD_DEMO_001",
+  "officeRulesConfigId": "OFFICE_RULES_STANDARD_DEMO_001",
+  "organizationId": "ORG_DEMO_001",
+  "officeId": "OFFICE_DEMO_001",
+  "rulesVersion": "standard-demo-v1",
+  "currency": "MXN",
+  "effectiveFrom": "2026-06-01T00:00:00.000Z",
+  "effectiveTo": null,
+  "capturedAt": "2026-06-01T00:00:00.000Z",
+  "officialWindowDays": 75,
+  "minimumPolicies": 6,
+  "minimumCommissions": 18000,
+  "precontractRules": {
+    "officialWindowDays": 75,
+    "minimumPolicies": 6,
+    "minimumCommissionAmount": 18000,
+    "allowInformalProduction": false,
+    "validPolicyDefinition": "ISSUED_AND_ACCEPTED",
+    "validCommissionDefinition": "PAID_COMMISSION"
+  },
+  "reactivationRules": {
+    "reactivationAllowed": true,
+    "maximumReactivations": 2,
+    "cooldownDays": 10,
+    "requiresManagerApproval": true,
+    "requiresDirectorApproval": false,
+    "carryForwardPreviousProgress": false
+  },
+  "contractingCriteria": {
+    "requiresCompletedTraining": true,
+    "requiresManagerApproval": true,
+    "requiresOfficeApproval": true,
+    "requiresComplianceReview": false,
+    "minimumInterviewScore": 70,
+    "minimumAssessmentScore": 75
+  },
+  "scoringWeights": {
+    "hardFactors": 20,
+    "vitalFactors": 30,
+    "interview": 20,
+    "activity": 15,
+    "production": 10,
+    "coachability": 5
+  },
+  "createdAt": "2026-06-01T00:00:00.000Z",
+  "updatedAt": "2026-06-03T00:00:00.000Z",
+  "positiveScenario": {
+    "signal": "BALANCED_RULES",
+    "reason": "Standard config balances assessment, activity and production."
+  },
+  "riskScenario": {
+    "signal": "MID_CYCLE_CHANGE_RISK",
+    "reason": "Historical cycles must keep snapshots if active office rules change."
+  }
+}

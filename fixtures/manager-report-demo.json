@@ -1,0 +1,33 @@
+{
+  "managerId": "MANAGER_DEMO_001",
+  "teamId": "TEAM_DEMO_001",
+  "reportType": "TEAM_INTELLIGENCE",
+  "generatedAt": "2026-06-03T12:00:00.000Z",
+  "summary": "Synthetic manager report showing one advisor with good discovery discipline and one coaching risk around closing.",
+  "advisorIds": ["ADVISOR_DEMO_001", "ADVISOR_DEMO_RISK_001"],
+  "riskLevel": "MEDIUM",
+  "coachingPriorities": ["OBJECTION_CLARITY", "FOLLOWUP_DISCIPLINE"],
+  "recommendedActions": [
+    {
+      "action": "RUN_OBJECTION_CLARITY_DRILL",
+      "reason": "Advisor needs to separate real budget constraints from low-priority objections.",
+      "ownerId": "MANAGER_DEMO_001",
+      "dueDate": "2026-06-07T00:00:00.000Z"
+    },
+    {
+      "action": "REVIEW_FOLLOWUP_QUEUE",
+      "reason": "Several synthetic opportunities lack next scheduled actions.",
+      "ownerId": "MANAGER_DEMO_001",
+      "dueDate": "2026-06-05T00:00:00.000Z"
+    }
+  ],
+  "positiveScenario": {
+    "signal": "COACHABLE_PATTERN",
+    "reason": "The issue is specific enough to coach with a drill."
+  },
+  "riskScenario": {
+    "signal": "PIPELINE_STALL",
+    "reason": "No next action can turn active opportunities into stalled conversations."
+  },
+  "confidence": 76
+}

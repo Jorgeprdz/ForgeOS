@@ -1,0 +1,24 @@
+{
+  "advisorId": "ADVISOR_DEMO_001",
+  "name": "Alex Rivera",
+  "status": "ACTIVE",
+  "managerId": "MANAGER_DEMO_001",
+  "primaryTrait": "CONSULTIVE",
+  "secondaryTraits": ["RELATIONSHIP_BUILDER", "DISCIPLINED_FOLLOWUP"],
+  "preferredChannels": ["WHATSAPP", "PHONE"],
+  "strongestStage": "DISCOVERY",
+  "weakestStage": "CLOSING",
+  "performanceScore": 78,
+  "confidence": 82,
+  "positiveScenario": {
+    "signal": "CONSULTATIVE_DISCOVERY",
+    "reason": "Advisor shows a strong discovery stage and relationship-building profile."
+  },
+  "riskScenario": {
+    "riskType": "FOLLOWUP_GAP",
+    "reason": "Several opportunities have no next scheduled action.",
+    "priority": "MEDIUM"
+  },
+  "createdAt": "2026-06-03T12:00:00.000Z",
+  "updatedAt": "2026-06-03T12:00:00.000Z"
+}

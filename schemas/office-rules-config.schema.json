@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/office-rules-config.schema.json",
+  "title": "Forge Office Rules Config",
+  "description": "Configurable recruitment and precontract rules for an office. These values are organization/office configuration, not Forge constants.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["officeRulesConfigId", "organizationId", "officeId", "currency", "effectiveFrom", "precontractRules", "reactivationRules", "contractingCriteria", "scoringWeights"],
+  "properties": {
+    "officeRulesConfigId": {
+      "type": "string",
+      "description": "Stable office rules config identifier.",
+      "examples": ["OFFICE_RULES_DEMO_001"]
+    },
+    "organizationId": {
+      "type": "string",
+      "description": "Organization that owns this rules config.",
+      "examples": ["ORG_DEMO_001"]
+    },
+    "officeId": {
+      "type": "string",
+      "description": "Office that uses this config.",
+      "examples": ["OFFICE_DEMO_001"]
+    },
+    "rulesVersion": {
+      "type": ["string", "null"],
+      "description": "Version label for audit snapshots.",
+      "examples": ["office-demo-rules-a"]
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency used by commission criteria.",
+      "examples": ["MXN"]
+    },
+    "effectiveFrom": {
+      "type": "string",
+      "description": "ISO timestamp when this config becomes effective.",
+      "examples": ["2026-06-01T00:00:00.000Z"]
+    },
+    "effectiveTo": {
+      "type": ["string", "null"],
+      "description": "ISO timestamp when this config stops being effective, if known.",
+      "examples": ["2026-12-31T23:59:59.000Z"]
+    },
+    "precontractRules": {
+      "type": "object",
+      "description": "Configurable precontract rules. Do not treat these values as global Forge constants.",
+      "additionalProperties": true,
+      "required": ["officialWindowDays", "minimumPolicies", "minimumCommissionAmount"],
+      "properties": {
+        "officialWindowDays": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Configurable duration of the official window. Precontract cycle key-clock metrics derive from this value and lifecycle timestamps."
+        },
+        "minimumPolicies": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Configurable minimum policy count."
+        },
+        "minimumCommissionAmount": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Configurable minimum commission amount."
+        },
+        "allowInformalProduction": {
+          "type": ["boolean", "null"],
+          "description": "Whether informal activity before key activation can count."
+        },
+        "validPolicyDefinition": {
+          "type": ["string", "null"],
+          "description": "Office definition of a valid policy for this rule set.",
+          "examples": ["ISSUED_AND_ACCEPTED"]
+        },
+        "validCommissionDefinition": {
+          "type": ["string", "null"],
+          "description": "Office definition of valid commission for this rule set.",
+          "examples": ["PAID_COMMISSION"]
+        }
+      }
+    },
+    "reactivationRules": {
+      "type": "object",
+      "description": "Configurable reactivation rules.",
+      "additionalProperties": true,
+      "properties": {
+        "reactivationAllowed": { "type": ["boolean", "null"], "examples": [true] },
+        "maximumReactivations": { "type": ["number", "null"], "minimum": 0 },
+        "cooldownDays": { "type": ["number", "null"], "minimum": 0 },
+        "requiresManagerApproval": { "type": ["boolean", "null"], "examples": [true] },
+        "requiresDirectorApproval": { "type": ["boolean", "null"], "examples": [false] },
+        "carryForwardPreviousProgress": { "type": ["boolean", "null"], "examples": [false] }
+      }
+    },
+    "contractingCriteria": {
+      "type": "object",
+      "description": "Configurable criteria for converting candidate to contracted advisor.",
+      "additionalProperties": true,
+      "properties": {
+        "requiresCompletedTraining": { "type": ["boolean", "null"], "examples": [true] },
+        "requiresManagerApproval": { "type": ["boolean", "null"], "examples": [true] },
+        "requiresOfficeApproval": { "type": ["boolean", "null"], "examples": [true] },
+        "requiresComplianceReview": { "type": ["boolean", "null"], "examples": [false] },
+        "minimumInterviewScore": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "minimumAssessmentScore": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+      }
+    },
+    "scoringWeights": {
+      "type": "object",
+      "description": "Configurable scoring weights for recruitment decisions.",
+      "additionalProperties": true,
+      "properties": {
+        "hardFactors": { "type": ["number", "null"], "minimum": 0 },
+        "vitalFactors": { "type": ["number", "null"], "minimum": 0 },
+        "interview": { "type": ["number", "null"], "minimum": 0 },
+        "activity": { "type": ["number", "null"], "minimum": 0 },
+        "production": { "type": ["number", "null"], "minimum": 0 },
+        "coachability": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "createdAt": {
+      "type": ["string", "null"],
+      "description": "ISO timestamp when config was created.",
+      "examples": ["2026-06-01T00:00:00.000Z"]
+    },
+    "updatedAt": {
+      "type": ["string", "null"],
+      "description": "ISO timestamp when config was last updated.",
+      "examples": ["2026-06-03T00:00:00.000Z"]
+    }
+  },
+  "examples": [
+    {
+      "officeRulesConfigId": "OFFICE_RULES_DEMO_001",
+      "organizationId": "ORG_DEMO_001",
+      "officeId": "OFFICE_DEMO_001",
+      "rulesVersion": "office-demo-rules-a",
+      "currency": "MXN",
+      "effectiveFrom": "2026-06-01T00:00:00.000Z",
+      "effectiveTo": null,
+      "precontractRules": {
+        "officialWindowDays": 75,
+        "minimumPolicies": 6,
+        "minimumCommissionAmount": 18000,
+        "allowInformalProduction": false,
+        "validPolicyDefinition": "ISSUED_AND_ACCEPTED",
+        "validCommissionDefinition": "PAID_COMMISSION"
+      },
+      "reactivationRules": {
+        "reactivationAllowed": true,
+        "maximumReactivations": 2,
+        "cooldownDays": 10,
+        "requiresManagerApproval": true,
+        "requiresDirectorApproval": false,
+        "carryForwardPreviousProgress": false
+      },
+      "contractingCriteria": {
+        "requiresCompletedTraining": true,
+        "requiresManagerApproval": true,
+        "requiresOfficeApproval": true,
+        "requiresComplianceReview": false,
+        "minimumInterviewScore": 70,
+        "minimumAssessmentScore": 75
+      },
+      "scoringWeights": {
+        "hardFactors": 20,
+        "vitalFactors": 30,
+        "interview": 20,
+        "activity": 15,
+        "production": 10,
+        "coachability": 5
+      },
+      "createdAt": "2026-06-01T00:00:00.000Z",
+      "updatedAt": "2026-06-03T00:00:00.000Z"
+    }
+  ]
+}

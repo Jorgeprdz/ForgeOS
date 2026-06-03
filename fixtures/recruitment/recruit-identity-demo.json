@@ -1,0 +1,43 @@
+{
+  "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+  "displayName": "Sofia Martinez Demo",
+  "identityStatus": "ACTIVE",
+  "canonicalCandidateIds": ["CANDIDATE_DEMO_001", "CANDIDATE_DEMO_REENTRY_001"],
+  "applicationIds": ["APPLICATION_DEMO_FIRST_001", "APPLICATION_DEMO_REENTRY_001"],
+  "knownOfficeIds": ["OFFICE_DEMO_001", "OFFICE_DEMO_002"],
+  "knownManagerIds": ["MANAGER_DEMO_001", "MANAGER_DEMO_002"],
+  "duplicateReview": {
+    "status": "CLEAR",
+    "matchedRecruitIdentityIds": [],
+    "reviewedAt": "2026-06-03T12:00:00.000Z",
+    "reviewedBy": "MANAGER_DEMO_001"
+  },
+  "historySummary": {
+    "totalApplications": 2,
+    "totalPrecontractCycles": 3,
+    "previousOutcome": "KEY_EXPIRED",
+    "latestOutcome": "CONVERTED"
+  },
+  "eventHistory": [
+    {
+      "eventType": "RECRUIT_IDENTITY_CREATED",
+      "occurredAt": "2026-01-05T15:00:00.000Z",
+      "actorId": "MANAGER_DEMO_001"
+    },
+    {
+      "eventType": "PREVIOUS_HISTORY_ATTACHED",
+      "occurredAt": "2026-06-03T12:00:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    }
+  ],
+  "positiveScenario": {
+    "signal": "REENTRY_WITH_HISTORY",
+    "reason": "The durable identity preserves previous attempts and supports better manager decisions."
+  },
+  "riskScenario": {
+    "signal": "HISTORY_CAN_BE_IGNORED",
+    "reason": "A manager could evaluate the reentry as a new person if recruitIdentityId is not used."
+  },
+  "createdAt": "2026-01-05T15:00:00.000Z",
+  "updatedAt": "2026-06-03T12:00:00.000Z"
+}

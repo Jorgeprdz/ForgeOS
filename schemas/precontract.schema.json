@@ -2,10 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://forge-os.local/schemas/precontract.schema.json",
   "title": "Forge Precontract",
-  "description": "Precontract progress contract based on AGENTS.md business rules.",
+  "description": "Precontract lifecycle and progress contract. Rules come from Organization Profile / Office Rules Config, not hardcoded defaults.",
   "type": "object",
   "additionalProperties": true,
-  "required": ["precontractId", "candidateId", "managerId", "startDate", "deadlineDate", "progress", "contractReadiness"],
+  "required": ["precontractId", "candidateId", "managerId", "lifecycle", "progress", "contractReadiness"],
   "properties": {
     "precontractId": {
       "type": "string",
@@ -27,32 +27,71 @@
       "description": "Responsible manager.",
       "examples": ["MANAGER_001"]
     },
+    "organizationProfileId": {
+      "type": ["string", "null"],
+      "description": "Organization profile that owns precontract rules.",
+      "examples": ["ORG_PROFILE_DEMO_001"]
+    },
+    "officeRulesConfigId": {
+      "type": ["string", "null"],
+      "description": "Office-specific rules config used to evaluate this cycle.",
+      "examples": ["OFFICE_RULES_DEMO_001"]
+    },
     "startDate": {
-      "type": "string",
-      "description": "Precontract start date.",
-      "examples": ["2026-06-01"]
+      "type": ["string", "null"],
+      "description": "Compatibility alias for the active cycle start date. Prefer lifecycle.informalStartDate or lifecycle.keyActivationDate.",
+      "examples": ["2026-06-01T00:00:00.000Z"]
     },
     "deadlineDate": {
-      "type": "string",
-      "description": "90-day deadline date.",
-      "examples": ["2026-08-30"]
+      "type": ["string", "null"],
+      "description": "Compatibility alias for the active cycle deadline. Prefer lifecycle.officialWindowEndDate or lifecycle.keyExpirationDate.",
+      "examples": ["2026-08-30T00:00:00.000Z"]
     },
-    "businessRules": {
+    "lifecycle": {
       "type": "object",
-      "description": "Official precontract thresholds from AGENTS.md.",
+      "description": "Precontract lifecycle dates and status. This supports informal starts, key activation, expiration, reactivation and multiple cycles.",
+      "additionalProperties": true,
+      "required": ["cycleId", "lifecycleStage"],
+      "properties": {
+        "cycleId": { "type": "string", "examples": ["PRECONTRACT_CYCLE_DEMO_001"] },
+        "lifecycleStage": {
+          "type": "string",
+          "enum": ["INFORMAL", "KEY_ACTIVE", "OFFICIAL_WINDOW", "KEY_EXPIRED", "REACTIVATED", "CLOSED", "UNKNOWN"],
+          "examples": ["OFFICIAL_WINDOW"]
+        },
+        "informalStartDate": { "type": ["string", "null"], "examples": ["2026-05-15T00:00:00.000Z"] },
+        "keyActivationDate": { "type": ["string", "null"], "examples": ["2026-06-01T00:00:00.000Z"] },
+        "officialWindowStartDate": { "type": ["string", "null"], "examples": ["2026-06-01T00:00:00.000Z"] },
+        "officialWindowEndDate": { "type": ["string", "null"], "examples": ["2026-08-30T00:00:00.000Z"] },
+        "keyExpirationDate": { "type": ["string", "null"], "examples": ["2026-08-30T00:00:00.000Z"] },
+        "keyReactivationDate": { "type": ["string", "null"], "examples": ["2026-09-15T00:00:00.000Z"] }
+      }
+    },
+    "officeRulesSnapshot": {
+      "type": "object",
+      "description": "Snapshot of configurable organization or office rules used for this evaluation. Values are not global Forge constants.",
       "additionalProperties": true,
       "properties": {
-        "windowDays": { "type": "number", "const": 90, "examples": [90] },
-        "minimumPolicies": { "type": "number", "const": 8, "examples": [8] },
-        "minimumCommissionsMxn": { "type": "number", "const": 24000, "examples": [24000] }
-      },
-      "examples": [
-        {
-          "windowDays": 90,
-          "minimumPolicies": 8,
-          "minimumCommissionsMxn": 24000
+        "officialWindowDays": { "type": ["number", "null"] },
+        "minimumPolicies": { "type": ["number", "null"] },
+        "minimumCommissionsMxn": { "type": ["number", "null"] },
+        "currency": { "type": ["string", "null"], "examples": ["MXN"] }
+      }
+    },
+    "cycleHistory": {
+      "type": "array",
+      "description": "Accumulated history across one or more precontract cycles.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "cycleId": { "type": "string", "examples": ["PRECONTRACT_CYCLE_DEMO_001"] },
+          "stage": { "type": "string", "examples": ["OFFICIAL_WINDOW"] },
+          "startedAt": { "type": ["string", "null"], "examples": ["2026-06-01T00:00:00.000Z"] },
+          "endedAt": { "type": ["string", "null"], "examples": ["2026-08-30T00:00:00.000Z"] },
+          "outcome": { "type": ["string", "null"], "examples": ["AT_RISK"] }
         }
-      ]
+      }
     },
     "progress": {
       "type": "object",
@@ -107,12 +146,22 @@
       "precontractId": "PRECONTRACT_001",
       "candidateId": "CANDIDATE_001",
       "managerId": "MANAGER_001",
-      "startDate": "2026-06-01",
-      "deadlineDate": "2026-08-30",
-      "businessRules": {
-        "windowDays": 90,
-        "minimumPolicies": 8,
-        "minimumCommissionsMxn": 24000
+      "organizationProfileId": "ORG_PROFILE_001",
+      "officeRulesConfigId": "OFFICE_RULES_001",
+      "lifecycle": {
+        "cycleId": "PRECONTRACT_CYCLE_001",
+        "lifecycleStage": "OFFICIAL_WINDOW",
+        "informalStartDate": "2026-05-15T00:00:00.000Z",
+        "keyActivationDate": "2026-06-01T00:00:00.000Z",
+        "officialWindowStartDate": "2026-06-01T00:00:00.000Z",
+        "officialWindowEndDate": "2026-08-30T00:00:00.000Z",
+        "keyExpirationDate": "2026-08-30T00:00:00.000Z"
+      },
+      "officeRulesSnapshot": {
+        "officialWindowDays": 75,
+        "minimumPolicies": 6,
+        "minimumCommissionsMxn": 18000,
+        "currency": "MXN"
       },
       "progress": {
         "policiesIssued": 5,

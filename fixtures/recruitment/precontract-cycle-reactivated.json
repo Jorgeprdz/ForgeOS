@@ -1,0 +1,87 @@
+{
+  "cycleId": "PRECONTRACT_CYCLE_DEMO_REACTIVATED_001",
+  "applicationId": "APPLICATION_DEMO_REENTRY_001",
+  "candidateId": "CANDIDATE_DEMO_REENTRY_001",
+  "managerId": "MANAGER_DEMO_002",
+  "officeId": "OFFICE_DEMO_001",
+  "cycleStatus": "REACTIVATED",
+  "keyStatus": "REACTIVATED",
+  "lifecycle": {
+    "informalStartDate": "2026-05-11T10:00:00.000Z",
+    "keyActivationDate": "2026-06-01T10:00:00.000Z",
+    "keyActivatedAt": "2026-06-01T10:00:00.000Z",
+    "officialWindowStartDate": "2026-06-01T10:00:00.000Z",
+    "officialWindowStartedAt": "2026-08-25T10:00:00.000Z",
+    "officialWindowEndDate": "2026-08-15T10:00:00.000Z",
+    "officialWindowEndsAt": "2026-10-09T10:00:00.000Z",
+    "keyExpirationDate": "2026-08-15T10:00:00.000Z",
+    "keyReactivationDate": "2026-08-25T10:00:00.000Z",
+    "closedAt": null
+  },
+  "ruleSnapshot": {
+    "organizationProfileId": "ORG_PROFILE_DEMO_001",
+    "officeRulesConfigId": "OFFICE_RULES_DEMO_001",
+    "rulesVersion": "office-demo-rules-a-reactivation",
+    "capturedAt": "2026-08-25T10:00:00.000Z",
+    "officialWindowDays": 45,
+    "minimumPolicies": 3,
+    "minimumCommissionsMxn": 9000,
+    "currency": "MXN",
+    "reactivationAllowed": true
+  },
+  "derivedMetrics": {
+    "calculatedAt": "2026-09-10T12:00:00.000Z",
+    "daysWithActiveKey": 101,
+    "daysRemainingInOfficialWindow": 28,
+    "officialWindowProgressPercent": 36
+  },
+  "previousCycleIds": ["PRECONTRACT_CYCLE_DEMO_EXPIRED_001", "PRECONTRACT_CYCLE_DEMO_ACTIVE_001"],
+  "cycleHistory": [
+    {
+      "cycleId": "PRECONTRACT_CYCLE_DEMO_EXPIRED_001",
+      "outcome": "EXPIRED",
+      "closedAt": "2026-04-20T18:00:00.000Z"
+    },
+    {
+      "cycleId": "PRECONTRACT_CYCLE_DEMO_ACTIVE_001",
+      "outcome": "IN_PROGRESS",
+      "closedAt": null
+    }
+  ],
+  "progress": {
+    "policiesIssued": 2,
+    "commissionsMxn": 7000,
+    "appointments": 5,
+    "prospectsCreated": 11,
+    "trainingCompleted": 2
+  },
+  "risks": [
+    {
+      "riskType": "REACTIVATION_WITH_PRIOR_EXPIRATION",
+      "detectedAt": "2026-08-25T10:00:00.000Z",
+      "severity": "MEDIUM",
+      "reason": "Candidate has a previous expired cycle and needs close coaching."
+    }
+  ],
+  "outcome": "REACTIVATED",
+  "eventHistory": [
+    {
+      "eventType": "KEY_REACTIVATION_REQUESTED",
+      "occurredAt": "2026-08-20T10:00:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    },
+    {
+      "eventType": "KEY_REACTIVATED",
+      "occurredAt": "2026-08-25T10:00:00.000Z",
+      "actorId": "DIRECTOR_DEMO_001"
+    }
+  ],
+  "positiveScenario": {
+    "signal": "REACTIVATION_WITH_CONTEXT",
+    "reason": "Reactivation carries previous cycle history and a new rule snapshot."
+  },
+  "riskScenario": {
+    "signal": "REPEATED_CYCLE_RISK",
+    "reason": "Reactivation can hide poor activity if prior cycles are ignored."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "rulesConfigId": "OFFICE_RULES_STRICT_DEMO_001",
+  "officeRulesConfigId": "OFFICE_RULES_STRICT_DEMO_001",
+  "organizationId": "ORG_DEMO_001",
+  "officeId": "OFFICE_DEMO_001",
+  "rulesVersion": "strict-demo-v1",
+  "currency": "MXN",
+  "effectiveFrom": "2026-06-01T00:00:00.000Z",
+  "effectiveTo": null,
+  "capturedAt": "2026-06-01T00:00:00.000Z",
+  "officialWindowDays": 105,
+  "minimumPolicies": 9,
+  "minimumCommissions": 27000,
+  "precontractRules": {
+    "officialWindowDays": 105,
+    "minimumPolicies": 9,
+    "minimumCommissionAmount": 27000,
+    "allowInformalProduction": false,
+    "validPolicyDefinition": "ISSUED_ACCEPTED_AND_ACTIVE",
+    "validCommissionDefinition": "PAID_AND_RECONCILED_COMMISSION"
+  },
+  "reactivationRules": {
+    "reactivationAllowed": true,
+    "maximumReactivations": 1,
+    "cooldownDays": 20,
+    "requiresManagerApproval": true,
+    "requiresDirectorApproval": true,
+    "carryForwardPreviousProgress": false
+  },
+  "contractingCriteria": {
+    "requiresCompletedTraining": true,
+    "requiresManagerApproval": true,
+    "requiresOfficeApproval": true,
+    "requiresComplianceReview": true,
+    "minimumInterviewScore": 82,
+    "minimumAssessmentScore": 85
+  },
+  "scoringWeights": {
+    "hardFactors": 20,
+    "vitalFactors": 35,
+    "interview": 20,
+    "activity": 10,
+    "production": 10,
+    "coachability": 5
+  },
+  "createdAt": "2026-06-01T00:00:00.000Z",
+  "updatedAt": "2026-06-03T00:00:00.000Z",
+  "positiveScenario": {
+    "signal": "QUALITY_CONTROL",
+    "reason": "Strict config emphasizes quality and compliance before conversion."
+  },
+  "riskScenario": {
+    "signal": "SLOWER_CONVERSION",
+    "reason": "Higher thresholds may reduce speed and require more manager coaching."
+  }
+}

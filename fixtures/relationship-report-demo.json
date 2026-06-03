@@ -1,0 +1,60 @@
+{
+  "engine": "RELATIONSHIP_MASTER_ENGINE",
+  "version": "1.0",
+  "clientId": "CLIENT_DEMO_001",
+  "nextAction": {
+    "nextAction": "SCHEDULE_REVIEW",
+    "actionReason": "Policy review is approaching and the client recently responded positively.",
+    "priority": "HIGH"
+  },
+  "opportunities": [
+    {
+      "type": "REVIEW_OPPORTUNITY",
+      "reason": "Upcoming review date creates a practical reason to contact the client.",
+      "priority": "HIGH"
+    },
+    {
+      "type": "REFERRAL_TIMING",
+      "reason": "Positive recent interaction may support a soft referral conversation after service is completed.",
+      "priority": "MEDIUM"
+    }
+  ],
+  "lifeEvents": {
+    "detectedEvents": [
+      {
+        "type": "POLICY_REVIEW",
+        "date": "2026-06-20T00:00:00.000Z",
+        "priority": "HIGH",
+        "description": "Synthetic policy review event."
+      }
+    ],
+    "confidence": 72
+  },
+  "referralOpportunity": {
+    "referralLikelihood": "MEDIUM",
+    "confidence": 70,
+    "reason": "Relationship is positive but service action should happen first."
+  },
+  "relationshipHealth": {
+    "relationshipHealth": "YELLOW",
+    "riskFactors": ["REVIEW_DUE_SOON"],
+    "recommendation": "Schedule a review before asking for referrals."
+  },
+  "engagement": {
+    "engagementScore": 84,
+    "lastInteraction": "2026-06-01T09:30:00.000Z"
+  },
+  "reviewRecommendation": {
+    "reviewNeeded": true,
+    "reason": "Review date is within the synthetic service window."
+  },
+  "positiveScenario": {
+    "signal": "SERVICE_REASON_TO_CONTACT",
+    "reason": "The advisor has a clear client-first reason to reach out."
+  },
+  "riskScenario": {
+    "signal": "REFERRAL_TOO_EARLY",
+    "reason": "Referral ask should wait until review service is handled."
+  },
+  "confidence": 78
+}

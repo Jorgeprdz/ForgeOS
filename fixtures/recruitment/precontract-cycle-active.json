@@ -1,0 +1,73 @@
+{
+  "cycleId": "PRECONTRACT_CYCLE_DEMO_ACTIVE_001",
+  "applicationId": "APPLICATION_DEMO_REENTRY_001",
+  "candidateId": "CANDIDATE_DEMO_REENTRY_001",
+  "managerId": "MANAGER_DEMO_002",
+  "officeId": "OFFICE_DEMO_001",
+  "cycleStatus": "OFFICIAL_WINDOW",
+  "keyStatus": "ACTIVE",
+  "lifecycle": {
+    "informalStartDate": "2026-05-11T10:00:00.000Z",
+    "keyActivationDate": "2026-06-01T10:00:00.000Z",
+    "keyActivatedAt": "2026-06-01T10:00:00.000Z",
+    "officialWindowStartDate": "2026-06-01T10:00:00.000Z",
+    "officialWindowStartedAt": "2026-06-01T10:00:00.000Z",
+    "officialWindowEndDate": "2026-08-15T10:00:00.000Z",
+    "officialWindowEndsAt": "2026-08-15T10:00:00.000Z",
+    "keyExpirationDate": "2026-08-15T10:00:00.000Z",
+    "keyReactivationDate": null,
+    "closedAt": null
+  },
+  "ruleSnapshot": {
+    "organizationProfileId": "ORG_PROFILE_DEMO_001",
+    "officeRulesConfigId": "OFFICE_RULES_DEMO_001",
+    "rulesVersion": "office-demo-rules-a",
+    "capturedAt": "2026-06-01T10:00:00.000Z",
+    "officialWindowDays": 75,
+    "minimumPolicies": 6,
+    "minimumCommissionsMxn": 18000,
+    "currency": "MXN"
+  },
+  "derivedMetrics": {
+    "calculatedAt": "2026-06-18T12:00:00.000Z",
+    "daysWithActiveKey": 17,
+    "daysRemainingInOfficialWindow": 57,
+    "officialWindowProgressPercent": 23
+  },
+  "progress": {
+    "policiesIssued": 4,
+    "commissionsMxn": 12000,
+    "appointments": 8,
+    "prospectsCreated": 18,
+    "trainingCompleted": 5
+  },
+  "risks": [
+    {
+      "riskType": "BELOW_RULE_SNAPSHOT",
+      "detectedAt": "2026-06-18T12:00:00.000Z",
+      "severity": "MEDIUM",
+      "reason": "Progress is positive but below this office rule snapshot."
+    }
+  ],
+  "outcome": "IN_PROGRESS",
+  "eventHistory": [
+    {
+      "eventType": "PRECONTRACT_CYCLE_STARTED",
+      "occurredAt": "2026-05-11T10:00:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    },
+    {
+      "eventType": "KEY_ACTIVATED",
+      "occurredAt": "2026-06-01T10:00:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    }
+  ],
+  "positiveScenario": {
+    "signal": "ACTIVE_PROGRESS",
+    "reason": "Cycle has explicit progress and a clear rule snapshot."
+  },
+  "riskScenario": {
+    "signal": "BELOW_CONFIGURED_TARGET",
+    "reason": "The candidate is not yet ready under this office configuration."
+  }
+}

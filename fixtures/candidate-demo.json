@@ -1,0 +1,33 @@
+{
+  "candidateId": "CANDIDATE_DEMO_001",
+  "name": "Sofia Martinez",
+  "status": "SCREENING",
+  "managerId": "MANAGER_DEMO_001",
+  "hardFactors": {
+    "age": 31,
+    "maritalStatus": "MARRIED",
+    "yearsLivingInTown": 9,
+    "career": "Commercial Account Executive",
+    "employmentStatus": "EMPLOYED"
+  },
+  "vitalFactors": {
+    "mentalAgility": 84,
+    "drive": 88,
+    "energy": 81,
+    "moneyMotivation": 79,
+    "character": 91,
+    "successHistory": 77,
+    "retentionPotential": 86
+  },
+  "positiveScenario": {
+    "signal": "LOCAL_NETWORK",
+    "reason": "Candidate has strong local roots and commercial experience."
+  },
+  "riskScenario": {
+    "signal": "INSURANCE_INEXPERIENCE",
+    "reason": "Candidate has not sold insurance or financial products before."
+  },
+  "source": "synthetic_fixture",
+  "createdAt": "2026-06-03T12:00:00.000Z",
+  "updatedAt": "2026-06-03T12:00:00.000Z"
+}

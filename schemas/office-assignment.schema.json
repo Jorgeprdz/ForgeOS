@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/office-assignment.schema.json",
+  "title": "Forge Office Assignment",
+  "description": "Office ownership assignment. Office changes are assignments, not overwrites.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["officeAssignmentId", "applicationId", "candidateId", "officeId", "assignmentStatus", "startedAt"],
+  "properties": {
+    "officeAssignmentId": {
+      "type": "string",
+      "examples": ["OFFICE_ASSIGNMENT_DEMO_001"]
+    },
+    "applicationId": {
+      "type": "string",
+      "examples": ["APPLICATION_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "officeId": {
+      "type": "string",
+      "examples": ["OFFICE_DEMO_001"]
+    },
+    "previousOfficeId": {
+      "type": ["string", "null"],
+      "examples": ["OFFICE_DEMO_000"]
+    },
+    "organizationProfileId": {
+      "type": ["string", "null"],
+      "examples": ["ORG_PROFILE_DEMO_001"]
+    },
+    "officeRulesConfigId": {
+      "type": ["string", "null"],
+      "examples": ["OFFICE_RULES_DEMO_001"]
+    },
+    "assignmentStatus": {
+      "type": "string",
+      "enum": ["ACTIVE", "ENDED", "TRANSFER_PENDING", "CANCELLED"],
+      "examples": ["ACTIVE"]
+    },
+    "assignmentReason": {
+      "type": ["string", "null"],
+      "examples": ["INITIAL_OFFICE"]
+    },
+    "startedAt": {
+      "type": "string",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    },
+    "endedAt": {
+      "type": ["string", "null"],
+      "examples": ["2026-07-03T12:00:00.000Z"]
+    },
+    "assignedBy": {
+      "type": ["string", "null"],
+      "examples": ["DIRECTOR_DEMO_001"]
+    },
+    "eventHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["eventType", "occurredAt"],
+        "properties": {
+          "eventType": { "type": "string", "examples": ["OFFICE_ASSIGNED"] },
+          "occurredAt": { "type": "string", "examples": ["2026-06-03T12:00:00.000Z"] },
+          "actorId": { "type": ["string", "null"], "examples": ["DIRECTOR_DEMO_001"] }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "officeAssignmentId": "OFFICE_ASSIGNMENT_DEMO_001",
+      "applicationId": "APPLICATION_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "officeId": "OFFICE_DEMO_001",
+      "previousOfficeId": null,
+      "organizationProfileId": "ORG_PROFILE_DEMO_001",
+      "officeRulesConfigId": "OFFICE_RULES_DEMO_001",
+      "assignmentStatus": "ACTIVE",
+      "assignmentReason": "INITIAL_OFFICE",
+      "startedAt": "2026-06-03T12:00:00.000Z",
+      "endedAt": null,
+      "assignedBy": "DIRECTOR_DEMO_001",
+      "eventHistory": [
+        {
+          "eventType": "OFFICE_ASSIGNED",
+          "occurredAt": "2026-06-03T12:00:00.000Z",
+          "actorId": "DIRECTOR_DEMO_001"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/interview.schema.json",
+  "title": "Forge Recruitment Interview",
+  "description": "Interview contract for Recruitment Lifecycle. Interviews belong to a recruitment application and preserve score, risks and recommendation.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["interviewId", "applicationId", "phase", "scheduledAt", "recommendation"],
+  "properties": {
+    "interviewId": {
+      "type": "string",
+      "description": "Stable interview identifier.",
+      "examples": ["INTERVIEW_DEMO_001"]
+    },
+    "applicationId": {
+      "type": "string",
+      "description": "Recruitment application being interviewed.",
+      "examples": ["APPLICATION_DEMO_001"]
+    },
+    "candidateId": {
+      "type": ["string", "null"],
+      "description": "Candidate record for this application attempt.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "recruitIdentityId": {
+      "type": ["string", "null"],
+      "description": "Durable recruit identity when available.",
+      "examples": ["RECRUIT_IDENTITY_DEMO_001"]
+    },
+    "managerId": {
+      "type": ["string", "null"],
+      "description": "Manager or interviewer responsible.",
+      "examples": ["MANAGER_DEMO_001"]
+    },
+    "officeId": {
+      "type": ["string", "null"],
+      "description": "Office where interview is evaluated.",
+      "examples": ["OFFICE_DEMO_001"]
+    },
+    "phase": {
+      "type": "string",
+      "description": "Interview phase in the recruitment process.",
+      "enum": ["SCREENING", "FIRST_INTERVIEW", "SECOND_INTERVIEW", "MANAGER_REVIEW", "FINAL_REVIEW", "REENTRY_REVIEW"],
+      "examples": ["FIRST_INTERVIEW"]
+    },
+    "status": {
+      "type": ["string", "null"],
+      "enum": ["SCHEDULED", "COMPLETED", "NO_SHOW", "RESCHEDULED", "CANCELLED", null],
+      "description": "Interview execution status.",
+      "examples": ["COMPLETED"]
+    },
+    "scheduledAt": {
+      "type": "string",
+      "description": "ISO timestamp for scheduled interview time.",
+      "examples": ["2026-06-05T16:00:00.000Z"]
+    },
+    "completedAt": {
+      "type": ["string", "null"],
+      "description": "ISO timestamp when completed, if completed.",
+      "examples": ["2026-06-05T17:00:00.000Z"]
+    },
+    "score": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Interview score when available.",
+      "examples": [88]
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Interview notes. Must not invent candidate facts.",
+      "examples": ["Synthetic interview with strong execution signal."]
+    },
+    "risks": {
+      "type": "array",
+      "description": "Observed interview risks.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "riskType": { "type": "string", "examples": ["LOW_ACTIVITY_TOLERANCE"] },
+          "severity": { "type": "string", "examples": ["MEDIUM"] },
+          "reason": { "type": "string", "examples": ["Candidate avoided specific activity commitments."] }
+        }
+      }
+    },
+    "recommendation": {
+      "type": "string",
+      "description": "Interview recommendation. This is decision support, not automatic approval.",
+      "enum": ["ADVANCE", "WATCH", "REJECT", "RESCHEDULE", "NEEDS_MORE_DATA"],
+      "examples": ["ADVANCE"]
+    },
+    "eventHistory": {
+      "type": "array",
+      "description": "Interview lifecycle events.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["eventType", "occurredAt"],
+        "properties": {
+          "eventType": { "type": "string", "examples": ["INTERVIEW_COMPLETED"] },
+          "occurredAt": { "type": "string", "examples": ["2026-06-05T17:00:00.000Z"] },
+          "actorId": { "type": ["string", "null"], "examples": ["MANAGER_DEMO_001"] }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "interviewId": "INTERVIEW_DEMO_001",
+      "applicationId": "APPLICATION_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+      "managerId": "MANAGER_DEMO_001",
+      "officeId": "OFFICE_DEMO_001",
+      "phase": "FIRST_INTERVIEW",
+      "status": "COMPLETED",
+      "scheduledAt": "2026-06-05T16:00:00.000Z",
+      "completedAt": "2026-06-05T17:00:00.000Z",
+      "score": 88,
+      "notes": "Synthetic interview with strong execution signal.",
+      "risks": [],
+      "recommendation": "ADVANCE",
+      "eventHistory": [
+        {
+          "eventType": "INTERVIEW_COMPLETED",
+          "occurredAt": "2026-06-05T17:00:00.000Z",
+          "actorId": "MANAGER_DEMO_001"
+        }
+      ]
+    }
+  ]
+}

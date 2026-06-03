@@ -1,0 +1,56 @@
+{
+  "rulesConfigId": "OFFICE_RULES_LIGHT_DEMO_001",
+  "officeRulesConfigId": "OFFICE_RULES_LIGHT_DEMO_001",
+  "organizationId": "ORG_DEMO_001",
+  "officeId": "OFFICE_DEMO_001",
+  "rulesVersion": "light-demo-v1",
+  "currency": "MXN",
+  "effectiveFrom": "2026-06-01T00:00:00.000Z",
+  "effectiveTo": null,
+  "capturedAt": "2026-06-01T00:00:00.000Z",
+  "officialWindowDays": 45,
+  "minimumPolicies": 3,
+  "minimumCommissions": 9000,
+  "precontractRules": {
+    "officialWindowDays": 45,
+    "minimumPolicies": 3,
+    "minimumCommissionAmount": 9000,
+    "allowInformalProduction": true,
+    "validPolicyDefinition": "ISSUED",
+    "validCommissionDefinition": "RECORDED_COMMISSION"
+  },
+  "reactivationRules": {
+    "reactivationAllowed": true,
+    "maximumReactivations": 3,
+    "cooldownDays": 5,
+    "requiresManagerApproval": true,
+    "requiresDirectorApproval": false,
+    "carryForwardPreviousProgress": true
+  },
+  "contractingCriteria": {
+    "requiresCompletedTraining": true,
+    "requiresManagerApproval": true,
+    "requiresOfficeApproval": false,
+    "requiresComplianceReview": false,
+    "minimumInterviewScore": 65,
+    "minimumAssessmentScore": 68
+  },
+  "scoringWeights": {
+    "hardFactors": 15,
+    "vitalFactors": 25,
+    "interview": 20,
+    "activity": 25,
+    "production": 10,
+    "coachability": 5
+  },
+  "createdAt": "2026-06-01T00:00:00.000Z",
+  "updatedAt": "2026-06-03T00:00:00.000Z",
+  "positiveScenario": {
+    "signal": "ENTRY_LEVEL_PATH",
+    "reason": "Light config supports controlled early-stage recruiting scenarios."
+  },
+  "riskScenario": {
+    "signal": "LOWER_BAR_RISK",
+    "reason": "Lower thresholds can increase conversion but require quality monitoring."
+  }
+}

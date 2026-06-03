@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/precontract-cycle.schema.json",
+  "title": "Forge Precontract Cycle",
+  "description": "One precontract lifecycle cycle with rule snapshot and historical progress.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["cycleId", "applicationId", "candidateId", "managerId", "officeId", "cycleStatus", "ruleSnapshot"],
+  "properties": {
+    "cycleId": {
+      "type": "string",
+      "description": "Identifier for one precontract cycle.",
+      "examples": ["PRECONTRACT_CYCLE_DEMO_001"]
+    },
+    "applicationId": {
+      "type": "string",
+      "description": "Recruitment application that owns this cycle.",
+      "examples": ["APPLICATION_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "description": "Candidate record for this application attempt.",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "managerId": {
+      "type": "string",
+      "description": "Manager responsible when the cycle is evaluated.",
+      "examples": ["MANAGER_DEMO_001"]
+    },
+    "officeId": {
+      "type": "string",
+      "description": "Office responsible when the cycle is evaluated.",
+      "examples": ["OFFICE_DEMO_001"]
+    },
+    "cycleStatus": {
+      "type": "string",
+      "enum": ["INFORMAL", "KEY_ACTIVE", "OFFICIAL_WINDOW", "AT_RISK", "READY", "KEY_EXPIRED", "REACTIVATED", "CLOSED", "UNKNOWN"],
+      "description": "Current cycle status.",
+      "examples": ["OFFICIAL_WINDOW"]
+    },
+    "keyStatus": {
+      "type": ["string", "null"],
+      "enum": ["NOT_ACTIVATED", "ACTIVE", "EXPIRED", "REACTIVATED", "CLOSED", "UNKNOWN", null],
+      "description": "Current key status for clock and lifecycle evaluation.",
+      "examples": ["ACTIVE"]
+    },
+    "lifecycle": {
+      "type": "object",
+      "description": "Lifecycle dates for the cycle.",
+      "additionalProperties": true,
+      "properties": {
+        "informalStartDate": { "type": ["string", "null"], "examples": ["2026-05-15T00:00:00.000Z"] },
+        "keyActivationDate": { "type": ["string", "null"], "examples": ["2026-06-01T00:00:00.000Z"] },
+        "keyActivatedAt": {
+          "type": ["string", "null"],
+          "description": "Preferred key activation timestamp for key clock calculations. Compatibility alias: keyActivationDate.",
+          "examples": ["2026-06-01T00:00:00.000Z"]
+        },
+        "officialWindowStartDate": { "type": ["string", "null"], "examples": ["2026-06-01T00:00:00.000Z"] },
+        "officialWindowStartedAt": {
+          "type": ["string", "null"],
+          "description": "Preferred official window start timestamp. Compatibility alias: officialWindowStartDate.",
+          "examples": ["2026-06-01T00:00:00.000Z"]
+        },
+        "officialWindowEndDate": { "type": ["string", "null"], "examples": ["2026-08-15T00:00:00.000Z"] },
+        "officialWindowEndsAt": {
+          "type": ["string", "null"],
+          "description": "Preferred official window end timestamp. Compatibility alias: officialWindowEndDate.",
+          "examples": ["2026-08-15T00:00:00.000Z"]
+        },
+        "keyExpirationDate": { "type": ["string", "null"], "examples": ["2026-08-15T00:00:00.000Z"] },
+        "keyReactivationDate": { "type": ["string", "null"], "examples": ["2026-09-01T00:00:00.000Z"] },
+        "closedAt": { "type": ["string", "null"], "examples": ["2026-08-18T00:00:00.000Z"] }
+      }
+    },
+    "ruleSnapshot": {
+      "type": "object",
+      "description": "Organization or office rules captured at cycle evaluation time. Historical cycles must not be recalculated under new rules except as separate analysis.",
+      "additionalProperties": true,
+      "required": ["organizationProfileId", "officeRulesConfigId", "capturedAt"],
+      "properties": {
+        "organizationProfileId": { "type": "string", "examples": ["ORG_PROFILE_DEMO_001"] },
+        "officeRulesConfigId": { "type": "string", "examples": ["OFFICE_RULES_DEMO_001"] },
+        "rulesVersion": { "type": ["string", "null"], "examples": ["rules-v1"] },
+        "capturedAt": { "type": "string", "examples": ["2026-06-01T00:00:00.000Z"] },
+        "officialWindowDays": { "type": ["number", "null"] },
+        "minimumPolicies": { "type": ["number", "null"] },
+        "minimumCommissionsMxn": { "type": ["number", "null"] },
+        "currency": { "type": ["string", "null"], "examples": ["MXN"] }
+      }
+    },
+    "derivedMetrics": {
+      "type": "object",
+      "description": "Calculated key-clock metrics. These are derived from lifecycle timestamps, current evaluation date and officeRulesConfig/ruleSnapshot. They are not manual required inputs.",
+      "additionalProperties": true,
+      "properties": {
+        "calculatedAt": {
+          "type": ["string", "null"],
+          "description": "ISO timestamp when metrics were calculated.",
+          "examples": ["2026-06-18T12:00:00.000Z"]
+        },
+        "daysWithActiveKey": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Derived days since keyActivatedAt while key is active/reactivated."
+        },
+        "daysRemainingInOfficialWindow": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Derived days remaining until officialWindowEndsAt."
+        },
+        "officialWindowProgressPercent": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Derived progress through the official window."
+        }
+      }
+    },
+    "progress": {
+      "type": "object",
+      "description": "Explicit production and activity progress for this cycle.",
+      "additionalProperties": true,
+      "properties": {
+        "policiesIssued": { "type": ["number", "null"], "minimum": 0 },
+        "commissionsMxn": { "type": ["number", "null"], "minimum": 0 },
+        "appointments": { "type": ["number", "null"], "minimum": 0 },
+        "prospectsCreated": { "type": ["number", "null"], "minimum": 0 },
+        "trainingCompleted": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "description": "Cycle risk signals.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "riskType": { "type": "string", "examples": ["LOW_ACTIVITY"] },
+          "detectedAt": { "type": "string", "examples": ["2026-06-15T00:00:00.000Z"] },
+          "severity": { "type": "string", "examples": ["MEDIUM"] },
+          "reason": { "type": "string", "examples": ["Activity is below office expectation."] }
+        }
+      }
+    },
+    "outcome": {
+      "type": ["string", "null"],
+      "enum": ["IN_PROGRESS", "READY", "CONVERTED", "EXPIRED", "WITHDRAWN", "REJECTED", "REACTIVATED", null],
+      "description": "Cycle outcome when known.",
+      "examples": ["IN_PROGRESS"]
+    },
+    "eventHistory": {
+      "type": "array",
+      "description": "Critical cycle events.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["eventType", "occurredAt"],
+        "properties": {
+          "eventType": { "type": "string", "examples": ["KEY_ACTIVATED"] },
+          "occurredAt": { "type": "string", "examples": ["2026-06-01T00:00:00.000Z"] },
+          "actorId": { "type": ["string", "null"], "examples": ["MANAGER_DEMO_001"] }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "cycleId": "PRECONTRACT_CYCLE_DEMO_001",
+      "applicationId": "APPLICATION_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "managerId": "MANAGER_DEMO_001",
+      "officeId": "OFFICE_DEMO_001",
+      "cycleStatus": "OFFICIAL_WINDOW",
+      "keyStatus": "ACTIVE",
+      "lifecycle": {
+        "informalStartDate": "2026-05-15T00:00:00.000Z",
+        "keyActivationDate": "2026-06-01T00:00:00.000Z",
+        "keyActivatedAt": "2026-06-01T00:00:00.000Z",
+        "officialWindowStartDate": "2026-06-01T00:00:00.000Z",
+        "officialWindowStartedAt": "2026-06-01T00:00:00.000Z",
+        "officialWindowEndDate": "2026-08-15T00:00:00.000Z",
+        "officialWindowEndsAt": "2026-08-15T00:00:00.000Z",
+        "keyExpirationDate": "2026-08-15T00:00:00.000Z"
+      },
+      "ruleSnapshot": {
+        "organizationProfileId": "ORG_PROFILE_DEMO_001",
+        "officeRulesConfigId": "OFFICE_RULES_DEMO_001",
+        "rulesVersion": "rules-v1",
+        "capturedAt": "2026-06-01T00:00:00.000Z",
+        "officialWindowDays": 75,
+        "minimumPolicies": 6,
+        "minimumCommissionsMxn": 18000,
+        "currency": "MXN"
+      },
+      "derivedMetrics": {
+        "calculatedAt": "2026-06-18T12:00:00.000Z",
+        "daysWithActiveKey": 17,
+        "daysRemainingInOfficialWindow": 58,
+        "officialWindowProgressPercent": 23
+      },
+      "progress": {
+        "policiesIssued": 5,
+        "commissionsMxn": 15000,
+        "appointments": 9,
+        "prospectsCreated": 21,
+        "trainingCompleted": 4
+      },
+      "risks": [
+        {
+          "riskType": "BELOW_RULE_SNAPSHOT",
+          "detectedAt": "2026-06-15T00:00:00.000Z",
+          "severity": "MEDIUM",
+          "reason": "Cycle is below the configured rule snapshot."
+        }
+      ],
+      "outcome": "IN_PROGRESS",
+      "eventHistory": [
+        {
+          "eventType": "KEY_ACTIVATED",
+          "occurredAt": "2026-06-01T00:00:00.000Z",
+          "actorId": "MANAGER_DEMO_001"
+        }
+      ]
+    }
+  ]
+}

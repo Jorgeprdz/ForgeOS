@@ -1,0 +1,175 @@
+{
+  "recruitIdentity": {
+    "recruitIdentityId": "RECRUIT_IDENTITY_FULL_DEMO_001",
+    "displayName": "Daniel Torres Demo",
+    "identityStatus": "ACTIVE",
+    "canonicalCandidateIds": ["CANDIDATE_FULL_DEMO_001"],
+    "applicationIds": ["APPLICATION_FULL_DEMO_001"],
+    "knownOfficeIds": ["OFFICE_DEMO_003"],
+    "knownManagerIds": ["MANAGER_DEMO_003"],
+    "createdAt": "2026-06-01T09:00:00.000Z",
+    "updatedAt": "2026-09-01T09:00:00.000Z"
+  },
+  "application": {
+    "applicationId": "APPLICATION_FULL_DEMO_001",
+    "recruitIdentityId": "RECRUIT_IDENTITY_FULL_DEMO_001",
+    "candidateId": "CANDIDATE_FULL_DEMO_001",
+    "applicationStatus": "CONVERTED",
+    "source": "center_of_influence",
+    "currentManagerAssignmentId": "MANAGER_ASSIGNMENT_FULL_DEMO_001",
+    "currentOfficeAssignmentId": "OFFICE_ASSIGNMENT_FULL_DEMO_001",
+    "assessmentIds": ["ASSESSMENT_FULL_DEMO_001"],
+    "interviewIds": ["INTERVIEW_FULL_DEMO_001"],
+    "precontractCycleIds": ["PRECONTRACT_CYCLE_FULL_DEMO_001"],
+    "eventHistory": [
+      {
+        "eventType": "APPLICATION_CREATED",
+        "occurredAt": "2026-06-01T09:00:00.000Z",
+        "actorId": "MANAGER_DEMO_003"
+      },
+      {
+        "eventType": "CANDIDATE_SELECTED",
+        "occurredAt": "2026-06-10T11:00:00.000Z",
+        "actorId": "MANAGER_DEMO_003"
+      },
+      {
+        "eventType": "ADVISOR_CONVERSION_COMPLETED",
+        "occurredAt": "2026-09-01T09:00:00.000Z",
+        "actorId": "DIRECTOR_DEMO_001"
+      }
+    ],
+    "createdAt": "2026-06-01T09:00:00.000Z",
+    "updatedAt": "2026-09-01T09:00:00.000Z"
+  },
+  "candidateAssessments": [
+    {
+      "assessmentId": "ASSESSMENT_FULL_DEMO_001",
+      "candidateId": "CANDIDATE_FULL_DEMO_001",
+      "managerId": "MANAGER_DEMO_003",
+      "overallScore": 86,
+      "recommendation": "ADVANCE",
+      "riskLevel": "LOW",
+      "strengths": ["Strong execution history", "Clear money motivation"],
+      "risks": ["Needs product language training"],
+      "createdAt": "2026-06-08T11:00:00.000Z"
+    }
+  ],
+  "interviews": [
+    {
+      "interviewId": "INTERVIEW_FULL_DEMO_001",
+      "applicationId": "APPLICATION_FULL_DEMO_001",
+      "candidateId": "CANDIDATE_FULL_DEMO_001",
+      "managerId": "MANAGER_DEMO_003",
+      "scheduledAt": "2026-06-05T16:00:00.000Z",
+      "completedAt": "2026-06-05T17:00:00.000Z",
+      "status": "COMPLETED",
+      "score": 88,
+      "notes": "Synthetic interview with strong execution signal."
+    }
+  ],
+  "managerAssignments": [
+    {
+      "managerAssignmentId": "MANAGER_ASSIGNMENT_FULL_DEMO_001",
+      "applicationId": "APPLICATION_FULL_DEMO_001",
+      "candidateId": "CANDIDATE_FULL_DEMO_001",
+      "managerId": "MANAGER_DEMO_003",
+      "assignmentStatus": "ACTIVE",
+      "assignmentReason": "INITIAL_OWNER",
+      "startedAt": "2026-06-01T09:00:00.000Z",
+      "endedAt": null
+    }
+  ],
+  "officeAssignments": [
+    {
+      "officeAssignmentId": "OFFICE_ASSIGNMENT_FULL_DEMO_001",
+      "applicationId": "APPLICATION_FULL_DEMO_001",
+      "candidateId": "CANDIDATE_FULL_DEMO_001",
+      "officeId": "OFFICE_DEMO_003",
+      "organizationProfileId": "ORG_PROFILE_DEMO_002",
+      "officeRulesConfigId": "OFFICE_RULES_DEMO_003",
+      "assignmentStatus": "ACTIVE",
+      "assignmentReason": "INITIAL_OFFICE",
+      "startedAt": "2026-06-01T09:00:00.000Z",
+      "endedAt": null
+    }
+  ],
+  "precontractCycles": [
+    {
+      "cycleId": "PRECONTRACT_CYCLE_FULL_DEMO_001",
+      "applicationId": "APPLICATION_FULL_DEMO_001",
+      "candidateId": "CANDIDATE_FULL_DEMO_001",
+      "managerId": "MANAGER_DEMO_003",
+      "officeId": "OFFICE_DEMO_003",
+      "cycleStatus": "READY",
+      "lifecycle": {
+        "informalStartDate": "2026-06-10T11:00:00.000Z",
+        "keyActivationDate": "2026-06-20T11:00:00.000Z",
+        "officialWindowStartDate": "2026-06-20T11:00:00.000Z",
+        "officialWindowEndDate": "2026-09-05T11:00:00.000Z",
+        "keyExpirationDate": "2026-09-05T11:00:00.000Z",
+        "keyReactivationDate": null,
+        "closedAt": "2026-09-01T09:00:00.000Z"
+      },
+      "ruleSnapshot": {
+        "organizationProfileId": "ORG_PROFILE_DEMO_002",
+        "officeRulesConfigId": "OFFICE_RULES_DEMO_003",
+        "rulesVersion": "office-demo-rules-c",
+        "capturedAt": "2026-06-20T11:00:00.000Z",
+        "officialWindowDays": 77,
+        "minimumPolicies": 5,
+        "minimumCommissionsMxn": 16000,
+        "currency": "MXN"
+      },
+      "progress": {
+        "policiesIssued": 6,
+        "commissionsMxn": 19000,
+        "appointments": 14,
+        "prospectsCreated": 29,
+        "trainingCompleted": 6
+      },
+      "risks": [],
+      "outcome": "CONVERTED",
+      "eventHistory": [
+        {
+          "eventType": "PRECONTRACT_CYCLE_STARTED",
+          "occurredAt": "2026-06-10T11:00:00.000Z",
+          "actorId": "MANAGER_DEMO_003"
+        },
+        {
+          "eventType": "PRECONTRACT_READY",
+          "occurredAt": "2026-08-28T12:00:00.000Z",
+          "actorId": "MANAGER_DEMO_003"
+        }
+      ]
+    }
+  ],
+  "advisorConversion": {
+    "advisorConversionId": "ADVISOR_CONVERSION_FULL_DEMO_001",
+    "applicationId": "APPLICATION_FULL_DEMO_001",
+    "recruitIdentityId": "RECRUIT_IDENTITY_FULL_DEMO_001",
+    "candidateId": "CANDIDATE_FULL_DEMO_001",
+    "cycleId": "PRECONTRACT_CYCLE_FULL_DEMO_001",
+    "advisorId": "ADVISOR_FULL_DEMO_001",
+    "managerId": "MANAGER_DEMO_003",
+    "officeId": "OFFICE_DEMO_003",
+    "conversionStatus": "COMPLETED",
+    "convertedAt": "2026-09-01T09:00:00.000Z",
+    "contractSignedAt": "2026-09-01T09:00:00.000Z",
+    "conversionReason": "Candidate met the configured office readiness criteria.",
+    "eventHistory": [
+      {
+        "eventType": "ADVISOR_CONVERSION_COMPLETED",
+        "occurredAt": "2026-09-01T09:00:00.000Z",
+        "actorId": "DIRECTOR_DEMO_001"
+      }
+    ]
+  },
+  "positiveScenario": {
+    "signal": "FULL_LIFECYCLE_CONVERSION",
+    "reason": "Fixture links identity, application, assessment, interview, assignments, cycle and conversion."
+  },
+  "riskScenario": {
+    "signal": "MODEL_COMPLEXITY",
+    "reason": "A full lifecycle requires contract discipline before engines are implemented."
+  }
+}

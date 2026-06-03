@@ -1,0 +1,49 @@
+{
+  "advisorConversionId": "ADVISOR_CONVERSION_DEMO_001",
+  "applicationId": "APPLICATION_DEMO_REENTRY_001",
+  "recruitIdentityId": "RECRUIT_IDENTITY_DEMO_001",
+  "candidateId": "CANDIDATE_DEMO_REENTRY_001",
+  "cycleId": "PRECONTRACT_CYCLE_DEMO_REACTIVATED_001",
+  "advisorId": "ADVISOR_DEMO_RECRUITED_001",
+  "managerId": "MANAGER_DEMO_002",
+  "officeId": "OFFICE_DEMO_001",
+  "conversionStatus": "COMPLETED",
+  "convertedAt": "2026-09-20T12:00:00.000Z",
+  "contractSignedAt": "2026-09-20T12:00:00.000Z",
+  "ruleSnapshot": {
+    "organizationProfileId": "ORG_PROFILE_DEMO_001",
+    "officeRulesConfigId": "OFFICE_RULES_DEMO_001",
+    "rulesVersion": "office-demo-rules-a-reactivation",
+    "capturedAt": "2026-08-25T10:00:00.000Z",
+    "officialWindowDays": 45,
+    "minimumPolicies": 3,
+    "minimumCommissionsMxn": 9000,
+    "currency": "MXN"
+  },
+  "conversionReason": "Candidate met the configured office readiness criteria for the reactivation cycle.",
+  "eventHistory": [
+    {
+      "eventType": "ADVISOR_CONVERSION_STARTED",
+      "occurredAt": "2026-09-18T12:00:00.000Z",
+      "actorId": "MANAGER_DEMO_002"
+    },
+    {
+      "eventType": "CONTRACT_SIGNED",
+      "occurredAt": "2026-09-20T12:00:00.000Z",
+      "actorId": "DIRECTOR_DEMO_001"
+    },
+    {
+      "eventType": "ADVISOR_CONVERSION_COMPLETED",
+      "occurredAt": "2026-09-20T12:00:00.000Z",
+      "actorId": "DIRECTOR_DEMO_001"
+    }
+  ],
+  "positiveScenario": {
+    "signal": "CONVERSION_WITH_AUDIT_TRAIL",
+    "reason": "Conversion links recruit identity, application, cycle, manager, office and rule snapshot."
+  },
+  "riskScenario": {
+    "signal": "EARLY_RAMP_RISK",
+    "reason": "Converted advisor still needs early habit and persistence monitoring."
+  }
+}

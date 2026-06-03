@@ -1,0 +1,30 @@
+{
+  "organizationId": "ORG_DEMO_001",
+  "organizationProfileId": "ORG_PROFILE_DEMO_001",
+  "officeId": "OFFICE_DEMO_001",
+  "managerId": "MANAGER_DEMO_001",
+  "channel": "AGENCY",
+  "country": "MX",
+  "currency": "MXN",
+  "activeRulesConfigId": "OFFICE_RULES_STANDARD_DEMO_001",
+  "profileStatus": "ACTIVE",
+  "effectiveFrom": "2026-06-01T00:00:00.000Z",
+  "effectiveTo": null,
+  "availableRulesConfigIds": [
+    "OFFICE_RULES_STANDARD_DEMO_001",
+    "OFFICE_RULES_LIGHT_DEMO_001",
+    "OFFICE_RULES_STRICT_DEMO_001"
+  ],
+  "metadata": {
+    "source": "synthetic_fixture",
+    "purpose": "Organization profile fixture for recruitment lifecycle configuration tests."
+  },
+  "positiveScenario": {
+    "signal": "ACTIVE_RULES_CONFIG_LINKED",
+    "reason": "The profile points to the active office rules config."
+  },
+  "riskScenario": {
+    "signal": "CONFIG_DRIFT",
+    "reason": "Rules can change by office, so cycles must store rule snapshots."
+  }
+}

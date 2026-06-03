@@ -1,0 +1,36 @@
+{
+  "policyId": "POLICY_DEMO_001",
+  "id": "POLICY_DEMO_001",
+  "clientId": "CLIENT_DEMO_001",
+  "policyNumber": "DEMO-VIDA-001",
+  "productName": "Vida Proteccion Demo",
+  "carrier": {
+    "id": "CARRIER_DEMO_001",
+    "name": "Carrier Demo",
+    "productName": "Vida Proteccion Demo"
+  },
+  "financial": {
+    "currency": "MXN",
+    "premium": 2500,
+    "paymentFrequency": "MONTHLY",
+    "sumInsured": 1000000
+  },
+  "renewalDate": "2026-07-15T00:00:00.000Z",
+  "nextReviewDate": "2026-06-20T00:00:00.000Z",
+  "nextPaymentDate": "2026-06-10T00:00:00.000Z",
+  "status": "ACTIVE",
+  "policyIssued": true,
+  "positiveScenario": {
+    "signal": "ACTIVE_POLICY",
+    "reason": "Policy is active and has explicit financial data."
+  },
+  "riskScenario": {
+    "signal": "PAYMENT_DUE_SOON",
+    "reason": "Next payment date is close and should trigger proactive service."
+  },
+  "metadata": {
+    "source": "synthetic_fixture",
+    "createdAt": "2026-06-03T12:00:00.000Z",
+    "updatedAt": "2026-06-03T12:00:00.000Z"
+  }
+}

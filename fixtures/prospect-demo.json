@@ -1,0 +1,29 @@
+{
+  "prospectId": "PROSPECT_DEMO_001",
+  "name": "Maria Demo",
+  "status": "RESPONDED",
+  "advisorId": "ADVISOR_DEMO_001",
+  "source": "warm_market",
+  "channel": "WHATSAPP",
+  "phone": "+525500000001",
+  "email": "maria.demo@example.test",
+  "age": 38,
+  "occupation": "Architect",
+  "maritalStatus": "MARRIED",
+  "children": 2,
+  "notes": [
+    "Synthetic prospect for NASH objection and followup testing.",
+    "Values family protection.",
+    "Asked for simple information before deciding."
+  ],
+  "knownMotivators": ["family_security", "peace_of_mind"],
+  "positiveScenario": {
+    "signal": "FAMILY_PROTECTION_MOTIVATION",
+    "reason": "Prospect has family-protection motivators and responded to outreach."
+  },
+  "riskScenario": {
+    "signal": "BUDGET_CONCERN",
+    "reason": "Prospect expressed concern about monthly cash flow."
+  },
+  "createdAt": "2026-06-03T12:00:00.000Z"
+}

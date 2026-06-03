@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/organization-profile.schema.json",
+  "title": "Forge Organization Profile",
+  "description": "Organization and office profile used to select active recruitment rules. This contract stores context, not hardcoded recruitment thresholds.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["organizationId", "officeId", "managerId", "channel", "country", "currency", "activeRulesConfigId"],
+  "properties": {
+    "organizationId": {
+      "type": "string",
+      "description": "Organization identifier.",
+      "examples": ["ORG_DEMO_001"]
+    },
+    "organizationProfileId": {
+      "type": ["string", "null"],
+      "description": "Optional organization profile version identifier.",
+      "examples": ["ORG_PROFILE_DEMO_001"]
+    },
+    "officeId": {
+      "type": "string",
+      "description": "Office identifier.",
+      "examples": ["OFFICE_DEMO_001"]
+    },
+    "managerId": {
+      "type": "string",
+      "description": "Default manager or owner for this profile context.",
+      "examples": ["MANAGER_DEMO_001"]
+    },
+    "channel": {
+      "type": "string",
+      "description": "Recruitment or commercial channel.",
+      "examples": ["AGENCY"]
+    },
+    "country": {
+      "type": "string",
+      "description": "Country code or country label.",
+      "examples": ["MX"]
+    },
+    "currency": {
+      "type": "string",
+      "description": "Default currency for this organization/office profile.",
+      "examples": ["MXN"]
+    },
+    "activeRulesConfigId": {
+      "type": "string",
+      "description": "Currently active Office Rules Config identifier.",
+      "examples": ["OFFICE_RULES_DEMO_001"]
+    },
+    "profileStatus": {
+      "type": ["string", "null"],
+      "enum": ["ACTIVE", "INACTIVE", "ARCHIVED", null],
+      "description": "Profile status.",
+      "examples": ["ACTIVE"]
+    },
+    "effectiveFrom": {
+      "type": ["string", "null"],
+      "description": "ISO timestamp when this profile became effective.",
+      "examples": ["2026-06-01T00:00:00.000Z"]
+    },
+    "effectiveTo": {
+      "type": ["string", "null"],
+      "description": "ISO timestamp when this profile stops being effective, if known.",
+      "examples": ["2026-12-31T23:59:59.000Z"]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Profile metadata.",
+      "additionalProperties": true
+    }
+  },
+  "examples": [
+    {
+      "organizationId": "ORG_DEMO_001",
+      "organizationProfileId": "ORG_PROFILE_DEMO_001",
+      "officeId": "OFFICE_DEMO_001",
+      "managerId": "MANAGER_DEMO_001",
+      "channel": "AGENCY",
+      "country": "MX",
+      "currency": "MXN",
+      "activeRulesConfigId": "OFFICE_RULES_DEMO_001",
+      "profileStatus": "ACTIVE",
+      "effectiveFrom": "2026-06-01T00:00:00.000Z",
+      "effectiveTo": null,
+      "metadata": {
+        "source": "synthetic_contract"
+      }
+    }
+  ]
+}

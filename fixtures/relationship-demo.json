@@ -1,0 +1,43 @@
+{
+  "clientId": "CLIENT_DEMO_001",
+  "id": "CLIENT_DEMO_001",
+  "name": "Carla Demo",
+  "advisorId": "ADVISOR_DEMO_001",
+  "relationshipStatus": "REVIEW_DUE",
+  "relationshipHealth": "YELLOW",
+  "relationshipScore": 72,
+  "preferredChannel": "WHATSAPP",
+  "clientSince": "2021-04-15T00:00:00.000Z",
+  "policyCount": 2,
+  "relationshipHistory": [
+    {
+      "date": "2026-06-01T09:30:00.000Z",
+      "direction": "INBOUND",
+      "message": "Gracias por estar al pendiente.",
+      "outcome": "POSITIVE"
+    },
+    {
+      "date": "2026-05-10T16:00:00.000Z",
+      "direction": "OUTBOUND",
+      "message": "Te comparto recordatorio de revision de poliza.",
+      "outcome": "RESPONDED"
+    }
+  ],
+  "events": [
+    {
+      "date": "2026-06-20T00:00:00.000Z",
+      "type": "POLICY_REVIEW",
+      "priority": "HIGH",
+      "description": "Synthetic policy review event."
+    }
+  ],
+  "positiveScenario": {
+    "signal": "TRUSTED_RELATIONSHIP",
+    "reason": "Recent inbound response shows trust and engagement."
+  },
+  "riskScenario": {
+    "signal": "REVIEW_WINDOW",
+    "reason": "Review should be scheduled before the policy date."
+  },
+  "notes": ["Synthetic relationship fixture aligned with relationship-master inputs."]
+}

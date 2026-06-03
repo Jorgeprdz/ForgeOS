@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/manager-assignment.schema.json",
+  "title": "Forge Manager Assignment",
+  "description": "Manager ownership assignment. Manager changes are assignments, not overwrites.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["managerAssignmentId", "applicationId", "candidateId", "managerId", "assignmentStatus", "startedAt"],
+  "properties": {
+    "managerAssignmentId": {
+      "type": "string",
+      "examples": ["MANAGER_ASSIGNMENT_DEMO_001"]
+    },
+    "applicationId": {
+      "type": "string",
+      "examples": ["APPLICATION_DEMO_001"]
+    },
+    "candidateId": {
+      "type": "string",
+      "examples": ["CANDIDATE_DEMO_001"]
+    },
+    "managerId": {
+      "type": "string",
+      "examples": ["MANAGER_DEMO_001"]
+    },
+    "previousManagerId": {
+      "type": ["string", "null"],
+      "examples": ["MANAGER_DEMO_000"]
+    },
+    "assignmentStatus": {
+      "type": "string",
+      "enum": ["ACTIVE", "ENDED", "TRANSFER_PENDING", "CANCELLED"],
+      "examples": ["ACTIVE"]
+    },
+    "assignmentReason": {
+      "type": ["string", "null"],
+      "examples": ["INITIAL_OWNER"]
+    },
+    "startedAt": {
+      "type": "string",
+      "examples": ["2026-06-03T12:00:00.000Z"]
+    },
+    "endedAt": {
+      "type": ["string", "null"],
+      "examples": ["2026-07-03T12:00:00.000Z"]
+    },
+    "assignedBy": {
+      "type": ["string", "null"],
+      "examples": ["DIRECTOR_DEMO_001"]
+    },
+    "eventHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["eventType", "occurredAt"],
+        "properties": {
+          "eventType": { "type": "string", "examples": ["MANAGER_ASSIGNED"] },
+          "occurredAt": { "type": "string", "examples": ["2026-06-03T12:00:00.000Z"] },
+          "actorId": { "type": ["string", "null"], "examples": ["DIRECTOR_DEMO_001"] }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "managerAssignmentId": "MANAGER_ASSIGNMENT_DEMO_001",
+      "applicationId": "APPLICATION_DEMO_001",
+      "candidateId": "CANDIDATE_DEMO_001",
+      "managerId": "MANAGER_DEMO_001",
+      "previousManagerId": null,
+      "assignmentStatus": "ACTIVE",
+      "assignmentReason": "INITIAL_OWNER",
+      "startedAt": "2026-06-03T12:00:00.000Z",
+      "endedAt": null,
+      "assignedBy": "DIRECTOR_DEMO_001",
+      "eventHistory": [
+        {
+          "eventType": "MANAGER_ASSIGNED",
+          "occurredAt": "2026-06-03T12:00:00.000Z",
+          "actorId": "DIRECTOR_DEMO_001"
+        }
+      ]
+    }
+  ]
+}
