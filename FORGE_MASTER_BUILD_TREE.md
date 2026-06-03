@@ -151,6 +151,15 @@
 ├── 🟢 Interview + Market Evidence Contracts
 ├── 🔵 Precontract Lifecycle Engine
 ├── 🔵 Mick / Behavior Intelligence
+├── 🟢 Compensation Intelligence Architecture
+│   ├── 🔵 Shared Commercial Model
+│   ├── 🔵 Career Intelligence Foundation
+│   ├── 🔵 Production Events Foundation
+│   ├── 🔵 Contest Intelligence Foundation
+│   ├── 🔵 Compensation Events Foundation
+│   ├── 🔵 Conservation Intelligence Discovery
+│   ├── 🔵 Economic Motivation Foundation
+│   └── 🔵 Manager Compensation Intelligence Foundation
 ├── 🔵 Coaching Suggestions
 ├── 🔵 Activity Alerts
 └── 🔵 Manager Notifications

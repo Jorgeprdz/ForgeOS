@@ -415,6 +415,47 @@ Includes:
 
 ---
 
+## Compensation Intelligence Architecture
+
+Status:
+ARCHITECTURE DOCUMENTED
+
+Source:
+
+- `FORGE_COMPENSATION_INTELLIGENCE_ARCHITECTURE.md`
+
+Central Principle:
+
+Production Events are facts.
+
+Contest Intelligence, Compensation Intelligence and Manager Compensation Intelligence are rule-based interpretations.
+
+Domains:
+
+- Career Intelligence
+- Contest Intelligence
+- Compensation Intelligence
+- Conservation Intelligence
+- Manager Compensation Intelligence
+- Shared Commercial Domain
+- Economic Motivation Engine
+- Compensation Operations
+
+Rules:
+
+- Advisor First.
+- No invented financial values.
+- No invented products.
+- No projections without explicit data.
+- Product Knowledge, Commission Schedules, Contest Rules and Manager Compensation Rules must remain separate.
+- Historical compensation periods must preserve rule snapshots and must not be recalculated with new rules except as separate analysis.
+- Do not mix 2025 commission schedules with 2026 contest rules.
+- Do not mix Prima Meta, Prima Pago, commission and renewal.
+- Do not treat LIMRA and IGC as interchangeable.
+- Do not ask for manual capture when Forge can infer from reliable source data.
+
+---
+
 ## Manager & Team Intelligence
 
 Future Major Area
@@ -433,6 +474,9 @@ Includes:
 - Team Intelligence
 - Coaching Intelligence
 - Leadership Intelligence
+- Compensation Intelligence
+- Conservation Intelligence
+- Economic Motivation Intelligence
 
 ---
 
