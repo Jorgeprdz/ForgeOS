@@ -1,0 +1,3504 @@
+FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+Generated: 2026-06-04
+Scope: Files requiring human review before cleanup, movement, consolidation or deletion.
+
+Review Candidate 1
+- File: center-of-influence-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 2
+- File: clipboard-action-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 3
+- File: event-system.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review
+- Recommendation: review manually before any code change.
+
+Review Candidate 4
+- File: phone-call-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 5
+- File: question-style-match-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review
+- Recommendation: review manually before any code change.
+
+Review Candidate 6
+- File: referral-color-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 7
+- File: referral-priority-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 8
+- File: referral-temperature-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 9
+- File: schema-field-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 10
+- File: seen-but-no-reply-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 11
+- File: shared-client-language-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review
+- Recommendation: review manually before any code change.
+
+Review Candidate 12
+- File: shared-financial-return-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review
+- Recommendation: review manually before any code change.
+
+Review Candidate 13
+- File: shared-protection-efficiency-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review
+- Recommendation: review manually before any code change.
+
+Review Candidate 14
+- File: shared-recovery-analysis-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review
+- Recommendation: review manually before any code change.
+
+Review Candidate 15
+- File: universal-filters-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 16
+- File: virtual-list.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 17
+- File: whatsapp-action-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 18
+- File: whatsapp-link-engine.js
+- Assigned branch: UNKNOWN / NEEDS REVIEW
+- Confidence: LOW
+- Risks: unknown / needs review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 19
+- File: manager-alert-engine.js
+- Assigned branch: 01 REVENUE GENERATION ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 20
+- File: opportunity-detector-engine.js
+- Assigned branch: 01 REVENUE GENERATION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 21
+- File: pipeline-stage-engine.js
+- Assigned branch: 01 REVENUE GENERATION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 22
+- File: revenue-forecast-engine.js
+- Assigned branch: 01 REVENUE GENERATION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 23
+- File: adaptive-message-builder.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 24
+- File: adaptive-outreach-prompt-builder.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 25
+- File: adaptive-script-builder.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 26
+- File: advisor-style-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 27
+- File: appointment-followup-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 28
+- File: close-strategy-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 29
+- File: communication-mismatch-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 30
+- File: conversion-metrics-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 31
+- File: discovery-summary-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 32
+- File: discovery-to-presentation-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 33
+- File: dna-script-strategy-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 34
+- File: first-contact-dashboard.viewmodel.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 35
+- File: first-contact-delivery-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 36
+- File: first-contact-options-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 37
+- File: first-contact-script-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 38
+- File: first-contact-tone-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 39
+- File: first-contact.entity.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 40
+- File: forge-ai-connector-master-test.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 41
+- File: forge-build-tree-status.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 42
+- File: imagina-ser-presentation-prompt-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 43
+- File: orvi-client-report-test.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 44
+- File: outreach-prompt-builder.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 45
+- File: presentation-input-context-builder.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 46
+- File: quotation-extraction-result.entity.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 47
+- File: reactivation-strategy-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 48
+- File: sales-context-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 49
+- File: sales-dna-insight-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 50
+- File: sales-dna-learning-event.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 51
+- File: sales-dna-match-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 52
+- File: sales-dna-profile-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 53
+- File: sales-dna-recommendation-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 54
+- File: sales-dna-stage-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 55
+- File: sales-learning-event.entity.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 56
+- File: smart-outreach-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 57
+- File: smnyl-pipeline-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 58
+- File: tests/gmm-out-of-pocket-test.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 59
+- File: tests/presentation-pipeline-test.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 60
+- File: tests/real-gmm-quote-test.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 61
+- File: tone-performance-engine.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 62
+- File: vida-mujer-client-presentation-test.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 63
+- File: vida-mujer-financial-fixture-report.js
+- Assigned branch: 02 SALES CONVERSION ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 64
+- File: close-prompt-builder.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 65
+- File: ghosting-prompt-builder.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 66
+- File: nash-advisor-performance-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 67
+- File: nash-advisor-performance-master-test.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 68
+- File: nash-coaching-insight-master-test.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 69
+- File: nash-combat-intelligence-report-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 70
+- File: nash-combat-intelligence-report-test.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 71
+- File: nash-learning-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 72
+- File: nash-master-intelligence-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 73
+- File: nash-master-intelligence-master-test.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 74
+- File: nash-memory-master-test.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 75
+- File: nash-next-best-action-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 76
+- File: nash-next-best-action-master-test.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 77
+- File: nash-personality-master-test.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 78
+- File: objection-battle-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 79
+- File: objection-classifier-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 80
+- File: objection-intent-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 81
+- File: objection-memory-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 82
+- File: objection-prompt-builder.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 83
+- File: objection-resolution-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 84
+- File: objection-response-strategy-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 85
+- File: orvi-objection-engine.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 86
+- File: referral-prompt-builder.js
+- Assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 87
+- File: comisiones-rules-gmm.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 88
+- File: comisiones.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 89
+- File: decision-appendix-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 90
+- File: discovery-product-alignment-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 91
+- File: education-cost-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 92
+- File: education-paths-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 93
+- File: financial-pyramid-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 94
+- File: financial-pyramid-priority-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 95
+- File: financial-pyramid-story-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 96
+- File: forge-ai-guardrails-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 97
+- File: forge-global-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 98
+- File: forge-imagina-ser-client-presentation-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 99
+- File: forge-semantic-risk-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 100
+- File: forge-shared-ave-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 101
+- File: forge-vida-mujer-advisor-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 102
+- File: gmm-out-of-pocket-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 103
+- File: imagina-ser-contribution-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 104
+- File: imagina-ser-fiscal-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 105
+- File: imagina-ser-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 106
+- File: imagina-ser-variant-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 107
+- File: imagina-ser-variant-fiscal-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 108
+- File: line-of-business-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 109
+- File: nash-message-recommendation-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 110
+- File: needs-discovery-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 111
+- File: orvi-client-presentation-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 112
+- File: orvi-decision-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 113
+- File: orvi-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 114
+- File: orvi-ocr-extractor.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 115
+- File: policy-ai-parser.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 116
+- File: policy-filter-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 117
+- File: product-detection-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 118
+- File: product-schema-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 119
+- File: search-index-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 120
+- File: segu-beca-client-presentation-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 121
+- File: segu-beca-education-options-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 122
+- File: segu-beca-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 123
+- File: segu-beca-ocr-intake-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 124
+- File: shared-ave-confidence-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 125
+- File: shared-ave-confidence-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 126
+- File: shared-ave-death-benefit-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 127
+- File: shared-ave-death-benefit-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 128
+- File: shared-ave-eligibility-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 129
+- File: shared-ave-growth-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 130
+- File: shared-ave-growth-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 131
+- File: shared-ave-portfolio-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 132
+- File: shared-ave-portfolio-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 133
+- File: shared-ave-rescue-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 134
+- File: shared-ave-rescue-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 135
+- File: shared-ave-type-inference-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 136
+- File: shared-ave-type-inference-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 137
+- File: shared-benefit-hierarchy-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 138
+- File: shared-education-cost-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 139
+- File: shared-education-paths-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 140
+- File: smnyl-comisiones-gmm.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 141
+- File: smnyl-cross-sell-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 142
+- File: smnyl-prima-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 143
+- File: smnyl-productos-gmm.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 144
+- File: solucionline-retirement-parser.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 145
+- File: tests/business-rules-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 146
+- File: tests/critical-path-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 147
+- File: tests/vida-mujer-real-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 148
+- File: vida-mujer-client-explanation-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 149
+- File: vida-mujer-coverage-status-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 150
+- File: vida-mujer-coverage-status-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 151
+- File: vida-mujer-event-benefits-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 152
+- File: vida-mujer-financial-correction-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 153
+- File: vida-mujer-knowledge-extractor-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 154
+- File: vida-mujer-knowledge-extractor.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 155
+- File: vida-mujer-master-test.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 156
+- File: vida-mujer-pdf-ave-integration-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 157
+- File: vida-mujer-pdf-intake-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 158
+- File: vida-mujer-protected-diseases-engine.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 159
+- File: vida-mujer-protected-diseases-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 160
+- File: vida-mujer-rule-consistency-report.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 161
+- File: vida-mujer-status.js
+- Assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 162
+- File: ai-first-contact-message-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 163
+- File: client-engagement-master-test.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 164
+- File: contact-attempt-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 165
+- File: contact-response-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 166
+- File: first-contact-ai-suggestion-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 167
+- File: followup-message-context-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 168
+- File: followup-overdue-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 169
+- File: followup-priority-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 170
+- File: followup-recommendation-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 171
+- File: followup-reminder-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 172
+- File: ghosting-status-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 173
+- File: hot-market-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 174
+- File: nash-coaching-insight-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 175
+- File: nash-followup-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 176
+- File: policy-followup-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 177
+- File: policy-last-contact-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 178
+- File: quick-actions-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 179
+- File: referral-ai-followup.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 180
+- File: referral-card-ui.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 181
+- File: referral-followup-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 182
+- File: relationship-master-acceptance-test.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 183
+- File: relationship-memory-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 184
+- File: smart-followup-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 185
+- File: smart-followup-message-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 186
+- File: smnyl-automation-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 187
+- File: smnyl-reminders-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 188
+- File: warm-market-segmentation-engine.js
+- Assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 189
+- File: ai-sales-coach-engine.js
+- Assigned branch: 06 LEARNING INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 190
+- File: nash-learning-master-test.js
+- Assigned branch: 06 LEARNING INTELLIGENCE ENGINE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 191
+- File: action-resolver-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 192
+- File: adaptive-question-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 193
+- File: advisor-alert-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 194
+- File: advisor-monitor-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 195
+- File: advisor-score-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 196
+- File: ai-context-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 197
+- File: ai-task-suggestion-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 198
+- File: auto-task-generator-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 199
+- File: cartera-import-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 200
+- File: cartera-repository.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 201
+- File: cartera-view.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 202
+- File: cartera.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file
+- Recommendation: review manually before any code change.
+
+Review Candidate 203
+- File: command-palette.tsx
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 204
+- File: dashboard-priority-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 205
+- File: drag-drop-policy-zone.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 206
+- File: financial-story-task-builder.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 207
+- File: followup-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 208
+- File: import-progress-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 209
+- File: live-operational-state-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 210
+- File: mass-import-mapping-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 211
+- File: mass-import-preview-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 212
+- File: nano-banana-icon-system-prompt.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 213
+- File: ocr-result-cache.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 214
+- File: operational-button.tsx
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 215
+- File: operational-card.tsx
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 216
+- File: operational-colors.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 217
+- File: operational-dashboard-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 218
+- File: operational-feed-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 219
+- File: orvi-mxn-master-test.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 220
+- File: overdue-task-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 221
+- File: payment-frequency-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 222
+- File: policy-activity-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 223
+- File: policy-ai-insights-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 224
+- File: policy-auto-approval-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 225
+- File: policy-auto-save-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 226
+- File: policy-client-summary-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 227
+- File: policy-context-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 228
+- File: policy-detail-alert-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 229
+- File: policy-detail-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 230
+- File: policy-detail-view-model.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 231
+- File: policy-document-classifier.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 232
+- File: policy-document-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 233
+- File: policy-duplicate-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 234
+- File: policy-import-dashboard-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 235
+- File: policy-import-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 236
+- File: policy-import-errors-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 237
+- File: policy-import-metrics-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 238
+- File: policy-import-summary.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 239
+- File: policy-indexing-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 240
+- File: policy-ingestion-orchestrator.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 241
+- File: policy-live-state-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 242
+- File: policy-metadata-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 243
+- File: policy-operational-center-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 244
+- File: policy-quick-actions-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 245
+- File: policy-renewal-status-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 246
+- File: policy-review-priority-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 247
+- File: policy-risk-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 248
+- File: policy-search-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 249
+- File: policy-side-by-side-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 250
+- File: policy-staging-cache.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 251
+- File: policy-staging-status-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 252
+- File: policy-status-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 253
+- File: policy-summary-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 254
+- File: policy-task-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 255
+- File: policy-task-priority-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 256
+- File: policy-timeline-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 257
+- File: policy-timeline-event.factory.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 258
+- File: policy-timeline-group-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 259
+- File: policy-timeline-query-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 260
+- File: policy-timeline-view-model.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 261
+- File: policy-timeline.repository.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 262
+- File: policy-timeline.types.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 263
+- File: policy-workspace-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 264
+- File: prospeccion.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 265
+- File: quick-action-executor-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 266
+- File: relationship-health-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 267
+- File: relationship-next-action-master-test.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 268
+- File: relationship-opportunity-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 269
+- File: relationship-review-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 270
+- File: relationship-review-master-test.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 271
+- File: relationship-timeline-master-test.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 272
+- File: render-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 273
+- File: renewal-intelligence-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 274
+- File: smnyl-followup-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 275
+- File: smnyl-operating-system-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 276
+- File: staging-cleanup-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 277
+- File: task-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 278
+- File: task-feed-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 279
+- File: task-priority-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 280
+- File: task-quick-action-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 281
+- File: tests/real-pdf-ocr-test.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 282
+- File: tests/vida-mujer-survival-schedule-test.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 283
+- File: ui-render-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 284
+- File: vida-mujer-survival-schedule-engine.js
+- Assigned branch: 07 POLICY & SALES OPERATIONS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 285
+- File: app-shell-manager.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 286
+- File: appointment-opportunity-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 287
+- File: candidate-assessment-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 288
+- File: candidate-assessment-master-test.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 289
+- File: candidate-coachability-master-test.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 290
+- File: candidate-market-quality-master-test.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 291
+- File: dna-coaching-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 292
+- File: manager-broadcast-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 293
+- File: manager-coaching-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 294
+- File: manager-feed-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 295
+- File: manager-notification-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 296
+- File: manager-role-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 297
+- File: nash-manager-alert-master-test.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 298
+- File: nash-team-intelligence-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 299
+- File: nash-team-intelligence-master-test.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 300
+- File: ovelay-manager.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 301
+- File: payment-mode-coaching-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 302
+- File: ranking-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 303
+- File: referral-opportunity-master-test.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 304
+- File: relationship-opportunity-master-test.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 305
+- File: route-transition-manager.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 306
+- File: search-ranking-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 307
+- File: smnyl-ai-presence-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 308
+- File: smnyl-command-center-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 309
+- File: team-momentum-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 310
+- File: team-structure-engine.js
+- Assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 311
+- File: command-shortcuts-engine.js
+- Assigned branch: 09 UNIVERSAL COMMAND OS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 312
+- File: command-suggestion-engine.js
+- Assigned branch: 09 UNIVERSAL COMMAND OS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 313
+- File: search-quick-actions-engine.js
+- Assigned branch: 09 UNIVERSAL COMMAND OS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 314
+- File: app.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN
+- Recommendation: review manually before any code change.
+
+Review Candidate 315
+- File: assistant-memory-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 316
+- File: candidate-hard-factors-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 317
+- File: communication-channel-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 318
+- File: copilot-suggestion-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 319
+- File: core-app-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 320
+- File: crash-runtime.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 321
+- File: csv-parser-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 322
+- File: dashboard.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 323
+- File: domain-events.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 324
+- File: event-bus-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 325
+- File: health-runtime.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 326
+- File: in-app-notification-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 327
+- File: live-communication-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 328
+- File: live-notification-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 329
+- File: mutation-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 330
+- File: notification-orchestrator.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 331
+- File: notification-priority-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 332
+- File: notification-queue-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 333
+- File: performance-runtime.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 334
+- File: policy-batch-processing-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 335
+- File: policy-import-queue.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 336
+- File: policy-storage-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 337
+- File: push-notification-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 338
+- File: query-cache.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 339
+- File: query-runtime.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 340
+- File: referral-smart-actions.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 341
+- File: referrals-board-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 342
+- File: relationship-health-master-test.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 343
+- File: sales-coach-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 344
+- File: secure-storage.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 345
+- File: segu-beca-mxn-timeline-clean-report.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 346
+- File: smart-notification-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 347
+- File: smart-priority-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 348
+- File: smnyl-ai-coach-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 349
+- File: storage-engine.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 350
+- File: supabase-runtime.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 351
+- File: sw-cache-config.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 352
+- File: sync-queue-runtime.js
+- Assigned branch: 10 PLATFORM SERVICES
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 353
+- File: ai-orb-widget.js
+- Assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 354
+- File: dashboard-executive.js
+- Assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 355
+- File: live-dashboard-engine.js
+- Assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 356
+- File: predictive-dashboard.tsx
+- Assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 357
+- File: smart-header.tsx
+- Assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 358
+- File: team-dashboard-engine.js
+- Assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 359
+- File: command-palette-ui.js
+- Assigned branch: Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 360
+- File: command-palette.js
+- Assigned branch: Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 361
+- File: universal-search-engine.js
+- Assigned branch: Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 362
+- File: commission-projection-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 363
+- File: commissionable-amount-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 364
+- File: concursos.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 365
+- File: discovery-insights-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 366
+- File: mass-import-validation-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 367
+- File: policy-field-confidence-map.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 368
+- File: policy-financial-summary-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 369
+- File: policy-normalization-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 370
+- File: policy-review-ui-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 371
+- File: policy-smart-sort-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 372
+- File: policy-validation-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 373
+- File: primary-risk-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 374
+- File: risk-story-context-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 375
+- File: smnyl-alerts-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 376
+- File: smnyl-cancelaciones-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 377
+- File: smnyl-comisiones-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 378
+- File: smnyl-command-palette-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 379
+- File: smnyl-concursos-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 380
+- File: smnyl-conteo-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 381
+- File: smnyl-opportunity-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 382
+- File: smnyl-produccion-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 383
+- File: smnyl-productos-vida.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 384
+- File: smnyl-training-allowance-engine.js
+- Assigned branch: COMPENSATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 385
+- File: command-execution-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 386
+- File: contextual-suggestion-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 387
+- File: semantic-navigation-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 388
+- File: smnyl-anomaly-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 389
+- File: smnyl-bonos-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 390
+- File: smnyl-comisiones-vida.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 391
+- File: smnyl-executive-dashboard-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; UI/business interpretation boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 392
+- File: smnyl-insights-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 393
+- File: smnyl-kpi-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 394
+- File: smnyl-persistencia-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 395
+- File: smnyl-renovaciones-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 396
+- File: smnyl-retencion-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 397
+- File: smnyl-risk-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 398
+- File: smnyl-time-block-engine.js
+- Assigned branch: CONSERVATION INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 399
+- File: gmm-quote-parser.js
+- Assigned branch: ECONOMIC MOTIVATION
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 400
+- File: candidate-hard-factors-master-test.js
+- Assigned branch: EVIDENCE & PROVENANCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 401
+- File: candidate-vital-factors-master-test.js
+- Assigned branch: EVIDENCE & PROVENANCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 402
+- File: forge-schema-reporter.js
+- Assigned branch: EVIDENCE & PROVENANCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 403
+- File: nash-intent-master-test.js
+- Assigned branch: EVIDENCE & PROVENANCE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 404
+- File: policy-human-review-engine.js
+- Assigned branch: EVIDENCE & PROVENANCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 405
+- File: staging-review-engine.js
+- Assigned branch: EVIDENCE & PROVENANCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 406
+- File: vida-mujer-client-presentation-engine.js
+- Assigned branch: EVIDENCE & PROVENANCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 407
+- File: imagina-ser-client-presentation-engine.js
+- Assigned branch: FORECAST INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 408
+- File: life-expectancy-projection-engine.js
+- Assigned branch: FORECAST INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 409
+- File: segu-beca-meaningful-numbers-report.js
+- Assigned branch: FORECAST INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 410
+- File: segu-beca-mxn-appendix-report.js
+- Assigned branch: FORECAST INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 411
+- File: smnyl-forecast-engine.js
+- Assigned branch: FORECAST INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 412
+- File: actividad.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; large file
+- Recommendation: review manually before any code change.
+
+Review Candidate 413
+- File: advisor-activity-timeline.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 414
+- File: advisor-sales-dna.entity.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 415
+- File: appointment-calendar-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 416
+- File: buying-signals-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 417
+- File: client-engagement-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 418
+- File: comisiones-utils.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 419
+- File: event-log-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 420
+- File: followup-next-date-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 421
+- File: followup.entity.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 422
+- File: forge-ai-connector.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 423
+- File: google-calendar-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 424
+- File: idle-runtime.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 425
+- File: life-event-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 426
+- File: monthly-revenue-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 427
+- File: nash-memory-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 428
+- File: optimistic-mutation-runtime.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 429
+- File: policy-core-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 430
+- File: question-answer-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 431
+- File: question-session-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 432
+- File: quick-actions-bar.tsx
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 433
+- File: realtime-task-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 434
+- File: referral-timeline-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 435
+- File: referrals-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 436
+- File: relationship-next-action-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 437
+- File: relationship-timeline-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 438
+- File: retry-runtime.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 439
+- File: revenue-optimization-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 440
+- File: shared-banxico-rate-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 441
+- File: shared-banxico-rate-report.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 442
+- File: shared-decision-appendix-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 443
+- File: smart-agenda-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 444
+- File: tests/smoke-test.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 445
+- File: virtual-list-engine.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 446
+- File: visibility-runtime.js
+- Assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 447
+- File: activity-feed-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 448
+- File: activity-feed.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 449
+- File: activity-stream-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 450
+- File: channel-performance-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 451
+- File: nash-manager-alert-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 452
+- File: sales-dna-evolution-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 453
+- File: smnyl-goals-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 454
+- File: smnyl-productividad-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 455
+- File: smnyl-streak-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 456
+- File: team-activity-engine.js
+- Assigned branch: PRODUCTIVITY INTELLIGENCE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 457
+- File: daily-points-engine.js
+- Assigned branch: RULESNAPSHOT / RULE PACK
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 458
+- File: introduction-message-engine.js
+- Assigned branch: SHARED COMMERCIAL MODEL
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 459
+- File: nash-intent-engine.js
+- Assigned branch: SHARED COMMERCIAL MODEL
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 460
+- File: shared-clp-engine.js
+- Assigned branch: SHARED COMMERCIAL MODEL
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 461
+- File: shared-clp-master-test.js
+- Assigned branch: SHARED COMMERCIAL MODEL
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 462
+- File: advisor-performance-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 463
+- File: animation-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 464
+- File: candidate-coachability-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 465
+- File: candidate-market-quality-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 466
+- File: candidate-vital-factors-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 467
+- File: close-readiness-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 468
+- File: command-palette-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 469
+- File: command-parser-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 470
+- File: core-event-bus.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 471
+- File: core_domain-events.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 472
+- File: core_event-bus.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 473
+- File: discovery-priority-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 474
+- File: dom-sanitizer.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 475
+- File: domain-runtime.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 476
+- File: entity-resolver-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 477
+- File: excel-parser-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 478
+- File: financial-risk-score-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 479
+- File: lead-temperature-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 480
+- File: life-event-master-test.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 481
+- File: momentum-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 482
+- File: motion-principles.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 483
+- File: nash-personality-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 484
+- File: operational-shell.store.ts
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 485
+- File: operational-sync-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 486
+- File: policy-relationship-score-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 487
+- File: policy-schema-validator-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 488
+- File: prospect-score-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 489
+- File: quotation-input.entity.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 490
+- File: referidos.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 491
+- File: referral-opportunity-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 492
+- File: referral-score-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 493
+- File: shared-decision-score-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible
+- Recommendation: review manually before any code change.
+
+Review Candidate 494
+- File: smart-referrals-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 495
+- File: smnyl-decision-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 496
+- File: smnyl-health-score-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Recommendation: review manually before any code change.
+
+Review Candidate 497
+- File: smnyl-leaderboard-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 498
+- File: smnyl-neural-glow-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: carrier-specific boundary review; possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+
+Review Candidate 499
+- File: smnyl-performance-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Recommendation: review manually before any code change.
+
+Review Candidate 500
+- File: universal-command-engine.js
+- Assigned branch: SHARED CORE
+- Confidence: MEDIUM
+- Risks: possible orphan / no incoming imports detected
+- Recommendation: review manually before any code change.
+

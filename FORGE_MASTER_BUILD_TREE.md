@@ -427,4 +427,218 @@
 ├── 🔵 Alfred / Universal Command Bar Introduction - ARCHITECTURE CANDIDATE
 ├── 🔵 Candy Crush Experience - ARCHITECTURE CANDIDATE
 └── ⛔ Implementation - NOT APPROVED
+
+## CODEBASE CARTOGRAPHY PHASE 1 - DETECTED CODE MODULES
+
+Status: DOCUMENTATION ONLY / INVENTORY ONLY
+
+No code movement approved. No imports changed. No implementation approved. Full detail lives in FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt. Review queue lives in FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt.
+
+### 01 REVENUE GENERATION ENGINE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 4 files detected
+    ├── Types: engine: 4
+    ├── Confidence: MEDIUM: 4
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 02 SALES CONVERSION ENGINE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 59 files detected
+    ├── Types: UI component: 7, adapter: 1, config: 4, engine: 28, fixture: 1, test: 13, utility: 5
+    ├── Confidence: HIGH: 18, MEDIUM: 41
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 03 NASH CONVERSATION INTELLIGENCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 32 files detected
+    ├── Types: UI component: 4, engine: 12, orchestrator: 2, script: 1, state/store: 1, test: 12
+    ├── Confidence: HIGH: 9, MEDIUM: 23
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 04 PRODUCT INTELLIGENCE ENGINE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 89 files detected
+    ├── Types: UI component: 1, adapter: 6, engine: 44, script: 19, test: 15, utility: 4
+    ├── Confidence: HIGH: 14, MEDIUM: 75
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 05 RELATIONSHIP INTELLIGENCE ENGINE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 31 files detected
+    ├── Types: UI component: 2, config: 3, engine: 21, script: 1, state/store: 1, test: 2, utility: 1
+    ├── Confidence: HIGH: 4, MEDIUM: 27
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 06 LEARNING INTELLIGENCE ENGINE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 2 files detected
+    ├── Types: engine: 1, test: 1
+    ├── Confidence: MEDIUM: 2
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 07 POLICY & SALES OPERATIONS
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 108 files detected
+    ├── Types: UI component: 18, engine: 58, orchestrator: 1, script: 3, state/store: 4, test: 9, unknown: 1, utility: 14
+    ├── Confidence: HIGH: 14, MEDIUM: 94
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 08 MANAGER & TEAM INTELLIGENCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 28 files detected
+    ├── Types: UI component: 1, engine: 16, state/store: 1, test: 8, utility: 2
+    ├── Confidence: HIGH: 2, MEDIUM: 26
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 09 UNIVERSAL COMMAND OS
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 3 files detected
+    ├── Types: UI component: 1, engine: 2
+    ├── Confidence: MEDIUM: 3
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 10 PLATFORM SERVICES
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 58 files detected
+    ├── Types: UI component: 1, adapter: 1, config: 1, engine: 22, orchestrator: 2, script: 1, state/store: 5, test: 3, unknown: 1, utility: 21
+    ├── Confidence: HIGH: 19, MEDIUM: 39
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### 12 ADVISOR EXPERIENCE INTELLIGENCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 7 files detected
+    ├── Types: UI component: 7
+    ├── Confidence: HIGH: 1, MEDIUM: 6
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### Alfred / Universal Command Bar
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 4 files detected
+    ├── Types: UI component: 1, engine: 2, utility: 1
+    ├── Confidence: HIGH: 1, MEDIUM: 3
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### COMPENSATION INTELLIGENCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 26 files detected
+    ├── Types: UI component: 1, engine: 22, utility: 3
+    ├── Confidence: HIGH: 3, MEDIUM: 23
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### CONSERVATION INTELLIGENCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 16 files detected
+    ├── Types: UI component: 1, engine: 14, utility: 1
+    ├── Confidence: HIGH: 2, MEDIUM: 14
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### ECONOMIC MOTIVATION
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 5 files detected
+    ├── Types: adapter: 1, engine: 3, utility: 1
+    ├── Confidence: HIGH: 4, MEDIUM: 1
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### EVIDENCE & PROVENANCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 10 files detected
+    ├── Types: UI component: 2, engine: 1, script: 1, test: 6
+    ├── Confidence: HIGH: 3, MEDIUM: 7
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### FORECAST INTELLIGENCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 15 files detected
+    ├── Types: engine: 12, script: 2, test: 1
+    ├── Confidence: HIGH: 10, MEDIUM: 5
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### PERIODSNAPSHOT / OPERATIONAL CLOCKS
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 44 files detected
+    ├── Types: UI component: 1, adapter: 1, engine: 25, script: 1, state/store: 1, test: 2, utility: 13
+    ├── Confidence: HIGH: 9, MEDIUM: 35
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### PRODUCTIVITY INTELLIGENCE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 11 files detected
+    ├── Types: engine: 9, utility: 2
+    ├── Confidence: HIGH: 1, MEDIUM: 10
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### RULESNAPSHOT / RULE PACK
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 5 files detected
+    ├── Types: engine: 2, orchestrator: 1, test: 2
+    ├── Confidence: HIGH: 4, MEDIUM: 1
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### SHARED COMMERCIAL MODEL
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 5 files detected
+    ├── Types: engine: 3, test: 2
+    ├── Confidence: HIGH: 1, MEDIUM: 4
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### SHARED CORE
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 54 files detected
+    ├── Types: UI component: 1, adapter: 2, config: 3, engine: 27, state/store: 5, test: 5, unknown: 3, utility: 8
+    ├── Confidence: HIGH: 15, MEDIUM: 39
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
+### UNKNOWN / NEEDS REVIEW
+
+└── 🔵 Detected Code Modules - Phase 1 Inventory
+    ├── Summary: 18 files detected
+    ├── Types: engine: 16, utility: 2
+    ├── Confidence: LOW: 18
+    ├── Review Queue: see FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+    └── Full map: see FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+
 ```

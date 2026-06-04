@@ -1,0 +1,48 @@
+FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt
+Generated: 2026-06-04
+
+1. Summary
+
+FORGE_MASTER_BUILD_TREE.md was updated with Phase 1 detected-code-module summaries by Build Tree branch. Existing PAQ states and architecture states were preserved.
+
+2. Updated Branches
+
+- 01 REVENUE GENERATION ENGINE: 4 modules
+- 02 SALES CONVERSION ENGINE: 59 modules
+- 03 NASH CONVERSATION INTELLIGENCE: 32 modules
+- 04 PRODUCT INTELLIGENCE ENGINE: 89 modules
+- 05 RELATIONSHIP INTELLIGENCE ENGINE: 31 modules
+- 06 LEARNING INTELLIGENCE ENGINE: 2 modules
+- 07 POLICY & SALES OPERATIONS: 108 modules
+- 08 MANAGER & TEAM INTELLIGENCE: 28 modules
+- 09 UNIVERSAL COMMAND OS: 3 modules
+- 10 PLATFORM SERVICES: 58 modules
+- 12 ADVISOR EXPERIENCE INTELLIGENCE: 7 modules
+- Alfred / Universal Command Bar: 4 modules
+- COMPENSATION INTELLIGENCE: 26 modules
+- CONSERVATION INTELLIGENCE: 16 modules
+- ECONOMIC MOTIVATION: 5 modules
+- EVIDENCE & PROVENANCE: 10 modules
+- FORECAST INTELLIGENCE: 15 modules
+- PERIODSNAPSHOT / OPERATIONAL CLOCKS: 44 modules
+- PRODUCTIVITY INTELLIGENCE: 11 modules
+- RULESNAPSHOT / RULE PACK: 5 modules
+- SHARED COMMERCIAL MODEL: 5 modules
+- SHARED CORE: 54 modules
+- UNKNOWN / NEEDS REVIEW: 18 modules
+
+3. Rules Applied
+
+- No code moved.
+- No files renamed.
+- No imports changed.
+- app.js classified as Platform / App Shell / Root Orchestration, HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN.
+- command-palette visible experience assigned to Alfred / Universal Command Bar.
+- Command routing/parsing/execution assigned to Command OS.
+- smnyl-* files marked for carrier-specific boundary review.
+
+4. References
+
+- FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt
+- FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+- FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md
