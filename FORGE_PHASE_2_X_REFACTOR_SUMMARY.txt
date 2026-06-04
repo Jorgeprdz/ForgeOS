@@ -1,0 +1,69 @@
+PHASE 2.X REFACTOR SUMMARY
+
+Status: BLOCKED - NO PHYSICAL REFACTOR EXECUTED
+
+Reason:
+
+The requested operation contains conflicting constraints:
+
+- Move JS/TS/TSX modules into /src/core, /src/engines, /src/products and /src/ui.
+- Do not modify imports.
+- Do not touch engines.
+- Do not touch UI.
+- Do not touch app.js.
+- Keep DO NOT TOUCH modules untouched.
+- Preserve runtime behavior.
+
+Moving JavaScript/TypeScript modules without updating imports would break runtime resolution.
+Moving *-engine.js files conflicts with the instruction not to touch engines.
+Moving TSX/UI files conflicts with the instruction not to touch UI.
+Moving legacy root files conflicts with LEGACY_CRM_ADDLIFE_ROOT / DO NOT TOUCH policy.
+
+No files were moved.
+No files were renamed.
+No imports were changed.
+No code was modified.
+No Build Tree file was modified.
+No commit was created.
+No push was executed.
+
+Requested target structure:
+
+- /src/core/
+- /src/engines/
+- /src/products/
+- /src/ui/
+- /docs/
+
+Safe path before physical refactor:
+
+1. Approve import rewrite policy.
+2. Approve test plan for each migration batch.
+3. Approve DO NOT TOUCH exceptions, if any.
+4. Approve Legacy CRM AddLife Root migration ADR.
+5. Move one low-risk batch first.
+6. Update imports in the same commit.
+7. Run acceptance tests.
+8. Only then continue with engines, UI and protected surfaces.
+
+High-risk blockers:
+
+- app.js remains DO NOT TOUCH.
+- dashboard.js remains DO NOT TOUCH / review required.
+- cartera.js and cartera-view.js remain DO NOT TOUCH.
+- command-palette* modules remain protected until Alfred / Command OS ADR is approved.
+- compensation and SMNYL rule modules require Rule Pack/source documentation.
+- forecast/projection/currency modules require predictive vs historical truth ADR.
+- event bus/domain event files require consolidation ADR before movement.
+
+Recommended next human decision:
+
+Choose one:
+
+1. Documentation-only commit of Phase 2.X reports.
+2. Safe refactor plan with import rewrites and tests approved.
+3. First migration batch limited to non-engine, non-UI, non-DO-NOT-TOUCH documentation files only.
+
+Final verdict:
+
+Physical refactor is NOT SAFE under the current constraints.

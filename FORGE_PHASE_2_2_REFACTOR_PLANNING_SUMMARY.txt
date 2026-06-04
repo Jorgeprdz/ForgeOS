@@ -1,0 +1,1552 @@
+FORGE PHASE 2.2 / 2.1 REFACTOR PLANNING SUMMARY
+
+Status: Documentation-only refactor planning.
+No code modified. No files moved. No imports changed. No Build Tree file updated.
+
+1. Executive Summary
+- Modules reviewed from Phase 2.1 decision table: 168
+- Modules in Phase 2.2 planning scope: 133
+- High priority: 35
+- Medium priority: 67
+- Low priority: 31
+- DOMAIN OWNER: 0
+- Legacy / Migration Candidate: 6
+- DO NOT TOUCH: 21
+- Needs further human validation: 106
+
+2. Action Summary
+- CONSOLIDATE: 36
+- DO NOT TOUCH: 21
+- MOVE: 2
+- REVIEW REQUIRED: 24
+- REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED: 50
+
+3. Priority Themes
+High
+- Separate predictive vs historical truth before changing forecast/dashboard/projection modules.
+- Keep institutional reporting lag separate from local predictive signals.
+- Do not touch app.js, cartera root files, compensation/rule files or projection engines without test/source plan.
+Medium
+- Consolidate duplicate modules only after behavior comparison and import graph validation.
+- Resolve owner mismatches in command, event bus, candidate, followup and performance modules.
+Low
+- Defer orphan/migration candidates that do not affect Core until high-risk ownership decisions are closed.
+
+4. Dangerous Dependency Review
+- Alfred / Universal Command Bar vs Command OS: Risk of mixing visible advisor command UX with command parsing/routing/execution infrastructure. Keep UI and execution boundaries separate.
+- Compensation Intelligence vs RuleSnapshot / Rule Pack: Risk of treating carrier-specific rules and hardcoded formulas as Forge Core. Require source docs and tests before movement.
+- Forecast vs Economic Motivation: Risk of forecasts becoming income promises or projections without rate/source validation. Keep predictive truth separate from financial explanation.
+- Local Predictive Truth vs Institutional Historical Truth: Risk of dashboards/projections using local signals as confirmed truth. Preserve evidence/provenance and reporting lag boundaries.
+- Policy & Sales Operations vs UI: Risk of cartera/policy views owning business truth. Split later only after import/lifecycle fixtures exist.
+- Nash vs Mick/Productivity/Manager: Risk of conversation/performance engines duplicating behavior/productivity/manager ownership. Consolidate only after behavior comparison.
+
+5. Conceptual Build Tree Update
+Conceptual Build Tree Update - Phase 2.2
+Status: REPORT ONLY. FORGE_MASTER_BUILD_TREE.md NOT MODIFIED.
+
+LEGACY_CRM_ADDLIFE_ROOT
+- app.js - DO NOT TOUCH / root orchestration
+- dashboard.js - REVIEW REQUIRED / dashboard-business truth split risk
+- utils.js - REVIEW REQUIRED / shared util migration candidate
+- store.js, runtime.js, db.js, sync-engine.js, service-worker.js - Platform migration candidates
+
+FORGE CORE / PLATFORM SERVICES
+- app shell, event bus, domain events, storage/sync/runtime modules
+- event bus duplicates require ADR before consolidation
+
+DOMAIN ENGINES
+- Engines remain in place. Ownership can be documented but no physical move approved.
+- Compensation/product/forecast/policy engines require source/test guardrails before refactor.
+
+REFACTOR CANDIDATE QUEUES
+- High: predictive vs historical truth, Rule Pack boundaries, app/cartera/dashboard root surfaces
+- Medium: duplicate engines and owner mismatches
+- Low: orphan candidates without core/runtime impact
+
+6. Module Classification Table
+
+## app.js
+- Module name: app.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: 10 PLATFORM SERVICES / App Shell / Root Orchestration
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## cartera-import-engine.js
+- Module name: cartera-import-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## cartera-repository.js
+- Module name: cartera-repository.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## cartera-view.js
+- Module name: cartera-view.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## cartera.js
+- Module name: cartera.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## comisiones-rules-gmm.js
+- Module name: comisiones-rules-gmm.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## comisiones-utils.js
+- Module name: comisiones-utils.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## comisiones.js
+- Module name: comisiones.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## command-palette-engine.js
+- Module name: command-palette-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## command-palette-ui.js
+- Module name: command-palette-ui.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## command-palette.js
+- Module name: command-palette.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## command-palette.store.js
+- Module name: command-palette.store.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: No immediate static risk detected. No immediate static risk detected.
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## command-palette.tsx
+- Module name: command-palette.tsx
+- Current classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## commission-projection-engine.js
+- Module name: commission-projection-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## core-event-bus.js
+- Module name: core-event-bus.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## core_event-bus.js
+- Module name: core_event-bus.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected; possible duplicate / overlap candidate possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## dashboard-executive.js
+- Module name: dashboard-executive.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## dashboard.js
+- Module name: dashboard.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## dynamic-cash-value-projection-engine.js
+- Module name: dynamic-cash-value-projection-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: No immediate static risk detected. No immediate static risk detected.
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## event-bus-engine.js
+- Module name: event-bus-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected; possible duplicate / overlap candidate possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## event-system.js
+- Module name: event-system.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: 10 PLATFORM SERVICES or SHARED CORE event infrastructure
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: unknown / needs review unknown / needs review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## first-contact-dashboard.viewmodel.js
+- Module name: first-contact-dashboard.viewmodel.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## life-expectancy-projection-engine.js
+- Module name: life-expectancy-projection-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## live-dashboard-engine.js
+- Module name: live-dashboard-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## mass-import-dashboard-engine.js
+- Module name: mass-import-dashboard-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: HIGH
+- Notes for human review: source module not detected in Phase 1 map source module not detected in Phase 1 map
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## predictive-dashboard.tsx
+- Module name: predictive-dashboard.tsx
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## projection-engine.js
+- Module name: projection-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: No immediate static risk detected. No immediate static risk detected.
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## shared-currency-projection-engine.js
+- Module name: shared-currency-projection-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: No immediate static risk detected. No immediate static risk detected.
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## smnyl-bonos-engine.js
+- Module name: smnyl-bonos-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## smnyl-comisiones-engine.js
+- Module name: smnyl-comisiones-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## smnyl-comisiones-vida.js
+- Module name: smnyl-comisiones-vida.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## smnyl-concursos-engine.js
+- Module name: smnyl-concursos-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## smnyl-prima-engine.js
+- Module name: smnyl-prima-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## smnyl-training-allowance-engine.js
+- Module name: smnyl-training-allowance-engine.js
+- Current classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: DO NOT TOUCH
+- Legacy / Core / Candidate: DO NOT TOUCH
+- Action recommendation: DO NOT TOUCH
+- Priority: HIGH
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## team-dashboard-engine.js
+- Module name: team-dashboard-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: HIGH
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## advisor-performance-engine.js
+- Module name: advisor-performance-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-assessment-engine.js
+- Module name: candidate-assessment-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-assessment-master-test.js
+- Module name: candidate-assessment-master-test.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-coachability-engine.js
+- Module name: candidate-coachability-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-coachability-master-test.js
+- Module name: candidate-coachability-master-test.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-hard-factors-engine.js
+- Module name: candidate-hard-factors-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-hard-factors-master-test.js
+- Module name: candidate-hard-factors-master-test.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-market-quality-engine.js
+- Module name: candidate-market-quality-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-market-quality-master-test.js
+- Module name: candidate-market-quality-master-test.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-vital-factors-engine.js
+- Module name: candidate-vital-factors-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## candidate-vital-factors-master-test.js
+- Module name: candidate-vital-factors-master-test.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## center-of-influence-engine.js
+- Module name: center-of-influence-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## clipboard-action-engine.js
+- Module name: clipboard-action-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## close-readiness-engine.js
+- Module name: close-readiness-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## concursos.js
+- Module name: concursos.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## core-app-engine.js
+- Module name: core-app-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## core_domain-events.js
+- Module name: core_domain-events.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible orphan / no incoming imports detected; possible duplicate / overlap candidate possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## db.js
+- Module name: db.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 10 PLATFORM SERVICES / Legacy CRM AddLife Root
+- Ownership: Legacy / Migration Candidate
+- Legacy / Core / Candidate: Legacy / Migration Candidate
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: Legacy root util/app file not in Phase 2.1 table Legacy root surface; requires dependency validation
+- Required before code change: test plan; import graph; rollback; owner decision
+
+## domain-events.js
+- Module name: domain-events.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible orphan / no incoming imports detected; possible duplicate / overlap candidate possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## followup-engine.js
+- Module name: followup-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## gmm-out-of-pocket-engine.js
+- Module name: gmm-out-of-pocket-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## mass-import-preview-engine.js
+- Module name: mass-import-preview-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## nash-advisor-performance-engine.js
+- Module name: nash-advisor-performance-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## nash-followup-engine.js
+- Module name: nash-followup-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## phone-call-engine.js
+- Module name: phone-call-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## policy-detail-engine.js
+- Module name: policy-detail-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible orphan / no incoming imports detected; possible duplicate / overlap candidate possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## policy-followup-engine.js
+- Module name: policy-followup-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible orphan / no incoming imports detected; possible duplicate / overlap candidate possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## policy-human-review-engine.js
+- Module name: policy-human-review-engine.js
+- Current classification: MOVE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: MOVE
+- Priority: MEDIUM
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## policy-risk-engine.js
+- Module name: policy-risk-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## policy-storage-engine.js
+- Module name: policy-storage-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible orphan / no incoming imports detected; possible duplicate / overlap candidate possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## policy-timeline-engine.js
+- Module name: policy-timeline-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## question-style-match-engine.js
+- Module name: question-style-match-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review unknown / needs review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## referral-color-engine.js
+- Module name: referral-color-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## referral-priority-engine.js
+- Module name: referral-priority-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## referral-temperature-engine.js
+- Module name: referral-temperature-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## runtime.js
+- Module name: runtime.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 10 PLATFORM SERVICES / Legacy CRM AddLife Root
+- Ownership: Legacy / Migration Candidate
+- Legacy / Core / Candidate: Legacy / Migration Candidate
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: Legacy root util/app file not in Phase 2.1 table Legacy root surface; requires dependency validation
+- Required before code change: test plan; import graph; rollback; owner decision
+
+## sales-dna-match-engine.js
+- Module name: sales-dna-match-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## schema-field-engine.js
+- Module name: schema-field-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## seen-but-no-reply-engine.js
+- Module name: seen-but-no-reply-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## segu-beca-meaningful-numbers-report.js
+- Module name: segu-beca-meaningful-numbers-report.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## segu-beca-mxn-appendix-report.js
+- Module name: segu-beca-mxn-appendix-report.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## service-worker.js
+- Module name: service-worker.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 10 PLATFORM SERVICES / Legacy CRM AddLife Root
+- Ownership: Legacy / Migration Candidate
+- Legacy / Core / Candidate: Legacy / Migration Candidate
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: Legacy root util/app file not in Phase 2.1 table Legacy root surface; requires dependency validation
+- Required before code change: test plan; import graph; rollback; owner decision
+
+## shared-ave-growth-engine.js
+- Module name: shared-ave-growth-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## shared-ave-growth-report.js
+- Module name: shared-ave-growth-report.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## shared-client-language-engine.js
+- Module name: shared-client-language-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review unknown / needs review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## shared-clp-engine.js
+- Module name: shared-clp-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## shared-financial-return-engine.js
+- Module name: shared-financial-return-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review unknown / needs review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## shared-protection-efficiency-engine.js
+- Module name: shared-protection-efficiency-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review unknown / needs review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## shared-recovery-analysis-engine.js
+- Module name: shared-recovery-analysis-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review unknown / needs review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## smnyl-command-palette-engine.js
+- Module name: smnyl-command-palette-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: carrier-specific boundary review; possible duplicate / overlap candidate carrier-specific boundary review; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## smnyl-conteo-engine.js
+- Module name: smnyl-conteo-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## smnyl-followup-engine.js
+- Module name: smnyl-followup-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: carrier-specific boundary review; possible duplicate / overlap candidate carrier-specific boundary review; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## staging-review-engine.js
+- Module name: staging-review-engine.js
+- Current classification: MOVE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: MOVE
+- Priority: MEDIUM
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## store.js
+- Module name: store.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 10 PLATFORM SERVICES / Legacy CRM AddLife Root
+- Ownership: Legacy / Migration Candidate
+- Legacy / Core / Candidate: Legacy / Migration Candidate
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: Legacy root util/app file not in Phase 2.1 table Legacy root surface; requires dependency validation
+- Required before code change: test plan; import graph; rollback; owner decision
+
+## sync-engine.js
+- Module name: sync-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 10 PLATFORM SERVICES / Legacy CRM AddLife Root
+- Ownership: Legacy / Migration Candidate
+- Legacy / Core / Candidate: Legacy / Migration Candidate
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: Legacy root util/app file not in Phase 2.1 table Legacy root surface; requires dependency validation
+- Required before code change: test plan; import graph; rollback; owner decision
+
+## ui-render-engine.js
+- Module name: ui-render-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## universal-filters-engine.js
+- Module name: universal-filters-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## utils.js
+- Module name: utils.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 10 PLATFORM SERVICES / Legacy CRM AddLife Root
+- Ownership: Legacy / Migration Candidate
+- Legacy / Core / Candidate: Legacy / Migration Candidate
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: Legacy root util/app file not in Phase 2.1 table Legacy root surface; requires dependency validation
+- Required before code change: test plan; import graph; rollback; owner decision
+
+## vida-mujer-coverage-status-report.js
+- Module name: vida-mujer-coverage-status-report.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## vida-mujer-event-benefits-report.js
+- Module name: vida-mujer-event-benefits-report.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## vida-mujer-knowledge-extractor-report.js
+- Module name: vida-mujer-knowledge-extractor-report.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## vida-mujer-knowledge-extractor.js
+- Module name: vida-mujer-knowledge-extractor.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## vida-mujer-protected-diseases-engine.js
+- Module name: vida-mujer-protected-diseases-engine.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: possible duplicate / overlap candidate possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## vida-mujer-protected-diseases-report.js
+- Module name: vida-mujer-protected-diseases-report.js
+- Current classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: CONSOLIDATE
+- Priority: MEDIUM
+- Notes for human review: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## virtual-list.js
+- Module name: virtual-list.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## whatsapp-action-engine.js
+- Module name: whatsapp-action-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## whatsapp-link-engine.js
+- Module name: whatsapp-link-engine.js
+- Current classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED
+- Priority: MEDIUM
+- Notes for human review: unknown / needs review; possible orphan / no incoming imports detected unknown / needs review; possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+
+## adaptive-message-builder.js
+- Module name: adaptive-message-builder.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## adaptive-outreach-prompt-builder.js
+- Module name: adaptive-outreach-prompt-builder.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## ai-orb-widget.js
+- Module name: ai-orb-widget.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## buying-signals-engine.js
+- Module name: buying-signals-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## close-prompt-builder.js
+- Module name: close-prompt-builder.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## close-strategy-engine.js
+- Module name: close-strategy-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## command-execution-engine.js
+- Module name: command-execution-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## command-parser-engine.js
+- Module name: command-parser-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## command-shortcuts-engine.js
+- Module name: command-shortcuts-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## command-suggestion-engine.js
+- Module name: command-suggestion-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## commissionable-amount-engine.js
+- Module name: commissionable-amount-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## first-contact-ai-suggestion-engine.js
+- Module name: first-contact-ai-suggestion-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## first-contact-script-engine.js
+- Module name: first-contact-script-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## ghosting-prompt-builder.js
+- Module name: ghosting-prompt-builder.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## mass-import-mapping-engine.js
+- Module name: mass-import-mapping-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## mass-import-validation-engine.js
+- Module name: mass-import-validation-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## objection-battle-engine.js
+- Module name: objection-battle-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## objection-classifier-engine.js
+- Module name: objection-classifier-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## objection-intent-engine.js
+- Module name: objection-intent-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## objection-memory-engine.js
+- Module name: objection-memory-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## objection-prompt-builder.js
+- Module name: objection-prompt-builder.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## operational-button.tsx
+- Module name: operational-button.tsx
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected; UI/business interpretation boundary review possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## outreach-prompt-builder.js
+- Module name: outreach-prompt-builder.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## policy-review-ui-engine.js
+- Module name: policy-review-ui-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected; UI/business interpretation boundary review possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## referral-prompt-builder.js
+- Module name: referral-prompt-builder.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## sales-dna-insight-engine.js
+- Module name: sales-dna-insight-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## sales-dna-recommendation-engine.js
+- Module name: sales-dna-recommendation-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## search-quick-actions-engine.js
+- Module name: search-quick-actions-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## segu-beca-mxn-timeline-clean-report.js
+- Module name: segu-beca-mxn-timeline-clean-report.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## smart-header.tsx
+- Module name: smart-header.tsx
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+## universal-search-engine.js
+- Module name: universal-search-engine.js
+- Current classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Alfred / Universal Command Bar
+- Ownership: Needs further human validation
+- Legacy / Core / Candidate: Needs further human validation
+- Action recommendation: REVIEW REQUIRED / DELETE LATER ONLY IF PROVEN UNUSED
+- Priority: LOW
+- Notes for human review: possible orphan / no incoming imports detected possible orphan / no incoming imports detected
+- Required before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+
+7. Recommended Human Review Order
+1. DO NOT TOUCH list: confirm no accidental future edits.
+2. Compensation / Rule Pack / SMNYL source boundary.
+3. Forecast / Projection / Economic Motivation truth boundary.
+4. Policy & Sales Operations / cartera split strategy.
+5. Alfred / Universal Command Bar vs Command OS ownership.
+6. Event bus / domain event consolidation ADR.
+7. Nash / Sales Conversion / Followup duplicate comparison.
+8. Recruitment / Candidate / Advisor Development ownership split.
+
+8. Final Verdict
+Phase 2.2 planning is ready for human review. No refactor, movement, consolidation, deletion or Build Tree file change is approved by this report.
+
+9. Validation
+- No code modified.
+- No files moved.
+- No imports changed.
+- No app.js touched.
+- No UI touched.
+- No schemas touched.
+- No engines touched.
+- No commit created.
