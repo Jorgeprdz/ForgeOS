@@ -1,0 +1,235 @@
+FORGE_PHASE_2_1_DO_NOT_TOUCH_LIST.txt
+Generated: 2026-06-04
+Scope: Modules that must not be touched without tests, source docs, owner decision, rollback and fixture coverage.
+
+## app.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## cartera-view.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## cartera.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## command-palette-engine.js
+
+- Why DO NOT TOUCH: possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## command-palette-ui.js
+
+- Why DO NOT TOUCH: possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## command-palette.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## command-palette.store.js
+
+- Why DO NOT TOUCH: No immediate static risk detected.; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## command-palette.tsx
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## core-event-bus.js
+
+- Why DO NOT TOUCH: possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## core_event-bus.js
+
+- Why DO NOT TOUCH: possible orphan / no incoming imports detected; possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## dashboard.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## dynamic-cash-value-projection-engine.js
+
+- Why DO NOT TOUCH: No immediate static risk detected.; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## event-bus-engine.js
+
+- Why DO NOT TOUCH: possible orphan / no incoming imports detected; possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## event-system.js
+
+- Why DO NOT TOUCH: unknown / needs review; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## projection-engine.js
+
+- Why DO NOT TOUCH: No immediate static risk detected.; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## shared-currency-projection-engine.js
+
+- Why DO NOT TOUCH: No immediate static risk detected.; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## smnyl-bonos-engine.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## smnyl-comisiones-engine.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## smnyl-concursos-engine.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## smnyl-prima-engine.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+
+## smnyl-training-allowance-engine.js
+
+- Why DO NOT TOUCH: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; critical ownership or runtime surface.
+- Required before touch:
+  - tests
+  - source docs
+  - owner decision
+  - rollback
+  - fixture coverage
+  - import graph validation
+

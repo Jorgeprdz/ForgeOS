@@ -1,0 +1,2110 @@
+FORGE_PHASE_2_1_MODULE_DECISION_TABLE.txt
+Generated: 2026-06-04
+Scope: Critical module decisions before any code change.
+
+## adaptive-message-builder.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## adaptive-outreach-prompt-builder.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## advisor-performance-engine.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: SHARED CORE
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## ai-orb-widget.js
+
+- Current assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## analytics-engine.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## app-shell-manager.js
+
+- Current assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible
+- Technical risk: hardcoded/rule-pack-sensitive values possible
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## app.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES / App Shell / Root Orchestration
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## buying-signals-engine.js
+
+- Current assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Suspected correct owner: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-assessment-engine.js
+
+- Current assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-assessment-master-test.js
+
+- Current assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-coachability-engine.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-coachability-master-test.js
+
+- Current assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-hard-factors-engine.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-hard-factors-master-test.js
+
+- Current assigned branch: EVIDENCE & PROVENANCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-market-quality-engine.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-market-quality-master-test.js
+
+- Current assigned branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-vital-factors-engine.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## candidate-vital-factors-master-test.js
+
+- Current assigned branch: EVIDENCE & PROVENANCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-events.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-import-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-normalizer.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-repository.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-service.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-state.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-utils.js
+
+- Current assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-validator.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera-view.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## cartera.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## center-of-influence-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## clipboard-action-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## close-prompt-builder.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## close-readiness-engine.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## close-strategy-engine.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## comisiones-rules-gmm.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## comisiones-utils.js
+
+- Current assigned branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## comisiones.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-execution-engine.js
+
+- Current assigned branch: CONSERVATION INTELLIGENCE
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-palette-engine.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: SHARED CORE
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-palette-ui.js
+
+- Current assigned branch: Alfred / Universal Command Bar
+- Suspected correct owner: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-palette.js
+
+- Current assigned branch: Alfred / Universal Command Bar
+- Suspected correct owner: Alfred / Universal Command Bar
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-palette.store.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: HIGH
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-palette.tsx
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-parser-engine.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-registry.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-search-engine.js
+
+- Current assigned branch: Alfred / Universal Command Bar
+- Suspected correct owner: Alfred / Universal Command Bar
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-shortcuts-engine.js
+
+- Current assigned branch: 09 UNIVERSAL COMMAND OS
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## command-suggestion-engine.js
+
+- Current assigned branch: 09 UNIVERSAL COMMAND OS
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## commission-projection-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation, Business Planning, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## commissionable-amount-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## concursos.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## core-app-engine.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## core-event-bus.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: SHARED CORE
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## core_domain-events.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: SHARED CORE
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## core_event-bus.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: SHARED CORE
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## dashboard-executive.js
+
+- Current assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## dashboard-widget-card.tsx
+
+- Current assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## dashboard.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## domain-events.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## dynamic-cash-value-projection-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## error-boundary.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## event-bus-engine.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## event-system.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 10 PLATFORM SERVICES or SHARED CORE event infrastructure
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: unknown / needs review
+- Technical risk: unknown / needs review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## first-contact-ai-suggestion-engine.js
+
+- Current assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## first-contact-dashboard.viewmodel.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## first-contact-script-engine.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## followup-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## future-currency-value-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## ghosting-prompt-builder.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## gmm-out-of-pocket-engine.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## gmm-quote-parser.js
+
+- Current assigned branch: ECONOMIC MOTIVATION
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible
+- Technical risk: hardcoded/rule-pack-sensitive values possible
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## imagina-ser-client-presentation-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible
+- Technical risk: hardcoded/rule-pack-sensitive values possible
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## imagina-ser-ocr-extractor.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## imagina-ser-scenario-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## life-expectancy-projection-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## live-dashboard-engine.js
+
+- Current assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## logger.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## mass-import-dashboard-engine.js
+
+- Current assigned branch: NOT DETECTED
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: source module not detected in Phase 1 map
+- Technical risk: source module not detected in Phase 1 map
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## mass-import-mapping-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## mass-import-preview-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## mass-import-validation-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## module-lifecycle.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## nash-advisor-performance-engine.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## nash-followup-engine.js
+
+- Current assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## objection-battle-engine.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## objection-classifier-engine.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## objection-intent-engine.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## objection-memory-engine.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## objection-prompt-builder.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## operational-button.tsx
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Technical risk: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## orvi-decision-engine.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible
+- Technical risk: hardcoded/rule-pack-sensitive values possible
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## orvi-event-engine.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## orvi-wait-vs-cancel-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## outreach-prompt-builder.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## phone-call-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-detail-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-followup-engine.js
+
+- Current assigned branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience, Sales Conversion, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-human-review-engine.js
+
+- Current assigned branch: EVIDENCE & PROVENANCE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: MOVE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-renewal-engine.js
+
+- Current assigned branch: CONSERVATION INTELLIGENCE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-review-ui-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Technical risk: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-risk-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-storage-engine.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## policy-timeline-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## precontract-activity-fixture-test.js
+
+- Current assigned branch: EVIDENCE & PROVENANCE
+- Suspected correct owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Secondary consumers: Recruitment Intelligence, Advisor Development, Partner Intelligence
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Recruitment / Candidate / Advisor Development.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## predictive-dashboard.tsx
+
+- Current assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## projection-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## projection-milestone-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## question-style-match-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review
+- Technical risk: unknown / needs review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## referral-color-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## referral-priority-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## referral-prompt-builder.js
+
+- Current assigned branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## referral-temperature-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## retirement-presentation-scenario-engine.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## sales-dna-insight-engine.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## sales-dna-match-engine.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## sales-dna-recommendation-engine.js
+
+- Current assigned branch: 02 SALES CONVERSION ENGINE
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## schema-field-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## search-quick-actions-engine.js
+
+- Current assigned branch: 09 UNIVERSAL COMMAND OS
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## seen-but-no-reply-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## segu-beca-master-test.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible
+- Technical risk: hardcoded/rule-pack-sensitive values possible
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## segu-beca-meaningful-numbers-report.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## segu-beca-mxn-appendix-report.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## segu-beca-mxn-timeline-clean-report.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-ave-growth-engine.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-ave-growth-report.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-client-language-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review
+- Technical risk: unknown / needs review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-clp-engine.js
+
+- Current assigned branch: SHARED COMMERCIAL MODEL
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-currency-projection-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-financial-return-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review
+- Technical risk: unknown / needs review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-meaningful-numbers-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-projection-scenarios-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-protection-efficiency-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review
+- Technical risk: unknown / needs review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## shared-recovery-analysis-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review
+- Technical risk: unknown / needs review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smart-header.tsx
+
+- Current assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-bonos-engine.js
+
+- Current assigned branch: CONSERVATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-comisiones-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-comisiones-vida.js
+
+- Current assigned branch: CONSERVATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-command-palette-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: COMPENSATION INTELLIGENCE
+- Secondary consumers: Advisor Experience, Command OS, Alfred / Universal Command Bar
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: carrier-specific boundary review; possible duplicate / overlap candidate
+- Technical risk: carrier-specific boundary review; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-concursos-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-conteo-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-followup-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Secondary consumers: Sales Conversion, Advisor Experience, Manager Intelligence
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Nash / Sales Conversion / Followup / Objections duplicates.
+- Ownership risk: carrier-specific boundary review; possible duplicate / overlap candidate
+- Technical risk: carrier-specific boundary review; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-forecast-engine.js
+
+- Current assigned branch: FORECAST INTELLIGENCE
+- Suspected correct owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Secondary consumers: Economic Motivation, Business Planning, Advisor Experience
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Forecast / Projection vs Economic Motivation / Product Intelligence.
+- Ownership risk: carrier-specific boundary review
+- Technical risk: carrier-specific boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-prima-engine.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: RuleSnapshot / Rule Pack, Economic Motivation, Manager Compensation
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-produccion-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-productos-gmm.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-productos-vida.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DOCUMENT
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## smnyl-training-allowance-engine.js
+
+- Current assigned branch: COMPENSATION INTELLIGENCE
+- Suspected correct owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DO NOT TOUCH
+- Reason: Decision derived from Phase 2.1 conflict rule for Compensation Intelligence vs RuleSnapshot / Rule Pack.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Technical risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## staging-review-engine.js
+
+- Current assigned branch: EVIDENCE & PROVENANCE
+- Suspected correct owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Secondary consumers: Conservation Intelligence, Compensation Intelligence, Advisor Experience
+- Confidence: MEDIUM
+- Decision: MOVE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Policy & Sales Operations / Cartera.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## state-manager.js
+
+- Current assigned branch: SHARED CORE
+- Suspected correct owner: SHARED CORE
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## sync-orchestrator.js
+
+- Current assigned branch: 10 PLATFORM SERVICES
+- Suspected correct owner: 10 PLATFORM SERVICES
+- Secondary consumers: Unknown until human review
+- Confidence: HIGH
+- Decision: KEEP
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: No immediate static risk detected.
+- Technical risk: No immediate static risk detected.
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## team-dashboard-engine.js
+
+- Current assigned branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Advisor Experience / UI vs Business Truth.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## ui-render-engine.js
+
+- Current assigned branch: 07 POLICY & SALES OPERATIONS
+- Suspected correct owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for app.js / Core Orchestration / Platform Services.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## universal-filters-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## universal-search-engine.js
+
+- Current assigned branch: Alfred / Universal Command Bar
+- Suspected correct owner: Alfred / Universal Command Bar
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Alfred / Universal Command Bar vs Command OS.
+- Ownership risk: possible orphan / no incoming imports detected
+- Technical risk: possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## vida-mujer-coverage-status-report.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## vida-mujer-event-benefits-report.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: DELETE LATER ONLY IF PROVEN UNUSED
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation; dynamic import/browser global/runtime usage proof
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## vida-mujer-knowledge-extractor-report.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## vida-mujer-knowledge-extractor.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## vida-mujer-protected-diseases-engine.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: possible duplicate / overlap candidate
+- Technical risk: possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## vida-mujer-protected-diseases-report.js
+
+- Current assigned branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected correct owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Secondary consumers: Unknown until human review
+- Confidence: MEDIUM
+- Decision: CONSOLIDATE LATER
+- Reason: Decision derived from Phase 2.1 conflict rule for Product Intelligence + SMNYL/Product-specific hardcoded values.
+- Ownership risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## virtual-list.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: UNKNOWN / NEEDS REVIEW
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## whatsapp-action-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+
+## whatsapp-link-engine.js
+
+- Current assigned branch: UNKNOWN / NEEDS REVIEW
+- Suspected correct owner: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Secondary consumers: Unknown until human review
+- Confidence: LOW
+- Decision: REVIEW REQUIRED
+- Reason: Decision derived from Phase 2.1 conflict rule for Unknown / Needs Review.
+- Ownership risk: unknown / needs review; possible orphan / no incoming imports detected
+- Technical risk: unknown / needs review; possible orphan / no incoming imports detected
+- Required validation before code change: tests; source docs if business rules; owner decision; rollback plan; fixture coverage; import graph validation
+- Notes: Documentation-only decision; no movement or implementation approved.
+

@@ -1,0 +1,708 @@
+FORGE_PHASE_2_1_REFACTOR_CANDIDATE_QUEUE.txt
+Generated: 2026-06-04
+Scope: Future refactor candidates. No current refactor approved.
+
+## advisor-performance-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: SHARED CORE
+- Suspected owner: SHARED CORE
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-assessment-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-assessment-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-coachability-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: SHARED CORE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-coachability-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-hard-factors-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 10 PLATFORM SERVICES
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-hard-factors-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: EVIDENCE & PROVENANCE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-market-quality-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: SHARED CORE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-market-quality-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 08 MANAGER & TEAM INTELLIGENCE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-vital-factors-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: SHARED CORE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## candidate-vital-factors-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: EVIDENCE & PROVENANCE
+- Suspected owner: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## comisiones.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## concursos.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: COMPENSATION INTELLIGENCE
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## core-app-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 10 PLATFORM SERVICES
+- Suspected owner: 10 PLATFORM SERVICES
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## core_domain-events.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: SHARED CORE
+- Suspected owner: SHARED CORE
+- Risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## domain-events.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 10 PLATFORM SERVICES
+- Suspected owner: 10 PLATFORM SERVICES
+- Risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## gmm-out-of-pocket-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## nash-advisor-performance-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## nash-followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## policy-detail-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## policy-followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## policy-risk-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## policy-storage-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 10 PLATFORM SERVICES
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## policy-timeline-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## shared-ave-growth-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## shared-ave-growth-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## shared-clp-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: SHARED COMMERCIAL MODEL
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## smnyl-command-palette-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: COMPENSATION INTELLIGENCE
+- Suspected owner: COMPENSATION INTELLIGENCE
+- Risk: carrier-specific boundary review; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## smnyl-followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: carrier-specific boundary review; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## ui-render-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## vida-mujer-coverage-status-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## vida-mujer-knowledge-extractor-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## vida-mujer-knowledge-extractor.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## vida-mujer-protected-diseases-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## vida-mujer-protected-diseases-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## adaptive-message-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## adaptive-outreach-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## ai-orb-widget.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## buying-signals-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Suspected owner: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## cartera-import-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## cartera-repository.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## close-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## close-readiness-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: SHARED CORE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## close-strategy-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## comisiones-rules-gmm.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## comisiones-utils.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## command-execution-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: CONSERVATION INTELLIGENCE
+- Suspected owner: 09 UNIVERSAL COMMAND OS
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## command-parser-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: SHARED CORE
+- Suspected owner: 09 UNIVERSAL COMMAND OS
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## command-shortcuts-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 09 UNIVERSAL COMMAND OS
+- Suspected owner: 09 UNIVERSAL COMMAND OS
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## command-suggestion-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 09 UNIVERSAL COMMAND OS
+- Suspected owner: 09 UNIVERSAL COMMAND OS
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## commission-projection-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: COMPENSATION INTELLIGENCE
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## commissionable-amount-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: COMPENSATION INTELLIGENCE
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## dashboard-executive.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## first-contact-ai-suggestion-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## first-contact-dashboard.viewmodel.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## first-contact-script-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## ghosting-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## life-expectancy-projection-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: FORECAST INTELLIGENCE
+- Suspected owner: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## live-dashboard-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## mass-import-mapping-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## mass-import-preview-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## mass-import-validation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: COMPENSATION INTELLIGENCE
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## objection-battle-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## objection-classifier-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## objection-intent-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## objection-memory-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## objection-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## operational-button.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 07 POLICY & SALES OPERATIONS
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## outreach-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## policy-review-ui-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: COMPENSATION INTELLIGENCE
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## predictive-dashboard.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## referral-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 03 NASH CONVERSATION INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## sales-dna-insight-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## sales-dna-match-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## sales-dna-recommendation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 02 SALES CONVERSION ENGINE
+- Suspected owner: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## search-quick-actions-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 09 UNIVERSAL COMMAND OS
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## segu-beca-meaningful-numbers-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: FORECAST INTELLIGENCE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## segu-beca-mxn-appendix-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: FORECAST INTELLIGENCE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## segu-beca-mxn-timeline-clean-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 10 PLATFORM SERVICES
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## smart-header.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## smnyl-comisiones-vida.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: CONSERVATION INTELLIGENCE
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## smnyl-conteo-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: COMPENSATION INTELLIGENCE
+- Suspected owner: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## team-dashboard-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 12 ADVISOR EXPERIENCE INTELLIGENCE
+- Suspected owner: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## universal-search-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: Alfred / Universal Command Bar
+- Suspected owner: Alfred / Universal Command Bar
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## vida-mujer-event-benefits-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Current branch: 04 PRODUCT INTELLIGENCE ENGINE
+- Suspected owner: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Risk: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## policy-human-review-engine.js
+
+- Candidate action: MOVE LATER
+- Current branch: EVIDENCE & PROVENANCE
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
+## staging-review-engine.js
+
+- Candidate action: MOVE LATER
+- Current branch: EVIDENCE & PROVENANCE
+- Suspected owner: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Risk: possible orphan / no incoming imports detected
+- Required before action: tests, owner decision, import graph validation, rollback plan.
+
