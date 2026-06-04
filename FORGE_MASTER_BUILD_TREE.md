@@ -44,6 +44,10 @@
 │   ├── 🟢 PAQ-09 Productivity Intelligence Discovery - ARCHITECTURE CANDIDATE
 │   ├── 🟢 PAQ-09.5 Productivity Intelligence Architecture Lock - ARCHITECTURE LOCK
 │   └── ⛔ Implementation - NOT APPROVED
+├── 🟢 Conservation Intelligence - ARCHITECTURE LOCK / NOT IMPLEMENTED
+│   ├── 🟢 PAQ-10 Conservation Intelligence Discovery - ARCHITECTURE CANDIDATE
+│   ├── 🟢 PAQ-10.5 Conservation Intelligence Architecture Lock - ARCHITECTURE LOCK
+│   └── ⛔ Implementation - NOT APPROVED
 ├── 🔵 Forecast Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
 ├── 🔵 Business Planning Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
 └── 🔵 Rule Packs - LOCKED BOUNDARY / SMNYL Agency 2026 first validated Rule Pack
@@ -183,7 +187,7 @@
 │   ├── 🔵 Production Events Foundation
 │   ├── 🔵 Contest Intelligence Foundation
 │   ├── 🔵 Compensation Events Foundation
-│   ├── 🔵 Conservation Intelligence Discovery
+│   ├── 🟢 Conservation Intelligence - ARCHITECTURE LOCK / NOT IMPLEMENTED
 │   ├── 🔵 Economic Motivation Foundation
 │   └── 🔵 Manager Compensation Intelligence Foundation
 ├── 🔵 Forecast Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
@@ -221,6 +225,56 @@
 │       ├── Career stage
 │       ├── Manager action
 │       └── Business Planning
+├── 🟢 Conservation Intelligence - ARCHITECTURE LOCK / NOT IMPLEMENTED
+│   ├── 🟢 PAQ-10 Conservation Intelligence Discovery - ARCHITECTURE CANDIDATE
+│   ├── 🟢 PAQ-10.5 Conservation Intelligence Architecture Lock - ARCHITECTURE LOCK
+│   ├── ⛔ Implementation - NOT APPROVED
+│   ├── ⛔ No approved formulas
+│   │   ├── LIMRA - FORMULA NOT VALIDATED
+│   │   ├── IGC - FORMULA NOT VALIDATED
+│   │   ├── Persistencia - FORMULA NOT VALIDATED
+│   │   ├── Siniestralidad - FORMULA NOT VALIDATED
+│   │   ├── Prima Conservada - FORMULA NOT VALIDATED
+│   │   └── Prima por Conservar - FORMULA NOT VALIDATED
+│   ├── 🔵 Consumes
+│   │   ├── Production Events
+│   │   ├── Policy lifecycle
+│   │   ├── Policy status
+│   │   ├── Premium history
+│   │   ├── Carrier reports
+│   │   ├── RuleSnapshot
+│   │   ├── PeriodSnapshot
+│   │   ├── EvidenceRecord
+│   │   ├── ProvenanceRecord
+│   │   ├── Product data when applicable
+│   │   ├── Servicing responsibility
+│   │   ├── Advisor assignment
+│   │   └── Client relationship context
+│   ├── 🟢 Produces
+│   │   ├── LIMRA snapshot
+│   │   ├── IGC snapshot
+│   │   ├── Persistency snapshot
+│   │   ├── Conservation snapshot
+│   │   ├── Conservation risk
+│   │   ├── Policy quality signal
+│   │   ├── Conservation explanation
+│   │   ├── Bonus conservation blocker
+│   │   ├── Productivity quality signal
+│   │   ├── Portfolio risk signal
+│   │   ├── Compensation dependency signal
+│   │   └── Manager compensation dependency signal
+│   └── ⛔ Does not own
+│       ├── Production facts
+│       ├── Productivity interpretation
+│       ├── Compensation payouts
+│       ├── Contest qualification
+│       ├── Manager compensation calculation
+│       ├── Career stage
+│       ├── Forecast outputs
+│       ├── Business plans
+│       ├── Generic client retention
+│       ├── Generic advisor retention
+│       └── Generic relationship retention
 ├── 🔵 Coaching Suggestions
 ├── 🔵 Activity Alerts
 └── 🔵 Manager Notifications
