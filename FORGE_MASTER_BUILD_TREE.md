@@ -146,6 +146,22 @@
 ├── 🟢 Imagina Ser
 ├── 🟢 Vida Mujer
 ├── 🟢 Alfa Medical
+├── 🔵 GMM Product Family - ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+│   ├── 🔵 Alfa Medical - PRODUCT-SPECIFIC RULE MODEL REQUIRED
+│   │   ├── 🔵 Deductible Model
+│   │   ├── 🔵 Coinsurance Model
+│   │   ├── 🔵 Coinsurance Cap Model
+│   │   ├── 🔵 Hospital Level Map: Práctico / Íntegro / Pleno
+│   │   ├── 🔵 Out-of-Pocket Model
+│   │   └── 🔵 Coverage Map
+│   ├── 🔵 Alfa Medical Flex - PRODUCT-SPECIFIC RULE MODEL REQUIRED
+│   │   ├── 🔵 Franchise Model
+│   │   ├── 🔵 Copay Model
+│   │   ├── 🔵 Participation Model
+│   │   ├── 🔵 Hospital Level Map: A / AA / AAA / Preferente
+│   │   ├── 🔵 Flex Out-of-Pocket Model
+│   │   └── 🔵 Coverage Map
+│   └── ⛔ Implementation - NOT APPROVED
 ├── 🟢 SeguBeca
 ├── 🟢 Shared AVE Library
 ├── 🟢 Shared CLP Library

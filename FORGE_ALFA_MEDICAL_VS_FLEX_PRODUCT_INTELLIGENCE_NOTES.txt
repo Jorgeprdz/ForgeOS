@@ -1,0 +1,144 @@
+FORGE ALFA MEDICAL VS ALFA MEDICAL FLEX PRODUCT INTELLIGENCE NOTES
+
+Status:
+ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+
+Scope:
+Documentary learning from March 2026 Condiciones Generales for:
+- Alfa Medical | Nuevos
+- Alfa Medical Flex | Nuevos
+
+Core finding:
+Alfa Medical and Alfa Medical Flex should be modeled as sibling GMM products,
+not as one product with an isFlex flag.
+
+Recommended family:
+
+GMM_PRODUCT_FAMILY
+├── ALFA_MEDICAL
+└── ALFA_MEDICAL_FLEX
+
+1. FINANCIAL STRUCTURE DIFFERENCE
+
+Alfa Medical uses:
+- Deducible
+- Coaseguro
+- Tope de Coaseguro
+- Deducible Único
+- Deducible Anual
+- Deducible Reinstalable
+- Coaseguro Único
+- Coaseguro Reinstalable
+
+Alfa Medical Flex uses:
+- Franquicia
+- Copago
+- Participación
+
+Architecture note:
+Do not use one generic out-of-pocket engine for both products. Alfa Medical
+requires a classic deducible/coaseguro/tope model. Alfa Medical Flex requires a
+Flex model based on franquicia/copago/participación.
+
+2. HOSPITAL LEVEL DIFFERENCE
+
+Alfa Medical hospital levels:
+- Práctico
+- Íntegro
+- Pleno
+
+Alfa Medical Flex hospital levels:
+- A
+- AA
+- AAA
+- Preferente
+
+Architecture note:
+hospital-level-engine must be product-aware. Hospital level labels must not be
+hardcoded as a global Forge Core list.
+
+3. COVERAGE AND CONDITION STRUCTURE DIFFERENCE
+
+Alfa Medical includes concepts such as:
+- Maternidad por Reproducción Asistida
+- Cirugía Fetal
+- Reducción de Deducible por Accidente
+- Eliminación de Deducible por Accidente
+- Cobertura de Extensión en el Extranjero
+
+Alfa Medical Flex includes concepts such as:
+- Reducción de Franquicia y Copago por Accidente
+- Asistencia en el Extranjero
+- Enfermedades Catastróficas en el Extranjero
+- Servicios Flex basados en Franquicia / Copago / Participación
+
+Architecture note:
+coverage-engine must be product-specific inside the GMM family. Shared GMM
+family concepts can exist, but product-specific coverage maps are required.
+
+4. ROUTING RULES
+
+If Forge detects "Alfa Medical Flex":
+- Use Flex product model
+- Use franquicia + copago + participación
+- Do not use the classic deducible/coaseguro path
+
+If Forge detects "Alfa Medical":
+- Use classic Alfa Medical product model
+- Use deducible + coaseguro + tope
+- Do not use the Flex path
+
+5. EVIDENCE RULES
+
+Do not hardcode:
+- Amounts
+- Percentages
+- Deducibles
+- Franquicias
+- Copagos
+- Participación
+- Coaseguro
+- Topes
+- Hospital levels
+- Coverage availability
+- Waiting periods
+- Exclusions
+
+Every rule must come from:
+- PDF / Condiciones Generales
+- Carátula de póliza
+- Cotización real
+- Versioned Rule Pack
+- Human review when ambiguous
+
+6. CALCULATION BLOCKERS
+
+Do not project or calculate insured out-of-pocket expense if any of the
+following are missing:
+- Exact product
+- Plan / hospital level
+- Suma asegurada
+- Deducible or franquicia
+- Coaseguro or participación
+- Tope de coaseguro if applicable
+- Copago if applicable
+- Territory
+- Applicable tabulator/catalog
+- Policy/document version and effective period
+
+7. IMPLEMENTATION STATUS
+
+Implementation is NOT APPROVED.
+
+This note does not authorize:
+- Engine changes
+- Schema changes
+- UI changes
+- app.js changes
+- Imports changes
+- Refactor
+- Rule pack implementation
+
+Next recommended step:
+Create versioned GMM rule-pack discovery fixtures and documentary source
+registry before implementing any calculation or product-specific engine.
