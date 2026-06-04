@@ -88,7 +88,7 @@ It helps answer:
 - Feature Learning State.
 - Contextual Help Signals.
 - Revenue Intelligence Introduction.
-- Command Palette Introduction.
+- Alfred / Universal Command Bar Introduction.
 - Candy Crush Experience.
 - Adoption interpretation.
 - Learning progression interpretation.
@@ -170,7 +170,7 @@ Advisor Experience must not hardcode carrier, contest, compensation, career, con
 | Feature Learning State | PLANNED / ARCHITECTURE DISCOVERY | Advisor Experience | Feature mastery state |
 | Contextual Help Signals | PLANNED / ARCHITECTURE DISCOVERY | Advisor Experience | Show/hide/suppress help logic |
 | Revenue Intelligence Introduction | PLANNED / ARCHITECTURE DISCOVERY | Advisor Experience | Introduce revenue workflows |
-| Command Palette Introduction | PLANNED / ARCHITECTURE DISCOVERY | Advisor Experience | Teach Command OS progressively |
+| Alfred / Universal Command Bar Introduction | PLANNED / ARCHITECTURE DISCOVERY | Advisor Experience | Teach Command OS progressively |
 | Candy Crush Experience | PLANNED / ARCHITECTURE DISCOVERY | Advisor Experience | Adaptive complexity |
 
 ## 7. Advisor Setup
@@ -242,7 +242,7 @@ Outputs:
 - First value moment.
 - First recommended action.
 - Revenue Intelligence Introduction.
-- Command Palette Introduction.
+- Alfred / Universal Command Bar Introduction.
 
 Rules:
 
@@ -257,7 +257,7 @@ Examples:
 
 - "Forge found one relationship worth reviewing first."
 - "Your first revenue opportunity is visible because Forge already has context."
-- "Use Command Palette to jump directly to the next useful action."
+- "Use Alfred / Universal Command Bar to jump directly to the next useful action."
 
 Risks:
 
@@ -347,7 +347,7 @@ Examples:
 
 - Introduce renewals explanation only when the advisor is viewing a policy or conservation risk.
 - Introduce forecast explanation only when the forecast changed or confidence dropped.
-- Introduce Command Palette when it shortens the current workflow.
+- Introduce Alfred / Universal Command Bar when it shortens the current workflow.
 
 Risks:
 
@@ -403,7 +403,7 @@ Examples:
 - Explain a forecast only when confidence changed or evidence is missing.
 - Explain compensation only when Compensation Intelligence has rule-backed context.
 - Explain a renewal only when Policy/Conservation context makes it actionable.
-- Suggest Command Palette when it shortens the task.
+- Suggest Alfred / Universal Command Bar when it shortens the task.
 
 Risks:
 
@@ -431,7 +431,7 @@ Approved states:
 |---|---|---|
 | `unseen` | Advisor has not been introduced to the feature | Feature has never appeared in context |
 | `introduced` | Feature was explained or surfaced | Clippy introduced Forecast confidence |
-| `tried` | Advisor attempted the feature | Advisor opened Command Palette for the workflow |
+| `tried` | Advisor attempted the feature | Advisor opened Alfred / Universal Command Bar for the workflow |
 | `completed_with_help` | Advisor completed task using help | Advisor followed Clippy guidance |
 | `completed_without_help` | Advisor completed task unaided | Advisor used the feature correctly later |
 | `learned` | Advisor demonstrates repeatable mastery | Repeated completion without help or errors |
@@ -442,7 +442,7 @@ Learning signals:
 
 - Completed meaningful work with help.
 - Repeated work without help.
-- Used Command Palette correctly.
+- Used Alfred / Universal Command Bar correctly.
 - Reduced repeated errors.
 - Completed task faster.
 - Chose correct next action after explanation.
@@ -536,7 +536,7 @@ Mitigations:
 - Consume official Revenue output only.
 - Explain without changing owner metrics.
 
-## 15. Command Palette Introduction
+## 15. Alfred / Universal Command Bar Introduction
 
 Purpose:
 
@@ -564,7 +564,7 @@ Boundary:
 
 Examples:
 
-- Introduce Command Palette when it reduces steps in the current task.
+- Introduce Alfred / Universal Command Bar when it reduces steps in the current task.
 - Suggest a command after repeated manual navigation.
 - Stop suggesting a command when the advisor uses it correctly without help.
 
@@ -615,7 +615,7 @@ Examples:
 
 - Show one next action instead of five when advisor is overwhelmed.
 - Add advanced forecast explanation only after the advisor understands basic forecast confidence.
-- Refresh Command Palette help after inactivity.
+- Refresh Alfred / Universal Command Bar help after inactivity.
 
 Risks:
 
@@ -741,6 +741,8 @@ Boundary:
 - Advisor Experience must not execute commands.
 - Advisor Experience must not create Command OS logic.
 
+Alfred is the advisor-facing universal command bar experience. Command OS is the technical command infrastructure. Advisor Experience teaches Alfred progressively, but does not own Command OS execution logic.
+
 ## 23. Events and Snapshots
 
 Advisor Experience event examples:
@@ -840,7 +842,7 @@ Recommended branch:
 ├── 🔵 Feature Learning State - PLANNED / ARCHITECTURE DISCOVERY
 ├── 🔵 Contextual Help Signals - PLANNED / ARCHITECTURE DISCOVERY
 ├── 🔵 Revenue Intelligence Introduction - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Command Palette Introduction - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Alfred / Universal Command Bar Introduction - PLANNED / ARCHITECTURE DISCOVERY
 └── 🔵 Candy Crush Experience - PLANNED / ARCHITECTURE DISCOVERY
 ```
 
@@ -864,4 +866,3 @@ Next recommended step:
 
 - Human review of PAQ-12.
 - If accepted, convert to Architecture Candidate in a separate PAQ.
-

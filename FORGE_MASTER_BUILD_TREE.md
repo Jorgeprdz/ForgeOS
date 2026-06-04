@@ -39,18 +39,19 @@
 🟢 Constitution v1.1 - RATIFIED
 
 🔵 Intelligence Domains Phase - OPEN
-├── 🔵 Advisor Experience Intelligence - PLANNED / ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+├── 🔵 Advisor Experience Intelligence - ARCHITECTURE CANDIDATE / NOT IMPLEMENTED
 │   ├── 🔵 PAQ-12 Advisor Experience Intelligence & Productivity - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Advisor Setup - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Benvenù Experience - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Advisor Baseline Snapshot - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Progressive Discovery - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Clippy Engine - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Feature Learning State - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Contextual Help Signals - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Revenue Intelligence Introduction - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Command Palette Introduction - PLANNED / ARCHITECTURE DISCOVERY
-│   ├── 🔵 Candy Crush Experience - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 PAQ-12.1 Advisor Experience Intelligence Architecture - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Advisor Setup - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Benvenù Experience - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Advisor Baseline Snapshot - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Progressive Discovery - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Clippy Engine - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Feature Learning State - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Contextual Help Signals - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Revenue Intelligence Introduction - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Alfred / Universal Command Bar Introduction - ARCHITECTURE CANDIDATE
+│   ├── 🔵 Candy Crush Experience - ARCHITECTURE CANDIDATE
 │   └── ⛔ Implementation - NOT APPROVED
 ├── 🟢 Productivity Intelligence - ARCHITECTURE LOCK / NOT IMPLEMENTED
 │   ├── 🟢 PAQ-09 Productivity Intelligence Discovery - ARCHITECTURE CANDIDATE
@@ -384,7 +385,7 @@
 
 🔵 09 UNIVERSAL COMMAND OS
 │
-├── 🔵 Command Palette
+├── 🔵 Alfred / Universal Command Bar
 ├── 🔵 Universal Search
 ├── 🔵 Quick Actions
 ├── 🔵 Entity Navigation
@@ -413,14 +414,17 @@
 
 🔵 12 ADVISOR EXPERIENCE INTELLIGENCE
 │
-├── 🔵 Advisor Setup - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Benvenù Experience - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Advisor Baseline Snapshot - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Progressive Discovery - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Clippy Engine - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Feature Learning State - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Contextual Help Signals - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Revenue Intelligence Introduction - PLANNED / ARCHITECTURE DISCOVERY
-├── 🔵 Command Palette Introduction - PLANNED / ARCHITECTURE DISCOVERY
-└── 🔵 Candy Crush Experience - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 PAQ-12 Advisor Experience Intelligence & Productivity - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 PAQ-12.1 Advisor Experience Intelligence Architecture - ARCHITECTURE CANDIDATE
+├── 🔵 Advisor Setup - ARCHITECTURE CANDIDATE
+├── 🔵 Benvenù Experience - ARCHITECTURE CANDIDATE
+├── 🔵 Advisor Baseline Snapshot - ARCHITECTURE CANDIDATE
+├── 🔵 Progressive Discovery - ARCHITECTURE CANDIDATE
+├── 🔵 Clippy Engine - ARCHITECTURE CANDIDATE
+├── 🔵 Feature Learning State - ARCHITECTURE CANDIDATE
+├── 🔵 Contextual Help Signals - ARCHITECTURE CANDIDATE
+├── 🔵 Revenue Intelligence Introduction - ARCHITECTURE CANDIDATE
+├── 🔵 Alfred / Universal Command Bar Introduction - ARCHITECTURE CANDIDATE
+├── 🔵 Candy Crush Experience - ARCHITECTURE CANDIDATE
+└── ⛔ Implementation - NOT APPROVED
 ```
