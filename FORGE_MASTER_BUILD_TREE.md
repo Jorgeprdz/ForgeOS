@@ -40,6 +40,10 @@
 
 🔵 Intelligence Domains Phase - OPEN
 ├── 🔵 Advisor Experience - APPROVED / PLANNED / NOT IMPLEMENTED
+├── 🟢 Productivity Intelligence - ARCHITECTURE LOCK / NOT IMPLEMENTED
+│   ├── 🟢 PAQ-09 Productivity Intelligence Discovery - ARCHITECTURE CANDIDATE
+│   ├── 🟢 PAQ-09.5 Productivity Intelligence Architecture Lock - ARCHITECTURE LOCK
+│   └── ⛔ Implementation - NOT APPROVED
 ├── 🔵 Forecast Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
 ├── 🔵 Business Planning Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
 └── 🔵 Rule Packs - LOCKED BOUNDARY / SMNYL Agency 2026 first validated Rule Pack
@@ -184,6 +188,39 @@
 │   └── 🔵 Manager Compensation Intelligence Foundation
 ├── 🔵 Forecast Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
 ├── 🔵 Business Planning Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
+├── 🟢 Productivity Intelligence - ARCHITECTURE LOCK / NOT IMPLEMENTED
+│   ├── 🟢 PAQ-09 Productivity Intelligence Discovery - ARCHITECTURE CANDIDATE
+│   ├── 🟢 PAQ-09.5 Productivity Intelligence Architecture Lock - ARCHITECTURE LOCK
+│   ├── 🔵 Consumes
+│   │   ├── Mick Behavior Intelligence
+│   │   ├── Production Events
+│   │   ├── Revenue Intelligence
+│   │   ├── Advisor Development Intelligence
+│   │   ├── Career Intelligence
+│   │   ├── Conservation Intelligence when evaluating quality
+│   │   ├── RuleSnapshot
+│   │   ├── PeriodSnapshot
+│   │   ├── EvidenceRecord
+│   │   └── ProvenanceRecord
+│   ├── 🟢 Produces
+│   │   ├── Activity-to-output conversion
+│   │   ├── Productivity trend
+│   │   ├── Productivity risk
+│   │   ├── Productivity bottleneck
+│   │   ├── Productive Advisor Capacity signal
+│   │   ├── Productivity alerts
+│   │   └── Productivity quality interpretation
+│   └── ⛔ Does not own
+│       ├── Raw behavior
+│       ├── Tasks
+│       ├── Production facts
+│       ├── Compensation
+│       ├── Contest qualification
+│       ├── LIMRA
+│       ├── IGC
+│       ├── Career stage
+│       ├── Manager action
+│       └── Business Planning
 ├── 🔵 Coaching Suggestions
 ├── 🔵 Activity Alerts
 └── 🔵 Manager Notifications

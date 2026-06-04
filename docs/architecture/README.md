@@ -28,6 +28,11 @@ Official architecture documentation index.
 
 - [Foundation Phase to Intelligence Domains Phase](phase-transitions/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md)
 
+## Intelligence Domains
+
+- [PAQ-09 Productivity Intelligence Discovery](../../PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md)
+- [PAQ-09.5 Productivity Intelligence Architecture Lock](../../PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md)
+
 ## Operating References
 
 - [AGENTS.md](../../AGENTS.md)
