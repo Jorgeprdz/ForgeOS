@@ -39,7 +39,19 @@
 🟢 Constitution v1.1 - RATIFIED
 
 🔵 Intelligence Domains Phase - OPEN
-├── 🔵 Advisor Experience - APPROVED / PLANNED / NOT IMPLEMENTED
+├── 🔵 Advisor Experience Intelligence - PLANNED / ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+│   ├── 🔵 PAQ-12 Advisor Experience Intelligence & Productivity - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Advisor Setup - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Benvenù Experience - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Advisor Baseline Snapshot - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Progressive Discovery - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Clippy Engine - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Feature Learning State - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Contextual Help Signals - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Revenue Intelligence Introduction - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Command Palette Introduction - PLANNED / ARCHITECTURE DISCOVERY
+│   ├── 🔵 Candy Crush Experience - PLANNED / ARCHITECTURE DISCOVERY
+│   └── ⛔ Implementation - NOT APPROVED
 ├── 🟢 Productivity Intelligence - ARCHITECTURE LOCK / NOT IMPLEMENTED
 │   ├── 🟢 PAQ-09 Productivity Intelligence Discovery - ARCHITECTURE CANDIDATE
 │   ├── 🟢 PAQ-09.5 Productivity Intelligence Architecture Lock - ARCHITECTURE LOCK
@@ -193,6 +205,13 @@
 ├── 🟢 Interview + Market Evidence Contracts
 ├── 🔵 Precontract Lifecycle Engine
 ├── 🔵 Mick / Behavior Intelligence
+├── 🔵 Advisor Development Intelligence - ARCHITECTURE CANDIDATE RECOMMENDED / NOT IMPLEMENTED
+│   ├── 🔵 PAQ-08 Advisor Development Intelligence Discovery - ARCHITECTURE CANDIDATE RECOMMENDED
+│   └── ⛔ Implementation - NOT APPROVED
+├── 🔵 Partner Intelligence - ARCHITECTURE CANDIDATE RECOMMENDED / NOT IMPLEMENTED
+│   ├── 🔵 PAQ-07 Partner Intelligence Discovery - ARCHITECTURE CANDIDATE RECOMMENDED
+│   └── ⛔ Implementation - NOT APPROVED
+├── 🔵 PAQ-08.5 Architecture Risk Correction Ratification - RATIFICATION REVIEW
 ├── 🟢 Compensation Intelligence Architecture
 │   ├── 🟢 Shared Commercial Model - FOUNDATION LOCK CLOSED
 │   ├── 🔵 Career Intelligence Foundation
@@ -392,16 +411,16 @@
 └── 🔵 Security Layer
 
 
-🔵 11 ADVISOR EXPERIENCE
+🔵 12 ADVISOR EXPERIENCE INTELLIGENCE
 │
-├── 🔵 Advisor Setup
-├── 🔵 Benvenù Experience
-├── 🔵 Advisor Baseline Snapshot
-├── 🔵 Progressive Discovery
-├── 🔵 Clippy Engine
-├── 🔵 Feature Learning State
-├── 🔵 Contextual Help Signals
-├── 🔵 Revenue Intelligence Introduction
-├── 🔵 Command Palette Introduction
-└── 🔵 Candy Crush Experience
+├── 🔵 Advisor Setup - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Benvenù Experience - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Advisor Baseline Snapshot - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Progressive Discovery - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Clippy Engine - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Feature Learning State - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Contextual Help Signals - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Revenue Intelligence Introduction - PLANNED / ARCHITECTURE DISCOVERY
+├── 🔵 Command Palette Introduction - PLANNED / ARCHITECTURE DISCOVERY
+└── 🔵 Candy Crush Experience - PLANNED / ARCHITECTURE DISCOVERY
 ```
