@@ -1,0 +1,159 @@
+FORGE UNKNOWN QUESTIONS QUEUE
+
+STATUS
+
+DISCOVERY
+NO IMPLEMENTATION
+NO CODE
+NO ENGINES
+NO SCHEMAS
+NO UI
+NO BUILD TREE CHANGES
+NO ARCHITECTURE MODIFICATIONS
+
+PURPOSE
+
+Questions that remain unresolved after reviewing Guion Riesgos, Manual de
+Induccion and Vendiendo Exitosamente.
+
+1. Should "Anual de Induccion" be treated as the same source as the verified
+   local file "Manual de Induccion.pdf" for future governance, or is there a
+   separate annual induction document still needed?
+
+2. What is the canonical source authority order when field intelligence and
+   corporate methodology disagree?
+
+3. Should Pedro Camarena Intelligence be treated as a named field methodology,
+   a source note, or an evidence family inside Forge?
+
+4. Which parts of SMNYL induction are company-specific training process versus
+   universal professional selling principles?
+
+5. How should Forge distinguish advisor activity discipline from client decision
+   readiness?
+
+6. Should "qualified prospect" have a universal Forge definition, with
+   company-specific overlays such as NAST?
+
+7. Is monetary commitment a universal sales process primitive, or is it
+   financial-services-specific?
+
+8. How should Forge represent the difference between recognized need and
+   emotional desire without creating manipulation risk?
+
+9. How should future Forge architecture prevent scripts from becoming robotic
+   compliance instead of understood principles?
+
+10. What evidence would show that an advisor is using questions to create
+    self-recognition rather than pressure?
+
+11. Should referral-worthiness be modeled as part of relationship intelligence,
+    sales process intelligence or advisor development intelligence?
+
+12. What is the boundary between persuasion and coercion in Forge's
+    constitutional sales principles?
+
+13. How should Forge handle cases where product suitability exists but client
+    readiness does not?
+
+14. How should Forge handle cases where client urgency exists but economic
+    capacity is unclear?
+
+15. What source should define the official delivery / policy solidification
+    process for SMNYL?
+
+16. Which law candidates should be reviewed for constitutional lock, and which
+    should remain methodology-pack principles?
+
+17. What future discovery should compare these principles against real advisor
+    meeting transcripts?
+
+18. What parts of the process remain valid for non-insurance professional
+    advisory work?
+
+READINESS INTELLIGENCE DISCOVERY ADDENDUM
+
+19. How should Forge distinguish prospect readiness from advisor confidence?
+
+20. What evidence is strong enough to say the prospect has moved from curiosity
+    to commitment?
+
+21. Should monetary commitment be considered universal readiness evidence, or
+    only financial-services readiness evidence?
+
+22. How should Forge treat household readiness when only one spouse or
+    decision-maker attended the first meeting?
+
+23. What evidence separates implementation questions from polite curiosity?
+
+24. When does an objection indicate readiness with concern, versus lack of
+    readiness?
+
+25. How should Forge preserve the distinction between first-meeting decision
+    formation and second-meeting transaction execution?
+
+26. What evidence would show that a presentation created new decision readiness
+    rather than merely revealing existing readiness?
+
+27. What real advisor meeting transcripts should be reviewed to validate the
+    Awareness -> Recognition -> Ownership -> Commitment -> Decision -> Action
+    model candidate?
+
+28. What ethical boundary prevents readiness signals from becoming sales
+    pressure triggers?
+
+FRICTION INTELLIGENCE DISCOVERY ADDENDUM
+
+29. What evidence distinguishes true friction from lack of readiness?
+
+30. What evidence distinguishes a real financial constraint from fear of regret
+    expressed as price concern?
+
+31. How should Forge identify hidden friction without becoming manipulative?
+
+32. Can friction be reduced by clarity alone, or does some friction require
+    relational trust, time or external alignment?
+
+33. What real meeting transcripts should be reviewed to validate friction
+    pattern candidates?
+
+34. Should advisor friction and prospect friction share a conceptual model, or
+    remain separate domains?
+
+35. What manager-side evidence shows coaching friction rather than poor
+    leadership capability?
+
+36. How should Forge represent friction when the ethical response is to slow
+    down rather than push forward?
+
+37. What is the boundary between resolving friction and pressuring a person
+    past their own agency?
+
+38. Should friction be considered a first-class discovery concept inside Career
+    OS, Sales Intelligence, Manager Intelligence or all three?
+
+ACTION SAFETY DISCOVERY ADDENDUM
+
+39. What evidence distinguishes genuine Action Safety from social compliance?
+
+40. What real client conversations should be reviewed to validate whether
+    Action Safety appears before action?
+
+41. Is Action Safety a universal constitutional concept or a Sales Intelligence
+    concept first?
+
+42. How should Forge avoid turning Action Safety into a compliance accelerator?
+
+43. Which Action Safety components are universal across clients, advisors,
+    managers, partners and recruits?
+
+44. Which components are context-specific and should never be generalized?
+
+45. What evidence shows acceptable uncertainty versus unsafe uncertainty?
+
+46. How should Forge distinguish economic clarity from economic capacity?
+
+47. Can Action Safety exist when the responsible answer is not to act?
+
+48. What ethical boundary ensures that increasing Action Safety does not become
+    pressure, urgency theater or emotional manipulation?

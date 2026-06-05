@@ -1,0 +1,106 @@
+FORGE HUMAN DECISION DISCOVERY CHECKPOINT
+
+STATUS
+
+CHECKPOINT REVIEW COMPLETE
+DOCUMENTATION ONLY
+NO IMPLEMENTATION
+NO CODE
+NO ENGINES
+NO SCHEMAS
+NO UI
+NO BUILD TREE CHANGES
+NO ARCHITECTURE MODIFICATIONS
+
+SUMMARY
+
+This checkpoint consolidates Professional Sales Process, Universal Sales
+Principles, Readiness Intelligence, Friction Intelligence and Action Safety
+discoveries.
+
+The strongest consolidated finding is:
+
+Forge should understand professional selling and human development decisions as
+decision-readiness processes, not product-presentation processes.
+
+UNIFIED MODEL
+
+Awareness
+-> Recognition
+-> Ownership
+-> Commitment
+-> Decision
+-> Action
+
+Readiness indicates preparation to move.
+
+Friction explains why movement stalls.
+
+Action Safety explains what makes movement feel responsible enough despite
+uncertainty.
+
+Decision Clarity helps people understand what matters, what is known, what is
+uncertain and what happens next.
+
+LOCK CANDIDATE REVIEW
+
+1. Product follows human context.
+
+Status:
+READY FOR FUTURE REVIEW, NOT LOCKED.
+
+2. Professional selling is the structured development of human decision
+readiness.
+
+Status:
+CANDIDATE FOR LOCK REVIEW AFTER VALIDATION.
+
+3. Forge helps people make better decisions.
+
+Status:
+STRONG CONSTITUTIONAL CANDIDATE, NOT RATIFIED.
+
+4. Action Safety is a valid human decision concept.
+
+Status:
+PROMISING DISCOVERY CANDIDATE, NOT READY FOR LOCK.
+
+VALIDATION REQUIREMENTS
+
+Future validation requires:
+
+- real advisor conversations
+- client meetings
+- recruiting conversations
+- manager coaching sessions
+- follow-up interactions
+- anonymized transcript review
+
+ETHICAL BOUNDARY
+
+Forge may support:
+
+- understanding
+- agency
+- evidence-based decision clarity
+- responsible action
+- human judgment development
+
+Forge must not optimize:
+
+- manipulation
+- pressure
+- coercion
+- compliance
+- hidden fear exploitation
+- human scoring
+
+RECOMMENDED NEXT DISCOVERY
+
+Real Meeting Transcript Validation.
+
+RECOMMENDED COMMIT
+
+PAQ Human Decision Discovery Checkpoint
+
+No code, engines, schemas, UI, architecture or Build Tree modifications.
