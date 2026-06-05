@@ -1,0 +1,193 @@
+FORGE JUDGMENT EVIDENCE PATTERNS
+
+STATUS
+
+DISCOVERY
+NO IMPLEMENTATION
+NO CODE
+NO UI
+NO ENGINES
+NO SCHEMAS
+NO BUILD TREE CHANGES
+NO RATIFICATION
+NO SCORES
+NO RANKINGS
+NO PERSON LABELS
+
+PURPOSE
+
+Document observable evidence patterns that may suggest professional judgment is
+developing over time.
+
+This file does not define scoring.
+This file does not define ranking.
+This file does not define readiness levels.
+This file does not label people.
+
+PATTERN 1: REASONING EXPLANATION
+
+Evidence:
+
+- user explains why a recommendation fits the situation
+- user distinguishes facts from assumptions
+- user can restate the reasoning in their own words
+- user can explain the recommendation to a manager or client without saying
+  "Forge told me"
+
+Concern:
+
+Repeating Forge language mechanically is not evidence of understanding.
+
+PATTERN 2: EVIDENCE-SEEKING
+
+Evidence:
+
+- user asks what facts support a recommendation
+- user requests source context before acting
+- user notices when evidence is missing
+- user delays action when the evidence is insufficient
+
+Concern:
+
+Blind confidence in the output may indicate dependency.
+
+PATTERN 3: TRADEOFF RECOGNITION
+
+Evidence:
+
+- user identifies what is gained and what is risked
+- user recognizes when speed may damage trust
+- user notices when short-term production may conflict with relationship value
+- user can choose between competing good options
+
+Concern:
+
+Seeking only the fastest answer may weaken judgment practice.
+
+PATTERN 4: RISK ANTICIPATION
+
+Evidence:
+
+- user identifies potential client resistance earlier
+- user notices renewal, trust, suitability or follow-up risks before escalation
+- user names what could go wrong if the recommendation is applied poorly
+- user recognizes when more human conversation is needed
+
+Concern:
+
+Risk blindness is not solved by more recommendations alone.
+
+PATTERN 5: UNCERTAINTY HANDLING
+
+Evidence:
+
+- user can act responsibly without complete certainty
+- user knows when not to act
+- user asks for clarification in ambiguous situations
+- user distinguishes "unknown" from "bad"
+
+Concern:
+
+Treating every unknown as a system failure may increase dependency.
+
+PATTERN 6: CONTEXTUAL ADAPTATION
+
+Evidence:
+
+- user modifies a suggested message to preserve relationship tone
+- user adapts a recommendation to client context
+- user rejects a recommendation when context has changed
+- user preserves the intent of guidance without copying it blindly
+
+Concern:
+
+Copying scripts without understanding conversation intent may create compliance,
+not judgment.
+
+PATTERN 7: PATTERN TRANSFER
+
+Evidence:
+
+- user applies a learned principle in a different case
+- user recognizes a familiar risk in a new context
+- user uses past reflection to improve future decisions
+- user can generalize without overgeneralizing
+
+Concern:
+
+If every new case requires full Forge instruction, the system may not be
+developing transferable reasoning.
+
+PATTERN 8: APPROPRIATE DISSENT
+
+Evidence:
+
+- user challenges a recommendation when facts do not match
+- user asks for alternative options
+- user explains why they are not following a suggestion
+- user detects when the recommendation is too generic
+
+Concern:
+
+Never questioning Forge is not trust. It may be abdication.
+
+PATTERN 9: BETTER QUESTIONS
+
+Evidence:
+
+- user moves from "What do I do?" to "What evidence matters?"
+- user asks "What would change this recommendation?"
+- user asks "What risk am I not seeing?"
+- user asks for principles rather than only scripts
+
+Concern:
+
+Question quality may be one of the earliest visible signs of judgment growth.
+
+PATTERN 10: CALIBRATED CONFIDENCE
+
+Evidence:
+
+- user is confident when evidence is strong
+- user is cautious when evidence is incomplete
+- user can explain uncertainty without paralysis
+- user does not confuse confidence with certainty
+
+Concern:
+
+Overconfidence and helplessness can both indicate judgment risk.
+
+PATTERN 11: REFLECTION AFTER OUTCOMES
+
+Evidence:
+
+- user reviews what happened after acting
+- user updates future decisions based on outcomes
+- user distinguishes decision quality from outcome luck
+- user asks what could be learned rather than only whether the sale closed
+
+Concern:
+
+Outcome-only learning can confuse production with judgment.
+
+PATTERN 12: RESPONSIBILITY RETENTION
+
+Evidence:
+
+- user treats Forge as support, not authority
+- user owns the final decision
+- manager owns coaching decisions
+- Forge output is used as context, not as a human substitute
+
+Concern:
+
+The moment Forge becomes the authority for human responsibility, Article 0 risk
+appears.
+
+FINAL OBSERVATION
+
+The most important evidence is not that users follow Forge more accurately.
+
+The most important evidence is that users reason better with Forge, and can
+carry that reasoning beyond Forge.
+
