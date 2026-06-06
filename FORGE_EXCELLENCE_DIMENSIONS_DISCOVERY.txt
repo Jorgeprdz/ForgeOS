@@ -1,0 +1,309 @@
+FORGE EXCELLENCE DIMENSIONS DISCOVERY
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No code. No UI. No schemas. No engines. No Build Tree
+changes.
+
+PURPOSE
+
+Identify the dimensions of Professional Excellence that Forge should consider
+when helping a person grow within a Career Stage or Leadership Stage.
+
+CORE PRINCIPLE
+
+Excellence is not one score.
+
+Excellence is a multi-dimensional interpretation of observable, stage-aware
+behaviors and decisions.
+
+UNIVERSAL DIMENSIONS
+
+1. Discipline
+
+Definition:
+The ability to do necessary work with reliable cadence.
+
+Evidence examples:
+- repeated activity
+- commitment completion
+- preparation
+- operating cadence
+
+Not evidence alone:
+- intensity burst
+- self-description
+- one productive week
+
+2. Consistency
+
+Definition:
+The durability of behavior over time.
+
+Evidence examples:
+- stable follow-up patterns
+- repeated execution
+- low avoidable drift
+
+Risk:
+Consistency must not punish healthy adaptation.
+
+3. Follow Through
+
+Definition:
+Turning commitments, conversations and plans into completed action.
+
+Evidence examples:
+- completed next actions
+- closed loops
+- client follow-up
+- manager commitments completed
+
+4. Coachability
+
+Definition:
+Ability to receive, test and integrate feedback into behavior.
+
+Evidence examples:
+- behavior changes after coaching
+- improved execution after feedback
+- asks useful questions
+
+Not evidence:
+- agreement in conversation without action
+
+5. Learning Ability
+
+Definition:
+Ability to improve through experience.
+
+Evidence examples:
+- fewer repeated mistakes
+- better objection handling
+- faster adoption of useful workflows
+- improved decision quality
+
+6. Relationship Building
+
+Definition:
+Ability to create and maintain trustworthy commercial relationships.
+
+Evidence examples:
+- engagement quality
+- continuity
+- referrals with context
+- repeat trust signals
+
+7. Trust
+
+Definition:
+Reliability, honesty and care in professional interactions.
+
+Evidence examples:
+- no invented claims
+- transparent follow-up
+- client-centered decisions
+- manager/advisor reliability
+
+8. Character
+
+Definition:
+Durable professional integrity under pressure.
+
+Evidence examples:
+- honest handling of uncertainty
+- keeps boundaries
+- avoids manipulation
+- preserves client dignity
+
+Boundary:
+Character must be evidence-based and carefully worded.
+
+9. Decision Quality
+
+Definition:
+Ability to choose appropriate actions based on context, evidence and tradeoffs.
+
+Evidence examples:
+- recommendation quality
+- prioritization
+- avoids unsupported projections
+- chooses next best action with reason
+
+10. Adaptability
+
+Definition:
+Ability to adjust behavior when context changes.
+
+Evidence examples:
+- changes approach after new evidence
+- adapts messaging
+- recovers from setbacks
+
+11. Business Planning
+
+Definition:
+Ability to connect ambition, facts, forecast, behavior and action.
+
+Evidence examples:
+- realistic plans
+- action paths
+- plan updates after evidence
+- follow-through against plan
+
+12. Execution Quality
+
+Definition:
+The quality of completed work, not merely activity quantity.
+
+Evidence examples:
+- prepared meetings
+- thoughtful follow-up
+- accurate policy handling
+- clean handoffs
+
+13. Communication Quality
+
+Definition:
+Ability to communicate with clarity, empathy and commercial usefulness.
+
+Evidence examples:
+- clear next steps
+- client-language explanations
+- objection handling
+- manager coaching conversations
+
+14. Evidence Respect
+
+Definition:
+Willingness to operate from facts, confidence and known uncertainty.
+
+Evidence examples:
+- does not invent values
+- asks for missing source
+- distinguishes forecast from fact
+- uses rule context
+
+15. Client / People Stewardship
+
+Definition:
+Quality of responsibility toward clients, advisors, candidates or teams.
+
+Evidence examples:
+- protects client interest
+- supports team development
+- respects candidate dignity
+- follows through on people commitments
+
+STAGE-SPECIFIC DIMENSIONS
+
+Candidate:
+- potential
+- character evidence
+- responsiveness
+- market quality
+- learning posture
+- readiness
+
+Precontract:
+- activation behavior
+- activity proof
+- resilience
+- coachability
+- readiness
+- risk reduction
+
+Advisor:
+- follow-through
+- prospecting consistency
+- relationship movement
+- client trust
+- sales learning
+- product boundary respect
+
+Professional Advisor:
+- practice quality
+- conservation
+- planning maturity
+- repeatable cadence
+- decision quality
+- client stewardship
+
+Partner:
+- network leverage
+- referral quality
+- ecosystem contribution
+- strategic relationships
+- trust capital
+- influence with responsibility
+
+Senior Partner:
+- mentorship
+- strategic contribution
+- durable leverage
+- practice resilience
+- ecosystem development
+
+Managing Partner:
+- leadership maturity
+- people development
+- organizational health
+- strategic operating cadence
+- manager development
+- accountability without surveillance
+
+Leadership Stage:
+- coaching quality
+- team development
+- recruiting quality
+- risk detection
+- development conversations
+- decision transparency
+
+DIMENSIONS TO AVOID OR RENAME
+
+"Motivation":
+Avoid as a dimension. Use observable drive, activity, commitment or purpose
+context instead.
+
+"Popularity":
+Reject. It is not excellence.
+
+"Charisma":
+Reject as a dimension. It may help communication but can hide weak trust.
+
+"Production":
+Use as evidence or outcome, not an excellence dimension.
+
+"Leadership":
+Split into leadership responsibility and leadership quality.
+
+RECOMMENDED TOP-LEVEL DIMENSION SET
+
+1. Discipline
+2. Consistency
+3. Follow Through
+4. Coachability
+5. Learning Ability
+6. Relationship Building
+7. Trust
+8. Character
+9. Decision Quality
+10. Adaptability
+11. Business Planning
+12. Execution Quality
+13. Communication Quality
+14. Evidence Respect
+15. People Stewardship
+
+FINAL DIMENSION VERDICT
+
+CANDIDATE FOR LOCK.
+
+Reason:
+The dimensions are coherent and map naturally to Career OS, Mick, Advisor
+Development, Manager Intelligence and Partner Intelligence.
+
+They require evidence contracts before implementation.

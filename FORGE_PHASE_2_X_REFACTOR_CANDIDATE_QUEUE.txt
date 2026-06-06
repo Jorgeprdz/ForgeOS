@@ -1,0 +1,3685 @@
+FORGE_PHASE_2_X_REFACTOR_CANDIDATE_QUEUE.txt
+Generated: 2026-06-04
+Scope: Future refactor candidates only. No refactor approved.
+
+## comisiones.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## manager-alert-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## forge-ai-connector-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## gmm-out-of-pocket-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-client-presentation-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-advisor-performance-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-coaching-insight-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-combat-intelligence-report-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-combat-intelligence-report-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-learning-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-master-intelligence-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-master-intelligence-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-memory-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-next-best-action-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-next-best-action-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-personality-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## decision-appendix-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## education-cost-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## education-paths-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-confidence-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-confidence-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-death-benefit-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-death-benefit-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-portfolio-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-portfolio-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-rescue-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-rescue-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-type-inference-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-type-inference-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-education-cost-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-education-paths-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-coverage-status-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## gmm-out-of-pocket-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-growth-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-ave-growth-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-clp-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-coverage-status-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-knowledge-extractor-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-knowledge-extractor.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-protected-diseases-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-protected-diseases-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## client-engagement-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-coaching-insight-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## quick-actions-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-learning-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 06 LEARNING INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-detail-view-model.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-quick-actions-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-task-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-task-priority-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-timeline-view-model.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-health-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-next-action-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-opportunity-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-review-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-review-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-timeline-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## render-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## task-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## task-priority-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-survival-schedule-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-survival-schedule-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-detail-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-risk-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-storage-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-timeline-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-manager-alert-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-team-intelligence-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-team-intelligence-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-opportunity-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-opportunity-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-assessment-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-assessment-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-coachability-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-coachability-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-hard-factors-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-hard-factors-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-market-quality-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-market-quality-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-vital-factors-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## candidate-vital-factors-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## core-app-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## domain-events.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## performance-runtime.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-health-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## storage-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ui-render-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-command-palette-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-risk-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## concursos.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-intent-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: EVIDENCE & PROVENANCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-client-presentation-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: EVIDENCE & PROVENANCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-advisor-performance-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-followup-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## client-engagement-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## forge-ai-connector.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## life-event-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-memory-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-next-action-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-timeline-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-banxico-rate-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-banxico-rate-report.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-decision-appendix-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## virtual-list-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## activity-feed-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## activity-feed.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-manager-alert-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-intent-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED COMMERCIAL MODEL
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## shared-clp-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED COMMERCIAL MODEL
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## advisor-performance-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## core_domain-events.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## life-event-master-test.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nash-personality-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-opportunity-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-performance-engine.js
+
+- Candidate action: CONSOLIDATE LATER
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## revenue-forecast-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## product-schema-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-comisiones-gmm.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## dashboard-priority-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## operational-dashboard-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-import-dashboard-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## cartera-import-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## cartera-repository.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## dashboard-executive.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## first-contact-dashboard.viewmodel.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## live-dashboard-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## predictive-dashboard.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## team-dashboard-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## primary-risk-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## comisiones-rules-gmm.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## comisiones-utils.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## commission-projection-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-comisiones-vida.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## forge-schema-reporter.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: EVIDENCE & PROVENANCE
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## life-expectancy-projection-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-schema-validator-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: ALTA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## opportunity-detector-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## pipeline-stage-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## adaptive-script-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## advisor-style-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## appointment-followup-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## communication-mismatch-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## conversion-metrics-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## discovery-summary-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## discovery-to-presentation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## dna-script-strategy-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## first-contact-delivery-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## first-contact-options-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## first-contact-tone-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## first-contact.entity.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## presentation-input-context-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## quotation-extraction-result.entity.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## reactivation-strategy-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-context-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-dna-learning-event.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-dna-profile-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-dna-stage-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-learning-event.entity.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-outreach-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## tone-performance-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## objection-resolution-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## objection-response-strategy-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## discovery-product-alignment-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## financial-pyramid-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## financial-pyramid-priority-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## financial-pyramid-story-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## imagina-ser-contribution-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## needs-discovery-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-filter-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## search-index-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## segu-beca-mxn-timeline-clean-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ai-first-contact-message-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## contact-attempt-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## contact-response-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup-message-context-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup-overdue-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup-priority-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup-recommendation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup-reminder-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ghosting-status-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## hot-market-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-last-contact-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-ai-followup.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-card-ui.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-followup-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## relationship-memory-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-followup-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-followup-message-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## warm-market-segmentation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ai-sales-coach-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 06 LEARNING INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## action-resolver-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## advisor-alert-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## advisor-monitor-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## advisor-score-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ai-context-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## auto-task-generator-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## drag-drop-policy-zone.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## financial-story-task-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## import-progress-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## live-operational-state-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## nano-banana-icon-system-prompt.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ocr-result-cache.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## operational-card.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## operational-colors.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## operational-feed-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## overdue-task-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## payment-frequency-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-activity-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-ai-insights-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-auto-approval-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-auto-save-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-client-summary-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-context-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-detail-alert-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-document-classifier.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-document-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-duplicate-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-import-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-import-errors-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-import-metrics-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-import-summary.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-indexing-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-ingestion-orchestrator.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-live-state-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-metadata-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-operational-center-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-renewal-status-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-review-priority-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-search-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-side-by-side-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-staging-cache.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-staging-status-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-status-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-summary-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-timeline-event.factory.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-timeline-group-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-timeline.repository.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-timeline.types.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-workspace-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## quick-action-executor-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## renewal-intelligence-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## staging-cleanup-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## task-feed-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## task-quick-action-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## mass-import-mapping-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## mass-import-validation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-review-ui-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## appointment-opportunity-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## dna-coaching-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## manager-broadcast-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## manager-coaching-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## manager-feed-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## manager-notification-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## manager-role-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ovelay-manager.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## payment-mode-coaching-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ranking-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## route-transition-manager.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## search-ranking-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## team-momentum-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## team-structure-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## command-execution-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## command-parser-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## command-shortcuts-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## command-suggestion-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## assistant-memory-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## communication-channel-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## copilot-suggestion-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## crash-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## csv-parser-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## health-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## in-app-notification-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## live-communication-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## live-notification-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## mutation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## notification-orchestrator.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## notification-priority-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## notification-queue-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-batch-processing-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-import-queue.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## push-notification-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## query-cache.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## query-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-smart-actions.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referrals-board-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-coach-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## secure-storage.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-notification-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-priority-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## supabase-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sw-cache-config.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sync-queue-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ai-orb-widget.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## operational-button.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## search-quick-actions-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-header.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## universal-search-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Alfred / Universal Command Bar
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## discovery-insights-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-field-confidence-map.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-financial-summary-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-normalization-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-smart-sort-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-validation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## risk-story-context-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## contextual-suggestion-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## semantic-navigation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## commissionable-amount-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## advisor-activity-timeline.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## advisor-sales-dna.entity.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## appointment-calendar-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## event-log-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup-next-date-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## followup.entity.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## google-calendar-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## idle-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## monthly-revenue-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## optimistic-mutation-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-core-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## question-answer-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## question-session-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## quick-actions-bar.tsx
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## realtime-task-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-timeline-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referrals-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## retry-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## revenue-optimization-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-agenda-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## activity-stream-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## channel-performance-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-dna-evolution-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## team-activity-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## daily-points-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: RULESNAPSHOT / RULE PACK
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## introduction-message-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED COMMERCIAL MODEL
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## animation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## discovery-priority-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## dom-sanitizer.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## domain-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## entity-resolver-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## excel-parser-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## financial-risk-score-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## motion-principles.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## operational-shell.store.ts
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## operational-sync-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## quotation-input.entity.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-score-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smart-referrals-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## universal-command-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: BAJA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## forge-build-tree-status.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-pipeline-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-financial-fixture-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## forge-semantic-risk-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## forge-vida-mujer-advisor-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## line-of-business-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-ai-parser.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## segu-beca-ocr-intake-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-cross-sell-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-client-explanation-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-financial-correction-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-pdf-ave-integration-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-pdf-intake-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-rule-consistency-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-status.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## segu-beca-meaningful-numbers-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## segu-beca-mxn-appendix-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## vida-mujer-event-benefits-report.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## adaptive-question-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ai-task-suggestion-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-timeline-query-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## mass-import-preview-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-ai-presence-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-command-center-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-ai-coach-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## adaptive-message-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## adaptive-outreach-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## close-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## ghosting-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## objection-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## outreach-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## referral-prompt-builder.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-opportunity-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-insights-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-renovaciones-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-conteo-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## close-readiness-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## close-strategy-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## first-contact-ai-suggestion-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## first-contact-script-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## objection-battle-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## objection-classifier-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## objection-intent-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## objection-memory-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-dna-insight-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-dna-match-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## sales-dna-recommendation-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## buying-signals-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## visibility-runtime.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-goals-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-productividad-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-streak-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## lead-temperature-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## momentum-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-relationship-score-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-decision-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-leaderboard-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## smnyl-neural-glow-engine.js
+
+- Candidate action: DELETE LATER ONLY IF PROVEN UNUSED
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## policy-human-review-engine.js
+
+- Candidate action: MOVE LATER
+- Classification: MOVE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+
+## staging-review-engine.js
+
+- Candidate action: MOVE LATER
+- Classification: MOVE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate type: Migration Candidate
+- Priority: MEDIA
+- Required before action: ADR if ownership changes, tests, import graph validation, rollback plan, source documentation where rules exist.
+

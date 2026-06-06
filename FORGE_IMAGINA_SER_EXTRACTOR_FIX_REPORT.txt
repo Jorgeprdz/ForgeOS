@@ -1,0 +1,171 @@
+FORGE IMAGINA SER EXTRACTOR FIX REPORT
+
+Status: PASS
+
+Scope:
+Extraction logic only.
+
+Source of truth:
+/storage/emulated/0/Download/Solucionline_20260602_18_10.PDF
+
+Client:
+Edwin Marquez
+
+1. ROOT CAUSE
+
+File:
+imagina-ser-ocr-extractor.js
+
+Root cause:
+The client scenario extractor was too narrow for the real Edwin Marquez quote layout.
+
+Before the fix:
+
+- Scenario extraction expected a hardcoded row beginning with:
+  27 65 ...
+
+- Annual premium extraction used a brittle regex around:
+  Prima basica ... Anual
+
+- Coverage period was hardcoded as:
+  accumulationYears: 27
+
+Why it failed:
+
+- Edwin's real quote shows coverage/scenario year 42, not 27.
+- The PDF table layout has the premium values on a row:
+  Prima basica 269 806 1,611 3,222
+
+- The scenario row is:
+  42 65 82,829 390 128,697 606 57,228 270
+
+- The previous extractor did not parse this layout and returned:
+  annualBasicPremium = 0
+  scenarios = {}
+  accumulationYears = 27
+
+2. FILES MODIFIED
+
+Modified:
+
+- imagina-ser-ocr-extractor.js
+
+Added validation script:
+
+- imagina-ser-real-quote-validation.js
+
+No business rules modified.
+No presentation logic modified.
+No Banxico integration modified.
+No market-data engine created.
+No cache system created.
+
+3. BEFORE
+
+Failed validation values:
+
+- annualBasicPremium: 0
+- scenarios: {}
+- accumulationYears: 27
+
+Expected PDF values:
+
+- Prima Total Anual / annual basic premium table value: 3,222
+- Base Scenario: 82,829 UDI one-time payout / 390 UDI monthly income
+- Favorable Scenario: 128,697 UDI one-time payout / 606 UDI monthly income
+- Unfavorable Scenario: 57,228 UDI one-time payout / 270 UDI monthly income
+- Coverage Period: 42 years
+- Payment Period: 15 years
+
+4. AFTER
+
+Extractor now returns from the real PDF:
+
+- annualBasicPremium: 3,222
+- annualTotalPremium: 3,222
+- accumulationYears: 42
+- coverageYears: 42
+- paymentYears: 15
+- productName: IMAGINA SER 65 PAGOS LIMITADOS 15
+
+Scenario extraction:
+
+- BASE singlePaymentUDI: 82,829
+- BASE monthlyIncomeUDI: 390
+- FAVORABLE singlePaymentUDI: 128,697
+- FAVORABLE monthlyIncomeUDI: 606
+- DESFAVORABLE singlePaymentUDI: 57,228
+- DESFAVORABLE monthlyIncomeUDI: 270
+
+Evidence flags:
+
+- product: SOURCE_TEXT
+- coverage: SOURCE_TEXT
+- premiums: SOURCE_TEXT
+- scenarios: SOURCE_TEXT
+
+5. TESTS EXECUTED
+
+Command:
+node imagina-ser-real-quote-validation.js
+
+Result:
+PASS
+
+Validation details:
+
+- Client name: PASS
+- Premium extraction: PASS
+- Total annual premium extraction: PASS
+- Coverage period: PASS
+- Accumulation years mirrors coverage period: PASS
+- Base scenario one-time payout: PASS
+- Favorable scenario one-time payout: PASS
+- Unfavorable scenario one-time payout: PASS
+- Base scenario monthly income: PASS
+- Retirement age: PASS
+- Payment period: PASS
+
+Summary:
+
+- Total: 11
+- Pass: 11
+- Fail: 0
+
+Command:
+node imagina-ser-master-test.js
+
+Result:
+PASS
+
+Summary:
+
+- Total: 16
+- Pass: 16
+- Fail: 0
+
+Command:
+node imagina-ser-banxico-integration-test.js
+
+Result:
+PASS
+
+Summary:
+
+- Total: 6
+- Pass: 6
+- Fail: 0
+
+6. FINAL STATUS
+
+PASS
+
+Root cause fixed.
+
+The extractor now validates against the real Edwin Marquez Imagina Ser quote:
+
+- Scenario extraction PASS
+- Premium extraction PASS
+- Coverage period PASS
+- Payment period PASS
+

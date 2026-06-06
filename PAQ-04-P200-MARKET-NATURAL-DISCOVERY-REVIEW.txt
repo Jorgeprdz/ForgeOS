@@ -1,0 +1,992 @@
+PAQ-04 P200 MARKET NATURAL DISCOVERY REVIEW
+
+Mode:
+Principal Domain Architect
+
+Scope:
+Architecture correction and boundary review only.
+
+This document does not create code.
+This document does not create engines.
+This document does not create schemas.
+This document does not modify UI.
+This document does not commit changes.
+
+Architecture correction:
+
+P200 does not belong to Recruitment Intelligence.
+P200 is not a Recruitment Artifact.
+P200 is not a prospect list.
+
+P200 is a Market Natural Discovery Artifact.
+
+Recruitment Intelligence consumes P200.
+Sales Prospecting consumes P200.
+Partner Intelligence consumes P200.
+Business Planning consumes P200.
+
+Corrected causal flow:
+
+Relationship Capital
+Market Natural
+P200 Evidence
+Recruitment
+Sales Prospecting
+
+
+1. EXECUTIVE SUMMARY
+
+The critical correction is valid:
+
+P200 should not be owned by Recruitment Intelligence.
+
+P200 is not primarily a recruitment tool.
+
+P200 is an artifact used to discover and externalize Market Natural.
+
+Its main purpose is not to create candidates.
+
+Its main purpose is to reveal the advisor's or candidate's relationship inventory and market access surface.
+
+P200 helps Forge see:
+
+Relationship inventory.
+Market Natural.
+Relationship clusters.
+Community access.
+Market concentration.
+Potential relationship activation surface.
+Potential prospecting capacity.
+Potential referral capacity.
+Potential recruiting capacity.
+
+Recruitment may use P200 to identify candidate capacity and future recruiting surfaces.
+
+Sales Prospecting may use P200 to identify client/prospect opportunities.
+
+Partner Intelligence may use P200 to evaluate whether a potential or new advisor has enough market surface to become a viable economic unit.
+
+Business Planning may use P200 to estimate whether activity goals have enough relationship surface behind them.
+
+But P200 itself is not Recruitment.
+
+Market Natural is the discovered relationship field.
+P200 is evidence of that field.
+Relationship Capital is the broader asset.
+Career Capital is the broader career viability interpretation.
+
+Final summary:
+
+Market Natural should be APPROVED as a distinct conceptual layer inside Relationship Capital.
+
+P200 should be APPROVED as Market Natural evidence and snapshot artifact.
+
+P200 should be explicitly removed from Recruitment ownership.
+
+
+2. MARKET NATURAL DEFINITION
+
+What Market Natural really is:
+
+Market Natural is the set of people, groups, communities and relationship clusters that a person can naturally identify, access, recognize or be recognized by at the beginning of a commercial career or prospecting process.
+
+It is the person's natural reachable market.
+
+It includes people with whom there is some prior familiarity, shared context, common group, relational path, community membership, professional adjacency or recognition.
+
+Market Natural exists before the person becomes a candidate in recruitment, before a prospect becomes a client, and before any sale occurs.
+
+Market Natural is not a list.
+
+A list can represent it.
+P200 can reveal it.
+But the Market Natural itself is the underlying commercial/social field.
+
+Market Natural contains:
+
+Family.
+Friends.
+Former classmates.
+Current classmates.
+Former coworkers.
+Current coworkers.
+Neighbors.
+Community members.
+Club members.
+Service providers.
+Business owners frequented by the person.
+Professional groups.
+School communities.
+Parent groups.
+Religious or civic communities.
+Sports or hobby communities.
+People known through spouse/partner.
+People known through clients.
+People known through advisors.
+People reachable through centers of influence.
+
+What Market Natural is not:
+
+It is not Recruitment.
+It is not a CRM.
+It is not a P200.
+It is not a candidate list.
+It is not a prospect list.
+It is not proof of production.
+It is not proof of sales ability.
+It is not proof of trust.
+It is not proof of conversion.
+It is not compensation.
+It is not a Rule Pack result.
+
+Is Market Natural a concept?
+
+Yes.
+
+It is a business concept recognized by training material and operational artifacts.
+
+Is Market Natural an asset?
+
+Yes, but with nuance.
+
+The relationship access inside Market Natural is an asset.
+The named inventory is evidence of the asset.
+
+Is Market Natural a capability?
+
+Not directly.
+
+Market Natural is mostly an asset/surface.
+
+The capability is the ability to activate Market Natural.
+
+Is Market Natural evidence?
+
+No.
+
+Market Natural itself is not evidence.
+P200 and Proyecto de Marketing are evidence of Market Natural.
+
+Is Market Natural a snapshot?
+
+No.
+
+Market Natural can be snapshotted.
+It is not itself a snapshot.
+
+Is Market Natural an interpretation?
+
+Partly.
+
+The raw relationships are facts.
+The interpretation that these relationships form a usable Market Natural is an interpretation.
+
+Is Market Natural a domain?
+
+Not yet.
+
+Market Natural should not become a standalone domain at this stage.
+
+Is Market Natural a subdomain?
+
+Possibly later under Relationship Capital, Career Capital, Sales Prospecting or Advisor Development.
+
+Current decision:
+Treat Market Natural as a distinct conceptual layer and interpreted asset surface inside Relationship Capital.
+
+
+3. RELATIONSHIP CAPITAL BOUNDARY
+
+Relationship Capital is broader than Market Natural.
+
+Relationship Capital means:
+
+The durable commercial value embedded in a person's relationships, trust paths, referral paths, community access, influence access and network position.
+
+Market Natural is one expression of Relationship Capital.
+
+Relationship Capital includes:
+
+Market Natural.
+Existing clients.
+Former clients.
+Referral relationships.
+Centers of Influence.
+Professional graph.
+Social graph.
+Trust paths.
+Community memberships.
+Influence nodes.
+Indirect access.
+Relationship quality.
+Relationship freshness.
+
+Market Natural differs from Relationship Capital because:
+
+Market Natural is the naturally identifiable and accessible starting market.
+Relationship Capital is the broader asset that includes all relationship value, including developed client relationships, referral paths, influence relationships and network trust over time.
+
+Can Relationship Capital exist without Market Natural?
+
+Yes.
+
+Examples:
+
+An advisor builds strong client relationships over time despite a weak initial natural market.
+A person has one powerful CI but no broad natural market.
+A professional has deep institutional access but little personal market.
+A digital prospecting system produces relationships not originally from Market Natural.
+
+Can Market Natural exist without Relationship Capital?
+
+Only superficially.
+
+If Market Natural is merely a list of names with no familiarity, access, trust, recognition or relationship path, then it is not meaningful Market Natural.
+
+A weak or low-quality Market Natural can exist as shallow relationship inventory, but usable Market Natural requires at least minimal Relationship Capital.
+
+Boundary decision:
+
+Market Natural is a subset or expression of Relationship Capital, not an equivalent term.
+
+
+4. CAREER CAPITAL BOUNDARY
+
+Career Capital is broader than both Relationship Capital and Market Natural.
+
+Career Capital means:
+
+The combined commercial assets, capabilities, credibility and behaviors that make a person viable in an advisor career or commercial leadership path.
+
+Career Capital may include:
+
+Relationship Capital.
+Market Natural.
+P200 evidence.
+Credibility.
+Commercial confidence.
+Ability to prospect.
+Ability to ask for referrals.
+Communication skill.
+Coachability.
+Discipline.
+Market understanding.
+Professional background.
+Community reputation.
+Centers of Influence.
+Sales maturity.
+Execution behavior.
+
+How Market Natural differs from Career Capital:
+
+Market Natural answers:
+Who can this person naturally reach or identify?
+
+Career Capital answers:
+Can this person convert their assets, relationships, behavior and credibility into a sustainable career?
+
+How Relationship Capital differs from Career Capital:
+
+Relationship Capital is relationship access and trust value.
+
+Career Capital includes Relationship Capital but adds personal capability, commercial maturity, execution discipline and career viability.
+
+Boundary decision:
+
+Career Capital should not own P200 directly at this stage.
+
+Career Capital may consume P200/Market Natural interpretation as one component of broader career viability.
+
+
+5. P200 ANALYSIS
+
+What P200 is:
+
+P200 is a Market Natural Discovery Artifact.
+
+It is a structured exercise to externalize the person's natural market.
+
+It is an artifact that reveals or attempts to reveal:
+
+Relationship inventory.
+Recognized people.
+Familiar people.
+Relationship clusters.
+Community access.
+Market concentration.
+Potential activation surface.
+
+What P200 is not:
+
+It is not Recruitment.
+It is not a Recruitment Artifact.
+It is not a prospect list.
+It is not a candidate list.
+It is not a guarantee of productivity.
+It is not a guarantee of quality.
+It is not a guarantee of trust.
+It is not a metric of advisor success by itself.
+
+Does P200 measure Market Natural or Relationship Capital?
+
+P200 primarily measures or evidences Market Natural.
+
+It indirectly evidences part of Relationship Capital.
+
+More precisely:
+
+P200 is evidence of declared Market Natural.
+Declared Market Natural is a subset/expression of Relationship Capital.
+
+What part is evidence?
+
+The listed names.
+Known relationship type.
+Contactability.
+Group membership.
+Occupation.
+Age or life stage if captured.
+Time known.
+Frequency of interaction.
+Possibility of approach.
+Potential for referrals.
+Comments.
+Source of the relationship.
+
+What part is interpretation?
+
+Market strength.
+Relationship quality.
+Activation potential.
+Trust level.
+Referral potential.
+Market concentration.
+Prospecting capacity.
+Recruitment capacity.
+Sales opportunity quality.
+Career viability implication.
+
+Is P200 a list?
+
+Operationally yes.
+Architecturally no.
+
+It is not only a list.
+It is evidence of a relationship inventory.
+
+Is P200 an activity?
+
+Completing P200 is an activity.
+Updating P200 is an activity.
+Reviewing P200 is an activity.
+Activating names from P200 is an activity.
+
+The artifact itself is not only an activity.
+
+Is P200 evidence?
+
+Yes.
+
+It is evidence of declared Market Natural.
+
+Is P200 a snapshot?
+
+Yes, when captured at a point in time.
+
+Example:
+P200 Snapshot as of a date.
+
+Is P200 an asset?
+
+No.
+
+The underlying Market Natural / Relationship Capital is the asset.
+P200 is a representation of the asset.
+
+Is P200 a score?
+
+No.
+
+It may contribute to interpretation, but it is not a score.
+
+What P200 predicts:
+
+Potential available people to contact.
+Potential prospecting capacity.
+Potential recruitment capacity.
+Potential referral surface.
+Potential market concentration.
+Risk of market exhaustion.
+Risk of weak relationship inventory.
+
+What P200 does not predict:
+
+Conversion.
+Sales skill.
+Trust depth.
+Willingness to call.
+Actual production.
+Actual recruitment success.
+Actual compensation.
+Future productivity with certainty.
+
+Valid metrics:
+
+Declared relationship count.
+Distinct relationship clusters.
+Community/group count.
+Contactability rate.
+Relationship type distribution.
+Time-known distribution.
+Interaction-frequency distribution.
+Approachability distribution.
+Referral-potential distribution.
+Market concentration by cluster.
+Activation rate.
+Contacted-from-P200 rate.
+Appointment-from-P200 rate.
+Referral-from-P200 rate.
+Candidate-from-P200 rate.
+Client-from-P200 rate.
+Conversion by cluster.
+Staleness / freshness of relationship inventory.
+
+Vanity metrics:
+
+Raw P200 count alone.
+Percentage completion alone.
+Number of names without contactability.
+Number of names without relationship type.
+Number of names without activation.
+Number of clusters without conversion.
+Referral potential declared but never tested.
+Market Natural score without evidence.
+
+
+6. OWNERSHIP ANALYSIS
+
+6.1 Shared Commercial Model
+
+Owns:
+
+CommercialPerson.
+CommercialRelationship.
+CommercialAccount.
+CommercialAttribution.
+CommercialAssignment.
+EvidenceRecord.
+ProvenanceRecord.
+PeriodSnapshot.
+
+Should own:
+
+The universal primitives needed to represent people, groups, relationships, evidence and source provenance.
+
+Should not own:
+
+Market Natural interpretation.
+Recruitment risk.
+Sales prospecting decisions.
+Partner coaching interpretation.
+Business planning actions.
+
+
+6.2 Market Natural
+
+Ownership status:
+No standalone domain approved.
+
+Recommended conceptual ownership:
+Transversal concept over Shared Commercial Model primitives.
+
+Interpretation owners:
+
+Recruitment interprets for candidate/recruiting capacity.
+Sales Prospecting interprets for prospect/client capacity.
+Partner Intelligence interprets for advisor unit viability.
+Business Planning interprets for goal feasibility and activation surface.
+
+
+6.3 P200
+
+Ownership:
+Not Recruitment.
+
+Recommended owner:
+Shared evidence layer for the artifact.
+
+Recommended interpretation:
+Market Natural Discovery Artifact.
+
+Consumers:
+
+Recruitment Intelligence.
+Sales Prospecting.
+Partner Intelligence.
+Business Planning.
+Career Capital interpretation if later approved.
+Advisor Experience if used for baseline or setup.
+Mick if tracking completion/activation behavior.
+
+
+6.4 Recruitment Intelligence
+
+Consumes:
+
+P200 evidence.
+Market Natural interpretation.
+Relationship clusters.
+Referral potential.
+Community access.
+Activation risk.
+
+Uses P200 to answer:
+
+Does this candidate/advisor have enough relationship surface for recruiting?
+Which clusters might produce candidate names?
+Which P200 contacts could become recruitment prospects?
+Where is recruitment capacity weak?
+
+Does not own:
+
+P200.
+Market Natural.
+Relationship Capital.
+
+
+6.5 Sales Prospecting
+
+Consumes:
+
+P200 evidence.
+Market Natural.
+Relationship clusters.
+Community access.
+Need segmentation.
+Trust paths.
+
+Uses P200 to answer:
+
+Who can become a client prospect?
+Which clusters can produce appointments?
+Which relationships can generate referrals?
+Which market segment is overrepresented?
+
+Does not own:
+
+P200 artifact as universal evidence.
+
+
+6.6 Partner Intelligence
+
+Consumes:
+
+P200 evidence.
+Market Natural strength.
+Relationship cluster diversity.
+Activation surface.
+Recruitment outcomes.
+Productivity outcomes.
+
+Uses P200 to answer:
+
+Is this advisor/candidate a viable economic unit?
+Does this person have enough market surface to start?
+Does the Partner's future unit have relationship capital?
+Which advisors need development around activation?
+
+Does not own:
+
+Raw P200 artifact.
+Recruitment candidate stages.
+Sales prospecting pipeline.
+
+
+6.7 Business Planning Intelligence
+
+Consumes:
+
+P200 evidence.
+Market Natural interpretation.
+Activation rates.
+Source quality.
+Recruitment funnel.
+Sales prospecting funnel.
+Mick behavior.
+
+Uses P200 to answer:
+
+Are goals feasible given available relationship surface?
+Does the plan have enough names/relationships behind it?
+What activation actions are required?
+Which clusters should be activated first?
+
+Does not own:
+
+P200.
+Relationship graph.
+Recruitment metrics.
+Sales prospecting metrics.
+
+
+7. RED TEAM REVIEW
+
+Hypothesis to destroy:
+"A complete P200 implies a strong Market Natural."
+
+Verdict:
+False.
+
+A complete P200 may indicate effort, memory, compliance or administrative completion.
+
+It does not automatically prove strong Market Natural.
+
+
+7.1 Counterexample: 200 weak names
+
+Scenario:
+The person lists 200 names but has not spoken to most of them in years.
+
+Failure:
+Raw count looks strong, activation surface is weak.
+
+Conclusion:
+Completeness does not equal relationship strength.
+
+
+7.2 Counterexample: 200 names without contactability
+
+Scenario:
+Names lack phone, channel, permission or context.
+
+Failure:
+Market cannot be activated.
+
+Conclusion:
+Contactability matters.
+
+
+7.3 Counterexample: 200 names in one cluster
+
+Scenario:
+All names come from one school, one job or one family branch.
+
+Failure:
+Market concentration risk.
+
+Conclusion:
+Diversity of clusters matters.
+
+
+7.4 Counterexample: high familiarity, low commercial fit
+
+Scenario:
+The person knows many people, but most lack need, income, seriousness or decision capacity.
+
+Failure:
+Relationship inventory is real but commercial opportunity is limited.
+
+Conclusion:
+Market Natural is not equivalent to qualified opportunity.
+
+
+7.5 Counterexample: P200 completed by pressure
+
+Scenario:
+Candidate fills names mechanically to satisfy training requirement.
+
+Failure:
+Artifact exists but evidence quality is low.
+
+Conclusion:
+P200 requires confidence/provenance and validation.
+
+
+7.6 Counterexample: small P200, strong Market Natural
+
+Scenario:
+Candidate lists only 80 names but each cluster is high-trust, active and referral-rich.
+
+Failure:
+Raw completion underestimates strength.
+
+Conclusion:
+Quality can outweigh quantity.
+
+
+7.7 Counterexample: weak Market Natural, high cold-prospecting skill
+
+Scenario:
+Advisor has little natural market but excels in cold prospecting or digital acquisition.
+
+Failure:
+P200 underestimates career potential.
+
+Conclusion:
+Market Natural is one input, not the whole career model.
+
+
+7.8 Counterexample: strong P200, no activation behavior
+
+Scenario:
+Advisor has a rich P200 but never contacts, asks, follows up or activates.
+
+Failure:
+Relationship asset remains dormant.
+
+Conclusion:
+Mick behavior and activation metrics are required.
+
+
+7.9 False positives
+
+Raw 200 names.
+High completion percentage.
+Many recognizable names.
+Many family names.
+Many social media contacts.
+Many declared potential referrals.
+
+Why false:
+They may not convert into contact, appointment, referral, candidate, prospect, client or advisor.
+
+
+7.10 False negatives
+
+Small list with high trust.
+Small professional niche.
+One powerful CI.
+Few but active community clusters.
+Strong digital audience not represented in P200.
+Institutional access not captured by personal names.
+
+Why false:
+P200 may miss non-traditional access or high-quality concentrated markets.
+
+
+7.11 Errors if Forge confuses Relationship Capital, Market Natural and P200
+
+Error:
+Treating P200 as Relationship Capital.
+
+Consequence:
+Forge believes a list is the asset.
+
+Error:
+Treating Market Natural as Recruitment.
+
+Consequence:
+Recruitment incorrectly owns broader relationship/career surface.
+
+Error:
+Treating Relationship Capital as P200 count.
+
+Consequence:
+Trust, access, group structure and relationship quality disappear.
+
+Error:
+Treating P200 completion as career viability.
+
+Consequence:
+False positives in candidate/advisor assessment.
+
+Error:
+Treating no P200 as no market.
+
+Consequence:
+False negatives for people with non-traditional networks.
+
+
+8. ARCHITECTURE RECOMMENDATION
+
+8.1 Market Natural status
+
+Decision:
+APPROVED as a distinct conceptual layer inside Relationship Capital.
+
+Not approved as:
+Standalone domain.
+Implementation.
+Schema.
+Score.
+
+
+8.2 P200 status
+
+Decision:
+APPROVED as Market Natural Discovery Artifact.
+
+Not approved as:
+Recruitment Artifact.
+Prospect list.
+Candidate list.
+Score.
+Guarantee.
+
+
+8.3 Ownership recommendation
+
+Shared Commercial Model:
+Owns primitives and evidence structures.
+
+Market Natural:
+Conceptual layer over Relationship Capital.
+
+P200:
+Evidence/snapshot artifact for Market Natural.
+
+Recruitment:
+Consumes P200.
+
+Sales Prospecting:
+Consumes P200.
+
+Partner Intelligence:
+Consumes P200.
+
+Business Planning:
+Consumes P200.
+
+Mick:
+Consumes completion/activation behavior.
+
+
+8.4 Foundation principles affected
+
+Capture Once:
+P200 should be captured once and reused by Recruitment, Sales Prospecting, Partner Intelligence and Business Planning.
+
+One Metric One Owner:
+P200 count, activation rate and interpretation metrics must have clear owners.
+
+Facts First:
+Listed names are evidence/facts only when provenance and confidence exist.
+Market strength is interpretation.
+
+Rule Pack Separation:
+P200 format and required count may be SMNYL-specific.
+Market Natural concept is broader.
+
+Forecasts Are Suggestions:
+P200 can support forecasts but cannot guarantee outcomes.
+
+Economic Clarity:
+P200 may inform future economic potential only with evidence, rules and confidence.
+
+Advisor First:
+P200 should help advisors understand and activate their market, not become paperwork.
+
+
+8.5 Implications for Recruitment Intelligence
+
+Recruitment Intelligence must remove ownership claim over P200.
+
+Recruitment should consume:
+
+P200 evidence.
+Market Natural clusters.
+Activation surface.
+Referral potential.
+Relationship concentration.
+
+Recruitment should interpret:
+
+Recruitment candidate potential.
+Recruitment source opportunities.
+Recruiting risk.
+Potential candidate/referral paths.
+
+Recruitment should not interpret:
+
+Full Career Capital.
+Full Relationship Capital.
+Sales prospecting potential outside recruitment.
+Official Partner economic value.
+
+
+8.6 Implications for Business Planning Intelligence
+
+Business Planning should use P200 to test feasibility of goals.
+
+Questions:
+
+Does the goal have enough relationship surface behind it?
+Which cluster should be activated?
+Is the plan relying on names that are not contactable?
+Is market concentration creating risk?
+Is the advisor's activity plan realistic given Market Natural?
+
+Business Planning must not treat P200 as automatic capacity.
+
+
+8.7 Implications for Partner Intelligence
+
+Partner Intelligence should use P200 to understand whether a potential advisor unit has market surface.
+
+Questions:
+
+Does this advisor have a viable natural market?
+Is the market concentrated or diversified?
+Is the advisor activating it?
+Does the Partner need to coach referral asking, CI development or market expansion?
+Is the Partner opening viable units or just signing people?
+
+Partner Intelligence must not equate complete P200 with future productivity.
+
+
+9. FINAL VERDICT
+
+Market Natural:
+APPROVED as distinct conceptual layer inside Relationship Capital.
+
+P200:
+APPROVED as Market Natural Discovery Artifact and evidence/snapshot of declared Market Natural.
+
+Relationship Capital:
+Remains broader than Market Natural.
+
+Career Capital:
+Consumes Market Natural as one component but remains broader and still not locked as a domain.
+
+Recruitment Intelligence:
+Consumes P200 but does not own it.
+
+Sales Prospecting:
+Consumes P200 but does not own it.
+
+Partner Intelligence:
+Consumes P200 as advisor-unit viability signal but does not own it.
+
+Business Planning:
+Consumes P200 for feasibility and activation planning but does not own it.
+
+Architecture correction:
+PAQ-02 and PAQ-03 should be interpreted with this correction:
+
+P200 is not recruitment.
+P200 is not a prospect list.
+P200 is a Market Natural Discovery Artifact.
+
+Corrected model:
+
+Relationship Capital
+Market Natural
+P200 Evidence
+Recruitment
+Sales Prospecting
+
+Red Team conclusion:
+
+A complete P200 does not imply a strong Market Natural.
+
+Strong Market Natural requires contactability, trust, relationship quality, cluster diversity, activation potential and downstream conversion.
+
+Final recommendation:
+
+Proceed to Recruitment Hardening only after updating its boundary:
+
+Recruitment starts after Market Natural evidence is consumed and interpreted for recruitment purposes.
+
+Recruitment does not own Market Natural.
+
+Recruitment activates part of it.

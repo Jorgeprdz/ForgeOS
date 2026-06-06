@@ -1,0 +1,426 @@
+FORGE GLOBAL UDI PROJECTION VALIDATION REPORT
+
+Estado: IMPLEMENTACION / VALIDACION
+Fecha: 2026-06-06
+Idioma: Español
+
+OBJETIVO
+
+Actualizar los motores de proyección financiera relacionados con UDI para usar una tasa global fija de 4.5% anual compuesta, manteniendo Banxico como fuente activa de UDI y USD/MXN.
+
+REGLA GLOBAL APLICADA
+
+Tasa global UDI:
+4.5% anual compuesta
+
+Uso:
+- crecimiento futuro de UDI;
+- aportaciones proyectadas;
+- valores nominales futuros en MXN;
+- pagos únicos;
+- mensualidades;
+- valores de rescate/retiro cuando se convierten a MXN futuros.
+
+No se usa:
+- CAGR histórico como tasa de cálculo directa;
+- UDI actual para todos los años;
+- valores futuros como garantizados.
+
+BANXICO
+
+Estado:
+ACTIVO
+
+Fuente:
+BANXICO_SIE_API
+
+Series:
+- UDI: SP68257
+- USD/MXN FIX: SF43718
+
+Última validación ejecutada:
+market-data-master-test.js
+
+Resultado:
+PASS
+
+Valores cacheados usados por Forge:
+- UDI/MXN: 8.82994
+- USD/MXN FIX: 17.4755
+
+ARCHIVOS MODIFICADOS
+
+1. projection-engine.js
+   Cambio:
+   Se agregó GLOBAL_UDI_PROJECTION_RATE = 0.045.
+   proyectarUDI ahora fuerza 4.5% para conservative, base y aggressive.
+
+2. imagina-ser-future-mxn-bridge.js
+   Cambio:
+   Imagina Ser usa 4.5% global para:
+   - preRetirementProjectionRate;
+   - premiumProjectionRate;
+   - annuityProjectionRate.
+
+3. shared-policy-currency-timeline-engine.js
+   Cambio:
+   Se agregó GLOBAL_UDI_PROJECTION_RATE = 0.045.
+   Para currency = UDI, el timeline fuerza 4.5% aunque el caller mande otra tasa.
+
+4. vida-mujer-survival-schedule-engine.js
+   Cambio:
+   Para currency = UDI, la proyección fuerza 4.5%.
+   Para USD conserva tasa explícita cuando aplique.
+
+5. retirement-future-udi-projection-smoke-test.js
+   Cambio:
+   Expectativas actualizadas a tasa global 4.5%.
+
+6. shared-policy-currency-timeline-smoke-test.js
+   Cambio:
+   Caso Imagina Ser y mensualidades actualizados a tasa global 4.5%.
+
+7. market-data-master-test.js
+   Cambio:
+   Ejemplo SeguBeca actualizado de 4.0% a 4.5%.
+
+8. tests/critical-path-test.js
+   Cambio:
+   La prueba de proyectarUDI ahora valida que los tres escenarios de moneda UDI usan la misma tasa global 4.5%.
+
+ARCHIVOS NO TOCADOS
+
+No se modificó:
+- UI
+- Build Tree
+- Schemas
+- GMM
+- Claims
+- Engines de cobertura
+- Engines de comisiones
+
+VALIDACIONES EJECUTADAS
+
+1. node retirement-future-udi-projection-smoke-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 9
+- Pass: 9
+- Fail: 0
+
+2. node shared-policy-currency-timeline-smoke-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 6
+- Pass: 6
+- Fail: 0
+
+3. node market-data-master-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 4
+- Pass: 4
+- Fail: 0
+
+4. node imagina-ser-master-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 16
+- Pass: 16
+- Fail: 0
+
+5. node tests/vida-mujer-survival-schedule-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 7
+- Pass: 7
+- Fail: 0
+
+6. node orvi-mxn-master-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 7
+- Pass: 7
+- Fail: 0
+
+7. node tests/critical-path-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 11
+- Pass: 11
+- Fail: 0
+
+8. node tests/module-integrity-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 5
+- Pass: 5
+- Fail: 0
+
+9. node tests/smoke-test.js
+Resultado:
+PASS
+
+Detalle:
+- Total: 3
+- Pass: 3
+- Fail: 0
+
+VALIDACION GLOBAL POR PRODUCTO
+
+Nota metodológica:
+Los valores siguientes validan la regla global de proyección 4.5% usando datos visibles en fuentes previas de Forge y Hoja de trabajo.xlsx.
+Cuando un producto no tiene escenario favorable/desfavorable o edad 65/75/80 explícita en la fuente, se marca como NO DISPONIBLE EN FUENTE.
+
+1. IMAGINA SER
+
+Fuente usada:
+- Solucionline_20260602_18_10.PDF
+- Edwin IS-15.pdf
+- Hoja de trabajo.xlsx / IMAGINA
+
+Inputs:
+- Edad actual: 23
+- UDI hoy de presentación: 8.85
+- Prima anual: 3,222 UDI
+- Periodo de pago: 15 años
+- Suma asegurada: 75,000 UDI
+- Favorable pago único: 128,697 UDI
+- Desfavorable pago único: 57,228 UDI
+- Favorable renta mensual: 606 UDI
+
+Total aportado:
+- 48,330 UDI
+- $592,651 MXN nominal proyectado acumulado
+
+Edad 65:
+- UDI proyectada: 56.211797
+- Suma asegurada: 75,000 UDI = $4,215,885 MXN
+- Favorable pago único: 128,697 UDI = $7,234,290 MXN
+- Desfavorable pago único: 57,228 UDI = $3,216,889 MXN
+- Favorable renta mensual: 606 UDI = $34,064 MXN
+
+Edad 75:
+- UDI proyectada: 87.295202
+- Suma asegurada: 75,000 UDI = $6,547,140 MXN
+- Favorable pago único: 128,697 UDI = $11,234,631 MXN
+- Desfavorable pago único: 57,228 UDI = $4,995,730 MXN
+- Favorable renta mensual: 606 UDI = $52,901 MXN
+
+Edad 80:
+- UDI proyectada: 108.785704
+- Suma asegurada: 75,000 UDI = $8,158,928 MXN
+- Favorable pago único: 128,697 UDI = $14,000,394 MXN
+- Desfavorable pago único: 57,228 UDI = $6,225,588 MXN
+- Favorable renta mensual: 606 UDI = $65,924 MXN
+
+Diferencia documentada contra Excel histórico:
+La hoja IMAGINA anterior usaba 4.0% en el timeline de aportaciones/protección y 4.5% en rentas.
+La política global nueva fuerza 4.5% en ambos.
+Por eso el total aportado nominal cambia de $570,967 MXN a $592,651 MXN.
+
+Estado:
+PASS
+
+2. ORVI
+
+Fuente usada:
+- Hoja de trabajo.xlsx / ORVI
+- orvi-mxn-master-test.js
+
+Inputs de referencia:
+- Edad inicial visible: 31
+- UDI inicial visible: 8.425
+- Prima anual: 9,575 UDI
+- Periodo usado para validación: 20 años
+- Suma asegurada de referencia: 60,000 UDI
+
+Total aportado:
+- 191,500 UDI
+- $2,530,713 MXN nominal proyectado acumulado
+
+Edad 65:
+- Años proyectados: 34
+- UDI proyectada: 37.629096
+- Suma asegurada: 60,000 UDI = $2,257,746 MXN
+
+Edad 75:
+- Años proyectados: 44
+- UDI proyectada: 58.436835
+- Suma asegurada: 60,000 UDI = $3,506,210 MXN
+
+Edad 80:
+- Años proyectados: 49
+- UDI proyectada: 72.822929
+- Suma asegurada: 60,000 UDI = $4,369,376 MXN
+
+Favorable vs desfavorable:
+NO DISPONIBLE EN FUENTE.
+La validación disponible de ORVI trabaja timeline garantizado / cash value UDI, no escenarios favorable/desfavorable.
+
+Diferencia contra históricos:
+ORVI ya usaba 4.5% en el Excel, por lo que la política global es consistente con su hoja.
+
+Estado:
+PASS
+
+3. VIDA MUJER
+
+Fuente usada:
+- Hoja de trabajo.xlsx / VM
+- vida-mujer-survival-schedule-engine.js
+- tests/vida-mujer-survival-schedule-test.js
+
+Inputs de referencia:
+- Edad inicial visible: 23
+- UDI inicial visible: 8.83
+- Prima anual: 2,217 UDI
+- Periodo usado para validación: 20 años
+- Suma asegurada: 35,000 UDI
+
+Total aportado:
+- 44,340 UDI
+- $614,130 MXN nominal proyectado acumulado
+
+Edad 65:
+- Años proyectados: 42
+- UDI proyectada: 56.084765
+- Suma asegurada: 35,000 UDI = $1,962,967 MXN
+
+Edad 75:
+- Años proyectados: 52
+- UDI proyectada: 87.097925
+- Suma asegurada: 35,000 UDI = $3,048,427 MXN
+
+Edad 80:
+- Años proyectados: 57
+- UDI proyectada: 108.539860
+- Suma asegurada: 35,000 UDI = $3,798,895 MXN
+
+Favorable vs desfavorable:
+NO DISPONIBLE EN FUENTE.
+Vida Mujer valida beneficios de supervivencia por calendario, no escenarios favorable/desfavorable.
+
+Diferencia contra históricos:
+La hoja VM usaba 4.0% en columna L.
+La política global nueva fuerza 4.5%, por lo que las proyecciones MXN futuras serán mayores que la hoja histórica.
+
+Estado:
+PASS
+
+4. SEGUBECA
+
+Fuente usada:
+- Hoja de trabajo.xlsx / SB
+- market-data-master-test.js
+
+Inputs de referencia:
+- Edad inicial visible: 41
+- UDI inicial visible: 8.25
+- Prima anual de referencia en hoja: 4,707 UDI
+- Periodo usado para validación: 18 años
+- Suma asegurada de referencia: 30,000 UDI
+- Mensualidad de referencia: 637 UDI
+
+Total aportado:
+- 84,726 UDI
+- $1,042,857 MXN nominal proyectado acumulado
+
+Edad 65:
+- Años proyectados: 24
+- UDI proyectada: 23.727114
+- Suma asegurada: 30,000 UDI = $711,813 MXN
+- Mensualidad: 637 UDI = $15,114 MXN
+
+Edad 75:
+- Años proyectados: 34
+- UDI proyectada: 36.847483
+- Suma asegurada: 30,000 UDI = $1,105,424 MXN
+- Mensualidad: 637 UDI = $23,472 MXN
+
+Edad 80:
+- Años proyectados: 39
+- UDI proyectada: 45.918667
+- Suma asegurada: 30,000 UDI = $1,377,560 MXN
+- Mensualidad: 637 UDI = $29,250 MXN
+
+Favorable vs desfavorable:
+NO DISPONIBLE EN FUENTE.
+SeguBeca valida aportación y proyección UDI, no escenarios favorable/desfavorable.
+
+Diferencia contra históricos:
+SB ya usaba 4.5% en columna K y en fórmulas relacionadas.
+La política global es consistente con la hoja.
+
+Estado:
+PASS
+
+5. NUEVO PLENITUD
+
+Fuente usada:
+NO SE DETECTO HOJA ESPECIFICA EN Hoja de trabajo.xlsx.
+
+Resultado:
+NO VALIDABLE CON FUENTE ACTUAL.
+
+Estado:
+BLOCKED_SOURCE_NOT_FOUND
+
+Nota:
+No se inventaron valores de prima, suma asegurada, rescate, edad 65, edad 75 ni edad 80.
+El motor compartido queda listo para Nuevo Plenitud cuando exista tabla actuarial o cotización fuente.
+
+RESUMEN DE DIFERENCIAS CON HISTORICOS
+
+IMAGINA SER:
+- Antes: aportaciones/protección al 4.0% en Excel IMAGINA.
+- Ahora: 4.5% global.
+- Diferencia documentada: total nominal aportado sube de $570,967 MXN a $592,651 MXN.
+
+VIDA MUJER:
+- Antes: columna L al 4.0% en Excel VM.
+- Ahora: 4.5% global.
+- Diferencia esperada: valores MXN futuros aumentan frente a Excel histórico.
+
+ORVI:
+- Antes: 4.5% en Excel ORVI.
+- Ahora: 4.5% global.
+- Sin diferencia por tasa.
+
+SEGUBECA:
+- Antes: 4.5% en Excel SB.
+- Ahora: 4.5% global.
+- Sin diferencia por tasa.
+
+NUEVO PLENITUD:
+- No hay fuente de validación en workbook.
+
+VEREDICTO FINAL
+
+Estado global:
+PASS WITH SOURCE GAP
+
+La actualización global a 4.5% quedó aplicada en motores de proyección UDI y validada en:
+- Imagina Ser
+- ORVI
+- Vida Mujer
+- SeguBeca
+
+Bloqueo residual:
+Nuevo Plenitud no pudo validarse con la fuente actual porque no se detectó hoja específica ni tabla actuarial verificable.

@@ -1,0 +1,1788 @@
+PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY
+
+Forge OS
+Principal Domain Architect Review
+Partner Intelligence Discovery
+
+Status:
+ARCHITECTURE CANDIDATE RECOMMENDED
+
+Scope:
+Architecture only.
+No code.
+No engines.
+No schemas.
+No UI.
+No commits.
+
+
+1. EXECUTIVE SUMMARY
+
+Partner Intelligence is the Forge domain responsible for explaining whether a Partner is building a sustainable commercial unit.
+
+It does not measure only recruitment.
+It does not measure only productivity.
+It does not measure only compensation.
+It does not measure only promotion.
+
+Partner Intelligence exists because a Partner's real job is not to personally sell more.
+The Partner's real job is to create, develop, retain and scale productive commercial capacity through other people.
+
+The core question is:
+
+Is this Partner building a future-producing unit or only creating temporary activity?
+
+Recruitment Intelligence answers:
+
+Is candidate flow being created?
+
+Partner Intelligence must answer:
+
+Is candidate flow becoming productive, retained, scalable advisor capacity?
+
+The phrase from Andrey Garcia:
+
+"Un asesor es una franquicia.
+La labor del Partner es abrir franquicias."
+
+is architecturally useful, but not literally complete.
+
+It should not be treated as a corporate definition.
+It should not become a rigid constitutional principle yet.
+It should be treated as a strong operating model:
+
+A Partner builds economic units.
+Each advisor can become an independent production unit.
+The Partner's value is the creation and development of those units.
+
+The phrase is strongest when it explains:
+
+Recruitment.
+Development.
+Productivity creation.
+Unit scaling.
+Leadership pipeline.
+
+The phrase is weakest when it implies:
+
+Every signed advisor is already a franchise.
+Every advisor has equal economic potential.
+Opening many advisors is enough.
+Partner success can be measured only by headcount.
+
+Final discovery:
+
+The true economic unit Partner Intelligence must study is not merely "advisor".
+
+The true economic unit is:
+
+Productive Advisor Capacity
+
+This includes:
+
+Signed advisor.
+Activated behavior.
+Development progress.
+Production capability.
+Retention probability.
+Future leadership potential.
+Economic contribution.
+
+Therefore:
+
+Recruitment creates future advisor supply.
+Development converts signed people into productive advisors.
+Productivity proves economic output.
+Retention preserves the unit.
+Leadership scales the unit.
+Compensation reflects some outcomes, often late.
+
+Partner Intelligence integrates those signals into one domain-level interpretation:
+
+Is the Partner building sustainable commercial capacity?
+
+
+2. PARTNER DEFINITION
+
+A Partner is not only a manager.
+
+Manager is an incomplete definition because it emphasizes supervision.
+
+A Partner is not only a coach.
+
+Coach is incomplete because it emphasizes development but not recruitment, capacity creation or economic accountability.
+
+A Partner is not only a recruiter.
+
+Recruiter is incomplete because recruitment without development creates headcount without productive capacity.
+
+A Partner is not only a builder.
+
+Builder is useful but vague unless Forge defines what is being built.
+
+A Partner is not only a talent developer.
+
+Talent Developer is useful but incomplete because it starts after candidate or advisor identification.
+
+A Partner is not only a business unit creator.
+
+Business Unit Creator is closer because it captures economic responsibility, but it may ignore the human development dimension.
+
+A Partner is not literally a franchise builder.
+
+Franchise Builder is a powerful model mental, but the advisor is not always a true franchise from day one.
+
+Best operational definition:
+
+A Partner is a commercial capacity builder.
+
+The Partner identifies, attracts, converts, develops, activates and retains people who can become productive advisor units.
+
+The Partner's job is to convert human potential into durable commercial capacity.
+
+Compatible roles:
+
+Recruiter.
+Coach.
+Developer.
+Capacity builder.
+Commercial leader.
+Pipeline owner.
+Risk manager.
+Talent multiplier.
+
+Incomplete roles:
+
+Supervisor.
+Reporter.
+Motivator.
+Administrative manager.
+Compensation recipient.
+
+Partner Intelligence definition:
+
+The domain that evaluates whether a Partner is building sustainable commercial capacity through recruitment, development, productivity, retention and future leadership creation.
+
+
+3. ECONOMIC UNIT ANALYSIS
+
+Critical question:
+
+What economic unit is a Partner trying to create?
+
+Hypothesis:
+
+The advisor.
+
+This is partially correct.
+
+An advisor can be:
+
+Vendedor:
+Yes, but this is incomplete.
+The advisor sells, but the Partner is not merely collecting salespeople.
+
+Productor:
+Yes, when the advisor generates production.
+However, a signed advisor with no production is not yet a productive economic unit.
+
+Empleado:
+No as the main architecture model.
+Forge should not model advisor value as employment status.
+
+Unidad economica:
+Yes, when the advisor produces, retains, renews and grows.
+This is the strongest architectural model.
+
+Microempresa:
+Partially.
+Useful because advisors manage relationships, pipeline, activity, clients and revenue.
+Dangerous if it ignores dependency on manager, product, carrier, office, rule pack and development system.
+
+Franquicia:
+Useful as metaphor and operating model.
+Not literally universal.
+It helps explain duplication of a commercial model through people.
+It fails if Forge assumes every signed advisor is already scalable, autonomous or economically durable.
+
+Otra cosa:
+Productive Advisor Capacity.
+
+This is the best architectural unit.
+
+Productive Advisor Capacity is not just a person.
+It is a person plus activated behavior plus commercial capability plus development progress plus retention probability plus production output.
+
+Partner Intelligence must distinguish:
+
+Potential advisor.
+Candidate.
+Connected candidate.
+Signed advisor.
+Active advisor.
+Productive advisor.
+Retained advisor.
+Leader candidate.
+Manager successor.
+
+Destroying the advisor-as-franchise hypothesis:
+
+Counterexample 1:
+A Partner signs 20 advisors and none produces.
+If each advisor were a franchise, the Partner built 20 units.
+Reality: the Partner created 20 weak or inactive units.
+
+Counterexample 2:
+A Partner has 3 advisors and one produces most of the unit.
+The unit has production, but the Partner has concentration risk.
+
+Counterexample 3:
+A Partner has many productive advisors but no future leaders.
+The unit may be productive now but not scalable.
+
+Counterexample 4:
+A Partner has high compensation because of one temporary production spike.
+The unit may not be healthy.
+
+Counterexample 5:
+A Partner recruits constantly but does not retain.
+The unit leaks capacity.
+
+Conclusion:
+
+An advisor is not automatically a franchise.
+An advisor can become an economic unit.
+Partner Intelligence must measure the conversion from signed person to productive advisor capacity.
+
+Recommended model:
+
+Candidate Flow
+Signed Advisor
+Active Advisor
+Productive Advisor
+Retained Advisor
+Scalable Advisor
+Leadership Candidate
+
+The Partner's unit economics are built on the quantity, quality, productivity, durability and scalability of those advisor units.
+
+
+4. PARTNER INPUTS
+
+Partner Intelligence consumes multiple upstream and downstream signals.
+
+It does not own all of them.
+
+
+Relationship Capital
+
+Consume:
+Yes.
+
+Ownership:
+Not Partner Intelligence.
+Relationship Capital is a locked transversal concept.
+
+Dependency:
+Partner Intelligence uses Relationship Capital to understand whether the Partner has access to people, communities, influence nodes and trust paths that can support recruitment and growth.
+
+Partner interpretation:
+Is the Partner turning relationship access into advisor capacity?
+
+
+Market Natural
+
+Consume:
+Yes.
+
+Ownership:
+Not Partner Intelligence.
+Market Natural is locked as a conceptual layer.
+
+Dependency:
+Partner Intelligence uses Market Natural to understand available relationship surface for candidate and opportunity creation.
+
+Partner interpretation:
+Is the Partner activating enough of the natural market to create future capacity?
+
+
+Relationship Activation
+
+Consume:
+Yes.
+
+Ownership:
+Not Partner Intelligence.
+Relationship Activation is a locked transversal capability.
+
+Dependency:
+Partner Intelligence uses activation to understand whether relationship assets are becoming candidate flow, referral flow, introductions and commercial opportunities.
+
+Partner interpretation:
+Is the Partner executing the behaviors that transform access into capacity?
+
+
+Recruitment Pipeline
+
+Consume:
+Yes.
+
+Ownership:
+Recruitment Intelligence.
+
+Dependency:
+Partner Intelligence consumes candidate pipeline, source mix, stage conversion, recruitment risk and recruitment forecast.
+
+Partner interpretation:
+Is there enough future advisor supply?
+
+
+Connected Candidates
+
+Consume:
+Yes.
+
+Ownership:
+Boundary between Recruitment and Precontract.
+
+Dependency:
+Partner Intelligence uses connected candidates as evidence that recruitment is reaching precontract handoff.
+
+Partner interpretation:
+Is candidate flow becoming development workload and future advisor capacity?
+
+
+Signed Advisors
+
+Consume:
+Yes.
+
+Ownership:
+Precontract or Career lifecycle, depending on final domain ownership.
+
+Dependency:
+Partner Intelligence uses signed advisors as evidence of capacity creation, but not proof of productive capacity.
+
+Partner interpretation:
+Is the Partner converting candidates into official advisor units?
+
+
+Advisor Development
+
+Consume:
+Yes.
+
+Ownership:
+Advisor Development Intelligence when defined.
+
+Dependency:
+Partner Intelligence needs development progress to know whether signed advisors are becoming capable producers.
+
+Partner interpretation:
+Is the Partner developing people or merely signing them?
+
+
+Advisor Productivity
+
+Consume:
+Yes.
+
+Ownership:
+Productivity Intelligence.
+
+Dependency:
+Partner Intelligence needs productivity to validate whether advisor units are producing economic output.
+
+Partner interpretation:
+Is the Partner creating productive capacity?
+
+
+Retention
+
+Consume:
+Yes.
+
+Ownership:
+Retention or Conservation-related domains depending on final domain map.
+
+Dependency:
+Partner Intelligence needs retention to understand whether capacity persists.
+
+Partner interpretation:
+Is the Partner preserving the units being created?
+
+
+Compensation
+
+Consume:
+Yes.
+
+Ownership:
+Compensation Intelligence and Manager Compensation Intelligence.
+
+Dependency:
+Partner Intelligence uses compensation as lagging economic evidence, not as the full definition of Partner health.
+
+Partner interpretation:
+Is economic reward aligned with sustainable capacity?
+
+
+Forecasts
+
+Consume:
+Yes.
+
+Ownership:
+Forecast Intelligence owns cross-domain forecast orchestration.
+Recruitment and Productivity may own domain-level forecasts.
+
+Dependency:
+Partner Intelligence consumes forecasts to understand future capacity, risk and gaps.
+
+Partner interpretation:
+Is the Partner likely to have enough future capacity to reach goals?
+
+
+Behavior Signals
+
+Consume:
+Yes.
+
+Ownership:
+Mick.
+
+Dependency:
+Partner Intelligence needs behavior signals such as recruitment cadence, follow-up discipline, coaching rhythm, activation behavior and development consistency.
+
+Partner interpretation:
+Are the behaviors that create capacity happening consistently?
+
+
+Mick Signals
+
+Consume:
+Yes.
+
+Ownership:
+Mick owns Behavior Intelligence.
+
+Dependency:
+Partner Intelligence consumes Mick signals to distinguish outcome problems from behavior problems.
+
+Partner interpretation:
+Is the Partner doing the work that creates future output?
+
+
+Business Plans
+
+Consume:
+Yes.
+
+Ownership:
+Business Planning Intelligence.
+
+Dependency:
+Partner Intelligence uses plans to evaluate whether current capacity supports declared goals.
+
+Partner interpretation:
+Can this Partner's unit realistically execute the plan?
+
+
+5. PARTNER OUTPUTS
+
+Partner Intelligence produces domain-level interpretations of unit health, capacity and risk.
+
+
+Future Advisor Capacity
+
+Recruitment produces the raw future advisor capacity signal.
+Partner Intelligence consumes and contextualizes it at unit level.
+
+Partner output:
+Whether future advisor supply is sufficient for unit growth.
+
+
+Active Advisor Capacity
+
+Partner Intelligence should produce an interpretation of how many advisors are not merely signed but actively participating in commercial work.
+
+Inputs:
+Signed advisors.
+Activity signals.
+Mick signals.
+Development status.
+
+Consumer:
+Productivity Intelligence.
+Business Planning.
+Manager Intelligence.
+
+
+Productive Advisor Capacity
+
+This is the core Partner output.
+
+It represents:
+The advisor base that is generating meaningful commercial output under current rules and periods.
+
+Inputs:
+Advisor productivity.
+Production events.
+Activity.
+Development progress.
+Retention.
+
+Important:
+Productive Advisor Capacity is an interpretation.
+It is not the same as production volume.
+
+
+Unit Growth
+
+Partner Intelligence produces an interpretation of whether the Partner's commercial unit is growing.
+
+Growth must include:
+New advisors.
+Active advisors.
+Productive advisors.
+Retained advisors.
+Leadership candidates.
+
+Growth must not be measured only by headcount.
+
+
+Leadership Capacity
+
+Partner Intelligence may produce a signal about potential future leadership capacity.
+
+This is not the same as promotion.
+
+It depends on:
+Productive advisors.
+Consistency.
+Development behavior.
+Influence.
+Potential to replicate.
+
+This output should remain interpretation until a formal leadership domain or promotion rule exists.
+
+
+Promotion Readiness
+
+Partner Intelligence may consume promotion rules from Rule Packs to evaluate readiness.
+
+Ownership:
+Rule Pack owns promotion rules.
+Partner Intelligence owns unit-level interpretation.
+
+Risk:
+Promotion readiness can be misleading if based only on current production.
+
+
+Partner Risk
+
+Partner Intelligence owns Partner Risk.
+
+Examples:
+Recruitment collapse.
+Development collapse.
+Productivity concentration.
+Single advisor dependency.
+Retention risk.
+Leadership gap.
+Future capacity gap.
+Forecast gap.
+Pipeline aging.
+Source fragility.
+
+
+Partner Forecast
+
+Partner Intelligence may produce partner-domain forecast inputs.
+
+Forecast Intelligence owns cross-domain forecast orchestration.
+
+Partner forecast may include:
+Future unit capacity.
+Expected active advisors.
+Expected productive advisors.
+Future capacity shortage.
+Development load.
+Recruitment gap.
+Retention risk.
+
+
+Advisor Development Capacity
+
+Partner Intelligence produces a signal about whether the Partner can develop the number and type of advisors being created.
+
+This is not owned by Recruitment.
+
+It asks:
+Does the Partner have enough coaching bandwidth, discipline and system to convert signed advisors into productive advisors?
+
+
+Recruitment Capacity
+
+Partner Intelligence consumes Recruitment outputs but may produce Partner-level recruitment capacity interpretation.
+
+This asks:
+Can this Partner repeatedly generate enough candidate flow to sustain unit growth?
+
+
+Partner Health
+
+Partner Health is an aggregate interpretation, not a raw metric.
+
+It should consider:
+Recruitment.
+Development.
+Productivity.
+Retention.
+Concentration.
+Leadership.
+Behavior.
+Forecast gap.
+
+It must not be a single opaque score without explanation.
+
+
+6. PARTNER CAUSAL CHAIN
+
+The full Partner causal chain is:
+
+Relationship Capital
+Market Natural
+P200 Evidence
+Relationship Activation
+Recruitment
+Candidate Flow
+Connected Candidates
+Signed Advisors
+Advisor Development
+Activity
+Productivity
+Retention
+Leadership Emergence
+Partner Unit Growth
+Partner Compensation
+Partner Promotion or Expansion
+
+Simplified chain:
+
+Access
+Activation
+Recruitment
+Conversion
+Development
+Production
+Retention
+Scale
+Economic Outcome
+
+Corrections to the chain:
+
+Recruitment is not the beginning of Partner success.
+It is the first formal capacity-construction domain.
+
+Signed advisors are not the end.
+They are only the start of productive capacity risk.
+
+Production is not enough.
+Durable production requires retention and capacity distribution.
+
+Compensation is not the truth.
+It is a lagging economic interpretation under a Rule Pack.
+
+
+Leading Indicators
+
+Relationship activation rate.
+Warm source ratio.
+CI activation.
+Magic Question yield.
+Recruitment pipeline health.
+Candidate stage conversion.
+Connected candidate count.
+Signed advisor trend.
+Development activity.
+Advisor activity consistency.
+Coaching cadence.
+Source diversity.
+Pipeline freshness.
+
+
+Lagging Indicators
+
+Production.
+Productivity.
+Compensation.
+Promotion.
+Retained advisors.
+Advisor persistence.
+Leadership emergence.
+Unit growth over time.
+
+
+Root Causes
+
+Insufficient relationship activation.
+Weak recruitment discipline.
+Poor source quality.
+Low interview conversion.
+Weak development system.
+Poor coaching cadence.
+Advisor inactivity.
+Overdependence on one producer.
+Weak retention.
+No leadership pipeline.
+
+
+False Signals
+
+Many names.
+Many candidates.
+Many interviews.
+Many signed advisors.
+High production from one advisor.
+High compensation in one period.
+Large team with low activity.
+Recruitment volume from low-quality sources.
+Temporary promotion readiness.
+
+
+7. PARTNER SUCCESS MODEL
+
+Partner success is not one metric.
+
+Partner success is sustainable capacity creation.
+
+A Partner is succeeding when:
+
+The Partner continuously generates candidate flow.
+Candidate flow comes from quality sources.
+Candidates convert into connected candidates.
+Connected candidates sign.
+Signed advisors activate.
+Activated advisors develop.
+Developed advisors produce.
+Productive advisors persist.
+Production is not concentrated in one person.
+Future capacity exists.
+Leadership potential emerges.
+Compensation follows from real unit health.
+
+
+Signals that appear first:
+
+Relationship activation.
+Warm source generation.
+CI activity.
+Magic Question yield.
+Candidate flow.
+Interview completion.
+Connected candidates.
+Development activity.
+Advisor activity.
+
+
+Signals that appear later:
+
+Signed advisors.
+Productivity.
+Production.
+Compensation.
+Retention.
+Leadership.
+Promotion readiness.
+Sustainable unit growth.
+
+
+Signals that deceive:
+
+Many candidates without conversion.
+Many signed advisors without activity.
+Many advisors without productivity.
+High production from one advisor.
+High compensation from temporary rule effects.
+Large pipeline with old candidates.
+High activity with no conversion.
+Warm source labels with cold-source behavior.
+
+
+Examples
+
+Many candidates:
+Positive only if they convert and come from sources with evidence of quality.
+
+Many signed:
+Positive only if they activate and develop.
+
+High production:
+Positive only if distributed and repeatable.
+
+Many advisors:
+Positive only if active, productive and retained.
+
+Many active advisors:
+Positive if activity is connected to production and development.
+
+Many qualified advisors:
+Positive if qualification is rule-backed, repeatable and not concentrated.
+
+Many leaders:
+Strong signal if leadership capacity is real and tied to productive behavior.
+
+Core success question:
+
+Can this Partner keep opening, developing and preserving productive advisor capacity?
+
+
+8. PARTNER FAILURE MODEL
+
+Partner failure usually appears late in compensation but begins earlier in behavior and capacity creation.
+
+
+Failure cause:
+Does not recruit.
+
+Root cause:
+No candidate flow.
+Low relationship activation.
+Weak source discipline.
+
+Symptoms:
+Empty pipeline.
+Few interviews.
+Few connected.
+Future capacity gap.
+
+Consequences:
+No new advisor supply.
+Unit ages.
+Production depends on existing advisors.
+Partner growth stalls.
+
+
+Failure cause:
+Does not develop.
+
+Root cause:
+Signed advisors are not converted into productive advisors.
+
+Symptoms:
+Many signed.
+Low activity.
+Low first production.
+Low persistence.
+Low confidence.
+
+Consequences:
+Recruitment effort is wasted.
+Advisor attrition rises.
+Partner capacity does not compound.
+
+
+Failure cause:
+Does not retain.
+
+Root cause:
+Advisor units are not durable.
+
+Symptoms:
+Advisor churn.
+Production drops after initial periods.
+Repeated replacement cycle.
+
+Consequences:
+Unit never compounds.
+Recruitment must constantly refill losses.
+
+
+Failure cause:
+Does not activate relationships.
+
+Root cause:
+Relationship Capital exists but is not converted into candidate or opportunity flow.
+
+Symptoms:
+Large P200.
+Low calls.
+Low PM.
+Low CI.
+Low interviews.
+
+Consequences:
+Capacity remains latent.
+Recruitment collapses.
+
+
+Failure cause:
+Does not generate trust.
+
+Root cause:
+Sources lack credibility or introductions are weak.
+
+Symptoms:
+Cold conversion behavior.
+No-shows.
+Low acceptance.
+Low stage conversion.
+
+Consequences:
+High effort, low yield.
+
+
+Failure cause:
+Depends on few people.
+
+Root cause:
+Production concentration.
+
+Symptoms:
+One or two advisors dominate output.
+Team metrics look strong but fragile.
+
+Consequences:
+One departure or slowdown can collapse the unit.
+
+
+Failure cause:
+Depends on FF.
+
+Root cause:
+Weak warm source activation.
+
+Symptoms:
+High cold source ratio.
+Low trust transfer.
+Low conversion.
+
+Consequences:
+Recruitment cost rises.
+Predictability declines.
+
+
+Failure cause:
+Does not generate leaders.
+
+Root cause:
+Advisor base does not produce future capacity multipliers.
+
+Symptoms:
+Productive advisors but no leadership candidates.
+Partner remains bottleneck.
+
+Consequences:
+Unit cannot scale beyond direct Partner capacity.
+
+
+9. PARTNER RISK MODEL
+
+Partner Risk is owned by Partner Intelligence.
+
+It integrates risks from Recruitment, Development, Productivity, Retention, Behavior and Forecast domains.
+
+
+Recruitment Collapse
+
+Definition:
+Future candidate flow is insufficient.
+
+Signals:
+Low candidate pipeline.
+Low warm sources.
+Few interviews.
+Few connected.
+Pipeline aging.
+
+Impact:
+Future advisor capacity shortage.
+
+
+Development Collapse
+
+Definition:
+Signed advisors are not becoming active or productive.
+
+Signals:
+Many signed with low activity.
+Poor early development completion.
+Weak coaching cadence.
+Low first production.
+
+Impact:
+Recruitment does not convert into economic capacity.
+
+
+Productivity Concentration
+
+Definition:
+Unit production depends on too few advisors.
+
+Signals:
+High production share from one advisor.
+Low median productivity.
+Large gap between top producer and rest.
+
+Impact:
+Unit is fragile even if current production is high.
+
+
+Single Advisor Dependency
+
+Definition:
+Partner outcome is materially dependent on one advisor.
+
+Signals:
+One advisor drives qualification, compensation or promotion readiness.
+
+Impact:
+Loss or slowdown of one advisor damages unit health.
+
+
+Retention Risk
+
+Definition:
+Advisor capacity may not persist.
+
+Signals:
+Early inactivity.
+Low development engagement.
+Declining production.
+Low relationship activation.
+Low persistence indicators.
+
+Impact:
+Unit loses accumulated capacity.
+
+
+Leadership Gap
+
+Definition:
+No emerging advisors can become multipliers.
+
+Signals:
+No productive advisors with influence.
+No advisors developing others.
+No future Partner candidates.
+
+Impact:
+Unit cannot scale beyond current Partner.
+
+
+Future Capacity Gap
+
+Definition:
+Current recruitment and development are insufficient for future goals.
+
+Signals:
+Forecasted advisor supply below goal.
+Connected count below needed.
+Signed count below needed.
+Development backlog.
+
+Impact:
+Business plan becomes unrealistic.
+
+
+Forecast Gap
+
+Definition:
+Partner expected outcomes differ materially from current trajectory.
+
+Signals:
+Goal higher than capacity.
+Pipeline below forecast need.
+Productivity below assumption.
+Retention lower than plan.
+
+Impact:
+Partner needs action before lagging metrics fail.
+
+
+Pipeline Aging
+
+Definition:
+Candidates or advisors are stuck too long without movement.
+
+Signals:
+Old candidates.
+Old connected candidates.
+Signed advisors with no early activity.
+
+Impact:
+Future capacity decays.
+
+
+Source Fragility
+
+Definition:
+Recruitment depends on weak or narrow source channels.
+
+Signals:
+High FF.
+Low CI.
+Low PM.
+One referrer dominates.
+One cluster dominates.
+
+Impact:
+Candidate supply becomes fragile.
+
+
+Development Bandwidth Risk
+
+Definition:
+Partner signs more people than they can develop.
+
+Signals:
+High signed count with low coaching cadence.
+Delayed follow-up.
+Inconsistent development progress.
+
+Impact:
+Advisor conversion quality declines.
+
+
+Compensation Mirage
+
+Definition:
+Partner compensation looks strong while underlying unit health is weak.
+
+Signals:
+High payout from concentrated or temporary production.
+Low recruitment.
+Low retention.
+Weak future pipeline.
+
+Impact:
+Partner may appear successful while future capacity deteriorates.
+
+
+10. PARTNER FORECAST REVIEW
+
+Partner forecasts are suggestions.
+They are not facts.
+
+Partner Intelligence can forecast:
+
+Future advisor count.
+Future active advisor count.
+Future productive advisor capacity.
+Future unit capacity.
+Future recruitment gap.
+Future development gap.
+Future retention risk.
+Future productivity concentration risk.
+Future promotion readiness.
+Future leadership gap.
+Future income capacity range.
+Future coaching load.
+Future unit fragility.
+
+Partner Intelligence cannot forecast as fact:
+
+Guaranteed production.
+Guaranteed compensation.
+Guaranteed promotion.
+Guaranteed advisor retention.
+Guaranteed leadership emergence.
+Guaranteed Alta Partner.
+Guaranteed qualification.
+Guaranteed productivity.
+
+Forecasts require:
+
+Recruitment pipeline.
+Connected candidates.
+Signed advisors.
+Development status.
+Advisor activity.
+Productivity history.
+Retention history.
+Behavior signals.
+Rule Pack snapshot.
+Period snapshot.
+Evidence.
+Confidence.
+
+Forecast confidence decreases when:
+
+Recruitment data is incomplete.
+Signed advisor data is missing.
+Productivity history is too short.
+One advisor dominates outcomes.
+Rule Pack context is unclear.
+Development signals are missing.
+Retention signals are weak.
+Manager or Partner assignment changed.
+
+Partner forecast must not:
+
+Convert future capacity into guaranteed income without Compensation rules.
+Treat signed advisors as productive advisors.
+Treat candidate flow as future production.
+Treat promotion readiness as promotion certainty.
+Hide concentration risk.
+
+Forecast vs Fact:
+
+Fact:
+Signed advisor exists.
+Candidate completed stage.
+Production event occurred.
+Commission was paid.
+Advisor is assigned to Partner for a period.
+
+Forecast:
+Advisor may become productive.
+Unit may reach capacity.
+Partner may qualify.
+Future compensation may increase.
+Future recruitment gap may occur.
+
+
+11. PARTNER VS PRODUCTIVITY
+
+Partner Intelligence and Productivity Intelligence are related but not the same.
+
+
+Partner Intelligence owns:
+
+Unit-level capacity interpretation.
+Partner risk.
+Partner health.
+Future advisor capacity interpretation.
+Development-to-productivity bridge.
+Capacity concentration risk.
+Leadership gap.
+Partner forecast inputs.
+Unit sustainability interpretation.
+
+
+Productivity Intelligence owns:
+
+Advisor productivity metrics.
+Activity-to-production interpretation.
+Production efficiency.
+Advisor output patterns.
+Productivity thresholds.
+Productivity trend.
+Productive advisor classification.
+
+
+Partner Intelligence consumes from Productivity:
+
+Productive advisor count.
+Advisor productivity trend.
+Production distribution.
+Activity-to-production conversion.
+Productivity concentration.
+
+
+Productivity Intelligence consumes from Partner:
+
+Partner context.
+Unit assignment.
+Development context.
+Recruitment cohort context.
+
+
+Boundary:
+
+Productivity answers:
+Is this advisor or group producing effectively?
+
+Partner answers:
+Is this Partner building enough productive and durable capacity?
+
+Example:
+
+An advisor may be productive.
+Productivity Intelligence explains that advisor's output.
+
+A Partner may still be at risk if that productivity comes from one advisor and no future capacity exists.
+Partner Intelligence explains that unit fragility.
+
+
+12. PARTNER VS COMPENSATION
+
+Partner Intelligence and Compensation Intelligence must remain separate.
+
+Compensation Intelligence explains:
+
+What was calculated.
+What was earned.
+What was paid.
+What rules applied.
+What period governed the payment.
+Why the payout occurred.
+
+Partner Intelligence explains:
+
+Whether the Partner's commercial unit is healthy, durable and scalable.
+
+
+Why a unit can appear successful in compensation but not be healthy:
+
+Compensation is often lagging.
+One advisor may create most of the payout.
+A temporary production spike can inflate payout.
+Rule Pack incentives may reward short-term behavior.
+Recruitment may be collapsing.
+Retention may be weak.
+Development may be failing.
+Future capacity may be empty.
+
+Therefore:
+
+High compensation is evidence.
+It is not proof of unit health.
+
+
+Why a unit can appear healthy and not yet reflect in compensation:
+
+Recruitment pipeline may be strong but not yet signed.
+Signed advisors may be developing but not yet producing.
+Activity may be improving before production appears.
+Retention may be improving before compensation reflects it.
+Leadership capacity may be emerging before payout rules recognize it.
+
+Therefore:
+
+Low current compensation is not always failure.
+It may be an early-stage capacity build.
+
+
+Boundary:
+
+Compensation owns payouts.
+Partner owns unit health interpretation.
+
+Partner Intelligence may consume compensation.
+It must not calculate compensation.
+
+Compensation may consume Partner assignments and Rule Pack context.
+It must not define Partner health.
+
+
+13. PARTNER VS BUSINESS PLANNING
+
+Partner Intelligence and Business Planning Intelligence are also separate.
+
+
+Partner Intelligence owns:
+
+Current and projected unit capacity interpretation.
+Partner risk.
+Partner health.
+Unit sustainability.
+Capacity bottlenecks.
+Leadership gap.
+Development load.
+
+
+Business Planning Intelligence owns:
+
+Goal to Forecast to Gap to Actions.
+Plan feasibility.
+Scenario planning.
+Required activity plans.
+Resource allocation.
+Execution roadmap.
+
+
+Partner Intelligence consumes:
+
+Business goals.
+Planning periods.
+Target capacity.
+Expected growth plan.
+
+
+Business Planning consumes:
+
+Partner health.
+Recruitment capacity.
+Development capacity.
+Productive advisor capacity.
+Partner risk.
+Forecast gaps.
+Concentration risk.
+
+
+Boundary:
+
+Partner Intelligence answers:
+What is the condition of the Partner's unit?
+
+Business Planning answers:
+What must happen to reach a goal from the current condition?
+
+Example:
+
+Partner Intelligence says:
+The unit has strong recruitment but weak development capacity.
+
+Business Planning says:
+To reach the goal, reduce signed-advisor overload, increase coaching cadence and prioritize first-productivity conversion.
+
+Partner Intelligence provides diagnosis.
+Business Planning converts diagnosis into plan.
+
+
+14. RED TEAM REVIEW
+
+Scenario 1:
+Many signed, 0 productivity.
+
+What breaks:
+If Partner Intelligence treats signed count as success, it fails.
+
+Correct interpretation:
+Recruitment conversion is strong, but development or productivity conversion is broken.
+
+Guardrail:
+Signed advisors must be separated from productive advisor capacity.
+
+
+Scenario 2:
+High production, 1 advisor.
+
+What breaks:
+If Partner Intelligence treats production total as unit health, it fails.
+
+Correct interpretation:
+Unit has productivity concentration risk and single advisor dependency.
+
+Guardrail:
+Measure distribution, not only total production.
+
+
+Scenario 3:
+Many advisors, low retention.
+
+What breaks:
+If Partner Intelligence treats headcount as capacity, it fails.
+
+Correct interpretation:
+Unit leaks capacity.
+Recruitment may be replacing losses rather than compounding growth.
+
+Guardrail:
+Retention must be part of Partner health.
+
+
+Scenario 4:
+Much recruitment, no development.
+
+What breaks:
+If Partner Intelligence celebrates recruitment volume, it fails.
+
+Correct interpretation:
+Candidate supply is not becoming productive capacity.
+
+Guardrail:
+Recruitment output must be connected to signed, active and productive outcomes.
+
+
+Scenario 5:
+Much development, no recruitment.
+
+What breaks:
+If Partner Intelligence focuses only on current advisors, it misses future shortage.
+
+Correct interpretation:
+Current advisor base may improve, but future capacity pipeline is drying.
+
+Guardrail:
+Partner health must include future advisor capacity.
+
+
+Scenario 6:
+Star Partner, no successors.
+
+What breaks:
+If Partner Intelligence treats personal leadership as enough, it fails.
+
+Correct interpretation:
+Unit may depend on one leader and lack scalability.
+
+Guardrail:
+Leadership capacity and successor emergence must be visible.
+
+
+Scenario 7:
+High compensation, high fragility.
+
+What breaks:
+If compensation is treated as truth, Partner health is misread.
+
+Correct interpretation:
+Compensation is a lagging outcome and may hide concentration, retention or recruitment risk.
+
+Guardrail:
+Partner Intelligence must separate economic reward from structural health.
+
+
+Scenario 8:
+Low compensation, strong early pipeline.
+
+What breaks:
+If current payout is treated as failure, early capacity building is ignored.
+
+Correct interpretation:
+Partner may be building future value not yet reflected in compensation.
+
+Guardrail:
+Leading indicators must be preserved separately from lagging economics.
+
+
+Scenario 9:
+Many productive advisors, no recruitment.
+
+What breaks:
+If current productivity is treated as permanent, future decline is missed.
+
+Correct interpretation:
+The unit is currently strong but future capacity is at risk.
+
+Guardrail:
+Recruitment gap must remain visible even during strong production.
+
+
+Scenario 10:
+Many candidates from weak sources.
+
+What breaks:
+If candidate volume is treated as pipeline strength, the Partner appears healthier than reality.
+
+Correct interpretation:
+Source quality and conversion must govern pipeline interpretation.
+
+Guardrail:
+Recruitment source quality must feed Partner health.
+
+
+Red Team conclusion:
+
+Partner Intelligence holds only if it refuses to collapse the domain into:
+
+Recruitment count.
+Signed count.
+Production total.
+Compensation.
+Promotion status.
+
+Partner Intelligence must integrate capacity creation, capacity conversion, capacity distribution, capacity durability and capacity scalability.
+
+
+15. ARCHITECTURE DECISION
+
+Partner Intelligence is:
+
+Domain.
+
+It is not merely:
+
+Subdomain.
+Capability.
+Interpretation.
+Score.
+
+Justification:
+
+Partner Intelligence has its own business question:
+
+Is the Partner building a sustainable commercial unit?
+
+It has its own inputs:
+
+Recruitment.
+Development.
+Productivity.
+Retention.
+Behavior.
+Compensation.
+Forecast.
+Business plan context.
+
+It has its own outputs:
+
+Partner Health.
+Partner Risk.
+Productive Advisor Capacity.
+Unit Growth.
+Future Capacity Gap.
+Development Capacity.
+Leadership Capacity.
+Partner Forecast inputs.
+
+It has its own ownership:
+
+Unit-level interpretation of capacity and sustainability.
+
+It does not own:
+
+Recruitment funnel.
+Productivity metrics.
+Compensation calculations.
+Business plans.
+Forecast orchestration.
+Relationship Capital.
+Market Natural.
+P200.
+Relationship Activation.
+
+Architecture status:
+
+ARCHITECTURE CANDIDATE
+
+Reason:
+
+Partner Intelligence is clearly a domain, but it should not be locked yet.
+
+The discovery identifies the correct unit of analysis:
+
+Productive Advisor Capacity
+
+However, Partner Intelligence depends on domains that are not yet locked:
+
+Advisor Development Intelligence.
+Productivity Intelligence.
+Retention interpretation.
+Leadership capacity.
+Partner-specific Rule Pack rules.
+
+Therefore, Partner Intelligence should advance from DISCOVERED to ARCHITECTURE CANDIDATE, not ARCHITECTURE LOCK.
+
+
+16. RECOMMENDED NEXT STEP
+
+Recommended next step:
+
+Advisor Development Intelligence
+
+Justification:
+
+Recruitment is locked.
+Partner Intelligence is now discovered as a domain and candidate.
+
+The biggest unresolved bridge is:
+
+Signed Advisor
+to
+Productive Advisor Capacity
+
+That bridge is development.
+
+Without Advisor Development Intelligence, Partner Intelligence cannot explain why:
+
+Many signed advisors produce nothing.
+Some advisors activate quickly.
+Some advisors stall.
+Some advisors become productive.
+Some advisors leave.
+Some advisors become future leaders.
+
+Productivity Intelligence should come after Development because productivity is the output that development attempts to create.
+
+Forecast Intelligence should come after Development and Productivity because forecasts need stable domain signals.
+
+Business Planning should come after the key capacity domains are clearer because planning needs reliable diagnosis.
+
+Compensation Intelligence already has foundation work, but Partner success cannot be reduced to compensation.
+
+Therefore:
+
+Next architecture PAQ should focus on Advisor Development Intelligence.
+
+This does not create implementation approval.
+It only identifies the next domain to clarify.
+
+
+17. FINAL VERDICT
+
+Partner Intelligence exists.
+
+It should be treated as a domain.
+
+It is not Recruitment.
+It is not Productivity.
+It is not Compensation.
+It is not Business Planning.
+It is not Forecast Intelligence.
+
+Partner Intelligence is the domain that explains whether a Partner is building sustainable commercial capacity through people.
+
+The phrase:
+
+"Un asesor es una franquicia.
+La labor del Partner es abrir franquicias."
+
+is approved as an operating model, not as literal architecture law.
+
+The stronger architectural formulation is:
+
+A Partner builds productive advisor capacity.
+
+The advisor is not automatically a franchise.
+The advisor becomes an economic unit only when development, activation, productivity and retention convert potential into durable output.
+
+Final status:
+
+ARCHITECTURE CANDIDATE
+
+Reason:
+
+The domain boundary is clear enough to approve the domain candidate.
+The core economic unit is clear enough to guide future architecture.
+The domain still depends on Development and Productivity hardening before lock.
+
+Official Partner Intelligence question:
+
+Is this Partner creating enough productive, retained and scalable advisor capacity to sustain future commercial growth?
+
+Official unit of analysis:
+
+Productive Advisor Capacity
+
+Official leading signals:
+
+Relationship activation.
+Recruitment pipeline.
+Source quality.
+Connected candidates.
+Signed advisors.
+Development activity.
+Advisor activity.
+Coaching behavior.
+Source diversity.
+
+Official lagging signals:
+
+Productivity.
+Production.
+Retention.
+Compensation.
+Promotion.
+Leadership emergence.
+
+Official non-owner boundaries:
+
+Recruitment owns candidate flow.
+Productivity owns productivity metrics.
+Compensation owns payouts.
+Business Planning owns plans.
+Forecast owns cross-domain forecast orchestration.
+Mick owns behavior intelligence.
+Relationship Capital, Market Natural, P200 and Relationship Activation remain upstream or transversal layers.
+
+Architecture conclusion:
+
+Partner Intelligence should move to ARCHITECTURE CANDIDATE and wait for Advisor Development Intelligence and Productivity Intelligence before Architecture Lock.
+
+Implementation remains not approved.
+No code should be created from this document without a separate implementation authorization.
+

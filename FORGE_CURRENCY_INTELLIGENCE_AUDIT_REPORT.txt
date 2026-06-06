@@ -1,0 +1,438 @@
+FORGE CURRENCY INTELLIGENCE AUDIT REPORT
+
+Status: REPOSITORY AUDIT ONLY
+Scope: No code created. No code modified. No refactor. No file moves. No commit.
+
+Search targets:
+- exchange-rate-cache-engine
+- currency-normalization-engine
+- Banxico integration
+- UDI retrieval
+- USD/MXN retrieval
+- exchange rate cache
+- currency projection
+- inflation projection
+- retirement projection
+- UDI projection
+- dynamic cash value projection
+
+Search surfaces:
+- filenames
+- imports
+- exports
+- references
+- tests
+- docs
+
+1. FILE INVENTORY
+
+Core market data / currency files
+
+1. shared-banxico-rate-engine.js
+- Purpose: Live Banxico SIE integration for UDI and USD/MXN FIX rates.
+- Evidence: Defines BANXICO_SERIES with UDI = SP68257 and USD_FIX = SF43718; uses https.request against www.banxico.org.mx; exports BANXICO_SERIES, fetchBanxicoLatest and getCurrentRates.
+- Status: IMPLEMENTED / ACTIVE LIVE INTEGRATION, requires BANXICO_TOKEN.
+
+2. exchange-rate-cache-engine.js
+- Purpose: Local cache wrapper around shared-banxico-rate-engine.js.
+- Evidence: Requires getCurrentRates, reads/writes forge-rate-cache.json, MAX_CACHE_AGE_HOURS = 12, exports getCachedRates/readCache/writeCache.
+- Status: IMPLEMENTED / ACTIVE CACHE, writes local JSON cache when refreshed.
+
+3. forge-rate-cache.json
+- Purpose: Local cached Banxico rates.
+- Evidence: Contains UDI_MXN and USD_MXN_FIX entries with source BANXICO_SIE_API and mode LATEST_VERIFIED.
+- Status: EXISTING CACHE SNAPSHOT. Last cachedAt observed: 2026-06-02T02:31:42.015Z. Not refreshed during this audit.
+
+4. shared-banxico-rate-report.js
+- Purpose: Standalone Banxico diagnostic/report script.
+- Evidence: Calls getCurrentRates, prints UDI/MXN and USD/MXN FIX, tests positive values and source BANXICO_SIE_API.
+- Status: IMPLEMENTED REPORT / LIVE CALL WHEN RUN.
+
+5. market-data-master-test.js
+- Purpose: Master test for market data layer.
+- Evidence: Calls getCachedRates, reads cache.rates.UDI_MXN.value and cache.rates.USD_MXN_FIX.value, estimates future UDI premium, asserts rates > 0 and projection NOT_GUARANTEED.
+- Status: IMPLEMENTED TEST / MAY HIT CACHE OR LIVE BANXICO WHEN RUN.
+
+6. currency-normalization-engine.js
+- Purpose: Converts explicit MXN/USD/UDI amounts to MXN.
+- Evidence: Exports obtenerMonedaNormalizada; handles MXN, USD and UDI; returns MISSING_USD_RATE or MISSING_UDI_RATE when rates are absent.
+- Status: IMPLEMENTED / CONVERSION ONLY. It does not retrieve rates.
+
+7. quotation-currency-bridge.js
+- Purpose: Connects quotation data to currency-normalization-engine.js.
+- Evidence: Imports obtenerMonedaNormalizada and normalizes premium and insured amount into MXN using supplied rates.
+- Status: IMPLEMENTED / DEPENDS ON EXPLICIT RATES.
+
+Projection and scenario files
+
+8. projection-engine.js
+- Purpose: ESM scenario projection engine for future values, UDI, USD and rescue values.
+- Evidence: Exports proyectarValorFuturo, generarEscenariosProyeccion, proyectarUDI, proyectarUSD and calcularValorRescateMXN.
+- Status: IMPLEMENTED / SCENARIO-BASED. Uses explicit assumptions, not live data.
+
+9. shared-currency-projection-engine.js
+- Purpose: CommonJS currency future value and future premium projection helper.
+- Evidence: Exports projectCurrencyValue and estimateFuturePremiumMXN; calculationMode is SCENARIO_BASED_ESTIMATE_NOT_GUARANTEED.
+- Status: IMPLEMENTED / SCENARIO-BASED.
+
+10. future-currency-value-engine.js
+- Purpose: CommonJS conversion/projection of an amount to MXN using currentExchangeRate and optional annualProjectionRate.
+- Evidence: Returns BLOCKED_NO_EXCHANGE_RATE, CURRENT_RATE_ONLY or PROJECTED_TO_MXN_BY_PAYMENT_YEAR.
+- Status: IMPLEMENTED / SCENARIO-BASED.
+
+11. dynamic-cash-value-projection-engine.js
+- Purpose: Dynamic cash value projection from OCR-extracted cash value rows.
+- Evidence: Imports proyectarUDI and calcularValorRescateMXN; exports proyectarValoresRescateDinamicos; projects conservative/base/aggressive MXN scenarios.
+- Status: IMPLEMENTED / SCENARIO-BASED, dependent on explicit currentUdiValue.
+
+12. projection-milestone-engine.js
+- Purpose: Selects significant projection milestones consumed by dynamic-cash-value-projection-engine.js.
+- Evidence: Imported by dynamic-cash-value-projection-engine.js.
+- Status: IMPLEMENTED SUPPORTING MODULE.
+
+13. shared-projection-scenarios-engine.js
+- Purpose: Standard projection scenarios.
+- Evidence: DEFAULT_SCENARIOS = CONSERVATIVE 3%, ADVISOR_45 4.5%, AGGRESSIVE 6%; exports getProjectionScenario/buildScenarioSet.
+- Status: IMPLEMENTED / ASSUMPTION SOURCE.
+
+14. shared-mxn-timeline-engine.js
+- Purpose: Builds MXN financial timeline from policy-currency rows and projected rates.
+- Evidence: Uses projectCurrencyValue; calculationMode MXN_TIMELINE_SCENARIO_NOT_GUARANTEED.
+- Status: IMPLEMENTED / SCENARIO-BASED.
+
+15. shared-meaningful-numbers-engine.js
+- Purpose: Builds client-facing meaningful numbers using currency projection.
+- Evidence: Imports projectCurrencyValue from shared-currency-projection-engine.js.
+- Status: IMPLEMENTED SUPPORTING MODULE.
+
+Retirement / Imagina Ser files
+
+16. retirement-presentation-scenario-engine.js
+- Purpose: Builds a retirement presentation scenario in UDI and MXN.
+- Evidence: Exports buildRetirementPresentationScenario; default currentUdiValue = 8.7; converts UDI values to MXN using that explicit value.
+- Status: PARTIAL / IMPLEMENTED WITH HARDCODED DEFAULT UDI VALUE, not wired to Banxico.
+
+17. solucionline-retirement-parser.js
+- Purpose: Parses Solucionline retirement quote text.
+- Evidence: Exports parseSolucionlineRetirementQuote; detects product, age, currency and interest rate, but hardcodes premium values, sum assured and scenarios.
+- Status: PARTIAL / PARSER WITH HARDCODED BUSINESS VALUES.
+
+18. tests/real-retirement-scenario-test.js
+- Purpose: Real retirement scenario output test/report.
+- Evidence: Prints UDI retirement contribution, lump sum, monthly income and milestones.
+- Status: TEST/REPORT PRESENT.
+
+19. tests/real-retirement-mxn-scenario-test.js
+- Purpose: Real retirement MXN scenario test/report.
+- Evidence: Uses buildRetirementPresentationScenario with currentUdiValue: 8.7 and prints MXN equivalents.
+- Status: TEST/REPORT PRESENT, uses explicit/hardcoded UDI value.
+
+20. imagina-ser-master-test.js
+- Purpose: Imagina Ser core master test.
+- Evidence: Uses OCR extractor, retirement fund analysis, scenario selection, decision, objections, client presentation, advisor analysis and prompt builder. Tests UDI currency and UDI scenario values.
+- Status: IMPLEMENTED TEST / PRODUCT CORE, not connected to Banxico or cache.
+
+21. imagina-ser-retirement-fund-engine.js
+- Purpose: Analyzes retirement fund rows in UDI.
+- Evidence: Calculates payment years, totalContributedUDI, finalReserveFundUDI, growthUDI and growthPercent.
+- Status: IMPLEMENTED / UDI-NATIVE ANALYSIS.
+
+22. imagina-ser-scenario-engine.js
+- Purpose: Normalizes and selects Imagina Ser scenario values.
+- Evidence: Exports normalizeScenarios and chooseDefaultScenario; uses UDI fields.
+- Status: IMPLEMENTED / UDI-NATIVE SCENARIO SELECTION.
+
+23. imagina-ser-client-presentation-engine.js
+- Purpose: Builds client presentation using Imagina Ser UDI scenario values.
+- Evidence: References monthlyIncomeUDI and singlePaymentUDI.
+- Status: IMPLEMENTED / PRESENTATION, no live MXN conversion found.
+
+24. imagina-ser-presentation-prompt-engine.js
+- Purpose: Builds presentation prompt.
+- Evidence: Notes that UDI remains technical support/backing.
+- Status: IMPLEMENTED / LANGUAGE LAYER.
+
+25. imagina-ser-ocr-extractor.js
+- Purpose: Extracts Imagina Ser data from PDFs/text.
+- Evidence: Used by imagina-ser-master-test.js.
+- Status: IMPLEMENTED / EXTRACTION LAYER.
+
+26. tests/fixtures/presentation-basic-imagina-ser.json
+- Purpose: Basic presentation fixture.
+- Evidence: Contains currentUdiValue: 8.7.
+- Status: FIXTURE PRESENT / STATIC UDI VALUE.
+
+Other product/report consumers of currency cache/projection
+
+27. segu-beca-mxn-timeline-clean-report.js
+- Purpose: SeguBeca MXN timeline report using Banxico cache and UDI projection.
+- Evidence: Requires getCachedRates and projectCurrencyValue; uses cache.rates.UDI_MXN.value.
+- Status: IMPLEMENTED REPORT / CACHE-AWARE.
+
+28. segu-beca-mxn-appendix-report.js
+- Purpose: SeguBeca MXN appendix report using cached Banxico UDI.
+- Evidence: Requires getCachedRates and uses currentUdi from cache.rates.UDI_MXN.value.
+- Status: IMPLEMENTED REPORT / CACHE-AWARE.
+
+29. segu-beca-meaningful-numbers-report.js
+- Purpose: SeguBeca meaningful numbers report using cached UDI.
+- Evidence: Requires getCachedRates and currentUdi from cache.rates.UDI_MXN.value.
+- Status: IMPLEMENTED REPORT / CACHE-AWARE.
+
+30. orvi-mxn-conversion-engine.js
+- Purpose: Converts ORVI UDI timeline to MXN using projected UDI scenario.
+- Evidence: Uses projectCurrencyValue with default annualGrowthRate 4.5%.
+- Status: IMPLEMENTED / SCENARIO-BASED.
+
+31. orvi-mxn-master-test.js
+- Purpose: ORVI MXN master test.
+- Evidence: Requires getCachedRates and uses cache.rates.UDI_MXN.value.
+- Status: IMPLEMENTED TEST / CACHE-AWARE.
+
+32. orvi-client-report-test.js
+- Purpose: ORVI client report test.
+- Evidence: Requires getCachedRates and uses cache.rates.UDI_MXN.value.
+- Status: IMPLEMENTED TEST / CACHE-AWARE.
+
+33. vida-mujer-financial-fixture-report.js
+- Purpose: Vida Mujer financial fixture report with live/cached UDI.
+- Evidence: Requires getCachedRates and uses cache.rates.UDI_MXN.value.
+- Status: IMPLEMENTED REPORT / CACHE-AWARE.
+
+34. vida-mujer-protected-diseases-engine.js
+- Purpose: Projects protected disease benefit values with future-currency-value-engine.js.
+- Evidence: Imports projectCurrencyValue from future-currency-value-engine.js.
+- Status: IMPLEMENTED / SCENARIO-BASED.
+
+35. tests/business-rules-test.js
+- Purpose: Business rule tests for currency behavior.
+- Evidence: Tests USD without rate -> MISSING_USD_RATE and UDI without rate -> MISSING_UDI_RATE.
+- Status: TEST PRESENT.
+
+36. tests/critical-path-test.js
+- Purpose: Critical path tests for currency normalization, UDI projection and dynamic cash value projection.
+- Evidence: Tests explicit USD rate, explicit UDI rate, UDI projection to 2050, proyectarUDI by target age and dynamic cash value projection.
+- Status: TEST PRESENT / STATIC ASSUMPTIONS.
+
+Docs / audit artifacts with relevant references
+
+37. FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt
+- Purpose: Static module inventory.
+- Evidence: Contains entries for currency-normalization-engine.js, exchange-rate-cache-engine.js, projection-engine.js, shared-banxico-rate-engine.js, shared-banxico-rate-report.js and shared-currency-projection-engine.js.
+- Status: DOC/AUDIT ARTIFACT.
+
+38. FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md
+- Purpose: Static domain assignment summary.
+- Evidence: References currency-normalization-engine.js, exchange-rate-cache-engine.js and shared-banxico-rate-engine.js.
+- Status: DOC/AUDIT ARTIFACT.
+
+39. FORGE_PHASE_2_X_MODULE_MARKDOWN_BUNDLE.md
+- Purpose: Phase 2.X module documentation bundle.
+- Evidence: Contains sections for currency-normalization-engine.js, exchange-rate-cache-engine.js, shared-banxico-rate-engine.js and shared-banxico-rate-report.js.
+- Status: DOC/AUDIT ARTIFACT.
+
+40. FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt
+- Purpose: Codebase review queue.
+- Evidence: Contains shared-banxico-rate-engine.js and shared-banxico-rate-report.js.
+- Status: DOC/AUDIT ARTIFACT / REVIEW QUEUE.
+
+41. FORGE_GMM_SOURCE_RETIREMENT_MODEL.md
+- Purpose: GMM source retirement model doc.
+- Evidence: Filename/content matched retirement search target.
+- Status: DOC / NOT CURRENCY CORE.
+
+2. BANXICO STATUS
+
+Does Banxico integration already exist?
+
+Yes.
+
+Which file uses it?
+
+- shared-banxico-rate-engine.js is the direct Banxico integration.
+- exchange-rate-cache-engine.js consumes getCurrentRates from shared-banxico-rate-engine.js.
+- shared-banxico-rate-report.js calls getCurrentRates directly.
+- market-data-master-test.js and several product reports/tests call getCachedRates from exchange-rate-cache-engine.js.
+
+API key source?
+
+- process.env.BANXICO_TOKEN.
+
+Environment variable used?
+
+- BANXICO_TOKEN.
+
+Is it active or placeholder?
+
+- Active live integration, not placeholder.
+- Evidence: shared-banxico-rate-engine.js uses https.request to www.banxico.org.mx with path /SieAPIRest/service/v1/series/${seriesId}/datos/oportuno and header Bmx-Token.
+- Caveat: Not executed during this audit because running cache/report scripts may perform network calls and/or refresh forge-rate-cache.json.
+
+Banxico series observed:
+
+- UDI: SP68257.
+- USD FIX: SF43718.
+
+3. UDI STATUS
+
+Can Forge currently obtain UDI values?
+
+Yes.
+
+From where?
+
+- Live: shared-banxico-rate-engine.js fetches Banxico series SP68257.
+- Cached: forge-rate-cache.json stores rates.UDI_MXN.
+- Cache wrapper: exchange-rate-cache-engine.js returns rates.UDI_MXN through getCachedRates.
+
+Cached or live?
+
+- Both mechanisms exist.
+- Live through getCurrentRates/fetchBanxicoLatest.
+- Cached through getCachedRates/readCache/writeCache.
+
+Verified or placeholder?
+
+- Implemented as verified Banxico source when live or cached payload comes from Banxico.
+- forge-rate-cache.json currently marks UDI_MXN source as BANXICO_SIE_API and mode as LATEST_VERIFIED.
+- The cached value was not refreshed in this audit.
+
+Important caveat:
+
+- Some Imagina Ser and retirement flows still pass currentUdiValue explicitly or default to 8.7 instead of using the Banxico cache.
+
+4. USD STATUS
+
+Can Forge currently obtain USD/MXN?
+
+Yes.
+
+From where?
+
+- Live: shared-banxico-rate-engine.js fetches Banxico series SF43718.
+- Cached: forge-rate-cache.json stores rates.USD_MXN_FIX.
+- Cache wrapper: exchange-rate-cache-engine.js returns rates.USD_MXN_FIX through getCachedRates.
+
+Cached or live?
+
+- Both mechanisms exist.
+- shared-banxico-rate-report.js uses live getCurrentRates.
+- market-data-master-test.js uses cached/live getCachedRates.
+
+Verified or placeholder?
+
+- Implemented as verified Banxico source when retrieved/cached.
+- forge-rate-cache.json currently marks USD_MXN_FIX source as BANXICO_SIE_API and mode as LATEST_VERIFIED.
+- The cached value was not refreshed in this audit.
+
+5. PROJECTION STATUS
+
+Currency Projection
+
+- Status: IMPLEMENTED.
+- Files: projection-engine.js, shared-currency-projection-engine.js, future-currency-value-engine.js, shared-mxn-timeline-engine.js, shared-projection-scenarios-engine.js.
+- Evidence: Functions projectCurrencyValue, estimateFuturePremiumMXN, proyectarValorFuturo, generarEscenariosProyeccion, proyectarUSD, proyectarUDI.
+- Caveat: Scenario-based. Outputs are estimates, not guaranteed facts.
+
+Inflation Projection
+
+- Status: PARTIAL / NOT A DISTINCT DOMAIN ENGINE.
+- Evidence: UDI growth assumptions exist through projection rates such as 3%, 4.5%, 6% and ADVISOR_45; UDI projections act as inflation-like scenarios.
+- Missing: No dedicated inflation projection engine, inflation source registry, CPI/INPC retrieval, or explicit inflation evidence contract found in this audit.
+
+Retirement Projection
+
+- Status: PARTIAL / IMPLEMENTED FOR SCENARIOS, NOT FULLY CLOSED.
+- Files: retirement-presentation-scenario-engine.js, solucionline-retirement-parser.js, imagina-ser-retirement-fund-engine.js, imagina-ser-scenario-engine.js, tests/real-retirement-scenario-test.js, tests/real-retirement-mxn-scenario-test.js, imagina-ser-master-test.js.
+- Evidence: Retirement scenarios are parsed/analyzed and presented in UDI and sometimes MXN.
+- Caveats:
+  - retirement-presentation-scenario-engine.js defaults currentUdiValue to 8.7.
+  - solucionline-retirement-parser.js contains hardcoded premium, sum assured and scenario values.
+  - Imagina Ser master flow is not wired to Banxico/cache for current UDI.
+
+UDI Projection
+
+- Status: IMPLEMENTED.
+- Files: projection-engine.js, shared-currency-projection-engine.js, shared-projection-scenarios-engine.js, shared-mxn-timeline-engine.js, dynamic-cash-value-projection-engine.js.
+- Evidence: proyectarUDI calculates conservative/base/aggressive future UDI scenarios by age; tests cover UDI to 2050 and UDI by target age.
+- Caveat: Requires explicit currentUdiValue/currentRate; not automatically sourced from Banxico in all consumers.
+
+Dynamic Cash Value Projection
+
+- Status: IMPLEMENTED.
+- File: dynamic-cash-value-projection-engine.js.
+- Evidence: Projects OCR-extracted cash value rows using projected UDI values and returns conservative/base/aggressive MXN scenarios.
+- Tests: tests/critical-path-test.js covers "proyecta valores de rescate dinámicos con UDI".
+- Caveat: Requires explicit currentUdiValue and projection rates.
+
+USD Projection
+
+- Status: IMPLEMENTED.
+- File: projection-engine.js.
+- Evidence: proyectarUSD generates conservative/base/aggressive USD rate scenarios.
+- Caveat: No strong product consumer found in Imagina Ser path.
+
+Exchange Rate Cache
+
+- Status: IMPLEMENTED.
+- File: exchange-rate-cache-engine.js.
+- Evidence: 12-hour cache to forge-rate-cache.json.
+- Caveat: cache file lives at repo root and refresh writes local state.
+
+6. IMAGINA SER IMPACT
+
+What currency-related work is already done?
+
+- UDI is recognized as the core Imagina Ser currency in tests and presentation flow.
+- Imagina Ser master test validates UDI currency and UDI scenario values.
+- Imagina Ser retirement fund analysis calculates UDI contribution, final reserve, growth and growth percent.
+- Retirement presentation scenario converts UDI summary values to MXN when a currentUdiValue is supplied.
+- General Forge currency infrastructure exists:
+  - Live Banxico UDI retrieval.
+  - Live Banxico USD/MXN FIX retrieval.
+  - Local 12-hour exchange rate cache.
+  - Explicit currency normalization for MXN/USD/UDI.
+  - UDI and USD scenario projection.
+  - Dynamic cash value projection using OCR rows.
+
+What is still missing before Imagina Ser can be considered closed?
+
+1. Wire Imagina Ser to the market data layer.
+- Current Imagina Ser / retirement flows use explicit or default currentUdiValue values such as 8.7.
+- No evidence found that imagina-ser-master-test.js, imagina-ser-client-presentation-engine.js or retirement-presentation-scenario-engine.js obtain current UDI through getCachedRates.
+
+2. Remove or isolate hardcoded retirement quote values.
+- solucionline-retirement-parser.js hardcodes basicAnnualPremium, plannedAnnualContribution, totalAnnualPremium, sumAssured and scenario values.
+- For closure, those values should come from source document extraction or explicit evidence, not embedded constants.
+
+3. Add source/evidence metadata to Imagina Ser MXN conversions.
+- Currency outputs should identify rate source, rate date, cache/live status and confidence.
+- Existing Banxico/cache payload supports this, but Imagina Ser presentation outputs do not appear to carry it through.
+
+4. Clarify current-rate vs future-scenario language in Imagina Ser outputs.
+- Forge has calculationMode labels such as SCENARIO_BASED_ESTIMATE_NOT_GUARANTEED and MXN_TIMELINE_SCENARIO_NOT_GUARANTEED in shared modules.
+- Imagina Ser should consistently expose similar labels when showing MXN equivalents or future values.
+
+5. Add Imagina Ser-specific tests for Banxico-backed UDI.
+- Existing tests cover Banxico/cache separately and Imagina Ser separately.
+- Missing: an Imagina Ser acceptance test proving that current UDI can be sourced from cache/Banxico and used in presentation/retirement outputs without hardcoded 8.7.
+
+6. Decide whether inflation is UDI-only or a separate domain.
+- UDI projection exists.
+- A distinct Inflation Projection domain was not found.
+- If Imagina Ser requires explicit inflation intelligence, it is not closed yet.
+
+Final audit conclusion:
+
+- Banxico integration: EXISTS / ACTIVE.
+- UDI retrieval: EXISTS / LIVE + CACHED.
+- USD/MXN retrieval: EXISTS / LIVE + CACHED.
+- Exchange rate cache: EXISTS / ACTIVE.
+- Currency normalization: EXISTS / EXPLICIT RATES ONLY.
+- Currency projection: EXISTS / SCENARIO-BASED.
+- UDI projection: EXISTS / SCENARIO-BASED.
+- Dynamic cash value projection: EXISTS / SCENARIO-BASED.
+- Retirement projection: PARTIAL.
+- Inflation projection: PARTIAL/MISSING AS DEDICATED DOMAIN.
+- Imagina Ser closure: NOT CLOSED. Currency foundation is strong, but Imagina Ser is not yet fully wired to Banxico/cache/evidence and still contains hardcoded retirement values.
+

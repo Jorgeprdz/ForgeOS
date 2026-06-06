@@ -1,0 +1,1199 @@
+PAQ 4
+METRICS OWNERSHIP FINALIZATION
+
+Purpose:
+
+Define final conceptual ownership for critical Forge metrics so every metric has one source of truth.
+
+This document is architecture only.
+It does not create code, engines, schemas, UI, implementation plans or commits.
+
+Core principle:
+
+One metric, one conceptual owner.
+
+Other domains consume the owner snapshot.
+Other domains do not recalculate the metric.
+
+If multiple domains calculate the same metric, Forge will eventually produce inconsistent decisions, compensation explanations, advisor guidance and manager coaching.
+
+
+1. Metric Inventory
+
+Known critical metrics:
+
+- Produccion.
+- Prima Inicial.
+- Prima Pago.
+- Prima Meta.
+- Prima Renovacion.
+- Comision Inicial.
+- Comision Renovacion.
+- Bono Inicial.
+- Bono Renovacion.
+- Bono GMM.
+- Ingresos.
+- Policy Count.
+- Contest Policy Count.
+- Actividad.
+- Productividad.
+- Conexion.
+- Desarrollo.
+- RDA.
+- LIMRA.
+- IGC.
+- Persistencia.
+- Conservacion.
+- Prima Conservada.
+- Prima por Conservar.
+- Siniestralidad.
+- Revenue Pipeline.
+- Revenue Forecast.
+- Advisor Baseline Metrics.
+- Manager Baseline Metrics.
+
+Hidden or implied metrics:
+
+- Paid Policy Count.
+- Issued Policy Count.
+- Eligible Policy Count.
+- First Receipt Paid Count.
+- Policy Count Adjustment.
+- Production Attribution Share.
+- Servicing Responsibility Count.
+- Initial Premium.
+- Renewal Premium.
+- GMM Initial Premium.
+- GMM Renewal Premium.
+- GMM Growth.
+- Average Initial Commission.
+- Advisor Compensation Qualified.
+- Team Compensation Qualified.
+- Contest Group.
+- Contest Gap.
+- Training Allowance Qualification.
+- Training Allowance Winner.
+- TA Winner Count.
+- Bono Devengado.
+- Bono Pagado.
+- Bonus Advance.
+- Bonus Reversal.
+- Recalculation Delta.
+- Income Earned.
+- Income Potential.
+- Income At Risk.
+- Revenue Opportunity Value.
+- Revenue Opportunity Priority.
+- Revenue Conversion Probability.
+- Relationship Health.
+- Engagement Score.
+- Activity Compliance.
+- Behavior Consistency.
+- Feature Learning State.
+- Advisor Setup Completeness.
+- Baseline Risk.
+- Manager Unit Production.
+- Qualified Advisor Count.
+- Non-qualified Advisor Production.
+- Unit LIMRA.
+- Unit IGC.
+- Partner Tenure.
+- Partner Support Eligibility.
+- Alta Partner Eligibility.
+- Development Window Status.
+- Connection Window Status.
+- Conservation Risk.
+- Cancellation Risk.
+- Renewal Risk.
+
+
+2. Ownership Map
+
+Produccion
+
+Owner:
+Production Events.
+
+Consumers:
+Revenue Intelligence, Contest Intelligence, Compensation Intelligence, Manager Compensation Intelligence, Mick, Advisor Experience, Economic Motivation.
+
+Non-owners:
+UI, Advisor Experience, Manager dashboard, Contest, Compensation, Revenue.
+
+Notes:
+Production Events owns raw commercial facts. Other domains interpret.
+
+Prima Inicial
+
+Owner:
+Production Events for raw premium amount.
+Compensation Intelligence for commissionable initial premium interpretation.
+
+Consumers:
+Contest Intelligence, Compensation Intelligence, Revenue Intelligence, Economic Motivation.
+
+Non-owners:
+Advisor Experience, Mick, UI.
+
+Notes:
+Raw initial premium and ruled commissionable initial premium must not be treated as the same metric.
+
+Prima Pago
+
+Owner:
+Contest Intelligence.
+
+Consumers:
+Compensation Intelligence, Advisor Experience, Economic Motivation, Manager Compensation Intelligence.
+
+Non-owners:
+Revenue Intelligence, UI, Mick, Advisor Experience.
+
+Notes:
+Prima Pago is a ruled contest/compensation metric, not raw production.
+
+Prima Meta
+
+Owner:
+Contest Intelligence.
+
+Consumers:
+Advisor Experience, Economic Motivation, Manager Compensation Intelligence, Revenue Intelligence as context only.
+
+Non-owners:
+Compensation payments, UI, Revenue Intelligence, Mick.
+
+Notes:
+Must be based on contest rule snapshot and product ponderation rules.
+
+Prima Renovacion
+
+Owner:
+Compensation Intelligence for renewal commissionable premium.
+Contest Intelligence for renewal bonus eligibility metric.
+
+Consumers:
+Conservation Intelligence, Economic Motivation, Advisor Experience.
+
+Non-owners:
+Revenue Intelligence, UI, Mick.
+
+Notes:
+Requires explicit metric name by context:
+primaRenovacionCommissionable vs primaRenovacionContest.
+
+Comision Inicial
+
+Owner:
+Compensation Intelligence.
+
+Consumers:
+Contest Intelligence, Manager Compensation Intelligence, Economic Motivation, Advisor Experience.
+
+Non-owners:
+Contest Intelligence directly from raw policy, Revenue Intelligence, UI.
+
+Notes:
+Depends on commission schedule, product, policy year, payment mode and rule snapshot.
+
+Comision Renovacion
+
+Owner:
+Compensation Intelligence.
+
+Consumers:
+Contest Intelligence, Conservation Intelligence, Economic Motivation, Advisor Experience.
+
+Non-owners:
+Revenue Intelligence, UI, Mick.
+
+Bono Inicial
+
+Owner:
+Contest Intelligence for eligibility and calculated contest result.
+Compensation Intelligence for accrued/paid financial event.
+
+Consumers:
+Advisor Experience, Economic Motivation, Manager Compensation Intelligence.
+
+Non-owners:
+Revenue Intelligence, UI, Mick.
+
+Notes:
+Must distinguish bonoInicialCalculated, bonoInicialAccrued and bonoInicialPaid.
+
+Bono Renovacion
+
+Owner:
+Contest Intelligence for eligibility and calculated result.
+Compensation Intelligence for accrued/paid financial event.
+
+Consumers:
+Advisor Experience, Economic Motivation, Conservation Intelligence.
+
+Non-owners:
+Revenue Intelligence, UI, Mick.
+
+Notes:
+Depends on Bono Inicial calculated and renewal/conservation rules.
+
+Bono GMM
+
+Owner:
+Contest Intelligence for qualification/result.
+Compensation Intelligence for accrual/payment.
+
+Consumers:
+Advisor Experience, Economic Motivation, Manager Compensation Intelligence.
+
+Non-owners:
+Revenue Intelligence, UI.
+
+Ingresos
+
+Owner:
+Compensation Intelligence for real earned/paid income.
+Economic Motivation for potential income interpretation.
+
+Consumers:
+Advisor Experience, Mick, Manager Compensation Intelligence, Revenue Intelligence as context.
+
+Non-owners:
+Revenue Intelligence as confirmed income, Advisor Experience, UI, Mick.
+
+Notes:
+Must distinguish ingresosReales, ingresosDevengados, ingresosPagados, ingresosPotenciales and ingresosEnRiesgo.
+
+Policy Count
+
+Owner:
+Production Events for raw issued/paid policy count.
+
+Consumers:
+Contest Intelligence, Manager Compensation Intelligence, Revenue Intelligence, Mick.
+
+Non-owners:
+Contest Intelligence as raw fact, Manager Compensation Intelligence as raw fact, UI.
+
+Contest Policy Count
+
+Owner:
+Contest Intelligence / Policy Count rule library.
+
+Consumers:
+Training Allowance, Conexion, Desarrollo, Manager Compensation Intelligence, Economic Motivation.
+
+Non-owners:
+Mick, Production Events, UI.
+
+Notes:
+Contest Policy Count is not activity points and not raw policy count.
+
+Actividad
+
+Owner:
+Mick / Behavior Intelligence for behavior activity.
+Production Events for production outcomes.
+
+Consumers:
+Revenue Intelligence, Manager Intelligence, Advisor Experience.
+
+Non-owners:
+Compensation Intelligence, Contest Intelligence, UI.
+
+Notes:
+Must distinguish behavior activity from production activity.
+
+Productividad
+
+Owner:
+Manager Compensation Intelligence for PCV/productividad metric.
+Mick for behavior productivity only if explicitly named differently.
+
+Consumers:
+Manager dashboards, Economic Motivation, Advisor Experience as contextual explanation.
+
+Non-owners:
+Mick when referring to PCV Productividad, Revenue Intelligence, UI.
+
+Notes:
+Do not use one generic "productividad" metric.
+
+Conexion
+
+Owner:
+Commercial Attribution / Connection Attribution for source.
+Contest Intelligence or Manager Compensation Intelligence for bonus qualification depending on audience.
+
+Consumers:
+Recruitment, Career Intelligence, Contest Intelligence, Manager Compensation, Revenue Intelligence.
+
+Non-owners:
+UI, Relationship Intelligence alone, Mick.
+
+Desarrollo
+
+Owner:
+Commercial Attribution / Development Attribution for source.
+Contest Intelligence or Manager Compensation Intelligence for bonus qualification depending on audience.
+
+Consumers:
+Career Intelligence, Contest Intelligence, Manager Compensation, Mick.
+
+Non-owners:
+UI, Revenue Intelligence.
+
+RDA
+
+Owner:
+Commercial Attribution / Referral Attribution.
+
+Consumers:
+Recruitment, Revenue Intelligence, Relationship Intelligence, Contest Intelligence, Manager Compensation Intelligence.
+
+Non-owners:
+Referral UI modules, Revenue Intelligence alone, Manager dashboards.
+
+LIMRA
+
+Owner:
+Conservation Intelligence.
+
+Consumers:
+Contest Intelligence, Compensation Intelligence, Manager Compensation Intelligence, Advisor Experience, Economic Motivation.
+
+Non-owners:
+Compensation Intelligence, UI/manual profile, Revenue Intelligence.
+
+IGC
+
+Owner:
+Conservation Intelligence.
+
+Consumers:
+Contest Intelligence, Compensation Intelligence, Manager Compensation Intelligence, Advisor Experience, Economic Motivation.
+
+Non-owners:
+Compensation Intelligence, UI/manual profile, Revenue Intelligence.
+
+Persistencia
+
+Owner:
+Conservation Intelligence.
+
+Consumers:
+Relationship Intelligence, Manager Compensation Intelligence, Advisor Experience, Revenue Intelligence.
+
+Non-owners:
+Generic portfolio dashboards, UI, Compensation Intelligence.
+
+Conservacion
+
+Owner:
+Conservation Intelligence.
+
+Consumers:
+Compensation Intelligence, Contest Intelligence, Manager Compensation Intelligence, Economic Motivation.
+
+Non-owners:
+Compensation Intelligence alone, UI.
+
+Siniestralidad
+
+Owner:
+Conservation Intelligence or Product/Claims Intelligence if later separated.
+
+Consumers:
+Contest Intelligence, Compensation Intelligence, Manager Compensation Intelligence.
+
+Non-owners:
+UI, Revenue Intelligence, Advisor Experience.
+
+Revenue Pipeline
+
+Owner:
+Revenue Intelligence.
+
+Consumers:
+Advisor Experience, Mick, Manager Intelligence, Command OS.
+
+Non-owners:
+Compensation Intelligence, Contest Intelligence.
+
+Revenue Forecast
+
+Owner:
+Revenue Intelligence as forecast.
+
+Consumers:
+Advisor Experience, Mick, Manager Intelligence, Economic Motivation as context only.
+
+Non-owners:
+Compensation Intelligence as confirmed income, UI as confirmed value.
+
+Advisor Baseline Metrics
+
+Owner:
+Advisor Experience as aggregated baseline snapshot.
+
+Consumers:
+Revenue Intelligence, Mick, Manager Intelligence, Command OS, Economic Motivation.
+
+Non-owners:
+Revenue Intelligence as full owner, Mick as full owner, Compensation as full owner.
+
+Notes:
+Baseline snapshot consumes metrics; it must not become source of truth for those metrics.
+
+Manager Baseline Metrics
+
+Owner:
+Manager / Team Intelligence.
+
+Consumers:
+Manager Compensation Intelligence, Mick, Advisor Experience, Economic Motivation.
+
+Non-owners:
+Advisor Experience, Revenue Intelligence alone.
+
+
+3. Raw vs Derived Classification
+
+RAW FACT:
+
+- Policy issued.
+- Policy paid.
+- Payment received.
+- Commission posted as source event.
+- Premium amount from source.
+- Carrier report received.
+- Manual input received.
+- Manager input received.
+- OCR extracted field before validation.
+- Source document received.
+
+DERIVED METRIC:
+
+- Policy Age Month.
+- Policy Year.
+- Career Month.
+- Contest Month.
+- NP Contest Month.
+- Partner Tenure Semester.
+- Raw Policy Count by period.
+- Pipeline total.
+- Activity count.
+- Engagement count.
+
+RULED METRIC:
+
+- Prima Meta.
+- Prima Pago.
+- Contest Policy Count.
+- Contest Group.
+- Training Allowance Qualification.
+- Bono Inicial Qualification.
+- Bono Renovacion Qualification.
+- Bono GMM Qualification.
+- Advisor Compensation Qualified.
+- Team Compensation Qualified.
+- Productividad PCV.
+- Actividad PCV.
+- Conexion bonus qualification.
+- Desarrollo bonus qualification.
+
+SNAPSHOT:
+
+- Advisor Baseline Snapshot.
+- Manager Baseline Snapshot.
+- Conservation Snapshot.
+- LIMRA Snapshot.
+- IGC Snapshot.
+- Contest Period Snapshot.
+- Compensation Period Snapshot.
+- Team Qualification Snapshot.
+- Revenue Pipeline Snapshot.
+- Feature Learning State Snapshot.
+
+FORECAST:
+
+- Revenue Forecast.
+- Income Potential.
+- Expected Pipeline Conversion.
+- Future Commission Estimate.
+- Future Bonus Estimate.
+- Conservation Risk Projection.
+
+INTERPRETATION:
+
+- Income at risk.
+- Bonus risk.
+- Next best action priority.
+- Economic Motivation message.
+- Coaching priority.
+- Relationship risk.
+- Feature learned.
+- Advisor progress narrative.
+
+Metric classifications:
+
+Produccion:
+RAW FACT aggregation or DERIVED METRIC depending on whether atomic or summarized.
+
+Prima Inicial:
+RAW FACT if source premium, RULED METRIC if commissionable/eligible.
+
+Prima Pago:
+RULED METRIC.
+
+Prima Meta:
+RULED METRIC.
+
+Prima Renovacion:
+RULED METRIC when used for bonus, DERIVED METRIC when from policy age.
+
+Comision Inicial:
+RULED METRIC.
+
+Comision Renovacion:
+RULED METRIC.
+
+Bono Inicial:
+RULED METRIC for calculated result, Compensation Event for paid/accrued.
+
+Bono Renovacion:
+RULED METRIC for calculated result, Compensation Event for paid/accrued.
+
+Bono GMM:
+RULED METRIC for calculated result, Compensation Event for paid/accrued.
+
+Ingresos Reales:
+SNAPSHOT or Compensation Event aggregation.
+
+Ingresos Potenciales:
+FORECAST / INTERPRETATION.
+
+Policy Count:
+DERIVED METRIC from RAW FACTS.
+
+Contest Policy Count:
+RULED METRIC.
+
+Actividad:
+DERIVED METRIC or INTERPRETATION depending on behavior scoring.
+
+Productividad:
+RULED METRIC in Manager Compensation.
+
+Conexion:
+Attribution fact plus RULED METRIC if bonus-related.
+
+Desarrollo:
+Attribution fact plus RULED METRIC if bonus-related.
+
+RDA:
+Attribution fact.
+
+LIMRA:
+RULED METRIC / SNAPSHOT.
+
+IGC:
+RULED METRIC / SNAPSHOT.
+
+Persistencia:
+DERIVED METRIC / SNAPSHOT.
+
+Conservacion:
+DERIVED METRIC / SNAPSHOT.
+
+Siniestralidad:
+DERIVED METRIC / SNAPSHOT.
+
+Revenue Pipeline:
+SNAPSHOT / DERIVED METRIC.
+
+Revenue Forecast:
+FORECAST.
+
+Advisor Baseline Metrics:
+SNAPSHOT.
+
+Manager Baseline Metrics:
+SNAPSHOT.
+
+
+4. Contest Metrics Ownership
+
+Contest Intelligence owns:
+
+- Prima Meta.
+- Prima Pago.
+- Contest Policy Count.
+- Contest Qualification.
+- Contest Group.
+- Training Allowance Qualification.
+- Training Allowance Winner.
+- Bono Inicial Qualification.
+- Bono Renovacion Qualification.
+- Bono GMM Qualification.
+- Contest Gap.
+
+Consumers:
+
+- Advisor Experience.
+- Compensation Intelligence.
+- Manager Compensation Intelligence.
+- Economic Motivation.
+- Revenue Intelligence as context.
+- Command OS for actions.
+
+Non-owners:
+
+- UI.
+- Revenue Intelligence.
+- Compensation Intelligence for eligibility.
+- Mick.
+- Advisor Experience.
+
+Required snapshots:
+
+- ContestRuleSnapshot.
+- ContestPeriodSnapshot.
+- ContestPolicyCountSnapshot.
+- ContestQualificationSnapshot.
+- ContestGroupSnapshot.
+- TrainingAllowanceSnapshot.
+- BonoInicialEligibilitySnapshot.
+- BonoRenovacionEligibilitySnapshot.
+- BonoGMMEligibilitySnapshot.
+- ContestGapSnapshot.
+
+Rules:
+
+- Compensation may consume contest-calculated bonus results, but must not recalculate contest eligibility.
+- Advisor Experience may explain contest metrics, but must not own them.
+- Economic Motivation may translate gaps into potential money, but must not recalculate Prima Meta or Contest Policy Count.
+
+
+5. Compensation Metrics Ownership
+
+Compensation Intelligence owns:
+
+- Comision Inicial.
+- Comision Renovacion.
+- Ingresos Reales.
+- Ingresos Devengados.
+- Ingresos Pagados.
+- Bono Devengado.
+- Bono Pagado.
+- Avances.
+- Reversas.
+- Recalculation.
+- Payment status.
+- Commission schedule application.
+
+Compensation does NOT own:
+
+- Prima Meta.
+- Contest Policy Count.
+- Contest Group.
+- LIMRA.
+- IGC.
+- RDA.
+- Career Month.
+- Contest Month.
+- Revenue Forecast.
+- Advisor Baseline.
+
+Depends on Contest for:
+
+- Bono Inicial calculated.
+- Bono Renovacion calculated.
+- Bono GMM calculated.
+- Training Allowance result.
+- Contest eligibility.
+- Contest group.
+- Contest gaps.
+
+Depends on Conservation for:
+
+- LIMRA.
+- IGC.
+- Persistencia.
+- Conservacion.
+- Siniestralidad.
+
+Depends on Production Events for:
+
+- Policy paid.
+- Commission posted source event.
+- Premium source events.
+- Cancellation.
+- Reinstatement.
+
+Required snapshots:
+
+- CompensationPeriodSnapshot.
+- CommissionScheduleSnapshot.
+- CommissionCalculationSnapshot.
+- BonusAccrualSnapshot.
+- BonusPaymentSnapshot.
+- ReversalSnapshot.
+- RecalculationSnapshot.
+
+Rules:
+
+- Compensation owns money actually calculated, accrued, paid, reversed or recalculated.
+- Compensation does not own the contest rules that make a contest bonus eligible.
+- Compensation must preserve distinction between calculated, accrued and paid.
+
+
+6. Conservation Metrics Ownership
+
+Conservation Intelligence owns:
+
+- LIMRA.
+- IGC.
+- Persistencia.
+- Conservacion.
+- Prima Conservada.
+- Prima por Conservar.
+- Siniestralidad.
+- Conservation Risk.
+- Cancellation impact on conservation.
+- Reinstatement impact on conservation.
+
+Consumers:
+
+- Contest Intelligence.
+- Compensation Intelligence.
+- Manager Compensation Intelligence.
+- Advisor Experience.
+- Economic Motivation.
+- Relationship Intelligence.
+- Revenue Intelligence as risk context.
+
+Non-owners:
+
+- Compensation Intelligence.
+- Manager Compensation Intelligence.
+- UI.
+- Manual advisor profile.
+- Revenue Intelligence.
+
+Required snapshots:
+
+- ConservationSnapshot.
+- LIMRASnapshot.
+- IGCSnapshot.
+- PersistencySnapshot.
+- PrimaConservadaSnapshot.
+- PrimaPorConservarSnapshot.
+- SiniestralidadSnapshot.
+- ConservationReportingPeriodSnapshot.
+- ConservationCorrectionSnapshot.
+
+Rules:
+
+- LIMRA and IGC must never be manually owned by Compensation.
+- If imported from carrier report, Conservation owns the resolved snapshot.
+- If calculated locally, Conservation owns the calculation and must label source/confidence.
+- Index Reporting Month must be preserved.
+
+
+7. Manager Metrics Ownership
+
+Manager Compensation Intelligence owns:
+
+- Productividad PCV.
+- Produccion PCV.
+- Actividad PCV.
+- Conexión bonus qualification for manager context.
+- Desarrollo bonus qualification for manager context.
+- Alta Partner qualification.
+- Apoyos qualification.
+- Manager bonus eligibility.
+- Team Qualification Snapshot.
+- Qualified Advisor Count for manager compensation.
+- Non-qualified Advisor Production for manager compensation.
+- Unit Production for manager compensation.
+- Unit LIMRA / Unit IGC snapshots consumed from Conservation.
+
+Mick owns:
+
+- Behavior activity.
+- Activity consistency.
+- Discipline.
+- Coachability.
+- Execution patterns.
+- Habit indicators.
+- Missed behaviors.
+
+Career Intelligence owns:
+
+- Advisor stage.
+- Advisor class.
+- Career Month.
+- Contest Month where career-derived.
+- Partner role transition.
+
+Contest Intelligence owns:
+
+- TA Winners.
+- Training Allowance Qualification.
+- Contest Policy Count.
+- Bono qualification.
+
+Production Events owns:
+
+- Raw production.
+- Raw policies.
+- Raw commission posted event.
+
+Duplicity risks:
+
+- Manager Productividad must not be confused with Mick productivity.
+- Manager Actividad must not be confused with general behavior activity.
+- TA Winners must be consumed from Contest, not recalculated by Manager Compensation.
+- Asesores Calificados for compensation must be a manager compensation/compensation-qualified snapshot, not generic "good advisor" score.
+
+Required snapshots:
+
+- ManagerCompensationPeriodSnapshot.
+- TeamQualificationSnapshot.
+- QualifiedAdvisorSnapshot.
+- ManagerProductividadSnapshot.
+- ManagerActividadSnapshot.
+- ManagerConexionSnapshot.
+- ManagerDesarrolloSnapshot.
+- UnitProductionSnapshot.
+- TAWinnerDependencySnapshot.
+
+
+8. Economic Motivation Guardrails
+
+Economic Motivation may consume:
+
+- Contest gaps.
+- Prima Meta gap.
+- Contest Policy Count gap.
+- Compensation commission schedules.
+- Bonus eligibility snapshots.
+- Conservation risk snapshots.
+- Revenue opportunity values.
+- Advisor baseline.
+- Production snapshots.
+- Payment/accrual status.
+
+Economic Motivation may produce:
+
+- Income potential interpretation.
+- Income at risk interpretation.
+- Economic explanation.
+- Action priority based on money impact.
+- Estimated upside with confidence label.
+
+Economic Motivation must never own:
+
+- Prima Meta.
+- Prima Pago.
+- Contest Policy Count.
+- Comision Inicial.
+- Comision Renovacion.
+- LIMRA.
+- IGC.
+- Revenue Forecast.
+- Bonus eligibility.
+- Actual income.
+
+Economic Motivation must never recalculate:
+
+- Contest eligibility.
+- Commission schedules.
+- Policy count.
+- Conservation indexes.
+- Manager compensation.
+- Revenue forecast.
+
+Guardrails:
+
+- Must label output as confirmed, estimated or hypothetical.
+- Must cite source metrics.
+- Must cite RuleSnapshot when money is involved.
+- Must cite PeriodSnapshot.
+- Must not show a money amount if rules are missing.
+- Must not use Revenue Forecast as confirmed income.
+- Must not turn assumptions into facts.
+- Must distinguish earned, potential and at risk.
+- Must lower confidence if any upstream metric has medium/low confidence.
+
+Example:
+
+"Te faltan 2 pólizas."
+
+Allowed if:
+Contest Policy Count snapshot exists and gap is rule-based.
+
+"Te faltan $25,000 de Prima Meta."
+
+Allowed if:
+Prima Meta gap is owned by Contest Intelligence and period snapshot is known.
+
+"Podrías ganar $12,000 más."
+
+Allowed only if:
+Bonus/commission rules are known, eligibility is clear, assumptions are labeled and confidence is shown.
+
+
+9. Advisor Experience Constraints
+
+Advisor Experience may show:
+
+- Advisor Baseline Snapshot.
+- Manager Baseline context.
+- Revenue introduction metrics.
+- Command OS learning state.
+- Contest gaps from Contest Intelligence.
+- Income potential from Economic Motivation.
+- Compensation explanations from Compensation Intelligence.
+- Conservation risks from Conservation Intelligence.
+- Activity patterns from Mick.
+- Revenue opportunities from Revenue Intelligence.
+
+Advisor Experience must never own:
+
+- Revenue Pipeline source metrics.
+- Revenue Forecast.
+- Compensation calculations.
+- Contest metrics.
+- LIMRA/IGC.
+- Policy Count.
+- Activity scoring.
+- Manager Compensation metrics.
+
+Advisor Baseline Snapshot:
+
+Owner:
+Advisor Experience.
+
+But:
+It is an aggregate snapshot, not source of truth.
+
+It may contain:
+
+- Current stage from Career Intelligence.
+- Revenue baseline from Revenue Intelligence.
+- Activity baseline from Mick.
+- Product focus from Product/Revenue.
+- Compensation context from Compensation.
+- Conservation risk from Conservation.
+- Learning state from Advisor Experience.
+
+It must not recalculate any upstream metric.
+
+Manager Baseline Snapshot:
+
+Owner:
+Manager / Team Intelligence.
+
+Advisor Experience may display it, but not own it.
+
+Benvenù:
+
+May introduce metrics, but must not create hidden metric ownership.
+
+Clippy:
+
+May explain metrics, but must not calculate unofficial values.
+
+Clippy must never show:
+
+- Unofficial LIMRA.
+- Unofficial income.
+- UI-calculated contest group.
+- Revenue forecast as confirmed money.
+- Any metric without owner/source.
+
+
+10. Ownership Conflicts
+
+Conflict 1:
+Prima Meta calculated by Contest and Compensation.
+
+Resolution:
+Contest owns Prima Meta. Compensation consumes.
+
+Conflict 2:
+Policy Count differs between Manager and Contest.
+
+Resolution:
+Production owns raw count. Contest owns contest-adjusted count. Manager consumes correct snapshot by rule context.
+
+Conflict 3:
+LIMRA differs between Conservation and Compensation.
+
+Resolution:
+Conservation owns LIMRA. Compensation consumes official snapshot.
+
+Conflict 4:
+Ingresos differ between Compensation and Revenue.
+
+Resolution:
+Compensation owns real income. Revenue owns forecast/pipeline. Names must differ.
+
+Conflict 5:
+Productividad differs between Manager and Mick.
+
+Resolution:
+Manager owns PCV Productividad. Mick owns behavior productivity. Generic "productividad" is banned.
+
+Conflict 6:
+Advisor Baseline becomes source of truth.
+
+Resolution:
+Baseline is aggregate snapshot only. It must reference owner snapshots.
+
+Conflict 7:
+Economic Motivation invents income.
+
+Resolution:
+Economic Motivation consumes owner snapshots and labels confirmed/estimated/hypothetical.
+
+Conflict 8:
+Revenue Forecast used as income confirmed.
+
+Resolution:
+Revenue Forecast is FORECAST. It cannot be displayed as ingresos reales.
+
+Conflict 9:
+Contest Group recalculated by UI.
+
+Resolution:
+Contest Group is owned by Contest Intelligence and must be snapshotted.
+
+Conflict 10:
+Clippy shows unofficial metrics.
+
+Resolution:
+Clippy may only show metrics with owner, source, confidence and applicable context.
+
+
+11. Riesgos críticos
+
+1. UI calculates contest metrics for display.
+2. Advisor Experience baseline becomes source of truth.
+3. Economic Motivation creates money estimates without RuleSnapshot.
+4. Revenue Forecast is confused with real income.
+5. Manager Compensation recalculates Contest Policy Count.
+6. Compensation recalculates LIMRA or IGC.
+7. Mick productivity is mixed with PCV Productividad.
+8. Policy Count is used without specifying raw, paid, eligible or contest-adjusted.
+9. Prima Pago and Prima Meta are treated as premium facts instead of ruled metrics.
+10. Bonus calculated, accrued and paid are collapsed into one value.
+11. Conservation metrics are imported manually without source/confidence.
+12. RDA ownership remains inside referrals instead of shared attribution.
+13. Contest Group changes historically because UI recalculates from current data.
+14. Manager dashboard sums production without period/assignment snapshot.
+15. Compensation ignores contest eligibility owner.
+16. Advisor Experience shows old baseline values as current truth.
+17. Clippy explains an unofficial metric.
+18. Command OS triggers action based on a stale snapshot without warning.
+19. Forecast values enter compensation workflows.
+20. Multiple domains create "qualified" metrics with different meanings.
+
+
+12. Recomendaciones obligatorias
+
+1. Every metric must have exactly one conceptual owner.
+2. Every displayed metric must name or reference its owner.
+3. Ban generic metric names where domain matters, especially productividad, actividad, qualified, ingresos and policy count.
+4. Distinguish raw facts, derived metrics, ruled metrics, snapshots, forecasts and interpretations.
+5. Define official metric names for:
+   - rawPolicyCount.
+   - paidPolicyCount.
+   - contestPolicyCount.
+   - behaviorActivity.
+   - managerActividadPCV.
+   - managerProductividadPCV.
+   - ingresosReales.
+   - ingresosPotenciales.
+   - ingresosEnRiesgo.
+6. Contest Intelligence must own contest metrics.
+7. Compensation Intelligence must own real financial events.
+8. Conservation Intelligence must own conservation/index metrics.
+9. Revenue Intelligence must own pipeline and forecast, not income truth.
+10. Mick must own behavior metrics, not compensation productivity.
+11. Advisor Experience must own baseline aggregation and learning state only.
+12. Economic Motivation must own explanation, not source metrics.
+13. Manager Compensation must consume Contest, Career, Conservation and Production snapshots.
+14. All snapshots must preserve period, source, rule and confidence.
+15. All money-related metrics must distinguish confirmed vs estimated.
+16. Any cross-domain consumer must consume snapshots, not recompute.
+17. Any recalculation must create a new snapshot, not overwrite.
+18. Red Team scenarios must be tested conceptually before FOUNDATION LOCK.
+19. Metrics with ambiguous ownership must not be used in official output.
+20. Build Tree should not advance Shared Commercial Model until ownership is documented.
+
+
+13. ¿Está listo para FOUNDATION LOCK?
+
+No.
+
+Status:
+FOUNDATION HARDENING REQUIRED.
+
+The ownership model is conceptually close, but not ready for lock until the official Shared Commercial Model incorporates:
+
+- final metric ownership list;
+- metric category classification;
+- canonical metric names;
+- snapshot requirements;
+- owner/consumer/non-owner rules;
+- guardrails for Economic Motivation;
+- Advisor Experience constraints;
+- conflict rules for ambiguous metrics.
+
+Ready for FOUNDATION CANDIDATE when:
+
+- all critical metrics have one owner;
+- all ambiguous metrics are renamed;
+- all consumers are defined;
+- all non-owners are explicitly blocked;
+- all snapshots required for contest, compensation, conservation, manager and advisor experience are documented.
+
+Ready for FOUNDATION LOCK only if the model survives:
+
+1. Prima Meta calculated by two domains.
+2. Policy Count mismatch between Manager and Contest.
+3. LIMRA mismatch between Conservation and Compensation.
+4. Real income mismatch between Compensation and Revenue.
+5. Productividad mismatch between Manager and Mick.
+6. Advisor Baseline used as source of truth.
+7. Economic Motivation inventing income.
+8. Revenue Forecast shown as confirmed income.
+9. Contest Group recalculated by UI.
+10. Clippy showing unofficial metrics.
+
+Verdict:
+
+Forge cannot become a reliable decision system if metrics have multiple owners.
+
+Metrics ownership must be locked before engines, schemas, dashboards or Advisor Experience depend on those metrics.
+
+
+14. Calificación arquitectónica
+
+8/10.
+
+The model is now strong enough to guide Foundation Candidate work.
+
+It is not yet ready for Foundation Lock because several metrics still require canonical naming and snapshot rules:
+
+- Prima Renovacion by context.
+- Productividad by domain.
+- Actividad by domain.
+- Ingresos by actual vs potential vs forecast.
+- Policy Count by raw vs paid vs contest-adjusted.
+- Qualified by candidate, precontract, advisor compensation and team compensation.
+
+Once those names are formalized and owners are locked, the Shared Commercial Model can become a true single source of commercial truth for Forge.

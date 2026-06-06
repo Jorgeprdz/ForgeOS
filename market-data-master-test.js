@@ -25,7 +25,7 @@ async function main() {
     policyCurrency: "UDI",
     annualPremium: 2855.36,
     currentRate: udiRate,
-    annualGrowthRate: 0.04,
+    annualGrowthRate: 0.045,
     targetYear: 7
   });
 

@@ -1,0 +1,169 @@
+REPORTE DE RESULTADOS
+MOTOR UNIVERSAL DE TIMELINE NOMINAL POR MONEDA
+
+Estado: PASS
+Fecha: 2026-06-06
+Idioma: Español
+
+OBJETIVO
+
+Crear un motor universal para proyectos de pólizas que convierta valores actuariales por año a MXN nominal utilizando la proyección anual de la moneda correspondiente.
+
+ARCHIVOS CREADOS
+
+1. shared-policy-currency-timeline-engine.js
+   Motor compartido para UDI y USD.
+
+2. shared-policy-currency-timeline-smoke-test.js
+   Prueba humo con caso Imagina Ser.
+
+3. SHARED_POLICY_CURRENCY_TIMELINE_ENGINE_REPORT.txt
+   Reporte de resultados, valores anuales y totales nominales.
+
+ALCANCE
+
+Productos objetivo:
+- Imagina Ser
+- Orvi
+- Vida Mujer
+- Nuevo Plenitud
+- Segubeca
+
+Este motor queda listo para integrarse con otros motores de Forge.
+No se modificó UI.
+No se modificó Build Tree.
+No se modificaron productos específicos.
+
+REGLAS IMPLEMENTADAS
+
+1. No se usa la UDI o el dólar actual para todos los años.
+   Cada año usa su valor de moneda proyectado.
+
+2. Soporta UDI y USD.
+
+3. Soporta escenarios:
+   - BASE
+   - FAVORABLE
+   - DESFAVORABLE
+
+4. Soporta valores anuales y mensualidades.
+
+5. Para mensualidades:
+   - conserva valor nominal mensual;
+   - calcula valor nominal anualizado.
+
+6. Todos los resultados proyectados usan etiqueta:
+   POLICY_CURRENCY_TIMELINE_PROJECTED_MXN_ESTIMATE_NOT_GUARANTEED
+
+7. Disclosure:
+   VALORES_NOMINALES_PROYECTADOS_NO_GARANTIZADOS
+
+BANXICO
+
+Estado:
+TEMPORAL LOCAL DEVELOPMENT
+
+Token:
+Incluido temporalmente dentro de shared-policy-currency-timeline-engine.js.
+
+Series soportadas:
+- UDI: SP68257
+- USD/MXN FIX: SF43718
+
+Función disponible:
+fetchBanxicoSeries({ currency, startDate, endDate })
+
+Uso:
+Consulta la API de series de tiempo de Banxico con header Bmx-Token.
+
+Advertencia:
+Antes de producción o Supabase, el token debe eliminarse del código y moverse a variables de entorno / Edge Functions.
+
+CASO SMOKE TEST: IMAGINA SER
+
+Input:
+- Moneda: UDI
+- UDI actual: 8.85
+- Tasa anual de proyección: 4%
+- Año inicial de póliza: 1
+- Prima anual: 3,222 UDI
+- Beneficio anual de referencia: 75,000 UDI
+
+Tabla actuarial de ejemplo:
+
+Año 1
+- Aportación: 3,222 UDI
+- Beneficio base: 75,000 UDI
+- Recuperación base: 0 UDI
+- Recuperación favorable: 0 UDI
+- Recuperación desfavorable: 0 UDI
+
+Año 2
+- Aportación: 3,222 UDI
+- Beneficio base: 75,000 UDI
+- Recuperación base: 0 UDI
+- Recuperación favorable: 0 UDI
+- Recuperación desfavorable: 0 UDI
+
+Año 3
+- Aportación: 3,222 UDI
+- Beneficio base: 75,000 UDI
+- Recuperación base: 13,467 UDI
+- Recuperación favorable: 15,000 UDI
+- Recuperación desfavorable: 12,000 UDI
+
+RESULTADOS ANUALES
+
+Año 1
+- UDI proyectada: 8.85
+- Aportación nominal: $28,515 MXN
+- Total aportado nominal acumulado: $28,515 MXN
+- Beneficio nominal base: $663,750 MXN
+- Recuperación nominal base: $0 MXN
+- Recuperación nominal favorable: $0 MXN
+- Recuperación nominal desfavorable: $0 MXN
+
+Año 2
+- UDI proyectada: 9.204
+- Aportación nominal: $29,655 MXN
+- Total aportado nominal acumulado: $58,170 MXN
+- Beneficio nominal base: $690,300 MXN
+- Recuperación nominal base: $0 MXN
+- Recuperación nominal favorable: $0 MXN
+- Recuperación nominal desfavorable: $0 MXN
+
+Año 3
+- UDI proyectada: 9.57216
+- Aportación nominal: $30,841 MXN
+- Total aportado nominal acumulado: $89,011 MXN
+- Beneficio nominal base: $717,912 MXN
+- Recuperación nominal base: $128,908 MXN
+- Recuperación nominal favorable: $143,582 MXN
+- Recuperación nominal desfavorable: $114,866 MXN
+
+TOTAL NOMINAL ACUMULADO
+
+Total aportado nominal acumulado escenario BASE:
+$89,011.49 MXN
+
+VALIDACION
+
+Comando ejecutado:
+node shared-policy-currency-timeline-smoke-test.js
+
+Resultado:
+PASS
+
+Detalle:
+- Proyecta moneda por año y no reutiliza la UDI actual: PASS
+- Calcula aportación nominal anual: PASS
+- Valida total nominal acumulado de aportaciones: PASS
+- Soporta escenarios base, favorable y desfavorable: PASS
+- Soporta mensualidades y anualiza el valor nominal: PASS
+- Mantiene etiqueta de estimación no garantizada: PASS
+
+VEREDICTO
+
+PASS
+
+El motor queda listo para integrarse a motores de producto de Forge sin tocar UI ni Build Tree.

@@ -1,0 +1,216 @@
+FORGE_PHASE_2_X_REVIEW_REQUIRED_QUEUE.txt
+Generated: 2026-06-04
+Scope: Phase 2.X documentation queue. No code changes approved.
+
+Action: REVIEW REQUIRED
+
+## schema-field-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## center-of-influence-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## referral-color-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## referral-priority-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## referral-temperature-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE or 02 SALES CONVERSION ENGINE; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## clipboard-action-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## phone-call-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## whatsapp-action-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## whatsapp-link-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Ownership: 09 UNIVERSAL COMMAND OS / action infrastructure or Sales Conversion channel support; review required
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## forge-rate-cache.json
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: JSON file requires human classification before movement.
+
+## manifest.json
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: JSON file requires human classification before movement.
+
+## maria_acceptance_001.json
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: JSON file requires human classification before movement.
+
+## maria_test_001.json
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: JSON file requires human classification before movement.
+
+## question-style-match-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review
+
+## seen-but-no-reply-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## shared-client-language-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review
+
+## shared-financial-return-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review
+
+## shared-protection-efficiency-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review
+
+## shared-recovery-analysis-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review
+
+## universal-filters-engine.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected
+
+## virtual-list.js
+
+- Classification: REVIEW REQUIRED
+- Recommended domain: UNKNOWN / NEEDS REVIEW
+- Ownership: UNKNOWN / NEEDS REVIEW
+- Candidate: Needs Further Human Validation
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+

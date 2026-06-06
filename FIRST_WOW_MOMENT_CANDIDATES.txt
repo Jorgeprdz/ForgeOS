@@ -1,0 +1,234 @@
+FIRST WOW MOMENT CANDIDATES
+
+Status:
+ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+
+Selection rule:
+The winning candidate must create immediate value in less than 30 seconds
+without asking for new data, showing a CRM dashboard or pretending to know
+something Forge cannot prove.
+
+1. ONE RELATIONSHIP WORTH REVIEWING
+
+Concept:
+Forge surfaces one client, prospect or relationship that deserves attention.
+
+Example:
+"Forge found one relationship worth reviewing today."
+
+Explainable reason:
+"There is recent activity, but no clear next action recorded."
+
+Why it could wow:
+It feels human and practical. It turns stored context into an immediate
+decision.
+
+Required information:
+- One relationship record or imported context.
+- Recent activity or absence of next action.
+- Evidence label.
+
+Risk:
+If evidence is weak, it can feel invented.
+
+Verdict:
+Best primary candidate.
+
+2. ONE NEXT ACTION FOUND
+
+Concept:
+Forge presents a single next action based on existing context.
+
+Example:
+"Your next useful move may be a follow-up message to Ana."
+
+Explainable reason:
+"Last interaction exists, but there is no follow-up outcome."
+
+Why it could wow:
+It immediately answers "what do I do now?"
+
+Required information:
+- Contact or opportunity context.
+- Last interaction.
+- Missing or stale next action.
+
+Risk:
+Could feel too operational if presented like a task manager.
+
+Verdict:
+Strong candidate if tone stays human.
+
+3. ONE OVERDUE FOLLOW-UP SIGNAL
+
+Concept:
+Forge notices one follow-up gap.
+
+Example:
+"This relationship may be waiting on you."
+
+Explainable reason:
+"A follow-up was expected, and no completed action appears after it."
+
+Why it could wow:
+It shows Forge protects commercial consistency.
+
+Required information:
+- Follow-up expectation.
+- Activity history.
+- Completion status.
+
+Risk:
+Can feel accusatory if copy is not restrained.
+
+Verdict:
+Useful, but should avoid shame.
+
+4. ONE POLICY OR RENEWAL SIGNAL
+
+Concept:
+Forge surfaces one policy-related attention point.
+
+Example:
+"There may be one policy moment worth reviewing."
+
+Explainable reason:
+"A policy event exists near the current period."
+
+Why it could wow:
+It turns operations into an advisor action.
+
+Required information:
+- Policy context.
+- Relevant date/event.
+- Evidence source.
+
+Risk:
+Could become too technical or dashboard-like.
+
+Verdict:
+Good if policy data is reliable.
+
+5. ONE OPPORTUNITY FROM EXISTING CONTEXT
+
+Concept:
+Forge identifies one potential opportunity signal.
+
+Example:
+"Forge found one conversation that could become an opportunity."
+
+Explainable reason:
+"There is a positive interaction signal and no active opportunity recorded."
+
+Why it could wow:
+It connects conversation intelligence with revenue generation.
+
+Required information:
+- Conversation or interaction context.
+- Opportunity absence/presence.
+- Confidence label.
+
+Risk:
+Must not invent intent or financial value.
+
+Verdict:
+Powerful, but higher risk.
+
+6. ZERO-DATA HONEST FIRST WOW
+
+Concept:
+If Forge has no reliable context, it says so and shows what will happen next
+without pretending.
+
+Example:
+"I do not have enough context yet to point to a real opportunity. I will not
+invent one."
+
+Follow-up:
+"Let's start with where you want to go."
+
+Why it could wow:
+Honesty creates trust. It proves Forge will not fake intelligence.
+
+Required information:
+- No reliable data state.
+
+Risk:
+Less visually exciting.
+
+Verdict:
+Best fallback when context is missing.
+
+7. IMPORTED CONTEXT COMES ALIVE
+
+Concept:
+Forge briefly shows that existing records are not just stored; they can become
+signals.
+
+Example:
+"These are not just records. They can become decisions."
+
+Explainable reason:
+"Forge can connect relationships, activity, policies and next actions when
+evidence exists."
+
+Why it could wow:
+It reframes data as intelligence.
+
+Required information:
+- Imported records or demo context.
+
+Risk:
+Can become too abstract if no concrete action appears.
+
+Verdict:
+Good visual support, weaker as the whole moment.
+
+8. TOMORROW'S AGENDA PREVIEW
+
+Concept:
+Forge shows a calm preview of one meaningful action for tomorrow.
+
+Example:
+"Tomorrow can start with one clear move."
+
+Explainable reason:
+"This action comes from existing relationship or policy context."
+
+Why it could wow:
+It creates a feeling of order and relief.
+
+Required information:
+- Date/session context.
+- One eligible action.
+
+Risk:
+Can look like a calendar feature instead of Forge intelligence.
+
+Verdict:
+Secondary candidate.
+
+REJECTED EXPERIENCE TYPES
+
+Reject:
+- Profile setup wizard.
+- "Complete your profile" flow.
+- Onboarding checklist.
+- Product tour.
+- Dashboard reveal.
+- KPI wall.
+- Motivation quiz.
+- Sales goal input.
+- Compensation target input.
+- Purpose Snapshot before Future You Conversation.
+- Any experience that needs multiple required fields.
+- Any experience that promises income, productivity or transformation.
+
+RECOMMENDED SHORTLIST
+
+1. One Relationship Worth Reviewing.
+2. One Next Action Found.
+3. Zero-Data Honest First Wow.
+
+The recommended primary candidate is One Relationship Worth Reviewing because
+it is advisor-first, human, explainable and immediately actionable.

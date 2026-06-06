@@ -1,0 +1,484 @@
+FORGE PROJECTION ENGINE VS EXCEL VALIDATION REPORT
+
+Estado: VALIDACION / AUDITORIA
+Fecha: 2026-06-06
+Fuente de verdad: /storage/emulated/0/Download/Hoja de trabajo.xlsx
+Hoja principal auditada: IMAGINA
+
+RESUMEN EJECUTIVO
+
+Resultado contra IMAGINA:
+PASS
+
+Resultado de universalidad:
+PARTIAL
+
+El motor retirement-future-udi-projection-engine.js reproduce los valores de presentación de Edwin IS-15 cuando recibe la tasa efectiva correcta para llegar a la celda P5 de Excel.
+
+Sin embargo, el Excel no usa una sola lógica universal plana para todas las hojas. Usa columnas y tasas distintas por producto:
+- IMAGINA usa I para aportaciones/protección y P para rentas.
+- ORVI usa I con crecimiento 4.5%.
+- VM usa L con crecimiento 4%.
+- SB usa K con crecimiento 4.5% y fórmulas especiales de renta.
+- REALIZA usa M con valores de moneda ya pegados/calculados.
+
+Por lo tanto, el engine puede convertirse en base universal si se usa como motor de timeline configurable, pero no debe asumir una sola tasa ni una sola columna de moneda para todos los productos.
+
+
+1. EXCEL FORMULA AUDIT: IMAGINA
+
+UDI actual
+
+- Celda: I5
+- Valor: 8.85
+- Formula: valor fijo
+- Uso: convierte prima, fondo y protección actuales.
+
+Prima anual nominal
+
+- Celda UDI: C5
+- Valor: 3,222 UDI
+- Celda MXN: D5
+- Formula: C5*I5
+- Resultado: 28,514.699999999997 MXN
+- Redondeo de presentación: $28,515 MXN
+
+Suma asegurada nominal
+
+- Celda UDI: G5
+- Valor: 75,000 UDI
+- Celda MXN: H5
+- Formula: G5*I5
+- Resultado: 663,750 MXN
+
+UDI proyectada por año / edad para aportaciones y protección
+
+- Celda inicial: I5
+- Valor: 8.85
+- Formula año siguiente: I6 = I5*1.04
+- Rango compartido: I7:I60 usa formula equivalente a celda previa * 1.04
+- Excepciones visibles:
+  - I13 = I12*1.04
+  - I15 = I14*1.04
+  - I17 = I16*1.04
+  - I19 = I18*1.04
+  - I31 = I30*1.04
+  - I32 = I31*1.045
+- Celda edad 65 en tabla de edad actual: I47 = 46.177080583207783
+
+Valores nominales anuales de aportación
+
+- D5 = C5*I5 -> 28,514.699999999997
+- D6 = C6*I6 -> 29,655.288
+- D7 = C7*I7 -> 30,841.49952
+- D8 = C8*I8 -> 32,075.1595008
+- D9:D15 usa formula compartida equivalente a Cn*In
+- D16:D20 usa formula compartida equivalente a Cn*In
+- D21:D26 usa formula compartida equivalente a Cn*In
+- D27:D30 usa formula compartida equivalente a Cn*In
+
+Total aportado nominal
+
+- Celda total UDI: C62
+- Formula: SUM(C5:C61)
+- Resultado: 48,330 UDI
+
+- Celda total MXN: D62
+- Formula: SUM(D5:D61)
+- Resultado: 570,966.59441195126 MXN
+
+Fondo / rescate nominal
+
+- E5 = Hoja5!I37 -> 0 UDI
+- F5 = E5*I5 -> 0 MXN
+- E6 = Hoja5!I38 -> 0 UDI
+- F6:F15 usa formula compartida equivalente a En*In
+- E7 = Hoja5!I39 -> 13,467 UDI
+- F7 = E7*I7 -> 128,908.27872 MXN
+- E16:E30 continúa referenciando Hoja5!I48:Hoja5!I62.
+
+Nota:
+Hoja5!I37:I62 contiene valores pegados; no se detectaron fórmulas visibles en XML para ese rango.
+
+Pago único favorable
+
+- Celda UDI: Q5
+- Valor: 128,697 UDI
+- Celda UDI proyectada usada para presentación: P5
+- Valor: 46.177
+- Celda MXN: R5
+- Formula: Q5*P5
+- Resultado: 5,942,841.3689999999 MXN
+- Presentación: $5,942,841 MXN
+
+Renta mensual favorable
+
+- Celda UDI mensual: L5
+- Valor: 606 UDI
+- Celda MXN mensual: N5
+- Formula: L5*P5
+- Resultado: 27,983.261999999999 MXN
+- Presentación: $27,983 MXN
+
+Renta anual favorable
+
+- Celda UDI anual: M5
+- Formula: L5*12
+- Resultado: 7,272 UDI
+
+- Celda MXN anual: O5
+- Formula: M5*P5
+- Resultado: 335,799.14399999997 MXN
+
+UDI proyectada para rentas
+
+- Celda inicial: P5
+- Valor: 46.177
+- Formula siguiente: P6 = P5*1.045
+- Rango compartido: P7:P60 usa formula equivalente a celda previa * 1.045
+
+Valores a edad 75
+
+- Celda UDI acumulada: Q15
+- Formula: SUM(M5:M15)
+- Resultado: 79,992 UDI
+
+- Celda MXN acumulada: R15
+- Formula: SUM(O5:O15)
+- Resultado: 4,647,855.9908334548 MXN
+- Presentación: $4,647,856 MXN
+
+Valores a edad 80
+
+- Celda UDI acumulada: Q20
+- Formula: SUM(M5:M20)
+- Resultado: 116,352 UDI
+
+- Celda MXN acumulada: R20
+- Formula: SUM(O5:O20)
+- Resultado: 7,629,133.8275268683 MXN
+- Presentación: $7,629,134 MXN
+
+
+2. ENGINE OUTPUT AUDIT
+
+Engine auditado:
+- retirement-future-udi-projection-engine.js
+- imagina-ser-future-mxn-bridge.js
+- shared-policy-currency-timeline-engine.js
+
+Inputs Edwin:
+- UDI hoy: 8.85
+- Edad actual: 23
+- Edad retiro: 65
+- Prima anual: 3,222 UDI
+- Suma asegurada: 75,000 UDI
+- Pago único favorable: 128,697 UDI
+- Renta mensual favorable: 606 UDI
+- Tasa efectiva para llegar a P5: 0.040118725925328391
+- Tasa anual para aportaciones: 4%
+- Tasa anual para rentas: 4.5%
+
+Outputs del engine:
+
+- Prima anual actual: 28,514.699999999997 MXN
+- Suma asegurada actual: 663,750 MXN
+- Pago único favorable futuro: 5,942,841.368999982 MXN
+- Renta mensual favorable futura: 27,983.26199999992 MXN
+- Acumulado a 75: 79,992 UDI = 4,647,855.990833441 MXN
+- Acumulado a 80: 116,352 UDI = 7,629,133.827526844 MXN
+- Total aportado UDI: 48,330 UDI
+- Total aportado nominal: 570,966.5944119513 MXN
+
+shared-policy-currency-timeline-engine.js:
+
+- Año 1 UDI proyectada: 8.85
+- Año 1 aportación nominal: 28,514.699999999997 MXN
+- Año 2 UDI proyectada: 9.204
+- Año 2 aportación nominal: 29,655.288 MXN
+- Año 3 UDI proyectada: 9.57216
+- Año 3 aportación nominal: 30,841.49952 MXN
+- Total aportado nominal 15 años: 570,966.5944119513 MXN
+
+
+3. COMPARACION ENGINE VS EXCEL
+
+Tolerancia:
+- MXN: diferencia máxima 1%
+- UDI: exacto o casi exacto
+- Tasas: deben seguir la lógica de fórmula Excel
+
+| Concepto | Excel | Engine | Diferencia | Diferencia % | Estado |
+|---|---:|---:|---:|---:|---|
+| UDI hoy | 8.85 | 8.85 | 0 | 0% | PASS |
+| Prima anual MXN | 28,514.70 | 28,514.70 | 0.00 | 0% | PASS |
+| Prima anual presentación | 28,515 | 28,514.70 | 0.30 | 0.0011% | PASS |
+| Suma asegurada MXN | 663,750 | 663,750 | 0 | 0% | PASS |
+| Pago único favorable MXN | 5,942,841.3689999999 | 5,942,841.368999982 | 0.0000000177 | 0% | PASS |
+| Pago único favorable presentación | 5,942,841 | 5,942,841.37 | 0.37 | 0.000006% | PASS |
+| Renta mensual favorable MXN | 27,983.261999999999 | 27,983.26199999992 | 0.000000079 | 0% | PASS |
+| Renta mensual presentación | 27,983 | 27,983.26 | 0.26 | 0.0009% | PASS |
+| UDI acumulada a 75 | 79,992 | 79,992 | 0 | 0% | PASS |
+| MXN acumulado a 75 | 4,647,855.9908334548 | 4,647,855.990833441 | 0.000000014 | 0% | PASS |
+| UDI acumulada a 80 | 116,352 | 116,352 | 0 | 0% | PASS |
+| MXN acumulado a 80 | 7,629,133.8275268683 | 7,629,133.827526844 | 0.000000024 | 0% | PASS |
+| Total aportado UDI | 48,330 | 48,330 | 0 | 0% | PASS |
+| Total aportado MXN | 570,966.59441195126 | 570,966.5944119513 | 0.0000000001 | 0% | PASS |
+| Tasa aportaciones | I6=I5*1.04 | 4% anual en timeline | 0 | 0% | PASS |
+| Tasa rentas | P6=P5*1.045 | 4.5% anual en timeline de rentas | 0 | 0% | PASS |
+| Tasa efectiva P5 | P5=46.177 desde Excel | engine usa tasa efectiva a P5 | 0 | 0% | PASS |
+
+Conclusión de comparación:
+El engine iguala IMAGINA para el caso Edwin cuando se separan correctamente:
+- timeline de aportaciones/protección;
+- timeline de recuperación/pago único a retiro;
+- timeline de rentas.
+
+
+4. UNIVERSALITY CHECK
+
+Hojas presentes:
+- SB
+- VM
+- REALIZA
+- IMAGINA
+- ORVI
+- Hoja2
+- Hoja5
+- Hoja1
+- Hoja3
+- Hoja4
+
+SEGUBECA
+
+Hoja detectada:
+SB
+
+Evidencia:
+- F8 = E8*K8
+- J8 = I8*K8
+- K9 = K8*1.045
+- K10:K25 usa formula compartida equivalente a Kn anterior * 1.045
+- P13 = SUM(P9:P12)
+- F26 = SUM(F8:F25)
+
+Lectura:
+SB usa patrón de moneda proyectada por año y multiplicación de valores UDI por moneda proyectada. También usa fórmulas especiales de renta, por ejemplo N9 = (K14*1.045)*M9.
+
+Compatibilidad universal:
+PARTIAL
+
+VIDA MUJER
+
+Hoja detectada:
+VM
+
+Evidencia:
+- F4 = D4*L9
+- D9 = C9*L9
+- K9 = J9*L9
+- L10 = L9*1.04
+- L11:L28 usa formula compartida equivalente a Ln anterior * 1.04
+- G29 = SUM(G9:G28)
+- C30 = SUM(D9:D29)
+
+Lectura:
+VM usa patrón compatible: valor actuarial * UDI proyectada. Su timeline de moneda está en columna L y usa 4%.
+
+Compatibilidad universal:
+YES, si el producto configura columna/rango/tasa.
+
+REALIZA
+
+Hoja detectada:
+REALIZA
+
+Evidencia:
+- D4 = C4*M4
+- F4 = E4*M4
+- H4 = G4*M4
+- L4 = K4*M4
+- L5:L23 usa formula compartida equivalente a Kn*Mn
+- D32 = SUM(D4:D13)
+- D34 = SUM(D4:D18)
+- D36 = SUM(D4:D23)
+- D44 = SUM(D4:D13)+SUM(F4:F13)
+
+Moneda:
+- M4 = 6.108806
+- M5 = 6.3837022699999997
+- M6 = 6.6709688721499996
+- La progresión visible inicial equivale a 4.5% anual.
+- El XML muestra valores en M4:M23, no fórmulas visibles para todas las celdas.
+
+Compatibilidad universal:
+PARTIAL
+
+Motivo:
+La conversión nominal sí es compatible, pero el origen del timeline de moneda debe poder aceptar valores pegados/manuales, no solo tasa anual.
+
+IMAGINA
+
+Hoja detectada:
+IMAGINA
+
+Evidencia:
+- D5 = C5*I5
+- H5 = G5*I5
+- I6 = I5*1.04
+- P6 = P5*1.045
+- R5 = Q5*P5
+- N5 = L5*P5
+- O5 = M5*P5
+- Q15 = SUM(M5:M15)
+- R15 = SUM(O5:O15)
+- Q20 = SUM(M5:M20)
+- R20 = SUM(O5:O20)
+
+Compatibilidad universal:
+PARTIAL
+
+Motivo:
+IMAGINA necesita más de un timeline: I para aportaciones/protección y P para rentas/pago único.
+
+ORVI
+
+Hoja detectada:
+ORVI
+
+Evidencia:
+- D4 = C4*I4
+- H4 = G4*I4
+- M4 = J4*I4
+- I5 = I4*1.045
+- I6:I49 usa formula compartida equivalente a In anterior * 1.045
+- D51 = SUM(D4:D50)
+
+Compatibilidad universal:
+YES, si el producto configura columna/rango/tasa.
+
+
+5. RESPUESTA DE UNIVERSALIDAD
+
+Can this engine become a universal shared policy currency timeline engine?
+
+PARTIAL
+
+Evidencia:
+El patrón general sí existe:
+
+valor actuarial por año
+*
+moneda proyectada del año
+=
+valor nominal MXN del año
+
+Pero el Excel no tiene una sola estructura:
+- distintas hojas usan distintas columnas para moneda;
+- distintas hojas usan 4%, 4.5% o valores pegados;
+- IMAGINA usa más de un timeline de moneda dentro de la misma hoja;
+- algunas celdas de fondo referencian tablas auxiliares sin fórmula visible;
+- algunas hojas calculan acumulados con SUM de columnas nominales y no con una conversión directa del total UDI.
+
+Conclusión:
+El motor compartido puede ser universal como motor de cálculo configurable, pero necesita adapters/product configs para mapear cada hoja/producto.
+
+
+6. RECOMENDACION
+
+Resultado del engine:
+PARTIAL MATCH UNIVERSAL
+
+Para IMAGINA / Edwin:
+El engine coincide. Mantener.
+
+Para universalidad:
+Usar shared-policy-currency-timeline-engine.js como base compartida y NO usar retirement-future-udi-projection-engine.js como motor universal único.
+
+Requerimientos antes de declarar cierre universal:
+
+1. Crear configuración por producto:
+   - columna/rango de moneda;
+   - tasa anual;
+   - moneda base;
+   - columnas de aportación;
+   - columnas de beneficio;
+   - columnas de rescate/retiro;
+   - reglas de acumulado.
+
+2. Permitir múltiples timelines por producto:
+   - aportaciones;
+   - protección;
+   - pago único;
+   - rentas;
+   - rescate.
+
+3. Permitir timeline de moneda por tasa o por valores explícitos.
+   Esto es necesario para REALIZA y tablas auxiliares.
+
+4. No convertir acumulados UDI multiplicando por una sola UDI final cuando Excel usa SUM de valores nominales anuales.
+
+5. Mantener etiqueta:
+   VALORES_NOMINALES_PROYECTADOS_NO_GARANTIZADOS
+
+
+7. VALIDACIONES EJECUTADAS
+
+Comando:
+node retirement-future-udi-projection-smoke-test.js
+
+Resultado:
+PASS
+
+Detalle:
+- Total: 9
+- Pass: 9
+- Fail: 0
+
+Comando:
+node shared-policy-currency-timeline-smoke-test.js
+
+Resultado:
+PASS
+
+Detalle:
+- Total: 6
+- Pass: 6
+- Fail: 0
+
+Comando:
+node tests/module-integrity-test.js
+
+Resultado:
+PASS
+
+Detalle:
+- Total: 5
+- Pass: 5
+- Fail: 0
+
+Comando:
+node tests/smoke-test.js
+
+Resultado:
+PASS
+
+Detalle:
+- Total: 3
+- Pass: 3
+- Fail: 0
+
+
+8. VEREDICTO FINAL
+
+IMAGINA contra Excel:
+PASS
+
+Engine como base universal:
+PARTIAL
+
+Recomendación:
+Mantener el cálculo, pero consolidarlo alrededor de shared-policy-currency-timeline-engine.js con configuración por producto y soporte de múltiples timelines de moneda.
+
+No reemplazar el engine.
+No declarar universalidad completa todavía.

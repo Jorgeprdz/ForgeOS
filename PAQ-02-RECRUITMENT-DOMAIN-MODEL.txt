@@ -1,0 +1,1820 @@
+PAQ-02 RECRUITMENT DOMAIN MODEL v1.0
+
+Codename:
+ANDREY GARCIA
+
+Mode:
+Principal Domain Architect
+
+Scope:
+Domain architecture only.
+
+This document does not create code.
+This document does not create engines.
+This document does not create implementable schemas.
+This document does not modify UI.
+This document does not commit changes.
+
+Input:
+PAQ-01 RECRUITMENT INTELLIGENCE DISCOVERY
+
+Foundation context:
+Foundation Lock is closed.
+Forge Core is universal.
+Rule Packs interpret facts.
+Production Events are facts.
+One metric has one owner.
+Forecasts are suggestions.
+
+
+1. EXECUTIVE SUMMARY
+
+Recruitment Intelligence is the Forge domain responsible for explaining whether a Partner is creating the future advisor base required for growth.
+
+Its job is not to recreate Reclutamiento.xlsx.
+
+Its job is to convert the tacit agency recruiting system into decision intelligence:
+
+Where do candidates come from?
+Which sources create quality?
+Which names become interviews?
+Which interviews convert?
+Where does the funnel break?
+Which candidates are stuck?
+Which candidates generate networks?
+Which recruiting behaviors predict future advisor capacity?
+Which gaps threaten Partner productivity and compensation?
+What should the Partner do next?
+
+The operating phrase:
+
+"Si reclutas, nada mas importa.
+Si no reclutas, nada mas importa."
+
+is not a slogan inside Forge.
+
+It becomes a measurable architecture:
+
+Source quality.
+Name flow.
+Stage conversion.
+Precontract transition.
+Signed advisor creation.
+Development capacity.
+Future productivity.
+Future Partner economics.
+
+Recruitment Intelligence owns the recruitment funnel and recruiting source quality.
+
+It does not own Precontract execution, advisor development, productivity, compensation, career promotion, contest qualification, Rule Pack targets or official income.
+
+Recruitment Intelligence consumes Forge Core primitives:
+
+CommercialPerson.
+CommercialRelationship.
+CommercialAssignment.
+CommercialAttribution.
+EvidenceRecord.
+ProvenanceRecord.
+RuleSnapshot.
+PeriodSnapshot.
+
+Recruitment Intelligence produces:
+
+Recruitment funnel state.
+Source quality interpretation.
+Candidate stage history.
+Recruitment risks.
+Recruitment network visibility.
+Recruitment snapshots.
+Recruitment decisions.
+Recruitment forecasts clearly labeled as forecasts.
+
+Final domain status:
+
+Recruitment Intelligence is ready for ARCHITECTURE CANDIDATE.
+
+It is not ready for ARCHITECTURE LOCK because POP remains undefined, PCV Partner 2026 source rules were not text-extractable in this pass, and SMNYL Agency 2026 Rule Pack thresholds must be formalized before lock.
+
+
+2. DOMAIN PURPOSE
+
+Mission:
+
+Recruitment Intelligence helps Partners and managers build the future advisor base by converting recruiting activity into clear decisions, risks, source quality insights, funnel movement and causal explanation.
+
+Problem it solves:
+
+Manual recruitment tracking is spread across names, P200, PM, monthly sheets, One Thing, RTW, Precont and planning workbooks.
+
+This creates duplicate capture, unclear ownership, weak historical traceability and low decision clarity.
+
+Recruitment Intelligence solves this by giving Forge a canonical domain that can answer:
+
+Do we have enough names?
+Are those names coming from quality sources?
+Are we relying too much on cold sources?
+Are we asking Magic Question consistently?
+Which candidates are moving?
+Which candidates are stuck?
+Where does the funnel break?
+Which source produces connected candidates?
+Which source produces signed advisors?
+Which candidates generate valuable networks?
+Which Partner is creating future advisor capacity?
+Which recruiting gap threatens future productivity?
+
+Decisions enabled:
+
+Who should be contacted next.
+Which candidates require follow-up.
+Which source should be activated.
+Which warm-source channel is weak.
+Which candidate is at risk.
+Which interview stage is bottlenecked.
+Which Partner needs coaching.
+Whether recruiting volume is enough for the current goal.
+Whether the Partner is building future productivity.
+Whether the downstream development load is likely to increase.
+
+Questions Recruitment Intelligence answers:
+
+Do I have enough names?
+Do I have enough warm sources?
+Which source produces quality?
+Where is my funnel breaking?
+Which candidate should move next?
+Which candidate is abandoned?
+Which candidate generated valuable referrals?
+Am I creating future advisors or only collecting names?
+Is my recruiting activity sufficient for my Partner goal?
+What is the next recruiting action?
+
+
+3. DOMAIN BOUNDARIES
+
+Recruitment Intelligence is responsible for:
+
+Recruitment candidate lifecycle before precontract.
+Recruitment sources.
+Recruitment funnel stages.
+Recruitment source quality.
+Recruitment stage conversion.
+Recruitment stage history.
+Recruitment network through Magic Question.
+P200 interpretation as market evidence.
+Recruitment risk identification.
+Recruitment funnel snapshots.
+Recruitment source snapshots.
+Recruitment forecast snapshots.
+Recruitment decisions and next actions.
+Recruitment causal chain explanation.
+
+Recruitment Intelligence is not responsible for:
+
+Precontract lifecycle execution.
+Key activation rules.
+Key expiration rules.
+EFC execution.
+Policy folio operations.
+Commission calculation.
+TA qualification.
+Advisor productivity calculation.
+Partner compensation calculation.
+Career stage after contract.
+Contest qualification.
+Manager compensation.
+Conservation metrics.
+Official income.
+UI onboarding.
+Generic CRM contact storage.
+
+Separation from Precontract:
+
+Recruitment ends when a candidate becomes connected and starts precontract.
+Precontract owns key activation, precontract window, EFC, operational requirements and readiness to sign.
+Recruitment may consume precontract outcome to measure conversion quality.
+
+Separation from Development:
+
+Recruitment can identify future development load.
+Development owns advisor development actions after signing or formal entry into advisor path.
+Recruitment does not own advisor development plans.
+
+Separation from Productivity:
+
+Recruitment predicts future productivity risk through source quality, P200 and early behavior.
+Productivity Intelligence owns productivity metrics and interpretations.
+
+Separation from Compensation:
+
+Recruitment creates upstream facts and signals.
+Compensation Intelligence owns paid, accrued, calculated and rule-based compensation events.
+Recruitment must not calculate Partner income.
+
+Separation from Forecast:
+
+Recruitment owns recruiting facts and recruitment-owned metrics.
+Forecast Intelligence may forecast likely outcomes using recruitment data.
+Recruitment may produce recruitment-specific forecast snapshots, but all forecasts must be labeled as forecasts.
+
+Separation from Business Planning:
+
+Recruitment identifies gaps.
+Business Planning converts goals into forecast, gap and actions across domains.
+Recruitment supplies the recruiting layer of that plan.
+
+Ownership summary:
+
+Recruitment owns:
+Candidate recruitment state, source quality, recruitment funnel metrics, PM network metrics, recruitment risk.
+
+Precontract owns:
+Connected-to-contract operational lifecycle.
+
+Development owns:
+Advisor development after recruiting handoff.
+
+Productivity owns:
+Productivity metrics and Rule Pack productivity interpretation.
+
+Compensation owns:
+Financial events, bonuses and official income.
+
+Forecast owns:
+Cross-domain future scenario modeling.
+
+Business Planning owns:
+Goal to forecast to gap to actions plan orchestration.
+
+Rule Pack owns:
+SMNYL-specific targets, stage expectations, POP meaning, warm-source quotas, activity standards and downstream bonus interpretation.
+
+Forge Core owns:
+Universal primitives only.
+
+
+4. CORE ENTITIES
+
+4.1 RecruitmentCandidate
+
+Purpose:
+Represents a person in a recruitment process.
+
+Owner:
+Recruitment Intelligence.
+
+Dependencies:
+CommercialPerson.
+RecruitmentStage.
+RecruitmentSource.
+RecruitmentStageHistory.
+EvidenceRecord.
+ProvenanceRecord.
+
+Risks:
+Do not make RecruitmentCandidate a durable identity.
+CommercialPerson is the durable identity.
+RecruitmentCandidate is a process role/context.
+The same person may later become advisor, client, referidor, partner or manager.
+
+
+4.2 RecruitmentSource
+
+Purpose:
+Represents the origin channel of a candidate/name.
+
+Owner:
+Recruitment Intelligence for canonical source assignment.
+Rule Pack for source taxonomy labels and operating targets.
+
+Dependencies:
+CommercialRelationship.
+CommercialAttribution.
+EvidenceRecord.
+RuleSnapshot.
+
+Risks:
+Do not hardcode SMNYL source labels into Forge Core.
+Do not assume warm/cold classification is universal.
+
+
+4.3 RecruitmentStage
+
+Purpose:
+Represents the candidate's position in the recruitment funnel.
+
+Candidate stages:
+
+Name.
+P200 identified.
+Contacted.
+EI.
+ES.
+EC.
+EA.
+Connected.
+Signed.
+Abandoned.
+
+Owner:
+Recruitment Intelligence for recruitment stages before connected.
+Precontract owns connected-to-signed operational process.
+Career owns advisor stage after contract.
+
+Dependencies:
+PeriodSnapshot.
+RuleSnapshot if stage definitions are Rule Pack-specific.
+
+Risks:
+Do not collapse Connected and Signed.
+Do not treat interview completion as qualification.
+
+
+4.4 P200
+
+Purpose:
+Represents natural market evidence, not merely recruitment.
+
+Owner:
+Recommended owner: Shared Commercial Model as CommercialNetworkEvidence or MarketInventory concept.
+Recruitment Intelligence consumes and interprets P200 for recruitment capacity.
+Career Capital or future capability domain may also consume if formalized later.
+
+Dependencies:
+CommercialPerson.
+CommercialRelationship.
+EvidenceRecord.
+ProvenanceRecord.
+RecruitmentCandidate if a P200 name enters recruiting funnel.
+
+Risks:
+Do not make P200 only a recruitment list.
+Do not treat P200 completion as quality by itself.
+Do not duplicate P200 names as separate people.
+
+
+4.5 MagicQuestionReferral
+
+Purpose:
+Represents a referred name generated through Magic Question.
+
+Owner:
+Recruitment Intelligence.
+
+Dependencies:
+CommercialPerson.
+CommercialRelationship.
+RecruitmentCandidate.
+RecruitmentSource.
+CommercialAttribution.
+EvidenceRecord.
+
+Risks:
+Do not flatten Magic Question into a simple source count.
+It creates graph edges and network effects.
+
+
+4.6 RecruitmentNetwork
+
+Purpose:
+Represents the referral graph created through recruitment sources, especially Magic Question.
+
+Owner:
+Recruitment Intelligence for recruitment-specific network interpretation.
+CommercialRelationship owns universal relationship edges.
+
+Dependencies:
+CommercialPerson.
+CommercialRelationship.
+CommercialAttribution.
+MagicQuestionReferral.
+PeriodSnapshot.
+
+Risks:
+Privacy and consent risk.
+Graph overinterpretation risk.
+Attribution disputes if a referred person later becomes high value.
+
+
+4.7 RecruitmentFunnelSnapshot
+
+Purpose:
+Point-in-time summary of funnel volume, stage distribution, conversion and gaps.
+
+Owner:
+Recruitment Intelligence.
+
+Dependencies:
+RecruitmentStageHistory.
+PeriodSnapshot.
+RuleSnapshot.
+
+Risks:
+Snapshot must not become source of truth.
+It is derived from events.
+
+
+4.8 RecruitmentSourceSnapshot
+
+Purpose:
+Point-in-time source quality view.
+
+Owner:
+Recruitment Intelligence.
+
+Dependencies:
+RecruitmentSource.
+RecruitmentFunnelSnapshot.
+PeriodSnapshot.
+RuleSnapshot.
+
+Risks:
+Do not reduce quality to volume.
+Quality must include downstream movement.
+
+
+4.9 RecruitmentForecastSnapshot
+
+Purpose:
+Forecast of likely recruitment outcomes.
+
+Owner:
+Recruitment Intelligence for recruitment-only forecasts.
+Forecast Intelligence may own broader cross-domain forecasts.
+
+Dependencies:
+RecruitmentFunnelSnapshot.
+RecruitmentSourceSnapshot.
+Mick behavior signals.
+PeriodSnapshot.
+RuleSnapshot.
+
+Risks:
+Forecast must not be displayed as fact.
+Do not turn forecasted signed candidates into confirmed signed advisors.
+
+
+4.10 RecruitmentRisk
+
+Purpose:
+Represents a detected recruitment risk.
+
+Owner:
+Recruitment Intelligence.
+
+Examples:
+Name shortage.
+Warm-source shortage.
+Stage bottleneck.
+Candidate stalled.
+Cold-source overreliance.
+PM low quality.
+Duplicate candidate.
+Connected not signed.
+
+Dependencies:
+RecruitmentFunnelSnapshot.
+RecruitmentStageHistory.
+RecruitmentSourceSnapshot.
+EvidenceRecord.
+
+Risks:
+Risk is an interpretation, not a fact.
+Risk requires rationale and confidence.
+
+
+4.11 RecruitmentGoal
+
+Purpose:
+Represents a recruitment target or desired outcome.
+
+Owner:
+Business Planning owns cross-domain goals.
+Recruitment Intelligence may own recruitment-specific goal interpretation.
+Rule Pack owns SMNYL target definitions.
+
+Dependencies:
+RuleSnapshot.
+PeriodSnapshot.
+Partner assignment.
+
+Risks:
+Do not hardcode 64 names, 16 EI, or 15 weekly names into Core.
+
+
+4.12 RecruitmentActivity
+
+Purpose:
+Represents an action performed or planned in recruiting.
+
+Owner:
+Mick owns behavior/activity quality.
+Recruitment Intelligence owns recruitment context of the activity.
+
+Examples:
+Call candidate.
+Ask Magic Question.
+Schedule EI.
+Follow up ES.
+Complete P200 review.
+Activate CI.
+
+Dependencies:
+Mick behavior events.
+RecruitmentCandidate.
+RecruitmentSource.
+PeriodSnapshot.
+
+Risks:
+Avoid double ownership between Recruitment and Mick.
+Recruitment owns business meaning; Mick owns behavior execution.
+
+
+4.13 RecruitmentStageHistory
+
+Purpose:
+Historical record of stage movement.
+
+Owner:
+Recruitment Intelligence.
+
+Dependencies:
+RecruitmentCandidate.
+RecruitmentStage.
+Event Time.
+Effective Time.
+EvidenceRecord.
+ProvenanceRecord.
+
+Risks:
+Must be append-only or historically preserved.
+No overwriting current stage without stage history.
+
+
+4.14 RecruitmentPipeline
+
+Purpose:
+Aggregates candidates, stages, source quality and risks for a Partner or organizational unit.
+
+Owner:
+Recruitment Intelligence.
+
+Dependencies:
+CommercialAssignment.
+CommercialAttribution.
+RecruitmentCandidate.
+PeriodSnapshot.
+
+Risks:
+Pipeline is not identity.
+Pipeline must preserve manager/partner changes historically.
+
+
+5. RELATIONSHIPS
+
+5.1 CommercialPerson to RecruitmentCandidate
+
+Type:
+Mandatory.
+
+Historical:
+Yes.
+
+Meaning:
+A RecruitmentCandidate is a recruitment context over a durable CommercialPerson.
+
+Guardrail:
+Never use RecruitmentCandidate as the durable identity.
+
+
+5.2 RecruitmentCandidate to RecruitmentSource
+
+Type:
+Mandatory when source is known.
+Candidate can exist with unknown source only if evidence is incomplete.
+
+Historical:
+Yes.
+
+Meaning:
+Candidate originated from a source such as NOM, CI, RDA, OP, PM or FF.
+
+Guardrail:
+Source changes must be corrections, not silent overwrites.
+
+
+5.3 RecruitmentCandidate to RecruitmentStage
+
+Type:
+Mandatory.
+
+Historical:
+Yes.
+
+Meaning:
+Candidate progresses through funnel stages.
+
+Guardrail:
+Current stage is a derived state from stage history.
+
+
+5.4 RecruitmentCandidate to MagicQuestionReferral
+
+Type:
+Optional.
+
+Historical:
+Yes.
+
+Meaning:
+Candidate generated one or more referred names through Magic Question.
+
+Guardrail:
+Candidate value may exist even if the candidate never signs.
+
+
+5.5 Partner to RecruitmentPipeline
+
+Type:
+Mandatory for managed pipelines.
+
+Historical:
+Yes.
+
+Meaning:
+Pipeline belongs to a Partner responsibility context during a period.
+
+Guardrail:
+Use CommercialAssignment for responsibility and CommercialAttribution for credit.
+
+
+5.6 RecruitmentCandidate to ConnectedAdvisor
+
+Type:
+Optional.
+
+Historical:
+Yes.
+
+Meaning:
+A recruitment candidate becomes connected and may enter precontract/advisor path.
+
+Guardrail:
+ConnectedAdvisor is not the same as signed advisor.
+
+
+5.7 RecruitmentCandidate to CommercialRelationship
+
+Type:
+Optional but strongly recommended when source is relational.
+
+Historical:
+Yes.
+
+Meaning:
+Captures referral, nomination, center of influence or relationship path.
+
+
+5.8 RecruitmentCandidate to EvidenceRecord
+
+Type:
+Mandatory when the candidate is imported or interpreted from external artifact.
+
+Historical:
+Yes.
+
+Meaning:
+Preserves where the candidate data came from.
+
+
+5.9 Mandatory relationships
+
+CommercialPerson to RecruitmentCandidate.
+RecruitmentCandidate to current/derived RecruitmentStage.
+RecruitmentCandidate to RecruitmentStageHistory.
+RecruitmentCandidate to RecruitmentPipeline when managed by Partner.
+RecruitmentCandidate to EvidenceRecord when sourced from workbook/import.
+
+
+5.10 Optional relationships
+
+RecruitmentCandidate to MagicQuestionReferral.
+RecruitmentCandidate to P200 entry.
+RecruitmentCandidate to CommercialAccount.
+RecruitmentCandidate to Center of Influence.
+RecruitmentCandidate to connected advisor record.
+RecruitmentCandidate to RecruitmentForecastSnapshot.
+
+
+5.11 Historical relationships
+
+Source assignment.
+Stage movement.
+Partner assignment.
+Manager assignment.
+Referral relationship.
+Magic Question origin.
+Connected transition.
+Signed transition.
+Abandonment reason.
+Correction history.
+
+
+6. SOURCE MODEL
+
+Recruitment Source Quality Model should exist.
+
+It should belong to Recruitment Intelligence as an interpretation model over source events, source relationships and downstream conversion.
+
+It must not be hardcoded into Forge Core.
+
+
+6.1 NOM
+
+Meaning:
+Nominados.
+
+Classification:
+Warm or semi-warm depending on nominator relationship.
+
+Strengths:
+Can provide trust transfer.
+Can represent intentional recommendation.
+May reveal hidden networks.
+
+Weaknesses:
+Quality depends heavily on nominator judgment.
+May produce social names without fit.
+
+Transferred confidence:
+Medium to high.
+
+Loop capacity:
+Medium.
+
+Recommended metrics:
+NOM names.
+NOM to EI.
+NOM to ES.
+NOM to connected.
+NOM to signed.
+Average stage time.
+Drop-off reason.
+Nominator quality.
+
+
+6.2 CI
+
+Meaning:
+Centro de Influencia.
+
+Classification:
+Warm.
+
+Strengths:
+High leverage.
+Repeated supply possible.
+Trust transfer can be strong.
+
+Weaknesses:
+May depend on relationship maintenance.
+Can become stale if not cultivated.
+
+Transferred confidence:
+High when CI is credible.
+
+Loop capacity:
+High.
+
+Recommended metrics:
+CI names.
+CI conversion.
+CI repeat contribution.
+CI downstream quality.
+CI relationship freshness.
+
+
+6.3 RDA
+
+Meaning:
+Referido de Asesor.
+
+Classification:
+Warm.
+
+Strengths:
+Advisor trust transfer.
+Can indicate advisor engagement.
+Can identify advisors who recruit well.
+
+Weaknesses:
+Quality depends on advisor judgment and incentive alignment.
+May create social referrals with low seriousness.
+
+Transferred confidence:
+High if advisor is trusted and understands fit.
+
+Loop capacity:
+High.
+
+Recommended metrics:
+RDA names by advisor.
+RDA to EI.
+RDA to connected.
+RDA to signed.
+RDA quality by referring advisor.
+RDA repeatability.
+
+
+6.4 OP
+
+Meaning:
+Observacion Personal.
+
+Classification:
+Warm or semi-warm.
+
+Strengths:
+Reflects Partner judgment.
+Can identify high-potential people outside formal referral channels.
+
+Weaknesses:
+Can be subjective.
+May lack trust transfer.
+
+Transferred confidence:
+Medium.
+
+Loop capacity:
+Medium.
+
+Recommended metrics:
+OP names.
+OP conversion.
+OP judgment accuracy.
+OP stage drop-off.
+
+
+6.5 PM
+
+Meaning:
+Pregunta Magica.
+
+Classification:
+Warm network-origin source.
+
+Strengths:
+Creates growth loop.
+Can multiply candidate generation.
+Can reveal network quality.
+
+Weaknesses:
+May generate many names with weak fit.
+Relationship to candidate may be shallow.
+Can inflate source volume without quality.
+
+Transferred confidence:
+Medium, variable by candidate and relationship.
+
+Loop capacity:
+Very high.
+
+Recommended metrics:
+PM names per candidate.
+PM names to EI.
+PM names to connected.
+PM names to signed.
+PM referral depth.
+PM referral chain value.
+Originating candidate network quality.
+
+
+6.6 FF
+
+Meaning:
+Fuente Fria.
+
+Classification:
+Cold.
+
+Strengths:
+Can create volume.
+Useful when warm channels are insufficient.
+Can expand beyond existing network.
+
+Weaknesses:
+Low trust transfer.
+Often lower conversion.
+Can mask weak warm-source discipline.
+
+Transferred confidence:
+Low.
+
+Loop capacity:
+Low to medium.
+
+Recommended metrics:
+FF volume.
+FF to EI.
+FF to connected.
+FF conversion cost.
+FF drop-off reason.
+FF dependency ratio.
+
+
+6.7 Source Quality Model
+
+Recruitment Source Quality Model should evaluate:
+
+Volume.
+Warmth.
+Trust transfer.
+Stage conversion.
+Time to next stage.
+Drop-off reason.
+Referral-loop generation.
+Downstream connected quality.
+Downstream signed quality.
+Future productivity signal.
+
+Output:
+Source quality is an interpretation, not a fact.
+
+Owner:
+Recruitment Intelligence.
+
+Rule Pack dependency:
+Warm/cold classification, quotas and target thresholds belong to Rule Pack.
+
+
+7. P200 SEMANTICS
+
+Hypothesis reviewed:
+P200 is not recruitment.
+P200 represents Mercado Natural.
+
+Verdict:
+The hypothesis is correct with nuance.
+
+P200 is not only recruitment.
+P200 is market capital evidence.
+
+What P200 really is:
+
+An inventory of natural market names.
+A proxy for relationship reach.
+A signal of candidate/advisor market access.
+A discipline artifact.
+A potential recruitment source.
+A future productivity indicator.
+
+What it measures:
+
+Market depth.
+Relationship inventory.
+Willingness to list names.
+Potential prospecting capacity.
+Possible future activity base.
+Completeness of natural market thinking.
+
+What it predicts:
+
+Potential ability to prospect.
+Potential early advisor activity.
+Potential referral capacity.
+Risk of "no tiene contactos".
+Risk of low future productivity.
+
+What it does not prove:
+
+It does not prove sales skill.
+It does not prove advisor quality.
+It does not prove willingness to contact.
+It does not prove conversion.
+It does not prove future income.
+
+Should it belong to Recruitment?
+
+Recruitment should consume and interpret P200 for candidate sourcing and recruiting risk.
+Recruitment should not be the sole owner of P200 as a universal concept.
+
+Should it belong to Career Capital?
+
+Conceptually yes, if Forge later formalizes Career Capital.
+But no new domain should be created here.
+
+Should it belong to Shared Commercial Model?
+
+The underlying primitive should belong to Shared Commercial Model as relationship/market evidence.
+
+Recommended conceptual placement:
+
+P200 as a Rule Pack-specific artifact over a universal MarketInventory or CommercialNetworkEvidence concept.
+
+Is it an entity?
+
+The P200 artifact can be represented as a conceptual entity or evidence bundle.
+Each P200 name should resolve to or create a CommercialPerson candidate only when it enters an active workflow.
+
+Is it evidence?
+
+Yes.
+P200 is evidence of market inventory.
+
+Is it a snapshot?
+
+Yes.
+P200 completion at a point in time should produce a snapshot.
+
+Is it an activity?
+
+Completing or updating P200 is an activity.
+The list itself is not merely an activity.
+
+Best answer:
+
+P200 should be modeled as market evidence consumed by Recruitment Intelligence, not as a recruitment-only list.
+
+
+8. MAGIC QUESTION MODEL
+
+PM is:
+
+A source.
+A loop.
+A network.
+An activity.
+An event origin.
+A metric source.
+
+It is not only one of these.
+
+
+8.1 As source
+
+PM identifies that a candidate name came from Pregunta Magica.
+
+
+8.2 As loop
+
+One candidate can generate more candidates.
+Those candidates can generate additional candidates.
+This creates compounding recruiting capacity.
+
+
+8.3 As network
+
+PM creates relationships:
+
+Candidate refers person.
+Referred person enters funnel.
+Referred person may later refer another person.
+
+
+8.4 As activity
+
+The Partner must ask the Magic Question.
+Mick may own the behavior of whether the Partner asks it consistently.
+Recruitment owns the business meaning and resulting names.
+
+
+8.5 As event
+
+MAGIC_QUESTION_ASKED is a fact event.
+MAGIC_QUESTION_REFERRAL_CREATED is a fact event.
+
+
+8.6 As metric
+
+PM metrics include count, conversion and network depth.
+
+
+8.7 Magic Question Network Model
+
+Required concepts:
+
+Originating candidate.
+Question asked date.
+Referred person.
+Relationship between origin and referred person.
+Source label PM.
+Recruitment pipeline entry.
+Downstream conversion.
+Referral chain depth.
+Referral chain value.
+
+How Forge should model growth by candidate referrals:
+
+Use CommercialRelationship to preserve referral relationships.
+Use CommercialAttribution to preserve who created the referral opportunity.
+Use RecruitmentCandidate to track funnel stage.
+Use MagicQuestionReferral to preserve recruitment-specific context.
+Use RecruitmentNetwork to interpret graph value.
+
+Guardrail:
+Do not assign compensation or Partner credit from PM without Rule Pack attribution rules.
+
+
+9. EVENT TAXONOMY
+
+9.1 Fact Events
+
+RECRUITMENT_NAME_ADDED
+CANDIDATE_SOURCE_ASSIGNED
+CANDIDATE_CONTACTED
+P200_NAME_ADDED
+P200_COMPLETED
+P200_UPDATED
+EI_SCHEDULED
+EI_COMPLETED
+ES_SCHEDULED
+ES_COMPLETED
+EC_SCHEDULED
+EC_COMPLETED
+EA_SCHEDULED
+EA_COMPLETED
+MAGIC_QUESTION_ASKED
+MAGIC_QUESTION_REFERRAL_CREATED
+CANDIDATE_CONNECTED
+PRECONTRACT_STARTED
+CONTRACT_SIGNED
+CANDIDATE_ABANDONED
+RECRUITMENT_COMMENT_RECORDED
+RECRUITMENT_SOURCE_CORRECTED
+CANDIDATE_DUPLICATE_IDENTIFIED
+CANDIDATE_MERGED
+
+Notes:
+CANDIDATE_CONNECTED and PRECONTRACT_STARTED may be the same operational transition in SMNYL context, but they should remain separable conceptually until Rule Pack confirms equivalence.
+
+
+9.2 Interpretation Events
+
+SOURCE_QUALITY_EVALUATED
+FUNNEL_GAP_DETECTED
+CANDIDATE_RISK_IDENTIFIED
+WARM_SOURCE_SHORTAGE_DETECTED
+COLD_SOURCE_OVERRELIANCE_DETECTED
+PM_NETWORK_QUALITY_EVALUATED
+P200_QUALITY_INTERPRETED
+POP_CLASSIFICATION_INTERPRETED
+STAGE_BOTTLENECK_IDENTIFIED
+
+Notes:
+POP remains undefined. Any POP interpretation requires Rule Pack evidence.
+
+
+9.3 Decision Events
+
+CANDIDATE_ADVANCE_DECIDED
+CANDIDATE_HOLD_DECIDED
+CANDIDATE_STOP_DECIDED
+FOLLOWUP_REQUIRED
+SOURCE_ACTIVATION_REQUIRED
+MAGIC_QUESTION_REQUIRED
+P200_REVIEW_REQUIRED
+MANAGER_COACHING_REQUIRED
+
+
+9.4 Experience Events
+
+RECRUITMENT_HELP_SHOWN
+SOURCE_QUALITY_EXPLAINED
+FUNNEL_CAUSAL_CHAIN_EXPLAINED
+P200_MEANING_EXPLAINED
+MAGIC_QUESTION_PROMPT_SHOWN
+RECRUITMENT_LEARNING_STATE_UPDATED
+
+
+9.5 System Events
+
+EXCEL_RECRUITMENT_IMPORT_REVIEWED
+RECRUITMENT_REPORT_GENERATED
+DUPLICATE_MATCH_SUGGESTED
+EVIDENCE_ATTACHED
+PROVENANCE_RECORDED
+SNAPSHOT_CREATED
+
+
+9.6 Missing events added beyond PAQ-01
+
+P200_COMPLETED.
+P200_UPDATED.
+EI_SCHEDULED.
+ES_SCHEDULED.
+EC_SCHEDULED.
+EA_SCHEDULED.
+SOURCE_ACTIVATION_REQUIRED.
+WARM_SOURCE_SHORTAGE_DETECTED.
+COLD_SOURCE_OVERRELIANCE_DETECTED.
+P200_QUALITY_INTERPRETED.
+RECRUITMENT_LEARNING_STATE_UPDATED.
+
+
+10. METRIC OWNERSHIP
+
+10.1 Names
+
+Owner:
+Recruitment Intelligence.
+
+Consumers:
+Partner Intelligence.
+Forecast Intelligence.
+Business Planning.
+Mick.
+
+Non-owners:
+Compensation, Productivity, Career, Advisor Experience.
+
+
+10.2 Sources
+
+Owner:
+Recruitment Intelligence for observed source assignment.
+Rule Pack for source taxonomy definitions and targets.
+
+Consumers:
+Partner Intelligence, Forecast Intelligence, Business Planning.
+
+Non-owners:
+Compensation, Productivity, UI.
+
+
+10.3 Interviews
+
+Owner:
+Recruitment Intelligence.
+
+Metrics:
+EI, ES, EC, EA scheduled and completed.
+
+Consumers:
+Partner Intelligence, Forecast Intelligence, Business Planning, Mick.
+
+Non-owners:
+Compensation, Career, Conservation.
+
+
+10.4 Conversions
+
+Owner:
+Recruitment Intelligence.
+
+Metrics:
+Name to EI.
+EI to ES.
+ES to EC.
+EC to EA.
+EA to connected.
+Connected to signed as consumed from Precontract or transition outcome.
+
+Consumers:
+Forecast Intelligence, Partner Intelligence, Business Planning.
+
+Non-owners:
+Compensation, Productivity, Advisor Experience.
+
+
+10.5 Connected
+
+Owner:
+Boundary ownership.
+Recruitment owns candidate conversion to connected as recruitment outcome.
+Precontract owns operational lifecycle after connected.
+
+Consumers:
+Partner Intelligence, Forecast Intelligence, Business Planning, Compensation after downstream rule interpretation.
+
+Non-owners:
+UI, Mick, Advisor Experience.
+
+
+10.6 Signed
+
+Owner:
+Precontract/Career boundary for official contract event.
+Recruitment consumes signed status for conversion quality.
+
+Consumers:
+Recruitment, Partner Intelligence, Career Intelligence, Compensation.
+
+Non-owners:
+Recruitment must not own official advisor identity after signing.
+
+
+10.7 PM
+
+Owner:
+Recruitment Intelligence.
+
+Metrics:
+PM referrals created.
+PM referral conversion.
+PM network depth.
+PM quality by originating candidate.
+
+Consumers:
+Partner Intelligence, Forecast Intelligence, Business Planning, Relationship Intelligence.
+
+Non-owners:
+Compensation unless Rule Pack defines attribution/bonus interpretation.
+
+
+10.8 Time by stage
+
+Owner:
+Recruitment Intelligence for recruitment stages.
+Precontract for precontract stages.
+
+Consumers:
+Forecast Intelligence, Business Planning, Partner Intelligence, Mick.
+
+Non-owners:
+Compensation, UI.
+
+
+10.9 Risk
+
+Owner:
+Recruitment Intelligence for recruitment risks.
+
+Consumers:
+Partner Intelligence, Business Planning, Manager Intelligence, Advisor Experience if surfaced contextually.
+
+Non-owners:
+Forecast may forecast risk but should not own recruitment risk facts.
+
+
+10.10 Source quality
+
+Owner:
+Recruitment Intelligence.
+
+Consumers:
+Partner Intelligence, Business Planning, Forecast Intelligence.
+
+Non-owners:
+Forge Core, Compensation, Productivity.
+
+
+11. RECRUITMENT NETWORK
+
+Recruitment Network should exist formally.
+
+Value:
+
+It captures the fact that recruitment is not only a linear funnel.
+
+Candidates, advisors, centers of influence and partners generate networks.
+
+Example:
+
+Juan refers Pedro.
+Pedro refers Ana.
+Ana becomes Partner.
+
+This matters because Juan may have created large network value even if Juan never signed.
+
+Should it persist?
+
+Yes, but as relationship and attribution history, not as a separate duplicate identity graph.
+
+What decisions it enables:
+
+Which candidates generate valuable networks.
+Which advisors are strong recruiting nodes.
+Which centers of influence deserve attention.
+Which Partner is building referral loops.
+Which source has hidden downstream value.
+Which candidate deserves follow-up because of network quality.
+
+Risks:
+
+Privacy.
+Consent.
+Incorrect attribution.
+Overvaluing network size over quality.
+Duplicated identities.
+Treating social connection as commercial permission.
+Compensation disputes if network attribution is later monetized.
+
+Guardrails:
+
+Use CommercialRelationship for relationships.
+Use CommercialAttribution for credit when applicable.
+Use EvidenceRecord for source.
+Use RuleSnapshot for any monetized interpretation.
+Separate network value from compensation.
+
+
+12. CAUSAL CHAIN
+
+Official causal chain:
+
+Sources
+Names
+EI
+ES
+EC
+EA
+Connected
+Signed
+Development
+TA
+Qualified
+Productivity
+Compensation
+
+
+12.1 Leading indicators
+
+Warm-source names.
+Total names.
+P200 completion.
+Magic Question asked.
+PM referrals generated.
+EI scheduled.
+EI completed.
+Stage movement velocity.
+Follow-up consistency.
+Source mix quality.
+Candidate response behavior.
+
+
+12.2 Lagging indicators
+
+Connected candidates.
+Signed candidates.
+Developed advisors.
+TA outcomes.
+Qualified advisors.
+Productivity.
+Partner compensation.
+Alta Partner.
+
+
+12.3 Root causes
+
+Low names:
+Prospecting/source activation problem.
+
+Low warm sources:
+Network activation problem.
+
+High FF dependency:
+Warm market weakness or partner behavior issue.
+
+Many names, few EI:
+Contact/follow-up quality or source quality problem.
+
+Many EI, few ES:
+Initial filtering or opportunity framing problem.
+
+Many ES, few EC:
+Selection fit or process discipline problem.
+
+Many EC, few EA:
+Career conviction or follow-up problem.
+
+Many EA, few connected:
+Commitment/precontract readiness problem.
+
+Connected but not signed:
+Precontract execution problem.
+
+Signed but not developed:
+Development ownership problem.
+
+
+12.4 False indicators
+
+Many names without interviews.
+Many PM referrals without conversion.
+P200 completed but no contact activity.
+Cold-source volume without warm-source mix.
+Connected candidates without signed contracts.
+Signed advisors without development.
+Forecasted signings shown as actual signings.
+
+
+12.5 Vanity metrics
+
+Raw names.
+Raw P200 count.
+Raw PM count.
+Interview count without conversion.
+Source count without quality.
+Network size without downstream movement.
+
+
+13. RED TEAM REVIEW
+
+Scenario 1:
+200 names and zero interviews.
+
+Model response:
+P200/name volume is not recruitment health.
+Recruitment must flag conversion failure from name to EI.
+
+What breaks:
+Only volume-based model breaks.
+
+Guardrail:
+Measure conversion and next action, not only names.
+
+
+Scenario 2:
+100 FF and zero CI.
+
+Model response:
+Source mix risk and warm-source shortage.
+
+What breaks:
+Any model that treats all names equally.
+
+Guardrail:
+Source Quality Model and Rule Pack source targets.
+
+
+Scenario 3:
+Much PM but bad quality.
+
+Model response:
+PM network volume is not PM network value.
+
+What breaks:
+PM as simple source count.
+
+Guardrail:
+Measure PM downstream conversion and origin candidate quality.
+
+
+Scenario 4:
+Connected without signed.
+
+Model response:
+Connected and signed remain separate lifecycle events.
+
+What breaks:
+Any model that treats connected as final recruiting success.
+
+Guardrail:
+Precontract boundary and distinct events.
+
+
+Scenario 5:
+Signed without developed.
+
+Model response:
+Recruitment succeeded at signing but downstream development risk exists.
+
+What breaks:
+Recruitment-only success definition.
+
+Guardrail:
+Recruitment feeds Development but does not own Development.
+
+
+Scenario 6:
+Partner stops recruiting for one year.
+
+Model response:
+Leading indicators collapse before compensation collapses.
+
+What breaks:
+Lagging-only manager dashboard.
+
+Guardrail:
+Business Planning and Partner Intelligence consume recruiting leading indicators.
+
+
+Scenario 7:
+Duplicated candidate.
+
+Model response:
+CommercialPerson identity resolution required.
+
+What breaks:
+Spreadsheet row identity.
+
+Guardrail:
+Capture Once and duplicate detection.
+
+
+Scenario 8:
+Manager change.
+
+Model response:
+CommercialAssignment history preserves responsibility by period.
+
+What breaks:
+Current manager overwrite.
+
+Guardrail:
+Time-bounded assignments.
+
+
+Scenario 9:
+Partner change.
+
+Model response:
+CommercialAssignment and CommercialAttribution separate responsibility from credit.
+
+What breaks:
+Single partner field.
+
+Guardrail:
+Historical assignment plus attribution.
+
+
+Scenario 10:
+Candidate never signs but generates great network.
+
+Model response:
+RecruitmentNetwork preserves candidate network value.
+
+What breaks:
+Signed-only candidate value model.
+
+Guardrail:
+Magic Question Network Model.
+
+
+Missing guardrails:
+
+Official POP definition.
+Rule Pack source target definitions.
+Precontract transition ownership.
+Privacy and consent rules for recruitment network.
+Evidence quality requirements for imported Excel data.
+Clear ownership of P200 universal primitive.
+
+
+14. FOUNDATION COMPATIBILITY
+
+14.1 CommercialPerson
+
+Compatible.
+
+RecruitmentCandidate must be a role/context over CommercialPerson.
+
+Conflict:
+If RecruitmentCandidate becomes durable identity, foundation is violated.
+
+
+14.2 CommercialAccount
+
+Compatible.
+
+Recruitment may not always need CommercialAccount, but business, family or center-of-influence recruitment paths may use it.
+
+Conflict:
+None immediate.
+
+
+14.3 CommercialRelationship
+
+Compatible and required.
+
+Used for referrals, nominations, PM, CI and network edges.
+
+Conflict:
+Relationship must not imply attribution or compensation automatically.
+
+
+14.4 CommercialAssignment
+
+Compatible and required.
+
+Used for Partner/manager responsibility over candidate pipeline by period.
+
+Conflict:
+Do not use assignment as attribution.
+
+
+14.5 CommercialAttribution
+
+Compatible and required.
+
+Used for referral origin, PM origin, connection credit and possible Partner credit.
+
+Conflict:
+Attribution must not imply payment without Rule Pack.
+
+
+14.6 EvidenceRecord
+
+Compatible and required.
+
+Used for Excel import, manual capture, interview notes, P200, PM and source assignment.
+
+Conflict:
+Manual spreadsheet data may have low confidence unless provenance is preserved.
+
+
+14.7 ProvenanceRecord
+
+Compatible and required.
+
+Used to explain how data entered Forge:
+
+Excel.
+Manual input.
+Manager input.
+Candidate-provided referral.
+Imported report.
+
+Conflict:
+None.
+
+
+14.8 RuleSnapshot
+
+Compatible and required.
+
+Used for:
+
+Source targets.
+Warm-source thresholds.
+POP definitions.
+Stage expectations.
+Recruitment activity standards.
+Downstream Partner compensation interpretations.
+
+Conflict:
+Hardcoding SMNYL rules into Core would violate Foundation Lock.
+
+
+14.9 PeriodSnapshot
+
+Compatible and required.
+
+Used for:
+
+Weekly recruiting period.
+Monthly recruiting period.
+Quarter planning period.
+Precontract window.
+Partner compensation quarter.
+
+Conflict:
+Recruitment month, weekly RTW cadence and Partner quarter must not be mixed.
+
+
+15. FINAL VERDICT
+
+Status:
+ARCHITECTURE CANDIDATE
+
+Why not FOUNDATION DRAFT:
+The domain is more mature than a draft because PAQ-01 reviewed real operational artifacts and this model defines boundaries, entities, relationships, events, metrics and foundation compatibility.
+
+Why not ARCHITECTURE LOCK:
+Three items remain unresolved:
+
+1. POP definition is not confirmed.
+2. PCV Partner 2026 rules were not text-extractable in this pass.
+3. SMNYL Agency 2026 Rule Pack needs formal recruitment rules for targets, source warmth, stage expectations and downstream Partner interpretation.
+
+What is approved:
+
+Recruitment Intelligence as a formal Intelligence Phase domain.
+RecruitmentCandidate as a recruitment context over CommercialPerson.
+Recruitment Source Quality Model.
+Magic Question Network Model.
+Recruitment Network as a formal conceptual model.
+Recruitment funnel ownership.
+Recruitment event taxonomy.
+Recruitment metric ownership.
+P200 as market evidence consumed by Recruitment, not recruitment-only list.
+
+What is not approved:
+
+Implementation.
+Engines.
+Schemas.
+UI.
+Hardcoded SMNYL thresholds in Core.
+Compensation calculations.
+POP interpretation without source rule.
+
+Final architectural statement:
+
+Recruitment Intelligence is the domain that tells Forge whether a Partner is creating future advisor capacity.
+
+It must protect the difference between:
+
+Names and quality.
+Volume and conversion.
+Referral count and network value.
+Connected and signed.
+Recruitment and precontract.
+Signing and development.
+Forecast and fact.
+Rule Pack interpretation and Core primitive.
+
+This model is sufficient to proceed to a formal Recruitment Intelligence Architecture document or Rule Pack recruitment hardening pass.
+
+It is not sufficient for implementation lock.

@@ -1,8 +1,89 @@
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { getCachedRates } = require('./exchange-rate-cache-engine');
+
+const BLOCKED_NO_VERIFIED_UDI_RATE = 'BLOCKED_NO_VERIFIED_UDI_RATE';
+const SCENARIO_LABEL = 'SCENARIO_BASED_ESTIMATE_NOT_GUARANTEED';
+
+export async function getVerifiedUdiRateMetadata({
+  rateProvider = getCachedRates
+} = {}) {
+  try {
+    const cache = await rateProvider();
+    const udi = cache?.rates?.UDI_MXN;
+    const currentUdiValue = Number(udi?.value || 0);
+
+    if (!currentUdiValue) {
+      return {
+        status: BLOCKED_NO_VERIFIED_UDI_RATE,
+        currentUdiValue: null,
+        source: null,
+        sourceDate: null,
+        sourceMode: null,
+        cacheStatus: cache?.cacheStatus || null
+      };
+    }
+
+    return {
+      status: 'VERIFIED_UDI_RATE_AVAILABLE',
+      currentUdiValue,
+      source: udi.source,
+      sourceDate: udi.date,
+      sourceMode: cache.cacheStatus === 'CACHE_HIT' ? 'CACHE' : 'LIVE',
+      cacheStatus: cache.cacheStatus,
+      seriesId: udi.seriesId,
+      title: udi.title
+    };
+  } catch (error) {
+    return {
+      status: BLOCKED_NO_VERIFIED_UDI_RATE,
+      currentUdiValue: null,
+      source: null,
+      sourceDate: null,
+      sourceMode: null,
+      cacheStatus: null,
+      error: error.message
+    };
+  }
+}
+
 export function buildRetirementPresentationScenario({
   parsedQuote = {},
-  currentUdiValue = 8.7
+  udiRateMetadata = {}
 }) {
-  const base = parsedQuote.scenarios.base;
+  const currentUdiValue = Number(udiRateMetadata.currentUdiValue || 0);
+
+  if (!currentUdiValue) {
+    return {
+      status: BLOCKED_NO_VERIFIED_UDI_RATE,
+      reason: 'Retirement MXN scenario requires verified UDI rate metadata.',
+      productName: parsedQuote.productName,
+      currency: parsedQuote.currency,
+      currentUdiValue: null,
+      source: null,
+      sourceDate: null,
+      sourceMode: null,
+      calculationMode: SCENARIO_LABEL
+    };
+  }
+
+  const base = parsedQuote.scenarios?.base;
+
+  if (!base?.monthlyIncome || !base?.lumpSum) {
+    return {
+      status: 'BLOCKED_NO_RETIREMENT_SCENARIO_EVIDENCE',
+      reason: 'Retirement scenario values must come from extracted/source evidence.',
+      productName: parsedQuote.productName,
+      currency: parsedQuote.currency,
+      currentUdiValue,
+      source: udiRateMetadata.source,
+      sourceDate: udiRateMetadata.sourceDate,
+      sourceMode: udiRateMetadata.sourceMode,
+      calculationMode: SCENARIO_LABEL
+    };
+  }
+
   const monthlyIncome = base.monthlyIncome;
   const annualIncome = monthlyIncome * 12;
 
@@ -30,6 +111,7 @@ export function buildRetirementPresentationScenario({
       yearsReceiving,
       totalReceivedUdi,
       totalReceivedMXN: totalReceivedUdi * currentUdiValue,
+      calculationMode: SCENARIO_LABEL,
       reason:
         age === premium.paidUntilAge
           ? 'Termina periodo de pago limitado'
@@ -46,9 +128,15 @@ export function buildRetirementPresentationScenario({
   });
 
   return {
+    status: 'READY',
     productName: parsedQuote.productName,
     currency: parsedQuote.currency,
     currentUdiValue,
+    source: udiRateMetadata.source,
+    sourceDate: udiRateMetadata.sourceDate,
+    sourceMode: udiRateMetadata.sourceMode,
+    cacheStatus: udiRateMetadata.cacheStatus,
+    calculationMode: SCENARIO_LABEL,
 
     summary: {
       currentAge: parsedQuote.currentAge,
@@ -74,7 +162,14 @@ export function buildRetirementPresentationScenario({
       lumpSumMXN: base.lumpSum * currentUdiValue,
 
       monthlyIncomeUDI: monthlyIncome,
-      monthlyIncomeMXN: monthlyIncome * currentUdiValue
+      monthlyIncomeMXN: monthlyIncome * currentUdiValue,
+      calculationMode: SCENARIO_LABEL,
+      currencySource: {
+        currentUdiValue,
+        source: udiRateMetadata.source,
+        sourceDate: udiRateMetadata.sourceDate,
+        sourceMode: udiRateMetadata.sourceMode
+      }
     },
 
     milestones

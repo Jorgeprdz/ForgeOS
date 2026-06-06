@@ -1,0 +1,78 @@
+FORGE UDI PROJECTION VALIDATION REPORT
+
+Estado: COMPLETADO
+Idioma: Español
+Archivo fuente usado: /storage/emulated/0/Download/Hoja de trabajo.xlsx
+Archivo generado: /storage/emulated/0/Forge OS/Hoja de trabajo - 4.5% UDI.xlsx
+
+OBJETIVO
+Unificar las proyecciones UDI del workbook a una tasa global fija de 4.5% anual compuesta, preservando inputs históricos y layout.
+
+CAMBIOS DE FORMULAS
+- Fórmulas con 1.04 fueron reemplazadas por 1.045 en hojas de proyección UDI.
+- IMAGINA!P5 dejó de ser valor fijo y ahora usa fórmula: I5*(1.045^(K5-B5)).
+- Se marcó el workbook para recálculo automático al abrir: calcMode=auto, fullCalcOnLoad=1, forceFullCalc=1.
+
+HOJAS AJUSTADAS
+- IMAGINA: columna I, P5, columnas dependientes D/F/H/N/O/R, totales C62/D62 y acumulados Q/R.
+- VM: columna L y columnas dependientes D/F/G/I/K, totales F29/G29/C30.
+- SB, ORVI y REALIZA fueron inspeccionadas; sus timelines principales ya estaban en 4.5% o no exponían fórmulas editables de 4.0%.
+
+IMAGINA - COMPARATIVO CLAVE
+UDI año siguiente I6: antes 9.204000 | después 9.248250 | diferencia 0.044250
+UDI proyectada edad 65 I47: antes 46.177081 | después 56.211797 | diferencia 10.034716
+UDI de retiro P5: antes 46.177000 | después 56.211797 | diferencia 10.034797
+Total aportado nominal D62: antes 570,966.594412 MXN | después 592,651.072889 MXN | diferencia 21,684.478477 MXN
+Pago único favorable R5: antes 5,942,841.369000 MXN | después 7,234,289.643001 MXN | diferencia 1,291,448.274001 MXN
+Renta mensual favorable N5: antes 27,983.262000 MXN | después 34,064.349003 MXN | diferencia 6,081.087003 MXN
+Acumulado MXN a 75 R15: antes 4,647,855.990833 MXN | después 5,657,888.940472 MXN | diferencia 1,010,032.949639 MXN
+Acumulado MXN a 80 R20: antes 7,629,133.827527 MXN | después 9,287,032.987527 MXN | diferencia 1,657,899.160001 MXN
+
+IMAGINA - NUEVOS TOTALES REDONDEADOS
+Total aportado nominal: $592,651.07 MXN
+Pago único favorable: $7,234,289.64 MXN
+Renta mensual favorable: $34,064.35 MXN
+Acumulado a 75: $5,657,888.94 MXN
+Acumulado a 80: $9,287,032.99 MXN
+
+VM - COMPARATIVO CLAVE
+UDI año siguiente L10: antes 9.183200 | después 9.227350 | diferencia 0.044150
+UDI final visible L28: antes 18.603478 | después 20.378407 | diferencia 1.774928
+Total nominal G29: antes 582,938.941789 MXN | después 614,130.423084 MXN | diferencia 31,191.481294 MXN
+Total ahorro C30: antes 582,938.941789 MXN | después 614,130.423084 MXN | diferencia 31,191.481294 MXN
+
+FORMULAS RESIDUALES 1.04
+No se detectaron fórmulas residuales con tasa 1.04 real. Las coincidencias 1.045 corresponden a la tasa objetivo 4.5%.
+
+FORMULAS 4.5% CONFIRMADAS
+xl/worksheets/sheet1.xml!K9 = K8*1.045
+xl/worksheets/sheet1.xml!N9 = (K14*1.045)*M9
+xl/worksheets/sheet1.xml!K10 = K9*1.045
+xl/worksheets/sheet1.xml!N10 = (K15*1.045)*M10
+xl/worksheets/sheet6.xml!I5 = I4*1.045
+xl/worksheets/sheet6.xml!I6 = I5*1.045
+xl/worksheets/sheet2.xml!L10 = L9*1.045
+xl/worksheets/sheet2.xml!L11 = L10*1.045
+xl/worksheets/sheet4.xml!P5 = I5*(1.045^(K5-B5))
+xl/worksheets/sheet4.xml!I6 = I5*1.045
+xl/worksheets/sheet4.xml!P6 = P5*1.045
+xl/worksheets/sheet4.xml!I7 = I6*1.045
+xl/worksheets/sheet4.xml!P7 = P6*1.045
+xl/worksheets/sheet4.xml!I13 = I12*1.045
+xl/worksheets/sheet4.xml!I15 = I14*1.045
+xl/worksheets/sheet4.xml!I17 = I16*1.045
+xl/worksheets/sheet4.xml!I19 = I18*1.045
+xl/worksheets/sheet4.xml!I31 = I30*1.045
+xl/worksheets/sheet4.xml!I32 = I31*1.045
+DIFERENCIAS IMPORTANTES
+- IMAGINA aumenta porque antes mezclaba 4.0% en aportaciones/protección y un P5 fijo de 46.177 para retiro.
+- Con 4.5% global, P5 se recalcula desde I5 y las edades K5/B5, generando una UDI de retiro mayor.
+- Los inputs originales visibles, primas, sumas aseguradas y términos de producto se preservaron.
+
+VALIDACION
+PASS: formulas de crecimiento UDI actualizadas a 4.5%.
+PASS: columnas dependientes recalculadas en IMAGINA y VM.
+PASS: formato/layout se preserva al editar únicamente XML de hojas y workbook calc settings.
+
+NOTA
+No se usaron datos externos ni Banxico. Solo se usó el workbook proporcionado/localizado.

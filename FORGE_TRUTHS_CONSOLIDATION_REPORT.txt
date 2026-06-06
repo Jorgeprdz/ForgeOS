@@ -1,0 +1,283 @@
+FORGE TRUTHS CONSOLIDATION REPORT
+
+Status:
+CONSOLIDATION / NOT LOCKED
+
+Scope:
+No implementation. No code. No UI. No schemas. No engines. No Build Tree
+changes. No automatic approval. No new truths created.
+
+SUMMARY
+
+The constitutional candidates discovered so far are coherent, but many repeat
+the same underlying protections in different language.
+
+The dominant pattern is:
+
+Forge is not a CRM because it does not merely store records.
+
+Forge is moving toward Career OS because it interprets career context, evidence,
+development, excellence and readiness into responsible decisions and action.
+
+TOP CONSOLIDATED FAMILIES
+
+1. Universal Truths
+
+- Forge is not a CRM, dashboard collection, database or sales tracker.
+- Forge converts context into decisions and action paths.
+- Evidence must precede judgment.
+- Human dignity must be preserved.
+- Purpose is human context, not pressure.
+
+2. Career Truths
+
+- Forge is a Career Operating System candidate.
+- Career Stage is first-class.
+- Career Stage, Operating State and Leadership Stage are separate.
+- Professional Excellence is first-class.
+- Professional Development is first-class.
+- Readiness is first-class.
+- Potential, Readiness and Excellence are distinct.
+
+3. SMNYL Contextual Truths
+
+- SMNYL is a human development business expressed through financial services.
+- Financial advisory often operates in latent demand.
+- Advisors help clients recognize future problems before present crisis.
+
+4. Ethical Boundaries
+
+- Manager Intelligence develops people, not surveils them.
+- No single score should represent human growth.
+- Production is evidence, not proof.
+- Title, tenure, compensation, confidence, team size and charisma are not proof.
+- Local hierarchy belongs in organization profiles or rule packs.
+- Latent demand must not justify manipulation.
+
+5. Product Principles
+
+- Value before work.
+- Show before ask.
+- Development before reporting.
+- Context before metric.
+- Stage-aware interpretation.
+- Learning by doing.
+
+DUPLICATES
+
+Duplicate 1:
+"Purpose is human context, not pressure."
+
+Appears as:
+- Purpose is human context, not a commercial pressure mechanism.
+- Purpose is context, not pressure.
+- Purpose is not motivation scoring.
+- Purpose Snapshot must not become sales leverage.
+- Purpose Snapshot must not be inferred as Career Stage or Readiness.
+
+Recommendation:
+Consolidate into one parent truth with sub-boundaries.
+
+Duplicate 2:
+"Manager Intelligence develops people, not surveils them."
+
+Appears across:
+- Career OS.
+- Career Stage.
+- Professional Excellence.
+- Professional Development.
+- Readiness.
+- SMNYL human development truth.
+
+Recommendation:
+Promote as a major ethical boundary candidate.
+
+Duplicate 3:
+"Production is evidence, not proof."
+
+Appears across:
+- Career Stage.
+- Professional Excellence.
+- Readiness.
+- Development.
+
+Recommendation:
+Keep as universal evaluation boundary.
+
+Duplicate 4:
+"Evidence before judgment."
+
+Appears as:
+- Career Stage requires evidence.
+- Excellence requires evidence.
+- Development requires evidence.
+- Readiness requires evidence.
+- No invented career conclusions.
+
+Recommendation:
+Make this a parent constitutional dependency.
+
+Duplicate 5:
+"No single score/ranking."
+
+Appears across:
+- Excellence.
+- Development.
+- Readiness.
+
+Recommendation:
+Consolidate as anti-reduction boundary.
+
+OVERLAPS
+
+Overlap 1:
+Professional Excellence and Readiness.
+
+Difference:
+Excellence describes quality inside responsibility.
+Readiness describes responsible ability to handle a specific responsibility.
+
+Risk:
+Excellent performance in one responsibility can be mistaken for readiness for
+another.
+
+Overlap 2:
+Professional Development and Readiness.
+
+Difference:
+Development explains growth mechanism.
+Readiness governs responsibility assignment.
+
+Risk:
+Growth trend can be mistaken for current readiness.
+
+Overlap 3:
+Career Stage and Leadership Stage.
+
+Difference:
+Career Stage is professional maturity/lifecycle.
+Leadership Stage is organizational responsibility.
+
+Risk:
+Manager/Subdirector/Director can be mistaken for career maturity.
+
+Overlap 4:
+SMNYL human development truth and Forge Core.
+
+Difference:
+SMNYL context explains a specific financial advisory environment.
+Forge Core must remain universal.
+
+Risk:
+SMNYL-specific truth could be hardcoded into Forge Core.
+
+CONTRADICTIONS
+
+No direct contradictions found.
+
+Potential tension 1:
+"Forge is a Career Operating System" vs "SMNYL is a human development business
+expressed through financial services."
+
+Resolution:
+Career OS can be universal. SMNYL human development framing is contextual unless
+later validated as universal across financial advisory.
+
+Potential tension 2:
+"Career Stage canonical model" vs local organization hierarchies.
+
+Resolution:
+Forge Core can own universal stage concepts. Organization profiles/rule packs
+map local labels.
+
+Potential tension 3:
+"Readiness can exist before results" vs evidence requirements.
+
+Resolution:
+Results are not the only evidence. Readiness may be supported by behavior,
+judgment, trust, coachability and responsibility-specific capability.
+
+HIDDEN ASSUMPTIONS
+
+Hidden assumption 1:
+Career OS is universal across all commercial careers.
+
+Risk:
+The discovered model is strongest for financial advisory and SMNYL-like
+contexts. It may need broader validation.
+
+Hidden assumption 2:
+Career Stage can be centrally owned.
+
+Risk:
+Ownership is not fully resolved. Prior documents suggest a Career Lifecycle
+Context or Career Intelligence foundation.
+
+Hidden assumption 3:
+Professional Excellence dimensions are observable enough.
+
+Risk:
+Trust, character and judgment need evidence contracts to avoid subjective
+labeling.
+
+Hidden assumption 4:
+Managers will use development signals ethically.
+
+Risk:
+Strong guardrails are needed to prevent surveillance and pressure.
+
+Hidden assumption 5:
+Latent demand can be handled ethically at scale.
+
+Risk:
+Requires strict no-manipulation, no-invented-urgency and client-dignity rules.
+
+Hidden assumption 6:
+Purpose can be used safely as context.
+
+Risk:
+Purpose Snapshot can become pressure unless access and use are constrained.
+
+CONSOLIDATION RECOMMENDATIONS
+
+Recommendation 1:
+Use parent-child constitutional structure.
+
+Parent:
+Evidence before judgment.
+
+Children:
+Career Stage evidence, Excellence evidence, Development evidence, Readiness
+evidence.
+
+Recommendation 2:
+Lock protective boundaries before identity labels.
+
+Examples:
+- Purpose is not pressure.
+- Manager Intelligence is not surveillance.
+- Production is evidence, not proof.
+- No single score for human growth.
+
+Recommendation 3:
+Keep SMNYL truths contextual until universal validation exists.
+
+Recommendation 4:
+Do not ratify Career OS before ownership and evidence contracts are resolved.
+
+Recommendation 5:
+Prepare next consolidation PAQ around evidence contracts and ownership map.
+
+FINAL CONSOLIDATION VERDICT
+
+The candidate truths are coherent and mutually reinforcing.
+
+No lock should occur yet.
+
+The strongest next move is not another new truth. It is an evidence and
+ownership consolidation:
+
+- Who owns each truth?
+- What evidence supports it?
+- Which domains consume it?
+- Which ethical boundaries constrain it?

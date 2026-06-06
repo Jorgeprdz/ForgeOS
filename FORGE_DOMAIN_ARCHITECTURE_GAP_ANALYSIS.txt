@@ -1,0 +1,845 @@
+Analisis de Arquitectura de Dominio - Forge OS
+
+Estado:
+Analisis arquitectonico de dominio.
+
+Alcance:
+Texto plano.
+No codigo.
+No engines.
+No schemas.
+No UI.
+No commit.
+
+
+1. Resumen Ejecutivo
+
+- Forge OS tiene una fundacion conceptual fuerte:
+  - Foundation Lock cerrado.
+  - Shared Commercial Model definido como capa base.
+  - Production Events definidos como hechos.
+  - Rule Packs definidos como capa de interpretacion.
+  - Recruitment Intelligence en Architecture Lock.
+  - Partner Intelligence y Advisor Development Intelligence en Architecture Candidate.
+
+- La arquitectura ya separa correctamente:
+  - Hechos comerciales.
+  - Interpretaciones regladas.
+  - Forecasts.
+  - Experiencia del asesor.
+  - Motivacion economica.
+  - Behavior Intelligence.
+
+- El riesgo actual no esta en la fundacion.
+  El riesgo esta en dominios criticos que todavia no tienen PAQ formal, ownership cerrado o limites suficientemente documentados.
+
+- Los faltantes mas importantes son:
+  - Conservation Intelligence.
+  - Behavior / Execution Intelligence, Mick.
+  - Portfolio Intelligence o Client Lifetime Value.
+  - Career Capital ownership.
+  - Manager Tactical Intelligence.
+
+- Si estos dominios se implementan prematuramente como engines sueltos, Forge puede volver a caer en duplicacion de metricas, ownership ambiguo y logica de negocio dispersa.
+
+
+2. Dominios Faltantes
+
+2.1 Conservation Intelligence
+
+- Estado actual:
+  - Conceptualmente reconocido.
+  - Mencionado dentro de Compensation Architecture y Foundation.
+  - Aun falta PAQ formal de descubrimiento y hardening.
+
+- Responsabilidad esperada:
+  - Ser el dueno conceptual de metricas de conservacion, persistencia y calidad post-emision.
+
+- Metricas que deberia poseer:
+  - LIMRA.
+  - IGC.
+  - Persistencia.
+  - Siniestralidad.
+  - Prima Conservada.
+  - Prima por Conservar.
+  - Conservation Risk.
+  - Policy quality indicators.
+
+- Inputs principales:
+  - Production Events.
+  - Policy issued.
+  - Policy paid.
+  - Policy cancelled.
+  - Policy reinstated.
+  - Policy age.
+  - Premium history.
+  - Carrier reports.
+  - EvidenceRecord.
+  - ProvenanceRecord.
+  - RuleSnapshot.
+  - PeriodSnapshot.
+  - Index Reporting Month.
+
+- Outputs principales:
+  - LIMRA snapshot.
+  - IGC snapshot.
+  - Persistency snapshot.
+  - Conservation snapshot.
+  - Conservation risk.
+  - Bonus conservation blocker.
+  - Conservation explanation.
+  - Post-sale quality signal.
+
+- Dependencias:
+  - Shared Commercial Model.
+  - Production Events.
+  - Policy lifecycle.
+  - Evidence and Provenance.
+  - Rule Packs.
+  - Compensation Intelligence.
+  - Manager Compensation Intelligence.
+
+- Por que es critico:
+  - Compensation Intelligence necesita Conservation Intelligence para explicar bonos condicionados por calidad, persistencia o conservacion.
+  - Manager Compensation puede depender de LIMRA o IGC.
+  - Advisor Development y Productivity pueden necesitar retroalimentacion de calidad de negocio.
+  - Forecast y Business Planning no pueden estimar ingresos duraderos si no entienden persistencia y fuga post-venta.
+
+- Riesgo si no se formaliza:
+  - LIMRA calculado en Compensation.
+  - IGC calculado en Manager Compensation.
+  - Persistencia calculada en UI.
+  - Conservation Risk mezclado con Retention.
+  - Reglas de conservacion hardcodeadas en engines.
+  - Indices reportados con lag usados como si fueran hechos del mismo periodo.
+
+- Decision recomendada:
+  - Conservation Intelligence debe tener PAQ formal antes de cualquier engine nuevo.
+  - Debe separar claramente:
+    - Policy reality.
+    - Index reporting.
+    - Conservation interpretation.
+    - Compensation impact.
+
+
+2.2 Behavior / Execution Intelligence (Mick)
+
+- Estado actual:
+  - Mick esta reconocido en AGENTS.md como Behavior Intelligence.
+  - Se usa transversalmente en Recruitment, Advisor Development, Partner Intelligence y Advisor Experience.
+  - Aun falta formalizacion como dominio estructural completo.
+
+- Responsabilidad esperada:
+  - Ser el dueno de senales de comportamiento, disciplina, actividad, consistencia y ejecucion.
+
+- Senales que deberia poseer:
+  - Activity completion.
+  - Follow-up discipline.
+  - Coaching responsiveness.
+  - Prospecting cadence.
+  - Relationship activation behavior.
+  - Task completion.
+  - Execution consistency.
+  - Behavior risk.
+  - Inactivity signals.
+  - Routine adherence.
+
+- Inputs principales:
+  - Activity events.
+  - Task events.
+  - Follow-up events.
+  - Coaching events.
+  - Relationship Activation events.
+  - Recruitment stage actions.
+  - Advisor Development expectations.
+  - Business Plan actions.
+  - Command OS execution.
+
+- Outputs principales:
+  - Behavior signal.
+  - Execution consistency.
+  - Activity risk.
+  - Discipline signal.
+  - Coachability behavior evidence.
+  - Action completion pattern.
+  - Execution gap.
+  - Behavior-based recommendation input.
+
+- Dependencias:
+  - Shared Commercial Model.
+  - Relationship Activation.
+  - Advisor Development Intelligence.
+  - Recruitment Intelligence.
+  - Partner Intelligence.
+  - Business Planning.
+  - Advisor Experience.
+
+- Por que es critico:
+  - Relationship Capital no produce resultados sin activacion.
+  - Advisor Development no transforma sin ejecucion.
+  - Recruitment no avanza sin actividad.
+  - Business Planning no sirve si no se ejecutan acciones.
+  - Production Events son resultados, pero Mick mide las acciones previas que los hacen probables.
+
+- Correccion conceptual:
+  - Mick no produce Production Events directamente.
+  - Mick mide y explica las conductas que aumentan o reducen la probabilidad de que existan Production Events.
+  - Production Events siguen siendo hechos comerciales.
+  - Mick es el dueno de la evidencia conductual previa.
+
+- Riesgo si no se formaliza:
+  - Activity calculada en Recruitment.
+  - Consistency calculada en Advisor Development.
+  - Follow-up discipline calculada en UI.
+  - Coachability mezclada con resultados.
+  - Business Planning sin verificacion de ejecucion.
+  - Candy Crush Experience sin senales reales de frustracion, avance o aprendizaje.
+
+- Decision recomendada:
+  - Mick debe recibir PAQ formal como Behavior / Execution Intelligence.
+  - Debe separarse de:
+    - Advisor Development, que mide transformacion.
+    - Productivity, que mide output.
+    - Advisor Experience, que mide adopcion y aprendizaje.
+    - Business Planning, que define acciones necesarias.
+
+
+2.3 Portfolio Intelligence / Client Lifetime Value
+
+- Estado actual:
+  - No esta formalmente definido.
+  - Hay senales en Relationship Intelligence, Policy Operations, Conservation, Revenue y Product Intelligence.
+  - El flujo post-emision sigue fragmentado.
+
+- Problema:
+  - Forge entiende ventas, relaciones, polizas, compensacion y conservacion como piezas separadas.
+  - Falta un dominio que explique la vida economica y relacional del cliente despues de la emision.
+
+- Responsabilidad esperada:
+  - Unificar lectura post-venta:
+    - Proteccion de ingresos.
+    - Cross-selling.
+    - Up-selling responsable.
+    - Policy review.
+    - Renewal.
+    - Conservation.
+    - Client risk.
+    - Portfolio growth.
+    - Client Lifetime Value.
+
+- Inputs posibles:
+  - CommercialAccount.
+  - CommercialPerson.
+  - PolicyRole.
+  - Policy timeline.
+  - Product ownership.
+  - Premium history.
+  - Conservation signals.
+  - Relationship health.
+  - Life events.
+  - Coverage gaps.
+  - Renewal events.
+  - Servicing responsibility.
+
+- Outputs posibles:
+  - Portfolio health.
+  - Client value.
+  - Protection gap.
+  - Cross-sell opportunity.
+  - Renewal risk.
+  - Policy review priority.
+  - Client lifetime value signal.
+  - Post-sale action recommendation.
+
+- Por que es critico:
+  - Conservation no cubre toda la realidad post-venta.
+  - Relationship Intelligence no necesariamente posee valor economico del portafolio.
+  - Revenue Intelligence puede detectar oportunidades, pero necesita contexto post-emision.
+  - Compensation ve pagos, no valor de cliente.
+
+- Riesgo si no se formaliza:
+  - Cross-sell disperso en Revenue.
+  - Renewal disperso en Policy Operations.
+  - Conservation limitado a indices.
+  - Relationship Intelligence obligado a explicar valor economico.
+  - Advisor sin una vista clara de que hacer despues de vender.
+
+- Decision recomendada:
+  - Abrir PAQ de Portfolio Intelligence o Client Lifetime Value antes de implementar nuevos engines post-venta.
+  - Determinar si es dominio propio o subdominio de Revenue / Relationship / Policy Operations.
+
+
+2.4 Career Capital
+
+- Estado actual:
+  - Descubierto durante los PAQs de Relationship Capital, Market Natural y Recruitment.
+  - No esta LOCK.
+  - No tiene dueno formal.
+
+- Problema:
+  - Relationship Capital quedo aprobado como concepto transversal.
+  - Market Natural quedo aprobado como capa conceptual.
+  - P200 quedo aprobado como Market Natural Discovery Artifact.
+  - Career Capital quedo separado pero sin ownership definitivo.
+
+- Posible definicion:
+  - Career Capital es el conjunto de activos, capacidades, credibilidad, red, experiencia y acceso que una persona puede usar para construir carrera comercial.
+
+- Componentes posibles:
+  - Market Natural.
+  - Relationship Capital.
+  - Community access.
+  - Centers of Influence.
+  - Referral capacity.
+  - Professional credibility.
+  - Commercial experience.
+  - Trust transfer potential.
+  - Prospecting capacity.
+
+- Posibles owners:
+  - Shared Commercial Model:
+    - Si Career Capital es primitiva transversal.
+  - Advisor Development:
+    - Si Career Capital es capacidad que se desarrolla.
+  - Recruitment Intelligence:
+    - Si Career Capital se usa principalmente para candidatos.
+  - Partner Intelligence:
+    - Si Career Capital se evalua para construir unidades.
+
+- Riesgo:
+  - Recruitment puede volver a aduenarse de P200.
+  - Advisor Development puede medir capacidad comercial sin entender capital inicial.
+  - Partner Intelligence puede evaluar potencial sin saber que activos trae cada asesor.
+  - Business Planning puede planear sin capacidad real de mercado.
+
+- Decision recomendada:
+  - Career Capital necesita PAQ de ownership.
+  - No debe implementarse como score antes de definir si es:
+    - Activo.
+    - Capacidad.
+    - Snapshot.
+    - Interpretacion.
+    - Dominio.
+    - Subdominio.
+
+
+2.5 Manager Tactical Intelligence
+
+- Estado actual:
+  - Manager Compensation Intelligence esta reconocido.
+  - Partner Intelligence esta en Architecture Candidate.
+  - Manager Intelligence aparece como area futura.
+  - La capa tactica diaria del manager no esta formalizada.
+
+- Problema:
+  - Manager Compensation explica pagos.
+  - Partner Intelligence explica salud de unidad.
+  - Pero falta una inteligencia tactica diaria:
+    - A quien coachar hoy.
+    - Que riesgo atender.
+    - Que asesor desarrollar.
+    - Que candidato destrabar.
+    - Que actividad corregir.
+    - Que gap de ejecucion priorizar.
+
+- Inputs posibles:
+  - Mick signals.
+  - Recruitment risk.
+  - Advisor Development risk.
+  - Productivity risk.
+  - Partner health.
+  - Business plan gap.
+  - Compensation risk.
+  - Conservation risk.
+
+- Outputs posibles:
+  - Manager next action.
+  - Coaching priority.
+  - Advisor watchlist.
+  - Candidate intervention.
+  - Unit risk alert.
+  - Tactical weekly plan.
+
+- Riesgo:
+  - Manager Intelligence podria confundirse con Manager Compensation.
+  - Partner Intelligence podria absorber tactica diaria y volverse demasiado amplio.
+  - Mick podria producir recomendaciones de manager sin contexto de negocio.
+
+- Decision recomendada:
+  - Documentar boundary entre:
+    - Partner Intelligence.
+    - Manager Compensation Intelligence.
+    - Manager Tactical Intelligence.
+    - Mick.
+
+
+3. Agujeros Conceptuales
+
+3.1 Post-Sale Void
+
+- Descripcion:
+  - Forge tiene piezas fuertes para venta, relacion, poliza, compensacion y conservacion.
+  - Pero no tiene un dominio unificado que explique la vida post-emision del cliente y del portafolio.
+
+- El hueco aparece despues de:
+  - Policy issued.
+  - Policy paid.
+  - Commission posted.
+
+- Preguntas sin owner claro:
+  - Que debe hacer el asesor despues de vender?
+  - Que cliente esta subprotegido?
+  - Que poliza necesita revision?
+  - Que oportunidad de cross-sell es responsable?
+  - Que cliente tiene valor economico creciente?
+  - Que fuga de cartera amenaza ingresos futuros?
+  - Como se conecta conservacion con crecimiento de portafolio?
+
+- Dominios afectados:
+  - Relationship Intelligence.
+  - Revenue Intelligence.
+  - Policy Operations.
+  - Conservation Intelligence.
+  - Compensation Intelligence.
+  - Advisor Experience.
+  - Business Planning.
+
+- Riesgo:
+  - Forge podria vender bien pero no acompanar bien al cliente despues de la venta.
+  - El asesor podria recibir acciones de venta sin contexto de portafolio.
+  - Conservation podria reducirse a LIMRA/IGC y no a salud completa del cliente.
+
+- Recomendacion:
+  - Evaluar formalmente Portfolio Intelligence o Client Lifetime Value.
+  - Definir si post-sale ownership vive en:
+    - Policy Operations.
+    - Relationship Intelligence.
+    - Revenue Intelligence.
+    - Un nuevo dominio Portfolio Intelligence.
+
+
+3.2 Career Capital Orphan
+
+- Descripcion:
+  - Career Capital fue descubierto, pero no tiene owner.
+  - Quedo separado de Relationship Capital.
+  - Es relevante para Recruitment, Development, Partner, Forecast y Business Planning.
+
+- Problema:
+  - Relationship Capital responde:
+    - Que relaciones existen?
+  - Market Natural responde:
+    - Donde esta el mercado accesible?
+  - P200 responde:
+    - Puedo ver evidencia del mercado natural?
+  - Relationship Activation responde:
+    - Lo estoy usando?
+  - Career Capital podria responder:
+    - Que capacidad comercial inicial y acumulada tiene esta persona para construir carrera?
+
+- Riesgo:
+  - Si queda huerfano, cada dominio lo reinterpretara:
+    - Recruitment como fuente de candidatos.
+    - Development como potencial de asesor.
+    - Partner como capacidad de franquicia.
+    - Business Planning como supuesto de produccion.
+
+- Recomendacion:
+  - Definir ownership antes de usar Career Capital en forecasts, scoring o planes.
+
+
+3.3 Development to Productivity Boundary
+
+- Descripcion:
+  - Advisor Development esta en Architecture Candidate.
+  - Productivity Intelligence aun no esta formalizada.
+  - El boundary de salida de Development depende de Productivity.
+
+- Pregunta pendiente:
+  - Cuando exactamente un asesor deja de ser "en desarrollo" y empieza a ser evaluado principalmente como Productive Advisor Capacity?
+
+- Riesgo:
+  - First Production puede confundirse con productividad.
+  - Activity puede confundirse con output.
+  - Training puede confundirse con desarrollo.
+
+- Recomendacion:
+  - Productivity Intelligence debe ser el siguiente PAQ critico.
+
+
+3.4 Rule Pack Operationalization Gap
+
+- Descripcion:
+  - Rule Pack Separation esta definido.
+  - SMNYL Agency 2026 es el primer Rule Pack validado.
+  - Pero falta definir formalmente como se expresan, versionan y auditan Rule Packs como artefactos operativos.
+
+- Riesgo:
+  - Core puede contaminarse con reglas SMNYL.
+  - Engines pueden codificar reglas especificas.
+  - Historicos pueden recalcularse con reglas nuevas.
+
+- Recomendacion:
+  - Formalizar Rule Pack artifact model antes de implementar reglas adicionales.
+
+
+4. Suposiciones Incorrectas a Corregir
+
+4.1 Conservation no es Retencion
+
+- Correccion:
+  - Conservation Intelligence no debe reducirse a retencion.
+
+- Conservation puede incluir:
+  - LIMRA.
+  - IGC.
+  - Persistencia.
+  - Prima Conservada.
+  - Prima por Conservar.
+  - Siniestralidad.
+  - Policy quality.
+  - Index lag.
+
+- Retencion puede ser:
+  - Retencion de clientes.
+  - Retencion de polizas.
+  - Retencion de asesores.
+  - Retencion de relacion.
+
+- Riesgo:
+  - Si Conservation se trata como Retencion generica, se mezclan portafolio, cliente, poliza, asesor y calidad de negocio.
+
+
+4.2 Production Events no dictan toda la realidad post-venta
+
+- Correccion:
+  - Production Events son hechos.
+  - Pero no explican por si solos:
+    - Salud de cliente.
+    - Calidad de portafolio.
+    - Oportunidad de cross-sell.
+    - Riesgo de fuga.
+    - Valor de vida del cliente.
+    - Necesidad de servicing.
+
+- Riesgo:
+  - Si Forge asume que Production Events bastan para post-venta, la arquitectura se vuelve transaccional y pierde inteligencia relacional.
+
+
+4.3 Manager Intelligence no cubre toda la gestion tactica diaria
+
+- Correccion:
+  - Manager Compensation Intelligence explica pagos.
+  - Partner Intelligence explica capacidad y salud de unidad.
+  - Manager Tactical Intelligence, si se formaliza, deberia explicar acciones diarias de gestion.
+
+- Riesgo:
+  - Confundir manager como receptor de bono con manager como operador tactico.
+  - Ocultar coaching, seguimiento, ejecucion y riesgos diarios bajo compensacion.
+
+
+4.4 Signed Advisor no es Productive Advisor Capacity
+
+- Correccion:
+  - Signed Advisor es entrada formal.
+  - Productive Advisor Capacity requiere transformacion, ejecucion, primeros resultados, consistencia y output duradero.
+
+- Riesgo:
+  - Partner Intelligence puede sobreestimar capacidad.
+  - Business Planning puede planear sobre headcount falso.
+  - Forecast puede proyectar productividad inexistente.
+
+
+4.5 First Production no es Productividad Duradera
+
+- Correccion:
+  - First Production es milestone y evidencia.
+  - Productividad requiere repeticion, consistencia y metrica formal.
+
+- Riesgo:
+  - Advisor Development puede cerrar prematuramente.
+  - Productivity puede inflarse con casos aislados.
+
+
+5. Fortalezas Arquitectonicas Actuales
+
+- Foundation Lock cerrado con buena separacion conceptual.
+
+- Forge Core universal:
+  - No debe codificar reglas de carrier, canal, concurso o compensacion.
+
+- Rule Pack Separation:
+  - SMNYL Agency 2026 se entiende como Rule Pack, no como Forge Core.
+
+- Production Events Principle:
+  - Hechos primero.
+  - Interpretaciones despues.
+
+- One Metric, One Owner:
+  - Reduce duplicacion y contradicciones.
+
+- Shared Commercial Model:
+  - CommercialPerson, CommercialAccount, Attribution, Assignment, Servicing y Evidence ya estan reconocidos.
+
+- Recruitment Intelligence:
+  - Esta en Architecture Lock.
+  - Ya no posee Relationship Capital, Market Natural o P200.
+
+- Partner Intelligence:
+  - Identifico Productive Advisor Capacity como unidad economica correcta.
+
+- Advisor Development Intelligence:
+  - Identifico la brecha entre Signed Advisor y Productive Advisor Capacity.
+
+- Advisor Experience:
+  - Benvenu, Clippy y Candy Crush Experience dan una arquitectura de adopcion y aprendizaje.
+
+
+6. Debilidades Arquitectonicas Actuales
+
+- Conservation Intelligence no tiene PAQ formal.
+
+- Mick no tiene domain hardening formal.
+
+- Productivity Intelligence aun no esta definida.
+
+- Business Planning y Forecast estan conceptualmente aprobados pero no suficientemente modelados.
+
+- Post-sale ownership esta fragmentado.
+
+- Career Capital esta huerfano.
+
+- Manager Tactical Intelligence no esta separado formalmente de Manager Compensation y Partner Intelligence.
+
+- Rule Pack operationalization aun puede ser ambigua.
+
+- Compensation Intelligence tiene arquitectura inicial, pero requiere hardening alrededor de:
+  - Retroactivos.
+  - Correcciones.
+  - Semaforos.
+  - Manager multipliers.
+  - LIMRA/IGC dependency.
+  - Rule Pack artifacts.
+
+
+7. Riesgos Criticos
+
+- Riesgo 1:
+  - Implementar Conservation dentro de Compensation.
+  - Resultado:
+    - Compensation calcularia metricas que no posee.
+
+- Riesgo 2:
+  - Implementar Mick como modulo motivacional.
+  - Resultado:
+    - Se perderia ownership de Behavior / Execution Intelligence.
+
+- Riesgo 3:
+  - Implementar Productivity antes de definir Development boundary.
+  - Resultado:
+    - First Production podria tratarse como productividad.
+
+- Riesgo 4:
+  - Implementar Business Planning sin Productivity.
+  - Resultado:
+    - Planes basados en supuestos debiles.
+
+- Riesgo 5:
+  - Usar Rule Packs sin versionamiento formal.
+  - Resultado:
+    - Historicos contaminados por reglas nuevas.
+
+- Riesgo 6:
+  - Dejar Career Capital sin owner.
+  - Resultado:
+    - Duplicacion entre Recruitment, Development, Partner y Forecast.
+
+- Riesgo 7:
+  - No resolver Post-Sale Void.
+  - Resultado:
+    - Forge se queda fuerte en venta y debil en vida del cliente.
+
+- Riesgo 8:
+  - Confundir Manager Compensation con Manager Intelligence.
+  - Resultado:
+    - Los managers reciben explicacion de bonos, pero no inteligencia tactica diaria.
+
+
+8. Recomendaciones
+
+8.1 Definir Dominios Faltantes Antes de Engines
+
+- No implementar nuevos engines de:
+  - Conservation.
+  - Productivity.
+  - Mick.
+  - Portfolio.
+  - Business Planning.
+  - Forecast.
+
+- Antes de PAQ formal:
+  - Definir owner.
+  - Definir inputs.
+  - Definir outputs.
+  - Definir boundaries.
+  - Definir eventos.
+  - Definir metric ownership.
+  - Definir dependencia de Rule Packs.
+
+
+8.2 Separar Hechos de Interpretaciones
+
+- Hechos:
+  - Production Events.
+  - Policy Events.
+  - Payment Events.
+  - Assignment Events.
+  - Evidence Records.
+
+- Interpretaciones:
+  - Compensation.
+  - Conservation.
+  - Career.
+  - Contest.
+  - Productivity.
+  - Partner Health.
+  - Development Readiness.
+
+- Forecasts:
+  - Nunca deben presentarse como hechos.
+
+
+8.3 Documentar Flujos Post-Venta
+
+- Crear PAQ para:
+  - Portfolio Intelligence.
+  - Client Lifetime Value.
+  - Post-Sale Intelligence.
+
+- Resolver:
+  - Renewal.
+  - Cross-sell.
+  - Policy review.
+  - Conservation.
+  - Servicing.
+  - Client risk.
+  - Portfolio health.
+
+
+8.4 Definir Career Capital con Owner Claro
+
+- Crear PAQ especifico de Career Capital ownership.
+
+- Decidir si Career Capital es:
+  - Shared Commercial concept.
+  - Advisor Development input.
+  - Partner Intelligence input.
+  - Business Planning capacity assumption.
+  - Separate domain.
+  - Snapshot.
+  - Interpretation.
+
+
+8.5 Formalizar Mick como Dominio Estructural
+
+- Crear PAQ:
+  - Behavior / Execution Intelligence.
+
+- Separar:
+  - Behavior.
+  - Development.
+  - Productivity.
+  - Advisor Experience.
+  - Business Planning execution.
+
+
+8.6 Priorizar Productivity Intelligence
+
+- Productivity Intelligence es el siguiente dominio critico porque:
+  - Advisor Development no puede cerrar boundary sin Productivity.
+  - Partner Intelligence no puede lockear sin Productive Advisor Capacity.
+  - Business Planning necesita supuestos de productividad.
+  - Forecast necesita senales de output confiables.
+
+
+9. Dominios Faltantes Priorizados
+
+Prioridad 1:
+Productivity Intelligence.
+
+Motivo:
+Define Productive Advisor Capacity.
+
+Prioridad 2:
+Conservation Intelligence.
+
+Motivo:
+Protege ownership de LIMRA, IGC, Persistencia, Siniestralidad y calidad de negocio.
+
+Prioridad 3:
+Behavior / Execution Intelligence (Mick).
+
+Motivo:
+Formaliza el puente entre potencial, plan y accion ejecutada.
+
+Prioridad 4:
+Portfolio Intelligence / Client Lifetime Value.
+
+Motivo:
+Cierra el Post-Sale Void.
+
+Prioridad 5:
+Forecast Intelligence.
+
+Motivo:
+Necesita dominios base cerrados para evitar predicciones como hechos.
+
+Prioridad 6:
+Business Planning Intelligence.
+
+Motivo:
+Debe convertir Goal -> Forecast -> Gap -> Actions con datos confiables.
+
+Prioridad 7:
+Career Capital Ownership.
+
+Motivo:
+Evita duplicacion entre Recruitment, Development, Partner y Shared Commercial Model.
+
+Prioridad 8:
+Manager Tactical Intelligence.
+
+Motivo:
+Separa gestion diaria de compensation y partner health.
+
+
+10. Conclusion Arquitectonica
+
+- Forge OS esta bien posicionado para avanzar desde Foundation hacia Intelligence Domains.
+
+- La fundacion no necesita reabrirse para estos hallazgos.
+
+- Sin embargo, antes de implementar nuevos engines, Forge debe cerrar varios dominios de negocio que hoy siguen incompletos.
+
+- Los dos riesgos mas urgentes son:
+  - Conservation Intelligence sin owner formal.
+  - Mick sin formalizacion como Behavior / Execution Intelligence.
+
+- El agujero conceptual mas grande es:
+  - Post-Sale Void.
+
+- El concepto huerfano mas importante es:
+  - Career Capital.
+
+- La recomendacion central:
+  - No construir mas engines de inteligencia hasta formalizar Productivity, Conservation, Mick y Post-Sale ownership.
+
+- La direccion correcta:
+  - Mantener Core universal.
+  - Mantener Rule Packs como interpretadores.
+  - Mantener Production Events como hechos.
+  - Mantener ownership singular por metrica.
+  - Separar comportamiento, desarrollo, productividad, conservacion y compensacion.
+
+Forge debe seguir construyendo Intelligence Domains, pero con disciplina de ownership antes de ejecucion tecnica.
+

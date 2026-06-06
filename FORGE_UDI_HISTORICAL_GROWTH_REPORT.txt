@@ -1,0 +1,202 @@
+FORGE UDI HISTORICAL GROWTH REPORT
+
+Estado: AUDITORIA
+Fecha de ejecución: 2026-06-06
+Fuente: BANXICO_SIE_API
+Serie: SP68257
+Título Banxico: Valor de UDIS
+
+OBJETIVO
+
+Determinar la tasa anual compuesta histórica de crecimiento de la UDI desde su primer valor disponible en Banxico hasta el valor más reciente disponible en la serie.
+
+DATOS VERIFICADOS
+
+Valor inicial UDI:
+1.000000
+
+Fecha inicial:
+04/04/1995
+
+Valor final UDI:
+8.829940
+
+Fecha final disponible:
+10/06/2026
+
+Número de observaciones recuperadas:
+11,391
+
+Años analizados:
+31.1841204654
+
+Nota:
+Banxico publica valores UDI con fechas adelantadas. Por eso la serie consultada el 06/06/2026 contiene como último valor disponible el 10/06/2026.
+
+FORMULA
+
+CAGR = ((valor final / valor inicial) ^ (1 / años)) - 1
+
+CAGR = ((8.829940 / 1.000000) ^ (1 / 31.1841204654)) - 1
+
+RESULTADO
+
+CAGR histórico UDI:
+7.2345164604%
+
+COMPARACION CONTRA TASAS DE PROYECCION
+
+Tasa 4.0%
+- Diferencia contra CAGR histórico: -3.2345164604 puntos porcentuales
+- Distancia absoluta: 3.2345164604 puntos porcentuales
+
+Tasa 4.5%
+- Diferencia contra CAGR histórico: -2.7345164604 puntos porcentuales
+- Distancia absoluta: 2.7345164604 puntos porcentuales
+
+Tasa 5.0%
+- Diferencia contra CAGR histórico: -2.2345164604 puntos porcentuales
+- Distancia absoluta: 2.2345164604 puntos porcentuales
+
+TASA MAS CERCANA ENTRE 4.0%, 4.5% Y 5.0%
+
+5.0%
+
+La tasa de 5.0% es la más cercana al CAGR histórico de la UDI desde 1995, aunque todavía queda 2.2345164604 puntos porcentuales por debajo del crecimiento histórico compuesto observado.
+
+SEGUNDO ANALISIS: ERROR DE PROYECCION
+
+Base de comparación:
+Valor inicial = 1.000000
+
+Se compara el resultado de proyectar con:
+- 4.0%
+- 4.5%
+- CAGR histórico 7.2345164604%
+
+Horizonte: 10 años
+
+Proyección con 4.0%:
+1.480244
+
+Proyección con 4.5%:
+1.552969
+
+Proyección con CAGR histórico:
+2.010694
+
+Error 4.0% vs CAGR histórico:
+-0.530450
+-26.381424%
+
+Error 4.5% vs CAGR histórico:
+-0.457725
+-22.764506%
+
+Horizonte: 20 años
+
+Proyección con 4.0%:
+2.191123
+
+Proyección con 4.5%:
+2.411714
+
+Proyección con CAGR histórico:
+4.042890
+
+Error 4.0% vs CAGR histórico:
+-1.851767
+-45.803052%
+
+Error 4.5% vs CAGR histórico:
+-1.631176
+-40.346785%
+
+Horizonte: 30 años
+
+Proyección con 4.0%:
+3.243398
+
+Proyección con 4.5%:
+3.745318
+
+Proyección con CAGR histórico:
+8.129015
+
+Error 4.0% vs CAGR histórico:
+-4.885618
+-60.100979%
+
+Error 4.5% vs CAGR histórico:
+-4.383697
+-53.926545%
+
+Horizonte: 40 años
+
+Proyección con 4.0%:
+4.801021
+
+Proyección con 4.5%:
+5.816365
+
+Proyección con CAGR histórico:
+16.344962
+
+Error 4.0% vs CAGR histórico:
+-11.543941
+-70.626908%
+
+Error 4.5% vs CAGR histórico:
+-10.528597
+-64.414940%
+
+INTERPRETACION
+
+El CAGR histórico completo desde 1995 está fuertemente influido por los años iniciales de alta inflación posteriores a la creación de la UDI.
+
+Por eso, usar el CAGR histórico global de 7.2345% para todas las proyecciones futuras podría sobreestimar escenarios actuales si la intención del producto es usar supuestos comerciales conservadores o específicos de presentación.
+
+Al mismo tiempo, usar 4.0% o 4.5% globalmente subestima materialmente el crecimiento histórico compuesto de toda la serie 1995-2026.
+
+RECOMENDACION
+
+Opción A: Usar CAGR histórico global
+No recomendado como regla global.
+
+Motivo:
+El CAGR 1995-2026 captura un periodo histórico completo, incluyendo años de inflación alta. Puede ser útil como benchmark histórico, pero no necesariamente como supuesto de venta o presentación para todos los productos.
+
+Opción B: Usar 4.5% globalmente
+No recomendado como regla global única.
+
+Motivo:
+4.5% está por debajo del CAGR histórico completo por 2.7345 puntos porcentuales y genera diferencias materiales en horizontes largos.
+
+Opción C: Permitir tasas específicas por producto
+Recomendado.
+
+Motivo:
+La auditoría previa del Excel muestra que distintos productos y secciones usan tasas y timelines distintos:
+- IMAGINA usa 4.0% para aportaciones/protección y 4.5% para rentas.
+- ORVI usa 4.5% en su timeline principal.
+- VM usa 4.0%.
+- SB usa 4.5% con fórmulas específicas.
+- REALIZA contiene valores de moneda pegados/calculados.
+
+La arquitectura más correcta para Forge es:
+
+1. Mantener CAGR histórico como benchmark de auditoría.
+2. Permitir tasas específicas por producto y por sección de producto.
+3. Exigir que cada tasa tenga fuente, modo y disclosure.
+4. No presentar ninguna tasa futura como garantizada.
+
+VEREDICTO FINAL
+
+La tasa que más se acerca al CAGR histórico entre 4.0%, 4.5% y 5.0% es:
+5.0%
+
+Recomendación Forge:
+C) Allow product-specific rates.
+
+Estado:
+AUDITORIA COMPLETADA / SIN CAMBIOS DE CODIGO

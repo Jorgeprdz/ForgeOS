@@ -161,8 +161,8 @@ test('critical path proyecta UDI por edad objetivo', () => {
 
   assert(result.years === 30, 'Debe calcular 30 años');
   assert(result.conservative > 8.7, 'Escenario conservador debe crecer');
-  assert(result.base > result.conservative, 'Base debe ser mayor que conservador');
-  assert(result.aggressive > result.base, 'Agresivo debe ser mayor que base');
+  assert(result.base === result.conservative, 'Base debe usar la misma tasa global UDI');
+  assert(result.aggressive === result.base, 'Agresivo debe usar la misma tasa global UDI');
 });
 
 test('critical path selecciona hitos significativos', () => {

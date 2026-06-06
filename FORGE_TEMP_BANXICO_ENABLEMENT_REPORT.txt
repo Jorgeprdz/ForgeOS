@@ -1,0 +1,122 @@
+FORGE TEMPORARY BANXICO ENABLEMENT REPORT
+
+Status: LOCAL DEVELOPMENT ONLY
+
+Scope:
+Temporary local-development Banxico live refresh enablement.
+
+No production deployment.
+No Supabase deployment.
+No new Banxico integration created.
+No new cache system created.
+
+1. FILES MODIFIED
+
+- shared-banxico-rate-engine.js
+  - Added temporary local-development BANXICO_TOKEN constant.
+  - Added required production warning comment.
+  - getToken now resolves process.env.BANXICO_TOKEN first, then the temporary local constant.
+  - Banxico request continues to send token through HTTP header Bmx-Token.
+
+- forge-rate-cache.json
+  - Updated by live Banxico refresh during validation.
+  - Latest observed cacheStatus: CACHE_REFRESHED.
+
+2. TOKEN LOCATION
+
+- File: shared-banxico-rate-engine.js
+- Constant: BANXICO_TOKEN
+- Location: directly below the TEMPORARY DEVELOPMENT CONFIGURATION warning.
+
+Token value intentionally omitted from this report.
+
+3. LIVE REFRESH RESULT
+
+market-data-master-test.js refreshed Banxico rates successfully.
+
+Observed cached values after refresh:
+
+- UDI_MXN
+  - seriesId: SP68257
+  - date: 10/06/2026
+  - value: 8.82994
+  - source: BANXICO_SIE_API
+  - mode: LATEST_VERIFIED
+
+- USD_MXN_FIX
+  - seriesId: SF43718
+  - date: 05/06/2026
+  - value: 17.4755
+  - source: BANXICO_SIE_API
+  - mode: LATEST_VERIFIED
+
+4. TEST RESULTS
+
+Command:
+node market-data-master-test.js
+
+Result:
+PASS
+
+Summary:
+- Total: 4
+- Pass: 4
+- Fail: 0
+- Cache status: CACHE_REFRESHED
+
+Command:
+node imagina-ser-master-test.js
+
+Result:
+PASS
+
+Summary:
+- Total: 16
+- Pass: 16
+- Fail: 0
+- Currency metadata status: VERIFIED_UDI_RATE_AVAILABLE
+- Source: BANXICO_SIE_API
+- Source mode: LIVE
+
+Command:
+node imagina-ser-banxico-integration-test.js
+
+Result:
+PASS
+
+Summary:
+- Total: 6
+- Pass: 6
+- Fail: 0
+- Source mode: CACHE
+
+5. FUTURE MIGRATION REMINDER
+
+This is a temporary local-development exception only.
+
+Before Supabase deployment:
+
+1. Remove hardcoded token.
+2. Use environment variables.
+3. Move token access to Edge Functions.
+4. Never expose token to frontend.
+
+Tracked by:
+FORGE_SECURITY_MIGRATION_PHASE
+
+Long-term architecture remains:
+
+Banxico
+↓
+Edge Function
+↓
+Supabase
+↓
+Forge
+
+6. FINAL STATUS
+
+PASS
+
+Banxico live refresh is temporarily enabled for local Forge development.
+

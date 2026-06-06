@@ -1,0 +1,1176 @@
+FORGE_PHASE_2_X_CONSOLIDATE_LATER_QUEUE.txt
+Generated: 2026-06-04
+Scope: Phase 2.X documentation queue. No code changes approved.
+
+Action: CONSOLIDATE LATER
+
+## comisiones.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate Requires Compensation vs Rule Pack ownership validation.
+
+## manager-alert-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Ownership: 01 REVENUE GENERATION ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## forge-ai-connector-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## gmm-out-of-pocket-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## vida-mujer-client-presentation-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## nash-advisor-performance-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## nash-coaching-insight-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## nash-combat-intelligence-report-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## nash-combat-intelligence-report-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## nash-learning-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## nash-master-intelligence-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## nash-master-intelligence-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## nash-memory-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## nash-next-best-action-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## nash-next-best-action-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## nash-personality-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## decision-appendix-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## education-cost-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## education-paths-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## shared-ave-confidence-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-ave-confidence-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## shared-ave-death-benefit-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-ave-death-benefit-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## shared-ave-portfolio-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-ave-portfolio-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## shared-ave-rescue-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-ave-rescue-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## shared-ave-type-inference-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-ave-type-inference-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## shared-education-cost-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## shared-education-paths-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## vida-mujer-coverage-status-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## gmm-out-of-pocket-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## shared-ave-growth-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-ave-growth-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## shared-clp-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## vida-mujer-coverage-status-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## vida-mujer-knowledge-extractor-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## vida-mujer-knowledge-extractor.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## vida-mujer-protected-diseases-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## vida-mujer-protected-diseases-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## client-engagement-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## nash-coaching-insight-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## quick-actions-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## nash-learning-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 06 LEARNING INTELLIGENCE ENGINE
+- Ownership: 06 LEARNING INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## policy-detail-view-model.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-quick-actions-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-task-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-task-priority-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-timeline-view-model.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## relationship-health-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## relationship-next-action-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## relationship-opportunity-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## relationship-review-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible duplicate / overlap candidate
+
+## relationship-review-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## relationship-timeline-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## render-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## task-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## task-priority-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## vida-mujer-survival-schedule-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## vida-mujer-survival-schedule-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## policy-detail-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-followup-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance; Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-risk-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-storage-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## policy-timeline-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible duplicate / overlap candidate
+
+## nash-manager-alert-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## nash-team-intelligence-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## nash-team-intelligence-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## referral-opportunity-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## relationship-opportunity-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-assessment-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-assessment-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## candidate-coachability-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-coachability-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-hard-factors-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-hard-factors-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-market-quality-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-market-quality-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-vital-factors-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## candidate-vital-factors-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE / Recruitment or Advisor Development
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Recruitment vs Advisor Development ownership; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## core-app-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## domain-events.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## performance-runtime.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## relationship-health-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## storage-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## ui-render-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible duplicate / overlap candidate
+
+## smnyl-command-palette-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary; Potential duplicate/overlap candidate
+- Notes: carrier-specific boundary review; possible duplicate / overlap candidate Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## smnyl-risk-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Ownership: CONSERVATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## concursos.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate Requires Compensation vs Rule Pack ownership validation.
+
+## nash-intent-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: EVIDENCE & PROVENANCE
+- Ownership: EVIDENCE & PROVENANCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## vida-mujer-client-presentation-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: EVIDENCE & PROVENANCE
+- Ownership: EVIDENCE & PROVENANCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## followup-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## nash-advisor-performance-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## nash-followup-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## smnyl-followup-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: carrier-specific boundary review; possible duplicate / overlap candidate
+
+## client-engagement-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## forge-ai-connector.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## life-event-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## nash-memory-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## relationship-next-action-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## relationship-timeline-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-banxico-rate-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## shared-banxico-rate-report.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## shared-decision-appendix-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## virtual-list-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## activity-feed-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## activity-feed.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## nash-manager-alert-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## nash-intent-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED COMMERCIAL MODEL
+- Ownership: SHARED COMMERCIAL MODEL
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible duplicate / overlap candidate
+
+## shared-clp-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED COMMERCIAL MODEL
+- Ownership: SHARED COMMERCIAL MODEL
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible duplicate / overlap candidate
+
+## advisor-performance-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## core_domain-events.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## life-event-master-test.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## nash-personality-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## referral-opportunity-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate
+
+## smnyl-performance-engine.js
+
+- Classification: CONSOLIDATE LATER
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+

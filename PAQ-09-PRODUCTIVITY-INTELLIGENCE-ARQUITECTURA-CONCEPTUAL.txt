@@ -1,0 +1,1249 @@
+PAQ-09 Productivity Intelligence – Arquitectura Conceptual
+
+Forge OS
+Arquitectura de Dominio de Negocio
+
+Fuentes:
+PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.txt
+PAQ-09-Productivity-Intelligence.txt
+
+Estado:
+ARCHITECTURE CANDIDATE
+
+Alcance:
+Documentacion conceptual.
+No codigo.
+No engines.
+No schemas.
+No UI.
+No app.js.
+No implementacion de IA.
+No commit.
+
+
+1. Executive Summary
+
+- Productivity Intelligence es el dominio de Forge OS que explica si la actividad y ejecucion del asesor se convierten en output comercial significativo, repetible y durable.
+
+- Productivity Intelligence no es:
+  - Mick.
+  - Behavior Intelligence.
+  - Production Events.
+  - Advisor Development.
+  - Compensation Intelligence.
+  - Revenue Intelligence.
+  - Manager Intelligence.
+  - Career Intelligence.
+  - Conservation Intelligence.
+
+- Productivity Intelligence vive entre ejecucion y resultado comercial:
+  - Mick mide si el asesor ejecuto conductas.
+  - Productivity interpreta si esas conductas produjeron output.
+  - Production Events registran hechos de produccion.
+  - Compensation interpreta dinero bajo reglas.
+  - Manager Intelligence consume productividad para coaching, riesgo y accion tactica.
+
+- Cadena conceptual:
+  - Mick.
+  - Execution Behavior.
+  - Activity Signals.
+  - Productivity Intelligence.
+  - Output Conversion.
+  - Production Events.
+  - Compensation / Contest / Conservation / Revenue Interpretations.
+
+- Productivity Intelligence existe para evitar errores de arquitectura:
+  - Actividad no es productividad.
+  - Training no es desarrollo.
+  - First Production no es productividad durable.
+  - Compensation no es productividad.
+  - Revenue forecast no es output confirmado.
+  - Manager bonus no es salud real de productividad.
+
+- Resultado de PAQ-09:
+  - Productivity Intelligence es un dominio valido en estado ARCHITECTURE CANDIDATE.
+  - Debe pasar por hardening antes de cualquier engine, UI o consumo operativo formal.
+
+
+2. Domain Purpose
+
+- Proposito central:
+  - Explicar si el trabajo comercial del asesor se convierte en output productivo.
+
+- Preguntas que responde:
+  - El asesor es productivo?
+  - El asesor se esta volviendo productivo?
+  - La actividad esta convirtiendo?
+  - La produccion se repite?
+  - La productividad mejora, se estanca o cae?
+  - Que bottleneck existe entre comportamiento y output?
+  - La productividad esta concentrada en un producto, fuente, cluster o periodo?
+  - La primera produccion se esta convirtiendo en productividad repetible?
+  - El asesor tiene mucha actividad pero poco output?
+  - El asesor produce pese a senales debiles de comportamiento?
+  - Que debe hacer el asesor para mejorar productividad?
+  - Que debe coachar el manager?
+
+- Valor arquitectonico:
+  - Protege a Forge de confundir acciones con resultados.
+  - Permite feedback accionable para asesor y manager.
+  - Entrega senales a Partner Intelligence, Advisor Development, Revenue, Career, Business Planning y Economic Motivation.
+  - Evita que Compensation o Manager Intelligence calculen productividad por su cuenta.
+
+- Principio central:
+  - Productividad no es existencia de actividad.
+  - Productividad es conversion de actividad en output comercial significativo.
+
+
+3. Boundaries
+
+3.1 Que es Productivity Intelligence
+
+- Es:
+  - Interpretacion de dominio sobre output comercial del asesor.
+  - Puente entre comportamiento y produccion.
+  - Medicion de efectividad comercial.
+  - Consumidor de senales de Mick.
+  - Consumidor de Production Events.
+  - Consumidor de contexto de Advisor Development.
+  - Productor de Productivity Risk.
+  - Productor de Productivity Status.
+  - Productor de senales para managers, partners y planning.
+
+3.2 Que no es Productivity Intelligence
+
+- No es:
+  - Behavior tracking.
+  - Task ownership.
+  - Compensation calculation.
+  - Contest qualification.
+  - Revenue forecast.
+  - Business plan ownership.
+  - Advisor Experience.
+  - Career stage ownership.
+  - Conservation index ownership.
+  - Manager bonus calculation.
+  - Raw Production Events.
+
+3.3 Boundary con Mick
+
+- Mick posee:
+  - Behavior execution.
+  - Activity completion.
+  - Consistency of actions.
+  - Follow-up discipline.
+  - Coaching responsiveness.
+  - Prospecting cadence.
+  - Execution gaps.
+
+- Productivity posee:
+  - Si el comportamiento produce output.
+  - Activity-to-output conversion.
+  - Productivity trend.
+  - Productivity bottleneck.
+  - Productive advisor interpretation.
+  - Output consistency.
+
+- Ejemplo:
+  - Mick: el asesor completo follow-ups.
+  - Productivity: esos follow-ups si o no se estan convirtiendo en citas, propuestas, polizas, prima o produccion.
+
+3.4 Boundary con Production Events
+
+- Production Events posee:
+  - POLICY_ISSUED.
+  - POLICY_PAID.
+  - PAYMENT_POSTED.
+  - POLICY_CANCELLED.
+  - POLICY_REINSTATED.
+  - COMMISSION_POSTED cuando la fuente lo reporta como hecho.
+
+- Productivity posee:
+  - Interpretacion de esos hechos como output performance.
+  - Repeatability of production.
+  - Conversion de actividad a produccion.
+  - Productivity status.
+
+- Ejemplo:
+  - Production Event: POLICY_PAID.
+  - Productivity: esa poliza pagada contribuye al output del asesor en el periodo correcto, bajo PeriodSnapshot y RuleSnapshot aplicables.
+
+3.5 Boundary con Compensation
+
+- Compensation posee:
+  - Commission calculation.
+  - Bonus calculation.
+  - Accrual.
+  - Payment.
+  - Adjustment.
+  - Reversal.
+  - Compensation explanation.
+
+- Productivity posee:
+  - Si el output del asesor es productivo.
+  - Si el output es repetible.
+  - Si la actividad convierte en produccion.
+
+- Guardrail:
+  - Productivity no calcula ingresos.
+  - Productivity no infiere bonos.
+  - Productivity no usa comision pagada como score de productividad sin contexto de reglas.
+
+3.6 Boundary con Advisor Development
+
+- Advisor Development posee:
+  - Transformacion de Signed Advisor a Productive Advisor Capacity.
+  - Development progress.
+  - First production readiness.
+  - Coachability as transformation.
+  - Development risk.
+
+- Productivity posee:
+  - Output cuando la actividad comercial ya puede evaluarse como performance.
+  - Repeatable production.
+  - Activity-to-output effectiveness.
+
+- Senales compartidas:
+  - First production.
+  - First appointment.
+  - Repeat activity.
+  - Consistency.
+  - Early production.
+
+- Regla:
+  - First Production es milestone de desarrollo.
+  - Repeatable output es evidencia de productividad.
+
+3.7 Boundary con Manager Intelligence
+
+- Manager Intelligence consume:
+  - Productivity status.
+  - Productivity risk.
+  - Productivity concentration.
+  - Advisor output trends.
+  - Team productivity distribution.
+
+- Productivity posee:
+  - Interpretacion de productividad a nivel advisor y cohort.
+
+- Manager Intelligence posee:
+  - Manager action.
+  - Coaching priority.
+  - Team risk.
+  - Unit interpretation.
+  - Advisor intervention priority.
+
+
+4. Metrics
+
+4.1 Regla general de metricas
+
+- PAQ-09 no aprueba thresholds numericos.
+
+- Todo threshold debe venir de:
+  - Rule Pack.
+  - Configuracion de dominio.
+  - PAQ posterior.
+  - Evidencia validada.
+
+- Productivity puede definir ownership conceptual, pero no valores.
+
+4.2 Daily Action Metrics
+
+- Ejemplos:
+  - Contacts attempted.
+  - Contacts completed.
+  - Follow-ups completed.
+  - New opportunities created.
+  - Appointments requested.
+  - Appointments scheduled.
+  - Appointments completed.
+  - Referrals requested.
+  - Referrals received.
+  - Pipeline updates completed.
+  - Client reviews completed.
+
+- Ownership:
+  - Mick posee raw behavior execution.
+  - Productivity consume estas senales para interpretar conversion.
+
+- Interpretacion de Productivity:
+  - Que acciones generan output?
+  - Que acciones tienen alto volumen y bajo yield?
+  - Que actividades faltan antes de que caiga la produccion?
+
+4.3 Calls and Contact Metrics
+
+- Ejemplos:
+  - Calls attempted.
+  - Calls connected.
+  - Response rate.
+  - Contact-to-appointment conversion.
+  - Follow-up-to-response conversion.
+  - Reconnection success.
+
+- Ownership:
+  - Mick posee ejecucion de llamadas y disciplina de contacto.
+  - Relationship Intelligence puede poseer contexto relacional.
+  - Productivity posee conversion a output comercial.
+
+4.4 Appointment Metrics
+
+- Ejemplos:
+  - Appointments requested.
+  - Appointments booked.
+  - Appointments completed.
+  - Appointment show rate.
+  - Appointment-to-opportunity conversion.
+  - Appointment-to-application conversion.
+  - Appointment-to-policy conversion.
+
+- Ownership:
+  - Mick posee completion behavior.
+  - Revenue Intelligence puede poseer opportunity context.
+  - Productivity posee output conversion.
+
+4.5 Referral Metrics
+
+- Ejemplos:
+  - Referral asks.
+  - Referrals received.
+  - Referral source quality.
+  - Referral-to-appointment conversion.
+  - Referral-to-policy conversion.
+  - Referral chain productivity.
+
+- Ownership:
+  - Relationship Intelligence posee referral relationship context.
+  - Mick posee ask behavior.
+  - Productivity posee output conversion.
+  - Recruitment posee candidate referral conversion cuando el referido es para candidate generation.
+
+4.6 Pipeline Metrics
+
+- Ejemplos:
+  - Active opportunities.
+  - Pipeline aging.
+  - Pipeline movement.
+  - Opportunity conversion.
+  - Pipeline-to-production conversion.
+  - Stalled opportunities.
+  - Pipeline quality.
+
+- Ownership:
+  - Revenue Intelligence posee revenue pipeline.
+  - Productivity consume pipeline movement para evaluar output readiness y conversion.
+
+4.7 Training and Learning Metrics
+
+- Ejemplos:
+  - Training completed.
+  - Learning applied.
+  - Coaching action completed.
+  - Development milestone reached.
+  - Learning-to-action conversion.
+
+- Ownership:
+  - Advisor Development posee transformation interpretation.
+  - Mick posee execution behavior.
+  - Productivity consume solo cuando learning afecta output conversion.
+
+- Guardrail:
+  - Training completion no es productividad.
+
+4.8 Conversion Metrics
+
+- Ejemplos:
+  - Contact-to-appointment.
+  - Appointment-to-opportunity.
+  - Opportunity-to-application.
+  - Application-to-policy.
+  - Policy-issued-to-policy-paid.
+  - Activity-to-production.
+  - First-production-to-repeat-production.
+
+- Ownership:
+  - Productivity posee productivity conversion interpretation.
+  - Production Events posee underlying policy facts.
+  - Revenue Intelligence posee revenue opportunity interpretation cuando aplica.
+
+4.9 Output Metrics
+
+- Ejemplos:
+  - Policies produced.
+  - Paid policies.
+  - Premium generated.
+  - Production by product line.
+  - Production by period.
+  - Repeat production.
+  - Production consistency.
+  - Production concentration.
+
+- Ownership:
+  - Production Events posee facts.
+  - Productivity posee output interpretation.
+  - Compensation posee income interpretation.
+  - Contest posee contest policy count cuando esta ruled.
+
+4.10 Quality Metrics
+
+- Ejemplos:
+  - Reinstatement-adjusted production.
+  - Cancellation impact.
+  - Conservation-informed production quality.
+  - Persistence-informed productivity quality.
+  - Policy quality risk.
+
+- Ownership:
+  - Conservation Intelligence posee conservation y persistence metrics.
+  - Productivity consume conservation signals para evitar tratar output fragil como productividad durable.
+
+4.11 Productive Advisor Capacity Metrics
+
+- Ejemplos:
+  - Active advisor.
+  - Producing advisor.
+  - Repeat-producing advisor.
+  - Consistently productive advisor.
+  - Advisor productivity trend.
+  - Advisor productivity risk.
+
+- Ownership:
+  - Productivity posee productivity interpretation.
+  - Partner Intelligence consume Productive Advisor Capacity.
+  - Advisor Development consume productivity feedback.
+
+
+5. Events
+
+5.1 Regla general de eventos
+
+- Productivity Events no deben duplicar Production Events.
+
+- Production Events son hechos.
+
+- Productivity Events son:
+  - Interpretations.
+  - Milestones.
+  - Risk signals.
+  - Snapshot/system events.
+
+5.2 Activity Events
+
+- Ejemplos consumidos desde Mick u otros workflows:
+  - TASK_COMPLETED.
+  - FOLLOWUP_COMPLETED.
+  - CONTACT_ATTEMPTED.
+  - CONTACT_COMPLETED.
+  - APPOINTMENT_BOOKED.
+  - APPOINTMENT_COMPLETED.
+  - REFERRAL_REQUESTED.
+  - REFERRAL_RECEIVED.
+
+- Naturaleza:
+  - Behavior fact or activity event.
+
+- Ownership:
+  - Mick, Relationship Intelligence o workflow-specific domain.
+
+- Uso en Productivity:
+  - Conversion interpretation.
+
+5.3 Production Events
+
+- Ejemplos consumidos:
+  - POLICY_ISSUED.
+  - POLICY_PAID.
+  - PAYMENT_POSTED.
+  - POLICY_CANCELLED.
+  - POLICY_REINSTATED.
+
+- Naturaleza:
+  - Fact events.
+
+- Ownership:
+  - Production Events foundation.
+
+- Uso en Productivity:
+  - Output interpretation.
+
+5.4 Interpretation Events
+
+- Ejemplos:
+  - PRODUCTIVITY_SIGNAL_UPDATED.
+  - ACTIVITY_TO_OUTPUT_CONVERSION_UPDATED.
+  - PRODUCTIVITY_BOTTLENECK_DETECTED.
+  - PRODUCTIVITY_RISK_DETECTED.
+  - PRODUCTIVITY_TREND_CHANGED.
+  - PRODUCTIVITY_CONCENTRATION_DETECTED.
+  - PRODUCTIVITY_QUALITY_RISK_DETECTED.
+
+- Naturaleza:
+  - Interpretation events.
+
+- Ownership:
+  - Productivity Intelligence.
+
+5.5 Milestone Events
+
+- Ejemplos:
+  - FIRST_PRODUCTIVITY_PERIOD_COMPLETED.
+  - FIRST_REPEAT_PRODUCTION_DETECTED.
+  - CONSISTENT_OUTPUT_DETECTED.
+  - PRODUCTIVE_ADVISOR_CAPACITY_DETECTED.
+  - PRODUCTIVITY_RECOVERY_DETECTED.
+
+- Naturaleza:
+  - Interpretation or milestone events.
+
+- Guardrail:
+  - FIRST_PRODUCTION no implica automaticamente PRODUCTIVE_ADVISOR_CAPACITY.
+
+5.6 Failure Events
+
+- Ejemplos:
+  - ACTIVITY_NOT_CONVERTING.
+  - PIPELINE_STALLED.
+  - APPOINTMENT_CONVERSION_FAILURE.
+  - FOLLOWUP_CONVERSION_FAILURE.
+  - REPEAT_PRODUCTION_FAILURE.
+  - PRODUCTIVITY_DROP_DETECTED.
+
+- Naturaleza:
+  - Interpretation events.
+
+- Ownership:
+  - Productivity Intelligence.
+
+- Dependencias:
+  - Mick.
+  - Revenue.
+  - Production Events.
+  - PeriodSnapshot.
+
+
+6. Ownership
+
+6.1 Propiedad de Productivity Intelligence
+
+- Productivity Intelligence posee:
+  - Productivity interpretation.
+  - Activity-to-output conversion.
+  - Output repeatability.
+  - Productive advisor status.
+  - Productivity trend.
+  - Productivity risk.
+  - Productivity bottleneck.
+  - Productivity quality interpretation.
+  - Productivity alerts.
+  - Productivity signals for Partner and Manager.
+  - Productivity feedback to Advisor Development.
+
+6.2 No propiedad de Productivity Intelligence
+
+- Productivity Intelligence no posee:
+  - Raw tasks.
+  - Raw behavior execution.
+  - Follow-up discipline.
+  - Task assignment.
+  - Production Events.
+  - Commission calculations.
+  - Bonus calculations.
+  - Contest policy count.
+  - LIMRA.
+  - IGC.
+  - Persistency.
+  - Career stage.
+  - Business plan goals.
+  - Advisor Experience learning states.
+  - Manager compensation.
+
+6.3 Ownership por dominio relacionado
+
+- Mick:
+  - Behavior execution.
+  - Activity completion.
+  - Cadence.
+  - Consistency of behavior.
+  - Coaching responsiveness as behavior.
+  - Execution gaps.
+  - Follow-up discipline.
+
+- Production Events:
+  - Policy fact events.
+  - Payment facts.
+  - Production facts.
+  - Cancellation facts.
+  - Reinstatement facts.
+
+- Revenue Intelligence:
+  - Opportunity pipeline.
+  - Revenue opportunity.
+  - Revenue forecast when applicable.
+  - Client opportunity context.
+
+- Advisor Development:
+  - Signed-to-productive transformation.
+  - Development readiness.
+  - Learning progress.
+  - Coachability as transformation.
+  - First production readiness.
+
+- Manager Intelligence:
+  - Team interpretation.
+  - Manager coaching priority.
+  - Unit risk.
+  - Advisor intervention priority.
+  - Team productivity distribution as management insight.
+
+- Compensation Intelligence:
+  - Commission explanation.
+  - Bonus explanation.
+  - Payment explanation.
+  - Adjustments.
+  - Reversals.
+
+- Conservation Intelligence:
+  - LIMRA.
+  - IGC.
+  - Persistency.
+  - Conservation.
+  - Siniestralidad.
+  - Conservation quality.
+
+- Career Intelligence:
+  - Career stage.
+  - Career Month.
+  - Career classification.
+  - Stage transitions.
+
+- Economic Motivation:
+  - Economic translation of productivity gaps when compensation rules, evidence and confidence exist.
+
+
+7. Dependencies
+
+7.1 Domain dependencies
+
+- Productivity Intelligence requiere:
+  - Shared Commercial Model.
+  - CommercialPerson.
+  - CommercialAssignment.
+  - CommercialAttribution.
+  - Production Events.
+  - PeriodSnapshot.
+  - RuleSnapshot.
+  - EvidenceRecord.
+  - ProvenanceRecord.
+  - Mick.
+  - Revenue Intelligence.
+  - Advisor Development Intelligence.
+  - Career Intelligence.
+  - Conservation Intelligence when quality is evaluated.
+
+7.2 Data dependencies
+
+- Datos requeridos:
+  - Advisor identity.
+  - Advisor assignment.
+  - Career stage.
+  - Activity history.
+  - Task completion history.
+  - Contact and appointment history.
+  - Pipeline history.
+  - Production event history.
+  - Product line.
+  - Policy status.
+  - Period context.
+  - Source evidence.
+  - Attribution.
+
+7.3 Snapshot dependencies
+
+- Snapshots potenciales:
+  - Productivity Period Snapshot.
+  - Advisor Productivity Snapshot.
+  - Activity-to-Output Snapshot.
+  - Productivity Risk Snapshot.
+  - Productivity Trend Snapshot.
+  - Productive Advisor Capacity Snapshot.
+  - Cohort Productivity Snapshot.
+
+- Guardrail:
+  - Snapshots no son hechos.
+  - Snapshots son interpretaciones capturadas en un punto del tiempo.
+
+7.4 Rule dependencies
+
+- Productivity puede necesitar Rule Pack context para:
+  - Que cuenta como productive.
+  - Que periodo aplica.
+  - Que product lines cuentan.
+  - Que advisor stage aplica.
+  - Que output es eligible.
+  - Que thresholds aplican.
+
+- Guardrail:
+  - PAQ-09 no aprueba thresholds.
+  - Forge Core no debe hardcodear thresholds.
+
+
+8. Lag & Periodicity
+
+8.1 Naturaleza multi-speed
+
+- Productivity tiene varias velocidades:
+  - Behavior puede actualizar daily o near real-time.
+  - Pipeline puede actualizar daily.
+  - Production Events actualizan cuando llegan source facts.
+  - Compensation puede actualizar despues de close o payment.
+  - Conservation puede actualizar con reporting lag.
+
+8.2 Local Productivity View
+
+- Proposito:
+  - Ayudar al advisor y manager a actuar temprano.
+
+- Inputs:
+  - Mick behavior signals.
+  - Pipeline movement.
+  - Appointments.
+  - Follow-ups.
+  - Early production events.
+
+- Naturaleza:
+  - Local predictive or near-current view.
+
+- Riesgo:
+  - No debe presentarse como institutional historical truth.
+
+8.3 Institutional Productivity Confirmation
+
+- Proposito:
+  - Confirmar production con hechos oficiales o source-backed.
+
+- Inputs:
+  - Policy paid.
+  - Carrier report.
+  - Payment posted.
+  - Official production report.
+
+- Naturaleza:
+  - Institutional historical truth.
+
+- Riesgo:
+  - Puede llegar tarde.
+
+8.4 Periodicity model
+
+- Daily:
+  - Activity execution.
+  - Follow-ups.
+  - Contact attempts.
+  - Appointment movement.
+  - Pipeline action.
+
+- Weekly:
+  - Activity-to-output trend.
+  - Pipeline conversion.
+  - Advisor productivity risk.
+  - Manager coaching priorities.
+
+- Monthly:
+  - Production output.
+  - Productivity trend.
+  - Productive advisor status.
+  - Career stage alignment.
+
+- Quarterly:
+  - Manager unit productivity.
+  - Partner capacity.
+  - Business plan progress.
+
+- Lagged:
+  - Conservation-informed quality.
+  - LIMRA.
+  - IGC.
+  - Official reports.
+
+8.5 Lag risks
+
+- Riesgos:
+  - Productivity appears low before official production posts.
+  - Productivity appears high before cancellations or conservation issues emerge.
+  - Manager acts too late if waiting for official reports.
+  - Compensation appears to validate productivity even when output is concentrated or fragile.
+
+- Guardrail:
+  - Productivity debe mostrar current local view.
+  - Productivity debe mostrar confirmed historical view.
+  - Productivity debe mostrar evidence status.
+  - Productivity debe mostrar confidence.
+  - Productivity debe mostrar reporting lag.
+
+
+9. Risks
+
+9.1 Activity equals Productivity
+
+- Riesgo:
+  - Forge trata alta actividad como alta productividad.
+
+- Correccion:
+  - Activity pertenece a Mick.
+  - Productivity requiere output conversion.
+
+9.2 First Output equals Durable Productivity
+
+- Riesgo:
+  - Forge trata first production como productividad durable.
+
+- Correccion:
+  - First production es milestone.
+  - Productivity requiere repeatability y output interpretation.
+
+9.3 Compensation equals Productivity
+
+- Riesgo:
+  - Forge trata ingreso como productividad.
+
+- Correccion:
+  - Compensation es ruled economic interpretation.
+  - Productivity es output effectiveness.
+
+9.4 Production Events equal Productivity
+
+- Riesgo:
+  - Forge trata raw production facts como productividad sin periodo, contexto o repeatability.
+
+- Correccion:
+  - Production Events son hechos.
+  - Productivity es interpretacion.
+
+9.5 Manager Intelligence owns Productivity
+
+- Riesgo:
+  - Manager domain calcula productivity para team alerts.
+
+- Correccion:
+  - Manager consume productivity.
+  - Productivity owns productivity interpretation.
+
+9.6 Revenue Intelligence owns Productivity
+
+- Riesgo:
+  - Revenue pipeline se confunde con productivity.
+
+- Correccion:
+  - Revenue owns opportunities.
+  - Productivity owns activity-to-output performance.
+
+9.7 Conservation lag ignored
+
+- Riesgo:
+  - Produccion de baja calidad se cuenta como productividad durable.
+
+- Correccion:
+  - Conservation signals deben informar productivity quality con lag documentado.
+
+9.8 Rule Pack leakage
+
+- Riesgo:
+  - Productivity thresholds se hardcodean en Core.
+
+- Correccion:
+  - Rule Packs definen thresholds.
+  - Core define primitives y ownership.
+
+9.9 Duplicate metrics
+
+- Riesgo:
+  - Activity conversion se calcula en Mick, Revenue, Manager y Productivity por separado.
+
+- Correccion:
+  - One metric, one owner.
+  - Productivity owns productivity conversion.
+
+9.10 False alerts
+
+- Riesgo:
+  - Alertas se disparan por evidencia incompleta, lag, vista local o ownership ambiguo.
+
+- Correccion:
+  - Alertas deben incluir evidence status, confidence, source y si el signal es local predictive o institutionally confirmed.
+
+
+10. Alerts & Feedback
+
+10.1 Advisor alerts
+
+- Posibles alertas al advisor:
+  - Activity is happening but not creating appointments.
+  - Appointments are happening but not creating opportunities.
+  - Opportunities are not reaching policy stage.
+  - First production has not repeated.
+  - Follow-ups are not converting.
+  - Pipeline is aging.
+  - Productivity is concentrated in one product or source.
+  - Local productivity is improving but not yet confirmed by institutional reporting.
+  - Production exists but quality may be at risk pending conservation signals.
+
+- Cada alerta debe incluir:
+  - What happened.
+  - Why it matters.
+  - What to do next.
+  - Confidence or evidence status.
+
+10.2 Manager alerts
+
+- Posibles alertas al manager:
+  - Advisor has high activity but low output conversion.
+  - Advisor has low activity and declining productivity.
+  - Advisor produced once but has no repeat activity.
+  - Advisor pipeline is aging.
+  - Advisor productivity dropped from prior period.
+  - Team productivity concentrated in one advisor.
+  - Cohort development is not becoming productivity.
+  - Official reporting lag may hide current productivity risk.
+
+10.3 Feedback style
+
+- Feedback al advisor debe ser:
+  - Actionable.
+  - Specific.
+  - Non-punitive.
+  - Economically clear when rules support it.
+  - Connected to next behavior.
+
+- Feedback al manager debe ser:
+  - Prioritized.
+  - Coaching-oriented.
+  - Tied to evidence.
+  - Separated from compensation unless rules support it.
+
+10.4 Advisor Experience integration
+
+- Clippy puede explicar:
+  - Why activity is not productivity.
+  - Why first production is not enough.
+  - Why pipeline aging matters.
+  - Why productivity is not confirmed yet.
+  - Why a manager is recommending a coaching action.
+
+- Candy Crush Experience puede adaptar:
+  - Simpler next actions for low-execution advisors.
+  - Deeper productivity diagnostics for advanced advisors.
+  - Reduced complexity when frustration or low learning is detected.
+
+
+11. Roadmap
+
+11.1 Phase 1: Conceptual Lock
+
+- Objetivo:
+  - Lock the Productivity Intelligence domain boundary.
+
+- Requerido:
+  - Confirm owner responsibilities.
+  - Confirm non-owner boundaries.
+  - Confirm dependency on Mick, Production Events, Revenue and Development.
+  - Confirm no compensation logic.
+
+11.2 Phase 2: Metric Ownership Map
+
+- Objetivo:
+  - Define which productivity metrics are canonical.
+
+- Requerido:
+  - Separate behavior metrics from productivity metrics.
+  - Separate production facts from productivity interpretation.
+  - Separate revenue pipeline from productivity conversion.
+
+11.3 Phase 3: Period and Snapshot Model
+
+- Objetivo:
+  - Define Productivity Period Snapshot.
+
+- Requerido:
+  - Daily, weekly, monthly, quarterly and lagged views.
+  - Local predictive view vs institutional confirmed view.
+
+11.4 Phase 4: Alert Design
+
+- Objetivo:
+  - Define advisor and manager alerts conceptually.
+
+- Requerido:
+  - Evidence.
+  - Confidence.
+  - Next action.
+  - Ownership.
+
+11.5 Phase 5: Economic Motivation Boundary
+
+- Objetivo:
+  - Define when productivity gaps can be translated into economic impact.
+
+- Requerido:
+  - Compensation rules.
+  - Evidence.
+  - Confidence.
+  - Forecast guardrails.
+
+11.6 Phase 6: Implementation Readiness Review
+
+- Objetivo:
+  - Determine if engines can be implemented.
+
+- Requerido:
+  - PAQ lock.
+  - Metric ownership.
+  - Event taxonomy.
+  - Snapshot model.
+  - Rule Pack boundaries.
+
+
+12. Domain Relationships
+
+12.1 Mick
+
+- Mick:
+  - Mide comportamiento y ejecucion.
+
+- Productivity:
+  - Interpreta si la ejecucion se convierte en output.
+
+- Boundary:
+  - Behavior belongs to Mick.
+  - Conversion to output belongs to Productivity.
+
+12.2 Advisor Development
+
+- Advisor Development:
+  - Explica transformacion de signed advisor a productive capacity.
+
+- Productivity:
+  - Da feedback de si esa transformacion ya produce output repetible.
+
+- Boundary:
+  - Development owns readiness and transformation.
+  - Productivity owns durable output interpretation.
+
+12.3 Manager Intelligence
+
+- Manager Intelligence consume productivity para:
+  - Coaching priority.
+  - Advisor intervention.
+  - Team risk.
+  - Unit interpretation.
+
+- Productivity provee:
+  - Advisor productivity signal.
+  - Productivity risk.
+  - Conversion bottleneck.
+  - Productivity trend.
+  - Productivity quality warning.
+
+- Boundary:
+  - Productivity calculates no manager action.
+  - Manager consumes productivity and decides action.
+
+12.4 Revenue Intelligence
+
+- Revenue Intelligence posee:
+  - Opportunity pipeline.
+  - Revenue opportunities.
+  - Revenue forecast.
+  - Client revenue potential.
+
+- Productivity consume:
+  - Pipeline movement.
+  - Opportunity conversion.
+  - Revenue-to-production path.
+
+- Boundary:
+  - Revenue answers where money can come from.
+  - Productivity answers whether advisor execution converts opportunities into output.
+
+12.5 Compensation Intelligence
+
+- Compensation posee:
+  - Commission explanation.
+  - Bonus explanation.
+  - Payment explanation.
+  - Adjustments.
+  - Reversals.
+
+- Productivity:
+  - No calcula dinero.
+  - No proyecta bonus.
+  - No interpreta pagos como productividad sin context.
+
+12.6 Conservation Intelligence
+
+- Conservation posee:
+  - LIMRA.
+  - IGC.
+  - Persistency.
+  - Conservation.
+  - Siniestralidad.
+  - Conservation quality.
+
+- Productivity consume:
+  - Conservation signals to distinguish durable output from fragile output.
+
+- Boundary:
+  - Conservation owns quality metrics.
+  - Productivity consumes quality to qualify productivity durability.
+
+12.7 Career Intelligence
+
+- Career posee:
+  - Career stage.
+  - Career Month.
+  - Career classification.
+  - Stage transitions.
+
+- Productivity provee:
+  - Productivity interpretation when career stage, promotion, classification or progression depends on productivity.
+
+- Rule Pack debe definir:
+  - Any career thresholds.
+  - Any productivity requirements.
+  - Any promotion rules.
+
+12.8 Economic Motivation
+
+- Economic Motivation consume productivity signals.
+
+- Productivity puede identificar:
+  - Activity-to-output gap.
+  - Pipeline conversion gap.
+  - Repeat production gap.
+  - Productivity decline.
+  - Productive capacity risk.
+
+- Economic Motivation puede traducir a:
+  - Potential income impact.
+  - Income at risk.
+  - Expected income range.
+  - Economic urgency.
+
+- Solo cuando existan:
+  - Compensation rules.
+  - RuleSnapshot.
+  - Evidence.
+  - Sufficient confidence.
+  - Explicit forecast uncertainty.
+
+- Guardrails:
+  - No invented financial values.
+  - No guaranteed income.
+  - No bonus projection without Compensation rules.
+  - No productivity-to-money translation without evidence.
+
+
+13. Open Questions
+
+- Que exactamente califica a un advisor como productive?
+- Productivity es stage-dependent?
+- Productivity es product-line dependent?
+- Que periodo es canonical para productivity?
+- Como debe afectar conservation quality a productivity?
+- Como debe tratar Productivity reinstatements?
+- Como debe tratar Productivity cancellations?
+- Como debe interpretarse first production?
+- Como separar Partner-assisted production de advisor-owned capability?
+- Como distinguir local predictive productivity view de official confirmed productivity view?
+- Que metrics son canonical y cuales son solo inputs?
+- Que alerts pueden mostrarse sin generar false confidence?
+- Que snapshots son obligatorios antes de engines?
+
+
+14. Recommendations
+
+- Formalizar Productivity Intelligence como domain candidate.
+
+- Crear un Productivity Metric Ownership Map.
+
+- Definir Productivity Period Snapshot.
+
+- Definir vistas:
+  - Local predictive.
+  - Institutional confirmed.
+
+- Mantener:
+  - Mick como behavior owner.
+  - Production Events como fact owner.
+  - Compensation como economic interpretation owner.
+  - Manager Intelligence como consumer, no owner.
+  - Conservation como owner de quality, LIMRA, IGC y persistency.
+
+- No crear productivity scores sin componentes explicables.
+
+- No traducir productivity a dinero sin Economic Motivation guardrails.
+
+- No tratar first production como durable productivity.
+
+- No hardcodear thresholds en Forge Core.
+
+- No permitir que UI o dashboards calculen productivity independientemente.
+
+- No permitir engines hasta:
+  - PAQ lock.
+  - Metric ownership.
+  - Event taxonomy.
+  - Snapshot model.
+  - Rule Pack boundary.
+  - Consumption boundary with Manager and Economic Motivation.
+
+
+15. Verdict
+
+- Productivity Intelligence es un dominio valido de Forge OS.
+
+- Estado:
+  - ARCHITECTURE CANDIDATE.
+
+- Definicion preliminar oficial:
+  - Productivity Intelligence mide y explica la conversion de comportamiento y actividad comercial del advisor en output de produccion repetible, preservando la separacion entre behavior, production facts, compensation y manager interpretation.
+
+- Official ownership:
+  - Activity-to-output conversion.
+  - Productivity trend.
+  - Productivity risk.
+  - Productivity bottleneck.
+  - Productive advisor capacity signal.
+  - Productivity alerts.
+  - Output repeatability.
+  - Productivity quality interpretation.
+
+- Official non-ownership:
+  - Mick behavior.
+  - Raw tasks.
+  - Production Events.
+  - Compensation.
+  - Contest.
+  - Conservation.
+  - Career stage.
+  - Manager action.
+  - Business planning.
+  - Revenue forecast.
+
+- Siguiente paso:
+  - Productivity Intelligence Hardening.
+
+- Hardening debe cubrir:
+  - Metric ownership.
+  - Event model.
+  - Period model.
+  - Snapshot model.
+  - Rule Pack boundary.
+  - Manager consumption boundary.
+  - Economic Motivation consumption boundary.
+
+- Decision final:
+  - No implementation is approved.
+  - No engines should be created yet.
+  - No UI should consume Productivity as authoritative until hardening is complete.
+

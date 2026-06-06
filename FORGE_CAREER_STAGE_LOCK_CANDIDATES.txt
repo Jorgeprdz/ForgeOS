@@ -1,0 +1,179 @@
+FORGE CAREER STAGE LOCK CANDIDATES
+
+Status:
+CONSTITUTIONAL LOCK CANDIDATES / NOT APPROVED
+
+Purpose:
+List candidate constitutional statements for Career Lifecycle and Career Stage.
+These are not ratified.
+
+LOCK CANDIDATE 1
+
+Career Stage is a first-class architectural primitive.
+
+Reason:
+Career Stage changes how Forge interprets behavior, forecast, compensation,
+planning, onboarding, partner context and manager development.
+
+Risk:
+Requires canonical ownership and evidence contract.
+
+LOCK CANDIDATE 2
+
+Career Stage is not title, compensation, production or org chart.
+
+Reason:
+Any one of those signals alone can misclassify a person.
+
+Risk:
+Local companies may expect their hierarchy to be treated as truth.
+
+LOCK CANDIDATE 3
+
+Forge separates Career Stage, Operating State and Leadership Stage.
+
+Reason:
+This prevents inactive advisors, managers without teams and partners without
+leadership roles from being mis-modeled.
+
+Risk:
+The product may become more complex unless surfaced progressively.
+
+LOCK CANDIDATE 4
+
+The canonical Career Stage model is:
+Candidate, Precontract, Advisor, Professional Advisor, Partner, Senior Partner,
+Managing Partner.
+
+Reason:
+This captures entry, readiness, early operation, maturity, leverage and senior
+career contribution.
+
+Risk:
+Partner/Senior Partner/Managing Partner require evidence definitions before
+implementation.
+
+LOCK CANDIDATE 5
+
+Leadership Stage is a separate dimension:
+Individual Contributor, Manager, Subdirector, Director.
+
+Reason:
+Leadership responsibility can be gained, lost or paused independently from
+career maturity.
+
+Risk:
+Local organizational labels must be mapped carefully.
+
+LOCK CANDIDATE 6
+
+Stage transitions require evidence, confidence and effective period.
+
+Reason:
+Stage changes affect sensitive guidance and manager interpretation.
+
+Risk:
+Without review workflow, ambiguous transitions may become brittle.
+
+LOCK CANDIDATE 7
+
+Regression is not a single decline.
+
+Reason:
+Forge must distinguish temporary risk, dormancy, reactivation and true stage
+regression.
+
+Risk:
+Managers may want aggressive demotion logic for performance management.
+
+LOCK CANDIDATE 8
+
+Candidate identity survives applications, precontract cycles and reentry.
+
+Reason:
+RecruitIdentity is durable; attempts are events, not the person.
+
+Risk:
+Requires careful lifecycle history to avoid overwrites.
+
+LOCK CANDIDATE 9
+
+Success criteria are stage-specific.
+
+Reason:
+Candidate success is fit evidence, precontract success is readiness, advisor
+success is consistency, partner success is leverage, manager success is people
+development.
+
+Risk:
+Product teams may default to production-only because it is easier to measure.
+
+LOCK CANDIDATE 10
+
+Manager Intelligence consumes Career Stage and Leadership Stage to develop
+people, not surveil them.
+
+Reason:
+Career OS increases manager context and therefore needs a strong constitutional
+boundary.
+
+Risk:
+Dashboard culture can turn development signals into pressure.
+
+LOCK CANDIDATE 11
+
+Local organization hierarchy belongs in Organization Profiles or Rule Packs, not
+Forge Core.
+
+Reason:
+Forge Core must remain universal.
+
+Risk:
+If this is not enforced, Forge becomes company-specific.
+
+LOCK CANDIDATE 12
+
+Career Stage must never be inferred from Purpose Snapshot alone.
+
+Reason:
+Purpose is human context, not stage evidence or motivation score.
+
+Risk:
+Purpose data can be misused if treated as performance psychology.
+
+RECOMMENDED LOCK ORDER
+
+Priority 1:
+Forge separates Career Stage, Operating State and Leadership Stage.
+
+Priority 2:
+Stage transitions require evidence, confidence and effective period.
+
+Priority 3:
+Career Stage is not title, compensation, production or org chart.
+
+Priority 4:
+Success criteria are stage-specific.
+
+Priority 5:
+Career Stage is a first-class architectural primitive.
+
+Priority 6:
+The canonical Career Stage model is Candidate, Precontract, Advisor,
+Professional Advisor, Partner, Senior Partner, Managing Partner.
+
+WHY THIS ORDER
+
+Locking separation and evidence first is safer than locking stage names first.
+
+The names matter, but the constitutional protection is the architecture:
+separate dimensions, evidence, confidence and stage-specific success.
+
+FINAL VERDICT
+
+CANDIDATE FOR LOCK.
+
+Reason:
+The lifecycle model is now coherent enough to support Career OS as a serious
+constitutional candidate, but final lock should wait for a formal Career Stage
+Evidence Contract and ownership decision.

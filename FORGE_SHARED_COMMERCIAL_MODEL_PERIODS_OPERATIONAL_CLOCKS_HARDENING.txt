@@ -1,0 +1,995 @@
+1. Canonical Clock Map
+
+Forge no tiene un reloj único. El modelo temporal correcto debe aceptar que un hecho puede:
+
+- ocurrir en una fecha,
+- ser efectivo en otra,
+- reportarse después,
+- evaluarse en otro periodo,
+- pagarse más tarde,
+- corregirse posteriormente.
+
+Relojes obligatorios:
+
+Career Month
+
+Tipo: derivado + snapshot.
+Base: fecha de conexión / contrato.
+Uso: etapa de carrera, Advisor in Development, New Professional, clasificación.
+Obligatorio: sí.
+
+Contest Month
+
+Tipo: derivado + snapshot.
+Base: fecha de concurso.
+Uso: Training Allowance, Conexión, Desarrollo, elegibilidad de concurso.
+Obligatorio: sí.
+
+NP Contest Month
+
+Tipo: derivado + snapshot.
+Base: fecha de entrada a Nuevo Profesional.
+Uso: reglas de Nuevo Profesional, especialmente entrada a mitad de semestre.
+Obligatorio: sí.
+
+Semester Month
+
+Tipo: period snapshot.
+Base: semestre aplicable por regla.
+Uso: Training Allowance, Bono Inicial, Bono Renovación, avances, cierres.
+Obligatorio: sí.
+
+Policy Age Month
+
+Tipo: derivado.
+Base: emisión, vigencia o evento contractual definido por regla.
+Uso: edad de póliza, persistencia, inicial vs renovación.
+Obligatorio: sí.
+
+Policy Year
+
+Tipo: derivado + snapshot.
+Base: Policy Age.
+Uso: comisiones iniciales, renovaciones, persistencia, conservación.
+Obligatorio: sí.
+
+Index Reporting Month
+
+Tipo: report snapshot.
+Base: fuente oficial de índice.
+Uso: LIMRA, IGC, siniestralidad, conservación reportada.
+Obligatorio: sí.
+
+Quarter Month
+
+Tipo: period snapshot.
+Base: calendario/regla.
+Uso: GMM, evaluaciones trimestrales, dependencias de quarter.
+Obligatorio: sí.
+
+Manager Compensation Quarter
+
+Tipo: period snapshot especializado.
+Base: reglas PCV / manager compensation.
+Uso: Productividad, TA dependency, manager gates.
+Obligatorio: sí.
+
+Partner Tenure Semester
+
+Tipo: derivado + snapshot.
+Base: alta Partner / inicio de apoyo.
+Uso: Apoyos, Transición, soportes decrecientes.
+Obligatorio: sí.
+
+Persistence Month
+
+Tipo: derivado.
+Base: edad de póliza.
+Uso: persistencia 13/25, elegibilidad de conservación.
+Obligatorio: sí.
+
+Relojes ocultos obligatorios:
+
+Event Time
+
+Fecha en que ocurrió el hecho real.
+Ejemplo: fecha de emisión, fecha de pago, fecha de cancelación.
+
+Effective Time
+
+Fecha desde la cual el hecho o regla produce efectos.
+Ejemplo: assignment efectivo desde el 1 de marzo, aunque se capturó el 10 de marzo.
+
+Reporting Time
+
+Fecha en que el dato fue reportado o recibido por Forge.
+Ejemplo: LIMRA reportado tres meses después.
+
+Evaluation Time
+
+Fecha o periodo en que Forge evalúa una regla.
+Ejemplo: cierre semestral de Bono Renovación.
+
+Payment Time
+
+Fecha o periodo en que se paga o avanza un resultado económico.
+Ejemplo: bono evaluado en junio, pagado en julio.
+
+Correction Time
+
+Fecha en que una corrección fue recibida o aplicada.
+Ejemplo: carrier corrige reporte de marzo en junio.
+
+Close Period
+
+Periodo operativo donde se congela o cierra una evaluación.
+
+Reopen Period
+
+Periodo donde un cierre puede reabrirse por corrección.
+
+Grace Period
+
+Periodo de tolerancia para pagos, conservación, rehabilitación o elegibilidad.
+
+Reinstatement Period
+
+Periodo en que una póliza rehabilitada puede cambiar efectos de cancelación.
+
+Assignment Effective Period
+
+Vigencia de una asignación.
+
+Attribution Effective Period
+
+Vigencia de una atribución.
+
+Servicing Period
+
+Vigencia de responsabilidad operativa de atención.
+
+Rule Effective Period
+
+Vigencia real de una regla.
+
+Relojes derivados:
+
+- Career Month.
+- Contest Month.
+- NP Contest Month.
+- Policy Age Month.
+- Policy Year.
+- Partner Tenure Semester.
+- Persistence Month.
+
+Relojes candidatos a eliminación:
+
+Ninguno debe eliminarse por completo, pero algunos no deben ser entidades independientes:
+
+- Quarter Month puede ser una variante de PeriodSnapshot.
+- Semester Month puede ser una variante de PeriodSnapshot.
+- Persistence Month puede derivarse de Policy Age Month.
+- Career Month y Contest Month pueden derivarse, pero deben preservarse como snapshots cuando se usan en decisiones.
+
+Regla:
+
+Lo derivado puede recalcularse para análisis, pero cuando participa en una decisión histórica debe quedar snapshotteado.
+
+2. Event Time Model
+
+Forge debe separar seis tiempos:
+
+Event Time
+
+Qué es:
+
+La fecha real en que ocurrió un hecho.
+
+Ejemplos:
+
+- Póliza emitida el 5 de abril.
+- Pago recibido el 10 de abril.
+- Cancelación ocurrida el 20 de mayo.
+
+Cuándo manda:
+
+- Para reconstruir hechos.
+- Para policy age.
+- Para secuencia histórica.
+- Para saber qué ocurrió primero.
+
+Effective Time
+
+Qué es:
+
+La fecha desde la cual un hecho, asignación, regla o cambio produce efectos.
+
+Ejemplos:
+
+- Cambio de manager efectivo el 1 de junio.
+- Regla aplicable desde el 1 de enero.
+- Atribución retroactiva efectiva desde marzo.
+
+Cuándo manda:
+
+- Para asignaciones.
+- Para reglas.
+- Para servicing.
+- Para attribution.
+- Para elegibilidad histórica.
+
+Reporting Time
+
+Qué es:
+
+La fecha en que el dato fue reportado o recibido.
+
+Ejemplos:
+
+- Carrier reporta LIMRA de marzo en junio.
+- Spreadsheet importado en julio contiene producción de mayo.
+
+Cuándo manda:
+
+- Para auditoría.
+- Para saber cuándo Forge pudo conocer el dato.
+- Para reporting lag.
+- Para explicar por qué una decisión anterior no usó un dato posterior.
+
+Evaluation Time
+
+Qué es:
+
+Momento o periodo en que Forge aplica una regla.
+
+Ejemplos:
+
+- Cierre semestral.
+- Evaluación trimestral de Productividad.
+- Evaluación mensual de bono.
+
+Cuándo manda:
+
+- Para contest.
+- Para compensation.
+- Para manager compensation.
+- Para conservation gates.
+
+Payment Time
+
+Qué es:
+
+Momento en que se paga, avanza, revierte o ajusta.
+
+Ejemplos:
+
+- Bono ganado en junio, pagado en julio.
+- Comisión posteada después de emisión.
+
+Cuándo manda:
+
+- Para cashflow.
+- Para estado de pago.
+- Para reconciliación.
+- Para reversas.
+
+Correction Time
+
+Qué es:
+
+Momento en que se recibe, valida o aplica una corrección.
+
+Ejemplos:
+
+- OCR corregido.
+- Carrier corrige reporte.
+- Regla corregida.
+- Manager corrige attribution.
+
+Cuándo manda:
+
+- Para auditoría.
+- Para recalculation.
+- Para preservar historia.
+- Para explicar por qué un resultado cambió.
+
+Cuándo deben coexistir:
+
+Siempre que el dato afecte dinero, elegibilidad, carrera, atribución, conservación o recomendación importante.
+
+Ejemplo:
+
+Póliza emitida el 28 de marzo.
+Pagada el 3 de abril.
+Reportada el 15 de abril.
+Evaluada en cierre semestral de junio.
+Bono pagado en julio.
+Cancelación corregida en septiembre.
+
+Todos los tiempos son distintos y todos importan.
+
+Obligatorios:
+
+- Event Time.
+- Effective Time.
+- Reporting Time.
+- Evaluation Time.
+- Payment Time si hay dinero.
+- Correction Time si hay modificación posterior.
+
+3. Career Clocks
+
+Career clocks gobiernan la trayectoria comercial de una persona.
+
+Fecha conexión
+
+Representa:
+
+- Inicio formal de relación como asesor o contrato/intermediación.
+
+No debe confundirse con:
+
+- Fecha concurso.
+- Fecha de alta operativa.
+- Fecha de primera venta.
+- Fecha de asignación a manager.
+
+Fecha concurso
+
+Representa:
+
+- Fecha desde la cual corren reglas de concurso.
+
+Puede diferir de fecha conexión.
+
+Uso:
+
+- Training Allowance.
+- Desarrollo.
+- Conexión.
+- Contest Month.
+
+Career Month
+
+Representa:
+
+- Mes de carrera desde conexión/contrato.
+
+Uso:
+
+- Advisor in Development.
+- New Professional.
+- clasificación.
+- baseline.
+
+Contest Month
+
+Representa:
+
+- Mes desde fecha concurso.
+
+Uso:
+
+- TA.
+- Desarrollo.
+- Conexión.
+- ventanas de concurso.
+
+NP Contest Month
+
+Representa:
+
+- Mes dentro de la etapa Nuevo Profesional.
+
+Por qué es separado:
+
+- Un asesor puede pasar a NP a mitad de semestre.
+- NP Contest Month 1 no necesariamente es Semester Month 1.
+
+Career Stage Timeline
+
+Debe conservar:
+
+- Candidate.
+- Precontract.
+- Advisor connected.
+- Advisor in Development.
+- New Professional.
+- Professional.
+- Consolidated.
+- Partner.
+- Manager.
+- Director.
+
+Resolución de transición a Nuevo Profesional:
+
+- Career Month puede indicar que terminó desarrollo.
+- NP Contest Month inicia según regla de entrada NP.
+- Semester Month no debe usarse para inferir NP month.
+
+Promociones:
+
+- Promoción a Partner o Manager es CareerEvent.
+- Puede crear nuevo CommercialRole.
+- No borra historial de asesor.
+
+Cambios de etapa:
+
+- Deben ser time-bounded.
+- Deben tener effective time.
+- Deben tener source/provenance.
+
+Cambios de clasificación:
+
+- Deben conservar clasificación histórica.
+- Deben depender de RuleSnapshot.
+
+Inconsistencias críticas:
+
+- Usar fecha conexión como fecha concurso siempre.
+- Usar fecha actual para career month histórico.
+- Usar contest month para policy age.
+- Borrar etapa anterior al cambiar a manager.
+- Tratar partner como si dejara de ser advisor/person.
+
+4. Compensation Clocks
+
+Compensation tiene al menos cinco relojes:
+
+Bonus Evaluation Period
+
+Qué representa:
+
+- Periodo donde se evalúa si un bono se ganó o no.
+
+Ejemplo:
+
+- Semestre para Training Allowance o Bono Renovación.
+- Trimestre para ciertos bonos GMM o manager.
+- Mes para avances o algunos bonos.
+
+Cuándo se gana:
+
+- Se gana conceptualmente cuando los hechos elegibles cumplen reglas dentro del evaluation period.
+
+Compensation Close Period
+
+Qué representa:
+
+- Periodo operativo donde la evaluación se cierra.
+
+Cuándo se confirma:
+
+- Cuando el periodo cierra y las fuentes mínimas están disponibles.
+
+Riesgo:
+
+- Cerrar antes de que lleguen reportes o índices puede producir resultados provisionales.
+
+Payment Period
+
+Qué representa:
+
+- Periodo en que se paga, avanza o deposita.
+
+Cuándo se paga:
+
+- Después de evaluation/close, según reglas operativas.
+
+No debe confundirse con:
+
+- Periodo donde se ganó.
+- Periodo donde ocurrió producción.
+
+Reversal Period
+
+Qué representa:
+
+- Periodo en que un pago puede revertirse por cancelación, error, regla o corrección.
+
+Uso:
+
+- Reversas.
+- clawback.
+- ajustes.
+
+Recalculation Period
+
+Qué representa:
+
+- Periodo donde un cálculo se rehace por nueva evidencia, corrección o rule correction.
+
+Cuándo puede recalcularse:
+
+- Si regla permite recalculation.
+- Si source correction lo exige.
+- Si periodo fue reabierto.
+- Si correction time cae dentro de ventana permitida.
+
+Cuándo deja de ser modificable:
+
+- Solo cuando existe regla de finality.
+- Debe distinguir "operationally closed" de "legally/audit final".
+
+Modelo recomendado:
+
+Un bono debe poder decir:
+
+- Producción ocurrió en X.
+- Fue elegible para evaluation period Y.
+- Se cerró en Z.
+- Se pagó en W.
+- Se corrigió/recalculó en C si aplica.
+
+5. Conservation Clocks
+
+Conservation necesita relojes separados para actividad, elegibilidad, evaluación y reporte.
+
+Policy Age Month
+
+Uso:
+
+- Determinar edad de póliza.
+- Distinguir negocio joven vs maduro.
+- Activar persistencia 13/25.
+
+Persistence Month
+
+Uso:
+
+- Medir persistencia a hitos específicos.
+- Puede derivarse de Policy Age.
+
+LIMRA Window
+
+Concepto:
+
+- Ventana de negocio joven/calidad inicial.
+
+Debe separar:
+
+- Activity window: cuándo ocurrió la emisión/pago/cancelación.
+- Eligibility window: cuándo la póliza entra a la población LIMRA.
+- Evaluation window: cuándo se calcula.
+- Reporting window: cuándo se reporta.
+
+IGC Window
+
+Concepto:
+
+- Ventana de conservación general o negocio maduro.
+
+Debe separar:
+
+- Portfolio inclusion.
+- Policy maturity.
+- Evaluation period.
+- Report period.
+
+Index Reporting Month
+
+Representa:
+
+- Mes en que el índice está disponible o fue reportado.
+
+Importante:
+
+- Puede tener rezago aproximado.
+- No debe confundirse con activity month.
+
+Escenario:
+
+Póliza elegible en marzo.
+Cancelación afecta abril.
+Índice se reporta en julio.
+Bono se evalúa en junio.
+
+Forge debe saber:
+
+- Qué ocurrió.
+- Cuándo era elegible.
+- Qué índice estaba disponible al cierre.
+- Qué índice llegó después.
+- Si puede recalcular.
+
+Relojes separados:
+
+- Conservation Activity Period.
+- Conservation Eligibility Period.
+- Conservation Evaluation Period.
+- Conservation Reporting Period.
+- Conservation Correction Period.
+
+6. Assignment & Attribution Clocks
+
+Assignment Effective Period
+
+Representa:
+
+- Vigencia de responsabilidad formal.
+
+Ejemplos:
+
+- Manager assignment.
+- Office assignment.
+- Team assignment.
+- Partner assignment.
+
+Debe preservar:
+
+- startedAt.
+- endedAt.
+- effectiveFrom.
+- effectiveTo.
+- source.
+- reason.
+
+Attribution Effective Period
+
+Representa:
+
+- Vigencia del crédito o atribución.
+
+Ejemplos:
+
+- Connection attribution.
+- Development attribution.
+- Production attribution.
+- Manager attribution.
+- Compensation attribution.
+
+No debe depender automáticamente de assignment actual.
+
+Servicing Period
+
+Representa:
+
+- Vigencia de atención operativa.
+
+Ejemplos:
+
+- asesor servicing.
+- oficina servicing.
+- manager temporal servicing.
+
+Escenarios:
+
+Cambio de manager:
+
+- Nuevo Assignment Effective Period.
+- Manager Attribution debe resolverse por periodo/regla.
+- Producción histórica no se reatribuye automáticamente.
+
+Cambio de oficina:
+
+- Office Assignment cambia.
+- Reglas futuras pueden cambiar.
+- Reglas históricas quedan por RuleSnapshot.
+
+Cambio de partner:
+
+- Partner Assignment cambia.
+- Development/Connection Attribution no cambia salvo correction explícita.
+
+Transferencia de cliente:
+
+- Servicing Period cambia.
+- Relationship puede conservarse.
+- Production Attribution histórica no cambia.
+
+Transferencia de servicing:
+
+- CommercialServicing cambia.
+- Advisor of Record puede o no cambiar.
+- Compensation Attribution puede no cambiar.
+
+Cambio de atribución:
+
+- Debe ser Attribution Correction.
+- Debe tener effective period, correction time, reason, evidence/provenance.
+
+Cómo se preserva historia:
+
+- Nunca overwrite.
+- Cada assignment/attribution/servicing tiene vigencia.
+- Cada resultado histórico apunta al snapshot usado.
+
+7. Rule Clocks
+
+Rule Publication Date
+
+Representa:
+
+- Cuándo se publicó o recibió la regla.
+
+Uso:
+
+- Auditoría.
+- Saber cuándo Forge pudo conocer la regla.
+
+Rule Effective Date
+
+Representa:
+
+- Desde cuándo aplica la regla.
+
+Uso:
+
+- Determinar qué regla gobierna un evento o periodo.
+
+Rule Expiration Date
+
+Representa:
+
+- Hasta cuándo aplica la regla.
+
+Uso:
+
+- Evitar aplicar reglas fuera de vigencia.
+
+Rule Correction Date
+
+Representa:
+
+- Cuándo se corrigió una regla, documento o interpretación.
+
+Uso:
+
+- Correcciones.
+- Recalculation.
+- Preservar historia.
+
+Escenarios:
+
+Regla nueva:
+
+- Publication Date puede ser antes de Effective Date.
+- Se aplica desde Effective Date.
+
+Regla corregida:
+
+- No borra RuleSnapshot anterior.
+- Crea correction record.
+- Declara si es retroactiva.
+
+Regla retroactiva:
+
+- Tiene publication/correction date posterior.
+- Tiene effective date anterior.
+- Requiere policy de recalculation.
+
+Reglas por oficina:
+
+- Rule applicability depende de Office Assignment effective period.
+
+Reglas por segmento:
+
+- Rule applicability depende de role/stage/class snapshot.
+
+Reglas por año de concurso:
+
+- Rule applicability depende de contest year/period, no necesariamente calendar year.
+
+Qué reloj gobierna una regla:
+
+- Effective Date gobierna aplicabilidad.
+- Publication Date gobierna conocimiento/auditoría.
+- Expiration Date gobierna fin de vigencia.
+- Correction Date gobierna cambio posterior.
+- RuleSnapshot gobierna explicación histórica.
+
+8. PeriodSnapshot Model
+
+PeriodSnapshot representa un corte temporal explícito usado para evaluar, reportar, pagar, corregir o explicar una decisión.
+
+Qué representa:
+
+- Un periodo con propósito.
+- Un reloj específico.
+- Una ventana de inicio/fin.
+- Un sujeto evaluado.
+- Una regla o fuente aplicable.
+- Un estado de cierre.
+
+Qué NO representa:
+
+- No es un evento.
+- No es una regla.
+- No es evidencia.
+- No es pago.
+- No es truth.
+- No reemplaza Event Time.
+
+Cómo relaciona múltiples relojes:
+
+Un mismo resultado puede tener varios PeriodSnapshots asociados:
+
+- Production Period.
+- Contest Evaluation Period.
+- Conservation Reporting Period.
+- Compensation Close Period.
+- Payment Period.
+- Correction Period.
+
+Ejemplo:
+
+Una póliza:
+
+- Event Time: emitida en marzo.
+- Effective Time: vigente desde abril.
+- Reporting Period: carrier report de mayo.
+- Contest Evaluation Period: semestre 1.
+- Payment Period: julio.
+- Correction Period: septiembre si se corrige.
+
+Cómo evita ambigüedad:
+
+- Obliga a nombrar el reloj usado.
+- Evita usar "mes" de forma genérica.
+- Permite explicar por qué algo cuenta en un periodo y se paga en otro.
+- Permite separar actividad, reporte, evaluación y pago.
+- Permite preservar snapshots históricos aunque reglas cambien.
+
+Requisitos conceptuales:
+
+- periodType.
+- subject.
+- start/end.
+- clock basis.
+- rule snapshot si aplica.
+- source/reporting basis si aplica.
+- close status.
+- correction status.
+- generatedAt/evaluatedAt.
+
+9. Riesgos críticos
+
+1. Usar fecha actual para calcular career month histórico.
+2. Usar fecha conexión como fecha concurso sin validación.
+3. Usar Semester Month para NP Contest Month.
+4. Usar Event Time como Reporting Time.
+5. Usar Reporting Time como Activity Time.
+6. Pagar en Payment Period equivocado.
+7. Recalcular sin Correction Time.
+8. Reabrir periodo cerrado sin provenance.
+9. Cambio de manager a mitad de trimestre reatribuye producción completa.
+10. Cambio de oficina a mitad de semestre aplica regla incorrecta.
+11. Cambio de grupo a mitad de semestre altera avances históricos.
+12. LIMRA reportado tarde bloquea o altera bono sin política clara.
+13. IGC reportado con rezago se aplica al periodo equivocado.
+14. Póliza rehabilitada se cuenta como nueva producción.
+15. Producción registrada tarde se excluye indebidamente.
+16. Regla corregida borra RuleSnapshot anterior.
+17. Atribución retroactiva cambia bonos pagados sin trace.
+18. Assignment Effective Period confundido con capture date.
+19. Servicing Period confundido con Production Attribution.
+20. PeriodSnapshot genérico sin periodType se vuelve inútil.
+
+Red Team escenarios:
+
+1. Cambio manager mitad trimestre:
+
+Soportable solo si Manager Assignment y Manager Attribution se snapshottean por periodo. Si no, Productividad se rompe.
+
+2. Cambio oficina mitad semestre:
+
+Soportable solo si Office Assignment effective period y RuleSnapshot por oficina existen. Si no, aplica reglas incorrectas.
+
+3. Cambio grupo mitad semestre:
+
+Requiere Career/Class Snapshot por evaluation period. Si no, avances y bonos se recalculan mal.
+
+4. Cambio a NP en octubre:
+
+Requiere NP Contest Month separado de Semester Month. Si no, entra mal a reglas NP.
+
+5. LIMRA reportado 3 meses después:
+
+Requiere activity period, evaluation period, reporting period y recalculation policy. Si no, hay decisiones con datos ausentes o tardíos sin explicación.
+
+6. IGC reportado con rezago:
+
+Mismo problema que LIMRA, pero con cartera madura y renovaciones.
+
+7. Bono Renovación evaluado en semestre y pagado después:
+
+Requiere Bonus Evaluation Period, Close Period y Payment Period.
+
+8. Recalculation retroactiva:
+
+Requiere Correction Time, Recalculation Period, prior output preserved.
+
+9. Póliza rehabilitada:
+
+Requiere Reinstatement Period y regla que determine si restaura elegibilidad o no.
+
+10. Producción registrada tarde:
+
+Requiere Event Time vs Reporting Time vs Evaluation policy.
+
+11. Regla corregida después:
+
+Requiere Rule Correction Date, retroactivity flag y RuleSnapshot preservation.
+
+12. Cambio de atribución retroactivo:
+
+Requiere Attribution Effective Period, Correction Time, provenance y impact assessment.
+
+10. Recomendaciones obligatorias
+
+1. Definir oficialmente Event Time, Effective Time, Reporting Time, Evaluation Time, Payment Time y Correction Time.
+2. Prohibir el uso de "mes" sin periodType.
+3. Hacer PeriodSnapshot obligatorio para toda decisión histórica.
+4. Separar Production Period, Evaluation Period, Close Period, Payment Period y Correction Period.
+5. Separar Career Month, Contest Month y NP Contest Month.
+6. Separar Policy Age Month y Policy Year de calendar month.
+7. Separar Index Reporting Month de activity month.
+8. Definir Conservation Activity, Eligibility, Evaluation, Reporting y Correction periods.
+9. Definir Assignment Effective Period, Attribution Effective Period y Servicing Period.
+10. Definir Rule Publication, Effective, Expiration y Correction clocks.
+11. Preservar RuleSnapshot histórico aunque regla sea corregida.
+12. Preservar output anterior en recalculation.
+13. Definir finality: cuándo un periodo está cerrado, reabrible o final.
+14. Definir treatment de late production.
+15. Definir treatment de rehabilitations.
+16. Definir treatment de retroactive attribution changes.
+17. Definir treatment de index lag.
+18. Definir period alignment para manager compensation.
+19. Definir period alignment para Advisor Experience baseline.
+20. No permitir FOUNDATION LOCK hasta que el modelo soporte los 12 escenarios Red Team.
+
+11. ¿Está listo para FOUNDATION LOCK?
+
+No.
+
+El modelo temporal todavía requiere endurecimiento formal antes de FOUNDATION LOCK.
+
+Estado recomendado:
+
+FOUNDATION HARDENING REQUIRED.
+
+Puede avanzar a FOUNDATION CANDIDATE cuando estén documentados:
+
+- Canonical Clock Map.
+- Event Time Model.
+- Career Clocks.
+- Compensation Clocks.
+- Conservation Clocks.
+- Assignment & Attribution Clocks.
+- Rule Clocks.
+- PeriodSnapshot Model.
+- Late production policy.
+- Recalculation/correction period policy.
+
+Puede avanzar a FOUNDATION LOCK solo si soporta:
+
+- cambios de manager/oficina/grupo a mitad de periodo;
+- entrada NP a mitad de semestre;
+- index reporting lag;
+- bonos evaluados y pagados en periodos distintos;
+- producción tardía;
+- rehabilitación;
+- reglas corregidas;
+- atribución retroactiva;
+- periodos cerrados y reabiertos sin borrar historia.
+
+Veredicto:
+
+Forge no puede ser confiable si no puede explicar qué reloj usó. La fundación temporal debe volverse explícita antes de construir Career, Contest, Compensation, Conservation, Manager Compensation, Advisor Experience o Economic Motivation.
+
+12. Calificación arquitectónica
+
+7.5/10.
+
+La dirección conceptual es fuerte: reconoce múltiples relojes y la necesidad de PeriodSnapshot.
+
+Pero todavía no está blindada para producción real hasta que se definan formalmente:
+
+- relojes operativos;
+- cierre y reapertura;
+- reporting lag;
+- correction time;
+- finality;
+- alignment entre activity, evaluation, payment y correction.
+
+Sin eso, Forge podrá calcular, pero no podrá explicar con confianza por qué un resultado temporal es correcto.

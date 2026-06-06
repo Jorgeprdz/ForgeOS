@@ -3,13 +3,17 @@ const { buildTwoBagsExplanation } = require("./imagina-ser-human-language-engine
 function buildClientPresentation({
   clientData,
   scenarioData,
-  decision
+  decision,
+  currencyMetadata = null,
+  scenarioDisclosure = "SCENARIO_BASED_ESTIMATE_NOT_GUARANTEED"
 }) {
   const bags = buildTwoBagsExplanation();
 
   return {
     presentationType: "CLIENT_VIEW",
     rule: "DESIRE_FIRST_PRICE_LAST",
+    currencyMetadata,
+    scenarioDisclosure,
     slides: [
       {
         slide: 1,
@@ -43,7 +47,7 @@ function buildClientPresentation({
         slide: 6,
         title: "El resultado que buscamos",
         body:
-          `En el escenario base, el plan muestra un posible ingreso mensual de ${scenarioData.monthlyIncomeUDI} UDI o un pago único de ${scenarioData.singlePaymentUDI} UDI.`
+          `En el escenario base, el plan muestra un posible ingreso mensual de ${scenarioData.monthlyIncomeUDI} UDI o un pago único de ${scenarioData.singlePaymentUDI} UDI. Es un escenario estimado, no garantizado.`
       },
       {
         slide: 7,

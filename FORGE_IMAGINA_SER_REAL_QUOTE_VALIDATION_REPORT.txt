@@ -1,0 +1,165 @@
+FORGE IMAGINA SER REAL QUOTE VALIDATION REPORT
+
+Status: PASS
+
+Source file:
+/storage/emulated/0/Download/Solucionline_20260602_18_10.PDF
+
+Client:
+Edwin Marquez
+
+Product:
+IMAGINA SER 65 PAGOS LIMITADOS 15
+
+1. EXTRACTION ACCURACY
+
+PDF text extraction:
+PASS
+
+Forge extractor:
+PASS
+
+Extractor used:
+imagina-ser-ocr-extractor.js
+
+Validation script:
+imagina-ser-real-quote-validation.js
+
+Critical fields extracted:
+
+- Client name: Edwin Marquez
+- Birthdate: 30/12/2002
+- Age: 23
+- Gender: Masculino
+- Smoker: No
+- Currency: UDI
+- Product: IMAGINA SER 65 PAGOS LIMITADOS 15
+- Retirement age: 65
+- Payment period: 15 years
+- Coverage period: 42 years
+- Sum insured: 75,000 UDI
+- Product annual premium: 2,943.00 UDI
+- Prima Total Anual: 3,222 UDI
+- Monthly total premium: 269 UDI
+- Quarterly total premium: 806 UDI
+- Semiannual total premium: 1,611 UDI
+- Annual total premium: 3,222 UDI
+- Suggested BMA 65 benefit: 214 UDI annual premium
+- Total with suggested benefits: 3,437 UDI
+- Base scenario: 82,829 UDI one-time payout / 390 UDI monthly income
+- Favorable scenario: 128,697 UDI one-time payout / 606 UDI monthly income
+- Unfavorable scenario: 57,228 UDI one-time payout / 270 UDI monthly income
+- Interest rate used: 3.95%
+- Solucionline version: 2.18.5.0
+- Quote generation date: 02/06/2026
+
+2. MISSING FIELDS
+
+No required PDF fields were missing from direct extraction.
+
+3. VERIFIED UDI STATUS
+
+Status:
+VERIFIED_UDI_RATE_AVAILABLE
+
+Source:
+BANXICO_SIE_API
+
+Source mode:
+CACHE
+
+Source date:
+10/06/2026
+
+UDI value:
+8.82994 MXN
+
+4. VALIDATION CHECKS
+
+Sum insured:
+PASS
+- PDF value: 75,000 UDI
+- Extracted value: 75,000 UDI
+
+Annual premium:
+PASS
+- PDF product row annual premium: 2,943.00 UDI
+- PDF total annual premium: 3,222 UDI
+- Extracted product row annual premium: 2,943.00 UDI
+- Extracted total annual premium: 3,222 UDI
+
+Scenario values:
+PASS
+- Base: 82,829 UDI / 390 UDI
+- Favorable: 128,697 UDI / 606 UDI
+- Unfavorable: 57,228 UDI / 270 UDI
+
+Retirement age:
+PASS
+- PDF value: 65
+- Extracted value: 65
+
+Payment period:
+PASS
+- PDF value: 15 years
+- Extracted value: 15 years
+
+Coverage period:
+PASS
+- PDF value: 42 years
+- Extracted value: 42 years
+
+5. MISMATCHES FOUND
+
+None.
+
+6. VALIDATION COMMAND OUTPUT SUMMARY
+
+Command:
+node imagina-ser-real-quote-validation.js
+
+Result:
+PASS
+
+Summary:
+- Total: 11
+- Pass: 11
+- Fail: 0
+
+Checks:
+- Client name: PASS
+- Premium extraction: PASS
+- Total annual premium extraction: PASS
+- Coverage period: PASS
+- Accumulation years mirrors coverage period: PASS
+- Base scenario one-time payout: PASS
+- Favorable scenario one-time payout: PASS
+- Unfavorable scenario one-time payout: PASS
+- Base scenario monthly income: PASS
+- Retirement age: PASS
+- Payment period: PASS
+
+7. CONFIDENCE LEVEL
+
+Source text extraction confidence:
+HIGH
+
+Reason:
+Critical values were visible in the extracted PDF text and matched the document layout.
+
+Forge module extraction confidence for this PDF:
+HIGH
+
+Reason:
+The extractor now returns SOURCE_TEXT evidence for product, coverage, premiums and scenarios.
+
+Overall validation status:
+PASS
+
+8. GENERATED DELIVERABLES
+
+- IMAGINA_SER_EDWIN_RAW_SOURCE_REPORT.md
+- IMAGINA_SER_EDWIN_ADVISOR_INTERPRETATION_REPORT.md
+- IMAGINA_SER_EDWIN_REASONING_DIAGRAM.md
+- FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt
+

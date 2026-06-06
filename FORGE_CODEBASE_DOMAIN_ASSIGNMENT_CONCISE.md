@@ -1,0 +1,5659 @@
+# Codebase Domain Assignment Summary
+
+Status: Static analysis only. No code executed. No code modified. No files moved.
+
+## Executive Summary
+
+- Code files analyzed: 634
+- JS files: 626
+- TS files: 1
+- TSX files: 7
+- Domains detected: 25
+- Possible duplicate groups: 61
+- Possible orphan files: 338
+
+## Domain Index
+
+- Advisor Experience Intelligence: 7 files
+- Alfred / Universal Command Bar: 4 files
+- Business Planning Intelligence: 1 files
+- Command OS: 2 files
+- Compensation Intelligence: 17 files
+- Conservation Intelligence: 12 files
+- Economic Motivation: 3 files
+- Evidence & Provenance: 9 files
+- Forecast Intelligence: 13 files
+- Learning Intelligence: 4 files
+- Manager & Team Intelligence: 21 files
+- Nash Conversation Intelligence: 32 files
+- PeriodSnapshot / Operational Clocks: 4 files
+- Platform Services: 50 files
+- Policy & Sales Operations: 127 files
+- Product Intelligence: 101 files
+- Productivity Intelligence: 14 files
+- Recruitment Intelligence: 6 files
+- Relationship Intelligence: 34 files
+- Revenue Generation: 7 files
+- RuleSnapshot / Rule Pack: 6 files
+- Sales Conversion: 72 files
+- Shared Commercial Model: 7 files
+- Shared Core: 53 files
+- Unknown / Needs Review: 28 files
+
+## Dominio: Advisor Experience Intelligence
+
+### Tipo: UI component
+
+- **Archivo:** ai-orb-widget.js ⚠️
+  - **Ruta:** ai-orb-widget.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for ai orb widget.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** renderAIOrb
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** dashboard-executive.js ⚠️
+  - **Ruta:** dashboard-executive.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for dashboard executive.
+  - **Entradas:** ./smnyl-operating-system-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** dashboard-widget-card.tsx
+  - **Ruta:** dashboard-widget-card.tsx
+  - **Propósito principal:** Presents or coordinates user-facing/view state for dashboard widget card.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** DashboardWidgetCard
+  - **Dependencias relevantes:** predictive-dashboard.tsx
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** live-dashboard-engine.js ⚠️
+  - **Ruta:** live-dashboard-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for live dashboard engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** actualizarDashboard
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** predictive-dashboard.tsx ⚠️
+  - **Ruta:** predictive-dashboard.tsx
+  - **Propósito principal:** Presents or coordinates user-facing/view state for predictive dashboard.
+  - **Entradas:** ./dashboard-widget-card
+  - **Salidas:** PredictiveDashboard
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** team-dashboard-engine.js ⚠️
+  - **Ruta:** team-dashboard-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for team dashboard engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirDashboardEquipo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: unknown
+
+- **Archivo:** concursos.js ⚠️
+  - **Ruta:** concursos.js
+  - **Propósito principal:** Supports concursos; exact role needs manual confirmation.
+  - **Entradas:** ./smnyl-concursos-engine.js
+  - **Salidas:** renderConcursos
+  - **Dependencias relevantes:** smnyl-bonos-engine.js, smnyl-training-allowance-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; large file
+  - **Recomendación:** document source / Rule Pack review
+
+## Dominio: Alfred / Universal Command Bar
+
+### Tipo: UI component
+
+- **Archivo:** command-palette-ui.js
+  - **Ruta:** command-palette-ui.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for command palette ui.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** renderCommandPalette, abrirCommandPalette, cerrarCommandPalette
+  - **Dependencias relevantes:** command-shortcuts-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: engine
+
+- **Archivo:** command-search-engine.js
+  - **Ruta:** command-search-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for command search engine within Alfred / Universal Command Bar.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** buscarComandos
+  - **Dependencias relevantes:** command-palette.tsx
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** universal-search-engine.js ⚠️
+  - **Ruta:** universal-search-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for universal search engine within Alfred / Universal Command Bar.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** buscarUniversal
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: unknown
+
+- **Archivo:** command-palette.js ⚠️
+  - **Ruta:** command-palette.js
+  - **Propósito principal:** Supports command palette; exact role needs manual confirmation.
+  - **Entradas:** ./smnyl-command-palette-engine.js
+  - **Salidas:** initCommandPalette
+  - **Dependencias relevantes:** command-palette.tsx, command-shortcuts-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+## Dominio: Business Planning Intelligence
+
+### Tipo: engine
+
+- **Archivo:** smart-agenda-engine.js ⚠️
+  - **Ruta:** smart-agenda-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart agenda engine within Business Planning Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearEventoAgenda, detectarEventosProximos
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+## Dominio: Command OS
+
+### Tipo: UI component
+
+- **Archivo:** search-quick-actions-engine.js ⚠️
+  - **Ruta:** search-quick-actions-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for search quick actions engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarQuickAction
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: engine
+
+- **Archivo:** command-shortcuts-engine.js ⚠️
+  - **Ruta:** command-shortcuts-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for command shortcuts engine within Command OS.
+  - **Entradas:** ./command-palette-ui.js
+  - **Salidas:** initCommandShortcuts
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+## Dominio: Compensation Intelligence
+
+### Tipo: engine
+
+- **Archivo:** commission-projection-engine.js ⚠️
+  - **Ruta:** commission-projection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for commission projection engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** proyectarComision
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** commissionable-amount-engine.js ⚠️
+  - **Ruta:** commissionable-amount-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for commissionable amount engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularMontoComisionable
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** discovery-insights-engine.js ⚠️
+  - **Ruta:** discovery-insights-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for discovery insights engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarInsightsDescubrimiento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** imagina-ser-human-language-engine.js
+  - **Ruta:** imagina-ser-human-language-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser human language engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-client-presentation-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** mass-import-validation-engine.js ⚠️
+  - **Ruta:** mass-import-validation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for mass import validation engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** validarRowsMasivas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-financial-summary-engine.js ⚠️
+  - **Ruta:** policy-financial-summary-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy financial summary engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarResumenFinancieroPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-smart-sort-engine.js ⚠️
+  - **Ruta:** policy-smart-sort-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy smart sort engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** ordenarPolizas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** primary-risk-engine.js ⚠️
+  - **Ruta:** primary-risk-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for primary risk engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** seleccionarRiesgoPrincipal
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** risk-story-context-engine.js ⚠️
+  - **Ruta:** risk-story-context-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for risk story context engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirContextoHistoriaRiesgo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** shared-document-priority-engine.js
+  - **Ruta:** shared-document-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared document priority engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-ocr-extractor.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** smnyl-cancelaciones-engine.js ⚠️
+  - **Ruta:** smnyl-cancelaciones-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl cancelaciones engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularCancelaciones
+  - **Dependencias relevantes:** smnyl-kpi-engine.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-comisiones-engine.js ⚠️
+  - **Ruta:** smnyl-comisiones-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl comisiones engine within Compensation Intelligence.
+  - **Entradas:** ./smnyl-prima-engine.js
+  - **Salidas:** calcularComision, calcularComisionesLote, calcularTotalComisiones
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-concursos-engine.js ⚠️
+  - **Ruta:** smnyl-concursos-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl concursos engine within Compensation Intelligence.
+  - **Entradas:** ./db.js, ./smnyl-produccion-engine.js, ./smnyl-bonos-engine.js, ./smnyl-training-allowance-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** concursos.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review; no clear exports
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-opportunity-engine.js ⚠️
+  - **Ruta:** smnyl-opportunity-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl opportunity engine within Compensation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarOportunidades
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-produccion-engine.js ⚠️
+  - **Ruta:** smnyl-produccion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl produccion engine within Compensation Intelligence.
+  - **Entradas:** ./smnyl-prima-engine.js
+  - **Salidas:** construirProduccionMensual, obtenerProduccionYTD
+  - **Dependencias relevantes:** smnyl-concursos-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-training-allowance-engine.js ⚠️
+  - **Ruta:** smnyl-training-allowance-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl training allowance engine within Compensation Intelligence.
+  - **Entradas:** ./smnyl-concursos-config.js
+  - **Salidas:** calcularTrainingAllowance
+  - **Dependencias relevantes:** smnyl-concursos-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: unknown
+
+- **Archivo:** smnyl-productos-vida.js ⚠️
+  - **Ruta:** smnyl-productos-vida.js
+  - **Propósito principal:** Supports smnyl productos vida; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SMNYL_PRODUCTOS_VIDA
+  - **Dependencias relevantes:** smnyl-prima-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+
+## Dominio: Conservation Intelligence
+
+### Tipo: UI component
+
+- **Archivo:** smnyl-executive-dashboard-engine.js ⚠️
+  - **Ruta:** smnyl-executive-dashboard-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for smnyl executive dashboard engine.
+  - **Entradas:** ./smnyl-kpi-engine.js, ./smnyl-health-score-engine.js, ./smnyl-forecast-engine.js
+  - **Salidas:** construirDashboardEjecutivo
+  - **Dependencias relevantes:** smnyl-operating-system-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: engine
+
+- **Archivo:** command-execution-engine.js ⚠️
+  - **Ruta:** command-execution-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for command execution engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** ejecutarComando
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smart-field-detection-engine.js
+  - **Ruta:** smart-field-detection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart field detection engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarCampos
+  - **Dependencias relevantes:** mass-import-mapping-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** smnyl-anomaly-engine.js ⚠️
+  - **Ruta:** smnyl-anomaly-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl anomaly engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarAnomalias
+  - **Dependencias relevantes:** smnyl-operating-system-engine.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-insights-engine.js ⚠️
+  - **Ruta:** smnyl-insights-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl insights engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarInsights
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-kpi-engine.js ⚠️
+  - **Ruta:** smnyl-kpi-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl kpi engine within Conservation Intelligence.
+  - **Entradas:** ./smnyl-persistencia-engine.js, ./smnyl-retencion-engine.js, ./smnyl-cancelaciones-engine.js
+  - **Salidas:** construirKPIs
+  - **Dependencias relevantes:** smnyl-executive-dashboard-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-persistencia-engine.js ⚠️
+  - **Ruta:** smnyl-persistencia-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl persistencia engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularPersistencia, calcularPersistencia13M, calcularPersistencia25M, calcularConservacionPrima, construirResumenPersistencia
+  - **Dependencias relevantes:** smnyl-kpi-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-renovaciones-engine.js ⚠️
+  - **Ruta:** smnyl-renovaciones-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl renovaciones engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerRenovacionesMes
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-retencion-engine.js ⚠️
+  - **Ruta:** smnyl-retencion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl retencion engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularRetencionClientes
+  - **Dependencias relevantes:** smnyl-kpi-engine.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-risk-engine.js ⚠️
+  - **Ruta:** smnyl-risk-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl risk engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarPolizasRiesgo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-time-block-engine.js ⚠️
+  - **Ruta:** smnyl-time-block-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl time block engine within Conservation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirAgendaIA
+  - **Dependencias relevantes:** smnyl-operating-system-engine.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+
+### Tipo: unknown
+
+- **Archivo:** smnyl-comisiones-vida.js ⚠️
+  - **Ruta:** smnyl-comisiones-vida.js
+  - **Propósito principal:** Supports smnyl comisiones vida; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SMNYL_VIDA_RULES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+
+## Dominio: Economic Motivation
+
+### Tipo: adapter
+
+- **Archivo:** gmm-quote-parser.js ⚠️
+  - **Ruta:** gmm-quote-parser.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for gmm quote parser.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** parseGMMQuote
+  - **Dependencias relevantes:** tests/gmm-out-of-pocket-test.js, tests/real-gmm-quote-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: engine
+
+- **Archivo:** shared-tax-profile-engine.js
+  - **Ruta:** shared-tax-profile-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared tax profile engine within Economic Motivation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-fiscal-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: utility
+
+- **Archivo:** financial-utils.js
+  - **Ruta:** financial-utils.js
+  - **Propósito principal:** Provides helper/utility behavior for financial utils.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** roundMoney, sanitizeMoney, formatCurrency, safeDivide, calculatePercentage, sumMoney
+  - **Dependencias relevantes:** cartera-normalizer.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Evidence & Provenance
+
+### Tipo: UI component
+
+- **Archivo:** policy-human-review-engine.js ⚠️
+  - **Ruta:** policy-human-review-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for policy human review engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** requiereRevisionHumana
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** staging-review-engine.js ⚠️
+  - **Ruta:** staging-review-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for staging review engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** prepararRevision, confirmarRevision
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: engine
+
+- **Archivo:** vida-mujer-client-presentation-engine.js ⚠️
+  - **Ruta:** vida-mujer-client-presentation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for vida mujer client presentation engine within Evidence & Provenance.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-client-presentation-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: script
+
+- **Archivo:** forge-schema-reporter.js ⚠️
+  - **Ruta:** forge-schema-reporter.js
+  - **Propósito principal:** Supports forge schema reporter; exact role needs manual confirmation.
+  - **Entradas:** fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: test
+
+- **Archivo:** candidate-hard-factors-master-test.js ⚠️
+  - **Ruta:** candidate-hard-factors-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for candidate hard factors master test.
+  - **Entradas:** ./candidate-hard-factors-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** candidate-vital-factors-master-test.js ⚠️
+  - **Ruta:** candidate-vital-factors-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for candidate vital factors master test.
+  - **Entradas:** ./candidate-vital-factors-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** interview-evidence-fixture-test.js
+  - **Ruta:** interview-evidence-fixture-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for interview evidence fixture test.
+  - **Entradas:** fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-intent-master-test.js
+  - **Ruta:** nash-intent-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash intent master test.
+  - **Entradas:** ./nash-intent-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** precontract-activity-fixture-test.js
+  - **Ruta:** precontract-activity-fixture-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for precontract activity fixture test.
+  - **Entradas:** fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Forecast Intelligence
+
+### Tipo: engine
+
+- **Archivo:** dynamic-cash-value-projection-engine.js
+  - **Ruta:** dynamic-cash-value-projection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for dynamic cash value projection engine within Forecast Intelligence.
+  - **Entradas:** ./projection-engine.js, ./projection-milestone-engine.js
+  - **Salidas:** proyectarValoresRescateDinamicos
+  - **Dependencias relevantes:** presentation-input-pipeline.js, tests/critical-path-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** future-currency-value-engine.js
+  - **Ruta:** future-currency-value-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for future currency value engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-protected-diseases-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-scenario-engine.js
+  - **Ruta:** imagina-ser-scenario-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser scenario engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** orvi-wait-vs-cancel-engine.js
+  - **Ruta:** orvi-wait-vs-cancel-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for orvi wait vs cancel engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-client-report-test.js, orvi-master-test.js, orvi-mxn-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** projection-engine.js
+  - **Ruta:** projection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for projection engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** proyectarValorFuturo, generarEscenariosProyeccion, proyectarUDI, proyectarUSD, calcularValorRescateMXN
+  - **Dependencias relevantes:** dynamic-cash-value-projection-engine.js, market-data-master-test.js, orvi-mxn-conversion-engine.js, presentation-input-pipeline.js, segu-beca-mxn-timeline-clean-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** projection-milestone-engine.js
+  - **Ruta:** projection-milestone-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for projection milestone engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularYearsUntilTarget, seleccionarHitosSignificativos
+  - **Dependencias relevantes:** dynamic-cash-value-projection-engine.js, tests/critical-path-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-currency-projection-engine.js
+  - **Ruta:** shared-currency-projection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared currency projection engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** market-data-master-test.js, orvi-mxn-conversion-engine.js, segu-beca-mxn-timeline-clean-report.js, shared-meaningful-numbers-engine.js, shared-mxn-timeline-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-meaningful-numbers-engine.js
+  - **Ruta:** shared-meaningful-numbers-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared meaningful numbers engine within Forecast Intelligence.
+  - **Entradas:** ./shared-currency-projection-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-meaningful-numbers-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-projection-scenarios-engine.js
+  - **Ruta:** shared-projection-scenarios-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared projection scenarios engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-meaningful-numbers-report.js, segu-beca-mxn-appendix-report.js, segu-beca-mxn-timeline-clean-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** smnyl-forecast-engine.js ⚠️
+  - **Ruta:** smnyl-forecast-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl forecast engine within Forecast Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularForecastMensual
+  - **Dependencias relevantes:** smnyl-executive-dashboard-engine.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+
+### Tipo: script
+
+- **Archivo:** segu-beca-meaningful-numbers-report.js ⚠️
+  - **Ruta:** segu-beca-meaningful-numbers-report.js
+  - **Propósito principal:** Supports segu beca meaningful numbers report; exact role needs manual confirmation.
+  - **Entradas:** ./exchange-rate-cache-engine, ./shared-projection-scenarios-engine, ./shared-meaningful-numbers-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** segu-beca-mxn-appendix-report.js ⚠️
+  - **Ruta:** segu-beca-mxn-appendix-report.js
+  - **Propósito principal:** Supports segu beca mxn appendix report; exact role needs manual confirmation.
+  - **Entradas:** ./exchange-rate-cache-engine, ./shared-projection-scenarios-engine, ./shared-mxn-timeline-engine, fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: test
+
+- **Archivo:** real-retirement-mxn-scenario-test.js
+  - **Ruta:** tests/real-retirement-mxn-scenario-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for real retirement mxn scenario test.
+  - **Entradas:** ../policy-ocr-engine.js, ../solucionline-retirement-parser.js, ../retirement-presentation-scenario-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Learning Intelligence
+
+### Tipo: engine
+
+- **Archivo:** ai-sales-coach-engine.js ⚠️
+  - **Ruta:** ai-sales-coach-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for ai sales coach engine within Learning Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarCoachingIA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-ai-coach-engine.js ⚠️
+  - **Ruta:** smnyl-ai-coach-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl ai coach engine within Learning Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarCoaching
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-alerts-engine.js ⚠️
+  - **Ruta:** smnyl-alerts-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl alerts engine within Learning Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarAlertasConcursos
+  - **Dependencias relevantes:** smnyl-automation-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: test
+
+- **Archivo:** nash-learning-master-test.js
+  - **Ruta:** nash-learning-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash learning master test.
+  - **Entradas:** ./nash-learning-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Manager & Team Intelligence
+
+### Tipo: UI component
+
+- **Archivo:** app-shell-manager.js ⚠️
+  - **Ruta:** app-shell-manager.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for app shell manager.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** AppShell
+  - **Dependencias relevantes:** app.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; threshold/static scoring
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: engine
+
+- **Archivo:** dna-coaching-engine.js ⚠️
+  - **Ruta:** dna-coaching-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for dna coaching engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarCoachingDNA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** live-communication-engine.js ⚠️
+  - **Ruta:** live-communication-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for live communication engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirEstadoComunicacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** manager-broadcast-engine.js ⚠️
+  - **Ruta:** manager-broadcast-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for manager broadcast engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearBroadcastManager
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** manager-coaching-engine.js ⚠️
+  - **Ruta:** manager-coaching-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for manager coaching engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarCoachingManager
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** manager-feed-engine.js ⚠️
+  - **Ruta:** manager-feed-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for manager feed engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearEventoManager, ordenarFeedManager
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** manager-notification-engine.js ⚠️
+  - **Ruta:** manager-notification-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for manager notification engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearNotificacionManager
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** manager-role-engine.js ⚠️
+  - **Ruta:** manager-role-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for manager role engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearManager
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** payment-mode-coaching-engine.js ⚠️
+  - **Ruta:** payment-mode-coaching-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for payment mode coaching engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarCoachingFormaPago
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** ranking-engine.js ⚠️
+  - **Ruta:** ranking-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for ranking engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarRanking
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** search-ranking-engine.js ⚠️
+  - **Ruta:** search-ranking-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for search ranking engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** rankearResultados
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-ai-presence-engine.js ⚠️
+  - **Ruta:** smnyl-ai-presence-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl ai presence engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPresenciaIA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-command-center-engine.js ⚠️
+  - **Ruta:** smnyl-command-center-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl command center engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirCommandCenter
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** team-momentum-engine.js ⚠️
+  - **Ruta:** team-momentum-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for team momentum engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularMomentumEquipo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** team-structure-engine.js ⚠️
+  - **Ruta:** team-structure-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for team structure engine within Manager & Team Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearEquipo, agregarAsesorEquipo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: state/store
+
+- **Archivo:** memory-manager.js
+  - **Ruta:** memory-manager.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for memory manager.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Memory
+  - **Dependencias relevantes:** actividad.js, cartera.js, dashboard.js, module-lifecycle.js, route-transition-manager.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: test
+
+- **Archivo:** nash-manager-alert-master-test.js
+  - **Ruta:** nash-manager-alert-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash manager alert master test.
+  - **Entradas:** ./nash-manager-alert-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** referral-opportunity-master-test.js ⚠️
+  - **Ruta:** referral-opportunity-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for referral opportunity master test.
+  - **Entradas:** ./referral-opportunity-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** relationship-opportunity-master-test.js ⚠️
+  - **Ruta:** relationship-opportunity-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for relationship opportunity master test.
+  - **Entradas:** ./relationship-opportunity-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: unknown
+
+- **Archivo:** ovelay-manager.js ⚠️
+  - **Ruta:** ovelay-manager.js
+  - **Propósito principal:** Supports ovelay manager; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** OverlayRuntime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** route-transition-manager.js ⚠️
+  - **Ruta:** route-transition-manager.js
+  - **Propósito principal:** Supports route transition manager; exact role needs manual confirmation.
+  - **Entradas:** ./memory-manager.js
+  - **Salidas:** RouteTransition
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+## Dominio: Nash Conversation Intelligence
+
+### Tipo: UI component
+
+- **Archivo:** objection-prompt-builder.js ⚠️
+  - **Ruta:** objection-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for objection prompt builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptObjecion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** referral-prompt-builder.js ⚠️
+  - **Ruta:** referral-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for referral prompt builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptReferido
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: engine
+
+- **Archivo:** imagina-ser-objection-engine.js
+  - **Ruta:** imagina-ser-objection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser objection engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-advisor-performance-engine.js ⚠️
+  - **Ruta:** nash-advisor-performance-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash advisor performance engine within Nash Conversation Intelligence.
+  - **Entradas:** ./nash-learning-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-advisor-performance-master-test.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** nash-core-engine.js
+  - **Ruta:** nash-core-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash core engine within Nash Conversation Intelligence.
+  - **Entradas:** ./nash-prospect-context-builder, ./nash-council-orchestrator, ./nash-message-recommendation-engine, ./nash-personality-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-integration-master-test.js, nash-master-test.js, nash-v03-master-test.js, nash-v04-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-learning-engine.js
+  - **Ruta:** nash-learning-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash learning engine within Nash Conversation Intelligence.
+  - **Entradas:** fs, path
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-advisor-performance-engine.js, nash-learning-master-test.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-next-best-action-engine.js
+  - **Ruta:** nash-next-best-action-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash next best action engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-combat-intelligence-report-engine.js, nash-core-engine.js, nash-master-acceptance-test.js, nash-next-best-action-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** objection-battle-engine.js ⚠️
+  - **Ruta:** objection-battle-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for objection battle engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverObjecion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** objection-classifier-engine.js ⚠️
+  - **Ruta:** objection-classifier-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for objection classifier engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** clasificarObjecion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** objection-intent-engine.js ⚠️
+  - **Ruta:** objection-intent-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for objection intent engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarIntencionObjecion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** objection-resolution-engine.js ⚠️
+  - **Ruta:** objection-resolution-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for objection resolution engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularObjecionesPendientes
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** objection-response-strategy-engine.js ⚠️
+  - **Ruta:** objection-response-strategy-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for objection response strategy engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** seleccionarEstrategiaObjecion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** orvi-objection-engine.js ⚠️
+  - **Ruta:** orvi-objection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for orvi objection engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** shared-objection-shield-engine.js
+  - **Ruta:** shared-objection-shield-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared objection shield engine within Nash Conversation Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-mxn-timeline-clean-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: orchestrator
+
+- **Archivo:** nash-combat-orchestrator.js
+  - **Ruta:** nash-combat-orchestrator.js
+  - **Propósito principal:** Coordinates multiple modules or workflow steps for nash combat orchestrator.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-combat-intelligence-report-engine.js, nash-combat-master-test.js, nash-master-acceptance-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-master-intelligence-engine.js
+  - **Ruta:** nash-master-intelligence-engine.js
+  - **Propósito principal:** Coordinates multiple modules or workflow steps for nash master intelligence engine.
+  - **Entradas:** ./nash-prospect-context-builder, ./nash-personality-engine, ./nash-intent-engine, ./nash-memory-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-master-acceptance-test.js, nash-master-intelligence-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: script
+
+- **Archivo:** nash-combat-intelligence-report-engine.js
+  - **Ruta:** nash-combat-intelligence-report-engine.js
+  - **Propósito principal:** Supports nash combat intelligence report engine; exact role needs manual confirmation.
+  - **Entradas:** ./nash-combat-orchestrator, ./nash-intent-engine, ./nash-next-best-action-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-combat-intelligence-report-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: state/store
+
+- **Archivo:** objection-memory-engine.js ⚠️
+  - **Ruta:** objection-memory-engine.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for objection memory engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** registrarObjecion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: test
+
+- **Archivo:** forge-ai-connector-master-test.js ⚠️
+  - **Ruta:** forge-ai-connector-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for forge ai connector master test.
+  - **Entradas:** ./forge-ai-prompt-builder, ./forge-ai-guardrails-engine, ./forge-ai-connector
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** nash-advisor-performance-master-test.js
+  - **Ruta:** nash-advisor-performance-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash advisor performance master test.
+  - **Entradas:** ./nash-advisor-performance-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-coaching-insight-master-test.js
+  - **Ruta:** nash-coaching-insight-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash coaching insight master test.
+  - **Entradas:** ./nash-coaching-insight-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-combat-intelligence-report-test.js
+  - **Ruta:** nash-combat-intelligence-report-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash combat intelligence report test.
+  - **Entradas:** ./nash-combat-intelligence-report-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-combat-master-test.js
+  - **Ruta:** nash-combat-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash combat master test.
+  - **Entradas:** ./nash-combat-orchestrator
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-integration-master-test.js
+  - **Ruta:** nash-integration-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash integration master test.
+  - **Entradas:** ./nash-core-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-master-acceptance-test.js
+  - **Ruta:** nash-master-acceptance-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash master acceptance test.
+  - **Entradas:** ./nash-prospect-context-builder, ./nash-personality-engine, ./nash-intent-engine, ./nash-combat-orchestrator, fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-master-intelligence-master-test.js
+  - **Ruta:** nash-master-intelligence-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash master intelligence master test.
+  - **Entradas:** ./nash-master-intelligence-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-memory-master-test.js
+  - **Ruta:** nash-memory-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash memory master test.
+  - **Entradas:** ./nash-memory-engine, fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-next-best-action-master-test.js
+  - **Ruta:** nash-next-best-action-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash next best action master test.
+  - **Entradas:** ./nash-next-best-action-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-personality-master-test.js
+  - **Ruta:** nash-personality-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash personality master test.
+  - **Entradas:** ./nash-personality-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-team-intelligence-master-test.js
+  - **Ruta:** nash-team-intelligence-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash team intelligence master test.
+  - **Entradas:** ./nash-team-intelligence-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-v03-master-test.js
+  - **Ruta:** nash-v03-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash v03 master test.
+  - **Entradas:** ./nash-core-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-v04-master-test.js
+  - **Ruta:** nash-v04-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash v04 master test.
+  - **Entradas:** ./nash-core-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: PeriodSnapshot / Operational Clocks
+
+### Tipo: UI component
+
+- **Archivo:** quick-actions-bar.tsx ⚠️
+  - **Ruta:** quick-actions-bar.tsx
+  - **Propósito principal:** Presents or coordinates user-facing/view state for quick actions bar.
+  - **Entradas:** lucide-react
+  - **Salidas:** QuickActionsBar
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: engine
+
+- **Archivo:** google-calendar-engine.js ⚠️
+  - **Ruta:** google-calendar-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for google calendar engine within PeriodSnapshot / Operational Clocks.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirEventoGoogle, generarLinkGoogleCalendar
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** revenue-optimization-engine.js ⚠️
+  - **Ruta:** revenue-optimization-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for revenue optimization engine within PeriodSnapshot / Operational Clocks.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularValorEsperado, optimizarFormaPago
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** shared-human-financial-language-engine.js
+  - **Ruta:** shared-human-financial-language-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared human financial language engine within PeriodSnapshot / Operational Clocks.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-financial-correction-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Platform Services
+
+### Tipo: UI component
+
+- **Archivo:** dashboard.js ⚠️
+  - **Ruta:** dashboard.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for dashboard.
+  - **Entradas:** ./db.js, ./state-manager.js, ./event-system.js, ./logger.js
+  - **Salidas:** renderDashboard
+  - **Dependencias relevantes:** app.js, predictive-dashboard.tsx, smnyl-operating-system-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; threshold/static scoring; large file
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: adapter
+
+- **Archivo:** csv-parser-engine.js ⚠️
+  - **Ruta:** csv-parser-engine.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for csv parser engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** forge-ai-connector.js
+  - **Ruta:** forge-ai-connector.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for forge ai connector.
+  - **Entradas:** ./forge-ai-prompt-builder, ./forge-ai-guardrails-engine, openai
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-ai-connector-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: config
+
+- **Archivo:** feature-flags.js
+  - **Ruta:** feature-flags.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for feature flags.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Flags
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: engine
+
+- **Archivo:** analytics-engine.js
+  - **Ruta:** analytics-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for analytics engine within Platform Services.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Analytics
+  - **Dependencias relevantes:** app.js, cartera.js, core-app-engine.js, error-boundary.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** core-app-engine.js
+  - **Ruta:** core-app-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for core app engine within Platform Services.
+  - **Entradas:** ./network-manager.js, ./offline-sync.js, ./logger.js, ./performance-monitor.js
+  - **Salidas:** Core
+  - **Dependencias relevantes:** app.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** event-bus-engine.js ⚠️
+  - **Ruta:** event-bus-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for event bus engine within Platform Services.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** EventBus
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** mutation-engine.js ⚠️
+  - **Ruta:** mutation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for mutation engine within Platform Services.
+  - **Entradas:** ./store.js, ./sync-engine.js
+  - **Salidas:** Mutations
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** notification-queue-engine.js ⚠️
+  - **Ruta:** notification-queue-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for notification queue engine within Platform Services.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** agregarNotificacionQueue
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-storage-engine.js ⚠️
+  - **Ruta:** policy-storage-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy storage engine within Platform Services.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** guardarPoliza, obtenerPolizas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** realtime-engine.js
+  - **Ruta:** realtime-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for realtime engine within Platform Services.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Realtime
+  - **Dependencias relevantes:** sync-orchestrator.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-banxico-rate-engine.js
+  - **Ruta:** shared-banxico-rate-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared banxico rate engine within Platform Services.
+  - **Entradas:** https
+  - **Salidas:** {
+  - **Dependencias relevantes:** exchange-rate-cache-engine.js, shared-banxico-rate-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** storage-engine.js
+  - **Ruta:** storage-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for storage engine within Platform Services.
+  - **Entradas:** ./storage-validator.js, ./storage-queue.js
+  - **Salidas:** Storage
+  - **Dependencias relevantes:** db.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** sync-engine.js
+  - **Ruta:** sync-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sync engine within Platform Services.
+  - **Entradas:** ./runtime.js
+  - **Salidas:** SyncRuntime
+  - **Dependencias relevantes:** mutation-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: orchestrator
+
+- **Archivo:** notification-orchestrator.js ⚠️
+  - **Ruta:** notification-orchestrator.js
+  - **Propósito principal:** Coordinates multiple modules or workflow steps for notification orchestrator.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** enviarNotificacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sync-orchestrator.js
+  - **Ruta:** sync-orchestrator.js
+  - **Propósito principal:** Coordinates multiple modules or workflow steps for sync orchestrator.
+  - **Entradas:** ./offline-sync.js, ./realtime-engine.js, ./state-manager.js, ./event-system.js
+  - **Salidas:** SyncEngine
+  - **Dependencias relevantes:** app.js, core-app-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: script
+
+- **Archivo:** segu-beca-mxn-timeline-clean-report.js ⚠️
+  - **Ruta:** segu-beca-mxn-timeline-clean-report.js
+  - **Propósito principal:** Supports segu beca mxn timeline clean report; exact role needs manual confirmation.
+  - **Entradas:** ./exchange-rate-cache-engine, ./shared-projection-scenarios-engine, ./shared-currency-projection-engine, ./shared-objection-shield-engine, fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** shared-banxico-rate-report.js ⚠️
+  - **Ruta:** shared-banxico-rate-report.js
+  - **Propósito principal:** Supports shared banxico rate report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-banxico-rate-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: state/store
+
+- **Archivo:** cache-runtime.js
+  - **Ruta:** cache-runtime.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for cache runtime.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** CacheRuntime
+  - **Dependencias relevantes:** query-runtime.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** exchange-rate-cache-engine.js
+  - **Ruta:** exchange-rate-cache-engine.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for exchange rate cache engine.
+  - **Entradas:** ./shared-banxico-rate-engine, fs
+  - **Salidas:** {
+  - **Dependencias relevantes:** market-data-master-test.js, orvi-client-report-test.js, orvi-mxn-master-test.js, segu-beca-meaningful-numbers-report.js, segu-beca-mxn-appendix-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** query-cache.js ⚠️
+  - **Ruta:** query-cache.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for query cache.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** QueryRuntime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sw-cache-config.js ⚠️
+  - **Ruta:** sw-cache-config.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for sw cache config.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** CACHE_CONFIG
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: test
+
+- **Archivo:** forge-master-acceptance-test.js
+  - **Ruta:** forge-master-acceptance-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for forge master acceptance test.
+  - **Entradas:** fs, path, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** market-data-master-test.js
+  - **Ruta:** market-data-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for market data master test.
+  - **Entradas:** ./exchange-rate-cache-engine, ./shared-currency-projection-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** relationship-health-master-test.js ⚠️
+  - **Ruta:** relationship-health-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for relationship health master test.
+  - **Entradas:** ./relationship-health-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: unknown
+
+- **Archivo:** ai-service.js
+  - **Ruta:** ai-service.js
+  - **Propósito principal:** Supports ai service; exact role needs manual confirmation.
+  - **Entradas:** ./event-system.js
+  - **Salidas:** AI
+  - **Dependencias relevantes:** actividad.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** base-repository.js
+  - **Ruta:** base-repository.js
+  - **Propósito principal:** Supports base repository; exact role needs manual confirmation.
+  - **Entradas:** ./telemetry.js
+  - **Salidas:** BaseRepository
+  - **Dependencias relevantes:** cartera-repository.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** crash-runtime.js ⚠️
+  - **Ruta:** crash-runtime.js
+  - **Propósito principal:** Supports crash runtime; exact role needs manual confirmation.
+  - **Entradas:** ./telemetry.js
+  - **Salidas:** CrashRuntimeEngine
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** db.js
+  - **Ruta:** db.js
+  - **Propósito principal:** Supports db; exact role needs manual confirmation.
+  - **Entradas:** ./storage-engine.js
+  - **Salidas:** DB
+  - **Dependencias relevantes:** actividad.js, app.js, cartera-repository.js, cartera-service.js, cartera.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** domain-events.js ⚠️
+  - **Ruta:** domain-events.js
+  - **Propósito principal:** Supports domain events; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** DOMAIN_EVENTS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** health-runtime.js ⚠️
+  - **Ruta:** health-runtime.js
+  - **Propósito principal:** Supports health runtime; exact role needs manual confirmation.
+  - **Entradas:** ./telemetry.js
+  - **Salidas:** HealthRuntimeEngine
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** idle-runtime.js ⚠️
+  - **Ruta:** idle-runtime.js
+  - **Propósito principal:** Supports idle runtime; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** IdleEngine
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** logger.js
+  - **Ruta:** logger.js
+  - **Propósito principal:** Supports logger; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Logger
+  - **Dependencias relevantes:** app.js, cartera.js, core-app-engine.js, dashboard.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** module-lifecycle.js
+  - **Ruta:** module-lifecycle.js
+  - **Propósito principal:** Supports module lifecycle; exact role needs manual confirmation.
+  - **Entradas:** ./memory-manager.js
+  - **Salidas:** Lifecycle
+  - **Dependencias relevantes:** app.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** network-manager.js
+  - **Ruta:** network-manager.js
+  - **Propósito principal:** Supports network manager; exact role needs manual confirmation.
+  - **Entradas:** ./event-system.js, ./state-manager.js
+  - **Salidas:** Network
+  - **Dependencias relevantes:** core-app-engine.js, offline-sync.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** offline-sync.js
+  - **Ruta:** offline-sync.js
+  - **Propósito principal:** Supports offline sync; exact role needs manual confirmation.
+  - **Entradas:** ./db.js, ./network-manager.js
+  - **Salidas:** OfflineSync
+  - **Dependencias relevantes:** core-app-engine.js, sync-orchestrator.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** optimistic-mutation-runtime.js ⚠️
+  - **Ruta:** optimistic-mutation-runtime.js
+  - **Propósito principal:** Supports optimistic mutation runtime; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** OptimisticMutationEngine
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** performance-runtime.js ⚠️
+  - **Ruta:** performance-runtime.js
+  - **Propósito principal:** Supports performance runtime; exact role needs manual confirmation.
+  - **Entradas:** ./telemetry.js
+  - **Salidas:** PerformanceMonitor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-import-queue.js ⚠️
+  - **Ruta:** policy-import-queue.js
+  - **Propósito principal:** Supports policy import queue; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** agregarImportacionQueue, actualizarStatusQueue, obtenerQueue
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** query-runtime.js ⚠️
+  - **Ruta:** query-runtime.js
+  - **Propósito principal:** Supports query runtime; exact role needs manual confirmation.
+  - **Entradas:** ./cache-runtime.js
+  - **Salidas:** QueryRuntime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** retry-runtime.js ⚠️
+  - **Ruta:** retry-runtime.js
+  - **Propósito principal:** Supports retry runtime; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** RetryRuntime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** runtime.js
+  - **Ruta:** runtime.js
+  - **Propósito principal:** Supports runtime; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** RuntimeManager, Runtime
+  - **Dependencias relevantes:** query-runtime.js, sync-engine.js, utils.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** secure-storage.js ⚠️
+  - **Ruta:** secure-storage.js
+  - **Propósito principal:** Supports secure storage; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SecureStore
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** service-worker.js ⚠️
+  - **Ruta:** service-worker.js
+  - **Propósito principal:** Supports service worker; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** storage-queue.js
+  - **Ruta:** storage-queue.js
+  - **Propósito principal:** Supports storage queue; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** StorageQueue
+  - **Dependencias relevantes:** storage-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** supabase-runtime.js ⚠️
+  - **Ruta:** supabase-runtime.js
+  - **Propósito principal:** Supports supabase runtime; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SupabaseRuntime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sync-queue-runtime.js ⚠️
+  - **Ruta:** sync-queue-runtime.js
+  - **Propósito principal:** Supports sync queue runtime; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SyncQueueRuntime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** telemetry.js
+  - **Ruta:** telemetry.js
+  - **Propósito principal:** Supports telemetry; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Telemetry
+  - **Dependencias relevantes:** base-repository.js, crash-runtime.js, health-runtime.js, performance-runtime.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** visibility-runtime.js ⚠️
+  - **Ruta:** visibility-runtime.js
+  - **Propósito principal:** Supports visibility runtime; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** VisibilityEngine
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+
+### Tipo: utility
+
+- **Archivo:** utils.js
+  - **Ruta:** utils.js
+  - **Propósito principal:** Provides helper/utility behavior for utils.
+  - **Entradas:** ./runtime.js, ./overlay-manager.js
+  - **Salidas:** showToast, showConfirm, agendarCita
+  - **Dependencias relevantes:** actividad.js, app.js, auth-guard.js, cartera-normalizer.js, cartera-view.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Policy & Sales Operations
+
+### Tipo: UI component
+
+- **Archivo:** cartera-view.js ⚠️
+  - **Ruta:** cartera-view.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for cartera view.
+  - **Entradas:** ../utils/cartera-utils.js
+  - **Salidas:** CarteraView
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; threshold/static scoring; large file
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** command-palette.tsx ⚠️
+  - **Ruta:** command-palette.tsx
+  - **Propósito principal:** Presents or coordinates user-facing/view state for command palette.
+  - **Entradas:** ./command-registry, ./command-search-engine, ./command-palette.store, react, lucide-react
+  - **Salidas:** CommandPalette
+  - **Dependencias relevantes:** command-palette.js, command-shortcuts-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** dashboard-priority-engine.js ⚠️
+  - **Ruta:** dashboard-priority-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for dashboard priority engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularDashboardPrioridades
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** financial-story-task-builder.js ⚠️
+  - **Ruta:** financial-story-task-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for financial story task builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirFinancialStoryTask
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** mass-import-preview-engine.js ⚠️
+  - **Ruta:** mass-import-preview-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for mass import preview engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarPreviewMasivo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** operational-button.tsx ⚠️
+  - **Ruta:** operational-button.tsx
+  - **Propósito principal:** Presents or coordinates user-facing/view state for operational button.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** OperationalButton
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** operational-card.tsx ⚠️
+  - **Ruta:** operational-card.tsx
+  - **Propósito principal:** Presents or coordinates user-facing/view state for operational card.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** OperationalCard
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** operational-dashboard-engine.js ⚠️
+  - **Ruta:** operational-dashboard-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for operational dashboard engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarDashboardOperativo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-detail-view-model.js ⚠️
+  - **Ruta:** policy-detail-view-model.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for policy detail view model.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearPolicyDetailViewModel
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-import-dashboard-engine.js ⚠️
+  - **Ruta:** policy-import-dashboard-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for policy import dashboard engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarDashboardImports
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-quick-actions-engine.js ⚠️
+  - **Ruta:** policy-quick-actions-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for policy quick actions engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerQuickActions
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-review-priority-engine.js ⚠️
+  - **Ruta:** policy-review-priority-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for policy review priority engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarCamposRevision
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-timeline-view-model.js ⚠️
+  - **Ruta:** policy-timeline-view-model.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for policy timeline view model.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirTimelineViewModel
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** quick-action-executor-engine.js ⚠️
+  - **Ruta:** quick-action-executor-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for quick action executor engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** relationship-review-engine.js
+  - **Ruta:** relationship-review-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for relationship review engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** relationship-master-acceptance-test.js, relationship-master-engine.js, relationship-review-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** smart-header.tsx ⚠️
+  - **Ruta:** smart-header.tsx
+  - **Propósito principal:** Presents or coordinates user-facing/view state for smart header.
+  - **Entradas:** lucide-react
+  - **Salidas:** SmartHeader
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** task-quick-action-engine.js ⚠️
+  - **Ruta:** task-quick-action-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for task quick action engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerAccionesTask
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** ui-render-engine.js
+  - **Ruta:** ui-render-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for ui render engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** RenderEngine
+  - **Dependencias relevantes:** app.js, cartera.js, dashboard.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: config
+
+- **Archivo:** design-tokens.js
+  - **Ruta:** design-tokens.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for design tokens.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** DESIGN_TOKENS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: engine
+
+- **Archivo:** action-resolver-engine.js ⚠️
+  - **Ruta:** action-resolver-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for action resolver engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverAccion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** adaptive-question-engine.js ⚠️
+  - **Ruta:** adaptive-question-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for adaptive question engine within Policy & Sales Operations.
+  - **Entradas:** ./adaptive-question-bank, ./question-style-match-engine
+  - **Salidas:** generarPreguntasAdaptativas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** advisor-alert-engine.js ⚠️
+  - **Ruta:** advisor-alert-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for advisor alert engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarAlertaAsesor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** advisor-monitor-engine.js ⚠️
+  - **Ruta:** advisor-monitor-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for advisor monitor engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** monitorearAsesor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** advisor-score-engine.js ⚠️
+  - **Ruta:** advisor-score-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for advisor score engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularScoreAsesor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** ai-context-engine.js ⚠️
+  - **Ruta:** ai-context-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for ai context engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirContextoIA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** ai-task-suggestion-engine.js ⚠️
+  - **Ruta:** ai-task-suggestion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for ai task suggestion engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarSugerenciasIA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** auto-task-generator-engine.js ⚠️
+  - **Ruta:** auto-task-generator-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for auto task generator engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarTasksAutomaticas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** cartera-import-engine.js ⚠️
+  - **Ruta:** cartera-import-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for cartera import engine within Policy & Sales Operations.
+  - **Entradas:** ./cartera-service.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** command-suggestion-engine.js ⚠️
+  - **Ruta:** command-suggestion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for command suggestion engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sugerirComandos
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** contextual-suggestion-engine.js ⚠️
+  - **Ruta:** contextual-suggestion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for contextual suggestion engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarSugerenciasContextuales
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** currency-normalization-engine.js
+  - **Ruta:** currency-normalization-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for currency normalization engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerMonedaNormalizada
+  - **Dependencias relevantes:** quotation-currency-bridge.js, tests/business-rules-test.js, tests/critical-path-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** event-log-engine.js ⚠️
+  - **Ruta:** event-log-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for event log engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** registrarEvento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** field-confidence-engine.js
+  - **Ruta:** field-confidence-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for field confidence engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularConfidence
+  - **Dependencias relevantes:** policy-field-confidence-map.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** followup-engine.js
+  - **Ruta:** followup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for followup engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarFollowup
+  - **Dependencias relevantes:** nash-core-engine.js, smnyl-automation-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-advisor-analysis-engine.js
+  - **Ruta:** imagina-ser-advisor-analysis-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser advisor analysis engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-decision-engine.js
+  - **Ruta:** imagina-ser-decision-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser decision engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** import-progress-engine.js ⚠️
+  - **Ruta:** import-progress-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for import progress engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularProgress
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** live-notification-engine.js ⚠️
+  - **Ruta:** live-notification-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for live notification engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearNotificacionLive
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** mass-import-mapping-engine.js ⚠️
+  - **Ruta:** mass-import-mapping-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for mass import mapping engine within Policy & Sales Operations.
+  - **Entradas:** ./smart-field-detection-engine.js
+  - **Salidas:** generarMappingMasivo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** notification-priority-engine.js ⚠️
+  - **Ruta:** notification-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for notification priority engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverPrioridad
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** operational-feed-engine.js ⚠️
+  - **Ruta:** operational-feed-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for operational feed engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarFeedOperativo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** orvi-guaranteed-value-timeline-engine.js
+  - **Ruta:** orvi-guaranteed-value-timeline-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for orvi guaranteed value timeline engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-client-report-test.js, orvi-master-test.js, orvi-mxn-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** overdue-task-engine.js ⚠️
+  - **Ruta:** overdue-task-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for overdue task engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarTasksVencidas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** payment-frequency-engine.js ⚠️
+  - **Ruta:** payment-frequency-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for payment frequency engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerFactorFrecuencia
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-activity-engine.js ⚠️
+  - **Ruta:** policy-activity-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy activity engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarActividadPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-ai-insights-engine.js ⚠️
+  - **Ruta:** policy-ai-insights-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy ai insights engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarInsightsIA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-auto-save-engine.js ⚠️
+  - **Ruta:** policy-auto-save-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy auto save engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** autoGuardarImport, obtenerAutoSave
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-batch-processing-engine.js ⚠️
+  - **Ruta:** policy-batch-processing-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy batch processing engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** policy-client-summary-engine.js ⚠️
+  - **Ruta:** policy-client-summary-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy client summary engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarResumenClientePoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-context-engine.js ⚠️
+  - **Ruta:** policy-context-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy context engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirContextoPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-core-engine.js ⚠️
+  - **Ruta:** policy-core-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy core engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearPolizaCore
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-detail-alert-engine.js ⚠️
+  - **Ruta:** policy-detail-alert-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy detail alert engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarAlertasDetallePoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-detail-engine.js ⚠️
+  - **Ruta:** policy-detail-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy detail engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirDetallePoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-document-engine.js ⚠️
+  - **Ruta:** policy-document-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy document engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** registrarDocumentoPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-duplicate-engine.js ⚠️
+  - **Ruta:** policy-duplicate-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy duplicate engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarDuplicados
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-import-engine.js ⚠️
+  - **Ruta:** policy-import-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy import engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** policy-import-errors-engine.js ⚠️
+  - **Ruta:** policy-import-errors-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy import errors engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearImportError, agruparErrores
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-import-metrics-engine.js ⚠️
+  - **Ruta:** policy-import-metrics-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy import metrics engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularMetricasImport
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-indexing-engine.js ⚠️
+  - **Ruta:** policy-indexing-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy indexing engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearIndicePolizas, buscarPolizaPorId
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-metadata-engine.js ⚠️
+  - **Ruta:** policy-metadata-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy metadata engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearMetadataPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-ocr-engine.js ⚠️
+  - **Ruta:** policy-ocr-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy ocr engine within Policy & Sales Operations.
+  - **Entradas:** node:child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** tests/gmm-out-of-pocket-test.js, tests/real-gmm-quote-test.js, tests/real-pdf-ocr-test.js, tests/real-retirement-mxn-scenario-test.js, tests/real-retirement-scenario-test.js
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** policy-operational-center-engine.js ⚠️
+  - **Ruta:** policy-operational-center-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy operational center engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirCentroOperativo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-renewal-engine.js
+  - **Ruta:** policy-renewal-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy renewal engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarRenovaciones
+  - **Dependencias relevantes:** tests/smoke-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** policy-risk-engine.js ⚠️
+  - **Ruta:** policy-risk-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy risk engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularRiesgoPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** policy-search-engine.js ⚠️
+  - **Ruta:** policy-search-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy search engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** buscarPolizas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-side-by-side-engine.js ⚠️
+  - **Ruta:** policy-side-by-side-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy side by side engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarVistaComparacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-summary-engine.js ⚠️
+  - **Ruta:** policy-summary-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy summary engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarResumenPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-task-engine.js ⚠️
+  - **Ruta:** policy-task-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy task engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearTask
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-task-priority-engine.js ⚠️
+  - **Ruta:** policy-task-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy task priority engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularPrioridadTask
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-timeline-engine.js
+  - **Ruta:** policy-timeline-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy timeline engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** agregarEventoTimeline
+  - **Dependencias relevantes:** tests/smoke-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** policy-timeline-group-engine.js ⚠️
+  - **Ruta:** policy-timeline-group-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy timeline group engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** agruparTimelinePorDia
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-timeline-query-engine.js ⚠️
+  - **Ruta:** policy-timeline-query-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy timeline query engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerEventosPorTipo, obtenerEventosRecientes
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** policy-workspace-engine.js ⚠️
+  - **Ruta:** policy-workspace-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy workspace engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirWorkspacePoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** realtime-task-engine.js ⚠️
+  - **Ruta:** realtime-task-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for realtime task engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** actualizarTaskRealtime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** referral-timeline-engine.js ⚠️
+  - **Ruta:** referral-timeline-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referral timeline engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearEventoReferido, obtenerTimelineReferido
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** relationship-health-engine.js
+  - **Ruta:** relationship-health-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for relationship health engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** relationship-health-master-test.js, relationship-master-acceptance-test.js, relationship-master-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** relationship-next-action-engine.js
+  - **Ruta:** relationship-next-action-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for relationship next action engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** relationship-master-acceptance-test.js, relationship-master-engine.js, relationship-next-action-master-test.js, relationship-opportunity-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** relationship-opportunity-engine.js ⚠️
+  - **Ruta:** relationship-opportunity-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for relationship opportunity engine within Policy & Sales Operations.
+  - **Entradas:** ./relationship-next-action-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** life-event-engine.js, relationship-master-acceptance-test.js, relationship-master-engine.js, relationship-opportunity-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; threshold/static scoring
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** relationship-timeline-engine.js
+  - **Ruta:** relationship-timeline-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for relationship timeline engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** life-event-engine.js, relationship-master-acceptance-test.js, relationship-master-engine.js, relationship-timeline-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** render-engine.js
+  - **Ruta:** render-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for render engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** RenderRuntime
+  - **Dependencias relevantes:** app.js, cartera.js, dashboard.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** renewal-intelligence-engine.js ⚠️
+  - **Ruta:** renewal-intelligence-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for renewal intelligence engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** analizarRenovacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** semantic-navigation-engine.js ⚠️
+  - **Ruta:** semantic-navigation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for semantic navigation engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** navegarSemanticamente
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** shared-decision-appendix-engine.js
+  - **Ruta:** shared-decision-appendix-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared decision appendix engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** decision-appendix-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-mxn-timeline-engine.js
+  - **Ruta:** shared-mxn-timeline-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared mxn timeline engine within Policy & Sales Operations.
+  - **Entradas:** ./shared-currency-projection-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-mxn-appendix-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-premium-growth-engine.js
+  - **Ruta:** shared-premium-growth-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared premium growth engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-financial-correction-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** smart-notification-engine.js ⚠️
+  - **Ruta:** smart-notification-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart notification engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarNotificacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-operating-system-engine.js ⚠️
+  - **Ruta:** smnyl-operating-system-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl operating system engine within Policy & Sales Operations.
+  - **Entradas:** ./smnyl-executive-dashboard-engine.js, ./smnyl-automation-engine.js, ./smnyl-anomaly-engine.js, ./smnyl-time-block-engine.js
+  - **Salidas:** ejecutarSistemaOperativo
+  - **Dependencias relevantes:** dashboard-executive.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** staging-cleanup-engine.js ⚠️
+  - **Ruta:** staging-cleanup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for staging cleanup engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** limpiarImportsViejos
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** task-engine.js ⚠️
+  - **Ruta:** task-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for task engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearTask
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** task-feed-engine.js ⚠️
+  - **Ruta:** task-feed-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for task feed engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarFeedTasks
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** task-priority-engine.js ⚠️
+  - **Ruta:** task-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for task priority engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularPrioridadTask
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** vida-mujer-survival-schedule-engine.js
+  - **Ruta:** vida-mujer-survival-schedule-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for vida mujer survival schedule engine within Policy & Sales Operations.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** buildVidaMujerSurvivalSchedule
+  - **Dependencias relevantes:** tests/vida-mujer-survival-schedule-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: orchestrator
+
+- **Archivo:** policy-ingestion-orchestrator.js ⚠️
+  - **Ruta:** policy-ingestion-orchestrator.js
+  - **Propósito principal:** Coordinates multiple modules or workflow steps for policy ingestion orchestrator.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+
+### Tipo: script
+
+- **Archivo:** policy-renewal-status-engine.js ⚠️
+  - **Ruta:** policy-renewal-status-engine.js
+  - **Propósito principal:** Supports policy renewal status engine; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerEstadoRenovacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-staging-status-engine.js ⚠️
+  - **Ruta:** policy-staging-status-engine.js
+  - **Propósito principal:** Supports policy staging status engine; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** IMPORT_STATUS, actualizarStatusImport
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-status-engine.js ⚠️
+  - **Ruta:** policy-status-engine.js
+  - **Propósito principal:** Supports policy status engine; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverStatusPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: state/store
+
+- **Archivo:** live-operational-state-engine.js ⚠️
+  - **Ruta:** live-operational-state-engine.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for live operational state engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirEstadoGlobal
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** ocr-result-cache.js ⚠️
+  - **Ruta:** ocr-result-cache.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for ocr result cache.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** guardarOCRResult, obtenerOCRResult, existeOCRCache
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-live-state-engine.js ⚠️
+  - **Ruta:** policy-live-state-engine.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for policy live state engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirEstadoVivo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-staging-cache.js ⚠️
+  - **Ruta:** policy-staging-cache.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for policy staging cache.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearStagingImport, obtenerStagingImport, obtenerTodosStaging
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: test
+
+- **Archivo:** orvi-client-report-test.js ⚠️
+  - **Ruta:** orvi-client-report-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for orvi client report test.
+  - **Entradas:** ./orvi-ocr-extractor, ./orvi-guaranteed-value-timeline-engine, ./orvi-wait-vs-cancel-engine, ./exchange-rate-cache-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** orvi-mxn-master-test.js ⚠️
+  - **Ruta:** orvi-mxn-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for orvi mxn master test.
+  - **Entradas:** ./orvi-ocr-extractor, ./orvi-guaranteed-value-timeline-engine, ./orvi-wait-vs-cancel-engine, ./exchange-rate-cache-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** relationship-next-action-master-test.js ⚠️
+  - **Ruta:** relationship-next-action-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for relationship next action master test.
+  - **Entradas:** ./relationship-next-action-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** relationship-review-master-test.js ⚠️
+  - **Ruta:** relationship-review-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for relationship review master test.
+  - **Entradas:** ./relationship-review-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** relationship-timeline-master-test.js ⚠️
+  - **Ruta:** relationship-timeline-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for relationship timeline master test.
+  - **Entradas:** ./relationship-timeline-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** module-integrity-test.js
+  - **Ruta:** tests/module-integrity-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for module integrity test.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** real-pdf-ocr-test.js ⚠️
+  - **Ruta:** tests/real-pdf-ocr-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for real pdf ocr test.
+  - **Entradas:** ../policy-ocr-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smoke-test.js ⚠️
+  - **Ruta:** tests/smoke-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for smoke test.
+  - **Entradas:** ../policy-timeline-engine.js, ../policy-renewal-engine.js, ../product-detection-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-survival-schedule-test.js ⚠️
+  - **Ruta:** tests/vida-mujer-survival-schedule-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for vida mujer survival schedule test.
+  - **Entradas:** ../vida-mujer-survival-schedule-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: unknown
+
+- **Archivo:** actividad.js ⚠️
+  - **Ruta:** actividad.js
+  - **Propósito principal:** Supports actividad; exact role needs manual confirmation.
+  - **Entradas:** ./db.js, ./ai-service.js, ./event-system.js, ./memory-manager.js
+  - **Salidas:** renderActividad
+  - **Dependencias relevantes:** app.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; large file
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** app.js ⚠️
+  - **Ruta:** app.js
+  - **Propósito principal:** Supports app; exact role needs manual confirmation.
+  - **Entradas:** ./db.js, ./utils.js, ./dashboard.js, ./prospeccion.js
+  - **Salidas:** getSupabase
+  - **Dependencias relevantes:** comisiones.js, decision-appendix-master-test.js, forge-imagina-ser-client-presentation-test.js, imagina-ser-fiscal-master-test.js, prospeccion.js
+  - **Riesgos detectables:** threshold/static scoring; large file
+  - **Recomendación:** split later / review manual
+- **Archivo:** cartera-events.js
+  - **Ruta:** cartera-events.js
+  - **Propósito principal:** Supports cartera events; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** CARTERA_EVENTS, carteraEvents
+  - **Dependencias relevantes:** cartera-service.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** cartera-repository.js ⚠️
+  - **Ruta:** cartera-repository.js
+  - **Propósito principal:** Supports cartera repository; exact role needs manual confirmation.
+  - **Entradas:** ./base-repository.js, ./db.js
+  - **Salidas:** carteraRepository
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** cartera-service.js ⚠️
+  - **Ruta:** cartera-service.js
+  - **Propósito principal:** Supports cartera service; exact role needs manual confirmation.
+  - **Entradas:** ./db.js, ./cartera-normalizer.js, ./cartera-validator.js, ./cartera-events.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** cartera-import-engine.js
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** cartera.js ⚠️
+  - **Ruta:** cartera.js
+  - **Propósito principal:** Supports cartera; exact role needs manual confirmation.
+  - **Entradas:** ./db.js, ./utils.js, ./state-manager.js, ./event-system.js
+  - **Salidas:** renderCartera
+  - **Dependencias relevantes:** app.js, cartera-import-engine.js, cartera-service.js, cartera-view.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; large file
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** command-registry.js
+  - **Ruta:** command-registry.js
+  - **Propósito principal:** Supports command registry; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** COMMANDS
+  - **Dependencias relevantes:** command-palette.tsx
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** error-boundary.js
+  - **Ruta:** error-boundary.js
+  - **Propósito principal:** Supports error boundary; exact role needs manual confirmation.
+  - **Entradas:** ./analytics-engine.js
+  - **Salidas:** ErrorHandler
+  - **Dependencias relevantes:** app.js, core-app-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nano-banana-icon-system-prompt.js ⚠️
+  - **Ruta:** nano-banana-icon-system-prompt.js
+  - **Propósito principal:** Supports nano banana icon system prompt; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** NANO_BANANA_ICON_PROMPT
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** operational-colors.js ⚠️
+  - **Ruta:** operational-colors.js
+  - **Propósito principal:** Supports operational colors; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** OPERATIONAL_COLORS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-document-classifier.js ⚠️
+  - **Ruta:** policy-document-classifier.js
+  - **Propósito principal:** Supports policy document classifier; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** clasificarDocumento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-field-confidence-map.js ⚠️
+  - **Ruta:** policy-field-confidence-map.js
+  - **Propósito principal:** Supports policy field confidence map; exact role needs manual confirmation.
+  - **Entradas:** ./field-confidence-engine.js
+  - **Salidas:** generarConfidenceMap
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-import-summary.js ⚠️
+  - **Ruta:** policy-import-summary.js
+  - **Propósito principal:** Supports policy import summary; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarResumenImportacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-timeline.repository.js ⚠️
+  - **Ruta:** policy-timeline.repository.js
+  - **Propósito principal:** Supports policy timeline.repository; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** agregarEventoTimeline, eliminarEventoTimeline
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-timeline.types.js ⚠️
+  - **Ruta:** policy-timeline.types.js
+  - **Propósito principal:** Supports policy timeline.types; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** TIMELINE_EVENT_TYPES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: utility
+
+- **Archivo:** cartera-utils.js
+  - **Ruta:** cartera-utils.js
+  - **Propósito principal:** Provides helper/utility behavior for cartera utils.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sanitizeHTML, normalizeText, currencyMXN, calculateNextPaymentDate
+  - **Dependencias relevantes:** cartera-view.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** policy-timeline-event.factory.js ⚠️
+  - **Ruta:** policy-timeline-event.factory.js
+  - **Propósito principal:** Provides helper/utility behavior for policy timeline event.factory.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearTimelineEvent
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** quotation-field-normalizer.js
+  - **Ruta:** quotation-field-normalizer.js
+  - **Propósito principal:** Provides helper/utility behavior for quotation field normalizer.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** normalizarCamposCotizacion
+  - **Dependencias relevantes:** presentation-input-pipeline.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Product Intelligence
+
+### Tipo: UI component
+
+- **Archivo:** forge-ai-prompt-builder.js
+  - **Ruta:** forge-ai-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for forge ai prompt builder.
+  - **Entradas:** ./forge-ai-guardrails-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-ai-connector-master-test.js, forge-ai-connector.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** policy-review-ui-engine.js ⚠️
+  - **Ruta:** policy-review-ui-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for policy review ui engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarPreviewPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: adapter
+
+- **Archivo:** imagina-ser-ocr-extractor.js
+  - **Ruta:** imagina-ser-ocr-extractor.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for imagina ser ocr extractor.
+  - **Entradas:** ./shared-document-priority-engine, fs, child_process
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** orvi-ocr-extractor.js ⚠️
+  - **Ruta:** orvi-ocr-extractor.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for orvi ocr extractor.
+  - **Entradas:** fs, child_process
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-client-report-test.js, orvi-master-test.js, orvi-mxn-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** policy-ai-parser.js ⚠️
+  - **Ruta:** policy-ai-parser.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for policy ai parser.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** parsearTextoPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** solucionline-retirement-parser.js ⚠️
+  - **Ruta:** solucionline-retirement-parser.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for solucionline retirement parser.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** parseSolucionlineRetirementQuote
+  - **Dependencias relevantes:** tests/real-retirement-mxn-scenario-test.js, tests/real-retirement-scenario-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-knowledge-extractor-report.js ⚠️
+  - **Ruta:** vida-mujer-knowledge-extractor-report.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for vida mujer knowledge extractor report.
+  - **Entradas:** ./vida-mujer-knowledge-extractor
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; no clear exports
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-knowledge-extractor.js ⚠️
+  - **Ruta:** vida-mujer-knowledge-extractor.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for vida mujer knowledge extractor.
+  - **Entradas:** fs, child_process
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-vida-mujer-advisor-report.js, vida-mujer-financial-correction-report.js, vida-mujer-knowledge-extractor-report.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: engine
+
+- **Archivo:** discovery-product-alignment-engine.js ⚠️
+  - **Ruta:** discovery-product-alignment-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for discovery product alignment engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sugerirEstrategias
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** event-benefit-engine.js
+  - **Ruta:** event-benefit-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for event benefit engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-event-benefits-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** financial-pyramid-engine.js ⚠️
+  - **Ruta:** financial-pyramid-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for financial pyramid engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** evaluarPiramideFinanciera
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** financial-pyramid-priority-engine.js ⚠️
+  - **Ruta:** financial-pyramid-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for financial pyramid priority engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarNivelCritico
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** financial-pyramid-story-engine.js ⚠️
+  - **Ruta:** financial-pyramid-story-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for financial pyramid story engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarNarrativaPiramide
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** forge-ai-guardrails-engine.js ⚠️
+  - **Ruta:** forge-ai-guardrails-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for forge ai guardrails engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-ai-connector-master-test.js, forge-ai-connector.js, forge-ai-prompt-builder.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** gmm-out-of-pocket-engine.js ⚠️
+  - **Ruta:** gmm-out-of-pocket-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for gmm out of pocket engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularParticipacionClienteGMM
+  - **Dependencias relevantes:** tests/gmm-out-of-pocket-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** imagina-ser-article-151-engine.js
+  - **Ruta:** imagina-ser-article-151-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser article 151 engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-fiscal-master-test.js, imagina-ser-fiscal-router-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-article-185-engine.js
+  - **Ruta:** imagina-ser-article-185-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser article 185 engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-fiscal-router-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-contribution-engine.js ⚠️
+  - **Ruta:** imagina-ser-contribution-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser contribution engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** imagina-ser-fiscal-bag-engine.js
+  - **Ruta:** imagina-ser-fiscal-bag-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser fiscal bag engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-fiscal-router-engine.js, imagina-ser-variant-fiscal-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-fiscal-router-engine.js
+  - **Ruta:** imagina-ser-fiscal-router-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser fiscal router engine within Product Intelligence.
+  - **Entradas:** ./imagina-ser-fiscal-bag-engine, ./imagina-ser-article-151-engine, ./imagina-ser-article-185-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-variant-fiscal-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-fiscal-slide-engine.js
+  - **Ruta:** imagina-ser-fiscal-slide-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser fiscal slide engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-fiscal-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-happy-numbers-engine.js
+  - **Ruta:** imagina-ser-happy-numbers-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser happy numbers engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-fiscal-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-retirement-fund-engine.js
+  - **Ruta:** imagina-ser-retirement-fund-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser retirement fund engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-variant-engine.js ⚠️
+  - **Ruta:** imagina-ser-variant-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser variant engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-imagina-ser-client-presentation-test.js, imagina-ser-variant-fiscal-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** life-event-engine.js
+  - **Ruta:** life-event-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for life event engine within Product Intelligence.
+  - **Entradas:** ./nash-memory-engine, ./relationship-timeline-engine, ./relationship-opportunity-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** life-event-master-test.js, relationship-master-acceptance-test.js, relationship-master-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** life-expectancy-projection-engine.js ⚠️
+  - **Ruta:** life-expectancy-projection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for life expectancy projection engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarEdadesObjetivoLongevidad
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** line-of-business-engine.js ⚠️
+  - **Ruta:** line-of-business-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for line of business engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** insuranceLines
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** nash-message-recommendation-engine.js ⚠️
+  - **Ruta:** nash-message-recommendation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash message recommendation engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-core-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** needs-discovery-engine.js ⚠️
+  - **Ruta:** needs-discovery-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for needs discovery engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** analizarNecesidades
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** orvi-decision-engine.js ⚠️
+  - **Ruta:** orvi-decision-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for orvi decision engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** orvi-event-engine.js
+  - **Ruta:** orvi-event-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for orvi event engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** orvi-mxn-conversion-engine.js
+  - **Ruta:** orvi-mxn-conversion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for orvi mxn conversion engine within Product Intelligence.
+  - **Entradas:** ./shared-currency-projection-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-client-report-test.js, orvi-mxn-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** policy-auto-approval-engine.js ⚠️
+  - **Ruta:** policy-auto-approval-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy auto approval engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** puedeAutoAprobar
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-filter-engine.js ⚠️
+  - **Ruta:** policy-filter-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy filter engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** filtrarPolizas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-normalization-engine.js ⚠️
+  - **Ruta:** policy-normalization-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy normalization engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** normalizarPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-validation-engine.js ⚠️
+  - **Ruta:** policy-validation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy validation engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** validarPoliza
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** product-detection-engine.js ⚠️
+  - **Ruta:** product-detection-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for product detection engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarProductoCotizacion, normalizeText, scoreTextMatch, classifyProductDetection
+  - **Dependencias relevantes:** presentation-input-pipeline.js, tests/business-rules-test.js, tests/critical-path-test.js, tests/smoke-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** product-knowledge-link-engine.js
+  - **Ruta:** product-knowledge-link-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for product knowledge link engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** vincularProductKnowledge
+  - **Dependencias relevantes:** presentation-input-pipeline.js, tests/critical-path-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** product-schema-engine.js ⚠️
+  - **Ruta:** product-schema-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for product schema engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearSchemaProducto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** search-index-engine.js ⚠️
+  - **Ruta:** search-index-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for search index engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearIndiceBusqueda
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** segu-beca-client-presentation-engine.js ⚠️
+  - **Ruta:** segu-beca-client-presentation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for segu beca client presentation engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** segu-beca-decision-engine.js
+  - **Ruta:** segu-beca-decision-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for segu beca decision engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** segu-beca-education-comparison-engine.js
+  - **Ruta:** segu-beca-education-comparison-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for segu beca education comparison engine within Product Intelligence.
+  - **Entradas:** ./shared-education-cost-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** education-cost-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** segu-beca-education-options-engine.js ⚠️
+  - **Ruta:** segu-beca-education-options-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for segu beca education options engine within Product Intelligence.
+  - **Entradas:** ./shared-education-paths-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** shared-ave-confidence-engine.js
+  - **Ruta:** shared-ave-confidence-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared ave confidence engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-shared-ave-master-test.js, shared-ave-confidence-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-ave-death-benefit-engine.js
+  - **Ruta:** shared-ave-death-benefit-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared ave death benefit engine within Product Intelligence.
+  - **Entradas:** ./shared-ave-growth-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-shared-ave-master-test.js, shared-ave-death-benefit-report.js, vida-mujer-pdf-ave-integration-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-ave-eligibility-engine.js ⚠️
+  - **Ruta:** shared-ave-eligibility-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared ave eligibility engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-shared-ave-master-test.js, shared-ave-confidence-report.js, vida-mujer-pdf-ave-integration-report.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** shared-ave-growth-engine.js
+  - **Ruta:** shared-ave-growth-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared ave growth engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-shared-ave-master-test.js, shared-ave-death-benefit-engine.js, shared-ave-growth-report.js, shared-ave-portfolio-engine.js, shared-ave-type-inference-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-ave-portfolio-engine.js
+  - **Ruta:** shared-ave-portfolio-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared ave portfolio engine within Product Intelligence.
+  - **Entradas:** ./shared-ave-growth-engine, ./shared-ave-rescue-engine, ./shared-ave-type-inference-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-shared-ave-master-test.js, shared-ave-portfolio-report.js, vida-mujer-pdf-ave-integration-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-ave-rescue-engine.js
+  - **Ruta:** shared-ave-rescue-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared ave rescue engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-shared-ave-master-test.js, shared-ave-portfolio-engine.js, shared-ave-rescue-report.js, shared-ave-type-inference-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-ave-type-inference-engine.js
+  - **Ruta:** shared-ave-type-inference-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared ave type inference engine within Product Intelligence.
+  - **Entradas:** ./shared-ave-growth-engine, ./shared-ave-rescue-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-shared-ave-master-test.js, shared-ave-portfolio-engine.js, shared-ave-type-inference-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-benefit-hierarchy-engine.js ⚠️
+  - **Ruta:** shared-benefit-hierarchy-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared benefit hierarchy engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** decision-appendix-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** shared-decision-clarity-engine.js
+  - **Ruta:** shared-decision-clarity-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared decision clarity engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** decision-appendix-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-education-cost-engine.js
+  - **Ruta:** shared-education-cost-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared education cost engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** segu-beca-education-comparison-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-education-paths-engine.js ⚠️
+  - **Ruta:** shared-education-paths-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared education paths engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** education-paths-master-test.js, segu-beca-education-options-engine.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-bonos-engine.js ⚠️
+  - **Ruta:** smnyl-bonos-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl bonos engine within Product Intelligence.
+  - **Entradas:** ./smnyl-concursos-config.js
+  - **Salidas:** calcularBonosNuevosProfesionales
+  - **Dependencias relevantes:** smnyl-concursos-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-conteo-engine.js ⚠️
+  - **Ruta:** smnyl-conteo-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl conteo engine within Product Intelligence.
+  - **Entradas:** ./smnyl-prima-engine.js
+  - **Salidas:** calcularConteoTotal, calcularConteoVida, calcularConteoGMM
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-cross-sell-engine.js ⚠️
+  - **Ruta:** smnyl-cross-sell-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl cross sell engine within Product Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarCrossSell
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-prima-engine.js ⚠️
+  - **Ruta:** smnyl-prima-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl prima engine within Product Intelligence.
+  - **Entradas:** ./smnyl-productos-vida.js, ./smnyl-productos-gmm.js
+  - **Salidas:** obtenerProducto, calcularPrimaAnualizada, calcularPrimaMeta, calcularPrimaPago, calcularConteo
+  - **Dependencias relevantes:** smnyl-comisiones-engine.js, smnyl-conteo-engine.js, smnyl-produccion-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-protected-diseases-engine.js
+  - **Ruta:** vida-mujer-protected-diseases-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for vida mujer protected diseases engine within Product Intelligence.
+  - **Entradas:** ./future-currency-value-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-protected-diseases-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: script
+
+- **Archivo:** forge-semantic-risk-report.js ⚠️
+  - **Ruta:** forge-semantic-risk-report.js
+  - **Propósito principal:** Supports forge semantic risk report; exact role needs manual confirmation.
+  - **Entradas:** fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** forge-vida-mujer-advisor-report.js ⚠️
+  - **Ruta:** forge-vida-mujer-advisor-report.js
+  - **Propósito principal:** Supports forge vida mujer advisor report; exact role needs manual confirmation.
+  - **Entradas:** ./vida-mujer-knowledge-extractor, ./forge-presentation-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** segu-beca-ocr-intake-report.js ⚠️
+  - **Ruta:** segu-beca-ocr-intake-report.js
+  - **Propósito principal:** Supports segu beca ocr intake report; exact role needs manual confirmation.
+  - **Entradas:** fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** shared-ave-confidence-report.js ⚠️
+  - **Ruta:** shared-ave-confidence-report.js
+  - **Propósito principal:** Supports shared ave confidence report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-ave-confidence-engine, ./shared-ave-eligibility-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** shared-ave-death-benefit-report.js ⚠️
+  - **Ruta:** shared-ave-death-benefit-report.js
+  - **Propósito principal:** Supports shared ave death benefit report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-ave-death-benefit-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** shared-ave-growth-report.js ⚠️
+  - **Ruta:** shared-ave-growth-report.js
+  - **Propósito principal:** Supports shared ave growth report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-ave-growth-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** shared-ave-portfolio-report.js ⚠️
+  - **Ruta:** shared-ave-portfolio-report.js
+  - **Propósito principal:** Supports shared ave portfolio report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-ave-portfolio-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** shared-ave-rescue-report.js ⚠️
+  - **Ruta:** shared-ave-rescue-report.js
+  - **Propósito principal:** Supports shared ave rescue report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-ave-rescue-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** shared-ave-type-inference-report.js ⚠️
+  - **Ruta:** shared-ave-type-inference-report.js
+  - **Propósito principal:** Supports shared ave type inference report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-ave-type-inference-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** vida-mujer-client-explanation-report.js ⚠️
+  - **Ruta:** vida-mujer-client-explanation-report.js
+  - **Propósito principal:** Supports vida mujer client explanation report; exact role needs manual confirmation.
+  - **Entradas:** fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-coverage-status-engine.js
+  - **Ruta:** vida-mujer-coverage-status-engine.js
+  - **Propósito principal:** Supports vida mujer coverage status engine; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-coverage-status-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** vida-mujer-coverage-status-report.js ⚠️
+  - **Ruta:** vida-mujer-coverage-status-report.js
+  - **Propósito principal:** Supports vida mujer coverage status report; exact role needs manual confirmation.
+  - **Entradas:** ./vida-mujer-coverage-status-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-event-benefits-report.js ⚠️
+  - **Ruta:** vida-mujer-event-benefits-report.js
+  - **Propósito principal:** Supports vida mujer event benefits report; exact role needs manual confirmation.
+  - **Entradas:** ./event-benefit-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-financial-correction-report.js ⚠️
+  - **Ruta:** vida-mujer-financial-correction-report.js
+  - **Propósito principal:** Supports vida mujer financial correction report; exact role needs manual confirmation.
+  - **Entradas:** ./vida-mujer-knowledge-extractor, ./shared-financial-return-engine, ./shared-premium-growth-engine, ./shared-protection-efficiency-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-pdf-ave-integration-report.js ⚠️
+  - **Ruta:** vida-mujer-pdf-ave-integration-report.js
+  - **Propósito principal:** Supports vida mujer pdf ave integration report; exact role needs manual confirmation.
+  - **Entradas:** ./shared-ave-portfolio-engine, ./shared-ave-death-benefit-engine, ./shared-ave-eligibility-engine, fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-pdf-intake-report.js ⚠️
+  - **Ruta:** vida-mujer-pdf-intake-report.js
+  - **Propósito principal:** Supports vida mujer pdf intake report; exact role needs manual confirmation.
+  - **Entradas:** fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-protected-diseases-report.js ⚠️
+  - **Ruta:** vida-mujer-protected-diseases-report.js
+  - **Propósito principal:** Supports vida mujer protected diseases report; exact role needs manual confirmation.
+  - **Entradas:** ./vida-mujer-protected-diseases-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-rule-consistency-report.js ⚠️
+  - **Ruta:** vida-mujer-rule-consistency-report.js
+  - **Propósito principal:** Supports vida mujer rule consistency report; exact role needs manual confirmation.
+  - **Entradas:** fs, child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-status.js ⚠️
+  - **Ruta:** vida-mujer-status.js
+  - **Propósito principal:** Supports vida mujer status; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: test
+
+- **Archivo:** decision-appendix-master-test.js ⚠️
+  - **Ruta:** decision-appendix-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for decision appendix master test.
+  - **Entradas:** ./shared-benefit-hierarchy-engine, ./shared-recovery-analysis-engine, ./shared-decision-clarity-engine, ./shared-client-language-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** education-cost-master-test.js
+  - **Ruta:** education-cost-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for education cost master test.
+  - **Entradas:** ./segu-beca-education-comparison-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** education-paths-master-test.js
+  - **Ruta:** education-paths-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for education paths master test.
+  - **Entradas:** ./shared-education-paths-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** forge-global-master-test.js ⚠️
+  - **Ruta:** forge-global-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for forge global master test.
+  - **Entradas:** child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** forge-imagina-ser-client-presentation-test.js ⚠️
+  - **Ruta:** forge-imagina-ser-client-presentation-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for forge imagina ser client presentation test.
+  - **Entradas:** ./imagina-ser-ocr-extractor, ./imagina-ser-retirement-fund-engine, ./imagina-ser-scenario-engine, ./imagina-ser-variant-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; threshold/static scoring
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** forge-shared-ave-master-test.js ⚠️
+  - **Ruta:** forge-shared-ave-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for forge shared ave master test.
+  - **Entradas:** ./shared-ave-growth-engine, ./shared-ave-rescue-engine, ./shared-ave-death-benefit-engine, ./shared-ave-type-inference-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** imagina-ser-fiscal-master-test.js ⚠️
+  - **Ruta:** imagina-ser-fiscal-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for imagina ser fiscal master test.
+  - **Entradas:** ./shared-tax-profile-engine, ./imagina-ser-article-151-engine, ./imagina-ser-happy-numbers-engine, ./imagina-ser-fiscal-slide-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** imagina-ser-master-test.js ⚠️
+  - **Ruta:** imagina-ser-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for imagina ser master test.
+  - **Entradas:** ./imagina-ser-ocr-extractor, ./imagina-ser-retirement-fund-engine, ./imagina-ser-scenario-engine, ./imagina-ser-decision-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** imagina-ser-variant-fiscal-master-test.js ⚠️
+  - **Ruta:** imagina-ser-variant-fiscal-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for imagina ser variant fiscal master test.
+  - **Entradas:** ./imagina-ser-variant-engine, ./imagina-ser-fiscal-bag-engine, ./imagina-ser-fiscal-router-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** orvi-master-test.js ⚠️
+  - **Ruta:** orvi-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for orvi master test.
+  - **Entradas:** ./orvi-ocr-extractor, ./orvi-guaranteed-value-timeline-engine, ./orvi-wait-vs-cancel-engine, ./orvi-event-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** segu-beca-master-test.js ⚠️
+  - **Ruta:** segu-beca-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for segu beca master test.
+  - **Entradas:** ./segu-beca-decision-engine, ./segu-beca-client-presentation-engine, ./segu-beca-education-options-engine, ./shared-price-placement-engine, fs
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** business-rules-test.js ⚠️
+  - **Ruta:** tests/business-rules-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for business rules test.
+  - **Entradas:** ../product-detection-engine.js, ../currency-normalization-engine.js, ../presentation-input-pipeline.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** critical-path-test.js ⚠️
+  - **Ruta:** tests/critical-path-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for critical path test.
+  - **Entradas:** ../product-detection-engine.js, ../product-knowledge-link-engine.js, ../currency-normalization-engine.js, ../projection-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** real-retirement-scenario-test.js
+  - **Ruta:** tests/real-retirement-scenario-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for real retirement scenario test.
+  - **Entradas:** ../policy-ocr-engine.js, ../solucionline-retirement-parser.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** vida-mujer-real-test.js ⚠️
+  - **Ruta:** tests/vida-mujer-real-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for vida mujer real test.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-master-test.js ⚠️
+  - **Ruta:** vida-mujer-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for vida mujer master test.
+  - **Entradas:** child_process, fs
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: unknown
+
+- **Archivo:** comisiones-rules-gmm.js ⚠️
+  - **Ruta:** comisiones-rules-gmm.js
+  - **Propósito principal:** Supports comisiones rules gmm; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SMNYL_GMM_RULES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** comisiones.js ⚠️
+  - **Ruta:** comisiones.js
+  - **Propósito principal:** Supports comisiones; exact role needs manual confirmation.
+  - **Entradas:** ./db.js, ./app.js, ./utils.js
+  - **Salidas:** renderComisiones
+  - **Dependencias relevantes:** app.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; threshold/static scoring; large file
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** drag-drop-policy-zone.js ⚠️
+  - **Ruta:** drag-drop-policy-zone.js
+  - **Propósito principal:** Supports drag drop policy zone; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** inicializarDropZone
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-comisiones-gmm.js ⚠️
+  - **Ruta:** smnyl-comisiones-gmm.js
+  - **Propósito principal:** Supports smnyl comisiones gmm; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SMNYL_GMM_RULES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-productos-gmm.js ⚠️
+  - **Ruta:** smnyl-productos-gmm.js
+  - **Propósito principal:** Supports smnyl productos gmm; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SMNYL_PRODUCTOS_GMM
+  - **Dependencias relevantes:** smnyl-prima-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: utility
+
+- **Archivo:** comisiones-utils.js ⚠️
+  - **Ruta:** comisiones-utils.js
+  - **Propósito principal:** Provides helper/utility behavior for comisiones utils.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** normalizarProducto, obtenerAnioPoliza, esRenovacion, esGMM, obtenerEdad, detectarMoneda, obtenerRangoEdadGMM, monedaFormatter
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+## Dominio: Productivity Intelligence
+
+### Tipo: engine
+
+- **Archivo:** activity-feed-engine.js ⚠️
+  - **Ruta:** activity-feed-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for activity feed engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearEventoActividad, ordenarFeed
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** activity-stream-engine.js ⚠️
+  - **Ruta:** activity-stream-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for activity stream engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** agregarActividad
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** channel-performance-engine.js ⚠️
+  - **Ruta:** channel-performance-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for channel performance engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** analizarCanales
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** nash-manager-alert-engine.js ⚠️
+  - **Ruta:** nash-manager-alert-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash manager alert engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-manager-alert-master-test.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** sales-dna-evolution-engine.js ⚠️
+  - **Ruta:** sales-dna-evolution-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales dna evolution engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** evolucionarSalesDNA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-goals-engine.js ⚠️
+  - **Ruta:** smnyl-goals-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl goals engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularMeta
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-productividad-engine.js ⚠️
+  - **Ruta:** smnyl-productividad-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl productividad engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularProductividad
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-streak-engine.js ⚠️
+  - **Ruta:** smnyl-streak-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl streak engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularStreakActividad
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** team-activity-engine.js ⚠️
+  - **Ruta:** team-activity-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for team activity engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirActividadEquipo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** tone-performance-engine.js ⚠️
+  - **Ruta:** tone-performance-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for tone performance engine within Productivity Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** analizarTonos
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: unknown
+
+- **Archivo:** activity-feed.js ⚠️
+  - **Ruta:** activity-feed.js
+  - **Propósito principal:** Supports activity feed; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** renderActivityFeed
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** advisor-activity-timeline.js ⚠️
+  - **Ruta:** advisor-activity-timeline.js
+  - **Propósito principal:** Supports advisor activity timeline; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearActividad, obtenerTimelineAdvisor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** auth-guard.js
+  - **Ruta:** auth-guard.js
+  - **Propósito principal:** Supports auth guard; exact role needs manual confirmation.
+  - **Entradas:** ./utils.js
+  - **Salidas:** SessionGuard
+  - **Dependencias relevantes:** core-app-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** performance-monitor.js
+  - **Ruta:** performance-monitor.js
+  - **Propósito principal:** Supports performance monitor; exact role needs manual confirmation.
+  - **Entradas:** ./event-system.js
+  - **Salidas:** PerformanceTracker
+  - **Dependencias relevantes:** core-app-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Recruitment Intelligence
+
+### Tipo: engine
+
+- **Archivo:** candidate-assessment-engine.js ⚠️
+  - **Ruta:** candidate-assessment-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for candidate assessment engine within Recruitment Intelligence.
+  - **Entradas:** ./candidate-hard-factors-engine, ./candidate-vital-factors-engine, ./candidate-coachability-engine, ./candidate-market-quality-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** candidate-assessment-master-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+
+### Tipo: test
+
+- **Archivo:** candidate-assessment-master-test.js
+  - **Ruta:** candidate-assessment-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for candidate assessment master test.
+  - **Entradas:** ./candidate-assessment-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** candidate-coachability-master-test.js ⚠️
+  - **Ruta:** candidate-coachability-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for candidate coachability master test.
+  - **Entradas:** ./candidate-coachability-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** candidate-market-quality-master-test.js ⚠️
+  - **Ruta:** candidate-market-quality-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for candidate market quality master test.
+  - **Entradas:** ./candidate-market-quality-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** fixture-validation-test.js
+  - **Ruta:** fixture-validation-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for fixture validation test.
+  - **Entradas:** fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** recruitment-fixture-validation-test.js ⚠️
+  - **Ruta:** recruitment-fixture-validation-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for recruitment fixture validation test.
+  - **Entradas:** fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** large file
+  - **Recomendación:** review manual
+
+## Dominio: Relationship Intelligence
+
+### Tipo: UI component
+
+- **Archivo:** quick-actions-engine.js ⚠️
+  - **Ruta:** quick-actions-engine.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for quick actions engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarQuickActions
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** referral-card-ui.js ⚠️
+  - **Ruta:** referral-card-ui.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for referral card ui.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** renderReferralCard
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: config
+
+- **Archivo:** contact-channel.constants.js
+  - **Ruta:** contact-channel.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for contact channel.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** CONTACT_CHANNELS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** first-contact-objections.constants.js
+  - **Ruta:** first-contact-objections.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for first contact objections.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** FIRST_CONTACT_OBJECTIONS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** followup-type.constants.js
+  - **Ruta:** followup-type.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for followup type.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** FOLLOWUP_TYPES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: engine
+
+- **Archivo:** ai-first-contact-message-engine.js ⚠️
+  - **Ruta:** ai-first-contact-message-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for ai first contact message engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptPrimerContactoIA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** contact-attempt-engine.js ⚠️
+  - **Ruta:** contact-attempt-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for contact attempt engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** registrarIntentoContacto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** contact-response-engine.js ⚠️
+  - **Ruta:** contact-response-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for contact response engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** clasificarRespuesta
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** copilot-suggestion-engine.js ⚠️
+  - **Ruta:** copilot-suggestion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for copilot suggestion engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarSugerencias
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** first-contact-tone-engine.js ⚠️
+  - **Ruta:** first-contact-tone-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for first contact tone engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sugerirTonoAcercamiento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** followup-message-context-engine.js ⚠️
+  - **Ruta:** followup-message-context-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for followup message context engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirContextoMensajeFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** followup-next-date-engine.js ⚠️
+  - **Ruta:** followup-next-date-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for followup next date engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sugerirFechaSiguienteFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** followup-overdue-engine.js ⚠️
+  - **Ruta:** followup-overdue-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for followup overdue engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarFollowupsVencidos
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** followup-recommendation-engine.js ⚠️
+  - **Ruta:** followup-recommendation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for followup recommendation engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** recomendarFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** followup-reminder-engine.js ⚠️
+  - **Ruta:** followup-reminder-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for followup reminder engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularProximoFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** hot-market-engine.js ⚠️
+  - **Ruta:** hot-market-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for hot market engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarMercadoCaliente
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** nash-coaching-insight-engine.js
+  - **Ruta:** nash-coaching-insight-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash coaching insight engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-coaching-insight-master-test.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-followup-engine.js
+  - **Ruta:** nash-followup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash followup engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-core-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** policy-followup-engine.js ⚠️
+  - **Ruta:** policy-followup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy followup engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarFollowupsPendientes
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-last-contact-engine.js ⚠️
+  - **Ruta:** policy-last-contact-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy last contact engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerUltimoContacto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** referral-followup-engine.js ⚠️
+  - **Ruta:** referral-followup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referral followup engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarReferidosPendientes
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** relationship-master-engine.js
+  - **Ruta:** relationship-master-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for relationship master engine within Relationship Intelligence.
+  - **Entradas:** ./relationship-timeline-engine, ./relationship-next-action-engine, ./relationship-opportunity-engine, ./life-event-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** relationship-master-acceptance-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** smart-followup-engine.js ⚠️
+  - **Ruta:** smart-followup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart followup engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarFollowups
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smart-followup-message-engine.js ⚠️
+  - **Ruta:** smart-followup-message-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart followup message engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarMensajeFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smart-outreach-engine.js ⚠️
+  - **Ruta:** smart-outreach-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart outreach engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarOutreach
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smart-priority-engine.js ⚠️
+  - **Ruta:** smart-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart priority engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarPrioridades
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-automation-engine.js ⚠️
+  - **Ruta:** smnyl-automation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl automation engine within Relationship Intelligence.
+  - **Entradas:** ./smnyl-reminders-engine.js, ./smnyl-followup-engine.js, ./smnyl-alerts-engine.js
+  - **Salidas:** ejecutarAutomations
+  - **Dependencias relevantes:** smnyl-operating-system-engine.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value; carrier-specific boundary review
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** smnyl-reminders-engine.js ⚠️
+  - **Ruta:** smnyl-reminders-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl reminders engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarRecordatorios
+  - **Dependencias relevantes:** smnyl-automation-engine.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** warm-market-segmentation-engine.js ⚠️
+  - **Ruta:** warm-market-segmentation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for warm market segmentation engine within Relationship Intelligence.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** segmentarMercadoCaliente
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: state/store
+
+- **Archivo:** relationship-memory-engine.js ⚠️
+  - **Ruta:** relationship-memory-engine.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for relationship memory engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** guardarRelacion, obtenerRelacionLead
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: test
+
+- **Archivo:** client-engagement-master-test.js ⚠️
+  - **Ruta:** client-engagement-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for client engagement master test.
+  - **Entradas:** ./client-engagement-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** relationship-master-acceptance-test.js ⚠️
+  - **Ruta:** relationship-master-acceptance-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for relationship master acceptance test.
+  - **Entradas:** ./relationship-timeline-engine, ./relationship-next-action-engine, ./relationship-opportunity-engine, ./life-event-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: unknown
+
+- **Archivo:** referral-ai-followup.js ⚠️
+  - **Ruta:** referral-ai-followup.js
+  - **Propósito principal:** Supports referral ai followup; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarPromptFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** referral-smart-actions.js ⚠️
+  - **Ruta:** referral-smart-actions.js
+  - **Propósito principal:** Supports referral smart actions; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarAccionesReferido
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+## Dominio: Revenue Generation
+
+### Tipo: engine
+
+- **Archivo:** manager-alert-engine.js ⚠️
+  - **Ruta:** manager-alert-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for manager alert engine within Revenue Generation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarAlertasAdvisor
+  - **Dependencias relevantes:** nash-manager-alert-master-test.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** monthly-revenue-engine.js ⚠️
+  - **Ruta:** monthly-revenue-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for monthly revenue engine within Revenue Generation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularIngresosMensuales
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** opportunity-detector-engine.js ⚠️
+  - **Ruta:** opportunity-detector-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for opportunity detector engine within Revenue Generation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarOportunidades, calcularValorPipeline
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** pipeline-stage-engine.js ⚠️
+  - **Ruta:** pipeline-stage-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for pipeline stage engine within Revenue Generation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** PIPELINE_STAGES, avanzarPipeline
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** referrals-board-engine.js ⚠️
+  - **Ruta:** referrals-board-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referrals board engine within Revenue Generation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** REFERRAL_COLUMNS, agruparReferidosBoard
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** revenue-forecast-engine.js ⚠️
+  - **Ruta:** revenue-forecast-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for revenue forecast engine within Revenue Generation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarForecast
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-command-palette-engine.js ⚠️
+  - **Ruta:** smnyl-command-palette-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl command palette engine within Revenue Generation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** buscarComandos
+  - **Dependencias relevantes:** command-palette.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+
+## Dominio: RuleSnapshot / Rule Pack
+
+### Tipo: engine
+
+- **Archivo:** channel-adaptation-engine.js
+  - **Ruta:** channel-adaptation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for channel adaptation engine within RuleSnapshot / Rule Pack.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** adaptarCanal
+  - **Dependencias relevantes:** adaptive-message-builder.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** daily-points-engine.js ⚠️
+  - **Ruta:** daily-points-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for daily points engine within RuleSnapshot / Rule Pack.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** DAILY_POINTS_RULES, calcularPuntosDiarios
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: orchestrator
+
+- **Archivo:** nash-council-orchestrator.js
+  - **Ruta:** nash-council-orchestrator.js
+  - **Propósito principal:** Coordinates multiple modules or workflow steps for nash council orchestrator.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-core-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: test
+
+- **Archivo:** organization-rules-fixture-validation-test.js
+  - **Ruta:** organization-rules-fixture-validation-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for organization rules fixture validation test.
+  - **Entradas:** fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** run-all-tests.js
+  - **Ruta:** tests/run-all-tests.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for run all tests.
+  - **Entradas:** node:child_process
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: unknown
+
+- **Archivo:** motion-principles.js ⚠️
+  - **Ruta:** motion-principles.js
+  - **Propósito principal:** Supports motion principles; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** MOTION_PRINCIPLES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+## Dominio: Sales Conversion
+
+### Tipo: UI component
+
+- **Archivo:** adaptive-message-builder.js ⚠️
+  - **Ruta:** adaptive-message-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for adaptive message builder.
+  - **Entradas:** ./tone-profile-engine, ./channel-adaptation-engine
+  - **Salidas:** construirPromptMensaje
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** adaptive-outreach-prompt-builder.js ⚠️
+  - **Ruta:** adaptive-outreach-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for adaptive outreach prompt builder.
+  - **Entradas:** ./prospect-personality-engine, ./communication-style-engine, ./script-adaptation-engine
+  - **Salidas:** construirPromptAcercamientoAdaptativo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** adaptive-script-builder.js ⚠️
+  - **Ruta:** adaptive-script-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for adaptive script builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirScriptAdaptativo
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** ai-prompt-builder.js
+  - **Ruta:** ai-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for ai prompt builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptOutreach, construirPromptObjecion
+  - **Dependencias relevantes:** forge-ai-connector-master-test.js, forge-ai-connector.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** close-prompt-builder.js ⚠️
+  - **Ruta:** close-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for close prompt builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptCierre
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** first-contact-dashboard.viewmodel.js ⚠️
+  - **Ruta:** first-contact-dashboard.viewmodel.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for first contact dashboard.viewmodel.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirDashboardPrimerContacto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** forge-build-tree-status.js ⚠️
+  - **Ruta:** forge-build-tree-status.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for forge build tree status.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** ghosting-prompt-builder.js ⚠️
+  - **Ruta:** ghosting-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for ghosting prompt builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptReactivacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** outreach-prompt-builder.js ⚠️
+  - **Ruta:** outreach-prompt-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for outreach prompt builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptAcercamiento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** presentation-input-context-builder.js ⚠️
+  - **Ruta:** presentation-input-context-builder.js
+  - **Propósito principal:** Presents or coordinates user-facing/view state for presentation input context builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirContextoPresentacionDesdeCotizacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: adapter
+
+- **Archivo:** quotation-currency-bridge.js
+  - **Ruta:** quotation-currency-bridge.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for quotation currency bridge.
+  - **Entradas:** ./currency-normalization-engine.js
+  - **Salidas:** normalizarCotizacionAMXN
+  - **Dependencias relevantes:** presentation-input-pipeline.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: config
+
+- **Archivo:** outreach-channel.constants.js
+  - **Ruta:** outreach-channel.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for outreach channel.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** OUTREACH_CHANNELS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** sales-dna.constants.js
+  - **Ruta:** sales-dna.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for sales dna.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SALES_DNA_TRAITS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** sales-script-types.constants.js
+  - **Ruta:** sales-script-types.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for sales script types.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SALES_SCRIPT_TYPES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** sales-tone.constants.js
+  - **Ruta:** sales-tone.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for sales tone.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** SALES_TONES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: engine
+
+- **Archivo:** advisor-style-engine.js ⚠️
+  - **Ruta:** advisor-style-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for advisor style engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarEstiloAsesor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** appointment-calendar-engine.js ⚠️
+  - **Ruta:** appointment-calendar-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for appointment calendar engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearEventoCitaProspecto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** appointment-followup-engine.js ⚠️
+  - **Ruta:** appointment-followup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for appointment followup engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearFollowupPostAgenda
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** appointment-opportunity-engine.js ⚠️
+  - **Ruta:** appointment-opportunity-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for appointment opportunity engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarOportunidadCita
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** buying-signals-engine.js ⚠️
+  - **Ruta:** buying-signals-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for buying signals engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarBuyingSignals
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** close-strategy-engine.js ⚠️
+  - **Ruta:** close-strategy-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for close strategy engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** seleccionarEstrategiaCierre
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** communication-mismatch-engine.js ⚠️
+  - **Ruta:** communication-mismatch-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for communication mismatch engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarMismatch
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** conversion-metrics-engine.js ⚠️
+  - **Ruta:** conversion-metrics-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for conversion metrics engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularConversiones
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** discovery-summary-engine.js ⚠️
+  - **Ruta:** discovery-summary-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for discovery summary engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirResumenDescubrimiento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** discovery-to-presentation-engine.js ⚠️
+  - **Ruta:** discovery-to-presentation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for discovery to presentation engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** prepararPresentacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** dna-script-strategy-engine.js ⚠️
+  - **Ruta:** dna-script-strategy-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for dna script strategy engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** seleccionarEstrategiaScript
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** first-contact-ai-suggestion-engine.js ⚠️
+  - **Ruta:** first-contact-ai-suggestion-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for first contact ai suggestion engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sugerirSiguienteMovimiento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** first-contact-delivery-engine.js ⚠️
+  - **Ruta:** first-contact-delivery-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for first contact delivery engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerAccionesEntregaPrimerContacto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** first-contact-options-engine.js ⚠️
+  - **Ruta:** first-contact-options-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for first contact options engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerOpcionesAcercamiento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** first-contact-script-engine.js ⚠️
+  - **Ruta:** first-contact-script-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for first contact script engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarScriptPrimerContacto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** followup-priority-engine.js ⚠️
+  - **Ruta:** followup-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for followup priority engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverPrioridadFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** forge-presentation-engine.js
+  - **Ruta:** forge-presentation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for forge presentation engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** forge-vida-mujer-advisor-report.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** imagina-ser-client-presentation-engine.js ⚠️
+  - **Ruta:** imagina-ser-client-presentation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser client presentation engine within Sales Conversion.
+  - **Entradas:** ./imagina-ser-human-language-engine
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** imagina-ser-presentation-prompt-engine.js ⚠️
+  - **Ruta:** imagina-ser-presentation-prompt-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for imagina ser presentation prompt engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** imagina-ser-master-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** orvi-client-presentation-engine.js ⚠️
+  - **Ruta:** orvi-client-presentation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for orvi client presentation engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** orvi-client-report-test.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** question-session-engine.js ⚠️
+  - **Ruta:** question-session-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for question session engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearSesionDescubrimiento
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** reactivation-strategy-engine.js ⚠️
+  - **Ruta:** reactivation-strategy-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for reactivation strategy engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** seleccionarEstrategiaReactivacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** retirement-presentation-scenario-engine.js
+  - **Ruta:** retirement-presentation-scenario-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for retirement presentation scenario engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** buildRetirementPresentationScenario
+  - **Dependencias relevantes:** tests/real-retirement-mxn-scenario-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** sales-coach-engine.js ⚠️
+  - **Ruta:** sales-coach-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales coach engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarCoachingVentas
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sales-context-engine.js ⚠️
+  - **Ruta:** sales-context-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales context engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirContextoVenta
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sales-dna-insight-engine.js ⚠️
+  - **Ruta:** sales-dna-insight-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales dna insight engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarInsightsSalesDNA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sales-dna-match-engine.js ⚠️
+  - **Ruta:** sales-dna-match-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales dna match engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularCompatibilidadSalesDNA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** sales-dna-profile-engine.js ⚠️
+  - **Ruta:** sales-dna-profile-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales dna profile engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarSalesDNAInicial
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sales-dna-recommendation-engine.js ⚠️
+  - **Ruta:** sales-dna-recommendation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales dna recommendation engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** recomendarEstiloPorSalesDNA
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sales-dna-stage-engine.js ⚠️
+  - **Ruta:** sales-dna-stage-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for sales dna stage engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** analizarEtapasVentaAsesor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** script-adaptation-engine.js
+  - **Ruta:** script-adaptation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for script adaptation engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirInstruccionesAdaptacion
+  - **Dependencias relevantes:** adaptive-outreach-prompt-builder.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** smnyl-followup-engine.js ⚠️
+  - **Ruta:** smnyl-followup-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl followup engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarFollowups
+  - **Dependencias relevantes:** smnyl-automation-engine.js
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-pipeline-engine.js ⚠️
+  - **Ruta:** smnyl-pipeline-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl pipeline engine within Sales Conversion.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPipeline
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+
+### Tipo: fixture
+
+- **Archivo:** vida-mujer-financial-fixture-report.js ⚠️
+  - **Ruta:** vida-mujer-financial-fixture-report.js
+  - **Propósito principal:** Supports vida mujer financial fixture report; exact role needs manual confirmation.
+  - **Entradas:** ./fixtures/vida-mujer-quote-fixture.json, ./exchange-rate-cache-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value; no clear exports
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: script
+
+- **Archivo:** ghosting-status-engine.js ⚠️
+  - **Ruta:** ghosting-status-engine.js
+  - **Propósito principal:** Supports ghosting status engine; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarGhosting
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: state/store
+
+- **Archivo:** assistant-memory-engine.js ⚠️
+  - **Ruta:** assistant-memory-engine.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for assistant memory engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** guardarMemoria, obtenerMemoria
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** nash-memory-engine.js
+  - **Ruta:** nash-memory-engine.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for nash memory engine.
+  - **Entradas:** fs, path
+  - **Salidas:** {
+  - **Dependencias relevantes:** life-event-engine.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js, nash-memory-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: test
+
+- **Archivo:** market-evidence-fixture-test.js
+  - **Ruta:** market-evidence-fixture-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for market evidence fixture test.
+  - **Entradas:** fs, path
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** nash-prospect-context-builder.js
+  - **Ruta:** nash-prospect-context-builder.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash prospect context builder.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-core-engine.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospeccion.js ⚠️
+  - **Ruta:** prospeccion.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospeccion.
+  - **Entradas:** ./db.js, ./app.js, ./utils.js
+  - **Salidas:** renderProspeccion
+  - **Dependencias relevantes:** app.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** prospect-next-action-engine.js
+  - **Ruta:** prospect-next-action-engine.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect next action engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sugerirSiguienteAccion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospect-pipeline-engine.js
+  - **Ruta:** prospect-pipeline-engine.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect pipeline engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPipelineProspectos
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospect-profile-engine.js
+  - **Ruta:** prospect-profile-engine.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect profile engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPerfilProspecto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospect-segment-performance-engine.js
+  - **Ruta:** prospect-segment-performance-engine.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect segment performance engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** analizarSegmentos
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospect-status.constants.js
+  - **Ruta:** prospect-status.constants.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect status.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** PROSPECT_STATUS
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospecting-dashboard.viewmodel.js
+  - **Ruta:** prospecting-dashboard.viewmodel.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospecting dashboard.viewmodel.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirProspectingDashboard
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** gmm-out-of-pocket-test.js ⚠️
+  - **Ruta:** tests/gmm-out-of-pocket-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for gmm out of pocket test.
+  - **Entradas:** ../policy-ocr-engine.js, ../gmm-quote-parser.js, ../gmm-out-of-pocket-engine.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** presentation-pipeline-test.js ⚠️
+  - **Ruta:** tests/presentation-pipeline-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for presentation pipeline test.
+  - **Entradas:** ../presentation-input-pipeline.js, node:fs
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** real-gmm-quote-test.js ⚠️
+  - **Ruta:** tests/real-gmm-quote-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for real gmm quote test.
+  - **Entradas:** ../policy-ocr-engine.js, ../gmm-quote-parser.js
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** vida-mujer-client-presentation-test.js ⚠️
+  - **Ruta:** vida-mujer-client-presentation-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for vida mujer client presentation test.
+  - **Entradas:** ./fixtures/vida-mujer-fixture.json, ./vida-mujer-client-presentation-engine, ./shared-price-placement-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: unknown
+
+- **Archivo:** advisor-sales-dna.entity.js ⚠️
+  - **Ruta:** advisor-sales-dna.entity.js
+  - **Propósito principal:** Supports advisor sales dna.entity; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearSalesDNAAsesor
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** first-contact.entity.js ⚠️
+  - **Ruta:** first-contact.entity.js
+  - **Propósito principal:** Supports first contact.entity; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearPrimerContacto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** followup.entity.js ⚠️
+  - **Ruta:** followup.entity.js
+  - **Propósito principal:** Supports followup.entity; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearFollowup
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** presentation-input-pipeline.js
+  - **Ruta:** presentation-input-pipeline.js
+  - **Propósito principal:** Supports presentation input pipeline; exact role needs manual confirmation.
+  - **Entradas:** ./quotation-field-normalizer.js, ./quotation-currency-bridge.js, ./product-detection-engine.js, ./product-knowledge-link-engine.js
+  - **Salidas:** prepararInputPresentacion
+  - **Dependencias relevantes:** tests/business-rules-test.js, tests/critical-path-test.js, tests/presentation-pipeline-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** quotation-extraction-result.entity.js ⚠️
+  - **Ruta:** quotation-extraction-result.entity.js
+  - **Propósito principal:** Supports quotation extraction result.entity; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearQuotationExtractionResult
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sales-dna-learning-event.js ⚠️
+  - **Ruta:** sales-dna-learning-event.js
+  - **Propósito principal:** Supports sales dna learning event; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearSalesDNALearningEvent
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** sales-learning-event.entity.js ⚠️
+  - **Ruta:** sales-learning-event.entity.js
+  - **Propósito principal:** Supports sales learning event.entity; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearEventoAprendizaje
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+## Dominio: Shared Commercial Model
+
+### Tipo: engine
+
+- **Archivo:** communication-style-engine.js
+  - **Ruta:** communication-style-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for communication style engine within Shared Commercial Model.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverEstiloComunicacion
+  - **Dependencias relevantes:** adaptive-outreach-prompt-builder.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** introduction-message-engine.js ⚠️
+  - **Ruta:** introduction-message-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for introduction message engine within Shared Commercial Model.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirPromptIntroduccion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** nash-intent-engine.js
+  - **Ruta:** nash-intent-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash intent engine within Shared Commercial Model.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-combat-intelligence-report-engine.js, nash-core-engine.js, nash-intent-master-test.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-clp-engine.js
+  - **Ruta:** shared-clp-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared clp engine within Shared Commercial Model.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** shared-clp-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: test
+
+- **Archivo:** prospect-personality-engine.js
+  - **Ruta:** prospect-personality-engine.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect personality engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarPersonalidadProspecto
+  - **Dependencias relevantes:** adaptive-outreach-prompt-builder.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospect-personality.constants.js
+  - **Ruta:** prospect-personality.constants.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect personality.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** PROSPECT_PERSONALITY
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-clp-master-test.js
+  - **Ruta:** shared-clp-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for shared clp master test.
+  - **Entradas:** ./shared-clp-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Shared Core
+
+### Tipo: UI component
+
+- **Archivo:** operational-shell.store.ts ⚠️
+  - **Ruta:** operational-shell.store.ts
+  - **Propósito principal:** Presents or coordinates user-facing/view state for operational shell.store.
+  - **Entradas:** zustand
+  - **Salidas:** useOperationalShell
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: adapter
+
+- **Archivo:** command-parser-engine.js ⚠️
+  - **Ruta:** command-parser-engine.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for command parser engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** parsearComando
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** excel-parser-engine.js ⚠️
+  - **Ruta:** excel-parser-engine.js
+  - **Propósito principal:** Parses, connects or adapts external/input data for excel parser engine.
+  - **Entradas:** xlsx
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+
+### Tipo: config
+
+- **Archivo:** advisor-style.constants.js
+  - **Ruta:** advisor-style.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for advisor style.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** ADVISOR_STYLES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** referral-source.constants.js
+  - **Ruta:** referral-source.constants.js
+  - **Propósito principal:** Provides constants, tokens, flags or configuration for referral source.constants.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** REFERRAL_SOURCES
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: engine
+
+- **Archivo:** advisor-performance-engine.js ⚠️
+  - **Ruta:** advisor-performance-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for advisor performance engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularPerformance
+  - **Dependencias relevantes:** nash-advisor-performance-master-test.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** candidate-coachability-engine.js ⚠️
+  - **Ruta:** candidate-coachability-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for candidate coachability engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** candidate-assessment-engine.js, candidate-coachability-master-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** candidate-hard-factors-engine.js ⚠️
+  - **Ruta:** candidate-hard-factors-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for candidate hard factors engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** candidate-assessment-engine.js, candidate-hard-factors-master-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** candidate-market-quality-engine.js ⚠️
+  - **Ruta:** candidate-market-quality-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for candidate market quality engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** candidate-assessment-engine.js, candidate-market-quality-master-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** candidate-vital-factors-engine.js ⚠️
+  - **Ruta:** candidate-vital-factors-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for candidate vital factors engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** candidate-assessment-engine.js, candidate-vital-factors-master-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** client-engagement-engine.js ⚠️
+  - **Ruta:** client-engagement-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for client engagement engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** client-engagement-master-test.js, relationship-master-acceptance-test.js, relationship-master-engine.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** close-readiness-engine.js ⚠️
+  - **Ruta:** close-readiness-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for close readiness engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularCloseReadiness
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** command-palette-engine.js
+  - **Ruta:** command-palette-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for command palette engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** parseCommandPalette
+  - **Dependencias relevantes:** command-palette.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** discovery-priority-engine.js ⚠️
+  - **Ruta:** discovery-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for discovery priority engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularPrioridadComercial
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** entity-resolver-engine.js ⚠️
+  - **Ruta:** entity-resolver-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for entity resolver engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverEntidad
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** financial-risk-score-engine.js ⚠️
+  - **Ruta:** financial-risk-score-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for financial risk score engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularRiskScore
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** lead-temperature-engine.js ⚠️
+  - **Ruta:** lead-temperature-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for lead temperature engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularTemperaturaLead
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** momentum-engine.js ⚠️
+  - **Ruta:** momentum-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for momentum engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularMomentum
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** nash-personality-engine.js ⚠️
+  - **Ruta:** nash-personality-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash personality engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-core-engine.js, nash-master-acceptance-test.js, nash-master-intelligence-engine.js, nash-personality-master-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** nash-team-intelligence-engine.js
+  - **Ruta:** nash-team-intelligence-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for nash team intelligence engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** nash-master-acceptance-test.js, nash-master-intelligence-engine.js, nash-team-intelligence-master-test.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** operational-sync-engine.js ⚠️
+  - **Ruta:** operational-sync-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for operational sync engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sincronizarOperacion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-relationship-score-engine.js ⚠️
+  - **Ruta:** policy-relationship-score-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for policy relationship score engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularRelationshipScore
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** referral-opportunity-engine.js ⚠️
+  - **Ruta:** referral-opportunity-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referral opportunity engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** referral-opportunity-master-test.js, relationship-master-acceptance-test.js, relationship-master-engine.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** referral-score-engine.js ⚠️
+  - **Ruta:** referral-score-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referral score engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularReferralScore
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** responsive-engine.js
+  - **Ruta:** responsive-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for responsive engine within Shared Core.
+  - **Entradas:** ./state-manager.js
+  - **Salidas:** Responsive
+  - **Dependencias relevantes:** core-app-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** shared-decision-score-engine.js ⚠️
+  - **Ruta:** shared-decision-score-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared decision score engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** decision-appendix-master-test.js, forge-imagina-ser-client-presentation-test.js
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** smart-referrals-engine.js ⚠️
+  - **Ruta:** smart-referrals-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smart referrals engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearReferido
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-decision-engine.js ⚠️
+  - **Ruta:** smnyl-decision-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl decision engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** priorizarLeads
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring; carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-health-score-engine.js ⚠️
+  - **Ruta:** smnyl-health-score-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl health score engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularHealthScore
+  - **Dependencias relevantes:** smnyl-executive-dashboard-engine.js
+  - **Riesgos detectables:** threshold/static scoring; carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-leaderboard-engine.js ⚠️
+  - **Ruta:** smnyl-leaderboard-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl leaderboard engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** construirLeaderboard
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-neural-glow-engine.js ⚠️
+  - **Ruta:** smnyl-neural-glow-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl neural glow engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerGlowState
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** smnyl-performance-engine.js ⚠️
+  - **Ruta:** smnyl-performance-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for smnyl performance engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularPerformance
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring; carrier-specific boundary review
+  - **Recomendación:** review manual
+- **Archivo:** universal-command-engine.js ⚠️
+  - **Ruta:** universal-command-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for universal command engine within Shared Core.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** interpretarComando, obtenerComandosDisponibles
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+
+### Tipo: state/store
+
+- **Archivo:** cartera-state.js
+  - **Ruta:** cartera-state.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for cartera state.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** CarteraStore
+  - **Dependencias relevantes:** cartera-service.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** command-palette.store.js
+  - **Ruta:** command-palette.store.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for command palette.store.
+  - **Entradas:** zustand
+  - **Salidas:** useCommandPalette
+  - **Dependencias relevantes:** command-palette.tsx
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** domain-store.js
+  - **Ruta:** domain-store.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for domain store.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Domains
+  - **Dependencias relevantes:** domain-runtime.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** state-manager.js
+  - **Ruta:** state-manager.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for state manager.
+  - **Entradas:** ./event-system.js
+  - **Salidas:** AppState
+  - **Dependencias relevantes:** app.js, cartera.js, dashboard.js, network-manager.js, responsive-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** store.js
+  - **Ruta:** store.js
+  - **Propósito principal:** Manages runtime, cache, memory or store state for store.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** AppStore
+  - **Dependencias relevantes:** command-palette.tsx, domain-runtime.js, mutation-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: test
+
+- **Archivo:** life-event-master-test.js ⚠️
+  - **Ruta:** life-event-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for life event master test.
+  - **Entradas:** ./life-event-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+- **Archivo:** nash-master-test.js
+  - **Ruta:** nash-master-test.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for nash master test.
+  - **Entradas:** ./nash-core-engine
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** prospect-score-engine.js ⚠️
+  - **Ruta:** prospect-score-engine.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect score engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularProspectScore
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** threshold/static scoring
+  - **Recomendación:** review manual
+- **Archivo:** prospect.entity.js
+  - **Ruta:** prospect.entity.js
+  - **Propósito principal:** Validates behavior, fixtures or acceptance flow for prospect.entity.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearProspecto
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+### Tipo: unknown
+
+- **Archivo:** core-event-bus.js
+  - **Ruta:** core-event-bus.js
+  - **Propósito principal:** Supports core event bus; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** CoreEventBus
+  - **Dependencias relevantes:** domain-runtime.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** core_domain-events.js ⚠️
+  - **Ruta:** core_domain-events.js
+  - **Propósito principal:** Supports core domain events; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** core_event-bus.js ⚠️
+  - **Ruta:** core_event-bus.js
+  - **Propósito principal:** Supports core event bus; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** domain-runtime.js ⚠️
+  - **Ruta:** domain-runtime.js
+  - **Propósito principal:** Supports domain runtime; exact role needs manual confirmation.
+  - **Entradas:** ./core-event-bus.js, ./domain-store.js
+  - **Salidas:** DomainRuntime
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** quotation-input.entity.js ⚠️
+  - **Ruta:** quotation-input.entity.js
+  - **Propósito principal:** Supports quotation input.entity; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** No exports detected / side-effect or script style.
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** no clear exports
+  - **Recomendación:** review manual
+- **Archivo:** referidos.js ⚠️
+  - **Ruta:** referidos.js
+  - **Propósito principal:** Supports referidos; exact role needs manual confirmation.
+  - **Entradas:** ./db.js, ./utils.js
+  - **Salidas:** renderReferidos
+  - **Dependencias relevantes:** app.js
+  - **Riesgos detectables:** hardcoded financial/product/rule value
+  - **Recomendación:** document source / Rule Pack review
+
+### Tipo: utility
+
+- **Archivo:** cartera-normalizer.js
+  - **Ruta:** cartera-normalizer.js
+  - **Propósito principal:** Provides helper/utility behavior for cartera normalizer.
+  - **Entradas:** ./financial-utils.js
+  - **Salidas:** sanitizeText, normalizePoliza
+  - **Dependencias relevantes:** cartera-service.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** cartera-validator.js
+  - **Ruta:** cartera-validator.js
+  - **Propósito principal:** Provides helper/utility behavior for cartera validator.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** validatePoliza
+  - **Dependencias relevantes:** cartera-service.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+- **Archivo:** dom-sanitizer.js ⚠️
+  - **Ruta:** dom-sanitizer.js
+  - **Propósito principal:** Provides helper/utility behavior for dom sanitizer.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** sanitizeHTML, safeInnerHTML
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** policy-schema-validator-engine.js ⚠️
+  - **Ruta:** policy-schema-validator-engine.js
+  - **Propósito principal:** Provides helper/utility behavior for policy schema validator engine.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** validarMetadata
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** review manual
+- **Archivo:** storage-validator.js
+  - **Ruta:** storage-validator.js
+  - **Propósito principal:** Provides helper/utility behavior for storage validator.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** StorageValidator
+  - **Dependencias relevantes:** storage-engine.js
+  - **Riesgos detectables:** No immediate static risk detected.
+  - **Recomendación:** keep / document
+
+## Dominio: Unknown / Needs Review
+
+### Tipo: engine
+
+- **Archivo:** accessibility-engine.js ⚠️
+  - **Ruta:** accessibility-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for accessibility engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Accessibility
+  - **Dependencias relevantes:** core-app-engine.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** animation-engine.js ⚠️
+  - **Ruta:** animation-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for animation engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** Motion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** center-of-influence-engine.js ⚠️
+  - **Ruta:** center-of-influence-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for center of influence engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarCentroInfluencia
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** clipboard-action-engine.js ⚠️
+  - **Ruta:** clipboard-action-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for clipboard action engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearAccionCopiarMensaje
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** communication-channel-engine.js ⚠️
+  - **Ruta:** communication-channel-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for communication channel engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverCanal
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** in-app-notification-engine.js ⚠️
+  - **Ruta:** in-app-notification-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for in app notification engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearNotificacionInterna
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** phone-call-engine.js ⚠️
+  - **Ruta:** phone-call-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for phone call engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** llamarLead
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** push-notification-engine.js ⚠️
+  - **Ruta:** push-notification-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for push notification engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearPushNotification
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** question-answer-engine.js ⚠️
+  - **Ruta:** question-answer-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for question answer engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** registrarRespuestaPregunta
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** question-style-match-engine.js ⚠️
+  - **Ruta:** question-style-match-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for question style match engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** filtrarPreguntasPorEstilo
+  - **Dependencias relevantes:** adaptive-question-engine.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** referral-color-engine.js ⚠️
+  - **Ruta:** referral-color-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referral color engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** obtenerColorTemperatura
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** referral-priority-engine.js ⚠️
+  - **Ruta:** referral-priority-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referral priority engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** ordenarReferidosPrioridad
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** referral-temperature-engine.js ⚠️
+  - **Ruta:** referral-temperature-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referral temperature engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** calcularTemperatura
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** referrals-engine.js ⚠️
+  - **Ruta:** referrals-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for referrals engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearReferido, actualizarStatusReferido
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** schema-field-engine.js ⚠️
+  - **Ruta:** schema-field-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for schema field engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** crearCampoSchema
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** seen-but-no-reply-engine.js ⚠️
+  - **Ruta:** seen-but-no-reply-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for seen but no reply engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** detectarVistoSinRespuesta
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** shared-client-language-engine.js ⚠️
+  - **Ruta:** shared-client-language-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared client language engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** decision-appendix-master-test.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** shared-financial-return-engine.js ⚠️
+  - **Ruta:** shared-financial-return-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared financial return engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-financial-correction-report.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** shared-price-placement-engine.js ⚠️
+  - **Ruta:** shared-price-placement-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared price placement engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** decision-appendix-master-test.js, forge-imagina-ser-client-presentation-test.js, orvi-client-report-test.js, segu-beca-master-test.js, vida-mujer-client-presentation-test.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** shared-protection-efficiency-engine.js ⚠️
+  - **Ruta:** shared-protection-efficiency-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared protection efficiency engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** vida-mujer-financial-correction-report.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** shared-recovery-analysis-engine.js ⚠️
+  - **Ruta:** shared-recovery-analysis-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for shared recovery analysis engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** {
+  - **Dependencias relevantes:** decision-appendix-master-test.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** tone-profile-engine.js ⚠️
+  - **Ruta:** tone-profile-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for tone profile engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** resolverPerfilTono
+  - **Dependencias relevantes:** adaptive-message-builder.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** universal-filters-engine.js ⚠️
+  - **Ruta:** universal-filters-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for universal filters engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** filtrarColeccion
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** virtual-list-engine.js ⚠️
+  - **Ruta:** virtual-list-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for virtual list engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:**  VirtualList 
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** whatsapp-action-engine.js ⚠️
+  - **Ruta:** whatsapp-action-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for whatsapp action engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** abrirWhatsApp
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** whatsapp-link-engine.js ⚠️
+  - **Ruta:** whatsapp-link-engine.js
+  - **Propósito principal:** Encapsulates decision or domain logic for whatsapp link engine within Unknown / Needs Review.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** generarWhatsappLink
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+
+### Tipo: unknown
+
+- **Archivo:** event-system.js ⚠️
+  - **Ruta:** event-system.js
+  - **Propósito principal:** Supports event system; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** EventBus
+  - **Dependencias relevantes:** actividad.js, ai-service.js, app.js, cartera.js, dashboard.js
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+- **Archivo:** virtual-list.js ⚠️
+  - **Ruta:** virtual-list.js
+  - **Propósito principal:** Supports virtual list; exact role needs manual confirmation.
+  - **Entradas:** No imports detected / runtime inputs.
+  - **Salidas:** VirtualList
+  - **Dependencias relevantes:** No incoming imports detected statically.
+  - **Riesgos detectables:** unclear domain
+  - **Recomendación:** review manual
+
+## Possible Duplicates / Overlap Candidates
+
+1. ⚠️ activity-feed-engine.js, activity-feed.js
+2. ⚠️ advisor-performance-engine.js, nash-advisor-performance-engine.js, nash-advisor-performance-master-test.js
+3. ⚠️ app.js, core-app-engine.js
+4. ⚠️ candidate-assessment-engine.js, candidate-assessment-master-test.js
+5. ⚠️ candidate-coachability-engine.js, candidate-coachability-master-test.js
+6. ⚠️ candidate-hard-factors-engine.js, candidate-hard-factors-master-test.js
+7. ⚠️ candidate-market-quality-engine.js, candidate-market-quality-master-test.js
+8. ⚠️ candidate-vital-factors-engine.js, candidate-vital-factors-master-test.js
+9. ⚠️ cartera-view.js, cartera.js
+10. ⚠️ client-engagement-engine.js, client-engagement-master-test.js
+11. ⚠️ comisiones.js, smnyl-comisiones-engine.js
+12. ⚠️ command-palette-engine.js, command-palette-ui.js, command-palette.js, command-palette.tsx, smnyl-command-palette-engine.js
+13. ⚠️ concursos.js, smnyl-concursos-engine.js
+14. ⚠️ core-event-bus.js, core_event-bus.js, event-bus-engine.js
+15. ⚠️ core_domain-events.js, domain-events.js
+16. ⚠️ decision-appendix-master-test.js, shared-decision-appendix-engine.js
+17. ⚠️ education-cost-master-test.js, shared-education-cost-engine.js
+18. ⚠️ education-paths-master-test.js, shared-education-paths-engine.js
+19. ⚠️ followup-engine.js, nash-followup-engine.js, policy-followup-engine.js, smnyl-followup-engine.js
+20. ⚠️ forge-ai-connector-master-test.js, forge-ai-connector.js
+21. ⚠️ gmm-out-of-pocket-engine.js, tests/gmm-out-of-pocket-test.js
+22. ⚠️ life-event-engine.js, life-event-master-test.js
+23. ⚠️ manager-alert-engine.js, nash-manager-alert-engine.js, nash-manager-alert-master-test.js
+24. ⚠️ nash-coaching-insight-engine.js, nash-coaching-insight-master-test.js
+25. ⚠️ nash-combat-intelligence-report-engine.js, nash-combat-intelligence-report-test.js
+26. ⚠️ nash-intent-engine.js, nash-intent-master-test.js
+27. ⚠️ nash-learning-engine.js, nash-learning-master-test.js
+28. ⚠️ nash-master-intelligence-engine.js, nash-master-intelligence-master-test.js
+29. ⚠️ nash-memory-engine.js, nash-memory-master-test.js
+30. ⚠️ nash-next-best-action-engine.js, nash-next-best-action-master-test.js
+31. ⚠️ nash-personality-engine.js, nash-personality-master-test.js
+32. ⚠️ nash-team-intelligence-engine.js, nash-team-intelligence-master-test.js
+33. ⚠️ performance-runtime.js, smnyl-performance-engine.js
+34. ⚠️ policy-detail-engine.js, policy-detail-view-model.js
+35. ⚠️ policy-quick-actions-engine.js, quick-actions-engine.js
+36. ⚠️ policy-risk-engine.js, smnyl-risk-engine.js
+37. ⚠️ policy-storage-engine.js, storage-engine.js
+38. ⚠️ policy-task-engine.js, task-engine.js
+39. ⚠️ policy-task-priority-engine.js, task-priority-engine.js
+40. ⚠️ policy-timeline-engine.js, policy-timeline-view-model.js
+41. ⚠️ referral-opportunity-engine.js, referral-opportunity-master-test.js
+42. ⚠️ relationship-health-engine.js, relationship-health-master-test.js
+43. ⚠️ relationship-next-action-engine.js, relationship-next-action-master-test.js
+44. ⚠️ relationship-opportunity-engine.js, relationship-opportunity-master-test.js
+45. ⚠️ relationship-review-engine.js, relationship-review-master-test.js
+46. ⚠️ relationship-timeline-engine.js, relationship-timeline-master-test.js
+47. ⚠️ render-engine.js, ui-render-engine.js
+48. ⚠️ shared-ave-confidence-engine.js, shared-ave-confidence-report.js
+49. ⚠️ shared-ave-death-benefit-engine.js, shared-ave-death-benefit-report.js
+50. ⚠️ shared-ave-growth-engine.js, shared-ave-growth-report.js
+51. ⚠️ shared-ave-portfolio-engine.js, shared-ave-portfolio-report.js
+52. ⚠️ shared-ave-rescue-engine.js, shared-ave-rescue-report.js
+53. ⚠️ shared-ave-type-inference-engine.js, shared-ave-type-inference-report.js
+54. ⚠️ shared-banxico-rate-engine.js, shared-banxico-rate-report.js
+55. ⚠️ shared-clp-engine.js, shared-clp-master-test.js
+56. ⚠️ tests/vida-mujer-survival-schedule-test.js, vida-mujer-survival-schedule-engine.js
+57. ⚠️ vida-mujer-client-presentation-engine.js, vida-mujer-client-presentation-test.js
+58. ⚠️ vida-mujer-coverage-status-engine.js, vida-mujer-coverage-status-report.js
+59. ⚠️ vida-mujer-knowledge-extractor-report.js, vida-mujer-knowledge-extractor.js
+60. ⚠️ vida-mujer-protected-diseases-engine.js, vida-mujer-protected-diseases-report.js
+61. ⚠️ virtual-list-engine.js, virtual-list.js
+
+## Possible Orphan Files
+
+- ⚠️ action-resolver-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ activity-feed-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ activity-feed.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ activity-stream-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ adaptive-message-builder.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ adaptive-outreach-prompt-builder.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ adaptive-question-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ adaptive-script-builder.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ advisor-activity-timeline.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ advisor-alert-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ advisor-monitor-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ advisor-sales-dna.entity.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ advisor-score-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ advisor-style-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ ai-context-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ ai-first-contact-message-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ ai-orb-widget.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ ai-sales-coach-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ ai-task-suggestion-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ animation-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ appointment-calendar-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ appointment-followup-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ appointment-opportunity-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ assistant-memory-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ auto-task-generator-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ buying-signals-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ cartera-import-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ cartera-repository.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ cartera-view.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ center-of-influence-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ channel-performance-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ clipboard-action-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ close-prompt-builder.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ close-readiness-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ close-strategy-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ comisiones-rules-gmm.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ comisiones-utils.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ command-execution-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ command-parser-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ command-shortcuts-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ command-suggestion-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ commission-projection-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ commissionable-amount-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ communication-channel-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ communication-mismatch-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ contact-attempt-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ contact-response-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ contextual-suggestion-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ conversion-metrics-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ copilot-suggestion-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ core_domain-events.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ core_event-bus.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ crash-runtime.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ csv-parser-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ daily-points-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ dashboard-executive.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ dashboard-priority-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ discovery-insights-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ discovery-priority-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ discovery-product-alignment-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ discovery-summary-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ discovery-to-presentation-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ dna-coaching-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ dna-script-strategy-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ dom-sanitizer.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ domain-events.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ domain-runtime.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ drag-drop-policy-zone.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ entity-resolver-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ event-bus-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ event-log-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ excel-parser-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ financial-pyramid-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ financial-pyramid-priority-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ financial-pyramid-story-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ financial-risk-score-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ financial-story-task-builder.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ first-contact-ai-suggestion-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ first-contact-dashboard.viewmodel.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ first-contact-delivery-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ first-contact-options-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ first-contact-script-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ first-contact-tone-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ first-contact.entity.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ followup-message-context-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ followup-next-date-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ followup-overdue-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ followup-priority-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ followup-recommendation-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ followup-reminder-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ followup.entity.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ forge-build-tree-status.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ forge-schema-reporter.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ forge-semantic-risk-report.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ forge-vida-mujer-advisor-report.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ ghosting-prompt-builder.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ ghosting-status-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ google-calendar-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ health-runtime.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ hot-market-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ idle-runtime.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ imagina-ser-contribution-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ import-progress-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ in-app-notification-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ introduction-message-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ lead-temperature-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ life-expectancy-projection-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ line-of-business-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ live-communication-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ live-dashboard-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ live-notification-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ live-operational-state-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ manager-broadcast-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ manager-coaching-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ manager-feed-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ manager-notification-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ manager-role-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ mass-import-mapping-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ mass-import-preview-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- ⚠️ mass-import-validation-engine.js: no incoming imports detected statically; do not delete without runtime/test confirmation.
+- Additional possible orphan files omitted from this concise section: 218. See inventory report for full detail.
+
+## Validation
+
+- No code executed.
+- No code modified.
+- No files moved.
+- No imports changed.
+- Documentation summary generated only.

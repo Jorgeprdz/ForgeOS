@@ -1,0 +1,1258 @@
+# PAQ-11 Forecast Intelligence Discovery
+
+Forge OS
+Principal Domain Architect Review
+Forecast Intelligence Discovery
+
+## Status
+ARCHITECTURE CANDIDATE
+
+## Scope
+Architecture discovery only.
+No code.
+No engines.
+No schemas.
+No UI.
+No app.js.
+No implementation.
+No Markdown conversion.
+No Build Tree update.
+No commits.
+No push.
+
+
+# 1. Executive Summary
+
+Forecast Intelligence is the Forge OS domain that estimates what may happen next based on evidence, behavior, productivity, conservation, pipeline, historical context, period and assumptions.
+
+## Forecast Intelligence exists because Forge can already answer
+
+- Did the advisor execute? Mick.
+- Did execution produce repeatable output? Productivity Intelligence.
+- Was that output durable and healthy? Conservation Intelligence.
+- What fact happened? Production Events.
+- What money applies under rules? Compensation Intelligence.
+
+## Forecast Intelligence answers
+
+- What is likely to happen next?
+- What outcome is at risk?
+- What gap may appear?
+- What confidence does Forge have?
+- What assumptions drive the estimate?
+- What evidence supports or weakens the forecast?
+
+Forecast Intelligence is not fact.
+Forecast Intelligence is not compensation.
+Forecast Intelligence is not business planning.
+Forecast Intelligence is not revenue pipeline.
+Forecast Intelligence is not productivity.
+Forecast Intelligence is not conservation.
+
+## Core architecture rule
+
+Forecasts are suggestions.
+Facts are facts.
+
+Forecast Intelligence must never present predictions as institutional truth, guaranteed income, confirmed compensation, confirmed production, confirmed conservation or official business result.
+
+## Why Forecast could not open before Productivity and Conservation
+
+- Without Productivity, Forge could confuse activity with future output.
+- Without Conservation, Forge could project fragile production as durable output.
+- Without PAQ-08.5, Forge could confuse local predictive truth with institutional historical truth.
+
+Forecast Intelligence is now ready for discovery because Productivity and Conservation are locked as upstream interpretation domains.
+
+
+# 2. Forecast Definition
+
+## Forecast
+
+- A structured estimate of what may happen in a future or not-yet-confirmed period.
+- Must include evidence, assumptions, confidence, period and source state.
+- Not a fact.
+
+## Projection
+
+- A forward-looking extension of current trend, pipeline, productivity, conservation or historical performance.
+- Can be useful, but must not be presented as guaranteed.
+
+## Estimate
+
+- A bounded interpretation based on available evidence.
+- May be local predictive, source-backed or rule-backed.
+
+## Scenario
+
+- A conditional view of what may happen if certain assumptions hold.
+- Example: if pipeline moves, if productivity holds, if conservation risk does not materialize.
+- No scenario is official truth.
+
+## Confidence
+
+- Qualitative indication of how reliable the forecast is based on evidence, source quality, completeness, history, rule support and lag.
+- No numeric confidence thresholds are approved in this PAQ.
+
+## Uncertainty
+
+- Explicit recognition that evidence may be incomplete, lagged, corrected, contradicted or dependent on future behavior.
+
+## Local predictive forecast
+
+- Forecast based on local signals such as Mick behavior, pipeline, productivity trend, conservation risk and current activity.
+- Useful for action.
+- Not institutional truth.
+
+## Institutionally confirmed outcome
+
+- Source-backed historical outcome confirmed by Production Events, carrier reports, official snapshots, payment reports or other institutional evidence.
+
+## Clear separations
+
+Forecast is not Fact.
+
+- Facts are source-backed events.
+- Forecast is future or uncertain interpretation.
+
+Forecast is not Compensation.
+
+- Compensation interprets money under rules.
+- Forecast may estimate possible direction only when evidence and rules support it.
+
+Forecast is not Business Plan.
+
+- Forecast asks what may happen.
+- Business Planning asks what must be done.
+
+Forecast is not Revenue Pipeline.
+
+- Pipeline is opportunity state.
+- Forecast estimates likely movement or materialization from pipeline and other signals.
+
+Forecast is not Productivity.
+
+- Productivity interprets activity-to-output conversion.
+- Forecast estimates future output or risk using productivity signals.
+
+Forecast is not Conservation.
+
+- Conservation interprets durability and quality.
+- Forecast consumes conservation risk and confirmed snapshots.
+
+
+# 3. Domain Purpose
+
+Forecast Intelligence enables better decisions before official outcomes arrive.
+
+## It helps answer
+
+- Is the advisor likely to meet expected output?
+- Is the manager unit likely to miss a target?
+- Is pipeline strong enough to support expected production?
+- Is productivity trend supporting future output?
+- Is conservation risk weakening future durability?
+- Is business planning based on realistic assumptions?
+- Is forecast confidence low due to missing evidence?
+
+## Consumers
+
+## Advisor
+
+- Uses Forecast to understand future risk, gaps and next action.
+
+## Manager
+
+- Uses Forecast to prioritize coaching, intervention and resource allocation.
+
+## Partner
+
+- Uses Forecast to evaluate unit capacity, recruitment/development/productivity trajectory and future risk.
+
+## Business Planning
+
+- Consumes Forecast to convert Goal to Forecast to Gap to Actions.
+
+## Economic Motivation
+
+- Consumes Forecast only when economic translation is rule-backed and evidence-backed.
+
+## Compensation
+
+- May consume Forecast context for pending or estimated explanation, but confirmed compensation remains Compensation's domain.
+
+## Revenue Intelligence
+
+- Feeds pipeline and opportunity context into Forecast.
+
+## Advisor Experience
+
+- Explains Forecast without creating anxiety, false certainty or perceived punishment.
+
+## Operational improvement
+
+- Forecast should help advisors and managers act earlier.
+- Forecast should reduce surprise.
+- Forecast should expose uncertainty.
+- Forecast should prevent planning based only on hope or raw pipeline.
+
+
+# 4. Forecast Inputs
+
+## Mick behavior signals
+
+- Owner: Mick Behavior Intelligence.
+- Forecast use: detects execution trajectory and behavior risk.
+- Misinterpretation risk: treating behavior as future output.
+
+## Productivity signals
+
+- Owner: Productivity Intelligence.
+- Forecast use: estimates future output based on conversion, trend, bottleneck and productive capacity.
+- Misinterpretation risk: treating current productivity as guaranteed future production.
+
+## Conservation risk
+
+- Owner: Conservation Intelligence.
+- Forecast use: adjusts durability and confidence of future output.
+- Misinterpretation risk: treating local risk as official index or ignoring fragile production.
+
+## Revenue pipeline
+
+- Owner: Revenue Intelligence.
+- Forecast use: estimates possible opportunity movement and future production path.
+- Misinterpretation risk: treating pipeline as production.
+
+## Production Events
+
+- Owner: Production Events foundation.
+- Forecast use: historical fact base and confirmation of prior output.
+- Misinterpretation risk: projecting from facts without considering period, quality or changes.
+
+## Career stage
+
+- Owner: Career Intelligence.
+- Forecast use: stage context for expectations and interpretation.
+- Misinterpretation risk: using productivity expectations without career context or Rule Pack.
+
+## Advisor Development status
+
+- Owner: Advisor Development Intelligence.
+- Forecast use: estimates readiness and transformation risk.
+- Misinterpretation risk: treating readiness as output.
+
+## Partner context
+
+- Owner: Partner Intelligence.
+- Forecast use: unit capacity and development/recruitment context.
+- Misinterpretation risk: collapsing Partner health into forecast.
+
+## Manager context
+
+- Owner: Manager Intelligence.
+- Forecast use: team context, coaching load, unit risk.
+- Misinterpretation risk: manager recalculates Forecast independently.
+
+## Historical performance
+
+- Owner: depends on underlying domain; Forecast owns forecast interpretation.
+- Forecast use: trend baseline.
+- Misinterpretation risk: assuming history repeats without evidence.
+
+## Current pipeline
+
+- Owner: Revenue Intelligence.
+- Forecast use: near-term opportunity source.
+- Misinterpretation risk: pipeline aging ignored.
+
+## Product line
+
+- Owner: Product Intelligence.
+- Forecast use: context for output, conservation and rule differences.
+- Misinterpretation risk: projecting across product lines as if all products behave the same.
+
+## Policy status
+
+- Owner: Policy Operations / Production Events.
+- Forecast use: durability and active status context.
+- Misinterpretation risk: stale status treated as current truth.
+
+## Conservation snapshots
+
+- Owner: Conservation Intelligence.
+- Forecast use: durability and quality adjustment.
+- Misinterpretation risk: late or local signals treated as official.
+
+## RuleSnapshot
+
+- Owner: Rule Pack / Rule Snapshot model.
+- Forecast use: identifies rules that affect interpretation when rules apply.
+- Misinterpretation risk: hardcoding thresholds in Forecast.
+
+## PeriodSnapshot
+
+- Owner: Period model.
+- Forecast use: anchors forecast to correct time window.
+- Misinterpretation risk: mixing daily, monthly, quarterly or lagged periods.
+
+## EvidenceRecord
+
+- Owner: Evidence model.
+- Forecast use: supports confidence and source traceability.
+- Misinterpretation risk: forecast without evidence.
+
+## ProvenanceRecord
+
+- Owner: Provenance model.
+- Forecast use: shows how source data reached Forge.
+- Misinterpretation risk: untraceable assumptions.
+
+## SourceSystem
+
+- Owner: Evidence/Provenance source model.
+- Forecast use: distinguishes user input, carrier report, imported file, local observation or official source.
+- Misinterpretation risk: weak source treated as official.
+
+## Business goals when available
+
+- Owner: Business Planning Intelligence.
+- Forecast use: compare expected trajectory against goal.
+- Misinterpretation risk: treating goal as forecast.
+
+
+# 5. Forecast Outputs
+
+## Forecast snapshot
+
+- Captured forecast interpretation for a period.
+- Must include confidence, evidence and assumptions.
+
+## Advisor forecast
+
+- Forecast for advisor trajectory.
+
+## Manager forecast
+
+- Forecast for manager/team context.
+
+## Partner forecast
+
+- Forecast for Partner unit capacity and risk.
+
+## Unit forecast
+
+- Forecast for team, unit or cohort.
+
+## Pipeline forecast
+
+- Forecast of likely pipeline movement or materialization.
+
+## Production forecast
+
+- Forecast of possible future production.
+- Not a production fact.
+
+## Productivity forecast input
+
+- Forecast signal consumed by Productivity or Partner when appropriate.
+
+## Conservation-adjusted forecast
+
+- Forecast adjusted by conservation risk or confirmed quality.
+
+## Forecast risk
+
+- Risk that expected outcome may not happen.
+
+## Forecast confidence
+
+- Qualitative confidence based on evidence, source quality, history and uncertainty.
+
+## Forecast explanation
+
+- Human-readable explanation of drivers, assumptions and uncertainty.
+
+## Forecast gap signal
+
+- Difference between expected trajectory and goal, plan or needed outcome.
+
+## Forecast dependency warning
+
+- Warning that forecast depends on missing evidence, pending report, local-only signal or unconfirmed assumption.
+
+## Output rules
+
+- Forecast outputs are suggestions, not facts.
+- Forecast outputs must include confidence, evidence and period.
+- Forecast outputs must preserve local predictive vs institutional confirmed state.
+
+
+# 6. Forecast Ownership
+
+## Forecast Intelligence owns
+
+- Forecast interpretation.
+- Forecast snapshots.
+- Forecast risk.
+- Forecast confidence.
+- Forecast assumptions.
+- Forecast scenarios.
+- Forecast explanation.
+- Forecast gap signal.
+- Forecast dependency warning.
+
+## Forecast Intelligence does not own
+
+- Production Events.
+- Behavior signals.
+- Productivity metrics.
+- Conservation metrics.
+- Revenue opportunities.
+- Compensation calculations.
+- Business plans.
+- Career stage.
+- Manager action.
+- Advisor Experience learning states.
+- Rule Pack thresholds.
+
+## Locked ownership rule
+
+- Forecast consumes domain signals and produces future-facing interpretation.
+- Forecast does not recalculate upstream domain metrics.
+
+
+# 7. Boundary with Productivity Intelligence
+
+## How Forecast consumes productivity
+
+- Uses productivity trend.
+- Uses productivity bottleneck.
+- Uses Productive Advisor Capacity signal.
+- Uses output repeatability.
+- Uses productivity risk.
+- Uses productivity quality interpretation when available.
+
+## Avoiding confusion
+
+- Productive Advisor Capacity is current/observed interpretation.
+- Forecast estimates future trajectory from that signal.
+
+## Productivity trend
+
+- Helps Forecast detect whether output trajectory is improving, flat or declining.
+
+## Productivity risk
+
+- Reduces confidence or triggers forecast risk.
+
+## Repeatable output vs fragile output
+
+- Repeatable output may support stronger forecast.
+- Fragile output must be checked against Conservation before being treated as durable.
+
+## Rule
+
+Productivity says what is converting.
+Forecast estimates what could occur next.
+
+
+# 8. Boundary with Conservation Intelligence
+
+## How Forecast consumes conservation risk
+
+- Uses conservation risk to reduce confidence or adjust durability expectation.
+- Uses policy quality signals to avoid over-projecting fragile output.
+- Uses official conservation snapshots for confirmed historical quality.
+
+## How Forecast handles LIMRA/IGC lag
+
+- Separates local predictive conservation risk from institutional historical snapshots.
+- Labels pending official reports.
+- Updates forecast when late reports or corrections arrive.
+
+## Local vs official
+
+- Local conservation risk can influence action and forecast confidence.
+- Official conservation snapshot can confirm or correct forecast assumptions.
+
+## Rule
+
+Forecast must not project fragile production as durable without Conservation context.
+
+
+# 9. Boundary with Revenue Intelligence
+
+## How Forecast consumes pipeline
+
+- Uses active opportunities, pipeline movement, pipeline aging and opportunity status.
+
+## Avoiding confusion
+
+- Pipeline is not forecast.
+- Pipeline is an input.
+
+## Stalled opportunities
+
+- Reduce forecast confidence.
+- May trigger forecast risk or gap signal.
+
+## Pipeline aging
+
+- Indicates possible weakening of near-term production forecast.
+
+## Revenue opportunity vs production forecast
+
+- Revenue Intelligence says where potential money can come from.
+- Forecast estimates what part may materialize under evidence, behavior, productivity, conservation and period context.
+
+## Rule
+
+Revenue says where money can come from.
+Forecast estimates what may materialize.
+
+
+# 10. Boundary with Compensation Intelligence
+
+## When Forecast can speak about probable income
+
+- Only when Compensation rules exist.
+- Only when RuleSnapshot exists.
+- Only when evidence supports the estimate.
+- Only when confidence and uncertainty are explicit.
+
+## When Forecast must not speak about income
+
+- No compensation rules.
+- No evidence.
+- No RuleSnapshot.
+- Missing production facts.
+- Weak or local-only signals.
+- Unclear period.
+- Conservation dependency unresolved.
+
+## Avoiding income guarantee
+
+- Forecast must label possible, estimated, pending or uncertain outcomes.
+- Forecast must never say income is guaranteed.
+
+## Compensation estimate vs confirmed compensation
+
+- Estimate is Forecast or Economic Motivation context.
+- Confirmed compensation is Compensation Intelligence.
+
+## Economic Motivation connection
+
+- Economic Motivation may translate forecast gaps into money only with compensation rules, evidence and confidence.
+
+## Rule
+
+Forecast does not calculate compensation.
+Compensation interprets money under rules.
+Economic Motivation translates gaps with guardrails.
+
+
+# 11. Boundary with Business Planning Intelligence
+
+## Difference
+
+## Forecast answers
+
+"What may happen?"
+
+## Business Planning answers
+
+"What should we do?"
+
+## Business Planning consumes from Forecast
+
+- Forecast snapshot.
+- Forecast gap.
+- Forecast risk.
+- Forecast confidence.
+- Forecast assumptions.
+- Dependency warnings.
+
+## Business Planning produces
+
+- Action plan.
+- Prioritization.
+- Resource allocation.
+- Goal-to-actions path.
+- Execution plan.
+- Plan adjustment.
+
+## Rule
+
+Forecast is not the plan.
+Forecast informs the plan.
+
+
+# 12. Boundary with Manager / Partner Intelligence
+
+## Manager consumes Forecast
+
+- Advisor forecast gap.
+- Unit forecast risk.
+- Productivity-adjusted forecast warning.
+- Conservation-adjusted forecast warning.
+- Forecast confidence status.
+
+## Partner consumes Forecast
+
+- Future advisor capacity trajectory.
+- Unit growth risk.
+- Development/productivity/conservation-adjusted outlook.
+- Partner capacity risk.
+
+## Avoiding recalculation
+
+- Manager and Partner Intelligence consume Forecast.
+- They do not recalculate Forecast.
+
+## Avoiding overreaction
+
+- Forecast alerts must label local predictive vs confirmed state.
+- Low confidence forecast should not trigger punitive action.
+
+## Conceptual examples
+
+## Advisor below forecast
+
+- Forecast identifies expected trajectory is below needed path.
+- Manager consumes as coaching input.
+
+## Unit forecast gap
+
+- Forecast identifies unit may miss expected capacity.
+- Business Planning converts into actions.
+
+## Productivity forecast risk
+
+- Productivity trend weakens future output estimate.
+
+## Conservation-adjusted forecast warning
+
+- Conservation risk reduces durability confidence.
+
+
+# 13. Forecast Period Model
+
+## Daily local signal
+
+- Purpose: detect immediate behavior or pipeline movement changes.
+- Inputs: Mick signals, pipeline movement, daily activity.
+- Consumers: Advisor, Manager, Advisor Experience.
+- Risk: too noisy; must not be official forecast.
+
+## Weekly forecast review
+
+- Purpose: review short-cycle trajectory and coaching risks.
+- Inputs: productivity trend, pipeline movement, activity patterns.
+- Consumers: Manager, Advisor, Partner.
+- Risk: incomplete production confirmation.
+
+## Monthly forecast
+
+- Purpose: evaluate near-term output trajectory.
+- Inputs: production facts, productivity signals, pipeline, conservation risk.
+- Consumers: Advisor, Manager, Business Planning.
+- Risk: conservation and compensation lag.
+
+## Quarterly forecast
+
+- Purpose: support manager, Partner and business planning cycles.
+- Inputs: monthly trends, productivity, conservation, pipeline, goals.
+- Consumers: Manager, Partner, Business Planning.
+- Risk: official reports may arrive after quarter.
+
+## Semester forecast
+
+- Purpose: support medium-cycle planning, career/contest/partner context where relevant.
+- Inputs: productivity trend, production facts, conservation, career stage, pipeline.
+- Consumers: Partner, Business Planning, Forecast review.
+- Risk: Rule Pack boundaries may apply.
+
+## Annual forecast
+
+- Purpose: support annual planning and capacity outlook.
+- Inputs: historical performance, current pipeline, productivity, conservation, business goals.
+- Consumers: Business Planning, Partner, Manager.
+- Risk: too many assumptions; confidence must be explicit.
+
+## Lagged forecast correction
+
+- Purpose: adjust prior forecast after official or late evidence arrives.
+- Inputs: carrier reports, official indexes, late Production Events, corrections.
+- Consumers: Forecast, Business Planning, Compensation context.
+- Risk: silent mutation of history.
+
+
+# 14. Forecast Snapshot Model
+
+## Advisor Forecast Snapshot
+
+- Forecast for one advisor and period.
+
+## Manager Forecast Snapshot
+
+- Forecast for manager/team scope.
+
+## Partner Forecast Snapshot
+
+- Forecast for Partner unit context.
+
+## Unit Forecast Snapshot
+
+- Forecast for unit, cohort or team.
+
+## Pipeline Forecast Snapshot
+
+- Forecast based on revenue pipeline and movement.
+
+## Conservation-adjusted Forecast Snapshot
+
+- Forecast adjusted by conservation risk or quality signals.
+
+## Forecast Risk Snapshot
+
+- Captures forecast risks and dependency warnings.
+
+## Forecast Confidence Snapshot
+
+- Captures qualitative confidence state.
+
+## Forecast Assumption Snapshot
+
+- Captures assumptions used to generate the forecast.
+
+## Every snapshot must preserve
+
+- Period.
+- Evidence.
+- Source.
+- Assumptions.
+- Confidence.
+- Local predictive vs institutional confirmed status.
+- RuleSnapshot if rules apply.
+- Correction reference if applicable.
+
+## Snapshot rule
+
+- Forecast snapshots are interpretations.
+- They must not overwrite facts or prior snapshots silently.
+
+
+# 15. Forecast Event Model
+
+## Input Events
+
+- productivity signal updated.
+- conservation risk updated.
+- pipeline moved.
+- production event received.
+- behavior pattern changed.
+
+## Owners
+
+- Upstream domains.
+
+## Forecast use
+
+- Trigger forecast review or refresh.
+
+## Interpretation Events
+
+- FORECAST_UPDATED.
+- FORECAST_RISK_DETECTED.
+- FORECAST_CONFIDENCE_CHANGED.
+- FORECAST_GAP_DETECTED.
+- FORECAST_ASSUMPTION_CHANGED.
+
+## Owner
+
+- Forecast Intelligence.
+
+## Snapshot Events
+
+- FORECAST_SNAPSHOT_CREATED.
+- FORECAST_PERIOD_CLOSED.
+- FORECAST_BASELINE_CREATED.
+
+## Owner
+
+- Forecast Intelligence.
+
+## Correction Events
+
+- FORECAST_CORRECTED.
+- LATE_REPORT_AFFECTED_FORECAST.
+- FORECAST_ASSUMPTION_INVALIDATED.
+
+## Owner
+
+- Forecast Intelligence for forecast correction.
+- Upstream domain owns source correction.
+
+
+# 16. Confidence and Evidence Model
+
+## High confidence
+
+- Strong evidence, stable source, sufficient history, clear period, low lag and rule-backed where rules apply.
+- No numeric threshold approved.
+
+## Medium confidence
+
+- Some evidence exists, but assumptions, lag, source quality or data completeness remain limited.
+
+## Low confidence
+
+- Weak evidence, incomplete source, unstable trend, unclear period or significant lag.
+
+## Insufficient evidence
+
+- Forecast should not present a directional conclusion beyond stating evidence is insufficient.
+
+## Pending institutional confirmation
+
+- Local signals exist but official report is pending.
+
+## Local predictive only
+
+- Based on local behavior, pipeline, productivity or conservation risk.
+- Useful for action, not official truth.
+
+## Source-backed
+
+- Supported by identifiable SourceSystem and EvidenceRecord.
+
+## Rule-backed
+
+- Supported by RuleSnapshot.
+
+## Historical trend backed
+
+- Supported by prior observed performance, but still not guaranteed.
+
+## Rule
+
+- Forecast must always expose confidence and evidence state.
+
+
+# 17. Forecast Risk Model
+
+## Pipeline does not convert
+
+- Pipeline exists but fails to become output.
+
+## Activity drops
+
+- Mick signals weaken future trajectory.
+
+## Productivity declines
+
+- Productivity trend weakens expected future output.
+
+## Conservation risk increases
+
+- Future durability decreases.
+
+## Official report contradicts local forecast
+
+- Institutional historical truth corrects local predictive view.
+
+## Forecast based on weak evidence
+
+- Confidence must drop or forecast should be withheld.
+
+## Forecast ignores lag
+
+- Forecast overstates certainty.
+
+## Forecast ignores product line
+
+- Product-specific differences may distort forecast.
+
+## Forecast ignores advisor stage
+
+- Career context may make assumptions invalid.
+
+## Forecast ignores attribution
+
+- Forecast may assign future outcome to wrong advisor/manager/partner.
+
+## Forecast used as fact
+
+- Critical governance failure.
+
+## Forecast used as compensation promise
+
+- Critical financial and trust risk.
+
+
+# 18. Advisor and Manager Forecast Alerts
+
+## Advisor alerts
+
+- You are trending below forecast.
+- Your pipeline is not moving enough to support forecast.
+- Your activity supports forecast but output is not converting.
+- Forecast confidence is low due to missing evidence.
+- Conservation risk may reduce future durability.
+
+## Manager alerts
+
+- Advisor forecast gap.
+- Unit forecast risk.
+- Productivity-adjusted forecast warning.
+- Conservation-adjusted forecast warning.
+- Pipeline aging reduces forecast confidence.
+- Forecast depends on unconfirmed institutional data.
+
+## Every alert must include
+
+- What changed.
+- Why it matters.
+- Evidence status.
+- Confidence.
+- Local predictive vs confirmed.
+- Next best action.
+- Domain owner of signal.
+
+## Guardrail
+
+- Forecast alerts must not become punishment.
+- Forecast alerts must guide action.
+
+
+# 19. Forecast and Economic Motivation
+
+## Forecast may feed Economic Motivation when
+
+- Forecast gap is evidence-backed.
+- Compensation rules exist if money is mentioned.
+- Confidence is sufficient.
+- Period is clear.
+- Uncertainty is explicit.
+
+## Economic Motivation may translate forecast to money only when
+
+- RuleSnapshot exists.
+- EvidenceRecord exists.
+- Compensation logic supports it.
+- Source and confidence are clear.
+
+## Guardrails
+
+- No invented income.
+- No guaranteed income.
+- No bonus projection without Compensation rules.
+- No forecast-to-money translation without evidence and confidence.
+- No local predictive forecast presented as confirmed income.
+
+
+# 20. Forecast and Advisor Experience
+
+## Clippy may explain Forecast by
+
+- Explaining why forecast changed.
+- Explaining missing evidence.
+- Explaining local predictive vs confirmed.
+- Explaining why pipeline is not enough.
+- Explaining conservation-adjusted risk.
+
+## Avoiding anxiety or false security
+
+- Use confidence labels.
+- Explain uncertainty.
+- Avoid punitive language.
+- Tie forecast to next action.
+
+## Candy Crush Experience may adapt
+
+- Lower complexity when confidence is low or advisor is early-stage.
+- Increase diagnostic depth for advanced advisors.
+- Avoid overwhelming advisor with speculative scenarios.
+
+## Advisor Experience display rule
+
+- Forecast must be shown as decision support, not judgment or guaranteed outcome.
+
+
+# 21. Red Team Review
+
+Scenario: High pipeline, low productivity.
+
+- Failure mode: Forecast overestimates future production from pipeline.
+- Impact: Advisor and manager believe output is likely when conversion is weak.
+- Mitigation: Forecast consumes Productivity trend and bottleneck.
+
+Scenario: High productivity, weak conservation.
+
+- Failure mode: Forecast projects durable future output from fragile production.
+- Impact: Future income and planning are overstated.
+- Mitigation: Forecast consumes Conservation risk and quality signals.
+
+Scenario: High activity, no output.
+
+- Failure mode: Mick signals create false forecast optimism.
+- Impact: Activity is mistaken for future production.
+- Mitigation: Forecast requires Productivity conversion signals.
+
+Scenario: Low activity, one big case.
+
+- Failure mode: Forecast overprojects from isolated output.
+- Impact: Productive trajectory is overstated.
+- Mitigation: Require repeatability and evidence context.
+
+Scenario: Forecast says on track, institutional report later contradicts.
+
+- Failure mode: Local predictive forecast treated as confirmed truth.
+- Impact: Loss of trust and bad planning.
+- Mitigation: Correction event and local-vs-confirmed labeling.
+
+Scenario: Manager treats forecast as fact.
+
+- Failure mode: Manager overreacts or punishes based on uncertain estimate.
+- Impact: Bad coaching and trust erosion.
+- Mitigation: Alerts include confidence and evidence status.
+
+Scenario: Advisor treats forecast as guaranteed income.
+
+- Failure mode: Forecast becomes income promise.
+- Impact: Financial expectation risk.
+- Mitigation: No guaranteed income language.
+
+Scenario: Forecast ignores product mix.
+
+- Failure mode: Product differences distort projection.
+- Impact: Invalid forecast.
+- Mitigation: Consume product line context and RuleSnapshot where applicable.
+
+Scenario: Forecast ignores policy cancellation.
+
+- Failure mode: Cancelled output remains in future expectation.
+- Impact: Overstated future result.
+- Mitigation: Consume Production Events and Conservation corrections.
+
+Scenario: Forecast ignores reporting lag.
+
+- Failure mode: Pending reports appear as missing or confirmed result.
+- Impact: Wrong confidence.
+- Mitigation: Reporting lag model and pending institutional confirmation state.
+
+Scenario: Forecast creates too many alerts.
+
+- Failure mode: Advisor and manager ignore noise.
+- Impact: Alert fatigue.
+- Mitigation: Alert thresholds require future hardening; no numeric thresholds in this PAQ.
+
+Scenario: Forecast loops with Mick/Manager action.
+
+- Failure mode: Forecast alert triggers action, action changes Mick, Mick changes Forecast repeatedly.
+- Impact: Overload and feedback loops.
+- Mitigation: Period snapshots, throttled refresh, event/snapshot separation.
+
+
+# 22. Architecture Decision
+
+## Decision
+
+ARCHITECTURE CANDIDATE
+
+## Justification
+
+- Forecast Intelligence has distinct ownership.
+- It consumes locked upstream domains.
+- It produces future-facing interpretations.
+- Boundaries with Productivity, Conservation, Revenue, Compensation and Business Planning are clear.
+- It still needs hardening before Architecture Lock.
+
+## Not ready for Lock because
+
+- Forecast metric ownership needs finalization.
+- Forecast period and snapshot models need hardening.
+- Confidence model needs finalization.
+- Economic Motivation boundary needs lock.
+- Business Planning dependency needs further modeling.
+
+
+# 23. Recommended Next Step
+
+## Recommended
+
+PAQ-11.5 Forecast Architecture Lock.
+
+## Justification
+
+- Boundaries are clear enough for hardening.
+- Forecast should lock before Business Planning because Business Planning consumes Forecast.
+
+## Next after Forecast Lock
+
+- Business Planning Intelligence.
+
+## Possible later
+
+- Portfolio Intelligence.
+- Manager Tactical Intelligence.
+
+
+# 24. Final Verdict
+
+Forecast Intelligence is a valid Forge OS domain candidate.
+
+## It owns
+
+- Forecast interpretation.
+- Forecast snapshots.
+- Forecast risk.
+- Forecast confidence.
+- Forecast assumptions.
+- Forecast scenarios.
+- Forecast explanation.
+- Forecast gap signal.
+- Forecast dependency warning.
+
+## It does not own
+
+- Production Events.
+- Behavior.
+- Productivity.
+- Conservation.
+- Revenue pipeline.
+- Compensation.
+- Business plans.
+- Career stage.
+- Manager action.
+- Rule Pack thresholds.
+
+## PAQ-11 status
+
+ARCHITECTURE CANDIDATE
+
+## Implementation status
+
+NOT APPROVED
+
+## Next recommended PAQ
+
+PAQ-11.5 Forecast Architecture Lock.
+
+
+# 25. Run Summary
+
+# 1. Documento generado:
+
+- PAQ-11-FORECAST-INTELLIGENCE-DISCOVERY.txt
+
+# 2. Estado propuesto de PAQ-11:
+
+- ARCHITECTURE CANDIDATE
+
+# 3. Principales hallazgos:
+
+- Forecast is suggestion, not fact.
+- Forecast consumes Productivity and Conservation but does not own them.
+- Forecast must preserve confidence, evidence, assumptions and period.
+- Forecast must distinguish local predictive from institutionally confirmed outcomes.
+- Forecast feeds Business Planning and Economic Motivation with guardrails.
+
+# 4. Riesgos abiertos:
+
+- Forecast metric ownership not yet locked.
+- Confidence model not yet hardened.
+- Economic Motivation boundary needs lock.
+- Business Planning dependency not yet modeled.
+- Alert fatigue and feedback loops require future hardening.
+
+# 5. Recomendacion de siguiente PAQ:
+
+- PAQ-11.5 Forecast Architecture Lock.
+
+# 6. Confirmacion:
+
+- No se toco codigo.
+- No se crearon engines.
+- No se crearon schemas.
+- No se modifico UI.
+- No se modifico app.js.
+- No se actualizo Build Tree.
+- No se creo Markdown.
+- No se hizo commit.
+- No se hizo push.
+
+---
+
+# Build Tree Conceptual Update Notes
+
+Agregar a FORGE_MASTER_BUILD_TREE.md sin tocar otros dominios ni motores existentes:
+
+```text
+🔵 12 FORECAST INTELLIGENCE
+│
+├── 🔵 Forecast Interpretation
+├── 🔵 Forecast Snapshots
+├── 🔵 Forecast Risk & Confidence
+├── 🔵 Forecast Assumptions
+├── 🔵 Forecast Scenarios
+├── 🔵 Forecast Explanation
+├── 🔵 Forecast Gap Signals
+└── 🔵 Forecast Dependency Warnings
+```
+
+Dependencias conceptuales a registrar:
+
+- Productivity Intelligence
+- Conservation Intelligence
+- Revenue Intelligence
+- Compensation Intelligence
+- Business Planning Intelligence
+
+Notas de boundary:
+
+- Forecast responde: What may happen?
+- Business Planning responde: What should we do?
+- Forecast no es Fact.
+- Forecast no es Compensation.
+- Forecast no es Revenue Pipeline.
+- Forecast no es Productivity.
+- Forecast no es Conservation.
+
+---
+
+# Commit and Push Instructions
+
+Archivos esperados para commit:
+
+- PAQ-11-Forecast-Intelligence.md
+- FORGE_MASTER_BUILD_TREE.md
+
+Mensaje sugerido:
+
+```text
+docs: add Forecast Intelligence architecture v1.0
+```
+
+Comandos exactos:
+
+```sh
+git add PAQ-11-Forecast-Intelligence.md FORGE_MASTER_BUILD_TREE.md
+git commit -m "docs: add Forecast Intelligence architecture v1.0"
+git push origin main
+```
+
+Validaciones antes de commit:
+
+```sh
+git status --short
+```
+
+Confirmar antes de commit:
+
+- Solo documentacion modificada o creada.
+- No app.js.
+- No engines.
+- No schemas.
+- No UI.
+- No codigo de negocio.

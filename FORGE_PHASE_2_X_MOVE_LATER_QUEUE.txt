@@ -1,0 +1,26 @@
+FORGE_PHASE_2_X_MOVE_LATER_QUEUE.txt
+Generated: 2026-06-04
+Scope: Phase 2.X documentation queue. No code changes approved.
+
+Action: MOVE LATER
+
+## policy-human-review-engine.js
+
+- Classification: MOVE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## staging-review-engine.js
+
+- Classification: MOVE LATER
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+

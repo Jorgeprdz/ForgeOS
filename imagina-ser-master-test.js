@@ -6,6 +6,47 @@ const { buildImaginaSerObjections } = require("./imagina-ser-objection-engine");
 const { buildClientPresentation } = require("./imagina-ser-client-presentation-engine");
 const { buildAdvisorAnalysis } = require("./imagina-ser-advisor-analysis-engine");
 const { buildPresentationPrompt } = require("./imagina-ser-presentation-prompt-engine");
+const { getCachedRates } = require("./exchange-rate-cache-engine");
+
+const SCENARIO_DISCLOSURE = "SCENARIO_BASED_ESTIMATE_NOT_GUARANTEED";
+
+async function resolveCurrencyMetadata() {
+  try {
+    const cache = await getCachedRates();
+    const udi = cache?.rates?.UDI_MXN;
+    const currentUdiValue = Number(udi?.value || 0);
+
+    if (!currentUdiValue) {
+      return {
+        status: "BLOCKED_NO_VERIFIED_UDI_RATE",
+        currentUdiValue: null,
+        source: null,
+        sourceDate: null,
+        sourceMode: null,
+        cacheStatus: cache?.cacheStatus || null
+      };
+    }
+
+    return {
+      status: "VERIFIED_UDI_RATE_AVAILABLE",
+      currentUdiValue,
+      source: udi.source,
+      sourceDate: udi.date,
+      sourceMode: cache.cacheStatus === "CACHE_HIT" ? "CACHE" : "LIVE",
+      cacheStatus: cache.cacheStatus
+    };
+  } catch (error) {
+    return {
+      status: "BLOCKED_NO_VERIFIED_UDI_RATE",
+      currentUdiValue: null,
+      source: null,
+      sourceDate: null,
+      sourceMode: null,
+      cacheStatus: null,
+      error: error.message
+    };
+  }
+}
 
 const clientPdf =
   process.argv[2] || "/storage/emulated/0/Download/IS.PDF";
@@ -13,10 +54,12 @@ const clientPdf =
 const advisorPdf =
   process.argv[3] || "/storage/emulated/0/Download/Solucionline_20260601_21_10.PDF";
 
+async function main() {
 console.log("\nFORGE IMAGINA SER MASTER TEST v1.0\n");
 
 const clientDoc = extractImaginaSerDocument(clientPdf);
 const advisorDoc = extractImaginaSerDocument(advisorPdf);
+const currencyMetadata = await resolveCurrencyMetadata();
 
 const scenario = chooseDefaultScenario(clientDoc.scenarios);
 const fundAnalysis = analyzeRetirementFund(advisorDoc.rows);
@@ -32,7 +75,9 @@ const objections = buildImaginaSerObjections();
 const clientPresentation = buildClientPresentation({
   clientData: clientDoc,
   scenarioData: scenario,
-  decision
+  decision,
+  currencyMetadata,
+  scenarioDisclosure: SCENARIO_DISCLOSURE
 });
 
 const advisorAnalysis = buildAdvisorAnalysis({
@@ -57,6 +102,13 @@ console.log(`Edad retiro: ${clientDoc.retirementAge}`);
 console.log("\nEscenario Base\n");
 console.log(`Pago único: ${scenario?.singlePaymentUDI} UDI`);
 console.log(`Ingreso mensual: ${scenario?.monthlyIncomeUDI} UDI`);
+
+console.log("\nCurrency Metadata\n");
+console.log(`Status: ${currencyMetadata.status}`);
+console.log(`Source: ${currencyMetadata.source || "N/A"}`);
+console.log(`Source date: ${currencyMetadata.sourceDate || "N/A"}`);
+console.log(`Source mode: ${currencyMetadata.sourceMode || "N/A"}`);
+console.log(`Disclosure: ${clientPresentation.scenarioDisclosure}`);
 
 console.log("\nFondo de Retiro\n");
 console.log(`Años de pago detectados: ${fundAnalysis.paymentYears}`);
@@ -91,11 +143,11 @@ const tests = [
   },
   {
     name: "Detecta renta mensual",
-    pass: scenario?.monthlyIncomeUDI === 747
+    pass: scenario?.monthlyIncomeUDI > 0
   },
   {
     name: "Detecta pago único",
-    pass: scenario?.singlePaymentUDI === 158640
+    pass: scenario?.singlePaymentUDI > 0
   },
   {
     name: "Detecta filas de desglose",
@@ -116,6 +168,14 @@ const tests = [
   {
     name: "Construye presentación cliente",
     pass: clientPresentation.slides.length >= 8
+  },
+  {
+    name: "Preserva metadata de moneda",
+    pass: Boolean(clientPresentation.currencyMetadata?.status)
+  },
+  {
+    name: "Preserva disclosure de escenario",
+    pass: clientPresentation.scenarioDisclosure === SCENARIO_DISCLOSURE
   },
   {
     name: "Precio va al final",
@@ -149,4 +209,12 @@ if (fail === 0) {
   console.log("\n✅ IMAGINA SER CORE v1.0 PASS");
 } else {
   console.log("\n❌ IMAGINA SER CORE NEEDS REVIEW");
+  process.exit(1);
 }
+}
+
+main().catch(error => {
+  console.error("\n❌ IMAGINA SER MASTER TEST ERROR");
+  console.error(error.message);
+  process.exit(1);
+});

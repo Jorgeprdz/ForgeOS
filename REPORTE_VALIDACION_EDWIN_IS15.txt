@@ -1,0 +1,174 @@
+REPORTE DE VALIDACION
+
+Validacion:
+Calculo humano de Jorge Palacios vs calculo generado por Forge.
+
+Fuente humana:
+/storage/emulated/0/Download/Edwin IS-15.pdf
+
+Fuentes Forge:
+FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt
+IMAGINA_SER_EDWIN_ADVISOR_INTERPRETATION_REPORT.md
+IMAGINA_SER_EDWIN_RAW_SOURCE_REPORT.md
+IMAGINA_SER_EDWIN_REASONING_DIAGRAM.md
+
+ESTADO FINAL
+
+🟡 COINCIDE PARCIALMENTE
+
+1. QUE CALCULO JORGE
+
+Jorge calculo:
+
+- Prima basica anual: 3,222 UDI = $28,515 MXN.
+- Prima total anual: 3,222 UDI = $28,515 MXN.
+- Invalidez: 75,000 UDI = $663,750 MXN.
+- Fallecimiento: 75,000 UDI = $663,750 MXN.
+- Ahorro en 15 anos: $570,967 MXN.
+- Recuperacion pago unico: $5,942,841 MXN.
+- Primera renta vitalicia: 606 UDI = $27,983 MXN.
+- Acumulado a los 75: 79,992 UDI = $4,647,856 MXN.
+- Acumulado a los 80: 116,352 UDI = $7,629,134 MXN.
+- UDI hoy: $8.85 MXN.
+
+2. QUE CALCULO FORGE
+
+Forge calculo:
+
+- Prima anual total: 3,222 UDI = $28,450.07 MXN.
+- Suma asegurada: 75,000 UDI = $662,245.50 MXN.
+- Total UDI contribuido: 48,330 UDI = $426,751.00 MXN.
+- Base pago unico: 82,829 UDI = $731,375.10 MXN.
+- Base renta mensual: 390 UDI = $3,443.68 MXN.
+- Favorable pago unico: 128,697 UDI = $1,136,386.79 MXN.
+- Favorable renta mensual: 606 UDI = $5,350.94 MXN.
+- Desfavorable pago unico: 57,228 UDI = $505,319.81 MXN.
+- Desfavorable renta mensual: 270 UDI = $2,384.08 MXN.
+- UDI usada: $8.82994 MXN, fuente BANXICO_SIE_API/cache.
+
+Forge no calculo:
+
+- Ahorro futuro en 15 anos de $570,967 MXN.
+- Recuperacion pago unico de $5,942,841 MXN.
+- Acumulado a 75 anos.
+- Acumulado a 80 anos.
+
+3. COINCIDEN
+
+Coinciden:
+
+- Prima anual en UDI: 3,222 UDI.
+- Suma asegurada en UDI: 75,000 UDI.
+- Renta favorable mensual en UDI: 606 UDI.
+
+No coinciden:
+
+- Conversion MXN de prima anual.
+- Conversion MXN de suma asegurada.
+- Ahorro total en 15 anos.
+- Recuperacion pago unico.
+- Primera renta vitalicia en MXN.
+- Acumulados a 75 y 80 anos.
+
+4. DIFERENCIAS
+
+Prima anual:
+- Jorge: $28,515 MXN.
+- Forge: $28,450.07 MXN.
+- Diferencia: -$64.93 MXN.
+
+Suma asegurada:
+- Jorge: $663,750 MXN.
+- Forge: $662,245.50 MXN.
+- Diferencia: -$1,504.50 MXN.
+
+Ahorro / contribucion:
+- Jorge: $570,967 MXN.
+- Forge: $426,751.00 MXN.
+- Diferencia: -$144,216.00 MXN.
+
+Pago unico favorable:
+- Jorge: $5,942,841 MXN.
+- Forge: $1,136,386.79 MXN.
+- Diferencia: -$4,806,454.21 MXN.
+
+Renta mensual favorable:
+- Jorge: $27,983 MXN.
+- Forge: $5,350.94 MXN.
+- Diferencia: -$22,632.06 MXN.
+
+Acumulado a los 75:
+- Jorge: 79,992 UDI = $4,647,856 MXN.
+- Forge: no calculado.
+- Diferencia: no comparable; falta en Forge.
+
+Acumulado a los 80:
+- Jorge: 116,352 UDI = $7,629,134 MXN.
+- Forge: no calculado.
+- Diferencia: no comparable; falta en Forge.
+
+5. CAUSA DE LA DIFERENCIA
+
+Causa principal:
+Jorge y Forge usan distinta logica de conversion UDI/MXN.
+
+Jorge:
+- Usa UDI hoy de $8.85 MXN para valores actuales.
+- Usa factores futuros implicitos para rentas, recuperacion y acumulados.
+
+Forge:
+- Usa UDI Banxico/cache de $8.82994 MXN.
+- Convierte con valor actual.
+- No calcula UDI futura ni acumulados a 75/80.
+
+6. EXISTE ERROR
+
+Si el objetivo es validar los valores UDI extraidos de la cotizacion:
+No hay error relevante.
+
+Si el objetivo es replicar la presentacion humana de Jorge:
+Si existe una discrepancia material.
+
+Error principal:
+Forge no reproduce la logica de UDI futura/proyectada usada por Jorge.
+
+7. CALCULO CORRECTO SEGUN LA COTIZACION
+
+Segun la cotizacion base Solucionline, los valores correctos son los UDI:
+
+- 3,222 UDI de prima anual.
+- 75,000 UDI de suma asegurada.
+- Base: 82,829 UDI / 390 UDI mensuales.
+- Favorable: 128,697 UDI / 606 UDI mensuales.
+- Desfavorable: 57,228 UDI / 270 UDI mensuales.
+
+Segun Edwin IS-15.pdf, los valores MXN correctos para la presentacion humana son los de Jorge:
+
+- $28,515 MXN de prima anual.
+- $570,967 MXN de ahorro en 15 anos.
+- $5,942,841 MXN de recuperacion pago unico.
+- $27,983 MXN de primera renta.
+- $4,647,856 MXN a los 75.
+- $7,629,134 MXN a los 80.
+
+8. EVALUACION DE RIESGO
+
+Riesgo de extraccion:
+BAJO.
+
+Riesgo de conversion MXN actual:
+BAJO.
+
+Riesgo de replicar calculo humano:
+ALTO.
+
+Riesgo de presentacion al cliente:
+ALTO si Forge presenta sus MXN actuales como equivalentes a los MXN de Jorge.
+
+9. VEREDICTO
+
+🟡 COINCIDE PARCIALMENTE
+
+Forge no esta mal leyendo la cotizacion.
+Forge esta incompleto frente al calculo humano de Jorge porque no reproduce la proyeccion UDI/MXN futura ni los acumulados a 75 y 80 anos.
+

@@ -1,0 +1,227 @@
+FORGE CAREER OS IMPLICATIONS
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+Constitutional implications only. No implementation. No UI. No code. No
+schemas. No engines. No Build Tree changes.
+
+CORE IMPLICATION
+
+If Forge is a Career Operating System, the product is not organized around
+records, screens or dashboards.
+
+It is organized around professional lifecycle, decision clarity, development
+signals, action paths and evidence.
+
+CRM FRAME
+
+CRM says:
+- Store contacts.
+- Track activity.
+- Manage pipeline.
+- Report stages.
+- Keep records updated.
+
+CAREER OS FRAME
+
+Career OS says:
+- Understand career stage.
+- Interpret signals.
+- Build capability.
+- Convert ambition into action.
+- Help managers develop people.
+- Help advisors decide what to do next.
+- Preserve evidence and confidence.
+- Move a person through a commercial career.
+
+IMPLICATION FOR BENVENÙ
+
+Benvenù is not account setup.
+
+It becomes the first experience of entering a career system.
+
+It must create the feeling:
+"Forge understands the career I am building."
+
+It must not create the feeling:
+"Forge wants me to complete my profile."
+
+IMPLICATION FOR LEOPARD EXPERIENCE
+
+Leopard Experience becomes the emotional first boot of Career OS.
+
+It should show vision before asking for work.
+
+It should not teach features, explain menus, show dashboards or request
+configuration.
+
+IMPLICATION FOR FIRST WOW MOMENT
+
+First Wow should show one explainable career-relevant signal.
+
+Best pattern:
+"Forge found one relationship/action/context signal that may move you forward."
+
+The wow comes from usefulness and restraint, not spectacle.
+
+IMPLICATION FOR FUTURE YOU CONVERSATION
+
+Future You Conversation is no longer just onboarding discovery.
+
+It becomes the first career-direction conversation.
+
+It should help the user describe what they want to build without turning purpose
+into a field.
+
+IMPLICATION FOR PURPOSE SNAPSHOT
+
+Purpose Snapshot becomes human career context.
+
+It must not become:
+- a motivation score
+- a sales pressure object
+- a manager coercion tool
+- a personality label
+- a compensation prompt
+
+IMPLICATION FOR ALFRED
+
+Alfred becomes the command surface of Career OS.
+
+It lets a professional move through work by intent:
+- find the next action
+- review this relationship
+- understand this forecast
+- prepare this conversation
+- see what changed
+
+Alfred should not be framed only as search.
+
+IMPLICATION FOR MANAGER INTELLIGENCE
+
+Manager Intelligence should be interpreted as people-development
+infrastructure.
+
+It must not become surveillance.
+
+Manager outputs should answer:
+- Who needs development?
+- Which skill?
+- What evidence?
+- What action?
+- What risk should be watched?
+
+IMPLICATION FOR PARTNER INTELLIGENCE
+
+Partner Intelligence becomes a later-career and network-expansion domain.
+
+It should model leverage, trust, alliances, referrals and strategic
+relationships.
+
+It should not collapse into CRM account management.
+
+IMPLICATION FOR BUSINESS PLANNING
+
+Business Planning becomes the operating bridge from ambition to action.
+
+It should connect:
+- purpose
+- career stage
+- forecast
+- productivity
+- behavior
+- compensation evidence
+- commercial events
+- next actions
+
+It must not become a static annual planning document.
+
+IMPLICATION FOR LIFECYCLE MODEL
+
+Career OS requires explicit lifecycle support:
+
+Candidate:
+Evaluate potential and evidence.
+
+Precontract:
+Track readiness, cycle state and conversion risk.
+
+Advisor Development:
+Build early habits, learning and consistency.
+
+New Professional:
+Support identity formation and first operating cadence.
+
+Professional Advisor:
+Optimize productivity, relationships, conservation and specialization.
+
+Manager:
+Develop people and teams.
+
+Partner:
+Expand leadership, network and strategic leverage.
+
+IMPLICATION FOR COMPETITIVE ALTERNATIVE
+
+The real competitor is not just CRM.
+
+The real competitor is:
+- Excel
+- disconnected records
+- manual follow-up
+- human memory
+- unclear decisions
+- manager intuition without evidence
+- career ambition without operating cadence
+
+Career OS must beat fragmentation.
+
+IMPLICATION FOR PRODUCT PRINCIPLES
+
+Career OS implies:
+- Career stage before screen.
+- Evidence before judgment.
+- Value before work.
+- Development before reporting.
+- Action before information.
+- Context before metric.
+- Purpose before target.
+- Forecast as scenario.
+- Manager as developer.
+- No invented career conclusions.
+
+RISKS
+
+Adopting Career OS creates risks:
+
+- It may become too broad.
+- It may sound like marketing.
+- It may invite overreach into identity or motivation.
+- It may increase manager-surveillance risk.
+- It may make Purpose Snapshot tempting to misuse.
+- It may blur boundaries between domains.
+
+MITIGATIONS
+
+Mitigate by enforcing:
+
+- Advisor First.
+- Decision Clarity First.
+- Evidence Before Judgment.
+- Forecast Truth Boundary.
+- Economic Evidence Rule.
+- Purpose is human context, not pressure.
+- Manager Intelligence develops people; it does not surveil.
+
+FINAL IMPLICATION
+
+Career OS is not a slogan.
+
+It is a boundary test:
+
+If a feature only stores data, it is not enough.
+
+If a feature helps a person move through a commercial career with evidence,
+context and action, it belongs in Forge.

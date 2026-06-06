@@ -1,0 +1,233 @@
+FORGE CAREER STAGE OWNERSHIP DISCOVERY
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No schemas. No engines. No UI. No code. No Build Tree
+changes.
+
+CORE QUESTION
+
+Who owns Career Stage in Forge?
+
+DISCOVERY ANSWER
+
+Career Stage should become a first-class architectural primitive, but no current
+business domain should silently own it alone.
+
+Recommended ownership pattern:
+
+Career Lifecycle Context should own canonical stage state.
+
+Other domains should contribute evidence and consume the official stage output.
+
+CONCEPTUAL OWNERSHIP MODEL
+
+Career Lifecycle Context:
+- owns canonical careerStage
+- owns operatingState
+- owns stage transition history
+- owns effective period
+- owns stage confidence
+- owns stage evidence references
+
+Leadership Context:
+- owns leadershipStage
+- owns leadership assignment state
+- owns manager/subdirector/director responsibility context
+- owns effective period
+- owns evidence references
+
+Recruitment Intelligence:
+- contributes candidate evidence
+- contributes assessment evidence
+- contributes interview evidence
+- does not own long-term Career Stage
+
+Precontract Intelligence:
+- contributes precontract cycle evidence
+- contributes activation/readiness evidence
+- contributes conversion evidence
+- does not overwrite durable identity
+
+Advisor Experience:
+- consumes Career Stage
+- adapts Benvenù, Future You, Alfred and Progressive Discovery
+- does not own Career Stage
+
+Mick / Behavior Intelligence:
+- contributes behavior evidence
+- interprets behavior by stage
+- does not promote or demote stage by itself
+
+Productivity Intelligence:
+- contributes productivity evidence
+- does not equate production with maturity
+
+Business Planning:
+- consumes Career Stage
+- adapts plans to stage
+- contributes planning maturity evidence
+- does not own stage
+
+Forecast Intelligence:
+- consumes Career Stage
+- interprets forecast by stage
+- does not create stage
+
+Compensation Intelligence:
+- contributes compensation/rule evidence when applicable
+- consumes Career Stage for interpretation
+- does not own stage
+
+Manager Intelligence:
+- consumes Career Stage and Leadership Stage
+- contributes coaching/development evidence
+- does not use manager opinion as stage truth without evidence
+
+Partner Intelligence:
+- contributes partner leverage and network maturity evidence
+- does not equate partner stage with org title
+
+Rule Packs / Organization Profiles:
+- map local titles, channels, rules and hierarchy terms
+- do not become Forge Core
+- may interpret evidence in context
+
+Human Review:
+- required when stage evidence conflicts
+- required when local title and observed maturity disagree
+- required when promotion/regression affects sensitive outputs
+
+WHY NO SINGLE DOMAIN SHOULD OWN IT
+
+Recruitment sees entry, not the whole career.
+
+Precontract sees readiness, not mature practice.
+
+Productivity sees output, not identity.
+
+Compensation sees rules and money, not human maturity.
+
+Manager Intelligence sees people-development context, but may be biased by
+organizational needs.
+
+Partner Intelligence sees leverage, not all leadership responsibility.
+
+Career Stage cuts across all of them.
+
+CAREER STAGE VS OPERATING STATE
+
+Career Stage:
+Durable lifecycle context.
+
+Examples:
+- Candidate
+- Precontract
+- Advisor
+- Professional Advisor
+- Partner
+- Senior Partner
+- Managing Partner
+
+Operating State:
+Current condition inside a stage.
+
+Examples:
+- active
+- inactive
+- dormant
+- at risk
+- reactivation
+- in review
+- transitioning
+
+CAREER STAGE VS LEADERSHIP STAGE
+
+Career Stage:
+Professional maturity and career lifecycle.
+
+Leadership Stage:
+Organizational responsibility for people, teams or units.
+
+Examples:
+- Individual Contributor
+- Manager
+- Subdirector
+- Director
+
+These must be separate.
+
+A person may be Partner + Individual Contributor.
+
+A person may be Advisor + Manager.
+
+A person may be Professional Advisor + Subdirector.
+
+A person may be Managing Partner + Director.
+
+EVIDENCE OWNERSHIP
+
+Stage evidence should include:
+- source
+- date
+- domain
+- confidence
+- effective period
+- human review status when ambiguous
+
+Evidence examples:
+- application status
+- precontract cycle status
+- contract signed
+- advisor conversion
+- production history
+- activity history
+- tenure
+- relationship/practice evidence
+- leadership assignment
+- team responsibility
+- development activity
+- recruiting activity
+- organization profile
+- rule pack interpretation
+
+NON-EVIDENCE
+
+Do not treat these as stage truth alone:
+- job title
+- one high production month
+- one low production month
+- compensation potential
+- forecast
+- self-description
+- manager preference
+- CRM pipeline stage
+- profile field
+- UI selection
+
+RECOMMENDED CONCEPTUAL CONTRACT
+
+No schema approved, but the conceptual contract should include:
+
+- personId
+- careerStage
+- operatingState
+- leadershipStage
+- effectiveFrom
+- effectiveTo
+- evidence[]
+- confidence
+- sourceDomain
+- reviewStatus
+- rulePackContext when applicable
+
+FINAL OWNERSHIP VERDICT
+
+Career Stage should be owned by a dedicated Career Lifecycle Context or Career
+Intelligence foundation, not by CRM, Compensation, Manager Intelligence or
+Advisor Experience.
+
+Verdict:
+CANDIDATE FOR LOCK.

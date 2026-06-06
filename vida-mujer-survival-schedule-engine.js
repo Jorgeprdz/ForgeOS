@@ -4,18 +4,22 @@ export function buildVidaMujerSurvivalSchedule({
   startAge = 0,
   coverageYears = 20,
   exchangeRateToMXN = null,
-  projectionRate = null
+  projectionRate = 0.045
 }) {
   const baseSumAssured = Number(sumAssured || 0);
   const normalizedCurrency = String(currency || 'UDI').toUpperCase();
   const currentRate = Number(exchangeRateToMXN || 0);
+  const effectiveProjectionRate =
+    normalizedCurrency === 'UDI'
+      ? 0.045
+      : projectionRate;
 
   const canConvertToMXN = currentRate > 0;
   const canProjectRate =
     canConvertToMXN &&
-    projectionRate !== null &&
-    projectionRate !== undefined &&
-    Number.isFinite(Number(projectionRate));
+    effectiveProjectionRate !== null &&
+    effectiveProjectionRate !== undefined &&
+    Number.isFinite(Number(effectiveProjectionRate));
 
   function getRateForYear(year) {
     if (!canConvertToMXN) return null;
@@ -24,7 +28,7 @@ export function buildVidaMujerSurvivalSchedule({
       return currentRate;
     }
 
-    return currentRate * Math.pow(1 + Number(projectionRate), year);
+    return currentRate * Math.pow(1 + Number(effectiveProjectionRate), year);
   }
 
   const intermediateYears = [
@@ -109,7 +113,7 @@ export function buildVidaMujerSurvivalSchedule({
         : null,
     projectionRate:
       canProjectRate
-        ? Number(projectionRate)
+        ? Number(effectiveProjectionRate)
         : null,
     conversionStatus:
       canProjectRate

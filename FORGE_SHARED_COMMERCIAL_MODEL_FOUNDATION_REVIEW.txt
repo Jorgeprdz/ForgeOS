@@ -1,0 +1,492 @@
+1. Domain Map
+
+El Shared Commercial Model debe ser la capa fundacional común de Forge. No es un módulo de negocio, no es base de datos y no es un engine. Es el lenguaje canónico para que los dominios no dupliquen identidad, asignación, eventos, periodos, reglas y métricas.
+
+Dominios consumidores:
+
+Dominio: Career Intelligence
+Usa Shared Commercial Model para: identidad, roles, fechas, etapa, career month, contest month
+
+Dominio: Contest Intelligence
+Usa Shared Commercial Model para: production events, periodos, rule snapshots, policy count, carrera
+
+Dominio: Compensation Intelligence
+Usa Shared Commercial Model para: policy/payment facts, commission schedule, rule snapshot, pagos
+
+Dominio: Conservation Intelligence
+Usa Shared Commercial Model para: policy age, status, primas, index reporting period
+
+Dominio: Revenue Intelligence
+Usa Shared Commercial Model para: persona, cliente, relación, oportunidad, actividad, baseline
+
+Dominio: Manager Compensation
+Usa Shared Commercial Model para: asignaciones históricas, equipo, producción, TA, conservación
+
+Dominio: Advisor Experience
+Usa Shared Commercial Model para: baseline, learning context, current stage, manager, first value
+
+Dominio: Mick
+Usa Shared Commercial Model para: comportamiento, actividad, disciplina, ejecución, progreso
+
+Dominio: Command OS
+Usa Shared Commercial Model para: entidades navegables, acciones disponibles, contexto activo
+
+Principio central:
+
+Production Events son hechos.
+Career, Contest, Compensation, Conservation y Manager Intelligence son interpretaciones regladas sobre esos hechos.
+
+2. Canonical Entities
+
+CommercialPerson
+Tipo: Permanente
+Obligatoria: Sí
+Semántica: Identidad humana durable, independiente del rol actual.
+
+CommercialRole
+Tipo: Temporal / histórico
+Obligatoria: Sí
+Semántica: Rol que una persona ocupa en un periodo: prospecto, cliente, asesor, manager, partner, director, referido.
+
+CommercialAssignment
+Tipo: Temporal / histórico
+Obligatoria: Sí
+Semántica: Asignación con vigencia: manager, oficina, equipo, partner, cartera, unidad.
+
+CommercialOrganization
+Tipo: Permanente
+Obligatoria: Sí
+Semántica: Organización, oficina, unidad o estructura comercial donde ocurren reglas y asignaciones.
+
+CommercialHierarchy
+Tipo: Agregado / snapshot
+Obligatoria: Sí, como vista conceptual
+Semántica: Estructura manager -> partner -> asesor -> equipo en un momento.
+
+CommercialRelationship
+Tipo: Permanente / histórico
+Obligatoria: Sí
+Semántica: Relación entre personas: cliente-asesor, referido-de, conectado-por, desarrollado-por, manager-de.
+
+Client
+Tipo: Rol derivado
+Obligatoria: No como identidad separada
+Semántica: Debe ser CommercialPerson con rol Client.
+
+Policy
+Tipo: Permanente
+Obligatoria: Sí
+Semántica: Contrato/póliza ligada a producto, cliente, asesor y eventos.
+
+Product
+Tipo: Permanente / versionado
+Obligatoria: Sí
+Semántica: Producto comercial, separado de reglas de comisión/contest.
+
+RuleSnapshot
+Tipo: Permanente / histórico
+Obligatoria: Sí
+Semántica: Reglas aplicadas a una decisión en un periodo.
+
+PeriodSnapshot
+Tipo: Snapshot
+Obligatoria: Sí
+Semántica: Corte temporal usado para evaluar reglas, métricas o estado.
+
+ProductionEvent
+Tipo: Hecho permanente
+Obligatoria: Sí
+Semántica: Evento atómico de producción: emisión, pago, comisión, cancelación, rehabilitación.
+
+CompensationEvent
+Tipo: Interpretación / resultado
+Obligatoria: Sí
+Semántica: Devengo, pago, reversa, recálculo, comisión calculada.
+
+ConservationEvent
+Tipo: Interpretación / medición
+Obligatoria: Sí
+Semántica: LIMRA, IGC, persistencia, conservación, index update.
+
+ContestEvent
+Tipo: Interpretación / resultado
+Obligatoria: Sí
+Semántica: TA won, Bono Inicial evaluated, policy count result, contest gap.
+
+CareerEvent
+Tipo: Hecho/interpretación de lifecycle
+Obligatoria: Sí
+Semántica: conexión, contrato, cambio etapa, promoción, cambio clase.
+
+RevenueOpportunity
+Tipo: Derivada / activa
+Obligatoria: Sí
+Semántica: Oportunidad comercial accionable basada en relación, producto, timing o riesgo.
+
+AdvisorBaselineSnapshot
+Tipo: Snapshot agregado
+Obligatoria: Sí para Advisor Experience
+Semántica: Punto inicial del asesor para adopción, revenue, Mick y Economic Motivation.
+
+ManagerBaselineSnapshot
+Tipo: Snapshot agregado
+Obligatoria: Sí futuro
+Semántica: Punto inicial del manager/equipo para coaching, productividad y compensación.
+
+Modelo de identidad:
+
+Una persona puede tener múltiples roles simultáneos o secuenciales. Un cliente puede convertirse en asesor. Un asesor puede ser cliente. Un partner sigue siendo una persona y puede seguir teniendo rol de asesor, manager, desarrollador o conectador según contexto. Por eso Client, Advisor, Manager y Partner no deben ser identidades separadas; son roles o asignaciones sobre CommercialPerson.
+
+3. Canonical Events
+
+Identity Events
+Representa: Cambios de identidad durable
+NO representa: roles comerciales o producción
+Ejemplos: PERSON_CREATED, PERSON_MERGED, DUPLICATE_REVIEW_STARTED
+
+Role / Career Events
+Representa: Cambios de etapa o rol
+NO representa: pagos o producción
+Ejemplos: ADVISOR_CONNECTED, CONTRACT_SIGNED, ADVISOR_BECAME_NEW_PROFESSIONAL, PARTNER_PROMOTED
+
+Assignment Events
+Representa: Cambios de ownership/atribución
+NO representa: identidad o producción
+Ejemplos: MANAGER_ASSIGNED, OFFICE_CHANGED, PARTNER_ASSIGNMENT_STARTED
+
+Production Events
+Representa: Hechos comerciales atómicos
+NO representa: bonos, elegibilidad o interpretación
+Ejemplos: POLICY_ISSUED, POLICY_PAID, COMMISSION_POSTED, POLICY_CANCELLED
+
+Compensation Events
+Representa: Resultado económico calculado/pagado
+NO representa: hecho original de producción
+Ejemplos: COMMISSION_CALCULATED, BONUS_ACCRUED, BONUS_PAID, BONUS_REVERSED
+
+Contest Events
+Representa: Evaluación de reglas de concurso
+NO representa: emisión/pago de póliza
+Ejemplos: TRAINING_ALLOWANCE_WON, BONO_INICIAL_EVALUATED, CONTEST_GAP_DETECTED
+
+Conservation Events
+Representa: Medición de calidad/conservación
+NO representa: pago de bono
+Ejemplos: LIMRA_UPDATED, IGC_UPDATED, PERSISTENCY_SNAPSHOT_CREATED
+
+Revenue Events
+Representa: Señales y oportunidades comerciales
+NO representa: compensación o carrera
+Ejemplos: OPPORTUNITY_DETECTED, NEXT_ACTION_CREATED, FOLLOWUP_DUE
+
+Relationship Events
+Representa: Historia de relación
+NO representa: producción financiera
+Ejemplos: CLIENT_CONTACTED, LIFE_EVENT_DETECTED, REFERRAL_REQUESTED
+
+Advisor Experience Events
+Representa: Adopción y aprendizaje de Forge
+NO representa: conducta comercial primaria
+Ejemplos: FEATURE_INTRODUCED, HELP_SHOWN, FEATURE_LEARNED, BASELINE_CREATED
+
+Mick / Behavior Events
+Representa: Ejecución, disciplina, hábitos
+NO representa: ingreso o bono
+Ejemplos: ACTIVITY_COMPLETED, TASK_MISSED, COACHING_ASSIGNED
+
+Regla: ningún evento debe resolver todo.
+POLICY_PAID no debe decidir bonos.
+BONUS_PAID no debe reconstruir producción.
+FEATURE_LEARNED no debe probar disciplina comercial.
+ADVISOR_CONNECTED no debe sustituir asignación, carrera y contest date.
+
+4. Canonical Periods
+
+Forge necesita un PeriodSnapshot conceptual, pero no todos los relojes deben ser entidades propias.
+
+Career Month
+Tipo recomendado: Derivado + snapshot
+Se deriva de: contrato/conexión
+Uso: etapa, Advisor in Development, NP
+
+Contest Month
+Tipo recomendado: Derivado + snapshot
+Se deriva de: fecha concurso
+Uso: TA, Conexión, Desarrollo
+
+Semester Month
+Tipo recomendado: Period snapshot
+Se deriva de: calendario/regla
+Uso: TA, Bono Inicial/Renovación
+
+NP Contest Month
+Tipo recomendado: Derivado + snapshot
+Se deriva de: entrada NP
+Uso: reglas Nuevo Profesional
+
+Policy Age Month
+Tipo recomendado: Derivado
+Se deriva de: emisión/efectividad/pago
+Uso: inicial vs renovación
+
+Policy Year
+Tipo recomendado: Derivado + snapshot
+Se deriva de: edad póliza
+Uso: comisión inicial/renovación
+
+Index Reporting Month
+Tipo recomendado: Snapshot propio
+Se deriva de: fuente índice
+Uso: LIMRA/IGC reportado
+
+Quarter Month
+Tipo recomendado: Period snapshot
+Se deriva de: calendario/regla
+Uso: GMM, quarter logic
+
+Manager Compensation Quarter
+Tipo recomendado: Snapshot propio
+Se deriva de: reglas PCV
+Uso: productividad, TA dependency
+
+Partner Tenure Semester
+Tipo recomendado: Derivado + snapshot
+Se deriva de: alta Partner
+Uso: Apoyos
+
+Persistence Month
+Tipo recomendado: Derivado
+Se deriva de: edad póliza
+Uso: persistencia 13/25
+
+Precontract Window Clock
+Tipo recomendado: Snapshot/ciclo
+Se deriva de: key activation/rules
+Uso: Recruitment/Precontract
+
+Payment Period
+Tipo recomendado: Snapshot propio
+Se deriva de: cierre/pago
+Uso: pagos, avances, reversas
+
+Reporting Period
+Tipo recomendado: Snapshot propio
+Se deriva de: sistema fuente
+Uso: reportes vs actividad real
+
+Activity Week/Day
+Tipo recomendado: Snapshot operativo
+Se deriva de: calendario
+Uso: Mick, Revenue, agenda
+
+Feature Learning Period
+Tipo recomendado: Snapshot experiencia
+Se deriva de: interacción/adopción
+Uso: Advisor Experience
+
+Recomendación: crear conceptualmente una familia PeriodSnapshot, no una entidad distinta para cada reloj. Cada snapshot debe decir: qué reloj representa, qué sujeto evalúa, qué regla usa, fecha inicio/fin, fuente y si es actividad, reporte, pago o interpretación.
+
+5. Rule Snapshot Model
+
+Forge necesita Rule Snapshots porque las reglas comerciales cambian y los resultados históricos deben seguir explicándose con las reglas vigentes en ese momento.
+
+Un Rule Snapshot representa:
+
+- Qué regla se aplicó.
+- A qué dominio pertenece.
+- Qué fuente/documento la soporta.
+- Para qué periodo era válida.
+- A qué sujeto o evento se aplicó.
+- Cuándo fue capturada.
+- Qué versión reemplaza o complementa.
+
+Debe existir para:
+
+- Recruitment / Precontract rules.
+- Career rules.
+- Contest rules.
+- Commission schedules.
+- Compensation rules.
+- Conservation/index rules.
+- Manager compensation rules.
+- Office rules.
+- Organization profile rules.
+- Advisor Experience learning/adoption rules si afectan decisiones.
+
+Cómo evita romper históricos:
+
+- Un bono 2026 se explica con Rule Snapshot 2026.
+- Una regla 2027 puede existir, pero no recalcula 2026 salvo como análisis separado.
+- Un cambio de fórmula LIMRA no altera snapshots históricos.
+- Una tabla de comisiones nueva no cambia comisiones ya calculadas.
+- Un manager assignment nuevo no reatribuye producción pasada.
+
+Principio: todo cálculo histórico debe poder responder: “¿con qué regla, en qué periodo, con qué hechos y bajo qué asignación se decidió esto?”
+
+6. Shared Metrics Ownership
+
+Producción
+Owner canónico: Production Events Foundation
+Consumidores: Revenue, Contest, Compensation, Manager, Mick
+Quién NO debería calcularla: UI, Manager dashboard, Advisor Experience
+
+Prima Meta
+Owner canónico: Contest Intelligence
+Consumidores: Advisor Experience, Economic Motivation, Manager
+Quién NO debería calcularla: Compensation payments, Revenue
+
+Prima Pago
+Owner canónico: Contest Intelligence / Compensation interpretation
+Consumidores: Compensation, Contest, Economic Motivation
+Quién NO debería calcularla: Revenue, UI
+
+Prima Renovación
+Owner canónico: Compensation/Contest with policy age
+Consumidores: Conservation, Contest, Economic Motivation
+Quién NO debería calcularla: Revenue
+
+Comisión Inicial
+Owner canónico: Compensation Intelligence
+Consumidores: Contest, Manager, Economic Motivation
+Quién NO debería calcularla: Contest directly from raw policy
+
+Comisión Renovación
+Owner canónico: Compensation Intelligence
+Consumidores: Contest, Conservation, Economic Motivation
+Quién NO debería calcularla: Revenue
+
+Pólizas
+Owner canónico: Production Events
+Consumidores: Contest, Manager, Revenue, Mick
+Quién NO debería calcularla: Compensation bonus engines independently
+
+Conteo Concurso
+Owner canónico: Contest / Policy Count Library
+Consumidores: TA, Conexión, Desarrollo, Manager Activity
+Quién NO debería calcularla: Mick 25-point activity
+
+Actividad
+Owner canónico: Mick / Behavior Intelligence
+Consumidores: Revenue, Manager, Advisor Experience
+Quién NO debería calcularla: Compensation as production substitute
+
+RDA
+Owner canónico: Connection Attribution
+Consumidores: Recruitment, Revenue, Conexión, Manager
+Quién NO debería calcularla: Isolated referral modules
+
+LIMRA
+Owner canónico: Conservation Intelligence
+Consumidores: Contest, Compensation, Manager
+Quién NO debería calcularla: UI/manual profile, Revenue
+
+IGC
+Owner canónico: Conservation Intelligence
+Consumidores: Contest, Compensation, Manager
+Quién NO debería calcularla: UI/manual profile, Revenue
+
+Persistencia
+Owner canónico: Conservation Intelligence
+Consumidores: Relationship, Manager, Advisor Experience
+Quién NO debería calcularla: Generic portfolio cards
+
+Conservación
+Owner canónico: Conservation Intelligence
+Consumidores: Compensation, Manager, Economic Motivation
+Quién NO debería calcularla: Compensation alone
+
+Ingresos
+Owner canónico: Compensation + Economic Motivation
+Consumidores: Advisor Experience, Mick, Manager
+Quién NO debería calcularla: Revenue without confirmed rules
+
+Revenue Opportunity
+Owner canónico: Revenue Intelligence
+Consumidores: Advisor Experience, Command OS, Mick
+Quién NO debería calcularla: Compensation
+
+Advisor Baseline
+Owner canónico: Advisor Experience
+Consumidores: Revenue, Mick, Manager
+Quién NO debería calcularla: Revenue alone
+
+Manager Baseline
+Owner canónico: Manager/Team Intelligence
+Consumidores: Manager Compensation, Mick
+Quién NO debería calcularla: Advisor Experience alone
+
+Feature Learning State
+Owner canónico: Advisor Experience
+Consumidores: Command OS, Clippy, Learning
+Quién NO debería calcularla: Mick alone
+
+Coaching Priority
+Owner canónico: Mick / Manager Intelligence
+Consumidores: Advisor Experience, Manager
+Quién NO debería calcularla: Revenue alone
+
+Rule: if a metric needs business rules, the owner is the domain that owns those rules. Other domains consume snapshots, not recalculated copies.
+
+7. Top Risks
+
+1. candidateId, advisorId, clientId, partnerId treated as different people.
+2. Client becoming advisor loses client history.
+3. Advisor becoming partner loses advisor production history.
+4. Manager assignment overwritten instead of time-bounded.
+5. Office/team changes reattribute historical production incorrectly.
+6. Production events used directly as bonus decisions.
+7. Compensation events used to infer production facts.
+8. Contest policy count confused with raw policy count.
+9. Mick activity points confused with contest policy count.
+10. Career Month mixed with Contest Month.
+11. NP Contest Month mixed with Semester Month.
+12. Policy Year calculated using current date instead of period snapshot.
+13. Index Reporting Month mixed with activity month.
+14. LIMRA and IGC treated as interchangeable.
+15. Rule 2027 recalculates 2026 historical outcomes.
+16. Commission schedules mixed with product knowledge.
+17. Contest rules mixed with commission schedules.
+18. Advisor Experience duplicates Revenue/Mick logic.
+19. Command OS executes actions without canonical entity context.
+20. Economic Motivation invents income because shared metrics lack owner/source.
+
+8. Hallazgos críticos
+
+El Shared Commercial Model debe existir antes de nuevos engines de Compensation, Career, Advisor Experience o Economic Motivation.
+
+La entidad más importante es CommercialPerson, no Advisor, Client o Candidate. Forge acompaña carreras completas; por eso identidad y roles deben separarse.
+
+La segunda entidad más importante es CommercialAssignment. Sin asignaciones históricas, Forge no puede explicar bonos, managers, promociones, producción ni coaching pasado.
+
+ProductionEvent debe ser el hecho más protegido del sistema comercial. Todo lo demás interpreta.
+
+RuleSnapshot es obligatorio para que Forge sea auditable. Sin eso, no hay confianza en compensación, concursos, conservación ni manager compensation.
+
+PeriodSnapshot debe convertirse en lenguaje común porque Forge ya tiene demasiados relojes para depender de “mes actual”.
+
+Advisor Experience no puede crear baseline sin Shared Model. Revenue Intelligence tampoco puede madurar sin identidad, relación, asignación y eventos compartidos.
+
+Command OS necesita entidades canónicas para que “abrir cliente”, “ver bono”, “crear follow-up”, “explicar renovación” o “priorizar oportunidad” no sean comandos aislados sin contexto.
+
+9. Recomendaciones
+
+1. Aprobar el Shared Commercial Model como capa fundacional obligatoria.
+2. Documentar primero, antes de schemas o engines.
+3. Separar identidad, rol y asignación.
+4. Tratar Client, Advisor, Manager, Partner y Director como roles sobre CommercialPerson.
+5. Modelar asignaciones como históricas y time-bounded.
+6. Crear una taxonomía oficial de eventos antes de cualquier implementación.
+7. Prohibir que Production Events calculen bonos directamente.
+8. Prohibir que Compensation Events reconstruyan hechos de producción.
+9. Definir PeriodSnapshot como lenguaje común de relojes.
+10. Hacer Rule Snapshot obligatorio para toda interpretación histórica.
+11. Definir ownership de métricas antes de construir dashboards.
+12. Convertir ConnectionAttribution en primitiva compartida para RDA, Conexión, referrals y manager attribution.
+13. Separar Product de Policy y Product Knowledge de Commission Schedule.
+14. Separar Conservation Snapshot oficial de métricas locales de persistencia.
+15. Definir Advisor Baseline Snapshot como agregado consumidor, no como fuente primaria.
+16. Definir Revenue Opportunity como derivado, no como hecho original.
+17. Definir ManagerBaselineSnapshot como agregado de equipo, no como reemplazo de asignaciones históricas.
+18. Hacer que Command OS consuma contexto canónico antes de ejecutar acciones.
+19. Hacer que Mick consuma actividad y comportamiento, no compensación calculada como proxy.
+20. No implementar hasta cerrar semántica de entidades, eventos, periodos, snapshots y ownership de métricas.

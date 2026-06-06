@@ -1,0 +1,207 @@
+FORGE SKYNET BOUNDARIES AND RISKS
+
+Status:
+ARCHITECTURE DISCOVERY / NOT RATIFIED
+
+Scope:
+No implementation. No code. No engines. No schemas. No Build Tree changes.
+
+BOUNDARY 1: SKYNET IS NOT AI
+
+Risk:
+The codename may cause people to imagine an autonomous intelligence layer.
+
+Boundary:
+Skynet is constitutional governance, not AI.
+
+BOUNDARY 2: SKYNET IS NOT AN ENGINE
+
+Risk:
+Teams may attempt to implement Skynet as a runtime module before governance is
+ratified.
+
+Boundary:
+Skynet begins as constitutional law. Implementation, if ever approved, is a
+separate PAQ.
+
+BOUNDARY 3: SKYNET IS NOT A RECOMMENDATION SYSTEM
+
+Risk:
+Skynet could become another intelligence domain.
+
+Boundary:
+Skynet does not recommend. It constrains recommendations.
+
+BOUNDARY 4: SKYNET LAWS ARE NOT ORDINARY PRODUCT PRINCIPLES
+
+Risk:
+Too many preferences become laws.
+
+Boundary:
+Only cross-domain, high-risk, durable constraints qualify.
+
+BOUNDARY 5: CONTEXTUAL TRUTHS ARE NOT AUTOMATIC SKYNET LAWS
+
+Risk:
+SMNYL or financial advisory context could be hardcoded as universal law.
+
+Boundary:
+Contextual truths become contextual policies unless universalized.
+
+BOUNDARY 6: SKYNET MUST GOVERN INTERPRETATION
+
+Risk:
+Teams may constrain final recommendations but allow unsafe interpretation.
+
+Boundary:
+Unsafe interpretation contaminates downstream recommendations. Skynet must
+govern both.
+
+BOUNDARY 7: SKYNET MUST NOT BECOME BUREAUCRACY
+
+Risk:
+Every design choice becomes constitutional review.
+
+Boundary:
+Skynet governs high-risk intelligence behavior, not ordinary product work.
+
+BOUNDARY 8: SKYNET MUST NOT FREEZE ARCHITECTURE
+
+Risk:
+Laws may prevent domain evolution.
+
+Boundary:
+Laws constrain harm. They should not prescribe implementation or domain design.
+
+BOUNDARY 9: RATIFICATION MUST BE HUMAN
+
+Risk:
+AI or engines self-authorize governance.
+
+Boundary:
+Only explicit human constitutional review can ratify Skynet Laws.
+
+BOUNDARY 10: LAW VIOLATION MUST HAVE CONSEQUENCE
+
+Risk:
+Laws become decorative.
+
+Boundary:
+If an intelligence conflicts with a law, the output must be blocked, degraded,
+reviewed or invalidated.
+
+RISKS
+
+Risk 1:
+Codename confusion.
+
+Mitigation:
+Always state Skynet is not AI, engine, assistant or intelligence domain.
+
+Risk 2:
+Bureaucratic sprawl.
+
+Mitigation:
+Keep active laws between 3 and 7 initially.
+
+Risk 3:
+Premature implementation.
+
+Mitigation:
+No engine, schema or runtime governance without separate approval.
+
+Risk 4:
+Context hardcoded as universal law.
+
+Mitigation:
+Separate universal laws from contextual policies.
+
+Risk 5:
+Laws become slogans.
+
+Mitigation:
+Each law must define conflict behavior.
+
+Risk 6:
+Domain teams bypass laws.
+
+Mitigation:
+Skynet Laws sit above all intelligence domains.
+
+Risk 7:
+Skynet blocks useful innovation.
+
+Mitigation:
+Write laws as boundaries, not methods.
+
+Risk 8:
+False safety.
+
+Mitigation:
+Skynet does not replace evidence contracts, ownership or human review.
+
+RISK ANALYSIS FOR INITIAL LAW CANDIDATES
+
+Evidence Before Judgment:
+
+Risk:
+Could slow outputs if evidence requirements are vague.
+
+Mitigation:
+Define evidence contracts and missing-evidence behavior.
+
+Human Dignity Must Be Preserved:
+
+Risk:
+Could be too abstract.
+
+Mitigation:
+Tie to concrete bans: no moral labels, no single-worth score, no shame outputs.
+
+Purpose Is Context, Not Pressure:
+
+Risk:
+Purpose access and manager visibility may be unclear.
+
+Mitigation:
+Define access, use and visibility boundaries.
+
+Production Is Evidence, Not Proof:
+
+Risk:
+Commercial teams may want production-first shortcuts.
+
+Mitigation:
+Allow production as evidence, but require stage/reason/context before judgment.
+
+No Single Score Represents Human Growth:
+
+Risk:
+Systems may still need summaries.
+
+Mitigation:
+Allow multi-factor summaries with caveats; prohibit totalizing human-growth
+scores.
+
+DO NOT DO
+
+Do not:
+
+- ratify laws in discovery
+- create Skynet engine
+- create Skynet schema
+- modify Build Tree
+- treat law candidates as active law
+- allow contextual truth to become universal law by accident
+- let Skynet review ordinary low-risk implementation details
+
+FINAL RISK VERDICT
+
+Skynet is architecturally valuable if it remains compact, universal,
+human-ratified and focused on non-negotiable intelligence boundaries.
+
+Skynet becomes harmful if it turns into AI, bureaucracy, implementation
+micromanagement or contextual hardcoding.
+
+Verdict:
+CANDIDATE FOR LOCK AS GOVERNANCE LAYER.

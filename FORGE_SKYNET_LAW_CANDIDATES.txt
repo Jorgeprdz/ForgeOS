@@ -1,0 +1,212 @@
+FORGE SKYNET LAW CANDIDATES
+
+Status:
+ARCHITECTURE DISCOVERY / NOT RATIFIED
+
+Scope:
+No implementation. No code. No engines. No schemas. No Build Tree changes.
+
+IMPORTANT:
+These are law candidates only. None are ratified by this document.
+
+QUALIFICATION TEST
+
+A Skynet Law candidate should:
+- apply across multiple intelligence systems
+- prevent serious harm
+- constrain interpretation and recommendation
+- remain valid as domains evolve
+- be universal or nearly universal
+- be testable as a boundary
+- block unsafe outputs when violated
+
+CANDIDATE LAW 1
+
+Evidence Before Judgment.
+
+Meaning:
+No intelligence may produce a judgment, classification, recommendation or
+development interpretation without evidence, confidence and source context.
+
+Supported by:
+- Career Stage discovery
+- Professional Excellence discovery
+- Professional Development discovery
+- Readiness discovery
+- Constitutional consolidation
+
+Why it may qualify:
+It is universal and protects against invented career, behavior, financial and
+human conclusions.
+
+Risks if absent:
+- invented readiness
+- invented excellence
+- manager bias automated as truth
+- confidence without source
+- AI explanation pretending uncertainty is fact
+
+Lock readiness:
+STRONG CANDIDATE
+
+CANDIDATE LAW 2
+
+Human Dignity Must Be Preserved.
+
+Meaning:
+No intelligence may reduce a person to a score, label, failure state or moral
+judgment.
+
+Supported by:
+- Professional Excellence boundaries
+- Professional Development boundaries
+- Readiness boundaries
+- Manager Intelligence boundaries
+
+Why it may qualify:
+Every Forge intelligence that interprets people must preserve dignity.
+
+Risks if absent:
+- surveillance
+- shame
+- simplistic ranking
+- "not ready" treated as failure
+- excellence treated as human worth
+
+Lock readiness:
+STRONG CANDIDATE
+
+CANDIDATE LAW 3
+
+Purpose Is Context, Not Pressure.
+
+Meaning:
+No intelligence may use purpose, family drivers, ambition or personal context to
+pressure, shame, coerce or manipulate a person.
+
+Supported by:
+- Benvenù
+- Future You Conversation
+- Purpose Snapshot
+- Professional Development
+- Professional Excellence
+- Readiness
+- SMNYL contextual truth
+
+Why it may qualify:
+Purpose data is sensitive and will influence multiple domains.
+
+Risks if absent:
+- motivation scoring
+- sales pressure
+- manager coercion
+- emotional manipulation
+
+Lock readiness:
+STRONG CANDIDATE
+
+CANDIDATE LAW 4
+
+Production Is Evidence, Not Proof.
+
+Meaning:
+No intelligence may treat production, revenue or output as complete proof of
+stage, excellence, development, readiness, maturity or leadership quality.
+
+Supported by:
+- Career Stage
+- Professional Excellence
+- Professional Development
+- Readiness
+- Compensation/Forecast boundaries
+
+Why it may qualify:
+Production-only interpretation is one of the most likely and dangerous
+shortcuts in a commercial system.
+
+Risks if absent:
+- premature promotion
+- false excellence
+- ignored trust risk
+- compensation mistaken for maturity
+
+Lock readiness:
+STRONG CANDIDATE
+
+CANDIDATE LAW 5
+
+No Single Score Represents Human Growth.
+
+Meaning:
+No intelligence may claim that one score fully represents professional growth,
+excellence, development, readiness, potential or human value.
+
+Supported by:
+- Excellence discovery
+- Development discovery
+- Readiness discovery
+- Constitutional lock preparation
+
+Why it may qualify:
+Forge will likely need summaries, but must avoid false precision and ranking
+theater.
+
+Risks if absent:
+- leaderboard culture
+- single-number manager pressure
+- hidden weighting
+- reduction of complex development into a simplistic metric
+
+Lock readiness:
+STRONG CANDIDATE
+
+CANDIDATES NOT READY AS SKYNET LAWS
+
+Forge is a Career Operating System.
+
+Reason:
+This is an identity/constitutional truth candidate, not a cross-domain
+constraint.
+
+Recommendation:
+Do not make a Skynet Law.
+
+Career Stage is first-class.
+
+Reason:
+Important architecture truth, but depends on ownership and evidence contracts.
+
+Recommendation:
+Do not make a Skynet Law yet.
+
+SMNYL is a human development business expressed through financial services.
+
+Reason:
+Contextual truth, not universal Forge law.
+
+Recommendation:
+Contextual policy only.
+
+Latent demand must not justify manipulation.
+
+Reason:
+Ethically powerful but contextual to financial advisory unless universalized.
+
+Recommendation:
+Skynet contextual policy candidate, not top-level law yet.
+
+POTENTIAL FUTURE CONTEXTUAL POLICIES
+
+- Latent demand must not justify manipulation.
+- Local hierarchy belongs in organization profiles or rule packs.
+- SMNYL Agency context must not become Forge Core.
+- Purpose Snapshot access must be constrained by role and use case.
+
+FINAL LAW CANDIDATE VERDICT
+
+The five initial laws are valid strong candidates for future lock review.
+
+Do not ratify them yet.
+
+Next required step:
+Formal law wording and conflict behavior definition.

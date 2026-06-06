@@ -1,0 +1,208 @@
+READINESS RISKS AND BOUNDARIES
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No code. No UI. No schemas. No engines. No scores. No
+rankings. No Build Tree changes.
+
+CORE RISK
+
+Readiness can be misused to justify promotion, delegation, exclusion,
+surveillance or pressure.
+
+Readiness must be evidence-based, responsibility-specific and development
+oriented.
+
+BOUNDARY 1: READINESS IS RESPONSIBILITY-SPECIFIC
+
+Risk:
+"Ready" becomes a broad label.
+
+Boundary:
+Always ask "ready for what?"
+
+BOUNDARY 2: READINESS IS NOT PRODUCTION
+
+Risk:
+High producers receive responsibility they cannot handle.
+
+Boundary:
+Production is evidence, not proof.
+
+BOUNDARY 3: READINESS IS NOT TENURE
+
+Risk:
+Time is mistaken for growth.
+
+Boundary:
+Tenure must be interpreted through capability and behavior.
+
+BOUNDARY 4: READINESS IS NOT CONFIDENCE
+
+Risk:
+Confident people receive responsibility before competence exists.
+
+Boundary:
+Confidence needs evidence.
+
+BOUNDARY 5: READINESS IS NOT INFORMATION
+
+Risk:
+Training completion or certification is treated as proof.
+
+Boundary:
+Information supports readiness only when converted into responsible action.
+
+BOUNDARY 6: READINESS IS NOT MANAGER PREFERENCE
+
+Risk:
+Bias, favoritism or urgency drives promotion.
+
+Boundary:
+Manager input is context or evidence, not truth by itself.
+
+BOUNDARY 7: READINESS IS NOT EXCELLENCE
+
+Risk:
+Excellent current performers are promoted into responsibilities they are not
+ready for.
+
+Boundary:
+Excellence in one responsibility does not prove readiness for another.
+
+BOUNDARY 8: READINESS IS NOT POTENTIAL
+
+Risk:
+Potential becomes premature responsibility.
+
+Boundary:
+Potential should lead to development until readiness evidence exists.
+
+BOUNDARY 9: READINESS IS NOT SURVEILLANCE
+
+Risk:
+Managers use readiness signals to monitor and pressure.
+
+Boundary:
+Readiness should support trust, delegation, coaching and development.
+
+BOUNDARY 10: NOT READY IS NOT FAILURE
+
+Risk:
+People are stigmatized.
+
+Boundary:
+Not ready should produce a development path.
+
+RISK SCENARIOS
+
+Scenario 1:
+High-producing advisor is promoted to manager without coaching evidence.
+
+Risk:
+Production without people-development capability.
+
+Correct handling:
+Mark strong production, but require leadership readiness evidence.
+
+Scenario 2:
+Long-tenured advisor receives autonomy despite weak follow-through.
+
+Risk:
+Tenure without readiness.
+
+Correct handling:
+Treat tenure as context; require accountability evidence.
+
+Scenario 3:
+Candidate is charismatic and confident.
+
+Risk:
+Interview performance mistaken for readiness.
+
+Correct handling:
+Treat charisma as weak evidence; require behavior and follow-through signals.
+
+Scenario 4:
+Manager wants to promote a preferred person.
+
+Risk:
+Manager bias.
+
+Correct handling:
+Require evidence, confidence and human review if signals conflict.
+
+Scenario 5:
+Person is capable but never given opportunity.
+
+Risk:
+Capability without responsibility stalls development.
+
+Correct handling:
+Recommend supported stretch responsibility.
+
+Scenario 6:
+Person is not ready but receives responsibility anyway.
+
+Risk:
+Avoidable failure, client risk, team harm.
+
+Correct handling:
+Recommend development path before assignment.
+
+PREMATURE PROMOTION RISKS
+
+- responsibility without capability
+- client harm
+- team instability
+- advisor burnout
+- false confidence
+- trust damage
+- manager credibility loss
+- avoidable regression
+
+PROMOTION TOO LATE RISKS
+
+- stagnation
+- lost talent
+- reduced confidence
+- resentment
+- missed leverage
+- underdeveloped leadership pipeline
+- capability without opportunity
+
+FALSE READINESS CAUSES
+
+- survivorship bias
+- recency bias
+- charisma bias
+- manager preference
+- production-only thinking
+- tenure assumptions
+- confidence bias
+- activity volume bias
+- certification bias
+- lack of negative evidence
+
+CONSTITUTIONAL BOUNDARIES TO CONSIDER
+
+1. Readiness requires evidence.
+2. Readiness is responsibility-specific.
+3. Readiness is not a score or ranking.
+4. Not ready is not failure.
+5. Potential, Readiness and Excellence are distinct.
+6. Production, tenure, confidence and training do not prove readiness alone.
+7. Manager input must not override evidence.
+8. Readiness signals must not become surveillance.
+9. Readiness should produce development paths.
+10. Greater responsibility requires explicit context and risk review.
+
+FINAL RISK VERDICT
+
+Readiness is constitutionally valuable only if Forge treats it as an
+evidence-supported responsibility judgment, not a broad label.
+
+Verdict:
+CANDIDATE FOR LOCK.

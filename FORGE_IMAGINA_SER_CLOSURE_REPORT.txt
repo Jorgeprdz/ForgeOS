@@ -1,0 +1,284 @@
+FORGE IMAGINA SER CLOSURE REPORT
+
+Status: IMPLEMENTATION CLOSEOUT
+Scope: Imagina Ser currency integration only.
+
+No new market-data engines created.
+No new Banxico integrations created.
+No new cache systems created.
+No inflation engines created.
+No product families created.
+No commits performed.
+
+1. FILES MODIFIED
+
+Implementation files:
+
+- retirement-presentation-scenario-engine.js
+  - Removed silent currentUdiValue = 8.7 default.
+  - Added getVerifiedUdiRateMetadata using existing exchange-rate-cache-engine.js.
+  - Added BLOCKED_NO_VERIFIED_UDI_RATE fallback.
+  - Added UDI metadata to retirement scenario output.
+  - Added SCENARIO_BASED_ESTIMATE_NOT_GUARANTEED labels to scenario outputs.
+
+- solucionline-retirement-parser.js
+  - Removed hardcoded premiums, sum assured and retirement scenario constants.
+  - Extracts product retirement age, limited-pay period, premium rows, sum assured, currency and interest rate from source text.
+  - Marks missing scenario evidence instead of inventing retirement values.
+
+- imagina-ser-client-presentation-engine.js
+  - Preserves currency metadata.
+  - Preserves scenario disclosure.
+  - Adds estimated/not-guaranteed language to scenario result slide.
+
+- imagina-ser-master-test.js
+  - Uses existing exchange-rate-cache-engine.js to attempt verified UDI metadata.
+  - Falls back to BLOCKED_NO_VERIFIED_UDI_RATE when Banxico/cache cannot provide a verified rate.
+  - Validates metadata and scenario disclosure preservation.
+
+Test / fixture files:
+
+- imagina-ser-banxico-integration-test.js
+  - New acceptance test requested by task.
+  - Uses existing exchange-rate-cache-engine.js and cached Banxico payload.
+  - Validates cached UDI consumption, metadata and scenario labels.
+
+- tests/real-retirement-mxn-scenario-test.js
+  - Removed hardcoded currentUdiValue: 8.7.
+  - Uses getVerifiedUdiRateMetadata.
+  - Blocks clearly if no verified UDI or no retirement scenario evidence.
+
+- tests/real-retirement-scenario-test.js
+  - Updated output to use extracted parser fields and evidence status.
+  - No longer assumes removed synthetic fields.
+
+- tests/fixtures/presentation-basic-imagina-ser.json
+  - Replaced currentUdiValue 8.7 with 0 to avoid treating fixture data as verified market data.
+
+Pre-existing modified file not part of this closure:
+
+- FORGE_MASTER_BUILD_TREE.md
+  - Already modified before this task.
+  - Not changed for Imagina Ser closure.
+
+2. HARDCODES REMOVED
+
+Removed from retirement-presentation-scenario-engine.js:
+
+- currentUdiValue = 8.7
+
+Removed from solucionline-retirement-parser.js:
+
+- basicAnnualPremium = 3977
+- plannedAnnualContribution = 2840
+- totalAnnualPremium = 6817
+- sumAssured = 75000
+- base lumpSum = 158640
+- base monthlyIncome = 747
+- favorable lumpSum = 199865
+- favorable monthlyIncome = 942
+- unfavorable lumpSum = 133146
+- unfavorable monthlyIncome = 627
+
+Replacement behavior:
+
+- Premiums and sum assured are extracted from Solucionline source text.
+- Retirement scenario values are only accepted when found in source text.
+- Missing scenario values return BLOCKED_NO_RETIREMENT_SCENARIO_EVIDENCE rather than invented numbers.
+
+3. BANXICO INTEGRATION STATUS
+
+Existing infrastructure used:
+
+- exchange-rate-cache-engine.js
+- shared-banxico-rate-engine.js indirectly through the cache engine
+
+No new Banxico client was created.
+
+Current behavior:
+
+- Imagina Ser retirement MXN conversion requires verified UDI metadata.
+- Verified metadata includes:
+  - currentUdiValue
+  - source
+  - sourceDate
+  - sourceMode
+  - cacheStatus
+
+Expected source values:
+
+- source: BANXICO_SIE_API
+- sourceMode: CACHE or LIVE
+
+Fallback behavior:
+
+- If getCachedRates cannot return a verified UDI rate, Imagina Ser returns:
+  BLOCKED_NO_VERIFIED_UDI_RATE
+
+No silent fallback to 8.7 remains in Imagina Ser retirement flows.
+
+4. SOURCE TRACEABILITY
+
+Retirement output now carries:
+
+- currentUdiValue
+- source
+- sourceDate
+- sourceMode
+- cacheStatus
+- calculationMode
+
+Parser output now carries evidence status:
+
+- productName
+- currentAge
+- currency
+- sumAssured
+- premiumStructure
+- scenarios
+
+Observed parser behavior against imagina-ser-source.txt:
+
+- productName: SOURCE_TEXT
+- currentAge: SOURCE_TEXT
+- currency: SOURCE_TEXT
+- sumAssured: SOURCE_TEXT
+- premiumStructure: SOURCE_TEXT
+- scenarios: MISSING
+
+5. SCENARIO DISCLOSURE
+
+Scenario label used:
+
+- SCENARIO_BASED_ESTIMATE_NOT_GUARANTEED
+
+Applied to:
+
+- retirement scenario root output
+- retirement scenario summary
+- retirement milestones
+- Imagina Ser client presentation disclosure
+
+Client presentation wording now states that the base scenario is estimated and not guaranteed.
+
+6. ACCEPTANCE TEST RESULTS
+
+Command:
+
+- node imagina-ser-master-test.js
+
+Result:
+
+- PASS
+- Total: 16
+- Pass: 16
+- Fail: 0
+
+Notes:
+
+- Currency metadata status was BLOCKED_NO_VERIFIED_UDI_RATE because getCachedRates attempted to refresh a stale cache and BANXICO_TOKEN is not available in this environment.
+- This is expected fallback behavior and does not silently use 8.7.
+
+Command:
+
+- node imagina-ser-banxico-integration-test.js
+
+Result:
+
+- PASS
+- Total: 6
+- Pass: 6
+- Fail: 0
+
+Validated:
+
+- UDI retrieved from cache.
+- Imagina Ser consumes cached UDI.
+- No hardcoded 8.7 required.
+- Presentation generated successfully.
+- Source metadata preserved.
+- Scenario labels preserved.
+
+Command:
+
+- node market-data-master-test.js
+
+Result:
+
+- FAIL
+
+Failure:
+
+- Missing BANXICO_TOKEN. Export it first: export BANXICO_TOKEN='your_token_here'
+
+Interpretation:
+
+- Market data live refresh is blocked by missing environment token.
+- The existing cache is present, but getCachedRates treats it as stale and attempts live refresh.
+- This is a remaining environment/config blocker, not a new Imagina Ser code failure.
+
+Command:
+
+- node tests/module-integrity-test.js
+
+Result:
+
+- PASS
+- Total: 5
+- Pass: 5
+- Fail: 0
+
+Command:
+
+- node tests/smoke-test.js
+
+Result:
+
+- PASS
+- Total: 3
+- Pass: 3
+- Fail: 0
+
+Additional validation:
+
+- node tests/presentation-pipeline-test.js
+
+Result:
+
+- PASS
+- Total: 1
+- Pass: 1
+- Fail: 0
+
+7. REMAINING BLOCKERS
+
+Blocker 1: BANXICO_TOKEN missing
+
+- market-data-master-test.js cannot refresh market data without BANXICO_TOKEN.
+- Until BANXICO_TOKEN is configured, live Banxico validation remains blocked.
+
+Blocker 2: stale cache behavior
+
+- forge-rate-cache.json exists and contains BANXICO_SIE_API values.
+- CachedAt is older than MAX_CACHE_AGE_HOURS.
+- getCachedRates attempts live refresh when cache is stale.
+- This behavior belongs to existing market-data infrastructure and was not changed.
+
+Blocker 3: missing retirement scenario evidence in advisor breakdown source
+
+- imagina-ser-source.txt contains premiums, sum assured and breakdown rows.
+- It does not contain the client economic scenario table parsed by the client document flow.
+- Parser now marks scenarios as MISSING instead of inventing values.
+
+8. FINAL STATUS
+
+Imagina Ser currency closure status:
+
+- Banxico wiring: CLOSED FOR IMAGINA SER FLOW, using existing cache infrastructure.
+- Silent 8.7 fallback: CLOSED.
+- Hardcoded parser premiums/sum/scenarios: CLOSED, replaced by source extraction or explicit missing evidence.
+- Source metadata: CLOSED.
+- Scenario disclosure: CLOSED.
+- Acceptance test: CLOSED.
+- Live market-data validation: BLOCKED BY MISSING BANXICO_TOKEN.
+

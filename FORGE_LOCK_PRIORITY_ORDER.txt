@@ -1,0 +1,196 @@
+FORGE LOCK PRIORITY ORDER
+
+Status:
+LOCK PREPARATION / NOT RATIFIED
+
+Scope:
+No implementation. No new truths. No Build Tree changes.
+
+PRIORITY 1 - READY PROTECTIVE FOUNDATIONS
+
+1. Evidence must precede judgment.
+
+Recommendation:
+READY FOR LOCK
+
+Why first:
+Every later career truth depends on evidence. Locking this first prevents
+invented stage, excellence, development and readiness conclusions.
+
+2. Human dignity must be preserved.
+
+Recommendation:
+READY FOR LOCK
+
+Why second:
+It prevents career intelligence from becoming moral judgment.
+
+3. Purpose is human context, not pressure.
+
+Recommendation:
+READY FOR LOCK
+
+Why third:
+Purpose Snapshot and Future You depend on this boundary.
+
+4. Manager Intelligence develops people; it does not surveil them.
+
+Recommendation:
+READY FOR LOCK
+
+Why fourth:
+Manager visibility will touch Career Stage, Excellence, Development and
+Readiness. This boundary must precede those locks.
+
+5. Production is evidence, not proof.
+
+Recommendation:
+READY FOR LOCK
+
+Why fifth:
+This protects every career decision from production-only interpretation.
+
+6. No single score should represent human growth, excellence or readiness.
+
+Recommendation:
+READY FOR LOCK
+
+Why sixth:
+This prevents false precision before any future implementation.
+
+PRIORITY 2 - READY UNIVERSAL PRODUCT PRINCIPLES
+
+7. Forge converts context into decisions and action paths.
+
+Recommendation:
+READY FOR LOCK
+
+8. Forge is not a CRM, dashboard collection, database or sales tracker.
+
+Recommendation:
+READY FOR LOCK
+
+9. Value before work.
+
+Recommendation:
+READY FOR LOCK
+
+10. Learning by doing.
+
+Recommendation:
+READY FOR LOCK
+
+11. Context before metric.
+
+Recommendation:
+READY FOR LOCK
+
+12. Show before ask.
+
+Recommendation:
+READY FOR LOCK
+
+13. Development before reporting.
+
+Recommendation:
+READY FOR LOCK
+
+PRIORITY 3 - CONCEPT SEPARATION BOUNDARIES
+
+14. Potential, Readiness and Excellence are distinct.
+
+Recommendation:
+READY FOR LOCK
+
+15. Career Stage, Operating State and Leadership Stage are separate.
+
+Recommendation:
+NEEDS OWNERSHIP
+
+16. Local hierarchy belongs in organization profiles or rule packs, not Forge
+Core.
+
+Recommendation:
+READY FOR LOCK
+
+PRIORITY 4 - NEED OWNERSHIP / EVIDENCE BEFORE LOCK
+
+17. Career Stage is a first-class architectural primitive.
+
+Recommendation:
+NEEDS OWNERSHIP
+
+18. Stage-aware interpretation.
+
+Recommendation:
+NEEDS OWNERSHIP
+
+19. Professional Excellence is first-class.
+
+Recommendation:
+NEEDS MORE EVIDENCE
+
+20. Professional Development is first-class.
+
+Recommendation:
+NEEDS MORE EVIDENCE
+
+21. Readiness is first-class.
+
+Recommendation:
+NEEDS MORE EVIDENCE
+
+PRIORITY 5 - CONTEXTUAL ONLY UNTIL UNIVERSALIZED
+
+22. SMNYL is a human development business expressed through financial services.
+
+Recommendation:
+CONTEXTUAL ONLY
+
+23. Financial advisory often operates in latent demand.
+
+Recommendation:
+CONTEXTUAL ONLY
+
+24. Advisors help clients recognize future problems before present crisis.
+
+Recommendation:
+CONTEXTUAL ONLY
+
+PRIORITY 6 - DO NOT LOCK YET
+
+25. Forge is a Career Operating System.
+
+Recommendation:
+NEEDS OWNERSHIP
+
+Why not yet:
+The label is strong, but locking it before Career Stage ownership and evidence
+contracts risks turning it into an inspirational identity rather than a
+constitutional architecture.
+
+26. Canonical Career Stage model.
+
+Recommendation:
+NEEDS MORE EVIDENCE
+
+Why not yet:
+Stage names require evidence contracts and local mapping validation.
+
+27. Leadership Stage model.
+
+Recommendation:
+NEEDS OWNERSHIP
+
+Why not yet:
+Needs organization profile mapping and clear ownership.
+
+LOCK ORDER PRINCIPLE
+
+Lock boundaries first.
+
+Lock identities later.
+
+Lock names last.
+
+This order minimizes future refactors.

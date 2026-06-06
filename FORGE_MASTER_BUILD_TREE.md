@@ -38,6 +38,15 @@
 
 🟢 Constitution v1.1 - RATIFIED
 
+🔵 Forge Core - DECISION INTELLIGENCE LAYER / CORE CANDIDATES
+├── ⚫ Proposal Intelligence - PARKED / CORE CANDIDATE / DO NOT IMPLEMENT YET
+│   ├── ⚫ Proposal Family
+│   ├── ⚫ Scenario Comparison
+│   ├── ⚫ Economic / Balanced / Premium Options
+│   ├── ⚫ Tradeoff Explanation
+│   └── ⚫ Decision Clarity Recommendation
+└── ⛔ Implementation - NOT APPROVED
+
 🔵 Intelligence Domains Phase - OPEN
 ├── 🔵 Advisor Experience Intelligence - ARCHITECTURE CANDIDATE / NOT IMPLEMENTED
 │   ├── 🔵 PAQ-12 Advisor Experience Intelligence & Productivity - PLANNED / ARCHITECTURE DISCOVERY
@@ -85,6 +94,19 @@
 │   └── ⛔ Implementation - NOT APPROVED
 ├── 🔵 Business Planning Intelligence - APPROVED / PLANNED / NOT IMPLEMENTED
 └── 🔵 Rule Packs - LOCKED BOUNDARY / SMNYL Agency 2026 first validated Rule Pack
+```
+
+```text
+🟡 Current Active Focus
+└── 🟡 GMM Validation Phase - ACTIVE
+
+⚫ Parked / Not Active
+├── ⚫ Proposal Intelligence - PARKED / CORE CANDIDATE
+├── ⚫ Shared Tax Intelligence
+├── ⚫ Shared Economic Projection Intelligence - DOCUMENTATION VALIDATED / 4.5% ILLUSTRATION RATE STANDARDIZED
+├── ⚫ Retirement Closure Review
+├── ⚫ Nuevo Plenitud Knowledge Capture
+└── ⚫ Sienten / Sintieron / Descubrieron Analysis
 ```
 
 ```text
@@ -155,7 +177,32 @@
 ├── 🟢 Imagina Ser
 ├── 🟢 Vida Mujer
 ├── 🟢 Alfa Medical
-├── 🔵 GMM Product Family - ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+├── 🟡 GMM Product Family - ACTIVE VALIDATION PHASE / IMPLEMENTATION BLOCKED
+│   ├── 🟢 Discovery - COMPLETE
+│   ├── 🟢 Rule Extraction - COMPLETE
+│   ├── 🟢 Evaluation Architecture - COMPLETE
+│   ├── 🟢 Coverage Blueprint - COMPLETE
+│   ├── 🟢 Source Registry - COMPLETE
+│   ├── 🟢 Evidence Packet Standard - COMPLETE
+│   ├── 🟡 Validation - ACTIVE
+│   │   ├── 🟡 Real Alfa Medical Caratula Validation
+│   │   ├── 🟡 Real Alfa Medical Quote Validation
+│   │   ├── 🟡 Quote vs Policy Comparison
+│   │   ├── 🟡 Evidence Packet Reality Check
+│   │   ├── 🟡 Human Review Protocol
+│   │   └── 🟡 Scenario Fixtures
+│   ├── 🔵 Document Classification Intelligence - DISCOVERY VALIDATED / NOT IMPLEMENTED
+│   │   ├── 🔵 Quote / Cotizacion Detection
+│   │   ├── 🔵 Policy Caratula / Caratula Detection
+│   │   ├── 🔵 Conditions / Condiciones Generales Detection
+│   │   ├── 🔵 Endorsement / Endoso Detection
+│   │   └── 🔵 Sales Illustration / Material Comercial Detection
+│   ├── ⚫ Quote-to-Policy Validation - PARKED / VALIDATION CANDIDATE
+│   │   ├── ⚫ Proposed Scenario vs Issued Policy Comparison
+│   │   ├── ⚫ Changed Deductible / Coaseguro / Tope Detection
+│   │   ├── ⚫ Changed Optional Coverage Detection
+│   │   ├── ⚫ Changed Hospital Level Detection
+│   │   └── ⚫ Evidence Class Boundary: Cotizacion vs Caratula
 │   ├── 🔵 Alfa Medical - PRODUCT-SPECIFIC RULE MODEL REQUIRED
 │   │   ├── 🔵 Deductible Model
 │   │   ├── 🔵 Coinsurance Model
@@ -170,10 +217,16 @@
 │   │   ├── 🔵 Hospital Level Map: A / AA / AAA / Preferente
 │   │   ├── 🔵 Flex Out-of-Pocket Model
 │   │   └── 🔵 Coverage Map
-│   └── ⛔ Implementation - NOT APPROVED
+│   └── ⛔ Implementation - BLOCKED pending real evidence packets and human review protocol
 ├── 🟢 SeguBeca
 ├── 🟢 Shared AVE Library
 ├── 🟢 Shared CLP Library
+├── 🟡 Projection Intelligence Checkpoint - DOCUMENTATION VALIDATED / NOT IMPLEMENTED
+│   ├── 🟢 Imagina Ser Validation
+│   ├── 🟢 Shared Policy Currency Timeline Foundation
+│   ├── 🟢 UDI Historical Growth Audit
+│   ├── 🟢 4.5% Illustration Rate Standard
+│   └── ⛔ Implementation - NOT APPROVED
 │
 ├── 🟡 Product Knowledge Library
 └── 🔵 Community Product Library

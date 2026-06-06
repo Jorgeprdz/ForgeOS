@@ -1,0 +1,189 @@
+FORGE EXCELLENCE BOUNDARIES AND RISKS
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No code. No UI. No schemas. No engines. No Build Tree
+changes.
+
+CORE RISK
+
+Professional Excellence is sensitive.
+
+If Forge models it carelessly, it can become surveillance, manipulation,
+ranking, motivational scoring or production-only judgment.
+
+BOUNDARY 1: EXCELLENCE IS NOT PRODUCTION
+
+Risk:
+Production is easy to measure, so teams may treat it as excellence.
+
+Boundary:
+Production can be evidence of output, but excellence requires behavior,
+decision quality, trust and durability.
+
+BOUNDARY 2: EXCELLENCE IS NOT COMPENSATION
+
+Risk:
+Compensation can create a false sense of objective maturity.
+
+Boundary:
+Compensation is economic outcome under rules. It does not define professional
+quality.
+
+BOUNDARY 3: EXCELLENCE IS NOT TITLE
+
+Risk:
+Titles can be local, political or temporary.
+
+Boundary:
+Title may be context, not proof.
+
+BOUNDARY 4: EXCELLENCE IS NOT TENURE
+
+Risk:
+Time in role can be confused with maturity.
+
+Boundary:
+Tenure is time. Excellence is demonstrated quality over time.
+
+BOUNDARY 5: EXCELLENCE IS NOT TEAM SIZE
+
+Risk:
+Large team may be mistaken for leadership excellence.
+
+Boundary:
+Leadership excellence is people development and organizational health, not
+headcount.
+
+BOUNDARY 6: EXCELLENCE IS NOT POPULARITY OR CHARISMA
+
+Risk:
+Charisma can look like capability while hiding weak follow-through or trust.
+
+Boundary:
+Forge should privilege evidence of reliability, stewardship and decision
+quality.
+
+BOUNDARY 7: EXCELLENCE IS NOT MOTIVATIONAL SCORING
+
+Risk:
+Forge may attempt to score motivation from Purpose Snapshot or behavior.
+
+Boundary:
+Motivation should not become a score. Purpose is human context.
+
+BOUNDARY 8: EXCELLENCE IS NOT SURVEILLANCE
+
+Risk:
+Manager-facing views may turn development signals into monitoring.
+
+Boundary:
+Manager Intelligence exists to develop people, not to shame or police them.
+
+BOUNDARY 9: EXCELLENCE IS NOT A SINGLE RANKING
+
+Risk:
+Ranking people creates false precision and pressure.
+
+Boundary:
+Excellence should be multi-dimensional, contextual and action-oriented.
+
+BOUNDARY 10: EXCELLENCE IS NOT PERSONAL WORTH
+
+Risk:
+Professional interpretation can become moral judgment.
+
+Boundary:
+Forge evaluates observable professional signals, not human value.
+
+DANGEROUS ASSUMPTIONS
+
+Forge must never assume:
+- high production equals excellence
+- low production equals weak character
+- strong charisma equals trust
+- long tenure equals maturity
+- title equals leadership quality
+- team size equals manager excellence
+- compensation equals professional value
+- Purpose Snapshot reveals motivation score
+- activity volume equals discipline
+- one strong month proves growth
+- one weak month proves regression
+- manager opinion is objective truth
+
+RISK SCENARIOS
+
+Scenario 1:
+Advisor has high production but frequent client confusion.
+
+Bad interpretation:
+Excellent advisor.
+
+Correct interpretation:
+Strong output signal with possible trust, communication or stewardship risk.
+
+Scenario 2:
+Manager has large team but high avoidable attrition.
+
+Bad interpretation:
+Excellent manager because team is large.
+
+Correct interpretation:
+Leadership responsibility exists, but people-development quality requires
+evidence.
+
+Scenario 3:
+Partner is charismatic and popular.
+
+Bad interpretation:
+High partner excellence.
+
+Correct interpretation:
+Social visibility is not leverage unless trust, referral quality and ecosystem
+contribution are evidenced.
+
+Scenario 4:
+Advisor states strong family purpose.
+
+Bad interpretation:
+High motivation score.
+
+Correct interpretation:
+Purpose context exists. It must not be scored or used as pressure.
+
+Scenario 5:
+Candidate interviews well.
+
+Bad interpretation:
+Excellent future advisor.
+
+Correct interpretation:
+Positive early signal; future excellence remains unknown.
+
+CONSTITUTIONAL BOUNDARIES TO CONSIDER
+
+1. Excellence requires evidence.
+2. Excellence is multi-dimensional.
+3. Excellence is stage-aware.
+4. Excellence is not production-only.
+5. Excellence is not compensation.
+6. Excellence is not title.
+7. Excellence is not motivation scoring.
+8. Excellence is not surveillance.
+9. Excellence is not a ranking.
+10. Excellence must preserve dignity.
+
+FINAL RISK VERDICT
+
+Professional Excellence is constitutionally valuable only if bounded.
+
+Without boundaries, it becomes dangerous.
+
+With boundaries, it gives Forge a humane way to develop people across career
+stages.
+
+Verdict:
+CANDIDATE FOR LOCK.

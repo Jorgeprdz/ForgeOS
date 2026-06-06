@@ -1,0 +1,214 @@
+FORGE CAREER OS LOCK CANDIDATES
+
+Status:
+CONSTITUTIONAL LOCK CANDIDATES / NOT APPROVED
+
+Purpose:
+List constitutional statements that may become lock candidates after human
+review and a separate approval PAQ.
+
+LOCK CANDIDATE 1
+
+Forge is a Career Operating System.
+
+Reason:
+The architecture spans Candidate, Precontract, Advisor Development,
+Professional Advisor, Manager and Partner stages. CRM is too narrow.
+
+Risk:
+Could become marketing language unless tied to lifecycle ownership and decision
+outputs.
+
+LOCK CANDIDATE 2
+
+Forge is not a CRM, dashboard collection, database, sales tracker or onboarding
+platform.
+
+Reason:
+Forge exists to create decisions, actions and development paths, not merely to
+store information.
+
+Risk:
+Must not deny the existence of CRM-like data needs. Forge can consume records
+without being defined by them.
+
+LOCK CANDIDATE 3
+
+Excel stores information. Forge helps build a career.
+
+Reason:
+This captures the constitutional distinction between passive storage and
+career-oriented intelligence.
+
+Risk:
+Needs careful language so it does not become marketing copy.
+
+LOCK CANDIDATE 4
+
+Career stage is a first-class architectural context.
+
+Reason:
+Candidate, Precontract, Advisor, Manager and Partner workflows require different
+rules, signals and outputs.
+
+Risk:
+Requires a canonical Career Lifecycle model and ownership decision.
+
+LOCK CANDIDATE 5
+
+Forge converts career context into decisions and action paths.
+
+Reason:
+This preserves Decision Clarity First while expanding from advisor sales into
+career progression.
+
+Risk:
+Must not imply Forge controls the career or replaces human judgment.
+
+LOCK CANDIDATE 6
+
+Manager Intelligence exists to develop people, not surveil them.
+
+Reason:
+Career OS expands manager visibility, so the constitutional boundary must be
+explicit.
+
+Risk:
+Manager-facing analytics can drift into performance policing if not constrained.
+
+LOCK CANDIDATE 7
+
+Purpose is human context, not a commercial pressure mechanism.
+
+Reason:
+Purpose Snapshot and Future You Conversation become more powerful under Career
+OS and need protection.
+
+Risk:
+Purpose data could be misused for sales pressure, shame or manager coercion.
+
+LOCK CANDIDATE 8
+
+Career OS must preserve evidence, confidence and source ownership.
+
+Reason:
+Career recommendations can affect trust, coaching and economic decisions.
+
+Risk:
+Without evidence, Career OS becomes narrative guesswork.
+
+LOCK CANDIDATE 9
+
+Forge must never invent career, financial, behavioral or motivational
+conclusions.
+
+Reason:
+No invented data must extend beyond products and financial values into human and
+career interpretation.
+
+Risk:
+Generative explanation layers may be tempted to infer too much.
+
+LOCK CANDIDATE 10
+
+Intelligence without career movement is still just information.
+
+Reason:
+This adapts the existing Forge principle "Intelligence without action is just
+information" to the Career OS constitutional frame.
+
+Risk:
+Needs definition of "career movement" so it does not become vague.
+
+LOCK CANDIDATE 11
+
+Business Planning is the operating bridge from ambition to execution.
+
+Reason:
+Career OS requires translating purpose, forecast, behavior and production
+context into action paths.
+
+Risk:
+Could become static planning theater if not tied to live decisions.
+
+LOCK CANDIDATE 12
+
+Alfred is the command surface of Career OS.
+
+Reason:
+If Forge is an operating system, Alfred is how the professional moves through
+intent, actions and context.
+
+Risk:
+Must preserve boundary between Alfred experience and Command OS execution
+logic.
+
+LOCK CANDIDATE 13
+
+Benvenù is the first boot of Career OS, not onboarding.
+
+Reason:
+This protects Benvenù, Leopard Experience, First Wow Moment, Future You
+Conversation and Purpose Snapshot from form-based CRM patterns.
+
+Risk:
+Could become theatrical if not connected to first value.
+
+LOCK CANDIDATE 14
+
+Career OS must support multiple professional lifecycle stages without forcing
+all users into advisor-only assumptions.
+
+Reason:
+Forge already spans Candidate, Precontract, Advisor, Manager and Partner
+contexts.
+
+Risk:
+Scope may become too broad without phased ownership.
+
+LOCK CANDIDATE 15
+
+The real competitor is fragmented career management: Excel, CRM, manual
+processes, human memory and decision uncertainty.
+
+Reason:
+This correctly frames the product problem as fragmentation, not only CRM
+replacement.
+
+Risk:
+Competitive framing should remain architectural, not marketing.
+
+RECOMMENDED LOCK PRIORITY
+
+Priority 1:
+Career stage is a first-class architectural context.
+
+Priority 2:
+Manager Intelligence exists to develop people, not surveil them.
+
+Priority 3:
+Purpose is human context, not a commercial pressure mechanism.
+
+Priority 4:
+Forge converts career context into decisions and action paths.
+
+Priority 5:
+Forge is a Career Operating System.
+
+WHY THIS ORDER
+
+The strongest constitutional lock is not the label. It is the architecture under
+the label.
+
+Locking career stage, manager-development boundary, purpose protection and
+evidence-based action first makes "Career Operating System" defensible.
+
+FINAL RECOMMENDATION
+
+Verdict:
+CANDIDATE FOR LOCK.
+
+Do not ratify yet.
+
+Recommended next PAQ:
+Career Lifecycle Model and Career Stage Ownership Discovery.

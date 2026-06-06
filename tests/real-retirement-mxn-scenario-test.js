@@ -1,6 +1,9 @@
 import { extraerTextoOCR } from '../policy-ocr-engine.js';
 import { parseSolucionlineRetirementQuote } from '../solucionline-retirement-parser.js';
-import { buildRetirementPresentationScenario } from '../retirement-presentation-scenario-engine.js';
+import {
+  buildRetirementPresentationScenario,
+  getVerifiedUdiRateMetadata
+} from '../retirement-presentation-scenario-engine.js';
 
 const PDF_PATH =
   '/storage/emulated/0/Download/Solucionline_20260601_13_09.PDF';
@@ -17,7 +20,7 @@ const parsed =
 const scenario =
   buildRetirementPresentationScenario({
     parsedQuote: parsed,
-    currentUdiValue: 8.7
+    udiRateMetadata: await getVerifiedUdiRateMetadata()
   });
 
 function mxn(value) {
@@ -41,8 +44,17 @@ console.log(
 );
 
 console.log(
-  `UDI usada: $${scenario.currentUdiValue} MXN`
+  `UDI usada: ${scenario.currentUdiValue ? `$${scenario.currentUdiValue} MXN` : scenario.status}`
 );
+
+console.log(
+  `Fuente UDI: ${scenario.source || 'N/A'} / ${scenario.sourceDate || 'N/A'} / ${scenario.sourceMode || 'N/A'}`
+);
+
+if (scenario.status !== 'READY') {
+  console.log(`\n${scenario.status}: ${scenario.reason}\n`);
+  process.exit(0);
+}
 
 console.log('\nResumen');
 

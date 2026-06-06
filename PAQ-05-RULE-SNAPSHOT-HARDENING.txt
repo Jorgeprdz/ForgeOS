@@ -1,0 +1,1283 @@
+PAQ 5
+RULE SNAPSHOT HARDENING
+
+Purpose:
+
+Define the canonical conceptual model for RuleSnapshot in Forge OS.
+
+This document is architecture only.
+It does not create code, engines, schemas, UI, implementation plans or commits.
+
+Core principle:
+
+Every historical decision must be explainable with the exact rules that were available, effective and applied at that time.
+
+Forge must never silently apply today's rules to yesterday's decisions.
+
+
+1. Rule Inventory
+
+Known rule families:
+
+Contest Rules
+
+Purpose:
+Define annual advisor contest eligibility, targets, windows, groups, policy count rules, Prima Meta, Prima Pago, Training Allowance, Bono Inicial, Bono Renovacion, Bono GMM, Conexion and Desarrollo.
+
+Fundamental:
+Yes.
+
+Depends on:
+Career rules, policy count rules, product rules, conservation rules, compensation periods.
+
+
+Compensation Rules
+
+Purpose:
+Define commission schedules, accrual rules, payment rules, advances, reversals, recalculations and payout behavior.
+
+Fundamental:
+Yes.
+
+Depends on:
+Production events, product rules, policy age, commission schedules, contest outputs, period snapshots.
+
+
+Conservation Rules
+
+Purpose:
+Define LIMRA, IGC, persistencia, conservacion, prima conservada, prima por conservar, siniestralidad and index windows.
+
+Fundamental:
+Yes.
+
+Depends on:
+Policy events, policy age, reporting periods, carrier reports, conservation source rules.
+
+
+Career Rules
+
+Purpose:
+Define career stages, connection date, contest date, career month, contest month, NP transition, advisor class, partner promotion and role progression.
+
+Fundamental:
+Yes.
+
+Depends on:
+CommercialPerson, CommercialRole, CommercialAssignment, career events, period snapshots.
+
+
+Recruitment Rules
+
+Purpose:
+Define candidate readiness, precontract windows, key activation, office rules, reentry, conversion and recruitment lifecycle decisions.
+
+Fundamental:
+Yes.
+
+Depends on:
+Recruitment evidence, office rules, organization rules, manager assignment, precontract cycle.
+
+
+Product Rules
+
+Purpose:
+Define product identity, eligibility, coverage behavior, product variants, aliases, benefit rules, age rules, currency and valid product interpretation.
+
+Fundamental:
+Yes.
+
+Depends on:
+Product library, product documents, evidence/provenance.
+
+
+Policy Count Rules
+
+Purpose:
+Define how policies count for contests, manager activity, training allowance, connection, development and other programs.
+
+Fundamental:
+Yes.
+
+Depends on:
+Production events, product rules, line of business, exclusions, personal policy rules, premium thresholds.
+
+
+Qualification Rules
+
+Purpose:
+Define whether a candidate, precontract candidate, advisor, team, manager or unit qualifies for a decision or benefit.
+
+Fundamental:
+Yes.
+
+Depends on:
+Domain-specific metrics, conservation snapshots, production snapshots, career stage, assignment and period.
+
+
+Manager Compensation Rules
+
+Purpose:
+Define Productividad, Produccion, Actividad, Conexion, Desarrollo, Alta Partner, Apoyos, Transicion and PCV-specific gates.
+
+Fundamental:
+Yes.
+
+Depends on:
+Advisor qualification, TA winners, production, unit indexes, assignment, attribution, partner tenure, period snapshots.
+
+
+Advisor Experience Rules
+
+Purpose:
+Define progressive discovery, contextual help eligibility, feature learning state transitions, Benvenu value-before-work behavior and adaptive difficulty.
+
+Fundamental:
+Yes for Advisor Experience.
+
+Depends on:
+Feature learning state, user behavior, revenue context, command context, Mick signals.
+
+
+Economic Motivation Rules
+
+Purpose:
+Define when Forge may translate gaps into money earned, potential money or money at risk.
+
+Fundamental:
+Yes for economic explanations.
+
+Depends on:
+Contest metrics, compensation metrics, rule confidence, evidence, period, assumptions and guardrails.
+
+
+Hidden rule families:
+
+Attribution Rules
+
+Purpose:
+Define who receives credit, split, origin, connection, development, referral or manager attribution.
+
+Fundamental:
+Yes.
+
+
+Servicing Rules
+
+Purpose:
+Define who is responsible for servicing, follow-up, renewal and operational attention.
+
+Fundamental:
+Yes for Relationship Intelligence and Policy Operations.
+
+
+Assignment Rules
+
+Purpose:
+Define manager, office, partner, team, unit and portfolio assignment validity.
+
+Fundamental:
+Yes.
+
+
+Evidence Rules
+
+Purpose:
+Define which evidence is acceptable for which type of decision and what confidence threshold applies.
+
+Fundamental:
+Yes.
+
+
+Override and Correction Rules
+
+Purpose:
+Define who can correct what, when corrections apply, whether corrections are retroactive and whether recalculation is allowed.
+
+Fundamental:
+Yes.
+
+
+Period Rules
+
+Purpose:
+Define how periods open, close, reopen, report, pay and become final.
+
+Fundamental:
+Yes.
+
+
+Command Eligibility Rules
+
+Purpose:
+Define when Command OS may expose or execute a command based on entity, role, state, permission, evidence and context.
+
+Fundamental:
+Yes for Command OS.
+
+
+Privacy and Consent Rules
+
+Purpose:
+Define whether a person/account can be contacted, shown, processed or used in workflows.
+
+Fundamental:
+Yes for real operations.
+
+
+Rule dependency summary:
+
+Foundational rule families:
+
+- Rule time rules.
+- Evidence rules.
+- Assignment rules.
+- Attribution rules.
+- Product rules.
+- Period rules.
+- Career rules.
+- Production interpretation rules.
+
+Derived rule families:
+
+- Contest qualification.
+- Compensation payout.
+- Manager compensation.
+- Economic motivation.
+- Advisor experience guidance.
+
+Dependency rule families:
+
+- Source/evidence admissibility.
+- Period alignment.
+- Role/stage applicability.
+- Office/organization applicability.
+- Product applicability.
+- Attribution applicability.
+
+
+2. Rule Definition
+
+A rule is a documented decision constraint that tells Forge how to interpret facts, metrics, events or states under specific conditions.
+
+A rule answers at least one of these questions:
+
+- Is this eligible?
+- Does this count?
+- Which category applies?
+- Which period applies?
+- Which amount applies?
+- Which person or unit receives credit?
+- Which calculation method applies?
+- Which exclusion applies?
+- Which evidence is acceptable?
+- Which action is allowed?
+- Which output can be shown?
+
+A rule must have:
+
+- scope;
+- domain;
+- source;
+- authority;
+- effective period;
+- applicability conditions;
+- version identity;
+- confidence or validation status;
+- relationship to previous or future versions.
+
+
+What is a rule:
+
+- A contest eligibility table.
+- A commission schedule.
+- A product eligibility condition.
+- A policy count rule.
+- A conservation formula.
+- An advisor class definition.
+- A manager productivity multiplier.
+- A rule saying personal policies do not count.
+- A rule saying GMM counts as 0.5.
+- A rule saying an index report applies with a lag.
+- A rule saying Clippy should not show already learned help.
+
+
+What is NOT a rule:
+
+Data:
+
+Example:
+Policy premium is $25,000.
+
+Metric:
+
+Example:
+Advisor has 4 paid policies.
+
+Event:
+
+Example:
+POLICY_PAID occurred on March 3.
+
+Evidence:
+
+Example:
+Carrier PDF report.
+
+Output:
+
+Example:
+Advisor earned $12,000.
+
+Interpretation:
+
+Example:
+Advisor qualified for bonus.
+
+Forecast:
+
+Example:
+Advisor might earn $8,000 more.
+
+
+Rule vs data:
+
+Data says what is.
+Rule says how to interpret what is.
+
+
+Rule vs metric:
+
+Metric is a value.
+Rule determines whether the value counts, qualifies or triggers an outcome.
+
+
+Rule vs event:
+
+Event records what happened.
+Rule determines how that event affects decisions.
+
+
+Rule vs interpretation:
+
+Interpretation is the result of applying rules to facts and metrics.
+
+
+3. RuleSnapshot Model
+
+RuleSnapshot represents the exact rule state used by Forge for a specific decision, calculation, interpretation or output.
+
+It is not merely a pointer to "current rules".
+
+It is a preserved decision context.
+
+
+What RuleSnapshot represents:
+
+- The rule version applied.
+- The source authority.
+- The rule text or structured meaning available at the time.
+- The effective period.
+- The applicable subject or segment.
+- The domain that owns the rule.
+- The evidence or document supporting the rule.
+- The version lineage.
+- The validation state.
+- The correction state if applicable.
+
+
+What RuleSnapshot must preserve:
+
+- rule family;
+- domain owner;
+- source document or source system;
+- publication date;
+- effective date;
+- expiration date;
+- correction date if any;
+- version id or conceptual version;
+- applicability scope;
+- office/segment/product/year applicability;
+- exclusions;
+- dependencies;
+- confidence/validation status;
+- relation to previous rule;
+- relation to replacement rule;
+- whether it was provisional, official, corrected, retired or experimental;
+- the rule content needed to explain the historical decision.
+
+
+What RuleSnapshot must NOT contain:
+
+- raw production facts;
+- policy events;
+- compensation events;
+- calculated bonus amounts unless the rule itself defines a table amount;
+- user-specific metric results;
+- current assignment state unless assignment is part of applicability snapshot;
+- UI display state;
+- AI-generated explanations as source truth;
+- mutable current values.
+
+
+How RuleSnapshot avoids rewriting history:
+
+- A historical decision points to the RuleSnapshot used at decision time.
+- New rule versions do not overwrite old snapshots.
+- Rule corrections create a new correction relationship.
+- Retroactive corrections are represented as new decisions or recalculations, not silent mutation.
+- The old result remains explainable with the old snapshot.
+
+
+How RuleSnapshot enables audit:
+
+It lets Forge answer:
+
+- What rule was applied?
+- Why did it apply?
+- What source supported it?
+- Was it official or provisional?
+- Was it later corrected?
+- What facts were interpreted?
+- What period was evaluated?
+- Who or what was eligible?
+- What changed if a recalculation happened?
+
+
+RuleSnapshot invariant:
+
+If a decision affects money, eligibility, attribution, career stage, conservation, contest, manager compensation, economic motivation or product interpretation, it must reference a RuleSnapshot.
+
+
+4. Rule Versioning Model
+
+A new rule version is required when a rule's decision behavior changes.
+
+
+New version triggers:
+
+- threshold changes;
+- percentage changes;
+- formula changes;
+- eligibility changes;
+- exclusion changes;
+- product applicability changes;
+- office applicability changes;
+- segment applicability changes;
+- period applicability changes;
+- attribution behavior changes;
+- policy count behavior changes;
+- evidence requirements change;
+- correction changes historical meaning;
+- rule authority changes;
+- rule source changes in material way.
+
+
+Regla nueva:
+
+Creates a new rule version.
+Requires publication date and effective date.
+May coexist with older rules if scope differs.
+
+
+Regla corregida:
+
+Creates a correction version.
+Must preserve the incorrect prior version.
+Must declare whether correction is retroactive or prospective.
+Must declare recalculation policy.
+
+
+Regla reemplazada:
+
+Creates successor version.
+Prior rule receives expiration date or replaced status.
+Historical references remain valid.
+
+
+Regla retirada:
+
+Rule remains historically available.
+New decisions cannot use it after expiration unless evaluating historical periods.
+
+
+Regla temporal:
+
+Must have explicit effective and expiration window.
+Must not become default after expiration.
+
+
+Regla experimental:
+
+Must be labeled experimental.
+Must not support official compensation or legal/economic decisions unless explicitly approved.
+
+
+When to create a new RuleSnapshot:
+
+- When a rule is applied to a decision.
+- When a period closes with a rule.
+- When a calculation is produced.
+- When a correction applies.
+- When a rule is used for historical explanation.
+- When a recalculation uses a different rule.
+
+
+Version relationships:
+
+- replaces;
+- replacedBy;
+- corrects;
+- correctedBy;
+- supersedes;
+- derivedFrom;
+- appliesWith;
+- conflictsWith;
+- retroactiveTo;
+- experimentalVariantOf.
+
+
+Versioning rule:
+
+Rule versions are append-only conceptually.
+Historical versions cannot be deleted if any decision used them.
+
+
+5. Rule Time Model
+
+Rule clocks:
+
+Publication Date
+
+Meaning:
+When the rule was published, received or made available.
+
+Governs:
+What Forge could know at a given time.
+
+
+Effective Date
+
+Meaning:
+When the rule begins to apply.
+
+Governs:
+Applicability to facts, events and periods.
+
+
+Expiration Date
+
+Meaning:
+When the rule stops applying prospectively.
+
+Governs:
+End of normal usage.
+
+
+Correction Date
+
+Meaning:
+When a rule was corrected, clarified, invalidated or reissued.
+
+Governs:
+Audit and recalculation behavior.
+
+
+What clock governs a rule:
+
+Effective Date governs applicability.
+
+Publication Date governs knowledge and audit.
+
+Expiration Date governs end of prospective use.
+
+Correction Date governs later changes and recalculation.
+
+RuleSnapshot governs historical explanation.
+
+
+Interaction with PeriodSnapshot:
+
+PeriodSnapshot says what period is being evaluated.
+RuleSnapshot says what rule applies to that period.
+
+If a period spans multiple rule effective windows, Forge must either:
+
+- split the period;
+- apply the rule specified by official period policy;
+- preserve mixed-rule applicability.
+
+
+Interaction with Event Time:
+
+Event Time says when the fact happened.
+Effective Date says whether the rule applies to that fact.
+Evaluation Time says when Forge applied the rule.
+Publication Date says whether Forge had the rule available.
+Correction Date says whether a later rule change requires review.
+
+
+Required temporal explanation:
+
+Every rule-based output should be able to say:
+
+- event happened on X;
+- rule was effective from A to B;
+- rule was published on P;
+- decision was evaluated on E;
+- correction occurred on C if applicable;
+- payment or output occurred on O if applicable.
+
+
+6. Rule Ownership Model
+
+Rule owner:
+
+The domain that defines and maintains the meaning of a rule family.
+
+Rule consumer:
+
+A domain that uses an owner-approved RuleSnapshot to interpret its own facts or explain outputs.
+
+
+Contest Intelligence
+
+Owns:
+
+- Contest Rules.
+- Policy Count Rules for contests.
+- Contest Group Rules.
+- Training Allowance Rules.
+- Bono Inicial Qualification Rules.
+- Bono Renovacion Qualification Rules.
+- Bono GMM Qualification Rules.
+- Conexion/Desarrollo contest rules for advisor context.
+
+Consumes:
+
+- Product rules.
+- Conservation snapshots/rules.
+- Career snapshots/rules.
+- Production events.
+
+Must not modify:
+
+- Commission schedules.
+- Conservation formulas.
+- Manager PCV rules.
+
+
+Compensation Intelligence
+
+Owns:
+
+- Commission Rules.
+- Accrual Rules.
+- Payment Rules.
+- Reversal Rules.
+- Recalculation Rules for compensation events.
+
+Consumes:
+
+- Contest calculated results.
+- Product rules.
+- Conservation snapshots.
+- Production events.
+
+Must not modify:
+
+- Contest eligibility rules.
+- LIMRA/IGC rules.
+- Career stage rules.
+
+
+Conservation Intelligence
+
+Owns:
+
+- LIMRA Rules.
+- IGC Rules.
+- Persistency Rules.
+- Conservacion Rules.
+- Prima Conservada Rules.
+- Prima por Conservar Rules.
+- Siniestralidad Rules.
+
+Consumes:
+
+- Policy events.
+- Product/policy rules.
+- Period/reporting rules.
+
+Must not modify:
+
+- Compensation payout rules.
+- Contest bonus rules.
+
+
+Career Intelligence
+
+Owns:
+
+- Career Stage Rules.
+- Career Month Rules.
+- Contest Date Rules when career-derived.
+- Advisor Class Rules.
+- Promotion Rules.
+- Role transition rules.
+
+Consumes:
+
+- Recruitment conversion events.
+- Assignment.
+- Rule snapshots from organization/office.
+
+Must not modify:
+
+- Compensation or contest payout rules.
+
+
+Recruitment Intelligence
+
+Owns:
+
+- Candidate assessment rules.
+- Precontract lifecycle rules.
+- Key activation/expiration rules.
+- Recruitment readiness rules.
+
+Consumes:
+
+- Evidence rules.
+- Office rules.
+- Assignment rules.
+
+
+Product Knowledge Library
+
+Owns:
+
+- Product identity rules.
+- Coverage rules.
+- Product eligibility rules.
+- Product alias/variant rules.
+- Product benefit semantics.
+
+Consumes:
+
+- Evidence/provenance.
+
+Must not modify:
+
+- Commission schedules.
+- Contest payout rules.
+
+
+Manager Compensation Intelligence
+
+Owns:
+
+- Productividad Rules.
+- Produccion Rules.
+- Actividad Rules.
+- Manager Conexion Rules.
+- Manager Desarrollo Rules.
+- Alta Partner Rules.
+- Apoyos Rules.
+- Transicion Rules.
+- Team qualification rules for PCV context.
+
+Consumes:
+
+- Contest TA winners.
+- Advisor qualification snapshots.
+- Conservation snapshots.
+- Production snapshots.
+- Assignment and attribution snapshots.
+
+Must not modify:
+
+- Contest rules.
+- Conservation formulas.
+- Production facts.
+
+
+Revenue Intelligence
+
+Owns:
+
+- Revenue opportunity rules.
+- Pipeline stage rules.
+- Revenue priority rules.
+- Follow-up opportunity rules.
+- Forecast rules.
+
+Consumes:
+
+- Relationship data.
+- Production history.
+- Advisor baseline.
+- Policy/relationship events.
+
+Must not modify:
+
+- Compensation rules.
+- Contest rules.
+- Conservation rules.
+
+
+Advisor Experience
+
+Owns:
+
+- Benvenu rules.
+- Progressive discovery rules.
+- Feature Learning State rules.
+- Contextual help rules.
+- Adaptive difficulty rules.
+
+Consumes:
+
+- Revenue metrics.
+- Mick signals.
+- Compensation explanations.
+- Contest gaps.
+- Command OS context.
+
+Must not modify:
+
+- Business metrics or financial rules.
+
+
+Economic Motivation
+
+Owns:
+
+- Economic explanation guardrails.
+- Confirmed vs estimated labeling rules.
+- Money-at-risk communication rules.
+- Assumption visibility rules.
+
+Consumes:
+
+- Contest metrics.
+- Compensation metrics.
+- Conservation risks.
+- Revenue forecasts.
+- Evidence/confidence.
+
+Must not modify:
+
+- Source metrics.
+- Commission schedules.
+- Contest rules.
+- Conservation rules.
+
+
+Rule ownership invariant:
+
+Consumers may select and apply owner-approved RuleSnapshots.
+Consumers may not redefine, fork or silently recalculate owner rules.
+
+
+7. Historical Explanation Requirements
+
+Scenario:
+
+In 2032, an advisor asks:
+"Why did I receive that bonus in 2026?"
+
+Forge must preserve enough context to answer.
+
+
+RuleSnapshot must preserve:
+
+- Contest rule version.
+- Compensation rule version.
+- Product rule version.
+- Policy count rule version.
+- Conservation/index rule version.
+- Qualification rule version.
+- Manager/assignment rule version if applicable.
+- Effective dates.
+- Source documents.
+- Exclusions.
+- Thresholds.
+- Tables.
+- Correction status.
+
+
+PeriodSnapshot must preserve:
+
+- Production period.
+- Contest evaluation period.
+- Compensation close period.
+- Payment period.
+- Index reporting period.
+- Correction/recalculation period if any.
+- Rule applicability period.
+
+
+Attribution must preserve:
+
+- Who originated.
+- Who connected.
+- Who developed.
+- Who serviced.
+- Who received credit.
+- Who was manager/partner/unit at the relevant time.
+- Attribution split.
+- Attribution effective period.
+- Attribution correction if any.
+
+
+Evidence must preserve:
+
+- Source documents.
+- Carrier reports.
+- OCR/provenance if used.
+- Manager/user inputs.
+- Imported files.
+- Product documents.
+- Rule documents.
+- Correction records.
+
+
+Production facts must preserve:
+
+- Policy issued.
+- Policy paid.
+- Commission posted.
+- Cancellation.
+- Reinstatement.
+- Product.
+- Premium.
+- Advisor/person/account/policy roles.
+
+
+Explanation should be able to say:
+
+"You received this bonus because these production events occurred in this period, these policies counted under the 2026 contest policy count rule, you were in this career/contest stage, these conservation indexes applied, this rule version was effective, this assignment/attribution was active, and the bonus was accrued and paid in these periods."
+
+
+8. Product Knowledge Implications
+
+Product rules must be versioned and snapshotted.
+
+Forge must not use current product rules on historical policies unless explicitly doing a current-state analysis.
+
+
+Product Rules
+
+Define:
+
+- product identity;
+- product family;
+- line of business;
+- variants;
+- aliases;
+- age limits;
+- coverage semantics;
+- currency;
+- valid product interpretation.
+
+
+Commission Rules
+
+Define:
+
+- commission schedule;
+- commission rate;
+- policy year behavior;
+- renewal behavior;
+- product-specific exclusions;
+- payment mode effects.
+
+Commission rules are not Product Knowledge.
+
+
+Eligibility Rules
+
+Define:
+
+- who can buy;
+- who can be insured;
+- what product qualifies for contest;
+- what product qualifies for compensation;
+- what product qualifies for policy count.
+
+
+Coverage Rules
+
+Define:
+
+- benefits;
+- exclusions;
+- riders;
+- coverage status;
+- product meaning.
+
+
+How Forge avoids applying incorrect rules:
+
+- Historical policy points to product rule version at time of sale.
+- Commission calculation points to commission schedule snapshot.
+- Contest evaluation points to contest product eligibility snapshot.
+- Product detection preserves evidence/provenance.
+- Product aliases are versioned.
+- Discontinued products remain historically resolvable.
+
+
+How Forge avoids using current rules on old policies:
+
+- Every historical interpretation uses RuleSnapshot.
+- Current product library can show current meaning, but historical calculation uses historical snapshot.
+- Product discontinued status does not erase historical product rules.
+- Reissued/corrected product rules create new versions, not mutation.
+
+
+Product risk:
+
+If Product Knowledge, Commission Schedule and Contest Eligibility are merged, Forge will eventually calculate wrong historical commissions or contest eligibility.
+
+
+9. Rule Taxonomy
+
+Forge needs official rule categories.
+
+
+Mandatory categories:
+
+Qualification Rule
+
+Determines whether a person, advisor, team, policy or account qualifies.
+
+Examples:
+advisor compensation qualified, team qualified, candidate selected, contest qualified.
+
+
+Eligibility Rule
+
+Determines whether something may participate.
+
+Examples:
+policy eligible for contest, product eligible for bonus, advisor eligible for TA.
+
+
+Calculation Rule
+
+Determines how to calculate a metric or amount.
+
+Examples:
+commission calculation, bonus amount, policy count, Prima Meta.
+
+
+Attribution Rule
+
+Determines who receives credit, split, connection, development or manager attribution.
+
+
+Assignment Rule
+
+Determines formal responsibility by office, manager, unit, team or partner.
+
+
+Servicing Rule
+
+Determines who operationally services a client, account or policy.
+
+
+Conservation Rule
+
+Determines LIMRA, IGC, persistency, conservation and related index behavior.
+
+
+Compensation Rule
+
+Determines accrual, payment, advance, reversal and recalculation behavior.
+
+
+Contest Rule
+
+Determines contest participation, goals, groups, qualification and bonus logic.
+
+
+Product Rule
+
+Determines product identity, coverage, eligibility and product semantics.
+
+
+Revenue Rule
+
+Determines opportunity detection, pipeline, priority and forecast behavior.
+
+
+Experience Rule
+
+Determines progressive discovery, Clippy eligibility, learning state and adaptive difficulty.
+
+
+Evidence Rule
+
+Determines what evidence is required and what confidence is acceptable.
+
+
+Correction Rule
+
+Determines when and how corrections apply and whether they are retroactive.
+
+
+Period Rule
+
+Determines evaluation, close, reporting, payment and correction periods.
+
+
+Redundant or dangerous categories:
+
+Generic Business Rule
+
+Too vague. Should not be official.
+
+Generic UI Rule
+
+Too vague. UI may consume rules but should not define business rules.
+
+Generic AI Rule
+
+Too vague. AI may explain but should not own business rules.
+
+Generic Productivity Rule
+
+Dangerous because Mick productivity and Manager Productividad are different.
+
+
+Rule taxonomy invariant:
+
+Every rule should belong to a domain owner and a rule category.
+
+
+10. Riesgos críticos
+
+1. Applying 2027 rules to 2026 decisions.
+2. Current product knowledge used on historical policies.
+3. Rule correction overwrites original rule.
+4. Rule expiration deletes historical explainability.
+5. Two active rule versions apply to same subject without priority.
+6. Office-specific rule ignored.
+7. Segment-specific rule ignored.
+8. Product-specific exclusion ignored.
+9. Contest and compensation rules merged.
+10. Product rules and commission rules merged.
+11. Policy count rule recalculated by multiple domains.
+12. UI uses current thresholds to explain historical bonus.
+13. Economic Motivation uses estimated rule as confirmed.
+14. Manager Compensation redefines TA winner rule.
+15. Compensation redefines contest eligibility.
+16. Conservation index formula changes historical qualification.
+17. Rule source document has error and no correction model exists.
+18. Experimental rule used for official payout.
+19. Rule publication date after effective date creates knowledge gap.
+20. Rule owner unclear, causing silent forks.
+21. Multiple offices with different rules produce inconsistent advisor results.
+22. Rule effective date does not align with PeriodSnapshot.
+23. Rule correction retroactive but recalculation not tracked.
+24. Discontinued product loses historical eligibility.
+25. Missing evidence for rule source destroys audit.
+
+
+11. Recomendaciones obligatorias
+
+1. Define RuleSnapshot as mandatory for all rule-based historical decisions.
+2. Define rule taxonomy before schemas or engines.
+3. Assign a single owner domain to every rule family.
+4. Separate Product Rules, Commission Rules and Contest Rules.
+5. Separate Eligibility Rules, Qualification Rules and Calculation Rules.
+6. Preserve publication, effective, expiration and correction dates.
+7. Preserve historical rule content even after retirement.
+8. Never overwrite a rule version used by a decision.
+9. Model corrections as append-only conceptual records.
+10. Require retroactivity flag for corrected rules.
+11. Require recalculation policy for retroactive corrections.
+12. Require source/evidence/provenance for official rules.
+13. Require applicability scope: office, segment, product, year, role, period.
+14. Require conflict handling for simultaneous versions.
+15. Require provisional/official/experimental status.
+16. Require RuleSnapshot references in compensation, contest, conservation, career, manager and economic outputs.
+17. Require historical explanation scenarios before FOUNDATION LOCK.
+18. Ban current-rule explanations for historical decisions unless explicitly labeled as current analysis.
+19. Ban UI-owned rule calculations.
+20. Ban AI-owned business rules.
+21. Create naming discipline for rule families.
+22. Preserve discontinued product rules.
+23. Preserve rule dependencies.
+24. Preserve rule owner.
+25. Do not advance to FOUNDATION LOCK until Red Team scenarios pass.
+
+
+12. ¿Está listo para FOUNDATION LOCK?
+
+No.
+
+Status:
+FOUNDATION HARDENING REQUIRED.
+
+The Shared Commercial Model cannot be locked until RuleSnapshot is formalized.
+
+Ready for FOUNDATION CANDIDATE when:
+
+- rule definition is accepted;
+- rule taxonomy is accepted;
+- rule ownership is assigned;
+- versioning model is accepted;
+- rule time model is accepted;
+- historical explanation requirements are accepted;
+- product knowledge implications are accepted;
+- correction model is accepted.
+
+Ready for FOUNDATION LOCK only if the model survives:
+
+1. Regla corregida retroactivamente.
+2. Regla eliminada.
+3. Regla con error.
+4. Cambio de comision.
+5. Cambio de grupo.
+6. Cambio de ponderacion.
+7. Cambio de Prima Meta.
+8. Cambio de Training Allowance.
+9. Cambio de Productividad.
+10. Cambio de elegibilidad.
+11. Producto descontinuado.
+12. Comision historica distinta.
+13. Regla aplicada a oficina equivocada.
+14. Regla aplicada a segmento equivocado.
+15. Dos versiones activas simultaneamente.
+
+Verdict:
+
+RuleSnapshot is not an optional audit feature.
+
+It is the mechanism that lets Forge explain why any historical decision was correct according to the rules available and applicable at that time.
+
+Without RuleSnapshot, Forge may calculate today, but it will not be able to defend its decisions tomorrow.
+
+
+13. Calificación arquitectónica
+
+8/10.
+
+The conceptual direction is strong.
+
+Forge already recognizes that rules are central and that historical decisions cannot depend on current logic.
+
+However, the foundation is not lock-ready until RuleSnapshot becomes a first-class conceptual primitive with:
+
+- taxonomy;
+- ownership;
+- versioning;
+- time model;
+- correction model;
+- source/evidence/provenance;
+- historical explanation requirements;
+- product knowledge separation.
+
+Once those are formalized, Forge can preserve decision integrity across years, rule changes, product changes, compensation updates and historical audits.

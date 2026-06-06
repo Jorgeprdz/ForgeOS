@@ -1,0 +1,157 @@
+FORGE BUILD TREE UPDATE REPORT
+
+Status:
+BUILD TREE UPDATE ONLY
+
+Scope:
+Documentation only.
+No code.
+No engines.
+No schemas.
+No UI.
+No implementation.
+
+1. EXECUTIVE SUMMARY
+
+FORGE_MASTER_BUILD_TREE.md was updated to reflect the latest GMM and Core
+Intelligence discoveries.
+
+The active focus is now explicitly:
+
+GMM Validation Phase - ACTIVE
+
+Implementation remains blocked pending:
+
+- real evidence packets
+- human review protocol
+- real Alfa Medical caratula validation
+- real Alfa Medical quote validation
+- quote vs policy comparison
+- scenario fixtures
+
+2. FILES UPDATED
+
+- FORGE_MASTER_BUILD_TREE.md
+- BUILD_TREE_UPDATE_REPORT.txt
+
+3. BUILD TREE MOVEMENTS COMPLETED
+
+GMM Product Family was moved from:
+
+ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+
+to:
+
+ACTIVE VALIDATION PHASE / IMPLEMENTATION BLOCKED
+
+Completed GMM discovery stages were added:
+
+- Discovery: COMPLETE
+- Rule Extraction: COMPLETE
+- Evaluation Architecture: COMPLETE
+- Coverage Blueprint: COMPLETE
+- Source Registry: COMPLETE
+- Evidence Packet Standard: COMPLETE
+- Validation: ACTIVE
+- Implementation: BLOCKED pending real evidence packets and human review protocol
+
+4. GMM VALIDATION PHASE ADDED
+
+Subitems added:
+
+- Real Alfa Medical Caratula Validation
+- Real Alfa Medical Quote Validation
+- Quote vs Policy Comparison
+- Evidence Packet Reality Check
+- Human Review Protocol
+- Scenario Fixtures
+
+5. DOCUMENT INTELLIGENCE REQUIREMENT ADDED
+
+Candidate module added:
+
+Document Classification Intelligence
+
+Status:
+DISCOVERY VALIDATED / NOT IMPLEMENTED
+
+Purpose:
+Distinguish evidence document classes:
+
+- Quote / Cotizacion
+- Policy Caratula / Caratula
+- Conditions / Condiciones Generales
+- Endorsement / Endoso
+- Sales Illustration / Material Comercial
+
+6. QUOTE-TO-POLICY VALIDATION ADDED
+
+Candidate capability added:
+
+Quote-to-Policy Validation
+
+Status:
+PARKED / VALIDATION CANDIDATE
+
+Purpose:
+Detect what changed between a proposed scenario and an issued policy.
+
+7. PROPOSAL INTELLIGENCE ADDED
+
+Added under:
+
+Forge Core
+└── Decision Intelligence Layer
+    └── Proposal Intelligence
+
+Status:
+PARKED / CORE CANDIDATE / DO NOT IMPLEMENT YET
+
+Subitems:
+
+- Proposal Family
+- Scenario Comparison
+- Economic / Balanced / Premium Options
+- Tradeoff Explanation
+- Decision Clarity Recommendation
+
+8. ACTIVE FOCUS / PARKED STATUS
+
+Active:
+
+- GMM Validation Phase
+
+Parked:
+
+- Proposal Intelligence
+- Shared Tax Intelligence
+- Shared Economic Projection Intelligence
+- Retirement Closure Review
+- Nuevo Plenitud Knowledge Capture
+- Sienten / Sintieron / Descubrieron Analysis
+
+9. VALIDATION
+
+Confirmed:
+
+- No code modified intentionally.
+- No engines modified.
+- No schemas modified.
+- No UI modified.
+- No implementation started.
+- Only Build Tree and report were updated for this request.
+
+10. IMPLEMENTATION STATUS
+
+Implementation remains:
+
+NOT APPROVED.
+
+GMM Coverage Intelligence Engine remains:
+
+BLOCKED.
+
+Next recommended step:
+
+Complete GMM Validation Phase using real evidence packets and a human review
+protocol before any engine, schema or UI work.

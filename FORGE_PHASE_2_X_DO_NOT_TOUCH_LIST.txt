@@ -1,0 +1,456 @@
+FORGE_PHASE_2_X_DO_NOT_TOUCH_LIST.txt
+Generated: 2026-06-04
+Scope: Phase 2.X documentation queue. No code changes approved.
+
+Action: DO NOT TOUCH
+
+## cartera-view.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review
+
+## cartera.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file
+
+## event-bus-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## app.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: 10 PLATFORM SERVICES / App Shell / Root Orchestration
+- Ownership: 10 PLATFORM SERVICES / App Shell / Root Orchestration
+- Candidate: Legacy / Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Potential duplicate/overlap candidate; Legacy CRM AddLife Root isolation
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN Legacy CRM AddLife root/util candidate; keep separate from Forge OS Core until migration ADR.
+
+## event-system.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: 10 PLATFORM SERVICES or SHARED CORE event infrastructure
+- Ownership: 10 PLATFORM SERVICES or SHARED CORE event infrastructure
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: unknown / needs review
+
+## dashboard.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Legacy / Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth; Legacy CRM AddLife Root isolation
+- Notes: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review Legacy CRM AddLife root/util candidate; keep separate from Forge OS Core until migration ADR.
+
+## command-palette.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar
+- Ownership: Alfred / Universal Command Bar
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## command-palette-ui.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Ownership: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary; UI / Advisor Experience vs business truth; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## command-palette.store.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Ownership: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: No immediate static risk detected. Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## command-palette.tsx
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Ownership: Alfred / Universal Command Bar, with Command OS as execution dependency
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary; UI / Advisor Experience vs business truth; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## smnyl-bonos-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review Requires Compensation vs Rule Pack ownership validation.
+
+## smnyl-comisiones-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate Requires Compensation vs Rule Pack ownership validation.
+
+## smnyl-concursos-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack; Potential duplicate/overlap candidate
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate Requires Compensation vs Rule Pack ownership validation.
+
+## smnyl-prima-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review Requires Compensation vs Rule Pack ownership validation.
+
+## smnyl-training-allowance-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review
+
+## dynamic-cash-value-projection-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Predictive vs Historical Truth; Forecast vs Economic Motivation
+- Notes: No immediate static risk detected. Requires predictive vs historical truth and source/rate validation.
+
+## projection-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Predictive vs Historical Truth; Forecast vs Economic Motivation
+- Notes: No immediate static risk detected. Requires predictive vs historical truth and source/rate validation.
+
+## shared-currency-projection-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Predictive vs Historical Truth; Forecast vs Economic Motivation
+- Notes: No immediate static risk detected. Requires predictive vs historical truth and source/rate validation.
+
+## advisor-conversion.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## advisor.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## candidate-assessment.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Recruitment vs Advisor Development ownership
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## candidate.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Recruitment vs Advisor Development ownership
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## command-palette-engine.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary; Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## core-event-bus.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible duplicate / overlap candidate
+
+## core_event-bus.js
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Potential duplicate/overlap candidate
+- Notes: possible orphan / no incoming imports detected; possible duplicate / overlap candidate
+
+## interview-evidence.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## interview.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## manager-assignment.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## manager-report.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## market-evidence.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## nash-report.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## office-assignment.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## organization-profile.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## policy.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## precontract-activity-evidence.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Recruitment vs Advisor Development ownership
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## precontract-cycle.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Recruitment vs Advisor Development ownership
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## precontract.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: Recruitment vs Advisor Development ownership
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## project200.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## prospect.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## question-evidence.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## rda.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## recruit-identity.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## recruitment-application.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## relationship-report.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+
+## relationship.schema.json
+
+- Classification: DO NOT TOUCH
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Core / Protected Surface
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: Schema/config file; DO NOT TOUCH unless schema change is explicitly approved.
+

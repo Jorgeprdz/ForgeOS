@@ -1,0 +1,314 @@
+FORGE RETIREMENT FUTURE UDI PROJECTION REPORT
+
+Estado: PASS
+Idioma: Español
+Fecha de validación: 2026-06-06
+
+OBJETIVO
+
+Crear un motor dedicado para proyectar valores futuros de UDI en presentaciones de retiro Imagina Ser, usando la lógica detectada en la hoja IMAGINA de Hoja de trabajo.xlsx y validando contra Edwin IS-15.pdf.
+
+FUENTES USADAS
+
+1. Excel:
+   /storage/emulated/0/Download/Hoja de trabajo.xlsx
+   Hoja: IMAGINA
+
+2. Presentación humana:
+   /storage/emulated/0/Download/Edwin IS-15.pdf
+
+3. Cotización original:
+   /storage/emulated/0/Download/Solucionline_20260602_18_10.PDF
+
+ARCHIVOS CREADOS
+
+1. retirement-future-udi-projection-engine.js
+   Propósito:
+   Proyecta valores futuros de UDI y convierte montos UDI a MXN futuros estimados.
+
+2. imagina-ser-future-mxn-bridge.js
+   Propósito:
+   Conecta los datos extraídos de Imagina Ser con el motor de proyección futura UDI.
+
+3. retirement-future-udi-projection-smoke-test.js
+   Propósito:
+   Valida la proyección contra los valores esperados de Edwin IS-15.pdf.
+
+4. FORGE_RETIREMENT_FUTURE_UDI_PROJECTION_REPORT.txt
+   Propósito:
+   Documenta hallazgos, fórmulas, resultados y estado.
+
+5. FORGE_RETIREMENT_FUTURE_UDI_REASONING_DIAGRAM.md
+   Propósito:
+   Diagrama de sistema, sin cadena privada de pensamiento.
+
+HALLAZGOS DE FORMULAS EN EXCEL
+
+Hoja auditada:
+IMAGINA
+
+UDI hoy:
+- Celda: I5
+- Valor: 8.85
+- Formula: valor fijo visible en XML
+- Uso: convierte prima anual y suma asegurada actuales a MXN.
+
+Prima anual en MXN:
+- Celda: D5
+- Formula: C5*I5
+- Valores: 3,222 UDI * 8.85 = 28,514.70 MXN
+- Presentación redondeada: $28,515 MXN
+
+Suma asegurada en MXN:
+- Celda: H5
+- Formula: G5*I5
+- Valores: 75,000 UDI * 8.85 = 663,750 MXN
+
+UDI proyectada por edad antes de retiro:
+- Celda inicial: I5 = 8.85
+- Formula principal: I6 = I5*1.04
+- Rango compartido detectado: I7:I60 usa formula compartida equivalente a celda previa * 1.04
+- Excepción detectada: I32 = I31*1.045
+- Celda de edad 65 en tabla de edad actual: I47 = 46.177080583207783
+- Celda usada para conversión de presentación: P5 = 46.177
+
+Crecimiento anual UDI detectado:
+- Para la tabla de ahorro/protección: 4% anual, con excepción explícita en I32 de 4.5%.
+- Para la tabla de rentas: 4.5% anual.
+- Tasa efectiva usada por Forge para llegar de I5 a P5 en 42 años:
+  0.040118725925328391
+- Esta tasa efectiva no se inventó; se deriva de I5 = 8.85 y P5 = 46.177, que es la celda usada por las conversiones MXN visibles de la presentación.
+
+Pago único favorable:
+- Celda UDI: Q5
+- Valor: 128,697 UDI
+- Celda UDI proyectada usada: P5
+- Valor P5: 46.177
+- Celda MXN: R5
+- Formula: Q5*P5
+- Resultado Excel: 5,942,841.3689999999 MXN
+- Presentación redondeada: $5,942,841 MXN
+
+Renta mensual favorable:
+- Celda UDI: L5
+- Valor: 606 UDI
+- Celda UDI proyectada usada: P5
+- Formula: N5 = L5*P5
+- Resultado Excel: 27,983.261999999999 MXN
+- Presentación redondeada: $27,983 MXN
+
+Renta anual favorable:
+- Celda: M5
+- Formula: L5*12
+- Valor: 7,272 UDI
+
+Proyección de UDI para rentas:
+- Celda inicial: P5 = 46.177
+- Formula: P6 = P5*1.045
+- Rango compartido detectado: P7:P60 usa formula compartida equivalente a celda previa * 1.045
+- Tasa detectada: 4.5% anual
+
+Renta anual en MXN:
+- Celda inicial: O5
+- Formula: M5*P5
+- Rango compartido detectado: O6:O60 usa formula equivalente a renta anual UDI * UDI proyectada de la fila.
+
+Acumulado UDI a 75:
+- Celda: Q15
+- Formula: SUM(M5:M15)
+- Resultado: 79,992 UDI
+
+Acumulado MXN a 75:
+- Celda: R15
+- Formula: SUM(O5:O15)
+- Resultado Excel: 4,647,855.9908334548 MXN
+- Presentación redondeada: $4,647,856 MXN
+
+Acumulado UDI a 80:
+- Celda: Q20
+- Formula: SUM(M5:M20)
+- Resultado: 116,352 UDI
+
+Acumulado MXN a 80:
+- Celda: R20
+- Formula: SUM(O5:O20)
+- Resultado Excel: 7,629,133.8275268683 MXN
+- Presentación redondeada: $7,629,134 MXN
+
+Fondo proyectado:
+- IMAGINA referencia Hoja5!I37:I62 para algunos valores de fondo.
+- Hoja5 no contiene formulas visibles en XML para ese rango; contiene valores pegados.
+- Forge no inventó una formula de fondo. Solo se documenta la referencia.
+
+ENTRADAS USADAS POR FORGE
+
+Cliente:
+Edwin Marquez
+
+Producto:
+Imagina Ser 65 Pagos Limitados 15
+
+Edad actual:
+23
+
+Edad de retiro:
+65
+
+Periodo de pago:
+15 años
+
+Prima anual:
+3,222 UDI
+
+Suma asegurada:
+75,000 UDI
+
+Escenario base:
+82,829 UDI
+
+Escenario favorable:
+128,697 UDI
+
+Escenario desfavorable:
+57,228 UDI
+
+Renta mensual favorable:
+606 UDI
+
+UDI hoy usada por Jorge:
+8.85 MXN
+
+CONFIGURACION DE PROYECCION
+
+Modo de calculo:
+PROJECTED_UDI_FUTURE_MXN_ESTIMATE_NOT_GUARANTEED
+
+Tasa para aportaciones durante periodo de pago:
+4%
+
+Tasa efectiva para UDI futura a retiro:
+0.040118725925328391
+
+Tasa para rentas despues del retiro:
+4.5%
+
+SALIDAS GENERADAS POR FORGE
+
+Prima anual actual:
+3,222 UDI = $28,514.70 MXN
+Redondeado: $28,515 MXN
+
+Suma asegurada actual:
+75,000 UDI = $663,750 MXN
+
+Total aportado:
+48,330 UDI
+
+Ahorro proyectado en periodo de pago:
+$570,966.59 MXN
+Redondeado: $570,967 MXN
+
+Pago único base futuro:
+82,829 UDI = $3,824,794.73 MXN
+
+Pago único favorable futuro:
+128,697 UDI = $5,942,841.37 MXN
+Redondeado: $5,942,841 MXN
+
+Pago único desfavorable futuro:
+57,228 UDI = $2,642,617.36 MXN
+
+Renta mensual favorable futura:
+606 UDI = $27,983.26 MXN
+Redondeado: $27,983 MXN
+
+Acumulado a 75:
+79,992 UDI = $4,647,855.99 MXN
+Redondeado: $4,647,856 MXN
+
+Acumulado a 80:
+116,352 UDI = $7,629,133.83 MXN
+Redondeado: $7,629,134 MXN
+
+COMPARACION CONTRA EDWIN IS-15.PDF
+
+1. Prima anual
+- Edwin IS-15.pdf: 3,222 UDI = $28,515 MXN
+- Forge: 3,222 UDI = $28,514.70 MXN
+- Diferencia: $0.30 MXN por redondeo
+- Estado: PASS
+
+2. Suma asegurada
+- Edwin IS-15.pdf: 75,000 UDI = $663,750 MXN
+- Forge: 75,000 UDI = $663,750 MXN
+- Diferencia: $0 MXN
+- Estado: PASS
+
+3. Pago único favorable
+- Edwin IS-15.pdf: $5,942,841 MXN
+- Forge: $5,942,841.37 MXN
+- Diferencia: $0.37 MXN por redondeo
+- Estado: PASS
+
+4. Renta mensual favorable
+- Edwin IS-15.pdf: 606 UDI = $27,983 MXN
+- Forge: 606 UDI = $27,983.26 MXN
+- Diferencia: $0.26 MXN por redondeo
+- Estado: PASS
+
+5. Acumulado a 75
+- Edwin IS-15.pdf: 79,992 UDI = $4,647,856 MXN
+- Forge: 79,992 UDI = $4,647,855.99 MXN
+- Diferencia: $0.01 MXN por redondeo
+- Estado: PASS
+
+6. Acumulado a 80
+- Edwin IS-15.pdf: 116,352 UDI = $7,629,134 MXN
+- Forge: 116,352 UDI = $7,629,133.83 MXN
+- Diferencia: $0.17 MXN por redondeo
+- Estado: PASS
+
+VALIDACION EJECUTADA
+
+Comando:
+node retirement-future-udi-projection-smoke-test.js
+
+Resultado:
+PASS
+
+Detalle:
+- UDI hoy 8.85 aceptada: PASS
+- UDI proyectada a edad 65 coincide con Excel: PASS
+- 128,697 UDI convierte cerca de $5,942,841 MXN: PASS
+- 606 UDI convierte cerca de $27,983 MXN: PASS
+- 79,992 UDI convierte cerca de $4,647,856 MXN: PASS
+- 116,352 UDI convierte cerca de $7,629,134 MXN: PASS
+- El motor no usa UDI actual para valores futuros de retiro: PASS
+- calculationMode presente: PASS
+- No se presenta como garantizado: PASS
+
+DIFERENCIAS
+
+No se encontraron diferencias materiales.
+
+Las diferencias son centavos o redondeos a peso entero derivados de:
+- uso de celda P5 = 46.177 para la conversión visible;
+- redondeo en la presentación Edwin IS-15.pdf;
+- conservación de decimales en Forge.
+
+BLOQUEOS RESTANTES
+
+No hay bloqueos para esta validación de proyección futura UDI.
+
+Notas:
+- La formula de valores de fondo en Hoja5 no está disponible como formula Excel; aparece como tabla de valores pegados.
+- Este motor no crea integración Banxico.
+- Este motor no crea motor de inflación.
+- Este motor no modifica reglas de negocio.
+- Este motor no presenta valores futuros como garantizados.
+
+VEREDICTO FINAL
+
+PASS
+
+Forge ahora puede replicar la lógica de presentación de Jorge para convertir valores de retiro Imagina Ser en MXN futuros estimados, usando UDI futura proyectada y no UDI actual.

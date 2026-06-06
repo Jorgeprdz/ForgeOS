@@ -1,0 +1,253 @@
+FORGE DEVELOPMENT DRIVERS DISCOVERY
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No code. No UI. No schemas. No engines. No scores. No
+rankings. No Build Tree changes.
+
+PURPOSE
+
+Identify what actually drives professional development in Forge Career OS.
+
+CORE PRINCIPLE
+
+Development is caused by interpreted action over time.
+
+Information alone is not development.
+
+Motivation alone is not development.
+
+Experience alone is not development.
+
+PRIMARY DEVELOPMENT DRIVERS
+
+1. Clarity
+
+Definition:
+The person understands what matters, what to do next and why.
+
+Development effect:
+Reduces avoidance and converts ambiguity into action.
+
+Risk:
+Clarity without action becomes passive understanding.
+
+2. Repeated Action
+
+Definition:
+The person performs stage-relevant behaviors with enough repetition to create
+evidence and skill.
+
+Development effect:
+Creates practice, pattern exposure and behavioral stability.
+
+Risk:
+Repetition without interpretation can reinforce bad habits.
+
+3. Feedback
+
+Definition:
+The person receives useful signal about what happened and what should change.
+
+Development effect:
+Turns activity into learning.
+
+Risk:
+Feedback without safety becomes defensiveness or fear.
+
+4. Interpretation
+
+Definition:
+The person or manager understands what the experience means.
+
+Development effect:
+Transforms experience into learning and adjusted behavior.
+
+Risk:
+Wrong interpretation creates wrong development path.
+
+5. Accountability
+
+Definition:
+Commitments are visible, owned and reviewed.
+
+Development effect:
+Increases follow-through and seriousness of action.
+
+Risk:
+Accountability without dignity becomes pressure.
+
+6. Mentorship
+
+Definition:
+A more experienced person helps interpret situations, standards and next moves.
+
+Development effect:
+Accelerates pattern recognition and reduces avoidable errors.
+
+Risk:
+Mentorship can become dependency if it replaces ownership.
+
+7. Environment
+
+Definition:
+The surrounding culture, tools, standards and rhythms either support or weaken
+growth.
+
+Development effect:
+Normalizes execution, feedback and learning.
+
+Risk:
+Weak environment makes individual discipline carry too much weight.
+
+8. Responsibility
+
+Definition:
+The person is trusted with meaningful ownership appropriate to stage.
+
+Development effect:
+Creates seriousness, identity growth and higher-quality decision making.
+
+Risk:
+Too much responsibility too early can create failure without learning.
+
+9. Purpose Context
+
+Definition:
+Human reason, direction or personal meaning behind the work.
+
+Development effect:
+Improves endurance, prioritization and recovery.
+
+Risk:
+Purpose can be misused as emotional pressure.
+
+10. Reflection
+
+Definition:
+Deliberate review of action, outcome and meaning.
+
+Development effect:
+Converts experience into insight.
+
+Risk:
+Reflection without action becomes rumination.
+
+11. Friction Reduction
+
+Definition:
+Removing unnecessary effort between intent and action.
+
+Development effect:
+Makes better behavior easier to repeat.
+
+Risk:
+Too much ease can reduce ownership and resilience.
+
+12. Adaptive Difficulty
+
+Definition:
+Challenge level adjusts to the person's current capacity.
+
+Development effect:
+Prevents abandonment and complacency.
+
+Risk:
+If opaque, it can feel manipulative.
+
+WHY PEOPLE IMPROVE RAPIDLY
+
+Rapid development usually appears when:
+- next action is clear
+- feedback is fast
+- accountability is humane
+- manager coaching is specific
+- responsibility is meaningful
+- environment supports repetition
+- purpose sustains effort
+- the person reflects and adjusts
+- early wins create confidence
+- failure is interpreted rather than hidden
+
+WHY PEOPLE REMAIN STUCK
+
+People remain stuck when:
+- they do not know what to do next
+- they act inconsistently
+- they repeat without learning
+- they avoid feedback
+- they lack safe accountability
+- incentives reward the wrong behavior
+- managers only inspect results
+- fear blocks action
+- purpose is absent or misused
+- the environment normalizes drift
+
+DEVELOPMENT DRIVER MAP
+
+Discipline is driven by:
+- clarity
+- routine
+- accountability
+- small commitments kept
+
+Consistency is driven by:
+- cadence
+- friction reduction
+- realistic standards
+- recovery loops
+
+Follow Through is driven by:
+- ownership
+- next action clarity
+- commitment review
+- contextual reminders
+
+Coachability is driven by:
+- trust
+- feedback safety
+- humility
+- visible behavior change
+
+Learning Ability is driven by:
+- experience
+- feedback
+- reflection
+- adaptation
+
+Trust is driven by:
+- reliability
+- honesty
+- stewardship
+- expectation management
+
+Decision Quality is driven by:
+- evidence
+- context
+- tradeoff awareness
+- outcome review
+
+Adaptability is driven by:
+- varied experience
+- psychological safety
+- feedback
+- resilience
+
+WHAT COMES FIRST
+
+Most reliable sequence:
+
+Clarity -> Action -> Feedback -> Interpretation -> Adjustment -> Confidence ->
+Identity -> Results.
+
+Knowledge can support every step, but knowledge alone does not move the chain.
+
+FINAL DRIVER VERDICT
+
+CANDIDATE FOR LOCK.
+
+Reason:
+The drivers are coherent enough to become constitutional candidates, but need
+evidence contracts and domain ownership before implementation.

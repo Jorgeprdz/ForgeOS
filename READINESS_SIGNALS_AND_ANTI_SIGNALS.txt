@@ -1,0 +1,230 @@
+READINESS SIGNALS AND ANTI-SIGNALS
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No code. No UI. No schemas. No engines. No scores. No
+rankings. No Build Tree changes.
+
+CORE PRINCIPLE
+
+Readiness is evidence-supported confidence for a specific responsibility.
+
+SIGNALS
+
+1. Responsibility-specific capability
+
+Meaning:
+The person has demonstrated the actual capability required by the next
+responsibility.
+
+Example:
+Before managing others, they have shown coaching, judgment and follow-through
+with development responsibility.
+
+2. Consistent follow-through
+
+Meaning:
+The person repeatedly closes loops and honors commitments.
+
+Why it matters:
+Readiness requires durability, not one strong moment.
+
+3. Judgment under context
+
+Meaning:
+The person makes appropriate decisions when conditions are real, ambiguous or
+imperfect.
+
+Evidence:
+- asks for help when needed
+- avoids unsupported claims
+- understands risk
+- chooses proportionate next actions
+
+4. Accountability
+
+Meaning:
+The person owns commitments, outcomes and recovery behavior.
+
+Evidence:
+- admits missed commitments
+- recovers
+- follows up transparently
+- does not hide uncertainty
+
+5. Trust evidence
+
+Meaning:
+The person can be trusted with clients, candidates, advisors, teams or strategic
+relationships.
+
+Evidence:
+- reliability
+- honesty
+- stewardship
+- boundary respect
+- no manipulation
+
+6. Coachability in action
+
+Meaning:
+Feedback changes behavior.
+
+Anti-pattern:
+Agreement without change.
+
+7. Development trend
+
+Meaning:
+The person is improving in the capability needed for the next responsibility.
+
+Evidence:
+- repeated improvement
+- fewer repeated mistakes
+- stronger decision quality
+- more stable cadence
+
+8. Recovery after setback
+
+Meaning:
+The person can respond to difficulty without collapse, avoidance or blame.
+
+Why it matters:
+Greater responsibility creates stress. Recovery behavior matters.
+
+9. Evidence of stewardship
+
+Meaning:
+The person protects the people or assets entrusted to them.
+
+Examples:
+- client trust
+- candidate dignity
+- advisor development
+- partner network quality
+
+10. Human review when ambiguous
+
+Meaning:
+When signals conflict, reviewed judgment is needed.
+
+Why it matters:
+Readiness can affect real responsibility and trust.
+
+ANTI-SIGNALS
+
+1. Tenure alone
+
+Tenure means time passed. It does not prove readiness.
+
+2. Production alone
+
+Production can show output. It does not prove maturity, trust or judgment.
+
+3. Confidence alone
+
+Confidence may be ahead of competence.
+
+4. Activity volume alone
+
+Activity can be noisy, low-quality or unsustained.
+
+5. Information or training completion alone
+
+Knowing is not handling responsibility.
+
+6. Certification alone
+
+Certification may show exposure or formal requirement, not real readiness.
+
+7. Charisma
+
+Charisma can mask weak follow-through or poor judgment.
+
+8. Popularity
+
+Popularity is not trustworthiness.
+
+9. Manager preference
+
+Manager preference can be biased or politically shaped.
+
+10. Compensation level
+
+Compensation is an economic outcome under rules, not proof of readiness.
+
+11. Title
+
+Title may reflect assignment, not capability.
+
+12. Team size
+
+Team size may reflect responsibility, not leadership readiness.
+
+13. One strong month
+
+Momentum is not durable readiness.
+
+14. Purpose Snapshot
+
+Purpose is human context, not readiness evidence by itself.
+
+FALSE READINESS PATTERNS
+
+Pattern 1:
+High production + weak trust.
+
+Risk:
+Promoting output while ignoring client or team risk.
+
+Pattern 2:
+High confidence + low competence.
+
+Risk:
+Responsibility without actual capability.
+
+Pattern 3:
+Long tenure + low growth.
+
+Risk:
+Assuming time created maturity.
+
+Pattern 4:
+Manager preference + weak evidence.
+
+Risk:
+Bias-driven promotion.
+
+Pattern 5:
+Training completed + no behavior change.
+
+Risk:
+Information mistaken for readiness.
+
+Pattern 6:
+Activity burst + no consistency.
+
+Risk:
+Temporary momentum mistaken for durability.
+
+RECOMMENDED SIGNAL STRUCTURE
+
+For any readiness judgment, require:
+
+- responsibility
+- context
+- evidence
+- confidence
+- risks
+- missing evidence
+- recommended next step
+
+FINAL SIGNAL VERDICT
+
+CANDIDATE FOR LOCK.
+
+Reason:
+Readiness signals are coherent only when tied to responsibility-specific
+evidence and protected against anti-signals.

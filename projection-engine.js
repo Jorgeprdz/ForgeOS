@@ -17,6 +17,8 @@
 |--------------------------------------------------------------------------
 */
 
+export const GLOBAL_UDI_PROJECTION_RATE = 0.045;
+
 export function proyectarValorFuturo({
 
     currentValue = 0,
@@ -107,13 +109,13 @@ export function proyectarUDI({
         years,
 
         conservativeRate:
-            rates.conservativeRate || 0.03,
+            GLOBAL_UDI_PROJECTION_RATE,
 
         baseRate:
-            rates.baseRate || 0.045,
+            GLOBAL_UDI_PROJECTION_RATE,
 
         aggressiveRate:
-            rates.aggressiveRate || 0.06
+            GLOBAL_UDI_PROJECTION_RATE
     });
 }
 

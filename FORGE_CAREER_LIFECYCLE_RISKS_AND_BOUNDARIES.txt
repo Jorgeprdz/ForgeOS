@@ -1,0 +1,193 @@
+FORGE CAREER LIFECYCLE RISKS AND BOUNDARIES
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No code. No UI. No schemas. No engines. No Build Tree
+changes.
+
+CORE RISK
+
+Career Stage is powerful. If implemented carelessly, it can become a rigid,
+company-specific, surveillance-heavy or compensation-driven label.
+
+Forge must avoid turning a human career into a simplistic hierarchy.
+
+BOUNDARY 1: CAREER STAGE IS NOT TITLE
+
+Risk:
+Local titles vary by company, channel, office and time.
+
+Boundary:
+Title may be evidence, but title is not stage truth.
+
+BOUNDARY 2: CAREER STAGE IS NOT COMPENSATION
+
+Risk:
+Compensation structures may tempt Forge to infer stage from money or rule
+eligibility.
+
+Boundary:
+Compensation can contribute evidence, but cannot own Career Stage.
+
+BOUNDARY 3: CAREER STAGE IS NOT PRODUCTION ONLY
+
+Risk:
+Production-only models erase readiness, character, behavior, conservation,
+learning, leadership and trust.
+
+Boundary:
+Production history is evidence, not the full definition of success.
+
+BOUNDARY 4: LEADERSHIP STAGE IS NOT CAREER STAGE
+
+Risk:
+Manager, Subdirector and Director may be incorrectly treated as a linear
+continuation of advisor maturity.
+
+Boundary:
+Leadership Stage is a separate dimension.
+
+BOUNDARY 5: PARTNER IS NOT AUTOMATICALLY MANAGER
+
+Risk:
+Partner Intelligence could collapse into org chart logic.
+
+Boundary:
+Partner can mean leverage, trust, referrals, ecosystem and strategic
+contribution, with or without team responsibility.
+
+BOUNDARY 6: MANAGER INTELLIGENCE IS NOT SURVEILLANCE
+
+Risk:
+Career Stage may increase manager visibility into sensitive development
+signals.
+
+Boundary:
+Manager Intelligence exists to develop people, not monitor or shame them.
+
+BOUNDARY 7: PURPOSE IS NOT PRESSURE
+
+Risk:
+Purpose Snapshot may become a tool for pressure, guilt or sales coercion.
+
+Boundary:
+Purpose is human context, not a commercial pressure mechanism.
+
+BOUNDARY 8: REGRESSION IS NOT ONE BAD MONTH
+
+Risk:
+Temporary performance drops may be mislabeled as career regression.
+
+Boundary:
+Distinguish risk, dormancy, reactivation and formal regression.
+
+BOUNDARY 9: CANDIDATE IDENTITY IS DURABLE
+
+Risk:
+Failed precontract or reentry may overwrite a person incorrectly.
+
+Boundary:
+RecruitIdentity remains durable. Applications and cycles are attempts, not
+permanent person identity.
+
+BOUNDARY 10: CAREER STAGE IS NOT UNIVERSAL COMPANY HIERARCHY
+
+Risk:
+Forge Core may hardcode carrier, office, channel or company-specific stages.
+
+Boundary:
+Forge Core owns universal stage concepts. Organization profiles and rule packs
+interpret local structures.
+
+DANGEROUS ASSUMPTIONS
+
+Forge must never assume:
+- title equals stage
+- manager equals partner
+- partner equals manager
+- production equals maturity
+- compensation equals stage
+- tenure equals maturity
+- leadership title means leadership quality
+- inactivity means permanent failure
+- a failed cycle means failed person
+- stage is static forever
+- purpose is a measurable motivation score
+- manager opinion overrides evidence
+
+RISK SCENARIOS
+
+Scenario 1:
+Advisor has strong production for one month.
+
+Bad inference:
+Promote to Professional Advisor.
+
+Correct handling:
+Mark production signal and wait for durable evidence.
+
+Scenario 2:
+Partner has no team.
+
+Bad inference:
+Demote because no leadership responsibility.
+
+Correct handling:
+Partner may remain Career Stage while Leadership Stage stays Individual
+Contributor.
+
+Scenario 3:
+Manager loses team.
+
+Bad inference:
+Demote career stage automatically.
+
+Correct handling:
+Leadership Stage may change; Career Stage requires separate review.
+
+Scenario 4:
+Candidate fails precontract.
+
+Bad inference:
+Erase person or mark permanently unfit.
+
+Correct handling:
+Preserve RecruitIdentity, close cycle, allow future reentry with evidence.
+
+Scenario 5:
+Purpose Snapshot shows family motivation.
+
+Bad inference:
+Use family driver to pressure production.
+
+Correct handling:
+Use as human context for supportive guidance only.
+
+CONSTITUTIONAL BOUNDARIES TO CONSIDER
+
+1. Career Stage requires evidence.
+2. Leadership Stage is separate from Career Stage.
+3. Compensation never owns Career Stage.
+4. Production never fully defines maturity.
+5. Manager visibility must serve development.
+6. Purpose must never become pressure.
+7. Local hierarchy belongs in organization profiles or rule packs, not Forge
+   Core.
+8. Regression requires review and evidence.
+9. Dormancy and reactivation are operating states, not moral judgments.
+10. Career OS must protect human dignity.
+
+FINAL RISK VERDICT
+
+Career Lifecycle can safely become a lock candidate only if Forge separates:
+
+- Career Stage
+- Operating State
+- Leadership Stage
+- Evidence
+- Local organization interpretation
+
+Verdict:
+CANDIDATE FOR LOCK.

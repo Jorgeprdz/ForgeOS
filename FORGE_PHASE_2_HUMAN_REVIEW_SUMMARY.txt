@@ -1,0 +1,295 @@
+# Forge OS – Phase 2 Human Review Summary
+
+Status: TXT summary for human validation.
+Scope: Documentation-only review guide. No code modified, moved, executed or refactored.
+
+## Executive Summary
+- Total modules in Phase 1 map: 634
+- Modules requiring review signal: 500
+- Unknown / Needs Review modules: 18
+- Duplicate candidate groups referenced: 25
+- Purpose: validate module-to-domain assignments before any physical reorganization.
+
+## 01 REVENUE GENERATION ENGINE
+- opportunity-detector-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- pipeline-stage-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- revenue-forecast-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- manager-alert-engine.js: confianza MEDIA, observación: possible duplicate / overlap candidate, prioridad de revisión: alta
+
+## 02 SALES CONVERSION ENGINE
+- forge-build-tree-status.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- sales-dna-match-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- vida-mujer-financial-fixture-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- forge-ai-connector-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- tests/gmm-out-of-pocket-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- vida-mujer-client-presentation-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-pipeline-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- adaptive-message-builder.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- ... 33 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## 03 NASH CONVERSATION INTELLIGENCE
+- nash-advisor-performance-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- close-prompt-builder.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- ghosting-prompt-builder.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- objection-battle-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- objection-classifier-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- objection-intent-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- ... 17 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## 04 PRODUCT INTELLIGENCE ENGINE
+- shared-ave-growth-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- shared-ave-rescue-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- vida-mujer-coverage-status-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- vida-mujer-knowledge-extractor-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- vida-mujer-protected-diseases-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-comisiones-gmm.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-cross-sell-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- comisiones-rules-gmm.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- ... 67 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## 05 RELATIONSHIP INTELLIGENCE ENGINE
+- policy-followup-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- quick-actions-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- client-engagement-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-automation-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review, prioridad de revisión: OBLIGATORIA
+- ai-first-contact-message-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- contact-attempt-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- ... 21 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## 06 LEARNING INTELLIGENCE ENGINE
+- ai-sales-coach-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- nash-learning-master-test.js: confianza MEDIA, observación: possible duplicate / overlap candidate, prioridad de revisión: alta
+
+## 07 POLICY & SALES OPERATIONS
+- cartera-view.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate; large file; UI/business interpretation boundary review, prioridad de revisión: OBLIGATORIA
+- policy-risk-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- cartera.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file, prioridad de revisión: OBLIGATORIA
+- adaptive-question-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- ai-task-suggestion-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- mass-import-preview-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- policy-timeline-query-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- operational-button.tsx: confianza MEDIA, observación: possible orphan / no incoming imports detected; UI/business interpretation boundary review, prioridad de revisión: alta
+- ... 86 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## 08 MANAGER & TEAM INTELLIGENCE
+- candidate-assessment-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- candidate-coachability-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- candidate-market-quality-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- referral-opportunity-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- relationship-opportunity-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-ai-presence-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- ... 20 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## 09 UNIVERSAL COMMAND OS
+- command-shortcuts-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- command-suggestion-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- search-quick-actions-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+
+## 10 PLATFORM SERVICES
+- app.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate; large file; HIGH RISK / DO NOT TOUCH WITHOUT TEST PLAN, prioridad de revisión: OBLIGATORIA
+- dashboard.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review, prioridad de revisión: OBLIGATORIA
+- domain-events.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- event-bus-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- performance-runtime.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- policy-storage-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- ... 33 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## 12 ADVISOR EXPERIENCE INTELLIGENCE
+- dashboard-executive.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review, prioridad de revisión: OBLIGATORIA
+- ai-orb-widget.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- live-dashboard-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- predictive-dashboard.tsx: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- smart-header.tsx: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- team-dashboard-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+
+## Alfred / Universal Command Bar
+- command-palette.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- universal-search-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- command-palette-ui.js: confianza MEDIA, observación: possible duplicate / overlap candidate, prioridad de revisión: alta
+
+## COMPENSATION INTELLIGENCE
+- smnyl-comisiones-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-conteo-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-opportunity-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-concursos-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- policy-review-ui-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; UI/business interpretation boundary review, prioridad de revisión: alta
+- concursos.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- ... 17 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## CONSERVATION INTELLIGENCE
+- smnyl-comisiones-vida.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-executive-dashboard-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; UI/business interpretation boundary review, prioridad de revisión: OBLIGATORIA
+- smnyl-risk-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-insights-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-renovaciones-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-bonos-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review, prioridad de revisión: OBLIGATORIA
+- ... 8 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## ECONOMIC MOTIVATION
+- gmm-quote-parser.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible, prioridad de revisión: OBLIGATORIA
+
+## EVIDENCE & PROVENANCE
+- candidate-hard-factors-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- candidate-vital-factors-master-test.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- vida-mujer-client-presentation-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- forge-schema-reporter.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- policy-human-review-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- staging-review-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- ... 1 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## FORECAST INTELLIGENCE
+- segu-beca-meaningful-numbers-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- segu-beca-mxn-appendix-report.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- life-expectancy-projection-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- imagina-ser-client-presentation-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible, prioridad de revisión: OBLIGATORIA
+- smnyl-forecast-engine.js: confianza MEDIA, observación: carrier-specific boundary review, prioridad de revisión: OBLIGATORIA
+
+## PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- visibility-runtime.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- shared-banxico-rate-report.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- virtual-list-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- client-engagement-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- actividad.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; large file, prioridad de revisión: OBLIGATORIA
+- advisor-activity-timeline.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- ... 29 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## PRODUCTIVITY INTELLIGENCE
+- activity-feed-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- activity-feed.js: confianza MEDIA, observación: possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: alta
+- nash-manager-alert-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-goals-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-productividad-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- smnyl-streak-engine.js: confianza MEDIA, observación: carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- ... 4 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## RULESNAPSHOT / RULE PACK
+- daily-points-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+
+## SHARED COMMERCIAL MODEL
+- introduction-message-engine.js: confianza MEDIA, observación: possible orphan / no incoming imports detected, prioridad de revisión: alta
+- nash-intent-engine.js: confianza MEDIA, observación: possible duplicate / overlap candidate, prioridad de revisión: alta
+- shared-clp-engine.js: confianza MEDIA, observación: possible duplicate / overlap candidate, prioridad de revisión: alta
+- shared-clp-master-test.js: confianza MEDIA, observación: possible duplicate / overlap candidate, prioridad de revisión: alta
+
+## SHARED CORE
+- smnyl-performance-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- smnyl-decision-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- close-readiness-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- lead-temperature-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- momentum-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- policy-relationship-score-engine.js: confianza MEDIA, observación: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- ... 33 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## UNKNOWN / NEEDS REVIEW
+- virtual-list.js: confianza BAJA, observación: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate, prioridad de revisión: OBLIGATORIA
+- center-of-influence-engine.js: confianza BAJA, observación: unknown / needs review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- clipboard-action-engine.js: confianza BAJA, observación: unknown / needs review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- phone-call-engine.js: confianza BAJA, observación: unknown / needs review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- referral-color-engine.js: confianza BAJA, observación: unknown / needs review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- referral-priority-engine.js: confianza BAJA, observación: unknown / needs review; possible orphan / no incoming imports detected, prioridad de revisión: OBLIGATORIA
+- ... 12 módulos adicionales en esta rama requieren revisión; ver FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt.
+
+## Unknown / Needs Review
+- virtual-list.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate.
+- center-of-influence-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- clipboard-action-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- phone-call-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- referral-color-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- referral-priority-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- referral-temperature-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- schema-field-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- seen-but-no-reply-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- universal-filters-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- whatsapp-action-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- whatsapp-link-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+- event-system.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review.
+- question-style-match-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review.
+- shared-client-language-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review.
+- shared-financial-return-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review.
+- shared-protection-efficiency-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review.
+- shared-recovery-analysis-engine.js: asignación indeterminada -> REVISIÓN HUMANA OBLIGATORIA. Riesgo: unknown / needs review.
+
+## Duplicados Potenciales
+- activity-feed-engine.js <-> activity-feed.js
+- advisor-performance-engine.js <-> nash-advisor-performance-engine.js <-> nash-advisor-performance-master-test.js
+- app.js <-> core-app-engine.js
+- candidate-assessment-engine.js <-> candidate-assessment-master-test.js
+- candidate-coachability-engine.js <-> candidate-coachability-master-test.js
+- candidate-hard-factors-engine.js <-> candidate-hard-factors-master-test.js
+- candidate-market-quality-engine.js <-> candidate-market-quality-master-test.js
+- candidate-vital-factors-engine.js <-> candidate-vital-factors-master-test.js
+- cartera-view.js <-> cartera.js
+- client-engagement-engine.js <-> client-engagement-master-test.js
+- comisiones.js <-> smnyl-comisiones-engine.js
+- command-palette-engine.js <-> command-palette-ui.js <-> command-palette.js <-> command-palette.tsx <-> smnyl-command-palette-engine.js
+- concursos.js <-> smnyl-concursos-engine.js
+- core-event-bus.js <-> core_event-bus.js <-> event-bus-engine.js
+- core_domain-events.js <-> domain-events.js
+- decision-appendix-master-test.js <-> shared-decision-appendix-engine.js
+- education-cost-master-test.js <-> shared-education-cost-engine.js
+- education-paths-master-test.js <-> shared-education-paths-engine.js
+- followup-engine.js <-> nash-followup-engine.js <-> policy-followup-engine.js <-> smnyl-followup-engine.js
+- forge-ai-connector-master-test.js <-> forge-ai-connector.js
+- ... 5 grupos adicionales; ver FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md.
+
+## Conflictos de Ownership
+- Advisor Experience/UI vs business truth ownership: adaptive-message-builder.js. Rama asignada: 02 SALES CONVERSION ENGINE. Riesgo: possible orphan / no incoming imports detected.
+- Advisor Experience/UI vs business truth ownership: adaptive-outreach-prompt-builder.js. Rama asignada: 02 SALES CONVERSION ENGINE. Riesgo: possible orphan / no incoming imports detected.
+- Advisor Experience/UI vs business truth ownership: adaptive-script-builder.js. Rama asignada: 02 SALES CONVERSION ENGINE. Riesgo: possible orphan / no incoming imports detected.
+- Advisor Experience/UI vs business truth ownership: ai-orb-widget.js. Rama asignada: 12 ADVISOR EXPERIENCE INTELLIGENCE. Riesgo: possible orphan / no incoming imports detected.
+- Advisor Experience/UI vs business truth ownership: close-prompt-builder.js. Rama asignada: 03 NASH CONVERSATION INTELLIGENCE. Riesgo: possible orphan / no incoming imports detected.
+- Forecast Intelligence vs Economic Motivation / Product Intelligence: close-strategy-engine.js. Rama asignada: 02 SALES CONVERSION ENGINE. Riesgo: possible orphan / no incoming imports detected.
+- Compensation Intelligence vs RuleSnapshot / Rule Pack: comisiones-rules-gmm.js. Rama asignada: 04 PRODUCT INTELLIGENCE ENGINE. Riesgo: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected.
+- Compensation Intelligence vs RuleSnapshot / Rule Pack: comisiones-utils.js. Rama asignada: PERIODSNAPSHOT / OPERATIONAL CLOCKS. Riesgo: possible orphan / no incoming imports detected.
+- Compensation Intelligence vs RuleSnapshot / Rule Pack: comisiones.js. Rama asignada: 04 PRODUCT INTELLIGENCE ENGINE. Riesgo: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate.
+- Alfred / Universal Command Bar vs Command OS: command-palette-ui.js. Rama asignada: Alfred / Universal Command Bar. Riesgo: possible duplicate / overlap candidate.
+- Advisor Experience/UI vs business truth ownership: command-palette-ui.js. Rama asignada: Alfred / Universal Command Bar. Riesgo: possible duplicate / overlap candidate.
+- Alfred / Universal Command Bar vs Command OS: command-palette.js. Rama asignada: Alfred / Universal Command Bar. Riesgo: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate.
+- Advisor Experience/UI vs business truth ownership: command-palette.tsx. Rama asignada: 07 POLICY & SALES OPERATIONS. Riesgo: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate.
+- Alfred / Universal Command Bar vs Command OS: command-shortcuts-engine.js. Rama asignada: 09 UNIVERSAL COMMAND OS. Riesgo: possible orphan / no incoming imports detected.
+- Alfred / Universal Command Bar vs Command OS: command-suggestion-engine.js. Rama asignada: 09 UNIVERSAL COMMAND OS. Riesgo: possible orphan / no incoming imports detected.
+- Compensation Intelligence vs RuleSnapshot / Rule Pack: commission-projection-engine.js. Rama asignada: COMPENSATION INTELLIGENCE. Riesgo: possible orphan / no incoming imports detected.
+- Forecast Intelligence vs Economic Motivation / Product Intelligence: commission-projection-engine.js. Rama asignada: COMPENSATION INTELLIGENCE. Riesgo: possible orphan / no incoming imports detected.
+- Compensation Intelligence vs RuleSnapshot / Rule Pack: commissionable-amount-engine.js. Rama asignada: COMPENSATION INTELLIGENCE. Riesgo: possible orphan / no incoming imports detected.
+- Compensation Intelligence vs RuleSnapshot / Rule Pack: concursos.js. Rama asignada: COMPENSATION INTELLIGENCE. Riesgo: hardcoded/rule-pack-sensitive values possible; possible duplicate / overlap candidate.
+- Advisor Experience/UI vs business truth ownership: dashboard-executive.js. Rama asignada: 12 ADVISOR EXPERIENCE INTELLIGENCE. Riesgo: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review.
+- Advisor Experience/UI vs business truth ownership: dashboard-priority-engine.js. Rama asignada: 07 POLICY & SALES OPERATIONS. Riesgo: possible orphan / no incoming imports detected.
+- Advisor Experience/UI vs business truth ownership: dashboard.js. Rama asignada: 10 PLATFORM SERVICES. Riesgo: hardcoded/rule-pack-sensitive values possible; large file; UI/business interpretation boundary review.
+- Forecast Intelligence vs Economic Motivation / Product Intelligence: dna-script-strategy-engine.js. Rama asignada: 02 SALES CONVERSION ENGINE. Riesgo: possible orphan / no incoming imports detected.
+- Advisor Experience/UI vs business truth ownership: financial-story-task-builder.js. Rama asignada: 07 POLICY & SALES OPERATIONS. Riesgo: possible orphan / no incoming imports detected.
+- Advisor Experience/UI vs business truth ownership: first-contact-dashboard.viewmodel.js. Rama asignada: 02 SALES CONVERSION ENGINE. Riesgo: possible orphan / no incoming imports detected.
+- ... 49 conflictos candidatos adicionales; ver FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt.
+
+## Top 10 Módulos con Revisión Humana Obligatoria
+1. virtual-list.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected; possible duplicate / overlap candidate.
+2. center-of-influence-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+3. clipboard-action-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+4. phone-call-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+5. referral-color-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+6. referral-priority-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+7. referral-temperature-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+8. schema-field-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+9. seen-but-no-reply-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+10. universal-filters-engine.js: UNKNOWN / NEEDS REVIEW, confianza LOW, riesgo: unknown / needs review; possible orphan / no incoming imports detected.
+
+## Acciones Recomendadas
+1. Validar módulos con confianza MEDIA o BAJA antes de mover archivos.
+2. Confirmar ownership de Alfred / Universal Command Bar vs Command OS vs UI visible.
+3. Confirmar ownership de Compensation Intelligence vs RuleSnapshot / Rule Pack en comisiones, bonos, concursos y Prima.
+4. Resolver duplicados conceptuales antes de cualquier consolidación física.
+5. Revisar Policy & Sales Operations por criticidad operativa y alta densidad de módulos.
+6. Revisar Product Intelligence y SMNYL/product-specific modules por riesgo de reglas hardcodeadas.
+7. Confirmar que Forecast/Projection no prometa dinero ni use tasas sin fuente.
+8. Registrar decisión humana por módulo revisado: owner, consumers, keep/move/split/consolidate/delete-later.
+9. No borrar huérfanos hasta validar imports dinámicos, HTML/browser globals, tests y runtime usage.
+10. Crear un ADR o Decision Log antes de reorganizar carpetas.
+
+## Validación
+- No code modified.
+- No files moved.
+- No imports changed.
+- No app.js touched.
+- No schemas changed.
+- No UI changed.
+- No engines changed.
+- No commit created.

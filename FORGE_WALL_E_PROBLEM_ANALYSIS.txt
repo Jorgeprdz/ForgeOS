@@ -1,0 +1,156 @@
+FORGE WALL-E PROBLEM ANALYSIS
+
+Status:
+ARCHITECTURE DISCOVERY
+
+Scope:
+No implementation. No code. No UI. No engines. No schemas. No Build Tree
+changes. No lock.
+
+PROBLEM STATEMENT
+
+The WALL-E problem is the risk that a system becomes so effective that humans
+stop practicing the capabilities the system was meant to strengthen.
+
+Inside Forge:
+
+An advisor repeatedly asks:
+- Who should I call?
+- What should I say?
+- What product should I recommend?
+- What follow-up should I send?
+
+If Forge becomes increasingly accurate, the advisor may stop practicing:
+- prioritization
+- judgment
+- product reasoning
+- relationship interpretation
+- follow-through ownership
+- ethical influence
+- risk recognition
+- learning from experience
+
+The product gets better.
+
+The professional gets weaker.
+
+That is the risk.
+
+HOW SUCCESS CAN BECOME HARMFUL
+
+Success becomes harmful when:
+
+- answers replace reasoning
+- recommendations replace responsibility
+- automation replaces learning
+- confidence in Forge replaces professional confidence
+- users stop asking why
+- managers use Forge as authority rather than development support
+- output accuracy hides judgment atrophy
+
+DEPENDENCY LOOP
+
+```text
+Forge gives strong answer
+↓
+User accepts without reasoning
+↓
+Short-term outcome improves
+↓
+User asks Forge more often
+↓
+User practices less judgment
+↓
+Long-term capability weakens
+↓
+User depends more on Forge
+```
+
+WHY THIS MATTERS IN CAREER OS
+
+Career OS exists to develop careers.
+
+If Career OS creates dependency, it violates its own purpose.
+
+Forge should not merely help a person act correctly today.
+
+Forge should help a person become better at acting correctly tomorrow.
+
+WARNING SIGNALS
+
+Possible signs of dependency:
+
+- user accepts recommendations without reviewing evidence
+- user cannot explain why an action is recommended
+- user asks for every next action instead of learning patterns
+- user avoids decisions when Forge is unavailable
+- manager uses Forge output as final authority
+- coaching shifts from "understand this" to "obey this"
+- user confidence only exists when Forge is present
+- product explanations are hidden behind black-box recommendation
+
+WHAT DOES NOT COUNT AS DEPENDENCY
+
+Healthy use:
+
+- user asks Forge to surface evidence
+- user uses Forge to check reasoning
+- user learns decision patterns
+- user becomes faster and more accurate
+- user can explain recommendations
+- user uses Forge for complex cases while owning judgment
+
+Dependency is not using Forge often.
+
+Dependency is losing judgment because of Forge.
+
+PROTECTIONS
+
+Protection 1:
+Explain the reasoning.
+
+Protection 2:
+Show evidence and uncertainty.
+
+Protection 3:
+Ask for user judgment in sensitive cases.
+
+Protection 4:
+Use progressive disclosure to teach patterns.
+
+Protection 5:
+Avoid acting as final authority on human potential.
+
+Protection 6:
+Preserve advisor responsibility.
+
+Protection 7:
+Design recommendations to transfer judgment over time.
+
+Protection 8:
+Require human review for ambiguous or high-impact interpretations.
+
+RELATIONSHIP TO SKYNET
+
+Skynet prevents unsafe intelligence behavior.
+
+Article 0 prevents unsafe dependency on intelligence behavior.
+
+Skynet asks:
+"Did the intelligence violate a law?"
+
+Article 0 asks:
+"Is Forge strengthening or weakening the human?"
+
+FINAL ANALYSIS
+
+The WALL-E problem is real enough to justify constitutional discovery.
+
+It should not be locked as a named doctrine yet.
+
+The deeper principle should be considered:
+
+Forge exists to strengthen human judgment, not replace it.
+
+Verdict:
+CANDIDATE FOR ARTICLE 0 SUPPORTING RATIONALE.

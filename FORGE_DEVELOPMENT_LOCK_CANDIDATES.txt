@@ -1,0 +1,172 @@
+FORGE DEVELOPMENT LOCK CANDIDATES
+
+Status:
+CONSTITUTIONAL LOCK CANDIDATES / NOT APPROVED
+
+Purpose:
+List candidate constitutional statements for Professional Development. These are
+not ratified.
+
+LOCK CANDIDATE 1
+
+Professional Development is a first-class architectural concept.
+
+Reason:
+Career OS must understand how people grow, not only where they are or what
+excellence looks like.
+
+Risk:
+Requires strong boundaries to avoid motivational scoring and surveillance.
+
+LOCK CANDIDATE 2
+
+Development is caused by interpreted action over time.
+
+Reason:
+Growth requires action, feedback, interpretation and adjustment.
+
+Risk:
+May be oversimplified if treated as a fixed formula.
+
+LOCK CANDIDATE 3
+
+Information is not development.
+
+Reason:
+Content exposure does not prove capability or behavior change.
+
+Risk:
+Learning products often mistake completion for growth.
+
+LOCK CANDIDATE 4
+
+Experience must be interpreted to become development.
+
+Reason:
+Experience can create wisdom or bad habits depending on feedback and reflection.
+
+Risk:
+Harder to measure than tenure.
+
+LOCK CANDIDATE 5
+
+Purpose is context, not pressure.
+
+Reason:
+Purpose can sustain growth but must not become coercion or motivation scoring.
+
+Risk:
+Purpose Snapshot misuse is a serious trust risk.
+
+LOCK CANDIDATE 6
+
+Managers develop people by diagnosing bottlenecks, not merely inspecting
+results.
+
+Reason:
+Manager development requires evidence, coaching and next actions.
+
+Risk:
+Manager dashboards may drift into surveillance.
+
+LOCK CANDIDATE 7
+
+Accountability must preserve dignity.
+
+Reason:
+Accountability accelerates growth only when it supports ownership without shame.
+
+Risk:
+Performance pressure can masquerade as accountability.
+
+LOCK CANDIDATE 8
+
+Growth is non-linear.
+
+Reason:
+Development includes plateaus, setbacks, recovery and reactivation.
+
+Risk:
+Systems may overreact to short-term dips.
+
+LOCK CANDIDATE 9
+
+Professional Development must not be reduced to one score or public ranking.
+
+Reason:
+Growth is multi-dimensional and contextual.
+
+Risk:
+Rankings distort behavior and create pressure.
+
+LOCK CANDIDATE 10
+
+Mick contributes development evidence but does not define the whole development
+model.
+
+Reason:
+Mick sees behavior patterns, while development also includes feedback,
+reflection, purpose, manager support, environment and responsibility.
+
+Risk:
+Behavior data may be over-weighted because it is easiest to observe.
+
+LOCK CANDIDATE 11
+
+Business Planning translates development priorities into operating commitments.
+
+Reason:
+Plans should help a person practice the next development behavior.
+
+Risk:
+Planning can become static paperwork if not connected to action.
+
+LOCK CANDIDATE 12
+
+Forge accelerates growth by improving the development loop, not by applying
+pressure.
+
+Reason:
+Acceleration should come from clarity, friction reduction, feedback,
+interpretation and better coaching.
+
+Risk:
+False urgency and motivational theater may feel faster but damage trust.
+
+RECOMMENDED LOCK ORDER
+
+Priority 1:
+Information is not development.
+
+Priority 2:
+Experience must be interpreted to become development.
+
+Priority 3:
+Purpose is context, not pressure.
+
+Priority 4:
+Accountability must preserve dignity.
+
+Priority 5:
+Professional Development must not be reduced to one score or public ranking.
+
+Priority 6:
+Professional Development is a first-class architectural concept.
+
+WHY THIS ORDER
+
+Protect the human boundaries first.
+
+Then lock the concept.
+
+If Forge locks Professional Development without these guardrails, the concept
+could drift into pressure, surveillance or training theater.
+
+FINAL VERDICT
+
+CANDIDATE FOR LOCK.
+
+Reason:
+Professional Development is necessary for Career OS, but final lock should wait
+for evidence contracts, ownership, manager visibility rules and no-ranking
+protections.

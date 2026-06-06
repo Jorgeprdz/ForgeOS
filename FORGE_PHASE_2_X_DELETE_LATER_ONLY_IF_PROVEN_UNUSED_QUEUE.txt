@@ -1,0 +1,2906 @@
+FORGE_PHASE_2_X_DELETE_LATER_ONLY_IF_PROVEN_UNUSED_QUEUE.txt
+Generated: 2026-06-04
+Scope: Phase 2.X documentation queue. No code changes approved.
+
+Action: DELETE LATER ONLY IF PROVEN UNUSED
+
+## revenue-forecast-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Ownership: 01 REVENUE GENERATION ENGINE
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Predictive vs Historical Truth; Forecast vs Economic Motivation
+- Notes: possible orphan / no incoming imports detected Requires predictive vs historical truth and source/rate validation.
+
+## product-schema-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## smnyl-comisiones-gmm.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected Requires Compensation vs Rule Pack ownership validation.
+
+## dashboard-priority-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## operational-dashboard-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## policy-import-dashboard-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## cartera-import-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## cartera-repository.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## dashboard-executive.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected; UI/business interpretation boundary review
+
+## first-contact-dashboard.viewmodel.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## live-dashboard-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## predictive-dashboard.tsx
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## team-dashboard-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## primary-risk-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: possible orphan / no incoming imports detected Requires Compensation vs Rule Pack ownership validation.
+
+## comisiones-rules-gmm.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected Requires Compensation vs Rule Pack ownership validation.
+
+## comisiones-utils.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: possible orphan / no incoming imports detected Requires Compensation vs Rule Pack ownership validation.
+
+## commission-projection-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack; Predictive vs Historical Truth; Forecast vs Economic Motivation
+- Notes: possible orphan / no incoming imports detected Requires Compensation vs Rule Pack ownership validation. Requires predictive vs historical truth and source/rate validation.
+
+## smnyl-comisiones-vida.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected Requires Compensation vs Rule Pack ownership validation.
+
+## forge-schema-reporter.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: EVIDENCE & PROVENANCE
+- Ownership: EVIDENCE & PROVENANCE
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## life-expectancy-projection-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Ownership: FORECAST INTELLIGENCE, with Economic Motivation/Product Intelligence consumers
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Predictive vs Historical Truth; Forecast vs Economic Motivation
+- Notes: possible orphan / no incoming imports detected Requires predictive vs historical truth and source/rate validation.
+
+## policy-schema-validator-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: ALTA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## opportunity-detector-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Ownership: 01 REVENUE GENERATION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## pipeline-stage-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 01 REVENUE GENERATION ENGINE
+- Ownership: 01 REVENUE GENERATION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## adaptive-script-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## advisor-style-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## appointment-followup-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## communication-mismatch-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## conversion-metrics-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## discovery-summary-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## discovery-to-presentation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## dna-script-strategy-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## first-contact-delivery-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## first-contact-options-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## first-contact-tone-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## first-contact.entity.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## presentation-input-context-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## quotation-extraction-result.entity.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## reactivation-strategy-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sales-context-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sales-dna-learning-event.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sales-dna-profile-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sales-dna-stage-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sales-learning-event.entity.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## smart-outreach-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## tone-performance-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## objection-resolution-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## objection-response-strategy-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 03 NASH CONVERSATION INTELLIGENCE
+- Ownership: 03 NASH CONVERSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## discovery-product-alignment-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## financial-pyramid-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## financial-pyramid-priority-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## financial-pyramid-story-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## imagina-ser-contribution-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## needs-discovery-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## policy-filter-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## search-index-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected
+
+## segu-beca-mxn-timeline-clean-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## ai-first-contact-message-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## contact-attempt-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## contact-response-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## followup-message-context-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## followup-overdue-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## followup-priority-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## followup-recommendation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## followup-reminder-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## ghosting-status-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## hot-market-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## policy-last-contact-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## referral-ai-followup.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## referral-card-ui.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## referral-followup-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## relationship-memory-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## smart-followup-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## smart-followup-message-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## warm-market-segmentation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Ownership: 05 RELATIONSHIP INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## ai-sales-coach-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 06 LEARNING INTELLIGENCE ENGINE
+- Ownership: 06 LEARNING INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## action-resolver-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## advisor-alert-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## advisor-monitor-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## advisor-score-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## ai-context-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## auto-task-generator-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## drag-drop-policy-zone.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## financial-story-task-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## import-progress-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## live-operational-state-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## nano-banana-icon-system-prompt.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## ocr-result-cache.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## operational-card.tsx
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## operational-colors.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## operational-feed-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## overdue-task-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## payment-frequency-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## policy-activity-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-ai-insights-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-auto-approval-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-auto-save-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-client-summary-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-context-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-detail-alert-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-document-classifier.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-document-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-duplicate-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-import-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-import-errors-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-import-metrics-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-import-summary.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-indexing-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-ingestion-orchestrator.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-live-state-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-metadata-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-operational-center-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-renewal-status-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-review-priority-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-search-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-side-by-side-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-staging-cache.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-staging-status-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-status-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-summary-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-timeline-event.factory.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-timeline-group-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-timeline.repository.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-timeline.types.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-workspace-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## quick-action-executor-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## renewal-intelligence-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## staging-cleanup-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## task-feed-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## task-quick-action-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## mass-import-mapping-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## mass-import-validation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-review-ui-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+
+## appointment-opportunity-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## dna-coaching-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## manager-broadcast-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## manager-coaching-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## manager-feed-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## manager-notification-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## manager-role-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## ovelay-manager.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## payment-mode-coaching-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## ranking-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## route-transition-manager.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## search-ranking-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected
+
+## team-momentum-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## team-structure-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## command-execution-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: 09 UNIVERSAL COMMAND OS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## command-parser-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: 09 UNIVERSAL COMMAND OS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## command-shortcuts-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: 09 UNIVERSAL COMMAND OS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## command-suggestion-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 09 UNIVERSAL COMMAND OS
+- Ownership: 09 UNIVERSAL COMMAND OS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## assistant-memory-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## communication-channel-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## copilot-suggestion-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## crash-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## csv-parser-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## health-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## in-app-notification-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## live-communication-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## live-notification-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## mutation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## notification-orchestrator.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## notification-priority-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## notification-queue-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## policy-batch-processing-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-import-queue.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## push-notification-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## query-cache.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## query-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## referral-smart-actions.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## referrals-board-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sales-coach-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## secure-storage.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## smart-notification-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## smart-priority-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## supabase-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sw-cache-config.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sync-queue-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## ai-orb-widget.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## operational-button.tsx
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected; UI/business interpretation boundary review
+
+## search-quick-actions-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary; UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## smart-header.tsx
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## universal-search-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Alfred / Universal Command Bar
+- Ownership: Alfred / Universal Command Bar
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected
+
+## discovery-insights-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## policy-field-confidence-map.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-financial-summary-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-normalization-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-smart-sort-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## policy-validation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## risk-story-context-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## contextual-suggestion-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Ownership: CONSERVATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## semantic-navigation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Ownership: CONSERVATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## commissionable-amount-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Compensation Intelligence vs RuleSnapshot / Rule Pack
+- Notes: possible orphan / no incoming imports detected Requires Compensation vs Rule Pack ownership validation.
+
+## advisor-activity-timeline.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## advisor-sales-dna.entity.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## appointment-calendar-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## event-log-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## followup-next-date-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## followup.entity.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## google-calendar-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## idle-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## monthly-revenue-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## optimistic-mutation-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## policy-core-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: possible orphan / no incoming imports detected
+
+## question-answer-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## question-session-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## quick-actions-bar.tsx
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## realtime-task-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## referral-timeline-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## referrals-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## retry-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## revenue-optimization-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## smart-agenda-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## activity-stream-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## channel-performance-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## sales-dna-evolution-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## team-activity-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## daily-points-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: RULESNAPSHOT / RULE PACK
+- Ownership: RULESNAPSHOT / RULE PACK
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## introduction-message-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED COMMERCIAL MODEL
+- Ownership: SHARED COMMERCIAL MODEL
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## animation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## discovery-priority-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## dom-sanitizer.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## domain-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## entity-resolver-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## excel-parser-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## financial-risk-score-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## motion-principles.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## operational-shell.store.ts
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## operational-sync-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## quotation-input.entity.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## referral-score-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## smart-referrals-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## universal-command-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: BAJA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: possible orphan / no incoming imports detected Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## forge-build-tree-status.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## smnyl-pipeline-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## vida-mujer-financial-fixture-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 02 SALES CONVERSION ENGINE
+- Ownership: 02 SALES CONVERSION ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## forge-semantic-risk-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## forge-vida-mujer-advisor-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## line-of-business-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## policy-ai-parser.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## segu-beca-ocr-intake-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## smnyl-cross-sell-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## vida-mujer-client-explanation-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## vida-mujer-financial-correction-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## vida-mujer-pdf-ave-integration-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## vida-mujer-pdf-intake-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## vida-mujer-rule-consistency-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## vida-mujer-status.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## segu-beca-meaningful-numbers-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## segu-beca-mxn-appendix-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## vida-mujer-event-benefits-report.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Ownership: 04 PRODUCT INTELLIGENCE ENGINE + Rule Pack/source documentation boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## adaptive-question-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## ai-task-suggestion-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## policy-timeline-query-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS
+- Ownership: 07 POLICY & SALES OPERATIONS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## mass-import-preview-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Ownership: 07 POLICY & SALES OPERATIONS, with Shared Core/Evidence consumers when generic
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth; Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## smnyl-ai-presence-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-command-center-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 08 MANAGER & TEAM INTELLIGENCE
+- Ownership: 08 MANAGER & TEAM INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Alfred / Universal Command Bar vs Command OS boundary
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected Preserve Alfred visible UX vs Command OS infrastructure boundary.
+
+## smnyl-ai-coach-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 10 PLATFORM SERVICES
+- Ownership: 10 PLATFORM SERVICES
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## adaptive-message-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## adaptive-outreach-prompt-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## close-prompt-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## ghosting-prompt-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## objection-prompt-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth; Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## outreach-prompt-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## referral-prompt-builder.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Ownership: 12 ADVISOR EXPERIENCE INTELLIGENCE / UI consumer only
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: UI / Advisor Experience vs business truth
+- Notes: possible orphan / no incoming imports detected
+
+## smnyl-opportunity-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: COMPENSATION INTELLIGENCE
+- Ownership: COMPENSATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-insights-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Ownership: CONSERVATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-renovaciones-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: CONSERVATION INTELLIGENCE
+- Ownership: CONSERVATION INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-conteo-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Ownership: Compensation Intelligence + RuleSnapshot / Rule Pack boundary
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## close-readiness-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## close-strategy-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## first-contact-ai-suggestion-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## first-contact-script-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## objection-battle-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## objection-classifier-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## objection-intent-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## objection-memory-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Nash vs Sales Conversion vs Mick/Productivity/Manager
+- Notes: possible orphan / no incoming imports detected
+
+## sales-dna-insight-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## sales-dna-match-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## sales-dna-recommendation-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Ownership: Nash Conversation Intelligence or Sales Conversion depending on workflow vs language role
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## buying-signals-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: possible orphan / no incoming imports detected
+
+## visibility-runtime.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Ownership: PERIODSNAPSHOT / OPERATIONAL CLOCKS
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## smnyl-goals-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-productividad-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-streak-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: PRODUCTIVITY INTELLIGENCE
+- Ownership: PRODUCTIVITY INTELLIGENCE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## lead-temperature-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## momentum-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## policy-relationship-score-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: Policy & Sales Operations lifecycle / Evidence provenance
+- Notes: hardcoded/rule-pack-sensitive values possible; possible orphan / no incoming imports detected
+
+## smnyl-decision-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: hardcoded/rule-pack-sensitive values possible; carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-leaderboard-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
+## smnyl-neural-glow-engine.js
+
+- Classification: DELETE LATER ONLY IF PROVEN UNUSED
+- Recommended domain: SHARED CORE
+- Ownership: SHARED CORE
+- Candidate: Migration Candidate
+- Priority: MEDIA
+- Critical dependencies: No critical dependency flagged by Phase 2.X heuristics
+- Notes: carrier-specific boundary review; possible orphan / no incoming imports detected
+
