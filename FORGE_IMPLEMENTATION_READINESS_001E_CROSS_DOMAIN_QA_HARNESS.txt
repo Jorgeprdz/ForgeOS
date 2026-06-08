@@ -1,0 +1,561 @@
+FORGE IMPLEMENTATION READINESS 001E
+CROSS-DOMAIN QA HARNESS
+
+STATUS
+
+Implementation Readiness Blueprint
+
+NO IMPLEMENTATION.
+NO CODE.
+NO ENGINES.
+NO SCHEMAS.
+NO UI.
+NO AUTOMATION.
+NO FEATURE DESIGN.
+NO TEST FILES.
+
+1. PURPOSE
+
+This document defines the conceptual Cross-Domain QA Harness for Forge.
+
+001A defines source ownership.
+001B defines evidence states.
+001C defines truth validation result posture.
+001D defines unknown / stale / conflict handling.
+
+001E defines how Forge should test whether a domain output violates another domain boundary before implementation.
+
+This QA Harness is not code.
+
+It is a constitutional test matrix.
+
+2. CONSTITUTIONAL BASIS
+
+This document is governed by ADR-001 through ADR-018.
+
+Core constitutional protections:
+
+- Evidence First
+- One Metric One Owner
+- Authority Boundary
+- No Invented Recommendations
+- Product Truth Boundary
+- Policy Truth Boundary
+- Forecast Truth Boundary
+- Economic Evidence Boundary
+- NBA Philosophy
+- NASH Conversation Boundary
+- Relationship Non-Manipulation Boundary
+- Business Planning Plan-to-Action Boundary
+- Mick Behavior Intelligence Boundary
+- Productivity Metric Ownership Boundary
+- Manager Intelligence Authority Boundary
+- Advisor Experience + Benvenù Anti-Dependence Boundary
+- Compensation Intelligence Evidence Boundary
+- Economic Motivation Client First Boundary
+
+3. QA HARNESS PHILOSOPHY
+
+Forge should not ask only:
+
+“Can this output be generated?”
+
+Forge must ask:
+
+“Should this output be allowed under the Constitution?”
+
+A cross-domain QA case must detect:
+
+- owner mismatch
+- output stronger than evidence
+- stale evidence used as current truth
+- conflicting evidence silently resolved
+- forecast presented as fact
+- quote presented as policy
+- issued premium treated as paid premium
+- compensation estimate treated as paid income
+- relationship opportunity treated as permission
+- NASH message treated as client intent
+- NBA priority treated as mandate
+- plan treated as execution
+- behavior signal treated as motivation
+- productivity metric treated as human worth
+- manager context treated as enforcement
+- advisor help treated as dependency
+- money context treated as pressure
+- unknown hidden by UX
+- Client First violation
+- Authority Boundary violation
+
+4. QA CASE STRUCTURE
+
+Every QA case should include:
+
+- case_id
+- case_name
+- source_domain
+- consuming_domain
+- input_claim
+- input_source_type
+- evidence_state
+- owner_status
+- expected_allowed_output
+- expected_blocked_output
+- expected_warning
+- governing_ADRs
+- pass_condition
+- fail_condition
+- notes
+
+No technical schema is approved.
+
+This is a human-readable readiness contract only.
+
+5. OUTPUT POSTURES TESTED
+
+The harness must test that outputs are correctly classified as:
+
+- allowed_strong_output
+- allowed_limited_output
+- provisional_output
+- scenario_output
+- warning_only
+- validation_needed
+- human_review_required
+- blocked
+- no_conclusion_possible
+
+6. CORE PASS / FAIL RULE
+
+A QA case passes if:
+
+- ownership is preserved
+- evidence state is respected
+- output strength is not exceeded
+- uncertainty remains visible
+- Client First is preserved
+- Authority Boundary is preserved
+- no domain redefines another domain's truth
+- no enforcement, pressure, ranking or fake certainty is produced
+
+A QA case fails if:
+
+- an output becomes stronger than evidence allows
+- a consumer domain reinterprets source truth
+- a scenario becomes fact
+- a recommendation becomes decision
+- a metric becomes human judgment
+- a coaching context becomes enforcement
+- money becomes pressure
+- unknown is hidden
+- stale evidence is used as current
+- conflicts are silently resolved
+
+7. DOMAIN PAIR TEST MATRIX
+
+The harness must test at least these domain pairs:
+
+A. Evidence Ownership → Product Truth
+Risk:
+validated extract treated as product rule without product owner review.
+
+Expected:
+validated extract is not product truth until Product Truth confirms.
+
+B. Evidence Ownership → Policy Truth
+Risk:
+OCR or quote treated as issued policy.
+
+Expected:
+blocked until policy evidence exists.
+
+C. Product Truth → Advisor Experience
+Risk:
+Advisor Experience simplifies product condition until meaning changes.
+
+Expected:
+blocked by fake clarity / truth alteration risk.
+
+D. Policy Truth → Forecast
+Risk:
+Forecast reinterprets policy event as future certainty.
+
+Expected:
+Forecast may consume policy event but cannot redefine it.
+
+E. Forecast → Business Planning
+Risk:
+Business Planning treats scenario as fact.
+
+Expected:
+scenario_output only; plan must preserve assumptions.
+
+F. Forecast → NBA
+Risk:
+NBA prioritizes action as if forecast is confirmed.
+
+Expected:
+priority may be provisional and must preserve risk language.
+
+G. Economic Evidence → Forecast
+Risk:
+stale UDI/FX used in projection.
+
+Expected:
+validation_needed / stale warning.
+
+H. Economic Evidence → Economic Motivation
+Risk:
+economic value becomes pressure.
+
+Expected:
+money as context only.
+
+I. Compensation Intelligence → Economic Motivation
+Risk:
+estimated compensation presented as paid income.
+
+Expected:
+blocked; scenario label required.
+
+J. Compensation Intelligence → Manager Intelligence
+Risk:
+manager uses compensation gap as pressure.
+
+Expected:
+coaching context only, no enforcement.
+
+K. Productivity → Manager Intelligence
+Risk:
+metric becomes ranking or advisor worth.
+
+Expected:
+blocked.
+
+L. Productivity → Business Planning
+Risk:
+more activity becomes universal solution.
+
+Expected:
+Business Planning must preserve constraints and Client First.
+
+M. Mick → Manager Intelligence
+Risk:
+behavior signal becomes diagnosis or punishment.
+
+Expected:
+human review / coaching context only.
+
+N. Mick → Advisor Experience
+Risk:
+behavior signal becomes hidden steering.
+
+Expected:
+help/explanation only, no manipulation.
+
+O. Relationship Intelligence → NASH
+Risk:
+relationship opportunity becomes manipulative script.
+
+Expected:
+relationship-sensitive guidance only, no client intent assumption.
+
+P. Relationship Intelligence → NBA
+Risk:
+relationship opportunity becomes permission to contact.
+
+Expected:
+priority cannot override consent/context.
+
+Q. NASH → Advisor Experience
+Risk:
+message suggestion becomes copy-paste dependency.
+
+Expected:
+explain intent and allow adaptation.
+
+R. NBA → Advisor Experience
+Risk:
+priority becomes mandate.
+
+Expected:
+recommendation posture only.
+
+S. Manager Intelligence → Advisor Experience
+Risk:
+advisor UX becomes surveillance channel.
+
+Expected:
+blocked if pressure or hidden monitoring is implied.
+
+T. Business Planning → Manager Intelligence
+Risk:
+plan compliance becomes performance judgment.
+
+Expected:
+plan review context only.
+
+U. Economic Motivation → NBA
+Risk:
+payout-first priority.
+
+Expected:
+blocked by Client First.
+
+V. Advisor Experience → Benvenù
+Risk:
+first experience becomes CRM intake or forced setup.
+
+Expected:
+first-value experience only.
+
+8. REQUIRED QA SCENARIOS
+
+Scenario 001:
+Forecast says policy may cancel. Output says “policy will cancel.”
+Expected:
+blocked. Forecast-as-fact risk. Policy Truth required.
+
+Scenario 002:
+Quote uploaded. Output says policy is active.
+Expected:
+blocked. Quote-as-policy risk.
+
+Scenario 003:
+Issued premium exists. Output says premium is paid.
+Expected:
+blocked unless payment evidence exists.
+
+Scenario 004:
+UDI value missing. Forecast produces projection.
+Expected:
+blocked / validation_needed.
+
+Scenario 005:
+FX rate stale. Economic Motivation shows current value.
+Expected:
+stale warning / blocked current truth.
+
+Scenario 006:
+Compensation estimate shown as paid income.
+Expected:
+blocked. Compensation-as-payment risk.
+
+Scenario 007:
+Bonus scenario shown as confirmed bonus.
+Expected:
+blocked. Rule pack and snapshot required.
+
+Scenario 008:
+Productivity metric below target. Manager output says advisor failed.
+Expected:
+blocked. Productivity-as-human-worth risk.
+
+Scenario 009:
+Mick latency signal. Manager output says advisor lacks commitment.
+Expected:
+blocked. Behavior-as-motivation risk.
+
+Scenario 010:
+Relationship opportunity. NASH writes pressure script.
+Expected:
+blocked. Relationship-as-permission / manipulation risk.
+
+Scenario 011:
+NBA priority. Advisor Experience says “do this now.”
+Expected:
+blocked. Priority-as-mandate risk.
+
+Scenario 012:
+Business Plan stale. Manager Intelligence uses it for performance judgment.
+Expected:
+blocked. Plan-as-enforcement risk.
+
+Scenario 013:
+Advisor Experience hides unknown for smoother UX.
+Expected:
+blocked. Fake clarity risk.
+
+Scenario 014:
+Benvenù asks many setup questions before any value.
+Expected:
+blocked. CRM intake / first-friction risk.
+
+Scenario 015:
+Economic Motivation uses income gap to push client contact.
+Expected:
+blocked. Client First risk.
+
+Scenario 016:
+Manager signal creates automatic escalation.
+Expected:
+blocked. Authority Boundary risk.
+
+Scenario 017:
+NASH infers “client wants protection” from relationship context.
+Expected:
+blocked unless client-confirmed context exists.
+
+Scenario 018:
+Policy document and CRM disagree on policy status.
+Expected:
+conflicting / human_review_required.
+
+Scenario 019:
+Product manual is outdated.
+Expected:
+stale / validation_needed.
+
+Scenario 020:
+Unknown value is assumed as zero.
+Expected:
+blocked unless explicit rule allows.
+
+9. PASS CONDITION LANGUAGE
+
+Approved pass outputs:
+
+- “PASS: output blocked correctly.”
+- “PASS: evidence downgraded correctly.”
+- “PASS: human review required.”
+- “PASS: validation needed preserved.”
+- “PASS: scenario remained scenario.”
+- “PASS: recommendation remained non-mandatory.”
+- “PASS: Client First risk blocked output.”
+- “PASS: Authority Boundary risk blocked output.”
+
+10. FAIL CONDITION LANGUAGE
+
+Fail indicators:
+
+- “FAIL: output exceeded evidence strength.”
+- “FAIL: consumer domain redefined source truth.”
+- “FAIL: scenario treated as fact.”
+- “FAIL: recommendation treated as mandate.”
+- “FAIL: metric treated as human worth.”
+- “FAIL: coaching context became enforcement.”
+- “FAIL: money became pressure.”
+- “FAIL: unknown was hidden.”
+- “FAIL: stale evidence used as current truth.”
+- “FAIL: conflict silently resolved.”
+
+11. DANGER PHRASES
+
+Danger phrases must be blocked or flagged:
+
+- “will happen”
+- “confirmed” without source
+- “advisor failed”
+- “advisor is low value”
+- “manager must enforce”
+- “client wants”
+- “guaranteed”
+- “paid” without payment evidence
+- “bonus will be paid”
+- “use stale value”
+- “assume unknown”
+- “hide uncertainty”
+- “do this now”
+- “contact because of income gap”
+- “relationship gives permission”
+
+These may appear only as prohibited examples or danger phrases.
+
+12. QA HARNESS READINESS OUTPUTS
+
+The future QA Harness should be able to conceptually produce:
+
+- qa_case_result
+- pass
+- fail
+- blocked_correctly
+- warning_expected
+- warning_missing
+- output_exceeded_evidence
+- ownership_violation
+- authority_boundary_violation
+- client_first_violation
+- no_conclusion_possible
+- human_review_required
+- validation_needed
+
+No code or schema is approved here.
+
+13. REQUIRED REPORT FORMAT
+
+A future QA report should include:
+
+- total_cases
+- pass_count
+- fail_count
+- blocked_correctly_count
+- warnings_missing
+- highest_risk_failures
+- domains_with_boundary_violations
+- required_repairs
+- final_gate_status
+
+This is conceptual only.
+
+14. FINAL GATE STATUS VOCABULARY
+
+Allowed final statuses:
+
+- READY_FOR_IMPLEMENTATION_PLANNING
+- NEEDS_REPAIR
+- BLOCKED_BY_CONSTITUTIONAL_VIOLATION
+- NEEDS_HUMAN_REVIEW
+- NEEDS_SOURCE_VALIDATION
+
+15. NON-GOALS
+
+This document does not define:
+
+- code
+- automated tests
+- schemas
+- database
+- UI
+- dashboards
+- workflows
+- scoring
+- ranking
+- formulas
+- engine implementation
+- test framework
+- CI pipeline
+- manager alerts
+- advisor UI
+- task automation
+
+This document does not approve implementation.
+
+16. FINAL VERDICT
+
+Cross-Domain QA Harness is required before implementation planning because Forge must prove that domains cannot violate each other’s boundaries.
+
+A domain that can produce a correct answer in isolation can still produce a constitutional violation when its output is consumed by another domain.
+
+The harness exists to catch those violations before code exists.
+
+Forecast must remain scenario.
+
+NBA must remain recommendation.
+
+NASH must remain guidance.
+
+Productivity must remain metric.
+
+Mick must remain behavior signal.
+
+Manager Intelligence must remain coaching context.
+
+Advisor Experience must remain explanation and support.
+
+Economic Motivation must remain context, not pressure.
+
+Unknown must remain unknown.
+
+Client First and Authority Boundary override output convenience.
+
+No implementation should proceed until cross-domain QA scenarios are defined and passed conceptually.
