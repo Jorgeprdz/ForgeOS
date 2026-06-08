@@ -1,0 +1,665 @@
+FORGE IMPLEMENTATION READINESS 001F
+IMPLEMENTATION PLAN V0.1
+
+STATUS
+
+Implementation Readiness Blueprint
+
+NO IMPLEMENTATION.
+NO CODE.
+NO ENGINES.
+NO SCHEMAS.
+NO UI.
+NO AUTOMATION.
+NO FEATURE DESIGN.
+NO WORKFLOWS.
+NO TEST FILES.
+NO SCORING.
+NO RANKING.
+NO ENFORCEMENT.
+
+1. PURPOSE
+
+This document defines the conceptual Implementation Plan v0.1 for Forge’s first implementation layer:
+
+Evidence / Source / Truth Validation Layer
+
+This plan does not implement code.
+
+It defines what future implementation artifacts should exist, what each artifact should own, what each artifact must not own, what inputs and outputs are allowed, and what constitutional QA gates must be satisfied before code is written.
+
+2. CONTEXT
+
+Forge Constitutional Phase is locked.
+
+ADR-001 through ADR-018 are canonical.
+
+Implementation Readiness Layer 001 has produced:
+
+- 001A — Source Ownership Registry
+- 001B — Evidence State Vocabulary
+- 001C — Truth Validation Result Contract
+- 001D — Unknown / Stale / Conflict Handling Contract
+- 001E — Cross-Domain QA Harness
+
+001F translates those readiness contracts into a future implementation plan.
+
+3. CONSTITUTIONAL BASIS
+
+This plan is governed by:
+
+- ADR-001 — Evidence Ownership / Source Validity
+- ADR-002 — One Metric One Owner
+- ADR-003 — Recommendation vs Decision / Authority Boundary
+- ADR-004 — No Invented Recommendations
+- ADR-005 — Product Truth Boundary
+- ADR-006 — Policy Truth Boundary
+- ADR-007 — Forecast Truth Boundary
+- ADR-008 — Economic Evidence Boundary
+- ADR-009 — NBA Philosophy
+- ADR-010 — NASH Conversation Intelligence Boundary
+- ADR-011 — Relationship Intelligence Non-Manipulation Boundary
+- ADR-012 — Business Planning Plan-to-Action Boundary
+- ADR-013 — Mick Behavior Intelligence Boundary
+- ADR-014 — Productivity Metric Ownership Boundary
+- ADR-015 — Manager Intelligence Authority Boundary
+- ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary
+- ADR-017 — Compensation Intelligence Evidence Boundary
+- ADR-018 — Economic Motivation Client First Boundary
+
+4. IMPLEMENTATION PHILOSOPHY
+
+Future implementation must follow this order:
+
+Evidence before interpretation.
+
+Ownership before validation.
+
+State before output.
+
+Validation before recommendation.
+
+QA before engine behavior.
+
+Client First before revenue.
+
+Human authority before automation.
+
+Blocking output is better than inventing truth.
+
+5. SCOPE
+
+This plan covers only the future implementation of the conceptual layer that answers:
+
+- Who owns this source or claim?
+- What state is the evidence in?
+- Is the source valid for this claim?
+- Is the output allowed?
+- What output strength is allowed?
+- What warning is required?
+- Is human review required?
+- Is validation required?
+- Should output be blocked?
+
+6. NON-SCOPE
+
+This plan does not cover:
+
+- product intelligence engines
+- policy engines
+- forecast engines
+- NBA engine
+- NASH engine
+- compensation engine
+- manager intelligence engine
+- advisor experience UI
+- dashboards
+- workflows
+- automations
+- database schema
+- scoring
+- ranking
+- alerts
+- notifications
+
+7. FUTURE ARTIFACT PLAN
+
+The future implementation layer should be split into these artifacts:
+
+A. source-ownership-registry
+B. evidence-state-vocabulary
+C. truth-validation-result-contract
+D. degraded-evidence-handler
+E. cross-domain-qa-harness
+F. constitutional-gate-runner
+G. readiness-test-scenarios
+H. validation-report-template
+
+These are conceptual artifact names.
+
+This document does not approve file paths, modules or code structure.
+
+8. ARTIFACT A — SOURCE OWNERSHIP REGISTRY
+
+Purpose:
+
+Identify conceptual ownership of source types, claim types, evidence types and domain outputs.
+
+Based on:
+
+FORGE_IMPLEMENTATION_READINESS_001A_SOURCE_OWNERSHIP_REGISTRY.txt
+
+Owns:
+
+- source ownership lookup
+- claim ownership lookup
+- domain ownership map
+- allowed consumers
+- prohibited reinterpretations
+- governing ADR references
+- owner unknown / owner conflict states
+
+Does not own:
+
+- evidence validity
+- business truth
+- product truth
+- policy truth
+- forecast truth
+- compensation truth
+- human judgment
+- implementation behavior
+
+Allowed conceptual inputs:
+
+- source_type
+- evidence_type
+- claim_type
+- consuming_domain
+- domain_context
+
+Allowed conceptual outputs:
+
+- conceptual_owner
+- ownership_status
+- allowed_consumers
+- prohibited_reinterpretations
+- governing_ADR
+- owner_unknown
+- owner_conflicting
+- consumer_allowed
+- consumer_restricted
+- reinterpretation_blocked
+
+Blocked outputs:
+
+- invented owner
+- local fallback owner
+- silent conflict resolution
+- consumer reinterpretation as truth
+
+QA gate:
+
+If owner is unknown or conflicting, strong output must be blocked.
+
+9. ARTIFACT B — EVIDENCE STATE VOCABULARY
+
+Purpose:
+
+Define the official state vocabulary that controls output strength.
+
+Based on:
+
+FORGE_IMPLEMENTATION_READINESS_001B_EVIDENCE_STATE_VOCABULARY.txt
+
+Owns:
+
+- evidence state vocabulary
+- output strength mapping
+- state transition concepts
+- warning language
+- prohibited language
+
+Does not own:
+
+- evidence source ownership
+- business truth
+- domain output
+- implementation logic
+- scoring
+
+Allowed conceptual inputs:
+
+- evidence item
+- source freshness
+- completeness
+- conflict status
+- validation status
+- domain context
+
+Allowed conceptual outputs:
+
+- confirmed
+- validated
+- provisional
+- partial
+- weak
+- inferred
+- assumed
+- stale
+- conflicting
+- unknown
+- invalid
+- blocked
+- validation_needed
+- human_review_required
+- no_conclusion_possible
+- allowed_output_strength
+
+Blocked outputs:
+
+- treating inferred as confirmed
+- treating assumed as fact
+- treating stale as current
+- treating partial as complete
+- hiding unknown
+
+QA gate:
+
+No output may be stronger than its evidence state allows.
+
+10. ARTIFACT C — TRUTH VALIDATION RESULT CONTRACT
+
+Purpose:
+
+Define how future validation results should be expressed.
+
+Based on:
+
+FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt
+
+Owns:
+
+- validation posture
+- allowed output strength
+- warning types
+- blocked reasons
+- no conclusion posture
+- human review requirement posture
+
+Does not own:
+
+- final decisions
+- workflow actions
+- manager enforcement
+- product recommendations
+- compensation promises
+- UI behavior
+
+Allowed conceptual inputs:
+
+- claim
+- owner result
+- evidence state result
+- source validity
+- freshness status
+- conflict status
+- governing ADR
+
+Allowed conceptual outputs:
+
+- valid_for_strong_output
+- valid_for_limited_output
+- valid_for_provisional_output
+- valid_for_scenario_output
+- valid_for_warning_only
+- validation_needed
+- human_review_required
+- blocked
+- no_conclusion_possible
+
+Blocked outputs:
+
+- decision
+- enforcement
+- mandate
+- pressure
+- ranking
+- fake certainty
+- hidden uncertainty
+
+QA gate:
+
+Validation does not decide, execute or enforce.
+
+11. ARTIFACT D — DEGRADED EVIDENCE HANDLER
+
+Purpose:
+
+Define conceptual handling for unknown, stale, conflicting, partial, weak, invalid and blocked evidence.
+
+Based on:
+
+FORGE_IMPLEMENTATION_READINESS_001D_UNKNOWN_STALE_CONFLICT_HANDLING_CONTRACT.txt
+
+Owns:
+
+- unknown handling
+- stale handling
+- conflict handling
+- partial handling
+- weak evidence handling
+- invalid handling
+- blocked handling
+- validation_needed posture
+- human_review_required posture
+- no_conclusion_possible posture
+
+Does not own:
+
+- source ownership
+- truth creation
+- silent resolution
+- automatic escalation
+- fallback assumptions
+- UI simplification
+- enforcement
+
+Allowed conceptual outputs:
+
+- unknown preserved
+- stale warning
+- conflict warning
+- validation_needed
+- human_review_required
+- blocked
+- no_conclusion_possible
+
+Blocked outputs:
+
+- assuming missing values
+- using stale evidence as current
+- choosing convenient source
+- hiding conflict
+- creating fake clarity
+
+QA gate:
+
+Unknown remains unknown. Conflicting blocks strong output.
+
+12. ARTIFACT E — CROSS-DOMAIN QA HARNESS
+
+Purpose:
+
+Test whether outputs violate cross-domain boundaries.
+
+Based on:
+
+FORGE_IMPLEMENTATION_READINESS_001E_CROSS_DOMAIN_QA_HARNESS.txt
+
+Owns:
+
+- conceptual QA cases
+- pass/fail language
+- danger phrases
+- boundary violation categories
+- final gate status vocabulary
+
+Does not own:
+
+- automated tests
+- CI
+- code test framework
+- implementation files
+- runtime behavior
+
+Allowed conceptual inputs:
+
+- source_domain
+- consuming_domain
+- claim
+- evidence_state
+- owner_status
+- expected_output
+- governing ADR
+
+Allowed conceptual outputs:
+
+- pass
+- fail
+- blocked_correctly
+- warning_missing
+- output_exceeded_evidence
+- ownership_violation
+- authority_boundary_violation
+- client_first_violation
+- human_review_required
+- validation_needed
+
+QA gate:
+
+Every future implementation artifact must pass cross-domain boundary scenarios before code.
+
+13. ARTIFACT F — CONSTITUTIONAL GATE RUNNER
+
+Purpose:
+
+Conceptually define a future gate that checks whether an implementation plan violates ADR-001 through ADR-018.
+
+This is not a technical runner.
+
+Owns:
+
+- readiness gate checklist
+- constitutional pass/fail posture
+- implementation approval status
+- blocking reasons
+
+Does not own:
+
+- code execution
+- test automation
+- deployment
+- CI logic
+
+Allowed conceptual statuses:
+
+- READY_FOR_IMPLEMENTATION_PLANNING
+- NEEDS_REPAIR
+- BLOCKED_BY_CONSTITUTIONAL_VIOLATION
+- NEEDS_HUMAN_REVIEW
+- NEEDS_SOURCE_VALIDATION
+
+QA gate:
+
+No implementation plan can proceed if it produces constitutional violations.
+
+14. ARTIFACT G — READINESS TEST SCENARIOS
+
+Purpose:
+
+Maintain human-readable scenario library for future implementation review.
+
+Owns:
+
+- scenario descriptions
+- expected posture
+- expected warnings
+- expected blocks
+- governing ADRs
+
+Does not own:
+
+- automated tests
+- production behavior
+- engine logic
+
+Required scenario categories:
+
+- forecast-as-fact
+- quote-as-policy
+- issued-as-paid
+- stale UDI / FX
+- compensation-as-payment
+- relationship-as-permission
+- productivity-as-human-worth
+- behavior-as-motivation
+- manager-signal-as-enforcement
+- NBA-priority-as-mandate
+- NASH-as-client-intent
+- Advisor Experience fake clarity
+- Economic Motivation pressure
+- unknown-as-zero
+- conflict silent resolution
+
+15. ARTIFACT H — VALIDATION REPORT TEMPLATE
+
+Purpose:
+
+Define the conceptual structure of future readiness validation reports.
+
+Owns:
+
+- report sections
+- validation summary
+- warning summary
+- blocked output summary
+- readiness verdict
+
+Does not own:
+
+- implementation approval
+- deployment
+- code merge
+- production decision
+
+Required report fields:
+
+- scope
+- artifacts reviewed
+- ADR coverage
+- ownership results
+- evidence state results
+- validation posture results
+- blocked outputs
+- warning types
+- unresolved issues
+- final gate status
+
+16. FUTURE BUILD ORDER
+
+Recommended future build sequence:
+
+1. Create implementation-facing source ownership registry.
+2. Create implementation-facing evidence state vocabulary.
+3. Create validation result posture contract.
+4. Create degraded evidence handler.
+5. Create cross-domain QA harness scenarios.
+6. Create constitutional gate checklist.
+7. Create validation report template.
+8. Run conceptual QA against the implementation plan.
+9. Only then create code implementation prompt for Codex/AGY.
+
+17. PRE-CODE QA CHECKLIST
+
+Before writing code, answer:
+
+- Which ADR governs this artifact?
+- What truth does it own?
+- What truth does it not own?
+- What inputs may it consume?
+- What outputs may it produce?
+- What outputs are blocked?
+- What degraded evidence states are handled?
+- What cross-domain scenarios test it?
+- What warning language is required?
+- What human review states are required?
+- What Client First risks exist?
+- What Authority Boundary risks exist?
+- What pressure, ranking or enforcement risks exist?
+- What implementation behavior is explicitly not approved?
+
+18. IMPLEMENTATION PROMPT REQUIREMENTS
+
+When Codex/AGY is used for real implementation, the prompt must include:
+
+- exact scope
+- exact files allowed to create or modify
+- no refactor unless required
+- no feature expansion
+- no UI
+- no automation
+- no scoring
+- no ranking
+- no enforcement
+- no invented metrics
+- required tests
+- required validation
+- summary in .txt format
+
+19. CODE PHASE BLOCKERS
+
+Implementation must stop if:
+
+- owner is unclear
+- evidence state vocabulary is missing
+- validation result posture is undefined
+- degraded evidence handling is missing
+- cross-domain QA scenarios are missing
+- output strength exceeds evidence
+- unknown is hidden
+- stale is treated as current
+- conflict is silently resolved
+- forecast becomes fact
+- recommendation becomes mandate
+- manager signal becomes enforcement
+- productivity becomes human worth
+- economic motivation becomes pressure
+- Client First risk exists
+- Authority Boundary risk exists
+
+20. NON-GOALS
+
+This document does not define:
+
+- code
+- schemas
+- database
+- file paths
+- module names
+- runtime behavior
+- UI
+- workflows
+- automations
+- tests
+- CI
+- scoring
+- ranking
+- formulas
+- implementation details
+- deployment
+
+This document does not approve implementation.
+
+21. FINAL VERDICT
+
+Implementation Plan v0.1 is required because Forge must translate constitutional readiness into a safe implementation sequence before code exists.
+
+The first code should not be a feature.
+
+The first code should protect truth.
+
+The first implementation layer must make ownership, evidence state, validation posture, degraded evidence handling and cross-domain QA explicit.
+
+No implementation should proceed until the conceptual readiness chain is complete:
+
+001A Source Ownership Registry
+001B Evidence State Vocabulary
+001C Truth Validation Result Contract
+001D Unknown / Stale / Conflict Handling Contract
+001E Cross-Domain QA Harness
+001F Implementation Plan v0.1
+
+After this document, Forge may prepare a narrow implementation prompt for the Source Ownership Registry v0.1.
+
+READY_FOR_IMPLEMENTATION_PLANNING.
