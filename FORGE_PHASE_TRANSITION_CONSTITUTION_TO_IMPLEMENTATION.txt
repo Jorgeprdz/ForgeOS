@@ -1,0 +1,198 @@
+FORGE PHASE TRANSITION
+CONSTITUTION → IMPLEMENTATION READINESS
+
+STATUS:
+LOCKED TRANSITION DOCUMENT
+
+DATE:
+2026-06-07
+
+1. PURPOSE
+
+This document closes Forge OS Constitutional Phase and opens Implementation Readiness.
+
+The constitutional layer is now locked through:
+
+ADR-001 → ADR-018
+
+These ADRs define the governing boundaries for evidence, truth, authority, recommendations, product logic, policy logic, forecast logic, economic evidence, NBA, NASH, relationship intelligence, business planning, behavior intelligence, productivity, manager intelligence, advisor experience, compensation intelligence and economic motivation.
+
+No future engine, schema, workflow, dashboard, UI, automation or AI behavior should be implemented without checking against these ADRs.
+
+2. CONSTITUTIONAL PHASE STATUS
+
+Forge ADR Constitutional Phase is:
+
+LOCKED.
+
+Canonical ADRs:
+
+- ADR-001 — Evidence Ownership Source Validity
+- ADR-002 — One Metric One Owner
+- ADR-003 — Recommendation vs Decision Authority Boundary
+- ADR-004 — No Invented Recommendations
+- ADR-005 — Product Truth Boundary
+- ADR-006 — Policy Truth Boundary
+- ADR-007 — Forecast Truth Boundary
+- ADR-008 — Economic Evidence Boundary
+- ADR-009 — NBA Philosophy
+- ADR-010 — NASH Conversation Intelligence Boundary
+- ADR-011 — Relationship Intelligence Non-Manipulation Boundary
+- ADR-012 — Business Planning Plan-to-Action Boundary
+- ADR-013 — Mick Behavior Intelligence Boundary
+- ADR-014 — Productivity Metric Ownership Boundary
+- ADR-015 — Manager Intelligence Authority Boundary
+- ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary
+- ADR-017 — Compensation Intelligence Evidence Boundary
+- ADR-018 — Economic Motivation Client First Boundary
+
+3. WHAT LOCKED MEANS
+
+Locked means:
+
+- The conceptual boundaries are accepted as governing rules.
+- Implementation must follow these ADRs.
+- New code cannot contradict these ADRs.
+- Future changes require explicit ADR review.
+- No engine can invent truth.
+- No engine can override human authority.
+- No engine can pressure against Client First.
+- No engine can convert uncertainty into certainty.
+- No engine can convert scenarios into facts.
+- No engine can use money as manipulation.
+- No engine can reduce humans to scores, rankings or enforcement.
+
+4. IMPLEMENTATION READINESS PHASE
+
+The next phase is not random coding.
+
+The next phase is:
+
+Implementation Readiness.
+
+Its purpose is to translate constitutional boundaries into safe build order, QA gates and implementation contracts.
+
+Before engines are built, Forge needs:
+
+- Constitutional QA checklist
+- Engine boundary map
+- Input/output contracts
+- Evidence validation layer plan
+- Source ownership rules in implementation form
+- No-invention safeguards
+- Unknown/stale/conflict handling rules
+- Test strategy per boundary
+
+5. FIRST BUILD CANDIDATE
+
+The first implementation candidate should be:
+
+Evidence / Source / Truth Validation Layer
+
+Reason:
+
+Every other Forge domain depends on knowing:
+
+- what evidence exists
+- who owns the source
+- whether the source is valid
+- whether data is confirmed, provisional, stale, conflicting or unknown
+- whether an output is allowed
+- whether an engine is trying to invent truth
+
+This layer should come before:
+
+- Product Intelligence implementation
+- Policy Intelligence implementation
+- Forecast Intelligence implementation
+- Business Planning implementation
+- NBA implementation
+- NASH implementation
+- Manager Intelligence implementation
+- Compensation Intelligence implementation
+- Economic Motivation implementation
+
+6. IMPLEMENTATION ORDER PRINCIPLE
+
+Build order should follow dependency gravity:
+
+1. Evidence / Source / Truth Validation Layer
+2. Product Truth + Policy Truth validation contracts
+3. Metric Ownership + Economic Evidence validation
+4. Forecast scenario safety
+5. Recommendation safety / No Invented Recommendations
+6. NBA / NASH safe output contracts
+7. Business Planning plan-to-action safety
+8. Mick + Productivity separation
+9. Manager Intelligence coaching vs enforcement safety
+10. Advisor Experience + Benvenù anti-dependence safety
+11. Compensation Intelligence evidence safety
+12. Economic Motivation Client First safety
+
+7. CONSTITUTIONAL QA GATE
+
+Every future implementation must answer:
+
+- What ADR governs this behavior?
+- What input does it consume?
+- Who owns that input?
+- What output does it produce?
+- Is the output allowed?
+- Does it create a recommendation?
+- Does it require human review?
+- Does it preserve unknown?
+- Does it handle stale evidence?
+- Does it handle conflicting evidence?
+- Does it risk pressure, manipulation or enforcement?
+- Does it violate Client First?
+- Does it violate Authority Boundary?
+- Does it invent truth?
+
+If any answer is unclear, implementation must stop.
+
+8. NON-GOALS
+
+This transition document does not implement:
+
+- engines
+- schemas
+- database
+- UI
+- workflows
+- dashboards
+- automations
+- scoring models
+- recommendation models
+- compensation formulas
+- product logic
+- policy logic
+
+This document only opens Implementation Readiness.
+
+9. FINAL VERDICT
+
+Forge Constitutional Phase is locked.
+
+Forge now moves to Implementation Readiness.
+
+The first correct move is not to build features.
+
+The first correct move is to build the validation layer that prevents Forge from violating its own constitution.
+
+Constitution first.
+
+Implementation second.
+
+Truth before automation.
+
+Client First before revenue.
+
+Human authority before AI output.
+
+Forge should become the best advisor for advisors without becoming a machine that invents, pressures or decides for humans.
+
+CONSTITUTIONAL PHASE:
+LOCKED.
+
+NEXT PHASE:
+IMPLEMENTATION READINESS.
