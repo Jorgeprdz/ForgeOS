@@ -1,44 +1,802 @@
-TITLE: FORGE IMPLEMENTATION READINESS — 001B Evidence State Vocabulary
-STATUS: Draft / Conceptual
+FORGE IMPLEMENTATION READINESS 001B
+EVIDENCE STATE VOCABULARY
 
-CONTEXT:
-Define todos los posibles estados de evidencia que pueden existir
-en registros, métricas, patrones y inputs antes de cualquier validación.
-Se alinea con ADR-001 a ADR-018 y con el principio Evidence → Metric → Pattern → Context.
+STATUS
 
-VOCABULARY:
+Implementation Readiness Blueprint
 
-- confirmed                  # evidencia validada y verificada por fuente confiable
-- validated                  # evidencia evaluada y consistente
-- provisional                # evidencia incompleta, requiere revisión
-- partial                     # solo parte de la evidencia está presente
-- weak                        # evidencia con baja confiabilidad
-- inferred                     # inferida de registros relacionados, no directa
-- assumed                     # asumida sin confirmación directa
-- stale                        # evidencia vieja, posible pérdida de validez
-- conflicting                  # evidencia contradictoria entre fuentes
-- unknown                       # estado desconocido, requiere investigación
-- invalid                       # evidencia inválida, no debe usarse
-- blocked                       # evidencia bloqueada por restricciones o permisos
-- validation_needed             # evidencia requiere confirmación de fuente
-- human_review_required         # revisión humana necesaria antes de uso
-- no_conclusion_possible        # no hay base suficiente para sacar conclusión
+NO IMPLEMENTATION.
+NO CODE.
+NO ENGINES.
+NO SCHEMAS.
+NO UI.
+NO AUTOMATION.
+NO FEATURE DESIGN.
 
-NOTES:
-- Todos los registros o métricas deben incluir:
-    - source
-    - owner
-    - period
-    - freshness
-    - evidence_state
-    - uncertainty
-    - limitations
-- Este documento es conceptual; no activa comportamiento, UI,
-  workflow, alertas o scoring.
-- No inventar valores ni porcentajes.
-- Se aplica a todos los dominios: Productivity, Mick, Manager Intelligence,
-  Advisor Experience, Benvenù, NASH, NBA, Economic Motivation.
+1. PURPOSE
 
-FINAL VERDICT:
-READY / NEEDS SOURCE VALIDATION
+This document defines the official evidence state vocabulary for Forge.
 
+001A Source Ownership Registry defines who owns a truth claim.
+
+001B Evidence State Vocabulary defines what condition the evidence is in.
+
+Ownership is not enough.
+
+A claim can have the correct owner and still be:
+
+- partial
+- weak
+- stale
+- conflicting
+- unknown
+- invalid
+- blocked
+
+This vocabulary prevents Forge from converting weak, incomplete, stale, inferred or assumed evidence into strong output.
+
+2. CONSTITUTIONAL BASIS
+
+This document is governed by ADR-001 through ADR-018.
+
+Primary controlling ADRs:
+
+- ADR-001 — Evidence Ownership / Source Validity
+- ADR-002 — One Metric One Owner
+- ADR-003 — Recommendation vs Decision / Authority Boundary
+- ADR-004 — No Invented Recommendations
+- ADR-007 — Forecast Truth Boundary
+- ADR-008 — Economic Evidence Boundary
+- ADR-012 — Business Planning Plan-to-Action Boundary
+- ADR-013 — Mick Behavior Intelligence Boundary
+- ADR-014 — Productivity Metric Ownership Boundary
+- ADR-015 — Manager Intelligence Authority Boundary
+- ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary
+- ADR-017 — Compensation Intelligence Evidence Boundary
+- ADR-018 — Economic Motivation Client First Boundary
+
+3. STATE VOCABULARY PHILOSOPHY
+
+Core rules:
+
+- Unknown remains unknown.
+- Partial evidence cannot produce strong claims.
+- Weak evidence cannot support important recommendations.
+- Stale evidence cannot support current truth without warning.
+- Conflicting evidence must not be silently resolved.
+- Assumptions are not facts.
+- Inference is not confirmation.
+- Forecast is not fact.
+- Scenario is not payment.
+- Recommendation is not decision.
+- Priority is not mandate.
+- Human review is not automatic approval.
+- Validation needed is a valid output.
+- Blocking output is better than inventing truth.
+
+4. REQUIRED STATE FIELDS
+
+Every evidence state record should preserve:
+
+- evidence_state
+- source
+- source_type
+- owner
+- governing_ADR
+- period
+- version
+- snapshot
+- freshness
+- confidence_label
+- uncertainty
+- limitations
+- conflict_status
+- validation_status
+- human_review_status
+- output_strength_allowed
+- blocked_output_reason
+
+No technical schema is approved by this document.
+
+This is a human-readable readiness contract only.
+
+5. OFFICIAL EVIDENCE STATES
+
+Forge uses the following official evidence states:
+
+- confirmed
+- validated
+- provisional
+- partial
+- weak
+- inferred
+- assumed
+- stale
+- conflicting
+- unknown
+- invalid
+- blocked
+- validation_needed
+- human_review_required
+- no_conclusion_possible
+
+6. CONFIRMED
+
+Definition:
+
+Evidence is supported by a valid source, known owner, relevant period, sufficient completeness, no unresolved conflict and correct governing ADR.
+
+Allowed output:
+
+- strong factual output within the validated domain and limits
+
+Prohibited output:
+
+- extending beyond scope
+- changing domain meaning
+- treating confirmed in one domain as confirmed in another
+- converting evidence into decision, enforcement or pressure
+
+Safe wording:
+
+“Evidence state: confirmed for this specific claim and period.”
+
+Prohibited wording:
+
+“This confirms everything about the case.”
+
+7. VALIDATED
+
+Definition:
+
+The source or evidence passed validation checks, but the domain claim may still require interpretation.
+
+Example:
+
+An OCR extract may be validated as an extract, but not yet confirmed as Policy Truth.
+
+Allowed output:
+
+- source validation result
+- evidence quality statement
+- validation summary
+
+Prohibited output:
+
+- domain truth claim without domain interpretation
+- policy/product/compensation assertion without proper owner
+
+Safe wording:
+
+“The source extract is validated, but the policy claim still requires Policy Truth review.”
+
+8. PROVISIONAL
+
+Definition:
+
+Evidence is usable only with explicit uncertainty.
+
+Allowed output:
+
+- provisional explanation
+- limited scenario
+- validation request
+- human review suggestion when sensitive
+
+Prohibited output:
+
+- final conclusion
+- strong recommendation
+- confirmed language
+- payment/compensation certainty
+
+Safe wording:
+
+“Evidence state: provisional. This may support a limited explanation but not a final conclusion.”
+
+9. PARTIAL
+
+Definition:
+
+Evidence exists but is incomplete.
+
+Allowed output:
+
+- partial summary
+- missing evidence list
+- validation_needed
+- limited output with visible uncertainty
+
+Prohibited output:
+
+- filling gaps
+- assuming missing fields
+- treating unknown as zero unless explicit rule allows it
+- hiding incompleteness for smoother UX
+
+Safe wording:
+
+“Evidence is partial; missing fields must remain unknown.”
+
+10. WEAK
+
+Definition:
+
+Evidence is low-quality, indirect, unreliable, outdated in source quality, or insufficient for important claims.
+
+Allowed output:
+
+- caution
+- human review recommendation
+- no conclusion statement
+- evidence gap explanation
+
+Prohibited output:
+
+- strong claim
+- action recommendation
+- policy truth
+- product truth
+- compensation truth
+- client pressure
+- manager enforcement
+
+Safe wording:
+
+“Evidence is weak and cannot support a strong output.”
+
+11. INFERRED
+
+Definition:
+
+The claim is derived from available evidence but not directly stated.
+
+Allowed output:
+
+- clearly labeled inference
+- explanation of basis
+- uncertainty warning
+
+Prohibited output:
+
+- treating inference as confirmed
+- hiding inferential nature
+- using inference for enforcement or pressure
+
+Safe wording:
+
+“This is an inference based on available records, not a confirmed fact.”
+
+12. ASSUMED
+
+Definition:
+
+An assumption used for scenario planning or conceptual analysis.
+
+Allowed output:
+
+- scenario under assumptions
+- planning exploration
+- sensitivity explanation
+
+Prohibited output:
+
+- fact claim
+- guaranteed outcome
+- compensation/payment claim
+- policy/product truth claim
+
+Safe wording:
+
+“This scenario depends on explicit assumptions and is not confirmed.”
+
+13. STALE
+
+Definition:
+
+Evidence may no longer be current.
+
+Required information:
+
+- stale reason
+- affected period
+- last known freshness
+- refresh requirement
+- downgraded output strength
+
+Allowed output:
+
+- stale warning
+- validation request
+- limited historical context
+
+Prohibited output:
+
+- current truth claim without refresh
+- current recommendation based on stale evidence
+- enforcement from stale evidence
+
+Safe wording:
+
+“Evidence is stale and requires refresh before current use.”
+
+14. CONFLICTING
+
+Definition:
+
+Evidence sources disagree.
+
+Required information:
+
+- conflicting sources
+- conflict type
+- affected claim
+- owner conflict if applicable
+- human review requirement if sensitive
+
+Allowed output:
+
+- conflict warning
+- no conclusion possible
+- human review required
+- validation path
+
+Prohibited output:
+
+- silent resolution
+- picking one source arbitrarily
+- forcing a clean answer
+- presenting certainty
+
+Safe wording:
+
+“Sources conflict; no strong conclusion should be made.”
+
+15. UNKNOWN
+
+Definition:
+
+No sufficient evidence exists.
+
+Allowed output:
+
+- unknown visible
+- validation request
+- blocked strong output
+
+Prohibited output:
+
+- invented fallback
+- fake clarity
+- hidden uncertainty
+- assuming unknown as zero unless explicit rule allows it
+
+Safe wording:
+
+“Evidence state: unknown. Unknown remains unknown.”
+
+16. INVALID
+
+Definition:
+
+The source is not valid for the claim.
+
+Allowed output:
+
+- reject evidence
+- explain why invalid
+- request correct evidence
+
+Prohibited output:
+
+- downstream use
+- partial workaround
+- transforming invalid evidence into a weaker valid claim
+
+Safe wording:
+
+“This source is invalid for the proposed claim.”
+
+17. BLOCKED
+
+Definition:
+
+Output is blocked by missing evidence, invalid source, unknown owner, conflict, staleness, Client First risk or Authority Boundary risk.
+
+Allowed output:
+
+- blocked explanation
+- validation path
+- human review request
+
+Prohibited output:
+
+- workaround claim
+- weaker false claim
+- hidden output
+- pressure to act anyway
+
+Safe wording:
+
+“Output blocked: evidence state does not support this claim.”
+
+18. VALIDATION_NEEDED
+
+Definition:
+
+More evidence is required before output.
+
+Allowed output:
+
+- validation request
+- limited description
+- evidence gap list
+
+Prohibited output:
+
+- final interpretation
+- confirmed language
+- recommendation requiring certainty
+
+Safe wording:
+
+“Validation needed before this can be used.”
+
+19. HUMAN_REVIEW_REQUIRED
+
+Definition:
+
+Human judgment is required before sensitive interpretation.
+
+Human review does not mean approval.
+
+Allowed output:
+
+- human review recommendation
+- context summary
+- sensitivity warning
+
+Prohibited output:
+
+- automatic escalation
+- enforcement
+- decision
+- approval assumption
+
+Safe wording:
+
+“Human review required before interpretation.”
+
+20. NO_CONCLUSION_POSSIBLE
+
+Definition:
+
+Evidence is insufficient, invalid, stale or too conflicted to support any responsible conclusion.
+
+Allowed output:
+
+- no conclusion statement
+- evidence gap list
+- validation path
+
+Prohibited output:
+
+- speculative replacement
+- forced summary
+- invented certainty
+
+Safe wording:
+
+“No responsible conclusion is possible from the current evidence.”
+
+21. OUTPUT STRENGTH LEVELS
+
+Forge uses these output strength levels:
+
+- strong factual output
+- limited factual output
+- provisional output
+- scenario output
+- explanatory output
+- warning-only output
+- blocked output
+- no conclusion
+
+Mapping:
+
+confirmed:
+- strong factual output within limits
+
+validated:
+- limited factual output or validation summary
+
+provisional:
+- provisional output
+
+partial:
+- provisional output / warning-only output
+
+weak:
+- warning-only output / no conclusion
+
+inferred:
+- provisional output with inference label
+
+assumed:
+- scenario output only
+
+stale:
+- warning-only output until refreshed
+
+conflicting:
+- warning-only output / human_review_required / no conclusion
+
+unknown:
+- blocked output / validation_needed
+
+invalid:
+- blocked output
+
+blocked:
+- blocked output
+
+validation_needed:
+- warning-only output
+
+human_review_required:
+- explanatory output only, no decision
+
+no_conclusion_possible:
+- no conclusion
+
+22. STATE TRANSITIONS
+
+Safe conceptual transitions:
+
+unknown → validation_needed → provisional → confirmed
+
+partial → validation_needed → provisional / confirmed
+
+weak → validation_needed / no_conclusion_possible
+
+validated → confirmed only after domain owner confirms claim
+
+confirmed → stale
+
+confirmed → conflicting
+
+assumed → scenario output only
+
+inferred → provisional unless validated
+
+stale → validation_needed
+
+conflicting → human_review_required / no_conclusion_possible
+
+blocked → validation_needed / no_conclusion_possible
+
+These are conceptual transitions only.
+
+No automation logic is approved.
+
+23. DOMAIN-SPECIFIC STATE RISKS
+
+Product Truth:
+- product rule uncertainty
+- outdated manuals
+- quote rules treated as product truth
+
+Policy Truth:
+- quote treated as issued policy
+- issued premium treated as paid premium
+- stale policy status
+
+Forecast Truth:
+- scenario treated as fact
+- projection presented as certainty
+
+Economic Evidence:
+- stale UDI / FX values
+- unknown conversion source
+- projected money treated as real money
+
+Compensation Intelligence:
+- estimated commission treated as paid income
+- bonus scenario treated as confirmed
+- missing snapshot or rule pack
+
+NBA:
+- priority treated as mandate
+- weak evidence used for action priority
+
+NASH:
+- message suggestion treated as client intent
+- relationship context converted into manipulation
+
+Relationship Intelligence:
+- opportunity treated as permission
+- trust treated as leverage
+
+Business Planning:
+- plan treated as execution
+- goal treated as production fact
+
+Mick:
+- behavior signal treated as motivation or character
+
+Productivity:
+- metric treated as human worth
+
+Manager Intelligence:
+- coaching context treated as enforcement
+
+Advisor Experience:
+- explanation hides unknown
+- fake clarity created for UX smoothness
+
+Economic Motivation:
+- money context becomes pressure
+- income gap becomes client pressure
+
+24. REQUIRED WARNING LANGUAGE
+
+Approved warning phrases:
+
+- “Evidence state: validation needed.”
+- “This is a scenario, not a confirmed fact.”
+- “This value is stale and requires refresh.”
+- “Sources conflict; no conclusion should be made.”
+- “Unknown remains unknown.”
+- “Human review required before interpretation.”
+- “This output is blocked by Authority Boundary.”
+- “This output is blocked by Client First risk.”
+- “This inference is not confirmed.”
+- “This assumption only supports scenario output.”
+- “This metric does not represent human worth.”
+- “This recommendation is not a mandate.”
+
+25. PROHIBITED LANGUAGE
+
+Forbidden output examples:
+
+- “This is confirmed” without source.
+- “The advisor failed.”
+- “The client wants X” without client-confirmed context.
+- “This will happen” from forecast.
+- “This bonus will be paid” from scenario.
+- “The manager must enforce.”
+- “The UI should hide uncertainty.”
+- “Unknown can be assumed.”
+- “Metric proves human quality.”
+- “Low productivity means low advisor value.”
+- “The system should pressure action.”
+
+These phrases may appear only as prohibited examples.
+
+26. QA CHECKLIST
+
+Before using evidence, Forge must ask:
+
+- Is owner known?
+- Is source valid?
+- Is period known?
+- Is evidence fresh?
+- Is state explicit?
+- Is output strength allowed?
+- Is uncertainty visible?
+- Is conflict visible?
+- Is human review required?
+- Is validation required?
+- Is Client First at risk?
+- Is Authority Boundary at risk?
+- Is any domain trying to strengthen evidence?
+- Is the output stronger than the evidence state allows?
+- Is unknown being hidden?
+- Is stale evidence being used as current?
+- Is a scenario being treated as fact?
+
+27. QA SCENARIOS
+
+1. Valid product manual but expired version.
+Expected:
+stale / validation_needed.
+
+2. Quote uploaded but no policy issued.
+Expected:
+quote evidence, not Policy Truth.
+
+3. Forecast scenario shown as fact.
+Expected:
+blocked.
+
+4. Paid premium missing payment proof.
+Expected:
+validation_needed.
+
+5. Manager signal from stale productivity metric.
+Expected:
+stale warning, no enforcement.
+
+6. NASH infers client intent from relationship context.
+Expected:
+blocked.
+
+7. Compensation scenario presented as paid income.
+Expected:
+blocked.
+
+8. Unknown UDI value used in projection.
+Expected:
+blocked / validation_needed.
+
+9. Conflicting CRM and policy records.
+Expected:
+conflicting / human_review_required.
+
+10. Advisor Experience tries to simplify by hiding unknown.
+Expected:
+blocked by fake clarity risk.
+
+28. IMPLEMENTATION READINESS OUTPUTS
+
+This document prepares future implementation to produce:
+
+- evidence_state_result
+- allowed_output_strength
+- state_warning
+- validation_needed
+- human_review_required
+- blocked_output
+- stale_warning
+- conflict_warning
+- no_conclusion_possible
+
+No schemas are approved.
+
+29. BUILD READINESS ORDER
+
+After this document:
+
+1. Truth Validation Result Contract
+2. Unknown / Stale / Conflict Handling Contract
+3. Cross-domain QA Harness
+4. Implementation Plan v0.1
+
+30. NON-GOALS
+
+This document does not define:
+
+- code
+- engine logic
+- schemas
+- UI
+- database
+- automation
+- workflows
+- scoring
+- ranking
+- formulas
+- domain calculations
+- feature behavior
+- manager alerts
+- advisor UI
+
+This document does not approve implementation.
+
+31. FINAL VERDICT
+
+Evidence State Vocabulary is required because ownership alone is not enough.
+
+A claim may have the correct owner and still be stale, partial, weak, conflicting or unknown.
+
+Forge must know not only who owns a claim, but what state the evidence is in.
+
+Unknown remains unknown.
+
+Partial remains partial.
+
+Stale requires warning.
+
+Conflicting blocks strong output.
+
+No engine should produce stronger output than the evidence state allows.

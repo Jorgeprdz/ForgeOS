@@ -1,0 +1,462 @@
+FORGE IMPLEMENTATION READINESS 001D
+UNKNOWN / STALE / CONFLICT HANDLING CONTRACT
+
+STATUS
+
+Implementation Readiness Blueprint
+
+NO IMPLEMENTATION.
+NO CODE.
+NO ENGINES.
+NO SCHEMAS.
+NO UI.
+NO AUTOMATION.
+NO FEATURE DESIGN.
+
+1. PURPOSE
+
+This document defines how Forge should conceptually handle unknown, stale and conflicting evidence before any future engine interprets or outputs claims.
+
+001A defines ownership.
+
+001B defines evidence state.
+
+001C defines validation result posture.
+
+001D defines how degraded evidence states must be handled.
+
+2. CONSTITUTIONAL BASIS
+
+This document is governed by ADR-001 through ADR-018.
+
+Core constitutional rules:
+
+- Unknown remains unknown.
+- Stale evidence requires warning.
+- Conflicting evidence blocks strong output.
+- Partial evidence cannot become certainty.
+- Human review is not approval.
+- Validation needed is a valid output.
+- Output should be blocked before truth is invented.
+- Client First and Authority Boundary override convenience, speed and UX smoothness.
+
+3. HANDLING PHILOSOPHY
+
+Forge must never make degraded evidence disappear.
+
+Unknown, stale and conflicting evidence must be:
+
+- visible
+- preserved
+- labeled
+- downgraded
+- blocked when necessary
+- routed to validation or human review when sensitive
+
+Forge must not:
+
+- silently resolve conflicts
+- assume unknown values
+- use stale evidence as current
+- use partial evidence as final
+- create fake clarity
+- create pressure from weak evidence
+- create enforcement from degraded evidence
+
+4. HANDLING STATES
+
+This document covers:
+
+- unknown
+- stale
+- conflicting
+- partial
+- weak
+- invalid
+- blocked
+- validation_needed
+- human_review_required
+- no_conclusion_possible
+
+5. UNKNOWN HANDLING
+
+Unknown means insufficient evidence exists.
+
+Required handling:
+
+- preserve unknown
+- label unknown visibly
+- block strong output
+- request validation when needed
+- avoid fallback assumptions
+- avoid treating unknown as zero unless explicit rule allows it
+
+Allowed output:
+
+“Evidence state: unknown. Validation needed before conclusion.”
+
+Prohibited output:
+
+“Assume default value.”
+
+6. STALE HANDLING
+
+Stale means evidence may no longer be current.
+
+Required handling:
+
+- identify stale reason
+- identify affected period
+- identify last known valid state if available
+- downgrade output strength
+- request refresh
+- block current truth if freshness is required
+
+Allowed output:
+
+“Evidence is stale and cannot support current truth without refresh.”
+
+Prohibited output:
+
+“Use old value as current.”
+
+7. CONFLICT HANDLING
+
+Conflicting means evidence sources disagree.
+
+Required handling:
+
+- identify conflicting sources
+- identify conflict type
+- preserve both claims
+- block strong output
+- request human review if sensitive
+- prevent silent resolution
+
+Allowed output:
+
+“Sources conflict; no strong conclusion should be made.”
+
+Prohibited output:
+
+“Choose the most convenient source.”
+
+8. PARTIAL HANDLING
+
+Partial means evidence exists but is incomplete.
+
+Required handling:
+
+- list missing elements
+- downgrade output strength
+- allow provisional output only when safe
+- request missing evidence
+
+Allowed output:
+
+“Evidence is partial; missing fields remain unknown.”
+
+Prohibited output:
+
+“Complete the missing fields by inference.”
+
+9. WEAK HANDLING
+
+Weak means evidence is insufficient quality for important claims.
+
+Required handling:
+
+- mark weak
+- block strong claims
+- allow caution or no conclusion
+- route to validation when useful
+
+Allowed output:
+
+“Evidence is weak and cannot support this output.”
+
+10. INVALID HANDLING
+
+Invalid means source cannot support claim.
+
+Required handling:
+
+- reject source for claim
+- explain mismatch
+- block downstream use
+
+Allowed output:
+
+“Source invalid for this claim.”
+
+11. BLOCKED HANDLING
+
+Blocked means the output cannot be responsibly produced.
+
+Block causes include:
+
+- owner_unknown
+- owner_conflicting
+- source_invalid
+- evidence_unknown
+- evidence_stale
+- evidence_conflicting
+- output_exceeds_evidence
+- forecast_as_fact
+- quote_as_policy
+- issued_as_paid
+- compensation_as_payment
+- relationship_as_permission
+- manager_signal_as_enforcement
+- productivity_as_human_worth
+- advisor_help_as_dependency
+- economic_context_as_pressure
+- Client First risk
+- Authority Boundary risk
+
+Allowed output:
+
+“Output blocked. Reason: [specific reason].”
+
+12. VALIDATION NEEDED HANDLING
+
+Validation needed means more evidence is required.
+
+Required handling:
+
+- identify missing evidence
+- identify owner
+- identify required source
+- preserve uncertainty
+- block final output
+
+Allowed output:
+
+“Validation needed before interpretation.”
+
+13. HUMAN REVIEW REQUIRED HANDLING
+
+Human review required means judgment is needed before sensitive interpretation.
+
+Required handling:
+
+- explain why review is required
+- avoid approval language
+- block enforcement
+- preserve human authority
+
+Allowed output:
+
+“Human review required before interpretation.”
+
+14. NO CONCLUSION POSSIBLE HANDLING
+
+No conclusion possible means evidence cannot support responsible output.
+
+Required handling:
+
+- state no conclusion
+- explain evidence gap or conflict
+- avoid speculation
+- avoid fake clarity
+
+Allowed output:
+
+“No responsible conclusion is possible from current evidence.”
+
+15. DOMAIN-SPECIFIC HANDLING RULES
+
+Product Truth:
+- stale manuals require validation
+- quote rules require support from product documentation
+
+Policy Truth:
+- no policy claim from quote alone
+- paid premium requires payment evidence
+
+Forecast Truth:
+- forecast cannot become fact
+- stale assumptions require refresh
+
+Economic Evidence:
+- UDI/FX freshness required before projection
+- unknown economic value blocks conversion
+
+Compensation Intelligence:
+- estimated cannot become paid
+- missing rule pack blocks calculation
+- missing snapshot blocks qualification
+
+NBA:
+- weak evidence cannot create strong priority
+- priority never becomes mandate
+
+NASH:
+- message cannot assert client intent without evidence
+- relationship signal cannot become manipulation
+
+Relationship Intelligence:
+- opportunity is not permission
+- trust is not leverage
+
+Business Planning:
+- plan cannot become execution
+- stale plan requires review
+
+Mick:
+- latency cannot become motivation
+- pattern requires repeated validated signals
+
+Productivity:
+- metric cannot become human worth
+
+Manager Intelligence:
+- coaching context cannot become enforcement
+
+Advisor Experience:
+- UX cannot hide unknown
+
+Economic Motivation:
+- money cannot become pressure
+
+16. ESCALATION POSTURES
+
+Allowed postures:
+
+- validation_needed
+- human_review_required
+- no_conclusion_possible
+- blocked
+- warning_only
+- provisional_output
+
+Prohibited postures:
+
+- automatic enforcement
+- automatic escalation to manager punishment
+- automatic client pressure
+- automatic UI behavior
+- automatic task creation
+- automatic ranking
+
+17. SAFE WORDING
+
+Allowed:
+
+- “Unknown remains unknown.”
+- “Evidence is stale and requires refresh.”
+- “Sources conflict; no conclusion should be made.”
+- “Output blocked by Authority Boundary.”
+- “Output blocked by Client First risk.”
+- “Validation needed before use.”
+- “Human review required before interpretation.”
+
+18. PROHIBITED WORDING
+
+Forbidden:
+
+- “Assume the missing value.”
+- “Use stale value anyway.”
+- “The advisor failed.”
+- “The manager must enforce.”
+- “The client wants this.”
+- “The forecast confirms this.”
+- “The bonus will be paid.”
+- “Hide uncertainty for better UX.”
+
+These phrases may appear only as prohibited examples.
+
+19. QA CHECKLIST
+
+Before allowing degraded evidence output:
+
+- Is the degraded state visible?
+- Is output strength downgraded?
+- Is strong output blocked?
+- Is unknown preserved?
+- Is stale reason explained?
+- Is conflict identified?
+- Is human review required?
+- Is validation needed?
+- Is Client First protected?
+- Is Authority Boundary protected?
+- Is fake clarity prevented?
+- Is pressure prevented?
+
+20. QA SCENARIOS
+
+1. Unknown UDI value used in projection.
+Expected:
+blocked / validation_needed.
+
+2. Stale compensation rule pack used for bonus.
+Expected:
+stale warning / blocked.
+
+3. Conflicting policy status between CRM and policy document.
+Expected:
+conflicting / human_review_required.
+
+4. Forecast scenario used as cancellation fact.
+Expected:
+blocked.
+
+5. Relationship opportunity used as permission.
+Expected:
+blocked.
+
+6. Productivity metric used as human ranking.
+Expected:
+blocked.
+
+7. Manager signal used as enforcement.
+Expected:
+blocked.
+
+8. Advisor Experience hides unknown.
+Expected:
+blocked.
+
+21. BUILD READINESS ORDER
+
+After this document:
+
+1. Cross-domain QA Harness
+2. Implementation Plan v0.1
+3. Source Ownership Registry implementation candidate
+
+22. NON-GOALS
+
+This document does not define:
+
+- code
+- schemas
+- database
+- UI
+- automation
+- workflows
+- scoring
+- ranking
+- formulas
+- engine implementation
+- alerts
+- task logic
+- notification logic
+
+This document does not approve implementation.
+
+23. FINAL VERDICT
+
+Unknown / Stale / Conflict Handling is required because degraded evidence is where Forge is most likely to invent truth, overstate certainty or create pressure.
+
+Unknown must remain unknown.
+
+Stale must be visible.
+
+Conflicting must block strong output.
+
+Validation needed is a valid result.
+
+Human review is not approval.
+
+Blocking output is better than inventing truth.

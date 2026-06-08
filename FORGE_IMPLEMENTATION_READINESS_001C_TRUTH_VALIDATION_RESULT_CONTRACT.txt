@@ -1,0 +1,487 @@
+FORGE IMPLEMENTATION READINESS 001C
+TRUTH VALIDATION RESULT CONTRACT
+
+STATUS
+
+Implementation Readiness Blueprint
+
+NO IMPLEMENTATION.
+NO CODE.
+NO ENGINES.
+NO SCHEMAS.
+NO UI.
+NO AUTOMATION.
+NO FEATURE DESIGN.
+
+1. PURPOSE
+
+This document defines the conceptual output contract for future truth validation.
+
+001A defines ownership.
+
+001B defines evidence state.
+
+001C defines how a validation result should be expressed.
+
+The purpose is to make every Forge domain produce validation-aware outputs without inventing truth, hiding uncertainty or exceeding evidence strength.
+
+2. CONSTITUTIONAL BASIS
+
+This document is governed by ADR-001 through ADR-018.
+
+Primary rules:
+
+- Evidence First
+- One Metric One Owner
+- Recommendation is not decision
+- No invented recommendations
+- Unknown remains unknown
+- Forecast is not fact
+- Scenario is not payment
+- Priority is not mandate
+- Manager signal is not enforcement
+- Money is context, not pressure
+- Client First remains above commercial pressure
+
+3. CONTRACT PHILOSOPHY
+
+A truth validation result must answer:
+
+- What claim is being validated?
+- Who owns the claim?
+- What evidence supports it?
+- What state is the evidence in?
+- Is the source valid for the claim?
+- Is the output allowed?
+- What output strength is allowed?
+- What warnings are required?
+- Is human review required?
+- Is validation needed?
+- Should the output be blocked?
+
+The result must not decide.
+
+The result must not recommend action by itself.
+
+The result must not execute.
+
+The result must not hide uncertainty.
+
+4. CONCEPTUAL RESULT FIELDS
+
+A future truth validation result should preserve:
+
+- validation_result_id
+- claim
+- claim_type
+- conceptual_owner
+- governing_ADR
+- evidence_items
+- source_summary
+- evidence_state
+- ownership_status
+- validity_status
+- freshness_status
+- conflict_status
+- output_strength_allowed
+- warnings
+- blocked_outputs
+- allowed_outputs
+- human_review_status
+- validation_status
+- uncertainty
+- limitations
+- final_validation_posture
+
+No technical schema is approved.
+
+This is a readiness contract only.
+
+5. VALIDATION POSTURES
+
+Official validation postures:
+
+- valid_for_strong_output
+- valid_for_limited_output
+- valid_for_provisional_output
+- valid_for_scenario_output
+- valid_for_warning_only
+- validation_needed
+- human_review_required
+- blocked
+- no_conclusion_possible
+
+6. VALID_FOR_STRONG_OUTPUT
+
+Allowed only when:
+
+- owner is known
+- source is valid
+- evidence state is confirmed
+- period is relevant
+- freshness is acceptable
+- no unresolved conflict exists
+- output does not violate Client First or Authority Boundary
+
+Prohibited when:
+
+- evidence is stale
+- evidence is partial
+- evidence is inferred
+- evidence is assumed
+- evidence is conflicting
+- owner is unknown
+
+7. VALID_FOR_LIMITED_OUTPUT
+
+Allowed when evidence supports a bounded factual statement but not a broad conclusion.
+
+Example safe posture:
+
+“Valid only for the stated period and source.”
+
+Prohibited:
+
+- extending beyond scope
+- using limited output as strong truth
+
+8. VALID_FOR_PROVISIONAL_OUTPUT
+
+Allowed when evidence is useful but incomplete.
+
+Required:
+
+- uncertainty visible
+- missing evidence listed
+- validation path stated
+
+Prohibited:
+
+- confirmed language
+- strong recommendations
+- enforcement
+
+9. VALID_FOR_SCENARIO_OUTPUT
+
+Allowed for:
+
+- forecast scenarios
+- planning assumptions
+- economic projections
+- compensation estimates
+- what-if analysis
+
+Required:
+
+- assumptions visible
+- scenario label
+- no guarantee language
+
+Prohibited:
+
+- treating scenario as fact
+- treating compensation scenario as payment
+- treating forecast as current truth
+
+10. VALID_FOR_WARNING_ONLY
+
+Allowed when evidence indicates risk but not enough for conclusion.
+
+Examples:
+
+- stale warning
+- conflict warning
+- Client First risk
+- Authority Boundary risk
+- owner mismatch
+
+Prohibited:
+
+- action mandate
+- human judgment
+- client pressure
+
+11. VALIDATION_NEEDED
+
+Used when more evidence is required before responsible output.
+
+Allowed:
+
+- request missing evidence
+- list required validation
+- explain blocker
+
+Prohibited:
+
+- workaround conclusion
+- assumption as fact
+
+12. HUMAN_REVIEW_REQUIRED
+
+Used when the output touches sensitive interpretation or human judgment.
+
+Human review is not automatic approval.
+
+Allowed:
+
+- review recommendation
+- context summary
+
+Prohibited:
+
+- escalation
+- enforcement
+- decision
+- punishment
+- ranking
+
+13. BLOCKED
+
+Used when output violates evidence, ownership, state or constitutional boundary.
+
+Block reasons may include:
+
+- owner_unknown
+- owner_conflicting
+- source_invalid
+- evidence_unknown
+- evidence_stale
+- evidence_conflicting
+- output_exceeds_evidence
+- forecast_as_fact
+- quote_as_policy
+- issued_as_paid
+- compensation_as_payment
+- relationship_as_permission
+- manager_signal_as_enforcement
+- productivity_as_human_worth
+- advisor_help_as_dependency
+- economic_context_as_pressure
+- Client First risk
+- Authority Boundary risk
+
+14. NO_CONCLUSION_POSSIBLE
+
+Used when no responsible conclusion can be made.
+
+Allowed:
+
+- no conclusion statement
+- evidence gap list
+- review path
+
+Prohibited:
+
+- speculative replacement
+- fake clarity
+
+15. WARNING TYPES
+
+Allowed warning types:
+
+- owner mismatch
+- unknown owner
+- conflicting owner
+- invalid source
+- partial evidence
+- weak evidence
+- stale evidence
+- conflicting evidence
+- inference warning
+- assumption warning
+- forecast-as-fact risk
+- quote-as-policy risk
+- issued-as-paid risk
+- compensation-as-payment risk
+- relationship-as-permission risk
+- manager-signal-as-enforcement risk
+- productivity-as-human-worth risk
+- advisor-help-as-dependency risk
+- economic-context-as-pressure risk
+- Client First risk
+- Authority Boundary risk
+
+16. ALLOWED OUTPUTS
+
+Truth validation may output:
+
+- validation result
+- evidence state
+- allowed output strength
+- warning
+- block reason
+- human review requirement
+- validation requirement
+- no conclusion possible
+- limited safe wording
+
+17. PROHIBITED OUTPUTS
+
+Truth validation must not output:
+
+- final business decision
+- manager enforcement
+- advisor ranking
+- human worth assessment
+- client pressure
+- product recommendation
+- compensation promise
+- forecast certainty
+- hidden uncertainty
+- fake clarity
+- workflow trigger
+- UI behavior
+- automation action
+
+18. SAFE WORDING EXAMPLES
+
+Allowed:
+
+- “This claim is valid only for the stated source and period.”
+- “Evidence state: validation_needed.”
+- “Output blocked because forecast cannot be treated as fact.”
+- “Human review required before interpretation.”
+- “No conclusion possible from current evidence.”
+
+Prohibited:
+
+- “This is true in all cases.”
+- “The advisor failed.”
+- “The manager must act.”
+- “The client wants this.”
+- “The system should trigger action.”
+- “This scenario guarantees payment.”
+
+19. DOMAIN-SPECIFIC VALIDATION RISKS
+
+Product Truth:
+- output must not invent product rules
+
+Policy Truth:
+- quote must not become policy
+
+Forecast Truth:
+- scenario must not become fact
+
+Economic Evidence:
+- stale UDI/FX must not support projection
+
+Compensation Intelligence:
+- estimated compensation must not become paid income
+
+NBA:
+- priority must not become mandate
+
+NASH:
+- message guidance must not become client intent truth
+
+Relationship Intelligence:
+- opportunity must not become permission
+
+Business Planning:
+- plan must not become execution
+
+Mick:
+- behavior pattern must not become personality judgment
+
+Productivity:
+- metric must not become human worth
+
+Manager Intelligence:
+- coaching context must not become enforcement
+
+Advisor Experience:
+- explanation must not hide unknown
+
+Economic Motivation:
+- money must not become pressure
+
+20. QA CHECKLIST
+
+Before accepting a truth validation result:
+
+- Is claim explicit?
+- Is owner known?
+- Is governing ADR identified?
+- Is source valid?
+- Is evidence state explicit?
+- Is output strength allowed?
+- Are warnings visible?
+- Are blocked outputs listed?
+- Is uncertainty preserved?
+- Is human review required?
+- Is Client First protected?
+- Is Authority Boundary protected?
+- Is output free of enforcement, ranking, pressure and fake certainty?
+
+21. QA SCENARIOS
+
+1. Forecast predicts cancellation and output says “will cancel.”
+Expected:
+blocked, forecast-as-fact risk.
+
+2. Quote contains premium and output says policy premium is paid.
+Expected:
+blocked, quote-as-policy and issued-as-paid risk.
+
+3. Productivity metric is below target and output says advisor failed.
+Expected:
+blocked, productivity-as-human-worth risk.
+
+4. Compensation estimate says bonus will be paid.
+Expected:
+blocked, compensation-as-payment risk.
+
+5. Relationship signal is used to pressure client contact.
+Expected:
+blocked, relationship-as-permission and Client First risk.
+
+6. Advisor Experience hides unknown for simplicity.
+Expected:
+blocked, fake clarity risk.
+
+7. Manager Intelligence turns signal into sanction.
+Expected:
+blocked, manager-signal-as-enforcement risk.
+
+22. BUILD READINESS ORDER
+
+After this document:
+
+1. Unknown / Stale / Conflict Handling Contract
+2. Cross-domain QA Harness
+3. Implementation Plan v0.1
+
+23. NON-GOALS
+
+This document does not define:
+
+- code
+- schemas
+- database
+- UI
+- workflows
+- automations
+- scoring
+- ranking
+- formulas
+- engine implementation
+- manager alerts
+- advisor UI
+- recommendation ranking
+
+This document does not approve implementation.
+
+24. FINAL VERDICT
+
+Truth Validation Result Contract is required because evidence ownership and evidence state must become a consistent validation posture before any domain output is produced.
+
+No Forge output should be stronger than its validation result.
+
+Validation does not decide.
+
+Validation does not execute.
+
+Validation does not enforce.
+
+Validation makes truth boundaries visible and blockable.
