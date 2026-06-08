@@ -1,0 +1,946 @@
+ADR-016 — ADVISOR EXPERIENCE + BENVENÙ ANTI-DEPENDENCE BOUNDARY
+
+1. TITLE
+
+ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary
+
+2. STATUS
+
+Final
+
+3. CONTEXT
+
+Forge ya cuenta con ADR-001 a ADR-015.
+
+ADR-016 define cómo Advisor Experience y Benvenù pueden ayudar al asesor a aprender, usar Forge, reducir fricción, lograr first value y desarrollar capacidad sin crear dependencia, ocultar razonamiento, manipular comportamiento o convertir Forge en muleta operativa.
+
+Advisor Experience existe para responder:
+
+¿Cómo debe vivir, entender, aprender y usar Forge el asesor para mejorar su capacidad?
+
+Benvenù existe para responder:
+
+¿Cómo debe ser la primera experiencia de valor para que el asesor entienda Forge y actúe sin sentir formulario, onboarding corporativo o CRM tradicional?
+
+Advisor Experience y Benvenù protegen la frontera entre experiencia útil y dependencia operativa.
+
+Forge debe hacer al asesor más capaz, no más dependiente.
+
+Sin este boundary, Forge puede:
+
+- explicar recomendaciones ocultando incertidumbre
+- enseñar workflows sin evidencia suficiente
+- convertir ayuda contextual en instrucciones obligatorias
+- convertir Benvenù en captura inicial excesiva
+- pedir datos antes de entregar valor
+- crear dependencia del asesor hacia Forge
+- esconder razonamiento detrás de lenguaje bonito
+- convertir first value en onboarding genérico
+- confundir simplicidad con pérdida de verdad
+- confundir guía con mandato
+- confundir fricción reducida con criterio reemplazado
+- convertir señales de aprendizaje en vigilancia
+- usar gamificación para presionar conducta
+- enseñar funciones que el asesor ya domina
+- repetir ayuda irrelevante
+- convertir claridad de producto, póliza, forecast o economía en afirmaciones no validadas
+
+ADR-016 protege la frontera entre experiencia, aprendizaje, adopción y autoridad profesional.
+
+4. DECISION
+
+Advisor Experience es el owner conceptual de advisor-facing explanation, contextual help, learning support, friction reduction, capability-building experience y feature learning state.
+
+Benvenù es el owner conceptual de first-value experience.
+
+Advisor Experience puede explicar, contextualizar, enseñar, orientar, revelar capacidades, reducir fricción y ayudar al asesor a entender outputs de Forge.
+
+Advisor Experience no puede ocultar evidencia, ocultar incertidumbre, manipular conducta, reemplazar criterio profesional, crear dependencia operativa o convertir recomendaciones en mandatos.
+
+Benvenù puede crear una primera experiencia útil, clara, mínima, responsable y accionable.
+
+Benvenù no puede convertirse en formulario, CRM intake, onboarding corporativo, captura excesiva, falsa personalización o condición previa para que Forge entregue valor.
+
+Advisor Experience aumenta capacidad del asesor.
+
+Advisor Experience no aumenta dependencia.
+
+Benvenù crea first value.
+
+Benvenù no crea first friction.
+
+5. DEFINITIONS
+
+Advisor Experience
+
+Dominio responsable de cómo el asesor descubre, entiende, aprende y usa Forge para desarrollar mayor capacidad comercial y operativa.
+
+Benvenù
+
+Primera experiencia de valor de Forge. Debe producir claridad o acción útil antes de exigir captura extensa.
+
+First Value
+
+Primer resultado durable que ayuda al asesor a entender, decidir o actuar mejor.
+
+First Friction
+
+Fricción inicial que aparece antes de que Forge haya producido valor claro para el asesor.
+
+Capability Building
+
+Proceso por el cual Forge ayuda al asesor a mejorar criterio, entendimiento, acción y autonomía.
+
+Advisor Dependency
+
+Estado no deseado donde el asesor requiere que Forge le diga qué hacer, qué pensar o cómo actuar sin entender evidencia, límites o criterio.
+
+Contextual Help
+
+Ayuda situada en el contexto del trabajo actual. Puede orientar o explicar, pero no bloquear ni mandar.
+
+Feature Learning State
+
+Estado que indica si el asesor no ha visto, fue introducido, intentó, completó con ayuda, completó sin ayuda, aprendió, suprimió o necesita refrescar una capacidad.
+
+Progressive Discovery
+
+Revelación gradual de capacidades de Forge según contexto, necesidad y madurez del asesor.
+
+Explanation Layer
+
+Capa que traduce outputs estructurados de Forge en lenguaje comprensible sin alterar la verdad de origen.
+
+Clippy Engine
+
+Motor de ayuda contextual no invasivo. Orienta, explica o revela capacidades sin interrumpir ni bloquear.
+
+Candy Crush Experience
+
+Adaptación de complejidad para reducir abandono cuando hay frustración y aumentar reto cuando existe progreso.
+
+Anti-Dependence
+
+Principio que obliga a Forge a aumentar autonomía, criterio y capacidad del asesor.
+
+6. ADVISOR EXPERIENCE OWNERSHIP RULES
+
+Advisor Experience puede poseer:
+
+- advisor-facing explanation
+- contextual help
+- progressive discovery
+- feature learning state
+- learning support
+- friction reduction signals
+- capability-building experience
+- advisor comprehension signals
+- help suppression state
+- needs-refresh state
+- first-use orientation
+- command discovery support
+- responsible simplification
+- explanation clarity
+- learning progression
+
+Advisor Experience no posee:
+
+- Product Truth
+- Policy Truth
+- Forecast Truth
+- Economic Evidence
+- Compensation Truth
+- NBA priority truth
+- NASH conversation truth
+- Business Planning truth
+- Mick behavior truth
+- Productivity truth
+- Manager Intelligence truth
+- client suitability
+- advisor authority
+- manager authority
+- final recommendation validity
+- implementation logic
+- schemas
+- UI design ownership
+
+Advisor Experience consume outputs oficiales de otros dominios.
+
+Advisor Experience no recalcula, redefine ni suaviza esos outputs.
+
+7. BENVENÙ OWNERSHIP RULES
+
+Benvenù puede poseer:
+
+- first-value experience
+- minimal initial orientation
+- initial advisor baseline prompt when evidence is insufficient
+- first action suggestion if evidence exists
+- first product focus introduction if Product Truth exists
+- first revenue intelligence introduction if economic evidence exists
+- first relationship opportunity introduction if relational evidence exists
+- first command discovery moment
+- first learning state initialization
+- initial context explanation
+
+Benvenù no posee:
+
+- CRM onboarding
+- exhaustive advisor intake
+- corporate tutorial flow
+- mandatory data capture
+- business plan calculation
+- compensation calculation
+- product recommendation
+- policy recommendation
+- forecast projection
+- behavior scoring
+- productivity scoring
+- manager review
+- automated setup mandates
+
+Benvenù must create first value before asking for heavy manual work.
+
+8. VALID ADVISOR EXPERIENCE INPUTS
+
+Valid inputs include:
+
+- official outputs from Forge engines
+- evidence status
+- source confidence
+- uncertainty flags
+- stale flags
+- unknown states
+- user role
+- advisor workflow context
+- current task context
+- feature learning state
+- previous successful completion
+- repeated help dismissal
+- friction signals
+- abandonment signals
+- user confusion signals
+- command usage history
+- permitted explanation metadata
+- Product Truth summary
+- Policy Truth summary
+- Forecast scenario summary
+- Economic Evidence summary
+- NBA candidate action and rationale
+- NASH language draft metadata
+- Business Planning goal/gap/context
+- Mick behavior signal status
+- Productivity metric status
+- Manager Intelligence context where advisor-facing use is allowed
+
+9. VALID BENVENÙ INPUTS
+
+Valid Benvenù inputs include:
+
+- advisor identity or role if available
+- organization profile
+- office or rule-pack context when available
+- existing advisor data already captured by Forge
+- reliable imported data
+- source documents already present
+- known product focus evidence
+- known client or relationship evidence
+- known activity or productivity evidence
+- known goal or planning evidence
+- missing-data map
+- first-use context
+- user-selected intent
+- evidence confidence
+- unknown states
+- minimum necessary manual answers
+
+10. INPUT BOUNDARIES
+
+Advisor Experience must not treat missing evidence as permission to invent.
+
+Benvenù must not ask for duplicate manual capture when Forge can infer, import, extract or derive a reliable data point.
+
+Advisor Experience must not use:
+
+- private inference without evidence
+- manager pressure as truth
+- emotional vulnerability as a learning trigger
+- Product Truth not validated by ADR-005
+- Policy Truth not validated by ADR-006
+- forecasts presented as facts
+- economic values without ADR-008 evidence
+- NASH drafts as final client communication
+- NBA priority as command
+- productivity metrics as human worth
+- Mick signals as diagnosis
+- compensation projections without supporting rules
+- stale signals without warning
+- feature usage as proof of competence
+- repeated dismissal as disobedience
+
+Benvenù must not use:
+
+- long mandatory forms before value
+- fake personalization from weak inputs
+- hidden default assumptions
+- inferred client needs without evidence
+- invented product focus
+- invented revenue opportunity
+- invented advisor baseline
+- imported data without source awareness
+- user friction as permission to hide uncertainty
+
+Unknown values remain unknown.
+
+Partial evidence remains partial.
+
+First experience must not bypass Forge truth boundaries.
+
+11. OUTPUTS PERMITIDOS — ADVISOR EXPERIENCE
+
+Advisor Experience may output:
+
+- contextual explanation
+- short orientation
+- feature introduction
+- capability reminder
+- help suggestion
+- evidence visibility prompt
+- uncertainty explanation
+- stale-warning explanation
+- next learning step
+- completion-with-help state
+- completion-without-help state
+- learned state
+- suppressed-help state
+- needs-refresh state
+- command discovery hint
+- workflow simplification
+- source-aware explanation
+- explanation of why Forge cannot answer
+- explanation of what evidence is missing
+- explanation of what domain owns the truth
+- lower-complexity experience when user is frustrated
+- higher-challenge experience when user demonstrates readiness
+
+12. OUTPUTS PROHIBIDOS — ADVISOR EXPERIENCE
+
+Advisor Experience must not output:
+
+- final product recommendation
+- final policy recommendation
+- final client suitability decision
+- final compensation claim
+- final forecast claim
+- hidden truth alteration
+- instruction that overrides advisor judgment
+- manipulative prompt
+- guilt-based productivity language
+- surveillance framing
+- punishment suggestion
+- automatic manager escalation
+- obedience framing
+- fake certainty
+- invented financial values
+- invented product benefits
+- invented policy facts
+- invented client intent
+- mandatory NASH copy-paste
+- mandatory NBA execution
+- business plan mandate
+- behavior diagnosis
+- human worth assessment
+
+13. OUTPUTS PERMITIDOS — BENVENÙ
+
+Benvenù may output:
+
+- first useful orientation
+- first value summary
+- advisor baseline snapshot if evidence exists
+- first evidence gap map
+- first recommended review area when supported by evidence
+- first action candidate when supported by NBA rules
+- first product focus introduction when Product Truth exists
+- first policy review introduction when Policy Truth exists
+- first relationship opportunity introduction when relationship evidence exists
+- first business planning orientation when goal or gap evidence exists
+- first learning state setup
+- minimal question to unlock value
+- explanation of why more evidence is needed
+- source-aware first experience
+
+14. OUTPUTS PROHIBIDOS — BENVENÙ
+
+Benvenù must not output:
+
+- generic CRM onboarding flow
+- corporate tutorial as first experience
+- exhaustive intake before value
+- mandatory profile completion before value
+- invented advisor baseline
+- invented revenue opportunity
+- invented client need
+- invented product focus
+- invented commission opportunity
+- false personalization
+- hidden assumptions
+- first action without evidence
+- pressure to complete setup
+- gamified pressure
+- manager-facing judgment
+- final recommendation
+- automated execution
+
+15. ADVISOR EXPERIENCE VS NBA
+
+NBA owns action prioritization.
+
+Advisor Experience can explain why an NBA exists, what evidence supports it, what uncertainty remains and how to use it responsibly.
+
+Advisor Experience cannot create a separate NBA, override NBA priority, turn NBA into a command or hide alternatives.
+
+NBA says what action may be next.
+
+Advisor Experience helps the advisor understand how to use that action without losing judgment.
+
+16. ADVISOR EXPERIENCE VS NASH
+
+NASH owns conversation intelligence and language drafts.
+
+Advisor Experience can explain how to use a NASH draft, what the draft is trying to accomplish and what boundaries apply.
+
+Advisor Experience cannot convert NASH into mandatory copy-paste, alter truth inside NASH, add pressure language or remove uncertainty.
+
+NASH may draft.
+
+Advisor Experience may teach.
+
+The advisor decides.
+
+17. ADVISOR EXPERIENCE VS BUSINESS PLANNING
+
+Business Planning owns goals, gaps, constraints and plan-to-action structure.
+
+Advisor Experience can explain the plan, help the advisor understand next steps and reduce friction in reviewing the plan.
+
+Advisor Experience cannot create planning truth, guarantee outcomes, convert a plan into a blind checklist or hide constraints.
+
+A plan remains revisable.
+
+Advisor Experience must preserve that revisability.
+
+18. ADVISOR EXPERIENCE VS MICK
+
+Mick owns behavior intelligence.
+
+Advisor Experience can explain behavior signals in a non-punitive way when permitted.
+
+Advisor Experience cannot diagnose character, shame the advisor, convert Mick into surveillance or turn a behavior signal into human worth.
+
+Mick observes patterns.
+
+Advisor Experience helps the advisor learn from them.
+
+19. ADVISOR EXPERIENCE VS PRODUCTIVITY
+
+Productivity owns activity, throughput, conversion and output metrics.
+
+Advisor Experience can explain what a productivity metric means, why it may matter and what evidence or period supports it.
+
+Advisor Experience cannot rank human value, create pressure language, turn metrics into shame or redefine metric ownership.
+
+Productivity measures.
+
+Advisor Experience teaches interpretation.
+
+20. ADVISOR EXPERIENCE VS MANAGER INTELLIGENCE
+
+Manager Intelligence owns manager-facing coaching context.
+
+Advisor Experience can consume only manager-related context that is permitted for advisor-facing explanation.
+
+Advisor Experience cannot turn manager attention signals into surveillance, punishment, employment conclusions or pressure.
+
+Manager Intelligence supports coaching.
+
+Advisor Experience supports advisor capability.
+
+21. ADVISOR EXPERIENCE VS ECONOMIC MOTIVATION / COMPENSATION
+
+Economic Motivation and Compensation domains own economic and compensation interpretations under evidence and rule boundaries.
+
+Advisor Experience can explain economic outputs only when evidence, rule context, period context, confidence and uncertainty are present.
+
+Advisor Experience cannot invent income potential, expected income, income at risk, commission, contest progress, compensation eligibility or economic urgency.
+
+Economic value without evidence remains unknown.
+
+Advisor Experience cannot make unknown money feel known.
+
+22. ADVISOR EXPERIENCE VS PRODUCT / POLICY TRUTH
+
+Product Truth owns product facts.
+
+Policy Truth owns specific policy facts.
+
+Advisor Experience can explain Product Truth and Policy Truth in simpler language.
+
+Advisor Experience cannot invent product benefits, policy status, coverage, exclusions, premiums, values or suitability.
+
+Simplicity is allowed.
+
+Truth alteration is prohibited.
+
+23. BENVENÙ BOUNDARY
+
+Benvenù exists to create first value, not first friction.
+
+Benvenù must:
+
+- start from evidence already available when possible
+- ask only the minimum necessary question when evidence is missing
+- produce a useful first output before broad setup
+- show uncertainty instead of hiding it
+- avoid generic CRM onboarding
+- avoid corporate tutorial posture
+- avoid long forms
+- avoid fake personalization
+- create durable value
+- preserve advisor authority
+- preserve truth boundaries
+
+Benvenù may introduce Forge through:
+
+- first advisor baseline snapshot
+- first evidence map
+- first relationship opportunity
+- first policy review area
+- first product focus area
+- first activity insight
+- first planning orientation
+- first command discovery
+- first learning state
+
+Benvenù must not make the advisor feel that Forge is asking for work before Forge has earned trust.
+
+24. ADVISOR EXPERIENCE STATES
+
+Advisor Experience may track these learning states:
+
+- unseen
+- introduced
+- tried
+- completed_with_help
+- completed_without_help
+- learned
+- suppressed
+- needs_refresh
+
+These states describe learning and interaction support.
+
+They do not describe intelligence, discipline, worth, loyalty, productivity or commitment.
+
+A feature should stop teaching itself when the advisor can complete the work without help.
+
+Help that continues after learning becomes friction.
+
+25. ADVISOR EXPERIENCE STALENESS
+
+Advisor Experience signals become stale when:
+
+- the advisor has learned the feature
+- the workflow changed
+- evidence changed
+- domain output changed
+- user role changed
+- rule-pack context changed
+- the advisor dismissed help repeatedly
+- the advisor completed the task without help
+- old confusion no longer applies
+- new uncertainty appears
+
+Stale help must be suppressed, refreshed or revalidated.
+
+Stale help must not be repeated as if still relevant.
+
+26. ADVISOR EXPERIENCE DRIFT HANDLING
+
+Advisor Experience drift occurs when:
+
+- help becomes command
+- explanation becomes persuasion
+- simplification hides uncertainty
+- first value becomes onboarding
+- learning state becomes surveillance
+- gamification becomes pressure
+- clarity becomes overconfidence
+- reduced complexity becomes reduced truth
+- guidance becomes dependency
+- NASH becomes copy-paste obligation
+- NBA becomes order
+- Productivity becomes shame
+- Mick becomes manipulation
+- Manager Intelligence becomes monitoring
+
+When drift is detected, Forge must:
+
+- restore evidence visibility
+- restore uncertainty visibility
+- restore human authority
+- lower pressure language
+- suppress irrelevant help
+- ask for missing evidence instead of inventing
+- identify the owning domain
+- avoid automatic escalation
+- mark the output as limited
+
+27. PARTIAL EVIDENCE HANDLING — ADVISOR EXPERIENCE
+
+When evidence is partial, Advisor Experience may:
+
+- explain what is known
+- explain what is unknown
+- explain what evidence is missing
+- explain which domain owns the missing truth
+- suggest a verification step
+- offer a limited orientation
+- reduce confidence language
+- avoid final claims
+- avoid irreversible guidance
+
+Advisor Experience must not:
+
+- fill missing facts with plausible defaults
+- hide partial evidence
+- convert weak evidence into confident teaching
+- teach a feature as if its output were complete
+- simplify away missing context
+- make a recommendation appear stronger than it is
+
+Partial evidence should produce partial explanation.
+
+It should not produce fake certainty.
+
+28. PARTIAL EVIDENCE HANDLING — BENVENÙ
+
+When Benvenù has partial evidence, it may:
+
+- create a first evidence map
+- ask one minimal clarifying question
+- produce a limited first-value output
+- explain what Forge can already do
+- explain what Forge cannot yet know
+- show next evidence needed
+- preserve unknown states
+
+Benvenù must not:
+
+- invent a complete advisor baseline
+- invent a first opportunity
+- invent a product focus
+- invent a revenue path
+- create fake personalization
+- require full setup before any value
+- ask for duplicate capture
+- hide that the first output is limited
+
+Benvenù should make partial value useful without pretending it is complete.
+
+29. ANTI-DEPENDENCE RULES
+
+Forge must make the advisor more capable.
+
+Advisor Experience must:
+
+- explain reasoning enough for the advisor to learn
+- reveal evidence and uncertainty
+- teach transferable judgment
+- reduce unnecessary friction
+- stop teaching learned features
+- avoid making the advisor wait for Forge when human judgment is sufficient
+- encourage review where evidence is weak
+- preserve advisor ownership of action
+
+Advisor Experience must not:
+
+- create blind obedience
+- make Forge the only path to action
+- hide why a recommendation exists
+- hide why Forge cannot answer
+- over-assist until the advisor stops thinking
+- use confidence theater
+- make help emotionally coercive
+- make the advisor dependent on prompts for basic professional judgment
+
+Help is successful when the advisor needs less help over time.
+
+30. CLIENT FIRST
+
+Advisor Experience must preserve Client First.
+
+Clarity for the advisor must not come at the expense of client autonomy, suitability, trust or truth.
+
+Advisor Experience cannot:
+
+- pressure the advisor to act against client interest
+- hide client-facing uncertainty
+- turn relationship trust into leverage
+- turn economic motivation into pressure
+- turn forecast gaps into urgency theater
+- turn product explanation into sales pressure
+- turn policy explanation into unsupported claims
+
+Benvenù must not optimize adoption by weakening Client First.
+
+First value is invalid if it teaches the advisor to act without client trust, evidence or authority.
+
+31. AUTHORITY BOUNDARY
+
+Advisor Experience may guide.
+
+Advisor Experience may teach.
+
+Advisor Experience may explain.
+
+Advisor Experience may suggest review.
+
+Advisor Experience may reduce friction.
+
+Advisor Experience may not decide.
+
+Advisor Experience may not execute.
+
+Advisor Experience may not mandate.
+
+Advisor Experience may not replace the advisor, manager or client.
+
+Advisor authority remains with the advisor.
+
+Manager authority remains with the manager.
+
+Client authority remains with the client.
+
+Forge decides only within its defined system boundaries.
+
+Generative AI explains; it does not create truth.
+
+32. SURVIVAL TEST
+
+If ADR-016 disappears, Forge can still have engines and outputs, but the advisor experience can drift into:
+
+- onboarding before value
+- help before context
+- prompts before evidence
+- dashboards before understanding
+- explanation without uncertainty
+- action without learning
+- automation without capability
+- gamification without judgment
+- adoption pressure without trust
+- dependency disguised as simplicity
+
+ADR-016 survives because no previous ADR fully governs learning state, first-value experience, help suppression, progressive discovery, first friction or anti-dependence.
+
+33. ABSORPTION TEST
+
+ADR-016 cannot be fully absorbed into ADR-003.
+
+ADR-003 governs authority, but not advisor learning or first experience.
+
+ADR-016 cannot be fully absorbed into ADR-004.
+
+ADR-004 governs recommendation validity, but not contextual help or anti-dependence.
+
+ADR-016 cannot be fully absorbed into ADR-009.
+
+ADR-009 governs action prioritization, but not feature learning state.
+
+ADR-016 cannot be fully absorbed into ADR-010.
+
+ADR-010 governs conversation intelligence, but not advisor experience.
+
+ADR-016 cannot be fully absorbed into ADR-012.
+
+ADR-012 governs plans, but not first value or help behavior.
+
+ADR-016 cannot be fully absorbed into ADR-013 or ADR-014.
+
+Mick and Productivity govern behavior and metrics, not learning experience.
+
+ADR-016 cannot be fully absorbed into ADR-015.
+
+Manager Intelligence is manager-facing. ADR-016 is advisor-facing.
+
+Therefore ADR-016 remains an independent constitutional boundary.
+
+34. ALLOWED BEHAVIOR
+
+Allowed behavior:
+
+- explain Forge outputs in plain language
+- show evidence and uncertainty
+- orient the advisor in context
+- reveal relevant capabilities progressively
+- reduce unnecessary steps
+- ask minimal clarifying questions
+- create first value before heavy capture
+- help the advisor learn a workflow
+- suppress help after mastery
+- refresh help when context changes
+- warn when evidence is partial or stale
+- identify the owning domain
+- preserve NBA, NASH, Product Truth, Policy Truth, Forecast Truth and Economic Evidence boundaries
+- lower complexity when frustration is detected
+- increase challenge when capability is demonstrated
+
+35. DISALLOWED BEHAVIOR
+
+Disallowed behavior:
+
+- invent facts
+- invent recommendations
+- invent products
+- invent premiums
+- invent coverage
+- invent economic values
+- hide evidence
+- hide uncertainty
+- hide unknown states
+- replace human authority
+- mandate action
+- execute action
+- pressure adoption
+- convert first experience into form completion
+- convert learning state into surveillance
+- convert help into command
+- convert simplicity into false certainty
+- convert gamification into pressure
+- repeat irrelevant help
+- teach a learned function unnecessarily
+- create advisor dependency
+
+36. CONSEQUENCES
+
+Positive consequences:
+
+- advisor adoption improves through value, not pressure
+- first experience becomes useful instead of bureaucratic
+- advisors learn Forge without losing judgment
+- explanations preserve truth boundaries
+- contextual help becomes safer
+- Benvenù avoids CRM-style onboarding
+- feature learning can mature responsibly
+- advisor autonomy increases over time
+- Client First is protected in experience design
+
+Tradeoffs:
+
+- more discipline is required before showing help
+- some onboarding shortcuts are prohibited
+- some personalization must remain limited until evidence exists
+- some help must be suppressed even if engagement metrics would increase
+- first experience may ask fewer questions and therefore produce narrower initial value
+- product teams must distinguish clarity from certainty
+- adoption cannot be optimized by hiding complexity that matters
+
+37. DEPENDENCIES
+
+ADR-016 depends on:
+
+- ADR-001 — Evidence Ownership / Source Validity
+- ADR-002 — One Metric One Owner
+- ADR-003 — Recommendation vs Decision / Authority Boundary
+- ADR-004 — No Invented Recommendations
+- ADR-005 — Product Truth Boundary
+- ADR-006 — Policy Truth Boundary
+- ADR-007 — Forecast Truth Boundary
+- ADR-008 — Economic Evidence Boundary
+- ADR-009 — NBA Philosophy
+- ADR-010 — NASH Conversation Intelligence Boundary
+- ADR-011 — Relationship Intelligence Non-Manipulation Boundary
+- ADR-012 — Business Planning Plan-to-Action Boundary
+- ADR-013 — Mick Behavior Intelligence Boundary
+- ADR-014 — Productivity Metric Ownership Boundary
+- ADR-015 — Manager Intelligence Authority Boundary
+
+38. DEPENDENT ADRs
+
+Future ADRs that define adoption, command behavior, compensation explanation, economic motivation, training, learning intelligence, onboarding, manager development, recruitment experience or advisor progression must respect ADR-016.
+
+Potential dependent ADRs may include:
+
+- Command OS experience boundaries
+- Compensation explanation boundaries
+- Economic Motivation Client First boundaries
+- Learning Intelligence boundaries
+- Recruitment Experience boundaries
+- Manager Development Experience boundaries
+
+This ADR does not create those ADRs.
+
+39. NON-GOALS
+
+This ADR does not define:
+
+- UI
+- app.js behavior
+- engine implementation
+- schemas
+- database design
+- automation
+- feature design
+- frontend layout
+- onboarding screens
+- command palette implementation
+- Clippy implementation
+- Candy Crush implementation
+- Benvenù implementation
+- scoring models
+- business planning formulas
+- compensation calculations
+- product recommendations
+- policy recommendations
+- manager workflows
+- notification logic
+- release plan
+
+40. FINAL VERDICT
+
+Advisor Experience increases advisor capability.
+
+Advisor Experience does not increase advisor dependency.
+
+Benvenù creates first value.
+
+Benvenù does not create first friction.
+
+Forge debe hacer al asesor más capaz, no más dependiente.
+
+Clarity is not hiding uncertainty.
+
+Simplicity is not altering truth.
+
+Help is not dependency.
+
+Guidance is not authority.
+
+NASH is not mandatory copy-paste.
+
+NBA is not an order.
+
+Business Planning is not a blind checklist.
+
+Productivity is not shame.
+
+Mick is not manipulation.
+
+Manager Intelligence is not surveillance.
+
+Benvenù is not a form.
+
+First value without truth is false value.
+
+An experience that hides evidence, uncertainty, limits or human judgment is not Advisor Experience.
+
+It is dependency with better language.

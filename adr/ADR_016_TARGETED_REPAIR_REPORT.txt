@@ -1,0 +1,163 @@
+FORGE ADR-016 TARGETED REPAIR REPORT
+
+A) WHAT WAS WRONG WITH ADR-016
+
+Target file:
+adr/ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary.txt
+
+Problem found:
+ADR-016 had been mechanically made self-contained during the prior audit, but the canonical file was only about 80 lines.
+
+It had:
+- TITLE
+- STATUS: Final
+- FINAL VERDICT
+
+It was missing critical constitutional content:
+- BENVENÙ BOUNDARY
+- PARTIAL EVIDENCE HANDLING — ADVISOR EXPERIENCE
+- PARTIAL EVIDENCE HANDLING — BENVENÙ
+- ANTI-DEPENDENCE RULES
+- CLIENT FIRST
+- AUTHORITY BOUNDARY
+- SURVIVAL TEST
+- ABSORPTION TEST
+- NON-GOALS
+- detailed input boundaries
+- detailed permitted/prohibited outputs
+- drift handling
+- staleness handling
+
+B) WHAT SECTIONS WERE ADDED / RESTORED
+
+ADR-016 was rewritten as a full, self-contained Final ADR with these sections:
+
+1. TITLE
+2. STATUS
+3. CONTEXT
+4. DECISION
+5. DEFINITIONS
+6. ADVISOR EXPERIENCE OWNERSHIP RULES
+7. BENVENÙ OWNERSHIP RULES
+8. VALID ADVISOR EXPERIENCE INPUTS
+9. VALID BENVENÙ INPUTS
+10. INPUT BOUNDARIES
+11. OUTPUTS PERMITIDOS — ADVISOR EXPERIENCE
+12. OUTPUTS PROHIBIDOS — ADVISOR EXPERIENCE
+13. OUTPUTS PERMITIDOS — BENVENÙ
+14. OUTPUTS PROHIBIDOS — BENVENÙ
+15. ADVISOR EXPERIENCE VS NBA
+16. ADVISOR EXPERIENCE VS NASH
+17. ADVISOR EXPERIENCE VS BUSINESS PLANNING
+18. ADVISOR EXPERIENCE VS MICK
+19. ADVISOR EXPERIENCE VS PRODUCTIVITY
+20. ADVISOR EXPERIENCE VS MANAGER INTELLIGENCE
+21. ADVISOR EXPERIENCE VS ECONOMIC MOTIVATION / COMPENSATION
+22. ADVISOR EXPERIENCE VS PRODUCT / POLICY TRUTH
+23. BENVENÙ BOUNDARY
+24. ADVISOR EXPERIENCE STATES
+25. ADVISOR EXPERIENCE STALENESS
+26. ADVISOR EXPERIENCE DRIFT HANDLING
+27. PARTIAL EVIDENCE HANDLING — ADVISOR EXPERIENCE
+28. PARTIAL EVIDENCE HANDLING — BENVENÙ
+29. ANTI-DEPENDENCE RULES
+30. CLIENT FIRST
+31. AUTHORITY BOUNDARY
+32. SURVIVAL TEST
+33. ABSORPTION TEST
+34. ALLOWED BEHAVIOR
+35. DISALLOWED BEHAVIOR
+36. CONSEQUENCES
+37. DEPENDENCIES
+38. DEPENDENT ADRs
+39. NON-GOALS
+40. FINAL VERDICT
+
+Core doctrine restored:
+- Advisor Experience should increase advisor capability.
+- Advisor Experience should not increase advisor dependency.
+- Benvenù should create first value.
+- Benvenù should not create first friction.
+- Forge debe hacer al asesor más capaz, no más dependiente.
+
+C) WHETHER ADR-015 NEEDS HUMAN REVIEW
+
+ADR-015 canonical file inspected:
+adr/ADR-015 — Manager Intelligence Authority Boundary.txt
+
+Result:
+ADR-015 has STATUS: Final and FINAL VERDICT, but it does not look complete enough under the same constitutional standard.
+
+The targeted check found only:
+- FINAL VERDICT
+
+It did not expose standalone sections for:
+- NON-GOALS
+- DRIFT
+- STALENESS
+- AUTHORITY BOUNDARY
+- CLIENT FIRST
+- CONSEQUENCES
+
+ADR-015 was not modified because this task was scoped as ADR-016 targeted repair.
+
+Human review recommended:
+Yes. ADR-015 likely needs a separate targeted repair PAQ.
+
+D) FILES MODIFIED
+
+Modified:
+adr/ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary.txt
+
+Created:
+adr/ADR_016_TARGETED_REPAIR_REPORT.txt
+
+Files intentionally not modified:
+adr/ADR-015 — Manager Intelligence Authority Boundary.txt
+adr/ADR-005 through adr/ADR-014 canonical files
+engines
+schemas
+UI
+Build Tree
+database files
+automation files
+
+E) VALIDATION RESULT
+
+Validation command:
+grep -n "BENVENÙ BOUNDARY\|PARTIAL EVIDENCE\|ANTI-DEPENDENCE\|CLIENT FIRST\|AUTHORITY BOUNDARY\|SURVIVAL TEST\|ABSORPTION TEST\|NON-GOALS\|FINAL VERDICT" "adr/ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary.txt"
+
+Result:
+All critical anchors were found.
+
+Observed anchor lines:
+- BENVENÙ BOUNDARY
+- PARTIAL EVIDENCE HANDLING — ADVISOR EXPERIENCE
+- PARTIAL EVIDENCE HANDLING — BENVENÙ
+- ANTI-DEPENDENCE RULES
+- CLIENT FIRST
+- AUTHORITY BOUNDARY
+- SURVIVAL TEST
+- ABSORPTION TEST
+- NON-GOALS
+- FINAL VERDICT
+
+Line count command:
+wc -l "adr/ADR-016 — Advisor Experience + Benvenù Anti-Dependence Boundary.txt"
+
+Result:
+946 lines.
+
+Forbidden reference check:
+No "Draft", "same as Draft", "see Draft", "follows Draft7", "resumen" or "versión condensada" references were found in ADR-016.
+
+Final validation result:
+PASS for ADR-016 targeted repair.
+
+F) SUGGESTED GIT COMMANDS
+
+git status
+git diff --stat
+git diff -- adr/ADR-016\ —\ Advisor\ Experience\ +\ Benvenù\ Anti-Dependence\ Boundary.txt adr/ADR_016_TARGETED_REPAIR_REPORT.txt
+git add adr/ADR-016\ —\ Advisor\ Experience\ +\ Benvenù\ Anti-Dependence\ Boundary.txt adr/ADR_016_TARGETED_REPAIR_REPORT.txt
+git commit -m "docs: repair ADR-016 advisor experience boundary"
