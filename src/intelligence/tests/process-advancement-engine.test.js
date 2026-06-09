@@ -185,7 +185,8 @@ const tests = [
       governingCommitment: baseCommitment({
         state: COMMITMENT_STATES.ACTIVE,
         owner: EVALUATED_ACTORS.ADVISOR,
-        quality: COMMITMENT_QUALITY.SPECIFIC
+        quality: COMMITMENT_QUALITY.SPECIFIC,
+        isDueNow: true
       })
     }),
     expected: PROCESS_MOVES.HONOR_COMMITMENT

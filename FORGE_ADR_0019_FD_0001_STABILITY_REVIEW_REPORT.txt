@@ -1,0 +1,56 @@
+FORGE ADR-0019 / FD-0001 STABILITY REVIEW REPORT
+
+Status:
+Completed
+
+Scope:
+Review the ADR/documentation layout, the Constitution Map references to ADR-001A/001B/001C, and the Process Advancement stability issues identified after ADR-0019 and FD-0001 review.
+
+Findings:
+1. Documentation layout is split in practice.
+   - `adr/` contains the canonical constitutional ADR set for ADR-001 through ADR-018.
+   - `docs/adr/` currently contains newer ADR-facing documents such as ADR-0019 and ADR-001D.
+   - Recommendation only: keep `adr/` as the canonical home for ratified constitutional ADRs, and treat `docs/adr/` as the working/staging location for new or transitional ADR material until ratification.
+
+2. Constitution Map references ADR-001A, ADR-001B, and ADR-001C, but no canonical `ADR-001A`, `ADR-001B`, or `ADR-001C` files exist.
+   - Existing artifacts for 001A/001B/001C are implementation-readiness contracts:
+     - FORGE_IMPLEMENTATION_READINESS_001A_SOURCE_OWNERSHIP_REGISTRY.txt
+     - FORGE_IMPLEMENTATION_READINESS_001B_EVIDENCE_STATE_VOCABULARY.txt
+     - FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt
+   - Recommendation only: either create canonical ADR documents later, or rename these Constitution Map references to readiness contracts / operational foundations so the map does not imply missing ADR files.
+
+3. Canonical test fixture 007 was stale.
+   - The engine now requires advisor commitments to be due via `isDueNow === true`.
+   - The old test did not include that flag, so the fixture expected behavior no longer matched the rule.
+
+4. `relationshipRisk: high` should not remain `generate_agreement`.
+   - ADR-011 and Client First principles point to restoring the consent boundary, not pushing forward.
+   - `revalidate_permission` is the lightest process move that matches that intent without escalating unnecessarily to `human_review`.
+
+Proposed changes:
+1. Keep ADR documentation locations unchanged for now and document the recommendation only.
+2. Keep the Constitution Map wording issue as a recommendation only.
+3. Update the canonical 007 fixture to include `isDueNow: true`.
+4. Route `relationshipRisk: high` to `revalidate_permission`.
+5. Update RW013 to expect `revalidate_permission`.
+
+Files changed:
+1. src/intelligence/process/process-advancement-rules.js
+2. src/intelligence/tests/process-advancement-engine.test.js
+3. src/intelligence/tests/process-advancement-real-world-validation.test.js
+4. FORGE_ADR_0019_FD_0001_STABILITY_REVIEW_REPORT.txt
+
+Tests run:
+1. `node src/intelligence/tests/process-advancement-engine.test.js`
+2. `node src/intelligence/tests/process-advancement-real-world-validation.test.js`
+3. `node src/intelligence/tests/process-advancement-stress-test.js`
+
+Pass/fail results:
+1. `process-advancement-engine.test.js`: failed before the fixture fix because Canonical 007 lacked `isDueNow: true`.
+2. `process-advancement-real-world-validation.test.js`: passed 20/20 after updating RW013.
+3. `process-advancement-stress-test.js`: passed 1000/1000.
+
+Remaining risks:
+1. The canonical/documentation split is still unresolved by design; this report only recommends a boundary, it does not move files.
+2. ADR-001A/001B/001C still lack canonical ADR files, so the Constitution Map can mislead readers until those references are renamed or formalized.
+3. `relationshipRisk` is now interpreted as a consent-boundary issue via `revalidate_permission`; if the product intent later wants a stronger caution, that policy may need a separate ADR or rule refinement.

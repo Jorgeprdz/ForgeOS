@@ -270,7 +270,7 @@ const cases = [
   },
   {
     name: "RW013 — High relationship risk after pressure",
-    expected: PROCESS_MOVES.GENERATE_AGREEMENT,
+    expected: PROCESS_MOVES.REVALIDATE_PERMISSION,
     input: input({
       externalConstraints: constraints({
         relationshipRisk: RISK_LEVELS.HIGH

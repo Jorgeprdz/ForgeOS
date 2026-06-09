@@ -89,6 +89,10 @@ function resolveProcessMove(input = {}) {
     return PROCESS_MOVES.WAIT_ON_DEPENDENCY;
   }
 
+  if (externalConstraints.relationshipRisk === RISK_LEVELS.HIGH) {
+    return PROCESS_MOVES.REVALIDATE_PERMISSION;
+  }
+
   if (
     governingCommitment.owner === EVALUATED_ACTORS.ADVISOR &&
     governingCommitment.state === COMMITMENT_STATES.ACTIVE &&
