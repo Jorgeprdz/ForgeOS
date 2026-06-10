@@ -1,157 +1,68 @@
-# Forge Discovery Consolidation Report
+# FORGE_DISCOVERY_CONSOLIDATION_REPORT.md
 
-Status: CHECKPOINT REVIEW
+## 1. Executive Summary
+Este ciclo de auditoría y descubrimiento arquitectónico ha resultado en una **simplificación radical** del núcleo de Forge OS. Se ha desmantelado la tendencia hacia el "inflacionismo semántico" (la creación de múltiples dominios y entidades para conceptos que son, en realidad, derivados). La arquitectura ha girado desde un modelo centrado en la "Acción" (NBA) hacia un modelo centrado en la **"Evidencia y la Continuidad del Significado"**. Forge se consolida no como un sistema de automatización, sino como un **Sistema Operativo del Asesor (AOS)** que reduce la incertidumbre mediante la persistencia y el peso de la evidencia.
 
-Documentation only. No implementation. No code. No engines. No schemas. No UI.
-No Build Tree changes. No architecture modifications.
+## 2. Discovery Timeline
+- **Fase 1: Deconstrucción del Permiso.** Se determinó que el "Permiso" no es una entidad, sino una interpretación contextual de la evidencia.
+- **Fase 2: Desmitificación del Avance.** Se rechazó "Process Advancement" como dominio, delegando el progreso a los "Progressive Commitments".
+- **Fase 3: Degradación del NBA.** El "Next Best Action" dejó de ser el núcleo para convertirse en una capa de consumo de evidencia.
+- **Fase 4: Alineación AOS.** Se corrigió el sesgo de "Ciencia de Datos", re-enfocando la memoria hacia la utilidad operativa del asesor (FD-0001).
+- **Fase 5: Consolidación de Primitivas.** Identificación del "Evidence Ledger" como el rastro atómico necesario para la continuidad.
 
-## 1. Unified Conceptual Model
+## 3. Surviving Concepts (Conceptos Supervivientes)
+- **FD-0001:** El centro de gravedad constitucional (Decisiones bajo incertidumbre).
+- **Evidence (Evidencia):** La única primitiva atómica de verdad.
+- **Ownership (ADR-0019):** La gestión de la responsabilidad del proceso.
+- **Progressive Commitments:** La unidad de medida del avance real.
+- **Waiting States:** Estados válidos de inacción estratégica.
+- **Relationship Risk:** Filtro de seguridad para la intervención.
+- **NASH-derived Context:** Significado extraído de la interacción cruda.
+- **Rule Pack Provenance:** Rastreo de la lógica legal/comercial aplicada.
+- **Evidence Persistence:** La capacidad técnica de conservar el rastro atómico.
+- **Uncertainty Reduction Over Time:** El objetivo métrico de FD-0001.
 
-The consolidated human decision model is:
+## 4. Rejected Concepts (Conceptos Rechazados)
+- **Permission Registry/Ledger:** Rechazados como entidades independientes.
+- **Authorization Inference:** Rechazado como capacidad autónoma.
+- **Process Advancement:** Rechazado como dominio arquitectónico.
+- **NBA como Núcleo:** Rechazado como centro de la arquitectura.
+- **Decision Anchors:** Rechazados como primitivas (son atributos de la evidencia).
+- **Context Continuity:** Rechazado como capacidad técnica (es un resultado deseado).
 
-Awareness
--> Recognition
--> Ownership
--> Commitment
--> Decision
--> Action
+## 5. Architectural Lessons Learned
+- **Evitar la Reificación:** No crear entidades para conceptos que son interpretaciones (ej. Permiso, Avance).
+- **Prioridad AOS:** La arquitectura debe servir a la carga cognitiva del asesor, no al entrenamiento de modelos futuros.
+- **Inferencia vs. Estado:** Es preferible inferir el "Derecho a Actuar" desde la evidencia en tiempo real que almacenarlo en un registro estático que puede quedar obsoleto.
+- **La Evidencia es Sagrada:** La pérdida de evidencia atómica es una pérdida irreversible de inteligencia futura.
 
-This is a conceptual relationship, not architecture.
+## 6. Impact on FD-0001
+FD-0001 sale fortalecido al eliminar "ruido" arquitectónico. La reducción de la incertidumbre ahora se apoya directamente en la calidad y persistencia de la **Evidencia**, eliminando capas intermedias que ocultaban el razonamiento.
 
-## 2. Stage Definitions
+## 7. Impact on ADR-0019
+ADR-0019 (Ownership) se confirma como el pilar operativo. Al eliminar la capa de "Process Advancement", la responsabilidad del flujo recae íntegramente en la gestión de **Ownership** y la detección de **Progressive Commitments**.
 
-Awareness:
+## 8. Impact on ADR-0020 Discovery
+El descubrimiento de ADR-0020 se desplaza desde "Permission" hacia la **"Continuidad del Significado"**. La investigación futura debe centrarse en cómo la evidencia preservada ayuda al asesor a mantener el hilo conductor de la relación sin crear estructuras de datos redundantes.
 
-The person notices the topic, risk, goal or opportunity.
+## 9. Open Questions
+- ¿Cómo gestionar la degradación (decay) de la relevancia de la evidencia sin perder el valor de continuidad?
+- ¿Cuál es el balance óptimo entre "Evidencia Cruda" y "Contexto Procesado" para maximizar el apalancamiento cognitivo del asesor?
+- ¿Cómo se integra el Rule Pack Provenance en el Evidence Ledger sin acoplar la lógica de negocio al almacenamiento?
 
-Recognition:
+## 10. Discovery Items Ready For LOCK
+- La eliminación de **Permission** como entidad.
+- La degradación de **NBA** a capa de recomendación.
+- La definición de **Decision Anchors** como atributos de evidencia.
+- El rol de los **Progressive Commitments** como única métrica de avance.
 
-The person sees that it may apply to their own life or responsibility.
+## 11. Discovery Items Requiring Further Research
+- El modelo de persistencia del **Evidence Ledger**.
+- La implementación de filtros de **Relationship Risk** basados en evidencia atómica.
+- La semántica de los **Waiting States** en la interfaz del asesor.
 
-Ownership:
+## 12. Recommended Next Discovery Area
+**The Evidence Ledger & Meaning Persistence:** Investigación sobre la estructura técnica necesaria para soportar la persistencia de evidencia atómica y su transformación en contexto accionable, respetando los límites de privacidad y eficiencia del AOS.
 
-The person accepts that the issue matters to them.
-
-Commitment:
-
-The person is willing to allocate time, attention, money, information or social
-coordination toward action.
-
-Decision:
-
-The person concludes that action should occur if the path is appropriate.
-
-Action:
-
-The person executes or begins execution.
-
-## 3. Readiness Relationship
-
-Readiness describes whether evidence suggests the person is prepared to move
-toward action or responsibility.
-
-Readiness is not general worth.
-
-Readiness is not a score.
-
-Readiness is context-specific.
-
-In the model, readiness becomes stronger as recognition, ownership, capacity and
-commitment become visible.
-
-## 4. Friction Relationship
-
-Friction is the force that slows or blocks action.
-
-Friction can appear at every stage:
-
-- awareness friction: attention avoidance
-- recognition friction: "this is not for me"
-- ownership friction: emotional discomfort
-- commitment friction: vague budget or missing decision-maker
-- decision friction: fear of regret
-- action friction: documents, payment, follow-up, conflict
-
-Friction can coexist with readiness.
-
-## 5. Action Safety Relationship
-
-Action Safety describes whether acting feels sufficiently safe and responsible
-despite uncertainty.
-
-Action Safety is not certainty.
-
-Action Safety is not compliance.
-
-Action Safety is not blind confidence.
-
-It appears to sit between decision and action, while also influencing earlier
-stages through trust, clarity and agency.
-
-## 6. Decision Clarity Relationship
-
-Decision Clarity is the condition that lets a person understand:
-
-- what matters
-- why it matters
-- what is known
-- what remains uncertain
-- what choice is being made
-- what happens next
-
-Decision Clarity supports readiness and Action Safety while reducing friction.
-
-## 7. Consolidated Relationship
-
-Conceptual relationship:
-
-Awareness creates attention.
-
-Recognition creates relevance.
-
-Ownership creates personal meaning.
-
-Commitment creates resource willingness.
-
-Decision creates intent.
-
-Action requires path, readiness and sufficient Action Safety.
-
-Friction can interrupt any transition.
-
-Decision Clarity helps the person move responsibly without surrendering agency.
-
-## 8. What Was Strengthened
-
-Strengthened assumptions:
-
-- Product should follow human context.
-- Trust precedes disclosure.
-- Questions create self-recognition.
-- Readiness is not the same as transaction.
-- Friction can explain non-action without assuming laziness.
-- Action Safety explains a gap between decision and action.
-
-## 9. What Was Weakened
-
-Weakened assumptions:
-
-- Objections explain most non-action.
-- The product presentation creates the sale.
-- Agreement means readiness.
-- Readiness means action will happen.
-- More information automatically creates action.
-- Compliance is a good proxy for decision quality.
-
-## 10. Future Architecture Decisions Potentially Affected
-
-Potentially affected future decisions:
-
-- whether Sales Intelligence should own decision-state interpretation
-- whether Product Intelligence should depend on human context intake
-- whether Advisor Development should model advisor-side friction
-- whether Manager Intelligence should model coaching friction
-- whether Article 0 should govern decision-support features
-- whether Skynet Laws need explicit protection against compliance optimization
-
-No architecture change is approved by this report.
+---
+*Reporte generado por Forge OS Architecture Auditor.*

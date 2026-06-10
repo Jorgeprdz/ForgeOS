@@ -114,9 +114,9 @@ No ADR-001D will be created.
 
 Future work involving operational recommendations should be evaluated under existing architecture:
 
-- ADR-001A Ownership Vocabulary
-- ADR-001B Support Condition Vocabulary
-- ADR-001C Validation Result Standardization
+- 001A Source Ownership Registry readiness contract / operational foundation
+- 001B Evidence State Vocabulary readiness contract / operational foundation
+- 001C Truth Validation Result Contract readiness contract / operational foundation
 - ADR-0019 Process Advancement Intelligence
 
 If a future architectural problem emerges that cannot be resolved within those frameworks, a new discovery may be initiated under a new ADR identifier.
@@ -125,7 +125,7 @@ If a future architectural problem emerges that cannot be resolved within those f
 
 ## Lessons Learned
 
-The existence of ADR-001A, ADR-001B, and ADR-001C does not imply the necessity of ADR-001D.
+The existence of 001A, 001B, and 001C readiness contracts / operational foundations does not imply the necessity of ADR-001D.
 
 Architecture should be driven by real problems and irreversible decisions, not by sequence completion.
 
