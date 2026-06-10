@@ -55,6 +55,7 @@ El descubrimiento de ADR-0020 se desplaza desde "Permission" hacia la **"Continu
 - La degradación de **NBA** a capa de recomendación.
 - La definición de **Decision Anchors** como atributos de evidencia.
 - El rol de los **Progressive Commitments** como única métrica de avance.
+- **FD-XXXX Phase Zero Validation:** Una capacidad solo es central si aporta valor en una cuenta vacía.
 
 ## 11. Discovery Items Requiring Further Research
 - El modelo de persistencia del **Evidence Ledger**.
@@ -66,3 +67,8 @@ El descubrimiento de ADR-0020 se desplaza desde "Permission" hacia la **"Continu
 
 ---
 *Reporte generado por Forge OS Architecture Auditor.*
+
+---
+
+### **Actualización de Auditoría: El AOS en "Cold Start"**
+Se ha integrado el principio de **Fase Cero** como el filtro definitivo de relevancia arquitectónica. Forge OS se define ahora no por su memoria, sino por su **capacidad de activación y metodología operacional**. El valor de la continuidad y la memoria se reconoce como un **multiplicador de eficacia**, pero no como la fuente del valor primario.
