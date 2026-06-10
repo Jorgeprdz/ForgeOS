@@ -56,6 +56,9 @@ El descubrimiento de ADR-0020 se desplaza desde "Permission" hacia la **"Continu
 - La definición de **Decision Anchors** como atributos de evidencia.
 - El rol de los **Progressive Commitments** como única métrica de avance.
 - **FD-XXXX Phase Zero Validation:** La Validación de Fase Cero demuestra que ninguna capacidad dependiente de relaciones históricas, memoria, continuidad, evidencia acumulada o pipelines existentes puede ser considerada arquitectónicamente central para Forge OS. Es un test de dependencia, no una redefinición de identidad.
+- **Fase -1 / Market Reconstruction:** Descubrimiento de que la identificación de mercado es una incertidumbre ontológica previa a la ejecución (Fase 0).
+- **Market Inventory Intake:** Proceso de captura de materia prima para resolver el vacío de la Fase -1.
+- **Test de las 10 AM:** Guardrail que exige que toda arquitectura contribuya a una acción concreta del asesor.
 
 ## 11. Discovery Items Requiring Further Research
 - El modelo de persistencia del **Evidence Ledger**.

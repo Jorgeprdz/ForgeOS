@@ -117,7 +117,10 @@
 ├── 🟢 Referral Engine
 ├── 🟢 Reactivation Engine
 ├── 🟡 Lead Scoring Engine
-└── 🔵 Opportunity Intelligence Engine
+├── 🔵 Opportunity Intelligence Engine
+└── 🔵 Sourcing Engine / Market Inventory Intake
+    ├── Status: DISCOVERY / CANDIDATE IMPLEMENTATION
+    └── Purpose: Convert raw contact inventory into prioritized outreach candidates for the 10 AM Test.
 
 
 🟢 02 SALES CONVERSION ENGINE

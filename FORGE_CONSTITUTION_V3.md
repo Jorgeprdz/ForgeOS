@@ -348,6 +348,14 @@ Forge Core never hardcodes carrier-specific groups, bonuses, contests, careers, 
 
 ---
 
+---
+
+# CONSTITUTION_HISTORY
+
+| Document | Classification | Purpose |
+|----------|----------------|---------|
+| `FORGE_ARCHITECTURAL_CONSTITUTION_v3.md` | Constitutional Discovery / Audit Closure Document | Lock and stabilize core primitives (FD-0001, WALL-E, ADR-0019, Evidence Ledger, Phase -1). |
+
 # CONSTITUTION_GAP_REPORT
 
 ### 1. Principles that still need clarification
