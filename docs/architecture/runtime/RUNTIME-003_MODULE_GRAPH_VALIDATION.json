@@ -1,0 +1,235 @@
+{
+  "generatedAt": "2026-06-11T20:10:54.704Z",
+  "summary": {
+    "totalJsFilesScanned": 670,
+    "totalImportsFound": 194,
+    "staticImportsFound": 193,
+    "dynamicImportsFound": 1,
+    "missingTargetsCount": 5,
+    "missingExportsCount": 4,
+    "circularImportsCount": 2,
+    "bootBlockersCount": 3,
+    "executabilityVerdict": "LIKELY_BOOT_FAILURE",
+    "confidenceScore": 0.88
+  },
+  "missingTargets": [
+    {
+      "source": "adaptive-question-engine.js",
+      "target": "./adaptive-question-bank",
+      "resolved": "adaptive-question-bank.js",
+      "type": "static",
+      "classification": "DOMAIN_BLOCKER"
+    },
+    {
+      "source": "cartera-view.js",
+      "target": "../utils/cartera-utils.js",
+      "resolved": "../utils/cartera-utils.js",
+      "type": "static",
+      "classification": "ROUTE_BLOCKER"
+    },
+    {
+      "source": "smnyl-bonos-engine.js",
+      "target": "./smnyl-concursos-config.js",
+      "resolved": "smnyl-concursos-config.js",
+      "type": "static",
+      "classification": "DOMAIN_BLOCKER"
+    },
+    {
+      "source": "smnyl-training-allowance-engine.js",
+      "target": "./smnyl-concursos-config.js",
+      "resolved": "smnyl-concursos-config.js",
+      "type": "static",
+      "classification": "DOMAIN_BLOCKER"
+    },
+    {
+      "source": "utils.js",
+      "target": "./overlay-manager.js",
+      "resolved": "overlay-manager.js",
+      "type": "static",
+      "classification": "BOOT_BLOCKER"
+    }
+  ],
+  "missingExports": [
+    {
+      "source": "cartera-import-engine.js",
+      "target": "./cartera-service.js",
+      "resolved": "cartera-service.js",
+      "imported": "carteraService",
+      "classification": "ROUTE_BLOCKER"
+    },
+    {
+      "source": "comisiones.js",
+      "target": "./app.js",
+      "resolved": "app.js",
+      "imported": "callGemini",
+      "classification": "BOOT_BLOCKER"
+    },
+    {
+      "source": "prospeccion.js",
+      "target": "./app.js",
+      "resolved": "app.js",
+      "imported": "callGemini",
+      "classification": "BOOT_BLOCKER"
+    },
+    {
+      "source": "smnyl-produccion-engine.js",
+      "target": "./smnyl-prima-engine.js",
+      "resolved": "smnyl-prima-engine.js",
+      "imported": "calcularPrimaPoliza",
+      "classification": "DOMAIN_BLOCKER"
+    }
+  ],
+  "circularImports": [
+    {
+      "key": "app.js>prospeccion.js>app.js",
+      "chain": [
+        "app.js",
+        "prospeccion.js",
+        "app.js"
+      ],
+      "classification": "APP_SHELL_CYCLE"
+    },
+    {
+      "key": "app.js>comisiones.js>app.js",
+      "chain": [
+        "app.js",
+        "comisiones.js",
+        "app.js"
+      ],
+      "classification": "APP_SHELL_CYCLE"
+    }
+  ],
+  "bootBlockers": [
+    {
+      "source": "utils.js",
+      "target": "./overlay-manager.js",
+      "resolved": "overlay-manager.js",
+      "type": "static",
+      "classification": "BOOT_BLOCKER"
+    },
+    {
+      "source": "comisiones.js",
+      "target": "./app.js",
+      "resolved": "app.js",
+      "imported": "callGemini",
+      "classification": "BOOT_BLOCKER"
+    },
+    {
+      "source": "prospeccion.js",
+      "target": "./app.js",
+      "resolved": "app.js",
+      "imported": "callGemini",
+      "classification": "BOOT_BLOCKER"
+    }
+  ],
+  "appShellCouplings": [
+    {
+      "path": "db.js",
+      "importedNames": "DB",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "utils.js",
+      "importedNames": "showToast",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "dashboard.js",
+      "importedNames": "renderDashboard, bindDashboardEvents",
+      "category": "Domain route",
+      "shouldEventuallyBeDynamic": true
+    },
+    {
+      "path": "prospeccion.js",
+      "importedNames": "renderProspeccion, bindProspeccionEvents",
+      "category": "Advisor OS",
+      "shouldEventuallyBeDynamic": true
+    },
+    {
+      "path": "referidos.js",
+      "importedNames": "renderReferidos, bindReferidosEvents",
+      "category": "Advisor OS",
+      "shouldEventuallyBeDynamic": true
+    },
+    {
+      "path": "actividad.js",
+      "importedNames": "renderActividad, bindActividadEvents",
+      "category": "Advisor OS",
+      "shouldEventuallyBeDynamic": true
+    },
+    {
+      "path": "cartera.js",
+      "importedNames": "renderCartera, bindCarteraEvents",
+      "category": "Legacy route",
+      "shouldEventuallyBeDynamic": true
+    },
+    {
+      "path": "comisiones.js",
+      "importedNames": "renderComisiones, bindComisionesEvents",
+      "category": "Manager OS",
+      "shouldEventuallyBeDynamic": true
+    },
+    {
+      "path": "core-app-engine.js",
+      "importedNames": "Core",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "state-manager.js",
+      "importedNames": "AppState",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "event-system.js",
+      "importedNames": "EventBus",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "module-lifecycle.js",
+      "importedNames": "Lifecycle",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "ui-render-engine.js",
+      "importedNames": "RenderEngine",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "sync-orchestrator.js",
+      "importedNames": "SyncEngine",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "analytics-engine.js",
+      "importedNames": "Analytics",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "error-boundary.js",
+      "importedNames": "ErrorHandler",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "logger.js",
+      "importedNames": "Logger",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "app-shell-manager.js",
+      "importedNames": "AppShell",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    }
+  ]
+}
