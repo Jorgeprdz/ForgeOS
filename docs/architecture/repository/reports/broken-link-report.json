@@ -1,310 +1,310 @@
 {
-  "generatedAt": "2026-06-11T04:53:54.231Z",
+  "generatedAt": "2026-06-11T19:15:55.455Z",
   "counts": {
-    "TARGET_BROKEN": 124,
-    "OK": 42
+    "OK": 159,
+    "TARGET_BROKEN": 7
   },
   "records": [
     {
       "sourceFile": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
@@ -315,80 +315,80 @@
     },
     {
       "sourceFile": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
@@ -399,136 +399,136 @@
     },
     {
       "sourceFile": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
@@ -560,45 +560,45 @@
     },
     {
       "sourceFile": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
-      "linkedPath": "FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
-      "resolvedTarget": "docs/adr/FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
+      "linkedPath": "../archive/FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
+      "resolvedTarget": "docs/archive/FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
@@ -651,52 +651,52 @@
     },
     {
       "sourceFile": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
-      "linkedPath": "SCHEMA_CATALOG.md",
-      "resolvedTarget": "docs/adr/SCHEMA_CATALOG.md",
+      "linkedPath": "../archive/SCHEMA_CATALOG.md",
+      "resolvedTarget": "docs/archive/SCHEMA_CATALOG.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
-      "linkedPath": "schemas/advisor.schema.json",
-      "resolvedTarget": "docs/adr/schemas/advisor.schema.json",
+      "linkedPath": "../../schemas/advisor.schema.json",
+      "resolvedTarget": "schemas/advisor.schema.json",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/adr/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/adr/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/adr/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
-      "resolvedTarget": "docs/adr/FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
+      "linkedPath": "../archive/FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
+      "resolvedTarget": "docs/archive/FORGE_ADVISOR_EXPERIENCE_ARCHITECTURE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
@@ -714,10 +714,10 @@
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
-      "linkedPath": "PAQ-08.5-ARCHITECTURE-RISK-CORRECTION-RATIFICATION.md",
-      "resolvedTarget": "docs/adr/PAQ-08.5-ARCHITECTURE-RISK-CORRECTION-RATIFICATION.md",
+      "linkedPath": "../architecture/constitution/PAQ-08.5-ARCHITECTURE-RISK-CORRECTION-RATIFICATION.md",
+      "resolvedTarget": "docs/architecture/constitution/PAQ-08.5-ARCHITECTURE-RISK-CORRECTION-RATIFICATION.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
@@ -756,10 +756,10 @@
     },
     {
       "sourceFile": "docs/architecture/README.md",
-      "linkedPath": "../../FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/README.md",
@@ -847,31 +847,31 @@
     },
     {
       "sourceFile": "docs/architecture/README.md",
-      "linkedPath": "../../PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
-      "resolvedTarget": "PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
+      "linkedPath": "../adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
+      "resolvedTarget": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/README.md",
-      "linkedPath": "../../PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "resolvedTarget": "PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "linkedPath": "../adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "resolvedTarget": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/README.md",
-      "linkedPath": "../../PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
-      "resolvedTarget": "PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
+      "linkedPath": "../adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
+      "resolvedTarget": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/README.md",
-      "linkedPath": "../../PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
-      "resolvedTarget": "PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "linkedPath": "../adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "resolvedTarget": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/README.md",
@@ -889,24 +889,24 @@
     },
     {
       "sourceFile": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/architecture/constitution/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/architecture/constitution/AGENTS.md",
+      "linkedPath": "../../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/architecture/constitution/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
@@ -917,24 +917,24 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/archive/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/archive/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/archive/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
@@ -945,24 +945,24 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/archive/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/archive/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/archive/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
@@ -1015,10 +1015,10 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
-      "linkedPath": "FORGE_GLOBAL_UDI_PROJECTION_PRODUCT_INTERPRETATION.md",
-      "resolvedTarget": "docs/archive/FORGE_GLOBAL_UDI_PROJECTION_PRODUCT_INTERPRETATION.md",
+      "linkedPath": "../architecture/product-intelligence/FORGE_GLOBAL_UDI_PROJECTION_PRODUCT_INTERPRETATION.md",
+      "resolvedTarget": "docs/architecture/product-intelligence/FORGE_GLOBAL_UDI_PROJECTION_PRODUCT_INTERPRETATION.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
@@ -1029,24 +1029,24 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/archive/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/archive/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/archive/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
@@ -1057,24 +1057,24 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/archive/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/archive/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/archive/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
@@ -1085,24 +1085,24 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/archive/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/archive/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/archive/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
@@ -1113,24 +1113,24 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/archive/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/archive/AGENTS.md",
+      "linkedPath": "../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/archive/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
@@ -1141,24 +1141,24 @@
     },
     {
       "sourceFile": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
-      "linkedPath": "FORGE_MASTER_BUILD_TREE.md",
-      "resolvedTarget": "docs/archive/superseded/FORGE_MASTER_BUILD_TREE.md",
+      "linkedPath": "../../../FORGE_MASTER_BUILD_TREE.md",
+      "resolvedTarget": "FORGE_MASTER_BUILD_TREE.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
-      "linkedPath": "AGENTS.md",
-      "resolvedTarget": "docs/archive/superseded/AGENTS.md",
+      "linkedPath": "../../../AGENTS.md",
+      "resolvedTarget": "AGENTS.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
-      "linkedPath": "FORGE_CONSTITUTION_V3.md",
-      "resolvedTarget": "docs/archive/superseded/FORGE_CONSTITUTION_V3.md",
+      "linkedPath": "../../../FORGE_CONSTITUTION_V3.md",
+      "resolvedTarget": "FORGE_CONSTITUTION_V3.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
@@ -1168,5 +1168,5 @@
       "status": "TARGET_BROKEN"
     }
   ],
-  "hardFailCount": 124
+  "hardFailCount": 7
 }

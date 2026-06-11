@@ -10,9 +10,9 @@ No code. No engines. No schemas. No UI. No app.js.
 
 Cross references:
 
-- [FORGE_MASTER_BUILD_TREE.md](FORGE_MASTER_BUILD_TREE.md)
-- [AGENTS.md](AGENTS.md)
-- [FORGE_CONSTITUTION_V3.md](FORGE_CONSTITUTION_V3.md)
+- [FORGE_MASTER_BUILD_TREE.md](../../FORGE_MASTER_BUILD_TREE.md)
+- [AGENTS.md](../../AGENTS.md)
+- [FORGE_CONSTITUTION_V3.md](../../FORGE_CONSTITUTION_V3.md)
 - [PAQ-11-FORECAST-INTELLIGENCE-DISCOVERY.txt](PAQ-11-FORECAST-INTELLIGENCE-DISCOVERY.txt)
 - [PAQ-11-FORECAST-INTELLIGENCE-MARKDOWN-REVIEW.txt](PAQ-11-FORECAST-INTELLIGENCE-MARKDOWN-REVIEW.txt)
 - [PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md](PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md)
@@ -284,7 +284,7 @@ One metric has one conceptual owner.
 
 Forecast may consume a metric, but must not recalculate or re-own it.
 
-This aligns with [AGENTS.md](AGENTS.md) metric ownership guidance and the constitutional separation between facts, forecasts and interpretations in [FORGE_CONSTITUTION_V3.md](FORGE_CONSTITUTION_V3.md).
+This aligns with [AGENTS.md](../../AGENTS.md) metric ownership guidance and the constitutional separation between facts, forecasts and interpretations in [FORGE_CONSTITUTION_V3.md](../../FORGE_CONSTITUTION_V3.md).
 
 ## 5. Period Model
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T04:53:55.658Z",
+  "generatedAt": "2026-06-11T19:15:56.670Z",
   "status": "PASS_WITH_WARNINGS_ALLOWED",
   "strictLinks": false,
   "exitCode": 0,
@@ -27,7 +27,7 @@
     {
       "gate": "broken_markdown_links",
       "status": "WARN",
-      "count": 124
+      "count": 7
     }
   ],
   "reports": {

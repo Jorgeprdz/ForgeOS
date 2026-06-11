@@ -1,0 +1,731 @@
+{
+  "approvedSafe": 96,
+  "appliedNow": 4,
+  "alreadyApplied": 92,
+  "totalAccountedFor": 96,
+  "modifiedFiles": [
+    {
+      "file": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
+      "appliedNow": 4,
+      "alreadyApplied": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
+      "appliedNow": 0,
+      "alreadyApplied": 4
+    },
+    {
+      "file": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
+      "appliedNow": 0,
+      "alreadyApplied": 4
+    },
+    {
+      "file": "docs/architecture/README.md",
+      "appliedNow": 0,
+      "alreadyApplied": 4
+    },
+    {
+      "file": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
+      "appliedNow": 0,
+      "alreadyApplied": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    },
+    {
+      "file": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
+      "appliedNow": 0,
+      "alreadyApplied": 3
+    }
+  ],
+  "details": [
+    {
+      "file": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-01-RECRUITMENT-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL-ADDENDUM.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-02-RECRUITMENT-DOMAIN-MODEL.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-03-CAREER-CAPITAL-RELATIONSHIP-CAPITAL-BOUNDARY-REVIEW.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-04-METRICS-OWNERSHIP-FINALIZATION.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-04-P200-MARKET-NATURAL-DISCOVERY-REVIEW.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-05-RELATIONSHIP-ACTIVATION-REVIEW.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-05-RULE-SNAPSHOT-HARDENING.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-06-RECRUITMENT-HARDENING-REVIEW.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-08-ADVISOR-DEVELOPMENT-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
+      "reference": "AGENTS.md",
+      "replacement": "../../AGENTS.md",
+      "status": "APPLIED",
+      "count": 2
+    },
+    {
+      "file": "docs/adr/PAQ-11.5-FORECAST-INTELLIGENCE-ARCHITECTURE.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "replacement": "../../FORGE_CONSTITUTION_V3.md",
+      "status": "APPLIED",
+      "count": 2
+    },
+    {
+      "file": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12-ADVISOR-EXPERIENCE-INTELLIGENCE-PRODUCTIVITY.md",
+      "reference": "schemas/advisor.schema.json",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/adr/PAQ-12.1-ADVISOR-EXPERIENCE-INTELLIGENCE-ARCHITECTURE.md",
+      "reference": "PAQ-08.5-ARCHITECTURE-RISK-CORRECTION-RATIFICATION.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/architecture/README.md",
+      "reference": "../../PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/architecture/README.md",
+      "reference": "../../PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/architecture/README.md",
+      "reference": "../../PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/architecture/README.md",
+      "reference": "../../PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_PHASE_TRANSITION_FOUNDATION_TO_INTELLIGENCE.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
+      "reference": "FORGE_GLOBAL_UDI_PROJECTION_PRODUCT_INTERPRETATION.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_FOUNDATION_REVIEW.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
+      "reference": "FORGE_MASTER_BUILD_TREE.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
+      "reference": "AGENTS.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    },
+    {
+      "file": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
+      "reference": "FORGE_CONSTITUTION_V3.md",
+      "status": "ALREADY_APPLIED",
+      "count": 1
+    }
+  ]
+}

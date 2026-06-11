@@ -5,7 +5,7 @@ Official architecture documentation index.
 
 ## Foundation
 
-- [FORGE Foundation Lock v1.0](../../FORGE_FOUNDATION_LOCK.md)
+- [FORGE Foundation Lock v1.0](../archive/FORGE_FOUNDATION_LOCK.md)
 - [PAQ-08 Foundation Lock Final Review](foundation/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md)
 - [PAQ-07 Foundation Lock Review](foundation/PAQ-07-FOUNDATION-LOCK-REVIEW.md)
 - [Forge Ratification and Foundation Closure](foundation/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md)
@@ -30,10 +30,10 @@ Official architecture documentation index.
 
 ## Intelligence Domains
 
-- [PAQ-09 Productivity Intelligence Discovery](../../PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md)
-- [PAQ-09.5 Productivity Intelligence Architecture Lock](../../PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md)
-- [PAQ-10 Conservation Intelligence Discovery](../../PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md)
-- [PAQ-10.5 Conservation Intelligence Architecture Lock](../../PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md)
+- [PAQ-09 Productivity Intelligence Discovery](../adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md)
+- [PAQ-09.5 Productivity Intelligence Architecture Lock](../adr/PAQ-09.5-PRODUCTIVITY-INTELLIGENCE-ARCHITECTURE-LOCK.md)
+- [PAQ-10 Conservation Intelligence Discovery](../adr/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md)
+- [PAQ-10.5 Conservation Intelligence Architecture Lock](../adr/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md)
 
 ## Operating References
 
