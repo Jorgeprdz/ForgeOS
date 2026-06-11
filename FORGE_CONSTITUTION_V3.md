@@ -210,6 +210,7 @@ Every engine output, UI report, or recommendation must answer the three question
 - **Rocky** – Consistency, resilience.
 - **Mick** – Coaching, skill improvement.
 - **Nicky Spurgeon** – Networking, referrals.
+- **Andrey** – Talent Intelligence, Future Capacity, Vital Factors.
 
 *Described in `AGENTS.md`.*
 
@@ -333,6 +334,19 @@ Rules
 Production Events are facts. Rule Packs interpret facts.
 
 Forge Core never hardcodes carrier-specific groups, bonuses, contests, careers, promotions, compensation formulas, conservation formulas, KPI names, activity rules or recognition rules.
+
+---
+
+## 17. Talent Intelligence & Future Capacity Principle
+
+Forge OS adopts the **Discovery of Greatness Principle**:
+
+> **"Forge does not create greatness. Forge discovers, develops and amplifies greatness where it already exists."**
+
+**Meaning:**
+- **Talent Precedes Activity:** Evaluation of potential (Vital Factors) governs the measurement of execution.
+- **Future Capacity Protection:** Forge protects the organization's future by ensuring only high-potential talent scales.
+- **Judgment over Ops:** Talent Intelligence provides the judgment layer over recruitment and career transitions.
 
 ---
 

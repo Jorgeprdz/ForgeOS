@@ -22,14 +22,17 @@ This document does not create engines.
 This document does not create schemas.
 This document does not modify UI.
 This document does not commit changes.
-
 ### Input context
 
 Foundation Lock is approved.
-Recruitment Intelligence, codename Andrey Garcia, is ARCHITECTURE CANDIDATE.
+Recruitment Intelligence, codename Andrey Garcia, is OPERATIONAL under Seat #13.
 Relationship Capital, Career Capital and Prospecting Intelligence are DISCOVERED only.
 
-### Purpose
+### Talent Intelligence Governance
+The discovery of Relationship Capital and Career Capital is now protected by **Seat #13 (The Talent Authority)**. This member ensures that relationship access is treated as a strategic asset, not just a list of names.
+
+
+## 1. Executive Summary
 Determine what Relationship Capital, Career Capital and Prospecting Intelligence really are, where they live, who consumes them, who owns them, and whether they are domains, subdomains, capabilities, assets, evidence, interpretations or transversal concepts.
 
 

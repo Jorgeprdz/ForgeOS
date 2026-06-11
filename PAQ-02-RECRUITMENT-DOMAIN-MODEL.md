@@ -37,6 +37,10 @@ Production Events are facts.
 One metric has one owner.
 Forecasts are suggestions.
 
+### Constitutional Governance
+**Seat #13 (The Talent Authority / Andrey)** governs this domain. 
+Recruitment Intelligence is governed by the principle: *"Forge does not create greatness. Forge discovers, develops and amplifies greatness where it already exists."*
+
 
 ## 1. Executive Summary
 
