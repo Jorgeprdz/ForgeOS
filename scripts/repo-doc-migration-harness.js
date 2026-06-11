@@ -328,12 +328,15 @@ function makeInventory() {
       destinationCandidates: candidates.filter((record) => record.destination).length,
     },
     protectedRootAssets: Array.from(PROTECTED_ROOT_ASSETS),
+    protectedAssets: Array.from(PROTECTED_ROOT_ASSETS),
+    files: allFiles,
     trackedFiles: Array.from(sets.tracked).sort(),
     untrackedFiles: Array.from(sets.untracked).sort(),
     rootFiles: root,
     rootDocs,
     codeFiles,
     destinationCandidates: candidates,
+    candidates,
   };
 }
 
@@ -343,6 +346,11 @@ function writeJson(file, value) {
 
 function tableRow(cells) {
   return `| ${cells.map((cell) => String(cell ?? '').replace(/\|/g, '\\|').replace(/\n/g, '<br>')).join(' | ')} |`;
+}
+
+function normalizeRel(file) {
+  const normalized = path.posix.normalize(file).replace(/^\.\//, '');
+  return normalized === '.' ? '' : normalized;
 }
 
 function actionCounts(records) {
@@ -456,12 +464,27 @@ function markdownFiles() {
   return walk('.').filter((file) => file.endsWith('.md'));
 }
 
+function stripMarkdownCodeBlocks(content) {
+  return content
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/~~~[\s\S]*?~~~/g, '');
+}
+
+function cleanMarkdownTarget(rawTarget) {
+  const trimmed = rawTarget.trim();
+  const withoutAngleBrackets = trimmed.startsWith('<') && trimmed.endsWith('>')
+    ? trimmed.slice(1, -1).trim()
+    : trimmed;
+  const titleMatch = withoutAngleBrackets.match(/^(\S+)\s+["'][^"']*["']$/);
+  return titleMatch ? titleMatch[1] : withoutAngleBrackets;
+}
+
 function extractMarkdownLinks(content) {
   const links = [];
   const pattern = /!?\[[^\]]*]\(([^)]+)\)/g;
   let match;
   while ((match = pattern.exec(content))) {
-    links.push(match[1]);
+    links.push(cleanMarkdownTarget(match[1]));
   }
   return links;
 }
@@ -539,18 +562,285 @@ function rewritePlan() {
   return { records };
 }
 
+function classifyMarkdownLink(sourceFile, rawLink) {
+  const link = cleanMarkdownTarget(rawLink);
+
+  if (!link) {
+    return {
+      sourceFile,
+      linkedPath: rawLink,
+      resolvedTarget: '',
+      status: 'UNKNOWN',
+    };
+  }
+
+  if (/^[a-z][a-z0-9+.-]*:/i.test(link) || link.startsWith('//')) {
+    return {
+      sourceFile,
+      linkedPath: link,
+      resolvedTarget: '',
+      status: 'EXTERNAL',
+    };
+  }
+
+  if (link.startsWith('#')) {
+    return {
+      sourceFile,
+      linkedPath: link,
+      resolvedTarget: sourceFile,
+      status: 'ANCHOR_ONLY',
+    };
+  }
+
+  const pathOnly = link.split('#')[0];
+  if (!pathOnly) {
+    return {
+      sourceFile,
+      linkedPath: link,
+      resolvedTarget: sourceFile,
+      status: 'ANCHOR_ONLY',
+    };
+  }
+
+  let decodedPath = pathOnly;
+  try {
+    decodedPath = decodeURIComponent(pathOnly);
+  } catch (error) {
+    return {
+      sourceFile,
+      linkedPath: link,
+      resolvedTarget: '',
+      status: 'UNKNOWN',
+    };
+  }
+
+  const resolvedTarget = normalizeRel(path.posix.join(path.posix.dirname(sourceFile), decodedPath));
+  const exists = Boolean(resolvedTarget) && fs.existsSync(path.join(ROOT, resolvedTarget));
+
+  return {
+    sourceFile,
+    linkedPath: link,
+    resolvedTarget,
+    status: exists ? 'OK' : 'BROKEN',
+  };
+}
+
+function linkReport() {
+  const records = [];
+
+  for (const file of markdownFiles()) {
+    const content = fs.readFileSync(path.join(ROOT, file), 'utf8');
+    const links = extractMarkdownLinks(stripMarkdownCodeBlocks(content));
+    for (const link of links) {
+      records.push(classifyMarkdownLink(file, link));
+    }
+  }
+
+  const counts = records.reduce((acc, record) => {
+    acc[record.status] = (acc[record.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  let md = '';
+  md += '# Broken Link Report\n\n';
+  md += 'Status: REPORT ONLY / NO WRITES TO SOURCE DOCS\n\n';
+  md += 'This report resolves Markdown links relative to each source file. It ignores fenced code blocks before extraction.\n\n';
+  md += '## Summary\n\n';
+  md += tableRow(['Status', 'Count']) + '\n';
+  md += tableRow(['---', '---:']) + '\n';
+  for (const status of Object.keys(counts).sort()) md += tableRow([status, counts[status]]) + '\n';
+  if (!records.length) md += tableRow(['-', 0]) + '\n';
+  md += '\n## Links\n\n';
+  md += tableRow(['Source File', 'Linked Path', 'Resolved Target', 'Status']) + '\n';
+  md += tableRow(['---', '---', '---', '---']) + '\n';
+  for (const record of records) {
+    md += tableRow([
+      `\`${record.sourceFile}\``,
+      `\`${record.linkedPath}\``,
+      record.resolvedTarget ? `\`${record.resolvedTarget}\`` : '-',
+      record.status,
+    ]) + '\n';
+  }
+  if (!records.length) md += tableRow(['-', '-', '-', '-']) + '\n';
+
+  fs.writeFileSync(path.join(ROOT, 'broken-link-report.md'), md);
+  return { records, counts };
+}
+
+function compareDestination(record) {
+  if (!record.destination) {
+    return {
+      source: record.source,
+      destination: '',
+      status: 'REVIEW_REQUIRED',
+      reason: 'No destination candidate exists for this record.',
+    };
+  }
+
+  const sourcePath = path.join(ROOT, record.source);
+  const destinationPath = path.join(ROOT, record.destination);
+
+  if (!fs.existsSync(destinationPath)) {
+    return {
+      source: record.source,
+      destination: record.destination,
+      status: 'DESTINATION_MISSING',
+      reason: 'Destination does not exist.',
+    };
+  }
+
+  if (!fs.existsSync(sourcePath)) {
+    return {
+      source: record.source,
+      destination: record.destination,
+      status: 'REVIEW_REQUIRED',
+      reason: 'Source file is missing; cannot compare content.',
+    };
+  }
+
+  const source = fs.readFileSync(sourcePath);
+  const destination = fs.readFileSync(destinationPath);
+  const exact = source.length === destination.length && source.equals(destination);
+
+  return {
+    source: record.source,
+    destination: record.destination,
+    status: exact ? 'EXACT_DUPLICATE' : 'CONTENT_DIFFERS',
+    reason: exact ? 'Source and destination contents match exactly.' : 'Destination exists with different content.',
+  };
+}
+
+function duplicateDestinationReport() {
+  const inventory = makeInventory();
+  const records = inventory.destinationCandidates
+    .filter((record) => record.destination)
+    .map(compareDestination);
+  const counts = records.reduce((acc, record) => {
+    acc[record.status] = (acc[record.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  let md = '';
+  md += '# Duplicate Destination Report\n\n';
+  md += 'Status: REPORT ONLY / NEVER OVERWRITE\n\n';
+  md += 'This report compares planned destinations that already exist and marks missing destinations as safe from collision.\n\n';
+  md += '## Summary\n\n';
+  md += tableRow(['Status', 'Count']) + '\n';
+  md += tableRow(['---', '---:']) + '\n';
+  for (const status of Object.keys(counts).sort()) md += tableRow([status, counts[status]]) + '\n';
+  if (!records.length) md += tableRow(['-', 0]) + '\n';
+  md += '\n## Destinations\n\n';
+  md += tableRow(['Source', 'Destination', 'Status', 'Reason']) + '\n';
+  md += tableRow(['---', '---', '---', '---']) + '\n';
+  for (const record of records) {
+    md += tableRow([
+      `\`${record.source}\``,
+      record.destination ? `\`${record.destination}\`` : '-',
+      record.status,
+      record.reason,
+    ]) + '\n';
+  }
+  if (!records.length) md += tableRow(['-', '-', '-', '-']) + '\n';
+
+  fs.writeFileSync(path.join(ROOT, 'duplicate-destination-report.md'), md);
+  return { records, counts };
+}
+
+function validateInventoryObject(inventory) {
+  const checks = [
+    ['generatedAt', (value) => typeof value === 'string' && value.length > 0, 'Required ISO timestamp string.'],
+    ['files', Array.isArray, 'Required array of repository files.'],
+    ['protectedAssets', Array.isArray, 'Required array of hardcoded protected assets.'],
+    ['rootDocs', Array.isArray, 'Required array of root documentation files.'],
+    ['trackedFiles', Array.isArray, 'Required array of git-tracked files.'],
+    ['untrackedFiles', Array.isArray, 'Required array of git-untracked files.'],
+    ['candidates', Array.isArray, 'Required array of destination candidates.'],
+  ];
+
+  const results = checks.map(([field, predicate, expectation]) => {
+    const present = Object.prototype.hasOwnProperty.call(inventory, field);
+    const valid = present && predicate(inventory[field]);
+    const observed = present && Array.isArray(inventory[field]) ? 'array' : typeof inventory[field];
+    return {
+      field,
+      status: valid ? 'PASS' : 'FAIL',
+      expectation,
+      observed: present ? observed : 'missing',
+    };
+  });
+
+  const missingProtectedAssets = Array.from(PROTECTED_ROOT_ASSETS)
+    .filter((asset) => !Array.isArray(inventory.protectedAssets) || !inventory.protectedAssets.includes(asset));
+
+  for (const asset of missingProtectedAssets) {
+    results.push({
+      field: `protectedAssets:${asset}`,
+      status: 'FAIL',
+      expectation: 'Protected root asset must be present in inventory schema.',
+      observed: 'missing',
+    });
+  }
+
+  return {
+    valid: results.every((result) => result.status === 'PASS'),
+    results,
+  };
+}
+
+function validateInventory(file = 'migration-inventory.json') {
+  const fullPath = path.join(ROOT, file);
+  let inventory = null;
+  let parseError = '';
+
+  try {
+    inventory = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
+  } catch (error) {
+    parseError = error.message;
+  }
+
+  const validation = inventory ? validateInventoryObject(inventory) : {
+    valid: false,
+    results: [{
+      field: file,
+      status: 'FAIL',
+      expectation: 'Readable JSON inventory file.',
+      observed: parseError || 'missing',
+    }],
+  };
+
+  let md = '';
+  md += '# Inventory Schema Validation Report\n\n';
+  md += `Status: ${validation.valid ? 'PASS' : 'FAIL'}\n\n`;
+  md += 'This report validates the structure required by the migration harness. It does not modify the inventory.\n\n';
+  md += '## Checks\n\n';
+  md += tableRow(['Field', 'Status', 'Expectation', 'Observed']) + '\n';
+  md += tableRow(['---', '---', '---', '---']) + '\n';
+  for (const result of validation.results) {
+    md += tableRow([result.field, result.status, result.expectation, result.observed]) + '\n';
+  }
+
+  fs.writeFileSync(path.join(ROOT, 'inventory-schema-validation-report.md'), md);
+  return validation;
+}
+
 function printHelp() {
   console.log(`Usage:
   node scripts/repo-doc-migration-harness.js inventory
   node scripts/repo-doc-migration-harness.js plan --batch 1
   node scripts/repo-doc-migration-harness.js validate
   node scripts/repo-doc-migration-harness.js rewrite-plan
+  node scripts/repo-doc-migration-harness.js links
+  node scripts/repo-doc-migration-harness.js duplicates
+  node scripts/repo-doc-migration-harness.js validate-inventory
 
 Outputs:
   migration-inventory.json
   ROOT_DOCS_MIGRATION_BATCH_X_MOVE_MAP.md
   migration-validation-report.md
-  reference-rewrite-plan.md`);
+  reference-rewrite-plan.md
+  broken-link-report.md
+  duplicate-destination-report.md
+  inventory-schema-validation-report.md`);
 }
 
 function main() {
@@ -582,8 +872,47 @@ function main() {
     return;
   }
 
+  if (command === 'links') {
+    const result = linkReport();
+    console.log(`Wrote broken-link-report.md (${result.records.length} links)`);
+    return;
+  }
+
+  if (command === 'duplicates') {
+    const result = duplicateDestinationReport();
+    console.log(`Wrote duplicate-destination-report.md (${result.records.length} destinations)`);
+    return;
+  }
+
+  if (command === 'validate-inventory') {
+    const result = validateInventory();
+    console.log(`Wrote inventory-schema-validation-report.md (${result.valid ? 'PASS' : 'FAIL'})`);
+    process.exitCode = result.valid ? 0 : 1;
+    return;
+  }
+
   printHelp();
   process.exitCode = command ? 1 : 0;
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  PROTECTED_ROOT_ASSETS,
+  isCode,
+  isDoc,
+  isRoot,
+  destinationFor,
+  classifyPlanRecord,
+  makeInventory,
+  validate,
+  extractMarkdownLinks,
+  classifyMarkdownLink,
+  linkReport,
+  compareDestination,
+  duplicateDestinationReport,
+  validateInventoryObject,
+  validateInventory,
+};
