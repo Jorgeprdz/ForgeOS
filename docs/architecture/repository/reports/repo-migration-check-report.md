@@ -14,7 +14,7 @@ This aggregate command runs migration validation, link validation, duplicate des
 | runtime_move_candidate | PASS | 0 |
 | inventory_schema | PASS | 0 |
 | destination_overwrite_risk | PASS | 0 |
-| broken_markdown_links | WARN | 7 |
+| broken_markdown_links | WARN | 3 |
 
 ## Reports
 

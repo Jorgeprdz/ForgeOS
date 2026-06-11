@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T19:23:12.921Z",
+  "generatedAt": "2026-06-11T19:28:53.422Z",
   "safety": {
     "writes": "reports_only",
     "movesFiles": false,
@@ -7,9 +7,9 @@
     "deletesFiles": false
   },
   "counts": {
-    "allFiles": 1242,
-    "trackedFiles": 1233,
-    "untrackedFiles": 7,
+    "allFiles": 1243,
+    "trackedFiles": 1240,
+    "untrackedFiles": 1,
     "rootFiles": 720,
     "rootDocs": 25,
     "protectedAssets": 8,
@@ -497,6 +497,7 @@
     "docs/architecture/repository/REPO-013_EXECUTION_REPORT.md",
     "docs/architecture/repository/REPO-014_FINAL_7_LINK_RESOLUTION_PLAN.md",
     "docs/architecture/repository/REPO-014_REMAINING_LINK_GOVERNANCE_REPORT.md",
+    "docs/architecture/repository/REPO-015_EXECUTION_REPORT.md",
     "docs/architecture/repository/REPO_MIGRATION_HARNESS_v1.md",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.json",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.md",
@@ -1303,18 +1304,23 @@
     "AGENTS.md",
     "Concursos SMNYL",
     "FORGE_CONSTITUTION_V3.md",
+    "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
     "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
     "FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
     "FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
+    "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
     "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
     "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
     "FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
+    "FORGE_MANAGER_OS_BLUEPRINT.md",
     "FORGE_MASTER_BUILD_TREE.md",
     "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
+    "FORGE_REPOSITORY_MIGRATION_PLAN.md",
     "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
     "Hoja de trabajo - 4.5% UDI.xlsx",
+    "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
     "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
     "_redirects",
     "accessibility-engine.js",
@@ -1733,6 +1739,8 @@
     "docs/architecture/repository/REPO-012_WAVE_A_REWRITE_MAP.json",
     "docs/architecture/repository/REPO-012_WAVE_A_REWRITE_MAP.md",
     "docs/architecture/repository/REPO-013_EXECUTION_REPORT.md",
+    "docs/architecture/repository/REPO-014_FINAL_7_LINK_RESOLUTION_PLAN.md",
+    "docs/architecture/repository/REPO-014_REMAINING_LINK_GOVERNANCE_REPORT.md",
     "docs/architecture/repository/REPO_MIGRATION_HARNESS_v1.md",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.json",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.md",
@@ -2516,13 +2524,7 @@
     "whatsapp-link-engine.js"
   ],
   "untrackedFiles": [
-    "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-    "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
-    "FORGE_MANAGER_OS_BLUEPRINT.md",
-    "FORGE_REPOSITORY_MIGRATION_PLAN.md",
-    "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
-    "docs/architecture/repository/REPO-014_FINAL_7_LINK_RESOLUTION_PLAN.md",
-    "docs/architecture/repository/REPO-014_REMAINING_LINK_GOVERNANCE_REPORT.md"
+    "docs/architecture/repository/REPO-015_EXECUTION_REPORT.md"
   ],
   "rootFiles": [
     ".gitignore",
@@ -4086,8 +4088,8 @@
     {
       "source": "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
       "destination": "docs/archive/FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
@@ -4116,8 +4118,8 @@
     {
       "source": "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
       "destination": "docs/archive/FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
@@ -4140,8 +4142,8 @@
     {
       "source": "FORGE_MANAGER_OS_BLUEPRINT.md",
       "destination": "docs/architecture/manager-os/FORGE_MANAGER_OS_BLUEPRINT.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_MASTER_BUILD_TREE.md",
@@ -4158,8 +4160,8 @@
     {
       "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",
       "destination": "docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
@@ -4176,8 +4178,8 @@
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
       "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
@@ -4238,8 +4240,8 @@
     {
       "source": "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
       "destination": "docs/archive/FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
@@ -4268,8 +4270,8 @@
     {
       "source": "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
       "destination": "docs/archive/FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
@@ -4292,8 +4294,8 @@
     {
       "source": "FORGE_MANAGER_OS_BLUEPRINT.md",
       "destination": "docs/architecture/manager-os/FORGE_MANAGER_OS_BLUEPRINT.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_MASTER_BUILD_TREE.md",
@@ -4310,8 +4312,8 @@
     {
       "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",
       "destination": "docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
@@ -4328,8 +4330,8 @@
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
       "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
-      "action": "BLOCKED_UNTRACKED",
-      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
     },
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",

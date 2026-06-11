@@ -8,8 +8,8 @@ This report resolves Markdown links relative to each source file. It ignores fen
 
 | Status | Count |
 | --- | ---: |
-| OK | 159 |
-| TARGET_BROKEN | 7 |
+| OK | 163 |
+| TARGET_BROKEN | 3 |
 
 ## Links
 
@@ -58,7 +58,7 @@ This report resolves Markdown links relative to each source file. It ignores fen
 | `docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md` | `../../FORGE_MASTER_BUILD_TREE.md` | `FORGE_MASTER_BUILD_TREE.md` | - | OK |
 | `docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md` | `../../AGENTS.md` | `AGENTS.md` | - | OK |
 | `docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md` | `../../FORGE_CONSTITUTION_V3.md` | `FORGE_CONSTITUTION_V3.md` | - | OK |
-| `docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md` | `FORGE_FOUNDATION_LOCK.md` | `docs/adr/FORGE_FOUNDATION_LOCK.md` | - | TARGET_BROKEN |
+| `docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md` | `../archive/FORGE_FOUNDATION_LOCK.md` | `docs/archive/FORGE_FOUNDATION_LOCK.md` | - | OK |
 | `docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md` | `../../FORGE_MASTER_BUILD_TREE.md` | `FORGE_MASTER_BUILD_TREE.md` | - | OK |
 | `docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md` | `../../AGENTS.md` | `AGENTS.md` | - | OK |
 | `docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md` | `../../FORGE_CONSTITUTION_V3.md` | `FORGE_CONSTITUTION_V3.md` | - | OK |
@@ -70,7 +70,7 @@ This report resolves Markdown links relative to each source file. It ignores fen
 | `docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md` | `../../FORGE_MASTER_BUILD_TREE.md` | `FORGE_MASTER_BUILD_TREE.md` | - | OK |
 | `docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md` | `../../AGENTS.md` | `AGENTS.md` | - | OK |
 | `docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md` | `../../FORGE_CONSTITUTION_V3.md` | `FORGE_CONSTITUTION_V3.md` | - | OK |
-| `docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md` | `FORGE_FOUNDATION_LOCK.md` | `docs/adr/FORGE_FOUNDATION_LOCK.md` | - | TARGET_BROKEN |
+| `docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md` | `../archive/FORGE_FOUNDATION_LOCK.md` | `docs/archive/FORGE_FOUNDATION_LOCK.md` | - | OK |
 | `docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md` | `../../FORGE_MASTER_BUILD_TREE.md` | `FORGE_MASTER_BUILD_TREE.md` | - | OK |
 | `docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md` | `../../AGENTS.md` | `AGENTS.md` | - | OK |
 | `docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md` | `../../FORGE_CONSTITUTION_V3.md` | `FORGE_CONSTITUTION_V3.md` | - | OK |
@@ -144,7 +144,7 @@ This report resolves Markdown links relative to each source file. It ignores fen
 | `docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md` | `../../../FORGE_MASTER_BUILD_TREE.md` | `FORGE_MASTER_BUILD_TREE.md` | - | OK |
 | `docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md` | `../../../AGENTS.md` | `AGENTS.md` | - | OK |
 | `docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md` | `../../../FORGE_CONSTITUTION_V3.md` | `FORGE_CONSTITUTION_V3.md` | - | OK |
-| `docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md` | `FORGE_FOUNDATION_LOCK.md` | `docs/architecture/constitution/FORGE_FOUNDATION_LOCK.md` | - | TARGET_BROKEN |
+| `docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md` | `../../archive/FORGE_FOUNDATION_LOCK.md` | `docs/archive/FORGE_FOUNDATION_LOCK.md` | - | OK |
 | `docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md` | `../../FORGE_MASTER_BUILD_TREE.md` | `FORGE_MASTER_BUILD_TREE.md` | - | OK |
 | `docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md` | `../../AGENTS.md` | `AGENTS.md` | - | OK |
 | `docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md` | `../../FORGE_CONSTITUTION_V3.md` | `FORGE_CONSTITUTION_V3.md` | - | OK |
@@ -180,4 +180,4 @@ This report resolves Markdown links relative to each source file. It ignores fen
 | `docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md` | `../../../FORGE_MASTER_BUILD_TREE.md` | `FORGE_MASTER_BUILD_TREE.md` | - | OK |
 | `docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md` | `../../../AGENTS.md` | `AGENTS.md` | - | OK |
 | `docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md` | `../../../FORGE_CONSTITUTION_V3.md` | `FORGE_CONSTITUTION_V3.md` | - | OK |
-| `docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md` | `FORGE_FOUNDATION_LOCK.md` | `docs/archive/superseded/FORGE_FOUNDATION_LOCK.md` | - | TARGET_BROKEN |
+| `docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md` | `../FORGE_FOUNDATION_LOCK.md` | `docs/archive/FORGE_FOUNDATION_LOCK.md` | - | OK |

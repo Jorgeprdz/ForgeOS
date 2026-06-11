@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-11T19:23:14.926Z",
+  "generatedAt": "2026-06-11T19:28:55.516Z",
   "counts": {
-    "OK": 159,
-    "TARGET_BROKEN": 7
+    "OK": 163,
+    "TARGET_BROKEN": 3
   },
   "records": [
     {
@@ -308,10 +308,10 @@
     },
     {
       "sourceFile": "docs/adr/PAQ-07-FOUNDATION-LOCK-REVIEW.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-07-PARTNER-INTELLIGENCE-DISCOVERY.md",
@@ -392,10 +392,10 @@
     },
     {
       "sourceFile": "docs/adr/PAQ-08-FOUNDATION-LOCK-FINAL-REVIEW.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/adr/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/adr/PAQ-09-PRODUCTIVITY-INTELLIGENCE-DISCOVERY.md",
@@ -910,10 +910,10 @@
     },
     {
       "sourceFile": "docs/architecture/constitution/FORGE_RATIFICATION_AND_FOUNDATION_CLOSURE.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/architecture/constitution/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../../archive/FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_OS_CURRENT_STATE_DOMAIN_COMPENSATION_ADVISOR_EXPERIENCE.md",
@@ -1162,11 +1162,11 @@
     },
     {
       "sourceFile": "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
-      "linkedPath": "FORGE_FOUNDATION_LOCK.md",
-      "resolvedTarget": "docs/archive/superseded/FORGE_FOUNDATION_LOCK.md",
+      "linkedPath": "../FORGE_FOUNDATION_LOCK.md",
+      "resolvedTarget": "docs/archive/FORGE_FOUNDATION_LOCK.md",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     }
   ],
-  "hardFailCount": 7
+  "hardFailCount": 3
 }
