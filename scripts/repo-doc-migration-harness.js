@@ -340,8 +340,9 @@ function makeInventory() {
   };
 }
 
-function writeJson(file, value) {
-  fs.writeFileSync(path.join(ROOT, file), `${JSON.stringify(value, null, 2)}\n`);
+function writeJson(file, value, options = {}) {
+  const outputDir = resolveOutputDir(options);
+  return writeJsonReport(outputDir, file, value);
 }
 
 function tableRow(cells) {
@@ -353,6 +354,52 @@ function normalizeRel(file) {
   return normalized === '.' ? '' : normalized;
 }
 
+function toPosixRelative(file) {
+  return path.relative(ROOT, file).split(path.sep).join('/');
+}
+
+function resolveOutputDir(options = {}) {
+  const requested = options.outputDir || options['output-dir'];
+  const outputDir = requested ? path.resolve(ROOT, requested) : ROOT;
+  fs.mkdirSync(outputDir, { recursive: true });
+  return outputDir;
+}
+
+function assertReportWriteAllowed(outputDir, filename) {
+  const resolved = path.resolve(outputDir, filename);
+  const relativeToRoot = path.relative(ROOT, resolved);
+  const writesProtectedRoot = (
+    !relativeToRoot.startsWith('..') &&
+    !path.isAbsolute(relativeToRoot) &&
+    !relativeToRoot.includes(path.sep) &&
+    PROTECTED_ROOT_ASSETS.has(path.basename(resolved))
+  );
+
+  if (writesProtectedRoot) {
+    throw new Error(`Refusing to overwrite protected root asset: ${filename}`);
+  }
+}
+
+function writeTextReport(outputDir, filename, content) {
+  assertReportWriteAllowed(outputDir, filename);
+  fs.writeFileSync(path.join(outputDir, filename), content);
+  return toPosixRelative(path.join(outputDir, filename));
+}
+
+function writeJsonReport(outputDir, filename, value) {
+  assertReportWriteAllowed(outputDir, filename);
+  fs.writeFileSync(path.join(outputDir, filename), `${JSON.stringify(value, null, 2)}\n`);
+  return toPosixRelative(path.join(outputDir, filename));
+}
+
+function writeReportPair(options, baseName, markdown, json) {
+  const outputDir = resolveOutputDir(options);
+  return {
+    markdownFile: writeTextReport(outputDir, `${baseName}.md`, markdown),
+    jsonFile: writeJsonReport(outputDir, `${baseName}.json`, json),
+  };
+}
+
 function actionCounts(records) {
   return records.reduce((acc, record) => {
     acc[record.action] = (acc[record.action] || 0) + 1;
@@ -360,10 +407,56 @@ function actionCounts(records) {
   }, {});
 }
 
-function writePlan(batch) {
+function markdownCountsTable(counts, label = 'Status') {
+  let md = '';
+  md += tableRow([label, 'Count']) + '\n';
+  md += tableRow(['---', '---:']) + '\n';
+  for (const key of Object.keys(counts).sort()) md += tableRow([key, counts[key]]) + '\n';
+  if (!Object.keys(counts).length) md += tableRow(['-', 0]) + '\n';
+  return md;
+}
+
+function writeInventory(options = {}) {
+  const inventory = makeInventory();
+  let md = '';
+  md += '# Migration Inventory\n\n';
+  md += 'Status: REPORT ONLY / NO FILES MOVED\n\n';
+  md += `Generated At: ${inventory.generatedAt}\n\n`;
+  md += '## Counts\n\n';
+  md += tableRow(['Metric', 'Count']) + '\n';
+  md += tableRow(['---', '---:']) + '\n';
+  for (const [metric, count] of Object.entries(inventory.counts)) {
+    md += tableRow([metric, count]) + '\n';
+  }
+  md += '\n## Safety\n\n';
+  md += tableRow(['Property', 'Value']) + '\n';
+  md += tableRow(['---', '---']) + '\n';
+  for (const [property, value] of Object.entries(inventory.safety)) {
+    md += tableRow([property, value]) + '\n';
+  }
+  md += '\n## Destination Candidates\n\n';
+  md += tableRow(['Action', 'Source', 'Destination', 'Reason']) + '\n';
+  md += tableRow(['---', '---', '---', '---']) + '\n';
+  for (const record of inventory.destinationCandidates) {
+    md += tableRow([
+      record.action,
+      `\`${record.source}\``,
+      record.destination ? `\`${record.destination}\`` : '-',
+      record.reason,
+    ]) + '\n';
+  }
+  if (!inventory.destinationCandidates.length) md += tableRow(['-', '-', '-', '-']) + '\n';
+
+  const outputDir = resolveOutputDir(options);
+  const markdownFile = writeTextReport(outputDir, 'migration-inventory.md', md);
+  const jsonFile = writeJsonReport(outputDir, 'migration-inventory.json', inventory);
+  return { inventory, markdownFile, jsonFile };
+}
+
+function writePlan(batch, options = {}) {
   const inventory = makeInventory();
   const records = inventory.destinationCandidates;
-  const file = `ROOT_DOCS_MIGRATION_BATCH_${batch}_MOVE_MAP.md`;
+  const baseName = `ROOT_DOCS_MIGRATION_BATCH_${batch}_MOVE_MAP`;
   const counts = actionCounts(records);
 
   let md = '';
@@ -377,11 +470,7 @@ function writePlan(batch) {
   md += '- Untracked files require human tracking approval.\n';
   md += '- Test/validation docs require separate evidence policy.\n\n';
   md += '## Summary\n\n';
-  md += tableRow(['Action', 'Count']) + '\n';
-  md += tableRow(['---', '---:']) + '\n';
-  for (const action of Object.keys(counts).sort()) {
-    md += tableRow([action, counts[action]]) + '\n';
-  }
+  md += markdownCountsTable(counts, 'Action');
   md += '\n## Move Map\n\n';
   md += tableRow(['Action', 'Source', 'Destination', 'Reason']) + '\n';
   md += tableRow(['---', '---', '---', '---']) + '\n';
@@ -394,11 +483,17 @@ function writePlan(batch) {
     ]) + '\n';
   }
 
-  fs.writeFileSync(path.join(ROOT, file), md);
-  return { file, counts };
+  const json = {
+    generatedAt: new Date().toISOString(),
+    batch,
+    counts,
+    records,
+  };
+  const files = writeReportPair(options, baseName, md, json);
+  return { ...files, counts, records };
 }
 
-function validate() {
+function validate(options = {}) {
   const inventory = makeInventory();
   const records = inventory.destinationCandidates;
   const destinationGroups = new Map();
@@ -456,8 +551,18 @@ function validate() {
   for (const item of ownershipIssues) md += tableRow([`\`${item.source}\``, item.reason]) + '\n';
   if (!ownershipIssues.length) md += tableRow(['-', '-']) + '\n';
 
-  fs.writeFileSync(path.join(ROOT, 'migration-validation-report.md'), md);
-  return { status, destinationCollisions, protectedViolations, runtimeInMoveList, duplicateDestinations, ownershipIssues };
+  const json = {
+    generatedAt: new Date().toISOString(),
+    status,
+    hardGatePass: protectedViolations.length === 0 && runtimeInMoveList.length === 0 && duplicateDestinations.length === 0,
+    destinationCollisions,
+    protectedViolations,
+    runtimeInMoveList,
+    duplicateDestinations,
+    ownershipIssues,
+  };
+  const files = writeReportPair(options, 'migration-validation-report', md, json);
+  return { ...json, ...files };
 }
 
 function markdownFiles() {
@@ -497,7 +602,25 @@ function extractFilenameReferences(content, filenames) {
   return refs;
 }
 
-function rewritePlan() {
+function relativeReference(fromFile, toFile, anchor = '') {
+  const fromDir = path.posix.dirname(fromFile);
+  let rel = normalizeRel(path.posix.relative(fromDir, toFile));
+  if (!rel.startsWith('.') && !rel.startsWith('/')) rel = `./${rel}`;
+  return anchor ? `${rel}#${anchor}` : rel;
+}
+
+function findMoveCandidateForReference(reference, moveCandidates) {
+  const cleanRef = cleanMarkdownTarget(reference);
+  const [pathOnly] = cleanRef.split('#');
+  const normalized = normalizeRel(pathOnly);
+  const basename = path.posix.basename(normalized);
+  return moveCandidates.find((record) => (
+    record.source === normalized ||
+    record.source === basename
+  ));
+}
+
+function rewritePlan(options = {}) {
   const inventory = makeInventory();
   const moveCandidates = inventory.destinationCandidates
     .filter((record) => record.destination)
@@ -512,10 +635,18 @@ function rewritePlan() {
     const filenameReferences = extractFilenameReferences(content, filenames);
 
     for (const link of markdownLinks) {
+      const candidate = findMoveCandidateForReference(link, moveCandidates);
+      const anchor = link.includes('#') ? link.split('#').slice(1).join('#') : '';
+      const proposedReference = candidate ? relativeReference(file, candidate.destination, anchor) : '';
       records.push({
         file,
         type: 'markdown_link',
         reference: link,
+        proposedReference,
+        confidence: candidate ? 'medium' : 'low',
+        reason: candidate
+          ? `Reference points to planned destination for ${candidate.source}.`
+          : 'No planned destination matched this link.',
         suggestedAction: 'review_before_rewrite',
       });
     }
@@ -527,6 +658,11 @@ function rewritePlan() {
         type: 'filename_reference',
         reference: ref,
         suggestedDestination: candidate ? candidate.destination : '',
+        proposedReference: candidate ? relativeReference(file, candidate.destination) : '',
+        confidence: candidate ? 'medium' : 'low',
+        reason: candidate
+          ? `Filename reference matches planned destination for ${candidate.source}.`
+          : 'No planned destination matched this filename reference.',
         suggestedAction: 'review_before_rewrite',
       });
     }
@@ -535,7 +671,7 @@ function rewritePlan() {
   let md = '';
   md += '# Reference Rewrite Plan\n\n';
   md += 'Status: PLAN ONLY / NO WRITES\n\n';
-  md += 'This report identifies markdown links, relative paths and filename references that may need review after document movement.\n\n';
+  md += 'This report identifies markdown links, relative paths, filename references and dry-run rewrite diffs that may need review after document movement.\n\n';
   md += '## Summary\n\n';
   const byType = records.reduce((acc, record) => {
     acc[record.type] = (acc[record.type] || 0) + 1;
@@ -545,21 +681,73 @@ function rewritePlan() {
   md += tableRow(['---', '---:']) + '\n';
   for (const type of Object.keys(byType).sort()) md += tableRow([type, byType[type]]) + '\n';
   md += '\n## References\n\n';
-  md += tableRow(['File', 'Type', 'Reference', 'Suggested Destination', 'Action']) + '\n';
-  md += tableRow(['---', '---', '---', '---', '---']) + '\n';
+  md += tableRow(['File', 'Type', 'Old Reference', 'Proposed New Reference', 'Confidence', 'Reason', 'Action']) + '\n';
+  md += tableRow(['---', '---', '---', '---', '---', '---', '---']) + '\n';
   for (const record of records) {
     md += tableRow([
       `\`${record.file}\``,
       record.type,
       `\`${record.reference}\``,
-      record.suggestedDestination ? `\`${record.suggestedDestination}\`` : '-',
+      record.proposedReference ? `\`${record.proposedReference}\`` : '-',
+      record.confidence,
+      record.reason,
       record.suggestedAction,
     ]) + '\n';
   }
-  if (!records.length) md += tableRow(['-', '-', '-', '-', '-']) + '\n';
+  if (!records.length) md += tableRow(['-', '-', '-', '-', '-', '-', '-']) + '\n';
 
-  fs.writeFileSync(path.join(ROOT, 'reference-rewrite-plan.md'), md);
-  return { records };
+  const json = {
+    generatedAt: new Date().toISOString(),
+    counts: byType,
+    records,
+  };
+  const files = writeReportPair(options, 'reference-rewrite-plan', md, json);
+  return { ...json, ...files };
+}
+
+function markdownHeadingSlug(heading) {
+  return heading
+    .trim()
+    .toLowerCase()
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/[^\p{L}\p{N}\s-]/gu, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
+
+function markdownHeadingSlugs(content) {
+  const slugs = new Set();
+  const counts = new Map();
+  const withoutCode = stripMarkdownCodeBlocks(content);
+  const pattern = /^#{1,6}\s+(.+)$/gm;
+  let match;
+
+  while ((match = pattern.exec(withoutCode))) {
+    const base = markdownHeadingSlug(match[1]);
+    if (!base) continue;
+    const count = counts.get(base) || 0;
+    counts.set(base, count + 1);
+    slugs.add(count === 0 ? base : `${base}-${count}`);
+  }
+
+  return slugs;
+}
+
+function anchorStatus(targetFile, anchor) {
+  if (!anchor) return 'OK';
+
+  let decodedAnchor = anchor;
+  try {
+    decodedAnchor = decodeURIComponent(anchor);
+  } catch (error) {
+    return 'ANCHOR_BROKEN';
+  }
+
+  const targetPath = path.join(ROOT, targetFile);
+  if (!fs.existsSync(targetPath) || !targetFile.endsWith('.md')) return 'ANCHOR_BROKEN';
+  const slugs = markdownHeadingSlugs(fs.readFileSync(targetPath, 'utf8'));
+  return slugs.has(markdownHeadingSlug(decodedAnchor)) ? 'ANCHOR_OK' : 'ANCHOR_BROKEN';
 }
 
 function classifyMarkdownLink(sourceFile, rawLink) {
@@ -584,21 +772,24 @@ function classifyMarkdownLink(sourceFile, rawLink) {
   }
 
   if (link.startsWith('#')) {
+    const anchor = link.slice(1);
     return {
       sourceFile,
       linkedPath: link,
       resolvedTarget: sourceFile,
-      status: 'ANCHOR_ONLY',
+      anchor,
+      status: anchorStatus(sourceFile, anchor),
     };
   }
 
-  const pathOnly = link.split('#')[0];
+  const [pathOnly, anchor = ''] = link.split('#');
   if (!pathOnly) {
     return {
       sourceFile,
       linkedPath: link,
       resolvedTarget: sourceFile,
-      status: 'ANCHOR_ONLY',
+      anchor,
+      status: anchorStatus(sourceFile, anchor),
     };
   }
 
@@ -616,16 +807,18 @@ function classifyMarkdownLink(sourceFile, rawLink) {
 
   const resolvedTarget = normalizeRel(path.posix.join(path.posix.dirname(sourceFile), decodedPath));
   const exists = Boolean(resolvedTarget) && fs.existsSync(path.join(ROOT, resolvedTarget));
+  const status = exists ? anchorStatus(resolvedTarget, anchor) : 'TARGET_BROKEN';
 
   return {
     sourceFile,
     linkedPath: link,
     resolvedTarget,
-    status: exists ? 'OK' : 'BROKEN',
+    anchor,
+    status,
   };
 }
 
-function linkReport() {
+function linkReport(options = {}) {
   const records = [];
 
   for (const file of markdownFiles()) {
@@ -651,20 +844,27 @@ function linkReport() {
   for (const status of Object.keys(counts).sort()) md += tableRow([status, counts[status]]) + '\n';
   if (!records.length) md += tableRow(['-', 0]) + '\n';
   md += '\n## Links\n\n';
-  md += tableRow(['Source File', 'Linked Path', 'Resolved Target', 'Status']) + '\n';
-  md += tableRow(['---', '---', '---', '---']) + '\n';
+  md += tableRow(['Source File', 'Linked Path', 'Resolved Target', 'Anchor', 'Status']) + '\n';
+  md += tableRow(['---', '---', '---', '---', '---']) + '\n';
   for (const record of records) {
     md += tableRow([
       `\`${record.sourceFile}\``,
       `\`${record.linkedPath}\``,
       record.resolvedTarget ? `\`${record.resolvedTarget}\`` : '-',
+      record.anchor ? `\`${record.anchor}\`` : '-',
       record.status,
     ]) + '\n';
   }
-  if (!records.length) md += tableRow(['-', '-', '-', '-']) + '\n';
+  if (!records.length) md += tableRow(['-', '-', '-', '-', '-']) + '\n';
 
-  fs.writeFileSync(path.join(ROOT, 'broken-link-report.md'), md);
-  return { records, counts };
+  const json = {
+    generatedAt: new Date().toISOString(),
+    counts,
+    records,
+    hardFailCount: records.filter((record) => record.status === 'TARGET_BROKEN' || record.status === 'ANCHOR_BROKEN').length,
+  };
+  const files = writeReportPair(options, 'broken-link-report', md, json);
+  return { ...json, ...files };
 }
 
 function compareDestination(record) {
@@ -710,7 +910,7 @@ function compareDestination(record) {
   };
 }
 
-function duplicateDestinationReport() {
+function duplicateDestinationReport(options = {}) {
   const inventory = makeInventory();
   const records = inventory.destinationCandidates
     .filter((record) => record.destination)
@@ -742,8 +942,14 @@ function duplicateDestinationReport() {
   }
   if (!records.length) md += tableRow(['-', '-', '-', '-']) + '\n';
 
-  fs.writeFileSync(path.join(ROOT, 'duplicate-destination-report.md'), md);
-  return { records, counts };
+  const json = {
+    generatedAt: new Date().toISOString(),
+    counts,
+    records,
+    overwriteRiskCount: records.filter((record) => record.status === 'CONTENT_DIFFERS' || record.status === 'EXACT_DUPLICATE').length,
+  };
+  const files = writeReportPair(options, 'duplicate-destination-report', md, json);
+  return { ...json, ...files };
 }
 
 function validateInventoryObject(inventory) {
@@ -787,8 +993,9 @@ function validateInventoryObject(inventory) {
   };
 }
 
-function validateInventory(file = 'migration-inventory.json') {
-  const fullPath = path.join(ROOT, file);
+function validateInventory(file = 'migration-inventory.json', options = {}) {
+  const outputDir = resolveOutputDir(options);
+  const fullPath = path.isAbsolute(file) ? file : path.join(outputDir, file);
   let inventory = null;
   let parseError = '';
 
@@ -819,8 +1026,122 @@ function validateInventory(file = 'migration-inventory.json') {
     md += tableRow([result.field, result.status, result.expectation, result.observed]) + '\n';
   }
 
-  fs.writeFileSync(path.join(ROOT, 'inventory-schema-validation-report.md'), md);
-  return validation;
+  const json = {
+    generatedAt: new Date().toISOString(),
+    status: validation.valid ? 'PASS' : 'FAIL',
+    valid: validation.valid,
+    results: validation.results,
+  };
+  const files = writeReportPair(options, 'inventory-schema-validation-report', md, json);
+  return { ...json, ...files };
+}
+
+function protectedRootRegressionChecks() {
+  const fakeSets = { tracked: new Set(Array.from(PROTECTED_ROOT_ASSETS)), untracked: new Set() };
+  const protectedResults = Array.from(PROTECTED_ROOT_ASSETS).map((asset) => {
+    const record = classifyPlanRecord(asset, fakeSets);
+    return {
+      asset,
+      action: record.action,
+      status: record.action === 'SKIP_PROTECTED' ? 'PASS' : 'FAIL',
+    };
+  });
+
+  const runtimeFiles = ['runtime-fixture.js', 'runtime-fixture.ts', 'runtime-fixture.json', 'runtime-fixture.html'];
+  const runtimeResults = runtimeFiles.map((file) => {
+    const record = classifyPlanRecord(file, { tracked: new Set([file]), untracked: new Set() });
+    return {
+      file,
+      action: record.action,
+      status: record.action !== 'MOVE' ? 'PASS' : 'FAIL',
+    };
+  });
+
+  return {
+    protectedResults,
+    runtimeResults,
+    pass: protectedResults.every((result) => result.status === 'PASS') &&
+      runtimeResults.every((result) => result.status === 'PASS'),
+  };
+}
+
+function check(options = {}) {
+  const strictLinks = Boolean(options.strictLinks || options['strict-links']);
+  const inventory = writeInventory(options);
+  const validation = validate(options);
+  const links = linkReport(options);
+  const duplicates = duplicateDestinationReport(options);
+  const inventoryValidation = validateInventory('migration-inventory.json', options);
+  const regression = protectedRootRegressionChecks();
+
+  const brokenLinkCount = (links.counts.TARGET_BROKEN || 0) + (links.counts.ANCHOR_BROKEN || 0);
+  const destinationOverwriteRiskCount = duplicates.overwriteRiskCount || 0;
+  const hardGates = [
+    {
+      gate: 'protected_root_violation',
+      status: validation.protectedViolations.length === 0 && regression.pass ? 'PASS' : 'FAIL',
+      count: validation.protectedViolations.length + (regression.pass ? 0 : 1),
+    },
+    {
+      gate: 'runtime_move_candidate',
+      status: validation.runtimeInMoveList.length === 0 ? 'PASS' : 'FAIL',
+      count: validation.runtimeInMoveList.length,
+    },
+    {
+      gate: 'inventory_schema',
+      status: inventoryValidation.valid ? 'PASS' : 'FAIL',
+      count: inventoryValidation.valid ? 0 : 1,
+    },
+    {
+      gate: 'destination_overwrite_risk',
+      status: destinationOverwriteRiskCount === 0 ? 'PASS' : 'FAIL',
+      count: destinationOverwriteRiskCount,
+    },
+    {
+      gate: 'broken_markdown_links',
+      status: brokenLinkCount === 0 ? 'PASS' : (strictLinks ? 'FAIL' : 'WARN'),
+      count: brokenLinkCount,
+    },
+  ];
+
+  const hardFail = hardGates.some((gate) => gate.status === 'FAIL');
+  const status = hardFail ? 'FAIL' : 'PASS_WITH_WARNINGS_ALLOWED';
+
+  let md = '';
+  md += '# Repository Migration Check Report\n\n';
+  md += `Status: ${status}\n\n`;
+  md += `Strict Links: ${strictLinks ? 'true' : 'false'}\n\n`;
+  md += 'This aggregate command runs migration validation, link validation, duplicate destination checks, inventory schema validation and protected-root regression checks. It does not move files.\n\n';
+  md += '## Hard Gates\n\n';
+  md += tableRow(['Gate', 'Status', 'Count']) + '\n';
+  md += tableRow(['---', '---', '---:']) + '\n';
+  for (const gate of hardGates) md += tableRow([gate.gate, gate.status, gate.count]) + '\n';
+  md += '\n## Reports\n\n';
+  md += tableRow(['Report', 'Markdown', 'JSON']) + '\n';
+  md += tableRow(['---', '---', '---']) + '\n';
+  md += tableRow(['inventory', `\`${inventory.markdownFile}\``, `\`${inventory.jsonFile}\``]) + '\n';
+  md += tableRow(['validate', `\`${validation.markdownFile}\``, `\`${validation.jsonFile}\``]) + '\n';
+  md += tableRow(['links', `\`${links.markdownFile}\``, `\`${links.jsonFile}\``]) + '\n';
+  md += tableRow(['duplicates', `\`${duplicates.markdownFile}\``, `\`${duplicates.jsonFile}\``]) + '\n';
+  md += tableRow(['validate-inventory', `\`${inventoryValidation.markdownFile}\``, `\`${inventoryValidation.jsonFile}\``]) + '\n';
+
+  const json = {
+    generatedAt: new Date().toISOString(),
+    status,
+    strictLinks,
+    exitCode: hardFail ? 1 : 0,
+    hardGates,
+    reports: {
+      inventory: { markdownFile: inventory.markdownFile, jsonFile: inventory.jsonFile },
+      validate: { markdownFile: validation.markdownFile, jsonFile: validation.jsonFile },
+      links: { markdownFile: links.markdownFile, jsonFile: links.jsonFile },
+      duplicates: { markdownFile: duplicates.markdownFile, jsonFile: duplicates.jsonFile },
+      validateInventory: { markdownFile: inventoryValidation.markdownFile, jsonFile: inventoryValidation.jsonFile },
+    },
+    regression,
+  };
+  const files = writeReportPair(options, 'repo-migration-check-report', md, json);
+  return { ...json, ...files };
 }
 
 function printHelp() {
@@ -832,62 +1153,83 @@ function printHelp() {
   node scripts/repo-doc-migration-harness.js links
   node scripts/repo-doc-migration-harness.js duplicates
   node scripts/repo-doc-migration-harness.js validate-inventory
+  node scripts/repo-doc-migration-harness.js check
+  node scripts/repo-doc-migration-harness.js check --strict-links
+
+Options:
+  --output-dir <dir>    Write generated reports to a directory instead of repository root.
+  --strict-links        Treat broken markdown targets and anchors as check failures.
 
 Outputs:
   migration-inventory.json
+  migration-inventory.md
   ROOT_DOCS_MIGRATION_BATCH_X_MOVE_MAP.md
+  ROOT_DOCS_MIGRATION_BATCH_X_MOVE_MAP.json
   migration-validation-report.md
+  migration-validation-report.json
   reference-rewrite-plan.md
+  reference-rewrite-plan.json
   broken-link-report.md
+  broken-link-report.json
   duplicate-destination-report.md
-  inventory-schema-validation-report.md`);
+  duplicate-destination-report.json
+  inventory-schema-validation-report.md
+  inventory-schema-validation-report.json
+  repo-migration-check-report.md
+  repo-migration-check-report.json`);
 }
 
 function main() {
   const { command, options } = parseArgs(process.argv);
 
   if (command === 'inventory') {
-    const inventory = makeInventory();
-    writeJson('migration-inventory.json', inventory);
-    console.log('Wrote migration-inventory.json');
+    const result = writeInventory(options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile}`);
     return;
   }
 
   if (command === 'plan') {
     const batch = options.batch || '1';
-    const result = writePlan(batch);
-    console.log(`Wrote ${result.file}`);
+    const result = writePlan(batch, options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile}`);
     return;
   }
 
   if (command === 'validate') {
-    const result = validate();
-    console.log(`Wrote migration-validation-report.md (${result.status})`);
+    const result = validate(options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile} (${result.status})`);
     return;
   }
 
   if (command === 'rewrite-plan') {
-    const result = rewritePlan();
-    console.log(`Wrote reference-rewrite-plan.md (${result.records.length} references)`);
+    const result = rewritePlan(options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile} (${result.records.length} references)`);
     return;
   }
 
   if (command === 'links') {
-    const result = linkReport();
-    console.log(`Wrote broken-link-report.md (${result.records.length} links)`);
+    const result = linkReport(options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile} (${result.records.length} links)`);
     return;
   }
 
   if (command === 'duplicates') {
-    const result = duplicateDestinationReport();
-    console.log(`Wrote duplicate-destination-report.md (${result.records.length} destinations)`);
+    const result = duplicateDestinationReport(options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile} (${result.records.length} destinations)`);
     return;
   }
 
   if (command === 'validate-inventory') {
-    const result = validateInventory();
-    console.log(`Wrote inventory-schema-validation-report.md (${result.valid ? 'PASS' : 'FAIL'})`);
+    const result = validateInventory('migration-inventory.json', options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile} (${result.valid ? 'PASS' : 'FAIL'})`);
     process.exitCode = result.valid ? 0 : 1;
+    return;
+  }
+
+  if (command === 'check') {
+    const result = check(options);
+    console.log(`Wrote ${result.markdownFile} and ${result.jsonFile} (${result.status})`);
+    process.exitCode = result.exitCode;
     return;
   }
 
@@ -909,10 +1251,16 @@ module.exports = {
   makeInventory,
   validate,
   extractMarkdownLinks,
+  markdownHeadingSlug,
+  markdownHeadingSlugs,
   classifyMarkdownLink,
   linkReport,
   compareDestination,
   duplicateDestinationReport,
   validateInventoryObject,
   validateInventory,
+  protectedRootRegressionChecks,
+  check,
+  rewritePlan,
+  writeInventory,
 };

@@ -1,0 +1,170 @@
+{
+  "generatedAt": "2026-06-11T04:43:14.127Z",
+  "batch": "3",
+  "counts": {
+    "SKIP_PROTECTED": 3,
+    "SKIP_DEST_EXISTS": 1,
+    "BLOCKED_UNTRACKED": 5,
+    "SKIP_TEST_DOC": 12,
+    "MOVE": 4,
+    "REVIEW_REQUIRED": 1
+  },
+  "records": [
+    {
+      "source": "AGENTS.md",
+      "destination": null,
+      "action": "SKIP_PROTECTED",
+      "reason": "Protected root asset; harness must reject movement."
+    },
+    {
+      "source": "FORGE_CONSTITUTION_AMENDMENT_v1.1.md",
+      "destination": "docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.1.md",
+      "action": "SKIP_DEST_EXISTS",
+      "reason": "Destination already exists; harness refuses overwrite."
+    },
+    {
+      "source": "FORGE_CONSTITUTION_V3.md",
+      "destination": null,
+      "action": "SKIP_PROTECTED",
+      "reason": "Protected root asset; harness must reject movement."
+    },
+    {
+      "source": "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
+      "destination": "docs/archive/FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
+      "action": "BLOCKED_UNTRACKED",
+      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+    },
+    {
+      "source": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "destination": "docs/archive/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
+      "destination": "docs/architecture/product-intelligence/FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
+      "destination": "docs/architecture/product-intelligence/FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
+      "destination": "docs/architecture/product-intelligence/FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
+      "destination": "docs/archive/FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
+      "action": "BLOCKED_UNTRACKED",
+      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+    },
+    {
+      "source": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+      "destination": "docs/architecture/product-intelligence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
+      "destination": "docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
+      "destination": "docs/archive/FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_MANAGER_OS_BLUEPRINT.md",
+      "destination": "docs/architecture/manager-os/FORGE_MANAGER_OS_BLUEPRINT.md",
+      "action": "BLOCKED_UNTRACKED",
+      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+    },
+    {
+      "source": "FORGE_MASTER_BUILD_TREE.md",
+      "destination": null,
+      "action": "SKIP_PROTECTED",
+      "reason": "Protected root asset; harness must reject movement."
+    },
+    {
+      "source": "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
+      "destination": "docs/archive/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",
+      "destination": "docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md",
+      "action": "BLOCKED_UNTRACKED",
+      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+    },
+    {
+      "source": "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "destination": "docs/archive/FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
+      "destination": "docs/archive/FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
+      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
+      "action": "BLOCKED_UNTRACKED",
+      "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
+    },
+    {
+      "source": "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
+      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
+    },
+    {
+      "source": "broken-link-report.md",
+      "destination": "docs/archive/broken-link-report.md",
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
+    },
+    {
+      "source": "duplicate-destination-report.md",
+      "destination": "docs/archive/duplicate-destination-report.md",
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
+    },
+    {
+      "source": "forge-full-inventory.txt",
+      "destination": "docs/archive/forge-full-inventory.txt",
+      "action": "REVIEW_REQUIRED",
+      "reason": "File is neither tracked nor clearly untracked in current git view."
+    },
+    {
+      "source": "inventory-schema-validation-report.md",
+      "destination": "docs/archive/inventory-schema-validation-report.md",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "migration-validation-report.md",
+      "destination": "docs/architecture/repository/migration-validation-report.md",
+      "action": "SKIP_TEST_DOC",
+      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
+    },
+    {
+      "source": "reference-rewrite-plan.md",
+      "destination": "docs/archive/reference-rewrite-plan.md",
+      "action": "MOVE",
+      "reason": "Tracked root documentation file with destination candidate."
+    }
+  ]
+}

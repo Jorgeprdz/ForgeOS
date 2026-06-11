@@ -1,0 +1,148 @@
+{
+  "generatedAt": "2026-06-11T04:43:32.214Z",
+  "counts": {
+    "CONTENT_DIFFERS": 1,
+    "DESTINATION_MISSING": 22
+  },
+  "records": [
+    {
+      "source": "FORGE_CONSTITUTION_AMENDMENT_v1.1.md",
+      "destination": "docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.1.md",
+      "status": "CONTENT_DIFFERS",
+      "reason": "Destination exists with different content."
+    },
+    {
+      "source": "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
+      "destination": "docs/archive/FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "destination": "docs/archive/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
+      "destination": "docs/architecture/product-intelligence/FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
+      "destination": "docs/architecture/product-intelligence/FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
+      "destination": "docs/architecture/product-intelligence/FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
+      "destination": "docs/archive/FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+      "destination": "docs/architecture/product-intelligence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
+      "destination": "docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
+      "destination": "docs/archive/FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_MANAGER_OS_BLUEPRINT.md",
+      "destination": "docs/architecture/manager-os/FORGE_MANAGER_OS_BLUEPRINT.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
+      "destination": "docs/archive/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",
+      "destination": "docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "destination": "docs/archive/FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
+      "destination": "docs/archive/FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
+      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
+      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "broken-link-report.md",
+      "destination": "docs/archive/broken-link-report.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "duplicate-destination-report.md",
+      "destination": "docs/archive/duplicate-destination-report.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "forge-full-inventory.txt",
+      "destination": "docs/archive/forge-full-inventory.txt",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "inventory-schema-validation-report.md",
+      "destination": "docs/archive/inventory-schema-validation-report.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "migration-validation-report.md",
+      "destination": "docs/architecture/repository/migration-validation-report.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "reference-rewrite-plan.md",
+      "destination": "docs/archive/reference-rewrite-plan.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    }
+  ],
+  "overwriteRiskCount": 1
+}

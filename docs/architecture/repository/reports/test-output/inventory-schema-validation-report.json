@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-06-11T04:43:32.224Z",
+  "status": "PASS",
+  "valid": true,
+  "results": [
+    {
+      "field": "generatedAt",
+      "status": "PASS",
+      "expectation": "Required ISO timestamp string.",
+      "observed": "string"
+    },
+    {
+      "field": "files",
+      "status": "PASS",
+      "expectation": "Required array of repository files.",
+      "observed": "array"
+    },
+    {
+      "field": "protectedAssets",
+      "status": "PASS",
+      "expectation": "Required array of hardcoded protected assets.",
+      "observed": "array"
+    },
+    {
+      "field": "rootDocs",
+      "status": "PASS",
+      "expectation": "Required array of root documentation files.",
+      "observed": "array"
+    },
+    {
+      "field": "trackedFiles",
+      "status": "PASS",
+      "expectation": "Required array of git-tracked files.",
+      "observed": "array"
+    },
+    {
+      "field": "untrackedFiles",
+      "status": "PASS",
+      "expectation": "Required array of git-untracked files.",
+      "observed": "array"
+    },
+    {
+      "field": "candidates",
+      "status": "PASS",
+      "expectation": "Required array of destination candidates.",
+      "observed": "array"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-06-11T04:45:03.114Z",
+  "status": "PASS_WITH_REVIEW_ITEMS",
+  "hardGatePass": true,
+  "destinationCollisions": [
+    {
+      "source": "FORGE_CONSTITUTION_AMENDMENT_v1.1.md",
+      "destination": "docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.1.md"
+    }
+  ],
+  "protectedViolations": [],
+  "runtimeInMoveList": [],
+  "duplicateDestinations": [],
+  "ownershipIssues": [
+    {
+      "source": "forge-full-inventory.txt",
+      "reason": "File is neither tracked nor clearly untracked in current git view."
+    }
+  ]
+}

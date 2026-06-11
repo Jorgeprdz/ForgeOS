@@ -1,0 +1,122 @@
+{
+  "generatedAt": "2026-06-11T04:45:05.907Z",
+  "status": "FAIL",
+  "strictLinks": false,
+  "exitCode": 1,
+  "hardGates": [
+    {
+      "gate": "protected_root_violation",
+      "status": "PASS",
+      "count": 0
+    },
+    {
+      "gate": "runtime_move_candidate",
+      "status": "PASS",
+      "count": 0
+    },
+    {
+      "gate": "inventory_schema",
+      "status": "PASS",
+      "count": 0
+    },
+    {
+      "gate": "destination_overwrite_risk",
+      "status": "FAIL",
+      "count": 1
+    },
+    {
+      "gate": "broken_markdown_links",
+      "status": "WARN",
+      "count": 121
+    }
+  ],
+  "reports": {
+    "inventory": {
+      "markdownFile": "docs/architecture/repository/reports/migration-inventory.md",
+      "jsonFile": "docs/architecture/repository/reports/migration-inventory.json"
+    },
+    "validate": {
+      "markdownFile": "docs/architecture/repository/reports/migration-validation-report.md",
+      "jsonFile": "docs/architecture/repository/reports/migration-validation-report.json"
+    },
+    "links": {
+      "markdownFile": "docs/architecture/repository/reports/broken-link-report.md",
+      "jsonFile": "docs/architecture/repository/reports/broken-link-report.json"
+    },
+    "duplicates": {
+      "markdownFile": "docs/architecture/repository/reports/duplicate-destination-report.md",
+      "jsonFile": "docs/architecture/repository/reports/duplicate-destination-report.json"
+    },
+    "validateInventory": {
+      "markdownFile": "docs/architecture/repository/reports/inventory-schema-validation-report.md",
+      "jsonFile": "docs/architecture/repository/reports/inventory-schema-validation-report.json"
+    }
+  },
+  "regression": {
+    "protectedResults": [
+      {
+        "asset": "AGENTS.md",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      },
+      {
+        "asset": "FORGE_CONSTITUTION_V3.md",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      },
+      {
+        "asset": "FORGE_MASTER_BUILD_TREE.md",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      },
+      {
+        "asset": "app.js",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      },
+      {
+        "asset": "index.html",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      },
+      {
+        "asset": "manifest.json",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      },
+      {
+        "asset": "service-worker.js",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      },
+      {
+        "asset": "sw-cache-config.js",
+        "action": "SKIP_PROTECTED",
+        "status": "PASS"
+      }
+    ],
+    "runtimeResults": [
+      {
+        "file": "runtime-fixture.js",
+        "action": "REVIEW_REQUIRED",
+        "status": "PASS"
+      },
+      {
+        "file": "runtime-fixture.ts",
+        "action": "REVIEW_REQUIRED",
+        "status": "PASS"
+      },
+      {
+        "file": "runtime-fixture.json",
+        "action": "REVIEW_REQUIRED",
+        "status": "PASS"
+      },
+      {
+        "file": "runtime-fixture.html",
+        "action": "REVIEW_REQUIRED",
+        "status": "PASS"
+      }
+    ],
+    "pass": true
+  }
+}
