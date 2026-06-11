@@ -8,23 +8,20 @@ This report compares planned destinations that already exist and marks missing d
 
 | Status | Count |
 | --- | ---: |
-| DESTINATION_MISSING | 22 |
+| DESTINATION_MISSING | 19 |
 
 ## Destinations
 
 | Source | Destination | Status | Reason |
 | --- | --- | --- | --- |
 | `FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md` | `docs/archive/FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md` | DESTINATION_MISSING | Destination does not exist. |
-| `FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt` | `docs/archive/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md` | `docs/architecture/product-intelligence/FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_GMM_RED_TEAM_RETEST_REPORT.txt` | `docs/architecture/product-intelligence/FORGE_GMM_RED_TEAM_RETEST_REPORT.txt` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md` | `docs/architecture/product-intelligence/FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md` | `docs/archive/FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md` | DESTINATION_MISSING | Destination does not exist. |
-| `FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt` | `docs/architecture/product-intelligence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt` | `docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_LARIZA_PEDRO_CAMARENA_TEST.md` | `docs/archive/FORGE_LARIZA_PEDRO_CAMARENA_TEST.md` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_MANAGER_OS_BLUEPRINT.md` | `docs/architecture/manager-os/FORGE_MANAGER_OS_BLUEPRINT.md` | DESTINATION_MISSING | Destination does not exist. |
-| `FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt` | `docs/archive/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_REPOSITORY_MIGRATION_PLAN.md` | `docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt` | `docs/archive/FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt` | DESTINATION_MISSING | Destination does not exist. |
 | `FORGE_VALIDATION_REQUIREMENTS_REPORT.md` | `docs/archive/FORGE_VALIDATION_REQUIREMENTS_REPORT.md` | DESTINATION_MISSING | Destination does not exist. |

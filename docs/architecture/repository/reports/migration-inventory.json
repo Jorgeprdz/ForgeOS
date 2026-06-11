@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T19:28:53.422Z",
+  "generatedAt": "2026-06-11T19:38:13.749Z",
   "safety": {
     "writes": "reports_only",
     "movesFiles": false,
@@ -7,14 +7,14 @@
     "deletesFiles": false
   },
   "counts": {
-    "allFiles": 1243,
-    "trackedFiles": 1240,
-    "untrackedFiles": 1,
-    "rootFiles": 720,
-    "rootDocs": 25,
+    "allFiles": 1247,
+    "trackedFiles": 1241,
+    "untrackedFiles": 4,
+    "rootFiles": 717,
+    "rootDocs": 22,
     "protectedAssets": 8,
     "codeFiles": 795,
-    "destinationCandidates": 22
+    "destinationCandidates": 19
   },
   "protectedRootAssets": [
     "AGENTS.md",
@@ -43,17 +43,14 @@
     "Crmaddlife.zip",
     "FORGE_CONSTITUTION_V3.md",
     "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-    "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
     "FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
     "FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
     "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
-    "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
     "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
     "FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
     "FORGE_MANAGER_OS_BLUEPRINT.md",
     "FORGE_MASTER_BUILD_TREE.md",
-    "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
     "FORGE_REPOSITORY_MIGRATION_PLAN.md",
     "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
@@ -498,6 +495,10 @@
     "docs/architecture/repository/REPO-014_FINAL_7_LINK_RESOLUTION_PLAN.md",
     "docs/architecture/repository/REPO-014_REMAINING_LINK_GOVERNANCE_REPORT.md",
     "docs/architecture/repository/REPO-015_EXECUTION_REPORT.md",
+    "docs/architecture/repository/REPO-016_EXECUTION_READINESS_REPORT.md",
+    "docs/architecture/repository/REPO-016_PROJECTION_EVIDENCE_MOVE_MAP.md",
+    "docs/architecture/repository/REPO-016_PROJECTION_EVIDENCE_OWNERSHIP_ANALYSIS.md",
+    "docs/architecture/repository/REPO-017_EXECUTION_REPORT.md",
     "docs/architecture/repository/REPO_MIGRATION_HARNESS_v1.md",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.json",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.md",
@@ -614,6 +615,9 @@
     "docs/archive/SCHEMA_CATALOG.md",
     "docs/archive/SHARED_POLICY_CURRENCY_TIMELINE_ENGINE_REPORT.txt",
     "docs/archive/forge-inventory.txt",
+    "docs/archive/product-intelligence/projection-evidence/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+    "docs/archive/product-intelligence/projection-evidence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+    "docs/archive/product-intelligence/projection-evidence/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
     "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
     "docs/archive/superseded/README.md",
     "docs/constitution/FORGE_CONSTITUTION_MAP.md",
@@ -1305,17 +1309,14 @@
     "Concursos SMNYL",
     "FORGE_CONSTITUTION_V3.md",
     "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-    "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
     "FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
     "FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
     "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
-    "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
     "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
     "FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
     "FORGE_MANAGER_OS_BLUEPRINT.md",
     "FORGE_MASTER_BUILD_TREE.md",
-    "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
     "FORGE_REPOSITORY_MIGRATION_PLAN.md",
     "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
@@ -1741,6 +1742,7 @@
     "docs/architecture/repository/REPO-013_EXECUTION_REPORT.md",
     "docs/architecture/repository/REPO-014_FINAL_7_LINK_RESOLUTION_PLAN.md",
     "docs/architecture/repository/REPO-014_REMAINING_LINK_GOVERNANCE_REPORT.md",
+    "docs/architecture/repository/REPO-015_EXECUTION_REPORT.md",
     "docs/architecture/repository/REPO_MIGRATION_HARNESS_v1.md",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.json",
     "docs/architecture/repository/reports/ROOT_DOCS_MIGRATION_BATCH_3_MOVE_MAP.md",
@@ -1857,6 +1859,9 @@
     "docs/archive/SCHEMA_CATALOG.md",
     "docs/archive/SHARED_POLICY_CURRENCY_TIMELINE_ENGINE_REPORT.txt",
     "docs/archive/forge-inventory.txt",
+    "docs/archive/product-intelligence/projection-evidence/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+    "docs/archive/product-intelligence/projection-evidence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+    "docs/archive/product-intelligence/projection-evidence/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
     "docs/archive/superseded/FORGE_CONSTITUTION_AMENDMENT_v1.1_ROOT_CONVERSION.md",
     "docs/archive/superseded/README.md",
     "docs/constitution/FORGE_CONSTITUTION_MAP.md",
@@ -2524,7 +2529,10 @@
     "whatsapp-link-engine.js"
   ],
   "untrackedFiles": [
-    "docs/architecture/repository/REPO-015_EXECUTION_REPORT.md"
+    "docs/architecture/repository/REPO-016_EXECUTION_READINESS_REPORT.md",
+    "docs/architecture/repository/REPO-016_PROJECTION_EVIDENCE_MOVE_MAP.md",
+    "docs/architecture/repository/REPO-016_PROJECTION_EVIDENCE_OWNERSHIP_ANALYSIS.md",
+    "docs/architecture/repository/REPO-017_EXECUTION_REPORT.md"
   ],
   "rootFiles": [
     ".gitignore",
@@ -2533,17 +2541,14 @@
     "Crmaddlife.zip",
     "FORGE_CONSTITUTION_V3.md",
     "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-    "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
     "FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
     "FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
     "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
-    "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
     "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
     "FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
     "FORGE_MANAGER_OS_BLUEPRINT.md",
     "FORGE_MASTER_BUILD_TREE.md",
-    "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
     "FORGE_REPOSITORY_MIGRATION_PLAN.md",
     "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
@@ -3252,17 +3257,14 @@
     "AGENTS.md",
     "FORGE_CONSTITUTION_V3.md",
     "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-    "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
     "FORGE_GMM_RED_TEAM_RETEST_REPORT.txt",
     "FORGE_GMM_SOURCE_VALIDATION_WORKFLOW.md",
     "FORGE_HUMAN_CAPITAL_ALLOCATION_FLOW.md",
-    "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
     "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
     "FORGE_LARIZA_PEDRO_CAMARENA_TEST.md",
     "FORGE_MANAGER_OS_BLUEPRINT.md",
     "FORGE_MASTER_BUILD_TREE.md",
-    "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
     "FORGE_REPOSITORY_MIGRATION_PLAN.md",
     "FORGE_UDI_PROJECTION_VALIDATION_REPORT.txt",
     "FORGE_VALIDATION_REQUIREMENTS_REPORT.md",
@@ -4092,12 +4094,6 @@
       "reason": "Tracked root documentation file with destination candidate."
     },
     {
-      "source": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
-      "destination": "docs/archive/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
-      "action": "SKIP_TEST_DOC",
-      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
-    },
-    {
       "source": "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
       "destination": "docs/architecture/product-intelligence/FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
       "action": "SKIP_TEST_DOC",
@@ -4122,12 +4118,6 @@
       "reason": "Tracked root documentation file with destination candidate."
     },
     {
-      "source": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
-      "destination": "docs/architecture/product-intelligence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
-      "action": "SKIP_TEST_DOC",
-      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
-    },
-    {
       "source": "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
       "destination": "docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
       "action": "SKIP_TEST_DOC",
@@ -4150,12 +4140,6 @@
       "destination": null,
       "action": "SKIP_PROTECTED",
       "reason": "Protected root asset; harness must reject movement."
-    },
-    {
-      "source": "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
-      "destination": "docs/archive/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
-      "action": "SKIP_TEST_DOC",
-      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
     },
     {
       "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",
@@ -4244,12 +4228,6 @@
       "reason": "Tracked root documentation file with destination candidate."
     },
     {
-      "source": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
-      "destination": "docs/archive/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
-      "action": "SKIP_TEST_DOC",
-      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
-    },
-    {
       "source": "FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
       "destination": "docs/architecture/product-intelligence/FORGE_GMM_EVIDENCE_PACKET_VALIDATION.md",
       "action": "SKIP_TEST_DOC",
@@ -4274,12 +4252,6 @@
       "reason": "Tracked root documentation file with destination candidate."
     },
     {
-      "source": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
-      "destination": "docs/architecture/product-intelligence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
-      "action": "SKIP_TEST_DOC",
-      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
-    },
-    {
       "source": "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
       "destination": "docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
       "action": "SKIP_TEST_DOC",
@@ -4302,12 +4274,6 @@
       "destination": null,
       "action": "SKIP_PROTECTED",
       "reason": "Protected root asset; harness must reject movement."
-    },
-    {
-      "source": "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
-      "destination": "docs/archive/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
-      "action": "SKIP_TEST_DOC",
-      "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
     },
     {
       "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",

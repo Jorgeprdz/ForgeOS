@@ -1,18 +1,12 @@
 {
-  "generatedAt": "2026-06-11T19:28:57.265Z",
+  "generatedAt": "2026-06-11T19:38:17.345Z",
   "counts": {
-    "DESTINATION_MISSING": 22
+    "DESTINATION_MISSING": 19
   },
   "records": [
     {
       "source": "FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
       "destination": "docs/archive/FORGE_DUAL_INTELLIGENCE_OPERATIONAL_BLUEPRINT.md",
-      "status": "DESTINATION_MISSING",
-      "reason": "Destination does not exist."
-    },
-    {
-      "source": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
-      "destination": "docs/archive/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
       "status": "DESTINATION_MISSING",
       "reason": "Destination does not exist."
     },
@@ -41,12 +35,6 @@
       "reason": "Destination does not exist."
     },
     {
-      "source": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
-      "destination": "docs/architecture/product-intelligence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
-      "status": "DESTINATION_MISSING",
-      "reason": "Destination does not exist."
-    },
-    {
       "source": "FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
       "destination": "docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001C_TRUTH_VALIDATION_RESULT_CONTRACT.txt",
       "status": "DESTINATION_MISSING",
@@ -61,12 +49,6 @@
     {
       "source": "FORGE_MANAGER_OS_BLUEPRINT.md",
       "destination": "docs/architecture/manager-os/FORGE_MANAGER_OS_BLUEPRINT.md",
-      "status": "DESTINATION_MISSING",
-      "reason": "Destination does not exist."
-    },
-    {
-      "source": "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
-      "destination": "docs/archive/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
       "status": "DESTINATION_MISSING",
       "reason": "Destination does not exist."
     },

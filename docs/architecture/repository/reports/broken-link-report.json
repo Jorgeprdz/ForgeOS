@@ -1,8 +1,7 @@
 {
-  "generatedAt": "2026-06-11T19:28:55.516Z",
+  "generatedAt": "2026-06-11T19:38:15.711Z",
   "counts": {
-    "OK": 163,
-    "TARGET_BROKEN": 3
+    "OK": 166
   },
   "records": [
     {
@@ -980,10 +979,10 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
-      "linkedPath": "FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
-      "resolvedTarget": "docs/archive/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+      "linkedPath": "product-intelligence/projection-evidence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
+      "resolvedTarget": "docs/archive/product-intelligence/projection-evidence/FORGE_IMAGINA_SER_REAL_QUOTE_VALIDATION_REPORT.txt",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
@@ -994,10 +993,10 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
-      "linkedPath": "FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
-      "resolvedTarget": "docs/archive/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
+      "linkedPath": "product-intelligence/projection-evidence/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
+      "resolvedTarget": "docs/archive/product-intelligence/projection-evidence/FORGE_PROJECTION_ENGINE_VS_EXCEL_VALIDATION_REPORT.txt",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
@@ -1008,10 +1007,10 @@
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
-      "linkedPath": "FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
-      "resolvedTarget": "docs/archive/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "linkedPath": "product-intelligence/projection-evidence/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
+      "resolvedTarget": "docs/archive/product-intelligence/projection-evidence/FORGE_GLOBAL_UDI_PROJECTION_VALIDATION_REPORT.txt",
       "anchor": "",
-      "status": "TARGET_BROKEN"
+      "status": "OK"
     },
     {
       "sourceFile": "docs/archive/FORGE_PROJECTION_INTELLIGENCE_CHECKPOINT_NOTE.md",
@@ -1168,5 +1167,5 @@
       "status": "OK"
     }
   ],
-  "hardFailCount": 3
+  "hardFailCount": 0
 }
