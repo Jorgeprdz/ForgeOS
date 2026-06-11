@@ -210,7 +210,7 @@ Every engine output, UI report, or recommendation must answer the three question
 - **Rocky** – Consistency, resilience.
 - **Mick** – Coaching, skill improvement.
 - **Nicky Spurgeon** – Networking, referrals.
-- **Andrey** – Talent Intelligence, Future Capacity, Vital Factors.
+- **Andrey (The Allocator)** – Human Capital Allocation, RODI, Resource Scarcity.
 
 *Described in `AGENTS.md`.*
 
@@ -248,7 +248,31 @@ Every engine output, UI report, or recommendation must answer the three question
 
 ---
 
-## 17. Constitution Amendment v1.1 - Ratified Principles
+## 17. Dual OS Principle: Execution vs. Governance
+
+Forge OS is formally split into two interdependent intelligence layers:
+
+1. **Advisor OS (Execution Layer):** Primary customer is the Advisor. Focuses on individual productivity and rapport.
+2. **Manager OS (Governance Layer):** Primary customer is the Manager-Partner. Focuses on capital allocation, risk, and scaling.
+
+**The Miranda Wall:** Investment judgments (RODI, Vetoes, Systemic Risk) are strictly prohibited from appearing in the Advisor OS to protect psychological safety.
+
+---
+
+## 18. Human Capital Allocation & Replication Principle
+
+Forge OS adopts the **RODI (Return on Development Investment) Principle**:
+
+> **"Developmental capital must be allocated proportionally to the unit's observed RODI to ensure organizational sustainability."**
+
+**Meaning:**
+- **The Allocator (Andrey):** Governs the threshold of investment based on Vital Factors and Relationship Capital.
+- **Leadership as Replication:** Leadership authority is granted only through evidence of replicating the model in others (Mentee Outcomes).
+- **Organization Health:** Protects the system from contagion and systemic decay.
+
+---
+
+## 19. Constitution Amendment v1.1 - Ratified Principles
 
 Forge Constitution Amendment v1.1 is ratified as constitutional doctrine.
 
@@ -337,20 +361,7 @@ Forge Core never hardcodes carrier-specific groups, bonuses, contests, careers, 
 
 ---
 
-## 17. Talent Intelligence & Future Capacity Principle
-
-Forge OS adopts the **Discovery of Greatness Principle**:
-
-> **"Forge does not create greatness. Forge discovers, develops and amplifies greatness where it already exists."**
-
-**Meaning:**
-- **Talent Precedes Activity:** Evaluation of potential (Vital Factors) governs the measurement of execution.
-- **Future Capacity Protection:** Forge protects the organization's future by ensuring only high-potential talent scales.
-- **Judgment over Ops:** Talent Intelligence provides the judgment layer over recruitment and career transitions.
-
----
-
-## 18. Constitutional Amendments Process
+## 20. Constitutional Amendments Process
 
 1. **Propose Amendment** – Any contributor submits a markdown change to `FORGE_CONSTITUTION_V3.md` in a feature branch.
 2. **Council Review** – The Forge Council evaluates the proposal against existing directives and business goals.
