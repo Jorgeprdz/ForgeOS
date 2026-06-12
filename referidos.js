@@ -1,5 +1,6 @@
 // /modules/referidos.js - Directorio Premium y Ruteador de Ventas
 import { DB } from './db.js';
+import { Navigation } from './platform/navigation-runtime.js';
 import { showToast, showConfirm } from './utils.js';
 
 const State = {
@@ -164,7 +165,11 @@ const Controller = {
         if (!ref) return;
         localStorage.setItem('auto_prospecto', JSON.stringify(ref));
         localStorage.setItem('auto_generar_guion', 'true');
-        window.navigateTo('prospeccion');
+        Navigation.navigate('prospeccion', {
+            source: 'referidos',
+            handoffKey: 'auto_prospecto',
+            autoGenerateKey: 'auto_generar_guion'
+        });
     },
 
     cargarEdicion(id) {

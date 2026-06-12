@@ -9,7 +9,7 @@ Status: APP SHELL COUPLING MAP / NO FIXES
 | --- | --- | --- | --- |
 | db.js | DB | Platform boot | NO |
 | utils.js | showToast | Platform boot | NO |
-| dashboard.js | renderDashboard, bindDashboardEvents | Domain route | YES |
+| supabase-runtime.js | SupabaseRuntime, getSupabase | Platform boot | NO |
 | prospeccion.js | renderProspeccion, bindProspeccionEvents | Advisor OS | YES |
 | referidos.js | renderReferidos, bindReferidosEvents | Advisor OS | YES |
 | actividad.js | renderActividad, bindActividadEvents | Advisor OS | YES |
@@ -19,6 +19,7 @@ Status: APP SHELL COUPLING MAP / NO FIXES
 | state-manager.js | AppState | Platform boot | NO |
 | event-system.js | EventBus | Platform boot | NO |
 | module-lifecycle.js | Lifecycle | Platform boot | NO |
+| platform/navigation-runtime.js | Navigation | Platform boot | NO |
 | ui-render-engine.js | RenderEngine | Platform boot | NO |
 | sync-orchestrator.js | SyncEngine | Platform boot | NO |
 | analytics-engine.js | Analytics | Platform boot | NO |

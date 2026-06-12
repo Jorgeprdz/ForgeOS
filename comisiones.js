@@ -1,7 +1,8 @@
 // comisiones.js — FULL SAFE RECOVERY BUILD v16 (RLS Safe)
 import { DB } from './db.js';
-import { getSupabase } from './app.js';
+import { getSupabase } from './supabase-runtime.js';
 import { callGemini } from './ai-service.js';
+import { Navigation } from './platform/navigation-runtime.js';
 import { showToast, showConfirm } from './utils.js';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -307,7 +308,12 @@ function bindConfigForm(sb, userId) {
             const { error } = await sb.from('crm_data').upsert(payload, { onConflict: 'id' });
             if (error) throw error;
             showToast('Perfil guardado', 'success');
-            setTimeout(() => window.navigateTo('comisiones'), 400);
+            setTimeout(() => {
+                Navigation.navigate('comisiones', {
+                    source: 'comisiones',
+                    reason: 'profile_saved'
+                });
+            }, 400);
         } catch(e) { showToast('Error al guardar: '+e.message, 'danger'); }
     });
 }
@@ -463,6 +469,11 @@ function bindUIEvents(r, perfil, sb, userId) {
         if(!ok) return;
         await sb.from('crm_data').delete().eq('user_id', userId).eq('coleccion', 'perfil_asesor');
         showToast('Perfil formateado', 'success');
-        setTimeout(() => window.navigateTo('comisiones'), 400);
+        setTimeout(() => {
+            Navigation.navigate('comisiones', {
+                source: 'comisiones',
+                reason: 'profile_reset'
+            });
+        }, 400);
     });
 }

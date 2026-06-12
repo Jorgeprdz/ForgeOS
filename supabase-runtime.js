@@ -56,4 +56,8 @@ class SupabaseRuntimeEngine {
 export const SupabaseRuntime =
     new SupabaseRuntimeEngine();
 
+export function getSupabase() {
+    return window.supabaseClient || null;
+}
+
 export default SupabaseRuntime;

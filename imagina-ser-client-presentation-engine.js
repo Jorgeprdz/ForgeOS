@@ -1,4 +1,4 @@
-const { buildTwoBagsExplanation } = require("./imagina-ser-human-language-engine");
+const { buildTwoBagsExplanation } = require("./product-intelligence/knowledge/imagina-ser-human-language-engine");
 
 function buildClientPresentation({
   clientData,

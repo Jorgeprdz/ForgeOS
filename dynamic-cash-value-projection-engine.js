@@ -17,11 +17,11 @@
 import {
     proyectarUDI,
     calcularValorRescateMXN
-} from './projection-engine.js';
+} from './product-intelligence/projections/projection-engine.js';
 
 import {
     seleccionarHitosSignificativos
-} from './projection-milestone-engine.js';
+} from './product-intelligence/projections/projection-milestone-engine.js';
 
 export function proyectarValoresRescateDinamicos({
 

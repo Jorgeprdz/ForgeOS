@@ -46,6 +46,7 @@ import { Core }         from './core-app-engine.js';
 import { AppState }     from './state-manager.js';
 import { EventBus }     from './event-system.js';
 import { Lifecycle }    from './module-lifecycle.js';
+import { Navigation }   from './platform/navigation-runtime.js';
 import { RenderEngine } from './ui-render-engine.js';
 import { SyncEngine }   from './sync-orchestrator.js';
 import { Analytics }    from './analytics-engine.js';
@@ -348,6 +349,9 @@ class AppManager {
     constructor() {
         this.auth   = new AuthService();
         this.router = new EnterpriseRouter();
+
+        Navigation.setNavigator((route, params) => this.router.navigate(route));
+        Navigation.bindLegacyWindow();
     }
 
     // ─────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 const {
   buildEducationCostComparison
-} = require("./shared-education-cost-engine");
+} = require("./product-intelligence/knowledge/shared-education-cost-engine");
 
 function buildSeguBecaEducationComparison({
   childAge,

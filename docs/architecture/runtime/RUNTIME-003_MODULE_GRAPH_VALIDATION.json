@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-06-11T20:47:01.142Z",
+  "generatedAt": "2026-06-12T02:26:53.603Z",
   "summary": {
-    "totalJsFilesScanned": 671,
-    "totalImportsFound": 196,
-    "staticImportsFound": 195,
-    "dynamicImportsFound": 1,
-    "missingTargetsCount": 4,
+    "totalJsFilesScanned": 675,
+    "totalImportsFound": 199,
+    "staticImportsFound": 197,
+    "dynamicImportsFound": 2,
+    "missingTargetsCount": 6,
     "missingExportsCount": 2,
     "circularImportsCount": 0,
     "bootBlockersCount": 0,
@@ -28,16 +28,30 @@
       "classification": "ROUTE_BLOCKER"
     },
     {
-      "source": "smnyl-bonos-engine.js",
-      "target": "./smnyl-concursos-config.js",
-      "resolved": "smnyl-concursos-config.js",
+      "source": "command-palette.js",
+      "target": "./smnyl-command-palette-engine.js",
+      "resolved": "smnyl-command-palette-engine.js",
       "type": "static",
       "classification": "DOMAIN_BLOCKER"
     },
     {
-      "source": "smnyl-training-allowance-engine.js",
+      "source": "rule-packs/smnyl/smnyl-bonos-engine.js",
       "target": "./smnyl-concursos-config.js",
-      "resolved": "smnyl-concursos-config.js",
+      "resolved": "rule-packs/smnyl/smnyl-concursos-config.js",
+      "type": "static",
+      "classification": "DOMAIN_BLOCKER"
+    },
+    {
+      "source": "rule-packs/smnyl/smnyl-concursos-engine.js",
+      "target": "./db.js",
+      "resolved": "rule-packs/smnyl/db.js",
+      "type": "static",
+      "classification": "DOMAIN_BLOCKER"
+    },
+    {
+      "source": "rule-packs/smnyl/smnyl-training-allowance-engine.js",
+      "target": "./smnyl-concursos-config.js",
+      "resolved": "rule-packs/smnyl/smnyl-concursos-config.js",
       "type": "static",
       "classification": "DOMAIN_BLOCKER"
     }
@@ -51,9 +65,9 @@
       "classification": "ROUTE_BLOCKER"
     },
     {
-      "source": "smnyl-produccion-engine.js",
+      "source": "rule-packs/smnyl/smnyl-produccion-engine.js",
       "target": "./smnyl-prima-engine.js",
-      "resolved": "smnyl-prima-engine.js",
+      "resolved": "rule-packs/smnyl/smnyl-prima-engine.js",
       "imported": "calcularPrimaPoliza",
       "classification": "DOMAIN_BLOCKER"
     }
@@ -78,12 +92,6 @@
       "importedNames": "SupabaseRuntime, getSupabase",
       "category": "Platform boot",
       "shouldEventuallyBeDynamic": false
-    },
-    {
-      "path": "dashboard.js",
-      "importedNames": "renderDashboard, bindDashboardEvents",
-      "category": "Domain route",
-      "shouldEventuallyBeDynamic": true
     },
     {
       "path": "prospeccion.js",
@@ -136,6 +144,12 @@
     {
       "path": "module-lifecycle.js",
       "importedNames": "Lifecycle",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "platform/navigation-runtime.js",
+      "importedNames": "Navigation",
       "category": "Platform boot",
       "shouldEventuallyBeDynamic": false
     },
