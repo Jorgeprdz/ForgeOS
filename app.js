@@ -34,8 +34,8 @@ console.log(
 
 import { DB }           from './db.js';
 import { showToast }    from './utils.js';
+import { SupabaseRuntime, getSupabase } from './supabase-runtime.js';
 
-import { renderDashboard,   bindDashboardEvents   } from './dashboard.js';
 import { renderProspeccion, bindProspeccionEvents  } from './prospeccion.js';
 import { renderReferidos,   bindReferidosEvents    } from './referidos.js';
 import { renderActividad,   bindActividadEvents    } from './actividad.js';
@@ -117,6 +117,7 @@ class AuthService {
         // pendientes de migración. Los módulos ya migrados NO usan esto.
         // TODO: eliminar window.supabaseClient cuando migración esté completa.
         window.supabaseClient = this.client;
+        SupabaseRuntime.init(this.client);
 
         Logger.info('[AUTH] READY');
 
@@ -202,13 +203,41 @@ class EnterpriseRouter {
         this.currentRoute = null;
 
         this.routes = {
-            dashboard:   { render: renderDashboard,   bind: bindDashboardEvents   },
+            dashboard: {
+                load:       () => import('./dashboard.js'),
+                renderName: 'renderDashboard',
+                bindName:   'bindDashboardEvents',
+            },
             prospeccion: { render: renderProspeccion,  bind: bindProspeccionEvents  },
             referidos:   { render: renderReferidos,    bind: bindReferidosEvents    },
             actividad:   { render: renderActividad,    bind: bindActividadEvents    },
             cartera:     { render: renderCartera,      bind: bindCarteraEvents      },
             comisiones:  { render: renderComisiones,   bind: bindComisionesEvents   },
         };
+    }
+
+    async _resolveRouteModule(route, descriptor) {
+
+        if (
+            typeof descriptor?.render === 'function' &&
+            typeof descriptor?.bind   === 'function'
+        ) {
+            return descriptor;
+        }
+
+        if (typeof descriptor?.load !== 'function') {
+            throw new Error(`Ruta inválida: ${_escapeHtml(route)}`);
+        }
+
+        const loaded = await descriptor.load();
+        const render = loaded?.[descriptor.renderName];
+        const bind   = loaded?.[descriptor.bindName];
+
+        if (typeof render !== 'function' || typeof bind !== 'function') {
+            throw new Error(`Contrato de ruta inválido: ${_escapeHtml(route)}`);
+        }
+
+        return { render, bind };
     }
 
     async navigate(route) {
@@ -218,9 +247,9 @@ class EnterpriseRouter {
             // Evitar re-navegación a la ruta activa
             if (this.currentRoute === route) return;
 
-            const module = this.routes[route];
+            const descriptor = this.routes[route];
 
-            if (!module) {
+            if (!descriptor) {
                 throw new Error(`Ruta inválida: ${_escapeHtml(route)}`);
             }
 
@@ -235,6 +264,8 @@ class EnterpriseRouter {
             // 1. Destruir módulo anterior — limpia Memory, AbortControllers,
             //    suscripciones a AppState, timers
             await Lifecycle.destroyAll();
+
+            const module = await this._resolveRouteModule(route, descriptor);
 
             // 2. Renderizar template HTML estático del nuevo módulo
             //    Via RAF-scheduled para evitar layout thrashing
@@ -686,9 +717,7 @@ class AppManager {
 // TODO: eliminar cuando todos los módulos estén migrados.
 // ═══════════════════════════════════════════════════════════════
 
-export function getSupabase() {
-    return window.supabaseClient || null;
-}
+export { getSupabase };
 
 // ═══════════════════════════════════════════════════════════════
 // BOOTSTRAP
