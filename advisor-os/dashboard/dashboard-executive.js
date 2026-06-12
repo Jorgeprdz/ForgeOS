@@ -15,7 +15,7 @@
 
 import {
     ejecutarSistemaOperativo
-} from './smnyl-operating-system-engine.js';
+} from '../../rule-packs/smnyl/smnyl-operating-system-engine.js';
 
 let dashboardData = null;
 

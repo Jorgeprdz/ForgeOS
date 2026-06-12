@@ -43,10 +43,24 @@ function ensureReportDir() {
 }
 
 function rootJsFiles() {
-  return fs.readdirSync(ROOT, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.js'))
-    .map((entry) => entry.name)
-    .sort();
+  const IGNORE_DIRS = new Set(['.git', 'node_modules', 'docs', 'scripts', 'tests', 'fixtures', 'Concursos SMNYL']);
+
+  function scan(dir, base = ROOT) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    let files = [];
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        if (IGNORE_DIRS.has(entry.name) || entry.name.startsWith('.')) continue;
+        files = files.concat(scan(path.join(dir, entry.name), base));
+      } else if (entry.isFile() && entry.name.endsWith('.js')) {
+        const relativePath = path.posix.relative(base, path.join(dir, entry.name));
+        files.push(relativePath);
+      }
+    }
+    return files;
+  }
+
+  return scan(ROOT).sort();
 }
 
 function stripComments(source) {

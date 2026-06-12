@@ -1,6 +1,6 @@
 import {
     calcularEstadoConcursos
-} from './smnyl-concursos-engine.js';
+} from '../../rule-packs/smnyl/smnyl-concursos-engine.js';
 
 const state = {
     data: null
