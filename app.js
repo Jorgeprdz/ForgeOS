@@ -32,7 +32,6 @@ console.log(
 // IMPORTS
 // ═══════════════════════════════════════════════════════════════
 
-import { DB }           from './db.js';
 import { showToast }    from './utils.js';
 import { SupabaseRuntime, getSupabase } from './supabase-runtime.js';
 
@@ -42,14 +41,13 @@ import { renderActividad,   bindActividadEvents    } from './actividad.js';
 import { renderCartera,     bindCarteraEvents      } from './cartera.js';
 import { renderComisiones,  bindComisionesEvents   } from './comisiones.js';
 
-import { Core }         from './core-app-engine.js';
 import { AppState }     from './state-manager.js';
 import { EventBus }     from './event-system.js';
 import { Lifecycle }    from './module-lifecycle.js';
-import { Navigation }   from './platform/navigation-runtime.js';
 import { RenderEngine } from './ui-render-engine.js';
 import { SyncEngine }   from './platform/sync/sync-orchestrator.js';
 import { bootstrapApp } from './platform/app/bootstrap.js';
+import { ForgeAppShell } from './platform/app/forge-app-shell.js';
 import { Analytics }    from './analytics-engine.js';
 import { ErrorHandler } from './error-boundary.js';
 import { Logger }       from './logger.js';
@@ -350,9 +348,16 @@ class AppManager {
     constructor() {
         this.auth   = new AuthService();
         this.router = new EnterpriseRouter();
-
-        Navigation.setNavigator((route, params) => this.router.navigate(route));
-        Navigation.bindLegacyWindow();
+        this.shell = new ForgeAppShell({
+            auth: this.auth,
+            router: this.router,
+            ui: {
+                showApp: user => this._showApp(user),
+                showLogin: () => this._showLogin(),
+                showFatalError: err => this._showFatalError(err),
+                bindGlobalListeners: () => this._bindGlobalListeners()
+            }
+        });
     }
 
     // ─────────────────────────────────────────────────────────
@@ -360,80 +365,7 @@ class AppManager {
     // ─────────────────────────────────────────────────────────
 
     async init() {
-
-        // Mostrar spinner de carga global inmediatamente
-        AppShell.showLoader('Iniciando CRM...');
-
-        try {
-
-            Logger.info('[APP] Bootstrap iniciado');
-
-            // 1. Inicializar Supabase — debe ser primero
-            this.auth.init();
-
-            // 2. Inicializar IndexedDB
-            await DB.init();
-
-            // 3. Inicializar infraestructura enterprise
-            if (typeof Core?.init === 'function') {
-                await Core.init();
-            }
-
-            Analytics.init();
-            ErrorHandler.init();
-
-            // 4. Verificar sesión de usuario
-            AppShell.showLoader('Verificando sesión...');
-
-            const user = await this.auth.getUser();
-
-            if (user) {
-
-                Logger.info('[APP] Usuario autenticado:', user.email);
-                Analytics.track('session_restored', { userId: user.id });
-
-                // Revelar UI autenticada
-                this._showApp(user);
-                this._bindGlobalListeners();
-
-                // 5. Navegar a ruta inicial
-                // Respeta deep-link si el usuario llegó con #ruta en la URL
-                const hashRoute    = window.location.hash.replace('#', '').trim();
-                const initialRoute = this.router.routes[hashRoute]
-                    ? hashRoute
-                    : 'dashboard';
-
-                AppShell.showLoader('Cargando...');
-
-                await this.router.navigate(initialRoute);
-
-                // 6. Arrancar sync engine en background — no bloquea UI
-                if (typeof SyncEngine?.start === 'function') {
-                    SyncEngine.start().catch(err => {
-                        Logger.warn('[SYNC] Error al arrancar:', err);
-                    });
-                }
-
-                Logger.info('[APP] Bootstrap completo');
-
-            } else {
-
-                // Sin sesión activa — pantalla de login
-                Logger.info('[APP] Sin sesión — mostrando login');
-                this._showLogin();
-            }
-
-        } catch (err) {
-
-            Logger.error('[APP INIT ERROR]', err);
-            ErrorHandler.capture(err);
-            this._showFatalError(err);
-
-        } finally {
-
-            // Ocultar spinner SIEMPRE — tanto en éxito como en error
-            AppShell.hideLoader();
-        }
+        return this.shell.init();
     }
 
     // ─────────────────────────────────────────────────────────
