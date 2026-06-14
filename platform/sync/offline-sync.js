@@ -1,8 +1,8 @@
 // offline-sync.js
 // Enterprise Offline Sync Engine
 
-import { DB } from './db.js';
-import { Network } from './network-manager.js';
+import { DB } from '../../db.js';
+import { Network } from '../../network-manager.js';
 
 class OfflineSyncEngine {
 

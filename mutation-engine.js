@@ -1,7 +1,7 @@
 // mutation-engine.js
 
 import { AppStore } from './store.js';
-import { SyncRuntime } from './sync-engine.js';
+import { SyncRuntime } from './platform/sync/sync-engine.js';
 
 class MutationEngine {
 

@@ -1,7 +1,7 @@
 // sync-engine.js
 // Enterprise Sync Runtime
 
-import { Runtime } from './runtime.js';
+import { Runtime } from '../../runtime.js';
 
 const SYNC_LOCK =
     'addlife-sync-lock';

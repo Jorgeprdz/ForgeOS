@@ -2,9 +2,9 @@
 // Enterprise Sync Coordinator
 
 import { OfflineSync } from './offline-sync.js';
-import { Realtime } from './realtime-engine.js';
-import { AppState } from './state-manager.js';
-import { EventBus } from './event-system.js';
+import { Realtime } from '../../realtime-engine.js';
+import { AppState } from '../../state-manager.js';
+import { EventBus } from '../../event-system.js';
 
 class SyncOrchestrator {
 
