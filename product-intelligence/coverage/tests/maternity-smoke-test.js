@@ -1,4 +1,4 @@
-import { analyzeMaternitySituation } from './maternity-intelligence-engine.js';
+import { analyzeMaternitySituation } from '../medical-events/maternity-intelligence-engine.js';
 
 const results = [];
 function test(name, fn) {

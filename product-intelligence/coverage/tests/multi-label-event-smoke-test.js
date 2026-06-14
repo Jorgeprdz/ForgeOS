@@ -1,4 +1,4 @@
-import { classifyEventMultiLabel } from './multi-label-event-engine.js';
+import { classifyEventMultiLabel } from '../medical-events/multi-label-event-engine.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

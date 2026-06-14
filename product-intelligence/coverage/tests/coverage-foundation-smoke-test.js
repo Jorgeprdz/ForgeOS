@@ -1,4 +1,4 @@
-import { evaluateCoverageFoundation } from './coverage-evaluation-foundation-engine.js';
+import { evaluateCoverageFoundation } from '../medical-events/coverage-evaluation-foundation-engine.js';
 
 const results = [];
 

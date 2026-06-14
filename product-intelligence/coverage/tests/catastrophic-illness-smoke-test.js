@@ -1,4 +1,4 @@
-import { analyzeCatastrophicIllness } from './catastrophic-illness-engine.js';
+import { analyzeCatastrophicIllness } from '../medical-events/catastrophic-illness-engine.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

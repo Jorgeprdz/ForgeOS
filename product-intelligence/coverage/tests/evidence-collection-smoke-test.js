@@ -1,4 +1,4 @@
-import { collectEventEvidence } from './evidence-collection-engine.js';
+import { collectEventEvidence } from '../medical-events/evidence-collection-engine.js';
 
 const results = [];
 

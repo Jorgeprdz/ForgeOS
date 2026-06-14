@@ -1,4 +1,4 @@
-import { routeHumanReview } from './human-review-routing-engine.js';
+import { routeHumanReview } from '../medical-events/human-review-routing-engine.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

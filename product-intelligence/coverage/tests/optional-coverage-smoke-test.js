@@ -1,4 +1,4 @@
-import { explainOptionalCoverage } from './optional-coverage-intelligence-engine.js';
+import { explainOptionalCoverage } from '../medical-events/optional-coverage-intelligence-engine.js';
 
 const results = [];
 

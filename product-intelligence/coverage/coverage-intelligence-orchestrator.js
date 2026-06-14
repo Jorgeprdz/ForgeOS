@@ -13,16 +13,16 @@
 |--------------------------------------------------------------------------
 */
 
-import { classifyMedicalEvent } from './event-classification-engine.js';
-import { collectEventEvidence } from './evidence-collection-engine.js';
-import { analyzeMaternitySituation } from './maternity-intelligence-engine.js';
-import { analyzeAccidentScenario } from './accident-intelligence-engine.js';
-import { analyzeHospitalizationScenario } from './hospitalization-intelligence-engine.js';
-import { analyzeSurgeryScenario } from './surgery-intelligence-engine.js';
-import { analyzeCatastrophicIllness } from './catastrophic-illness-engine.js';
-import { analyzeTerritoriality } from './territoriality-intelligence-engine.js';
-import { routeHumanReview } from './human-review-routing-engine.js';
-import { evaluateCoverageFoundation } from './coverage-evaluation-foundation-engine.js';
+import { classifyMedicalEvent } from './medical-events/event-classification-engine.js';
+import { collectEventEvidence } from './medical-events/evidence-collection-engine.js';
+import { analyzeMaternitySituation } from './medical-events/maternity-intelligence-engine.js';
+import { analyzeAccidentScenario } from './medical-events/accident-intelligence-engine.js';
+import { analyzeHospitalizationScenario } from './medical-events/hospitalization-intelligence-engine.js';
+import { analyzeSurgeryScenario } from './medical-events/surgery-intelligence-engine.js';
+import { analyzeCatastrophicIllness } from './medical-events/catastrophic-illness-engine.js';
+import { analyzeTerritoriality } from './medical-events/territoriality-intelligence-engine.js';
+import { routeHumanReview } from './medical-events/human-review-routing-engine.js';
+import { evaluateCoverageFoundation } from './medical-events/coverage-evaluation-foundation-engine.js';
 
 function analysisFor({ family, event, policyFacts }) {
   if (family === 'PREGNANCY' || family === 'CHILDBIRTH' || family === 'CESAREAN') {

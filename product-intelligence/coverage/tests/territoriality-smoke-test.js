@@ -1,4 +1,4 @@
-import { analyzeTerritoriality } from './territoriality-intelligence-engine.js';
+import { analyzeTerritoriality } from '../medical-events/territoriality-intelligence-engine.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

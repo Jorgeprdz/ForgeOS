@@ -1,4 +1,4 @@
-import { analyzeHospitalizationScenario } from './hospitalization-intelligence-engine.js';
+import { analyzeHospitalizationScenario } from '../medical-events/hospitalization-intelligence-engine.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

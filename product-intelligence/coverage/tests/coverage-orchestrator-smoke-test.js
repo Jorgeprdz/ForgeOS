@@ -1,4 +1,4 @@
-import { runCoverageIntelligence } from './coverage-intelligence-orchestrator.js';
+import { runCoverageIntelligence } from '../coverage-intelligence-orchestrator.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

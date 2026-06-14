@@ -1,4 +1,4 @@
-import { analyzeAccidentScenario } from './accident-intelligence-engine.js';
+import { analyzeAccidentScenario } from '../medical-events/accident-intelligence-engine.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

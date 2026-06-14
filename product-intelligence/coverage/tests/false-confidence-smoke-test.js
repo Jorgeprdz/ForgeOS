@@ -1,4 +1,4 @@
-import { applyFalseConfidenceProtection } from './false-confidence-protection-engine.js';
+import { applyFalseConfidenceProtection } from '../medical-events/false-confidence-protection-engine.js';
 
 const results = [];
 function test(name, fn) { try { fn(); results.push({ name, status: 'PASS' }); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); } }

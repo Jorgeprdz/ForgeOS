@@ -1,4 +1,4 @@
-import { classifyMedicalEvent } from './event-classification-engine.js';
+import { classifyMedicalEvent } from '../medical-events/event-classification-engine.js';
 
 const results = [];
 
