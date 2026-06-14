@@ -1,4 +1,4 @@
-const { evaluateCandidateHardFactors } = require("./candidate-hard-factors-engine");
+const { evaluateCandidateHardFactors } = require("../candidate-intelligence/candidate-hard-factors-engine");
 
 console.log("\nFORGE CANDIDATE HARD FACTORS MASTER TEST v1.0\n");
 

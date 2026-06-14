@@ -1,4 +1,4 @@
-const { evaluateCandidateAssessment } = require("./candidate-assessment-engine");
+const { evaluateCandidateAssessment } = require("../candidate-intelligence/candidate-assessment-engine");
 
 console.log("\nFORGE CANDIDATE ASSESSMENT MASTER TEST v1.0\n");
 

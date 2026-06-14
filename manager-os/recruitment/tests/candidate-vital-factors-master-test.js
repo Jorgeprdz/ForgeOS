@@ -1,4 +1,4 @@
-const { evaluateCandidateVitalFactors } = require("./candidate-vital-factors-engine");
+const { evaluateCandidateVitalFactors } = require("../candidate-intelligence/candidate-vital-factors-engine");
 
 console.log("\nFORGE CANDIDATE VITAL FACTORS MASTER TEST v1.0\n");
 

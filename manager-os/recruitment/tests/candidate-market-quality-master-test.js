@@ -1,4 +1,4 @@
-const { evaluateCandidateMarketQuality } = require("./candidate-market-quality-engine");
+const { evaluateCandidateMarketQuality } = require("../candidate-intelligence/candidate-market-quality-engine");
 
 console.log("\nFORGE CANDIDATE MARKET QUALITY MASTER TEST v1.0\n");
 

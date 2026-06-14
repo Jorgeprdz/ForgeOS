@@ -3,7 +3,7 @@ const path = require("path");
 
 console.log("\nFORGE INTERVIEW EVIDENCE FIXTURE TEST v1.0\n");
 
-const fixtureDir = path.join(__dirname, "fixtures", "recruitment", "evidence");
+const fixtureDir = path.join(__dirname, "../../../fixtures/recruitment/evidence");
 const validPhases = ["INITIAL_INTERVIEW", "SELECTION_INTERVIEW", "CAREER_INTERVIEW", "ADDITIONAL_INTERVIEW"];
 const validRecommendations = ["ADVANCE", "WATCH", "COACH", "REJECT", "RESCHEDULE", "NEEDS_MORE_DATA"];
 

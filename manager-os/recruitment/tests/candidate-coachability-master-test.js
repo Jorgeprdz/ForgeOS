@@ -1,4 +1,4 @@
-const { evaluateCandidateCoachability } = require("./candidate-coachability-engine");
+const { evaluateCandidateCoachability } = require("../candidate-intelligence/candidate-coachability-engine");
 
 console.log("\nFORGE CANDIDATE COACHABILITY MASTER TEST v1.0\n");
 

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const FIXTURE_DIR = path.join(__dirname, "fixtures", "recruitment");
+const FIXTURE_DIR = path.join(__dirname, "../../../fixtures/recruitment");
 
 const APPLICATION_STATES = new Set([
   "NEW",
