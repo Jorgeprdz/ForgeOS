@@ -52,6 +52,7 @@ import { createRouteRegistry } from './platform/routing/route-registry.js';
 import { ErrorHandler } from './error-boundary.js';
 import { Logger }       from './logger.js';
 import { bindCrmAddlifeChatShell } from './legacy/crmaddlife/chat-shell.js';
+import { bindCrmAddlifeThemeToggle } from './legacy/crmaddlife/ui-listeners.js';
 import {
     showCrmAddlifeApp,
     renderCrmAddlifeLogin,
@@ -156,27 +157,9 @@ class AppManager {
             });
         }
 
-        // ── Toggle tema dark/light
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-
-            // Restaurar preferencia guardada en localStorage
-            const savedTheme = localStorage.getItem('crm-theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeToggle.checked = true;
-            }
-
-            themeToggle.addEventListener('change', (e) => {
-                const isDark = e.target.checked;
-                document.documentElement.setAttribute(
-                    'data-theme',
-                    isDark ? 'dark' : 'light'
-                );
-                localStorage.setItem('crm-theme', isDark ? 'dark' : 'light');
-                EventBus.emit('theme:changed', { dark: isDark });
-            });
-        }
+        bindCrmAddlifeThemeToggle({
+            onThemeChanged: payload => EventBus.emit('theme:changed', payload),
+        });
 
         bindCrmAddlifeChatShell();
 
