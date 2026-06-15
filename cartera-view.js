@@ -1,9 +1,9 @@
 // views/cartera-view.js
 
 import {
-    formatCurrency,
-    escapeHTML
-} from '../utils/cartera-utils.js';
+    currencyMXN as formatCurrency,
+    sanitizeHTML as escapeHTML
+} from './policy-operations/client-records/cartera-utils.js';
 
 const STATUS_CONFIG = Object.freeze({
     paid: {

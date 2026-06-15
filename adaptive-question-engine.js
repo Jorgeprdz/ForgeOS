@@ -14,10 +14,10 @@
 */
 
 import { ADAPTIVE_QUESTION_BANK }
-    from './adaptive-question-bank';
+    from './adaptive-question-bank.js';
 
 import { filtrarPreguntasPorEstilo }
-    from './question-style-match-engine';
+    from './question-style-match-engine.js';
 
 export function generarPreguntasAdaptativas({
 
