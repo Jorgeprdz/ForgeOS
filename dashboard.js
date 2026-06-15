@@ -26,6 +26,7 @@ import { EventBus }     from './event-system.js';
 import { Logger }       from './logger.js';
 import { Memory }       from './memory-manager.js';
 import { RenderEngine } from './ui-render-engine.js';
+import { Navigation }   from './platform/navigation-runtime.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTES DE NEGOCIO
@@ -274,6 +275,7 @@ const DashboardCalculator = {
             : `La meta semanal de ${kpi.meta} puntos ya está cubierta.`;
 
         return {
+            decisionType: 'activity_gap',
             title: 'Repair today\'s activity gap',
             status: kpi.faltantes > 0 ? 'Acción requerida' : 'En ritmo',
             why: kpi.faltantes > 0
@@ -284,6 +286,8 @@ const DashboardCalculator = {
                 paceText,
             ],
             action,
+            ctaLabel: 'Open Activity',
+            ctaRoute: 'actividad',
             owner: 'Asesor',
             successMetric: 'La productividad semanal avanza hacia la meta de 125 puntos.',
         };
@@ -309,6 +313,7 @@ const DashboardCalculator = {
 
         if (!selected) {
             return {
+                decisionType: 'referral_activation',
                 title: 'Turn one referred person into an active prospect',
                 status: 'Sin referido listo',
                 why: 'Forge no encontró referidos nuevos o en seguimiento con evidencia suficiente para activar hoy.',
@@ -317,6 +322,8 @@ const DashboardCalculator = {
                     'No hay candidato con estado Nuevo o Seguimiento.',
                 ],
                 action: 'Registra un referido nuevo o actualiza un referido en seguimiento con teléfono y contexto.',
+                ctaLabel: 'Open Referrals',
+                ctaRoute: 'referidos',
                 owner: 'Asesor',
                 successMetric: 'Un referido queda listo para contacto o pasa al flujo de prospección.',
             };
@@ -327,6 +334,7 @@ const DashboardCalculator = {
         const phone = selected.telefono ? 'con teléfono' : 'sin teléfono';
 
         return {
+            decisionType: 'referral_activation',
             title: 'Turn one referred person into an active prospect',
             status: selected.estado || 'Nuevo',
             why: 'Forge encontró un referido accionable que puede convertirse en prospecto hoy.',
@@ -336,6 +344,8 @@ const DashboardCalculator = {
                 `Disponibilidad de contacto: ${phone}.`,
             ],
             action: `Contacta a ${name} por WhatsApp y muévelo al flujo de prospección.`,
+            ctaLabel: 'Open Referrals',
+            ctaRoute: 'referidos',
             owner: 'Asesor',
             successMetric: 'El referido avanza de Nuevo o Seguimiento a Contactado, Cita o prospecto activo.',
         };
@@ -360,6 +370,7 @@ const DashboardCalculator = {
 
         if (!selected) {
             return {
+                decisionType: 'cartera_urgency',
                 title: 'Contact the highest-urgency client in cartera',
                 status: 'Sin alerta urgente',
                 why: 'Forge no encontró pagos, aniversarios, cumpleaños o hitos de edad actuarial próximos.',
@@ -368,6 +379,8 @@ const DashboardCalculator = {
                     'No hay señal de urgencia dentro de las ventanas actuales.',
                 ],
                 action: 'Mantén cartera actualizada para que Forge detecte el próximo evento accionable.',
+                ctaLabel: 'Open Cartera',
+                ctaRoute: 'cartera',
                 owner: 'Asesor',
                 successMetric: 'La siguiente alerta de cartera queda lista para contacto.',
             };
@@ -377,6 +390,7 @@ const DashboardCalculator = {
         const policy = selected.policy?.poliza || selected.policy?.plan || 'póliza sin folio';
 
         return {
+            decisionType: 'cartera_urgency',
             title: 'Contact the highest-urgency client in cartera',
             status: selected.urgency.label,
             why: 'Forge detectó una señal de cartera que pierde valor si se atiende tarde.',
@@ -386,6 +400,8 @@ const DashboardCalculator = {
                 selected.urgency.reason,
             ],
             action: `Contacta hoy a ${client} para atender: ${selected.urgency.actionReason}.`,
+            ctaLabel: 'Open Cartera',
+            ctaRoute: 'cartera',
             owner: 'Asesor',
             successMetric: 'La alerta de cartera se resuelve o el contacto queda registrado.',
         };
@@ -585,6 +601,16 @@ const DashboardView = {
                 <p style="font-size:13px;margin:0 0 8px 0;">
                     <strong>Acción:</strong> ${Sanitizer.escape(decision.action)}
                 </p>
+                <button
+                    class="btn-primary btn-sm"
+                    data-action="decision-navigate"
+                    data-decision-type="${Sanitizer.escape(decision.decisionType)}"
+                    data-decision-title="${Sanitizer.escape(decision.title)}"
+                    data-route="${Sanitizer.escape(decision.ctaRoute)}"
+                    style="width:100%;margin-bottom:10px;"
+                >
+                    ${Sanitizer.escape(decision.ctaLabel)}
+                </button>
                 <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;font-size:11px;color:var(--text-tertiary);">
                     <span><strong>Owner:</strong> ${Sanitizer.escape(decision.owner)}</span>
                     <span style="text-align:right;">${Sanitizer.escape(decision.successMetric)}</span>
@@ -661,6 +687,52 @@ const DashboardController = {
     _abortController: null,
 
     /**
+     * Registra acciones del Decision Cockpit usando navegación existente.
+     */
+    _bindDecisionActions() {
+        const root = document.getElementById('dashboard-container');
+        if (!root) return;
+
+        const clickHandler = event => {
+            const btn = event.target.closest('[data-action="decision-navigate"]');
+            if (!btn) return;
+
+            const route = btn.dataset.route;
+            this._recordDecisionTelemetry('clicked', {
+                decisionType: btn.dataset.decisionType,
+                title: btn.dataset.decisionTitle,
+                ctaRoute: route,
+            });
+
+            if (route) Navigation.navigate(route);
+        };
+
+        root.addEventListener('click', clickHandler);
+        Memory.add(() => root.removeEventListener('click', clickHandler));
+    },
+
+    /**
+     * Guarda evidencia local de uso del Decision Cockpit.
+     * @param {'shown'|'clicked'} eventName
+     * @param {Object} decision
+     */
+    _recordDecisionTelemetry(eventName, decision = {}) {
+        const eventId = `decision_${eventName}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+        DB.guardar('logs', {
+            id: eventId,
+            type: 'decision_telemetry',
+            event: eventName,
+            decisionType: decision.decisionType || 'unknown',
+            decisionTitle: decision.title || '',
+            ctaRoute: decision.ctaRoute || '',
+            timestamp: new Date().toISOString(),
+        }).catch(err => {
+            Logger.warn('[Dashboard] decision telemetry failed:', err?.message || err);
+        });
+    },
+
+    /**
      * Punto de entrada. Llamado por bindDashboardEvents() desde el router.
      * Lee usuario de AppState (puesto por AuthService), carga datos de DB,
      * hidrata el DOM via RenderEngine, registra cleanup en Memory.
@@ -678,6 +750,7 @@ const DashboardController = {
         // — Registrar cleanup en MemoryManager
         // El router llama a Memory.cleanup() en destroyAll() antes de cada navigate
         Memory.add(() => this._abort());
+        this._bindDecisionActions();
 
         // — Suscripción reactiva: si AppState.cartera cambia (sync en background),
         //   refrescar automáticamente la sección relevante sin recargar todo
@@ -721,6 +794,10 @@ const DashboardController = {
                 historial,
                 referidos,
                 cartera,
+            });
+
+            decisions.forEach(decision => {
+                this._recordDecisionTelemetry('shown', decision);
             });
 
             // — Hidratar DOM via RenderEngine (batched, RAF-scheduled)
