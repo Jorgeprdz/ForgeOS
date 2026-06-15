@@ -2,14 +2,14 @@
 // Enterprise Offline-First Service Worker
 
 importScripts(
-    '/sw-cache-config.js'
+    './sw-cache-config.js'
 );
 
 const STATIC =
-    CACHE_CONFIG.STATIC_CACHE;
+    self.CACHE_CONFIG.STATIC_CACHE;
 
 const RUNTIME =
-    CACHE_CONFIG.RUNTIME_CACHE;
+    self.CACHE_CONFIG.RUNTIME_CACHE;
 
 self.addEventListener(
     'install',
@@ -20,7 +20,7 @@ self.addEventListener(
                 .then(cache => {
 
                     return cache.addAll(
-                        CACHE_CONFIG.STATIC_ASSETS
+                        self.CACHE_CONFIG.STATIC_ASSETS
                     );
                 })
         );
