@@ -273,4 +273,29 @@ class CarteraService {
                                     raw
                                 );
 
-                            inserted.push(
+                            inserted.push(created);
+
+                        } catch (err) {
+
+                            errors.push({
+                                poliza: raw.poliza,
+                                error: err.message
+                            });
+                        }
+                    }
+                );
+
+            await Promise.all(promises);
+        }
+
+        return {
+            inserted,
+            errors
+        };
+    }
+}
+
+export const carteraService =
+    new CarteraService();
+
+export default carteraService;
