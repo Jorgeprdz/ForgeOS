@@ -49,14 +49,14 @@ import { ForgeAppShell } from './platform/app/forge-app-shell.js';
 import { AuthService } from './platform/auth/auth-service.js';
 import { EnterpriseRouter } from './platform/routing/enterprise-router.js';
 import { createRouteRegistry } from './platform/routing/route-registry.js';
-import { Analytics }    from './analytics-engine.js';
 import { ErrorHandler } from './error-boundary.js';
 import { Logger }       from './logger.js';
+import { bindCrmAddlifeChatShell } from './legacy/crmaddlife/chat-shell.js';
 
 // ═══════════════════════════════════════════════════════════════
 // SANITIZADOR LOCAL
 // Protege cualquier dato externo antes de inyectarlo al DOM.
-// Usado en renderError, _showFatalError y _handleChatSend.
+// Usado en _showFatalError.
 // ═══════════════════════════════════════════════════════════════
 
 const _escapeHtml = (value) => {
@@ -275,46 +275,7 @@ class AppManager {
             });
         }
 
-        // ── Chat bubble — abrir ventana
-        const chatBubble = document.getElementById('ai-chat-bubble');
-        const chatWindow = document.getElementById('ai-chat-window');
-
-        if (chatBubble && chatWindow) {
-            chatBubble.addEventListener('click', () => {
-                chatWindow.classList.add('chat-window-open');
-                chatBubble.style.display = 'none';
-                const input = document.getElementById('ai-chat-input');
-                if (input) input.focus();
-            });
-        }
-
-        // ── Chat — cerrar ventana
-        const closeChat = document.getElementById('close-chat');
-        if (closeChat && chatWindow && chatBubble) {
-            closeChat.addEventListener('click', () => {
-                chatWindow.classList.remove('chat-window-open');
-                chatBubble.style.display = '';
-            });
-        }
-
-        // ── Chat — enviar (botón)
-        const sendBtn = document.getElementById('ai-chat-send');
-        if (sendBtn) {
-            sendBtn.addEventListener('click', () => {
-                this._handleChatSend();
-            });
-        }
-
-        // ── Chat — enviar (Enter)
-        const chatInput = document.getElementById('ai-chat-input');
-        if (chatInput) {
-            chatInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    this._handleChatSend();
-                }
-            });
-        }
+        bindCrmAddlifeChatShell();
 
         // ── Online / Offline
         window.addEventListener('online', () => {
@@ -350,46 +311,6 @@ class AppManager {
         Logger.info('[APP] Global listeners registrados');
     }
 
-    // ─────────────────────────────────────────────────────────
-    // _handleChatSend
-    // UI básica del chat. La integración real con el modelo AI
-    // se implementará en Phase 3 (ai-engine.js).
-    // ─────────────────────────────────────────────────────────
-
-    _handleChatSend() {
-
-        const input    = document.getElementById('ai-chat-input');
-        const messages = document.getElementById('ai-chat-messages');
-
-        if (!input || !messages) return;
-
-        const text = input.value.trim();
-        if (!text) return;
-
-        // Mensaje del usuario — sanitizado antes de ir al DOM
-        const userRow = document.createElement('div');
-        userRow.className = 'msg-row user-row';
-        userRow.innerHTML =
-            `<div class="chat-bubble user-bubble">${_escapeHtml(text)}</div>`;
-        messages.appendChild(userRow);
-
-        input.value = '';
-        messages.scrollTop = messages.scrollHeight;
-
-        Analytics.track('chat_message_sent');
-
-        // Placeholder hasta Phase 3
-        setTimeout(() => {
-            const iaRow = document.createElement('div');
-            iaRow.className = 'msg-row ia-row';
-            iaRow.innerHTML =
-                `<div class="chat-bubble ia-bubble">` +
-                    `Procesando tu consulta... (AI engine Phase 3)` +
-                `</div>`;
-            messages.appendChild(iaRow);
-            messages.scrollTop = messages.scrollHeight;
-        }, 600);
-    }
 }
 
 // ═══════════════════════════════════════════════════════════════
