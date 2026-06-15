@@ -48,6 +48,7 @@ import { bootstrapApp } from './platform/app/bootstrap.js';
 import { ForgeAppShell } from './platform/app/forge-app-shell.js';
 import { AuthService } from './platform/auth/auth-service.js';
 import { EnterpriseRouter } from './platform/routing/enterprise-router.js';
+import { createRouteRegistry } from './platform/routing/route-registry.js';
 import { Analytics }    from './analytics-engine.js';
 import { ErrorHandler } from './error-boundary.js';
 import { Logger }       from './logger.js';
@@ -78,18 +79,19 @@ class AppManager {
     constructor() {
         this.auth   = new AuthService();
         this.router = new EnterpriseRouter({
-            routes: {
-                dashboard: {
-                    load:       () => import('./dashboard.js'),
-                    renderName: 'renderDashboard',
-                    bindName:   'bindDashboardEvents',
-                },
-                prospeccion: { render: renderProspeccion,  bind: bindProspeccionEvents  },
-                referidos:   { render: renderReferidos,    bind: bindReferidosEvents    },
-                actividad:   { render: renderActividad,    bind: bindActividadEvents    },
-                cartera:     { render: renderCartera,      bind: bindCarteraEvents      },
-                comisiones:  { render: renderComisiones,   bind: bindComisionesEvents   },
-            },
+            routes: createRouteRegistry({
+                dashboardLoader: () => import('./dashboard.js'),
+                renderProspeccion,
+                bindProspeccionEvents,
+                renderReferidos,
+                bindReferidosEvents,
+                renderActividad,
+                bindActividadEvents,
+                renderCartera,
+                bindCarteraEvents,
+                renderComisiones,
+                bindComisionesEvents,
+            }),
         });
         this.shell = new ForgeAppShell({
             auth: this.auth,
