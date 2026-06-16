@@ -820,6 +820,34 @@ const DashboardView = {
                         `;
                     }
                 })()}
+
+                <!-- Feedback Loop -->
+                <div class="feedback-container" style="margin-top:2px;margin-bottom:12px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(150,150,150,0.05);padding-top:8px;">
+                    <span style="font-size:11px;color:var(--text-tertiary);">¿Te fue útil?</span>
+                    <div style="display:flex;gap:4px;">
+                        <button
+                            class="btn-secondary btn-sm"
+                            data-action="decision-feedback"
+                            data-feedback="useful"
+                            data-decision-type="${Sanitizer.escape(decision.decisionType)}"
+                            data-decision-title="${Sanitizer.escape(decision.title)}"
+                            style="padding:2px 8px;font-size:11px;border-radius:6px;background:rgba(0,122,255,0.03);"
+                        >
+                            👍 Útil
+                        </button>
+                        <button
+                            class="btn-secondary btn-sm"
+                            data-action="decision-feedback"
+                            data-feedback="not_useful"
+                            data-decision-type="${Sanitizer.escape(decision.decisionType)}"
+                            data-decision-title="${Sanitizer.escape(decision.title)}"
+                            style="padding:2px 8px;font-size:11px;border-radius:6px;background:rgba(255,59,48,0.03);"
+                        >
+                            👎 No útil
+                        </button>
+                    </div>
+                </div>
+
                 <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;font-size:11px;color:var(--text-tertiary);">
                     <span><strong>Siguiente acción:</strong> ${Sanitizer.escape(decision.owner)}</span>
                     <span style="text-align:right;">${Sanitizer.escape(decision.successMetric)}</span>
@@ -894,6 +922,9 @@ const DashboardController = {
 
     /** AbortController activo para la carga de datos en curso */
     _abortController: null,
+
+    /** Registro de decisiones votadas en esta sesión para evitar duplicados */
+    _votedDecisions: new Set(),
 
     /**
      * Registra acciones del Decision Cockpit usando navegación existente.
@@ -990,6 +1021,29 @@ const DashboardController = {
                 }
                 return;
             }
+
+            const btnFeedback = event.target.closest('[data-action="decision-feedback"]');
+            if (btnFeedback) {
+                const type = btnFeedback.dataset.decisionType;
+                const title = btnFeedback.dataset.decisionTitle;
+                const feedback = btnFeedback.dataset.feedback;
+                const voteId = `${type}:${title}`;
+
+                if (this._votedDecisions.has(voteId)) return;
+
+                this._votedDecisions.add(voteId);
+                this._recordDecisionTelemetry('feedback', {
+                    decisionType: type,
+                    title: title,
+                    feedback: feedback
+                });
+
+                const container = btnFeedback.closest('.feedback-container');
+                if (container) {
+                    container.innerHTML = `<span style="font-size:11px;color:var(--color-success);font-weight:600;display:flex;align-items:center;gap:4px;">✨ Gracias por tu retroalimentación.</span>`;
+                }
+                return;
+            }
         };
 
         root.addEventListener('click', clickHandler);
@@ -998,22 +1052,23 @@ const DashboardController = {
 
     /**
      * Guarda evidencia local de uso del Decision Cockpit.
-     * @param {'shown'|'clicked'} eventName
+     * @param {\'shown\'|\'clicked\'|\'feedback\'} eventName
      * @param {Object} decision
      */
     _recordDecisionTelemetry(eventName, decision = {}) {
         const eventId = `decision_${eventName}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-        DB.guardar('logs', {
+        DB.guardar(\'logs\', {
             id: eventId,
-            type: 'decision_telemetry',
+            type: \'decision_telemetry\',
             event: eventName,
-            decisionType: decision.decisionType || 'unknown',
-            decisionTitle: decision.title || '',
-            ctaRoute: decision.ctaRoute || '',
+            decisionType: decision.decisionType || \'unknown\',
+            decisionTitle: decision.title || \'\',
+            ctaRoute: decision.ctaRoute || \'\',
+            feedback: decision.feedback || null,
             timestamp: new Date().toISOString(),
         }).catch(err => {
-            Logger.warn('[Dashboard] decision telemetry failed:', err?.message || err);
+            Logger.warn(\'[Dashboard] decision telemetry failed:\', err?.message || err);
         });
     },
 
