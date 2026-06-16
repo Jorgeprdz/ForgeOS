@@ -263,6 +263,12 @@ const DashboardCalculator = {
             this._buildCarteraUrgencyDecision(cartera),
         ];
 
+        // Add unique instanceId per render for outcome attribution
+        decisions.forEach(d => {
+            const salt = Math.random().toString(36).slice(2, 6);
+            d.instanceId = `inst_${Date.now()}_${salt}`;
+        });
+
         // Sort by priority score descending
         return decisions.sort((a, b) => (b.priorityScore || 0) - (a.priorityScore || 0));
     },
@@ -731,6 +737,7 @@ const DashboardView = {
                 </div>
 
                 ${(() => {
+                    const instanceId = Sanitizer.escape(decision.instanceId);
                     if (decision.decisionType === 'activity_gap') {
                         const targetKey = decision.quickActionTargetKey ? Sanitizer.escape(decision.quickActionTargetKey) : '';
                         return `
@@ -738,6 +745,7 @@ const DashboardView = {
                                 <button
                                     class="btn-primary btn-sm"
                                     data-action="decision-navigate"
+                                    data-instance-id="${instanceId}"
                                     data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                                     data-decision-title="${Sanitizer.escape(decision.title)}"
                                     data-route="${Sanitizer.escape(decision.ctaRoute)}"
@@ -748,6 +756,7 @@ const DashboardView = {
                                 <button
                                     class="btn-secondary btn-sm"
                                     data-action="quick-action-activity"
+                                    data-instance-id="${instanceId}"
                                     data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                                     data-target-key="${targetKey}"
                                     style="flex:1;"
@@ -763,6 +772,7 @@ const DashboardView = {
                                 <button
                                     class="btn-secondary btn-sm"
                                     data-action="decision-navigate"
+                                    data-instance-id="${instanceId}"
                                     data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                                     data-decision-title="${Sanitizer.escape(decision.title)}"
                                     data-route="${Sanitizer.escape(decision.ctaRoute)}"
@@ -773,6 +783,7 @@ const DashboardView = {
                                 <button
                                     class="btn-primary btn-sm"
                                     ${phone ? `data-action="quick-action-referral" data-phone="${phone}"` : `data-action="decision-navigate" data-route="referidos"`}
+                                    data-instance-id="${instanceId}"
                                     data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                                     style="flex:1;"
                                 >
@@ -787,6 +798,7 @@ const DashboardView = {
                                 <button
                                     class="btn-secondary btn-sm"
                                     data-action="decision-navigate"
+                                    data-instance-id="${instanceId}"
                                     data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                                     data-decision-title="${Sanitizer.escape(decision.title)}"
                                     data-route="${Sanitizer.escape(decision.ctaRoute)}"
@@ -797,6 +809,7 @@ const DashboardView = {
                                 <button
                                     class="btn-primary btn-sm"
                                     data-action="quick-action-cartera"
+                                    data-instance-id="${instanceId}"
                                     data-client="${client}"
                                     data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                                     style="flex:1;"
@@ -810,6 +823,7 @@ const DashboardView = {
                             <button
                                 class="btn-primary btn-sm"
                                 data-action="decision-navigate"
+                                data-instance-id="${instanceId}"
                                 data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                                 data-decision-title="${Sanitizer.escape(decision.title)}"
                                 data-route="${Sanitizer.escape(decision.ctaRoute)}"
@@ -828,6 +842,7 @@ const DashboardView = {
                         <button
                             class="btn-secondary btn-sm"
                             data-action="decision-feedback"
+                            data-instance-id="${Sanitizer.escape(decision.instanceId)}"
                             data-feedback="useful"
                             data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                             data-decision-title="${Sanitizer.escape(decision.title)}"
@@ -838,6 +853,7 @@ const DashboardView = {
                         <button
                             class="btn-secondary btn-sm"
                             data-action="decision-feedback"
+                            data-instance-id="${Sanitizer.escape(decision.instanceId)}"
                             data-feedback="not_useful"
                             data-decision-type="${Sanitizer.escape(decision.decisionType)}"
                             data-decision-title="${Sanitizer.escape(decision.title)}"
@@ -938,6 +954,7 @@ const DashboardController = {
             if (btnNav) {
                 const route = btnNav.dataset.route;
                 this._recordDecisionTelemetry('clicked', {
+                    instanceId: btnNav.dataset.instanceId,
                     decisionType: btnNav.dataset.decisionType,
                     title: btnNav.dataset.decisionTitle,
                     ctaRoute: route,
@@ -951,6 +968,7 @@ const DashboardController = {
             if (btnActivity) {
                 const targetKey = btnActivity.dataset.targetKey;
                 this._recordDecisionTelemetry('clicked', {
+                    instanceId: btnActivity.dataset.instanceId,
                     decisionType: 'activity_gap',
                     title: 'Registrar actividad',
                     ctaRoute: 'actividad',
@@ -982,6 +1000,7 @@ const DashboardController = {
             if (btnReferral) {
                 const phone = btnReferral.dataset.phone;
                 this._recordDecisionTelemetry('clicked', {
+                    instanceId: btnReferral.dataset.instanceId,
                     decisionType: 'referral_activation',
                     title: 'Contactar ahora',
                     ctaRoute: 'whatsapp',
@@ -999,6 +1018,7 @@ const DashboardController = {
             if (btnCartera) {
                 const client = btnCartera.dataset.client;
                 this._recordDecisionTelemetry('clicked', {
+                    instanceId: btnCartera.dataset.instanceId,
                     decisionType: 'cartera_urgency',
                     title: 'Dar seguimiento',
                     ctaRoute: 'cartera',
@@ -1027,12 +1047,14 @@ const DashboardController = {
                 const type = btnFeedback.dataset.decisionType;
                 const title = btnFeedback.dataset.decisionTitle;
                 const feedback = btnFeedback.dataset.feedback;
-                const voteId = `${type}:${title}`;
+                const instanceId = btnFeedback.dataset.instanceId;
+                const voteId = instanceId || `${type}:${title}`;
 
                 if (this._votedDecisions.has(voteId)) return;
 
                 this._votedDecisions.add(voteId);
                 this._recordDecisionTelemetry('feedback', {
+                    instanceId: instanceId,
                     decisionType: type,
                     title: title,
                     feedback: feedback
@@ -1052,7 +1074,7 @@ const DashboardController = {
 
     /**
      * Guarda evidencia local de uso del Decision Cockpit.
-     * @param {\'shown\'|\'clicked\'|\'feedback\'} eventName
+     * @param {\'shown\'|\'clicked\'|\'feedback\'|\'outcome_detected\'} eventName
      * @param {Object} decision
      */
     _recordDecisionTelemetry(eventName, decision = {}) {
@@ -1062,14 +1084,89 @@ const DashboardController = {
             id: eventId,
             type: \'decision_telemetry\',
             event: eventName,
+            instanceId: decision.instanceId || \'unknown\',
             decisionType: decision.decisionType || \'unknown\',
             decisionTitle: decision.title || \'\',
             ctaRoute: decision.ctaRoute || \'\',
             feedback: decision.feedback || null,
+            outcome: decision.outcome || null,
+            confidence: decision.confidence || null,
             timestamp: new Date().toISOString(),
         }).catch(err => {
             Logger.warn(\'[Dashboard] decision telemetry failed:\', err?.message || err);
         });
+    },
+
+    /**
+     * Detecta resoluciones de decisiones previas basándose en datos actuales.
+     * @param {{ historial:Array, referidos:Array, cartera:Array }} currentData
+     */
+    async _detectOutcomes({ historial, referidos, cartera }) {
+        try {
+            const logs = await DB.obtenerTodos(\'logs\');
+            const telemetry = logs.filter(l => l.type === \'decision_telemetry\');
+
+            const shown = telemetry
+                .filter(t => t.event === \'shown\')
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 30); // Analizar las últimas 30 recomendaciones
+
+            const alreadyDetected = new Set(
+                telemetry.filter(t => t.event === \'outcome_detected\').map(t => t.instanceId)
+            );
+
+            const now = new Date();
+
+            for (const dec of shown) {
+                if (alreadyDetected.has(dec.instanceId) || dec.instanceId === \'unknown\') continue;
+
+                const ageMs = now - new Date(dec.timestamp);
+                let resolved = false;
+                let confidence = \'level_0\';
+
+                // 1. Activity Gap (24h)
+                if (dec.decisionType === \'activity_gap\' && ageMs <= 86400000) {
+                    const kpi = DashboardCalculator.productividad(historial);
+                    if (kpi.faltantes <= 0) {
+                        resolved = true;
+                        confidence = \'level_3\'; // State transition: Gap closed
+                    }
+                }
+                // 2. Referrals (7 days)
+                else if (dec.decisionType === \'referral_activation\' && ageMs <= 604800000) {
+                    // Si el referido que disparó la recomendación ya no está en "Nuevo"
+                    // o no es el candidato principal actual (inferencia ligera)
+                    const candidates = (referidos || []).filter(ref => [\'Nuevo\', \'Seguimiento\'].includes(ref?.estado));
+                    const stillNuevo = candidates.some(ref => dec.decisionTitle.includes(ref.nombre) && ref.estado === \'Nuevo\');
+                    if (!stillNuevo && dec.decisionTitle.includes(\'referido\')) {
+                        resolved = true;
+                        confidence = \'level_2\'; // Behavioral: No longer in "new" state
+                    }
+                }
+                // 3. Cartera (72h)
+                else if (dec.decisionType === \'cartera_urgency\' && ageMs <= 259200000) {
+                    // Si el cliente ya no tiene la alerta que disparó la decisión
+                    const urgencies = (cartera || []).map(p => DashboardCalculator._scoreCarteraUrgency(p));
+                    const stillUrgent = urgencies.some(u => dec.decisionTitle.includes(u.label));
+                    if (!stillUrgent) {
+                        resolved = true;
+                        confidence = \'level_2\'; // Behavioral: Risk signal cleared
+                    }
+                }
+
+                if (resolved) {
+                    this._recordDecisionTelemetry(\'outcome_detected\', {
+                        instanceId: dec.instanceId,
+                        decisionType: dec.decisionType,
+                        title: dec.decisionTitle,
+                        outcome: \'resolved\',
+                        confidence: confidence
+                    });
+                }
+            }
+        } catch (err) {
+            Logger.warn(\'[Dashboard] Outcome detection skipped:\', err?.message || err);
+        }
     },
 
     /**
@@ -1129,6 +1226,9 @@ const DashboardController = {
 
             // — Guardar en AppState para que otros módulos (ej. cartera.js) lo reusen
             AppState.set('dashboard', { historial, cartera, referidos, loadedAt: Date.now() });
+
+            // — Detectar resoluciones de recomendaciones previas (outcome intelligence)
+            await this._detectOutcomes({ historial, referidos, cartera });
 
             const decisions = DashboardCalculator.decisionCockpit({
                 historial,
