@@ -280,13 +280,20 @@ const DashboardCalculator = {
         const confidence = 85;
         const impactWeight = 3; // High
 
+        const title = (kpi && typeof kpi.puntos === 'number')
+            ? (kpi.faltantes > 0
+                ? `Llevas ${kpi.puntos} puntos esta semana. Aún estás a tiempo de alcanzar tu meta.`
+                : `Llevas ${kpi.puntos} puntos esta semana. ¡Meta semanal cumplida!`)
+            : 'Hoy aún puedes recuperar tu ritmo comercial';
+
         return {
             decisionType: 'activity_gap',
-            title: 'Corrige la brecha de actividad de hoy',
+            title,
             status: kpi.faltantes > 0 ? 'Acción requerida' : 'En ritmo',
             why: kpi.faltantes > 0
-                ? 'Forge detectó que la productividad semanal todavía está por debajo de la meta.'
-                : 'Forge detectó que la meta semanal ya está cubierta; conserva el ritmo.',
+                ? 'Forge detectó que tu actividad semanal puede mejorar con un pequeño impulso.'
+                : 'Forge detectó que tu ritmo es excelente; conservas la meta cubierta.',
+            note: 'Una pequeña acción hoy puede marcar la diferencia esta semana.',
             evidence: [
                 `${kpi.puntos} de ${kpi.meta} puntos esta semana.`,
                 paceText,
@@ -295,7 +302,7 @@ const DashboardCalculator = {
             ctaLabel: 'Abrir Actividad',
             ctaRoute: 'actividad',
             owner: 'Asesor',
-            successMetric: 'La productividad semanal avanza hacia la meta de 125 puntos.',
+            successMetric: 'Tu productividad semanal avanza hacia el objetivo.',
             priorityScore: impactWeight * confidence,
             metadata: {
                 impact: 'Alto',
@@ -325,21 +332,30 @@ const DashboardCalculator = {
         const confidence = 70;
         const impactWeight = 2; // Medium
 
+        const sinContactoCount = Array.isArray(referidos)
+            ? referidos.filter(ref => !ref?.estado || ref.estado === 'Nuevo').length
+            : 0;
+
+        const title = sinContactoCount > 0
+            ? `Tienes ${sinContactoCount} referido${sinContactoCount > 1 ? 's' : ''} sin contacto. Uno podría convertirse en tu próxima cita.`
+            : 'Es buen momento para contactar a uno de tus referidos';
+
         if (!selected) {
             return {
                 decisionType: 'referral_activation',
-                title: 'Convierte un referido en un prospecto activo',
+                title,
                 status: 'Sin referido listo',
-                why: 'Forge no encontró referidos nuevos o en seguimiento con evidencia suficiente para activar hoy.',
+                why: 'Por ahora no hay referidos nuevos listos para ser activados.',
+                note: 'Los referidos suelen avanzar más rápido que un prospecto frío.',
                 evidence: [
                     `${Array.isArray(referidos) ? referidos.length : 0} referidos registrados.`,
-                    'No hay candidato con estado Nuevo o Seguimiento.',
+                    'No hay candidato con información suficiente para contacto.',
                 ],
-                action: 'Registra un referido nuevo o actualiza un referido en seguimiento con teléfono y contexto.',
+                action: 'Actualiza un referido en seguimiento con teléfono y contexto para activarlo.',
                 ctaLabel: 'Abrir Referidos',
                 ctaRoute: 'referidos',
                 owner: 'Asesor',
-                successMetric: 'Un referido queda listo para contacto o pasa al flujo de prospección.',
+                successMetric: 'Un referido queda listo para iniciar su proceso.',
                 priorityScore: impactWeight * confidence,
                 metadata: {
                     impact: 'Medio',
@@ -355,19 +371,20 @@ const DashboardCalculator = {
 
         return {
             decisionType: 'referral_activation',
-            title: 'Convierte un referido en un prospecto activo',
+            title,
             status: selected.estado || 'Nuevo',
-            why: 'Forge encontró un referido accionable que puede convertirse en prospecto hoy.',
+            why: `Forge encontró una oportunidad para convertir a ${name} en prospecto hoy.`,
+            note: 'Los referidos suelen avanzar más rápido que un prospecto frío.',
             evidence: [
                 `${name} está en estado ${selected.estado || 'Nuevo'}.`,
-                `COI / fuente: ${source}.`,
-                `Disponibilidad de contacto: ${phone}.`,
+                `Fuente: ${source}.`,
+                `Contacto: ${phone}.`,
             ],
-            action: `Contacta a ${name} por WhatsApp y muévelo al flujo de prospección.`,
+            action: `Contacta a ${name} y comienza a construir la relación.`,
             ctaLabel: 'Abrir Referidos',
             ctaRoute: 'referidos',
             owner: 'Asesor',
-            successMetric: 'El referido avanza de Nuevo o Seguimiento a Contactado, Cita o prospecto activo.',
+            successMetric: 'El referido avanza en su ciclo de prospección.',
             priorityScore: impactWeight * confidence,
             metadata: {
                 impact: 'Medio',
@@ -399,18 +416,19 @@ const DashboardCalculator = {
         if (!selected) {
             return {
                 decisionType: 'cartera_urgency',
-                title: 'Contacta al cliente más urgente de cartera',
+                title: 'Hay un cliente de tu cartera que requiere atención hoy',
                 status: 'Sin alerta urgente',
-                why: 'Forge no encontró pagos, aniversarios, cumpleaños o hitos de edad actuarial próximos.',
+                why: 'Tus clientes están al día; no hay eventos inmediatos que requieran atención.',
+                note: 'Dar seguimiento a tiempo fortalece la relación con tus clientes.',
                 evidence: [
                     `${Array.isArray(cartera) ? cartera.length : 0} pólizas revisadas.`,
-                    'No hay señal de urgencia dentro de las ventanas actuales.',
+                    'No hay señales de prioridad detectadas hoy.',
                 ],
-                action: 'Mantén cartera actualizada para que Forge detecte el próximo evento accionable.',
+                action: 'Mantén tu cartera actualizada para no perder ninguna oportunidad.',
                 ctaLabel: 'Abrir Cartera',
                 ctaRoute: 'cartera',
                 owner: 'Asesor',
-                successMetric: 'La siguiente alerta de cartera queda lista para contacto.',
+                successMetric: 'La atención a clientes se mantiene en niveles óptimos.',
                 priorityScore: impactWeight * confidence,
                 metadata: {
                     impact: 'Alto',
@@ -423,21 +441,38 @@ const DashboardCalculator = {
         const client = selected.policy?.cliente || 'este cliente';
         const policy = selected.policy?.poliza || selected.policy?.plan || 'póliza sin folio';
 
+        let title = 'Hay un cliente de tu cartera que requiere atención hoy';
+        const label = selected.urgency.label;
+        if (label === 'Cumpleaños próximo') {
+            const bDays = this._daysUntilAnnualDate(selected.policy?.nacimiento);
+            const daysText = (bDays !== null && bDays <= 7) ? 'esta semana' : `en ${bDays} días`;
+            title = `${client} cumple años ${daysText}. Un mensaje puede fortalecer la relación.`;
+        } else if (label === 'Aniversario de póliza') {
+            const aDays = this._daysUntilAnnualDate(selected.policy?.emision);
+            const daysText = (aDays !== null && aDays <= 7) ? 'esta semana' : `en ${aDays} días`;
+            title = `Póliza de ${client} cumple aniversario ${daysText}.`;
+        } else if (label === 'Pago pendiente') {
+            title = `Póliza de ${client} tiene un pago pendiente este mes.`;
+        } else if (label === 'Edad actuarial') {
+            title = `${client} entra en ventana de edad actuarial próximamente.`;
+        }
+
         return {
             decisionType: 'cartera_urgency',
-            title: 'Contacta al cliente más urgente de cartera',
+            title,
             status: selected.urgency.label,
-            why: 'Forge detectó una señal de cartera que pierde valor si se atiende tarde.',
+            why: `Forge identificó que ${client} apreciará tu contacto en este momento.`,
+            note: 'Dar seguimiento a tiempo fortalece la relación con tus clientes.',
             evidence: [
                 `Cliente: ${client}.`,
                 `Póliza: ${policy}.`,
                 selected.urgency.reason,
             ],
-            action: `Contacta hoy a ${client} para atender: ${selected.urgency.actionReason}.`,
+            action: `Contacta a ${client} para dar seguimiento a su ${selected.urgency.actionReason}.`,
             ctaLabel: 'Abrir Cartera',
             ctaRoute: 'cartera',
             owner: 'Asesor',
-            successMetric: 'La alerta de cartera se resuelve o el contacto queda registrado.',
+            successMetric: 'El cliente recibe atención personalizada a tiempo.',
             priorityScore: impactWeight * confidence,
             metadata: {
                 impact: 'Alto',
@@ -661,6 +696,7 @@ const DashboardView = {
                 <p style="font-size:13px;color:var(--text-secondary);line-height:1.45;margin:0 0 10px 0;">
                     ${Sanitizer.escape(decision.why)}
                 </p>
+                ${decision.note ? `<p style="font-size:12px;color:var(--text-tertiary);font-style:italic;margin:-5px 0 10px 0;">${Sanitizer.escape(decision.note)}</p>` : ''}
                 <ul style="font-size:12px;color:var(--text-secondary);line-height:1.45;margin:0 0 10px 18px;padding:0;">
                     ${evidenceHtml}
                 </ul>
@@ -670,8 +706,8 @@ const DashboardView = {
 
                 <!-- Decision Metadata Bar -->
                 <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;font-size:11px;color:var(--text-tertiary);border-top:1px solid rgba(150,150,150,0.1);padding-top:10px;">
-                    <span style="color:${impact.color};font-weight:700;">${impact.icon} Impacto ${Sanitizer.escape(meta.impact || 'Bajo')}</span>
-                    <span style="background:rgba(0,122,255,0.05);padding:2px 6px;border-radius:4px;color:var(--color-primary);">Confianza: ${Sanitizer.escape(meta.confidence || '0%')}</span>
+                    <span style="color:${impact.color};font-weight:700;">${impact.icon} Impacto esperado: ${Sanitizer.escape(meta.impact || 'Bajo')}</span>
+                    <span style="background:rgba(0,122,255,0.05);padding:2px 6px;border-radius:4px;color:var(--color-primary);">Confianza Forge: ${Sanitizer.escape(meta.confidence || '0%')}</span>
                     <span>⏱ ${Sanitizer.escape(meta.estimatedTime || '-')}</span>
                 </div>
 
@@ -686,7 +722,7 @@ const DashboardView = {
                     ${Sanitizer.escape(decision.ctaLabel)}
                 </button>
                 <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;font-size:11px;color:var(--text-tertiary);">
-                    <span><strong>Responsable:</strong> ${Sanitizer.escape(decision.owner)}</span>
+                    <span><strong>Siguiente acción:</strong> ${Sanitizer.escape(decision.owner)}</span>
                     <span style="text-align:right;">${Sanitizer.escape(decision.successMetric)}</span>
                 </div>
             </div>
