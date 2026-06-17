@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forge Daily Extraction</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Forge Mobile Daily</h1>
+    
+    <div class="form-group">
+      <input type="text" id="prospectAlias" placeholder="Prospect Alias">
+      <textarea id="noteText" placeholder="Enter note..."></textarea>
+      <div class="button-group">
+        <button id="testNoteBtn">Test Note</button>
+        <button id="processBtn">Process Note</button>
+      </div>
+    </div>
+
+    <div id="loading" class="hidden">Processing...</div>
+    <div id="error" class="hidden error"></div>
+    <div id="results" class="hidden">
+      <div id="metaInfo"></div>
+      <div id="candidatesList"></div>
+      <div id="unknownsList"></div>
+      <details>
+        <summary>Raw JSON</summary>
+        <pre id="rawJson"></pre>
+      </details>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
