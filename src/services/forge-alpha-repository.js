@@ -52,8 +52,7 @@ class ForgeAlphaRepository {
         waiting_state: output.waiting_state,
         advancement_state: output.advancement_state,
         recommendation: output.recommendation,
-        evidence_used: output.evidence_used,
-        timestamp: new Date().toISOString()
+        evidence_used: output.evidence_used
       })
       .select()
       .single();
