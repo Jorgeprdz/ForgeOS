@@ -22,13 +22,23 @@ class ForgeAlphaRuntime {
     const waiting = this.waiting.determineState(ownership);
     const advancement = this.advancement.determineAdvancement(extracted);
 
+    // Incorporate Commitment Quality into Runtime Confidence
+    let confidence = ownership.confidence;
+    const commitment = extracted.find(e => e.type === 'commitment_established');
+    if (commitment && commitment.data.quality) {
+        const qualityModifiers = { strong: 0.10, medium: 0.05, weak: 0.00 };
+        confidence += (qualityModifiers[commitment.data.quality] || 0);
+    }
+    confidence = Math.min(confidence, 1.0);
+
     return {
       extracted_events: extracted,
       owner: ownership.owner,
       ownership_confidence: ownership.confidence,
       waiting_state: waiting.waitingState,
       advancement_state: advancement.advancementState,
-      recommendation: advancement.recommendation,
+      recommendation: commitment ? commitment.data.recommendation : advancement.recommendation,
+      runtimeConfidence: confidence,
       unknowns: [],
       evidence_used: ownership.evidenceUsed
     };

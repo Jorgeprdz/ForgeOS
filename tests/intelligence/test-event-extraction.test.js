@@ -33,6 +33,25 @@ async function runTests() {
     assert.strictEqual(o3.owner, 'advisor');
     assert.strictEqual(a3.advancementState, 'advanced');
     console.log('Test 3 passed');
+
+    // Quality Tests
+    console.log('Running Quality Test 1: "Me llama el viernes." (STRONG)');
+    const q1 = extractor.extract("Me llama el viernes.");
+    const c1 = q1.find(e => e.type === 'commitment_established');
+    assert.strictEqual(c1.data.quality, 'strong');
+    console.log('Quality Test 1 passed');
+
+    console.log('Running Quality Test 2: "Lo revisa y me avisa." (MEDIUM)');
+    const q2 = extractor.extract("Lo revisa y me avisa.");
+    const c2 = q2.find(e => e.type === 'commitment_established');
+    assert.strictEqual(c2.data.quality, 'medium');
+    console.log('Quality Test 2 passed');
+
+    console.log('Running Quality Test 3: "Luego hablamos." (WEAK)');
+    const q3 = extractor.extract("Luego hablamos.");
+    const c3 = q3.find(e => e.type === 'commitment_established');
+    assert.strictEqual(c3.data.quality, 'weak');
+    console.log('Quality Test 3 passed');
 }
 
 runTests().then(() => console.log('All new tests passed')).catch(err => {

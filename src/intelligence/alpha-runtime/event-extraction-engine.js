@@ -5,7 +5,7 @@ class EventExtractionEngine {
     const text = rawText.toLowerCase();
 
     const conversationPatterns = ["hablé", "revisa", "look at it", "call you", "dijo"];
-    const commitmentPatterns = [
+    const actionPhrases = [
         "me llama", "me avisa", "me confirma", "lo revisa", "lo revisan", 
         "me busca", "me contacta", "me escribe", "me manda documentos", 
         "me comparte información", "quedó de mandarme", "voy a enviar"
@@ -14,22 +14,39 @@ class EventExtractionEngine {
         "el viernes", "mañana", "la próxima semana", "el lunes", 
         "en unos días", "después de vacaciones"
     ];
+    const weakPatterns = ["luego hablamos", "ya veremos", "lo pienso"];
 
     if (conversationPatterns.some(p => text.includes(p))) {
         events.push({ type: 'conversation_occurred', data: { raw: rawText } });
     }
     
     // Check for prospect commitments
-    const prospectCommitmentFound = commitmentPatterns.some(p => text.includes(p));
-    if (prospectCommitmentFound) {
-        const temporal = temporalMarkers.find(t => text.includes(t)) || 'unknown';
+    const actionFound = actionPhrases.some(p => text.includes(p));
+    const temporalFound = temporalMarkers.find(t => text.includes(t));
+    const isWeak = weakPatterns.some(p => text.includes(p));
+
+    if (actionFound || isWeak) {
+        let quality, recommendation;
+        if (isWeak || !actionFound) {
+            quality = 'weak';
+            recommendation = "Commitment is ambiguous. Consider agreeing on a specific next step.";
+        } else if (temporalFound) {
+            quality = 'strong';
+            recommendation = "Valid commitment detected.";
+        } else {
+            quality = 'medium';
+            recommendation = "Commitment detected without explicit timeframe.";
+        }
+
         const owner = text.includes("yo le voy a enviar") ? 'advisor' : 'prospect';
         
         events.push({ 
             type: 'commitment_established', 
             data: { 
                 owner: owner,
-                due: temporal,
+                due: temporalFound || null,
+                quality: quality,
+                recommendation: recommendation,
                 description: rawText 
             } 
         });
