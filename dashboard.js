@@ -642,6 +642,37 @@ const DashboardCalculator = {
         if (diffDays === 1) return 'ayer';
         return `hace ${diffDays} días`;
     },
+
+    /**
+     * Genera un resumen ejecutivo de una frase para el día.
+     * @param {Array} decisions
+     * @param {Array} outcomes
+     * @param {Object} kpi
+     * @returns {string}
+     */
+    generateDailyBrief(decisions, outcomes, kpi) {
+        const highImpactCount = (decisions || []).filter(d => d.metadata?.impact === 'Alto').length;
+        const recentOutcome = outcomes?.[0];
+        const referralReady = (decisions || []).some(d => d.decisionType === 'referral_activation' && d.status !== 'Sin referido listo');
+
+        if (highImpactCount > 0) {
+            return `Hoy tienes ${highImpactCount} oportunidades de alto impacto que requieren tu atención inmediata.`;
+        }
+
+        if (recentOutcome && (new Date() - new Date(recentOutcome.timestamp)) < 86400000) {
+            return 'Forge detectó avances recientes en tu negocio. Es un gran momento para mantener el ritmo.';
+        }
+
+        if (kpi && kpi.faltantes > 0 && kpi.faltantes < 25) {
+            return 'Tu actividad semanal está muy cerca de la meta; un pequeño impulso hoy será clave.';
+        }
+
+        if (referralReady) {
+            return 'Un referido detectado hoy tiene potencial para convertirse en tu próxima cita.';
+        }
+
+        return 'Tu negocio está al día. Revisa las recomendaciones de Forge para seguir construyendo tu cartera.';
+    },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -676,6 +707,16 @@ const DashboardView = {
         if (!el) return;
         const valueEl = el.querySelector('.widget-value');
         if (valueEl) valueEl.textContent = puntos;
+    },
+
+    /**
+     * Renderiza el resumen ejecutivo diario.
+     * @param {string} text
+     */
+    renderDailyBrief(text) {
+        const el = document.getElementById('dash-daily-brief');
+        if (!el) return;
+        el.innerHTML = `<p style="font-size:14px;margin:0;line-height:1.45;color:var(--text-primary);font-weight:500;">${Sanitizer.escape(text)}</p>`;
     },
 
     /**
@@ -1385,11 +1426,14 @@ const DashboardController = {
                 .filter(l => l.type === 'decision_telemetry' && l.event === 'outcome_detected')
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
+            const kpi = DashboardCalculator.productividad(historial);
+            const brief = DashboardCalculator.generateDailyBrief(decisions, outcomes, kpi);
+
             // — Hidratar DOM via RenderEngine (batched, RAF-scheduled)
             RenderEngine.batch([
                 () => DashboardView.renderSaludo(nombre),
+                () => DashboardView.renderDailyBrief(brief),
                 () => {
-                    const kpi = DashboardCalculator.productividad(historial);
                     DashboardView.renderKpiPuntos(kpi.puntos);
                     DashboardView.renderProductividad(kpi);
                 },
@@ -1514,6 +1558,14 @@ export function renderDashboard() {
                 <div id="dash-meta-kpi" class="widget">
                     <span class="widget-title">Meta semanal</span>
                     <span class="widget-value">${DASHBOARD_CONFIG.META_SEMANAL}</span>
+                </div>
+            </div>
+
+            <!-- Resumen del día -->
+            <div class="card" style="border-left:4px solid var(--color-primary) !important; padding: 16px !important;">
+                <h2 style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-tertiary); margin-bottom:8px;">Resumen del día</h2>
+                <div id="dash-daily-brief">
+                    <div class="skeleton-text skeleton-shimmer" style="width:95%;"></div>
                 </div>
             </div>
 
