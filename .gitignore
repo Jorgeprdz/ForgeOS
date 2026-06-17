@@ -16,3 +16,4 @@ forge-full-inventory.txt
 
 .DS_Store
 Thumbs.db
+.env

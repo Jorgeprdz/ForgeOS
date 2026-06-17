@@ -1,88 +1,25 @@
 {
-  "generatedAt": "2026-06-14T06:09:31.295Z",
+  "generatedAt": "2026-06-17T01:42:31.804Z",
   "summary": {
-    "totalJsFilesScanned": 653,
-    "totalImportsFound": 185,
-    "staticImportsFound": 183,
+    "totalJsFilesScanned": 666,
+    "totalImportsFound": 213,
+    "staticImportsFound": 211,
     "dynamicImportsFound": 2,
-    "missingTargetsCount": 5,
-    "missingExportsCount": 2,
+    "missingTargetsCount": 0,
+    "missingExportsCount": 0,
     "circularImportsCount": 0,
     "bootBlockersCount": 0,
-    "executabilityVerdict": "EXECUTABLE_WITH_WARNINGS",
+    "executabilityVerdict": "EXECUTABLE",
     "confidenceScore": 0.88
   },
-  "missingTargets": [
-    {
-      "source": "adaptive-question-engine.js",
-      "target": "./adaptive-question-bank",
-      "resolved": "adaptive-question-bank.js",
-      "type": "static",
-      "classification": "DOMAIN_BLOCKER"
-    },
-    {
-      "source": "cartera-view.js",
-      "target": "../utils/cartera-utils.js",
-      "resolved": "../utils/cartera-utils.js",
-      "type": "static",
-      "classification": "ROUTE_BLOCKER"
-    },
-    {
-      "source": "rule-packs/smnyl/smnyl-bonos-engine.js",
-      "target": "./smnyl-concursos-config.js",
-      "resolved": "rule-packs/smnyl/smnyl-concursos-config.js",
-      "type": "static",
-      "classification": "DOMAIN_BLOCKER"
-    },
-    {
-      "source": "rule-packs/smnyl/smnyl-concursos-engine.js",
-      "target": "./db.js",
-      "resolved": "rule-packs/smnyl/db.js",
-      "type": "static",
-      "classification": "DOMAIN_BLOCKER"
-    },
-    {
-      "source": "rule-packs/smnyl/smnyl-training-allowance-engine.js",
-      "target": "./smnyl-concursos-config.js",
-      "resolved": "rule-packs/smnyl/smnyl-concursos-config.js",
-      "type": "static",
-      "classification": "DOMAIN_BLOCKER"
-    }
-  ],
-  "missingExports": [
-    {
-      "source": "cartera-import-engine.js",
-      "target": "./cartera-service.js",
-      "resolved": "cartera-service.js",
-      "imported": "carteraService",
-      "classification": "ROUTE_BLOCKER"
-    },
-    {
-      "source": "rule-packs/smnyl/smnyl-produccion-engine.js",
-      "target": "./smnyl-prima-engine.js",
-      "resolved": "rule-packs/smnyl/smnyl-prima-engine.js",
-      "imported": "calcularPrimaPoliza",
-      "classification": "DOMAIN_BLOCKER"
-    }
-  ],
+  "missingTargets": [],
+  "missingExports": [],
   "circularImports": [],
   "bootBlockers": [],
   "appShellCouplings": [
     {
-      "path": "db.js",
-      "importedNames": "DB",
-      "category": "Platform boot",
-      "shouldEventuallyBeDynamic": false
-    },
-    {
-      "path": "utils.js",
-      "importedNames": "showToast",
-      "category": "Platform boot",
-      "shouldEventuallyBeDynamic": false
-    },
-    {
       "path": "supabase-runtime.js",
-      "importedNames": "SupabaseRuntime, getSupabase",
+      "importedNames": "getSupabase",
       "category": "Platform boot",
       "shouldEventuallyBeDynamic": false
     },
@@ -117,57 +54,39 @@
       "shouldEventuallyBeDynamic": true
     },
     {
-      "path": "core-app-engine.js",
-      "importedNames": "Core",
-      "category": "Platform boot",
-      "shouldEventuallyBeDynamic": false
-    },
-    {
-      "path": "state-manager.js",
-      "importedNames": "AppState",
-      "category": "Platform boot",
-      "shouldEventuallyBeDynamic": false
-    },
-    {
       "path": "event-system.js",
       "importedNames": "EventBus",
       "category": "Platform boot",
       "shouldEventuallyBeDynamic": false
     },
     {
-      "path": "module-lifecycle.js",
-      "importedNames": "Lifecycle",
+      "path": "platform/app/bootstrap.js",
+      "importedNames": "bootstrapApp",
+      "category": "Unknown",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "platform/app/forge-app-shell.js",
+      "importedNames": "ForgeAppShell",
       "category": "Platform boot",
       "shouldEventuallyBeDynamic": false
     },
     {
-      "path": "platform/navigation-runtime.js",
-      "importedNames": "Navigation",
+      "path": "platform/auth/auth-service.js",
+      "importedNames": "AuthService",
       "category": "Platform boot",
       "shouldEventuallyBeDynamic": false
     },
     {
-      "path": "ui-render-engine.js",
-      "importedNames": "RenderEngine",
-      "category": "Platform boot",
+      "path": "platform/routing/enterprise-router.js",
+      "importedNames": "EnterpriseRouter",
+      "category": "Unknown",
       "shouldEventuallyBeDynamic": false
     },
     {
-      "path": "sync-orchestrator.js",
-      "importedNames": "SyncEngine",
-      "category": "Platform boot",
-      "shouldEventuallyBeDynamic": false
-    },
-    {
-      "path": "analytics-engine.js",
-      "importedNames": "Analytics",
-      "category": "Platform boot",
-      "shouldEventuallyBeDynamic": false
-    },
-    {
-      "path": "error-boundary.js",
-      "importedNames": "ErrorHandler",
-      "category": "Platform boot",
+      "path": "platform/routing/route-registry.js",
+      "importedNames": "createRouteRegistry",
+      "category": "Unknown",
       "shouldEventuallyBeDynamic": false
     },
     {
@@ -177,8 +96,26 @@
       "shouldEventuallyBeDynamic": false
     },
     {
-      "path": "app-shell-manager.js",
-      "importedNames": "AppShell",
+      "path": "platform/app/runtime-listeners.js",
+      "importedNames": "bindPlatformRuntimeListeners",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "legacy/crmaddlife/chat-shell.js",
+      "importedNames": "bindCrmAddlifeChatShell",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "legacy/crmaddlife/ui-listeners.js",
+      "importedNames": "bindCrmAddlifeThemeToggle",
+      "category": "Platform boot",
+      "shouldEventuallyBeDynamic": false
+    },
+    {
+      "path": "legacy/crmaddlife/ui-shell.js",
+      "importedNames": "showCrmAddlifeApp, renderCrmAddlifeLogin, renderCrmAddlifeFatalError",
       "category": "Platform boot",
       "shouldEventuallyBeDynamic": false
     }

@@ -5,9 +5,9 @@ Status: EXECUTABLE VALIDATION / NO FIXES
 
 ## Executive Summary
 
-Scanned 653 root JavaScript files and found 185 import edges.
+Scanned 666 root JavaScript files and found 213 import edges.
 
-Executability verdict: `EXECUTABLE_WITH_WARNINGS`
+Executability verdict: `EXECUTABLE`
 
 No runtime files were modified, no imports were rewritten, and no files were renamed.
 
@@ -15,29 +15,20 @@ No runtime files were modified, no imports were rewritten, and no files were ren
 
 | Metric | Count |
 | --- | --- |
-| Total JS files scanned | 653 |
-| Total imports found | 185 |
-| Missing targets | 5 |
-| Missing exports | 2 |
+| Total JS files scanned | 666 |
+| Total imports found | 213 |
+| Missing targets | 0 |
+| Missing exports | 0 |
 | Circular imports | 0 |
 | Boot blockers | 0 |
 
 ## Missing Import Targets
 
-| Source | Target | Resolved | Type | Classification |
-| --- | --- | --- | --- | --- |
-| adaptive-question-engine.js | ./adaptive-question-bank | adaptive-question-bank.js | static | DOMAIN_BLOCKER |
-| cartera-view.js | ../utils/cartera-utils.js | ../utils/cartera-utils.js | static | ROUTE_BLOCKER |
-| rule-packs/smnyl/smnyl-bonos-engine.js | ./smnyl-concursos-config.js | rule-packs/smnyl/smnyl-concursos-config.js | static | DOMAIN_BLOCKER |
-| rule-packs/smnyl/smnyl-concursos-engine.js | ./db.js | rule-packs/smnyl/db.js | static | DOMAIN_BLOCKER |
-| rule-packs/smnyl/smnyl-training-allowance-engine.js | ./smnyl-concursos-config.js | rule-packs/smnyl/smnyl-concursos-config.js | static | DOMAIN_BLOCKER |
+None.
 
 ## Missing Named Exports
 
-| Source | Target | Resolved | Imported Name | Classification |
-| --- | --- | --- | --- | --- |
-| cartera-import-engine.js | ./cartera-service.js | cartera-service.js | carteraService | ROUTE_BLOCKER |
-| rule-packs/smnyl/smnyl-produccion-engine.js | ./smnyl-prima-engine.js | rule-packs/smnyl/smnyl-prima-engine.js | calcularPrimaPoliza | DOMAIN_BLOCKER |
+None.
 
 ## Circular Imports
 
@@ -53,7 +44,7 @@ None detected.
 
 ## Executability Verdict
 
-`EXECUTABLE_WITH_WARNINGS`
+`EXECUTABLE`
 
 No boot blockers were detected by static module evidence.
 
