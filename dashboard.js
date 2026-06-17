@@ -673,6 +673,36 @@ const DashboardCalculator = {
 
         return 'Tu negocio está al día. Revisa las recomendaciones de Forge para seguir construyendo tu cartera.';
     },
+
+    /**
+     * Calcula métricas de impacto de Forge basadas en logs de telemetría.
+     * @param {Array} logs
+     * @returns {Object}
+     */
+    calculateAnalytics(logs) {
+        const telemetry = (logs || []).filter(l => l.type === 'decision_telemetry');
+
+        // 1. Recomendaciones útiles
+        const feedbackEvents = telemetry.filter(t => t.event === 'feedback');
+        const usefulCount = feedbackEvents.filter(t => t.feedback === 'useful').length;
+        const totalFeedback = feedbackEvents.length;
+        const usefulPct = totalFeedback > 0 ? Math.round((usefulCount / totalFeedback) * 100) : null;
+
+        // 2. Acciones realizadas
+        const shownCount = telemetry.filter(t => t.event === 'shown').length;
+        const clickedCount = telemetry.filter(t => t.event === 'clicked').length;
+        const clickedPct = shownCount > 0 ? Math.round((clickedCount / shownCount) * 100) : null;
+
+        // 3. Resultados detectados
+        const outcomesCount = telemetry.filter(t => t.event === 'outcome_detected').length;
+
+        return {
+            usefulPct,
+            clickedPct,
+            outcomesCount,
+            hasData: totalFeedback > 0 || shownCount > 0 || outcomesCount > 0
+        };
+    },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -775,6 +805,43 @@ const DashboardView = {
                 `;
             })
             .join('');
+    },
+
+    /**
+     * Renderiza las métricas de impacto de Forge.
+     * @param {Object} analytics
+     */
+    renderAnalytics(analytics) {
+        const el = document.getElementById('dash-analytics');
+        if (!el) return;
+
+        if (!analytics || !analytics.hasData) {
+            el.innerHTML = `<p style="font-size:12px;color:var(--text-tertiary);font-style:italic;margin:0;">Forge sigue aprendiendo de tu actividad.</p>`;
+            return;
+        }
+
+        const usefulText = analytics.usefulPct !== null ? `${analytics.usefulPct}% útiles` : 'Sin retroalimentación';
+        const clickedText = analytics.clickedPct !== null ? `${analytics.clickedPct}% ejecutadas` : 'Sin interacción';
+
+        el.innerHTML = `
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;">
+                <div style="background:rgba(0,122,255,0.03);padding:10px;border-radius:8px;">
+                    <div style="font-size:18px;margin-bottom:4px;">👍</div>
+                    <div style="font-size:14px;font-weight:700;color:var(--text-primary);">${Sanitizer.escape(usefulText)}</div>
+                    <div style="font-size:10px;color:var(--text-tertiary);margin-top:2px;">Utilidad</div>
+                </div>
+                <div style="background:rgba(255,149,0,0.03);padding:10px;border-radius:8px;">
+                    <div style="font-size:18px;margin-bottom:4px;">⚡</div>
+                    <div style="font-size:14px;font-weight:700;color:var(--text-primary);">${Sanitizer.escape(clickedText)}</div>
+                    <div style="font-size:10px;color:var(--text-tertiary);margin-top:2px;">Ejecución</div>
+                </div>
+                <div style="background:rgba(52,199,89,0.03);padding:10px;border-radius:8px;">
+                    <div style="font-size:18px;margin-bottom:4px;">🎯</div>
+                    <div style="font-size:14px;font-weight:700;color:var(--text-primary);">${analytics.outcomesCount}</div>
+                    <div style="font-size:10px;color:var(--text-tertiary);margin-top:2px;">Resultados</div>
+                </div>
+            </div>
+        `;
     },
 
     /**
@@ -1374,6 +1441,7 @@ const DashboardController = {
 
             const kpi = DashboardCalculator.productividad(historial);
             const brief = DashboardCalculator.generateDailyBrief(decisions, outcomes, kpi);
+            const analytics = DashboardCalculator.calculateAnalytics(logs);
 
             // — Hidratar DOM via RenderEngine (batched, RAF-scheduled)
             RenderEngine.batch([
@@ -1382,6 +1450,7 @@ const DashboardController = {
                 () => DashboardView.renderKpiPuntos(kpi.puntos),
                 () => DashboardView.renderDecisionCockpit(decisions),
                 () => DashboardView.renderEvidenceTimeline(outcomes),
+                () => DashboardView.renderAnalytics(analytics),
             ]);
 
             // — Notificar al sistema que el dashboard cargó correctamente
@@ -1501,6 +1570,14 @@ export function renderDashboard() {
                 <h2 style="font-size:15px;margin-bottom:10px;color:var(--color-success);">🛡️ Evidencia Forge</h2>
                 <div id="dash-evidence-timeline">
                     <div class="skeleton-text skeleton-shimmer" style="width:70%;"></div>
+                </div>
+            </div>
+
+            <!-- Impacto Forge -->
+            <div class="card" style="background:rgba(0,122,255,0.02);border:1px solid rgba(0,122,255,0.1);">
+                <h2 style="font-size:15px;margin-bottom:10px;color:var(--color-primary);">⚡ Impacto Forge</h2>
+                <div id="dash-analytics">
+                    <div class="skeleton-text skeleton-shimmer" style="width:50%;"></div>
                 </div>
             </div>
 
