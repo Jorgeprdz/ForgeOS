@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
 
-const FUNCTION_VERSION = "semantic-extract-v0.7-temporal-stable-lite";
+const FUNCTION_VERSION = "semantic-extract-v0.8-hdl-semantic-frame-lite";
 const MODEL_VERSION = "gemini-3.1-flash-lite";
 
 const corsHeaders = {
@@ -97,16 +97,66 @@ function isTrivialGreeting(note: string): boolean {
   return TRIVIAL_GREETINGS.includes(normalizeText(note));
 }
 
-function resolveRelativeMonthReference(text: string, now = new Date()): string | null {
-  const normalized = normalizeText(text);
-  const monthMatch = normalized.match(/\b(en|dentro de)\s+(\d+)\s+mes(es)?\b/);
-  if (monthMatch) {
-    const monthsToAdd = parseInt(monthMatch[2], 10);
-    const targetDate = new Date(now);
-    targetDate.setMonth(now.getMonth() + monthsToAdd);
-    return SPANISH_MONTHS[targetDate.getMonth()];
+function buildSemanticFrame(note: string, now = new Date()) {
+  const normalized = normalizeText(note);
+  
+  // Basic classification
+  let scope = "unknown";
+  let intent_normalized = "unknown";
+  let action = null;
+  let temporal_reference = null;
+  let claimable = false;
+  let uncertainty_flags = [];
+  let semantic_confidence = 0.0;
+  let claim_confidence = 0.0;
+
+  // Simple classification heuristics
+  if (isTrivialGreeting(note)) {
+    scope = "greeting";
+    intent_normalized = "greeting_only";
+    semantic_confidence = 1.0;
+  } else if (normalized.includes("pensara") || normalized.includes("va a pensar") || normalized.includes("lo pensara")) {
+    scope = "intent";
+    intent_normalized = "decision_delay";
+    semantic_confidence = 0.95;
+    claim_confidence = 0.35;
+    uncertainty_flags = ["NON_ACTIONABLE_INTENT"];
+  } else {
+    // Basic request parsing heuristic (could be improved)
+    const requestMatch = note.match(/(pidio|solicito|requiere|llamar|seguimiento)\s+(.*)/i);
+    if (requestMatch) {
+      scope = "commitment";
+      intent_normalized = "advisor_request";
+      action = requestMatch[1].toLowerCase();
+      claimable = true;
+      semantic_confidence = 0.95;
+      claim_confidence = 0.8;
+      
+      const tempMatch = requestMatch[2].match(/(próximo año|proximo año|julio|dentro de \d+ meses)/i);
+      if (tempMatch) {
+        temporal_reference = tempMatch[0];
+      }
+    }
   }
-  return null;
+
+  return {
+    frame_type: "hdl_semantic_frame",
+    source: "hdl_semantic_normalizer",
+    semantic_confidence,
+    original_text: note,
+    interpretations: [
+      {
+        scope,
+        intent_normalized,
+        action,
+        temporal_reference,
+        semantic_confidence,
+        claim_confidence,
+        claimable,
+        uncertainty_flags,
+      },
+    ],
+  };
 }
 
 function deterministicProspectRequest(note: string, generatedAt: string) {
@@ -359,7 +409,57 @@ serve(async (req) => {
     }
 
     const generatedAt = new Date().toISOString();
+    const frame = buildSemanticFrame(note);
 
+    // Canonical extraction now reads from the frame if claimable
+    const primaryInterpretation = frame.interpretations[0];
+    if (primaryInterpretation.claimable) {
+      return jsonResponse({
+        function_version: FUNCTION_VERSION,
+        summary: {
+          candidate_count: 1,
+          requires_human_review: true,
+          model_version: MODEL_VERSION,
+        },
+        candidates: [{
+          id: "cand_001",
+          type: "commitment_established",
+          owner: "advisor",
+          action: primaryInterpretation.action || "general_action",
+          due: primaryInterpretation.temporal_reference,
+          quality: "medium",
+          confidence: primaryInterpretation.claim_confidence,
+          evidence_span: note,
+          review_status: "proposed",
+          source: "hdl_semantic_frame_extractor",
+          model_version: MODEL_VERSION,
+          generated_at: generatedAt,
+          unknowns: [],
+        }],
+        unknowns: [],
+        requiresHumanReview: true,
+        source: "semantic_extractor",
+        model_version: MODEL_VERSION,
+        semantic_frame: frame
+      });
+    } else {
+        return jsonResponse({
+        function_version: FUNCTION_VERSION,
+        summary: {
+          candidate_count: 0,
+          requires_human_review: true,
+          model_version: MODEL_VERSION,
+        },
+        candidates: [],
+        unknowns: ["non_claimable_interpretation"],
+        requiresHumanReview: true,
+        source: "semantic_extractor",
+        model_version: MODEL_VERSION,
+        semantic_frame: frame
+      });
+    }
+
+    /*
     const deterministicCandidate = deterministicProspectRequest(note, generatedAt);
     if (deterministicCandidate) {
       return jsonResponse({
@@ -376,6 +476,7 @@ serve(async (req) => {
         model_version: MODEL_VERSION,
       });
     }
+    */
 
     const responseText = await callGemini(note);
 
