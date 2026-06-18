@@ -235,6 +235,44 @@ Rules:
 - Commit by PAQ
 - Push only when requested
 
+### Constitutional Gate for Codex
+
+Before any Forge work starts, Codex must declare:
+
+- Applicable Constitution
+- Applicable ADRs
+- Build Tree area
+- Discovery status
+- Implementation readiness
+- Miranda approval
+- Board approval status
+- Scope boundary
+- Prohibited surfaces
+- Validation expectation
+
+If any required gate field is missing, the task is BLOCKED BY ROBOCOP LOCK 001.
+
+Read-only inventory may be used only to complete the gate.
+
+Implementation, refactor, migration, repair, test creation, schema change, route change, UI change, rule change or business logic change may not begin until the Constitutional Gate is complete.
+
+Codex must not implement discoveries or candidates marked as:
+
+- Discovery
+- Candidate
+- Not Ratified
+- Documentation Only
+- Implementation Deferred
+- Implementation Blocked
+- No Implementation
+
+Those statuses allow read-only inventory, governance mapping or approval requests only.
+
+Source:
+
+- `docs/governance/FORGE_ROBOCOP_DIRECTIVES.md`
+- `docs/governance/FORGE_GOVERNANCE_REGISTRY.md`
+
 ---
 
 ## Forge Council
