@@ -131,6 +131,13 @@ function resolveRelativeMonthReference(text: string, now = new Date()): string |
   return null;
 }
 
+function removeTrailingTemporalConnectors(action: string): string {
+  return action
+    .replace(/\s+/g, " ")
+    .replace(/\s+(?:para(?:\s+(?:el|la|los|las))?|el|la)\s*$/i, "")
+    .trim();
+}
+
 function getNormalizedAction(note: string): string | null {
   const normalized = normalizeText(note);
   const hasRequestVerb =
@@ -150,15 +157,16 @@ function getNormalizedAction(note: string): string | null {
   action = action.replace(/^pid[ií]o\s+/i, "preparar/enviar ");
   action = action.replace(/^solicit[oó]\s+/i, "preparar/enviar ");
   action = action.replace(/^requiere\s+/i, "preparar/enviar ");
+  action = action.replace(/^seguimiento\b/i, "seguimiento");
 
   const temporalInNote = extractTemporalReference(note);
   if (temporalInNote) {
     const escaped = temporalInNote.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const cleanRegex = new RegExp(`\\s+(para|el)?\\s*${escaped}.*$`, "i");
+    const cleanRegex = new RegExp(`\\s*${escaped}.*$`, "i");
     action = action.replace(cleanRegex, "");
   }
 
-  return action.trim();
+  return removeTrailingTemporalConnectors(action);
 }
 
 function buildSemanticFrame(note: string, now = new Date()) {
