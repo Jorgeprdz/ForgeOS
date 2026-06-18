@@ -100,9 +100,7 @@ function isTrivialGreeting(note: string): boolean {
   return TRIVIAL_GREETINGS.includes(normalizeText(note));
 }
 
-function extractTemporalReference(text: string): string | null {
-  const normalized = normalizeText(text);
-
+function extractRawTemporalReference(text: string): string | null {
   const patterns = [
     /\b(lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo)\b/i,
     /\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/i,
@@ -117,6 +115,24 @@ function extractTemporalReference(text: string): string | null {
   }
 
   return null;
+}
+
+function normalizeTemporalReference(reference: string | null): string | null {
+  const normalized = normalizeText(reference);
+
+  if (
+    normalized === "proximo ano" ||
+    normalized === "el proximo ano" ||
+    normalized === "ano que viene"
+  ) {
+    return "próximo año";
+  }
+
+  return reference ? reference.toLowerCase().trim() : null;
+}
+
+function extractTemporalReference(text: string): string | null {
+  return normalizeTemporalReference(extractRawTemporalReference(text));
 }
 
 function resolveRelativeMonthReference(text: string, now = new Date()): string | null {
@@ -159,14 +175,14 @@ function getNormalizedAction(note: string): string | null {
   action = action.replace(/^requiere\s+/i, "preparar/enviar ");
   action = action.replace(/^seguimiento\b/i, "seguimiento");
 
-  const temporalInNote = extractTemporalReference(note);
+  const temporalInNote = extractRawTemporalReference(note);
   if (temporalInNote) {
     const escaped = temporalInNote.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const cleanRegex = new RegExp(`\\s*${escaped}.*$`, "i");
     action = action.replace(cleanRegex, "");
   }
 
-  return removeTrailingTemporalConnectors(action);
+  return removeTrailingTemporalConnectors(action).toLowerCase();
 }
 
 function buildSemanticFrame(note: string, now = new Date()) {
