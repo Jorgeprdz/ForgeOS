@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
 
-const FUNCTION_VERSION = "semantic-extract-v0.6-ownership-stable-lite";
+const FUNCTION_VERSION = "semantic-extract-v0.7-temporal-stable-lite";
 const MODEL_VERSION = "gemini-3.1-flash-lite";
 
 const corsHeaders = {
@@ -9,6 +9,21 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+const SPANISH_MONTHS = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
 
 const TRIVIAL_GREETINGS = [
   "hola",
@@ -82,6 +97,18 @@ function isTrivialGreeting(note: string): boolean {
   return TRIVIAL_GREETINGS.includes(normalizeText(note));
 }
 
+function resolveRelativeMonthReference(text: string, now = new Date()): string | null {
+  const normalized = normalizeText(text);
+  const monthMatch = normalized.match(/\b(en|dentro de)\s+(\d+)\s+mes(es)?\b/);
+  if (monthMatch) {
+    const monthsToAdd = parseInt(monthMatch[2], 10);
+    const targetDate = new Date(now);
+    targetDate.setMonth(now.getMonth() + monthsToAdd);
+    return SPANISH_MONTHS[targetDate.getMonth()];
+  }
+  return null;
+}
+
 function deterministicProspectRequest(note: string, generatedAt: string) {
   const normalized = normalizeText(note);
 
@@ -95,23 +122,49 @@ function deterministicProspectRequest(note: string, generatedAt: string) {
 
   if (!hasRequestVerb) return null;
 
-  const dueMatch = normalized.match(/\b(para|el)\s+(lunes|martes|miercoles|jueves|viernes|sabado|domingo|manana|hoy|la proxima semana|proxima semana)\b/);
-  const due = dueMatch ? dueMatch[2] : null;
+  let due: string | null = null;
+  const relativeMonth = resolveRelativeMonthReference(note);
+
+  if (relativeMonth) {
+    due = relativeMonth;
+  } else {
+    const dueMatch = normalized.match(
+      /\b(para|el)\s+(lunes|martes|miercoles|jueves|viernes|sabado|domingo|manana|hoy|la proxima semana|proxima semana|fin de mes|este mes|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/,
+    );
+    if (dueMatch) {
+      due = dueMatch[2];
+    }
+  }
 
   let action = note.trim();
   action = action.replace(/^me\s+/i, "");
   action = action.replace(/^pid[ií]o\s+/i, "preparar/enviar ");
   action = action.replace(/^solicit[oó]\s+/i, "preparar/enviar ");
   action = action.replace(/^requiere\s+/i, "preparar/enviar ");
-  action = action.replace(/\s+para\s+(el\s+)?(lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo|mañana|manana|hoy|la próxima semana|la proxima semana|próxima semana|proxima semana).*$/i, "");
+
+  if (relativeMonth) {
+    action = action.replace(/\b(en|dentro\s+de)\s+(\d+)\s+mes(es)?\b/i, "");
+  }
+
+  action = action.replace(
+    /\s+(para|el)\s+(lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo|mañana|manana|hoy|la\s+próxima\s+semana|la\s+proxima\s+semana|próxima\s+semana|proxima\s+semana|fin\s+de\s+mes|este\s+mes|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre).*$/i,
+    "",
+  );
+
+  action = action.trim();
 
   return {
     id: "cand_001",
     type: "commitment_established",
     owner: "advisor",
-    action: action.trim(),
+    action: action,
     due,
-    quality: computeQuality("commitment_established", "advisor", action.trim(), due),
+    quality: computeQuality(
+      "commitment_established",
+      "advisor",
+      action,
+      due,
+    ),
     confidence: 1,
     evidence_span: note.trim(),
     review_status: "proposed",
