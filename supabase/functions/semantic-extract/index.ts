@@ -57,6 +57,19 @@ const FORBIDDEN_FIELDS = [
   "health_status",
 ];
 
+const DIRECT_ADVISOR_ACTIONS: Record<string, string> = {
+  escribeme: "escribir",
+  escribir: "escribir",
+  llamame: "llamar",
+  llamar: "llamar",
+  buscame: "buscar",
+  buscar: "buscar",
+  marcame: "marcar",
+  marcar: "marcar",
+  contactame: "contactar",
+  contactar: "contactar",
+};
+
 function normalizeText(value: unknown): string {
   if (typeof value !== "string") return "";
 
@@ -100,8 +113,18 @@ function isTrivialGreeting(note: string): boolean {
   return TRIVIAL_GREETINGS.includes(normalizeText(note));
 }
 
+function extractTemporalRange(text: string): string | null {
+  const normalized = normalizeText(text);
+  const match = normalized.match(/\b(?:en|dentro de)\s+(\d+)\s+o\s+(\d+)\s+(dias|semanas|meses)\b/);
+  if (!match) return null;
+
+  const unit = match[3] === "dias" ? "días" : match[3];
+  return `${match[1]} o ${match[2]} ${unit}`;
+}
+
 function extractRawTemporalReference(text: string): string | null {
   const patterns = [
+    /\b(?:en|dentro de)\s+\d+\s+o\s+\d+\s+(?:días|dias|semanas|meses)\b/i,
     /\b(lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo)\b/i,
     /\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/i,
     /\b(hoy|mañana|manana)\b/i,
@@ -132,10 +155,15 @@ function normalizeTemporalReference(reference: string | null): string | null {
 }
 
 function extractTemporalReference(text: string): string | null {
+  const temporalRange = extractTemporalRange(text);
+  if (temporalRange) return temporalRange;
+
   return normalizeTemporalReference(extractRawTemporalReference(text));
 }
 
 function resolveRelativeMonthReference(text: string, now = new Date()): string | null {
+  if (extractTemporalRange(text)) return null;
+
   const normalized = normalizeText(text);
   const monthMatch = normalized.match(/\b(en|dentro de)\s+(\d+)\s+mes(es)?\b/);
   if (monthMatch) {
@@ -159,8 +187,15 @@ function removeTrailingTemporalConnectors(action: string): string {
     .trim();
 }
 
+function getDirectAdvisorAction(note: string): string | null {
+  const normalized = normalizeText(note);
+  const firstToken = normalized.split(" ")[0];
+  return DIRECT_ADVISOR_ACTIONS[firstToken] || null;
+}
+
 function getNormalizedAction(note: string): string | null {
   const normalized = normalizeText(note);
+  const directAdvisorAction = getDirectAdvisorAction(note);
   const hasRequestVerb =
     normalized.startsWith("pidio ") ||
     normalized.startsWith("me pidio ") ||
@@ -168,12 +203,16 @@ function getNormalizedAction(note: string): string | null {
     normalized.startsWith("me solicito ") ||
     normalized.startsWith("requiere ") ||
     normalized.startsWith("me requiere ") ||
+    directAdvisorAction !== null ||
     normalized.startsWith("llamar ") ||
     normalized.startsWith("seguimiento ");
 
   if (!hasRequestVerb) return null;
 
   let action = note.trim();
+  if (directAdvisorAction) {
+    action = directAdvisorAction;
+  }
   action = action.replace(/^me\s+/i, "");
   action = action.replace(/^pid[ií]o\s+/i, "preparar/enviar ");
   action = action.replace(/^solicit[oó]\s+/i, "preparar/enviar ");
@@ -253,7 +292,8 @@ function deterministicProspectRequest(note: string, generatedAt: string) {
   const due = getNormalizedDue(note);
 
   // Quality Rule
-  const isBroad = due && (due.includes("próximo") || due.includes("proximo") || due.includes("año") || due.includes("mes") || due.includes("semana") || due.match(/\b(dentro|en)\b/));
+  const isRange = due && /^\d+\s+o\s+\d+\s+(días|dias|semanas|meses)$/.test(due);
+  const isBroad = due && (isRange || due.includes("próximo") || due.includes("proximo") || due.includes("año") || due.includes("mes") || due.includes("semana") || due.match(/\b(dentro|en)\b/));
   const quality = (due && !isBroad) ? "strong" : "medium";
 
   return {
