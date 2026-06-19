@@ -4,6 +4,15 @@
 import { DB } from '../../db.js';
 import { Network } from '../../network-manager.js';
 
+const ALLOWED_REMOTE_TABLES =
+    new Set([
+        'crm_data',
+        'prospects',
+        'alpha_events',
+        'forge_outputs',
+        'validation_results'
+    ]);
+
 class OfflineSyncEngine {
 
     constructor() {
@@ -136,6 +145,10 @@ class OfflineSyncEngine {
 
     async execute(item) {
 
+        this.assertAllowedTable(
+            item.table
+        );
+
         switch (item.type) {
 
             case 'UPSERT':
@@ -151,6 +164,19 @@ class OfflineSyncEngine {
                 throw new Error(
                     '[SYNC] Unknown operation'
                 );
+        }
+    }
+
+    assertAllowedTable(table) {
+
+        if (
+            !table ||
+            !ALLOWED_REMOTE_TABLES.has(table)
+        ) {
+
+            throw new Error(
+                `[SYNC] Remote table not allowed for beta: ${table || 'unknown'}`
+            );
         }
     }
 

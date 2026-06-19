@@ -302,10 +302,10 @@ function bindConfigForm(sb, userId) {
         const limra = parseFloat(document.getElementById('cfg-limra')?.value)||75.5;
         const igc = parseFloat(document.getElementById('cfg-igc')?.value)||91.0;
 
-        const payload = { id: 'perfil_'+userId, user_id: userId, coleccion: 'perfil_asesor', datos: { fecha_conexion: f, esquema, limra, igc } };
+        const payload = { user_id: userId, coleccion: 'perfil_asesor', datos: { fecha_conexion: f, esquema, limra, igc } };
 
         try {
-            const { error } = await sb.from('crm_data').upsert(payload, { onConflict: 'id' });
+            const { error } = await sb.from('crm_data').upsert(payload, { onConflict: 'user_id,coleccion' });
             if (error) throw error;
             showToast('Perfil guardado', 'success');
             setTimeout(() => {
@@ -323,10 +323,10 @@ function bindConfigFormIndices(sb, userId, perfil) {
         const limra = parseFloat(document.getElementById('idx-limra').value) || 75.5;
         const igc = parseFloat(document.getElementById('idx-igc').value) || 91.0;
         
-        const payload = { id: 'perfil_'+userId, user_id: userId, coleccion: 'perfil_asesor', datos: { ...perfil, limra, igc } };
+        const payload = { user_id: userId, coleccion: 'perfil_asesor', datos: { ...perfil, limra, igc } };
 
         try {
-            const { error } = await sb.from('crm_data').upsert(payload, { onConflict: 'id' });
+            const { error } = await sb.from('crm_data').upsert(payload, { onConflict: 'user_id,coleccion' });
             if (error) throw error;
             
             showToast('Índices actualizados', 'success');
