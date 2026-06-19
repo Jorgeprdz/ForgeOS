@@ -143,6 +143,7 @@ Alfred represents:
 - commercial judgment
 - next best action
 - daily briefing
+- command execution
 
 Alfred should feel like:
 
@@ -198,7 +199,7 @@ Pregúntale a Alfred o escribe un comando...
 
 The command bar is part of the product identity.
 
-Forge is not just navigated.
+Forge is not just navigated.  
 Forge is commanded.
 
 ---
@@ -303,7 +304,7 @@ The nav should support the product hierarchy:
 
 ---
 
-## 10. What This Screen Must Not Become
+## 10. Forbidden Drift
 
 The Mi Día screen must not become:
 
@@ -363,16 +364,17 @@ Manager OS must also convert data into intervention.
 
 Future UI implementation must preserve:
 
+- Alfred-first hierarchy
 - Alfred as visible operational layer
 - command bar as a first-class control
-- contextual header based on time/weather/state
+- contextual header based on time, weather or advisor state
 - forecast and gap as concise decision signal
-- opportunities ranked by priority/probability
+- opportunities ranked by priority and probability
 - follow-up engine as rescue layer
 - recommendations as action list
 - premium dark glass visual language
 
-Any UI implementation that removes Alfred, hides the command bar, or turns Mi Día into a generic dashboard violates this lock.
+Any UI implementation that removes Alfred, hides the command bar, buries the daily briefing, or turns Mi Día into a generic dashboard violates this lock.
 
 ---
 
