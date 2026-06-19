@@ -10,6 +10,13 @@ const commands = [
   ['node', ['tests/banxico-edge-provider-test.js']],
   ['node', ['tests/supabase-rls-foundation-test.js']],
   ['node', ['tests/truth/truth-validators-phase-a-test.js']],
+  ['node', ['tests/economic-event-status-test.js']],
+  ['node', ['tests/policy-evidence-packet-test.js']],
+  ['node', ['tests/payment-evidence-packet-test.js']],
+  ['node', ['tests/commission-statement-evidence-packet-test.js']],
+  ['node', ['tests/payment-event-engine-test.js']],
+  ['node', ['tests/initial-renewal-classifier-test.js']],
+  ['node', ['tests/policy-advisor-confirmation-gate-test.js']],
   ['node', ['tests/real-pdf-ocr-test.js']],
 ];
 
