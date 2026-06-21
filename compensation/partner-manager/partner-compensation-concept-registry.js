@@ -1,0 +1,371 @@
+import {
+  PARTNER_COMPENSATION_CONCEPT_KEYS,
+} from './partner-compensation-input-gate.js';
+
+import {
+  PARTNER_RULE_PACK_READINESS,
+} from './rule-pack-readiness.js';
+
+export const PARTNER_CONCEPT_CATEGORIES = Object.freeze({
+  PRODUCTIVITY: 'productivity',
+  PRODUCTION: 'production',
+  ACTIVITY: 'activity',
+  SUPPORT: 'support',
+  TRANSITION: 'transition',
+  CONNECTION: 'connection',
+  DEVELOPMENT: 'development',
+  PROMOTION: 'promotion',
+  UNKNOWN: 'unknown',
+});
+
+export const PARTNER_CONCEPT_CALCULATION_MODES = Object.freeze({
+  FULL_CANDIDATE: 'full_candidate',
+  CANDIDATE_WITH_CAUTION: 'candidate_with_caution',
+  SEMANTIC_ONLY: 'semantic_only',
+  PARTIAL_BLOCKED: 'partial_blocked',
+  EXAMPLE_ONLY: 'example_only',
+  NOT_CALCULABLE: 'not_calculable',
+  UNKNOWN: 'unknown',
+});
+
+export const PARTNER_CONCEPT_PAYOUT_GATE_MODES = Object.freeze({
+  OFFICIAL_STATEMENT_REQUIRED: 'official_statement_required',
+  OFFICIAL_STATEMENT_OR_ACCOUNT_STATEMENT_REQUIRED: 'official_statement_or_account_statement_required',
+  NOT_APPLICABLE_UNTIL_MODELED: 'not_applicable_until_modeled',
+  BLOCKED: 'blocked',
+  UNKNOWN: 'unknown',
+});
+
+export const PARTNER_CONCEPT_MODEL_STATUSES = Object.freeze({
+  MODELED: 'modeled',
+  MODELED_WITH_CAUTION: 'modeled_with_caution',
+  PARTIALLY_MODELABLE: 'partially_modelable',
+  BLOCKED_BY_MISSING_TABLE: 'blocked_by_missing_table',
+  BLOCKED_BY_MISSING_FORMULA: 'blocked_by_missing_formula',
+  EXAMPLE_ONLY: 'example_only',
+  UNKNOWN: 'unknown',
+});
+
+const TA_COUNTING_RULE = 'TA-counting precontract/advisor event supports Partner support eligibility only; it is not confirmed payout.';
+const OFFICIAL_STATEMENT_RULE = 'Official statement evidence is required for payout truth.';
+const ECONOMIC_OUTPUT_RULE = 'Partner compensation must consume advisor economic outputs, not raw advisor activity.';
+
+function deepFreeze(value) {
+  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+  Object.freeze(value);
+  Object.values(value).forEach(deepFreeze);
+  return value;
+}
+
+function clone(value) {
+  if (Array.isArray(value)) return value.map(clone);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, clone(item)]));
+  }
+  return value;
+}
+
+function entry(config) {
+  return deepFreeze({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN,
+    displayName: 'Unknown Partner Compensation Concept',
+    category: PARTNER_CONCEPT_CATEGORIES.UNKNOWN,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.UNKNOWN,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.UNKNOWN,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.UNKNOWN,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.UNKNOWN,
+    evidenceRequirement: [],
+    economicInputRequirement: [],
+    lifecycleRequirement: [],
+    scopeRequirement: ['scope must be evaluated before visible aggregation'],
+    tableCompleteness: 'unknown',
+    partialStatus: null,
+    supportsCandidateCalculation: false,
+    supportsFullCalculation: false,
+    supportsSemanticAmount: false,
+    supportsPayoutTruthGate: false,
+    requiresOfficialStatementForPayout: false,
+    sourcePages: [],
+    missingArtifacts: [],
+    warnings: [],
+    constitutionalRules: [
+      'Unknown is not zero.',
+      'Blocked is not zero.',
+      'Calculated candidate is not payout truth.',
+    ],
+    metadata: {},
+    ...config,
+  });
+}
+
+const REGISTRY = deepFreeze({
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTIVITY_BASE]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTIVITY_BASE,
+    displayName: 'Productividad Base',
+    category: PARTNER_CONCEPT_CATEGORIES.PRODUCTIVITY,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.FULL_CANDIDATE,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED,
+    evidenceRequirement: ['paid_applied_economic_evidence', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['qualified_advisor_economic_status', 'average_monthly_initial_commissions'],
+    lifecycleRequirement: ['connected_active_or_official_career_clock'],
+    tableCompleteness: 'complete',
+    supportsCandidateCalculation: true,
+    supportsFullCalculation: true,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [6],
+    constitutionalRules: [ECONOMIC_OUTPUT_RULE, OFFICIAL_STATEMENT_RULE],
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTIVITY_MULTIPLIER]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTIVITY_MULTIPLIER,
+    displayName: 'Multiplicador de Productividad',
+    category: PARTNER_CONCEPT_CATEGORIES.PRODUCTIVITY,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.FULL_CANDIDATE,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED,
+    evidenceRequirement: ['productivity_base_candidate', 'qualified_advisor_count', 'TA_counting_event_evidence', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['productivity_base_result', 'qualified_advisor_count'],
+    lifecycleRequirement: ['connected_active_or_official_career_clock'],
+    tableCompleteness: 'complete',
+    supportsCandidateCalculation: true,
+    supportsFullCalculation: true,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [7],
+    warnings: [TA_COUNTING_RULE],
+    constitutionalRules: [ECONOMIC_OUTPUT_RULE, TA_COUNTING_RULE, OFFICIAL_STATEMENT_RULE],
+    metadata: {
+      taWinnerCountAlias: 'TAWinnerCount is documentary legacy naming for TA-counting precontract/advisor event evidence, not confirmed payout.',
+    },
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTION_BONUS]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTION_BONUS,
+    displayName: 'Bono de Produccion',
+    category: PARTNER_CONCEPT_CATEGORIES.PRODUCTION,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.FULL_CANDIDATE,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED,
+    evidenceRequirement: ['paid_applied_economic_evidence', 'unit_LIMRA', 'unit_IGC', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['non_qualified_advisor_economic_output'],
+    lifecycleRequirement: ['connected_active_or_official_career_clock'],
+    tableCompleteness: 'complete',
+    supportsCandidateCalculation: true,
+    supportsFullCalculation: true,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [8],
+    constitutionalRules: [ECONOMIC_OUTPUT_RULE, OFFICIAL_STATEMENT_RULE],
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.ACTIVITY_BONUS]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.ACTIVITY_BONUS,
+    displayName: 'Bono de Actividad',
+    category: PARTNER_CONCEPT_CATEGORIES.ACTIVITY,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT_WITH_CAUTION,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED_WITH_CAUTION,
+    evidenceRequirement: ['qualified_advisor_status', 'minimum_three_month_seniority', 'valid_paid_applied_vida_gmm_policy_evidence', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['valid_life_gmm_policy_count_with_paid_applied_evidence'],
+    lifecycleRequirement: ['connected_active_or_official_career_clock'],
+    tableCompleteness: 'complete_with_evidence_caution',
+    supportsCandidateCalculation: true,
+    supportsFullCalculation: true,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [9],
+    warnings: ['Raw activity logs must not satisfy this concept.'],
+    constitutionalRules: [ECONOMIC_OUTPUT_RULE, OFFICIAL_STATEMENT_RULE],
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.FIXED_SUPPORT]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.FIXED_SUPPORT,
+    displayName: 'Apoyos Fijos',
+    category: PARTNER_CONCEPT_CATEGORIES.SUPPORT,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT_WITH_CAUTION,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_OR_ACCOUNT_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED_WITH_CAUTION,
+    evidenceRequirement: ['accumulated_commission_goals_evidence', 'TA_counting_event_evidence', 'support_table_evidence_for_full_modeling', 'official_statement_or_account_statement_for_payout'],
+    economicInputRequirement: ['accumulated_commission_goals_from_economic_evidence'],
+    lifecycleRequirement: ['partner_active_status'],
+    tableCompleteness: 'support_amounts_known_goals_table_missing',
+    supportsCandidateCalculation: true,
+    supportsFullCalculation: false,
+    supportsSemanticAmount: true,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [12],
+    missingArtifacts: ['Tabla de Apoyos exacta', 'support metrics thresholds'],
+    warnings: [TA_COUNTING_RULE, 'Full official modeling remains caution until support table evidence is available.'],
+    constitutionalRules: [ECONOMIC_OUTPUT_RULE, TA_COUNTING_RULE, OFFICIAL_STATEMENT_RULE],
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.TRANSITION_BONUS]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.TRANSITION_BONUS,
+    displayName: 'Bono de Transicion',
+    category: PARTNER_CONCEPT_CATEGORIES.TRANSITION,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.PARTIALLY_MODELABLE,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.PARTIAL_BLOCKED,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.PARTIALLY_MODELABLE,
+    evidenceRequirement: ['assigned_portfolio_commissions', 'direct_key_attribution', 'commission_evidence', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['assigned_portfolio_commissions_attributable_to_direct_key'],
+    lifecycleRequirement: ['partner_active_status'],
+    tableCompleteness: 'missing_operational_commission_definition',
+    partialStatus: 'blocked_without_commission_evidence',
+    supportsCandidateCalculation: false,
+    supportsFullCalculation: false,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [5],
+    missingArtifacts: ['operational assigned portfolio commission definition'],
+    warnings: ['Assigned portfolio without commission evidence must block calculation.'],
+    constitutionalRules: [ECONOMIC_OUTPUT_RULE, OFFICIAL_STATEMENT_RULE],
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.CONNECTION_BONUS]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.CONNECTION_BONUS,
+    displayName: 'Bono de Conexion',
+    category: PARTNER_CONCEPT_CATEGORIES.CONNECTION,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.BLOCKED_BY_MISSING_TABLE,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.BLOCKED_BY_MISSING_TABLE,
+    evidenceRequirement: ['advisor_activation_event', 'complete_month_2_3_policy_amount_table_for_full_modeling', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['activation_semantic_event_only_until_table_complete'],
+    lifecycleRequirement: ['advisor_connected_or_activation_event'],
+    tableCompleteness: 'month_2_3_table_missing',
+    partialStatus: 'semantic_7500_only',
+    supportsCandidateCalculation: false,
+    supportsFullCalculation: false,
+    supportsSemanticAmount: true,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [10],
+    missingArtifacts: ['complete policy count to amount table for months 2-3'],
+    warnings: ['$7,500 alta is semantic only and not payout truth.'],
+    constitutionalRules: ['Semantic amount is not payout truth.', OFFICIAL_STATEMENT_RULE],
+    metadata: { semanticAmounts: { activation: 7500 } },
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.DEVELOPMENT_BONUS]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.DEVELOPMENT_BONUS,
+    displayName: 'Bono de Desarrollo',
+    category: PARTNER_CONCEPT_CATEGORIES.DEVELOPMENT,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.EXAMPLE_ONLY,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.EXAMPLE_ONLY,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.NOT_APPLICABLE_UNTIL_MODELED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.EXAMPLE_ONLY,
+    evidenceRequirement: ['complete_policy_amount_table_required_before_modeling'],
+    economicInputRequirement: ['none_until_modeled'],
+    lifecycleRequirement: ['not_applicable_until_modeled'],
+    tableCompleteness: 'example_only_table_missing',
+    partialStatus: 'example_only',
+    supportsCandidateCalculation: false,
+    supportsFullCalculation: false,
+    supportsSemanticAmount: false,
+    supportsPayoutTruthGate: false,
+    requiresOfficialStatementForPayout: false,
+    sourcePages: [10, 17],
+    missingArtifacts: ['complete policy count to monthly amount table'],
+    warnings: ['4+ policies = $15,000 is an example only and must not become a calculation table.'],
+    constitutionalRules: ['Example-only is never payout truth.', 'No invented bonus rules.'],
+    metadata: { exampleOnly: { policyCountLabel: '4+', monthlyAmount: 15000 } },
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.PARTNER_PROMOTION_BONUS]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.PARTNER_PROMOTION_BONUS,
+    displayName: 'Bono de Alta Partner',
+    category: PARTNER_CONCEPT_CATEGORIES.PROMOTION,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.BLOCKED_BY_MISSING_TABLE,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.BLOCKED_BY_MISSING_TABLE,
+    evidenceRequirement: ['partner_promotion_event', 'Alta Partner table', 'support_metrics_definition', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['promotion_semantic_event_only_until_table_complete'],
+    lifecycleRequirement: ['promoted_partner_active_status'],
+    tableCompleteness: 'Alta Partner table missing',
+    partialStatus: 'semantic_schedule_only',
+    supportsCandidateCalculation: false,
+    supportsFullCalculation: false,
+    supportsSemanticAmount: true,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
+    sourcePages: [11],
+    missingArtifacts: ['Tabla de Alta Partner', 'support metrics definition'],
+    warnings: ['$300,000 / $60,000 / $20,000 x12 schedule is semantic only and not payout truth.'],
+    constitutionalRules: ['Semantic amount is not payout truth.', OFFICIAL_STATEMENT_RULE],
+    metadata: { semanticAmounts: { total: 300000, initial: 60000, monthly: 20000, payments: 12 } },
+  }),
+  [PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN]: entry({
+    conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.UNKNOWN,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.NOT_CALCULABLE,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.BLOCKED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.UNKNOWN,
+    tableCompleteness: 'unknown',
+    partialStatus: 'blocked_unknown_concept',
+    missingArtifacts: ['known conceptKey'],
+    warnings: ['Unknown concept must not default to a real Partner compensation concept.'],
+    constitutionalRules: ['Unknown is not zero.', 'Unknown concept is not payout truth.'],
+  }),
+});
+
+const EXPLICIT_ALIASES = Object.freeze({
+  'productivity_base': PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTIVITY_BASE,
+  'productivity_multiplier': PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTIVITY_MULTIPLIER,
+  'production_bonus': PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTION_BONUS,
+  'activity_bonus': PARTNER_COMPENSATION_CONCEPT_KEYS.ACTIVITY_BONUS,
+  'fixed_support': PARTNER_COMPENSATION_CONCEPT_KEYS.FIXED_SUPPORT,
+  'transition_bonus': PARTNER_COMPENSATION_CONCEPT_KEYS.TRANSITION_BONUS,
+  'connection_bonus': PARTNER_COMPENSATION_CONCEPT_KEYS.CONNECTION_BONUS,
+  'development_bonus': PARTNER_COMPENSATION_CONCEPT_KEYS.DEVELOPMENT_BONUS,
+  'partner_promotion_bonus': PARTNER_COMPENSATION_CONCEPT_KEYS.PARTNER_PROMOTION_BONUS,
+});
+
+const CANONICAL_KEYS = Object.freeze(Object.values(PARTNER_COMPENSATION_CONCEPT_KEYS));
+
+export function normalizePartnerConceptKey(input) {
+  if (typeof input !== 'string') return PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN;
+  const normalized = input.trim().toLowerCase();
+  if (!normalized) return PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN;
+  if (CANONICAL_KEYS.includes(normalized)) return normalized;
+  return EXPLICIT_ALIASES[normalized] || PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN;
+}
+
+export function getPartnerCompensationConceptEntry(conceptKey) {
+  return clone(REGISTRY[normalizePartnerConceptKey(conceptKey)] || REGISTRY[PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN]);
+}
+
+export function listPartnerCompensationConceptEntries() {
+  return CANONICAL_KEYS.map((conceptKey) => getPartnerCompensationConceptEntry(conceptKey));
+}
+
+export function isPartnerConceptKnown(conceptKey) {
+  return normalizePartnerConceptKey(conceptKey) !== PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN;
+}
+
+export function isPartnerConceptCandidateCalculable(conceptKey) {
+  return getPartnerCompensationConceptEntry(conceptKey).supportsCandidateCalculation === true;
+}
+
+export function isPartnerConceptFullCalculable(conceptKey) {
+  return getPartnerCompensationConceptEntry(conceptKey).supportsFullCalculation === true;
+}
+
+export function isPartnerConceptPartial(conceptKey) {
+  return [
+    PARTNER_CONCEPT_CALCULATION_MODES.PARTIAL_BLOCKED,
+    PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY,
+    PARTNER_CONCEPT_CALCULATION_MODES.EXAMPLE_ONLY,
+  ].includes(getPartnerCompensationConceptEntry(conceptKey).calculationMode);
+}
+
+export function isPartnerConceptExampleOnly(conceptKey) {
+  return getPartnerCompensationConceptEntry(conceptKey).calculationMode === PARTNER_CONCEPT_CALCULATION_MODES.EXAMPLE_ONLY;
+}
+
+export function requiresOfficialStatementForPartnerPayout(conceptKey) {
+  return getPartnerCompensationConceptEntry(conceptKey).requiresOfficialStatementForPayout === true;
+}
+
+export { PARTNER_COMPENSATION_CONCEPT_KEYS };

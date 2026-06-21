@@ -44,6 +44,7 @@ const commands = [
   ['node', ['tests/partner-activity-bonus-contract-test.js']],
   ['node', ['tests/partner-fixed-support-contract-test.js']],
   ['node', ['tests/partner-partial-bonus-contracts-test.js']],
+  ['node', ['tests/partner-compensation-concept-registry-test.js']],
   ['node', ['tests/partner-safe-calculation-result-test.js']],
   ['node', ['tests/partner-productivity-base-calculator-test.js']],
   ['node', ['tests/partner-productivity-multiplier-calculator-test.js']],
