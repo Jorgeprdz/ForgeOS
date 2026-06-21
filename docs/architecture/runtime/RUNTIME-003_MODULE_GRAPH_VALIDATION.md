@@ -5,7 +5,7 @@ Status: EXECUTABLE VALIDATION / NO FIXES
 
 ## Executive Summary
 
-Scanned 733 root JavaScript files and found 251 import edges.
+Scanned 741 root JavaScript files and found 251 import edges.
 
 Executability verdict: `EXECUTABLE`
 
@@ -15,7 +15,7 @@ No runtime files were modified, no imports were rewritten, and no files were ren
 
 | Metric | Count |
 | --- | --- |
-| Total JS files scanned | 733 |
+| Total JS files scanned | 741 |
 | Total imports found | 251 |
 | Missing targets | 0 |
 | Missing exports | 0 |
