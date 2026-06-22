@@ -13,6 +13,7 @@ function hasNumber(value) {
 
 export function calculatePartnerActivityBonusCandidate({
   assessment = null,
+  rulePack = null,
   qualifiedAdvisorStatus = null,
   advisorCareerMonth = null,
   validLifeGmmPolicyCount = null,
@@ -22,6 +23,7 @@ export function calculatePartnerActivityBonusCandidate({
   period = null,
 } = {}) {
   const activityAssessment = assessment || assessPartnerActivityBonus({
+    rulePack,
     qualifiedAdvisorStatus,
     advisorCareerMonth,
     validLifeGmmPolicyCount,

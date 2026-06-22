@@ -9,6 +9,12 @@ import {
   calculatePartnerProductionBonusCandidate,
 } from '../compensation/partner-manager/partner-production-bonus-calculator.js';
 
+import {
+  loadPartner2026RulePack,
+} from '../compensation/partner-manager/partner-2026-rule-pack-loader.js';
+
+const rulePack = loadPartner2026RulePack();
+
 const economicOutput = createAdvisorEconomicOutput({
   advisorId: 'ADV_2',
   totalCommissions: 50000,
@@ -16,6 +22,7 @@ const economicOutput = createAdvisorEconomicOutput({
 });
 
 const nueva = calculatePartnerProductionBonusCandidate({
+  rulePack,
   nonQualifiedAdvisorEconomicOutput: economicOutput,
   organizationType: 'Nueva Organización',
   unitLIMRA: 0.78,
@@ -27,6 +34,7 @@ assert.equal(nueva.candidatePercentage, 0.135);
 assert.equal(nueva.candidateAmount, 13500);
 
 const consolidados = calculatePartnerProductionBonusCandidate({
+  rulePack,
   nonQualifiedAdvisorEconomicOutput: economicOutput,
   organizationType: 'Consolidados',
   unitLIMRA: 0.78,

@@ -13,6 +13,7 @@ function hasNumber(value) {
 
 export function calculatePartnerProductionBonusCandidate({
   assessment = null,
+  rulePack = null,
   nonQualifiedAdvisorEconomicOutput = null,
   organizationType = null,
   unitLIMRA = null,
@@ -21,6 +22,7 @@ export function calculatePartnerProductionBonusCandidate({
   validEconomicBaseAmount = null,
 } = {}) {
   const productionAssessment = assessment || assessPartnerProductionBonus({
+    rulePack,
     nonQualifiedAdvisorEconomicOutput,
     organizationType,
     unitLIMRA,

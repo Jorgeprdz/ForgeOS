@@ -7,6 +7,15 @@ import {
   assessPartnerTransitionBonus,
 } from '../compensation/partner-manager/partner-partial-bonus-contracts.js';
 
+import {
+  loadPartner2026RulePack,
+} from '../compensation/partner-manager/partner-2026-rule-pack-loader.js';
+
+const rulePack = loadPartner2026RulePack();
+const connectionActivationAmount = rulePack.concepts['connection-bonus'].semanticAmounts.advisorOnboarding;
+const developmentLastScale = rulePack.concepts['development-bonus'].policyScale.at(-1);
+const promotionAmounts = rulePack.concepts['partner-promotion-bonus'].semanticAmounts;
+
 const transition = assessPartnerTransitionBonus({
   directKeyAttribution: true,
 });
@@ -16,22 +25,22 @@ assert.equal(transition.amountCandidate, null);
 
 const connection = assessPartnerConnectionBonus();
 assert.equal(connection.calculationAllowed, false);
-assert.equal(connection.metadata.activationSemanticAmount, 7500);
+assert.equal(connection.metadata.activationSemanticAmount, connectionActivationAmount);
 assert.ok(connection.blockedReasons.includes('blocked_by_missing_table'));
 assert.equal(connection.payoutTruth, false);
 
 const development = assessPartnerDevelopmentBonus();
-assert.equal(development.readiness, 'example_only');
+assert.equal(development.readiness, 'ready_for_contract_with_caution');
 assert.equal(development.calculationAllowed, false);
-assert.equal(development.metadata.exampleOnly.monthlyAmount, 15000);
-assert.ok(development.blockedReasons.includes('example_only_not_formula'));
+assert.equal(development.metadata.exampleOnly.monthlyAmount, developmentLastScale.amount);
+assert.deepEqual(development.blockedReasons, []);
 
 const promotion = assessPartnerPromotionBonus();
 assert.equal(promotion.calculationAllowed, false);
-assert.equal(promotion.metadata.totalSemanticAmount, 300000);
-assert.equal(promotion.metadata.initialPayment, 60000);
-assert.equal(promotion.metadata.monthlyPayment, 20000);
-assert.equal(promotion.metadata.monthlyPayments, 12);
+assert.equal(promotion.metadata.totalSemanticAmount, promotionAmounts.total);
+assert.equal(promotion.metadata.initialPayment, promotionAmounts.initial);
+assert.equal(promotion.metadata.monthlyPayment, promotionAmounts.monthly);
+assert.equal(promotion.metadata.monthlyPayments, promotionAmounts.monthlyPayments);
 assert.ok(promotion.blockedReasons.includes('blocked_by_missing_table'));
 assert.equal(promotion.amountCandidate, null);
 

@@ -1,0 +1,451 @@
+{
+  "schemaVersion": "0.1.0",
+  "rulePackId": "smnyl_partner_compensation_2026",
+  "title": "SMNYL Partner Compensation 2026 - Canonical Rule Draft",
+  "status": "official_source_manual_extraction",
+  "source": {
+    "fileName": "2026_Partner_Compensation.pdf",
+    "sourceType": "official_compensation_booklet",
+    "sourceTruth": true,
+    "notes": [
+      "The PDF is treated as the official Partner 2026 booklet per user confirmation.",
+      "Visible rules can be modeled.",
+      "Rules that reference tables not visible/extracted remain blocked_by_missing_table.",
+      "Official rules allow candidate calculations; payout truth still requires official statement evidence."
+    ]
+  },
+  "constitutionalLocks": [
+    "Partner compensation must consume advisor economic outputs, not raw advisor activity.",
+    "El precontrato cuenta para apoyo.",
+    "La conexión libera economía.",
+    "El estado oficial confirma payout truth.",
+    "La póliza define la regla.",
+    "El pago dispara la comisión.",
+    "El estado de comisiones confirma payout truth.",
+    "Unknown is not zero.",
+    "Blocked is not zero.",
+    "Not modeled is not zero.",
+    "Hidden by scope is not zero.",
+    "Forecast is not payout truth.",
+    "Calculated candidate is not payout truth.",
+    "Semantic amount is not payout truth.",
+    "OCR/PDF/AI extraction is not payout truth.",
+    "Official statement evidence confirms payout truth."
+  ],
+  "globalRules": {
+    "currency": "MXN",
+    "payoutTruthRule": {
+      "candidateCalculationIsPayoutTruth": false,
+      "requiresOfficialStatementLine": true,
+      "officialEvidenceRequiredForPaidConfirmed": true
+    },
+    "advisorQualifiedDefinition": {
+      "sourcePages": [
+        4
+      ],
+      "status": "modeled",
+      "requires": {
+        "averageMonthlyInitialCommissionsGreaterThan": 9000,
+        "LIMRA": "meets_minimum",
+        "IGC": "meets_minimum",
+        "advisorActiveStatus": "active_or_connected_active"
+      }
+    },
+    "partnerClassMapping": {
+      "sourcePages": [
+        6
+      ],
+      "status": "partially_modeled",
+      "knownMappings": [
+        {
+          "class": "CC",
+          "careerMonthRange": {
+            "from": 1,
+            "to": 12
+          }
+        },
+        {
+          "class": "1C",
+          "careerMonthRange": {
+            "from": 13,
+            "to": 24
+          }
+        }
+      ],
+      "unknownMappings": [
+        {
+          "class": "2C",
+          "reason": "visible in table but career month range not explicitly extracted"
+        },
+        {
+          "class": "3C",
+          "reason": "visible in table but career month range not explicitly extracted"
+        },
+        {
+          "class": "consolidados",
+          "reason": "visible in table but career month range not explicitly extracted"
+        }
+      ],
+      "forgeBehavior": {
+        "ifClassCannotBeDerived": "blocked_by_missing_partner_class",
+        "allowExplicitPartnerClassInput": true
+      }
+    }
+  },
+  "concepts": {
+    "productivity-base": {
+      "displayName": "Productividad Base",
+      "sourcePages": [
+        6
+      ],
+      "status": "modeled",
+      "frequency": "monthly_or_period_candidate_based_on_input",
+      "calculationMode": "full_candidate",
+      "payoutGateMode": "official_statement_required",
+      "requires": [
+        "qualifiedAdvisorEconomicStatus",
+        "averageMonthlyInitialCommissions",
+        "partnerClass",
+        "paidAppliedEconomicEvidence",
+        "advisorInitialCommissions"
+      ],
+      "table": {
+        "bands": [
+          {
+            "minAverageMonthlyInitialCommissions": 9000,
+            "maxAverageMonthlyInitialCommissions": 18000,
+            "rates": {
+              "CC": 0.25,
+              "1C": 0.3,
+              "2C": 0.135,
+              "3C": 0.135,
+              "consolidados": 0.135
+            }
+          },
+          {
+            "minAverageMonthlyInitialCommissions": 18001,
+            "maxAverageMonthlyInitialCommissions": 30000,
+            "rates": {
+              "CC": 0.3,
+              "1C": 0.35,
+              "2C": 0.16,
+              "3C": 0.16,
+              "consolidados": 0.16
+            }
+          },
+          {
+            "minAverageMonthlyInitialCommissions": 30001,
+            "maxAverageMonthlyInitialCommissions": null,
+            "rates": {
+              "CC": 0.35,
+              "1C": 0.4,
+              "2C": 0.185,
+              "3C": 0.185,
+              "consolidados": 0.185
+            }
+          }
+        ]
+      },
+      "blockedReasons": [
+        "blocked_by_missing_partner_class",
+        "blocked_by_missing_qualified_advisor_status",
+        "blocked_by_missing_initial_commission_evidence",
+        "blocked_by_missing_paid_applied_evidence",
+        "blocked_by_activity_only_input"
+      ]
+    },
+    "productivity-multiplier": {
+      "displayName": "Multiplicador",
+      "sourcePages": [
+        7
+      ],
+      "status": "modeled",
+      "frequency": "period_candidate_based_on_input",
+      "calculationMode": "full_candidate",
+      "payoutGateMode": "official_statement_required",
+      "requires": [
+        "productivityBaseCandidate",
+        "qualifiedAdvisorCount"
+      ],
+      "table": [
+        {
+          "qualifiedAdvisorCount": 3,
+          "multiplierRate": 0.3
+        },
+        {
+          "qualifiedAdvisorCount": 5,
+          "multiplierRate": 0.5
+        },
+        {
+          "qualifiedAdvisorCount": 10,
+          "multiplierRate": 1.0
+        }
+      ],
+      "TARequirement": {
+        "appliesTo": "100_percent_multiplier",
+        "requiresTACountingEvent": true,
+        "withoutTACountingEvent": {
+          "rule": "pays_at_80_percent",
+          "rateAppliedToTotalCandidate": 0.8
+        },
+        "semanticClarification": "TAWinnerCount means TA-counting signed precontract/advisor event for Partner support qualification, not confirmed payout."
+      },
+      "notes": [
+        "Visible multiplier rule is based on count of qualified advisors.",
+        "Do not block multiplier by Partner career month unless a specific official support table requires it."
+      ]
+    },
+    "production-bonus": {
+      "displayName": "Bono de Producción",
+      "sourcePages": [
+        8
+      ],
+      "status": "modeled",
+      "frequency": "period_candidate_based_on_input",
+      "calculationMode": "full_candidate",
+      "payoutGateMode": "official_statement_required",
+      "requires": [
+        "nonQualifiedAdvisorEconomicOutput",
+        "paidAppliedEconomicEvidence",
+        "unitLIMRA",
+        "unitIGC",
+        "organizationType"
+      ],
+      "rates": {
+        "nueva_organizacion": 0.135,
+        "consolidados": 0.07
+      },
+      "minimumIndexes": {
+        "LIMRA": 78,
+        "IGC": 86
+      }
+    },
+    "activity-bonus": {
+      "displayName": "Bono de Actividad",
+      "sourcePages": [
+        9
+      ],
+      "status": "modeled_with_caution",
+      "frequency": "monthly",
+      "calculationMode": "candidate_with_caution",
+      "payoutGateMode": "official_statement_required",
+      "requires": [
+        "qualifiedAdvisorStatus",
+        "advisorMinimumAgeThreeMonths",
+        "validLifeGmmPolicyCount",
+        "paidAppliedPolicyEvidence"
+      ],
+      "policyScale": [
+        {
+          "policies": 2,
+          "rate": 0.1
+        },
+        {
+          "policies": 3,
+          "rate": 0.15
+        },
+        {
+          "policies": 4,
+          "rate": 0.2
+        },
+        {
+          "policies": 5,
+          "rate": 0.25
+        },
+        {
+          "policies": "6+",
+          "rate": 0.3
+        }
+      ]
+    },
+    "fixed-support": {
+      "displayName": "Apoyos Fijos / Bono de Apoyo",
+      "sourcePages": [
+        12
+      ],
+      "status": "modeled_with_caution",
+      "frequency": "semester",
+      "calculationMode": "candidate_with_caution",
+      "payoutGateMode": "official_statement_or_account_statement_required",
+      "supportAmountsBySemester": [
+        {
+          "semester": 1,
+          "amount": 65000
+        },
+        {
+          "semester": 2,
+          "amount": 54000
+        },
+        {
+          "semester": 3,
+          "amount": 43500
+        },
+        {
+          "semester": 4,
+          "amount": 32500
+        },
+        {
+          "semester": 5,
+          "amount": 21500
+        },
+        {
+          "semester": 6,
+          "amount": 11000
+        }
+      ],
+      "requires": [
+        "partnerCareerMonth",
+        "semesterIndex",
+        "accumulatedCommissionGoalsEvidence",
+        "TACountingEventEvidence",
+        "supportTableEvidence"
+      ],
+      "blockedReasons": [
+        "blocked_by_missing_support_table",
+        "blocked_by_missing_accumulated_commission_goal",
+        "blocked_by_missing_accumulated_commission_evidence",
+        "blocked_by_missing_TA_counting_event_evidence",
+        "blocked_by_partner_lifecycle"
+      ]
+    },
+    "transition-bonus": {
+      "displayName": "Bono de Transición",
+      "sourcePages": [
+        5
+      ],
+      "status": "partially_modelable",
+      "calculationMode": "partial_blocked",
+      "payoutGateMode": "official_statement_required",
+      "requires": [
+        "assignedPortfolioCommissions",
+        "directKeyAttribution",
+        "commissionEvidence"
+      ]
+    },
+    "connection-bonus": {
+      "displayName": "Bono de Conexión",
+      "sourcePages": [
+        10
+      ],
+      "status": "partially_modelable",
+      "calculationMode": "semantic_and_partial_candidate",
+      "payoutGateMode": "official_statement_required",
+      "semanticAmounts": {
+        "advisorOnboarding": 7500
+      },
+      "monthlyPolicyScale": [
+        {
+          "advisorMonths": [
+            2,
+            3
+          ],
+          "policies": 3,
+          "amount": 5000
+        },
+        {
+          "advisorMonths": [
+            2,
+            3
+          ],
+          "policies": 4,
+          "amount": 9000
+        },
+        {
+          "advisorMonths": [
+            2,
+            3
+          ],
+          "policies": 5,
+          "amount": 15000
+        },
+        {
+          "advisorMonths": [
+            2,
+            3
+          ],
+          "policies": "6+",
+          "amount": 20000
+        }
+      ],
+      "requires": [
+        "advisorOnboardingEvidence",
+        "advisorMonth",
+        "validPolicyCount",
+        "paidAppliedPolicyEvidence"
+      ]
+    },
+    "development-bonus": {
+      "displayName": "Bono de Desarrollo",
+      "sourcePages": [
+        10,
+        17
+      ],
+      "status": "modeled_with_caution",
+      "calculationMode": "candidate_with_caution",
+      "payoutGateMode": "official_statement_required",
+      "advisorMonthRange": {
+        "from": 4,
+        "to": 15
+      },
+      "policyScale": [
+        {
+          "policies": 2,
+          "amount": 5000
+        },
+        {
+          "policies": 3,
+          "amount": 9000
+        },
+        {
+          "policies": "4+",
+          "amount": 15000
+        }
+      ],
+      "requires": [
+        "advisorMonth",
+        "validPolicyCount",
+        "paidAppliedPolicyEvidence"
+      ]
+    },
+    "partner-promotion-bonus": {
+      "displayName": "Bono de Alta Partner",
+      "sourcePages": [
+        11
+      ],
+      "status": "partially_modelable",
+      "calculationMode": "semantic_only",
+      "payoutGateMode": "official_statement_required",
+      "semanticAmounts": {
+        "total": 300000,
+        "initial": 60000,
+        "monthly": 20000,
+        "monthlyPayments": 12
+      },
+      "requires": [
+        "partnerPromotionEvent",
+        "newPartnerSupportMetricsEvidence",
+        "officialStatementEvidence"
+      ]
+    }
+  },
+  "implementationGuidanceForCodex": {
+    "mustUpdate": [
+      "Treat the Partner 2026 PDF as official rule source.",
+      "Do not hardcode Partner career-month support requirements unless they come from a visible official support table or explicit config.",
+      "Productivity multiplier is based on qualified advisor count: 3, 5, 10.",
+      "Do not block multiplier by Partner career month unless a specific official support table requires it.",
+      "Fixed support must be gated by semester, accumulated commission goals, TA-counting evidence, and support table evidence.",
+      "Activity bonus frequency should be modeled as monthly.",
+      "Development bonus can use policy scale 2=$5,000, 3=$9,000, 4+=$15,000 for advisor months 4-15.",
+      "Connection bonus can use month 2-3 policy scale 3=$5,000, 4=$9,000, 5=$15,000, 6+=$20,000.",
+      "Payout truth always requires official statement evidence."
+    ],
+    "mustNotDo": [
+      "Do not convert rule candidates into paid_confirmed.",
+      "Do not treat TA-counting precontracts as payout.",
+      "Do not sum blocked/unknown/not_modeled as zero.",
+      "Do not use activity logs as commission evidence.",
+      "Do not use generic bonus aliases to route to a real concept."
+    ]
+  }
+}

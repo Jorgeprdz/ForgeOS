@@ -2,7 +2,17 @@ import {
   ADVISOR_ECONOMIC_OUTPUT_STATUSES,
 } from './advisor-economic-output.js';
 
-export const DEFAULT_PARTNER_2026_QUALIFIED_COMMISSION_THRESHOLD = 9000;
+import {
+  loadPartner2026RulePack,
+} from './partner-2026-rule-pack-loader.js';
+
+const DEFAULT_PARTNER_2026_RULE_PACK = loadPartner2026RulePack();
+
+export const DEFAULT_PARTNER_2026_QUALIFIED_COMMISSION_THRESHOLD = DEFAULT_PARTNER_2026_RULE_PACK
+  .globalRules
+  .advisorQualifiedDefinition
+  .requires
+  .averageMonthlyInitialCommissionsGreaterThan;
 
 export const QUALIFIED_ADVISOR_ECONOMIC_STATUSES = Object.freeze({
   QUALIFIED_CONFIRMED: 'qualified_confirmed',

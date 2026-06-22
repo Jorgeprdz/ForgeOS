@@ -17,6 +17,7 @@ function hasNumber(value) {
 
 export function calculatePartnerProductivityBaseCandidate({
   assessment = null,
+  rulePack = null,
   advisorEconomicOutputs = [],
   qualifiedAdvisorEconomicStatuses = [],
   averageMonthlyInitialCommissions = null,
@@ -26,6 +27,7 @@ export function calculatePartnerProductivityBaseCandidate({
   commissionBasis = null,
 } = {}) {
   const productivityAssessment = assessment || assessPartnerProductivityBase({
+    rulePack,
     advisorEconomicOutputs,
     qualifiedAdvisorEconomicStatuses,
     averageMonthlyInitialCommissions,

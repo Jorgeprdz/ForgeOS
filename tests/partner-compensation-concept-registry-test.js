@@ -30,7 +30,11 @@ assert.deepEqual(productivityBase.sourcePages, [6]);
 
 const multiplier = getPartnerCompensationConceptEntry('productivity-multiplier');
 assert.equal(multiplier.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.FULL_CANDIDATE);
-assert.ok(multiplier.evidenceRequirement.includes('TA_counting_event_evidence'));
+assert.ok(multiplier.evidenceRequirement.includes('TA_counting_event_evidence_for_100_percent'));
+assert.equal(multiplier.metadata.requiresPartnerCareerMonthSupportGate, false);
+assert.equal(multiplier.metadata.requiresAccumulatedCommissionGoal, false);
+assert.equal(multiplier.metadata.requiresQualifiedAdvisorRequirementByCareerMonth, false);
+assert.equal(multiplier.metadata.doNotBlockByPartnerCareerMonthUnlessOfficialConfigSaysSo, true);
 assert.ok(multiplier.constitutionalRules.some((rule) => rule.includes('not confirmed payout')));
 
 const production = getPartnerCompensationConceptEntry('production-bonus');
@@ -43,22 +47,27 @@ const fixedSupport = getPartnerCompensationConceptEntry('fixed-support');
 assert.equal(fixedSupport.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
 assert.equal(fixedSupport.supportsFullCalculation, false);
 assert.ok(fixedSupport.evidenceRequirement.includes('support_table_evidence_for_full_modeling'));
+assert.equal(fixedSupport.metadata.requiresPartnerCareerMonthSupportGate, true);
+assert.equal(fixedSupport.metadata.requiresAccumulatedCommissionGoal, true);
+assert.equal(fixedSupport.metadata.requiresQualifiedAdvisorRequirementByCareerMonth, false);
+assert.equal(fixedSupport.metadata.requiresSupportTableEvidence, true);
 
 const transition = getPartnerCompensationConceptEntry('transition-bonus');
 assert.equal(transition.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.PARTIAL_BLOCKED);
 assert.equal(isPartnerConceptPartial('transition-bonus'), true);
 
 const connection = getPartnerCompensationConceptEntry('connection-bonus');
-assert.equal(connection.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY);
+assert.equal(connection.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
 assert.equal(connection.supportsSemanticAmount, true);
+assert.equal(connection.supportsCandidateCalculation, true);
 assert.equal(connection.supportsFullCalculation, false);
 assert.equal(connection.metadata.semanticAmounts.activation, 7500);
 
 const development = getPartnerCompensationConceptEntry('development-bonus');
-assert.equal(development.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.EXAMPLE_ONLY);
-assert.equal(isPartnerConceptExampleOnly('development-bonus'), true);
-assert.equal(isPartnerConceptFullCalculable('development-bonus'), false);
-assert.equal(isPartnerConceptCandidateCalculable('development-bonus'), false);
+assert.equal(development.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
+assert.equal(isPartnerConceptExampleOnly('development-bonus'), false);
+assert.equal(isPartnerConceptFullCalculable('development-bonus'), true);
+assert.equal(isPartnerConceptCandidateCalculable('development-bonus'), true);
 
 const promotion = getPartnerCompensationConceptEntry('partner-promotion-bonus');
 assert.equal(promotion.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY);
@@ -87,11 +96,11 @@ for (const conceptKey of [
   'fixed-support',
   'transition-bonus',
   'connection-bonus',
+  'development-bonus',
   'partner-promotion-bonus',
 ]) {
   assert.equal(requiresOfficialStatementForPartnerPayout(conceptKey), true);
 }
-assert.equal(requiresOfficialStatementForPartnerPayout('development-bonus'), false);
 
 assert.equal(isPartnerConceptFullCalculable('transition-bonus'), false);
 assert.equal(isPartnerConceptFullCalculable('connection-bonus'), false);

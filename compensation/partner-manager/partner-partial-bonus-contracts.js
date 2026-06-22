@@ -3,6 +3,12 @@ import {
   createPartnerRulePackAssessment,
 } from './rule-pack-readiness.js';
 
+import {
+  getConnectionBonusAmount,
+  getDevelopmentBonusAmount,
+  loadPartner2026RulePack,
+} from './partner-2026-rule-pack-loader.js';
+
 export const PARTNER_PARTIAL_CONCEPT_KEYS = Object.freeze({
   TRANSITION_BONUS: 'transition-bonus',
   CONNECTION_BONUS: 'connection-bonus',
@@ -13,6 +19,8 @@ export const PARTNER_PARTIAL_CONCEPT_KEYS = Object.freeze({
 function hasNumber(value) {
   return value !== null && value !== undefined && Number.isFinite(Number(value));
 }
+
+const DEFAULT_PARTNER_2026_RULE_PACK = loadPartner2026RulePack();
 
 export function assessPartnerTransitionBonus({
   assignedPortfolioCommissions = null,
@@ -40,8 +48,11 @@ export function assessPartnerTransitionBonus({
 }
 
 export function assessPartnerConnectionBonus({
+  rulePack = null,
   hasCompletePolicyAmountTable = false,
 } = {}) {
+  const activeRulePack = rulePack || DEFAULT_PARTNER_2026_RULE_PACK;
+  const activationAmount = getConnectionBonusAmount(activeRulePack, { onboardingEvidence: true }).amount;
   const blockedReasons = hasCompletePolicyAmountTable ? [] : ['blocked_by_missing_table'];
 
   return createPartnerRulePackAssessment({
@@ -50,40 +61,52 @@ export function assessPartnerConnectionBonus({
     calculationAllowed: false,
     requiredInputs: ['advisor_activation_event', 'complete_policy_amount_table'],
     blockedReasons,
-    warnings: ['$7,500 activation amount is semantic only; month 2-3 table remains incomplete.'],
+    warnings: ['Connection bonus amounts are rule-pack candidates, not payout truth.'],
     sourceNotes: ['SMNYL Partner Compensation 2026 page 10.'],
     confidence: 'medium',
-    amountCandidate: 7500,
+    amountCandidate: activationAmount,
     metadata: {
-      activationSemanticAmount: 7500,
-      monthTwoThreeRange: [5000, 20000],
+      rulePackId: activeRulePack?.rulePackId || null,
+      activationSemanticAmount: activationAmount,
+      monthTwoThreeScale: activeRulePack?.concepts?.['connection-bonus']?.monthlyPolicyScale || null,
     },
   });
 }
 
-export function assessPartnerDevelopmentBonus() {
+export function assessPartnerDevelopmentBonus({
+  rulePack = null,
+} = {}) {
+  const activeRulePack = rulePack || DEFAULT_PARTNER_2026_RULE_PACK;
+  const developmentScale = activeRulePack?.concepts?.['development-bonus']?.policyScale || [];
+  const exampleRow = developmentScale[developmentScale.length - 1] || null;
   return createPartnerRulePackAssessment({
     conceptKey: PARTNER_PARTIAL_CONCEPT_KEYS.DEVELOPMENT_BONUS,
-    readiness: PARTNER_RULE_PACK_READINESS.EXAMPLE_ONLY,
+    readiness: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT_WITH_CAUTION,
     calculationAllowed: false,
     requiredInputs: ['complete_policy_amount_table'],
-    blockedReasons: ['blocked_by_missing_table', 'example_only_not_formula'],
-    warnings: ['4+ policies = $15,000 is an example only and must not become a calculation table.'],
+    blockedReasons: [],
+    warnings: ['Development policy scale is modeled from official rule JSON; payout truth still requires official statement.'],
     sourceNotes: ['SMNYL Partner Compensation 2026 pages 10 and 17.'],
-    confidence: 'low',
+    confidence: 'medium',
     metadata: {
+      rulePackId: activeRulePack?.rulePackId || null,
+      policyScale: developmentScale,
+      modeledAmountExample: getDevelopmentBonusAmount(activeRulePack, { advisorMonth: activeRulePack?.concepts?.['development-bonus']?.advisorMonthRange?.from, validPolicyCount: exampleRow?.policies }).amount,
       exampleOnly: {
-        policyCountLabel: '4+',
-        monthlyAmount: 15000,
+        policyCountLabel: exampleRow?.policies || null,
+        monthlyAmount: exampleRow?.amount || null,
       },
     },
   });
 }
 
 export function assessPartnerPromotionBonus({
+  rulePack = null,
   hasAltaPartnerTable = false,
   hasSupportMetricsDefinition = false,
 } = {}) {
+  const activeRulePack = rulePack || DEFAULT_PARTNER_2026_RULE_PACK;
+  const semanticAmounts = activeRulePack?.concepts?.['partner-promotion-bonus']?.semanticAmounts || {};
   const blockedReasons = [];
   if (!hasAltaPartnerTable) blockedReasons.push('blocked_by_missing_table');
   if (!hasSupportMetricsDefinition) blockedReasons.push('blocked_by_missing_support_metrics');
@@ -97,12 +120,12 @@ export function assessPartnerPromotionBonus({
     warnings: ['Semantic payment schedule is preserved; full calculation remains blocked without Alta Partner table.'],
     sourceNotes: ['SMNYL Partner Compensation 2026 page 11.'],
     confidence: 'medium',
-    amountCandidate: 300000,
+    amountCandidate: semanticAmounts.total || null,
     metadata: {
-      totalSemanticAmount: 300000,
-      initialPayment: 60000,
-      monthlyPayment: 20000,
-      monthlyPayments: 12,
+      totalSemanticAmount: semanticAmounts.total || null,
+      initialPayment: semanticAmounts.initial || null,
+      monthlyPayment: semanticAmounts.monthly || null,
+      monthlyPayments: semanticAmounts.monthlyPayments || null,
     },
   });
 }

@@ -13,16 +13,22 @@ function hasNumber(value) {
 
 export function calculatePartnerProductivityMultiplierCandidate({
   assessment = null,
+  rulePack = null,
   productivityBaseCalculation = null,
   qualifiedAdvisorCount = null,
+  supportRequirementGateResult = null,
+  enforceSupportRequirementGate = false,
   taCountingPrecontractCount = null,
   taCountingEventEvidence = false,
   TAWinnerCount = null,
   periodType = null,
 } = {}) {
   const multiplierAssessment = assessment || assessPartnerProductivityMultiplier({
+    rulePack,
     productivityBaseAssessment: productivityBaseCalculation,
     qualifiedAdvisorCount,
+    supportRequirementGateResult,
+    enforceSupportRequirementGate,
     taCountingPrecontractCount,
     taCountingEventEvidence,
     TAWinnerCount,
@@ -41,9 +47,12 @@ export function calculatePartnerProductivityMultiplierCandidate({
   const additionalCandidateAmount = hasNumber(baseAmount) && hasNumber(multiplier)
     ? Number(baseAmount) * Number(multiplier)
     : null;
-  const totalCandidateAmount = hasNumber(baseAmount) && hasNumber(additionalCandidateAmount)
+  const standardTotalCandidateAmount = hasNumber(baseAmount) && hasNumber(additionalCandidateAmount)
     ? Number(baseAmount) + Number(additionalCandidateAmount)
     : null;
+  const totalCandidateAmount = hasNumber(standardTotalCandidateAmount) && hasNumber(multiplierAssessment.metadata?.effectiveTotalCandidateRate)
+    ? standardTotalCandidateAmount * Number(multiplierAssessment.metadata.effectiveTotalCandidateRate)
+    : standardTotalCandidateAmount;
 
   return createPartnerSafeCalculationResult({
     conceptKey: 'productivity-multiplier',
@@ -73,6 +82,7 @@ export function calculatePartnerProductivityMultiplierCandidate({
       appliedTAConstraint: multiplierAssessment.metadata?.taCountingEventEvidence === true,
       createsPartnerEconomicGain: false,
       releasesHeldCommission: false,
+      supportRequirementGateResult,
       assessment: multiplierAssessment,
     },
   });

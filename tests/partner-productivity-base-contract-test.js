@@ -90,6 +90,6 @@ const unknownClass = assessPartnerProductivityBase({
   advisorClass: 'mystery',
   lifecycleGate: { allowed: true },
 });
-assert.ok(unknownClass.blockedReasons.includes('unknown_advisor_class'));
+assert.ok(unknownClass.blockedReasons.includes('blocked_by_missing_partner_class'));
 
 console.log('PASS partner-productivity-base-contract-test');

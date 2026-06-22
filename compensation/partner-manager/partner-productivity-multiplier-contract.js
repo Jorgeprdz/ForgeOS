@@ -3,6 +3,11 @@ import {
   createPartnerRulePackAssessment,
 } from './rule-pack-readiness.js';
 
+import {
+  getProductivityMultiplierRate,
+  loadPartner2026RulePack,
+} from './partner-2026-rule-pack-loader.js';
+
 export const PARTNER_PRODUCTIVITY_MULTIPLIER_CONCEPT_KEY = 'productivity-multiplier';
 export const PARTNER_PRODUCTIVITY_MULTIPLIER_TABLE_VERSION = 'SMNYL_PARTNER_2026_PAGE_7_PRODUCTIVITY_MULTIPLIER';
 export const TA_COUNTING_EVENT_NOTE = 'TAWinnerCount means TA-counting signed precontract/advisor event for Partner support qualification, not confirmed payout.';
@@ -11,17 +16,12 @@ function hasNumber(value) {
   return value !== null && value !== undefined && Number.isFinite(Number(value));
 }
 
-function multiplierForQualifiedCount(count) {
-  if (!hasNumber(count)) return null;
-  if (Number(count) >= 10) return 1;
-  if (Number(count) >= 5) return 0.5;
-  if (Number(count) >= 3) return 0.3;
-  return null;
-}
-
 export function assessPartnerProductivityMultiplier({
+  rulePack = null,
   productivityBaseAssessment = null,
   qualifiedAdvisorCount = null,
+  supportRequirementGateResult = null,
+  enforceSupportRequirementGate = false,
   taCountingPrecontractCount = null,
   supportQualifiedPrecontractCount = null,
   taCountingAdvisorEventCount = null,
@@ -37,12 +37,27 @@ export function assessPartnerProductivityMultiplier({
     blockedReasons.push('missing_base_result');
   }
 
+  if (enforceSupportRequirementGate === true && supportRequirementGateResult?.allowed === false) {
+    blockedReasons.push(...supportRequirementGateResult.blockedReasons);
+    missingInputs.push(...supportRequirementGateResult.missingInputs);
+  } else if (!supportRequirementGateResult && enforceSupportRequirementGate === true) {
+    blockedReasons.push('blocked_by_missing_support_requirement_gate');
+    missingInputs.push('supportRequirementGateResult');
+  } else if (supportRequirementGateResult?.allowed === false) {
+    warnings.push('support_requirement_gate_ignored_for_multiplier_without_explicit_official_config');
+  }
+
   if (!hasNumber(qualifiedAdvisorCount)) {
     missingInputs.push('qualifiedAdvisorCount');
     blockedReasons.push('missing_qualified_advisor_status');
   }
 
-  const percentageCandidate = multiplierForQualifiedCount(qualifiedAdvisorCount);
+  const activeRulePack = rulePack || loadPartner2026RulePack();
+  const multiplierRateResult = getProductivityMultiplierRate(activeRulePack, {
+    qualifiedAdvisorCount,
+    taCountingEventEvidence,
+  });
+  const percentageCandidate = multiplierRateResult.multiplierRate;
   if (hasNumber(qualifiedAdvisorCount) && percentageCandidate === null) {
     blockedReasons.push('below_minimum_qualified_advisors');
   }
@@ -55,15 +70,8 @@ export function assessPartnerProductivityMultiplier({
   ].find(hasNumber);
 
   let effectiveMultiplierCandidate = percentageCandidate;
-  if (percentageCandidate === 1) {
-    if (!hasNumber(normalizedTaCountingCount) || taCountingEventEvidence !== true) {
-      blockedReasons.push('blocked_by_missing_TA_counting_event_evidence');
-      missingInputs.push('taCountingEventEvidence');
-    } else if (Number(normalizedTaCountingCount) < 1) {
-      effectiveMultiplierCandidate = 0.8;
-      warnings.push('100_percent_multiplier_requires_TA_counting_event; without support-qualified event only 80_percent_total_candidate applies.');
-    }
-  }
+  let effectiveTotalCandidateRate = multiplierRateResult?.effectiveTotalCandidateRate || null;
+  warnings.push(...(multiplierRateResult.warnings || []));
 
   return createPartnerRulePackAssessment({
     conceptKey: PARTNER_PRODUCTIVITY_MULTIPLIER_CONCEPT_KEY,
@@ -71,7 +79,7 @@ export function assessPartnerProductivityMultiplier({
       ? PARTNER_RULE_PACK_READINESS.BLOCKED_BY_MISSING_TA_RESULT
       : PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT,
     calculationAllowed: true,
-    requiredInputs: ['productivityBaseAssessment', 'qualifiedAdvisorCount', 'taCountingEventEvidence when 10+ qualified advisors'],
+    requiredInputs: ['productivityBaseAssessment', 'qualifiedAdvisorCount', 'supportRequirementGateResult', 'taCountingEventEvidence when 10+ qualified advisors'],
     missingInputs,
     blockedReasons,
     warnings,
@@ -93,6 +101,10 @@ export function assessPartnerProductivityMultiplier({
       createsPartnerEconomicGain: false,
       releasesHeldCommission: false,
       periodType,
+      effectiveTotalCandidateRate,
+      rulePackId: activeRulePack?.rulePackId || null,
+      enforceSupportRequirementGate,
+      supportRequirementGateResult,
     },
   });
 }

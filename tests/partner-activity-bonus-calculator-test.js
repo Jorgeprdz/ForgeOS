@@ -13,6 +13,12 @@ import {
   calculatePartnerActivityBonusCandidate,
 } from '../compensation/partner-manager/partner-activity-bonus-calculator.js';
 
+import {
+  loadPartner2026RulePack,
+} from '../compensation/partner-manager/partner-2026-rule-pack-loader.js';
+
+const rulePack = loadPartner2026RulePack();
+
 const qualifiedAdvisorStatus = evaluateQualifiedAdvisorEconomicStatus({
   advisorId: 'ADV_1',
   averageMonthlyInitialCommissions: 12000,
@@ -27,6 +33,7 @@ const qualifiedAdvisorStatus = evaluateQualifiedAdvisorEconomicStatus({
 const expected = new Map([[2, 0.10], [3, 0.15], [4, 0.20], [5, 0.25], [6, 0.30], [7, 0.30]]);
 for (const [count, percentage] of expected) {
   const result = calculatePartnerActivityBonusCandidate({
+    rulePack,
     qualifiedAdvisorStatus,
     advisorCareerMonth: 3,
     validLifeGmmPolicyCount: count,

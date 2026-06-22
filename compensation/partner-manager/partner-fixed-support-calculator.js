@@ -9,7 +9,13 @@ import {
 
 export function calculatePartnerFixedSupportCandidate({
   assessment = null,
+  rulePack = null,
   semesterIndex = null,
+  partnerCareerMonth = null,
+  supportRequirementGateResult = null,
+  strictSupportRequirementGate = false,
+  accumulatedCommissions = null,
+  accumulatedCommissionGoal = null,
   accumulatedCommissionGoalsEvidence = false,
   taCountingPrecontractCount = null,
   taCountingEventEvidence = false,
@@ -19,7 +25,13 @@ export function calculatePartnerFixedSupportCandidate({
   rawActivityOnly = false,
 } = {}) {
   const fixedSupportAssessment = assessment || assessPartnerFixedSupport({
+    rulePack,
     semesterIndex,
+    partnerCareerMonth,
+    supportRequirementGateResult,
+    strictSupportRequirementGate,
+    accumulatedCommissions,
+    accumulatedCommissionGoal,
     accumulatedCommissionGoalsEvidence,
     taCountingPrecontractCount,
     taCountingEventEvidence,
@@ -33,7 +45,7 @@ export function calculatePartnerFixedSupportCandidate({
   if (supportTableEvidenceRequired && supportTableEvidence !== true && !blockedReasons.includes('blocked_by_missing_table')) {
     blockedReasons.push('blocked_by_missing_table');
   }
-  if (partnerLifecycleStatus && partnerLifecycleStatus !== 'connected_active' && partnerLifecycleStatus !== 'active') {
+  if (partnerLifecycleStatus && !['connected_active', 'active', 'partner_active', 'manager_active'].includes(partnerLifecycleStatus)) {
     blockedReasons.push('blocked_by_missing_lifecycle');
   }
 
@@ -53,7 +65,7 @@ export function calculatePartnerFixedSupportCandidate({
     calculationAllowed: true,
     calculatedCandidate: true,
     candidateAmount: fixedSupportAssessment.amountCandidate,
-    inputBasis: `semester:${semesterIndex}`,
+    inputBasis: `semester:${fixedSupportAssessment.metadata?.semesterIndex ?? semesterIndex}`,
     blockedReasons,
     missingInputs,
     warnings: fixedSupportAssessment.warnings,
@@ -65,6 +77,7 @@ export function calculatePartnerFixedSupportCandidate({
       taCountingPrecontractCountsForSupportOnly: true,
       createsPartnerEconomicGain: false,
       releasesHeldCommission: false,
+      supportRequirementGateResult: fixedSupportAssessment.metadata?.supportRequirementGateResult || supportRequirementGateResult,
     },
   });
 }

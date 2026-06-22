@@ -7,6 +7,11 @@ import {
   createPartnerRulePackAssessment,
 } from './rule-pack-readiness.js';
 
+import {
+  getActivityBonusRate,
+  loadPartner2026RulePack,
+} from './partner-2026-rule-pack-loader.js';
+
 export const PARTNER_ACTIVITY_BONUS_CONCEPT_KEY = 'activity-bonus';
 export const PARTNER_ACTIVITY_BONUS_TABLE_VERSION = 'SMNYL_PARTNER_2026_PAGE_9_ACTIVITY_BONUS';
 
@@ -14,17 +19,8 @@ function hasNumber(value) {
   return value !== null && value !== undefined && Number.isFinite(Number(value));
 }
 
-function percentageForPolicyCount(count) {
-  if (!hasNumber(count)) return null;
-  if (Number(count) >= 6) return 0.30;
-  if (Number(count) === 5) return 0.25;
-  if (Number(count) === 4) return 0.20;
-  if (Number(count) === 3) return 0.15;
-  if (Number(count) === 2) return 0.10;
-  return null;
-}
-
 export function assessPartnerActivityBonus({
+  rulePack = null,
   qualifiedAdvisorStatus = null,
   advisorCareerMonth = null,
   validLifeGmmPolicyCount = null,
@@ -48,10 +44,9 @@ export function assessPartnerActivityBonus({
     blockedReasons.push('missing_valid_life_gmm_policy_count');
   }
 
-  const percentageCandidate = percentageForPolicyCount(validLifeGmmPolicyCount);
-  if (hasNumber(validLifeGmmPolicyCount) && percentageCandidate === null) {
-    blockedReasons.push('below_minimum_policy_count');
-  }
+  const activeRulePack = rulePack || loadPartner2026RulePack();
+  const jsonRate = getActivityBonusRate(activeRulePack, { validLifeGmmPolicyCount });
+  if (hasNumber(validLifeGmmPolicyCount)) blockedReasons.push(...jsonRate.blockedReasons);
 
   if (!paidAppliedPolicyEvidence) blockedReasons.push('missing_paid_applied_policy_evidence');
   if (rawActivityOnly) blockedReasons.push('raw_activity_logs_only');
@@ -69,8 +64,10 @@ export function assessPartnerActivityBonus({
     sourceNotes: ['SMNYL Partner Compensation 2026 page 9.'],
     confidence: blockedReasons.length > 0 ? 'blocked' : 'medium',
     tableVersion: PARTNER_ACTIVITY_BONUS_TABLE_VERSION,
-    percentageCandidate,
+    percentageCandidate: jsonRate.rate,
     metadata: {
+      rulePackId: activeRulePack?.rulePackId || null,
+      frequency: activeRulePack?.concepts?.['activity-bonus']?.frequency || null,
       period,
       validLifeGmmPolicyCount,
     },

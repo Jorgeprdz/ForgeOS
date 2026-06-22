@@ -6,6 +6,10 @@ import {
   PARTNER_RULE_PACK_READINESS,
 } from './rule-pack-readiness.js';
 
+import {
+  loadPartner2026RulePack,
+} from './partner-2026-rule-pack-loader.js';
+
 export const PARTNER_CONCEPT_CATEGORIES = Object.freeze({
   PRODUCTIVITY: 'productivity',
   PRODUCTION: 'production',
@@ -49,6 +53,16 @@ export const PARTNER_CONCEPT_MODEL_STATUSES = Object.freeze({
 const TA_COUNTING_RULE = 'TA-counting precontract/advisor event supports Partner support eligibility only; it is not confirmed payout.';
 const OFFICIAL_STATEMENT_RULE = 'Official statement evidence is required for payout truth.';
 const ECONOMIC_OUTPUT_RULE = 'Partner compensation must consume advisor economic outputs, not raw advisor activity.';
+const OFFICIAL_RULE_PACK = Object.freeze({
+  rulePackId: 'smnyl_partner_compensation_2026',
+  sourceType: 'official_compensation_booklet',
+  sourceTruth: true,
+});
+const DEFAULT_PARTNER_2026_RULE_PACK = loadPartner2026RulePack();
+const CONNECTION_SEMANTIC_AMOUNTS = DEFAULT_PARTNER_2026_RULE_PACK.concepts?.['connection-bonus']?.semanticAmounts || {};
+const DEVELOPMENT_POLICY_SCALE = DEFAULT_PARTNER_2026_RULE_PACK.concepts?.['development-bonus']?.policyScale || [];
+const DEVELOPMENT_EXAMPLE_ROW = DEVELOPMENT_POLICY_SCALE[DEVELOPMENT_POLICY_SCALE.length - 1] || {};
+const PROMOTION_SEMANTIC_AMOUNTS = DEFAULT_PARTNER_2026_RULE_PACK.concepts?.['partner-promotion-bonus']?.semanticAmounts || {};
 
 function deepFreeze(value) {
   if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
@@ -94,6 +108,7 @@ function entry(config) {
       'Calculated candidate is not payout truth.',
     ],
     metadata: {},
+    source: OFFICIAL_RULE_PACK,
     ...config,
   });
 }
@@ -126,7 +141,7 @@ const REGISTRY = deepFreeze({
     calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.FULL_CANDIDATE,
     payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
     modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED,
-    evidenceRequirement: ['productivity_base_candidate', 'qualified_advisor_count', 'TA_counting_event_evidence', 'official_partner_compensation_statement_line_for_payout'],
+    evidenceRequirement: ['productivity_base_candidate', 'qualified_advisor_count', 'TA_counting_event_evidence_for_100_percent', 'official_partner_compensation_statement_line_for_payout'],
     economicInputRequirement: ['productivity_base_result', 'qualified_advisor_count'],
     lifecycleRequirement: ['connected_active_or_official_career_clock'],
     tableCompleteness: 'complete',
@@ -139,6 +154,10 @@ const REGISTRY = deepFreeze({
     constitutionalRules: [ECONOMIC_OUTPUT_RULE, TA_COUNTING_RULE, OFFICIAL_STATEMENT_RULE],
     metadata: {
       taWinnerCountAlias: 'TAWinnerCount is documentary legacy naming for TA-counting precontract/advisor event evidence, not confirmed payout.',
+      requiresPartnerCareerMonthSupportGate: false,
+      requiresAccumulatedCommissionGoal: false,
+      requiresQualifiedAdvisorRequirementByCareerMonth: false,
+      doNotBlockByPartnerCareerMonthUnlessOfficialConfigSaysSo: true,
     },
   }),
   [PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTION_BONUS]: entry({
@@ -188,9 +207,9 @@ const REGISTRY = deepFreeze({
     calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION,
     payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_OR_ACCOUNT_STATEMENT_REQUIRED,
     modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED_WITH_CAUTION,
-    evidenceRequirement: ['accumulated_commission_goals_evidence', 'TA_counting_event_evidence', 'support_table_evidence_for_full_modeling', 'official_statement_or_account_statement_for_payout'],
+    evidenceRequirement: ['partner_career_month_support_gate', 'accumulated_commission_goals_evidence', 'TA_counting_event_evidence', 'support_table_evidence_for_full_modeling', 'official_statement_or_account_statement_for_payout'],
     economicInputRequirement: ['accumulated_commission_goals_from_economic_evidence'],
-    lifecycleRequirement: ['partner_active_status'],
+    lifecycleRequirement: ['partner_career_month_support_gate', 'partner_active_status'],
     tableCompleteness: 'support_amounts_known_goals_table_missing',
     supportsCandidateCalculation: true,
     supportsFullCalculation: false,
@@ -201,6 +220,12 @@ const REGISTRY = deepFreeze({
     missingArtifacts: ['Tabla de Apoyos exacta', 'support metrics thresholds'],
     warnings: [TA_COUNTING_RULE, 'Full official modeling remains caution until support table evidence is available.'],
     constitutionalRules: [ECONOMIC_OUTPUT_RULE, TA_COUNTING_RULE, OFFICIAL_STATEMENT_RULE],
+    metadata: {
+      requiresPartnerCareerMonthSupportGate: true,
+      requiresAccumulatedCommissionGoal: true,
+      requiresQualifiedAdvisorRequirementByCareerMonth: false,
+      requiresSupportTableEvidence: true,
+    },
   }),
   [PARTNER_COMPENSATION_CONCEPT_KEYS.TRANSITION_BONUS]: entry({
     conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.TRANSITION_BONUS,
@@ -228,16 +253,16 @@ const REGISTRY = deepFreeze({
     conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.CONNECTION_BONUS,
     displayName: 'Bono de Conexion',
     category: PARTNER_CONCEPT_CATEGORIES.CONNECTION,
-    readinessStatus: PARTNER_RULE_PACK_READINESS.BLOCKED_BY_MISSING_TABLE,
-    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT_WITH_CAUTION,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION,
     payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
-    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.BLOCKED_BY_MISSING_TABLE,
-    evidenceRequirement: ['advisor_activation_event', 'complete_month_2_3_policy_amount_table_for_full_modeling', 'official_partner_compensation_statement_line_for_payout'],
-    economicInputRequirement: ['activation_semantic_event_only_until_table_complete'],
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED_WITH_CAUTION,
+    evidenceRequirement: ['advisor_activation_event', 'advisorMonth', 'validPolicyCount', 'paidAppliedPolicyEvidence', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['valid_paid_applied_policy_count_for_month_2_3_candidate'],
     lifecycleRequirement: ['advisor_connected_or_activation_event'],
-    tableCompleteness: 'month_2_3_table_missing',
-    partialStatus: 'semantic_7500_only',
-    supportsCandidateCalculation: false,
+    tableCompleteness: 'modeled_from_official_json',
+    partialStatus: 'semantic_activation_and_month_2_3_candidate',
+    supportsCandidateCalculation: true,
     supportsFullCalculation: false,
     supportsSemanticAmount: true,
     supportsPayoutTruthGate: true,
@@ -246,31 +271,31 @@ const REGISTRY = deepFreeze({
     missingArtifacts: ['complete policy count to amount table for months 2-3'],
     warnings: ['$7,500 alta is semantic only and not payout truth.'],
     constitutionalRules: ['Semantic amount is not payout truth.', OFFICIAL_STATEMENT_RULE],
-    metadata: { semanticAmounts: { activation: 7500 } },
+    metadata: { semanticAmounts: { activation: CONNECTION_SEMANTIC_AMOUNTS.advisorOnboarding || null } },
   }),
   [PARTNER_COMPENSATION_CONCEPT_KEYS.DEVELOPMENT_BONUS]: entry({
     conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.DEVELOPMENT_BONUS,
     displayName: 'Bono de Desarrollo',
     category: PARTNER_CONCEPT_CATEGORIES.DEVELOPMENT,
-    readinessStatus: PARTNER_RULE_PACK_READINESS.EXAMPLE_ONLY,
-    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.EXAMPLE_ONLY,
-    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.NOT_APPLICABLE_UNTIL_MODELED,
-    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.EXAMPLE_ONLY,
-    evidenceRequirement: ['complete_policy_amount_table_required_before_modeling'],
-    economicInputRequirement: ['none_until_modeled'],
-    lifecycleRequirement: ['not_applicable_until_modeled'],
-    tableCompleteness: 'example_only_table_missing',
-    partialStatus: 'example_only',
-    supportsCandidateCalculation: false,
-    supportsFullCalculation: false,
+    readinessStatus: PARTNER_RULE_PACK_READINESS.READY_FOR_CONTRACT_WITH_CAUTION,
+    calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION,
+    payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
+    modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED_WITH_CAUTION,
+    evidenceRequirement: ['advisorMonth', 'validPolicyCount', 'paidAppliedPolicyEvidence', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['valid_paid_applied_policy_count'],
+    lifecycleRequirement: ['advisor_month_4_to_15'],
+    tableCompleteness: 'modeled_from_official_json',
+    partialStatus: 'candidate_with_caution',
+    supportsCandidateCalculation: true,
+    supportsFullCalculation: true,
     supportsSemanticAmount: false,
-    supportsPayoutTruthGate: false,
-    requiresOfficialStatementForPayout: false,
+    supportsPayoutTruthGate: true,
+    requiresOfficialStatementForPayout: true,
     sourcePages: [10, 17],
     missingArtifacts: ['complete policy count to monthly amount table'],
-    warnings: ['4+ policies = $15,000 is an example only and must not become a calculation table.'],
-    constitutionalRules: ['Example-only is never payout truth.', 'No invented bonus rules.'],
-    metadata: { exampleOnly: { policyCountLabel: '4+', monthlyAmount: 15000 } },
+    warnings: ['Development bonus is modeled from official JSON but remains candidate only until official statement evidence.'],
+    constitutionalRules: ['Calculated candidate is not payout truth.', OFFICIAL_STATEMENT_RULE],
+    metadata: { exampleOnly: { policyCountLabel: DEVELOPMENT_EXAMPLE_ROW.policies || null, monthlyAmount: DEVELOPMENT_EXAMPLE_ROW.amount || null } },
   }),
   [PARTNER_COMPENSATION_CONCEPT_KEYS.PARTNER_PROMOTION_BONUS]: entry({
     conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.PARTNER_PROMOTION_BONUS,
@@ -294,7 +319,14 @@ const REGISTRY = deepFreeze({
     missingArtifacts: ['Tabla de Alta Partner', 'support metrics definition'],
     warnings: ['$300,000 / $60,000 / $20,000 x12 schedule is semantic only and not payout truth.'],
     constitutionalRules: ['Semantic amount is not payout truth.', OFFICIAL_STATEMENT_RULE],
-    metadata: { semanticAmounts: { total: 300000, initial: 60000, monthly: 20000, payments: 12 } },
+    metadata: {
+      semanticAmounts: {
+        total: PROMOTION_SEMANTIC_AMOUNTS.total || null,
+        initial: PROMOTION_SEMANTIC_AMOUNTS.initial || null,
+        monthly: PROMOTION_SEMANTIC_AMOUNTS.monthly || null,
+        payments: PROMOTION_SEMANTIC_AMOUNTS.monthlyPayments || null,
+      },
+    },
   }),
   [PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN]: entry({
     conceptKey: PARTNER_COMPENSATION_CONCEPT_KEYS.UNKNOWN,
