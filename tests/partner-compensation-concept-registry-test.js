@@ -30,11 +30,17 @@ assert.deepEqual(productivityBase.sourcePages, [6]);
 
 const multiplier = getPartnerCompensationConceptEntry('productivity-multiplier');
 assert.equal(multiplier.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.FULL_CANDIDATE);
-assert.ok(multiplier.evidenceRequirement.includes('TA_counting_event_evidence_for_100_percent'));
-assert.equal(multiplier.metadata.requiresPartnerCareerMonthSupportGate, false);
+assert.ok(multiplier.evidenceRequirement.includes('qualified_advisor_count'));
+assert.ok(multiplier.evidenceRequirement.includes('productivity_base_candidate'));
+assert.ok(multiplier.evidenceRequirement.includes('partner_career_month_or_multiplier_minimum_requirement_config'));
+assert.ok(multiplier.evidenceRequirement.includes('training_winner_or_signed_precontract_evidence_for_pay_factor'));
+assert.ok(multiplier.evidenceRequirement.includes('official_partner_compensation_statement_line_for_payout'));
+assert.equal(multiplier.metadata.requiresPartnerCareerMonthSupportGate, true);
 assert.equal(multiplier.metadata.requiresAccumulatedCommissionGoal, false);
-assert.equal(multiplier.metadata.requiresQualifiedAdvisorRequirementByCareerMonth, false);
-assert.equal(multiplier.metadata.doNotBlockByPartnerCareerMonthUnlessOfficialConfigSaysSo, true);
+assert.equal(multiplier.metadata.requiresQualifiedAdvisorRequirementByCareerMonth, true);
+assert.equal(multiplier.metadata.sourceTruthLevel, 'user_confirmed_pending_document_pinpoint');
+assert.equal(multiplier.metadata.requiresTrainingWinnerEvidenceForPayFactor, true);
+assert.equal(multiplier.metadata.officialStatementRequiredForPayoutTruth, true);
 assert.ok(multiplier.constitutionalRules.some((rule) => rule.includes('not confirmed payout')));
 
 const production = getPartnerCompensationConceptEntry('production-bonus');

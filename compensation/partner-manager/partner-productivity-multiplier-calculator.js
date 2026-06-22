@@ -15,9 +15,16 @@ export function calculatePartnerProductivityMultiplierCandidate({
   assessment = null,
   rulePack = null,
   productivityBaseCalculation = null,
+  productivityBaseCandidate = null,
   qualifiedAdvisorCount = null,
+  partnerCareerMonth = null,
+  minimumQualifiedAdvisorRequirement = null,
+  multiplierMinimumRequirement = null,
   supportRequirementGateResult = null,
   enforceSupportRequirementGate = false,
+  trainingWinnerInQuarter = null,
+  signedPrecontractInQuarter = null,
+  taCountingEventInQuarter = null,
   taCountingPrecontractCount = null,
   taCountingEventEvidence = false,
   TAWinnerCount = null,
@@ -25,10 +32,18 @@ export function calculatePartnerProductivityMultiplierCandidate({
 } = {}) {
   const multiplierAssessment = assessment || assessPartnerProductivityMultiplier({
     rulePack,
-    productivityBaseAssessment: productivityBaseCalculation,
+    productivityBaseAssessment: productivityBaseCalculation || (hasNumber(productivityBaseCandidate)
+      ? { calculationAllowed: true, candidateAmount: Number(productivityBaseCandidate) }
+      : null),
     qualifiedAdvisorCount,
+    partnerCareerMonth,
+    minimumQualifiedAdvisorRequirement,
+    multiplierMinimumRequirement,
     supportRequirementGateResult,
     enforceSupportRequirementGate,
+    trainingWinnerInQuarter,
+    signedPrecontractInQuarter,
+    taCountingEventInQuarter,
     taCountingPrecontractCount,
     taCountingEventEvidence,
     TAWinnerCount,
@@ -37,22 +52,27 @@ export function calculatePartnerProductivityMultiplierCandidate({
 
   const blockedReasons = [...multiplierAssessment.blockedReasons];
   const missingInputs = [...multiplierAssessment.missingInputs];
-  const baseAmount = productivityBaseCalculation?.candidateAmount;
+  const baseAmount = hasNumber(productivityBaseCalculation?.candidateAmount)
+    ? productivityBaseCalculation.candidateAmount
+    : productivityBaseCandidate;
   if (!hasNumber(baseAmount)) {
     blockedReasons.push('missing_base_candidate_amount');
     missingInputs.push('productivityBaseCalculation.candidateAmount');
   }
 
-  const multiplier = multiplierAssessment.percentageCandidate;
-  const additionalCandidateAmount = hasNumber(baseAmount) && hasNumber(multiplier)
+  const multiplier = hasNumber(multiplierAssessment.percentageCandidate)
+    ? multiplierAssessment.percentageCandidate
+    : multiplierAssessment.metadata?.multiplierRate;
+  const multiplierAmountCandidate = hasNumber(baseAmount) && hasNumber(multiplier)
     ? Number(baseAmount) * Number(multiplier)
     : null;
-  const standardTotalCandidateAmount = hasNumber(baseAmount) && hasNumber(additionalCandidateAmount)
-    ? Number(baseAmount) + Number(additionalCandidateAmount)
+  const calculatedProductivityBonusCandidate = hasNumber(baseAmount) && hasNumber(multiplierAmountCandidate)
+    ? Number(baseAmount) + Number(multiplierAmountCandidate)
     : null;
-  const totalCandidateAmount = hasNumber(standardTotalCandidateAmount) && hasNumber(multiplierAssessment.metadata?.effectiveTotalCandidateRate)
-    ? standardTotalCandidateAmount * Number(multiplierAssessment.metadata.effectiveTotalCandidateRate)
-    : standardTotalCandidateAmount;
+  const payFactor = multiplierAssessment.metadata?.payFactor;
+  const payableProductivityBonusCandidate = hasNumber(calculatedProductivityBonusCandidate) && hasNumber(payFactor)
+    ? calculatedProductivityBonusCandidate * Number(payFactor)
+    : null;
 
   return createPartnerSafeCalculationResult({
     conceptKey: 'productivity-multiplier',
@@ -65,7 +85,7 @@ export function calculatePartnerProductivityMultiplierCandidate({
       ),
     calculationAllowed: true,
     calculatedCandidate: true,
-    candidateAmount: totalCandidateAmount,
+    candidateAmount: payableProductivityBonusCandidate,
     candidatePercentage: multiplier,
     inputBasis: hasNumber(baseAmount) ? Number(baseAmount) : null,
     blockedReasons,
@@ -73,13 +93,20 @@ export function calculatePartnerProductivityMultiplierCandidate({
     warnings: multiplierAssessment.warnings,
     sourceNotes: multiplierAssessment.sourceNotes,
     confidence: blockedReasons.length > 0 ? 'blocked' : 'high',
-    evidenceRequirement: ['qualified_advisor_count', 'base_productivity_candidate', 'TA_counting_event_evidence_for_100_percent'],
+    evidenceRequirement: ['qualified_advisor_count', 'base_productivity_candidate', 'training_winner_or_signed_precontract_evidence_for_pay_factor'],
     metadata: {
       multiplierPercentageCandidate: multiplier,
+      multiplierRate: multiplier,
       baseCandidateAmount: hasNumber(baseAmount) ? Number(baseAmount) : null,
-      additionalCandidateAmount,
-      totalCandidateAmount,
-      appliedTAConstraint: multiplierAssessment.metadata?.taCountingEventEvidence === true,
+      baseProductivityCandidate: hasNumber(baseAmount) ? Number(baseAmount) : null,
+      multiplierAmountCandidate,
+      calculatedProductivityBonusCandidate,
+      trainingWinnerInQuarter: multiplierAssessment.metadata?.trainingWinnerInQuarter ?? null,
+      payFactor: hasNumber(payFactor) ? Number(payFactor) : null,
+      payableProductivityBonusCandidate,
+      qualifiedAdvisorCount: multiplierAssessment.metadata?.qualifiedAdvisorCount ?? null,
+      minimumQualifiedAdvisorRequirement: multiplierAssessment.metadata?.minimumQualifiedAdvisorRequirement ?? null,
+      appliedTrainingWinnerPayFactor: hasNumber(payFactor),
       createsPartnerEconomicGain: false,
       releasesHeldCommission: false,
       supportRequirementGateResult,

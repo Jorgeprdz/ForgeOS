@@ -25,6 +25,10 @@ import {
   calculatePartnerProductivityBaseCandidate,
 } from '../compensation/partner-manager/partner-productivity-base-calculator.js';
 
+import {
+  calculatePartnerProductivityMultiplierCandidate,
+} from '../compensation/partner-manager/partner-productivity-multiplier-calculator.js';
+
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -86,6 +90,35 @@ const fixedSupportResult = calculatePartnerFixedSupportCandidate({
 });
 assert.equal(fixedSupportResult.candidateAmount, 22222);
 assert.equal(fixedSupportResult.payoutTruth, false);
+
+const mutatedMultiplier = clone(rulePack);
+const multiplierFour = mutatedMultiplier.concepts['productivity-multiplier'].table.find((row) => row.qualifiedAdvisorCount === 4);
+multiplierFour.multiplierRate = 0.4444;
+const multiplierResult = calculatePartnerProductivityMultiplierCandidate({
+  rulePack: mutatedMultiplier,
+  productivityBaseCandidate: 100000,
+  qualifiedAdvisorCount: 4,
+  partnerCareerMonth: 7,
+  minimumQualifiedAdvisorRequirement: 3,
+  trainingWinnerInQuarter: true,
+});
+assert.equal(multiplierResult.candidatePercentage, 0.4444);
+assert.equal(multiplierResult.candidateAmount, 144440);
+assert.equal(multiplierResult.payoutTruth, false);
+
+const mutatedPayFactor = clone(rulePack);
+mutatedPayFactor.concepts['productivity-multiplier'].trainingWinnerPayFactor.withoutTrainingWinnerInQuarter.payFactor = 0.7;
+const payFactorResult = calculatePartnerProductivityMultiplierCandidate({
+  rulePack: mutatedPayFactor,
+  productivityBaseCandidate: 100000,
+  qualifiedAdvisorCount: 10,
+  minimumQualifiedAdvisorRequirement: 5,
+  trainingWinnerInQuarter: false,
+});
+assert.equal(payFactorResult.metadata.calculatedProductivityBonusCandidate, 200000);
+assert.equal(payFactorResult.metadata.payFactor, 0.7);
+assert.equal(payFactorResult.candidateAmount, 140000);
+assert.equal(payFactorResult.payoutTruth, false);
 
 const brokenProductivity = clone(rulePack);
 delete brokenProductivity.concepts['productivity-base'].table.bands[0].rates[firstClass];

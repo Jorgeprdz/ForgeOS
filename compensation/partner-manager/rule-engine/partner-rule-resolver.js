@@ -48,6 +48,24 @@ export function resolveThresholdScale({
   return { value: Number(row[resultKey]), row, blockedReasons: [], missingInputs: [] };
 }
 
+export function resolveExactOrAboveScale({
+  scale = [],
+  value = null,
+  valueKey,
+  resultKey,
+  appliesToCountAndAboveKey = 'appliesToCountAndAbove',
+} = {}) {
+  if (!hasNumber(value)) return { value: null, row: null, blockedReasons: ['blocked_by_missing_scale_value'], missingInputs: ['value'] };
+  const numericValue = Number(value);
+  const exactRow = scale.find((row) => hasNumber(row[valueKey]) && numericValue === Number(row[valueKey])) || null;
+  const aboveRows = scale
+    .filter((row) => row[appliesToCountAndAboveKey] === true && hasNumber(row[valueKey]) && numericValue >= Number(row[valueKey]))
+    .sort((a, b) => Number(b[valueKey]) - Number(a[valueKey]));
+  const row = exactRow || aboveRows[0] || null;
+  if (!row || !hasNumber(row[resultKey])) return { value: null, row: null, blockedReasons: ['blocked_by_missing_scale_match'], missingInputs: [] };
+  return { value: Number(row[resultKey]), row, blockedReasons: [], missingInputs: [] };
+}
+
 export function resolveExactOrPlusScale({
   scale = [],
   value = null,

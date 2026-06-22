@@ -12,9 +12,9 @@ import {
   deriveSemesterIndexFromCareerMonth,
   getConcept,
   resolveBandRate,
+  resolveExactOrAboveScale,
   resolveExactOrPlusScale,
   resolveSemesterAmount,
-  resolveThresholdScale,
 } from './rule-engine/partner-rule-resolver.js';
 
 export const PARTNER_2026_RULE_PACK_PATH = new URL(
@@ -86,7 +86,6 @@ export function getProductivityBaseRate(rulePack, {
 
 export function getProductivityMultiplierRate(rulePack, {
   qualifiedAdvisorCount = null,
-  taCountingEventEvidence = false,
 } = {}) {
   const blockedReasons = [];
   const missingInputs = [];
@@ -95,34 +94,22 @@ export function getProductivityMultiplierRate(rulePack, {
     missingInputs.push('qualifiedAdvisorCount');
   }
 
-  const resolved = resolveThresholdScale({
+  const resolved = resolveExactOrAboveScale({
     scale: getConcept(rulePack, 'productivity-multiplier')?.table || [],
     value: qualifiedAdvisorCount,
     valueKey: 'qualifiedAdvisorCount',
     resultKey: 'multiplierRate',
-    floorMode: true,
   });
-  blockedReasons.push(...resolved.blockedReasons);
+  blockedReasons.push(...resolved.blockedReasons.map((reason) => (
+    reason === 'blocked_by_missing_scale_match' ? 'blocked_by_missing_multiplier_rate' : reason
+  )));
   missingInputs.push(...resolved.missingInputs);
 
-  const taRule = getConcept(rulePack, 'productivity-multiplier')?.TARequirement;
-  const rawMultiplierRate = resolved.value;
-  let effectiveTotalCandidateRate = null;
-  const warnings = [];
-
-  if (rawMultiplierRate === 1 && taRule?.requiresTACountingEvent && taCountingEventEvidence !== true) {
-    effectiveTotalCandidateRate = hasNumber(taRule.withoutTACountingEvent?.rateAppliedToTotalCandidate)
-      ? Number(taRule.withoutTACountingEvent.rateAppliedToTotalCandidate)
-      : null;
-    warnings.push('100_percent_multiplier_without_TA_counting_event_uses_80_percent_total_candidate_rule');
-  }
-
   return {
-    multiplierRate: rawMultiplierRate,
-    effectiveTotalCandidateRate,
+    multiplierRate: resolved.value,
     blockedReasons,
     missingInputs,
-    warnings,
+    warnings: [],
   };
 }
 

@@ -32,13 +32,15 @@ const missingClass = getProductivityBaseRate(rulePack, {
 assert.ok(missingClass.blockedReasons.includes('blocked_by_missing_partner_class'));
 
 assert.equal(getProductivityMultiplierRate(rulePack, { qualifiedAdvisorCount: 3 }).multiplierRate, 0.3);
+assert.equal(getProductivityMultiplierRate(rulePack, { qualifiedAdvisorCount: 4 }).multiplierRate, 0.4);
 assert.equal(getProductivityMultiplierRate(rulePack, { qualifiedAdvisorCount: 5 }).multiplierRate, 0.5);
+assert.equal(getProductivityMultiplierRate(rulePack, { qualifiedAdvisorCount: 9 }).multiplierRate, 0.9);
 assert.equal(getProductivityMultiplierRate(rulePack, { qualifiedAdvisorCount: 10, taCountingEventEvidence: true }).multiplierRate, 1);
+assert.equal(getProductivityMultiplierRate(rulePack, { qualifiedAdvisorCount: 11, taCountingEventEvidence: true }).multiplierRate, 1);
 
 const multiplierWithoutTa = getProductivityMultiplierRate(rulePack, { qualifiedAdvisorCount: 10 });
 assert.equal(multiplierWithoutTa.multiplierRate, 1);
-assert.equal(multiplierWithoutTa.effectiveTotalCandidateRate, 0.8);
-assert.ok(multiplierWithoutTa.warnings.includes('100_percent_multiplier_without_TA_counting_event_uses_80_percent_total_candidate_rule'));
+assert.deepEqual(multiplierWithoutTa.warnings, []);
 
 assert.equal(getProductionBonusRate(rulePack, { organizationType: 'nueva organizacion' }).rate, 0.135);
 assert.equal(getProductionBonusRate(rulePack, { organizationType: 'consolidados' }).rate, 0.07);

@@ -165,7 +165,9 @@
       "payoutGateMode": "official_statement_required",
       "requires": [
         "productivityBaseCandidate",
-        "qualifiedAdvisorCount"
+        "qualifiedAdvisorCount",
+        "partnerCareerMonth",
+        "minimumQualifiedAdvisorRequirement"
       ],
       "table": [
         {
@@ -173,26 +175,72 @@
           "multiplierRate": 0.3
         },
         {
+          "qualifiedAdvisorCount": 4,
+          "multiplierRate": 0.4
+        },
+        {
           "qualifiedAdvisorCount": 5,
           "multiplierRate": 0.5
         },
         {
+          "qualifiedAdvisorCount": 6,
+          "multiplierRate": 0.6
+        },
+        {
+          "qualifiedAdvisorCount": 7,
+          "multiplierRate": 0.7
+        },
+        {
+          "qualifiedAdvisorCount": 8,
+          "multiplierRate": 0.8
+        },
+        {
+          "qualifiedAdvisorCount": 9,
+          "multiplierRate": 0.9
+        },
+        {
           "qualifiedAdvisorCount": 10,
-          "multiplierRate": 1.0
+          "multiplierRate": 1.0,
+          "appliesToCountAndAbove": true
         }
       ],
-      "TARequirement": {
-        "appliesTo": "100_percent_multiplier",
-        "requiresTACountingEvent": true,
-        "withoutTACountingEvent": {
-          "rule": "pays_at_80_percent",
-          "rateAppliedToTotalCandidate": 0.8
-        },
-        "semanticClarification": "TAWinnerCount means TA-counting signed precontract/advisor event for Partner support qualification, not confirmed payout."
+      "minimumQualifiedAdvisorsByPartnerCareerMonth": {
+        "status": "user_confirmed_pending_document_pinpoint",
+        "sourceTruthLevel": "user_confirmed_pending_document_pinpoint",
+        "allowedMinimums": [
+          3,
+          4,
+          5
+        ],
+        "rules": []
       },
+      "trainingWinnerPayFactor": {
+        "sourceTruthLevel": "user_confirmed_pending_document_pinpoint",
+        "appliesTo": "calculated_productivity_bonus_total",
+        "requiresTrainingWinnerInQuarter": true,
+        "withTrainingWinnerInQuarter": {
+          "payFactor": 1.0
+        },
+        "withoutTrainingWinnerInQuarter": {
+          "payFactor": 0.8,
+          "reason": "reduced_by_missing_training_winner_in_quarter"
+        },
+        "semanticClarification": "Training winner/precontract evidence determines the pay factor for the calculated productivity bonus candidate; it is not payout truth."
+      },
+      "blockedReasons": [
+        "blocked_by_missing_partner_career_month",
+        "blocked_by_missing_multiplier_minimum_requirement",
+        "blocked_by_insufficient_qualified_advisors_for_partner_career_month",
+        "blocked_by_missing_multiplier_rate",
+        "reduced_by_missing_training_winner_in_quarter",
+        "blocked_by_missing_training_winner_evidence_policy"
+      ],
       "notes": [
-        "Visible multiplier rule is based on count of qualified advisors.",
-        "Do not block multiplier by Partner career month unless a specific official support table requires it."
+        "The multiplier rate scales 30% to 100% from 3 to 10+ qualified advisors.",
+        "The minimum qualified advisor count required to activate multiplier depends on Partner career month and must come from official table/config.",
+        "Training winner/precontract does not cap multiplier rate.",
+        "Training winner/precontract determines whether the calculated productivity bonus is paid at 100% or reduced to 80%.",
+        "Training/precontract evidence is not payout truth."
       ]
     },
     "production-bonus": {

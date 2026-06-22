@@ -50,7 +50,7 @@ export const PARTNER_CONCEPT_MODEL_STATUSES = Object.freeze({
   UNKNOWN: 'unknown',
 });
 
-const TA_COUNTING_RULE = 'TA-counting precontract/advisor event supports Partner support eligibility only; it is not confirmed payout.';
+const TA_COUNTING_RULE = 'Training/precontract event supports Partner pay factor eligibility only; it is not confirmed payout.';
 const OFFICIAL_STATEMENT_RULE = 'Official statement evidence is required for payout truth.';
 const ECONOMIC_OUTPUT_RULE = 'Partner compensation must consume advisor economic outputs, not raw advisor activity.';
 const OFFICIAL_RULE_PACK = Object.freeze({
@@ -141,9 +141,9 @@ const REGISTRY = deepFreeze({
     calculationMode: PARTNER_CONCEPT_CALCULATION_MODES.FULL_CANDIDATE,
     payoutGateMode: PARTNER_CONCEPT_PAYOUT_GATE_MODES.OFFICIAL_STATEMENT_REQUIRED,
     modelStatus: PARTNER_CONCEPT_MODEL_STATUSES.MODELED,
-    evidenceRequirement: ['productivity_base_candidate', 'qualified_advisor_count', 'TA_counting_event_evidence_for_100_percent', 'official_partner_compensation_statement_line_for_payout'],
-    economicInputRequirement: ['productivity_base_result', 'qualified_advisor_count'],
-    lifecycleRequirement: ['connected_active_or_official_career_clock'],
+    evidenceRequirement: ['productivity_base_candidate', 'qualified_advisor_count', 'partner_career_month_or_multiplier_minimum_requirement_config', 'training_winner_or_signed_precontract_evidence_for_pay_factor', 'official_partner_compensation_statement_line_for_payout'],
+    economicInputRequirement: ['productivity_base_result', 'qualified_advisor_count', 'minimum_qualified_advisor_requirement'],
+    lifecycleRequirement: ['partner_career_month_or_explicit_minimum_requirement', 'connected_active_or_official_career_clock'],
     tableCompleteness: 'complete',
     supportsCandidateCalculation: true,
     supportsFullCalculation: true,
@@ -154,10 +154,12 @@ const REGISTRY = deepFreeze({
     constitutionalRules: [ECONOMIC_OUTPUT_RULE, TA_COUNTING_RULE, OFFICIAL_STATEMENT_RULE],
     metadata: {
       taWinnerCountAlias: 'TAWinnerCount is documentary legacy naming for TA-counting precontract/advisor event evidence, not confirmed payout.',
-      requiresPartnerCareerMonthSupportGate: false,
+      requiresPartnerCareerMonthSupportGate: true,
       requiresAccumulatedCommissionGoal: false,
-      requiresQualifiedAdvisorRequirementByCareerMonth: false,
-      doNotBlockByPartnerCareerMonthUnlessOfficialConfigSaysSo: true,
+      requiresQualifiedAdvisorRequirementByCareerMonth: true,
+      sourceTruthLevel: 'user_confirmed_pending_document_pinpoint',
+      requiresTrainingWinnerEvidenceForPayFactor: true,
+      officialStatementRequiredForPayoutTruth: true,
     },
   }),
   [PARTNER_COMPENSATION_CONCEPT_KEYS.PRODUCTION_BONUS]: entry({

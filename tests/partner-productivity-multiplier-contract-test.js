@@ -16,14 +16,15 @@ const blockedSupportGate = {
   missingInputs: [],
 };
 
-assert.equal(assessPartnerProductivityMultiplier({ productivityBaseAssessment: base, qualifiedAdvisorCount: 3 }).percentageCandidate, 0.3);
-assert.equal(assessPartnerProductivityMultiplier({ productivityBaseAssessment: base, qualifiedAdvisorCount: 5 }).percentageCandidate, 0.5);
+assert.equal(assessPartnerProductivityMultiplier({ productivityBaseAssessment: base, qualifiedAdvisorCount: 3, trainingWinnerInQuarter: true }).percentageCandidate, 0.3);
+assert.equal(assessPartnerProductivityMultiplier({ productivityBaseAssessment: base, qualifiedAdvisorCount: 4, trainingWinnerInQuarter: true }).percentageCandidate, 0.4);
+assert.equal(assessPartnerProductivityMultiplier({ productivityBaseAssessment: base, qualifiedAdvisorCount: 5, trainingWinnerInQuarter: true }).percentageCandidate, 0.5);
 
 const tenWithTa = assessPartnerProductivityMultiplier({
   productivityBaseAssessment: base,
   qualifiedAdvisorCount: 10,
   taCountingPrecontractCount: 1,
-  taCountingEventEvidence: true,
+  trainingWinnerInQuarter: true,
 });
 assert.equal(tenWithTa.percentageCandidate, 1);
 assert.equal(tenWithTa.payoutTruth, false);
@@ -34,33 +35,72 @@ assert.ok(tenWithTa.sourceNotes.some((note) => note.includes('not confirmed payo
 const below = assessPartnerProductivityMultiplier({
   productivityBaseAssessment: base,
   qualifiedAdvisorCount: 2,
+  trainingWinnerInQuarter: true,
 });
 assert.equal(below.calculationAllowed, false);
-assert.ok(below.blockedReasons.includes('below_minimum_qualified_advisors'));
+assert.ok(below.blockedReasons.includes('blocked_by_missing_multiplier_rate'));
 
-const noTa = assessPartnerProductivityMultiplier({
+const missingMinimum = assessPartnerProductivityMultiplier({
+  productivityBaseAssessment: base,
+  qualifiedAdvisorCount: 4,
+  partnerCareerMonth: 7,
+  trainingWinnerInQuarter: true,
+});
+assert.equal(missingMinimum.calculationAllowed, false);
+assert.ok(missingMinimum.blockedReasons.includes('blocked_by_missing_multiplier_minimum_requirement'));
+assert.equal(missingMinimum.percentageCandidate, null);
+
+const insufficientForMonth = assessPartnerProductivityMultiplier({
+  productivityBaseAssessment: base,
+  qualifiedAdvisorCount: 4,
+  partnerCareerMonth: 7,
+  minimumQualifiedAdvisorRequirement: 5,
+  trainingWinnerInQuarter: true,
+});
+assert.equal(insufficientForMonth.calculationAllowed, false);
+assert.ok(insufficientForMonth.blockedReasons.includes('blocked_by_insufficient_qualified_advisors_for_partner_career_month'));
+
+const fourWithMinimumThree = assessPartnerProductivityMultiplier({
+  productivityBaseAssessment: base,
+  qualifiedAdvisorCount: 4,
+  partnerCareerMonth: 7,
+  minimumQualifiedAdvisorRequirement: 3,
+  trainingWinnerInQuarter: true,
+});
+assert.equal(fourWithMinimumThree.calculationAllowed, true);
+assert.equal(fourWithMinimumThree.percentageCandidate, 0.4);
+
+const withTrainingWinner = assessPartnerProductivityMultiplier({
   rulePack,
   productivityBaseAssessment: base,
   qualifiedAdvisorCount: 10,
-  taCountingPrecontractCount: 0,
-  taCountingEventEvidence: true,
+  trainingWinnerInQuarter: true,
 });
-assert.equal(noTa.percentageCandidate, 1);
-assert.equal(noTa.metadata.effectiveTotalCandidateRate, null);
+assert.equal(withTrainingWinner.percentageCandidate, 1);
+assert.equal(withTrainingWinner.metadata.payFactor, 1);
 
-const missingTaEvidence = assessPartnerProductivityMultiplier({
+const withoutTrainingWinner = assessPartnerProductivityMultiplier({
   rulePack,
   productivityBaseAssessment: base,
-  qualifiedAdvisorCount: 10,
-  taCountingPrecontractCount: 1,
+  qualifiedAdvisorCount: 9,
+  trainingWinnerInQuarter: false,
 });
-assert.equal(missingTaEvidence.calculationAllowed, true);
-assert.equal(missingTaEvidence.percentageCandidate, 1);
-assert.equal(missingTaEvidence.metadata.effectiveTotalCandidateRate, 0.8);
-assert.ok(missingTaEvidence.warnings.some((warning) => warning.includes('80_percent')));
+assert.equal(withoutTrainingWinner.calculationAllowed, true);
+assert.equal(withoutTrainingWinner.percentageCandidate, 0.9);
+assert.equal(withoutTrainingWinner.metadata.payFactor, 0.8);
+assert.ok(withoutTrainingWinner.warnings.includes('reduced_by_missing_training_winner_in_quarter'));
+
+const unknownTrainingWinner = assessPartnerProductivityMultiplier({
+  rulePack,
+  productivityBaseAssessment: base,
+  qualifiedAdvisorCount: 9,
+});
+assert.equal(unknownTrainingWinner.calculationAllowed, false);
+assert.ok(unknownTrainingWinner.blockedReasons.includes('blocked_by_missing_training_winner_evidence_policy'));
 
 const missingBase = assessPartnerProductivityMultiplier({
   qualifiedAdvisorCount: 3,
+  trainingWinnerInQuarter: true,
 });
 assert.ok(missingBase.blockedReasons.includes('missing_base_result'));
 
@@ -68,6 +108,7 @@ const monthGateBlocked = assessPartnerProductivityMultiplier({
   rulePack,
   productivityBaseAssessment: base,
   qualifiedAdvisorCount: 3,
+  trainingWinnerInQuarter: true,
   supportRequirementGateResult: blockedSupportGate,
 });
 assert.equal(monthGateBlocked.calculationAllowed, true);
@@ -77,6 +118,7 @@ assert.ok(monthGateBlocked.warnings.includes('support_requirement_gate_ignored_f
 const missingStrictGate = assessPartnerProductivityMultiplier({
   productivityBaseAssessment: base,
   qualifiedAdvisorCount: 3,
+  trainingWinnerInQuarter: true,
   enforceSupportRequirementGate: true,
 });
 assert.equal(missingStrictGate.calculationAllowed, false);
