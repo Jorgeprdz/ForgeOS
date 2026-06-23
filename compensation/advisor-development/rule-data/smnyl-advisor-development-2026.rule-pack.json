@@ -67,5 +67,146 @@
       }
     ]
   },
-  "concepts": {}
+  "concepts": {
+    "training-allowance": {
+      "displayName": "Training Allowance",
+      "targetPopulation": "first_year_advisors",
+      "calculationFrequency": "monthly",
+      "paymentFrequency": "semiannual_with_monthly_advances",
+      "paymentTiming": "month_after_semester_close",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "policyAccumulationRule": {
+        "vidaPlusGmmiCountsAs": 0.5
+      },
+      "calculationRules": {
+        "baseBonusStrategy": "min_between_calculated_and_max_award",
+        "excessBonusStrategy": "apply_rate_to_excess_above_max_award",
+        "excessMultiplierRate": 0.35,
+        "paymentDeductionStrategy": "subtract_prior_paid_bonuses_in_current_semester"
+      },
+      "table": [
+        {
+          "advisorMonth": 1,
+          "semester": 1,
+          "accumulatedCommissionGoal": 9000,
+          "accumulatedPolicyGoal": 3,
+          "minimumLifePolicyGoal": 1,
+          "bonusPercentage": 1,
+          "minimumAward": 9000,
+          "maximumAward": 33000
+        },
+        {
+          "advisorMonth": 2,
+          "semester": 1,
+          "accumulatedCommissionGoal": 15000,
+          "accumulatedPolicyGoal": 6,
+          "minimumLifePolicyGoal": 2,
+          "bonusPercentage": 1,
+          "minimumAward": 15000,
+          "maximumAward": 56000
+        },
+        {
+          "advisorMonth": 3,
+          "semester": 1,
+          "accumulatedCommissionGoal": 21000,
+          "accumulatedPolicyGoal": 9,
+          "minimumLifePolicyGoal": 3,
+          "bonusPercentage": 1,
+          "minimumAward": 21000,
+          "maximumAward": 69000
+        },
+        {
+          "advisorMonth": 4,
+          "semester": 1,
+          "accumulatedCommissionGoal": 31000,
+          "accumulatedPolicyGoal": 12,
+          "minimumLifePolicyGoal": 4,
+          "bonusPercentage": 1,
+          "minimumAward": 31000,
+          "maximumAward": 102000
+        },
+        {
+          "advisorMonth": 5,
+          "semester": 1,
+          "accumulatedCommissionGoal": 39000,
+          "accumulatedPolicyGoal": 15,
+          "minimumLifePolicyGoal": 5,
+          "bonusPercentage": 1,
+          "minimumAward": 39000,
+          "maximumAward": 129000
+        },
+        {
+          "advisorMonth": 6,
+          "semester": 1,
+          "accumulatedCommissionGoal": 51000,
+          "accumulatedPolicyGoal": 18,
+          "minimumLifePolicyGoal": 6,
+          "bonusPercentage": 1,
+          "minimumAward": 51000,
+          "maximumAward": 167000
+        },
+        {
+          "advisorMonth": 7,
+          "semester": 2,
+          "accumulatedCommissionGoal": 13000,
+          "accumulatedPolicyGoal": 3,
+          "minimumLifePolicyGoal": 1,
+          "bonusPercentage": 1,
+          "minimumAward": 13000,
+          "maximumAward": 38000
+        },
+        {
+          "advisorMonth": 8,
+          "semester": 2,
+          "accumulatedCommissionGoal": 21000,
+          "accumulatedPolicyGoal": 6,
+          "minimumLifePolicyGoal": 2,
+          "bonusPercentage": 1,
+          "minimumAward": 21000,
+          "maximumAward": 64000
+        },
+        {
+          "advisorMonth": 9,
+          "semester": 2,
+          "accumulatedCommissionGoal": 32000,
+          "accumulatedPolicyGoal": 9,
+          "minimumLifePolicyGoal": 3,
+          "bonusPercentage": 1,
+          "minimumAward": 32000,
+          "maximumAward": 95000
+        },
+        {
+          "advisorMonth": 10,
+          "semester": 2,
+          "accumulatedCommissionGoal": 43000,
+          "accumulatedPolicyGoal": 12,
+          "minimumLifePolicyGoal": 4,
+          "bonusPercentage": 1,
+          "minimumAward": 43000,
+          "maximumAward": 130000
+        },
+        {
+          "advisorMonth": 11,
+          "semester": 2,
+          "accumulatedCommissionGoal": 55000,
+          "accumulatedPolicyGoal": 15,
+          "minimumLifePolicyGoal": 5,
+          "bonusPercentage": 1,
+          "minimumAward": 55000,
+          "maximumAward": 165000
+        },
+        {
+          "advisorMonth": 12,
+          "semester": 2,
+          "accumulatedCommissionGoal": 70000,
+          "accumulatedPolicyGoal": 18,
+          "minimumLifePolicyGoal": 6,
+          "bonusPercentage": 1,
+          "minimumAward": 70000,
+          "maximumAward": 210000
+        }
+      ]
+    }
+  }
 }

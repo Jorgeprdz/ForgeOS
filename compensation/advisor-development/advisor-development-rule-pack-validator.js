@@ -1,5 +1,6 @@
 const EXPECTED_RULE_PACK_ID = 'smnyl-advisor-development-2026';
 const EXPECTED_SOURCE_EVIDENCE_REF = 'CC 2026 Asesores en Desarrollo.pdf';
+const TRAINING_ALLOWANCE_CONCEPT_KEY = 'training-allowance';
 
 const VALID_GOVERNANCE_STATUSES = new Set(['draft', 'official']);
 
@@ -80,6 +81,10 @@ function isValidDateString(value) {
 
 function isNumber(value) {
   return typeof value === 'number' && Number.isFinite(value);
+}
+
+function isString(value) {
+  return typeof value === 'string' && value.trim() !== '';
 }
 
 function validateIdentity(rulePack, validationErrors) {
@@ -218,20 +223,156 @@ function validateCountingAndWeightingRules(rulePack, validationErrors) {
   }
 }
 
+function validateTrainingAllowanceRow(row, index, validationErrors) {
+  if (!isPlainObject(row)) {
+    validationErrors.push(createIssue(
+      'invalid_training_allowance_table_row',
+      'Training Allowance table rows must be objects',
+      `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.table[${index}]`,
+    ));
+    return;
+  }
+
+  const numericFields = [
+    'advisorMonth',
+    'semester',
+    'accumulatedCommissionGoal',
+    'accumulatedPolicyGoal',
+    'minimumLifePolicyGoal',
+    'bonusPercentage',
+    'minimumAward',
+    'maximumAward',
+  ];
+
+  for (const field of numericFields) {
+    if (!isNumber(row[field])) {
+      validationErrors.push(createIssue(
+        'invalid_training_allowance_numeric_field',
+        `Training Allowance table row ${index + 1} requires numeric ${field}`,
+        `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.table[${index}].${field}`,
+      ));
+    }
+  }
+}
+
+function validateTrainingAllowanceConcept(rulePack, validationErrors) {
+  const concepts = rulePack?.concepts;
+
+  if (!isPlainObject(concepts)) {
+    validationErrors.push(createIssue(
+      'missing_concepts',
+      'concepts is required and must include training-allowance',
+      'concepts',
+    ));
+    return;
+  }
+
+  const trainingAllowance = concepts[TRAINING_ALLOWANCE_CONCEPT_KEY];
+
+  if (!isPlainObject(trainingAllowance)) {
+    validationErrors.push(createIssue(
+      'missing_training_allowance_concept',
+      'concepts.training-allowance is required',
+      `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}`,
+    ));
+    return;
+  }
+
+  const requiredStringFields = [
+    'displayName',
+    'targetPopulation',
+    'calculationFrequency',
+    'paymentFrequency',
+  ];
+
+  for (const field of requiredStringFields) {
+    if (!isString(trainingAllowance[field])) {
+      validationErrors.push(createIssue(
+        'invalid_training_allowance_string_field',
+        `Training Allowance requires string ${field}`,
+        `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.${field}`,
+      ));
+    }
+  }
+
+  if (trainingAllowance.payoutTruth !== false) {
+    validationErrors.push(createIssue(
+      'invalid_training_allowance_payout_truth',
+      'Training Allowance payoutTruth must be explicitly false',
+      `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.payoutTruth`,
+    ));
+  }
+
+  if (!isNumber(trainingAllowance?.policyAccumulationRule?.vidaPlusGmmiCountsAs)) {
+    validationErrors.push(createIssue(
+      'invalid_training_allowance_policy_accumulation_rule',
+      'Training Allowance policyAccumulationRule.vidaPlusGmmiCountsAs must be numeric',
+      `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.policyAccumulationRule.vidaPlusGmmiCountsAs`,
+    ));
+  }
+
+  const calculationRules = trainingAllowance.calculationRules;
+
+  if (!isPlainObject(calculationRules)) {
+    validationErrors.push(createIssue(
+      'missing_training_allowance_calculation_rules',
+      'Training Allowance calculationRules is required',
+      `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.calculationRules`,
+    ));
+  } else {
+    const requiredStrategyFields = [
+      'baseBonusStrategy',
+      'excessBonusStrategy',
+      'paymentDeductionStrategy',
+    ];
+
+    for (const field of requiredStrategyFields) {
+      if (!isString(calculationRules[field])) {
+        validationErrors.push(createIssue(
+          'invalid_training_allowance_strategy_field',
+          `Training Allowance calculationRules requires string ${field}`,
+          `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.calculationRules.${field}`,
+        ));
+      }
+    }
+
+    if (!isNumber(calculationRules.excessMultiplierRate)) {
+      validationErrors.push(createIssue(
+        'invalid_training_allowance_excess_multiplier_rate',
+        'Training Allowance calculationRules.excessMultiplierRate must be numeric',
+        `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.calculationRules.excessMultiplierRate`,
+      ));
+    }
+  }
+
+  if (!Array.isArray(trainingAllowance.table)) {
+    validationErrors.push(createIssue(
+      'missing_training_allowance_table',
+      'Training Allowance table must be an array',
+      `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.table`,
+    ));
+    return;
+  }
+
+  if (trainingAllowance.table.length !== 12) {
+    validationErrors.push(createIssue(
+      'invalid_training_allowance_table_length',
+      'Training Allowance table must contain exactly 12 rows',
+      `concepts.${TRAINING_ALLOWANCE_CONCEPT_KEY}.table`,
+    ));
+  }
+
+  trainingAllowance.table.forEach((row, index) => {
+    validateTrainingAllowanceRow(row, index, validationErrors);
+  });
+}
+
 function validateDraftCompleteness(rulePack, validationWarnings) {
   if (!hasOwn(rulePack, 'qualificationRules')) {
     validationWarnings.push(createIssue(
       'qualification_rules_allowed_missing_in_draft',
       'qualificationRules is allowed as draft warning, but must be added before official sealing',
       'qualificationRules',
-    ));
-  }
-
-  if (!hasOwn(rulePack, 'concepts')) {
-    validationWarnings.push(createIssue(
-      'concepts_allowed_missing_in_draft',
-      'concepts is allowed as draft warning, but must be added before official sealing',
-      'concepts',
     ));
   }
 }
@@ -258,6 +399,7 @@ export function validateAdvisorDevelopmentRulePack(rulePack) {
   validateSourceEvidence(rulePack, validationErrors);
   validatePayoutTruthRule(rulePack, validationErrors);
   validateCountingAndWeightingRules(rulePack, validationErrors);
+  validateTrainingAllowanceConcept(rulePack, validationErrors);
   validateDraftCompleteness(rulePack, validationWarnings);
 
   return {
@@ -270,4 +412,5 @@ export function validateAdvisorDevelopmentRulePack(rulePack) {
 export {
   EXPECTED_RULE_PACK_ID,
   EXPECTED_SOURCE_EVIDENCE_REF,
+  TRAINING_ALLOWANCE_CONCEPT_KEY,
 };

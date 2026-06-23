@@ -3,8 +3,63 @@ import assert from 'node:assert/strict';
 import {
   EXPECTED_RULE_PACK_ID,
   EXPECTED_SOURCE_EVIDENCE_REF,
+  TRAINING_ALLOWANCE_CONCEPT_KEY,
   validateAdvisorDevelopmentRulePack,
 } from '../compensation/advisor-development/advisor-development-rule-pack-validator.js';
+
+function createTrainingAllowanceConcept(overrides = {}) {
+  return {
+    displayName: 'Training Allowance',
+    targetPopulation: 'first_year_advisors',
+    calculationFrequency: 'monthly',
+    paymentFrequency: 'semiannual_with_monthly_advances',
+    paymentTiming: 'month_after_semester_close',
+    payoutTruth: false,
+    payoutTruthRule: 'commission_statement_required',
+    policyAccumulationRule: {
+      vidaPlusGmmiCountsAs: 0.5,
+    },
+    calculationRules: {
+      baseBonusStrategy: 'min_between_calculated_and_max_award',
+      excessBonusStrategy: 'apply_rate_to_excess_above_max_award',
+      excessMultiplierRate: 0.35,
+      paymentDeductionStrategy: 'subtract_prior_paid_bonuses_in_current_semester',
+    },
+    table: [
+      [1, 1, 9000, 3, 1, 1, 9000, 33000],
+      [2, 1, 15000, 6, 2, 1, 15000, 56000],
+      [3, 1, 21000, 9, 3, 1, 21000, 69000],
+      [4, 1, 31000, 12, 4, 1, 31000, 102000],
+      [5, 1, 39000, 15, 5, 1, 39000, 129000],
+      [6, 1, 51000, 18, 6, 1, 51000, 167000],
+      [7, 2, 13000, 3, 1, 1, 13000, 38000],
+      [8, 2, 21000, 6, 2, 1, 21000, 64000],
+      [9, 2, 32000, 9, 3, 1, 32000, 95000],
+      [10, 2, 43000, 12, 4, 1, 43000, 130000],
+      [11, 2, 55000, 15, 5, 1, 55000, 165000],
+      [12, 2, 70000, 18, 6, 1, 70000, 210000],
+    ].map(([
+      advisorMonth,
+      semester,
+      accumulatedCommissionGoal,
+      accumulatedPolicyGoal,
+      minimumLifePolicyGoal,
+      bonusPercentage,
+      minimumAward,
+      maximumAward,
+    ]) => ({
+      advisorMonth,
+      semester,
+      accumulatedCommissionGoal,
+      accumulatedPolicyGoal,
+      minimumLifePolicyGoal,
+      bonusPercentage,
+      minimumAward,
+      maximumAward,
+    })),
+    ...overrides,
+  };
+}
 
 function createValidDraft(overrides = {}) {
   return {
@@ -37,19 +92,27 @@ function createValidDraft(overrides = {}) {
         },
       },
     },
+    qualificationRules: {
+      minimumIndexes: {
+        LIMRA: 75.5,
+        IGC: 91,
+      },
+    },
+    concepts: {
+      [TRAINING_ALLOWANCE_CONCEPT_KEY]: createTrainingAllowanceConcept(),
+    },
     ...overrides,
   };
 }
 
-function testValidDraftPassesWithWarningsForIncrementalNodes() {
+function testValidDraftPassesWithoutDraftWarnings() {
   const result = validateAdvisorDevelopmentRulePack(createValidDraft());
 
   assert.equal(result.isValid, true);
   assert.equal(result.validationErrors.length, 0);
-  assert(result.validationWarnings.some((warning) => warning.code === 'qualification_rules_allowed_missing_in_draft'));
-  assert(result.validationWarnings.some((warning) => warning.code === 'concepts_allowed_missing_in_draft'));
+  assert.equal(result.validationWarnings.length, 0);
 
-  console.log('PASS valid advisor development draft shell passes with draft warnings');
+  console.log('PASS valid advisor development draft with Training Allowance passes');
 }
 
 function testMissingIdentityFails() {
@@ -145,6 +208,81 @@ function testMissingOfficialSourceFails() {
   console.log('PASS official advisor development source evidence is required');
 }
 
+function testMissingTrainingAllowanceConceptFails() {
+  const draft = createValidDraft({
+    concepts: {},
+  });
+
+  const result = validateAdvisorDevelopmentRulePack(draft);
+
+  assert.equal(result.isValid, false);
+  assert(result.validationErrors.some((error) => error.code === 'missing_training_allowance_concept'));
+
+  console.log('PASS missing Training Allowance concept fails validation');
+}
+
+function testTrainingAllowanceTableRequiresTwelveRows() {
+  const trainingAllowance = createTrainingAllowanceConcept({
+    table: createTrainingAllowanceConcept().table.slice(0, 11),
+  });
+
+  const draft = createValidDraft({
+    concepts: {
+      [TRAINING_ALLOWANCE_CONCEPT_KEY]: trainingAllowance,
+    },
+  });
+
+  const result = validateAdvisorDevelopmentRulePack(draft);
+
+  assert.equal(result.isValid, false);
+  assert(result.validationErrors.some((error) => error.code === 'invalid_training_allowance_table_length'));
+
+  console.log('PASS Training Allowance table requires 12 rows');
+}
+
+function testTrainingAllowanceNumericFieldsAreStrict() {
+  const table = createTrainingAllowanceConcept().table;
+  table[0] = {
+    ...table[0],
+    accumulatedCommissionGoal: '9000',
+  };
+
+  const draft = createValidDraft({
+    concepts: {
+      [TRAINING_ALLOWANCE_CONCEPT_KEY]: createTrainingAllowanceConcept({ table }),
+    },
+  });
+
+  const result = validateAdvisorDevelopmentRulePack(draft);
+
+  assert.equal(result.isValid, false);
+  assert(result.validationErrors.some((error) => error.code === 'invalid_training_allowance_numeric_field'));
+
+  console.log('PASS Training Allowance numeric fields are strict numbers');
+}
+
+function testTrainingAllowanceExcessMultiplierRateIsStrictNumber() {
+  const draft = createValidDraft({
+    concepts: {
+      [TRAINING_ALLOWANCE_CONCEPT_KEY]: createTrainingAllowanceConcept({
+        calculationRules: {
+          baseBonusStrategy: 'min_between_calculated_and_max_award',
+          excessBonusStrategy: 'apply_rate_to_excess_above_max_award',
+          excessMultiplierRate: '0.35',
+          paymentDeductionStrategy: 'subtract_prior_paid_bonuses_in_current_semester',
+        },
+      }),
+    },
+  });
+
+  const result = validateAdvisorDevelopmentRulePack(draft);
+
+  assert.equal(result.isValid, false);
+  assert(result.validationErrors.some((error) => error.code === 'invalid_training_allowance_excess_multiplier_rate'));
+
+  console.log('PASS Training Allowance excessMultiplierRate is strict number');
+}
+
 function testValidatorDoesNotMutateInput() {
   const draft = createValidDraft();
   const before = JSON.stringify(draft);
@@ -156,12 +294,16 @@ function testValidatorDoesNotMutateInput() {
   console.log('PASS validator does not mutate input');
 }
 
-testValidDraftPassesWithWarningsForIncrementalNodes();
+testValidDraftPassesWithoutDraftWarnings();
 testMissingIdentityFails();
 testInvalidRulePackIdFails();
 testMissingCountingAndWeightingRulesFails();
 testInvalidPayoutTruthFails();
 testMissingOfficialSourceFails();
+testMissingTrainingAllowanceConceptFails();
+testTrainingAllowanceTableRequiresTwelveRows();
+testTrainingAllowanceNumericFieldsAreStrict();
+testTrainingAllowanceExcessMultiplierRateIsStrictNumber();
 testValidatorDoesNotMutateInput();
 
 console.log('PASS advisor-development-rule-pack-validator-test');
