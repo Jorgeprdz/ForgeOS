@@ -32,6 +32,7 @@ const commands = [
   ['node', ['tests/advisor-development-rule-pack-loader-test.js']],
   ['node', ['tests/advisor-development-rule-pack-integration-test.js']],
   ['node', ['tests/advisor-development-training-allowance-engine-test.js']],
+  ['node', ['tests/advisor-relationship-attribution-evaluator-test.js']],
   ['node', ['tests/cuaderno-point-period-test.js']],
   ['node', ['tests/bonus-rule-pack-contract-test.js']],
   ['node', ['tests/bonus-eligibility-result-test.js']],

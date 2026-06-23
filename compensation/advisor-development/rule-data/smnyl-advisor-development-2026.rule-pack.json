@@ -207,6 +207,51 @@
           "maximumAward": 210000
         }
       ]
+    },
+    "connection-bonus": {
+      "displayName": "Bono de Conexión",
+      "targetPopulation": "relationship_attributed_advisors",
+      "calculationStatus": "blocked_until_relationship_attribution_evidence",
+      "calculationFrequency": "monthly",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "attributionModel": "advisor_connection_attribution",
+      "requiredAttributionEvidence": [
+        "connectorId",
+        "connectedAdvisorId",
+        "connectionDate",
+        "onboardingEvidence",
+        "connectorActiveAtMonthClose",
+        "connectedAdvisorActiveAtMonthClose",
+        "attributionEvidenceStatus"
+      ],
+      "policyCountSource": "advisor-development-counting-weighting-engine.summary.includedCount",
+      "blockedReason": "blocked_by_missing_connection_attribution_evidence"
+    },
+    "development-bonus": {
+      "displayName": "Bono de Desarrollo",
+      "targetPopulation": "relationship_attributed_developers",
+      "calculationStatus": "blocked_until_relationship_attribution_evidence",
+      "calculationFrequency": "monthly",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "attributionModel": "advisor_development_attribution",
+      "supportedDeveloperShares": [
+        1,
+        0.5
+      ],
+      "requiredAttributionEvidence": [
+        "developerId",
+        "developedAdvisorId",
+        "developmentStartDate",
+        "developerEligibilityEvidence",
+        "developerActiveAtMonthClose",
+        "developedAdvisorActiveAtMonthClose",
+        "developerShare",
+        "attributionEvidenceStatus"
+      ],
+      "policyCountSource": "advisor-development-counting-weighting-engine.summary.includedCount",
+      "blockedReason": "blocked_by_missing_development_assignment_evidence"
     }
   }
 }
