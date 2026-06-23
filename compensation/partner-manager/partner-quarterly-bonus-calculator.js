@@ -733,14 +733,36 @@ export function calculatePartnerQuarterlyBonusCandidate({
 
   const activityParts = qualifiedAdvisors.map((advisor) => {
     const originalIndex = advisors.indexOf(advisor);
+    const sourceAdvisor = originalIndex >= 0 ? advisors[originalIndex] : advisor;
+    const activityNumberOrNull = (value) => {
+      const numericValue = Number(value);
+      return Number.isFinite(numericValue) ? numericValue : null;
+    };
+    const activityPolicyOverrideValue =
+      activityNumberOrNull(advisor.activityMonthlyAveragePolicies) ??
+      activityNumberOrNull(sourceAdvisor.activityMonthlyAveragePolicies) ??
+      activityNumberOrNull(advisor.activityEligiblePolicyAverage) ??
+      activityNumberOrNull(sourceAdvisor.activityEligiblePolicyAverage) ??
+      activityNumberOrNull(advisor.activityPaidPolicyAverage) ??
+      activityNumberOrNull(sourceAdvisor.activityPaidPolicyAverage);
+    const activityMonthlyAveragePolicies = activityPolicyOverrideValue ?? advisor.monthlyAveragePolicies;
+    const activityQuarterPolicyTotal = activityPolicyOverrideValue === null ? advisor.quarterPolicyTotal : activityPolicyOverrideValue * periodMonths.length;
+    const activityEconomicBasisAmount =
+      activityNumberOrNull(advisor.activityInitialCommissionsLifeIndividualAndGmmi) ??
+      activityNumberOrNull(sourceAdvisor.activityInitialCommissionsLifeIndividualAndGmmi) ??
+      activityNumberOrNull(advisor.activityBasisLifeIndividualAndGmmi) ??
+      activityNumberOrNull(sourceAdvisor.activityBasisLifeIndividualAndGmmi) ??
+      activityNumberOrNull(advisor.activityBasis) ??
+      activityNumberOrNull(sourceAdvisor.activityBasis) ??
+      advisor.qualifiedAdvisorInitialCommissionsLifeIndividualAndGmmi;
     return calculatePartnerActivityBonusCandidate({
       rulePack: activeRulePack,
       qualifiedAdvisorStatus: qualifiedAdvisorResults[originalIndex],
       advisorCareerMonth: advisor.advisorMonth,
-      monthlyAveragePolicies: advisor.monthlyAveragePolicies,
-      quarterPolicyTotal: advisor.quarterPolicyTotal,
+      monthlyAveragePolicies: activityMonthlyAveragePolicies,
+      quarterPolicyTotal: activityQuarterPolicyTotal,
       paidAppliedPolicyEvidence: advisor.paidAppliedPolicyEvidence === true,
-      economicBasisAmount: advisor.qualifiedAdvisorInitialCommissionsLifeIndividualAndGmmi,
+      economicBasisAmount: activityEconomicBasisAmount,
       period,
     });
   });
