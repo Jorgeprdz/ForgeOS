@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "rulePackId": "smnyl-partner-compensation-2026-payment-distribution",
+    "rulePackVersion": "2026.1.0-draft",
+    "rulePackHash": "draft:not-sealed",
+    "rulePackEffectiveDate": "2026-01-01",
+    "carrier": "SMNYL",
+    "year": 2026,
+    "domain": "partner_compensation",
+    "governanceStatus": "draft",
+    "sourceEvidenceRefs": [
+      "ADR-0027_COMPENSATION_RULE_PACK_BOUNDARY",
+      "2026_Partner_Compensation"
+    ]
+  },
+  "conceptsDictionary": {
+    "production": {
+      "aliases": ["production-bonus", "produccion", "bono_produccion", "bono-produccion"],
+      "payable": true,
+      "canonicalFinancialCategory": "production",
+      "label": "Production"
+    },
+    "productivity": {
+      "aliases": ["productivityMultiplier", "productivity-multiplier", "productivity-bonus", "productividad", "bono_productividad"],
+      "payable": true,
+      "canonicalFinancialCategory": "productivity",
+      "label": "Productivity"
+    },
+    "activity": {
+      "aliases": ["activity-bonus", "actividad", "bono_actividad"],
+      "payable": true,
+      "canonicalFinancialCategory": "activity",
+      "label": "Activity"
+    },
+    "development": {
+      "aliases": ["development-bonus", "desarrollo", "bono_desarrollo"],
+      "payable": true,
+      "canonicalFinancialCategory": "development",
+      "label": "Development"
+    },
+    "connection": {
+      "aliases": ["connection-bonus", "conexion", "conexión", "bono_conexion", "bono_conexión"],
+      "payable": true,
+      "canonicalFinancialCategory": "connection",
+      "label": "Connection"
+    },
+    "fixedSupport": {
+      "aliases": ["fixed-support", "fixed-support-bonus", "support", "support-bonus", "partner-support", "partner-support-bonus", "apoyo", "bono_apoyo"],
+      "payable": true,
+      "canonicalFinancialCategory": "fixedSupport",
+      "label": "Fixed Support"
+    },
+    "partnerSignup": {
+      "aliases": ["partner-signup", "partner-signup-bonus", "partnerAlta", "partner-alta", "partner-alta-bonus", "alta_partner", "bono_alta_partner"],
+      "payable": true,
+      "canonicalFinancialCategory": "partnerSignup",
+      "label": "Partner Signup"
+    },
+    "productivityBase": {
+      "aliases": ["productivity-base", "productivity_base", "base_productividad"],
+      "payable": false,
+      "canonicalFinancialCategory": "productivity",
+      "nonPayableReason": "concept_is_not_payable",
+      "label": "Productivity Base"
+    }
+  },
+  "paymentDistributionPolicies": {
+    "production": {
+      "ruleId": "payment-distribution.production.deferred_equal_parts.2026",
+      "payable": true,
+      "distributionType": "deferred_equal_parts",
+      "parts": 3,
+      "startAnchor": "month_after_quarter_close",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    },
+    "productivity": {
+      "ruleId": "payment-distribution.productivity.deferred_equal_parts.2026",
+      "payable": true,
+      "distributionType": "deferred_equal_parts",
+      "parts": 3,
+      "startAnchor": "month_after_quarter_close",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    },
+    "activity": {
+      "ruleId": "payment-distribution.activity.single_payment.2026",
+      "payable": true,
+      "distributionType": "single_payment",
+      "paymentAnchor": "quarter_close",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    },
+    "development": {
+      "ruleId": "payment-distribution.development.monthly_breakdown_required.2026",
+      "payable": true,
+      "distributionType": "monthly_breakdown_required",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    },
+    "connection": {
+      "ruleId": "payment-distribution.connection.monthly_breakdown_required.2026",
+      "payable": true,
+      "distributionType": "monthly_breakdown_required",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    },
+    "fixedSupport": {
+      "ruleId": "payment-distribution.fixedSupport.monthly_breakdown_required.2026",
+      "payable": true,
+      "distributionType": "monthly_breakdown_required",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    },
+    "partnerSignup": {
+      "ruleId": "payment-distribution.partnerSignup.monthly_breakdown_required.2026",
+      "payable": true,
+      "distributionType": "monthly_breakdown_required",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    },
+    "productivityBase": {
+      "ruleId": "payment-distribution.productivityBase.excluded_non_payable.2026",
+      "payable": false,
+      "distributionType": "excluded_non_payable",
+      "excludeReason": "concept_is_not_payable",
+      "sourceEvidenceRef": "2026_Partner_Compensation"
+    }
+  },
+  "canonicalFinancialCategories": [
+    "production",
+    "productivity",
+    "activity",
+    "development",
+    "connection",
+    "fixedSupport",
+    "partnerSignup"
+  ]
+}

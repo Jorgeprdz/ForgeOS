@@ -1,27 +1,13 @@
-const PAYABLE_CONCEPT_ALIASES = Object.freeze({
-  production: new Set(['production', 'production-bonus']),
-  productivity: new Set(['productivity', 'productivityMultiplier', 'productivity-multiplier', 'productivity-bonus']),
-  activity: new Set(['activity', 'activity-bonus']),
-  development: new Set(['development', 'development-bonus']),
-  connection: new Set(['connection', 'connection-bonus']),
-  partnerSignup: new Set(['partnerSignup', 'partner-signup', 'partner-signup-bonus', 'partnerAlta', 'partner-alta-bonus']),
-  fixedSupport: new Set(['fixedSupport', 'fixed-support', 'fixed-support-bonus']),
-});
-
-const NON_PAYABLE_CONCEPT_ALIASES = new Set([
-  'productivityBase',
-  'productivity-base',
-  'productivity_base',
-]);
+import {
+  FatalGovernanceError,
+  assertValidPaymentDistributionRulePack,
+} from './partner-payment-distribution-rule-pack-validator.js';
 
 export const PARTNER_PAYMENT_CADENCE_STATUSES = Object.freeze({
   PROJECTED_CANDIDATE: 'projected_candidate',
-  PARTIAL_PROJECTED_WITH_BLOCKED_PAYMENTS: 'partial_projected_with_blocked_payments',
   PROJECTED_WITH_EXCLUDED_NON_PAYABLE_CONCEPTS: 'projected_with_excluded_non_payable_concepts',
-  BLOCKED_BY_MISSING_PAYMENT_MONTH: 'blocked_by_missing_payment_month',
-  BLOCKED_BY_MISSING_AMOUNT: 'blocked_by_missing_amount',
-  BLOCKED_BY_SOURCE_CONCEPT: 'blocked_by_source_concept',
-  BLOCKED_BY_NOT_PAYABLE_CONCEPT: 'blocked_by_not_payable_concept',
+  PARTIAL_PROJECTED_WITH_BLOCKED_PAYMENTS: 'partial_projected_with_blocked_payments',
+  EMPTY_PROJECTION: 'empty_projection',
 });
 
 function numberOrNull(value) {
@@ -44,7 +30,7 @@ function monthKeyFrom(value) {
     return null;
   }
 
-  const raw = value.month || value.monthId || value.monthKey || value.paymentMonth || value.periodMonth || value.date || value.startDate || value.endDate;
+  const raw = value.month || value.paymentMonth || value.monthId || value.monthKey || value.date || value.startDate || value.endDate;
 
   if (typeof raw === 'string') {
     if (/^\d{4}-\d{2}$/.test(raw)) return raw;
@@ -54,451 +40,583 @@ function monthKeyFrom(value) {
   return null;
 }
 
-export function addMonthsToMonthKey(monthKey, offset = 0) {
-  const key = monthKeyFrom(monthKey);
-  if (!key) return null;
+function addMonthsToMonthKey(monthKey, offset) {
+  if (!/^\d{4}-\d{2}$/.test(monthKey || '')) return null;
 
-  const [year, month] = key.split('-').map(Number);
-  if (!Number.isInteger(year) || !Number.isInteger(month)) return null;
+  const [year, month] = monthKey.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1 + offset, 1));
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
 
-  const date = new Date(Date.UTC(year, month - 1 + Number(offset || 0), 1));
-  const nextYear = date.getUTCFullYear();
-  const nextMonth = String(date.getUTCMonth() + 1).padStart(2, '0');
-
-  return `${nextYear}-${nextMonth}`;
-}
-
-function quarterEndMonthFromPeriod(period = {}) {
-  const explicitEnd = monthKeyFrom(period.endDate || period.end || period.closeDate);
-  if (explicitEnd) return explicitEnd;
-
-  if (Array.isArray(period.months) && period.months.length > 0) {
-    const normalizedMonths = period.months.map(monthKeyFrom).filter(Boolean);
-    return normalizedMonths[normalizedMonths.length - 1] || null;
-  }
-
-  return null;
-}
-
-function conceptKeyOf(entryKey, concept = {}) {
-  return concept.conceptKey || concept.key || entryKey || null;
-}
-
-function canonicalConceptKey(entryKey, concept = {}) {
-  const key = conceptKeyOf(entryKey, concept);
-  if (!key) return null;
-
-  if (NON_PAYABLE_CONCEPT_ALIASES.has(key)) return 'nonPayable';
-
-  for (const [canonical, aliases] of Object.entries(PAYABLE_CONCEPT_ALIASES)) {
-    if (aliases.has(key) || aliases.has(entryKey)) return canonical;
-  }
-
-  return null;
-}
-
-function candidateAmountOf(concept = {}) {
-  return numberOrNull(
-    concept.candidateAmount
-    ?? concept.amount
-    ?? concept.calculatedCandidateAmount
-    ?? concept.payableCandidateAmount
-  );
-}
-
-function sourceConceptIsBlocked(concept = {}) {
-  const status = String(concept.status || '');
-  return status.includes('blocked') || status.includes('unknown') || status.includes('not_modeled');
+  return `${y}-${m}`;
 }
 
 function unique(items = []) {
   return [...new Set(items.filter(Boolean))];
 }
 
-function allocateEqualParts(amount, count) {
-  const numericAmount = numberOrNull(amount);
-  const numericCount = Number(count);
+function normalizeConceptValue(sourceConceptKey, rawConcept) {
+  if (rawConcept === null || rawConcept === undefined || typeof rawConcept !== 'object' || Array.isArray(rawConcept)) {
+    return {
+      sourceConceptKey,
+      conceptKey: sourceConceptKey,
+      status: 'calculated_candidate',
+      candidateAmount: rawConcept,
+      blockedReasons: [],
+      missingInputs: [],
+      warnings: [],
+      metadata: {},
+    };
+  }
 
-  if (numericAmount === null || !Number.isInteger(numericCount) || numericCount <= 0) return [];
+  return {
+    ...rawConcept,
+    sourceConceptKey,
+    conceptKey: rawConcept.conceptKey || rawConcept.canonicalConceptKey || sourceConceptKey,
+    status: rawConcept.status || 'calculated_candidate',
+    candidateAmount: rawConcept.candidateAmount ?? rawConcept.amount ?? rawConcept.value ?? null,
+    blockedReasons: Array.isArray(rawConcept.blockedReasons) ? rawConcept.blockedReasons : [],
+    missingInputs: Array.isArray(rawConcept.missingInputs) ? rawConcept.missingInputs : [],
+    warnings: Array.isArray(rawConcept.warnings) ? rawConcept.warnings : [],
+    metadata: rawConcept.metadata || {},
+  };
+}
 
-  const cents = Math.round(numericAmount * 100);
-  const sign = cents < 0 ? -1 : 1;
-  const absoluteCents = Math.abs(cents);
-  const base = Math.trunc(absoluteCents / numericCount);
-  const remainder = absoluteCents - (base * numericCount);
+function resolveCanonicalConceptKey({ sourceConceptKey, concept, aliasMap }) {
+  const candidates = [
+    concept.canonicalConceptKey,
+    concept.conceptKey,
+    sourceConceptKey,
+  ].filter(Boolean);
 
-  return Array.from({ length: numericCount }, (_, index) => {
-    const centsForPart = base + (index < remainder ? 1 : 0);
-    return roundMoney((centsForPart * sign) / 100);
+  for (const candidate of candidates) {
+    const resolved = aliasMap.get(String(candidate).trim().toLowerCase());
+    if (resolved) return resolved;
+  }
+
+  return null;
+}
+
+function isUncertainStatus(status = '') {
+  const normalized = String(status || '').toLowerCase();
+
+  return normalized.includes('blocked')
+    || normalized.includes('unknown')
+    || normalized.includes('not_modeled')
+    || normalized.includes('not_modelled')
+    || normalized.includes('hidden_by_scope');
+}
+
+function candidateAmountOf(concept) {
+  return roundMoney(concept.candidateAmount ?? concept.amount ?? concept.value);
+}
+
+function allocateEqualParts(amount, parts) {
+  if (amount === null) return Array.from({ length: parts }, () => null);
+
+  const totalCents = Math.round(Number(amount) * 100);
+  const baseCents = Math.trunc(totalCents / parts);
+  const remainder = totalCents - (baseCents * parts);
+
+  return Array.from({ length: parts }, (_, index) => {
+    const cents = baseCents + (index < remainder ? 1 : 0);
+    return roundMoney(cents / 100);
   });
 }
 
-function createPayment({
+function pickRulePackMetadata(rulePack) {
+  const metadata = rulePack.metadata || {};
+
+  return {
+    rulePackId: metadata.rulePackId || null,
+    rulePackVersion: metadata.rulePackVersion || null,
+    rulePackHash: metadata.rulePackHash || null,
+    rulePackEffectiveDate: metadata.rulePackEffectiveDate || null,
+    sourceEvidenceRefs: metadata.sourceEvidenceRefs || [],
+  };
+}
+
+function resolveAnchorMonth({ anchor, period, policy }) {
+  const quarterCloseMonth = monthKeyFrom(period?.endDate || period?.endMonth || period?.quarterEndMonth || period);
+
+  if (anchor === 'quarter_close' || anchor === 'period_end') {
+    return quarterCloseMonth;
+  }
+
+  if (anchor === 'month_after_quarter_close') {
+    return addMonthsToMonthKey(quarterCloseMonth, 1);
+  }
+
+  if (anchor === 'explicit_payment_month') {
+    return monthKeyFrom(policy.paymentMonth || policy.targetMonth);
+  }
+
+  return null;
+}
+
+function createProjectedPayment({
   sourceConceptKey,
-  canonicalConceptKey: canonical,
+  canonicalConceptKey,
+  concept,
+  policy,
   paymentMonth,
   amount,
-  paymentIndex = 1,
-  paymentCount = 1,
-  calculationCadence,
-  paymentCadence,
-  cadenceRule,
-  sourceStatus = null,
+  fractionIndex = null,
+  totalFractions = null,
+  rulePackMetadata,
 } = {}) {
+  const sourceStatus = concept.status || 'calculated_candidate';
+  const sourceIsUncertain = isUncertainStatus(sourceStatus);
+  const projectedAmount = sourceIsUncertain ? null : roundMoney(amount);
+
   return {
     sourceConceptKey,
-    canonicalConceptKey: canonical,
-    paymentMonth,
-    paymentIndex,
-    paymentCount,
-    amount: roundMoney(amount),
-    calculationCadence,
-    paymentCadence,
-    cadenceRule,
-    status: PARTNER_PAYMENT_CADENCE_STATUSES.PROJECTED_CANDIDATE,
-    payoutTruth: false,
+    canonicalConceptKey,
+    conceptKey: canonicalConceptKey,
     sourceStatus,
-    evidenceRequirement: ['commission_statement_for_paid_confirmed'],
+    status: sourceIsUncertain ? sourceStatus : PARTNER_PAYMENT_CADENCE_STATUSES.PROJECTED_CANDIDATE,
+    paymentMonth,
+    month: paymentMonth,
+    amount: projectedAmount,
+    candidateAmount: projectedAmount,
+    payoutTruth: false,
+    paymentCadence: policy.distributionType,
+    distributionType: policy.distributionType,
+    fractionIndex,
+    totalFractions,
+    ruleId: policy.ruleId || null,
+    sourceEvidenceRef: policy.sourceEvidenceRef || null,
+    blockedReasons: unique([...(concept.blockedReasons || [])]),
+    missingInputs: unique([...(concept.missingInputs || [])]),
+    warnings: unique([...(concept.warnings || [])]),
+    ...rulePackMetadata,
   };
 }
 
 function createBlockedPayment({
   sourceConceptKey,
-  canonicalConceptKey: canonical,
-  status,
+  canonicalConceptKey = null,
+  policy = {},
+  concept = {},
   blockedReasons = [],
   missingInputs = [],
-  sourceStatus = null,
+  status = 'blocked_by_payment_distribution_boundary',
+  rulePackMetadata = {},
 } = {}) {
   return {
     sourceConceptKey,
-    canonicalConceptKey: canonical,
+    canonicalConceptKey,
+    conceptKey: canonicalConceptKey,
+    sourceStatus: concept.status || null,
     status,
     payoutTruth: false,
-    amount: null,
-    paymentMonth: null,
-    blockedReasons: unique(blockedReasons),
-    missingInputs: unique(missingInputs),
-    sourceStatus,
-    evidenceRequirement: ['commission_statement_for_paid_confirmed'],
+    paymentCadence: policy.distributionType || null,
+    distributionType: policy.distributionType || null,
+    ruleId: policy.ruleId || null,
+    sourceEvidenceRef: policy.sourceEvidenceRef || null,
+    blockedReasons: unique([
+      ...(concept.blockedReasons || []),
+      ...blockedReasons,
+    ]),
+    missingInputs: unique([
+      ...(concept.missingInputs || []),
+      ...missingInputs,
+    ]),
+    warnings: unique([...(concept.warnings || [])]),
+    ...rulePackMetadata,
   };
 }
 
-function extractMonthlyBreakdown({ canonical, concept = {}, monthlyBreakdown = {} } = {}) {
-  const direct = monthlyBreakdown[canonical];
-
-  if (Array.isArray(direct)) {
-    return direct.map((part) => ({
-      month: monthKeyFrom(part),
-      amount: numberOrNull(part.amount ?? part.candidateAmount ?? part.value),
-    }));
-  }
-
-  const candidates = [
-    concept.monthlyPayments,
+function extractMonthlyBreakdown({ sourceConceptKey, canonicalConceptKey, concept, monthlyBreakdown }) {
+  const sources = [
+    monthlyBreakdown?.[canonicalConceptKey],
+    monthlyBreakdown?.[sourceConceptKey],
+    monthlyBreakdown?.[concept.conceptKey],
     concept.monthlyBreakdown,
-    concept.metadata?.monthlyPayments,
+    concept.monthlyPayments,
+    concept.parts,
     concept.metadata?.monthlyBreakdown,
+    concept.metadata?.monthlyPayments,
     concept.metadata?.parts,
   ];
 
-  const parts = candidates.find(Array.isArray);
+  for (const source of sources) {
+    if (Array.isArray(source)) return source;
+  }
 
-  if (!parts) return [];
-
-  return parts.map((part) => {
-    const result = part.result || {};
-    return {
-      month: monthKeyFrom(part) || monthKeyFrom(result),
-      amount: numberOrNull(
-        part.amount
-        ?? part.candidateAmount
-        ?? result.amount
-        ?? result.candidateAmount
-      ),
-    };
-  });
+  return [];
 }
 
-function scheduleDeferredThirds({
+function scheduleDeferredEqualParts({
   sourceConceptKey,
-  canonical,
+  canonicalConceptKey,
   concept,
-  amount,
-  quarterEndMonth,
-  firstDeferredPaymentMonth,
+  policy,
+  period,
+  rulePackMetadata,
 } = {}) {
-  const blockedPayments = [];
   const projectedPayments = [];
+  const blockedPayments = [];
+  const parts = policy.parts;
+  const startMonth = resolveAnchorMonth({ anchor: policy.startAnchor, period, policy });
 
-  const firstMonth = monthKeyFrom(firstDeferredPaymentMonth) || addMonthsToMonthKey(quarterEndMonth, 1);
-
-  if (!firstMonth) {
+  if (!Number.isInteger(parts) || parts <= 0 || !startMonth) {
     blockedPayments.push(createBlockedPayment({
       sourceConceptKey,
-      canonicalConceptKey: canonical,
-      status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_MISSING_PAYMENT_MONTH,
-      blockedReasons: ['missing_first_deferred_payment_month'],
-      missingInputs: ['firstDeferredPaymentMonth'],
-      sourceStatus: concept.status,
+      canonicalConceptKey,
+      concept,
+      policy,
+      blockedReasons: ['blocked_by_incomplete_cadence_rule_definition'],
+      missingInputs: [
+        ...(!Number.isInteger(parts) || parts <= 0 ? ['paymentDistributionPolicy.parts'] : []),
+        ...(!startMonth ? ['paymentDistributionPolicy.startAnchor'] : []),
+      ],
+      status: 'blocked_by_incomplete_cadence_rule_definition',
+      rulePackMetadata,
     }));
 
     return { projectedPayments, blockedPayments };
   }
 
-  const parts = allocateEqualParts(amount, 3);
+  const amount = candidateAmountOf(concept);
+  const allocatedParts = allocateEqualParts(amount, parts);
 
-  parts.forEach((partAmount, index) => {
-    projectedPayments.push(createPayment({
+  for (let index = 0; index < parts; index += 1) {
+    projectedPayments.push(createProjectedPayment({
       sourceConceptKey,
-      canonicalConceptKey: canonical,
-      paymentMonth: addMonthsToMonthKey(firstMonth, index),
-      amount: partAmount,
-      paymentIndex: index + 1,
-      paymentCount: 3,
-      calculationCadence: 'quarterly',
-      paymentCadence: 'deferred_equal_thirds',
-      cadenceRule: 'quarterly_candidate_paid_over_following_three_months',
-      sourceStatus: concept.status,
+      canonicalConceptKey,
+      concept,
+      policy,
+      paymentMonth: addMonthsToMonthKey(startMonth, index),
+      amount: allocatedParts[index],
+      fractionIndex: index + 1,
+      totalFractions: parts,
+      rulePackMetadata,
     }));
-  });
+  }
 
   return { projectedPayments, blockedPayments };
 }
 
-function scheduleQuarterCloseFull({
+function scheduleSinglePayment({
   sourceConceptKey,
-  canonical,
+  canonicalConceptKey,
   concept,
-  amount,
-  quarterEndMonth,
-  activityPaymentMonth,
+  policy,
+  period,
+  rulePackMetadata,
 } = {}) {
-  const paymentMonth = monthKeyFrom(activityPaymentMonth) || quarterEndMonth;
+  const anchor = policy.paymentAnchor || policy.startAnchor;
+  const paymentMonth = resolveAnchorMonth({ anchor, period, policy });
 
   if (!paymentMonth) {
     return {
       projectedPayments: [],
-      blockedPayments: [createBlockedPayment({
-        sourceConceptKey,
-        canonicalConceptKey: canonical,
-        status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_MISSING_PAYMENT_MONTH,
-        blockedReasons: ['missing_quarter_close_payment_month'],
-        missingInputs: ['quarterEndMonth'],
-        sourceStatus: concept.status,
-      })],
+      blockedPayments: [
+        createBlockedPayment({
+          sourceConceptKey,
+          canonicalConceptKey,
+          concept,
+          policy,
+          blockedReasons: ['blocked_by_missing_payment_anchor_month'],
+          missingInputs: ['paymentDistributionPolicy.paymentAnchor'],
+          status: 'blocked_by_missing_payment_anchor_month',
+          rulePackMetadata,
+        }),
+      ],
     };
   }
 
   return {
-    projectedPayments: [createPayment({
-      sourceConceptKey,
-      canonicalConceptKey: canonical,
-      paymentMonth,
-      amount,
-      calculationCadence: 'quarterly',
-      paymentCadence: 'quarter_close_full',
-      cadenceRule: 'quarterly_activity_candidate_paid_full_at_quarter_close',
-      sourceStatus: concept.status,
-    })],
+    projectedPayments: [
+      createProjectedPayment({
+        sourceConceptKey,
+        canonicalConceptKey,
+        concept,
+        policy,
+        paymentMonth,
+        amount: candidateAmountOf(concept),
+        rulePackMetadata,
+      }),
+    ],
     blockedPayments: [],
   };
 }
 
-function scheduleMonthlyBreakdown({
+function scheduleMonthlyBreakdownRequired({
   sourceConceptKey,
-  canonical,
+  canonicalConceptKey,
   concept,
+  policy,
   monthlyBreakdown,
-  amount = null,
+  rulePackMetadata,
 } = {}) {
-  const parts = extractMonthlyBreakdown({ canonical, concept, monthlyBreakdown });
   const projectedPayments = [];
   const blockedPayments = [];
+  const parts = extractMonthlyBreakdown({ sourceConceptKey, canonicalConceptKey, concept, monthlyBreakdown });
+  const amount = candidateAmountOf(concept);
 
   if (parts.length === 0) {
-    if (numberOrNull(amount) === 0) {
+    if (amount === 0 && !isUncertainStatus(concept.status)) {
       return { projectedPayments, blockedPayments };
     }
 
     blockedPayments.push(createBlockedPayment({
       sourceConceptKey,
-      canonicalConceptKey: canonical,
-      status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_MISSING_PAYMENT_MONTH,
+      canonicalConceptKey,
+      concept,
+      policy,
       blockedReasons: ['missing_monthly_payment_breakdown'],
-      missingInputs: [`${canonical}MonthlyBreakdown`],
-      sourceStatus: concept.status,
+      missingInputs: [`monthlyBreakdown.${canonicalConceptKey}`],
+      status: 'blocked_by_missing_monthly_payment_breakdown',
+      rulePackMetadata,
     }));
 
     return { projectedPayments, blockedPayments };
   }
 
-  parts.forEach((part, index) => {
-    if (!part.month) {
+  for (const part of parts) {
+    const paymentMonth = monthKeyFrom(part.month || part.paymentMonth || part.date);
+    const partAmount = roundMoney(part.amount ?? part.candidateAmount ?? part.value);
+
+    if (!paymentMonth) {
       blockedPayments.push(createBlockedPayment({
         sourceConceptKey,
-        canonicalConceptKey: canonical,
-        status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_MISSING_PAYMENT_MONTH,
+        canonicalConceptKey,
+        concept,
+        policy,
         blockedReasons: ['missing_month_for_monthly_payment'],
-        missingInputs: [`${canonical}MonthlyBreakdown[${index}].month`],
-        sourceStatus: concept.status,
+        missingInputs: [`monthlyBreakdown.${canonicalConceptKey}.month`],
+        status: 'blocked_by_missing_month_for_monthly_payment',
+        rulePackMetadata,
       }));
-      return;
+      continue;
     }
 
-    if (numberOrNull(part.amount) === null) {
+    if (partAmount === null) {
       blockedPayments.push(createBlockedPayment({
         sourceConceptKey,
-        canonicalConceptKey: canonical,
-        status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_MISSING_AMOUNT,
-        blockedReasons: ['missing_monthly_payment_amount'],
-        missingInputs: [`${canonical}MonthlyBreakdown[${index}].amount`],
-        sourceStatus: concept.status,
+        canonicalConceptKey,
+        concept,
+        policy,
+        blockedReasons: ['missing_amount_for_monthly_payment'],
+        missingInputs: [`monthlyBreakdown.${canonicalConceptKey}.amount`],
+        status: 'blocked_by_missing_amount_for_monthly_payment',
+        rulePackMetadata,
       }));
-      return;
+      continue;
     }
 
-    projectedPayments.push(createPayment({
+    projectedPayments.push(createProjectedPayment({
       sourceConceptKey,
-      canonicalConceptKey: canonical,
-      paymentMonth: part.month,
-      amount: part.amount,
-      paymentIndex: index + 1,
-      paymentCount: parts.length,
-      calculationCadence: 'monthly',
-      paymentCadence: 'monthly',
-      cadenceRule: 'monthly_candidate_paid_in_own_month',
-      sourceStatus: concept.status,
+      canonicalConceptKey,
+      concept,
+      policy,
+      paymentMonth,
+      amount: partAmount,
+      rulePackMetadata,
     }));
-  });
+  }
 
   return { projectedPayments, blockedPayments };
 }
 
+function scheduleConcept({
+  sourceConceptKey,
+  canonicalConceptKey,
+  concept,
+  policy,
+  period,
+  monthlyBreakdown,
+  rulePackMetadata,
+}) {
+  if (policy.payable === false || policy.distributionType === 'excluded_non_payable') {
+    return {
+      projectedPayments: [],
+      blockedPayments: [],
+      excludedConcepts: [{
+        sourceConceptKey,
+        canonicalConceptKey,
+        conceptKey: canonicalConceptKey,
+        reason: policy.excludeReason || 'concept_is_not_payable',
+        status: 'excluded_non_payable',
+        payoutTruth: false,
+        ruleId: policy.ruleId || null,
+        sourceEvidenceRef: policy.sourceEvidenceRef || null,
+        ...rulePackMetadata,
+      }],
+    };
+  }
+
+  let scheduled;
+
+  if (policy.distributionType === 'deferred_equal_parts') {
+    scheduled = scheduleDeferredEqualParts({
+      sourceConceptKey,
+      canonicalConceptKey,
+      concept,
+      policy,
+      period,
+      rulePackMetadata,
+    });
+  } else if (policy.distributionType === 'single_payment') {
+    scheduled = scheduleSinglePayment({
+      sourceConceptKey,
+      canonicalConceptKey,
+      concept,
+      policy,
+      period,
+      rulePackMetadata,
+    });
+  } else if (policy.distributionType === 'monthly_breakdown_required') {
+    scheduled = scheduleMonthlyBreakdownRequired({
+      sourceConceptKey,
+      canonicalConceptKey,
+      concept,
+      policy,
+      monthlyBreakdown,
+      rulePackMetadata,
+    });
+  } else {
+    scheduled = {
+      projectedPayments: [],
+      blockedPayments: [
+        createBlockedPayment({
+          sourceConceptKey,
+          canonicalConceptKey,
+          concept,
+          policy,
+          blockedReasons: ['unsupported_payment_distribution_type'],
+          status: 'blocked_by_unsupported_payment_distribution_type',
+          rulePackMetadata,
+        }),
+      ],
+    };
+  }
+
+  return {
+    ...scheduled,
+    excludedConcepts: [],
+  };
+}
+
 export function createPartnerPaymentCadenceSchedule({
-  quarterlyResult = null,
-  concepts = null,
   period = null,
-  quarterEndMonth = null,
-  firstDeferredPaymentMonth = null,
-  activityPaymentMonth = null,
+  concepts = null,
+  quarterlyResult = null,
   monthlyBreakdown = {},
+  rulePack = null,
+  paymentDistributionRulePack = null,
 } = {}) {
-  const sourceConcepts = concepts || quarterlyResult?.concepts || {};
-  const sourcePeriod = period || quarterlyResult?.period || {};
-  const resolvedQuarterEndMonth = monthKeyFrom(quarterEndMonth) || quarterEndMonthFromPeriod(sourcePeriod);
+  const activeRulePack = paymentDistributionRulePack || rulePack;
+
+  if (!activeRulePack) {
+    throw new FatalGovernanceError('Missing payment distribution rule pack. ADR-0027 requires JSON rule packs for variable business rules.', [
+      {
+        code: 'missing_payment_distribution_rule_pack',
+        message: 'Payment Cadence Engine must receive a rulePack or paymentDistributionRulePack.',
+      },
+    ]);
+  }
+
+  const validation = assertValidPaymentDistributionRulePack(activeRulePack);
+  const aliasMap = validation.aliasMap;
+  const rulePackMetadata = pickRulePackMetadata(activeRulePack);
+  const activeConcepts = concepts || quarterlyResult?.concepts || {};
+  const activePeriod = period || quarterlyResult?.period || null;
 
   const projectedPayments = [];
   const blockedPayments = [];
   const excludedConcepts = [];
+  const unmappedConcepts = [];
   const warnings = [];
 
-  Object.entries(sourceConcepts).forEach(([entryKey, concept]) => {
-    const sourceConceptKey = conceptKeyOf(entryKey, concept);
-    const canonical = canonicalConceptKey(entryKey, concept);
+  for (const [sourceConceptKey, rawConcept] of Object.entries(activeConcepts)) {
+    const concept = normalizeConceptValue(sourceConceptKey, rawConcept);
+    const canonicalConceptKey = resolveCanonicalConceptKey({ sourceConceptKey, concept, aliasMap });
 
-    if (canonical === 'nonPayable') {
-      excludedConcepts.push({
+    if (!canonicalConceptKey) {
+      unmappedConcepts.push({
         sourceConceptKey,
-        canonicalConceptKey: canonical,
-        reason: 'concept_is_not_payable',
-        status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_NOT_PAYABLE_CONCEPT,
+        conceptKey: concept.conceptKey,
+        status: 'unmapped_concept_missing_cadence_rule',
         payoutTruth: false,
-        sourceStatus: concept.status,
+        blockedReasons: ['unmapped_concept_missing_cadence_rule'],
+        ...rulePackMetadata,
       });
-      return;
+      warnings.push('unmapped_concept_missing_cadence_rule');
+      continue;
     }
 
-    if (!canonical) {
-      warnings.push(`unknown_payment_cadence:${sourceConceptKey || entryKey}`);
-      return;
-    }
+    const policy = activeRulePack.paymentDistributionPolicies?.[canonicalConceptKey];
 
-    if (sourceConceptIsBlocked(concept)) {
-      blockedPayments.push(createBlockedPayment({
+    if (!policy) {
+      unmappedConcepts.push({
         sourceConceptKey,
-        canonicalConceptKey: canonical,
-        status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_SOURCE_CONCEPT,
-        blockedReasons: concept.blockedReasons || ['source_concept_blocked'],
-        missingInputs: concept.missingInputs || [],
-        sourceStatus: concept.status,
-      }));
-      return;
-    }
-
-    const amount = candidateAmountOf(concept);
-
-    if (amount === null) {
-      blockedPayments.push(createBlockedPayment({
-        sourceConceptKey,
-        canonicalConceptKey: canonical,
-        status: PARTNER_PAYMENT_CADENCE_STATUSES.BLOCKED_BY_MISSING_AMOUNT,
-        blockedReasons: ['missing_candidate_amount'],
-        missingInputs: [`${sourceConceptKey || entryKey}.candidateAmount`],
-        sourceStatus: concept.status,
-      }));
-      return;
-    }
-
-    let scheduled;
-
-    if (canonical === 'production' || canonical === 'productivity') {
-      scheduled = scheduleDeferredThirds({
-        sourceConceptKey,
-        canonical,
-        concept,
-        amount,
-        quarterEndMonth: resolvedQuarterEndMonth,
-        firstDeferredPaymentMonth,
+        canonicalConceptKey,
+        conceptKey: concept.conceptKey,
+        status: 'unmapped_concept_missing_payment_distribution_policy',
+        payoutTruth: false,
+        blockedReasons: ['unmapped_concept_missing_payment_distribution_policy'],
+        ...rulePackMetadata,
       });
-    } else if (canonical === 'activity') {
-      scheduled = scheduleQuarterCloseFull({
-        sourceConceptKey,
-        canonical,
-        concept,
-        amount,
-        quarterEndMonth: resolvedQuarterEndMonth,
-        activityPaymentMonth,
-      });
-    } else {
-      scheduled = scheduleMonthlyBreakdown({
-        sourceConceptKey,
-        canonical,
-        concept,
-        monthlyBreakdown,
-        amount,
-      });
+      warnings.push('unmapped_concept_missing_payment_distribution_policy');
+      continue;
     }
+
+    const scheduled = scheduleConcept({
+      sourceConceptKey,
+      canonicalConceptKey,
+      concept,
+      policy,
+      period: activePeriod,
+      monthlyBreakdown,
+      rulePackMetadata,
+    });
 
     projectedPayments.push(...scheduled.projectedPayments);
     blockedPayments.push(...scheduled.blockedPayments);
-  });
+    excludedConcepts.push(...scheduled.excludedConcepts);
+    warnings.push(...(concept.warnings || []));
+  }
 
-  const status = blockedPayments.length > 0
+  const projectedAmountValues = projectedPayments
+    .map((payment) => numberOrNull(payment.amount))
+    .filter((value) => value !== null);
+
+  const projectedAmount = projectedAmountValues.length > 0
+    ? roundMoney(projectedAmountValues.reduce((total, value) => total + value, 0))
+    : null;
+
+  const status = blockedPayments.length > 0 || unmappedConcepts.length > 0
     ? PARTNER_PAYMENT_CADENCE_STATUSES.PARTIAL_PROJECTED_WITH_BLOCKED_PAYMENTS
-    : excludedConcepts.length > 0
-      ? PARTNER_PAYMENT_CADENCE_STATUSES.PROJECTED_WITH_EXCLUDED_NON_PAYABLE_CONCEPTS
-      : PARTNER_PAYMENT_CADENCE_STATUSES.PROJECTED_CANDIDATE;
+    : projectedPayments.length === 0
+      ? PARTNER_PAYMENT_CADENCE_STATUSES.EMPTY_PROJECTION
+      : excludedConcepts.length > 0
+        ? PARTNER_PAYMENT_CADENCE_STATUSES.PROJECTED_WITH_EXCLUDED_NON_PAYABLE_CONCEPTS
+        : PARTNER_PAYMENT_CADENCE_STATUSES.PROJECTED_CANDIDATE;
 
   return {
     status,
     payoutTruth: false,
-    quarterEndMonth: resolvedQuarterEndMonth,
     projectedPayments,
     blockedPayments,
     excludedConcepts,
+    unmappedConcepts,
     warnings: unique(warnings),
+    rulePack: rulePackMetadata,
+    ...rulePackMetadata,
     totals: {
-      projectedAmount: roundMoney(projectedPayments.reduce((total, payment) => total + Number(payment.amount || 0), 0)),
+      projectedAmount,
+      projectedPaymentCount: projectedPayments.length,
       blockedPaymentCount: blockedPayments.length,
       excludedConceptCount: excludedConcepts.length,
-      projectedPaymentCount: projectedPayments.length,
+      unmappedConceptCount: unmappedConcepts.length,
     },
   };
 }
 
 export default {
   createPartnerPaymentCadenceSchedule,
-  addMonthsToMonthKey,
   PARTNER_PAYMENT_CADENCE_STATUSES,
 };
