@@ -15,6 +15,20 @@ const rulePack = JSON.parse(readFileSync(
   'utf8'
 ));
 
+function identityFrom(activeRulePack) {
+  return {
+    rulePackId: activeRulePack.metadata.rulePackId,
+    rulePackVersion: activeRulePack.metadata.rulePackVersion,
+    rulePackHash: activeRulePack.metadata.rulePackHash,
+    rulePackEffectiveDate: activeRulePack.metadata.rulePackEffectiveDate,
+    sourceEvidenceRefs: activeRulePack.metadata.sourceEvidenceRefs,
+    governanceStatus: activeRulePack.metadata.rulePackHash === 'draft:not-sealed' ? 'draft' : 'official',
+    calculatedAt: null,
+  };
+}
+
+const rulePackIdentity = identityFrom(rulePack);
+
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -32,6 +46,7 @@ assert.equal(validation.valid, true);
 const schedule = createPartnerPaymentCadenceSchedule({
   period,
   rulePack,
+  rulePackIdentity,
   concepts: {
     produccion: {
       conceptKey: 'bono_produccion',
@@ -101,6 +116,9 @@ assert.equal(schedule.payoutTruth, false);
 assert.equal(schedule.rulePackId, rulePack.metadata.rulePackId);
 assert.equal(schedule.rulePackVersion, rulePack.metadata.rulePackVersion);
 assert.equal(schedule.rulePackHash, rulePack.metadata.rulePackHash);
+assert.equal(schedule.rulePackIdentity.rulePackHash, rulePack.metadata.rulePackHash);
+assert.equal(schedule.projectedPayments.every((payment) => payment.rulePackIdentity.rulePackHash === rulePack.metadata.rulePackHash), true);
+assert.equal(schedule.governanceStatus, 'draft');
 
 const byConcept = (concept) => schedule.projectedPayments.filter((payment) => payment.canonicalConceptKey === concept);
 
@@ -148,6 +166,7 @@ const fakeSchedule = createPartnerPaymentCadenceSchedule({
     endDate: '2026-12-31',
   },
   rulePack: fakeRulePack,
+  rulePackIdentity: identityFrom(fakeRulePack),
   concepts: {
     bono_prueba_invernal: {
       status: 'calculated_candidate',
@@ -163,6 +182,7 @@ assert.deepEqual(fakeSchedule.projectedPayments.map((payment) => payment.amount)
 const unmappedSchedule = createPartnerPaymentCadenceSchedule({
   period,
   rulePack,
+  rulePackIdentity,
   concepts: {
     alienBonus: {
       status: 'calculated_candidate',
@@ -179,6 +199,7 @@ assert.equal(unmappedSchedule.totals.projectedAmount, null);
 const blockedInputSchedule = createPartnerPaymentCadenceSchedule({
   period,
   rulePack,
+  rulePackIdentity,
   concepts: {
     produccion: {
       status: 'blocked_by_missing_economic_input',
@@ -196,6 +217,7 @@ assert.equal(blockedInputSchedule.projectedPayments.every((payment) => payment.p
 const missingMonthlyBreakdownSchedule = createPartnerPaymentCadenceSchedule({
   period,
   rulePack,
+  rulePackIdentity,
   concepts: {
     development: {
       status: 'calculated_candidate',
@@ -215,6 +237,7 @@ assert.throws(
   () => createPartnerPaymentCadenceSchedule({
     period,
     rulePack: invalidRulePack,
+    rulePackIdentity: identityFrom(invalidRulePack),
     concepts: {
       production: {
         status: 'calculated_candidate',
@@ -232,6 +255,7 @@ assert.throws(
   () => createPartnerPaymentCadenceSchedule({
     period,
     rulePack: unsafeRulePack,
+    rulePackIdentity: identityFrom(unsafeRulePack),
     concepts: {
       production: {
         status: 'calculated_candidate',

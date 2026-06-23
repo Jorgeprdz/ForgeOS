@@ -6,9 +6,12 @@ import {
 } from '../compensation/partner-manager/partner-payment-cadence-engine.js';
 
 import {
-  MissingGovernanceMetadataError,
   createPartnerMonthlyCashflowProjection,
 } from '../compensation/partner-manager/partner-monthly-cashflow-projection-engine.js';
+
+import {
+  GovernanceIdentityMissingError,
+} from '../governance/rule-pack-identity-snapshot.js';
 
 const rulePack = JSON.parse(readFileSync(
   new URL('../compensation/partner-manager/rule-packs/smnyl-partner-compensation-2026-payment-distribution.rule-pack.json', import.meta.url),
@@ -20,6 +23,8 @@ const rulePackIdentity = {
   rulePackVersion: rulePack.metadata.rulePackVersion,
   rulePackHash: rulePack.metadata.rulePackHash,
   rulePackEffectiveDate: rulePack.metadata.rulePackEffectiveDate,
+  sourceEvidenceRefs: rulePack.metadata.sourceEvidenceRefs,
+  calculatedAt: null,
 };
 
 const periodMonths = ['2026-10', '2026-11', '2026-12', '2027-01', '2027-02', '2027-03'];
@@ -28,13 +33,9 @@ assert.throws(
   () => createPartnerMonthlyCashflowProjection({
     periodMonths,
     cadenceSchedule: { projectedPayments: [] },
-    rulePackIdentity: {
-      rulePackId: 'x',
-      rulePackVersion: '1',
-    },
     canonicalFinancialCategories: ['production'],
   }),
-  MissingGovernanceMetadataError
+  GovernanceIdentityMissingError
 );
 
 const blindCategoriesProjection = createPartnerMonthlyCashflowProjection({
@@ -53,6 +54,7 @@ assert.deepEqual(Object.keys(blindCategoriesProjection.monthlyCashflow[0].catego
 assert.equal(blindCategoriesProjection.monthlyCashflow[0].categories.bono_alfa, null);
 assert.equal(blindCategoriesProjection.monthlyCashflow[0].monthlyTotalCandidate, null);
 assert.equal(blindCategoriesProjection.monthlyCashflow[0].status, 'empty_projection');
+assert.equal(blindCategoriesProjection.monthlyCashflow[0].rulePackIdentity.rulePackHash, rulePackIdentity.rulePackHash);
 
 const nullSafeProjection = createPartnerMonthlyCashflowProjection({
   periodMonths: ['2026-01'],
@@ -131,6 +133,7 @@ const cadence = createPartnerPaymentCadenceSchedule({
     endDate: '2026-12-31',
   },
   rulePack,
+  rulePackIdentity,
   concepts: {
     produccion: {
       conceptKey: 'bono_produccion',
@@ -165,6 +168,7 @@ const cadence = createPartnerPaymentCadenceSchedule({
 const projection = createPartnerMonthlyCashflowProjection({
   periodMonths,
   cadenceSchedule: cadence,
+  rulePackIdentity,
   canonicalFinancialCategories: rulePack.canonicalFinancialCategories,
 });
 
@@ -173,6 +177,7 @@ const byMonth = new Map(projection.monthlyCashflow.map((month) => [month.payment
 assert.equal(projection.rulePackId, rulePack.metadata.rulePackId);
 assert.equal(projection.rulePackVersion, rulePack.metadata.rulePackVersion);
 assert.equal(projection.rulePackHash, rulePack.metadata.rulePackHash);
+assert.equal(projection.rulePackIdentity.rulePackHash, rulePack.metadata.rulePackHash);
 
 assert.equal(byMonth.get('2026-10').categories.development, 18000);
 assert.equal(byMonth.get('2026-10').monthlyTotalCandidate, 18000);
@@ -194,6 +199,7 @@ assert.equal(projection.totalProjectedCandidate, 132390);
 assert.equal(projection.rootExcludedConcepts.length, 1);
 assert.equal(projection.rootExcludedConcepts[0].canonicalConceptKey, 'productivityBase');
 assert.equal(projection.monthlyCashflow.every((month) => month.payoutTruth === false), true);
+assert.equal(projection.monthlyCashflow.every((month) => month.rulePackIdentity.rulePackHash === rulePack.metadata.rulePackHash), true);
 
 const emptyProjection = createPartnerMonthlyCashflowProjection({
   periodMonths: ['2026-01'],
@@ -202,10 +208,8 @@ const emptyProjection = createPartnerMonthlyCashflowProjection({
     blockedPayments: [],
     excludedConcepts: [],
     unmappedConcepts: [],
-    rulePackId: rulePackIdentity.rulePackId,
-    rulePackVersion: rulePackIdentity.rulePackVersion,
-    rulePackHash: rulePackIdentity.rulePackHash,
   },
+  rulePackIdentity,
   canonicalFinancialCategories: ['bono_alfa'],
 });
 

@@ -3,6 +3,12 @@ import {
   assertValidPaymentDistributionRulePack,
 } from './partner-payment-distribution-rule-pack-validator.js';
 
+import {
+  GovernanceIdentityMissingError,
+  createRulePackIdentitySnapshot,
+  flattenRulePackIdentitySnapshot,
+} from '../../governance/rule-pack-identity-snapshot.js';
+
 export const PARTNER_PAYMENT_CADENCE_STATUSES = Object.freeze({
   PROJECTED_CANDIDATE: 'projected_candidate',
   PROJECTED_WITH_EXCLUDED_NON_PAYABLE_CONCEPTS: 'projected_with_excluded_non_payable_concepts',
@@ -124,16 +130,15 @@ function allocateEqualParts(amount, parts) {
   });
 }
 
-function pickRulePackMetadata(rulePack) {
-  const metadata = rulePack.metadata || {};
+function pickRulePackMetadata({ rulePackIdentity }) {
+  const identity = createRulePackIdentitySnapshot({
+    rulePackIdentity,
+    calculatedAt: rulePackIdentity?.calculatedAt ?? null,
+    generatedAt: rulePackIdentity?.generatedAt ?? null,
+    allowDraft: true,
+  });
 
-  return {
-    rulePackId: metadata.rulePackId || null,
-    rulePackVersion: metadata.rulePackVersion || null,
-    rulePackHash: metadata.rulePackHash || null,
-    rulePackEffectiveDate: metadata.rulePackEffectiveDate || null,
-    sourceEvidenceRefs: metadata.sourceEvidenceRefs || [],
-  };
+  return flattenRulePackIdentitySnapshot(identity);
 }
 
 function resolveAnchorMonth({ anchor, period, policy }) {
@@ -507,6 +512,7 @@ export function createPartnerPaymentCadenceSchedule({
   monthlyBreakdown = {},
   rulePack = null,
   paymentDistributionRulePack = null,
+  rulePackIdentity = null,
 } = {}) {
   const activeRulePack = paymentDistributionRulePack || rulePack;
 
@@ -519,9 +525,19 @@ export function createPartnerPaymentCadenceSchedule({
     ]);
   }
 
+  if (!rulePackIdentity) {
+    throw new GovernanceIdentityMissingError(
+      'Payment Cadence Engine requires explicit rulePackIdentity. ADR-0027 forbids hidden latest-rule defaults.',
+      [{
+        code: 'missing_explicit_rule_pack_identity',
+        field: 'rulePackIdentity',
+      }]
+    );
+  }
+
   const validation = assertValidPaymentDistributionRulePack(activeRulePack);
   const aliasMap = validation.aliasMap;
-  const rulePackMetadata = pickRulePackMetadata(activeRulePack);
+  const rulePackMetadata = pickRulePackMetadata({ rulePackIdentity });
   const activeConcepts = concepts || quarterlyResult?.concepts || {};
   const activePeriod = period || quarterlyResult?.period || null;
 

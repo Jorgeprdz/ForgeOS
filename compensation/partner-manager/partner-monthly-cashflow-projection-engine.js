@@ -1,3 +1,8 @@
+import {
+  createRulePackIdentitySnapshot,
+  flattenRulePackIdentitySnapshot,
+} from '../../governance/rule-pack-identity-snapshot.js';
+
 export class MissingGovernanceMetadataError extends Error {
   constructor(message, details = []) {
     super(message);
@@ -115,15 +120,24 @@ function assertRulePackIdentity(identity = {}) {
 }
 
 function createEmptyMonth({ paymentMonth, categories, rulePackIdentity }) {
+  const flattenedIdentity = rulePackIdentity?.rulePackIdentity
+    ? rulePackIdentity
+    : flattenRulePackIdentitySnapshot(rulePackIdentity);
+
   return {
     paymentMonth,
     month: paymentMonth,
     status: PARTNER_MONTHLY_CASHFLOW_MONTH_STATUSES.EMPTY_PROJECTION,
     payoutTruth: false,
-    rulePackId: rulePackIdentity.rulePackId,
-    rulePackVersion: rulePackIdentity.rulePackVersion,
-    rulePackHash: rulePackIdentity.rulePackHash,
-    rulePackEffectiveDate: rulePackIdentity.rulePackEffectiveDate,
+    rulePackIdentity: flattenedIdentity.rulePackIdentity,
+    rulePackId: flattenedIdentity.rulePackId,
+    rulePackVersion: flattenedIdentity.rulePackVersion,
+    rulePackHash: flattenedIdentity.rulePackHash,
+    rulePackEffectiveDate: flattenedIdentity.rulePackEffectiveDate,
+    sourceEvidenceRefs: flattenedIdentity.sourceEvidenceRefs,
+    governanceStatus: flattenedIdentity.governanceStatus,
+    calculatedAt: flattenedIdentity.calculatedAt,
+    generatedAt: flattenedIdentity.generatedAt,
     monthlyTotalCandidate: null,
     categories: emptyCategories(categories),
     projectedPayments: [],
@@ -205,9 +219,14 @@ export function createPartnerMonthlyCashflowProjection({
   rulePackIdentity = null,
   canonicalFinancialCategories = null,
 } = {}) {
-  const identity = inferRulePackIdentity({ rulePackIdentity, cadenceSchedule });
+  const identity = createRulePackIdentitySnapshot({
+    rulePackIdentity,
+    calculatedAt: rulePackIdentity?.calculatedAt ?? null,
+    generatedAt: rulePackIdentity?.generatedAt ?? null,
+    allowDraft: true,
+  });
 
-  assertRulePackIdentity(identity);
+  const flattenedIdentity = flattenRulePackIdentitySnapshot(identity);
 
   const categories = normalizeCategories(canonicalFinancialCategories);
 
@@ -251,7 +270,7 @@ export function createPartnerMonthlyCashflowProjection({
     const row = ensureMonth(rowsByMonth, {
       paymentMonth: payment.paymentMonth,
       categories,
-      rulePackIdentity: identity,
+      rulePackIdentity: flattenedIdentity.rulePackIdentity,
       explicitMonthSet,
     });
 
@@ -291,7 +310,7 @@ export function createPartnerMonthlyCashflowProjection({
     const row = ensureMonth(rowsByMonth, {
       paymentMonth: event.paymentMonth,
       categories,
-      rulePackIdentity: identity,
+      rulePackIdentity: flattenedIdentity.rulePackIdentity,
       explicitMonthSet,
     });
 
@@ -304,7 +323,7 @@ export function createPartnerMonthlyCashflowProjection({
     const row = ensureMonth(rowsByMonth, {
       paymentMonth: event.paymentMonth,
       categories,
-      rulePackIdentity: identity,
+      rulePackIdentity: flattenedIdentity.rulePackIdentity,
       explicitMonthSet,
     });
 
@@ -315,7 +334,7 @@ export function createPartnerMonthlyCashflowProjection({
     const row = ensureMonth(rowsByMonth, {
       paymentMonth: event.paymentMonth,
       categories,
-      rulePackIdentity: identity,
+      rulePackIdentity: flattenedIdentity.rulePackIdentity,
       explicitMonthSet,
     });
 
@@ -358,11 +377,11 @@ export function createPartnerMonthlyCashflowProjection({
   return {
     status,
     payoutTruth: false,
-    rulePackIdentity: identity,
-    rulePackId: identity.rulePackId,
-    rulePackVersion: identity.rulePackVersion,
-    rulePackHash: identity.rulePackHash,
-    rulePackEffectiveDate: identity.rulePackEffectiveDate,
+    rulePackIdentity: flattenedIdentity.rulePackIdentity,
+    rulePackId: flattenedIdentity.rulePackId,
+    rulePackVersion: flattenedIdentity.rulePackVersion,
+    rulePackHash: flattenedIdentity.rulePackHash,
+    rulePackEffectiveDate: flattenedIdentity.rulePackEffectiveDate,
     totalProjectedCandidate,
     months: monthlyCashflow,
     monthlyCashflow,
