@@ -28,6 +28,8 @@ const commands = [
   ['node', ['tests/career-month-resolver-test.js']],
   ['node', ['tests/advisor-compensation-stage-test.js']],
   ['node', ['tests/advisor-development-counting-weighting-engine-test.js']],
+  ['node', ['tests/advisor-development-rule-pack-validator-test.js']],
+  ['node', ['tests/advisor-development-rule-pack-loader-test.js']],
   ['node', ['tests/cuaderno-point-period-test.js']],
   ['node', ['tests/bonus-rule-pack-contract-test.js']],
   ['node', ['tests/bonus-eligibility-result-test.js']],
