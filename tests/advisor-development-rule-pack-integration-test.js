@@ -15,6 +15,13 @@ import {
   calculateTrainingAllowanceCandidate,
 } from '../compensation/advisor-development/advisor-development-training-allowance-engine.js';
 
+import {
+  CONNECTION_BONUS_STATUS,
+  CONNECTION_BONUS_TYPE,
+  calculateConnectionBonusCandidate,
+} from '../compensation/advisor-development/advisor-development-connection-bonus-engine.js';
+
+
 const RULE_PACK_PATH = 'compensation/advisor-development/rule-data/smnyl-advisor-development-2026.rule-pack.json';
 
 function readRulePackRaw() {
@@ -285,10 +292,64 @@ function testTrainingAllowanceEngineConsumesPhysicalRulePack() {
   console.log('PASS Training Allowance engine consumes physical rule pack');
 }
 
+
+function createReadyConnectionBonusReadiness(validPolicyCount) {
+  return {
+    status: 'ready_for_candidate_calculation',
+    reason: null,
+    readiness: {
+      relationshipConfirmed: true,
+      validPolicyCountAvailable: true,
+      validPolicyCount,
+      shareAvailable: false,
+      developerShare: null,
+      readyForCandidateCalculation: true,
+    },
+    payoutTruth: false,
+    warnings: [],
+  };
+}
+
+function testConnectionBonusEngineConsumesPhysicalRulePack() {
+  const loaded = loadAdvisorDevelopmentRulePack();
+
+  const alta = calculateConnectionBonusCandidate({
+    rulePack: loaded.rulePack,
+    connectionBonusReadinessResult: createReadyConnectionBonusReadiness(3),
+    advisorFacts: {
+      advisorMonth: 1,
+    },
+  });
+
+  assert.equal(alta.status, CONNECTION_BONUS_STATUS.ELIGIBLE);
+  assert.equal(alta.bonusType, CONNECTION_BONUS_TYPE.ALTA);
+  assert.equal(alta.calculation.payableCandidate, 7500);
+  assert.equal(alta.payoutTruth, false);
+
+  const monthlyTierSixPlus = calculateConnectionBonusCandidate({
+    rulePack: loaded.rulePack,
+    connectionBonusReadinessResult: createReadyConnectionBonusReadiness(7),
+    advisorFacts: {
+      advisorMonth: 2,
+    },
+  });
+
+  assert.equal(monthlyTierSixPlus.status, CONNECTION_BONUS_STATUS.ELIGIBLE);
+  assert.equal(monthlyTierSixPlus.bonusType, CONNECTION_BONUS_TYPE.MONTHLY);
+  assert.equal(monthlyTierSixPlus.calculation.validPolicyCount, 7);
+  assert.equal(monthlyTierSixPlus.calculation.tierMatched.minimumPolicies, 6);
+  assert.equal(monthlyTierSixPlus.calculation.tierMatched.appliesToCountAndAbove, true);
+  assert.equal(monthlyTierSixPlus.calculation.payableCandidate, 20000);
+  assert.equal(monthlyTierSixPlus.payoutTruth, false);
+
+  console.log('PASS Connection Bonus engine consumes physical rule pack');
+}
+
 testPhysicalJsonIsValid();
 testLoaderLoadsPhysicalDraftRulePack();
 testTrainingAllowanceTableFromPhysicalRulePack();
 testConnectionBonusRulePackFromPhysicalRulePack();
+testConnectionBonusEngineConsumesPhysicalRulePack();
 testCountingEngineConsumesPhysicalRulePack();
 testTrainingAllowanceEngineConsumesPhysicalRulePack();
 
