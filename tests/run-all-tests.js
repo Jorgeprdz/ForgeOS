@@ -52,6 +52,7 @@ const commands = [
   ['node', ['tests/partner-ownership-real-scenario-blackbox-test.js']],
   ['node', ['tests/partner-ownership-mixed-required-quarter-regression-test.js']],
   ['node', ['tests/partner-ownership-development-required-regression-test.js']],
+  ['node', ['tests/partner-juan-real-exercise-regression-test.js']],
   ['node', ['tests/partner-rule-pack-readiness-test.js']],
   ['node', ['tests/partner-productivity-base-contract-test.js']],
   ['node', ['tests/partner-productivity-multiplier-contract-test.js']],
