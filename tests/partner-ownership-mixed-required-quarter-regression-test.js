@@ -130,6 +130,9 @@ assert.equal(result.concepts.connection.warnings.includes(
 assert.equal(result.concepts.development.warnings.includes(
   'partner_ownership_source_truth_not_required',
 ), false);
+assert.equal(result.warnings.includes(
+  'partner_ownership_source_truth_not_required',
+), false);
 
 assert.deepEqual(result.concepts.connection.metadata.ownershipSourceTruth, {
   required: true,

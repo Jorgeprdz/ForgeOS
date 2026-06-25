@@ -761,6 +761,9 @@ assert.equal(
   rawMonthlyFactsScenario.concepts.development.metadata.ownershipSourceTruth.payoutTruth,
   false,
 );
+assert.ok(rawMonthlyFactsScenario.warnings.includes(
+  'partner_ownership_source_truth_not_required',
+));
 
 const supportCareerMonths = rawMonthlyFactsScenario.concepts.fixedSupport.metadata.parts.map((part) => part.partnerCareerMonth);
 assert.deepEqual(supportCareerMonths, [25, 26, 27]);
