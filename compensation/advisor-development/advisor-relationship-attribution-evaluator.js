@@ -526,3 +526,197 @@ export function evaluateManagerPrecontractRdaAttribution({
     payoutTruth,
   };
 }
+
+
+const MANAGER_PRECONTRACT_RELATIONSHIP_OWNER_TYPES = Object.freeze([
+  'advisor',
+  'partner',
+  'manager',
+]);
+
+function isManagerPrecontractRelationshipOwnerTypeSupported(ownerType) {
+  return MANAGER_PRECONTRACT_RELATIONSHIP_OWNER_TYPES.includes(ownerType);
+}
+
+/**
+ * Evaluates Manager OS precontract relationship attribution.
+ *
+ * This is broader than RDA:
+ * - A precontract can be connected by an advisor, partner, or manager.
+ * - RDA applies only when the connection owner is an advisor.
+ * - Compensation consumes this attribution and must not infer ownership.
+ * - This function never creates payout truth or money.
+ */
+export function evaluateManagerPrecontractRelationshipAttribution({
+  advisorId,
+  relationshipType,
+  connectionOwnerType,
+  connectionOwnerId,
+  developmentOwnerType,
+  developmentOwnerId,
+  developerShare,
+  managerPrecontractAttributionEvidence = false,
+  source = 'manager_os',
+} = {}) {
+  const payoutTruth = false;
+
+  if (managerPrecontractAttributionEvidence !== true) {
+    return {
+      status: 'blocked',
+      reason: 'blocked_by_missing_manager_precontract_attribution',
+      requiredEvidence: ['manager_precontract_attribution_evidence'],
+      relationshipType,
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  if (relationshipType !== 'connection' && relationshipType !== 'development') {
+    return {
+      status: 'not_modeled',
+      reason: 'unknown_relationship_type',
+      relationshipType,
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  if (relationshipType === 'connection') {
+    if (!connectionOwnerType) {
+      return {
+        status: 'blocked',
+        reason: 'blocked_by_missing_connection_owner_type',
+        requiredEvidence: ['connection_owner_type'],
+        relationshipType: 'connection',
+        advisorId,
+        payoutTruth,
+      };
+    }
+
+    if (!isManagerPrecontractRelationshipOwnerTypeSupported(connectionOwnerType)) {
+      return {
+        status: 'not_modeled',
+        reason: 'unsupported_connection_owner_type',
+        relationshipType: 'connection',
+        connectionOwnerType,
+        advisorId,
+        payoutTruth,
+      };
+    }
+
+    if (!connectionOwnerId) {
+      return {
+        status: 'blocked',
+        reason: 'blocked_by_missing_connection_owner_id',
+        requiredEvidence: ['connection_owner_id'],
+        relationshipType: 'connection',
+        connectionOwnerType,
+        advisorId,
+        payoutTruth,
+      };
+    }
+
+    const rdaApplies = connectionOwnerType === 'advisor';
+
+    return {
+      status: 'confirmed',
+      reason: null,
+      relationshipType: 'connection',
+      ownerType: connectionOwnerType,
+      ownerId: connectionOwnerId,
+      connectionOwnerType,
+      connectionOwnerId,
+      rdaStatus: rdaApplies ? 'confirmed' : 'not_applicable',
+      rdaOwnerId: rdaApplies ? connectionOwnerId : null,
+      advisorId,
+      source,
+      payoutTruth,
+    };
+  }
+
+  if (!developmentOwnerType) {
+    return {
+      status: 'blocked',
+      reason: 'blocked_by_missing_development_owner_type',
+      requiredEvidence: ['development_owner_type'],
+      relationshipType: 'development',
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  if (!isManagerPrecontractRelationshipOwnerTypeSupported(developmentOwnerType)) {
+    return {
+      status: 'not_modeled',
+      reason: 'unsupported_development_owner_type',
+      relationshipType: 'development',
+      developmentOwnerType,
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  if (!developmentOwnerId) {
+    return {
+      status: 'blocked',
+      reason: 'blocked_by_missing_development_owner_id',
+      requiredEvidence: ['development_owner_id'],
+      relationshipType: 'development',
+      developmentOwnerType,
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  if (developerShare === undefined || developerShare === null) {
+    return {
+      status: 'blocked',
+      reason: 'blocked_by_missing_developer_share',
+      requiredEvidence: ['developer_share'],
+      relationshipType: 'development',
+      developmentOwnerType,
+      developmentOwnerId,
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  if (typeof developerShare !== 'number' || !Number.isFinite(developerShare)) {
+    return {
+      status: 'unknown',
+      reason: 'invalid_developer_share',
+      relationshipType: 'development',
+      developmentOwnerType,
+      developmentOwnerId,
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  if (developerShare !== 1.0 && developerShare !== 0.5) {
+    return {
+      status: 'not_modeled',
+      reason: 'unsupported_developer_share',
+      relationshipType: 'development',
+      developmentOwnerType,
+      developmentOwnerId,
+      developerShare,
+      advisorId,
+      payoutTruth,
+    };
+  }
+
+  return {
+    status: 'confirmed',
+    reason: null,
+    relationshipType: 'development',
+    ownerType: developmentOwnerType,
+    ownerId: developmentOwnerId,
+    developmentOwnerType,
+    developmentOwnerId,
+    advisorId,
+    developerShare,
+    source,
+    payoutTruth,
+  };
+}

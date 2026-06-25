@@ -375,3 +375,160 @@ const {
   forge005B1Assert.equal(unknownRelationship.payoutTruth, false);
   console.log('PASS unknown relationship type returns not_modeled');
 }
+
+
+const forge005B2Assert = (await import('node:assert/strict')).default;
+const {
+  evaluateManagerPrecontractRelationshipAttribution: forge005B2EvaluateManagerPrecontractRelationshipAttribution,
+} = await import('../compensation/advisor-development/advisor-relationship-attribution-evaluator.js');
+
+{
+  const directPartnerConnection = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Roberto',
+    relationshipType: 'connection',
+    connectionOwnerType: 'partner',
+    connectionOwnerId: 'Juan',
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(directPartnerConnection.status, 'confirmed');
+  forge005B2Assert.equal(directPartnerConnection.ownerType, 'partner');
+  forge005B2Assert.equal(directPartnerConnection.ownerId, 'Juan');
+  forge005B2Assert.equal(directPartnerConnection.connectionOwnerType, 'partner');
+  forge005B2Assert.equal(directPartnerConnection.connectionOwnerId, 'Juan');
+  forge005B2Assert.equal(directPartnerConnection.rdaStatus, 'not_applicable');
+  forge005B2Assert.equal(directPartnerConnection.rdaOwnerId, null);
+  forge005B2Assert.equal(directPartnerConnection.payoutTruth, false);
+  console.log('PASS partner direct precontract connection does not create RDA');
+
+  const advisorRdaConnection = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Fer',
+    relationshipType: 'connection',
+    connectionOwnerType: 'advisor',
+    connectionOwnerId: 'Pamela',
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(advisorRdaConnection.status, 'confirmed');
+  forge005B2Assert.equal(advisorRdaConnection.ownerType, 'advisor');
+  forge005B2Assert.equal(advisorRdaConnection.ownerId, 'Pamela');
+  forge005B2Assert.equal(advisorRdaConnection.rdaStatus, 'confirmed');
+  forge005B2Assert.equal(advisorRdaConnection.rdaOwnerId, 'Pamela');
+  forge005B2Assert.equal(advisorRdaConnection.payoutTruth, false);
+  console.log('PASS advisor precontract connection creates RDA attribution');
+
+  const sharedPartnerDevelopment = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Fer',
+    relationshipType: 'development',
+    developmentOwnerType: 'partner',
+    developmentOwnerId: 'Juan',
+    developerShare: 0.5,
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(sharedPartnerDevelopment.status, 'confirmed');
+  forge005B2Assert.equal(sharedPartnerDevelopment.ownerType, 'partner');
+  forge005B2Assert.equal(sharedPartnerDevelopment.ownerId, 'Juan');
+  forge005B2Assert.equal(sharedPartnerDevelopment.developmentOwnerType, 'partner');
+  forge005B2Assert.equal(sharedPartnerDevelopment.developmentOwnerId, 'Juan');
+  forge005B2Assert.equal(sharedPartnerDevelopment.developerShare, 0.5);
+  forge005B2Assert.equal(sharedPartnerDevelopment.payoutTruth, false);
+  console.log('PASS partner shared development attribution is supported');
+
+  const fullPartnerDevelopment = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Roberto',
+    relationshipType: 'development',
+    developmentOwnerType: 'partner',
+    developmentOwnerId: 'Juan',
+    developerShare: 1.0,
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(fullPartnerDevelopment.status, 'confirmed');
+  forge005B2Assert.equal(fullPartnerDevelopment.ownerType, 'partner');
+  forge005B2Assert.equal(fullPartnerDevelopment.ownerId, 'Juan');
+  forge005B2Assert.equal(fullPartnerDevelopment.developerShare, 1.0);
+  forge005B2Assert.equal(fullPartnerDevelopment.payoutTruth, false);
+  console.log('PASS partner full development attribution is supported');
+
+  const missingConnectionOwnerType = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Roberto',
+    relationshipType: 'connection',
+    connectionOwnerId: 'Juan',
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(missingConnectionOwnerType.status, 'blocked');
+  forge005B2Assert.equal(
+    missingConnectionOwnerType.reason,
+    'blocked_by_missing_connection_owner_type',
+  );
+  forge005B2Assert.equal(missingConnectionOwnerType.payoutTruth, false);
+  console.log('PASS missing connectionOwnerType blocks connection attribution');
+
+  const unsupportedConnectionOwnerType = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Roberto',
+    relationshipType: 'connection',
+    connectionOwnerType: 'investor',
+    connectionOwnerId: 'External',
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(unsupportedConnectionOwnerType.status, 'not_modeled');
+  forge005B2Assert.equal(
+    unsupportedConnectionOwnerType.reason,
+    'unsupported_connection_owner_type',
+  );
+  forge005B2Assert.equal(unsupportedConnectionOwnerType.payoutTruth, false);
+  console.log('PASS unsupported connectionOwnerType returns not_modeled');
+
+  const missingDevelopmentOwnerId = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Fer',
+    relationshipType: 'development',
+    developmentOwnerType: 'partner',
+    developerShare: 0.5,
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(missingDevelopmentOwnerId.status, 'blocked');
+  forge005B2Assert.equal(
+    missingDevelopmentOwnerId.reason,
+    'blocked_by_missing_development_owner_id',
+  );
+  forge005B2Assert.equal(missingDevelopmentOwnerId.payoutTruth, false);
+  console.log('PASS missing developmentOwnerId blocks development attribution');
+
+  const unsupportedDevelopmentOwnerType = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Fer',
+    relationshipType: 'development',
+    developmentOwnerType: 'investor',
+    developmentOwnerId: 'External',
+    developerShare: 0.5,
+    managerPrecontractAttributionEvidence: true,
+  });
+
+  forge005B2Assert.equal(unsupportedDevelopmentOwnerType.status, 'not_modeled');
+  forge005B2Assert.equal(
+    unsupportedDevelopmentOwnerType.reason,
+    'unsupported_development_owner_type',
+  );
+  forge005B2Assert.equal(unsupportedDevelopmentOwnerType.payoutTruth, false);
+  console.log('PASS unsupported developmentOwnerType returns not_modeled');
+
+  const advisorOsSelfAssignment = forge005B2EvaluateManagerPrecontractRelationshipAttribution({
+    advisorId: 'Fer',
+    relationshipType: 'connection',
+    connectionOwnerType: 'advisor',
+    connectionOwnerId: 'Fer',
+    source: 'advisor_os',
+    managerPrecontractAttributionEvidence: false,
+  });
+
+  forge005B2Assert.equal(advisorOsSelfAssignment.status, 'blocked');
+  forge005B2Assert.equal(
+    advisorOsSelfAssignment.reason,
+    'blocked_by_missing_manager_precontract_attribution',
+  );
+  forge005B2Assert.equal(advisorOsSelfAssignment.payoutTruth, false);
+  console.log('PASS Advisor OS self-assignment remains blocked without Manager OS evidence');
+}
