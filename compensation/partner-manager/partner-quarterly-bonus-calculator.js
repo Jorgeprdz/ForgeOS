@@ -1,3 +1,6 @@
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+
 import {
   ADVISOR_ECONOMIC_OUTPUT_STATUSES,
   createAdvisorEconomicOutput,
@@ -36,6 +39,21 @@ import {
 import {
   calculatePartnerProductivityMultiplierCandidate,
 } from './partner-productivity-multiplier-calculator.js';
+
+import {
+  createPartnerPaymentCadenceSchedule,
+} from './partner-payment-cadence-engine.js';
+
+const PAYMENT_DISTRIBUTION_RULE_PACK_URL = new URL(
+  './rule-packs/smnyl-partner-compensation-2026-payment-distribution.rule-pack.json',
+  import.meta.url
+);
+
+const PAYMENT_DISTRIBUTION_RULE_PACK_RAW = readFileSync(PAYMENT_DISTRIBUTION_RULE_PACK_URL, 'utf8');
+const PAYMENT_DISTRIBUTION_RULE_PACK = JSON.parse(PAYMENT_DISTRIBUTION_RULE_PACK_RAW);
+const PAYMENT_DISTRIBUTION_RULE_PACK_HASH = `sha256:${createHash('sha256')
+  .update(PAYMENT_DISTRIBUTION_RULE_PACK_RAW)
+  .digest('hex')}`;
 
 function hasNumber(value) {
   return value !== null && value !== undefined && Number.isFinite(Number(value));
@@ -630,6 +648,66 @@ function calculateRequestedConceptsSubtotal({ requestedConcepts = null, concepts
   };
 }
 
+function buildPaymentCadencePeriod(period = {}, periodMonths = []) {
+  const lastPeriodMonth = periodMonths[periodMonths.length - 1]?.key || null;
+  const quarterNumber = Number(String(period.quarter || '').replace('Q', ''));
+  const quarterEndMonth = hasNumber(period.year) && quarterNumber >= 1 && quarterNumber <= 4
+    ? `${period.year}-${String(quarterNumber * 3).padStart(2, '0')}`
+    : null;
+  return {
+    ...period,
+    quarterEndMonth: period.quarterEndMonth || period.endMonth || lastPeriodMonth || quarterEndMonth,
+  };
+}
+
+function buildRequestedConceptsForPaymentCadence({ concepts = {}, requestedConceptsApplied = [] } = {}) {
+  return requestedConceptsApplied.reduce((requestedConceptsForSchedule, conceptKey) => {
+    const concept = concepts[conceptKey];
+    if (!concept) return requestedConceptsForSchedule;
+
+    const amount = calculatedAmount(concept);
+    requestedConceptsForSchedule[conceptKey] = {
+      ...concept,
+      sourceConceptKey: conceptKey,
+      conceptKey,
+      candidateAmount: amount,
+      amount,
+      payoutTruth: false,
+    };
+
+    return requestedConceptsForSchedule;
+  }, {});
+}
+
+function buildRequestedPaymentSchedule({
+  concepts = {},
+  requestedConceptsResult,
+  period = {},
+  periodMonths = [],
+} = {}) {
+  if (!Array.isArray(requestedConceptsResult?.requestedConcepts)) return null;
+
+  const requestedConceptsForSchedule = buildRequestedConceptsForPaymentCadence({
+    concepts,
+    requestedConceptsApplied: requestedConceptsResult.requestedConceptsApplied,
+  });
+
+  return createPartnerPaymentCadenceSchedule({
+    period: buildPaymentCadencePeriod(period, periodMonths),
+    concepts: requestedConceptsForSchedule,
+    paymentDistributionRulePack: PAYMENT_DISTRIBUTION_RULE_PACK,
+    rulePackIdentity: {
+      rulePackId: PAYMENT_DISTRIBUTION_RULE_PACK.metadata.rulePackId,
+      rulePackVersion: PAYMENT_DISTRIBUTION_RULE_PACK.metadata.rulePackVersion,
+      rulePackHash: PAYMENT_DISTRIBUTION_RULE_PACK_HASH,
+      rulePackEffectiveDate: PAYMENT_DISTRIBUTION_RULE_PACK.metadata.rulePackEffectiveDate,
+      sourceEvidenceRefs: PAYMENT_DISTRIBUTION_RULE_PACK.metadata.sourceEvidenceRefs,
+      governanceStatus: PAYMENT_DISTRIBUTION_RULE_PACK.metadata.governanceStatus,
+      calculatedAt: null,
+    },
+  });
+}
+
 function buildQuarterlyPaymentSchedule({ concepts, rulePack }) {
   const monthlyAdvances = [];
   const monthlyPayments = [];
@@ -1036,6 +1114,12 @@ export function calculatePartnerQuarterlyBonusCandidate({
     fixedSupport,
   };
   const requestedConceptsResult = calculateRequestedConceptsSubtotal({ requestedConcepts, concepts });
+  const requestedPaymentSchedule = buildRequestedPaymentSchedule({
+    concepts,
+    requestedConceptsResult,
+    period,
+    periodMonths,
+  });
   const blockedConcepts = collectBlockedConcepts(concepts);
   const totalQuarterCandidateExcludingBlocked = sumNumbers(Object.entries(concepts)
     .filter(([conceptKey]) => isPayablePartnerConceptKey(conceptKey))
@@ -1071,6 +1155,7 @@ export function calculatePartnerQuarterlyBonusCandidate({
     requestedConceptsApplied: requestedConceptsResult.requestedConceptsApplied,
     requestedConceptsMissing: requestedConceptsResult.requestedConceptsMissing,
     subtotalRequestedConceptsCandidate: requestedConceptsResult.subtotalRequestedConceptsCandidate,
+    requestedPaymentSchedule,
     totals: {
       totalQuarterCandidateExcludingBlocked,
       monthlyAverageCandidateExcludingBlocked: hasNumber(totalQuarterCandidateExcludingBlocked) ? totalQuarterCandidateExcludingBlocked / 3 : null,

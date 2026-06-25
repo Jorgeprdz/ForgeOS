@@ -452,6 +452,7 @@ assert.equal(partnerXLegacy.requestedConcepts, null);
 assert.deepEqual(partnerXLegacy.requestedConceptsApplied, []);
 assert.deepEqual(partnerXLegacy.requestedConceptsMissing, []);
 assert.equal(partnerXLegacy.subtotalRequestedConceptsCandidate, null);
+assert.equal(partnerXLegacy.requestedPaymentSchedule, null);
 
 const partnerXRequestedSubtotal = calculatePartnerXQuarterlyCandidate({
   requestedConcepts: ['production', 'productivityMultiplier'],
@@ -505,6 +506,51 @@ assert.equal(
   partnerXRequestedSubtotal.totals.monthlyAverageCandidateExcludingBlocked,
   partnerXLegacy.totals.monthlyAverageCandidateExcludingBlocked
 );
+assert.ok(partnerXRequestedSubtotal.paymentSchedule);
+assert.ok(partnerXLegacy.paymentSchedule);
+
+const requestedPaymentSchedule = partnerXRequestedSubtotal.requestedPaymentSchedule;
+assert.ok(requestedPaymentSchedule);
+assert.equal(requestedPaymentSchedule.payoutTruth, false);
+assert.equal(Array.isArray(requestedPaymentSchedule.projectedPayments), true);
+assert.equal(requestedPaymentSchedule.projectedPayments.length, 6);
+assert.equal(requestedPaymentSchedule.totals.projectedAmount, 136395);
+assert.equal(
+  requestedPaymentSchedule.projectedPayments.reduce((total, payment) => total + payment.amount, 0),
+  136395
+);
+
+const requestedPaymentConceptKeys = new Set(
+  requestedPaymentSchedule.projectedPayments.flatMap((payment) => [
+    payment.conceptKey,
+    payment.canonicalConceptKey,
+  ])
+);
+assert.equal(requestedPaymentConceptKeys.has('production'), true);
+assert.equal(requestedPaymentConceptKeys.has('productivity'), true);
+assert.equal(requestedPaymentConceptKeys.has('activity'), false);
+assert.equal(requestedPaymentConceptKeys.has('development'), false);
+assert.equal(requestedPaymentConceptKeys.has('connection'), false);
+assert.equal(requestedPaymentConceptKeys.has('fixedSupport'), false);
+assert.equal(
+  requestedPaymentSchedule.projectedPayments.every((payment) => payment.payoutTruth === false),
+  true
+);
+assert.equal(
+  requestedPaymentSchedule.warnings.some((warning) => String(warning).includes('unknown_payment_cadence')),
+  false
+);
+
+const requestedProductionPayments = requestedPaymentSchedule.projectedPayments
+  .filter((payment) => payment.canonicalConceptKey === 'production');
+assert.deepEqual(requestedProductionPayments.map((payment) => payment.month), ['2026-04', '2026-05', '2026-06']);
+assert.deepEqual(requestedProductionPayments.map((payment) => payment.amount), [945, 945, 945]);
+
+const requestedProductivityPayments = requestedPaymentSchedule.projectedPayments
+  .filter((payment) => payment.canonicalConceptKey === 'productivity');
+assert.deepEqual(requestedProductivityPayments.map((payment) => payment.month), ['2026-04', '2026-05', '2026-06']);
+assert.deepEqual(requestedProductivityPayments.map((payment) => payment.amount), [44520, 44520, 44520]);
+assert.equal(partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate, 136395);
 
 const partnerXRequestedAliases = calculatePartnerXQuarterlyCandidate({
   requestedConcepts: ['production-bonus', 'productivity-multiplier'],
