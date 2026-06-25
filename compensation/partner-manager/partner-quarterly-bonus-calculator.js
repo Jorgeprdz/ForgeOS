@@ -159,7 +159,20 @@ function applyPartnerOwnershipSourceTruthToQuarterlyPart({
   relationshipAttribution = null,
 } = {}) {
   if (!shouldEvaluatePartnerQuarterlyOwnership({ evidence, relationshipAttribution })) {
-    return part;
+    return {
+      ...part,
+      metadata: {
+        ...part.metadata,
+        ownershipSourceTruth: {
+          status: 'not_required_legacy_mode',
+          reason: 'partner_ownership_source_truth_not_required',
+          requestedConcept,
+          partnerId: resolvePartnerOwnershipPartnerId(partner),
+          advisorId: resolvePartnerOwnershipAdvisorId(advisor),
+          payoutTruth: false,
+        },
+      },
+    };
   }
 
   const ownershipSourceTruth = evaluatePartnerOwnershipSourceTruth({
