@@ -571,6 +571,65 @@ function isPayablePartnerConceptKey(conceptKey) {
   ].includes(conceptKey);
 }
 
+function normalizeRequestedPartnerConceptKey(conceptKey) {
+  const aliases = {
+    production: 'production',
+    'production-bonus': 'production',
+    productivityMultiplier: 'productivityMultiplier',
+    'productivity-multiplier': 'productivityMultiplier',
+    productivityBase: 'productivityBase',
+    'productivity-base': 'productivityBase',
+    activity: 'activity',
+    'activity-bonus': 'activity',
+    development: 'development',
+    'development-bonus': 'development',
+    connection: 'connection',
+    'connection-bonus': 'connection',
+    fixedSupport: 'fixedSupport',
+    'fixed-support': 'fixedSupport',
+  };
+  return aliases[conceptKey] || null;
+}
+
+function calculateRequestedConceptsSubtotal({ requestedConcepts = null, concepts = {} } = {}) {
+  if (!Array.isArray(requestedConcepts)) {
+    return {
+      requestedConcepts: null,
+      requestedConceptsApplied: [],
+      requestedConceptsMissing: [],
+      subtotalRequestedConceptsCandidate: null,
+    };
+  }
+
+  const applied = [];
+  const missing = [];
+  const amounts = [];
+
+  for (const requestedConcept of requestedConcepts) {
+    const normalizedConceptKey = normalizeRequestedPartnerConceptKey(requestedConcept);
+    if (!normalizedConceptKey || !Object.prototype.hasOwnProperty.call(concepts, normalizedConceptKey)) {
+      missing.push(requestedConcept);
+      continue;
+    }
+
+    if (!applied.includes(normalizedConceptKey)) {
+      applied.push(normalizedConceptKey);
+    }
+
+    const amount = calculatedAmount(concepts[normalizedConceptKey]);
+    if (hasNumber(amount)) {
+      amounts.push(amount);
+    }
+  }
+
+  return {
+    requestedConcepts: [...requestedConcepts],
+    requestedConceptsApplied: applied,
+    requestedConceptsMissing: missing,
+    subtotalRequestedConceptsCandidate: sumNumbers(amounts),
+  };
+}
+
 function buildQuarterlyPaymentSchedule({ concepts, rulePack }) {
   const monthlyAdvances = [];
   const monthlyPayments = [];
@@ -647,6 +706,7 @@ export function calculatePartnerQuarterlyBonusCandidate({
   period = {},
   evidence = {},
   rulePack = null,
+  requestedConcepts = null,
 } = {}) {
   const activeRulePack = rulePack || loadPartner2026RulePack();
   const normalizedInput = normalizePartnerQuarterlyInput({ partner, advisors, period, evidence }, activeRulePack);
@@ -975,6 +1035,7 @@ export function calculatePartnerQuarterlyBonusCandidate({
     connection,
     fixedSupport,
   };
+  const requestedConceptsResult = calculateRequestedConceptsSubtotal({ requestedConcepts, concepts });
   const blockedConcepts = collectBlockedConcepts(concepts);
   const totalQuarterCandidateExcludingBlocked = sumNumbers(Object.entries(concepts)
     .filter(([conceptKey]) => isPayablePartnerConceptKey(conceptKey))
@@ -1006,11 +1067,19 @@ export function calculatePartnerQuarterlyBonusCandidate({
     trainingWinnerInference,
     concepts,
     paymentSchedule,
+    requestedConcepts: requestedConceptsResult.requestedConcepts,
+    requestedConceptsApplied: requestedConceptsResult.requestedConceptsApplied,
+    requestedConceptsMissing: requestedConceptsResult.requestedConceptsMissing,
+    subtotalRequestedConceptsCandidate: requestedConceptsResult.subtotalRequestedConceptsCandidate,
     totals: {
       totalQuarterCandidateExcludingBlocked,
       monthlyAverageCandidateExcludingBlocked: hasNumber(totalQuarterCandidateExcludingBlocked) ? totalQuarterCandidateExcludingBlocked / 3 : null,
       totalQuarterBlockedReasons: blockedConcepts.flatMap((concept) => concept.blockedReasons),
       excludedConcepts: blockedConcepts.map((concept) => concept.conceptKey),
+      requestedConcepts: requestedConceptsResult.requestedConcepts,
+      requestedConceptsApplied: requestedConceptsResult.requestedConceptsApplied,
+      requestedConceptsMissing: requestedConceptsResult.requestedConceptsMissing,
+      subtotalRequestedConceptsCandidate: requestedConceptsResult.subtotalRequestedConceptsCandidate,
     },
     warnings: [...new Set(allWarnings)],
     missingInputs: [...new Set(allMissingInputs)],

@@ -358,6 +358,168 @@ assert.equal(scenario.concepts.fixedSupport.blockedReasons.includes('blocked_by_
 assert.notEqual(scenario.totals.totalQuarterCandidateExcludingBlocked, 0);
 assert.notEqual(scenario.totals.monthlyAverageCandidateExcludingBlocked, 0);
 
+function partnerXQualifiedAdvisor(name, quarterInitialCommissions, advisorMonth) {
+  return {
+    name,
+    quarterInitialCommissions,
+    averageMonthlyInitialCommissions: quarterInitialCommissions / 3,
+    quarterPolicyTotal: 12,
+    monthlyAveragePolicies: 4,
+    monthlyPolicies: 4,
+    advisorMonth,
+    activeAtQuarterClose: true,
+    lifeIndividualShare: 0.5,
+    lifeIndividualInitialCommissions: quarterInitialCommissions * 0.5,
+    qualifiedAdvisorInitialCommissionsLifeIndividualAndGmmi: quarterInitialCommissions,
+    paidAppliedPolicyEvidence: true,
+    developerEligibilityEvidence: true,
+    LIMRA: 80,
+    IGC: 90,
+  };
+}
+
+function calculatePartnerXQuarterlyCandidate(overrides = {}) {
+  return calculatePartnerQuarterlyBonusCandidate({
+    partner: {
+      partnerId: 'PARTNER_X_005P_1_B1',
+      partnerCareerMonth: 24,
+      partnerConnectedYear: 2026,
+      organizationType: 'nueva_organizacion',
+      unitLIMRA: 80,
+      unitIGC: 90,
+      active: true,
+    },
+    period: { type: 'quarter', quarter: 'Q1', year: 2026 },
+    evidence: {
+      paidAppliedEconomicEvidence: true,
+      trainingWinnerInQuarter: true,
+    },
+    advisors: [
+      partnerXQualifiedAdvisor('Partner X A', 80000, 7),
+      partnerXQualifiedAdvisor('Partner X B', 80000, 8),
+      partnerXQualifiedAdvisor('Partner X C', 79000, 9),
+      partnerXQualifiedAdvisor('Partner X D', 79000, 10),
+      {
+        name: 'Partner X Non Qualified',
+        quarterInitialCommissions: 21000,
+        averageMonthlyInitialCommissions: 7000,
+        quarterPolicyTotal: 3,
+        advisorMonth: 4,
+        activeAtQuarterClose: true,
+        lifeIndividualShare: 0.5,
+        lifeIndividualInitialCommissions: 10500,
+        paidAppliedPolicyEvidence: true,
+        developerEligibilityEvidence: true,
+        LIMRA: 80,
+        IGC: 90,
+      },
+      {
+        name: 'Partner X Connection',
+        quarterInitialCommissions: 0,
+        averageMonthlyInitialCommissions: 0,
+        quarterPolicyTotal: 0,
+        monthlyPolicies: 0,
+        advisorMonth: 1,
+        activeAtQuarterClose: true,
+        activeAtMonthClose: true,
+        onboardingEvidence: true,
+        lifeIndividualShare: 0.5,
+        lifeIndividualInitialCommissions: 0,
+        paidAppliedPolicyEvidence: true,
+        LIMRA: 80,
+        IGC: 90,
+      },
+    ],
+    ...overrides,
+  });
+}
+
+const partnerXLegacy = calculatePartnerXQuarterlyCandidate();
+assert.deepEqual(Object.keys(partnerXLegacy.concepts), [
+  'productivityBase',
+  'productivityMultiplier',
+  'production',
+  'activity',
+  'development',
+  'connection',
+  'fixedSupport',
+]);
+assert.equal(partnerXLegacy.concepts.productivityBase.candidateAmount, 95400);
+assert.equal(partnerXLegacy.concepts.productivityMultiplier.candidateAmount, 133560);
+assert.equal(partnerXLegacy.concepts.production.candidateAmount, 2835);
+assert.equal(partnerXLegacy.payoutTruth, false);
+assert.equal(partnerXLegacy.requestedConcepts, null);
+assert.deepEqual(partnerXLegacy.requestedConceptsApplied, []);
+assert.deepEqual(partnerXLegacy.requestedConceptsMissing, []);
+assert.equal(partnerXLegacy.subtotalRequestedConceptsCandidate, null);
+
+const partnerXRequestedSubtotal = calculatePartnerXQuarterlyCandidate({
+  requestedConcepts: ['production', 'productivityMultiplier'],
+});
+assert.equal(partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate, 136395);
+assert.equal(partnerXRequestedSubtotal.totals.subtotalRequestedConceptsCandidate, 136395);
+assert.deepEqual(partnerXRequestedSubtotal.requestedConceptsApplied, ['production', 'productivityMultiplier']);
+assert.deepEqual(partnerXRequestedSubtotal.requestedConceptsMissing, []);
+assert.equal(partnerXRequestedSubtotal.payoutTruth, false);
+assert.equal(
+  partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate,
+  partnerXRequestedSubtotal.concepts.production.candidateAmount +
+    partnerXRequestedSubtotal.concepts.productivityMultiplier.candidateAmount
+);
+assert.notEqual(
+  partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate,
+  partnerXRequestedSubtotal.concepts.production.candidateAmount +
+    partnerXRequestedSubtotal.concepts.productivityMultiplier.candidateAmount +
+    partnerXRequestedSubtotal.concepts.activity.candidateAmount
+);
+assert.notEqual(
+  partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate,
+  partnerXRequestedSubtotal.concepts.production.candidateAmount +
+    partnerXRequestedSubtotal.concepts.productivityMultiplier.candidateAmount +
+    partnerXRequestedSubtotal.concepts.connection.candidateAmount
+);
+assert.ok(partnerXRequestedSubtotal.concepts.development.candidateAmount !== null);
+assert.notEqual(
+  partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate,
+  partnerXRequestedSubtotal.concepts.production.candidateAmount +
+    partnerXRequestedSubtotal.concepts.productivityMultiplier.candidateAmount +
+    partnerXRequestedSubtotal.concepts.development.candidateAmount
+);
+assert.equal(partnerXRequestedSubtotal.concepts.fixedSupport.candidateAmount, null);
+assert.equal(
+  partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate,
+  136395
+);
+assert.equal(
+  partnerXRequestedSubtotal.concepts.productivityBase.candidateAmount +
+    partnerXRequestedSubtotal.concepts.production.candidateAmount +
+    partnerXRequestedSubtotal.concepts.productivityMultiplier.candidateAmount,
+  231795
+);
+assert.notEqual(partnerXRequestedSubtotal.subtotalRequestedConceptsCandidate, 231795);
+assert.equal(
+  partnerXRequestedSubtotal.totals.totalQuarterCandidateExcludingBlocked,
+  partnerXLegacy.totals.totalQuarterCandidateExcludingBlocked
+);
+assert.equal(
+  partnerXRequestedSubtotal.totals.monthlyAverageCandidateExcludingBlocked,
+  partnerXLegacy.totals.monthlyAverageCandidateExcludingBlocked
+);
+
+const partnerXRequestedAliases = calculatePartnerXQuarterlyCandidate({
+  requestedConcepts: ['production-bonus', 'productivity-multiplier'],
+});
+assert.equal(partnerXRequestedAliases.subtotalRequestedConceptsCandidate, 136395);
+assert.deepEqual(partnerXRequestedAliases.requestedConceptsApplied, ['production', 'productivityMultiplier']);
+
+const partnerXRequestedMissing = calculatePartnerXQuarterlyCandidate({
+  requestedConcepts: ['production', 'not-a-partner-concept'],
+});
+assert.equal(partnerXRequestedMissing.subtotalRequestedConceptsCandidate, 2835);
+assert.deepEqual(partnerXRequestedMissing.requestedConceptsApplied, ['production']);
+assert.deepEqual(partnerXRequestedMissing.requestedConceptsMissing, ['not-a-partner-concept']);
+assert.equal(partnerXRequestedMissing.concepts.productivityMultiplier.candidateAmount, 133560);
+
 function rawFact(month, vidaIndividual, gmmiIndividual, otherRamos, vidaPolicies, gmmiPolicies = 0) {
   return {
     month,
