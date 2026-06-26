@@ -2,20 +2,20 @@
 
 Status: REPORT ONLY / NO FILES MOVED
 
-Generated At: 2026-06-14T06:09:33.431Z
+Generated At: 2026-06-26T21:46:31.336Z
 
 ## Counts
 
 | Metric | Count |
 | --- | ---: |
-| allFiles | 1331 |
-| trackedFiles | 1328 |
-| untrackedFiles | 0 |
-| rootFiles | 394 |
-| rootDocs | 22 |
+| allFiles | 2104 |
+| trackedFiles | 1671 |
+| untrackedFiles | 3 |
+| rootFiles | 401 |
+| rootDocs | 23 |
 | protectedAssets | 8 |
-| codeFiles | 799 |
-| destinationCandidates | 19 |
+| codeFiles | 1090 |
+| destinationCandidates | 20 |
 
 ## Safety
 
@@ -46,6 +46,7 @@ Generated At: 2026-06-14T06:09:33.431Z
 | SKIP_TEST_DOC | `FORGE_VALIDATION_REQUIREMENTS_REPORT.md` | `docs/archive/FORGE_VALIDATION_REQUIREMENTS_REPORT.md` | Filename indicates test/validation artifact; requires separate evidence policy. |
 | MOVE | `ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md` | `docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md` | Tracked root documentation file with destination candidate. |
 | MOVE | `ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md` | `docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md` | Tracked root documentation file with destination candidate. |
+| MOVE | `SESSION_BOOKMARK.md` | `docs/archive/SESSION_BOOKMARK.md` | Tracked root documentation file with destination candidate. |
 | MOVE | `broken-link-report.md` | `docs/archive/broken-link-report.md` | Tracked root documentation file with destination candidate. |
 | MOVE | `duplicate-destination-report.md` | `docs/archive/duplicate-destination-report.md` | Tracked root documentation file with destination candidate. |
 | REVIEW_REQUIRED | `forge-full-inventory.txt` | `docs/archive/forge-full-inventory.txt` | File is neither tracked nor clearly untracked in current git view. |

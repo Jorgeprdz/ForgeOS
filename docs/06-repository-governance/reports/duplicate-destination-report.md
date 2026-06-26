@@ -8,7 +8,7 @@ This report compares planned destinations that already exist and marks missing d
 
 | Status | Count |
 | --- | ---: |
-| DESTINATION_MISSING | 19 |
+| DESTINATION_MISSING | 20 |
 
 ## Destinations
 
@@ -27,6 +27,7 @@ This report compares planned destinations that already exist and marks missing d
 | `FORGE_VALIDATION_REQUIREMENTS_REPORT.md` | `docs/archive/FORGE_VALIDATION_REQUIREMENTS_REPORT.md` | DESTINATION_MISSING | Destination does not exist. |
 | `ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md` | `docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md` | DESTINATION_MISSING | Destination does not exist. |
 | `ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md` | `docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md` | DESTINATION_MISSING | Destination does not exist. |
+| `SESSION_BOOKMARK.md` | `docs/archive/SESSION_BOOKMARK.md` | DESTINATION_MISSING | Destination does not exist. |
 | `broken-link-report.md` | `docs/archive/broken-link-report.md` | DESTINATION_MISSING | Destination does not exist. |
 | `duplicate-destination-report.md` | `docs/archive/duplicate-destination-report.md` | DESTINATION_MISSING | Destination does not exist. |
 | `forge-full-inventory.txt` | `docs/archive/forge-full-inventory.txt` | DESTINATION_MISSING | Destination does not exist. |

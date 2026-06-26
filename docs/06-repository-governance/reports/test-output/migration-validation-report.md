@@ -8,7 +8,7 @@ This report validates the generated plan. It does not move files.
 
 | Check | Count | Status |
 | --- | ---: | --- |
-| Destination collisions | 1 | REVIEW_REQUIRED |
+| Destination collisions | 0 | PASS |
 | Protected root violations | 0 | PASS |
 | Runtime files in MOVE list | 0 | PASS |
 | Duplicate destinations | 0 | PASS |
@@ -18,7 +18,7 @@ This report validates the generated plan. It does not move files.
 
 | Source | Destination |
 | --- | --- |
-| `FORGE_CONSTITUTION_AMENDMENT_v1.1.md` | `docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.1.md` |
+| - | - |
 
 ## Review Required
 

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-14T06:09:37.681Z",
+  "generatedAt": "2026-06-26T21:46:37.967Z",
   "counts": {
-    "DESTINATION_MISSING": 19
+    "DESTINATION_MISSING": 20
   },
   "records": [
     {
@@ -79,6 +79,12 @@
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
       "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
+      "status": "DESTINATION_MISSING",
+      "reason": "Destination does not exist."
+    },
+    {
+      "source": "SESSION_BOOKMARK.md",
+      "destination": "docs/archive/SESSION_BOOKMARK.md",
       "status": "DESTINATION_MISSING",
       "reason": "Destination does not exist."
     },

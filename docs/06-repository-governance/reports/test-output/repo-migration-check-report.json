@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-11T04:43:32.228Z",
-  "status": "FAIL",
+  "generatedAt": "2026-06-26T21:46:21.076Z",
+  "status": "PASS_WITH_WARNINGS_ALLOWED",
   "strictLinks": true,
-  "exitCode": 1,
+  "exitCode": 0,
   "hardGates": [
     {
       "gate": "protected_root_violation",
@@ -21,35 +21,35 @@
     },
     {
       "gate": "destination_overwrite_risk",
-      "status": "FAIL",
-      "count": 1
+      "status": "PASS",
+      "count": 0
     },
     {
       "gate": "broken_markdown_links",
-      "status": "FAIL",
-      "count": 121
+      "status": "PASS",
+      "count": 0
     }
   ],
   "reports": {
     "inventory": {
-      "markdownFile": "docs/architecture/repository/reports/test-output/migration-inventory.md",
-      "jsonFile": "docs/architecture/repository/reports/test-output/migration-inventory.json"
+      "markdownFile": "docs/06-repository-governance/reports/test-output/migration-inventory.md",
+      "jsonFile": "docs/06-repository-governance/reports/test-output/migration-inventory.json"
     },
     "validate": {
-      "markdownFile": "docs/architecture/repository/reports/test-output/migration-validation-report.md",
-      "jsonFile": "docs/architecture/repository/reports/test-output/migration-validation-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/test-output/migration-validation-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/test-output/migration-validation-report.json"
     },
     "links": {
-      "markdownFile": "docs/architecture/repository/reports/test-output/broken-link-report.md",
-      "jsonFile": "docs/architecture/repository/reports/test-output/broken-link-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/test-output/broken-link-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/test-output/broken-link-report.json"
     },
     "duplicates": {
-      "markdownFile": "docs/architecture/repository/reports/test-output/duplicate-destination-report.md",
-      "jsonFile": "docs/architecture/repository/reports/test-output/duplicate-destination-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/test-output/duplicate-destination-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/test-output/duplicate-destination-report.json"
     },
     "validateInventory": {
-      "markdownFile": "docs/architecture/repository/reports/test-output/inventory-schema-validation-report.md",
-      "jsonFile": "docs/architecture/repository/reports/test-output/inventory-schema-validation-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/test-output/inventory-schema-validation-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/test-output/inventory-schema-validation-report.json"
     }
   },
   "regression": {

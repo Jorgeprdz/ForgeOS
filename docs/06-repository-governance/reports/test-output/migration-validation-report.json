@@ -1,13 +1,8 @@
 {
-  "generatedAt": "2026-06-11T04:43:30.556Z",
+  "generatedAt": "2026-06-26T21:46:17.198Z",
   "status": "PASS_WITH_REVIEW_ITEMS",
   "hardGatePass": true,
-  "destinationCollisions": [
-    {
-      "source": "FORGE_CONSTITUTION_AMENDMENT_v1.1.md",
-      "destination": "docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.1.md"
-    }
-  ],
+  "destinationCollisions": [],
   "protectedViolations": [],
   "runtimeInMoveList": [],
   "duplicateDestinations": [],

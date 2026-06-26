@@ -52,6 +52,12 @@ All report commands accept:
 
 When omitted, reports are written to repository root for backward compatibility. When provided, the harness creates the directory if missing and writes generated Markdown and JSON reports there. The harness refuses to overwrite protected root assets.
 
+Current canonical report output:
+
+- `docs/06-repository-governance/reports`
+
+Historical reports may still mention `docs/architecture/repository/reports`; that path is no longer the active harness output location.
+
 ### Inventory
 
 ```sh
@@ -190,7 +196,7 @@ Validates that `migration-inventory.json` has the required schema-like fields. I
 ### Check
 
 ```sh
-node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports
 ```
 
 Output:
@@ -217,7 +223,7 @@ Exit behavior:
 Strict mode:
 
 ```sh
-node scripts/repo-doc-migration-harness.js check --strict-links --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js check --strict-links --output-dir docs/06-repository-governance/reports
 ```
 
 ### Regression Tests
@@ -249,10 +255,10 @@ Verifies:
 ## Recommended Workflow
 
 ```sh
-node scripts/repo-doc-migration-harness.js inventory --output-dir docs/architecture/repository/reports
-node scripts/repo-doc-migration-harness.js plan --batch 3 --output-dir docs/architecture/repository/reports
-node scripts/repo-doc-migration-harness.js rewrite-plan --output-dir docs/architecture/repository/reports
-node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js inventory --output-dir docs/06-repository-governance/reports
+node scripts/repo-doc-migration-harness.js plan --batch 3 --output-dir docs/06-repository-governance/reports
+node scripts/repo-doc-migration-harness.js rewrite-plan --output-dir docs/06-repository-governance/reports
+node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports
 ```
 
 Use `--strict-links` only when broken or stale Markdown references should block the migration.

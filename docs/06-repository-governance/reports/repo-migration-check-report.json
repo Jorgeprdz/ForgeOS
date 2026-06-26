@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T06:09:37.709Z",
+  "generatedAt": "2026-06-26T21:46:37.986Z",
   "status": "PASS_WITH_WARNINGS_ALLOWED",
   "strictLinks": false,
   "exitCode": 0,
@@ -32,24 +32,24 @@
   ],
   "reports": {
     "inventory": {
-      "markdownFile": "docs/architecture/repository/reports/migration-inventory.md",
-      "jsonFile": "docs/architecture/repository/reports/migration-inventory.json"
+      "markdownFile": "docs/06-repository-governance/reports/migration-inventory.md",
+      "jsonFile": "docs/06-repository-governance/reports/migration-inventory.json"
     },
     "validate": {
-      "markdownFile": "docs/architecture/repository/reports/migration-validation-report.md",
-      "jsonFile": "docs/architecture/repository/reports/migration-validation-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/migration-validation-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/migration-validation-report.json"
     },
     "links": {
-      "markdownFile": "docs/architecture/repository/reports/broken-link-report.md",
-      "jsonFile": "docs/architecture/repository/reports/broken-link-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/broken-link-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/broken-link-report.json"
     },
     "duplicates": {
-      "markdownFile": "docs/architecture/repository/reports/duplicate-destination-report.md",
-      "jsonFile": "docs/architecture/repository/reports/duplicate-destination-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/duplicate-destination-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/duplicate-destination-report.json"
     },
     "validateInventory": {
-      "markdownFile": "docs/architecture/repository/reports/inventory-schema-validation-report.md",
-      "jsonFile": "docs/architecture/repository/reports/inventory-schema-validation-report.json"
+      "markdownFile": "docs/06-repository-governance/reports/inventory-schema-validation-report.md",
+      "jsonFile": "docs/06-repository-governance/reports/inventory-schema-validation-report.json"
     }
   },
   "regression": {

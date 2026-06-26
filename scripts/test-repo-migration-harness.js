@@ -6,7 +6,7 @@ const { execFileSync } = require('child_process');
 const harness = require('./repo-doc-migration-harness.js');
 
 const ROOT = process.cwd();
-const TEST_OUTPUT_DIR = 'docs/architecture/repository/reports/test-output';
+const TEST_OUTPUT_DIR = 'docs/06-repository-governance/reports/test-output';
 
 function assert(condition, message) {
   if (!condition) {
