@@ -270,8 +270,8 @@ Those statuses allow read-only inventory, governance mapping or approval request
 
 Source:
 
-- `docs/governance/FORGE_ROBOCOP_DIRECTIVES.md`
-- `docs/governance/FORGE_GOVERNANCE_REGISTRY.md`
+- `docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md`
+- `docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md`
 
 ---
 

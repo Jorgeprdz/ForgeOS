@@ -27,7 +27,7 @@ When this digest conflicts with a source ADR, the root Constitution or the Const
 - Working / transition docs:
   - `docs/adr/`
 - Governance docs:
-  - `docs/governance/`
+  - `docs/00-governance/`
 - PAQs:
   - discovery / architecture / readiness material, not implementation approval by default
 

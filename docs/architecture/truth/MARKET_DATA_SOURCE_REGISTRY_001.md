@@ -16,7 +16,7 @@ Applicable Constitution:
 
 - AGENTS.md: no secrets in source code, no invented financial values, forecasts are not facts, AI output is never source truth, no metric without an owner.
 - FORGE_CONSTITUTION_V3.md: evidence precedes judgment, no invented truth, source truth must remain owned.
-- docs/governance/FORGE_ROBOCOP_DIRECTIVES.md: ROBOCOP LOCK 001 requires governance declaration before work.
+- docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md: ROBOCOP LOCK 001 requires governance declaration before work.
 
 Applicable ADRs and contracts:
 

@@ -86,8 +86,8 @@ Board approval status:
 ## Sources Inspected
 
 - docs/architecture/truth/TRUTH_BOUNDARY_001_SOURCE_TRUTH_AND_EVIDENCE_STATE.md
-- docs/governance/FORGE_ROBOCOP_DIRECTIVES.md
-- docs/governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md
+- docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md
+- docs/00-governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md
 - AGENTS.md
 - FORGE_CONSTITUTION_V3.md
 - Relevant canonical ADRs listed above

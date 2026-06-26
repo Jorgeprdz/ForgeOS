@@ -93,8 +93,8 @@ Board approval status:
 - docs/architecture/truth/EVIDENCE_STATE_CONTRACT_001.md
 - docs/architecture/truth/RULE_SNAPSHOT_GOVERNANCE_001.md
 - docs/architecture/truth/TRUTH_BOUNDARY_003_VALIDATOR_READINESS_PLAN.md
-- docs/governance/FORGE_ROBOCOP_DIRECTIVES.md
-- docs/governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md
+- docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md
+- docs/00-governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md
 - AGENTS.md
 - FORGE_CONSTITUTION_V3.md
 - adr/ADR-001 through ADR-008, ADR-010, ADR-011, ADR-015, ADR-017, ADR-018

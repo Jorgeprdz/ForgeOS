@@ -100,9 +100,9 @@ The map is documentation-only. It does not create engines, schemas, runtime beha
 - docs/architecture/constitution/FORGE_ARCHITECTURAL_CONSTITUTION_v3.md
 - docs/constitution/FORGE_CONSTITUTION_MAP.md
 - AGENTS.md
-- docs/governance/FORGE_ROBOCOP_DIRECTIVES.md
-- docs/governance/FORGE_GOVERNANCE_REGISTRY.md
-- docs/governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md
+- docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md
+- docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md
+- docs/00-governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md
 - FORGE_MASTER_BUILD_TREE.md
 - adr/ADR-001 through ADR-008, ADR-010, ADR-011, ADR-015, ADR-017, ADR-018
 - docs/adr/ADR-0019_PROCESS_ADVANCEMENT_INTELLIGENCE.md
@@ -116,7 +116,7 @@ The map is documentation-only. It does not create engines, schemas, runtime beha
 
 Note:
 
-- docs/governance/FORGE_ROBOCOP_GOVERNANCE_REGISTRY.md was requested if present. It was not present. The active registry is docs/governance/FORGE_GOVERNANCE_REGISTRY.md.
+- docs/00-governance/FORGE_ROBOCOP_GOVERNANCE_REGISTRY.md was requested if present. It was not present. The active registry is docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md.
 
 ## Authority Order
 

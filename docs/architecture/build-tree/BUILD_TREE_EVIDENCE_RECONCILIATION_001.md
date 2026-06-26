@@ -58,8 +58,8 @@ Board approval status:
 
 - FORGE_MASTER_BUILD_TREE.md
 - AGENTS.md
-- docs/governance/FORGE_ROBOCOP_DIRECTIVES.md
-- docs/governance/FORGE_GOVERNANCE_REGISTRY.md
+- docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md
+- docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md
 - docs/architecture/runtime/RUNTIME-003_MODULE_GRAPH_VALIDATION.md
 - docs/architecture/runtime/RUNTIME-003_MODULE_GRAPH_VALIDATION.json
 - docs/architecture/runtime/MIGRATION-007_PROGRESS.md
@@ -90,8 +90,8 @@ Operator-provided current evidence:
 
 | Evidence | Source | Status impact | Confidence |
 | --- | --- | --- | --- |
-| ROBOCOP LOCK 001 status is LOCKED | docs/governance/FORGE_ROBOCOP_DIRECTIVES.md | Governance gate may be treated as locked | High |
-| Constitutional Gate required before work | AGENTS.md; docs/governance/FORGE_ROBOCOP_DIRECTIVES.md | Future work must declare all 10 gate fields | High |
+| ROBOCOP LOCK 001 status is LOCKED | docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md | Governance gate may be treated as locked | High |
+| Constitutional Gate required before work | AGENTS.md; docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md | Future work must declare all 10 gate fields | High |
 | Runtime audit is EXECUTABLE | docs/architecture/runtime/RUNTIME-003_MODULE_GRAPH_VALIDATION.md | Runtime/Test Integrity may move to validated baseline | High |
 | Missing targets are 0 | docs/architecture/runtime/RUNTIME-003_MODULE_GRAPH_VALIDATION.md | Stale import blocker class is cleared at current baseline | High |
 | Missing exports are 0 | docs/architecture/runtime/RUNTIME-003_MODULE_GRAPH_VALIDATION.md | Export blocker class is cleared at current baseline | High |

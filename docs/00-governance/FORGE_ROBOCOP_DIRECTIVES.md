@@ -190,7 +190,7 @@ ROBOCOP ADDENDUM 001 - Forge Thinks, AI Interprets is part of this lock.
 
 Canonical addendum:
 
-- `docs/governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md`
+- `docs/00-governance/FORGE_ROBOCOP_AI_INTERPRETATION_ADDENDUM.md`
 
 Canonical authority remains:
 

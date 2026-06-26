@@ -39,7 +39,7 @@ Forge work is governed in this order:
 | Implementation readiness | `docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_*` | Readiness contracts and implementation conditions. |
 | Repository governance | `docs/architecture/repository/` | Repository surface, migration and protected asset governance. |
 | Runtime governance | `docs/architecture/runtime/` | Runtime boundary, migration and boot-readiness governance. |
-| ROBOCOP directives | `docs/governance/FORGE_ROBOCOP_DIRECTIVES.md` | Mandatory pre-work gate. |
+| ROBOCOP directives | `docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md` | Mandatory pre-work gate. |
 
 ## Required Work Intake Record
 

@@ -11,8 +11,8 @@ Sprint Candidate: SUPABASE RLS BETA FOUNDATION 001
 Governing authority:
 
 - Forge OS AGENTS.md / ROBOCOP LOCK 001.
-- `docs/governance/FORGE_ROBOCOP_DIRECTIVES.md`
-- `docs/governance/FORGE_GOVERNANCE_REGISTRY.md`
+- `docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md`
+- `docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md`
 
 Applicable ADRs / truth boundaries:
 
