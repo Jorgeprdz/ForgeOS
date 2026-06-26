@@ -17,7 +17,7 @@ After a few minutes, the site will be live at:
 `https://<your-username>.github.io/<your-repo-name>/`
 
 The GUI will automatically be accessible at that URL, or specifically at:
-`https://<your-username>.github.io/<your-repo-name>/gui/mobile-daily/index.html`
+`https://<your-username>.github.io/<your-repo-name>/10-gui/mobile-daily/index.html`
 
 ## Configuration
 
