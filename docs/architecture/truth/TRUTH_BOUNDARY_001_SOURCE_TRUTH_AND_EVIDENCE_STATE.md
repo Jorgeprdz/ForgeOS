@@ -98,7 +98,7 @@ The map is documentation-only. It does not create engines, schemas, runtime beha
 
 - FORGE_CONSTITUTION_V3.md
 - docs/architecture/constitution/FORGE_ARCHITECTURAL_CONSTITUTION_v3.md
-- docs/constitution/FORGE_CONSTITUTION_MAP.md
+- docs/01-constitution/FORGE_CONSTITUTION_MAP.md
 - AGENTS.md
 - docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md
 - docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md

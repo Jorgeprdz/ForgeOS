@@ -19,7 +19,7 @@ When this digest conflicts with a source ADR, the root Constitution or the Const
 - Root constitution:
   - `FORGE_CONSTITUTION_V3.md`
 - Constitution map:
-  - `docs/constitution/FORGE_CONSTITUTION_MAP.md`
+  - `docs/01-constitution/FORGE_CONSTITUTION_MAP.md`
 - Canonical ADR directory:
   - `adr/`
 - Process ADR exception:
@@ -43,7 +43,7 @@ When this digest conflicts with a source ADR, the root Constitution or the Const
 ## 4. Constitution Hierarchy
 
 1. `FORGE_CONSTITUTION_V3.md`
-2. `docs/constitution/FORGE_CONSTITUTION_MAP.md`
+2. `docs/01-constitution/FORGE_CONSTITUTION_MAP.md`
 3. Canonical ADRs under `adr/`
 4. Approved dependent addenda
 5. Process ADR `ADR-0019`
