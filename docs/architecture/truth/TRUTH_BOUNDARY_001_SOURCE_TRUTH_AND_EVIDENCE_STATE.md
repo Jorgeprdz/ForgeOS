@@ -112,7 +112,7 @@ The map is documentation-only. It does not create engines, schemas, runtime beha
 - docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001C_REPORT.txt
 - docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001D_UNKNOWN_STALE_CONFLICT_HANDLING_CONTRACT.txt
 - docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_001F_IMPLEMENTATION_PLAN_V0_1.txt
-- docs/discoveries/consolidated/TRUTH_ARCHITECTURE_CANONICALIZATION.md
+- docs/03-discoveries/consolidated/TRUTH_ARCHITECTURE_CANONICALIZATION.md
 
 Note:
 

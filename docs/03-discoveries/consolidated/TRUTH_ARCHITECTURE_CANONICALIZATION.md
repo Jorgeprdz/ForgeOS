@@ -46,11 +46,11 @@ The five original book discovery files must remain preserved as evidence.
 
 They may later be moved from:
 
-docs/discoveries/todo/books/
+docs/03-discoveries/todo/books/
 
 to:
 
-docs/discoveries/archived/books/
+docs/03-discoveries/archived/books/
 
 But they should not be deleted.
 

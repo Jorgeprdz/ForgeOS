@@ -35,7 +35,7 @@ Forge work is governed in this order:
 | Canonical ADRs | `adr/` | Canonical ADR authority set. |
 | ADR working material | `docs/adr/` | Working, transition and PAQ-stage ADR material. |
 | Build Tree | `FORGE_MASTER_BUILD_TREE.md` | Canonical project area and status map. |
-| Discovery documents | `docs/architecture/discovery/`, `docs/discovery/`, `docs/discoveries/` | Discovery status, open questions, accepted/rejected discoveries and readiness inputs. |
+| Discovery documents | `docs/architecture/discovery/`, `docs/discovery/`, `docs/03-discoveries/` | Discovery status, open questions, accepted/rejected discoveries and readiness inputs. |
 | Implementation readiness | `docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_*` | Readiness contracts and implementation conditions. |
 | Repository governance | `docs/architecture/repository/` | Repository surface, migration and protected asset governance. |
 | Runtime governance | `docs/architecture/runtime/` | Runtime boundary, migration and boot-readiness governance. |
