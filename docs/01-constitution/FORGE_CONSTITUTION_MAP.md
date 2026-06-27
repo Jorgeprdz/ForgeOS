@@ -254,6 +254,36 @@ ADR-0019
 
 ---
 
+# CANONICAL OPERATIONAL DOCS NAMESPACES
+
+These namespaces are operational governance surfaces. They are not canonical ADR sets.
+
+## `docs/02-build-tree/`
+
+Build tree and implementation map namespace.
+
+Policy: KEEP_WITH_CONSTITUTION_MAP_ENTRY.
+
+## `docs/05-foundation/`
+
+Foundation architecture namespace.
+
+Policy: KEEP_WITH_CONSTITUTION_MAP_ENTRY.
+
+## `docs/05-phase-transitions/`
+
+Phase transition namespace.
+
+Policy: KEEP_WITH_CONSTITUTION_MAP_ENTRY.
+
+## `docs/05-truth/`
+
+Truth, source and evidence governance namespace.
+
+Policy: KEEP_WITH_CONSTITUTION_MAP_ENTRY.
+
+---
+
 # CONSTITUTIONAL STACK
 
 Truth Governance

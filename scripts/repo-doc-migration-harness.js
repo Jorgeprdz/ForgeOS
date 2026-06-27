@@ -44,6 +44,70 @@ const CODE_EXTENSIONS = new Set([
 
 const DOC_EXTENSIONS = new Set(['.md', '.txt']);
 
+const DEPRECATED_DOC_PATHS = [
+  {
+    deprecated: 'docs/architecture/constitution',
+    replacement: 'docs/01-constitution',
+  },
+  {
+    deprecated: 'docs/architecture/discovery',
+    replacement: 'docs/03-discovery',
+  },
+  {
+    deprecated: 'docs/architecture/repository',
+    replacement: 'docs/06-repository-governance',
+  },
+  {
+    deprecated: 'docs/architecture/runtime',
+    replacement: 'docs/07-runtime',
+  },
+  {
+    deprecated: 'docs/archive',
+    replacement: 'docs/99-archive',
+  },
+  {
+    deprecated: 'docs/adr',
+    replacement: 'docs/02-adr-candidates',
+  },
+  {
+    deprecated: 'docs/05-legacy',
+    replacement: 'docs/99-archive/05-legacy',
+  },
+];
+
+const REGISTERED_TOP_LEVEL_DOC_NAMESPACES = new Set([
+  'docs/00-governance',
+  'docs/01-constitution',
+  'docs/02-adr-candidates',
+  'docs/02-build-tree',
+  'docs/03-discoveries',
+  'docs/03-discovery',
+  'docs/04-intelligence',
+  'docs/04-manager-os',
+  'docs/04-product-intelligence',
+  'docs/05-foundation',
+  'docs/05-phase-transitions',
+  'docs/05-readiness',
+  'docs/05-shared-commercial-model',
+  'docs/05-truth',
+  'docs/06-repository-governance',
+  'docs/07-runtime',
+  'docs/09-live-mvp',
+  'docs/10-design',
+  'docs/10-gui',
+  'docs/10-specs',
+  'docs/11-validation',
+  'docs/12-deployment',
+  'docs/99-archive',
+  'docs/architecture',
+]);
+
+const DOC_ANTI_CONTAMINATION_EXCLUDED_PREFIXES = [
+  'docs/06-repository-governance/reports/',
+  'docs/architecture/source-truth/',
+  'docs/evidence/',
+];
+
 function runGit(args) {
   try {
     return execFileSync('git', args, {
@@ -115,6 +179,22 @@ function isDoc(file) {
 
 function isCode(file) {
   return CODE_EXTENSIONS.has(extname(file));
+}
+
+function isExcludedFromDocsAntiContamination(file) {
+  return DOC_ANTI_CONTAMINATION_EXCLUDED_PREFIXES.some((prefix) => file.startsWith(prefix));
+}
+
+function topLevelDocsNamespace(file) {
+  if (!file.startsWith('docs/')) return '';
+  const parts = file.split('/');
+  if (parts.length < 3) return '';
+  return `docs/${parts[1]}`;
+}
+
+function isDocsAntiContaminationPolicyDeclaration(file) {
+  return file === 'docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md' ||
+    file === 'scripts/repo-doc-migration-harness.js';
 }
 
 function isRoot(file) {
@@ -518,6 +598,8 @@ function validate(options = {}) {
   const runtimeInMoveList = records
     .filter((record) => record.action === 'MOVE' && isCode(record.source));
 
+  const docsAntiContamination = docsAntiContaminationCheck(inventory.trackedFiles);
+
   const ownershipIssues = records
     .filter((record) => record.action === 'REVIEW_REQUIRED')
     .map((record) => ({ source: record.source, reason: record.reason }));
@@ -525,7 +607,8 @@ function validate(options = {}) {
   const status = (
     protectedViolations.length === 0 &&
     runtimeInMoveList.length === 0 &&
-    duplicateDestinations.length === 0
+    duplicateDestinations.length === 0 &&
+    docsAntiContamination.pass
   ) ? 'PASS_WITH_REVIEW_ITEMS' : 'FAIL';
 
   let md = '';
@@ -539,6 +622,7 @@ function validate(options = {}) {
   md += tableRow(['Protected root violations', protectedViolations.length, protectedViolations.length ? 'FAIL' : 'PASS']) + '\n';
   md += tableRow(['Runtime files in MOVE list', runtimeInMoveList.length, runtimeInMoveList.length ? 'FAIL' : 'PASS']) + '\n';
   md += tableRow(['Duplicate destinations', duplicateDestinations.length, duplicateDestinations.length ? 'FAIL' : 'PASS']) + '\n';
+  md += tableRow(['Docs anti-contamination issues', docsAntiContamination.issueCount, docsAntiContamination.pass ? 'PASS' : 'FAIL']) + '\n';
   md += tableRow(['Broken ownership rules / review required', ownershipIssues.length, ownershipIssues.length ? 'REVIEW_REQUIRED' : 'PASS']) + '\n';
   md += '\n## Destination Collisions\n\n';
   md += tableRow(['Source', 'Destination']) + '\n';
@@ -559,10 +643,78 @@ function validate(options = {}) {
     protectedViolations,
     runtimeInMoveList,
     duplicateDestinations,
+    docsAntiContamination,
     ownershipIssues,
   };
   const files = writeReportPair(options, 'migration-validation-report', md, json);
   return { ...json, ...files };
+}
+
+function docsAntiContaminationCheck(trackedFiles) {
+  const files = Array.isArray(trackedFiles) ? trackedFiles : Array.from(trackedFiles || []);
+  const activeFiles = files
+    .filter((file) => !isExcludedFromDocsAntiContamination(file));
+
+  const deprecatedTrackedFiles = [];
+  for (const file of activeFiles) {
+    for (const entry of DEPRECATED_DOC_PATHS) {
+      if (file === entry.deprecated || file.startsWith(`${entry.deprecated}/`)) {
+        deprecatedTrackedFiles.push({
+          file,
+          deprecatedPath: entry.deprecated,
+          replacement: entry.replacement,
+        });
+      }
+    }
+  }
+
+  const deprecatedExactReferences = [];
+  for (const file of activeFiles) {
+    const fullPath = path.join(ROOT, file);
+    if (!fs.existsSync(fullPath) || fs.statSync(fullPath).isDirectory()) continue;
+    let content = '';
+    try {
+      content = fs.readFileSync(fullPath, 'utf8');
+    } catch (error) {
+      continue;
+    }
+    const lines = content.split(/\r?\n/);
+    for (const entry of DEPRECATED_DOC_PATHS) {
+      for (let index = 0; index < lines.length; index += 1) {
+        if (lines[index].includes(entry.deprecated)) {
+          if (isDocsAntiContaminationPolicyDeclaration(file)) continue;
+          deprecatedExactReferences.push({
+            file,
+            line: index + 1,
+            deprecatedPath: entry.deprecated,
+            replacement: entry.replacement,
+            content: lines[index],
+          });
+        }
+      }
+    }
+  }
+
+  const unregisteredTopLevelNamespaces = Array.from(new Set(
+    activeFiles
+      .map(topLevelDocsNamespace)
+      .filter(Boolean)
+      .filter((namespace) => !REGISTERED_TOP_LEVEL_DOC_NAMESPACES.has(namespace))
+  )).sort();
+
+  const issueCount = (
+    deprecatedTrackedFiles.length +
+    deprecatedExactReferences.length +
+    unregisteredTopLevelNamespaces.length
+  );
+
+  return {
+    pass: issueCount === 0,
+    issueCount,
+    deprecatedTrackedFiles,
+    deprecatedExactReferences,
+    unregisteredTopLevelNamespaces,
+  };
 }
 
 function markdownFiles() {
@@ -1073,6 +1225,7 @@ function check(options = {}) {
   const duplicates = duplicateDestinationReport(options);
   const inventoryValidation = validateInventory('migration-inventory.json', options);
   const regression = protectedRootRegressionChecks();
+  const docsAntiContamination = docsAntiContaminationCheck(inventory.inventory.trackedFiles);
 
   const brokenLinkCount = (links.counts.TARGET_BROKEN || 0) + (links.counts.ANCHOR_BROKEN || 0);
   const destinationOverwriteRiskCount = duplicates.overwriteRiskCount || 0;
@@ -1096,6 +1249,11 @@ function check(options = {}) {
       gate: 'destination_overwrite_risk',
       status: destinationOverwriteRiskCount === 0 ? 'PASS' : 'FAIL',
       count: destinationOverwriteRiskCount,
+    },
+    {
+      gate: 'docs_anti_contamination',
+      status: docsAntiContamination.pass ? 'PASS' : 'FAIL',
+      count: docsAntiContamination.issueCount,
     },
     {
       gate: 'broken_markdown_links',
@@ -1139,6 +1297,7 @@ function check(options = {}) {
       validateInventory: { markdownFile: inventoryValidation.markdownFile, jsonFile: inventoryValidation.jsonFile },
     },
     regression,
+    docsAntiContamination,
   };
   const files = writeReportPair(options, 'repo-migration-check-report', md, json);
   return { ...json, ...files };
@@ -1260,6 +1419,7 @@ module.exports = {
   validateInventoryObject,
   validateInventory,
   protectedRootRegressionChecks,
+  docsAntiContaminationCheck,
   check,
   rewritePlan,
   writeInventory,

@@ -41,6 +41,48 @@ Forge work is governed in this order:
 | Runtime governance | `docs/07-runtime/` | Runtime boundary, migration and boot-readiness governance. |
 | ROBOCOP directives | `docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md` | Mandatory pre-work gate. |
 
+## Canonical Docs Namespaces
+
+These namespaces are approved canonical documentation surfaces.
+
+| Namespace | Status | Governance Policy | Role |
+| --- | --- | --- | --- |
+| `docs/02-build-tree/` | KEEP | Constitution map entry required | Build tree and implementation map material. |
+| `docs/04-manager-os/` | KEEP | Governance registry entry required | Manager OS domain documentation. |
+| `docs/04-product-intelligence/` | KEEP | Governance registry entry required | Product Intelligence domain documentation. |
+| `docs/05-foundation/` | KEEP | Constitution map entry required | Foundation architecture documentation. |
+| `docs/05-phase-transitions/` | KEEP | Constitution map entry required | Phase transition documentation. |
+| `docs/05-shared-commercial-model/` | KEEP | Governance registry entry required | Shared Commercial Model domain architecture. |
+| `docs/05-readiness/` | KEEP | Governance registry entry required | Readiness and governance planning documentation. |
+| `docs/05-truth/` | KEEP | Constitution map entry required | Truth, source and evidence governance documentation. |
+
+## Deprecated Docs Source Paths
+
+These source paths have been canonicalized and must not receive tracked files or active references.
+
+| Deprecated Source Path | Canonical Replacement |
+| --- | --- |
+| `docs/architecture/constitution/` | `docs/01-constitution/` |
+| `docs/architecture/discovery/` | `docs/03-discovery/` |
+| `docs/architecture/repository/` | `docs/06-repository-governance/` |
+| `docs/architecture/runtime/` | `docs/07-runtime/` |
+| `docs/archive/` | `docs/99-archive/` |
+| `docs/adr/` | `docs/02-adr-candidates/` |
+| `docs/05-legacy/` | `docs/99-archive/05-legacy/` |
+
+## Docs Anti-Contamination Rule
+
+New or moved documentation must pass all repository documentation gates before commit:
+
+- canonical destination check
+- governance registry check
+- constitution map check when the document carries constitutional, source-truth, readiness, build-tree or operational-foundation authority
+- no orphan docs namespace
+- no active deprecated path references
+- no new top-level docs namespace without explicit approval
+- repository migration harness check
+- generated report noise restored or cleaned before staging
+
 ## Required Work Intake Record
 
 Every future work item must include:
