@@ -68,7 +68,7 @@ Subcarpetas recomendadas para la primera migracion controlada:
 - `compensation/smnyl-agency-2026/`, `compensation/production/`, `compensation/contests/`, `compensation/manager-compensation/`
 - `rule-packs/smnyl-agency-2026/`
 - `platform/runtime/`, `platform/storage/`, `platform/sync/`, `platform/commands/`, `platform/ui-shell/`
-- `docs/architecture/`, `docs/archive/`, `docs/adr/`, `docs/discovery/`
+- `docs/architecture/`, `docs/archive/`, `docs/adr/`, `docs/03-discovery/`
 - `tests/unit/`, `tests/master/`, `tests/smoke/`, `tests/fixtures/`
 
 ## 4. Archivos que NO deben moverse en la primera fase
@@ -1057,10 +1057,10 @@ Criterio mecanico: JS/TS sin imports relativos y sin referencias entrantes detec
 | `docs/architecture/shared-commercial-model/PAQ-05-RULE-SNAPSHOT-HARDENING.md` | docs | `docs/architecture/shared-commercial-model/PAQ-05-RULE-SNAPSHOT-HARDENING.md` | BAJO | - | 1 - Docs y arquitectura |
 | `docs/architecture/shared-commercial-model/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md` | docs | `docs/architecture/shared-commercial-model/PAQ-06-COMMERCIAL-EVENTS-TAXONOMY.md` | BAJO | - | 1 - Docs y arquitectura |
 | `docs/constitution/FORGE_CONSTITUTION_MAP.md` | docs | `docs/constitution/FORGE_CONSTITUTION_MAP.md` | BAJO | - | 1 - Docs y arquitectura |
-| `docs/discovery/FD-0001_BETTER_DECISIONS_UNDER_UNCERTAINTY.md` | docs | `docs/discovery/FD-0001_BETTER_DECISIONS_UNDER_UNCERTAINTY.md` | BAJO | - | 1 - Docs y arquitectura |
-| `docs/discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS.md` | docs | `docs/discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS.md` | BAJO | - | 1 - Docs y arquitectura |
-| `docs/discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS_DISCOVERY.md` | docs | `docs/discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS_DISCOVERY.md` | BAJO | - | 1 - Docs y arquitectura |
-| `docs/discovery/PROCESS_ADVANCEMENT_V01_POST_IMPLEMENTATION_REVIEW.md` | docs | `docs/discovery/PROCESS_ADVANCEMENT_V01_POST_IMPLEMENTATION_REVIEW.md` | BAJO | - | 1 - Docs y arquitectura |
+| `docs/03-discovery/FD-0001_BETTER_DECISIONS_UNDER_UNCERTAINTY.md` | docs | `docs/03-discovery/FD-0001_BETTER_DECISIONS_UNDER_UNCERTAINTY.md` | BAJO | - | 1 - Docs y arquitectura |
+| `docs/03-discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS.md` | docs | `docs/03-discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS.md` | BAJO | - | 1 - Docs y arquitectura |
+| `docs/03-discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS_DISCOVERY.md` | docs | `docs/03-discovery/PROCESS_ADVANCEMENT_IMPLEMENTATION_READINESS_DISCOVERY.md` | BAJO | - | 1 - Docs y arquitectura |
+| `docs/03-discovery/PROCESS_ADVANCEMENT_V01_POST_IMPLEMENTATION_REVIEW.md` | docs | `docs/03-discovery/PROCESS_ADVANCEMENT_V01_POST_IMPLEMENTATION_REVIEW.md` | BAJO | - | 1 - Docs y arquitectura |
 | `document-classification-engine.js` | policy-operations | `policy-operations/document-classification-engine.js` | MEDIO | - | 6 - Policy operations |
 | `dom-sanitizer.js` | legacy | `legacy/dom-sanitizer.js` | MEDIO | - | 11 - Legacy quarantine |
 | `domain-events.js` | legacy | `legacy/domain-events.js` | MEDIO | - | 11 - Legacy quarantine |
