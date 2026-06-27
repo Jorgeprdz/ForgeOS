@@ -238,3 +238,60 @@ This report already contains the required evidence-backed status statements:
 PASS
 
 READY FOR TRUTH BOUNDARY 001
+
+---
+
+## Post Docs Canonicalization Evidence Update
+
+Status: BUILD-TREE-001B/C DOCUMENTATION-ONLY UPDATE
+
+Date: 2026-06-27
+
+Scope:
+
+- Documentation-only conservative Build Tree status patch.
+- No runtime, app, UI, schema, route, business logic or compensation files touched.
+- Partner Compensation was not opened in this phase.
+
+### Docs Closure Commits Registered
+
+| Commit | Evidence |
+| --- | --- |
+| `e04cab7 docs: add docs anti-contamination governance` | Added canonical docs namespace governance and harness anti-contamination check. |
+| `0377cd4 docs: remove stale constitution architecture reference` | Removed final stale active reference to the legacy architecture constitution namespace. |
+| `fd42ea5 docs: move adr docs to canonical folder` | Moved legacy ADR working docs to `docs/02-adr-candidates`. |
+| `0efad7e docs: move archive docs to canonical folder` | Moved legacy archive docs to `docs/99-archive`. |
+| `3193621 docs: move architecture constitution docs to canonical folder` | Moved architecture constitution docs to `docs/01-constitution`. |
+| `49dd806 docs: move discovery architecture docs to canonical folder` | Moved architecture discovery docs to `docs/03-discovery`. |
+| `ea735a6 docs: archive legacy 05 docs` | Archived legacy 05 docs into `docs/99-archive/05-legacy`. |
+
+### Docs Closure Metrics
+
+| Metric | Result |
+| --- | --- |
+| Strong move candidates remaining | 0 |
+| Deprecated source paths tracked files | 0 |
+| Old deprecated exact refs | 0 |
+| Anti-contamination harness active | YES |
+
+### Build Tree Status Update
+
+The root Build Tree was updated conservatively from BUILD-TREE-001A evidence:
+
+- Foundation Lock remains IMPLEMENTED.
+- Governance / ROBOCOP gate is IMPLEMENTED.
+- Repository docs anti-contamination is IMPLEMENTED.
+- Runtime Integrity baseline is IMPLEMENTED.
+- Truth governance validators/contracts are IMPLEMENTED.
+- Recruitment Intelligence is IMPLEMENTED only as a subset.
+- Product Intelligence coverage is IMPLEMENTED only as a subset.
+- NASH, Relationship Intelligence, Advisor OS, Manager OS, Mick / Behavior Intelligence, Universal Command OS, Offline / Sync, Compensation Intelligence, Policy & Sales Operations, Forecast/projection engines, GMM Validation and Product Intelligence remain PARTIALLY_IMPLEMENTED where evidence supports only partial completion.
+- Russell Identity Intelligence, Organization Health, Leadership Intelligence, Career OS Transition Engine, full GMM validation completion, Proposal Intelligence, manager access / invitation model and Partner Intelligence remain PENDING.
+- Old docs path assumptions are OBSOLETE_BY_DOCS_MIGRATION.
+- Sales Conversion / Jordan, Jürgen, Hitch / Patch / Chris / Rocky, RODI Metrics, Partner Intelligence status and root confidence percentages remain NEEDS_REVIEW where direct acceptance evidence was not established in BUILD-TREE-001A.
+
+### Next Workstream Note
+
+The next recommended workstream may be Partner Compensation only after an explicit Constitutional Gate.
+
+This reconciliation does not authorize Partner Compensation execution.
