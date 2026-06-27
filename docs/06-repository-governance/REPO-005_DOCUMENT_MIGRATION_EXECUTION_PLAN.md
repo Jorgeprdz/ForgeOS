@@ -146,7 +146,7 @@ docs/
 | `docs/adr/` | ADR governance |
 | `docs/06-repository-governance/` | Repository governance |
 | `docs/02-build-tree/` | Architecture governance |
-| `docs/architecture/discovery/` | Discovery governance |
+| `docs/03-discovery/` | Discovery governance |
 | `docs/04-product-intelligence/` | Product Intelligence |
 | `docs/04-manager-os/` | Manager OS |
 | `docs/architecture/advisor-os/` | Advisor OS |

@@ -85,7 +85,7 @@ While each domain (Allocation, Health, Leadership) protects a unique decision, c
     - `FORGE_MASTER_BUILD_TREE.md`: Restructure to reflect Advisor/Manager/Shared layers.
 - **New Files:**
     - `docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.4.md`
-    - `docs/architecture/discovery/MANAGER_OS_CONSOLIDATION_REPORT.md` (This file)
+    - `docs/03-discovery/MANAGER_OS_CONSOLIDATION_REPORT.md` (This file)
 - **Commit Message:** `Consolidate Manager OS architecture and harden governance domains`
 
 **Push Readiness:** **HIGH.** Architecture is stable and evidence-based.

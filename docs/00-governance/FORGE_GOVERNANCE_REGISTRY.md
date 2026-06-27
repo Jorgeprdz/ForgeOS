@@ -35,8 +35,8 @@ Forge work is governed in this order:
 | Canonical ADRs | `adr/` | Canonical ADR authority set. |
 | ADR working material | `docs/adr/` | Working, transition and PAQ-stage ADR material. |
 | Build Tree | `FORGE_MASTER_BUILD_TREE.md` | Canonical project area and status map. |
-| Discovery documents | `docs/architecture/discovery/`, `docs/03-discovery/`, `docs/03-discoveries/` | Discovery status, open questions, accepted/rejected discoveries and readiness inputs. |
-| Implementation readiness | `docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_*` | Readiness contracts and implementation conditions. |
+| Discovery documents | `docs/03-discovery/`, `docs/03-discovery/`, `docs/03-discoveries/` | Discovery status, open questions, accepted/rejected discoveries and readiness inputs. |
+| Implementation readiness | `docs/03-discovery/FORGE_IMPLEMENTATION_READINESS_*` | Readiness contracts and implementation conditions. |
 | Repository governance | `docs/06-repository-governance/` | Repository surface, migration and protected asset governance. |
 | Runtime governance | `docs/07-runtime/` | Runtime boundary, migration and boot-readiness governance. |
 | ROBOCOP directives | `docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md` | Mandatory pre-work gate. |
@@ -127,7 +127,7 @@ The following surfaces must be declared explicitly before work may touch them:
 - `adr/`
 - `docs/adr/`
 - `docs/architecture/constitution/`
-- `docs/architecture/discovery/`
+- `docs/03-discovery/`
 - `docs/07-runtime/`
 - `docs/06-repository-governance/`
 - `app.js`

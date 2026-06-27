@@ -220,7 +220,7 @@ function destinationFor(file) {
     lower.includes('professional') ||
     lower.includes('dependency_signal')
   ) {
-    return `docs/architecture/discovery/${file}`;
+    return `docs/03-discovery/${file}`;
   }
 
   return `docs/archive/${file}`;
