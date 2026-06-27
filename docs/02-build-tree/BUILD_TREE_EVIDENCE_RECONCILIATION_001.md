@@ -295,3 +295,58 @@ The root Build Tree was updated conservatively from BUILD-TREE-001A evidence:
 The next recommended workstream may be Partner Compensation only after an explicit Constitutional Gate.
 
 This reconciliation does not authorize Partner Compensation execution.
+
+---
+
+## Partner Compensation Candidate Foundation Closeout
+
+Status: PARTNER-COMP-RETURN-001B/C DOCUMENTATION-ONLY CLOSEOUT
+
+Date: 2026-06-27
+
+Scope:
+
+- Documentation/status closeout only.
+- No engine logic, tests, rule packs, runtime, app, UI, schema, route or payout semantics changed.
+- Candidate calculations are not payout truth.
+- `payoutTruth=true` requires official confirmed evidence and a carrier statement/payment line.
+- Unknown, missing, blocked and not modeled values remain not zero.
+- Ownership source truth gate remains protected.
+
+### Evidence Registered
+
+| Evidence | Result |
+| --- | --- |
+| Partner manager files | `compensation/partner-manager` files=44 |
+| Partner tests | `tests/partner-*.js` total=39 |
+| Targeted partner tests | pass=39 fail=0 |
+
+### Implemented Candidate Foundation Components
+
+- Rule-pack loading/validation.
+- Core partner bonus candidates.
+- Quarterly bonus orchestrator.
+- Spreadsheet monthly fact adapter.
+- Ownership source truth gate.
+- Payout truth boundary.
+- Payment cadence/schedule.
+- Partial bonus gates / evidence blocking.
+- Juan real exercise regression.
+
+### Future Scope Preserved
+
+- Official rule source completeness.
+- Official statement ingestion / operations flow.
+- Real carrier statement payout truth confirmation.
+- Broader Compensation Intelligence.
+- Partner Intelligence.
+
+### Closeout Interpretation
+
+Partner Compensation Candidate Foundation is IMPLEMENTED BASELINE / CLOSED for candidate-calculation readiness.
+
+Broader Compensation Intelligence remains PARTIALLY_IMPLEMENTED.
+
+Official statement ingestion, production payout operations and real carrier statement payout truth confirmation remain PENDING.
+
+Partner Intelligence remains PENDING as a separate future workstream.

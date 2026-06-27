@@ -18,7 +18,10 @@ Rules:
 
 - File existence is not enough to mark a branch complete.
 - Completed means backed by canonical docs, tracked implementation, tests or harness evidence.
-- Partner Compensation remains an active workstream and is not closed by this Build Tree patch.
+- Partner Compensation Candidate Foundation is closed as a candidate-calculation baseline.
+- Broader Compensation Intelligence, official statement ingestion, payout operations and Partner Intelligence remain future scope.
+- Candidate calculators are not payout truth; `payoutTruth=true` requires official confirmed evidence and a statement line.
+- Unknown is not zero, and ownership source truth remains protected.
 
 | Branch or Area | Current Status | Evidence | Conservative Update |
 | --- | --- | --- | --- |
@@ -35,7 +38,9 @@ Rules:
 | Manager OS | PARTIALLY_IMPLEMENTED | `manager-os/`; `docs/04-manager-os/`; `docs/05-readiness/` | Split recruitment subset from planned leadership/org health. |
 | Universal Command OS / Alfred | PARTIALLY_IMPLEMENTED | `universal-command-engine.js`; `platform/commands/` | Change from planned to implemented foundation / needs review. |
 | Offline / Sync | PARTIALLY_IMPLEMENTED | `platform/sync/`; `offline-sync.js`; runtime readiness docs | Change from planned to partial hardening. |
-| Compensation Intelligence | PARTIALLY_IMPLEMENTED / active workstream | `compensation/`; targeted tests exist | Not closed; Partner Compensation requires explicit gate. |
+| Partner Compensation Candidate Foundation | IMPLEMENTED BASELINE / CLOSED | `compensation/partner-manager/`; `tests/partner-*.js`; Juan real exercise regression | Candidate calculation foundation closed; not payout truth. |
+| Broader Compensation Intelligence | PARTIALLY_IMPLEMENTED | `compensation/`; Partner candidate foundation tests | Keep broader domain yellow until official statement ingestion and payout operations exist. |
+| Official statement ingestion / payout operations | PENDING | Payout truth boundary tests; no official statement ingestion closure | Future scope only; `payoutTruth=true` requires official confirmed evidence and statement line. |
 | Forecast / projection engines | PARTIALLY_IMPLEMENTED | `product-intelligence/projections/`; forecast/projection engines | Split engines from full Forecast Intelligence architecture lock. |
 | GMM Validation | PARTIALLY_IMPLEMENTED | `docs/02-build-tree/BUILD_TREE_UPDATE_REPORT.txt`; product coverage tests | Validation active; full completion pending real evidence packets and human review. |
 | Russell Identity Intelligence | PENDING | Discovery candidate only | Do not implement without ratification. |
@@ -44,7 +49,7 @@ Rules:
 | Career OS Transition Engine | PENDING | Conceptual/lifecycle helpers only | Keep planned. |
 | Proposal Intelligence | PENDING | Parked / core candidate docs | Keep parked. |
 | Manager access / invitation model | PENDING | `docs/05-readiness/MANAGER_ADVISOR_ACCESS_MODEL_001.md` | Future sprint only. |
-| Partner Intelligence | PENDING | Build Tree planned; Partner Compensation not opened here | Keep planned until explicit Partner gate. |
+| Partner Intelligence | PENDING / separate future workstream | Build Tree planned; Partner Compensation candidate foundation is separate and closed | Keep Partner Intelligence planned until its own explicit gate. |
 | Sales Conversion / Jordan; Jürgen; Hitch / Patch / Chris / Rocky | NEEDS_REVIEW | Advisor OS modules exist, but direct acceptance evidence was not reviewed | Do not keep broad green claims without evidence links. |
 | RODI Metrics | NEEDS_REVIEW | Manager OS hardening mentioned | Keep yellow/review. |
 | Root confidence percentages | NEEDS_REVIEW | Percentages are not evidence-backed by this audit | Replace later with evidence-backed status if desired. |
@@ -116,8 +121,9 @@ The following source paths are obsolete after `/docs` canonicalization and must 
     - Replication Signals 🔵
     - Promotion & Succession 🔵
 - **Recruitment Intelligence Domain** 🟢 (Implemented subset / Architecture Locked)
-- **Partner Intelligence** 🔵 (Planned)
-    - Partner Compensation closure pending explicit gate
+- **Partner Intelligence** 🔵 (Planned / separate future workstream)
+    - Partner Compensation Candidate Foundation 🟢 (Implemented baseline / closed; candidate only, not payout truth)
+    - Official statement ingestion / payout operations 🔵 (Pending)
 
 ---
 
@@ -129,7 +135,9 @@ The following source paths are obsolete after `/docs` canonicalization and must 
 - **Universal Command OS (Alfred)** 🟡 (Implemented foundation / needs governance review)
 - **Career OS Transition Engine** 🔵
 - **Offline First & Sync Engine** 🟡 (Partial / hardening)
-- **Compensation Intelligence** 🟡 (PARTIALLY_IMPLEMENTED / active workstream; Partner Compensation not closed)
+- **Compensation Intelligence** 🟡 (Broader domain PARTIALLY_IMPLEMENTED)
+    - Partner Compensation Candidate Foundation 🟢 (Closed candidate baseline; not payout truth)
+    - Official statement ingestion / payout operations 🔵 (Pending)
 - **Forecast Intelligence** 🟡 (Projection engines partial / Architecture Lock)
 
 ---
