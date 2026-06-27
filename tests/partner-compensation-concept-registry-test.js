@@ -59,8 +59,11 @@ assert.equal(fixedSupport.metadata.requiresQualifiedAdvisorRequirementByCareerMo
 assert.equal(fixedSupport.metadata.requiresSupportTableEvidence, true);
 
 const transition = getPartnerCompensationConceptEntry('transition-bonus');
-assert.equal(transition.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.PARTIAL_BLOCKED);
-assert.equal(isPartnerConceptPartial('transition-bonus'), true);
+assert.equal(transition.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
+assert.equal(isPartnerConceptPartial('transition-bonus'), false);
+assert.equal(transition.supportsCandidateCalculation, true);
+assert.equal(transition.supportsFullCalculation, false);
+assert.equal(transition.requiresOfficialStatementForPayout, true);
 
 const connection = getPartnerCompensationConceptEntry('connection-bonus');
 assert.equal(connection.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);

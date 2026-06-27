@@ -418,3 +418,33 @@ Boundary:
 - `payoutTruth=true` remains `BLOCKED_BY_OFFICIAL_EVIDENCE` for all PCV concepts until official statement/account ingestion and statement line match exist.
 - Unknown is not zero.
 - Ownership source truth remains protected.
+
+## Transition Coverage Update — 002B/C-5C
+
+Bono de Transicion is now **IMPLEMENTED_CANDIDATE** for candidateAmount coverage.
+
+Coverage count update:
+
+- implemented_candidate: 7
+- partial: 3
+- missing: 0
+- blocked_for_payoutTruth: 10
+
+Transition candidate coverage is based on:
+
+- advisor-to-promoted/new-partner lineage
+- formerAdvisorCompensationKey / directKey / assignedPortfolio matching
+- initial commission ledger lines
+- renewal commission ledger lines
+- paid premium / paid-applied commission evidence
+- no-administration evidence
+- no-client-intervention evidence
+- months 1-6 transition window
+- standalone monthly transition orchestrator
+- `payoutTruth=false`
+
+Still not implemented:
+
+- `payoutTruth=true`
+- official statement/account ingestion
+- production payout operations

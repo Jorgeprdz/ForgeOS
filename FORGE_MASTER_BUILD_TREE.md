@@ -38,7 +38,7 @@ Rules:
 | Manager OS | PARTIALLY_IMPLEMENTED | `manager-os/`; `docs/04-manager-os/`; `docs/05-readiness/` | Split recruitment subset from planned leadership/org health. |
 | Universal Command OS / Alfred | PARTIALLY_IMPLEMENTED | `universal-command-engine.js`; `platform/commands/` | Change from planned to implemented foundation / needs review. |
 | Offline / Sync | PARTIALLY_IMPLEMENTED | `platform/sync/`; `offline-sync.js`; runtime readiness docs | Change from planned to partial hardening. |
-| Partner Compensation Candidate Foundation Subset | IMPLEMENTED_CANDIDATE / SUBSET STABILIZED | `compensation/partner-manager/`; `tests/partner-*.js`; Juan real exercise regression; `docs/02-build-tree/PARTNER_COMP_BONUS_COVERAGE_001.md` | Six PCV bonuses are IMPLEMENTED_CANDIDATE, four remain PARTIAL; Partner Compensation overall remains PARTIAL / ACTIVE WORKSTREAM; not payout truth. |
+| Partner Compensation Candidate Foundation Subset | IMPLEMENTED_CANDIDATE / SUBSET STABILIZED | `compensation/partner-manager/`; `tests/partner-*.js`; Juan real exercise regression; `docs/02-build-tree/PARTNER_COMP_BONUS_COVERAGE_001.md` | Seven PCV bonuses are IMPLEMENTED_CANDIDATE, three remain PARTIAL; Partner Compensation overall remains PARTIAL / ACTIVE WORKSTREAM; not payout truth. |
 | Broader Compensation Intelligence | PARTIALLY_IMPLEMENTED | `compensation/`; Partner candidate foundation tests | Keep broader domain yellow until official statement ingestion and payout operations exist. |
 | Official statement ingestion / payout operations | PENDING | Payout truth boundary tests; no official statement ingestion closure | Future scope only; `payoutTruth=true` requires official confirmed evidence and statement line. |
 | Forecast / projection engines | PARTIALLY_IMPLEMENTED | `product-intelligence/projections/`; forecast/projection engines | Split engines from full Forecast Intelligence architecture lock. |
@@ -176,3 +176,33 @@ Boundary:
 - `payoutTruth=true` remains `BLOCKED_BY_OFFICIAL_EVIDENCE` for all PCV concepts until official statement/account ingestion and statement line match exist.
 - Unknown is not zero.
 - Ownership source truth remains protected.
+
+## Transition Coverage Update — 002B/C-5C
+
+Bono de Transicion is now **IMPLEMENTED_CANDIDATE** for candidateAmount coverage.
+
+Coverage count update:
+
+- implemented_candidate: 7
+- partial: 3
+- missing: 0
+- blocked_for_payoutTruth: 10
+
+Transition candidate coverage is based on:
+
+- advisor-to-promoted/new-partner lineage
+- formerAdvisorCompensationKey / directKey / assignedPortfolio matching
+- initial commission ledger lines
+- renewal commission ledger lines
+- paid premium / paid-applied commission evidence
+- no-administration evidence
+- no-client-intervention evidence
+- months 1-6 transition window
+- standalone monthly transition orchestrator
+- `payoutTruth=false`
+
+Still not implemented:
+
+- `payoutTruth=true`
+- official statement/account ingestion
+- production payout operations

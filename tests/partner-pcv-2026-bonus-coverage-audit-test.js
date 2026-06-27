@@ -20,7 +20,7 @@ const coverageDoc = readFileSync(
 );
 
 const pcvConcepts = Object.freeze([
-  ['transition-bonus', 'Bono de Transicion', 'PARTIAL'],
+  ['transition-bonus', 'Bono de Transicion', 'IMPLEMENTED_CANDIDATE'],
   ['productivity-base', 'Bono de Productividad Base', 'IMPLEMENTED_CANDIDATE'],
   ['productivity-multiplier', 'Multiplicador de Productividad', 'IMPLEMENTED_CANDIDATE'],
   ['productivity-annual-additional-bonus', 'Bono Adicional Anual de Productividad', 'PARTIAL'],
@@ -72,7 +72,7 @@ for (const conceptKey of implementedCandidateConcepts) {
   );
 }
 
-assert.equal(getPartnerCompensationConceptEntry('transition-bonus').calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.PARTIAL_BLOCKED);
+assert.equal(getPartnerCompensationConceptEntry('transition-bonus').calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
 assert.equal(isPartnerConceptKnown('productivity-annual-additional-bonus'), false);
 assert.equal(getPartnerCompensationConceptEntry('partner-promotion-bonus').calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY);
 assert.equal(getPartnerCompensationConceptEntry('fixed-support').supportsFullCalculation, false);
