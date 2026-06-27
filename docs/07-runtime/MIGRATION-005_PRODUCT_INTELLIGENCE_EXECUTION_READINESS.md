@@ -53,7 +53,7 @@ Execution must either approve these rewrites explicitly or reduce the batch to t
 
 ```sh
 node scripts/runtime-module-graph-audit.js
-node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports
 git diff --check
 git status --short
 ```

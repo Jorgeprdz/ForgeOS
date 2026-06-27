@@ -164,7 +164,7 @@ function destinationFor(file) {
   }
 
   if (lower.includes('repository') || lower.includes('repo-') || lower.includes('codebase') || lower.includes('migration')) {
-    return `docs/architecture/repository/${file}`;
+    return `docs/06-repository-governance/${file}`;
   }
 
   if (

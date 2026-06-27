@@ -3,9 +3,9 @@
   "status": "DRY_RUN_ONLY",
   "generatedAt": "2026-06-11T19:11:54.389Z",
   "sourceReports": [
-    "docs/architecture/repository/REPO-011_ARCHIVE_REFERENCE_ANALYSIS.md",
-    "docs/architecture/repository/REPO-011_ARCHIVE_REFERENCE_SUMMARY.md",
-    "docs/architecture/repository/REPO-010_EXECUTION_REPORT.md"
+    "docs/06-repository-governance/REPO-011_ARCHIVE_REFERENCE_ANALYSIS.md",
+    "docs/06-repository-governance/REPO-011_ARCHIVE_REFERENCE_SUMMARY.md",
+    "docs/06-repository-governance/REPO-010_EXECUTION_REPORT.md"
   ],
   "safeToRedirectVerified": 21,
   "totalRewritesPlanned": 21,
@@ -612,7 +612,7 @@
       "reason": "REPO-011 classified this archive reference as SAFE_TO_REDIRECT and WAVE-A; target exists under docs/archive and rewrite is path-only."
     }
   ],
-  "patchFile": "docs/architecture/repository/REPO-012_WAVE_A_DRY_RUN.patch",
+  "patchFile": "docs/06-repository-governance/REPO-012_WAVE_A_DRY_RUN.patch",
   "recommendedRepo013": {
     "exactRewriteCount": 21,
     "filesAffected": [
@@ -638,7 +638,7 @@
     ],
     "validationCommands": [
       "git diff --check",
-      "node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports",
+      "node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports",
       "git diff --name-only | rg '(^app\\.js$|^manifest\\.json$|^service-worker\\.js$|\\.js$|\\.ts$|\\.tsx$|\\.jsx$|package.*\\.json$)'"
     ],
     "rollbackStrategy": "Reverse the approved REPO-013 patch before commit, or use a revert commit after commit."

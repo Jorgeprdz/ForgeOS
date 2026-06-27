@@ -144,7 +144,7 @@ docs/
 | --- | --- |
 | `docs/architecture/constitution/` | Constitution / constitutional governance |
 | `docs/adr/` | ADR governance |
-| `docs/architecture/repository/` | Repository governance |
+| `docs/06-repository-governance/` | Repository governance |
 | `docs/02-build-tree/` | Architecture governance |
 | `docs/architecture/discovery/` | Discovery governance |
 | `docs/04-product-intelligence/` | Product Intelligence |
@@ -331,11 +331,11 @@ Improves because:
 
 - Search scope becomes domain-aware.
 - Repository docs can be routed by folder.
-- Future agents can inspect `docs/architecture/repository/` for repository governance without scanning root clutter.
+- Future agents can inspect `docs/06-repository-governance/` for repository governance without scanning root clutter.
 
 Evidence:
 
-- `docs/architecture/repository/` now receives migration and cartography artifacts.
+- `docs/06-repository-governance/` now receives migration and cartography artifacts.
 - `docs/04-product-intelligence/` now receives GMM/Alfa/Vida/quote docs.
 
 ### 7.3 Constitutional Clarity

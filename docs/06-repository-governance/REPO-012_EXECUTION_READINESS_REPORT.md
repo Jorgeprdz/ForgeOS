@@ -57,7 +57,7 @@ All 21 planned rewrites are LOW_RISK path-only archive redirects. No runtime fil
 
 ```sh
 git diff --check
-node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports
 git diff --name-only | rg '(^app\.js$|^manifest\.json$|^service-worker\.js$|\.js$|\.ts$|\.tsx$|\.jsx$|package.*\.json$)'
 ```
 

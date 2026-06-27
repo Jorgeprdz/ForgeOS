@@ -37,7 +37,7 @@ Forge work is governed in this order:
 | Build Tree | `FORGE_MASTER_BUILD_TREE.md` | Canonical project area and status map. |
 | Discovery documents | `docs/architecture/discovery/`, `docs/03-discovery/`, `docs/03-discoveries/` | Discovery status, open questions, accepted/rejected discoveries and readiness inputs. |
 | Implementation readiness | `docs/architecture/discovery/FORGE_IMPLEMENTATION_READINESS_*` | Readiness contracts and implementation conditions. |
-| Repository governance | `docs/architecture/repository/` | Repository surface, migration and protected asset governance. |
+| Repository governance | `docs/06-repository-governance/` | Repository surface, migration and protected asset governance. |
 | Runtime governance | `docs/07-runtime/` | Runtime boundary, migration and boot-readiness governance. |
 | ROBOCOP directives | `docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md` | Mandatory pre-work gate. |
 
@@ -129,7 +129,7 @@ The following surfaces must be declared explicitly before work may touch them:
 - `docs/architecture/constitution/`
 - `docs/architecture/discovery/`
 - `docs/07-runtime/`
-- `docs/architecture/repository/`
+- `docs/06-repository-governance/`
 - `app.js`
 - route files
 - UI files

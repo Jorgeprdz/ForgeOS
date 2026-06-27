@@ -31,7 +31,7 @@ Validation side effect:
 
 | File | Change |
 | --- | --- |
-| `docs/architecture/repository/reports/repo-migration-check-report.json` | Rewritten by the required repository harness validation command. |
+| `docs/06-repository-governance/reports/repo-migration-check-report.json` | Rewritten by the required repository harness validation command. |
 
 Note:
 
@@ -101,7 +101,7 @@ Post-implementation validation:
 | `node --check referidos.js` | PASS |
 | `node --check comisiones.js` | PASS |
 | `node scripts/runtime-module-graph-audit.js` | PASS with warnings |
-| `node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports` | PASS_WITH_WARNINGS_ALLOWED |
+| `node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports` | PASS_WITH_WARNINGS_ALLOWED |
 | `git diff --check` | PASS |
 
 Post-implementation runtime graph:

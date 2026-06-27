@@ -98,13 +98,13 @@ Explicit exclusions: `AGENTS.md`, `FORGE_CONSTITUTION_V3.md`, `FORGE_MASTER_BUIL
 | MOVE | `FORGE_CHECKPOINT_EXECUTIVE_SUMMARY.txt` | `docs/archive/FORGE_CHECKPOINT_EXECUTIVE_SUMMARY.txt` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_CLIENT_DECISION_MODEL_DISCOVERY.md` | `docs/architecture/discovery/FORGE_CLIENT_DECISION_MODEL_DISCOVERY.md` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_CLIENT_PRESENTATION_SIMULATION.md` | `docs/archive/FORGE_CLIENT_PRESENTATION_SIMULATION.md` | Tracked root documentation file within batch scope. |
-| MOVE | `FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt` | `docs/architecture/repository/FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt` | Tracked root documentation file within batch scope. |
-| MOVE | `FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md` | `docs/architecture/repository/FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md` | Tracked root documentation file within batch scope. |
-| MOVE | `FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md` | `docs/architecture/repository/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md` | Tracked root documentation file within batch scope. |
-| MOVE | `FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md` | `docs/architecture/repository/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md` | Tracked root documentation file within batch scope. |
-| MOVE | `FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt` | `docs/architecture/repository/FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt` | Tracked root documentation file within batch scope. |
-| MOVE | `FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt` | `docs/architecture/repository/FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt` | Tracked root documentation file within batch scope. |
-| MOVE | `FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt` | `docs/architecture/repository/FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt` | Tracked root documentation file within batch scope. |
+| MOVE | `FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt` | `docs/06-repository-governance/FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt` | Tracked root documentation file within batch scope. |
+| MOVE | `FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md` | `docs/06-repository-governance/FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md` | Tracked root documentation file within batch scope. |
+| MOVE | `FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md` | `docs/06-repository-governance/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md` | Tracked root documentation file within batch scope. |
+| MOVE | `FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md` | `docs/06-repository-governance/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md` | Tracked root documentation file within batch scope. |
+| MOVE | `FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt` | `docs/06-repository-governance/FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt` | Tracked root documentation file within batch scope. |
+| MOVE | `FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt` | `docs/06-repository-governance/FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt` | Tracked root documentation file within batch scope. |
+| MOVE | `FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt` | `docs/06-repository-governance/FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_CODEX_PROMPT_001_SOURCE_OWNERSHIP_REGISTRY_V0_1.txt` | `docs/archive/FORGE_CODEX_PROMPT_001_SOURCE_OWNERSHIP_REGISTRY_V0_1.txt` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_COMPENSATION_INTELLIGENCE_ARCHITECTURE.md` | `docs/archive/FORGE_COMPENSATION_INTELLIGENCE_ARCHITECTURE.md` | Tracked root documentation file within batch scope. |
 | SKIP_DEST_EXISTS | `FORGE_CONSTITUTION_AMENDMENT_v1.1.md` | `docs/architecture/constitution/FORGE_CONSTITUTION_AMENDMENT_v1.1.md` | Destination already existed; skipped to avoid overwrite/delete. |
@@ -267,7 +267,7 @@ Explicit exclusions: `AGENTS.md`, `FORGE_CONSTITUTION_V3.md`, `FORGE_MASTER_BUIL
 | MOVE | `FORGE_READINESS_VS_FRICTION_COMPARISON.md` | `docs/architecture/discovery/FORGE_READINESS_VS_FRICTION_COMPARISON.md` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_REAL_WORLD_CASE_REVIEW.md` | `docs/archive/FORGE_REAL_WORLD_CASE_REVIEW.md` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_REAL_WORLD_EXECUTIVE_SUMMARY.txt` | `docs/archive/FORGE_REAL_WORLD_EXECUTIVE_SUMMARY.txt` | Tracked root documentation file within batch scope. |
-| BLOCKED_UNTRACKED | `FORGE_REPOSITORY_MIGRATION_PLAN.md` | `docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md` | Untracked root doc; git mv cannot move it without first changing tracking state. |
+| BLOCKED_UNTRACKED | `FORGE_REPOSITORY_MIGRATION_PLAN.md` | `docs/06-repository-governance/FORGE_REPOSITORY_MIGRATION_PLAN.md` | Untracked root doc; git mv cannot move it without first changing tracking state. |
 | MOVE | `FORGE_RETIREMENT_FUTURE_UDI_PROJECTION_REPORT.txt` | `docs/archive/FORGE_RETIREMENT_FUTURE_UDI_PROJECTION_REPORT.txt` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_RETIREMENT_FUTURE_UDI_REASONING_DIAGRAM.md` | `docs/archive/FORGE_RETIREMENT_FUTURE_UDI_REASONING_DIAGRAM.md` | Tracked root documentation file within batch scope. |
 | MOVE | `FORGE_SALES_DECISION_SEQUENCE_DISCOVERY.md` | `docs/architecture/discovery/FORGE_SALES_DECISION_SEQUENCE_DISCOVERY.md` | Tracked root documentation file within batch scope. |

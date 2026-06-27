@@ -473,15 +473,15 @@
     "docs/04-product-intelligence/segu-beca-quote-ocr.txt",
     "docs/04-product-intelligence/vida-mujer-knowledge-source.txt",
     "docs/04-product-intelligence/vida-mujer-quote-ocr.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md",
-    "docs/architecture/repository/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md",
-    "docs/architecture/repository/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md",
-    "docs/architecture/repository/FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt",
-    "docs/architecture/repository/REPO-005_DOCUMENT_MIGRATION_EXECUTION_PLAN.md",
-    "docs/architecture/repository/REPO_MIGRATION_HARNESS_v1.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt",
+    "docs/06-repository-governance/FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt",
+    "docs/06-repository-governance/FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt",
+    "docs/06-repository-governance/FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt",
+    "docs/06-repository-governance/REPO-005_DOCUMENT_MIGRATION_EXECUTION_PLAN.md",
+    "docs/06-repository-governance/REPO_MIGRATION_HARNESS_v1.md",
     "docs/05-shared-commercial-model/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
     "docs/05-shared-commercial-model/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
     "docs/05-shared-commercial-model/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
@@ -1652,14 +1652,14 @@
     "docs/04-product-intelligence/segu-beca-quote-ocr.txt",
     "docs/04-product-intelligence/vida-mujer-knowledge-source.txt",
     "docs/04-product-intelligence/vida-mujer-quote-ocr.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md",
-    "docs/architecture/repository/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md",
-    "docs/architecture/repository/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md",
-    "docs/architecture/repository/FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt",
-    "docs/architecture/repository/FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt",
-    "docs/architecture/repository/REPO_MIGRATION_HARNESS_v1.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_BUILD_TREE_UPDATE_REPORT.txt",
+    "docs/06-repository-governance/FORGE_CODEBASE_CARTOGRAPHY_PHASE_1.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_CONCISE.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_DOMAIN_ASSIGNMENT_SUMMARY.md",
+    "docs/06-repository-governance/FORGE_CODEBASE_MODULE_INVENTORY_REPORT.txt",
+    "docs/06-repository-governance/FORGE_CODEBASE_MODULE_TO_BRANCH_MAP.txt",
+    "docs/06-repository-governance/FORGE_CODEBASE_UNKNOWN_REVIEW_QUEUE.txt",
+    "docs/06-repository-governance/REPO_MIGRATION_HARNESS_v1.md",
     "docs/05-shared-commercial-model/FORGE_SHARED_COMMERCIAL_MODEL_EVIDENCE_PROVENANCE_FOUNDATION.md",
     "docs/05-shared-commercial-model/FORGE_SHARED_COMMERCIAL_MODEL_IDENTITY_ATTRIBUTION_HARDENING.md",
     "docs/05-shared-commercial-model/FORGE_SHARED_COMMERCIAL_MODEL_PERIODS_OPERATIONAL_CLOCKS_HARDENING.md",
@@ -2419,7 +2419,7 @@
     "docs/architecture/discovery/REPO-004_ROOT_SURFACE_CLASSIFICATION_AUDIT.md",
     "docs/architecture/discovery/RUSSELL-001_IDENTITY_BASELINE_MODEL.md",
     "docs/architecture/discovery/RUSSELL-002_IDENTITY_DRIFT_DETECTION.md",
-    "docs/architecture/repository/REPO-005_DOCUMENT_MIGRATION_EXECUTION_PLAN.md",
+    "docs/06-repository-governance/REPO-005_DOCUMENT_MIGRATION_EXECUTION_PLAN.md",
     "scripts/test-repo-migration-harness.js"
   ],
   "rootFiles": [
@@ -4041,7 +4041,7 @@
     },
     {
       "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",
-      "destination": "docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md",
+      "destination": "docs/06-repository-governance/FORGE_REPOSITORY_MIGRATION_PLAN.md",
       "action": "BLOCKED_UNTRACKED",
       "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
     },
@@ -4059,13 +4059,13 @@
     },
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
-      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
+      "destination": "docs/06-repository-governance/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
       "action": "BLOCKED_UNTRACKED",
       "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
     },
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
-      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
+      "destination": "docs/06-repository-governance/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
       "action": "MOVE",
       "reason": "Tracked root documentation file with destination candidate."
     },
@@ -4083,7 +4083,7 @@
     },
     {
       "source": "migration-validation-report.md",
-      "destination": "docs/architecture/repository/migration-validation-report.md",
+      "destination": "docs/06-repository-governance/migration-validation-report.md",
       "action": "SKIP_TEST_DOC",
       "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
     },
@@ -4187,7 +4187,7 @@
     },
     {
       "source": "FORGE_REPOSITORY_MIGRATION_PLAN.md",
-      "destination": "docs/architecture/repository/FORGE_REPOSITORY_MIGRATION_PLAN.md",
+      "destination": "docs/06-repository-governance/FORGE_REPOSITORY_MIGRATION_PLAN.md",
       "action": "BLOCKED_UNTRACKED",
       "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
     },
@@ -4205,13 +4205,13 @@
     },
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
-      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
+      "destination": "docs/06-repository-governance/ROOT_DOCS_MIGRATION_BATCH_1_MOVE_MAP.md",
       "action": "BLOCKED_UNTRACKED",
       "reason": "Untracked file; git mv cannot be used without explicit tracking decision."
     },
     {
       "source": "ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
-      "destination": "docs/architecture/repository/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
+      "destination": "docs/06-repository-governance/ROOT_DOCS_MIGRATION_BATCH_2_MOVE_MAP.md",
       "action": "MOVE",
       "reason": "Tracked root documentation file with destination candidate."
     },
@@ -4229,7 +4229,7 @@
     },
     {
       "source": "migration-validation-report.md",
-      "destination": "docs/architecture/repository/migration-validation-report.md",
+      "destination": "docs/06-repository-governance/migration-validation-report.md",
       "action": "SKIP_TEST_DOC",
       "reason": "Filename indicates test/validation artifact; requires separate evidence policy."
     },

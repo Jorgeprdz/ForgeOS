@@ -56,7 +56,7 @@ Current canonical report output:
 
 - `docs/06-repository-governance/reports`
 
-Historical reports may still mention `docs/architecture/repository/reports`; that path is no longer the active harness output location.
+Historical reports may still mention `docs/06-repository-governance/reports`; that path is no longer the active harness output location.
 
 ### Inventory
 

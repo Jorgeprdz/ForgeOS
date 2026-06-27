@@ -2,7 +2,7 @@
   "reportId": "REPO-009",
   "status": "DRY_RUN_REWRITE_MAP",
   "generatedAt": "2026-06-11T18:56:39.009Z",
-  "sourceTriageReport": "docs/architecture/repository/REPO-008_BROKEN_LINK_TRIAGE_REPORT.md",
+  "sourceTriageReport": "docs/06-repository-governance/REPO-008_BROKEN_LINK_TRIAGE_REPORT.md",
   "totalBrokenRecordsInTriage": 124,
   "autoFixProcessed": 96,
   "excluded": {
@@ -1311,5 +1311,5 @@
       "rootCause": "Protected root anchor referenced from moved documentation"
     }
   ],
-  "patchFile": "docs/architecture/repository/REPO-009_AUTO_FIX_DRY_RUN_DIFF.patch"
+  "patchFile": "docs/06-repository-governance/REPO-009_AUTO_FIX_DRY_RUN_DIFF.patch"
 }

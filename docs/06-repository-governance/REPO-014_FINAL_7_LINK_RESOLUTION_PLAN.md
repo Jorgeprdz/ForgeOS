@@ -69,7 +69,7 @@ REPO-016 should resolve the 3 NEEDS_MOVE records:
 ## Validation Required For Future Execution
 
 ```sh
-node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports
 git diff --check
 git diff --name-only | rg '(^app\.js$|^index\.html$|^manifest\.json$|^service-worker\.js$|^sw-cache-config\.js$|\.js$|\.ts$|\.tsx$|\.jsx$|package.*\.json$)'
 ```

@@ -91,7 +91,7 @@ git status --short
 git diff --name-status
 git diff --check
 node scripts/runtime-module-graph-audit.js
-node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports
 ```
 
 Validation results:

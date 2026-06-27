@@ -22,10 +22,10 @@ The final 7 links should not be handled as a bulk rewrite. They require two diff
 
 ## Source Reports Loaded
 
-- `docs/architecture/repository/REPO-013_EXECUTION_REPORT.md`
-- `docs/architecture/repository/REPO-011_ARCHIVE_REFERENCE_ANALYSIS.md`
-- `docs/architecture/repository/REPO-011_NEEDS_MOVE_AUDIT.md`
-- `docs/architecture/repository/reports/broken-link-report.json`
+- `docs/06-repository-governance/REPO-013_EXECUTION_REPORT.md`
+- `docs/06-repository-governance/REPO-011_ARCHIVE_REFERENCE_ANALYSIS.md`
+- `docs/06-repository-governance/REPO-011_NEEDS_MOVE_AUDIT.md`
+- `docs/06-repository-governance/reports/broken-link-report.json`
 
 ## Current Verification
 

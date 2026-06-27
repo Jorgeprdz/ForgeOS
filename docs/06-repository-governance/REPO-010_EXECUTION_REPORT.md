@@ -5,7 +5,7 @@ Status: EXECUTION COMPLETE
 
 ## Executive Summary
 
-Executed the 96 approved SAFE documentation link rewrites from `docs/architecture/repository/REPO-009_AUTO_FIX_REWRITE_MAP.json`. No additional rewrites were applied. No runtime files, imports, package files or engine code were modified.
+Executed the 96 approved SAFE documentation link rewrites from `docs/06-repository-governance/REPO-009_AUTO_FIX_REWRITE_MAP.json`. No additional rewrites were applied. No runtime files, imports, package files or engine code were modified.
 
 ## Link Impact
 

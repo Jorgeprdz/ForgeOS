@@ -136,7 +136,7 @@ Result:
 Command:
 
 ```sh
-node scripts/repo-doc-migration-harness.js check --output-dir docs/architecture/repository/reports
+node scripts/repo-doc-migration-harness.js check --output-dir docs/06-repository-governance/reports
 ```
 
 Result:
