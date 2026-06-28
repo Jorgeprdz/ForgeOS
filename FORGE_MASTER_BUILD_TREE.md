@@ -791,3 +791,80 @@ Still not closed:
 - Candidate-to-Precontract Gate
 - Product Intelligence
 <!-- FORGEOS:RECRUITMENT_PIPELINE_ENGINE_STATUS:END -->
+
+<!-- FORGEOS:RECRUITMENT_TO_PRECONTRACT_GATE_STATUS:START -->
+## Recruitment-to-Precontract Gate — Implementation Status
+
+Last updated: 20260628-172239
+
+Status:
+- IMPLEMENTED
+
+Implemented infrastructure:
+- recruitment-to-precontract-gate
+
+Implemented files:
+- manager-os/recruitment/precontract-gate/recruitment-to-precontract-gate.js
+
+Verified focal tests:
+- manager-os/recruitment/tests/recruitment-to-precontract-gate-master-test.js
+- manager-os/recruitment/tests/recruitment-pipeline-engine-master-test.js
+- manager-os/recruitment/tests/recruitment-fixture-validation-test.js
+- manager-os/recruitment/tests/interview-flow-engine-master-test.js
+- manager-os/recruitment/tests/candidate-assessment-master-test.js
+- manager-os/recruitment/tests/candidate-evidence-provenance-master-test.js
+
+Implementation commit:
+- cdc80409e9ae13fdc6f70b6a19452721d4099700
+
+What this implementation covers:
+- recruitment-owned precontract review gate
+- precontract review packet readiness
+- upstream recruitment pipeline integration
+- candidate assessment and provenance integration
+- interview flow integration
+- RDA/manager prerequisite surfacing
+- precontract cycle/activity evidence reference-only handling
+- forbidden downstream transition blocking
+
+Critical distinction:
+- READY_FOR_PRECONTRACT_REVIEW is not PRECONTRACT.
+- precontractReviewPacketReady is not precontract truth.
+- RDA review is not attribution truth.
+- manager review is not official truth.
+
+Forbidden downstream transitions:
+- PRECONTRACT
+- PRECONTRACT_CYCLE
+- ADVISOR_LIFECYCLE
+- ADVISOR
+- ACTIVATION
+- CONNECTION
+- REVENUE
+- COMPENSATION
+- PAYOUT
+- PAYMENT
+
+Constitutional boundaries:
+- Recruitment-to-Precontract Gate is decision support only.
+- It does not create precontract truth.
+- It does not create a precontract cycle.
+- It does not create precontract activity.
+- It does not create Advisor Lifecycle truth.
+- It does not create revenue, compensation, or payout truth.
+- Missing evidence is not zero and not automatic disqualification.
+- REJECT recommendation is not automatic rejection.
+- Manager override still requires human review.
+- RDA missing/pending is surfaced as prerequisite, not truth.
+
+Closure certificate:
+- docs/evidence/RECRUITMENT_TO_PRECONTRACT_GATE_CLOSURE_CERTIFICATE.md
+
+Still not closed:
+- Full Recruitment
+- Manager OS / RDA Attribution
+- Advisor Lifecycle
+- Revenue
+- Compensation
+- Product Intelligence
+<!-- FORGEOS:RECRUITMENT_TO_PRECONTRACT_GATE_STATUS:END -->
