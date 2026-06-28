@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0.0",
+  "rulePackId": "smnyl-new-professional-2026",
+  "sourceDocument": "CC 2026 Asesores Nuevos Profesionales",
+  "effectiveFrom": "2026-01-01",
+  "effectiveTo": "2026-12-31",
+  "currency": "MXN",
+  "participantType": "new_professional_advisor",
+  "payoutTruth": false,
+  "payoutTruthRule": "commission_statement_required",
+  "sourceEvidence": [
+    "CC 2026 Asesores Nuevos Profesionales.pdf"
+  ],
+  "globalExclusions": {
+    "personalPoliciesExcluded": true,
+    "legalEntitiesExcluded": true,
+    "onlyDefinitiveKeys": true,
+    "activeAdvisorsOnly": true,
+    "payrollDiscountExcluded": true,
+    "aveExcluded": true,
+    "additionalUniversalProductContributionsExcluded": true,
+    "gmmiInitialPremiumsCommissionsExcludedForInsuredAge60Plus": true,
+    "paidAppliedAtCloseRequired": true,
+    "canceledPoliciesMayBeDeductedRecalculated": true,
+    "personasMoralesExcluded": {
+      "enabled": true,
+      "label": "No participan claves de Asesores que sean Personas Morales.",
+      "source": "CC 2026 Asesores Nuevos Profesionales - Bases"
+    }
+  },
+  "concepts": {
+    "life-initial-bonus": {
+      "displayName": "Bono Inicial Vida",
+      "category": "life",
+      "cadence": "initial",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "life-renewal-bonus": {
+      "displayName": "Bono de Renovacion Vida",
+      "category": "life",
+      "cadence": "renewal",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "gmmi-initial-premium-bonus": {
+      "displayName": "Bono Inicial Prima GMMI",
+      "category": "gmmi",
+      "cadence": "initial",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "gmmi-initial-premium-growth-annual-bonus": {
+      "displayName": "Bono Anual de Crecimiento Prima Inicial GMMI",
+      "category": "gmmi",
+      "cadence": "annual",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "gmmi-renewal-premium-bonus": {
+      "displayName": "Bono Prima de Renovacion GMMI",
+      "category": "gmmi",
+      "cadence": "renewal",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "gmmi-loss-ratio-annual-bonus": {
+      "displayName": "Bono Anual Siniestralidad GMMI",
+      "category": "gmmi",
+      "cadence": "annual",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "connection-bonus": {
+      "displayName": "Bono de Conexion",
+      "category": "relationship",
+      "cadence": "event_and_monthly",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "development-bonus": {
+      "displayName": "Bono de Desarrollo",
+      "category": "relationship",
+      "cadence": "monthly",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "temporary-total-disability-benefit": {
+      "displayName": "Beneficio por Invalidez Total Temporal",
+      "category": "benefit",
+      "cadence": "event",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    },
+    "death-benefit": {
+      "displayName": "Beneficio por Fallecimiento",
+      "category": "benefit",
+      "cadence": "event",
+      "payoutTruth": false,
+      "payoutTruthRule": "commission_statement_required",
+      "sourceEvidence": [
+        "CC 2026 Asesores Nuevos Profesionales.pdf"
+      ],
+      "modelStatus": "skeleton_not_calculated"
+    }
+  }
+}
