@@ -38,7 +38,7 @@ Rules:
 | Manager OS | PARTIALLY_IMPLEMENTED | `manager-os/`; `docs/04-manager-os/`; `docs/05-readiness/` | Split recruitment subset from planned leadership/org health. |
 | Universal Command OS / Alfred | PARTIALLY_IMPLEMENTED | `universal-command-engine.js`; `platform/commands/` | Change from planned to implemented foundation / needs review. |
 | Offline / Sync | PARTIALLY_IMPLEMENTED | `platform/sync/`; `offline-sync.js`; runtime readiness docs | Change from planned to partial hardening. |
-| Partner Compensation Candidate Foundation Subset | IMPLEMENTED_CANDIDATE / SUBSET STABILIZED | `compensation/partner-manager/`; `tests/partner-*.js`; Juan real exercise regression; `docs/02-build-tree/PARTNER_COMP_BONUS_COVERAGE_001.md` | Eight PCV bonuses are IMPLEMENTED_CANDIDATE, two remain PARTIAL; Partner Compensation overall remains PARTIAL / ACTIVE WORKSTREAM; not payout truth. |
+| Partner Compensation Candidate Foundation Subset | IMPLEMENTED_CANDIDATE / SUBSET STABILIZED | `compensation/partner-manager/`; `tests/partner-*.js`; Juan real exercise regression; `docs/02-build-tree/PARTNER_COMP_BONUS_COVERAGE_001.md` | Nine PCV bonuses are IMPLEMENTED_CANDIDATE, one remains PARTIAL; Partner Compensation overall remains PARTIAL / ACTIVE WORKSTREAM; not payout truth. |
 | Broader Compensation Intelligence | PARTIALLY_IMPLEMENTED | `compensation/`; Partner candidate foundation tests | Keep broader domain yellow until official statement ingestion and payout operations exist. |
 | Official statement ingestion / payout operations | PENDING | Payout truth boundary tests; no official statement ingestion closure | Future scope only; `payoutTruth=true` requires official confirmed evidence and statement line. |
 | Forecast / projection engines | PARTIALLY_IMPLEMENTED | `product-intelligence/projections/`; forecast/projection engines | Split engines from full Forecast Intelligence architecture lock. |
@@ -227,6 +227,39 @@ Annual productivity candidate coverage is based on:
 - Jul-Dec threshold: 4
 - candidateAmount = 10% of yearly productivity bonus candidates
 - annual orchestrator separate from quarterly productivity flow
+- `payoutTruth=false`
+
+Still not implemented:
+
+- `payoutTruth=true`
+- official statement/account ingestion
+- production payout operations
+
+## Alta Partner Coverage Update — 004B/C-4B
+
+Bono de Alta Partner is now **IMPLEMENTED_CANDIDATE** for candidateAmount coverage.
+
+Coverage count update:
+
+- implemented_candidate: 9
+- partial: 1
+- missing: 0
+- blocked_for_payoutTruth: 10
+
+Alta Partner candidate coverage is based on:
+
+- 13-payment candidate schedule
+- payment 1 = 60000
+- payments 2-13 = 20000 each
+- total candidate schedule = 300000
+- Partner active evidence at payment generation
+- promoted advisor active evidence at payment generation
+- promoted advisor Apoyo evidence
+- recovery only with recovered Apoyo evidence
+- recovery max 3 months
+- same calendar year recovery evidence
+- monthly/promotion-event orchestrator
+- support calculator untouched
 - `payoutTruth=false`
 
 Still not implemented:

@@ -90,13 +90,27 @@ assert.equal(isPartnerConceptFullCalculable('development-bonus'), true);
 assert.equal(isPartnerConceptCandidateCalculable('development-bonus'), true);
 
 const promotion = getPartnerCompensationConceptEntry('partner-promotion-bonus');
-assert.equal(promotion.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.SEMANTIC_ONLY);
-assert.equal(promotion.supportsSemanticAmount, true);
+assert.equal(promotion.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
+assert.equal(promotion.supportsCandidateCalculation, true);
 assert.equal(promotion.supportsFullCalculation, false);
-assert.equal(promotion.metadata.semanticAmounts.total, 300000);
-assert.equal(promotion.metadata.semanticAmounts.initial, 60000);
-assert.equal(promotion.metadata.semanticAmounts.monthly, 20000);
-assert.equal(promotion.metadata.semanticAmounts.payments, 12);
+assert.equal(promotion.requiresOfficialStatementForPayout, true);
+assert.equal(promotion.supportsPayoutTruthGate, true);
+assert.equal(promotion.metadata.totalScheduleAmount, 300000);
+assert.equal(promotion.metadata.paymentCount, 13);
+assert.equal(promotion.metadata.firstPaymentAmount, 60000);
+assert.equal(promotion.metadata.recurringPaymentAmount, 20000);
+assert.equal(promotion.metadata.maxRecoveryMonths, 3);
+assert.equal(promotion.metadata.requiresPartnerActiveEvidence, true);
+assert.equal(promotion.metadata.requiresPromotedAdvisorActiveEvidence, true);
+assert.equal(promotion.metadata.requiresPromotedAdvisorSupportEvidence, true);
+assert.equal(promotion.metadata.supportCalculatorTouched, false);
+assert.equal(promotion.metadata.productionPayoutOperationsTouched, false);
+assert.equal(isPartnerConceptKnown('partner-promotion-bonus'), true);
+assert.equal(isPartnerConceptCandidateCalculable('partner-promotion-bonus'), true);
+assert.equal(isPartnerConceptFullCalculable('partner-promotion-bonus'), false);
+assert.equal(isPartnerConceptPartial('partner-promotion-bonus'), false);
+assert.equal(requiresOfficialStatementForPartnerPayout('partner-promotion-bonus'), true);
+
 
 const mutableCopy = getPartnerCompensationConceptEntry('productivity-base');
 mutableCopy.displayName = 'mutated';

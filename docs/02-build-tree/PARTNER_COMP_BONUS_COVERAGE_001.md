@@ -170,3 +170,36 @@ Still not implemented:
 - `payoutTruth=true`
 - official statement/account ingestion
 - production payout operations
+
+## Alta Partner Coverage Update — 004B/C-4B
+
+Bono de Alta Partner is now **IMPLEMENTED_CANDIDATE** for candidateAmount coverage.
+
+Coverage count update:
+
+- implemented_candidate: 9
+- partial: 1
+- missing: 0
+- blocked_for_payoutTruth: 10
+
+Alta Partner candidate coverage is based on:
+
+- 13-payment candidate schedule
+- payment 1 = 60000
+- payments 2-13 = 20000 each
+- total candidate schedule = 300000
+- Partner active evidence at payment generation
+- promoted advisor active evidence at payment generation
+- promoted advisor Apoyo evidence
+- recovery only with recovered Apoyo evidence
+- recovery max 3 months
+- same calendar year recovery evidence
+- monthly/promotion-event orchestrator
+- support calculator untouched
+- `payoutTruth=false`
+
+Still not implemented:
+
+- `payoutTruth=true`
+- official statement/account ingestion
+- production payout operations
