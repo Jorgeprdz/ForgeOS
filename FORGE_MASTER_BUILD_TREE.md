@@ -450,3 +450,44 @@ Constitutional boundaries:
 - No cross-imports from Advisor Development or Partner modules.
 - Out-of-scope benefit concepts remain present in source shape but have no engines.
 <!-- FORGEOS:NP_COMPENSATION_2026_STATUS:END -->
+
+<!-- FORGEOS:ADVISOR_LIFECYCLE_STATUS:START -->
+## Advisor Lifecycle — Closure Status
+
+Last updated: 20260628-151133
+
+Status:
+- CLOSED
+
+Closed infrastructure:
+- advisor-career-clock
+- advisor-lifecycle-evidence
+- advisor-lifecycle-status
+- advisor-stage-gate
+- lifecycle-to-compensation-gate
+- lifecycle-to-revenue-mapper
+- precontract-economic-status
+- precontract-revenue-classifier
+
+Verified focal tests:
+- tests/advisor-career-clock-test.js
+- tests/advisor-lifecycle-status-test.js
+- tests/advisor-lifecycle-evidence-test.js
+- tests/advisor-stage-gate-test.js
+- tests/lifecycle-to-compensation-gate-test.js
+- tests/lifecycle-to-revenue-mapper-test.js
+- tests/precontract-economic-status-test.js
+- tests/precontract-revenue-classifier-test.js
+
+Constitutional boundaries:
+- Advisor Lifecycle does not create payment truth by itself.
+- Manager confirmation alone is not payout truth.
+- Unknown is not zero.
+- Blocked is not zero.
+- Candidate tracking is not payment authorization.
+- Compensation Intelligence remains closed and read/reference only.
+- Product Intelligence is deferred to final phase.
+
+Closure certificate:
+- docs/evidence/ADVISOR_LIFECYCLE_CLOSURE_CERTIFICATE.md
+<!-- FORGEOS:ADVISOR_LIFECYCLE_STATUS:END -->
