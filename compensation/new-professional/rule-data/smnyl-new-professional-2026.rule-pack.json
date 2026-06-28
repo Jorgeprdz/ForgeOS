@@ -203,7 +203,7 @@
       }
     },
     "gmmi-initial-premium-bonus": {
-      "displayName": "Bono Inicial Prima GMMI",
+      "displayName": "GMMI Bono Primas Iniciales",
       "category": "gmmi",
       "cadence": "initial",
       "payoutTruth": false,
@@ -211,7 +211,76 @@
       "sourceEvidence": [
         "CC 2026 Asesores Nuevos Profesionales.pdf"
       ],
-      "modelStatus": "skeleton_not_calculated"
+      "modelStatus": "implemented_candidate",
+      "gmmiInitialPremiumQuarterlyBonusTable": {
+        "sourceTable": "Table 7. Prima neta pagada y polizas iniciales de GMMI en el trimestre.",
+        "unit": "MXN",
+        "premiumGoalBasis": "accumulated_eligible_paid_gmmi_initial_net_premium",
+        "policyGoalBasis": "accumulated_gmmi_initial_policies_paid",
+        "quarterMonths": [
+          1,
+          2,
+          3
+        ],
+        "groups": {
+          "1": {
+            "group": 1,
+            "month1PremiumGoal": 315000,
+            "month2PremiumGoal": 640000,
+            "month3PremiumGoal": 790000,
+            "policyGoal": 8,
+            "bonusRate": 0.16
+          },
+          "2": {
+            "group": 2,
+            "month1PremiumGoal": 245000,
+            "month2PremiumGoal": 485000,
+            "month3PremiumGoal": 610000,
+            "policyGoal": 6,
+            "bonusRate": 0.14
+          },
+          "3": {
+            "group": 3,
+            "month1PremiumGoal": 195000,
+            "month2PremiumGoal": 390000,
+            "month3PremiumGoal": 485000,
+            "policyGoal": 5,
+            "bonusRate": 0.13
+          },
+          "4": {
+            "group": 4,
+            "month1PremiumGoal": 135000,
+            "month2PremiumGoal": 285000,
+            "month3PremiumGoal": 365000,
+            "policyGoal": 4,
+            "bonusRate": 0.1
+          },
+          "5": {
+            "group": 5,
+            "month1PremiumGoal": 115000,
+            "month2PremiumGoal": 225000,
+            "month3PremiumGoal": 280000,
+            "policyGoal": 3,
+            "bonusRate": 0.09
+          },
+          "6": {
+            "group": 6,
+            "month1PremiumGoal": 80000,
+            "month2PremiumGoal": 170000,
+            "month3PremiumGoal": 215000,
+            "policyGoal": 3,
+            "bonusRate": 0.08
+          },
+          "7": {
+            "group": 7,
+            "month1PremiumGoal": 65000,
+            "month2PremiumGoal": 125000,
+            "month3PremiumGoal": 160000,
+            "policyGoal": 2,
+            "bonusRate": 0.07
+          }
+        }
+      }
     },
     "gmmi-initial-premium-growth-annual-bonus": {
       "displayName": "Bono Anual de Crecimiento Prima Inicial GMMI",

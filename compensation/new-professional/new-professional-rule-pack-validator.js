@@ -4,6 +4,7 @@ const NEW_PROFESSIONAL_PARTICIPANT_TYPE = 'new_professional_advisor';
 const NEW_PROFESSIONAL_PAYOUT_TRUTH_RULE = 'commission_statement_required';
 const LIFE_INITIAL_BONUS_CONCEPT_KEY = 'life-initial-bonus';
 const LIFE_RENEWAL_BONUS_CONCEPT_KEY = 'life-renewal-bonus';
+const GMMI_INITIAL_PREMIUM_BONUS_CONCEPT_KEY = 'gmmi-initial-premium-bonus';
 
 const REQUIRED_NEW_PROFESSIONAL_CONCEPT_KEYS = Object.freeze([
   'life-initial-bonus',
@@ -239,6 +240,43 @@ function validateLifeRenewalBonusConcept(concept, errors) {
   }
 }
 
+function validateGmmiInitialPremiumBonusConcept(concept, errors) {
+  if (concept.modelStatus !== 'implemented_candidate') {
+    errors.push(createIssue(
+      'invalid_gmmi_initial_premium_bonus_model_status',
+      'gmmi-initial-premium-bonus.modelStatus must be implemented_candidate',
+      'concepts.gmmi-initial-premium-bonus.modelStatus',
+    ));
+  }
+
+  const table = concept.gmmiInitialPremiumQuarterlyBonusTable;
+  if (!isPlainObject(table) || table.unit !== 'MXN' || !isPlainObject(table.groups)) {
+    errors.push(createIssue(
+      'missing_gmmi_initial_premium_quarterly_bonus_table',
+      'gmmi-initial-premium-bonus.gmmiInitialPremiumQuarterlyBonusTable is required',
+      'concepts.gmmi-initial-premium-bonus.gmmiInitialPremiumQuarterlyBonusTable',
+    ));
+    return;
+  }
+
+  for (let group = 1; group <= 7; group += 1) {
+    const row = table.groups[String(group)];
+    if (!isPlainObject(row) ||
+      row.group !== group ||
+      !isNumber(row.month1PremiumGoal) ||
+      !isNumber(row.month2PremiumGoal) ||
+      !isNumber(row.month3PremiumGoal) ||
+      !isNumber(row.policyGoal) ||
+      !isNumber(row.bonusRate)) {
+      errors.push(createIssue(
+        'invalid_gmmi_initial_premium_quarterly_bonus_group',
+        `gmmi-initial-premium-bonus group ${group} must include group, premium goals, policyGoal and bonusRate`,
+        `concepts.gmmi-initial-premium-bonus.gmmiInitialPremiumQuarterlyBonusTable.groups.${group}`,
+      ));
+    }
+  }
+}
+
 function validateIdentity(rulePack, errors) {
   if (rulePack.rulePackId !== NEW_PROFESSIONAL_RULE_PACK_ID) {
     errors.push(createIssue(
@@ -387,6 +425,8 @@ function validateConcepts(rulePack, errors) {
       validateLifeInitialBonusConcept(concept, errors);
     } else if (conceptKey === LIFE_RENEWAL_BONUS_CONCEPT_KEY && concept.modelStatus === 'implemented_candidate') {
       validateLifeRenewalBonusConcept(concept, errors);
+    } else if (conceptKey === GMMI_INITIAL_PREMIUM_BONUS_CONCEPT_KEY && concept.modelStatus === 'implemented_candidate') {
+      validateGmmiInitialPremiumBonusConcept(concept, errors);
     } else if (concept.modelStatus !== 'skeleton_not_calculated') {
       errors.push(createIssue(
         'invalid_concept_model_status',
@@ -452,6 +492,7 @@ function validateNewProfessionalRulePack(rulePack) {
 }
 
 export {
+  GMMI_INITIAL_PREMIUM_BONUS_CONCEPT_KEY,
   LIFE_INITIAL_BONUS_CONCEPT_KEY,
   LIFE_RENEWAL_BONUS_CONCEPT_KEY,
   NEW_PROFESSIONAL_PARTICIPANT_TYPE,

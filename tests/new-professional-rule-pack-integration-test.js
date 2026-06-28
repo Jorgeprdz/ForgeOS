@@ -58,9 +58,14 @@ function testConceptShapeFromPhysicalRulePack() {
 
   assert.equal(rulePack.concepts['life-initial-bonus'].modelStatus, 'implemented_candidate');
   assert.equal(rulePack.concepts['life-renewal-bonus'].modelStatus, 'implemented_candidate');
+  assert.equal(rulePack.concepts['gmmi-initial-premium-bonus'].modelStatus, 'implemented_candidate');
 
   const skeletonConceptKeys = REQUIRED_NEW_PROFESSIONAL_CONCEPT_KEYS
-    .filter((conceptKey) => !['life-initial-bonus', 'life-renewal-bonus'].includes(conceptKey));
+    .filter((conceptKey) => ![
+      'life-initial-bonus',
+      'life-renewal-bonus',
+      'gmmi-initial-premium-bonus',
+    ].includes(conceptKey));
   for (const conceptKey of skeletonConceptKeys) {
     assert.equal(rulePack.concepts[conceptKey].modelStatus, 'skeleton_not_calculated');
   }
@@ -99,6 +104,22 @@ function testLifeRenewalBonusTablesFromPhysicalRulePack() {
   console.log('PASS life-renewal-bonus required IGC table loads from physical rule pack');
 }
 
+function testGmmiInitialPremiumBonusTableFromPhysicalRulePack() {
+  const { rulePack } = loadNewProfessional2026RulePack();
+  const concept = rulePack.concepts['gmmi-initial-premium-bonus'];
+  const table = concept.gmmiInitialPremiumQuarterlyBonusTable;
+
+  assert.equal(concept.modelStatus, 'implemented_candidate');
+  assert.ok(table);
+  assert.equal(table.groups['1'].month1PremiumGoal, 315000);
+  assert.equal(table.groups['1'].bonusRate, 0.16);
+  assert.equal(table.groups['7'].month3PremiumGoal, 160000);
+  assert.equal(table.groups['7'].bonusRate, 0.07);
+  assert.equal(Object.keys(rulePack.concepts).length, 10);
+
+  console.log('PASS gmmi-initial-premium-bonus required quarterly table loads from physical rule pack');
+}
+
 function testGlobalExclusionsFromPhysicalRulePack() {
   const { rulePack } = loadNewProfessional2026RulePack();
 
@@ -114,6 +135,7 @@ testPhysicalRulePackLoadsAndValidates();
 testConceptShapeFromPhysicalRulePack();
 testLifeInitialBonusTablesFromPhysicalRulePack();
 testLifeRenewalBonusTablesFromPhysicalRulePack();
+testGmmiInitialPremiumBonusTableFromPhysicalRulePack();
 testGlobalExclusionsFromPhysicalRulePack();
 
 console.log('PASS new-professional-rule-pack-integration-test');
