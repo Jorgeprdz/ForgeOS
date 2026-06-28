@@ -62,12 +62,19 @@ assert.equal(activity.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDA
 
 const fixedSupport = getPartnerCompensationConceptEntry('fixed-support');
 assert.equal(fixedSupport.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
+assert.equal(fixedSupport.supportsCandidateCalculation, true);
 assert.equal(fixedSupport.supportsFullCalculation, false);
+assert.equal(fixedSupport.supportsPayoutTruthGate, true);
+assert.equal(fixedSupport.requiresOfficialStatementForPayout, true);
 assert.ok(fixedSupport.evidenceRequirement.includes('support_table_evidence_for_full_modeling'));
 assert.equal(fixedSupport.metadata.requiresPartnerCareerMonthSupportGate, true);
 assert.equal(fixedSupport.metadata.requiresAccumulatedCommissionGoal, true);
 assert.equal(fixedSupport.metadata.requiresQualifiedAdvisorRequirementByCareerMonth, false);
 assert.equal(fixedSupport.metadata.requiresSupportTableEvidence, true);
+assert.equal(isPartnerConceptCandidateCalculable('fixed-support'), true);
+assert.equal(isPartnerConceptFullCalculable('fixed-support'), false);
+assert.equal(isPartnerConceptPartial('fixed-support'), false);
+assert.equal(requiresOfficialStatementForPartnerPayout('fixed-support'), true);
 
 const transition = getPartnerCompensationConceptEntry('transition-bonus');
 assert.equal(transition.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);

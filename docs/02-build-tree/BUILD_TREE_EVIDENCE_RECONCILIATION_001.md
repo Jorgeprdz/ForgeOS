@@ -343,7 +343,7 @@ Scope:
 
 ### Closeout Interpretation
 
-Partner Compensation Candidate Foundation Subset is IMPLEMENTED_CANDIDATE / SUBSET STABILIZED for candidate-calculation readiness; Partner Compensation overall remains PARTIAL / ACTIVE WORKSTREAM and full candidate completeness is NOT CLOSED.
+Partner Compensation Candidate Foundation Subset is IMPLEMENTED_CANDIDATE / SUBSET STABILIZED for candidate-calculation readiness; Partner Compensation overall remains PARTIAL / ACTIVE WORKSTREAM and full candidate completeness is IMPLEMENTED_CANDIDATE / CLOSED FOR CANDIDATE COVERAGE.
 
 Broader Compensation Intelligence remains PARTIALLY_IMPLEMENTED.
 
@@ -369,8 +369,8 @@ Coverage test:
 
 | Status | Concepts |
 | --- | --- |
-| IMPLEMENTED_CANDIDATE | Bono de Productividad Base; Multiplicador de Productividad; Bono de Produccion; Bono de Actividad; Bono de Conexion; Bono de Desarrollo |
-| PARTIAL | Bono de Transicion; Bono Adicional Anual de Productividad; Bono de Alta Partner; Apoyos |
+| IMPLEMENTED_CANDIDATE | Bono de Transicion; Bono de Productividad Base; Multiplicador de Productividad; Bono Adicional Anual de Productividad; Bono de Produccion; Bono de Actividad; Bono de Alta Partner; Bono de Conexion; Bono de Desarrollo; Apoyos |
+| PARTIAL | None |
 | MISSING | None completely absent from official rule-data |
 | BLOCKED_BY_OFFICIAL_EVIDENCE | All PCV Partner bonuses for `payoutTruth=true` |
 
@@ -383,13 +383,10 @@ Coverage test:
 - Raw activity logs are insufficient without paid-applied evidence.
 - Ownership source truth gate remains protected.
 
-### Remaining Candidate Completeness Gaps
+### Remaining Compensation Gaps
 
-1. Transition candidate calculator/orchestrator/test coverage.
-2. Annual additional productivity bonus calculator/orchestrator/test coverage.
-3. Alta Partner promotion monthly schedule/support-gate calculator/orchestrator/test coverage.
-4. Apoyos support table / proportional payment / recovery reconciliation.
-5. Official statement/account ingestion after candidate completeness.
+1. Official statement/account ingestion after candidate completeness.
+2. Production payout operations after official statement/account matching exists.
 
 ## Partner Compensation Closure Correction — Status Truth
 
@@ -397,21 +394,22 @@ Partner Compensation overall is **PARTIAL / ACTIVE WORKSTREAM**.
 
 The **Partner Compensation Candidate Foundation Subset** is **IMPLEMENTED_CANDIDATE / SUBSET STABILIZED**.
 
-Full candidate completeness is **NOT CLOSED**.
+Full candidate completeness is **IMPLEMENTED_CANDIDATE / CLOSED FOR CANDIDATE COVERAGE**.
 
 Implemented candidate concepts:
 - Productividad Base
 - Multiplicador de Productividad
 - Bono de Produccion
 - Bono de Actividad
+- Bono de Alta Partner
 - Bono de Conexion
 - Bono de Desarrollo
-
-Partial candidate concepts / active gaps:
 - Bono de Transicion
 - Bono Adicional Anual de Productividad
-- Bono de Alta Partner
 - Apoyos
+
+Partial candidate concepts / active gaps:
+- None
 
 Boundary:
 - `candidateAmount` is not `payoutTruth`.
@@ -425,8 +423,8 @@ Bono de Transicion is now **IMPLEMENTED_CANDIDATE** for candidateAmount coverage
 
 Coverage count update:
 
-- implemented_candidate: 8
-- partial: 2
+- implemented_candidate: 10
+- partial: 0
 - missing: 0
 - blocked_for_payoutTruth: 10
 
@@ -449,14 +447,50 @@ Still not implemented:
 - official statement/account ingestion
 - production payout operations
 
+## Apoyos Coverage Update — 005B/C-5B
+
+Apoyos / fixed-support is now **IMPLEMENTED_CANDIDATE** for candidateAmount coverage.
+
+Coverage count update:
+
+- implemented_candidate: 10
+- partial: 0
+- missing: 0
+- blocked_for_payoutTruth: 10
+
+Apoyos candidate coverage is based on:
+
+- official support amount table
+- 36-month commission goal table
+- accumulated Partner-year commission calculator
+- accumulatedCommissionGoal derived from the official contract table
+- explicit accumulatedCommissionGoal override
+- achievementRatio exposed
+- commissionGoalSource exposed
+- signed precontracts as TA evidence
+- new advisors as TA evidence
+- first-two-hires exclusion evidence preserved
+- monthly orchestration
+- batch orchestration
+- recovery orchestration
+- blocked months preserved, not zeroed
+- unknown-is-not-zero
+- `payoutTruth=false`
+
+Still not implemented:
+
+- `payoutTruth=true`
+- official statement/account ingestion
+- production payout operations
+
 ## Annual Productivity Coverage Update — 003B/C-4B
 
 Bono Adicional Anual de Productividad is now **IMPLEMENTED_CANDIDATE** for candidateAmount coverage.
 
 Coverage count update:
 
-- implemented_candidate: 8
-- partial: 2
+- implemented_candidate: 10
+- partial: 0
 - missing: 0
 - blocked_for_payoutTruth: 10
 
@@ -483,8 +517,8 @@ Bono de Alta Partner is now **IMPLEMENTED_CANDIDATE** for candidateAmount covera
 
 Coverage count update:
 
-- implemented_candidate: 9
-- partial: 1
+- implemented_candidate: 10
+- partial: 0
 - missing: 0
 - blocked_for_payoutTruth: 10
 

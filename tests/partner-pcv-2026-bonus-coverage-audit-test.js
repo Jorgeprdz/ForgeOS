@@ -20,7 +20,7 @@ const pcvConcepts = Object.freeze([
   ['partner-promotion-bonus', 'Bono de Alta Partner', 'IMPLEMENTED_CANDIDATE'],
   ['connection-bonus', 'Bono de Conexion', 'IMPLEMENTED_CANDIDATE'],
   ['development-bonus', 'Bono de Desarrollo', 'IMPLEMENTED_CANDIDATE'],
-  ['fixed-support', 'Apoyos', 'PARTIAL'],
+  ['fixed-support', 'Apoyos', 'IMPLEMENTED_CANDIDATE'],
 ]);
 
 const counts = pcvConcepts.reduce(
@@ -31,10 +31,25 @@ const counts = pcvConcepts.reduce(
   {}
 );
 
+const blockedForPayoutTruth = pcvConcepts.filter(([conceptKey]) =>
+  requiresOfficialStatementForPartnerPayout(conceptKey)
+);
+
+const coverageCounts = Object.freeze({
+  implemented_candidate: counts.IMPLEMENTED_CANDIDATE || 0,
+  partial: counts.PARTIAL || 0,
+  missing: counts.MISSING || 0,
+  blocked_for_payoutTruth: blockedForPayoutTruth.length,
+});
+
 assert.equal(pcvConcepts.length, 10);
-assert.equal(counts.IMPLEMENTED_CANDIDATE, 9);
-assert.equal(counts.PARTIAL, 1);
+assert.equal(counts.IMPLEMENTED_CANDIDATE, 10);
+assert.equal(counts.PARTIAL || 0, 0);
 assert.equal(counts.MISSING || 0, 0);
+assert.equal(coverageCounts.implemented_candidate, 10);
+assert.equal(coverageCounts.partial, 0);
+assert.equal(coverageCounts.missing, 0);
+assert.equal(coverageCounts.blocked_for_payoutTruth, 10);
 
 for (const [conceptKey] of pcvConcepts) {
   assert.equal(isPartnerConceptKnown(conceptKey), true, `${conceptKey} must be registry-known`);
@@ -72,11 +87,16 @@ assert.equal(isPartnerConceptCandidateCalculable('partner-promotion-bonus'), tru
 assert.equal(isPartnerConceptFullCalculable('partner-promotion-bonus'), false);
 assert.equal(isPartnerConceptPartial('partner-promotion-bonus'), false);
 
-// Apoyos remains PARTIAL by explicit PCV coverage status; do not assert registry helper partialness here.
-
-const blockedForPayoutTruth = pcvConcepts.filter(([conceptKey]) =>
-  requiresOfficialStatementForPartnerPayout(conceptKey)
-);
+const fixedSupport = getPartnerCompensationConceptEntry('fixed-support');
+assert.equal(fixedSupport.calculationMode, PARTNER_CONCEPT_CALCULATION_MODES.CANDIDATE_WITH_CAUTION);
+assert.equal(fixedSupport.supportsCandidateCalculation, true);
+assert.equal(fixedSupport.supportsFullCalculation, false);
+assert.equal(fixedSupport.supportsPayoutTruthGate, true);
+assert.equal(fixedSupport.requiresOfficialStatementForPayout, true);
+assert.equal(isPartnerConceptCandidateCalculable('fixed-support'), true);
+assert.equal(isPartnerConceptFullCalculable('fixed-support'), false);
+assert.equal(isPartnerConceptPartial('fixed-support'), false);
+assert.equal(requiresOfficialStatementForPartnerPayout('fixed-support'), true);
 
 assert.equal(blockedForPayoutTruth.length, 10);
 
