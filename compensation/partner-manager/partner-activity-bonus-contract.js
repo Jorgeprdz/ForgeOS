@@ -19,6 +19,12 @@ function hasNumber(value) {
   return value !== null && value !== undefined && Number.isFinite(Number(value));
 }
 
+function resolveActivityMonthlyAverageScaleValue(monthlyAveragePolicies) {
+  if (!hasNumber(monthlyAveragePolicies)) return null;
+  const value = Math.floor(Number(monthlyAveragePolicies));
+  return value >= 6 ? 6 : value;
+}
+
 export function assessPartnerActivityBonus({
   rulePack = null,
   qualifiedAdvisorStatus = null,
@@ -52,7 +58,9 @@ export function assessPartnerActivityBonus({
   }
 
   const activeRulePack = rulePack || loadPartner2026RulePack();
-  const jsonRate = getActivityBonusRate(activeRulePack, { validLifeGmmPolicyCount: resolvedMonthlyAveragePolicies });
+  const jsonRate = getActivityBonusRate(activeRulePack, {
+    validLifeGmmPolicyCount: resolveActivityMonthlyAverageScaleValue(resolvedMonthlyAveragePolicies),
+  });
   if (hasNumber(resolvedMonthlyAveragePolicies)) blockedReasons.push(...jsonRate.blockedReasons);
 
   if (!paidAppliedPolicyEvidence) blockedReasons.push('missing_paid_applied_policy_evidence');
