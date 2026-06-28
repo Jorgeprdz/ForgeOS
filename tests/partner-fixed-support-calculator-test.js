@@ -121,4 +121,151 @@ assert.equal(monthGateBlocked.calculationAllowed, false);
 assert.equal(monthGateBlocked.candidateAmount, null);
 assert.ok(monthGateBlocked.blockedReasons.includes('blocked_by_insufficient_qualified_advisors_for_partner_month'));
 
+// PCV_2026_FIXED_SUPPORT_OFFICIAL_TABLES_CALCULATOR_TEST
+{
+  const pcv2026FixedSupportCalculator = await import(
+    '../compensation/partner-manager/partner-fixed-support-calculator.js'
+  );
+
+  const fullSupport = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 1,
+    initialCommissionsLifeAndIndividualGmm: 14500,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 0,
+    payoutTruth: false,
+  });
+
+  assert.equal(fullSupport.status, 'CALCULATED_CANDIDATE');
+  assert.equal(fullSupport.candidateAmount, 65000);
+  assert.equal(fullSupport.totalCandidateAmount, 65000);
+  assert.equal(fullSupport.payoutTruth, false);
+  assert.equal(fullSupport.monthlySupportAmount, 65000);
+  assert.equal(fullSupport.initialCommissionGoal, 14500);
+  assert.equal(fullSupport.trainingAdvisorTarget, 0);
+  assert.equal(fullSupport.minimumComplianceRatio, 0.8);
+  assert.equal(fullSupport.proportionalSupportStartInclusive, 0.8);
+  assert.equal(fullSupport.proportionalSupportEndExclusive, 1);
+  assert.equal(fullSupport.fullSupportStartInclusive, 1);
+  assert.deepEqual(fullSupport.blockingReasons, []);
+
+  const proportionalSupport = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 1,
+    initialCommissionsLifeAndIndividualGmm: 11600,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 0,
+    payoutTruth: false,
+  });
+
+  assert.equal(proportionalSupport.status, 'CALCULATED_CANDIDATE');
+  assert.equal(proportionalSupport.candidateAmount, 52000);
+  assert.equal(proportionalSupport.payoutTruth, false);
+
+  const blockedBelowMinimum = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 1,
+    initialCommissionsLifeAndIndividualGmm: 11599,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 0,
+    payoutTruth: false,
+  });
+
+  assert.equal(blockedBelowMinimum.status, 'BLOCKED_OR_UNKNOWN');
+  assert.equal(blockedBelowMinimum.candidateAmount, null);
+  assert.equal(
+    blockedBelowMinimum.blockingReasons.includes('MINIMUM_80_PERCENT_COMPLIANCE_NOT_MET'),
+    true
+  );
+
+  const monthSixTaTargetMet = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 6,
+    initialCommissionsLifeAndIndividualGmm: 33000,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 3,
+    payoutTruth: false,
+  });
+
+  assert.equal(monthSixTaTargetMet.status, 'CALCULATED_CANDIDATE');
+  assert.equal(monthSixTaTargetMet.candidateAmount, 65000);
+  assert.equal(monthSixTaTargetMet.trainingAdvisorTarget, 3);
+
+  const monthSixTaTargetMissing = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 6,
+    initialCommissionsLifeAndIndividualGmm: 33000,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 2,
+    payoutTruth: false,
+  });
+
+  assert.equal(monthSixTaTargetMissing.status, 'BLOCKED_OR_UNKNOWN');
+  assert.equal(monthSixTaTargetMissing.candidateAmount, null);
+  assert.equal(
+    monthSixTaTargetMissing.blockingReasons.includes('TRAINING_ADVISOR_WINNER_TARGET_NOT_MET'),
+    true
+  );
+
+  const blockedWithoutFirstTwoEvidence = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 6,
+    initialCommissionsLifeAndIndividualGmm: 33000,
+    trainingAdvisorWinnersLastSixMonths: 3,
+    payoutTruth: false,
+  });
+
+  assert.equal(blockedWithoutFirstTwoEvidence.status, 'BLOCKED_OR_UNKNOWN');
+  assert.equal(blockedWithoutFirstTwoEvidence.candidateAmount, null);
+  assert.equal(
+    blockedWithoutFirstTwoEvidence.blockingReasons.includes(
+      'TRAINING_ADVISOR_WINNERS_LAST_SIX_MONTHS_EVIDENCE_REQUIRED'
+    ),
+    true
+  );
+
+  const recoveryCandidate = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 7,
+    initialCommissionsLifeAndIndividualGmm: 40000,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 3,
+    recoveryPreviousMonthsRequested: 2,
+    samePartnerYearRecoveryEvidence: true,
+    payoutTruth: false,
+  });
+
+  assert.equal(recoveryCandidate.status, 'CALCULATED_CANDIDATE');
+  assert.equal(recoveryCandidate.candidateAmount, 54000);
+  assert.equal(recoveryCandidate.recoveryCandidateAmount, 108000);
+  assert.equal(recoveryCandidate.totalCandidateAmount, 162000);
+  assert.equal(recoveryCandidate.payoutTruth, false);
+
+  const blockedRecoveryOverThree = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 7,
+    initialCommissionsLifeAndIndividualGmm: 40000,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 3,
+    recoveryPreviousMonthsRequested: 4,
+    samePartnerYearRecoveryEvidence: true,
+    payoutTruth: false,
+  });
+
+  assert.equal(blockedRecoveryOverThree.status, 'BLOCKED_OR_UNKNOWN');
+  assert.equal(blockedRecoveryOverThree.candidateAmount, null);
+  assert.equal(
+    blockedRecoveryOverThree.blockingReasons.includes('RECOVERY_MAX_THREE_PREVIOUS_MONTHS_EXCEEDED'),
+    true
+  );
+
+  const blockedPayoutTruth = pcv2026FixedSupportCalculator.calculatePcv2026FixedSupportCandidateAmount({
+    careerMonth: 1,
+    initialCommissionsLifeAndIndividualGmm: 14500,
+    firstTwoHiresExclusionApplied: true,
+    trainingAdvisorWinnersLastSixMonths: 0,
+    payoutTruth: true,
+  });
+
+  assert.equal(blockedPayoutTruth.status, 'BLOCKED_OR_UNKNOWN');
+  assert.equal(blockedPayoutTruth.candidateAmount, null);
+  assert.equal(blockedPayoutTruth.payoutTruth, false);
+  assert.equal(
+    blockedPayoutTruth.blockingReasons.includes('PAYOUT_TRUTH_INPUT_NOT_ALLOWED_FOR_CANDIDATE_CONTRACT'),
+    true
+  );
+}
+
 console.log('PASS partner-fixed-support-calculator-test');
