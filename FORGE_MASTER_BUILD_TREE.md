@@ -561,3 +561,74 @@ Constitutional boundaries:
 Closure certificate:
 - docs/evidence/REVENUE_INTELLIGENCE_CLOSURE_CERTIFICATE.md
 <!-- FORGEOS:REVENUE_INTELLIGENCE_STATUS:END -->
+
+<!-- FORGEOS:RECRUITMENT_CANDIDATE_INTELLIGENCE_STATUS:START -->
+## Recruitment Candidate Intelligence — Closure Status
+
+Last updated: 20260628-160224
+
+Status:
+
+- CLOSED
+
+Closed infrastructure:
+
+- candidate-vital-factors-engine
+- candidate-hard-factors-engine
+- candidate-coachability-engine
+- candidate-market-quality-engine
+- candidate-assessment-engine
+
+Verified focal tests:
+
+- manager-os/recruitment/tests/candidate-vital-factors-master-test.js
+- manager-os/recruitment/tests/candidate-hard-factors-master-test.js
+- manager-os/recruitment/tests/candidate-coachability-master-test.js
+- manager-os/recruitment/tests/candidate-market-quality-master-test.js
+- manager-os/recruitment/tests/candidate-assessment-master-test.js
+
+What this closure covers:
+
+- candidate vital factors / vitales
+- hard factors
+- coachability
+- market quality
+- aggregate assessment
+- strengths
+- risks
+- recommendation
+- manager action
+- confidence
+
+Constitutional boundaries:
+
+- Candidate score is not absolute truth.
+- Candidate recommendation is manager decision support, not automatic approval/rejection.
+- Candidate Intelligence does not approve, reject, hire, contract, activate, or onboard a candidate by itself.
+- Confidence is not evidence provenance.
+- Missing data is not zero and not automatic disqualification.
+- Candidate potential is not guaranteed production.
+- Candidate readiness is not precontract truth.
+- Candidate assessment is not Advisor Lifecycle status.
+- Candidate Intelligence does not create revenue, compensation, or payout truth.
+- Recruitment full pipeline is not closed.
+- Interview Intelligence / 4 interviews are not closed.
+- Manager OS / RDA attribution is not closed.
+- Candidate-to-precontract gate is not closed.
+- Evidence-to-score provenance contract remains future implementation.
+- Product Intelligence remains deferred to final phase.
+- Compensation, Advisor Lifecycle, and Revenue remain closed read/reference only.
+
+Closure certificate:
+
+- docs/evidence/RECRUITMENT_CANDIDATE_INTELLIGENCE_CLOSURE_CERTIFICATE.md
+
+Deferred future slices:
+
+- RECRUITMENT_EVIDENCE_TO_SCORE_PROVENANCE_002A
+- RECRUITMENT_INTERVIEW_FLOW_002A
+- RECRUITMENT_PIPELINE_ENGINE_002A
+- MANAGER_OS_RECRUITING_ATTRIBUTION_002A
+- RECRUITMENT_TO_PRECONTRACT_GATE_002A
+
+<!-- FORGEOS:RECRUITMENT_CANDIDATE_INTELLIGENCE_STATUS:END -->
