@@ -2,6 +2,7 @@ const NEW_PROFESSIONAL_RULE_PACK_ID = 'smnyl-new-professional-2026';
 const NEW_PROFESSIONAL_SOURCE_DOCUMENT = 'CC 2026 Asesores Nuevos Profesionales';
 const NEW_PROFESSIONAL_PARTICIPANT_TYPE = 'new_professional_advisor';
 const NEW_PROFESSIONAL_PAYOUT_TRUTH_RULE = 'commission_statement_required';
+const LIFE_INITIAL_BONUS_CONCEPT_KEY = 'life-initial-bonus';
 
 const REQUIRED_NEW_PROFESSIONAL_CONCEPT_KEYS = Object.freeze([
   'life-initial-bonus',
@@ -45,10 +46,153 @@ function isString(value) {
   return typeof value === 'string' && value.trim() !== '';
 }
 
+function isNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
 function isValidDateString(value) {
   if (!isString(value)) return false;
 
   return Number.isFinite(Date.parse(value));
+}
+
+function validateLifeInitialBonusConcept(concept, errors) {
+  if (concept.modelStatus !== 'implemented_candidate') {
+    errors.push(createIssue(
+      'invalid_life_initial_bonus_model_status',
+      'life-initial-bonus.modelStatus must be implemented_candidate',
+      'concepts.life-initial-bonus.modelStatus',
+    ));
+  }
+
+  const targetPremiumGroupsTable = concept.targetPremiumGroupsTable;
+  if (!isPlainObject(targetPremiumGroupsTable) ||
+    targetPremiumGroupsTable.unit !== 'MXN' ||
+    !Array.isArray(targetPremiumGroupsTable.semesterMonths) ||
+    targetPremiumGroupsTable.semesterMonths.length !== 6 ||
+    !isPlainObject(targetPremiumGroupsTable.groups)) {
+    errors.push(createIssue(
+      'missing_life_initial_target_premium_groups_table',
+      'life-initial-bonus.targetPremiumGroupsTable is required',
+      'concepts.life-initial-bonus.targetPremiumGroupsTable',
+    ));
+  } else {
+    for (let group = 1; group <= 16; group += 1) {
+      const row = targetPremiumGroupsTable.groups[String(group)];
+      if (!Array.isArray(row) || row.length !== 6 || !row.every(isNumber)) {
+        errors.push(createIssue(
+          'invalid_life_initial_target_premium_group_row',
+          `life-initial-bonus target premium group ${group} must contain 6 numeric values`,
+          `concepts.life-initial-bonus.targetPremiumGroupsTable.groups.${group}`,
+        ));
+      }
+    }
+  }
+
+  const policyGoalsTable = concept.policyGoalsTable;
+  if (!isPlainObject(policyGoalsTable) ||
+    !isPlainObject(policyGoalsTable.monthlyLifePolicyGoalBySemesterMonth) ||
+    !isPlainObject(policyGoalsTable.semesterAccumulatedPolicyGoals) ||
+    !isPlainObject(policyGoalsTable.annualPolicyGoalsSecondSemesterOnly)) {
+    errors.push(createIssue(
+      'missing_life_initial_policy_goals_table',
+      'life-initial-bonus.policyGoalsTable is required',
+      'concepts.life-initial-bonus.policyGoalsTable',
+    ));
+  } else {
+    for (let month = 1; month <= 6; month += 1) {
+      const key = String(month);
+      const monthlyGoal = policyGoalsTable.monthlyLifePolicyGoalBySemesterMonth[key];
+      if (month < 6 && monthlyGoal !== 1) {
+        errors.push(createIssue(
+          'invalid_life_initial_monthly_policy_goal',
+          'monthly life policy goal must be 1 for months 1 through 5',
+          `concepts.life-initial-bonus.policyGoalsTable.monthlyLifePolicyGoalBySemesterMonth.${key}`,
+        ));
+      }
+      if (month === 6 && monthlyGoal !== null) {
+        errors.push(createIssue(
+          'invalid_life_initial_month6_policy_goal',
+          'monthly life policy goal must not apply at month 6 semester close',
+          'concepts.life-initial-bonus.policyGoalsTable.monthlyLifePolicyGoalBySemesterMonth.6',
+        ));
+      }
+      if (!isNumber(policyGoalsTable.semesterAccumulatedPolicyGoals[key])) {
+        errors.push(createIssue(
+          'invalid_life_initial_semester_policy_goal',
+          'semester accumulated policy goals must be numeric for months 1 through 6',
+          `concepts.life-initial-bonus.policyGoalsTable.semesterAccumulatedPolicyGoals.${key}`,
+        ));
+      }
+      if (!isNumber(policyGoalsTable.annualPolicyGoalsSecondSemesterOnly[key])) {
+        errors.push(createIssue(
+          'invalid_life_initial_annual_policy_goal',
+          'second semester annual policy goals must be numeric for months 1 through 6',
+          `concepts.life-initial-bonus.policyGoalsTable.annualPolicyGoalsSecondSemesterOnly.${key}`,
+        ));
+      }
+    }
+  }
+
+  if (!Array.isArray(concept.minimumLimraByTenureTable) ||
+    concept.minimumLimraByTenureTable.length !== 3 ||
+    !concept.minimumLimraByTenureTable.every((row) => isPlainObject(row) &&
+      isNumber(row.fromMonth) &&
+      (row.toMonth === null || isNumber(row.toMonth)) &&
+      isNumber(row.minimumLimra))) {
+    errors.push(createIssue(
+      'missing_life_initial_minimum_limra_by_tenure_table',
+      'life-initial-bonus.minimumLimraByTenureTable is required',
+      'concepts.life-initial-bonus.minimumLimraByTenureTable',
+    ));
+  }
+
+  const rateTable = concept.bonusRateByGroupAndLimraTable;
+  if (!isPlainObject(rateTable)) {
+    errors.push(createIssue(
+      'missing_life_initial_bonus_rate_table',
+      'life-initial-bonus.bonusRateByGroupAndLimraTable is required',
+      'concepts.life-initial-bonus.bonusRateByGroupAndLimraTable',
+    ));
+  } else {
+    for (let group = 1; group <= 16; group += 1) {
+      const row = rateTable[String(group)];
+      if (!isPlainObject(row) ||
+        !['minimumIndex', '87.5', '89.5', '91.5', '95.5'].every((key) => isNumber(row[key]))) {
+        errors.push(createIssue(
+          'invalid_life_initial_bonus_rate_group',
+          `life-initial-bonus bonus rate group ${group} must include all rate tiers`,
+          `concepts.life-initial-bonus.bonusRateByGroupAndLimraTable.${group}`,
+        ));
+      }
+    }
+  }
+
+  const floor = concept.contestMonth13To36MinimumRateFloor;
+  if (!isPlainObject(floor) ||
+    floor.enabled !== true ||
+    floor.fromMonth !== 13 ||
+    floor.toMonth !== 36 ||
+    floor.minimumRate !== 0.098) {
+    errors.push(createIssue(
+      'missing_life_initial_contest_month_13_36_floor',
+      'life-initial-bonus.contestMonth13To36MinimumRateFloor is required',
+      'concepts.life-initial-bonus.contestMonth13To36MinimumRateFloor',
+    ));
+  }
+
+  const capRule = concept.monthlyAdvanceGroupCapRule;
+  if (!isPlainObject(capRule) ||
+    capRule.firstSemesterInNewProfessionalBook !== 'use_current_calculated_group' ||
+    capRule.missingOrWorseThanGroup13CapGroup !== 13 ||
+    capRule.effectiveMonthlyAdvanceGroupStrategy !== 'worse_of_current_group_and_cap_group' ||
+    capRule.semesterSettlementGroupStrategy !== 'use_actual_current_group') {
+    errors.push(createIssue(
+      'missing_life_initial_monthly_advance_group_cap_rule',
+      'life-initial-bonus.monthlyAdvanceGroupCapRule is required',
+      'concepts.life-initial-bonus.monthlyAdvanceGroupCapRule',
+    ));
+  }
 }
 
 function validateIdentity(rulePack, errors) {
@@ -195,7 +339,9 @@ function validateConcepts(rulePack, errors) {
       }
     }
 
-    if (concept.modelStatus !== 'skeleton_not_calculated') {
+    if (conceptKey === LIFE_INITIAL_BONUS_CONCEPT_KEY && concept.modelStatus === 'implemented_candidate') {
+      validateLifeInitialBonusConcept(concept, errors);
+    } else if (concept.modelStatus !== 'skeleton_not_calculated') {
       errors.push(createIssue(
         'invalid_concept_model_status',
         `${conceptKey}.modelStatus must be skeleton_not_calculated`,
@@ -260,6 +406,7 @@ function validateNewProfessionalRulePack(rulePack) {
 }
 
 export {
+  LIFE_INITIAL_BONUS_CONCEPT_KEY,
   NEW_PROFESSIONAL_PARTICIPANT_TYPE,
   NEW_PROFESSIONAL_PAYOUT_TRUTH_RULE,
   NEW_PROFESSIONAL_RULE_PACK_ID,

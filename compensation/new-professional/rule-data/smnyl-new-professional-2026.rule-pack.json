@@ -38,7 +38,112 @@
       "sourceEvidence": [
         "CC 2026 Asesores Nuevos Profesionales.pdf"
       ],
-      "modelStatus": "skeleton_not_calculated"
+      "modelStatus": "implemented_candidate",
+      "targetPremiumGroupsTable": {
+        "unit": "MXN",
+        "semesterMonths": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "groups": {
+          "1": [455000, 910000, 1370000, 1825000, 2280000, 2735000],
+          "2": [420000, 835000, 1255000, 1670000, 2090000, 2505000],
+          "3": [355000, 710000, 1065000, 1420000, 1775000, 2125000],
+          "4": [325000, 645000, 970000, 1290000, 1615000, 1945000],
+          "5": [300000, 605000, 905000, 1215000, 1515000, 1820000],
+          "6": [275000, 560000, 835000, 1115000, 1400000, 1675000],
+          "7": [250000, 500000, 745000, 1000000, 1245000, 1495000],
+          "8": [210000, 430000, 640000, 860000, 1075000, 1290000],
+          "9": [185000, 375000, 555000, 740000, 930000, 1115000],
+          "10": [160000, 315000, 475000, 640000, 790000, 950000],
+          "11": [125000, 245000, 370000, 490000, 615000, 735000],
+          "12": [85000, 175000, 260000, 350000, 440000, 525000],
+          "13": [75000, 140000, 215000, 280000, 355000, 420000],
+          "14": [60000, 130000, 190000, 260000, 320000, 385000],
+          "15": [55000, 110000, 160000, 220000, 275000, 330000],
+          "16": [50000, 90000, 135000, 185000, 225000, 275000]
+        }
+      },
+      "policyGoalsTable": {
+        "monthlyLifePolicyGoalBySemesterMonth": {
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": null
+        },
+        "semesterAccumulatedPolicyGoals": {
+          "1": 2.5,
+          "2": 5,
+          "3": 7.5,
+          "4": 10,
+          "5": 12.5,
+          "6": 15
+        },
+        "annualPolicyGoalsSecondSemesterOnly": {
+          "1": 17.5,
+          "2": 20,
+          "3": 22.5,
+          "4": 25,
+          "5": 27.5,
+          "6": 30
+        }
+      },
+      "minimumLimraByTenureTable": [
+        {
+          "fromMonth": 1,
+          "toMonth": 24,
+          "minimumLimra": 75.5
+        },
+        {
+          "fromMonth": 25,
+          "toMonth": 36,
+          "minimumLimra": 80.5
+        },
+        {
+          "fromMonth": 37,
+          "toMonth": null,
+          "minimumLimra": 84.5
+        }
+      ],
+      "bonusRateByGroupAndLimraTable": {
+        "1": { "minimumIndex": 0.098, "87.5": 0.195, "89.5": 0.33, "91.5": 0.36, "95.5": 0.45 },
+        "2": { "minimumIndex": 0.083, "87.5": 0.165, "89.5": 0.305, "91.5": 0.34, "95.5": 0.43 },
+        "3": { "minimumIndex": 0.07, "87.5": 0.14, "89.5": 0.275, "91.5": 0.32, "95.5": 0.4 },
+        "4": { "minimumIndex": 0.063, "87.5": 0.125, "89.5": 0.265, "91.5": 0.3, "95.5": 0.37 },
+        "5": { "minimumIndex": 0.058, "87.5": 0.115, "89.5": 0.245, "91.5": 0.28, "95.5": 0.35 },
+        "6": { "minimumIndex": 0.053, "87.5": 0.105, "89.5": 0.22, "91.5": 0.26, "95.5": 0.33 },
+        "7": { "minimumIndex": 0.05, "87.5": 0.1, "89.5": 0.195, "91.5": 0.25, "95.5": 0.31 },
+        "8": { "minimumIndex": 0.048, "87.5": 0.095, "89.5": 0.165, "91.5": 0.23, "95.5": 0.29 },
+        "9": { "minimumIndex": 0.045, "87.5": 0.09, "89.5": 0.14, "91.5": 0.22, "95.5": 0.27 },
+        "10": { "minimumIndex": 0.043, "87.5": 0.085, "89.5": 0.11, "91.5": 0.2, "95.5": 0.25 },
+        "11": { "minimumIndex": 0.04, "87.5": 0.08, "89.5": 0.1, "91.5": 0.18, "95.5": 0.23 },
+        "12": { "minimumIndex": 0.035, "87.5": 0.07, "89.5": 0.09, "91.5": 0.17, "95.5": 0.21 },
+        "13": { "minimumIndex": 0.028, "87.5": 0.055, "89.5": 0.08, "91.5": 0.15, "95.5": 0.19 },
+        "14": { "minimumIndex": 0.023, "87.5": 0.045, "89.5": 0.07, "91.5": 0.14, "95.5": 0.17 },
+        "15": { "minimumIndex": 0.018, "87.5": 0.035, "89.5": 0.055, "91.5": 0.12, "95.5": 0.15 },
+        "16": { "minimumIndex": 0.01, "87.5": 0.02, "89.5": 0.025, "91.5": 0.11, "95.5": 0.14 }
+      },
+      "contestMonth13To36MinimumRateFloor": {
+        "enabled": true,
+        "fromMonth": 13,
+        "toMonth": 36,
+        "minimumRate": 0.098,
+        "appliesOnlyWhenGroupPolicyGoalsAndMinimumLimraAreMet": true
+      },
+      "monthlyAdvanceGroupCapRule": {
+        "firstSemesterInNewProfessionalBook": "use_current_calculated_group",
+        "otherwise": "cap_by_previous_semester_closing_group",
+        "missingOrWorseThanGroup13CapGroup": 13,
+        "lowerGroupNumberIsBetter": true,
+        "effectiveMonthlyAdvanceGroupStrategy": "worse_of_current_group_and_cap_group",
+        "semesterSettlementGroupStrategy": "use_actual_current_group"
+      }
     },
     "life-renewal-bonus": {
       "displayName": "Bono de Renovacion Vida",

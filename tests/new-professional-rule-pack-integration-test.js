@@ -52,12 +52,36 @@ function testConceptShapeFromPhysicalRulePack() {
     assert.equal(typeof concept.cadence, 'string');
     assert.equal(concept.payoutTruth, false);
     assert.equal(concept.payoutTruthRule, 'commission_statement_required');
-    assert.equal(concept.modelStatus, 'skeleton_not_calculated');
     assert.equal(Array.isArray(concept.sourceEvidence), true);
     assert(concept.sourceEvidence.includes('CC 2026 Asesores Nuevos Profesionales.pdf'));
   }
 
-  console.log('PASS physical New Professional concepts are skeleton-only and payoutTruth false');
+  assert.equal(rulePack.concepts['life-initial-bonus'].modelStatus, 'implemented_candidate');
+
+  const skeletonConceptKeys = REQUIRED_NEW_PROFESSIONAL_CONCEPT_KEYS
+    .filter((conceptKey) => conceptKey !== 'life-initial-bonus');
+  for (const conceptKey of skeletonConceptKeys) {
+    assert.equal(rulePack.concepts[conceptKey].modelStatus, 'skeleton_not_calculated');
+  }
+
+  console.log('PASS physical New Professional concepts keep payoutTruth false and expected model statuses');
+}
+
+function testLifeInitialBonusTablesFromPhysicalRulePack() {
+  const { rulePack } = loadNewProfessional2026RulePack();
+  const concept = rulePack.concepts['life-initial-bonus'];
+
+  assert.ok(concept.targetPremiumGroupsTable);
+  assert.ok(concept.policyGoalsTable);
+  assert.ok(concept.minimumLimraByTenureTable);
+  assert.ok(concept.bonusRateByGroupAndLimraTable);
+  assert.ok(concept.contestMonth13To36MinimumRateFloor);
+  assert.ok(concept.monthlyAdvanceGroupCapRule);
+  assert.equal(concept.targetPremiumGroupsTable.groups['1'][0], 455000);
+  assert.equal(concept.policyGoalsTable.monthlyLifePolicyGoalBySemesterMonth['6'], null);
+  assert.equal(concept.contestMonth13To36MinimumRateFloor.minimumRate, 0.098);
+
+  console.log('PASS life-initial-bonus required tables load from physical rule pack');
 }
 
 function testGlobalExclusionsFromPhysicalRulePack() {
@@ -73,6 +97,7 @@ function testGlobalExclusionsFromPhysicalRulePack() {
 testPhysicalJsonIsValid();
 testPhysicalRulePackLoadsAndValidates();
 testConceptShapeFromPhysicalRulePack();
+testLifeInitialBonusTablesFromPhysicalRulePack();
 testGlobalExclusionsFromPhysicalRulePack();
 
 console.log('PASS new-professional-rule-pack-integration-test');
