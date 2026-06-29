@@ -1047,3 +1047,92 @@ Explicitly out of scope:
 Deferred:
 - Product Intelligence final phase
 <!-- FORGEOS:RECRUITMENT_FOUNDATION_STATUS:END -->
+
+<!-- FORGEOS:MANAGER_OS_RDA_ATTRIBUTION_TRUTH_STATUS:START -->
+## Manager OS RDA Attribution Truth — Closure Status
+
+Last updated: 20260628-221901
+
+Status:
+- CLOSED
+
+Implemented infrastructure:
+- manager-rda-attribution-truth-engine
+
+Implemented files:
+- manager-os/rda-attribution/manager-rda-attribution-truth-engine.js
+
+Verified focal tests:
+- manager-os/tests/manager-rda-attribution-truth-engine-master-test.js
+- manager-os/recruitment/tests/recruitment-rda-prerequisite-boundary-master-test.js
+- tests/manager-precontract-rda-attribution-intake-test.js
+
+Implementation commit:
+- d46ca36fff4213fef3547de46d01351f3603d519
+
+What this closure covers:
+- Manager OS-owned RDA attribution truth classification
+- proposed/provided/pending/confirmed/rejected/blocked/unknown/not-modeled attribution handling
+- proposed RDA owner preservation
+- confirmed RDA owner only when evidence-confirmed under Manager OS rules
+- evidence refs and source evidence IDs preservation
+- missing evidence and missing prerequisite surfacing
+- manager review and human review requirements
+- consumption-safe output for Recruitment, Advisor Lifecycle, Revenue and Compensation
+- compensation eligibility separation
+- forbidden downstream truth blocking
+
+Supported attribution statuses:
+- MISSING
+- PROPOSED
+- PROVIDED
+- PENDING_REVIEW
+- CONFIRMED
+- REJECTED
+- BLOCKED
+- UNKNOWN
+- NOT_MODELED
+
+Critical distinction:
+- Manager OS RDA Attribution Truth may create Manager/RDA attribution truth only when explicitly evidence-confirmed under Manager OS rules.
+- Manager self-confirmation alone is not ownership truth.
+- Recruitment RDA prerequisite PROVIDED is not attribution truth.
+- Compensation intake is not attribution truth.
+- RDA attribution truth is not compensation ownership truth.
+- RDA attribution truth is not payout truth.
+- RDA attribution truth is not precontract truth.
+- RDA attribution truth is not Advisor Lifecycle truth.
+- Missing evidence is not negative evidence.
+- Unknown is not zero.
+- Blocked is not zero.
+
+Forbidden downstream outputs:
+- compensation ownership truth
+- precontract truth
+- Advisor Lifecycle truth
+- revenue
+- compensation
+- payout truth
+- payment execution
+- automatic approval/rejection
+
+Constitutional boundaries:
+- automaticDecisionAllowed=false
+- createsCompensationOwnershipTruth=false
+- createsPrecontractTruth=false
+- createsAdvisorLifecycleTruth=false
+- createsRevenue=false
+- createsCompensation=false
+- createsPayoutTruth=false
+
+Closure certificate:
+- docs/evidence/MANAGER_OS_RDA_ATTRIBUTION_TRUTH_CLOSURE_CERTIFICATE.md
+
+Still separate:
+- Recruitment Foundation remains closed and prerequisite-only.
+- Advisor Lifecycle remains separate.
+- Revenue remains separate.
+- Compensation remains separate.
+- Partner Compensation remains separate.
+- Product Intelligence remains deferred to final phase.
+<!-- FORGEOS:MANAGER_OS_RDA_ATTRIBUTION_TRUTH_STATUS:END -->
