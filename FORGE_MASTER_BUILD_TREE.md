@@ -961,3 +961,89 @@ Still not closed:
 - Compensation
 - Product Intelligence
 <!-- FORGEOS:RECRUITMENT_RDA_PREREQUISITE_BOUNDARY_STATUS:END -->
+
+<!-- FORGEOS:RECRUITMENT_FOUNDATION_STATUS:START -->
+## Recruitment Foundation — Final Closure Status
+
+Last updated: 20260628-200000
+
+Status:
+- CLOSED
+
+Closure base:
+- Audit base HEAD: 829b6285e0c2707165c09e8c3138d098672e3e1f
+- Final certificate creation commit: 55394ada937fdb9b9300bd8ab2036b2b831e8bb6
+
+Closed Recruitment Foundation chain:
+- Candidate Intelligence
+- Evidence Provenance
+- Interview Flow
+- Recruitment Pipeline
+- Recruitment-to-Precontract Gate
+- Recruitment RDA Prerequisite Boundary
+
+Closure certificate:
+- docs/evidence/RECRUITMENT_FOUNDATION_CLOSURE_CERTIFICATE.md
+
+Verified focal tests reported by RECRUITMENT_FULL_CLOSURE_006A:
+- manager-os/recruitment/tests/candidate-assessment-master-test.js
+- manager-os/recruitment/tests/candidate-evidence-provenance-master-test.js
+- manager-os/recruitment/tests/interview-flow-engine-master-test.js
+- manager-os/recruitment/tests/recruitment-pipeline-engine-master-test.js
+- manager-os/recruitment/tests/recruitment-to-precontract-gate-master-test.js
+- manager-os/recruitment/tests/recruitment-rda-prerequisite-boundary-master-test.js
+- manager-os/recruitment/tests/recruitment-fixture-validation-test.js
+- tests/manager-precontract-rda-attribution-intake-test.js
+
+Final closure scope:
+- Recruitment Foundation is closed as decision support only.
+- Candidate assessment remains recommendation support only.
+- Evidence Provenance is implemented and included in final closure.
+- Interview Flow remains transition support only.
+- Recruitment Pipeline readiness remains boundary-only support.
+- Recruitment-to-Precontract Gate produces review packet readiness only.
+- RDA Prerequisite Boundary produces prerequisite status only.
+
+Explicit truth boundaries:
+- automaticDecisionAllowed=false
+- createsManagerOwnershipTruth=false
+- createsRdaAttributionTruth=false
+- createsCompensationOwnershipTruth=false
+- createsPrecontractTruth=false
+- createsPrecontractCycle=false
+- createsPrecontractActivity=false
+- createsAdvisorLifecycleTruth=false
+- createsRevenue=false
+- createsCompensation=false
+- createsPayoutTruth=false
+
+Critical distinctions:
+- READY_FOR_PRECONTRACT_REVIEW is not PRECONTRACT.
+- readyForPrecontractReview is not precontract status.
+- precontractReviewPacketReady is not precontract truth.
+- RDA evidence is not RDA attribution truth.
+- RDA provided is not ownership truth.
+- RDA confirmed is not compensation truth.
+- Manager review is not official truth.
+- Manager self-confirmation is not ownership truth.
+- RDA prerequisite status is not payout eligibility.
+- Recruitment does not import compensation RDA intake.
+
+Explicitly out of scope:
+- Manager OS / RDA Attribution truth
+- Advisor Lifecycle
+- Revenue
+- Compensation
+- Partner Compensation
+- Product Intelligence final phase
+- precontract truth
+- advisor activation
+- advisor connection
+- payout truth
+- payment execution
+- official statement ingestion
+- runtime/UI/package/schema/fixture changes
+
+Deferred:
+- Product Intelligence final phase
+<!-- FORGEOS:RECRUITMENT_FOUNDATION_STATUS:END -->
