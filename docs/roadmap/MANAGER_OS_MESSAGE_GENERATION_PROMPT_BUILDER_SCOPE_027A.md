@@ -168,3 +168,45 @@ buildManagerMessagePrompt({
 ## Final Scope Statement
 
 027B/C should implement a Manager OS-owned prompt-builder boundary. It must prepare safe prompt instructions from protected Manager OS and Nash intake context only. It must not generate drafts, execute runtime, or perform delivery.
+
+## 027B Implementation Complete
+
+Status: IMPLEMENTED_AND_CLOSED_FOR_PROMPT_INSTRUCTIONS_ONLY
+
+Commit:
+
+- 4dc6d57df37833019e3eb1e9f468fe9ee53c913e
+- feat: add manager message prompt builder boundary
+
+Implemented:
+
+- `manager-os/message-generation/manager-message-prompt-builder-boundary-contract.js`
+- `manager-os/message-generation/manager-message-prompt-builder.js`
+
+Verified:
+
+- `manager-os/tests/manager-message-prompt-builder-boundary-contract-master-test.js` PASS 13/13
+- `manager-os/tests/manager-message-prompt-builder-master-test.js` PASS 16/16
+- Total: PASS 29/29
+
+## 027C Docs Sync
+
+027C closes documentation for the prompt-builder boundary. The boundary is now closed for protected prompt instructions only.
+
+It does not close:
+
+- LLM Draft Intake
+- Message Safety Validator
+- Human Approval Gate
+- WhatsApp/SMS Delivery Adapter
+- Send Execution Gate
+- UI / Read Model
+- Persistence / Adapter Boundary
+
+## Next Recommended Phase
+
+~~~text
+NEXT=028A_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_SCOPE
+~~~
+
+028A should scope how future LLM draft intake and message safety validation consume Prompt Builder instructions without creating approved communications, sends, tasks, calendar events, or downstream truth.

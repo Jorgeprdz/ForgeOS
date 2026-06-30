@@ -216,3 +216,124 @@ The implementation must build protected prompt instructions only. It must not cr
 Forge learned that the next safe step after Manager OS Context Intelligence V1 is not message generation. The next step is a prompt-builder boundary that transforms protected context into safe instructions for a future draft layer.
 
 Forge also learned that legacy Nash contains valuable conversation logic, but direct reuse would cross runtime and action boundaries. Nash support must be consumed through protected context intake and a Manager OS boundary wrapper.
+
+## 027B Implementation Closure
+
+Status: IMPLEMENTED_AND_CLOSED_FOR_PROMPT_INSTRUCTIONS_ONLY
+
+Implementation commit:
+
+- 4dc6d57df37833019e3eb1e9f468fe9ee53c913e
+- feat: add manager message prompt builder boundary
+
+Implemented files:
+
+- `manager-os/message-generation/manager-message-prompt-builder-boundary-contract.js`
+- `manager-os/message-generation/manager-message-prompt-builder.js`
+
+Tests:
+
+- `manager-os/tests/manager-message-prompt-builder-boundary-contract-master-test.js` PASS 13/13
+- `manager-os/tests/manager-message-prompt-builder-master-test.js` PASS 16/16
+- Total: PASS 29/29
+
+Exports:
+
+- `evaluateManagerMessagePromptBuilderBoundary`
+- `MANAGER_MESSAGE_PROMPT_BUILDER_BOUNDARY_STATUSES`
+- `MANAGER_MESSAGE_PROMPT_BUILDER_BOUNDARY_DECISIONS`
+- `buildManagerMessagePrompt`
+- `MANAGER_MESSAGE_PROMPT_BUILDER_STATUSES`
+- `MANAGER_MESSAGE_PROMPT_BUILDER_DECISIONS`
+- allowed/forbidden prompt-use constants
+
+Implemented statuses:
+
+- `READY_FOR_PROMPT_REVIEW`
+- `NEEDS_CONTEXT`
+- `NEEDS_EVIDENCE`
+- `NEEDS_SOURCE_OWNER`
+- `NEEDS_FRESHNESS`
+- `NEEDS_HUMAN_REVIEW`
+- `BLOCKED`
+- `UNKNOWN`
+- `NOT_MODELED`
+
+Allowed uses:
+
+- `MANAGER_MESSAGE_PROMPT_PREP`
+- `RECRUITMENT_OUTREACH_PROMPT_PREP`
+- `ADVISOR_SUPPORT_PROMPT_PREP`
+- `ONE_ON_ONE_PREP_PROMPT`
+- `FOLLOW_UP_PROMPT_PREP`
+- `CONTEXTUAL_CHECK_IN_PROMPT_PREP`
+
+Forbidden uses:
+
+- `GENERATE_FINAL_DRAFT`
+- `SEND_MESSAGE`
+- `WHATSAPP_SEND`
+- `SMS_SEND`
+- `LLM_RUNTIME_EXECUTION`
+- `NASH_RUNTIME_EXECUTION`
+- `LEGACY_NASH_MESSAGE_EXECUTION`
+- `NEXT_BEST_ACTION_EXECUTION`
+- `CREATE_TASK`
+- `CREATE_CALENDAR_EVENT`
+- `HUMAN_RANKING`
+- `PROMOTION_DECISION`
+- `PUNISHMENT`
+- `TERMINATION`
+- `COMPENSATION`
+- `PAYOUT`
+- `REVENUE_TRUTH`
+- `ADVISOR_LIFECYCLE_TRUTH`
+- `HR_DECISION`
+- `HIRING_DECISION`
+
+Output shape:
+
+- `promptStatus`
+- `promptPurpose`
+- `audienceType`
+- `promptInstructions`
+- `evidenceRefs`
+- `sourceEvidenceIds`
+- `sourceOwners`
+- `freshness`
+- `period`
+- `missingContext`
+- `unknownContext`
+- `staleContext`
+- `warnings`
+- `confidenceLimitations`
+- `allowedUses`
+- `blockedUses`
+- `humanApprovalRequired: true`
+- all draft/send/runtime/action/downstream truth flags false
+
+Still open:
+
+- LLM Draft Intake
+- Message Safety Validator
+- Human Approval Gate
+- WhatsApp/SMS Delivery Adapter
+- Send Execution Gate
+- UI / Read Model
+- Persistence / Adapter Boundary
+
+## 027C Final Declaration
+
+~~~text
+MANAGER_OS_MESSAGE_GENERATION_PROMPT_BUILDER=IMPLEMENTED_AND_CLOSED_FOR_PROMPT_INSTRUCTIONS_ONLY
+PROMPT_IS_NOT_DRAFT=true
+DRAFT_IS_NOT_APPROVED_COMMUNICATION=true
+NASH_RUNTIME_EXECUTION=false
+LLM_RUNTIME_EXECUTION=false
+MESSAGE_DRAFT_CREATION=false
+WHATSAPP_SMS_DELIVERY=false
+TASK_CALENDAR_CREATION=false
+DOWNSTREAM_TRUTH_CREATION=false
+HUMAN_APPROVAL_REQUIRED=true
+NEXT=028A_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_SCOPE
+~~~
