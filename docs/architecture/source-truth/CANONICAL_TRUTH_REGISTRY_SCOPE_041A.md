@@ -365,3 +365,19 @@ Metric / Economic Truth remains separate.
 SEMAFORO=PASS
 DECISION=PASS_041A_CANONICAL_TRUTH_REGISTRY_SCOPE_READY_FOR_IMPLEMENTATION
 NEXT=041B_CANONICAL_TRUTH_REGISTRY_IMPLEMENTATION
+
+<!-- BEGIN FORGEOS:CANONICAL_TRUTH_REGISTRY_IMPLEMENTATION_APPENDIX_041B -->
+## 041B Implementation Appendix
+
+- `041B_CANONICAL_TRUTH_REGISTRY_IMPLEMENTATION` implemented Canonical Truth Registry Boundary Contract.
+- Canonical truth entry candidate is not canonical truth write.
+- Metric / Economic Truth remains separate.
+- Canonical truth entry candidate can be prepared.
+- Canonical truth write remains false.
+- Persistence/file/database writes remain false.
+- Business/metric truth creation remains false.
+- Explicit zero/false values are preserved as review context, not treated as missing.
+- Immutable source trace is included in the candidate.
+- Unified Build Tree updated.
+- Next: `042A_METRIC_ECONOMIC_TRUTH_SCOPE`
+<!-- END FORGEOS:CANONICAL_TRUTH_REGISTRY_IMPLEMENTATION_APPENDIX_041B -->

@@ -1202,3 +1202,41 @@ GREEN CANONICAL TRUTH REGISTRY / SCOPE
 `-- RED Canonical truth write / persistence / metric truth / compensation truth / HR truth / CRM mutation remain forbidden
 ```
 <!-- END FORGEOS:CANONICAL_TRUTH_REGISTRY_SCOPE_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:CANONICAL_TRUTH_REGISTRY_IMPLEMENTATION_UNIFIED_STATUS -->
+## CANONICAL TRUTH REGISTRY / IMPLEMENTED
+
+```text
+GREEN CANONICAL TRUTH REGISTRY / IMPLEMENTED
+|-- GREEN 041A Canonical Truth Registry Scope Closed
+|-- GREEN 041B Canonical Truth Registry Boundary Contract Implemented
+|   |-- GREEN Truth Promotion snapshot required
+|   |-- GREEN Truth promotion review candidate required
+|   |-- GREEN Candidate fact type/value/owner required
+|   |-- GREEN Canonical truth/key/owner policies required
+|   |-- GREEN Immutability, conflict review, human truth review required
+|   |-- GREEN Evidence, owners, freshness, audit, idempotency required
+|   |-- GREEN Canonical truth entry candidate can be prepared
+|   |-- GREEN Immutable source trace included
+|   |-- GREEN Explicit zero/false values preserved as review context
+|   `-- GREEN Metric / Economic Truth remains separate
+|
+|-- BLUE Next Layer
+|   `-- BLUE 042A Metric / Economic Truth Scope
+|
+`-- RED Still Forbidden
+    |-- RED Canonical truth write
+    |-- RED Persistence/file/database write
+    |-- RED Business/metric truth creation
+    |-- RED Delivery/message truth creation
+    |-- RED Compensation/revenue/payout truth
+    |-- RED Ranking/punishment/HR/personality truth
+    |-- RED Advisor lifecycle truth
+    |-- RED Task/calendar auto-creation
+    |-- RED CRM mutation
+    |-- RED UI rendering
+    |-- RED Provider/external API calls
+    |-- RED Send/action execution
+    `-- RED Manipulation/surveillance
+```
+<!-- END FORGEOS:CANONICAL_TRUTH_REGISTRY_IMPLEMENTATION_UNIFIED_STATUS -->
