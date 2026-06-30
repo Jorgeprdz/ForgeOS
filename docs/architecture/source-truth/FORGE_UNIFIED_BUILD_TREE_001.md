@@ -919,3 +919,20 @@ GREEN CONNECTOR EXECUTOR BOUNDARY / IMPLEMENTED
     `-- RED Manipulation/surveillance
 ```
 <!-- END FORGEOS:CONNECTOR_EXECUTOR_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_SCOPE_UNIFIED_STATUS -->
+## EXTERNAL DISPATCH BOUNDARY / SCOPE CLOSED
+
+```text
+GREEN EXTERNAL DISPATCH BOUNDARY / SCOPE
+|-- GREEN 036A External Dispatch Boundary Scope Closed
+|-- GREEN Executor command candidate is not external dispatch
+|-- GREEN Final external dispatch confirmation scoped
+|-- GREEN Dispatch capability and policy review scoped
+|-- GREEN External dispatch request candidate scoped
+|-- GREEN External API call remains forbidden
+|-- BLUE 036B External Dispatch Boundary Implementation
+|-- BLUE Provider Webhook Boundary Scope
+`-- RED Automatic send / silent send / external dispatch / external API call remain forbidden
+```
+<!-- END FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_SCOPE_UNIFIED_STATUS -->
