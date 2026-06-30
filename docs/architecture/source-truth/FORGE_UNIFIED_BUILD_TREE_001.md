@@ -1447,3 +1447,20 @@ GREEN STATIC PREVIEW PUBLIC SURFACE DECISION / SCOPE
 `-- RED deploy / publish / settings mutation / public URL / DNS / live app / API / auth / analytics / storage / CRM / truth / action remain forbidden
 ```
 <!-- END FORGEOS:STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_SCOPE_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_IMPLEMENTATION_UNIFIED_STATUS -->
+## STATIC PREVIEW PUBLIC SURFACE DECISION / IMPLEMENTED
+
+```text
+GREEN STATIC PREVIEW PUBLIC SURFACE DECISION / IMPLEMENTED
+|-- GREEN 046A Static Preview Public Surface Decision Scope Closed
+|-- GREEN 046B Static Preview Public Surface Decision Boundary Contract Implemented
+|-- GREEN Owner decision record can be prepared
+|-- GREEN GitHub Pages availability is not deployment authorization
+|-- GREEN Owner public surface decision is separate from deployment execution
+|-- GREEN Public URL creation / verification remains forbidden
+|-- BLUE 047A Public URL Verification Boundary Scope
+|-- BLUE Metric / Economic Truth Scope
+`-- RED deploy / publish / settings mutation / public URL / DNS / live app / API / auth / analytics / storage / CRM / truth / action remain forbidden
+```
+<!-- END FORGEOS:STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_IMPLEMENTATION_UNIFIED_STATUS -->

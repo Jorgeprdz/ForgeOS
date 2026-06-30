@@ -333,3 +333,15 @@ Tests must prove:
 SEMAFORO=PASS
 DECISION=PASS_046A_STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_SCOPE_READY_FOR_IMPLEMENTATION
 NEXT=046B_STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_IMPLEMENTATION
+
+<!-- BEGIN FORGEOS:STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_IMPLEMENTATION_APPENDIX_046B -->
+## 046B Implementation Appendix
+
+- `046B_STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_IMPLEMENTATION` implemented the Static Preview Public Surface Decision Boundary Contract.
+- The boundary prepares owner public surface decision records only.
+- GitHub Pages availability is not deployment authorization.
+- Owner public surface decision is separate from deployment execution.
+- No deploy, publish, GitHub Pages settings mutation, public URL creation, public URL verification, DNS/custom domain, API/auth/analytics/storage/forms/service worker/CRM/truth/action surfaces are authorized.
+- Unified Build Tree updated.
+- Next: `047A_PUBLIC_URL_VERIFICATION_BOUNDARY_SCOPE`
+<!-- END FORGEOS:STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_IMPLEMENTATION_APPENDIX_046B -->
