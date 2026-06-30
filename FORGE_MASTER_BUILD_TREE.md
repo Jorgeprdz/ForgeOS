@@ -1,5 +1,28 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:MICK_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_STATUS:START -->
+## Mick Existing Engine Inventory and Purpose Discovery 005B
+
+Status: MICK_EXISTING_ENGINE_INVENTORY_DOCUMENTED
+
+- Mick existing engine inventory completed.
+- Mick engines/modules were documented by purpose, observed inputs, observed outputs, risks, and future-use recommendation.
+- 198 Mick/behavior-related tracked paths were discovered by the approved pattern.
+- 45 Mick/behavior-related candidate paths were reviewed as the primary engine/module set.
+- No Mick runtime executed.
+- No code moved or modified.
+- No tests modified.
+- Detected Mick module does not equal runtime approval.
+- Mick remains behavior/execution context, not surveillance, punishment, ranking, HR truth, promotion truth, personality truth, compensation truth, payout truth, revenue truth, or Advisor Lifecycle truth.
+- Mick is candidate support for NBA Reason Why.
+- Human judgment remains required.
+
+Inventory: `docs/architecture/source-truth/MICK_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_005B.md`
+
+Certificate: `docs/evidence/MICK_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_CERTIFICATE_005B.md`
+
+<!-- FORGEOS:MICK_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_STATUS:END -->
+
 <!-- FORGEOS:NASH_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_STATUS:START -->
 ## Nash Existing Engine Inventory and Purpose Discovery 005A
 
