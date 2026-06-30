@@ -50,6 +50,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ├── 🟢 LLM Draft Intake Boundary Contract - human-review context only
 ├── 🟢 Message Safety Validator - safety review only
 ├── 🟢 029A_HUMAN_APPROVAL_GATE_SCOPE
+├── 🟢 029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
 └── 🟢 Genesis-to-current Build Tree restoration/crosswalk
 ~~~
 
@@ -57,15 +58,15 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 
 ~~~text
 🟡 Immediate Next Phase
-└── 🔵 029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
+└── 🔵 030A_DELIVERY_ADAPTER_BOUNDARY_SCOPE
 ~~~
 
 ## 4. Near-Term Roadmap
 
 ~~~text
 🔵 Near-Term Roadmap
-├── 🔵 029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
 ├── 🔵 030A_DELIVERY_ADAPTER_BOUNDARY_SCOPE
+├── 🔵 030B_DELIVERY_ADAPTER_BOUNDARY_IMPLEMENTATION
 ├── 🔵 031A_SEND_EXECUTION_GATE_SCOPE
 ├── 🔵 UI / Read Model Scope
 └── 🔵 Persistence / Adapter Boundary Scope
@@ -79,7 +80,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ├── 🟢 Prompt Builder
 ├── 🟢 NBA Reason Why + Nash/Mick reconnection - non-executing review layer
 ├── 🟢 LLM Draft + Safety Layer
-├── 🟢 Human Approval Gate Scope
+├── 🟢 Human Approval Gate Boundary
 └── 🔵 Delivery + Send Execution Layer
 
 🟡 Revenue Generation Engine
@@ -195,7 +196,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ## 7. Locked Next
 
 ~~~text
-NEXT=029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
-THEN=030A_DELIVERY_ADAPTER_BOUNDARY_SCOPE
+NEXT=030A_DELIVERY_ADAPTER_BOUNDARY_SCOPE
+THEN=030B_DELIVERY_ADAPTER_BOUNDARY_IMPLEMENTATION
 THEN_AFTER=031A_SEND_EXECUTION_GATE_SCOPE
 ~~~
