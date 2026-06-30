@@ -29,7 +29,8 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 
 🟡 Current implementation truth
 ├── 🟡 Evidence/test/closure based
-├── 🟡 Manager OS through 028B implemented pending 028C docs sync
+├── 🟢 Manager OS message prompt/draft/safety docs synced through 028C
+├── 🟢 Human Approval Gate scoped in 029A
 └── 🔴 File existence alone is not completion proof
 ~~~
 
@@ -48,6 +49,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ├── 🟢 028C_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC
 ├── 🟢 LLM Draft Intake Boundary Contract - human-review context only
 ├── 🟢 Message Safety Validator - safety review only
+├── 🟢 029A_HUMAN_APPROVAL_GATE_SCOPE
 └── 🟢 Genesis-to-current Build Tree restoration/crosswalk
 ~~~
 
@@ -55,17 +57,16 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 
 ~~~text
 🟡 Immediate Next Phase
-└── 🔵 029A_HUMAN_APPROVAL_GATE_SCOPE
+└── 🔵 029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
 ~~~
 
 ## 4. Near-Term Roadmap
 
 ~~~text
 🔵 Near-Term Roadmap
-├── 🔵 029A_HUMAN_APPROVAL_GATE_SCOPE
 ├── 🔵 029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
-├── 🔵 WhatsApp/SMS Delivery Adapter Boundary Scope
-├── 🔵 Send Execution Gate Scope
+├── 🔵 030A_DELIVERY_ADAPTER_BOUNDARY_SCOPE
+├── 🔵 031A_SEND_EXECUTION_GATE_SCOPE
 ├── 🔵 UI / Read Model Scope
 └── 🔵 Persistence / Adapter Boundary Scope
 ~~~
@@ -78,7 +79,8 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ├── 🟢 Prompt Builder
 ├── 🟢 NBA Reason Why + Nash/Mick reconnection - non-executing review layer
 ├── 🟢 LLM Draft + Safety Layer
-└── 🔵 Human Approval + Delivery Layer
+├── 🟢 Human Approval Gate Scope
+└── 🔵 Delivery + Send Execution Layer
 
 🟡 Revenue Generation Engine
 ├── 🟡 Prospecting / opportunity / action support
@@ -193,6 +195,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ## 7. Locked Next
 
 ~~~text
-NEXT=029A_HUMAN_APPROVAL_GATE_SCOPE
-THEN=029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
+NEXT=029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
+THEN=030A_DELIVERY_ADAPTER_BOUNDARY_SCOPE
+THEN_AFTER=031A_SEND_EXECUTION_GATE_SCOPE
 ~~~

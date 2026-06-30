@@ -1,5 +1,34 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:HUMAN_APPROVAL_GATE_SCOPE_STATUS:START -->
+## Human Approval Gate Scope 029A
+
+Status: SCOPED / READY_FOR_029B_IMPLEMENTATION
+
+- 029A Human Approval Gate scope completed.
+- Approval requires an explicit human reviewer.
+- Approval is exact-artifact-bound.
+- Approval must be attributable, time-aware, and auditable.
+- Safety validation is not approval.
+- Human approval is not message send.
+- Approval unlocks delivery preparation only.
+- Send execution remains blocked and requires a separate gate.
+- AI may not approve its own output.
+- A changed draft, prompt instruction, reason why, target person, channel, or material artifact field invalidates prior approval and requires reapproval.
+- Human approval creates no payout, compensation, revenue, ranking, punishment, HR, promotion, Advisor Lifecycle, or personality truth.
+- No implementation code changed.
+- No tests changed.
+- No AI/LLM runtime executed.
+- No draft/message generated.
+- No delivery/send executed.
+- Next phase: `029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION`.
+
+Scope doc: `docs/architecture/source-truth/HUMAN_APPROVAL_GATE_SCOPE_029A.md`
+
+Certificate: `docs/evidence/HUMAN_APPROVAL_GATE_SCOPE_CERTIFICATE_029A.md`
+
+<!-- FORGEOS:HUMAN_APPROVAL_GATE_SCOPE_STATUS:END -->
+
 <!-- FORGEOS:LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC_STATUS:START -->
 ## LLM Draft Intake and Message Safety Validator Docs Sync 028C
 
