@@ -218,6 +218,22 @@ Boundary:
 - Forge already has modern Manager OS prompt, draft intake, and safety validator boundaries.
 - Forge also has older AI/provider/prompt/message modules that can generate or display text without the newer approval gates.
 - The modern Manager OS message-generation chain is the safest candidate for 028C closure.
+
+## Appendix: 028C Consumption
+
+028C consumed this inventory as source-truth input for the LLM Draft Intake and Message Safety Validator docs sync.
+
+- The modern Manager OS path was selected for docs closure:
+  - `manager-os/message-generation/manager-message-prompt-builder.js`
+  - `manager-os/message-generation/llm-draft-intake-boundary-contract.js`
+  - `manager-os/message-generation/message-safety-validator.js`
+- Provider connectors remain runtime-risk:
+  - `forge-ai-connector.js`
+  - `ai-service.js`
+- Legacy generators remain source material only:
+  - `nash-message-recommendation-engine.js`
+  - root/advisor prompt and message builders without the modern evidence/source/freshness/human-approval boundary
+- Human Approval Gate remains the next required layer before delivery/send can be scoped.
 - Provider connectors are runtime-risk and must not be executed or treated as approval.
 - Human Approval Gate should consume validated draft context, not raw provider output.
 

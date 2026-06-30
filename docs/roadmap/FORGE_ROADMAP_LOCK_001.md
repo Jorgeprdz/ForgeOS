@@ -44,8 +44,10 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ├── 🟢 006C_NASH_MICK_NBA_RECONNECTION_ENGINE_IMPLEMENTATION
 ├── 🟢 006D_NASH_MICK_NBA_RECONNECTION_DOCS_SYNC
 ├── 🟢 NBA Reason Why and Nash/Mick reconnection - non-executing review layers
-├── 🟡 LLM Draft Intake implementation - IMPLEMENTED_PENDING_DOCS_SYNC
-├── 🟡 Message Safety Validator implementation - IMPLEMENTED_PENDING_DOCS_SYNC
+├── 🟢 028C0_LLM_AI_ENGINE_EXISTING_INVENTORY
+├── 🟢 028C_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC
+├── 🟢 LLM Draft Intake Boundary Contract - human-review context only
+├── 🟢 Message Safety Validator - safety review only
 └── 🟢 Genesis-to-current Build Tree restoration/crosswalk
 ~~~
 
@@ -53,7 +55,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 
 ~~~text
 🟡 Immediate Next Phase
-└── 🔵 028C_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC
+└── 🔵 029A_HUMAN_APPROVAL_GATE_SCOPE
 ~~~
 
 ## 4. Near-Term Roadmap
@@ -61,8 +63,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ~~~text
 🔵 Near-Term Roadmap
 ├── 🔵 029A_HUMAN_APPROVAL_GATE_SCOPE
-├── 🔵 029A Human Approval Gate Scope
-├── 🔵 Human Approval Gate implementation
+├── 🔵 029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
 ├── 🔵 WhatsApp/SMS Delivery Adapter Boundary Scope
 ├── 🔵 Send Execution Gate Scope
 ├── 🔵 UI / Read Model Scope
@@ -76,7 +77,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ├── 🟢 Protected Context Foundation
 ├── 🟢 Prompt Builder
 ├── 🟢 NBA Reason Why + Nash/Mick reconnection - non-executing review layer
-├── 🟡 LLM Draft + Safety Layer
+├── 🟢 LLM Draft + Safety Layer
 └── 🔵 Human Approval + Delivery Layer
 
 🟡 Revenue Generation Engine
@@ -192,6 +193,6 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ## 7. Locked Next
 
 ~~~text
-NEXT=028C_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC
-THEN=029A_HUMAN_APPROVAL_GATE_SCOPE
+NEXT=029A_HUMAN_APPROVAL_GATE_SCOPE
+THEN=029B_HUMAN_APPROVAL_GATE_IMPLEMENTATION
 ~~~

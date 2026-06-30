@@ -1,5 +1,34 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC_STATUS:START -->
+## LLM Draft Intake and Message Safety Validator Docs Sync 028C
+
+Status: IMPLEMENTED_AND_CLOSED_FOR_HUMAN_REVIEW_ONLY
+
+- 028C docs sync completed.
+- Manager OS prompt/draft/safety path documented.
+- Manager Message Prompt Builder is closed for protected prompt instructions only.
+- LLM Draft Intake Boundary Contract is implemented and documented as unapproved draft intake context only.
+- Message Safety Validator is implemented and documented as safety review only.
+- No implementation code changed in 028C.
+- No tests changed in 028C.
+- No AI/LLM runtime executed.
+- No provider calls executed.
+- No drafts/messages generated.
+- No delivery/send executed.
+- Safety validation is not human approval.
+- Prompt is not draft.
+- Draft is not approved communication.
+- Message recommendation is not message send.
+- Human Approval Gate remains required before delivery/send.
+- Next phase: `029A_HUMAN_APPROVAL_GATE_SCOPE`.
+
+Closure doc: `docs/architecture/source-truth/LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_CLOSURE_028C.md`
+
+Certificate: `docs/evidence/LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_CLOSURE_CERTIFICATE_028C.md`
+
+<!-- FORGEOS:LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC_STATUS:END -->
+
 <!-- FORGEOS:LLM_AI_ENGINE_EXISTING_INVENTORY_STATUS:START -->
 ## LLM / AI Existing Engine Inventory 028C0
 
