@@ -1539,3 +1539,44 @@ Latest implementation commit: 2d597f4398324b108d01957892ea7e8136dfa85a
 - No HR, disciplinary, ranking, promotion, punishment, termination, revenue, compensation, payout, lifecycle, precontract, hiring, or automatic decision truth.
 
 <!-- MICK_MANAGER_CONTEXT_INTAKE_DOCS_SYNC_024D_END -->
+
+<!-- FORGE_GENESIS_MESSAGE_GENERATION_ROADMAP_SYNC_024E_START -->
+
+## Forge Origin Principle — Signal-to-Message Genesis
+
+Roadmap sync commit source: 2e68b09f1d06f95d5440bd6b47eb72f2bf8bb96d
+
+Forge began as a small signal-reading script designed to generate the best WhatsApp/SMS outreach messages for prospects.
+
+That origin is now a formal architecture principle:
+
+```text
+signals → protected context → prompt builder → LLM draft → Forge validation → human approval → channel delivery
+```
+
+### Canonical operating chain
+
+1. Forge reads signals and prepares protected context.
+2. Forge builds a constrained prompt for the target communication.
+3. The LLM interprets the prompt and generates draft message options.
+4. Forge validates the draft against safety, evidence, product, revenue, compensation, HR, pressure, and manipulation boundaries.
+5. A human approves, edits, or rejects the draft.
+6. Only after explicit human approval may a WhatsApp/SMS adapter send.
+
+### Required product implication
+
+- Manager OS must include a future Message Generation + WhatsApp/SMS Delivery layer for candidates, advisors, and precontracts.
+- Advisor OS must include the same genesis module for advisor-facing prospect/client outreach.
+- This module is not optional; it is the original reason Forge exists.
+
+### Boundary lock
+
+- LLM output is draft language only.
+- A draft is not approved communication.
+- Forge validation is required after LLM generation.
+- Human approval is required before channel delivery.
+- WhatsApp/SMS adapters cannot send without explicit approval.
+- No automatic pressure, manipulation, shame, invented intent, false urgency, or emotional leverage.
+- No unauthorized product, policy, revenue, compensation, payout, HR, lifecycle, precontract, hiring, or automatic decision truth.
+
+<!-- FORGE_GENESIS_MESSAGE_GENERATION_ROADMAP_SYNC_024E_END -->

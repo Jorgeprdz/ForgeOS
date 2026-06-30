@@ -466,3 +466,55 @@ Manager OS has completed its protected context-preparation chain and now has saf
 - Manager OS Full Product / Runtime Readiness: approximately 63%.
 
 <!-- MICK_MANAGER_CONTEXT_INTAKE_DOCS_SYNC_024D_END -->
+
+<!-- FORGE_GENESIS_MESSAGE_GENERATION_ROADMAP_SYNC_024E_START -->
+
+## Manager OS Roadmap Addition — Message Generation + Delivery Layer
+
+Roadmap sync commit source: 2e68b09f1d06f95d5440bd6b47eb72f2bf8bb96d
+
+Manager OS Context Intelligence V1 remains focused on protected context preparation.
+
+After Engagement / Private Motivation Context Intake and Manager OS Context Intelligence V1 closure, Manager OS must add an operating layer that returns to Forge's original genesis:
+
+```text
+manager signals → manager context → prompt builder → LLM draft → Forge validation → human approval → WhatsApp/SMS delivery adapter
+```
+
+### Manager OS target audiences
+
+- Candidates.
+- Precontracts.
+- Advisors.
+
+### Manager OS message purposes
+
+- Outreach.
+- Follow-up.
+- Reconnection.
+- Meeting confirmation.
+- Coaching support.
+- Review preparation.
+- Safe next-step invitation.
+
+### Required safety sequence
+
+Nash protects conversation quality and safe language.
+Mick protects behavior review from surveillance and punishment.
+Engagement protects private motivation from manipulation.
+Message Generation must consume those protected contexts and never bypass them.
+
+### Future roadmap items
+
+- Manager OS Message Generation Prompt Builder.
+- LLM Draft Intake.
+- Message Safety Validator.
+- Human Approval Gate.
+- WhatsApp/SMS Delivery Adapter Boundary.
+- Send Execution Gate.
+
+### Non-negotiable boundary
+
+Manager OS may prepare and validate message drafts, but it must not automatically send messages or create drafts/tasks/calendar events without explicit human authorization.
+
+<!-- FORGE_GENESIS_MESSAGE_GENERATION_ROADMAP_SYNC_024E_END -->
