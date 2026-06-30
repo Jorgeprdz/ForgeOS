@@ -39,6 +39,11 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 🟢 Closed / Built Areas
 ├── 🟢 Manager OS Context Intelligence V1
 ├── 🟢 Manager Message Prompt Builder
+├── 🟢 006A_NASH_MICK_NBA_RECONNECTION_SCOPE
+├── 🟢 006B_NBA_REASON_WHY_BOUNDARY_IMPLEMENTATION
+├── 🟢 006C_NASH_MICK_NBA_RECONNECTION_ENGINE_IMPLEMENTATION
+├── 🟢 006D_NASH_MICK_NBA_RECONNECTION_DOCS_SYNC
+├── 🟢 NBA Reason Why and Nash/Mick reconnection - non-executing review layers
 ├── 🟡 LLM Draft Intake implementation - IMPLEMENTED_PENDING_DOCS_SYNC
 ├── 🟡 Message Safety Validator implementation - IMPLEMENTED_PENDING_DOCS_SYNC
 └── 🟢 Genesis-to-current Build Tree restoration/crosswalk
@@ -55,6 +60,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 
 ~~~text
 🔵 Near-Term Roadmap
+├── 🔵 029A_HUMAN_APPROVAL_GATE_SCOPE
 ├── 🔵 029A Human Approval Gate Scope
 ├── 🔵 Human Approval Gate implementation
 ├── 🔵 WhatsApp/SMS Delivery Adapter Boundary Scope
@@ -69,6 +75,7 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 🟡 Forge Genesis / Signal-to-Message Operating Layer
 ├── 🟢 Protected Context Foundation
 ├── 🟢 Prompt Builder
+├── 🟢 NBA Reason Why + Nash/Mick reconnection - non-executing review layer
 ├── 🟡 LLM Draft + Safety Layer
 └── 🔵 Human Approval + Delivery Layer
 
@@ -178,9 +185,13 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 - Nash support is not Nash runtime execution.
 - Manager OS context is not punishment, ranking, promotion, revenue, compensation, payout, or lifecycle truth.
 - Human approval remains mandatory before action.
+- NBA Reason Why and Nash/Mick reconnection are implemented as non-executing review layers.
+- Message draft, approval, delivery, and send remain open.
+- Human Approval Gate is required before any delivery/send layer.
 
 ## 7. Locked Next
 
 ~~~text
 NEXT=028C_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC
+THEN=029A_HUMAN_APPROVAL_GATE_SCOPE
 ~~~

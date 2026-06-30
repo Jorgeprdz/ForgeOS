@@ -39,6 +39,36 @@ FORGE OS UNIFIED BUILD TREE 001
 │   ├── 🟢 Prompt is not draft
 │   └── 🟢 Nash support is not Nash runtime execution
 │
+├── 🟢 NASH + MICK + NBA RECONNECTION / REASON WHY LAYER
+│   │
+│   ├── 🟢 NBA Reason Why Boundary Contract
+│   │   ├── 🟢 Next Best Action + Reason Why
+│   │   ├── 🟢 Human approval required
+│   │   ├── 🟢 Automatic execution blocked
+│   │   └── 🟢 Truth/action flags locked false
+│   │
+│   ├── 🟢 Nash + Mick + NBA Reconnection Engine
+│   │   ├── 🟢 Nash conversation context consumed as protected context only
+│   │   ├── 🟢 Nash Combat / objection context consumed as protected context only
+│   │   ├── 🟢 Mick behavior / execution context consumed as protected context only
+│   │   ├── 🟢 NBA Reason Why Boundary called
+│   │   └── 🟢 Non-executing explained recommendation produced
+│   │
+│   ├── 🔵 Open Next Layers
+│   │   ├── 🔵 LLM Draft Intake Docs Sync
+│   │   ├── 🔵 Human Approval Gate
+│   │   ├── 🔵 WhatsApp/SMS Delivery Adapter Boundary
+│   │   ├── 🔵 Send Execution Gate
+│   │   └── 🔵 UI / Read Model / Persistence
+│   │
+│   └── 🔴 Still Forbidden
+│       ├── 🔴 Automatic send
+│       ├── 🔴 Nash/Mick runtime execution
+│       ├── 🔴 Task/calendar auto-creation
+│       ├── 🔴 Compensation/revenue/payout truth
+│       ├── 🔴 Ranking/punishment/HR truth
+│       └── 🔴 Manipulation/surveillance/personality truth
+│
 ├── 🟡 LLM Draft + Safety Layer
 │   ├── 🟡 LLM Draft Intake - IMPLEMENTED_PENDING_DOCS_SYNC
 │   ├── 🟡 Message Safety Validator - IMPLEMENTED_PENDING_DOCS_SYNC

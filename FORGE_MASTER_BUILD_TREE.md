@@ -1,5 +1,31 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:NASH_MICK_NBA_RECONNECTION_DOCS_SYNC_STATUS:START -->
+## Nash + Mick + NBA Reconnection Docs Sync 006D
+
+Status: IMPLEMENTED_AND_CLOSED_FOR_NON_EXECUTING_REASON_WHY_LAYER
+
+- 006D docs sync completed.
+- 006B NBA Reason Why Boundary implemented.
+- 006C Nash + Mick + NBA Reconnection Engine implemented.
+- Forge Northstar preserved: signals -> voluntary explained action.
+- NBA = Next Best Action + Reason Why.
+- Nash remains conversation, objections, style, and message angle context.
+- Nash Combat remains objection support, not manipulation.
+- Mick remains behavior, execution, consistency, habits, and pattern context.
+- No implementation code changed in 006D.
+- No tests changed in 006D.
+- No Nash/Mick runtime executed.
+- Human approval remains mandatory before action.
+- Message draft, approval, delivery, send, task/calendar, and persistence layers remain open.
+- Next phase: `028C_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC`, then `029A_HUMAN_APPROVAL_GATE_SCOPE`.
+
+Closure doc: `docs/architecture/source-truth/NASH_MICK_NBA_RECONNECTION_IMPLEMENTATION_CLOSURE_006D.md`
+
+Certificate: `docs/evidence/NASH_MICK_NBA_RECONNECTION_CLOSURE_CERTIFICATE_006D.md`
+
+<!-- FORGEOS:NASH_MICK_NBA_RECONNECTION_DOCS_SYNC_STATUS:END -->
+
 <!-- FORGEOS:NASH_MICK_NBA_RECONNECTION_SCOPE_STATUS:START -->
 ## Nash + Mick + NBA Reconnection Scope 006A
 

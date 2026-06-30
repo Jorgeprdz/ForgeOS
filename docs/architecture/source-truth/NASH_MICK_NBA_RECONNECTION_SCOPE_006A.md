@@ -464,3 +464,21 @@ Recommended architecture:
 - Jurgen Klaric: This understands psychology through clarity and voluntary action, not leverage or invented certainty.
 
 Council review is advisory only and does not override Constitution, ADRs, tests, evidence, or source-truth boundaries.
+
+## Implementation Closure Appendix 006D
+
+Status: IMPLEMENTED_AND_CLOSED_FOR_NON_EXECUTING_RECONNECTION
+
+- 006B implemented the NBA Reason Why Boundary Contract:
+  - `manager-os/nba/nba-reason-why-boundary-contract.js`
+  - `manager-os/tests/nba-reason-why-boundary-contract-master-test.js`
+- 006C implemented the Nash + Mick + NBA Reconnection Engine:
+  - `manager-os/nba/nash-mick-nba-reconnection-engine.js`
+  - `manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js`
+- 006D synchronized documentation and closure evidence.
+- Scope moved from planned to implemented/closed for non-executing reconnection.
+- Runtime/action/message/delivery layers remain open.
+- Human approval remains mandatory before action.
+- Nash runtime execution remains blocked.
+- Mick runtime execution remains blocked.
+- Message draft creation, message send, task creation, calendar creation, compensation truth, revenue truth, payout truth, ranking truth, punishment truth, HR truth, promotion truth, Advisor Lifecycle truth, personality truth, manipulation, and surveillance remain blocked.
