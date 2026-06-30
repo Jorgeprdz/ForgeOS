@@ -1464,3 +1464,21 @@ GREEN STATIC PREVIEW PUBLIC SURFACE DECISION / IMPLEMENTED
 `-- RED deploy / publish / settings mutation / public URL / DNS / live app / API / auth / analytics / storage / CRM / truth / action remain forbidden
 ```
 <!-- END FORGEOS:STATIC_PREVIEW_PUBLIC_SURFACE_DECISION_IMPLEMENTATION_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:PUBLIC_URL_VERIFICATION_BOUNDARY_SCOPE_UNIFIED_STATUS -->
+## PUBLIC URL VERIFICATION BOUNDARY / SCOPE CLOSED
+
+```text
+GREEN PUBLIC URL VERIFICATION BOUNDARY / SCOPE
+|-- GREEN 047A Public URL Verification Boundary Scope Closed
+|-- GREEN Verification is evidence-review only
+|-- GREEN GitHub Pages availability is not deployment authorization
+|-- GREEN No network call / HTTP request / DNS lookup
+|-- GREEN Public URL creation remains forbidden
+|-- GREEN Live URL direct verification remains forbidden
+|-- BLUE 047B Public URL Verification Boundary Implementation
+|-- BLUE 048A Static Preview Release Note Scope if needed
+|-- BLUE Metric / Economic Truth Scope
+`-- RED deploy / publish / settings mutation / public URL creation / DNS / live app / API / auth / analytics / storage / CRM / truth / action remain forbidden
+```
+<!-- END FORGEOS:PUBLIC_URL_VERIFICATION_BOUNDARY_SCOPE_UNIFIED_STATUS -->
