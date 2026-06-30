@@ -1932,3 +1932,40 @@ Scope documents:
 - docs/roadmap/LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_SCOPE_028A.md
 
 <!-- FORGEOS:LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_SCOPE_STATUS:END -->
+
+<!-- FORGEOS:FORGE_GENESIS_TO_CURRENT_BUILDTREE_RESTORATION_STATUS:START -->
+## Forge Genesis to Current Build Tree Restoration and Crosswalk 001
+
+Status: RESTORED_AND_CROSSWALKED
+
+Restoration date: 2026-06-29
+
+Genesis source preserved at:
+
+- docs/architecture/source-truth/FORGE_GENESIS_VISION_BUILD_TREE_ORIGINAL_001.md
+
+Current implemented tree generated at:
+
+- docs/architecture/source-truth/FORGE_CURRENT_IMPLEMENTED_BUILD_TREE_001.md
+
+Crosswalk generated at:
+
+- docs/architecture/source-truth/FORGE_GENESIS_TO_CURRENT_BUILDTREE_CROSSWALK_001.md
+
+Unified tree generated at:
+
+- docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md
+
+Certificate:
+
+- docs/evidence/FORGE_GENESIS_TO_CURRENT_BUILDTREE_RESTORATION_CERTIFICATE_001.md
+
+Interpretation:
+
+- Historical Genesis tree is product intent source.
+- Unified tree is a planning/source-truth aid.
+- Current implementation truth still requires evidence, tests, and closures.
+- Historical vision is not current implementation truth.
+- No implementation/runtime changes were made by this restoration.
+
+<!-- FORGEOS:FORGE_GENESIS_TO_CURRENT_BUILDTREE_RESTORATION_STATUS:END -->
