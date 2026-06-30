@@ -361,3 +361,18 @@ Canonical Truth Registry remains separate.
 SEMAFORO=PASS
 DECISION=PASS_040A_TRUTH_PROMOTION_BOUNDARY_SCOPE_READY_FOR_IMPLEMENTATION
 NEXT=040B_TRUTH_PROMOTION_BOUNDARY_IMPLEMENTATION
+
+<!-- BEGIN FORGEOS:TRUTH_PROMOTION_IMPLEMENTATION_APPENDIX_040B -->
+## 040B Implementation Appendix
+
+- `040B_TRUTH_PROMOTION_BOUNDARY_IMPLEMENTATION` implemented Truth Promotion Boundary Contract.
+- Truth promotion candidate is not canonical truth.
+- Canonical Truth Registry remains separate.
+- Truth promotion review candidate can be prepared.
+- Canonical truth write remains false.
+- Business/metric truth creation remains false.
+- Delivery/message truth creation remains false.
+- Explicit zero/false values are preserved as review context, not treated as missing.
+- Unified Build Tree updated.
+- Next: `041A_CANONICAL_TRUTH_REGISTRY_SCOPE`
+<!-- END FORGEOS:TRUTH_PROMOTION_IMPLEMENTATION_APPENDIX_040B -->

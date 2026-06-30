@@ -1147,3 +1147,40 @@ GREEN TRUTH PROMOTION BOUNDARY / SCOPE
 `-- RED Canonical truth write / metric truth / compensation truth / HR truth / CRM mutation remain forbidden
 ```
 <!-- END FORGEOS:TRUTH_PROMOTION_BOUNDARY_SCOPE_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:TRUTH_PROMOTION_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+## TRUTH PROMOTION BOUNDARY / IMPLEMENTED
+
+```text
+GREEN TRUTH PROMOTION BOUNDARY / IMPLEMENTED
+|-- GREEN 040A Truth Promotion Boundary Scope Closed
+|-- GREEN 040B Truth Promotion Boundary Contract Implemented
+|   |-- GREEN Audit Persistence snapshot required
+|   |-- GREEN Audit persistence record candidate required
+|   |-- GREEN Candidate fact type/value/owner required
+|   |-- GREEN Promotion policy, metric ownership, truth ownership required
+|   |-- GREEN Conflict review and human truth review required
+|   |-- GREEN Evidence, owners, freshness, audit, idempotency required
+|   |-- GREEN Truth promotion review candidate can be prepared
+|   |-- GREEN Explicit zero/false values preserved as review context
+|   `-- GREEN Canonical Truth Registry remains separate
+|
+|-- BLUE Next Layer
+|   `-- BLUE 041A Canonical Truth Registry Scope
+|
+`-- RED Still Forbidden
+    |-- RED Canonical truth write
+    |-- RED Business/metric truth creation
+    |-- RED Delivery/message truth creation
+    |-- RED Compensation/revenue/payout truth
+    |-- RED Ranking/punishment/HR/personality truth
+    |-- RED Advisor lifecycle truth
+    |-- RED Task/calendar auto-creation
+    |-- RED CRM mutation
+    |-- RED Persistence write
+    |-- RED UI rendering
+    |-- RED Provider/external API calls
+    |-- RED Send/action execution
+    `-- RED Manipulation/surveillance
+```
+<!-- END FORGEOS:TRUTH_PROMOTION_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
