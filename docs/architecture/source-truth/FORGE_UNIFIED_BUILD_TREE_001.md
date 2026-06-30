@@ -1184,3 +1184,21 @@ GREEN TRUTH PROMOTION BOUNDARY / IMPLEMENTED
     `-- RED Manipulation/surveillance
 ```
 <!-- END FORGEOS:TRUTH_PROMOTION_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:CANONICAL_TRUTH_REGISTRY_SCOPE_UNIFIED_STATUS -->
+## CANONICAL TRUTH REGISTRY / SCOPE CLOSED
+
+```text
+GREEN CANONICAL TRUTH REGISTRY / SCOPE
+|-- GREEN 041A Canonical Truth Registry Scope Closed
+|-- GREEN Canonical truth entry candidate is not canonical truth write
+|-- GREEN Metric / Economic Truth remains separate
+|-- GREEN Canonical truth policy, key policy, owner policy, immutability, conflict review, human truth review scoped
+|-- GREEN Canonical truth write remains forbidden
+|-- GREEN Metric/economic truth creation remains forbidden
+|-- BLUE 041B Canonical Truth Registry Implementation
+|-- BLUE Metric / Economic Truth Scope
+|-- BLUE UI Rendering Boundary Scope
+`-- RED Canonical truth write / persistence / metric truth / compensation truth / HR truth / CRM mutation remain forbidden
+```
+<!-- END FORGEOS:CANONICAL_TRUTH_REGISTRY_SCOPE_UNIFIED_STATUS -->
