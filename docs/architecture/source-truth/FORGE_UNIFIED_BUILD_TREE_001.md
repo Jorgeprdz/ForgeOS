@@ -973,3 +973,20 @@ GREEN EXTERNAL DISPATCH BOUNDARY / IMPLEMENTED
     `-- RED Manipulation/surveillance
 ```
 <!-- END FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_SCOPE_UNIFIED_STATUS -->
+## PROVIDER WEBHOOK BOUNDARY / SCOPE CLOSED
+
+```text
+GREEN PROVIDER WEBHOOK BOUNDARY / SCOPE
+|-- GREEN 037A Provider Webhook Boundary Scope Closed
+|-- GREEN External provider event candidate is not delivery truth
+|-- GREEN Signature verification and schema validation scoped
+|-- GREEN Replay protection and dedupe review scoped
+|-- GREEN Provider event read model candidate scoped
+|-- GREEN Truth creation remains forbidden
+|-- BLUE 037B Provider Webhook Boundary Implementation
+|-- BLUE UI / Read Model Scope
+`-- RED Webhook listener registration / webhook side effects / provider API calls / truth creation remain forbidden
+```
+<!-- END FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_SCOPE_UNIFIED_STATUS -->
