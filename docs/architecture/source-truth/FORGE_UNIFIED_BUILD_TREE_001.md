@@ -779,3 +779,36 @@ GREEN PROVIDER CONNECTOR BOUNDARY / SCOPE
 `-- RED Automatic send / silent send / connector invocation / external provider dispatch remain forbidden
 ```
 <!-- END FORGEOS:PROVIDER_CONNECTOR_BOUNDARY_SCOPE_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:PROVIDER_CONNECTOR_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+## PROVIDER CONNECTOR BOUNDARY / IMPLEMENTED
+
+```text
+GREEN PROVIDER CONNECTOR BOUNDARY / IMPLEMENTED
+|-- GREEN 033A Provider Connector Boundary Scope Closed
+|-- GREEN 033B Provider Connector Boundary Contract Implemented
+|   |-- GREEN Provider Runtime snapshot required
+|   |-- GREEN Provider payload candidate required
+|   |-- GREEN Connector capability and policy required
+|   |-- GREEN Credential and rate-limit review required
+|   |-- GREEN Connector invocation candidate can be prepared
+|   |-- GREEN Dry-run can be modeled
+|   `-- GREEN External API call remains false
+|
+|-- BLUE Next Layer
+|   `-- BLUE 034A Connector Execution Gate Scope
+|
+`-- RED Still Forbidden
+    |-- RED Automatic send
+    |-- RED Silent send
+    |-- RED AI self-send
+    |-- RED Connector invocation
+    |-- RED External provider dispatch
+    |-- RED Credential material exposure
+    |-- RED Queue/scheduled/webhook side effects
+    |-- RED Task/calendar auto-creation
+    |-- RED Compensation/revenue/payout truth
+    |-- RED Ranking/punishment/HR/personality truth
+    `-- RED Manipulation/surveillance
+```
+<!-- END FORGEOS:PROVIDER_CONNECTOR_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
