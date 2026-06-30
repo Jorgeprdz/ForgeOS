@@ -1438,3 +1438,52 @@ The system still does not execute Nash, Mick, engagement, tasks, calendar events
 - No writes or downstream truth creation.
 
 <!-- MANAGER_OS_DOCS_SYNC_022D_END -->
+
+<!-- NASH_MANAGER_CONTEXT_INTAKE_DOCS_SYNC_023D_START -->
+
+## Manager OS Continuity Sync — Through 023B/C
+
+Status: IMPLEMENTED_AND_PUSHED
+Latest implementation commit: fe2a24d62ebf33729d215f77d28f2ede7466ee2d
+
+### Implemented chain
+
+| Layer | Status | Canonical scope |
+| --- | --- | --- |
+| Manager Recruitment Pipeline Capture | IMPLEMENTED | Protected candidate/recruitment context capture. |
+| Candidate Manager Snapshot | IMPLEMENTED | Candidate manager-facing snapshot context only. |
+| Advisor Manager Snapshot | IMPLEMENTED | Advisor manager-facing snapshot context only. |
+| Manager Metrics Intelligence | IMPLEMENTED | Protected metric context only; no downstream truth. |
+| Manager Historical Analytics | IMPLEMENTED | Historical review context only; no raw truth mutation. |
+| Historical Storage / Rollup / Query Plan Contracts | IMPLEMENTED | Query planning and rollup contracts only; no query execution or writes. |
+| Manager Forecast Intelligence | IMPLEMENTED | Scenario context only; not revenue, promotion, payout, lifecycle, or automatic decision truth. |
+| Manager Dashboard Intelligence | IMPLEMENTED | Manager review dashboard context only; no UI/rendering/chart truth. |
+| Manager Coaching Intelligence | IMPLEMENTED | Manager conversation/coaching context only; no HR/disciplinary truth. |
+| Manager Review Plan Intelligence | IMPLEMENTED | Review planning context only; no task/calendar/message creation. |
+| Manager External Context Bridge | IMPLEMENTED | Sanitized context export for Nash, Mick, and private engagement consumers only. |
+| Nash Manager Context Intake | IMPLEMENTED | Intake/validation for Manager OS sanitized Nash conversation-prep packets only. |
+
+### Progress estimate
+
+| Area | Estimate | Notes |
+| --- | ---: | --- |
+| Manager OS Core Intelligence Spine | 100% | Current defined context spine is complete through External Context Bridge. |
+| Manager OS External Intake Layer | 33% | Nash intake is complete; Mick and Engagement intakes remain open. |
+| Manager OS Architecture Roadmap | ~75% | Context intelligence chain is strong; external intakes and handoff scopes remain. |
+| Manager OS Full Product / Runtime Readiness | ~60% | No UI, persistence, task/calendar/message runtime, or live operating surface yet. |
+
+### Boundary lock
+
+- Progress estimate is planning context only.
+- Nash Manager Context Intake is intake/validation context only.
+- No Nash runtime execution.
+- No Nash next-best-action execution.
+- No message sending.
+- No draft creation.
+- No task creation.
+- No calendar writes.
+- No pressure language generation.
+- No manipulation or invented intent truth.
+- No HR, disciplinary, ranking, promotion, punishment, termination, revenue, compensation, payout, lifecycle, precontract, hiring, or automatic decision truth.
+
+<!-- NASH_MANAGER_CONTEXT_INTAKE_DOCS_SYNC_023D_END -->

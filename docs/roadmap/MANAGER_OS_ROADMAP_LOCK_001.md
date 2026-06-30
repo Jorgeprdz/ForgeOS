@@ -388,3 +388,40 @@ Manager OS has moved from protected capture and review snapshots into a complete
 Future work should remain in boundary-first scope analysis before implementation. Any Nash, Mick, engagement, Command OS, Advisor OS, UI, task, calendar, messaging, or runtime connection must begin as a read-only scope with explicit no-execution guarantees.
 
 <!-- MANAGER_OS_DOCS_SYNC_022D_END -->
+
+<!-- NASH_MANAGER_CONTEXT_INTAKE_DOCS_SYNC_023D_START -->
+
+## Roadmap Update — Manager OS Through 023B/C
+
+Locked implementation commit: fe2a24d62ebf33729d215f77d28f2ede7466ee2d
+
+### Completed sequence
+
+1. Manager recruitment pipeline capture.
+2. Candidate and advisor manager snapshots.
+3. Manager Metrics Intelligence.
+4. Manager Historical Analytics.
+5. Historical storage, rollup, and query-plan boundaries.
+6. Manager Forecast Intelligence.
+7. Manager Dashboard Intelligence.
+8. Manager Coaching Intelligence.
+9. Manager Review Plan Intelligence.
+10. Manager External Context Bridge.
+11. Nash Manager Context Intake.
+
+### Open next roadmap items
+
+- Mick Manager Context Intake.
+- Engagement / Private Motivation Context Intake.
+- Command / Action Handoff Boundary.
+- Manager Read Model / UI Scope.
+- Persistence / Adapter Boundary Scope.
+
+### Current estimate
+
+- Manager OS Core Intelligence Spine: 100%.
+- Manager OS External Intake Layer: 33%.
+- Manager OS Architecture Roadmap: approximately 75%.
+- Manager OS Full Product / Runtime Readiness: approximately 60%.
+
+<!-- NASH_MANAGER_CONTEXT_INTAKE_DOCS_SYNC_023D_END -->
