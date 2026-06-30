@@ -1994,3 +1994,28 @@ Source preservation:
 - No implementation code changed.
 
 <!-- FORGEOS:FORGE_UNIFIED_BUILDTREE_SEMAFORO_TREE_FORMAT_STATUS:END -->
+
+<!-- FORGEOS:FORGE_ROADMAP_UPDATE_FROM_UNIFIED_BUILDTREE_STATUS:START -->
+## Forge Roadmap Update from Unified Build Tree 003
+
+Status: CLOSED
+
+Forge roadmap updated from unified semaforo Build Tree.
+
+Roadmap:
+
+- docs/roadmap/FORGE_ROADMAP_LOCK_001.md
+
+Certificate:
+
+- docs/evidence/FORGE_ROADMAP_UPDATE_FROM_UNIFIED_BUILDTREE_CERTIFICATE_003.md
+
+Source boundary:
+
+- Original Genesis preserved file was not modified.
+- Unified Build Tree was read as planning/source-truth aid only.
+- Unified Build Tree was not modified.
+- No implementation code changed.
+- Next phase remains 028C docs sync.
+
+<!-- FORGEOS:FORGE_ROADMAP_UPDATE_FROM_UNIFIED_BUILDTREE_STATUS:END -->
