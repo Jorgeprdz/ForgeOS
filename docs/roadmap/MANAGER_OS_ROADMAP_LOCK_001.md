@@ -359,3 +359,32 @@ DECISION=PASS_MANAGER_OS_ADVISOR_TRACKING_BOUNDARY_HARDENING_013A_READY_FOR_IMPL
 MANAGER_OS_ROADMAP_LOCK_001 is the continuity ledger for the next Manager OS implementation sequence.
 
 Future phases must preserve this order unless a later explicit roadmap governance phase updates this document.
+
+<!-- MANAGER_OS_DOCS_SYNC_022D_START -->
+
+## Roadmap Update — Manager OS Through 022B/C
+
+Locked implementation commit: 7901b558a067648edae87f7b71c36b341e5dcc55
+
+### Completed sequence
+
+1. Manager recruitment pipeline capture.
+2. Candidate and advisor manager snapshots.
+3. Manager Metrics Intelligence.
+4. Manager Historical Analytics.
+5. Historical storage, rollup, and query-plan boundaries.
+6. Manager Forecast Intelligence.
+7. Manager Dashboard Intelligence.
+8. Manager Coaching Intelligence.
+9. Manager Review Plan Intelligence.
+10. Manager External Context Bridge.
+
+### Roadmap meaning
+
+Manager OS has moved from protected capture and review snapshots into a complete context-preparation chain. The latest bridge safely exposes sanitized manager context to external consumers without giving those consumers execution authority.
+
+### Next safe roadmap zone
+
+Future work should remain in boundary-first scope analysis before implementation. Any Nash, Mick, engagement, Command OS, Advisor OS, UI, task, calendar, messaging, or runtime connection must begin as a read-only scope with explicit no-execution guarantees.
+
+<!-- MANAGER_OS_DOCS_SYNC_022D_END -->

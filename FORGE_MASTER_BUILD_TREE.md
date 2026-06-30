@@ -1394,3 +1394,47 @@ Closure certificate:
 
 - docs/evidence/MANAGER_OS_ADVISOR_SIGNAL_CONSUMER_CONTRACT_CLOSURE_CERTIFICATE.md
 <!-- FORGEOS:MANAGER_OS_ADVISOR_SIGNAL_CONSUMER_CONTRACT_STATUS:END -->
+
+<!-- MANAGER_OS_DOCS_SYNC_022D_START -->
+
+## Manager OS Continuity Sync — Through 022B/C
+
+Status: IMPLEMENTED_AND_PUSHED
+Latest implementation commit: 7901b558a067648edae87f7b71c36b341e5dcc55
+
+### Implemented Manager OS chain
+
+| Layer | Status | Canonical scope |
+| --- | --- | --- |
+| Manager Recruitment Pipeline Capture | IMPLEMENTED | Protected candidate/recruitment context capture. |
+| Candidate Manager Snapshot | IMPLEMENTED | Candidate manager-facing snapshot context only. |
+| Advisor Manager Snapshot | IMPLEMENTED | Advisor manager-facing snapshot context only. |
+| Manager Metrics Intelligence | IMPLEMENTED | Protected metric context only; no downstream truth. |
+| Manager Historical Analytics | IMPLEMENTED | Historical review context only; no raw truth mutation. |
+| Historical Storage / Rollup / Query Plan Contracts | IMPLEMENTED | Query planning and rollup contracts only; no query execution or writes. |
+| Manager Forecast Intelligence | IMPLEMENTED | Scenario context only; not revenue, promotion, payout, lifecycle, or automatic decision truth. |
+| Manager Dashboard Intelligence | IMPLEMENTED | Manager review dashboard context only; no UI/rendering/chart truth. |
+| Manager Coaching Intelligence | IMPLEMENTED | Manager conversation/coaching context only; no HR/disciplinary truth. |
+| Manager Review Plan Intelligence | IMPLEMENTED | Review planning context only; no task/calendar/message creation. |
+| Manager External Context Bridge | IMPLEMENTED | Sanitized context export for Nash, Mick, and private engagement consumers only. |
+
+### Current Forge capability in plain language
+
+Forge can now take protected Manager OS snapshots and safely turn them into manager-facing context: metrics, history, forecast, dashboard review, coaching context, review-plan context, and sanitized packets for Nash, Mick, and Engagement-style consumers.
+
+The system still does not execute Nash, Mick, engagement, tasks, calendar events, automated messages, HR decisions, rankings, punishment, promotion, revenue, compensation, payout, lifecycle, precontract, hiring, or automatic decisions.
+
+### 022B/C External Context Bridge lock
+
+- Nash receives conversation-prep context only.
+- Mick receives behavior-review context only.
+- Engagement receives private motivation/progress context only.
+- No direct Nash execution.
+- No direct Mick execution.
+- No direct Engagement/Gamification runtime.
+- No public leaderboards.
+- No pressure mechanics.
+- No addictive loops.
+- No writes or downstream truth creation.
+
+<!-- MANAGER_OS_DOCS_SYNC_022D_END -->
