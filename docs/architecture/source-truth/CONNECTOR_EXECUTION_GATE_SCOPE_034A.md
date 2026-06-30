@@ -342,3 +342,16 @@ Actual connector executor must remain separate.
 SEMAFORO=PASS
 DECISION=PASS_034A_CONNECTOR_EXECUTION_GATE_SCOPE_READY_FOR_IMPLEMENTATION
 NEXT=034B_CONNECTOR_EXECUTION_GATE_IMPLEMENTATION
+
+<!-- BEGIN FORGEOS:CONNECTOR_EXECUTION_GATE_IMPLEMENTATION_APPENDIX_034B -->
+## 034B Implementation Appendix
+
+- `034B_CONNECTOR_EXECUTION_GATE_IMPLEMENTATION` implemented Connector Execution Gate Boundary Contract.
+- Connector invocation candidate is not connector execution.
+- Connector execution handoff can be approved.
+- External API call remains false.
+- Connector invocation remains false.
+- Connector Executor Boundary remains separate.
+- Unified Build Tree updated.
+- Next: `035A_CONNECTOR_EXECUTOR_BOUNDARY_SCOPE`
+<!-- END FORGEOS:CONNECTOR_EXECUTION_GATE_IMPLEMENTATION_APPENDIX_034B -->
