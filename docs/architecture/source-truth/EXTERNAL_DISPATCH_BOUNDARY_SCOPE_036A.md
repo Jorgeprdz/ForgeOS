@@ -357,3 +357,16 @@ Actual outside-world dispatch must remain separate and requires future explicit 
 SEMAFORO=PASS
 DECISION=PASS_036A_EXTERNAL_DISPATCH_BOUNDARY_SCOPE_READY_FOR_IMPLEMENTATION
 NEXT=036B_EXTERNAL_DISPATCH_BOUNDARY_IMPLEMENTATION
+
+<!-- BEGIN FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_IMPLEMENTATION_APPENDIX_036B -->
+## 036B Implementation Appendix
+
+- `036B_EXTERNAL_DISPATCH_BOUNDARY_IMPLEMENTATION` implemented External Dispatch Boundary Contract.
+- Executor command candidate is not external dispatch.
+- External dispatch request candidate can be prepared.
+- External API call remains false.
+- External dispatch execution remains false.
+- Provider Webhook Boundary remains separate.
+- Unified Build Tree updated.
+- Next: `037A_PROVIDER_WEBHOOK_BOUNDARY_SCOPE`
+<!-- END FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_IMPLEMENTATION_APPENDIX_036B -->

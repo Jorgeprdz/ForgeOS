@@ -936,3 +936,40 @@ GREEN EXTERNAL DISPATCH BOUNDARY / SCOPE
 `-- RED Automatic send / silent send / external dispatch / external API call remain forbidden
 ```
 <!-- END FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_SCOPE_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+## EXTERNAL DISPATCH BOUNDARY / IMPLEMENTED
+
+```text
+GREEN EXTERNAL DISPATCH BOUNDARY / IMPLEMENTED
+|-- GREEN 036A External Dispatch Boundary Scope Closed
+|-- GREEN 036B External Dispatch Boundary Contract Implemented
+|   |-- GREEN Connector Executor snapshot required
+|   |-- GREEN Executor command candidate required
+|   |-- GREEN Final external dispatch confirmation required
+|   |-- GREEN Dispatch capability and policy required
+|   |-- GREEN Audit trail and idempotency required
+|   |-- GREEN External dispatch request candidate can be prepared
+|   |-- GREEN Dry-run can be modeled
+|   `-- GREEN External API call remains false
+|
+|-- BLUE Next Layer
+|   `-- BLUE 037A Provider Webhook Boundary Scope
+|
+`-- RED Still Forbidden
+    |-- RED Automatic send
+    |-- RED Silent send
+    |-- RED AI self-send
+    |-- RED External dispatch execution
+    |-- RED External API call
+    |-- RED Executor invocation
+    |-- RED Connector invocation
+    |-- RED Provider dispatch
+    |-- RED Credential material exposure
+    |-- RED Queue/scheduled/webhook side effects
+    |-- RED Task/calendar auto-creation
+    |-- RED Compensation/revenue/payout truth
+    |-- RED Ranking/punishment/HR/personality truth
+    `-- RED Manipulation/surveillance
+```
+<!-- END FORGEOS:EXTERNAL_DISPATCH_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
