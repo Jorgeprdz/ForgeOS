@@ -503,6 +503,59 @@ NEXT=028C_LLM_DRAFT_INTAKE_AND_MESSAGE_SAFETY_VALIDATOR_DOCS_SYNC
     └── ⚫ Documentation placement review only
 ~~~
 
+## Existing Module Capability Inventory / Boundary Review
+
+~~~text
+🟡 EXISTING MODULE CAPABILITY INVENTORY / BOUNDARY REVIEW
+│
+├── 🟡 Forge Genesis / Signal-to-Message Candidates
+│   ├── 🟡 adaptive-message-builder.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   ├── 🟡 adaptive-outreach-prompt-builder.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   ├── 🟡 ai-prompt-builder.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   ├── 🟡 forge-ai-prompt-builder.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   ├── 🟡 manager-os/message-generation/manager-message-prompt-builder.js - IMPLEMENTED / BOUNDARY PROTECTED
+│   ├── 🟡 manager-os/message-generation/llm-draft-intake-boundary-contract.js - IMPLEMENTED_PENDING_DOCS_SYNC
+│   ├── 🟡 manager-os/message-generation/message-safety-validator.js - IMPLEMENTED_PENDING_DOCS_SYNC
+│   ├── 🟡 whatsapp-link-engine.js - DELIVERY_CAPABILITY_EXISTS_BUT_NOT_AUTHORIZED_FOR_SEND
+│   └── 🟡 whatsapp-action-engine.js - EXISTS_NEEDS_BOUNDARY_WRAPPER / RUNTIME RISK
+│
+├── 🟡 Sales Conversion Candidates
+│   ├── 🟡 adaptive-question-engine.js - EXISTS_NEEDS_SOURCE_TRUTH_REVIEW
+│   ├── 🟡 adaptive-script-builder.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   ├── 🟡 question-answer-engine.js - EXISTS_NEEDS_SOURCE_TRUTH_REVIEW
+│   ├── 🟡 sales-coach-engine.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   └── 🟡 smart-outreach-engine.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│
+├── 🟡 Activity / Feed / Context Candidates
+│   ├── 🟡 activity-feed-engine.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   ├── 🟡 activity-stream-engine.js - EXISTS_NEEDS_BOUNDARY_WRAPPER
+│   ├── 🟡 ai-context-engine.js - EXISTS_NEEDS_SOURCE_TRUTH_REVIEW
+│   ├── 🟡 risk-story-context-engine.js - EXISTS_NEEDS_SOURCE_TRUTH_REVIEW
+│   └── 🟡 presentation-input-context-builder.js - EXISTS_NEEDS_SOURCE_TRUTH_REVIEW
+│
+├── 🟡 Candidate / Prospect / Advisor / Manager Candidates
+│   ├── 🟡 advisor-os/** - EXISTS_NEEDS_SOURCE_TRUTH_REVIEW / Advisor OS owns advisor-facing execution context
+│   ├── 🟡 manager-os/** - EXISTS_NEEDS_BOUNDARY_WRAPPER / Manager review context only
+│   ├── 🟡 candidate/prospect surfaces - EXISTS_NEEDS_SOURCE_TRUTH_REVIEW
+│   └── 🟡 nash-* legacy surfaces - EXISTS_LEGACY_DO_NOT_EXECUTE
+│
+├── 🔴 Runtime Risk Candidates
+│   ├── 🔴 action-resolver-engine.js - EXISTS_RUNTIME_RISK
+│   ├── 🔴 quick-action-executor-engine.js - EXISTS_RUNTIME_RISK
+│   ├── 🔴 quick-actions-engine.js - EXISTS_RUNTIME_RISK
+│   ├── 🔴 policy-operations/tasks/** - EXISTS_RUNTIME_RISK / task execution boundary required
+│   ├── 🔴 policy-operations/tasks/google-calendar-engine.js - EXISTS_RUNTIME_RISK / calendar boundary required
+│   └── 🔴 any send/task/calendar/action executor discovered - NOT APPROVED FOR RUNTIME
+│
+└── ⚫ No Runtime Authorization
+    ├── ⚫ Existing module does not equal approved runtime
+    ├── ⚫ Link generation is not message send
+    ├── ⚫ Prompt generation is not draft approval
+    ├── ⚫ Draft is not approved communication
+    ├── ⚫ Safety validation is not human approval
+    └── ⚫ Human approval remains mandatory
+~~~
+
 ## Non-Replacement Declaration
 
 - This unified tree does not replace the byte-preserved Genesis Build Tree.

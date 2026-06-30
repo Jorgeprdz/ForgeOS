@@ -489,3 +489,28 @@ Constitutional notes: Unknown is not zero. Generic filename evidence must not be
 - The unified semaforo Build Tree can classify probable ownership without claiming closure.
 - Root location is a migration/documentation concern, not deletion authority.
 - Unknown root engines need a review queue, not guessing.
+
+## Appendix B Reference
+
+Appendix 004B was created to extend this root-level placement inventory with an existing module capability inventory:
+
+- `docs/architecture/source-truth/FORGE_EXISTING_MODULE_CAPABILITY_INVENTORY_APPENDIX_004B.md`
+
+Appendix 004B:
+
+- Extends this 004 inventory.
+- Does not replace this 004 inventory.
+- Does not move files.
+- Does not refactor imports.
+- Does not execute runtime modules.
+- Does not approve runtime usage.
+- Documents delivery, message, prompt, draft, action/runtime-risk, candidate, prospect, advisor, manager, Nash, relationship, policy, product, compensation, revenue, and intelligence capabilities where detected.
+
+Boundary:
+
+- A detected capability does not equal implementation closure.
+- A detected capability does not equal approved runtime.
+- A detected capability does not equal source truth.
+- Link generation is not message send.
+- Prompt generation is not draft approval.
+- Human approval remains mandatory before action.

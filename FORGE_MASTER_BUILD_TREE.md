@@ -1,5 +1,25 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:FORGE_EXISTING_MODULE_CAPABILITY_INVENTORY_APPENDIX_STATUS:START -->
+## Forge Existing Module Capability Inventory Appendix 004B
+
+Status: CAPABILITY_INVENTORY_APPENDED
+
+- Existing module capability inventory completed from tracked files only.
+- Appendix 004B extends 004 and does not replace it.
+- Delivery, message, prompt, draft, action/runtime-risk, candidate, prospect, advisor, manager, Nash, relationship, policy, product, compensation, revenue, and intelligence capability surfaces were documented where detected.
+- Capability appendix: `docs/architecture/source-truth/FORGE_EXISTING_MODULE_CAPABILITY_INVENTORY_APPENDIX_004B.md`
+- 004 root-level placement inventory remains valid at `docs/architecture/source-truth/FORGE_ROOT_ENGINE_INVENTORY_AND_BUILDTREE_CROSSWALK_004.md`
+- No code moved.
+- No imports rewritten.
+- No runtime approved.
+- No runtime modules executed.
+- Detected capability does not equal closure.
+- Detected capability does not equal approved runtime.
+- Unknown remains unknown.
+
+<!-- FORGEOS:FORGE_EXISTING_MODULE_CAPABILITY_INVENTORY_APPENDIX_STATUS:END -->
+
 <!-- FORGEOS:FORGE_ROOT_ENGINE_INVENTORY_AND_BUILDTREE_CROSSWALK_STATUS:START -->
 ## Forge Root Engine Inventory and Build Tree Crosswalk 004
 
