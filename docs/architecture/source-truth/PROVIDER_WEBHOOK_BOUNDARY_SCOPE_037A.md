@@ -333,3 +333,18 @@ Audit / Persistence remains separate.
 SEMAFORO=PASS
 DECISION=PASS_037A_PROVIDER_WEBHOOK_BOUNDARY_SCOPE_READY_FOR_IMPLEMENTATION
 NEXT=037B_PROVIDER_WEBHOOK_BOUNDARY_IMPLEMENTATION
+
+<!-- BEGIN FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_IMPLEMENTATION_APPENDIX_037B -->
+## 037B Implementation Appendix
+
+- `037B_PROVIDER_WEBHOOK_BOUNDARY_IMPLEMENTATION` implemented Provider Webhook Boundary Contract.
+- External provider event candidate is not delivery truth.
+- Provider event read model candidate can be prepared.
+- Webhook listener registration remains false.
+- Provider API call remains false.
+- Delivery/message truth creation remains false.
+- UI / Read Model remains separate.
+- Audit / Persistence remains separate.
+- Unified Build Tree updated.
+- Next: `038A_UI_READ_MODEL_SCOPE`
+<!-- END FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_IMPLEMENTATION_APPENDIX_037B -->

@@ -990,3 +990,40 @@ GREEN PROVIDER WEBHOOK BOUNDARY / SCOPE
 `-- RED Webhook listener registration / webhook side effects / provider API calls / truth creation remain forbidden
 ```
 <!-- END FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_SCOPE_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+## PROVIDER WEBHOOK BOUNDARY / IMPLEMENTED
+
+```text
+GREEN PROVIDER WEBHOOK BOUNDARY / IMPLEMENTED
+|-- GREEN 037A Provider Webhook Boundary Scope Closed
+|-- GREEN 037B Provider Webhook Boundary Contract Implemented
+|   |-- GREEN External Dispatch snapshot required
+|   |-- GREEN Webhook event candidate required
+|   |-- GREEN Provider message reference required
+|   |-- GREEN Provider event type required
+|   |-- GREEN Signature verification required
+|   |-- GREEN Schema validation required
+|   |-- GREEN Replay protection and dedupe required
+|   |-- GREEN Webhook capability and policy required
+|   |-- GREEN Provider event read model candidate can be prepared
+|   `-- GREEN Delivery/message truth creation remains false
+|
+|-- BLUE Next Layer
+|   `-- BLUE 038A UI / Read Model Scope
+|
+`-- RED Still Forbidden
+    |-- RED Webhook listener registration
+    |-- RED Webhook side effects
+    |-- RED Provider API calls
+    |-- RED External API calls
+    |-- RED Delivery truth creation
+    |-- RED Message truth creation
+    |-- RED CRM mutation
+    |-- RED Automatic follow-up/retry
+    |-- RED Task/calendar auto-creation
+    |-- RED Compensation/revenue/payout truth
+    |-- RED Ranking/punishment/HR/personality truth
+    `-- RED Manipulation/surveillance
+```
+<!-- END FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
