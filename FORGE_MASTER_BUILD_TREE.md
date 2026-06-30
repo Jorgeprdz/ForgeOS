@@ -1,5 +1,29 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:NASH_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_STATUS:START -->
+## Nash Existing Engine Inventory and Purpose Discovery 005A
+
+Status: NASH_EXISTING_ENGINE_INVENTORY_DOCUMENTED
+
+- Nash existing engine inventory completed.
+- Nash engines were documented by purpose, observed inputs, observed outputs, dependencies, tests, risks, and future-use recommendation.
+- 103 Nash-related tracked paths were discovered by the approved pattern.
+- 22 Nash-related JS modules were inventoried as the primary engine/module set.
+- No Nash runtime executed.
+- No code moved or modified.
+- No tests modified.
+- Detected Nash module does not equal runtime approval.
+- Nash remains conversation intelligence, not automatic execution.
+- Nash support is not Nash runtime execution.
+- Next-best-action is not execution.
+- Message recommendation is not message send.
+
+Inventory: `docs/architecture/source-truth/NASH_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_005A.md`
+
+Certificate: `docs/evidence/NASH_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_CERTIFICATE_005A.md`
+
+<!-- FORGEOS:NASH_EXISTING_ENGINE_INVENTORY_AND_PURPOSE_DISCOVERY_STATUS:END -->
+
 <!-- FORGEOS:FORGE_EXISTING_MODULE_CAPABILITY_INVENTORY_APPENDIX_STATUS:START -->
 ## Forge Existing Module Capability Inventory Appendix 004B
 
