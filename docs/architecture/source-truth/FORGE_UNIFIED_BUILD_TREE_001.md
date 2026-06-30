@@ -1027,3 +1027,20 @@ GREEN PROVIDER WEBHOOK BOUNDARY / IMPLEMENTED
     `-- RED Manipulation/surveillance
 ```
 <!-- END FORGEOS:PROVIDER_WEBHOOK_BOUNDARY_IMPLEMENTATION_UNIFIED_STATUS -->
+
+<!-- BEGIN FORGEOS:UI_READ_MODEL_SCOPE_UNIFIED_STATUS -->
+## UI / READ MODEL BOUNDARY / SCOPE CLOSED
+
+```text
+GREEN UI / READ MODEL BOUNDARY / SCOPE
+|-- GREEN 038A UI / Read Model Boundary Scope Closed
+|-- GREEN UI read model candidate is not UI rendering truth
+|-- GREEN Read-only presentation model candidate scoped
+|-- GREEN Evidence, freshness, visibility, warnings, limitations scoped
+|-- GREEN UI rendering remains separate
+|-- GREEN Audit / Persistence remains separate
+|-- BLUE 038B UI / Read Model Boundary Implementation
+|-- BLUE Audit / Persistence Scope
+`-- RED UI rendering / dashboard creation / persistence / CRM mutation / truth creation remain forbidden
+```
+<!-- END FORGEOS:UI_READ_MODEL_SCOPE_UNIFIED_STATUS -->
