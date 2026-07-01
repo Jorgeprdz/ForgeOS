@@ -717,3 +717,14 @@ The Genesis Beta Loop Orchestrator boundary is implemented as safe orchestration
 
 Next recommended phase:
 - First real scenario fixture: Jorge follow-up to Maria after 15 days.
+
+# Genesis Beta Loop First Scenario Fixture Roadmap Status
+
+052B_GENESIS_BETA_LOOP_FIRST_SCENARIO_FIXTURE: GREEN / CLOSED.
+
+The first real scenario fixture is implemented:
+Jorge follows up with Maria after 15 days.
+
+Next recommended phase:
+- expand scenario fixtures for Andres/Juan and Lupita/Maria, or
+- scope Manager OS Genesis Beta Loop read model.

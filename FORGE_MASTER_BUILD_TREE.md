@@ -3030,3 +3030,28 @@ Evidence:
 - docs/architecture/source-truth/GENESIS_BETA_LOOP_ORCHESTRATOR_IMPLEMENTATION_CLOSURE_052A.md
 - docs/evidence/GENESIS_BETA_LOOP_ORCHESTRATOR_IMPLEMENTATION_CERTIFICATE_052A.md
 <!-- FORGEOS:GENESIS_BETA_LOOP_ORCHESTRATOR_IMPLEMENTATION_STATUS_052A:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_FIRST_SCENARIO_FIXTURE_052B:START -->
+## Genesis Beta Loop First Scenario Fixture 052B
+
+Status: CLOSED / SCENARIO FIXTURE IMPLEMENTED.
+
+052B adds the Jorge -> Maria 15-day follow-up scenario fixture.
+
+This proves the Genesis Beta Loop can represent:
+- protected context
+- Nash conversation angle
+- Mick timing/execution signal
+- NBA Reason Why
+- draft candidate
+- human approval requirement
+- delivery candidate preparation
+
+Boundary preserved:
+- no send
+- no runtime execution
+- no CRM/task/calendar write
+- no revenue/compensation/payout/lifecycle/HR/ranking/punishment truth
+- delivery candidate is not send
+- Send Execution Gate remains separate
+<!-- FORGEOS:GENESIS_BETA_LOOP_FIRST_SCENARIO_FIXTURE_052B:END -->

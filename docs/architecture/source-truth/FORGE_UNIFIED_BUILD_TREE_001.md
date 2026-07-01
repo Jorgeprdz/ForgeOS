@@ -1621,3 +1621,14 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- RED CRM/task/calendar writes
 |   `-- RED Revenue/compensation/payout/lifecycle/HR/ranking/punishment/personality truth
 <!-- FORGEOS:GENESIS_BETA_LOOP_ORCHESTRATOR_052A:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_FIRST_SCENARIO_FIXTURE_052B:START -->
+|-- GREEN 052B First Real Scenario Fixture - Jorge/Maria 15-Day Follow-up
+|   |-- GREEN Protected context represented
+|   |-- GREEN Nash conversation angle represented
+|   |-- GREEN Mick follow-up timing represented
+|   |-- GREEN NBA Reason Why represented
+|   |-- GREEN Human Approval required
+|   |-- GREEN Delivery candidate only
+|   `-- RED Send/runtime/truth mutation
+<!-- FORGEOS:GENESIS_BETA_LOOP_FIRST_SCENARIO_FIXTURE_052B:END -->
