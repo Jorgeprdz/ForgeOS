@@ -3289,3 +3289,29 @@ Evidence:
 - docs/architecture/source-truth/GENESIS_BETA_LOOP_UI_READ_MODEL_PREP_CLOSURE_052K.md
 - docs/evidence/GENESIS_BETA_LOOP_UI_READ_MODEL_PREP_CERTIFICATE_052K.md
 <!-- FORGEOS:GENESIS_BETA_LOOP_UI_READ_MODEL_PREP_052K:END -->
+
+<!-- FORGEOS:FORGE_ALIVE_GENESIS_BETA_LOOP_UI_RENDERING_SCOPE_052M:START -->
+## Forge Alive Genesis Beta Loop UI Rendering Scope 052M
+
+Status: CLOSED / UI RENDERING SCOPE DOCUMENTED.
+
+052M scopes the future Forge Alive UI rendering of Genesis Beta Loop UI read-model cards.
+
+Boundary preserved:
+- docs-only scope
+- no code or UI implementation
+- no frontend components
+- no engine or schema changes
+- no send or provider/LLM runtime execution
+- no CRM/task/calendar writes
+- no approval mutation or fake approval
+- no delivery preparation unlock
+- no payout/revenue/compensation/lifecycle/HR/ranking/punishment truth mutation
+- Article 0 consumed, not modified
+- Skynet unchanged
+- Constitution not rewritten
+
+Evidence:
+- docs/architecture/source-truth/FORGE_ALIVE_GENESIS_BETA_LOOP_UI_RENDERING_SCOPE_052M.md
+- docs/evidence/FORGE_ALIVE_GENESIS_BETA_LOOP_UI_RENDERING_SCOPE_CERTIFICATE_052M.md
+<!-- FORGEOS:FORGE_ALIVE_GENESIS_BETA_LOOP_UI_RENDERING_SCOPE_052M:END -->

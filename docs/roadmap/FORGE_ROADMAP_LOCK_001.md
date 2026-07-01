@@ -837,3 +837,16 @@ Constitution rewrite occurred. Message Safety Validator remains unchanged.
 
 Next recommended phase:
 - 052L Forge Alive UI Rendering Scope.
+
+# Forge Alive Genesis Beta Loop UI Rendering Scope Roadmap Status
+
+052M_FORGE_ALIVE_GENESIS_BETA_LOOP_UI_RENDERING_SCOPE: GREEN / CLOSED.
+
+Forge Alive Genesis Beta Loop UI Rendering Scope defines guidelines, boundaries, and safety constraints for rendering manager-facing card data.
+
+The rendering definitions cover: allowed/required/forbidden UI components, Article 0 UI requirements, and future implementation gates. No code changed. No UI was implemented.
+
+Article 0 remains active and unchanged. Skynet remains unchanged. No Constitution rewrite occurred.
+
+Next recommended phase:
+- 052N Forge Alive UI Rendering Implementation.

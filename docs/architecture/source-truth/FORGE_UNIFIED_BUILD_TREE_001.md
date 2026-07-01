@@ -1767,3 +1767,22 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- RED Revenue/compensation/payout/lifecycle/HR/ranking/punishment/personality truth
 |   `-- RED Skynet/Constitution/Article 0 text modification
 <!-- FORGEOS:GENESIS_BETA_LOOP_UI_READ_MODEL_PREP_052K:END -->
+
+<!-- FORGEOS:FORGE_ALIVE_GENESIS_BETA_LOOP_UI_RENDERING_SCOPE_052M:START -->
+|-- GREEN 052M Forge Alive Genesis Beta Loop UI Rendering Scope
+|   |-- GREEN Docs-only scope defined for UI rendering card guidelines
+|   |-- GREEN Allowed UI surfaces scoped: title, preview, evidence, reasoning, uncertainty, missing context, badges
+|   |-- GREEN Required UI warning labels scoped: Human final authority, Review only, Not approved, Not sendable, Delivery locked
+|   |-- GREEN Scenario-specific labels scoped: follow-up context, motivational context, motivation context
+|   |-- GREEN Forbidden UI elements scoped: no send, no approve, no task/calendar creation, no provider/LLM runtime
+|   |-- GREEN Article 0 UI guidelines and accessibility requirements specified
+|   |-- BLUE 052N Forge Alive UI Rendering Implementation
+|   |-- RED UI rendering or frontend component creation
+|   |-- RED Fake reviewer or fake approval
+|   |-- RED Delivery preparation unlock
+|   |-- RED Automatic send
+|   |-- RED Provider/LLM runtime execution
+|   |-- RED CRM/task/calendar writes
+|   |-- RED Revenue/compensation/payout/lifecycle/HR/ranking/punishment/personality truth
+|   `-- RED Skynet/Constitution/Article 0 text modification
+<!-- FORGEOS:FORGE_ALIVE_GENESIS_BETA_LOOP_UI_RENDERING_SCOPE_052M:END -->
