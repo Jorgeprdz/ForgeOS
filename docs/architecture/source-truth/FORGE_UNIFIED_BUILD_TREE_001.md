@@ -1632,3 +1632,14 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- GREEN Delivery candidate only
 |   `-- RED Send/runtime/truth mutation
 <!-- FORGEOS:GENESIS_BETA_LOOP_FIRST_SCENARIO_FIXTURE_052B:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_ADDITIONAL_SCENARIO_FIXTURES_052C:START -->
+|-- GREEN 052C Additional Genesis Beta Loop Scenario Fixtures
+|   |-- GREEN Andres/Juan bonus proximity represented
+|   |-- GREEN Candidate commission remains not payout truth
+|   |-- GREEN Lupita/Maria car goal represented
+|   |-- GREEN Training allowance context remains not compensation truth
+|   |-- GREEN Human approval required
+|   |-- GREEN Delivery candidate only
+|   `-- RED Send/runtime/truth mutation
+<!-- FORGEOS:GENESIS_BETA_LOOP_ADDITIONAL_SCENARIO_FIXTURES_052C:END -->

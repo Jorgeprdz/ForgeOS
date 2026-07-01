@@ -728,3 +728,15 @@ Jorge follows up with Maria after 15 days.
 Next recommended phase:
 - expand scenario fixtures for Andres/Juan and Lupita/Maria, or
 - scope Manager OS Genesis Beta Loop read model.
+
+# Genesis Beta Loop Additional Scenario Fixtures Roadmap Status
+
+052C_GENESIS_BETA_LOOP_ADDITIONAL_SCENARIO_FIXTURES: GREEN / CLOSED.
+
+Additional scenario fixtures are implemented:
+- Andres/Juan bonus proximity.
+- Lupita/Maria car goal.
+
+Next recommended phase:
+- Manager OS Genesis Beta Loop read model, or
+- Advisor OS Genesis scenario alignment.

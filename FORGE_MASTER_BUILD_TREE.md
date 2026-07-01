@@ -3055,3 +3055,22 @@ Boundary preserved:
 - delivery candidate is not send
 - Send Execution Gate remains separate
 <!-- FORGEOS:GENESIS_BETA_LOOP_FIRST_SCENARIO_FIXTURE_052B:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_ADDITIONAL_SCENARIO_FIXTURES_052C:START -->
+## Genesis Beta Loop Additional Scenario Fixtures 052C
+
+Status: CLOSED / SCENARIO FIXTURES IMPLEMENTED.
+
+052C adds:
+- Andres/Juan bonus proximity fixture.
+- Lupita/Maria car goal fixture.
+
+Boundary preserved:
+- candidate commission is not payout truth
+- training allowance context is not compensation truth
+- goal motivation is not guaranteed outcome
+- no send
+- no runtime execution
+- no CRM/task/calendar write
+- no revenue/compensation/payout/lifecycle/HR/ranking/punishment truth
+<!-- FORGEOS:GENESIS_BETA_LOOP_ADDITIONAL_SCENARIO_FIXTURES_052C:END -->
