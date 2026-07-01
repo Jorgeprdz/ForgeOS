@@ -8,6 +8,8 @@ const {
   buildGenesisBetaLoopOrchestrator,
   GENESIS_BETA_LOOP_STATUSES,
   GENESIS_BETA_LOOP_DECISIONS,
+  GENESIS_BETA_LOOP_ARTICLE_0_PRINCIPLE,
+  GENESIS_BETA_LOOP_ARTICLE_0_GATE,
 } = require("../genesis-beta-loop/genesis-beta-loop-orchestrator-boundary-contract");
 
 let passed = 0;
@@ -124,8 +126,11 @@ test("boundaries remain explicit", () => {
   assert.strictEqual(out.humanApprovalRequired, true);
   assert.strictEqual(out.deliveryCandidateOnly, true);
   assert.strictEqual(out.sendExecutionRequiredSeparately, true);
+  assert.strictEqual(out.notFinalAuthority, true);
+  assert.strictEqual(out.doesNotReplaceHumanResponsibility, true);
   assert.ok(out.boundaries.includes("Delivery candidate is not send"));
   assert.ok(out.boundaries.includes("Send Execution Gate remains separate"));
+  assert.ok(out.boundaries.includes("Forge is not final authority"));
 });
 
 test("missing adapters become warnings, not runtime execution", () => {
@@ -140,6 +145,66 @@ test("engine avoids forbidden runtime imports", () => {
   assert.ok(!/require\(['"](fs|child_process|http|https|net|dns|axios)['"]\)/.test(source));
   assert.ok(!/fetch\(|XMLHttpRequest|navigator\.sendBeacon|serviceWorker/.test(source));
   assert.ok(!source.includes("send-execution"));
+});
+
+test("Article 0 fields appear in Genesis Beta Loop output", () => {
+  const out = buildGenesisBetaLoopOrchestrator(validInput(), adapters());
+  assert.strictEqual(out.article0Status, "ARTICLE_0_ACTIVE");
+  assert.strictEqual(out.article0Principle, GENESIS_BETA_LOOP_ARTICLE_0_PRINCIPLE);
+  assert.strictEqual(out.article0Gate, GENESIS_BETA_LOOP_ARTICLE_0_GATE);
+  assert.strictEqual(out.strengthensHumanJudgment, true);
+  assert.strictEqual(out.dependencyRiskReviewed, true);
+  assert.strictEqual(out.finalAuthority, "HUMAN");
+  assert.strictEqual(out.forgeRole, "AUGMENTS_JUDGMENT");
+});
+
+test("Article 0 read model exposes evidence reasoning uncertainty and missing context", () => {
+  const input = validInput();
+  delete input.draftText;
+  const out = buildGenesisBetaLoopOrchestrator(input, adapters());
+  assert.strictEqual(out.reasoningVisible, true);
+  assert.strictEqual(out.uncertaintyVisible, true);
+  assert.strictEqual(out.evidenceVisible, true);
+  assert.strictEqual(out.missingContextVisible, true);
+  assert.ok(out.article0ReadModel.evidence.evidenceRefs.includes("ev-1"));
+  assert.ok(out.article0ReadModel.uncertainty.blockedStages.includes("DRAFT_REQUIRED"));
+  assert.ok(out.article0ReadModel.missingContext.signals.includes("blocked:DRAFT_REQUIRED"));
+  assert.strictEqual(out.article0ReadModel.reasoning.stageOutputsPreserved, true);
+});
+
+test("Article 0 requires human decision checkpoint and learning prompt", () => {
+  const out = buildGenesisBetaLoopOrchestrator(validInput(), adapters());
+  assert.strictEqual(out.humanDecisionCheckpointRequired, true);
+  assert.strictEqual(out.article0ReadModel.humanDecisionCheckpoint.required, true);
+  assert.ok(out.learningPrompt.includes("What evidence supports this?"));
+  assert.ok(out.learningPrompt.includes("What context is missing?"));
+  assert.ok(out.learningPrompt.includes("What would make this recommendation wrong?"));
+  assert.ok(out.learningPrompt.includes("What should the human decide before any communication?"));
+  assert.ok(out.learningPrompt.includes("What should the advisor or manager learn from this case?"));
+  assert.ok(out.judgmentDevelopmentPrompt.length >= 1);
+});
+
+test("Article 0 output does not become final authority or command", () => {
+  const out = buildGenesisBetaLoopOrchestrator(validInput(), adapters());
+  assert.strictEqual(out.finalAuthority, "HUMAN");
+  assert.strictEqual(out.notFinalAuthority, true);
+  assert.strictEqual(out.actionBoundary.notCommand, true);
+  assert.strictEqual(out.actionBoundary.notSend, true);
+  assert.strictEqual(out.actionBoundary.notDeliveryApproval, true);
+  assert.strictEqual(out.article0ReadModel.actionBoundary.forgeIsNotFinalAuthority, true);
+});
+
+test("Article 0 output preserves NOT_MODELED blocked and warning states", () => {
+  const input = validInput();
+  delete input.humanApproval;
+  const notModeledAdapters = adapters();
+  notModeledAdapters.nashMickNba = () => ({ status: "NOT_MODELED", warning: "payload alignment remains future work" });
+  const out = buildGenesisBetaLoopOrchestrator(input, notModeledAdapters);
+  assert.strictEqual(out.stages.nashMickNba.status, "NOT_MODELED");
+  assert.ok(out.blockedStages.includes("HUMAN_APPROVAL_REQUIRED"));
+  assert.ok(out.article0ReadModel.uncertainty.stageSignals.includes("nashMickNba: NOT_MODELED"));
+  assert.ok(out.article0ReadModel.uncertainty.blockedStages.includes("HUMAN_APPROVAL_REQUIRED"));
+  assert.strictEqual(out.sendsMessage, false);
 });
 
 for (const { name, fn } of tests) {

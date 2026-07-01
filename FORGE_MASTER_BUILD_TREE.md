@@ -22,6 +22,44 @@ Certificate: `docs/evidence/ARTICLE_0_RATIFICATION_CERTIFICATE_001.md`
 
 <!-- FORGEOS:ARTICLE_0_RATIFICATION_STATUS:END -->
 
+<!-- FORGEOS:GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_052E:START -->
+## Genesis Beta Loop Article 0 Alignment 052E
+
+Status: CLOSED / ARTICLE_0_READ_MODEL_ALIGNMENT_IMPLEMENTED.
+
+052E aligns Genesis Beta Loop outputs with ratified Article 0:
+"Forge exists to strengthen human judgment, not replace it."
+
+Implemented:
+- Article 0 status, principle, and gate visible in Genesis Beta Loop output.
+- Evidence, reasoning, uncertainty, and missing context visibility.
+- Human decision checkpoint required.
+- Learning and judgment-development prompts.
+- Explicit reminder that Forge is not final authority.
+- Explicit action boundary.
+- NOT_MODELED, blocked, and warning states remain visible.
+
+Boundary preserved:
+- Article 0 consumed, not modified.
+- Skynet unchanged.
+- no Skynet law modification.
+- no Constitution rewrite.
+- no send.
+- no provider/LLM runtime.
+- no CRM/task/calendar write.
+- no payout/revenue/compensation/lifecycle/HR/ranking truth.
+- 052F remains real adapter payload alignment.
+
+Evidence:
+- `manager-os/genesis-beta-loop/genesis-beta-loop-orchestrator-boundary-contract.js`
+- `manager-os/genesis-beta-loop/genesis-beta-loop-real-adapter-wiring.js`
+- `manager-os/tests/genesis-beta-loop-orchestrator-boundary-contract-master-test.js`
+- `manager-os/tests/genesis-beta-loop-real-adapter-wiring-master-test.js`
+- `docs/architecture/source-truth/GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_CLOSURE_052E.md`
+- `docs/evidence/GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_CERTIFICATE_052E.md`
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_052E:END -->
+
 <!-- FORGEOS:ARTICLE_0_CANDIDATE_LOCK_STATUS:START -->
 ## Article 0 Candidate Lock 001
 

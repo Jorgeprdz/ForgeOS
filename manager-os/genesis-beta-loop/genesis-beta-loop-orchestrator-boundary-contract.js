@@ -54,6 +54,26 @@ const FALSE_FLAGS = Object.freeze({
   createsPersonalityTruth: false,
 });
 
+const ARTICLE_0_PRINCIPLE = "Forge exists to strengthen human judgment, not replace it.";
+const ARTICLE_0_GATE = "Does this strengthen human judgment, or does it create dependency?";
+
+const ARTICLE_0_ALIGNMENT = Object.freeze({
+  article0Status: "ARTICLE_0_ACTIVE",
+  article0Principle: ARTICLE_0_PRINCIPLE,
+  article0Gate: ARTICLE_0_GATE,
+  strengthensHumanJudgment: true,
+  dependencyRiskReviewed: true,
+  finalAuthority: "HUMAN",
+  forgeRole: "AUGMENTS_JUDGMENT",
+  humanDecisionCheckpointRequired: true,
+  reasoningVisible: true,
+  uncertaintyVisible: true,
+  evidenceVisible: true,
+  missingContextVisible: true,
+  notFinalAuthority: true,
+  doesNotReplaceHumanResponsibility: true,
+});
+
 function clone(value) {
   return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
 }
@@ -81,6 +101,80 @@ function approvalAllowsDelivery(approval) {
   const text = JSON.stringify(approval || {});
   return text.includes("APPROVED_FOR_DELIVERY_PREPARATION") ||
     text.includes("APPROVE_FOR_DELIVERY_PREPARATION");
+}
+
+function collectStageSignals(stages) {
+  const signals = [];
+
+  for (const [stageName, stageValue] of Object.entries(stages || {})) {
+    const text = JSON.stringify(stageValue || {});
+    if (!stageValue) signals.push(`${stageName}: missing output`);
+    if (text.includes("NOT_MODELED")) signals.push(`${stageName}: NOT_MODELED`);
+    if (text.includes("BLOCKED")) signals.push(`${stageName}: BLOCKED`);
+    if (text.includes("REVIEW_REQUIRED")) signals.push(`${stageName}: REVIEW_REQUIRED`);
+    if (text.includes("UNKNOWN")) signals.push(`${stageName}: UNKNOWN`);
+  }
+
+  return unique(signals);
+}
+
+function buildArticle0ReadModel({ stages, blockedStages, warnings, evidenceRefs, sourceOwners, freshness }) {
+  const missingContext = unique([
+    ...((blockedStages || []).map((stage) => `blocked:${stage}`)),
+    ...((warnings || []).map((warning) => `warning:${warning}`)),
+  ]);
+  const uncertaintySignals = collectStageSignals(stages);
+
+  return {
+    ...ARTICLE_0_ALIGNMENT,
+    evidence: {
+      evidenceRefs: evidenceRefs || [],
+      sourceOwners: sourceOwners || [],
+      freshness: freshness || "UNKNOWN",
+      evidenceVisible: true,
+    },
+    reasoning: {
+      reasoningVisible: true,
+      stageReasoningAvailable: true,
+      stageOutputsPreserved: true,
+      notModeledStatesPreserved: true,
+    },
+    uncertainty: {
+      uncertaintyVisible: true,
+      blockedStages: blockedStages || [],
+      warnings: warnings || [],
+      stageSignals: uncertaintySignals,
+      freshness: freshness || "UNKNOWN",
+    },
+    missingContext: {
+      missingContextVisible: true,
+      signals: missingContext,
+    },
+    humanDecisionCheckpoint: {
+      required: true,
+      prompt: "Human must review evidence, missing context, uncertainty, and action boundary before any communication or delivery preparation.",
+    },
+    learningPrompt: [
+      "What evidence supports this?",
+      "What context is missing?",
+      "What would make this recommendation wrong?",
+      "What should the human decide before any communication?",
+      "What should the advisor or manager learn from this case?",
+    ],
+    judgmentDevelopmentPrompt: [
+      "Explain the reasoning in your own words before acting.",
+      "Name the uncertainty that still needs human judgment.",
+      "Identify which criterion should improve for the next case.",
+    ],
+    actionBoundary: {
+      outputIsReviewContextOnly: true,
+      notCommand: true,
+      notSend: true,
+      notDeliveryApproval: true,
+      sendRequiresSeparateGate: true,
+      forgeIsNotFinalAuthority: true,
+    },
+  };
 }
 
 function buildGenesisBetaLoopOrchestrator(input = {}, adapters = {}) {
@@ -191,7 +285,31 @@ function buildGenesisBetaLoopOrchestrator(input = {}, adapters = {}) {
     humanApprovalRequired: true,
     deliveryCandidateOnly: true,
     sendExecutionRequiredSeparately: true,
+    ...ARTICLE_0_ALIGNMENT,
+    learningPrompt: [
+      "What evidence supports this?",
+      "What context is missing?",
+      "What would make this recommendation wrong?",
+      "What should the human decide before any communication?",
+      "What should the advisor or manager learn from this case?",
+    ],
+    judgmentDevelopmentPrompt: [
+      "Explain the reasoning in your own words before acting.",
+      "Name the uncertainty that still needs human judgment.",
+      "Identify which criterion should improve for the next case.",
+    ],
+    actionBoundary: {
+      outputIsReviewContextOnly: true,
+      notCommand: true,
+      notSend: true,
+      notDeliveryApproval: true,
+      sendRequiresSeparateGate: true,
+      forgeIsNotFinalAuthority: true,
+    },
     boundaries: [
+      "Article 0: Forge exists to strengthen human judgment, not replace it",
+      "Article 0 Gate: Does this strengthen human judgment, or does it create dependency?",
+      "Forge is not final authority",
       "Forge decides; AI explains",
       "Prompt is not draft",
       "Draft is not approved communication",
@@ -203,6 +321,15 @@ function buildGenesisBetaLoopOrchestrator(input = {}, adapters = {}) {
     ],
     ...FALSE_FLAGS,
   };
+
+  output.article0ReadModel = buildArticle0ReadModel({
+    stages,
+    blockedStages: output.blockedStages,
+    warnings: output.warnings,
+    evidenceRefs,
+    sourceOwners,
+    freshness,
+  });
 
   if (JSON.stringify(before) !== JSON.stringify(input)) {
     throw new Error("Genesis Beta Loop Orchestrator mutated input");
@@ -216,4 +343,6 @@ module.exports = {
   GENESIS_BETA_LOOP_STAGES: STAGES,
   GENESIS_BETA_LOOP_STATUSES: STATUSES,
   GENESIS_BETA_LOOP_DECISIONS: DECISIONS,
+  GENESIS_BETA_LOOP_ARTICLE_0_PRINCIPLE: ARTICLE_0_PRINCIPLE,
+  GENESIS_BETA_LOOP_ARTICLE_0_GATE: ARTICLE_0_GATE,
 };

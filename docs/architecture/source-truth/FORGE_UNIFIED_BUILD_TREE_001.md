@@ -1673,3 +1673,18 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- GREEN Boundary flags visible
 |   `-- RED Send/runtime/truth mutation
 <!-- FORGEOS:GENESIS_BETA_LOOP_REAL_ADAPTER_WIRING_052D:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_052E:START -->
+|-- GREEN 052E Genesis Beta Loop Article 0 Alignment
+|   |-- GREEN Ratified Article 0 consumed, not modified
+|   |-- GREEN Human judgment strengthening fields visible
+|   |-- GREEN Evidence/reasoning/uncertainty/missing context visible
+|   |-- GREEN Human decision checkpoint required
+|   |-- GREEN Learning and judgment-development prompts visible
+|   |-- GREEN Forge is not final authority
+|   |-- GREEN NOT_MODELED/block/warning states remain visible
+|   |-- BLUE 052F Real Adapter Payload Alignment
+|   |-- RED Skynet law modification
+|   |-- RED Constitution rewrite
+|   `-- RED Send/runtime/truth mutation
+<!-- FORGEOS:GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_052E:END -->

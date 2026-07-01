@@ -88,6 +88,32 @@ test("real response table output is markdown and includes stages", () => {
   assert.ok(table.includes("humanApprovalGate"));
 });
 
+test("real response includes Article 0 read-model alignment", () => {
+  const response = buildGenesisBetaLoopRealResponse(buildJorgeMariaFollowup15DaysFixture());
+  assert.strictEqual(response.output.article0Status, "ARTICLE_0_ACTIVE");
+  assert.strictEqual(response.output.article0Principle, "Forge exists to strengthen human judgment, not replace it.");
+  assert.strictEqual(response.output.article0Gate, "Does this strengthen human judgment, or does it create dependency?");
+  assert.strictEqual(response.output.finalAuthority, "HUMAN");
+  assert.strictEqual(response.output.forgeRole, "AUGMENTS_JUDGMENT");
+  assert.strictEqual(response.output.humanDecisionCheckpointRequired, true);
+  assert.strictEqual(response.output.reasoningVisible, true);
+  assert.strictEqual(response.output.uncertaintyVisible, true);
+  assert.strictEqual(response.output.evidenceVisible, true);
+  assert.strictEqual(response.output.missingContextVisible, true);
+  assert.ok(response.output.article0ReadModel.learningPrompt.includes("What evidence supports this?"));
+});
+
+test("real response table renders Article 0 alignment fields", () => {
+  const table = buildGenesisBetaLoopRealResponseTables(buildJorgeMariaFollowup15DaysFixture());
+  assert.ok(table.includes("article0Status"));
+  assert.ok(table.includes("ARTICLE_0_ACTIVE"));
+  assert.ok(table.includes("article0Gate"));
+  assert.ok(table.includes("finalAuthority"));
+  assert.ok(table.includes("learningPrompt"));
+  assert.ok(table.includes("judgmentDevelopmentPrompt"));
+  assert.ok(table.includes("actionBoundary"));
+});
+
 test("real wiring preserves delivery candidate and send separation", () => {
   const response = buildGenesisBetaLoopRealResponse(buildJorgeMariaFollowup15DaysFixture());
   assert.strictEqual(response.output.humanApprovalRequired, true);
