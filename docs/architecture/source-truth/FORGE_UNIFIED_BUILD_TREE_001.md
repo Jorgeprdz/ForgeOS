@@ -24,6 +24,26 @@ Purpose: combine Genesis product intent, current implementation truth, and const
 ~~~text
 FORGE OS UNIFIED BUILD TREE 001
 
+🟢 00 ARTICLE 0 / HUMAN JUDGMENT GOVERNANCE
+│
+├── 🟢 Article 0 Candidate Lock
+│   ├── 🟢 Status: CANDIDATE_LOCKED / NOT_RATIFIED
+│   ├── 🟢 Forge exists to strengthen human judgment, not replace it
+│   ├── 🟢 Article 0 Gate: strengthen human judgment or create dependency?
+│   ├── 🟢 Mandatory HOLD for dependency risk
+│   └── 🟢 Future ratification requires explicit user approval
+│
+├── 🟢 Relationship To Governance
+│   ├── 🟢 Article 0 -> Forge Constitution -> Skynet -> Intelligence Systems
+│   ├── 🟢 Article 0 asks what Skynet is protecting
+│   └── 🟢 New intelligence work must show reasoning, evidence, and human checkpoint
+│
+└── 🔴 Still Forbidden
+    ├── 🔴 no Skynet modification
+    ├── 🔴 no Constitution ratification
+    ├── 🔴 no ratification by accident
+    └── 🔴 no intelligence dependency pattern
+
 🟡 01 FORGE GENESIS / SIGNAL TO MESSAGE OPERATING LAYER
 │
 ├── 🟢 Protected Context Foundation

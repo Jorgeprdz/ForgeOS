@@ -1,5 +1,28 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:ARTICLE_0_CANDIDATE_LOCK_STATUS:START -->
+## Article 0 Candidate Lock 001
+
+Status: CANDIDATE_LOCKED / NOT_RATIFIED
+
+- Article 0 candidate wording is locked as governance source-truth:
+  "Forge exists to strengthen human judgment, not replace it."
+- Article 0 remains a candidate and is not ratified.
+- Future ratification requires explicit user approval.
+- Article 0 sits conceptually above Forge Constitution, Skynet, and Intelligence Systems.
+- Article 0 Gate: "Does this strengthen human judgment, or does it create dependency?"
+- Mandatory HOLD: if a feature gives answers without teaching reasoning, hides uncertainty, removes human responsibility, or increases dependency, hold for Article 0 review.
+- Genesis Beta Loop outputs must preserve evidence, reasoning, missing evidence, human decision checkpoint, and learning/criterion development.
+- no Skynet modification.
+- no Constitution ratification.
+- No code, engine, UI, schema, runtime, or product behavior changed.
+
+Source-truth lock: `docs/architecture/source-truth/ARTICLE_0_CANDIDATE_LOCK_001.md`
+
+Certificate: `docs/evidence/ARTICLE_0_CANDIDATE_LOCK_CERTIFICATE_001.md`
+
+<!-- FORGEOS:ARTICLE_0_CANDIDATE_LOCK_STATUS:END -->
+
 <!-- FORGEOS:HUMAN_APPROVAL_GATE_IMPLEMENTATION_STATUS:START -->
 ## Human Approval Gate Implementation 029B
 

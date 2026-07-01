@@ -17,6 +17,13 @@ This roadmap is derived from the unified semaforo Build Tree. It is a planning/s
 ## 1. Current Forge Operating Status
 
 ~~~text
+🟢 Article 0 candidate governance locked
+├── 🟢 Status: CANDIDATE_LOCKED / NOT_RATIFIED
+├── 🟢 Forge exists to strengthen human judgment, not replace it
+├── 🟢 Article 0 Gate: strengthen human judgment or create dependency?
+├── 🔴 no Skynet modification
+└── 🔴 no Constitution ratification
+
 🟢 Genesis original preserved
 ├── 🟢 Byte-exact historical vision preserved
 ├── 🟢 Historical Genesis tree remains product-intent source
