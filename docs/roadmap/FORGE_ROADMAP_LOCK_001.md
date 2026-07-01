@@ -771,3 +771,18 @@ rewrite occurred.
 
 Next recommended phase:
 - 052F Genesis Beta Loop real adapter payload alignment.
+
+# Genesis Beta Loop Real Adapter Payload Alignment Roadmap Status
+
+052F_GENESIS_BETA_LOOP_REAL_ADAPTER_PAYLOAD_ALIGNMENT: GREEN / CLOSED.
+
+Genesis Beta Loop real adapter payloads now use contract-valid keys and allowed
+`requestedUse` values for real closed modules. Avoidable `NOT_MODELED` states are
+removed from valid mapped stages while real safety and human approval blocks
+remain visible.
+
+Article 0 read-model alignment is preserved. Skynet remains unchanged. No
+Constitution rewrite occurred.
+
+Next recommended phase:
+- Downstream delivery/send work only through separately scoped gates.

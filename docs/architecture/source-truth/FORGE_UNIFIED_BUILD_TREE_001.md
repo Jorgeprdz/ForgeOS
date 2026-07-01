@@ -1688,3 +1688,20 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- RED Constitution rewrite
 |   `-- RED Send/runtime/truth mutation
 <!-- FORGEOS:GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_052E:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_REAL_ADAPTER_PAYLOAD_ALIGNMENT_052F:START -->
+|-- GREEN 052F Genesis Beta Loop Real Adapter Payload Alignment
+|   |-- GREEN Real adapter payload keys aligned to existing module contracts
+|   |-- GREEN Allowed requestedUse values used per contract
+|   |-- GREEN Nash/Mick NBA, Prompt Builder, Draft Intake, and Safety Validator avoid unnecessary NOT_MODELED for valid scenarios
+|   |-- GREEN Evidence/source owner/freshness preserved through pipeline
+|   |-- GREEN Article 0 judgment-development read model preserved
+|   |-- GREEN Human Approval Gate remains required
+|   |-- GREEN Delivery remains blocked unless approval unlocks delivery preparation
+|   |-- BLUE Downstream delivery/send work remains separately gated
+|   |-- RED Automatic send
+|   |-- RED Provider/LLM runtime execution
+|   |-- RED CRM/task/calendar writes
+|   |-- RED Revenue/compensation/payout/lifecycle/HR/ranking/punishment/personality truth
+|   `-- RED Skynet/Constitution/Article 0 text modification
+<!-- FORGEOS:GENESIS_BETA_LOOP_REAL_ADAPTER_PAYLOAD_ALIGNMENT_052F:END -->

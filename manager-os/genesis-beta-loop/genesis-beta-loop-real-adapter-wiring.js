@@ -18,8 +18,8 @@ const MODULE_SPECS = Object.freeze({
   nashMickNba: {
     path: "../nba/nash-mick-nba-reconnection-engine",
     names: [
-      "buildNashMickNbaReconnectionEngine",
       "buildNashMickNbaReconnection",
+      "buildNashMickNbaReconnectionEngine",
       "buildNashMickNbaReconnectionBoundary",
       "reconnectNashMickNba",
     ],
@@ -35,6 +35,7 @@ const MODULE_SPECS = Object.freeze({
   draftIntake: {
     path: "../message-generation/llm-draft-intake-boundary-contract",
     names: [
+      "intakeLlmDraftForSafetyReview",
       "buildLlmDraftIntakeBoundary",
       "buildLlmDraftIntake",
       "buildDraftIntakeBoundary",
@@ -43,6 +44,7 @@ const MODULE_SPECS = Object.freeze({
   safetyValidator: {
     path: "../message-generation/message-safety-validator",
     names: [
+      "validateMessageDraftSafety",
       "validateMessageSafety",
       "buildMessageSafetyValidator",
       "buildMessageSafetyValidation",
@@ -83,6 +85,15 @@ const FALSE_FLAGS = Object.freeze({
   createsRankingTruth: false,
   createsPunishmentTruth: false,
   createsPersonalityTruth: false,
+});
+
+const REQUESTED_USES = Object.freeze({
+  nashMickNba: "FOLLOWUP_REASON_WHY",
+  promptBuilder: "FOLLOW_UP_PROMPT_PREP",
+  draftIntake: "LLM_DRAFT_INTAKE",
+  safetyValidator: "SAFETY_REVIEW_PREP",
+  humanApprovalGate: "MESSAGE_DELIVERY_PREP_REVIEW",
+  deliveryAdapter: "WHATSAPP_LINK_PREP",
 });
 
 function safeRequire(modulePath) {
@@ -128,6 +139,7 @@ function inspectGenesisBetaLoopRealAdapters() {
     diagnostics[stage] = {
       stage,
       modulePath: spec.path,
+      requestedUse: REQUESTED_USES[stage],
       moduleLoaded: true,
       functionFound: typeof picked.fn === "function",
       exportName: picked.exportName,
@@ -138,72 +150,187 @@ function inspectGenesisBetaLoopRealAdapters() {
   return diagnostics;
 }
 
+function present(value) {
+  return value !== undefined && value !== null && value !== "";
+}
+
+function asArray(value) {
+  if (!present(value)) return [];
+  return Array.isArray(value) ? value.filter(present) : [value].filter(present);
+}
+
+function unique(values) {
+  return [...new Set(asArray(values).flat().filter(present))];
+}
+
+function evidenceFields(input) {
+  return {
+    evidenceRefs: unique(input.evidenceRefs),
+    sourceEvidenceIds: unique(input.sourceEvidenceIds),
+    sourceOwners: unique(input.sourceOwners),
+    freshness: input.freshness || "UNKNOWN",
+    period: input.period || null,
+  };
+}
+
+function sourceEvidence(input) {
+  const evidence = evidenceFields(input);
+  return {
+    evidenceRefs: evidence.evidenceRefs,
+    sourceEvidenceIds: evidence.sourceEvidenceIds,
+    sourceOwners: evidence.sourceOwners,
+    freshness: evidence.freshness,
+  };
+}
+
+function requestedUseFor(input, stage) {
+  return (input.requestedUses && input.requestedUses[stage]) || REQUESTED_USES[stage];
+}
+
+function normalizePersonType(value) {
+  if (!value) return "prospect";
+  return String(value).toLowerCase();
+}
+
+function targetPerson(input) {
+  return input.targetPerson || (input.protectedContext && input.protectedContext.targetPerson) || {};
+}
+
+function actorIds(input) {
+  const actor = input.actor || {};
+  const person = targetPerson(input);
+  return {
+    advisorId: input.advisorId || actor.advisorId || null,
+    managerId: input.managerId || actor.managerId || null,
+    personId: input.personId || person.personId || person.id || null,
+    personType: normalizePersonType(input.personType || person.personType || person.type),
+  };
+}
+
+function channelCandidate(input) {
+  const delivery = input.delivery || {};
+  return delivery.channelCandidate || {
+    channel: delivery.channel || input.channel || "whatsapp",
+    recipientDestination: delivery.recipientDestination || null,
+    deliveryCapability: "DELIVERY_PREPARATION_ONLY",
+  };
+}
+
+function approvalInput(input) {
+  const approval = input.humanApproval || {};
+  return {
+    approvalRequestId: approval.approvalRequestId || input.approvalRequestId || null,
+    reviewerId: approval.reviewerId || approval.reviewer || null,
+    reviewerRole: approval.reviewerRole || null,
+    reviewerType: approval.reviewerType || null,
+    approvalAction: approval.approvalAction || approval.action || "REQUEST_REVIEW",
+    artifactHash: approval.artifactHash || null,
+    currentArtifactHash: approval.currentArtifactHash || approval.artifactHash || null,
+    approvedArtifactHash: approval.approvedArtifactHash || null,
+    warningsVisible: approval.warningsVisible,
+    warningsAcknowledged: approval.warningsAcknowledged,
+    limitationsVisible: approval.limitationsVisible,
+    limitationsAcknowledged: approval.limitationsAcknowledged,
+    createdAt: approval.createdAt || input.createdAt || null,
+    reviewedAt: approval.reviewedAt || null,
+    expiresAt: approval.expiresAt || null,
+    now: approval.now || input.now || null,
+  };
+}
+
 function buildPayloads(input, priorStages = {}) {
-  const evidenceRefs = input.evidenceRefs || [];
-  const sourceOwners = input.sourceOwners || [];
-  const freshness = input.freshness || "UNKNOWN";
+  const evidence = evidenceFields(input);
+  const source = sourceEvidence(input);
+  const ids = actorIds(input);
+  const person = targetPerson(input);
+  const approval = approvalInput(input);
 
   return {
     nashMickNba: {
+      ...ids,
+      period: evidence.period,
       protectedContext: input.protectedContext,
-      nashContext: input.nashContext,
-      mickContext: input.mickContext,
-      nbaContext: input.nbaContext,
-      recommendedAction: input.nbaContext && input.nbaContext.recommendedAction,
-      targetPerson: input.targetPerson || (input.protectedContext && input.protectedContext.targetPersonName),
-      reasonWhy: input.nbaContext && input.nbaContext.reasonWhy,
-      evidenceRefs,
-      sourceOwners,
-      freshness,
-      requestedUse: "genesis_beta_loop_real_adapter_wiring",
+      relationshipContext: input.relationshipContext || input.protectedContext || {},
+      activityContext: input.activityContext || input.mickContext || {},
+      followupContext: {
+        ...(input.followupContext || {}),
+        ...(input.nbaContext || {}),
+        targetPerson: person,
+      },
+      nashConversationContext: input.nashConversationContext || input.nashContext || {},
+      nashCombatContext: input.nashCombatContext || {},
+      mickBehaviorContext: input.mickBehaviorContext || input.mickContext || {},
+      goalContext: input.goalContext || null,
+      compensationCandidateContext: input.compensationCandidateContext || null,
+      forecastContext: input.forecastContext || null,
+      sourceEvidence: source,
+      requestedUse: requestedUseFor(input, "nashMickNba"),
     },
     promptBuilder: {
       managerContext: input.protectedContext || {},
-      nashContext: input.nashContext || {},
+      nashConversationContext: input.nashConversationContext || input.nashContext || {},
       nbaReasonWhy: priorStages.nashMickNba || input.nbaContext || {},
-      purpose: "genesis_beta_loop_message_instruction",
-      audienceType: "prospect_or_candidate",
-      evidenceRefs,
-      sourceOwners,
-      freshness,
-      requestedUse: "message_prompt_instruction",
+      messagePurpose: input.messagePurpose || "FOLLOW_UP",
+      audienceType: input.audienceType || ids.personType || "prospect",
+      evidenceRefs: evidence.evidenceRefs,
+      sourceEvidenceIds: evidence.sourceEvidenceIds,
+      sourceOwners: evidence.sourceOwners,
+      freshness: evidence.freshness,
+      period: evidence.period,
+      requestedUse: requestedUseFor(input, "promptBuilder"),
     },
     draftIntake: {
       draftText: input.draftText,
+      draftPurpose: input.draftPurpose || "FOLLOW_UP",
+      audienceType: input.audienceType || ids.personType || "prospect",
       promptContext: priorStages.promptBuilder || {},
-      evidenceRefs,
-      sourceOwners,
-      freshness,
-      requestedUse: "draft_intake_for_human_review",
+      evidenceRefs: evidence.evidenceRefs,
+      sourceEvidenceIds: evidence.sourceEvidenceIds,
+      sourceOwners: evidence.sourceOwners,
+      freshness: evidence.freshness,
+      period: evidence.period,
+      requestedUse: requestedUseFor(input, "draftIntake"),
     },
     safetyValidator: {
+      draftIntake: priorStages.draftIntake || {},
       draftText: input.draftText,
-      draftContext: priorStages.draftIntake || {},
+      draftPurpose: input.draftPurpose || "FOLLOW_UP",
+      audienceType: input.audienceType || ids.personType || "prospect",
       promptContext: priorStages.promptBuilder || {},
-      evidenceRefs,
-      sourceOwners,
-      freshness,
-      requestedUse: "message_safety_validation",
+      evidenceRefs: evidence.evidenceRefs,
+      sourceEvidenceIds: evidence.sourceEvidenceIds,
+      sourceOwners: evidence.sourceOwners,
+      freshness: evidence.freshness,
+      period: evidence.period,
+      requestedUse: requestedUseFor(input, "safetyValidator"),
     },
     humanApprovalGate: {
-      ...(input.humanApproval || {}),
-      artifact: input.draftText,
-      safetyValidation: priorStages.safetyValidator || {},
-      evidenceRefs,
-      sourceOwners,
-      freshness,
-      requestedUse: "human_approval_for_delivery_preparation",
+      ...ids,
+      ...approval,
+      channelCandidate: channelCandidate(input),
+      approvalSurface: input.approvalSurface || "GENESIS_BETA_LOOP",
+      nbaReasonWhySnapshot: priorStages.nashMickNba || null,
+      promptInstructionSnapshot: priorStages.promptBuilder || null,
+      draftCandidateSnapshot: {
+        draftText: input.draftText || null,
+        draftPurpose: input.draftPurpose || "FOLLOW_UP",
+      },
+      safetyValidationSnapshot: priorStages.safetyValidator || null,
+      sourceEvidence: source,
+      warnings: (priorStages.safetyValidator && priorStages.safetyValidator.warnings) || [],
+      limitations: (priorStages.safetyValidator && priorStages.safetyValidator.confidenceLimitations) || [],
+      requestedUse: requestedUseFor(input, "humanApprovalGate"),
     },
     deliveryAdapter: {
       ...(input.delivery || {}),
-      approvedArtifact: input.draftText,
-      humanApproval: priorStages.humanApprovalGate || {},
-      channel: (input.delivery && input.delivery.channel) || input.channel || "whatsapp",
-      recipientDestination: input.delivery && input.delivery.recipientDestination,
-      evidenceRefs,
-      sourceOwners,
-      freshness,
-      requestedUse: "delivery_candidate_preparation",
+      humanApprovalSnapshot: priorStages.humanApprovalGate || {},
+      approvedText: priorStages.humanApprovalGate && priorStages.humanApprovalGate.approvedText,
+      approvedArtifactHash: priorStages.humanApprovalGate && priorStages.humanApprovalGate.approvedArtifactHash,
+      currentArtifactHash: approval.currentArtifactHash,
+      channelCandidate: channelCandidate(input),
+      safetyValidationSnapshot: priorStages.safetyValidator || null,
+      sourceEvidence: [source],
+      requestedUse: requestedUseFor(input, "deliveryAdapter"),
     },
   };
 }

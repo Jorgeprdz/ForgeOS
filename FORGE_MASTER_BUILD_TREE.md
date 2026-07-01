@@ -3174,3 +3174,39 @@ Boundary preserved:
 - delivery candidate is not send
 - Send Execution Gate remains separate
 <!-- FORGEOS:GENESIS_BETA_LOOP_REAL_ADAPTER_WIRING_052D:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_052E:START -->
+## Genesis Beta Loop Article 0 Alignment 052E
+
+Status: CLOSED / ARTICLE 0 READ MODEL ALIGNMENT IMPLEMENTED.
+
+052E aligns Genesis Beta Loop outputs with ratified Article 0.
+
+Boundary preserved:
+- Article 0 consumed, not modified
+- Skynet unchanged
+- Constitution not rewritten
+- evidence/reasoning/uncertainty/missing context visible
+- human decision checkpoint required
+- Forge is not final authority
+- no send/runtime/truth mutation
+<!-- FORGEOS:GENESIS_BETA_LOOP_ARTICLE_0_ALIGNMENT_052E:END -->
+
+<!-- FORGEOS:GENESIS_BETA_LOOP_REAL_ADAPTER_PAYLOAD_ALIGNMENT_052F:START -->
+## Genesis Beta Loop Real Adapter Payload Alignment 052F
+
+Status: CLOSED / REAL ADAPTER PAYLOAD ALIGNMENT IMPLEMENTED.
+
+052F aligns Genesis Beta Loop real adapter payloads and `requestedUse` values with existing closed module contracts.
+
+Boundary preserved:
+- no send
+- no provider runtime
+- no LLM runtime execution
+- no CRM/task/calendar write
+- no revenue/compensation/payout/lifecycle/HR/ranking/punishment/personality truth
+- Article 0 read-model alignment preserved
+- Skynet unchanged
+- Constitution not rewritten
+- remaining blocks stay visible when safety or human approval requirements are unmet
+<!-- FORGEOS:GENESIS_BETA_LOOP_REAL_ADAPTER_PAYLOAD_ALIGNMENT_052F:END -->
