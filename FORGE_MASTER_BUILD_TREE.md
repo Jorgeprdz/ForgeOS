@@ -3743,3 +3743,16 @@ Evidence:
 - no live search or runtime execution
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Command Orb Timing Slowdown Tuning 053W
+
+053W slightly slows the orb-to-pill expansion and result reveal.
+
+- pill expansion increased to 680ms
+- input/control reveal delay increased
+- result reveal delay increased
+- orb exit remains responsive
+- reduced-motion fallback preserved
+- no live search or runtime execution
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged
