@@ -1877,3 +1877,14 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- RED approval/send/runtime/truth mutation
 |   `-- BLUE 053F Smart Widget Stack Visual Output Review
 <!-- FORGEOS:SMART_WIDGET_STACK_VISUAL_QA_TUNING_053E:END -->
+
+<!-- FORGEOS:SMART_WIDGET_STACK_SWIPE_CAROUSEL_TUNING_053G:START -->
+|-- GREEN 053G Forge Alive Smart Widget Stack Swipe Carousel Tuning
+|   |-- GREEN Preview v053G visible
+|   |-- GREEN Context pills replaced by swipe carousel
+|   |-- GREEN Dot indicators show carousel position
+|   |-- GREEN Query context support remains only as initial deep link
+|   |-- GREEN Article 0 and read-only safety labels remain visible
+|   |-- RED approval/send/runtime/truth mutation
+|   `-- BLUE 053H Smart Widget Stack Carousel Output Review
+<!-- FORGEOS:SMART_WIDGET_STACK_SWIPE_CAROUSEL_TUNING_053G:END -->

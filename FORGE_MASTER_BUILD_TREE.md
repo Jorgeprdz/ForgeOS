@@ -3498,3 +3498,28 @@ Evidence:
 - docs/architecture/source-truth/FORGE_ALIVE_SMART_WIDGET_STACK_VISUAL_QA_TUNING_CLOSURE_053E.md
 - docs/evidence/FORGE_ALIVE_SMART_WIDGET_STACK_VISUAL_QA_TUNING_CERTIFICATE_053E.md
 <!-- FORGEOS:SMART_WIDGET_STACK_VISUAL_QA_TUNING_053E:END -->
+
+<!-- FORGEOS:SMART_WIDGET_STACK_SWIPE_CAROUSEL_TUNING_053G:START -->
+## Forge Alive Smart Widget Stack Swipe Carousel Tuning 053G
+
+Status: CLOSED / STATIC_PREVIEW_CAROUSEL_TUNED.
+
+053G replaces Smart Widget Stack context pills with a swipe carousel and dot indicators.
+
+Boundary:
+- static preview only
+- Preview v053G visible
+- swipe carousel contexts
+- dot indicators
+- no context buttons
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged
+- Skynet unchanged
+
+Evidence:
+- docs/static-preview/forge-alive/index.html
+- docs/static-preview/forge-alive/styles.css
+- docs/static-preview/forge-alive/smart-widget-stack.js
+- docs/architecture/source-truth/FORGE_ALIVE_SMART_WIDGET_STACK_SWIPE_CAROUSEL_TUNING_CLOSURE_053G.md
+- docs/evidence/FORGE_ALIVE_SMART_WIDGET_STACK_SWIPE_CAROUSEL_TUNING_CERTIFICATE_053G.md
+<!-- FORGEOS:SMART_WIDGET_STACK_SWIPE_CAROUSEL_TUNING_053G:END -->

@@ -1,4 +1,4 @@
-import { forgeAliveSmartWidgetStackPreview } from "./smart-widget-stack-data.js?v=053E";
+import { forgeAliveSmartWidgetStackPreview } from "./smart-widget-stack-data.js?v=053G";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -17,18 +17,17 @@ function familyLabel(value) {
     .toLowerCase();
 }
 
-function pickContext() {
+function initialContextIndex(contexts) {
   const requested = params.get("context");
-  const contexts = forgeAliveSmartWidgetStackPreview.contexts;
   if (requested) {
-    const match = contexts.find((context) => context.id === requested);
-    if (match) return match;
+    const match = contexts.findIndex((context) => context.id === requested);
+    if (match >= 0) return match;
   }
 
   const hour = new Date().getHours();
-  if (hour >= 15) return contexts.find((context) => context.id === "four-pm-review");
-  if (hour >= 7 && hour <= 10) return contexts.find((context) => context.id === "morning-agenda");
-  return contexts.find((context) => context.id === "follow-up-risk") || contexts[0];
+  if (hour >= 15) return Math.max(0, contexts.findIndex((context) => context.id === "four-pm-review"));
+  if (hour >= 7 && hour <= 10) return Math.max(0, contexts.findIndex((context) => context.id === "morning-agenda"));
+  return Math.max(0, contexts.findIndex((context) => context.id === "follow-up-risk"));
 }
 
 function renderChip(text, tone) {
@@ -37,18 +36,22 @@ function renderChip(text, tone) {
   return chip;
 }
 
-function renderContextNav(activeContext) {
-  const nav = el("nav", "smart-widget-contexts");
-  nav.setAttribute("aria-label", "Smart widget preview contexts");
+function renderDots(count, activeIndex) {
+  const dots = el("div", "smart-widget-dots");
+  dots.setAttribute("aria-label", "Smart widget position");
 
-  for (const context of forgeAliveSmartWidgetStackPreview.contexts) {
-    const item = el("a", context.id === activeContext.id ? "active" : "", context.label);
-    item.href = `?context=${encodeURIComponent(context.id)}`;
-    item.setAttribute("aria-label", `Preview context ${context.label}`);
-    nav.appendChild(item);
+  for (let index = 0; index < count; index += 1) {
+    const dot = el("span", index === activeIndex ? "active" : "");
+    dot.setAttribute("aria-hidden", "true");
+    dots.appendChild(dot);
   }
 
-  return nav;
+  return dots;
+}
+
+function updateDots(root, activeIndex) {
+  const dots = [...root.querySelectorAll(".smart-widget-dots span")];
+  dots.forEach((dot, index) => dot.classList.toggle("active", index === activeIndex));
 }
 
 function renderEvidence(items) {
@@ -91,26 +94,62 @@ function renderWidget(widget, index) {
   return card;
 }
 
+function renderSlide(context) {
+  const slide = el("section", "smart-widget-slide");
+  slide.setAttribute("aria-label", context.label);
+
+  const header = el("div", "smart-widget-slide-header");
+  header.appendChild(el("p", "smart-widget-eyebrow", context.label));
+  header.appendChild(el("h3", "", context.selectedWhen));
+  header.appendChild(el("p", "smart-widget-subtitle", "Desliza para revisar otros contextos."));
+  slide.appendChild(header);
+
+  const stack = el("div", "smart-widget-slide-stack");
+  context.widgets
+    .slice()
+    .sort((a, b) => b.priority - a.priority)
+    .forEach((widget, index) => stack.appendChild(renderWidget(widget, index)));
+  slide.appendChild(stack);
+
+  return slide;
+}
+
 function main() {
   const target = document.getElementById("smart-widget-stack");
   if (!target) return;
 
-  const context = pickContext();
+  const contexts = forgeAliveSmartWidgetStackPreview.contexts;
+  const activeIndex = initialContextIndex(contexts);
   target.innerHTML = "";
 
   const header = el("header", "smart-widget-header glass");
   header.appendChild(el("p", "smart-widget-eyebrow", forgeAliveSmartWidgetStackPreview.version));
   header.appendChild(el("h2", "", "Smart Widget Stack"));
-  header.appendChild(el("p", "smart-widget-subtitle", context.selectedWhen));
-  header.appendChild(renderContextNav(context));
+  header.appendChild(el("p", "smart-widget-subtitle", "Desliza el stack. Forge muestra contexto; el humano decide."));
   target.appendChild(header);
 
-  const grid = el("section", "smart-widget-grid");
-  context.widgets
-    .slice()
-    .sort((a, b) => b.priority - a.priority)
-    .forEach((widget, index) => grid.appendChild(renderWidget(widget, index)));
-  target.appendChild(grid);
+  const carousel = el("section", "smart-widget-carousel");
+  carousel.setAttribute("aria-label", "Swipe smart widget stack contexts");
+  contexts.forEach((context) => carousel.appendChild(renderSlide(context)));
+  target.appendChild(carousel);
+
+  target.appendChild(renderDots(contexts.length, activeIndex));
+
+  requestAnimationFrame(() => {
+    const targetSlide = carousel.children[activeIndex];
+    if (targetSlide) targetSlide.scrollIntoView({ behavior: "auto", inline: "start", block: "nearest" });
+    updateDots(target, activeIndex);
+  });
+
+  let scrollTimer = null;
+  carousel.addEventListener("scroll", () => {
+    window.clearTimeout(scrollTimer);
+    scrollTimer = window.setTimeout(() => {
+      const width = carousel.clientWidth || 1;
+      const index = Math.max(0, Math.min(contexts.length - 1, Math.round(carousel.scrollLeft / width)));
+      updateDots(target, index);
+    }, 70);
+  }, { passive: true });
 }
 
 if (document.readyState === "loading") {

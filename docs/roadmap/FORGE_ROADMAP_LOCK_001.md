@@ -954,3 +954,13 @@ The Smart Widget Stack static preview was tuned for mobile readability after scr
 
 Next:
 - 053F_SMART_WIDGET_STACK_VISUAL_OUTPUT_REVIEW.
+
+
+# Forge Alive Smart Widget Stack Swipe Carousel Tuning
+
+053G_SMART_WIDGET_STACK_SWIPE_CAROUSEL_TUNING: GREEN / CLOSED.
+
+The Smart Widget Stack static preview now uses a swipe carousel with dot indicators instead of context buttons.
+
+Next:
+- 053H_SMART_WIDGET_STACK_CAROUSEL_OUTPUT_REVIEW.
