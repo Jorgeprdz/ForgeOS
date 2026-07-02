@@ -2013,3 +2013,12 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- GREEN No live search or runtime execution
 |   |-- GREEN Article 0 and read-only safety boundaries unchanged
 |   `-- RED approval/send/runtime/truth mutation
+
+|-- GREEN 053V Forge Alive Command Orb Expansion Timing Tuning
+|   |-- GREEN Orb-to-pill expansion timing tuned
+|   |-- GREEN Input controls fade in after short delay
+|   |-- GREEN Results reveal after typing
+|   |-- GREEN Reduced-motion fallback preserved
+|   |-- GREEN No live search or runtime execution
+|   |-- GREEN Article 0 and read-only safety boundaries unchanged
+|   `-- RED approval/send/runtime/truth mutation

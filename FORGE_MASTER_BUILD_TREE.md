@@ -3730,3 +3730,16 @@ Evidence:
 - no live search or runtime execution
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Command Orb Expansion Timing Tuning 053V
+
+053V tunes the orb-to-pill expansion timing.
+
+- expansion transform extended to be readable
+- input controls fade in after short delay
+- results reveal after typing
+- orb exit remains quick but not abrupt
+- reduced-motion fallback preserved
+- no live search or runtime execution
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged

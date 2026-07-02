@@ -1212,3 +1212,68 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:COMMAND_ORB_EXPANSION_053U:END */
+
+/* FORGEOS:COMMAND_ORB_TIMING_053V:START */
+.command-orb {
+  transition:
+    opacity 180ms ease,
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.command-pill {
+  transition:
+    opacity 230ms ease 90ms,
+    transform 560ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+  will-change: transform, opacity;
+}
+
+.command-pill-input,
+.command-pill-slash,
+.command-pill-close {
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 180ms ease 140ms,
+    transform 240ms ease 140ms;
+}
+
+.command-orb-layer.is-expanded .command-pill-input,
+.command-orb-layer.is-expanded .command-pill-slash,
+.command-orb-layer.is-expanded .command-pill-close {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.command-orb-layer.is-expanded .command-orb {
+  transition:
+    opacity 170ms ease,
+    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.command-orb-results {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition:
+    opacity 220ms ease 110ms,
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1) 110ms;
+}
+
+.command-orb-layer.is-typing .command-orb-results:not([hidden]) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-orb,
+  .command-pill,
+  .command-pill-input,
+  .command-pill-slash,
+  .command-pill-close,
+  .command-orb-results {
+    transition: opacity 120ms ease;
+    transform: none;
+  }
+}
+/* FORGEOS:COMMAND_ORB_TIMING_053V:END */

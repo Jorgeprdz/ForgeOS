@@ -1068,3 +1068,12 @@ Forge Alive now has an experimental command orb state that expands into a pill c
 
 Next:
 - 053V_COMMAND_ORB_EXPANSION_OUTPUT_REVIEW.
+
+# Forge Alive Command Orb Expansion Timing Tuning Roadmap Status
+
+053V_COMMAND_ORB_EXPANSION_TIMING_TUNING: GREEN / IMPLEMENTED.
+
+Forge Alive command orb expansion now has a more readable orb-to-pill animation with delayed input/control reveal and reduced-motion fallback.
+
+Next:
+- 053W_COMMAND_ORB_TIMING_OUTPUT_REVIEW.
