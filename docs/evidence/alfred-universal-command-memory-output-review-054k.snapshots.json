@@ -1,0 +1,1064 @@
+{
+  "phase": "054K_ALFRED_UNIVERSAL_COMMAND_MEMORY_OUTPUT_REVIEW",
+  "generatedAt": "2026-07-02T23:33:48.649Z",
+  "source": "manager-os/alfred-universal-command-memory-read-model.js",
+  "casesReviewed": 9,
+  "safetyContract": {
+    "requiredSafety": {
+      "previewOnly": true,
+      "reviewOnly": true,
+      "notApproved": true,
+      "notSendable": true,
+      "createsTruth": false,
+      "executesRuntime": false,
+      "sendsMessage": false,
+      "writesCrm": false,
+      "createsCalendarEvent": false,
+      "audioRuntimeEnabled": false,
+      "speechEngineEnabled": false
+    },
+    "allowedConfirmationFlags": [
+      "calendarCreateRequiresConfirmation",
+      "crmWriteRequiresConfirmation",
+      "sendMessageRequiresConfirmation",
+      "transcriptionPreviewOnly"
+    ],
+    "forbidden": [
+      "approval",
+      "send",
+      "CRM write",
+      "calendar write",
+      "task write",
+      "audio runtime",
+      "speech engine",
+      "provider call",
+      "live search",
+      "truth mutation"
+    ]
+  },
+  "reviewedCases": [
+    {
+      "id": "memory_juan_interest_followup",
+      "command": "/Memoria Hoy vi a Juan. Me dijo que si le interesa retiro, pero quiere revisarlo con su esposa. Me pidio que le hable la proxima semana.",
+      "expectedCommercialUse": "Capture meeting memory, retirement interest, spouse context, and follow-up timing.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 2,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Memoria",
+        "matchedAlias": "/memoria",
+        "family": "ALFRED_MEMORY",
+        "intent": "memory_capture_prep",
+        "rawInput": "/Memoria Hoy vi a Juan. Me dijo que si le interesa retiro, pero quiere revisarlo con su esposa. Me pidio que le hable la proxima semana.",
+        "query": "Hoy vi a Juan. Me dijo que si le interesa retiro, pero quiere revisarlo con su esposa. Me pidio que le hable la proxima semana.",
+        "extracted": {
+          "people": [
+            "Juan"
+          ],
+          "products": [
+            "retiro"
+          ],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "",
+            "time": "",
+            "eventCandidate": false
+          },
+          "signals": [
+            "interest_signal",
+            "relationship_context",
+            "follow_up_signal"
+          ]
+        },
+        "candidateActions": [
+          "prepare_memory_entry",
+          "prepare_follow_up"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Juan",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "product_intelligence_prep",
+            "title": "retiro",
+            "subtitle": "quote/projection/presentation artifact preview",
+            "status": "not_sendable"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "agenda_maria_friday_11",
+      "command": "/Agenda Tengo cita con Maria el viernes a las 11.",
+      "expectedCommercialUse": "Prepare a calendar candidate for review without creating a calendar event.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 2,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Agenda",
+        "matchedAlias": "/agenda",
+        "family": "ALFRED_CALENDAR_PREP",
+        "intent": "calendar_event_prep",
+        "rawInput": "/Agenda Tengo cita con Maria el viernes a las 11.",
+        "query": "Tengo cita con Maria el viernes a las 11.",
+        "extracted": {
+          "people": [
+            "Maria"
+          ],
+          "products": [],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "viernes",
+            "time": "11:00",
+            "eventCandidate": true
+          },
+          "signals": [
+            "follow_up_signal",
+            "appointment_signal"
+          ]
+        },
+        "candidateActions": [
+          "prepare_calendar_event",
+          "prepare_follow_up"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Maria",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "calendar_candidate",
+            "title": "viernes",
+            "subtitle": "11:00",
+            "status": "requires_confirmation"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "create_event_maria_friday_11",
+      "command": "/Crear evento con Maria el viernes a las 11 para revisar su plan de proteccion.",
+      "expectedCommercialUse": "Prepare a calendar event draft only, with human confirmation required before any write.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 2,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Crear evento",
+        "matchedAlias": "/crear evento",
+        "family": "ALFRED_CALENDAR_PREP",
+        "intent": "calendar_event_prep",
+        "rawInput": "/Crear evento con Maria el viernes a las 11 para revisar su plan de proteccion.",
+        "query": "con Maria el viernes a las 11 para revisar su plan de proteccion.",
+        "extracted": {
+          "people": [
+            "Maria"
+          ],
+          "products": [],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "viernes",
+            "time": "11:00",
+            "eventCandidate": true
+          },
+          "signals": [
+            "follow_up_signal"
+          ]
+        },
+        "candidateActions": [
+          "prepare_calendar_event",
+          "prepare_follow_up"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Maria",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "calendar_candidate",
+            "title": "viernes",
+            "subtitle": "11:00",
+            "status": "requires_confirmation"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "lariza_couple_product_interest",
+      "command": "/Memoria A Lariza le interesa para ella y su novio. Les intereso retiro y Vida Mujer.",
+      "expectedCommercialUse": "Capture couple context and product interests for later proposal preparation.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 3,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Memoria",
+        "matchedAlias": "/memoria",
+        "family": "ALFRED_MEMORY",
+        "intent": "memory_capture_prep",
+        "rawInput": "/Memoria A Lariza le interesa para ella y su novio. Les intereso retiro y Vida Mujer.",
+        "query": "A Lariza le interesa para ella y su novio. Les intereso retiro y Vida Mujer.",
+        "extracted": {
+          "people": [
+            "Lariza",
+            "Vida Mujer"
+          ],
+          "products": [
+            "retiro",
+            "Vida Mujer",
+            "vida"
+          ],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "",
+            "time": "",
+            "eventCandidate": false
+          },
+          "signals": [
+            "interest_signal",
+            "relationship_context"
+          ]
+        },
+        "candidateActions": [
+          "prepare_memory_entry"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Lariza",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "person_context",
+            "title": "Vida Mujer",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "product_intelligence_prep",
+            "title": "retiro / Vida Mujer / vida",
+            "subtitle": "quote/projection/presentation artifact preview",
+            "status": "not_sendable"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "referral_luis_from_giovanni",
+      "command": "/Referido Luis Perez es referido de Giovanni Islas, compañero del trabajo.",
+      "expectedCommercialUse": "Prepare referral capture with source and relationship, without CRM write.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 3,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Referido",
+        "matchedAlias": "/referido",
+        "family": "ALFRED_REFERRAL_CAPTURE",
+        "intent": "referral_capture_prep",
+        "rawInput": "/Referido Luis Perez es referido de Giovanni Islas, compañero del trabajo.",
+        "query": "Luis Perez es referido de Giovanni Islas, compañero del trabajo.",
+        "extracted": {
+          "people": [
+            "Giovanni Islas",
+            "Luis Perez"
+          ],
+          "products": [],
+          "referral": {
+            "referralName": "Luis Perez",
+            "sourceName": "Giovanni Islas",
+            "relationship": "compañero del trabajo",
+            "hasReferralSignal": true
+          },
+          "calendar": {
+            "day": "",
+            "time": "",
+            "eventCandidate": false
+          },
+          "signals": [
+            "referral_signal"
+          ]
+        },
+        "candidateActions": [
+          "prepare_referral_record"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Giovanni Islas",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "person_context",
+            "title": "Luis Perez",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "referral_candidate",
+            "title": "Luis Perez",
+            "subtitle": "source: Giovanni Islas",
+            "status": "not_approved"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "quote_lariza_and_partner",
+      "command": "/Cotizar Lariza y su novio retiro y Vida Mujer.",
+      "expectedCommercialUse": "Prepare product intelligence review artifact without approving or selling.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 3,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Cotizar",
+        "matchedAlias": "/cotizar",
+        "family": "ALFRED_PRODUCT_INTELLIGENCE",
+        "intent": "quote_prep",
+        "rawInput": "/Cotizar Lariza y su novio retiro y Vida Mujer.",
+        "query": "Lariza y su novio retiro y Vida Mujer.",
+        "extracted": {
+          "people": [
+            "Lariza",
+            "Vida Mujer"
+          ],
+          "products": [
+            "retiro",
+            "Vida Mujer",
+            "vida"
+          ],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "",
+            "time": "",
+            "eventCandidate": false
+          },
+          "signals": [
+            "relationship_context"
+          ]
+        },
+        "candidateActions": [
+          "prepare_product_intelligence_artifact"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Lariza",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "person_context",
+            "title": "Vida Mujer",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "product_intelligence_prep",
+            "title": "retiro / Vida Mujer / vida",
+            "subtitle": "quote/projection/presentation artifact preview",
+            "status": "not_sendable"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "improve_message_juan",
+      "command": "/Mejora este mensaje Hola Juan te busco para hablar de retiro y ver cuando podemos agendar.",
+      "expectedCommercialUse": "Prepare a message draft improvement without sending.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 2,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Mejora este mensaje",
+        "matchedAlias": "/mejora este mensaje",
+        "family": "ALFRED_MESSAGE_DRAFT",
+        "intent": "message_draft_prep",
+        "rawInput": "/Mejora este mensaje Hola Juan te busco para hablar de retiro y ver cuando podemos agendar.",
+        "query": "Hola Juan te busco para hablar de retiro y ver cuando podemos agendar.",
+        "extracted": {
+          "people": [
+            "Hola Juan"
+          ],
+          "products": [
+            "retiro"
+          ],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "",
+            "time": "",
+            "eventCandidate": false
+          },
+          "signals": []
+        },
+        "candidateActions": [
+          "prepare_message_draft"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Hola Juan",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "product_intelligence_prep",
+            "title": "retiro",
+            "subtitle": "quote/projection/presentation artifact preview",
+            "status": "not_sendable"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "follow_plain_priority",
+      "command": "/Follow Juan retiro proxima semana.",
+      "expectedCommercialUse": "Prepare follow-up route and context without task creation.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 2,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Follow",
+        "matchedAlias": "/follow",
+        "family": "ALFRED_FOLLOW_UP_PREP",
+        "intent": "follow_up_search",
+        "rawInput": "/Follow Juan retiro proxima semana.",
+        "query": "Juan retiro proxima semana.",
+        "extracted": {
+          "people": [
+            "Juan"
+          ],
+          "products": [
+            "retiro"
+          ],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "",
+            "time": "",
+            "eventCandidate": false
+          },
+          "signals": [
+            "follow_up_signal"
+          ]
+        },
+        "candidateActions": [
+          "prepare_follow_up"
+        ],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Juan",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "product_intelligence_prep",
+            "title": "retiro",
+            "subtitle": "quote/projection/presentation artifact preview",
+            "status": "not_sendable"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    },
+    {
+      "id": "chatbot_safe_route",
+      "command": "/Chatbot ayudame a preparar una cita de retiro con Maria.",
+      "expectedCommercialUse": "Route to assistant/chat preview without runtime execution.",
+      "summary": {
+        "route": "UNSPECIFIED_ROUTE",
+        "resultCount": 2,
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "actionPreparation": null
+      },
+      "boundaryDecision": "PASS_REVIEW_ONLY_NO_EXECUTION",
+      "model": {
+        "id": "ALFRED_READ_MODEL_PREVIEW",
+        "source": "ALFRED_UNIVERSAL_COMMAND_MEMORY_READ_MODEL",
+        "command": "/Chatbot",
+        "matchedAlias": "/chatbot",
+        "family": "ALFRED_CHATBOT_ENTRY",
+        "intent": "chatbot_entry",
+        "rawInput": "/Chatbot ayudame a preparar una cita de retiro con Maria.",
+        "query": "ayudame a preparar una cita de retiro con Maria.",
+        "extracted": {
+          "people": [
+            "Maria"
+          ],
+          "products": [
+            "retiro"
+          ],
+          "referral": {
+            "referralName": "",
+            "sourceName": "",
+            "relationship": "",
+            "hasReferralSignal": false
+          },
+          "calendar": {
+            "day": "",
+            "time": "",
+            "eventCandidate": false
+          },
+          "signals": [
+            "appointment_signal"
+          ]
+        },
+        "candidateActions": [],
+        "resultCards": [
+          {
+            "type": "person_context",
+            "title": "Maria",
+            "subtitle": "indexed candidate / preview",
+            "status": "review_only"
+          },
+          {
+            "type": "product_intelligence_prep",
+            "title": "retiro",
+            "subtitle": "quote/projection/presentation artifact preview",
+            "status": "not_sendable"
+          }
+        ],
+        "safety": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "requiresHumanConfirmation": true,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "warnings": [
+          "Preview only.",
+          "Human review required before any write or execution.",
+          "No live search, no audio runtime, no speech engine."
+        ]
+      }
+    }
+  ],
+  "decision": "PASS_054K_ALFRED_UNIVERSAL_COMMAND_MEMORY_OUTPUT_REVIEW_SNAPSHOTS_GENERATED",
+  "next": "054L_ALFRED_REVIEW_ACTION_PACKET_CONTRACT_SCOPE"
+}
