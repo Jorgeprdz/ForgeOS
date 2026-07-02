@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Forge Alive Static Preview</title>
-  <link rel="stylesheet" href="./styles.css?v=053L">
+  <link rel="stylesheet" href="./styles.css?v=053O">
 </head>
 <body>
   <main class="phone-shell" aria-label="Forge Alive static preview">
     <section class="safety-ribbon">SAMPLE DATA / READ-ONLY / NOT PRODUCTION</section>
-    <section class="preview-version-badge">Preview v053L</section>
+    <section class="preview-version-badge">Preview v053O</section>
 
     <header class="hero">
       <div>
@@ -85,7 +85,48 @@
       </ul>
     </section>
 
-    <section class="fake-input glass">Pídele a Forge qué revisar ahora · deshabilitado</section>
+    <section class="command-bar-shell glass" aria-label="Forge Alive command bar">
+      <div class="command-bar-aura" aria-hidden="true"></div>
+      <div class="command-bar-topline">
+        <span>ALFRED / COMMAND BAR</span>
+        <span>Read-only preview</span>
+      </div>
+      <label class="command-input-shell" aria-label="Spotlight command input preview">
+        <span class="command-slash" aria-hidden="true">/</span>
+        <input
+          class="command-input"
+          type="text"
+          value=""
+          placeholder="Juan, /Follow, /Agenda, /Mejora este mensaje"
+          disabled
+        />
+        <span class="command-pulse" aria-hidden="true"></span>
+      </label>
+      <div class="command-suggestions" aria-label="Command examples">
+        <span>/Follow</span>
+        <span>/Comisiones</span>
+        <span>/bonos</span>
+        <span>/Juan</span>
+        <span>/Mejora este mensaje</span>
+        <span>/Agenda</span>
+        <span>/Crear evento</span>
+        <span>/Chatbot</span>
+      </div>
+      <div class="command-results-preview" aria-label="Indexed result examples">
+        <article>
+          <strong>Juan Orozco</strong>
+          <span>Poliza ABC · preview</span>
+        </article>
+        <article>
+          <strong>Juan Martinez</strong>
+          <span>Prospecto · review</span>
+        </article>
+        <article>
+          <strong>Juan Perez</strong>
+          <span>Ultimo contacto hace 76 dias · follow-up</span>
+        </article>
+      </div>
+    </section>
 
     <nav class="bottom-nav" aria-label="static navigation preview">
       <span>Inicio</span>
@@ -98,6 +139,6 @@
 
   <script src="./sample-data.js"></script>
 
-  <script src="./smart-widget-stack.js?v=053L" type="module"></script>
+  <script src="./smart-widget-stack.js?v=053O" type="module"></script>
 </body>
 </html>
