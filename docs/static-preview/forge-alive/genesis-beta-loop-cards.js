@@ -1,4 +1,29 @@
-import { genesisBetaLoopCards } from "./genesis-beta-loop-card-data.js";
+const cards = [
+  {
+    title: "Jorge / Maria",
+    context: "Follow-up 15 dias",
+    subtitle: "relationship follow-up context, not send approval",
+    draft: "Retomar la conversacion con calma y revisar si hace sentido avanzar.",
+    evidence: ["previous conversation", "15-day follow-up", "pending follow-up"],
+    boundary: "Delivery locked"
+  },
+  {
+    title: "Andres / Juan",
+    context: "Bonus proximity",
+    subtitle: "motivational context / candidate estimate, not payout truth",
+    draft: "Revisar la oportunidad como contexto, sin prometer pago ni resultado.",
+    evidence: ["bonus proximity", "relative signal", "consultative message"],
+    boundary: "Not payout truth"
+  },
+  {
+    title: "Lupita / Maria",
+    context: "Car goal",
+    subtitle: "motivation context, not compensation truth",
+    draft: "Usar la meta como referencia motivacional, sin convertirla en presion.",
+    evidence: ["car goal", "advancement signal", "consistency signal"],
+    boundary: "Not compensation truth"
+  }
+];
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -7,63 +32,38 @@ function el(tag, className, text) {
   return node;
 }
 
-function chip(text, className = "forge-chip") {
-  return el("span", className, text);
-}
-
-function list(title, items) {
-  const section = el("div", "genesis-card-section");
-  section.appendChild(el("h4", "", title));
-  const ul = el("ul", "genesis-card-list");
-  (items || []).forEach((item) => ul.appendChild(el("li", "", item)));
-  section.appendChild(ul);
-  return section;
+function chip(text, variant) {
+  return el("span", `forge-chip ${variant || ""}`.trim(), text);
 }
 
 function renderCard(card) {
-  const article = el("article", "mini-card glass genesis-beta-loop-card");
-  article.setAttribute("data-scenario-id", card.scenarioId);
+  const article = el("article", "mini-card glass genesis-beta-loop-card compact");
 
-  const eyebrow = el("p", "eyebrow", "Genesis Beta Loop");
-  const title = el("h3", "", card.title);
-  const subtitle = el("p", "muted", card.subtitle);
+  const top = el("div", "genesis-card-top");
+  const titleWrap = el("div", "");
+  titleWrap.appendChild(el("p", "eyebrow", "Genesis Beta Loop"));
+  titleWrap.appendChild(el("h3", "", card.title));
+  titleWrap.appendChild(el("p", "muted", card.context));
+  top.appendChild(titleWrap);
+  top.appendChild(chip("Review only", "gold"));
+  article.appendChild(top);
 
-  const chips = el("div", "genesis-card-chips");
-  [
-    "Human final authority",
-    "Review only",
-    "Not approved",
-    "Not sendable",
-    "Delivery locked",
-    "Evidence visible",
-    "Uncertainty visible"
-  ].forEach((label) => chips.appendChild(chip(label)));
+  article.appendChild(el("p", "genesis-subtitle", card.subtitle));
 
-  const safety = el("p", "metric-line", `Safety: ${card.safetyBadge}`);
-  const draft = el("p", "metric-line", `Draft: ${card.draftQualityBadge}`);
-  const draftPreview = el("p", "genesis-draft-preview", card.candidateDraftPreview);
-
-  const article0 = el(
-    "p",
-    "article-zero-reminder",
-    "Article 0: strengthen human judgment, not replace it."
-  );
-
-  article.appendChild(eyebrow);
-  article.appendChild(title);
-  article.appendChild(subtitle);
+  const chips = el("div", "genesis-card-chips compact");
+  chips.appendChild(chip("Human final authority", "blue"));
+  chips.appendChild(chip("Not approved", "locked"));
+  chips.appendChild(chip("Not sendable", "locked"));
+  chips.appendChild(chip(card.boundary, "locked"));
   article.appendChild(chips);
-  article.appendChild(safety);
-  article.appendChild(draft);
-  article.appendChild(el("h4", "", "Draft preview"));
-  article.appendChild(draftPreview);
-  article.appendChild(list("Evidence", card.evidenceRefs));
-  article.appendChild(el("p", "muted", `Reasoning: ${card.reasoningSummary}`));
-  article.appendChild(el("p", "muted", `Uncertainty: ${card.uncertaintySummary}`));
-  article.appendChild(list("Human review questions", card.humanReviewQuestions));
-  article.appendChild(list("Approval prerequisites", card.approvalPrerequisites));
-  article.appendChild(el("p", "locked-line", `Blocked: ${card.blockedReason.join(", ")}`));
-  article.appendChild(article0);
+
+  article.appendChild(el("p", "genesis-draft-preview compact", card.draft));
+
+  const evidence = el("div", "genesis-evidence-row");
+  card.evidence.slice(0, 3).forEach((item) => evidence.appendChild(chip(item, "soft")));
+  article.appendChild(evidence);
+
+  article.appendChild(el("p", "article-zero-reminder compact", "Article 0: strengthen judgment, not replace it."));
 
   return article;
 }
@@ -72,7 +72,7 @@ function main() {
   const target = document.getElementById("genesis-cards");
   if (!target) return;
   target.innerHTML = "";
-  genesisBetaLoopCards.forEach((card) => target.appendChild(renderCard(card)));
+  cards.forEach((card) => target.appendChild(renderCard(card)));
 }
 
 document.addEventListener("DOMContentLoaded", main);
