@@ -3691,3 +3691,16 @@ Evidence:
 - no live search or runtime execution
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Command Bar Fixed Viewport Layer Tuning 053S
+
+053S moves the oval command bar into a fixed viewport command layer.
+
+- command bar fixed to bottom of screen
+- command bar no longer lives at bottom of page flow
+- content scrolls behind/below command layer
+- bottom padding protects content from occlusion
+- bottom nav remains visible
+- no live search or runtime execution
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged

@@ -816,9 +816,6 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
 
 /* FORGEOS:COMMAND_BAR_OVAL_GLOW_053Q:START */
 .command-bar-shell.command-bar-oval {
-  position: sticky;
-  bottom: 68px;
-  z-index: 45;
   display: block;
   margin: 18px 0 12px;
   padding: 3px;
@@ -993,3 +990,48 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:COMMAND_BAR_OVAL_GLOW_053Q:END */
+
+/* FORGEOS:COMMAND_BAR_FIXED_VIEWPORT_LAYER_053S:START */
+.phone-frame,
+.app-shell,
+main {
+  padding-bottom: max(156px, calc(132px + env(safe-area-inset-bottom)));
+}
+
+.command-bar-shell.command-bar-oval {
+  position: fixed;
+  left: max(18px, calc((100vw - 430px) / 2 + 18px));
+  right: max(18px, calc((100vw - 430px) / 2 + 18px));
+  bottom: max(74px, calc(64px + env(safe-area-inset-bottom)));
+  z-index: 90;
+  max-width: 394px;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+.command-bar-shell.command-bar-oval .command-input-shell {
+  pointer-events: auto;
+}
+
+.command-bar-shell.command-bar-oval + .bottom-nav,
+.command-bar-shell.command-bar-oval ~ .bottom-nav,
+.bottom-nav {
+  z-index: 95;
+}
+
+@media (min-width: 700px) {
+  .command-bar-shell.command-bar-oval {
+    left: calc(50vw - 197px);
+    right: auto;
+    width: 394px;
+  }
+}
+
+@media (max-width: 380px) {
+  .command-bar-shell.command-bar-oval {
+    left: 14px;
+    right: 14px;
+    bottom: max(70px, calc(60px + env(safe-area-inset-bottom)));
+  }
+}
+/* FORGEOS:COMMAND_BAR_FIXED_VIEWPORT_LAYER_053S:END */

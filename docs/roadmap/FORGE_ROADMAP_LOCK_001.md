@@ -1041,3 +1041,12 @@ Forge Alive command bar is now visually tuned as a single oval textbox with anim
 
 Next:
 - 053R_COMMAND_BAR_OVAL_GLOW_OUTPUT_REVIEW.
+
+# Forge Alive Command Bar Fixed Viewport Layer Tuning Roadmap Status
+
+053S_COMMAND_BAR_FIXED_VIEWPORT_LAYER_TUNING: GREEN / IMPLEMENTED.
+
+Forge Alive command bar now sits in a fixed viewport command layer. Contextual content scrolls behind/below it instead of pushing it to the bottom of the page.
+
+Next:
+- 053T_COMMAND_BAR_FIXED_VIEWPORT_OUTPUT_REVIEW.
