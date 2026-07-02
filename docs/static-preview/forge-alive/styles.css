@@ -425,3 +425,39 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* 052T force Genesis cards stack */
+section#genesis-cards.genesis-cards-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.9rem !important;
+  grid-template-columns: none !important;
+  margin-top: 0.95rem;
+  width: 100%;
+}
+
+section#genesis-cards.genesis-cards-stack > .genesis-beta-loop-card {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  max-width: 100%;
+  min-width: 0;
+  width: 100%;
+}
+
+section#genesis-cards.genesis-cards-stack .genesis-card-chips.compact {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.4rem !important;
+}
+
+section#genesis-cards.genesis-cards-stack .forge-chip {
+  max-width: 100%;
+  white-space: normal;
+}
+
+section#genesis-cards.genesis-cards-stack .genesis-draft-preview.compact,
+section#genesis-cards.genesis-cards-stack .genesis-subtitle,
+section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
