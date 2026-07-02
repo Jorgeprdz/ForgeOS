@@ -541,7 +541,7 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   overflow-wrap: anywhere;
 }
 
-/* FORGEOS:SMART_WIDGET_STACK_DOT_GLIDE_CONTINUOUS_053J:START */
+/* FORGEOS:SMART_WIDGET_STACK_DOT_GLIDE_LEADING_DROP_053K:START */
 #smart-widget-stack,
 .smart-widget-stack {
   display: grid;
@@ -794,11 +794,11 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
 
 #smart-widget-stack .smart-widget-dots.is-moving .smart-widget-dot-glider {
   width: 26px;
-  border-radius: 999px 14px 14px 999px;
+  border-radius: 14px 999px 999px 14px;
 }
 
 #smart-widget-stack .smart-widget-dots.moving-left .smart-widget-dot-glider {
-  border-radius: 14px 999px 999px 14px;
+  border-radius: 999px 14px 14px 999px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -806,4 +806,4 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
     transition: none;
   }
 }
-/* FORGEOS:SMART_WIDGET_STACK_DOT_GLIDE_CONTINUOUS_053J:END */
+/* FORGEOS:SMART_WIDGET_STACK_DOT_GLIDE_LEADING_DROP_053K:END */

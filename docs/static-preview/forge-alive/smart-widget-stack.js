@@ -1,4 +1,4 @@
-import { forgeAliveSmartWidgetStackPreview } from "./smart-widget-stack-data.js?v=053J";
+import { forgeAliveSmartWidgetStackPreview } from "./smart-widget-stack-data.js?v=053K";
 
 const params = new URLSearchParams(window.location.search);
 

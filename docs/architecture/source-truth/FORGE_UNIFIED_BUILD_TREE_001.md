@@ -1921,3 +1921,14 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- RED approval/send/runtime/truth mutation
 |   `-- BLUE 053K Smart Widget Dot Glide Continuous Output Review
 <!-- FORGEOS:SMART_WIDGET_DOT_GLIDE_CONTINUOUS_SYNC_053J:END -->
+
+<!-- FORGEOS:SMART_WIDGET_DOT_GLIDE_LEADING_DROP_TUNING_053K:START -->
+|-- GREEN 053K Forge Alive Smart Widget Dot Glide Leading Drop Tuning
+|   |-- GREEN Preview v053K visible
+|   |-- GREEN Dot glider leading edge points in swipe direction
+|   |-- GREEN Right swipe uses right-side drop head
+|   |-- GREEN Left swipe uses left-side drop head
+|   |-- GREEN Article 0 and read-only safety boundaries unchanged
+|   |-- RED approval/send/runtime/truth mutation
+|   `-- BLUE 053L Smart Widget Dot Glide Leading Drop Output Review
+<!-- FORGEOS:SMART_WIDGET_DOT_GLIDE_LEADING_DROP_TUNING_053K:END -->

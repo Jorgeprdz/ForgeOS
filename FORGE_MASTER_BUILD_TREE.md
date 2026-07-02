@@ -3593,3 +3593,26 @@ Evidence:
 - docs/architecture/source-truth/FORGE_ALIVE_SMART_WIDGET_STACK_DOT_GLIDE_CONTINUOUS_SYNC_CLOSURE_053J.md
 - docs/evidence/FORGE_ALIVE_SMART_WIDGET_STACK_DOT_GLIDE_CONTINUOUS_SYNC_CERTIFICATE_053J.md
 <!-- FORGEOS:SMART_WIDGET_DOT_GLIDE_CONTINUOUS_SYNC_053J:END -->
+
+<!-- FORGEOS:SMART_WIDGET_DOT_GLIDE_LEADING_DROP_TUNING_053K:START -->
+## Forge Alive Smart Widget Dot Glide Leading Drop Tuning 053K
+
+Status: CLOSED / STATIC_PREVIEW_MICRO_INTERACTION_TUNED.
+
+053K tunes the dot glider leading edge so the drop head points in the swipe direction.
+
+Boundary:
+- static preview micro-interaction only
+- Preview v053K visible
+- leading-edge drop shape tuned
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged
+- Skynet unchanged
+
+Evidence:
+- docs/static-preview/forge-alive/index.html
+- docs/static-preview/forge-alive/styles.css
+- docs/static-preview/forge-alive/smart-widget-stack.js
+- docs/architecture/source-truth/FORGE_ALIVE_SMART_WIDGET_STACK_DOT_GLIDE_LEADING_DROP_TUNING_CLOSURE_053K.md
+- docs/evidence/FORGE_ALIVE_SMART_WIDGET_STACK_DOT_GLIDE_LEADING_DROP_TUNING_CERTIFICATE_053K.md
+<!-- FORGEOS:SMART_WIDGET_DOT_GLIDE_LEADING_DROP_TUNING_053K:END -->
