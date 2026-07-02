@@ -461,3 +461,17 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   overflow-wrap: anywhere;
   word-break: normal;
 }
+
+/* 052U preview version badge */
+.preview-version-badge {
+  align-self: center;
+  border: 1px solid rgba(96, 165, 250, 0.32);
+  border-radius: 999px;
+  color: #9cc9ff;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  margin: -0.35rem auto 1rem;
+  padding: 0.35rem 0.75rem;
+  text-transform: uppercase;
+  width: fit-content;
+}
