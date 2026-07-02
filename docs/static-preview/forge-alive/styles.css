@@ -344,3 +344,84 @@ h3 {
   line-height: 1.35;
   margin: 0;
 }
+
+/* 052S Genesis cards mobile layout fix */
+#genesis-cards {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: 1fr;
+  margin-top: 0.9rem;
+}
+
+#genesis-cards .genesis-beta-loop-card.compact {
+  min-width: 0;
+  padding: 1rem;
+  width: 100%;
+}
+
+#genesis-cards .genesis-card-top {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+#genesis-cards .genesis-card-top h3 {
+  font-size: 1.32rem;
+  line-height: 1.05;
+  margin: 0.15rem 0 0;
+}
+
+#genesis-cards .genesis-card-top .muted {
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+#genesis-cards .genesis-subtitle {
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+#genesis-cards .genesis-card-chips.compact {
+  display: grid;
+  gap: 0.38rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#genesis-cards .forge-chip {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  line-height: 1.15;
+  min-height: 1.65rem;
+  padding: 0.38rem 0.46rem;
+  text-align: center;
+  white-space: normal;
+}
+
+#genesis-cards .genesis-draft-preview.compact {
+  font-size: 0.86rem;
+  line-height: 1.34;
+  padding-left: 0.6rem;
+}
+
+#genesis-cards .genesis-evidence-row {
+  display: grid;
+  gap: 0.36rem;
+  grid-template-columns: 1fr;
+}
+
+#genesis-cards .article-zero-reminder.compact {
+  font-size: 0.74rem;
+  line-height: 1.25;
+}
+
+@media (max-width: 520px) {
+  #genesis-cards {
+    grid-template-columns: 1fr;
+  }
+
+  #genesis-cards .genesis-card-chips.compact {
+    grid-template-columns: 1fr;
+  }
+}
