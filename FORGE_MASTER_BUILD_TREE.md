@@ -3795,3 +3795,17 @@ Evidence:
 - Forge glow/crystal visual identity preserved
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Desktop Landscape Cockpit Layout Implementation 054B
+
+054B implements the first desktop/landscape cockpit layout pass.
+
+- hamburger/drawer affordance added
+- desktop/landscape command bar moved to top command layer
+- mobile portrait orb behavior preserved
+- mobile bottom nav hidden in desktop/landscape
+- cockpit container widened
+- grids reflow to 2-3 columns
+- smart widgets reflow into wider horizontal card tracks
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged

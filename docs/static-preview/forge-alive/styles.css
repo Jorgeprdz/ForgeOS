@@ -1488,3 +1488,210 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:COMMAND_BAR_DESKTOP_LANDSCAPE_053Y:END */
+
+/* FORGEOS:DESKTOP_LANDSCAPE_COCKPIT_054B:START */
+.desktop-menu-toggle,
+.desktop-nav-drawer {
+  display: none;
+}
+
+@media (min-width: 760px), (orientation: landscape) {
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .phone-frame,
+  .app-shell,
+  main {
+    width: min(1180px, calc(100vw - 40px));
+    max-width: min(1180px, calc(100vw - 40px));
+    margin-inline: auto;
+    padding: 28px 24px max(128px, calc(108px + env(safe-area-inset-bottom)));
+  }
+
+  .desktop-menu-toggle {
+    position: fixed;
+    top: 22px;
+    left: max(22px, calc((100vw - 1180px) / 2 + 22px));
+    z-index: 110;
+    display: grid;
+    gap: 4px;
+    width: 42px;
+    height: 42px;
+    place-content: center;
+    border: 1px solid rgba(116, 211, 255, 0.2);
+    border-radius: 14px;
+    background: rgba(8, 18, 36, 0.62);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+    box-shadow: 0 0 22px rgba(85, 198, 255, 0.16);
+  }
+
+  .desktop-menu-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(236, 246, 255, 0.84);
+  }
+
+  .desktop-nav-drawer {
+    position: fixed;
+    top: 76px;
+    left: max(22px, calc((100vw - 1180px) / 2 + 22px));
+    z-index: 105;
+    display: grid;
+    gap: 10px;
+    width: 156px;
+    padding: 14px;
+    border-radius: 18px;
+    opacity: 0.72;
+  }
+
+  .desktop-nav-drawer strong {
+    color: rgba(255, 225, 161, 0.96);
+    font-size: 0.78rem;
+  }
+
+  .desktop-nav-drawer a {
+    color: rgba(226, 236, 255, 0.76);
+    font-size: 0.78rem;
+  }
+
+  .safety-ribbon,
+  .preview-version-badge {
+    max-width: 540px;
+    margin-inline: auto;
+  }
+
+  header,
+  .hero,
+  .assistant-card,
+  .primary-card {
+    max-width: none;
+  }
+
+  .assistant-card {
+    min-height: 132px;
+  }
+
+  .primary-card {
+    min-height: 172px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .smart-widget-stack {
+    display: grid;
+    gap: 14px;
+    margin: 18px 0;
+  }
+
+  .smart-widget-carousel.card-level,
+  .smart-widget-carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(300px, 0.42fr);
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 2px 4px 8px;
+  }
+
+  .smart-widget-slide,
+  .smart-widget-card,
+  .smart-widget-card.compact {
+    min-height: 100%;
+    scroll-snap-align: start;
+  }
+
+  .panel {
+    max-width: none;
+  }
+
+  .fake-input {
+    display: none;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .command-orb-layer {
+    top: 22px;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    z-index: 112;
+    width: min(680px, calc(100vw - 260px));
+    justify-items: stretch;
+    transform: translateX(-50%);
+  }
+
+  .command-orb {
+    display: none;
+  }
+
+  .command-pill {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    min-height: 54px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition:
+      box-shadow 260ms ease,
+      border-color 260ms ease,
+      background 260ms ease;
+  }
+
+  .command-pill-input,
+  .command-pill-slash,
+  .command-pill-close {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .command-pill-close {
+    display: none;
+  }
+
+  .command-orb-results {
+    top: 66px;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 980px) {
+  .phone-frame,
+  .app-shell,
+  main {
+    width: min(1280px, calc(100vw - 56px));
+    max-width: min(1280px, calc(100vw - 56px));
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .smart-widget-carousel.card-level,
+  .smart-widget-carousel {
+    grid-auto-columns: minmax(340px, 0.34fr);
+  }
+
+  .command-orb-layer {
+    width: min(760px, calc(100vw - 320px));
+  }
+}
+/* FORGEOS:DESKTOP_LANDSCAPE_COCKPIT_054B:END */
