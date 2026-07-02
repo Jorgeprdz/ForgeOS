@@ -1059,3 +1059,12 @@ Forge Alive command bar now preserves its animated glow while using a crystal ba
 
 Next:
 - 053U_COMMAND_BAR_CRYSTAL_BACKDROP_OUTPUT_REVIEW.
+
+# Forge Alive Command Orb Expansion Experiment Roadmap Status
+
+053U_COMMAND_ORB_EXPANSION_EXPERIMENT: GREEN / IMPLEMENTED.
+
+Forge Alive now has an experimental command orb state that expands into a pill command input with local static mock results only. A backup tag was created before the experiment so the prior crystal command bar state can be restored.
+
+Next:
+- 053V_COMMAND_ORB_EXPANSION_OUTPUT_REVIEW.

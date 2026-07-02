@@ -3717,3 +3717,16 @@ Evidence:
 - no live search or runtime execution
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Command Orb Expansion Experiment 053U
+
+053U prototypes orb-to-pill command interaction after creating a backup tag for the current crystal command bar state.
+
+- backup tag created before experiment
+- idle state is glowing orb
+- tap expands orb into pill command input
+- local static input demo enabled
+- mock results are local only
+- no live search or runtime execution
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged

@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Forge Alive Static Preview</title>
-  <link rel="stylesheet" href="./styles.css?v=053T">
+  <link rel="stylesheet" href="./styles.css?v=053U">
 </head>
 <body>
   <main class="phone-shell" aria-label="Forge Alive static preview">
     <section class="safety-ribbon">SAMPLE DATA / READ-ONLY / NOT PRODUCTION</section>
-    <section class="preview-version-badge">Preview v053T</section>
+    <section class="preview-version-badge">Preview v053U</section>
 
     <header class="hero">
       <div>
@@ -85,19 +85,37 @@
       </ul>
     </section>
 
-    <section class="command-bar-shell command-bar-oval" aria-label="Forge Alive command bar">
-      <div class="command-bar-aura" aria-hidden="true"></div>
-      <label class="command-input-shell" aria-label="Spotlight command input preview">
-        <span class="command-slash" aria-hidden="true">/</span>
+    <section class="command-orb-layer" data-command-orb-layer aria-label="Forge Alive command orb">
+      <button class="command-orb" type="button" aria-label="Abrir command bar">
+        <span class="command-orb-core" aria-hidden="true">/</span>
+      </button>
+      <div class="command-pill" aria-label="Forge Alive command bar">
+        <span class="command-pill-slash" aria-hidden="true">/</span>
         <input
-          class="command-input"
+          class="command-pill-input"
           type="text"
           value=""
           placeholder="Busca o escribe un comando"
-          disabled
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
         />
-        <span class="command-hint" aria-hidden="true">/Juan</span>
-      </label>
+        <button class="command-pill-close" type="button" aria-label="Cerrar command bar">x</button>
+      </div>
+      <div class="command-orb-results" hidden aria-label="Local command preview results">
+        <article>
+          <strong>Juan Orozco</strong>
+          <span>Poliza ABC · preview</span>
+        </article>
+        <article>
+          <strong>Juan Martinez</strong>
+          <span>Prospecto · review</span>
+        </article>
+        <article>
+          <strong>Juan Perez</strong>
+          <span>Ultimo contacto hace 76 dias · follow-up</span>
+        </article>
+      </div>
     </section>
 
     <nav class="bottom-nav" aria-label="static navigation preview">
@@ -111,6 +129,7 @@
 
   <script src="./sample-data.js"></script>
 
-  <script src="./smart-widget-stack.js?v=053T" type="module"></script>
+  <script src="./smart-widget-stack.js?v=053U" type="module"></script>
+  <script src="./command-bar-orb.js?v=053U" type="module"></script>
 </body>
 </html>
