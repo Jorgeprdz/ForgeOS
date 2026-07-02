@@ -1023,3 +1023,12 @@ Forge Alive command layer is now scoped as a persistent textbox with Forge-compa
 
 Next:
 - 053O_FORGE_ALIVE_STATIC_COMMAND_TEXTBOX_GLOW_IMPLEMENTATION.
+
+# Forge Alive Command Bar Spotlight Index Scope Roadmap Status
+
+053N_FORGE_ALIVE_COMMAND_BAR_SPOTLIGHT_INDEX_SCOPE: GREEN / SCOPED.
+
+Forge Alive command bar is now scoped as a Spotlight / Alfred-style textbox-first universal command surface. It will support slash commands, indexed results, and minimum-click navigation while preserving read-only and human-authority boundaries.
+
+Next:
+- 053O_FORGE_ALIVE_COMMAND_BAR_SPOTLIGHT_STATIC_PREVIEW_IMPLEMENTATION.

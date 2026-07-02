@@ -1952,3 +1952,14 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- GREEN Reduced-motion fallback required
 |   |-- GREEN Article 0 and read-only safety boundaries unchanged
 |   `-- RED approval/send/runtime/truth mutation
+
+|-- GREEN 053N Forge Alive Command Bar Spotlight Index Scope
+|   |-- GREEN Command bar is Spotlight / Alfred-style
+|   |-- GREEN Command bar is textbox-first and persistent
+|   |-- GREEN Slash commands are scoped
+|   |-- GREEN Universal system index is read-model first
+|   |-- GREEN Minimum-click navigation is the product philosophy
+|   |-- GREEN Smart Widget Stack remains bounded contextual content
+|   |-- GREEN Animated Forge glow is visual-only
+|   |-- GREEN Article 0 and read-only safety boundaries unchanged
+|   `-- RED approval/send/runtime/truth mutation

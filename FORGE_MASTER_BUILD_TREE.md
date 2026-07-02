@@ -3653,3 +3653,16 @@ Evidence:
 - reduced-motion fallback required
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Command Bar Spotlight Index Scope 053N
+
+053N scopes the Forge Alive command bar as a Spotlight / Alfred-style universal command surface.
+
+- command bar is textbox-first
+- slash commands are scoped
+- universal system index is scoped as read-model first
+- minimum-click navigation is the product philosophy
+- Smart Widget Stack remains bounded contextual content
+- animated Forge glow is visual-only
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged
