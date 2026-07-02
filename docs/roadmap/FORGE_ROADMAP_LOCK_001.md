@@ -1131,12 +1131,3 @@ Forge Alive desktop/landscape now treats Contexto vivo as a collapsible dedicate
 
 Next:
 - 054G_DESKTOP_CONTEXT_RAIL_DRAWER_OUTPUT_REVIEW.
-
-# Forge Alive Desktop Cockpit Overlap And Lower Fill Tuning Roadmap Status
-
-054G_DESKTOP_COCKPIT_OVERLAP_AND_LOWER_FILL_TUNING: GREEN / IMPLEMENTED.
-
-Forge Alive desktop/landscape now reserves more top space for the command layer and fills lower cockpit space with more visible smart-widget cards.
-
-Next:
-- 054H_DESKTOP_COCKPIT_OVERLAP_LOWER_FILL_OUTPUT_REVIEW.

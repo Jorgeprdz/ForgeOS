@@ -2090,13 +2090,3 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- GREEN Mobile portrait orb-to-pill behavior preserved
 |   |-- GREEN Article 0 and read-only safety boundaries unchanged
 |   `-- RED approval/send/runtime/truth mutation
-
-|-- GREEN 054G Forge Alive Desktop Cockpit Overlap And Lower Fill Tuning
-|   |-- GREEN Command bar reduced and anchored higher
-|   |-- GREEN Context trigger moved below command layer
-|   |-- GREEN Main cockpit top padding reserves command layer
-|   |-- GREEN Desktop smart widgets render as dense grid cards
-|   |-- GREEN Desktop carousel dots hidden when grid is visible
-|   |-- GREEN Lower cockpit space filled with more widget cards
-|   |-- GREEN Article 0 and read-only safety boundaries unchanged
-|   `-- RED approval/send/runtime/truth mutation
