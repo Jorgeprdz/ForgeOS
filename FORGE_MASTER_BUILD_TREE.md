@@ -3809,3 +3809,16 @@ Evidence:
 - smart widgets reflow into wider horizontal card tracks
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Desktop Landscape Asymmetric Cockpit Tuning 054D
+
+054D tunes the desktop/landscape preview away from a centered phone-column layout.
+
+- command bar anchored smaller at top-right
+- right desktop context rail added
+- left hamburger/drawer navigation preserved
+- main content uses asymmetric cockpit columns
+- smart widgets keep wider horizontal card tracks
+- mobile portrait orb-to-pill behavior preserved
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged

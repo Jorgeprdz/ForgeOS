@@ -1695,3 +1695,198 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:DESKTOP_LANDSCAPE_COCKPIT_054B:END */
+
+/* FORGEOS:DESKTOP_ASYMMETRIC_COCKPIT_054D:START */
+.desktop-context-rail {
+  display: none;
+}
+
+@media (min-width: 900px), (orientation: landscape) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .phone-frame,
+  .app-shell {
+    width: min(1420px, calc(100vw - 40px)) !important;
+    max-width: min(1420px, calc(100vw - 40px)) !important;
+    margin-inline: auto !important;
+  }
+
+  main {
+    width: min(1180px, calc(100vw - 340px)) !important;
+    max-width: min(1180px, calc(100vw - 340px)) !important;
+    margin: 0 300px 0 220px !important;
+    padding-top: 102px !important;
+    padding-bottom: max(92px, calc(72px + env(safe-area-inset-bottom))) !important;
+    display: grid !important;
+    grid-template-columns: minmax(310px, 0.8fr) minmax(420px, 1.2fr) !important;
+    grid-auto-flow: dense;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .safety-ribbon,
+  .preview-version-badge {
+    grid-column: 1 / -1;
+    width: min(520px, 100%);
+    justify-self: start;
+    margin-inline: 0;
+  }
+
+  header,
+  .hero,
+  .assistant-card,
+  .primary-card {
+    grid-column: 1;
+    width: 100%;
+    max-width: none !important;
+  }
+
+  .smart-widget-stack {
+    grid-column: 2;
+    grid-row: span 4;
+    width: 100%;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .smart-widget-carousel.card-level,
+  .smart-widget-carousel {
+    display: grid !important;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(360px, 0.74fr);
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 4px 12px;
+  }
+
+  .smart-widget-slide,
+  .smart-widget-card,
+  .smart-widget-card.compact {
+    min-height: 100%;
+    scroll-snap-align: start;
+  }
+
+  .grid,
+  .metrics-grid,
+  .summary-grid {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 16px;
+  }
+
+  .panel,
+  .recommendations,
+  .opportunities {
+    max-width: none !important;
+  }
+
+  .desktop-menu-toggle {
+    top: 28px !important;
+    left: 30px !important;
+    width: 46px;
+    height: 46px;
+    z-index: 116;
+  }
+
+  .desktop-nav-drawer {
+    top: 88px !important;
+    left: 30px !important;
+    width: 174px !important;
+    z-index: 108;
+    opacity: 0.82;
+  }
+
+  .desktop-context-rail {
+    position: fixed;
+    top: 102px;
+    right: 28px;
+    z-index: 106;
+    display: grid;
+    gap: 12px;
+    width: min(286px, calc(100vw - 1080px));
+    min-width: 238px;
+    padding: 16px;
+    border-radius: 22px;
+    color: rgba(232, 242, 255, 0.78);
+    background:
+      linear-gradient(150deg, rgba(10, 23, 44, 0.76), rgba(10, 32, 52, 0.42)),
+      rgba(8, 18, 36, 0.58);
+    border: 1px solid rgba(116, 211, 255, 0.18);
+    -webkit-backdrop-filter: blur(22px) saturate(155%);
+    backdrop-filter: blur(22px) saturate(155%);
+    box-shadow:
+      0 18px 58px rgba(0, 0, 0, 0.32),
+      0 0 34px rgba(85, 198, 255, 0.12);
+  }
+
+  .desktop-context-rail strong {
+    color: rgba(255, 225, 161, 0.96);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.76rem;
+  }
+
+  .desktop-context-rail section {
+    display: grid;
+    gap: 4px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(170, 204, 255, 0.1);
+  }
+
+  .desktop-context-rail span {
+    color: rgba(169, 186, 214, 0.78);
+    font-size: 0.74rem;
+  }
+
+  .desktop-context-rail b {
+    color: rgba(239, 247, 255, 0.92);
+    font-size: 0.84rem;
+  }
+
+  .command-orb-layer {
+    top: 26px !important;
+    right: 28px !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: min(520px, 38vw) !important;
+    transform: none !important;
+    justify-items: stretch;
+    z-index: 118;
+  }
+
+  .command-pill {
+    min-height: 50px !important;
+    border-radius: 999px !important;
+  }
+
+  .command-pill-input {
+    font-size: 0.94rem;
+  }
+
+  .command-orb-results {
+    top: 62px !important;
+    right: 0 !important;
+    left: auto !important;
+    width: min(520px, 38vw) !important;
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 1180px) and (orientation: landscape) {
+  main {
+    width: calc(100vw - 590px) !important;
+    max-width: 980px !important;
+    margin-left: 236px !important;
+    margin-right: 328px !important;
+    grid-template-columns: minmax(330px, 0.88fr) minmax(430px, 1.12fr) !important;
+  }
+
+  .smart-widget-carousel.card-level,
+  .smart-widget-carousel {
+    grid-auto-columns: minmax(390px, 0.82fr);
+  }
+}
+/* FORGEOS:DESKTOP_ASYMMETRIC_COCKPIT_054D:END */
