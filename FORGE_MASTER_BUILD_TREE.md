@@ -3782,3 +3782,16 @@ Evidence:
 - no live search or runtime execution
 - no approval/send/runtime/truth mutation
 - Article 0 unchanged
+
+## Forge Alive Desktop Landscape Cockpit Layout Scope 054A
+
+054A scopes a real desktop/landscape cockpit layout for Forge Alive.
+
+- mobile portrait keeps orb-to-pill command pattern
+- desktop/landscape gets extended command bar
+- hamburger/drawer navigation is allowed for route/overflow navigation
+- widgets reflow into wider multi-card layout
+- phone-column layout must not dominate desktop/landscape
+- Forge glow/crystal visual identity preserved
+- no approval/send/runtime/truth mutation
+- Article 0 unchanged

@@ -1104,3 +1104,12 @@ Forge Alive now preserves the orb-to-pill pattern on mobile while showing the co
 
 Next:
 - 053Z_COMMAND_BAR_DESKTOP_LANDSCAPE_OUTPUT_REVIEW.
+
+# Forge Alive Desktop Landscape Cockpit Layout Scope Roadmap Status
+
+054A_FORGE_ALIVE_DESKTOP_LANDSCAPE_COCKPIT_LAYOUT_SCOPE: GREEN / SCOPED.
+
+Forge Alive desktop/landscape layout is now scoped as a real cockpit layout. Mobile keeps orb-to-pill behavior, while desktop/landscape uses an extended command bar, hamburger/drawer navigation, and wider multi-card widget layout.
+
+Next:
+- 054B_FORGE_ALIVE_DESKTOP_LANDSCAPE_COCKPIT_LAYOUT_IMPLEMENTATION.

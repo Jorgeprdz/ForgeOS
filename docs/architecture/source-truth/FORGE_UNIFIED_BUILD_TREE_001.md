@@ -2049,3 +2049,13 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- GREEN No live search or runtime execution
 |   |-- GREEN Article 0 and read-only safety boundaries unchanged
 |   `-- RED approval/send/runtime/truth mutation
+
+|-- GREEN 054A Forge Alive Desktop Landscape Cockpit Layout Scope
+|   |-- GREEN Mobile portrait keeps orb-to-pill command pattern
+|   |-- GREEN Desktop/landscape gets extended command bar
+|   |-- GREEN Hamburger/drawer navigation allowed for route/overflow navigation
+|   |-- GREEN Widgets reflow into wider multi-card layout
+|   |-- GREEN Phone-column layout must not dominate desktop/landscape
+|   |-- GREEN Forge glow/crystal visual identity preserved
+|   |-- GREEN Article 0 and read-only safety boundaries unchanged
+|   `-- RED approval/send/runtime/truth mutation
