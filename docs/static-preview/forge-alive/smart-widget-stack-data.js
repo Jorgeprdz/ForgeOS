@@ -66,7 +66,7 @@ export const forgeAliveSmartWidgetStackPreview = Object.freeze({
         {
           family: "COMMISSION_UPDATE_WIDGET",
           title: "Vistazo de comisiones",
-          subtitle: "Información para revisar, no payout truth.",
+          subtitle: "Información para revisar, no es cálculo final de pago.",
           priority: 82,
           whyNow: "Hay una actualización de comisión disponible para inspección humana.",
           evidence: ["actualización de muestra", "vigencia de reglas"],

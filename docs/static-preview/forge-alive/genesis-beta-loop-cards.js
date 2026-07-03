@@ -10,10 +10,10 @@ const cards = [
   {
     title: "Andres / Juan",
     context: "Cercanía a bono",
-    subtitle: "contexto motivacional / estimación candidata, no payout truth",
+    subtitle: "contexto motivacional / estimación candidata, no es cálculo final de pago",
     draft: "Revisar la oportunidad como contexto, sin prometer pago ni resultado.",
     evidence: ["cercanía a bono", "señal relativa", "mensaje consultivo"],
-    boundary: "No es payout truth"
+    boundary: "No es cálculo final de pago"
   },
   {
     title: "Lupita / Maria",

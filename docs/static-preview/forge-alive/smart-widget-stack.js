@@ -1,5 +1,19 @@
 import { forgeAliveSmartWidgetStackPreview } from "./smart-widget-stack-data.js?v=053L";
 
+const SMART_WIDGET_FAMILY_LABELS = Object.freeze({
+  COMMISSION_UPDATE_WIDGET_FAMILY: "ACTUALIZACION DE COMISION",
+  FOLLOW_UP_RISK_WIDGET_FAMILY: "SEGUIMIENTO",
+  DAILY_REVIEW_WIDGET_FAMILY: "REVISION DIARIA",
+  MONTHLY_GOAL_WIDGET_FAMILY: "META MENSUAL",
+  GENESIS_REVIEW_PACKET_WIDGET_FAMILY: "REVISION GENESIS",
+  JUDGMENT_GATE_WIDGET_FAMILY: "JUICIO HUMANO",
+});
+
+function formatWidgetFamilyLabel(family) {
+  const key = String(family || "");
+  return SMART_WIDGET_FAMILY_LABELS[key] || key.replace(/_WIDGET_FAMILY$/, "").replaceAll("_", " ");
+}
+
 const params = new URLSearchParams(window.location.search);
 const CARD_LEVEL_CAROUSEL_RULE = "one smart widget card per slide";
 
@@ -102,7 +116,7 @@ function syncDotsFromScroll(root, carousel, cards) {
   updateDots(root, activeIndex, progress);
 }
 
-function renderEvidence(items) {
+function renderEvidencia(items) {
   const wrap = el("div", "smart-widget-evidence");
   wrap.appendChild(el("span", "smart-widget-mini-label", "Evidencia"));
   wrap.appendChild(el("p", "", (items || []).join(" · ")));
@@ -123,7 +137,7 @@ function renderWidget(card, index) {
 
   const top = el("div", "smart-widget-card-top");
   const titleBlock = el("div", "smart-widget-title-block");
-  titleBlock.appendChild(el("p", "smart-widget-eyebrow", familyLabel(card.family)));
+  titleBlock.appendChild(el("p", "smart-widget-eyebrow", formatWidgetFamilyLabel(card.family))));
   titleBlock.appendChild(el("h3", "", card.title));
   titleBlock.appendChild(el("p", "smart-widget-subtitle", card.subtitle));
   top.appendChild(titleBlock);
@@ -143,7 +157,7 @@ function renderWidget(card, index) {
   article.appendChild(chips);
 
   article.appendChild(el("p", "smart-widget-why", `Por qué ahora: ${card.whyNow}`));
-  article.appendChild(renderEvidence(card.evidence));
+  article.appendChild(renderEvidencia(card.evidence));
   article.appendChild(el("p", "smart-widget-uncertainty", `Incertidumbre: ${card.uncertainty}`));
   article.appendChild(el("p", "article-zero-reminder compact", forgeAliveSmartWidgetStackPreview.article0));
   article.appendChild(el("p", "smart-widget-prompt", card.prompt));
@@ -163,7 +177,7 @@ function main() {
 
   const header = el("header", "smart-widget-header glass");
   header.appendChild(el("p", "smart-widget-eyebrow", forgeAliveSmartWidgetStackPreview.version));
-  header.appendChild(el("h2", "", "Contexto vivo"));
+  header.appendChild(el("h2", "", "Señales para decidir"));
   header.appendChild(el("p", "smart-widget-subtitle", "Desliza una tarjeta. Forge muestra contexto; el humano decide."));
   target.appendChild(header);
 

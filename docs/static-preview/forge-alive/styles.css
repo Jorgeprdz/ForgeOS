@@ -2094,3 +2094,33 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:ALFRED_PRODUCT_POLISH_056F:END */
+
+/* FORGEOS:ALFRED_ACCESSIBILITY_MICROCOPY_056G:START */
+@media (max-width: 640px) {
+  .command-orb-layer {
+    bottom: 76px !important;
+    right: 14px !important;
+    top: auto !important;
+    width: auto !important;
+    z-index: 35;
+  }
+
+  .command-pill {
+    min-height: 50px !important;
+  }
+
+  .command-pill-input,
+  .command-pill-close {
+    display: none !important;
+  }
+
+  .command-pill-slash {
+    height: 44px !important;
+    width: 44px !important;
+  }
+
+  .bottom-nav {
+    z-index: 40;
+  }
+}
+/* FORGEOS:ALFRED_ACCESSIBILITY_MICROCOPY_056G:END */
