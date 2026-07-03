@@ -4125,3 +4125,223 @@
     }
   }
 }
+
+
+/* FORGEOS:ALFRED_MOBILE_UX90_PROFILE_MENU_SMARTWIDGET_FOCUS_056O */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  html.forge-ux90-mobile-056o {
+    --forge-profile-menu-bg-056o: rgba(6, 14, 29, 0.86);
+    --forge-profile-menu-border-056o: rgba(223, 240, 255, 0.16);
+  }
+
+  html.forge-ux90-mobile-056o.forge-light-preview-056o {
+    --forge-profile-menu-bg-056o: rgba(245, 248, 255, 0.90);
+    --forge-profile-menu-border-056o: rgba(10, 26, 47, 0.12);
+  }
+
+  html.forge-ux90-mobile-056o.forge-light-preview-056o body {
+    background:
+      radial-gradient(circle at 92% 8%, rgba(100, 218, 255, 0.20), transparent 34%),
+      radial-gradient(circle at 10% 22%, rgba(242, 207, 117, 0.18), transparent 34%),
+      #edf4fb !important;
+    color: #071224 !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-trigger-056o {
+    position: relative !important;
+    cursor: pointer !important;
+    isolation: isolate !important;
+    transition: transform 220ms cubic-bezier(.16,1,.3,1), box-shadow 220ms ease, filter 220ms ease !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-trigger-056o:active {
+    transform: scale(.965) !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-trigger-056o::after {
+    content: "" !important;
+    position: absolute !important;
+    right: 4px !important;
+    bottom: 4px !important;
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #73e59a, #76dbff) !important;
+    box-shadow: 0 0 0 2px rgba(5, 11, 22, 0.80), 0 0 12px rgba(115, 229, 154, 0.50) !important;
+    z-index: 3 !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-menu-056o {
+    position: fixed !important;
+    top: max(74px, env(safe-area-inset-top, 0px) + 54px) !important;
+    right: max(18px, env(safe-area-inset-right, 0px)) !important;
+    width: min(310px, calc(100vw - 36px)) !important;
+    border-radius: 26px !important;
+    border: 1px solid var(--forge-profile-menu-border-056o) !important;
+    background:
+      radial-gradient(circle at 16% 10%, rgba(242, 207, 117, 0.16), transparent 34%),
+      radial-gradient(circle at 92% 90%, rgba(100, 218, 255, 0.18), transparent 38%),
+      var(--forge-profile-menu-bg-056o) !important;
+    box-shadow:
+      0 24px 62px rgba(0, 0, 0, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+    backdrop-filter: blur(26px) saturate(1.45) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(1.45) !important;
+    padding: 12px !important;
+    z-index: 380 !important;
+    opacity: 0 !important;
+    transform: translate3d(0, -10px, 0) scale(.985) !important;
+    pointer-events: none !important;
+    transition: opacity 220ms ease, transform 320ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-menu-056o.is-open-056o {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-menu-head-056o {
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    gap: 11px !important;
+    align-items: center !important;
+    padding: 8px 8px 12px !important;
+    border-bottom: 1px solid rgba(223, 240, 255, 0.10) !important;
+    margin-bottom: 8px !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-avatar-056o {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 999px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #050b16 !important;
+    font-weight: 950 !important;
+    background: linear-gradient(135deg, #f2cf75, #76dbff) !important;
+    box-shadow: 0 10px 24px rgba(100, 218, 255, 0.20) !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-name-056o {
+    color: #f5f8ff !important;
+    font-size: .96rem !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+  }
+
+  html.forge-ux90-mobile-056o.forge-light-preview-056o .forge-profile-name-056o {
+    color: #071224 !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-meta-056o {
+    color: rgba(220, 230, 244, 0.62) !important;
+    font-size: .72rem !important;
+    font-weight: 720 !important;
+    margin-top: 3px !important;
+  }
+
+  html.forge-ux90-mobile-056o.forge-light-preview-056o .forge-profile-meta-056o {
+    color: rgba(7, 18, 36, 0.62) !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-option-056o {
+    width: 100% !important;
+    min-height: 44px !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    padding: 9px 10px !important;
+    display: grid !important;
+    grid-template-columns: 30px minmax(0, 1fr) auto !important;
+    gap: 9px !important;
+    align-items: center !important;
+    color: #f5f8ff !important;
+    background: transparent !important;
+    text-align: left !important;
+    font: inherit !important;
+    transition: background 180ms ease, transform 180ms ease !important;
+  }
+
+  html.forge-ux90-mobile-056o.forge-light-preview-056o .forge-profile-option-056o {
+    color: #071224 !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-option-056o:active {
+    transform: scale(.99) !important;
+    background: rgba(245, 248, 255, 0.08) !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-option-icon-056o {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 12px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #050b16 !important;
+    background: linear-gradient(135deg, rgba(242, 207, 117, .95), rgba(118, 219, 255, .92)) !important;
+    font-size: .82rem !important;
+    font-weight: 950 !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-option-title-056o {
+    font-size: .84rem !important;
+    font-weight: 850 !important;
+    line-height: 1.1 !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-option-subtitle-056o {
+    color: rgba(220, 230, 244, 0.58) !important;
+    font-size: .67rem !important;
+    font-weight: 680 !important;
+    margin-top: 2px !important;
+  }
+
+  html.forge-ux90-mobile-056o.forge-light-preview-056o .forge-profile-option-subtitle-056o {
+    color: rgba(7, 18, 36, 0.58) !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-profile-status-056o {
+    color: rgba(242, 207, 117, 0.86) !important;
+    font-size: .64rem !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-smart-widget-pager-root-056l3 {
+    overflow: hidden !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-smart-widget-viewport-056l3 {
+    overflow: hidden !important;
+    max-height: 292px !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-smart-widget-track-056l3 {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: 400% !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-smart-widget-card-056l3 {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+    max-width: 25% !important;
+  }
+
+  html.forge-ux90-mobile-056o .forge-ux90-hidden-extra-widget-056o {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  @media (max-width: 900px) and (orientation: landscape) {
+    html.forge-ux90-mobile-056o .forge-profile-menu-056o {
+      top: max(62px, env(safe-area-inset-top, 0px) + 44px) !important;
+      width: min(300px, 42vw) !important;
+    }
+
+    html.forge-ux90-mobile-056o .forge-smart-widget-viewport-056l3 {
+      max-height: 184px !important;
+    }
+  }
+}

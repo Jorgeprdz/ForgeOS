@@ -2208,3 +2208,183 @@
   window.addEventListener("resize", scheduleUx85Polish056N, { passive: true });
   window.addEventListener("orientationchange", scheduleUx85Polish056N, { passive: true });
 })();
+
+
+/* FORGEOS:ALFRED_MOBILE_UX90_PROFILE_MENU_SMARTWIDGET_FOCUS_056O */
+(function () {
+  "use strict";
+
+  function isMobile056O() {
+    return window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+  }
+
+  function el056O(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (typeof text === "string") node.textContent = text;
+    return node;
+  }
+
+  function normalizeText056O(value) {
+    return String(value || "").replace(/\s+/g, " ").trim();
+  }
+
+  function findGreetingAvatar056O() {
+    var candidates = Array.prototype.slice.call(document.querySelectorAll("button, [role='button'], .avatar, [class*='avatar'], [class*='profile'], div, span"));
+    return candidates.find(function (node) {
+      var text = normalizeText056O(node.textContent);
+      if (text !== "F") return false;
+      var rect = node.getBoundingClientRect();
+      return rect.width >= 38 && rect.width <= 96 && rect.height >= 38 && rect.height <= 96 && rect.top < 220;
+    }) || null;
+  }
+
+  function makeOption056O(icon, title, subtitle, status, action) {
+    var button = el056O("button", "forge-profile-option-056o");
+    button.type = "button";
+    button.dataset.profileAction056o = action;
+    button.appendChild(el056O("span", "forge-profile-option-icon-056o", icon));
+    var copy = el056O("span");
+    copy.appendChild(el056O("span", "forge-profile-option-title-056o", title));
+    copy.appendChild(el056O("span", "forge-profile-option-subtitle-056o", subtitle));
+    button.appendChild(copy);
+    button.appendChild(el056O("span", "forge-profile-status-056o", status));
+    return button;
+  }
+
+  function ensureProfileMenu056O(trigger) {
+    var existing = document.querySelector(".forge-profile-menu-056o");
+    if (existing) return existing;
+
+    var menu = el056O("section", "forge-profile-menu-056o");
+    menu.setAttribute("aria-label", "Opciones de perfil");
+    menu.setAttribute("aria-hidden", "true");
+
+    var head = el056O("div", "forge-profile-menu-head-056o");
+    head.appendChild(el056O("div", "forge-profile-avatar-056o", "F"));
+    var identity = el056O("div");
+    identity.appendChild(el056O("div", "forge-profile-name-056o", "Jorge"));
+    identity.appendChild(el056O("div", "forge-profile-meta-056o", "Google Auth proximamente"));
+    head.appendChild(identity);
+    menu.appendChild(head);
+
+    menu.appendChild(makeOption056O("G", "Cuenta Google", "Foto y sesion real cuando Auth este listo", "preview", "google"));
+    menu.appendChild(makeOption056O("☼", "Tema claro", "Vista temporal sin guardar preferencia", "local", "light"));
+    menu.appendChild(makeOption056O("☾", "Tema oscuro", "Regresa a Forge navy", "local", "dark"));
+    menu.appendChild(makeOption056O("↗", "Cerrar sesion", "Bloqueado en static preview", "locked", "logout"));
+
+    document.body.appendChild(menu);
+
+    menu.addEventListener("click", function (event) {
+      var option = event.target.closest("[data-profile-action-056o]");
+      if (!option) return;
+      var action = option.dataset.profileAction056o;
+      if (action === "light") {
+        document.documentElement.classList.add("forge-light-preview-056o");
+        return;
+      }
+      if (action === "dark") {
+        document.documentElement.classList.remove("forge-light-preview-056o");
+        return;
+      }
+      if (action === "logout") {
+        option.querySelector(".forge-profile-status-056o").textContent = "requiere auth";
+        return;
+      }
+      if (action === "google") {
+        option.querySelector(".forge-profile-status-056o").textContent = "pronto";
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!menu.classList.contains("is-open-056o")) return;
+      if (menu.contains(event.target)) return;
+      if (trigger.contains(event.target)) return;
+      closeProfileMenu056O(menu, trigger);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeProfileMenu056O(menu, trigger);
+    });
+
+    return menu;
+  }
+
+  function openProfileMenu056O(menu, trigger) {
+    menu.classList.add("is-open-056o");
+    menu.setAttribute("aria-hidden", "false");
+    trigger.setAttribute("aria-expanded", "true");
+  }
+
+  function closeProfileMenu056O(menu, trigger) {
+    menu.classList.remove("is-open-056o");
+    menu.setAttribute("aria-hidden", "true");
+    trigger.setAttribute("aria-expanded", "false");
+  }
+
+  function wireProfile056O() {
+    if (!isMobile056O()) return;
+    var trigger = findGreetingAvatar056O();
+    if (!trigger || trigger.dataset.profileMenu056o === "ready") return;
+    trigger.dataset.profileMenu056o = "ready";
+    trigger.classList.add("forge-profile-trigger-056o");
+    trigger.setAttribute("role", "button");
+    trigger.setAttribute("tabindex", "0");
+    trigger.setAttribute("aria-haspopup", "menu");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-label", "Abrir opciones de perfil");
+    var menu = ensureProfileMenu056O(trigger);
+
+    function toggle() {
+      if (menu.classList.contains("is-open-056o")) {
+        closeProfileMenu056O(menu, trigger);
+      } else {
+        openProfileMenu056O(menu, trigger);
+      }
+    }
+
+    trigger.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggle();
+    });
+    trigger.addEventListener("keydown", function (event) {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      toggle();
+    });
+  }
+
+  function enforceOneSmartWidgetViewport056O() {
+    if (!isMobile056O()) return;
+    var root = document.querySelector(".forge-smart-widget-pager-root-056l3");
+    if (!root) return;
+    var cards = Array.prototype.slice.call(root.querySelectorAll(".forge-smart-widget-card-056l3"));
+    cards.forEach(function (card, index) {
+      card.classList.toggle("forge-ux90-hidden-extra-widget-056o", index > 3);
+    });
+    var track = root.querySelector(".forge-smart-widget-track-056l3");
+    if (track) {
+      track.style.width = "400%";
+      track.style.flexWrap = "nowrap";
+    }
+  }
+
+  function applyUx90Mobile056O() {
+    if (!isMobile056O()) return;
+    document.documentElement.classList.add("forge-ux90-mobile-056o");
+    wireProfile056O();
+    enforceOneSmartWidgetViewport056O();
+  }
+
+  function schedule056O() {
+    [80, 360, 900, 1600, 2800].forEach(function (delay) {
+      window.setTimeout(applyUx90Mobile056O, delay);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", schedule056O);
+  window.addEventListener("load", schedule056O);
+  window.addEventListener("resize", schedule056O, { passive: true });
+  window.addEventListener("orientationchange", schedule056O, { passive: true });
+})();
