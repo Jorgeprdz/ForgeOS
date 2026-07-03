@@ -800,3 +800,2365 @@
   }
 }
 /* FORGEOS:ALFRED_MOBILE_VISUAL_QA_REPAIR_056J:END */
+
+/* FORGEOS:ALFRED_CONCIERGE_VISUAL_REPAIR_LITE_056K */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --alfred-nav-056k: 72px;
+    --alfred-orb-056k: 72px;
+    --alfred-safe-056k: max(14px, env(safe-area-inset-bottom, 0px));
+  }
+
+  html, body {
+    overflow-x: hidden !important;
+    background: #050B16 !important;
+  }
+
+  .phone-shell {
+    max-width: 430px !important;
+    margin: 0 auto !important;
+    padding-bottom: calc(var(--alfred-nav-056k) + 132px) !important;
+    overflow-x: clip !important;
+  }
+
+  .command-orb-layer {
+    position: fixed !important;
+    right: 22px !important;
+    bottom: calc(var(--alfred-nav-056k) + var(--alfred-safe-056k) + 18px) !important;
+    width: var(--alfred-orb-056k) !important;
+    height: var(--alfred-orb-056k) !important;
+    min-width: var(--alfred-orb-056k) !important;
+    min-height: var(--alfred-orb-056k) !important;
+    border-radius: 999px !important;
+    z-index: 140 !important;
+    display: grid !important;
+    place-items: center !important;
+    transition: width 860ms cubic-bezier(.16,1,.3,1), height 860ms cubic-bezier(.16,1,.3,1), right 860ms cubic-bezier(.16,1,.3,1), transform 860ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .command-orb-layer::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -26px !important;
+    border-radius: 999px !important;
+    background: radial-gradient(circle at 30% 25%, rgba(242,207,117,.66), transparent 31%), radial-gradient(circle at 72% 72%, rgba(100,218,255,.62), transparent 48%) !important;
+    filter: blur(22px) !important;
+    opacity: .9 !important;
+    animation: alfredHalo056K 5.2s ease-in-out infinite !important;
+    pointer-events: none !important;
+  }
+
+  .command-orb-layer.is-open {
+    left: 50% !important;
+    right: auto !important;
+    width: min(390px, calc(100vw - 36px)) !important;
+    height: 78px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .command-pill {
+    width: 100% !important;
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: var(--alfred-orb-056k) 0 0 !important;
+    align-items: center !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(223,240,255,.18) !important;
+    background: radial-gradient(circle at 28% 22%, rgba(247,213,132,.45), transparent 32%), radial-gradient(circle at 78% 72%, rgba(100,218,255,.42), transparent 42%), linear-gradient(135deg, rgba(8,18,35,.94), rgba(5,11,22,.88)) !important;
+    backdrop-filter: blur(22px) saturate(145%) !important;
+    box-shadow: inset 0 1px 0 rgba(245,248,255,.22), 0 18px 54px rgba(0,0,0,.42) !important;
+    transition: grid-template-columns 860ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .command-orb-layer.is-open .command-pill {
+    grid-template-columns: 68px minmax(0,1fr) 48px !important;
+  }
+
+  .command-pill-slash {
+    position: relative !important;
+    width: var(--alfred-orb-056k) !important;
+    height: var(--alfred-orb-056k) !important;
+    min-width: var(--alfred-orb-056k) !important;
+    min-height: var(--alfred-orb-056k) !important;
+    border-radius: 999px !important;
+    border: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    background: radial-gradient(circle at 30% 22%, rgba(245,248,255,.72), transparent 18%), radial-gradient(circle at 68% 76%, rgba(100,218,255,.70), transparent 36%), linear-gradient(135deg, #F7D584 0%, #EFC45C 38%, #76DBFF 100%) !important;
+  }
+
+  .command-pill-slash::before {
+    content: "" !important;
+    width: 39px !important;
+    height: 24px !important;
+    background: linear-gradient(135deg, rgba(5,11,22,.94), rgba(10,26,47,.86)) !important;
+    clip-path: polygon(0 12%,41% 41%,50% 34%,59% 41%,100% 12%,76% 50%,100% 88%,59% 59%,50% 66%,41% 59%,0 88%,24% 50%) !important;
+  }
+
+  .command-pill-slash::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 10px !important;
+    height: 14px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(180deg,#F5F8FF,#BDEEFF) !important;
+    box-shadow: 0 0 12px rgba(100,218,255,.48) !important;
+  }
+
+  .command-pill-input, .command-pill input, .command-pill [role="textbox"] {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    background: transparent !important;
+    color: #F5F8FF !important;
+    border: 0 !important;
+    outline: 0 !important;
+    font-weight: 650 !important;
+    transition: opacity 520ms ease 180ms !important;
+  }
+
+  .command-orb-layer.is-open .command-pill-input,
+  .command-orb-layer.is-open .command-pill input,
+  .command-orb-layer.is-open .command-pill [role="textbox"] {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .command-pill-close {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 420ms ease 220ms !important;
+  }
+
+  .command-orb-layer.is-open .command-pill-close {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .smart-widget-stack {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 208px !important;
+    margin: 22px 0 28px !important;
+    overflow: visible !important;
+  }
+
+  .smart-widget-carousel {
+    display: flex !important;
+    gap: 14px !important;
+    overflow-x: auto !important;
+    min-height: 166px !important;
+    padding: 6px 22px 14px !important;
+    margin: 0 -22px !important;
+    scroll-snap-type: x mandatory !important;
+  }
+
+  .smart-widget-carousel > *, .smart-widget-card, .smart-widget-panel {
+    display: grid !important;
+    flex: 0 0 min(82vw,318px) !important;
+    min-height: 150px !important;
+    scroll-snap-align: center !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .smart-widget-dots-056k {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin: 2px auto 0 !important;
+  }
+
+  .smart-widget-dot-056k {
+    width: 8px !important;
+    height: 8px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: rgba(223,240,255,.34) !important;
+    transition: width 420ms cubic-bezier(.16,1,.3,1), background 420ms ease !important;
+  }
+
+  .smart-widget-dot-056k.is-active {
+    width: 24px !important;
+    background: linear-gradient(90deg,#F2CF75,#64DAFF) !important;
+  }
+
+  @keyframes alfredHalo056K {
+    0%,100% { transform: scale(.94); opacity:.64; }
+    50% { transform: scale(1.08); opacity:.96; }
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .alfred-desktop-app-056g7, .alfred-desktop-menu-pill, .alfred-desktop-menu-button {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .phone-shell {
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 18px 18px calc(var(--alfred-nav-056k) + 42px) !important;
+  }
+
+  .command-orb-layer {
+    right: 24px !important;
+    bottom: calc(var(--alfred-nav-056k) + 16px) !important;
+    width: 62px !important;
+    height: 62px !important;
+    min-width: 62px !important;
+    min-height: 62px !important;
+  }
+
+  .command-orb-layer.is-open {
+    left: auto !important;
+    right: 24px !important;
+    width: min(420px,54vw) !important;
+    height: 68px !important;
+    transform: none !important;
+  }
+
+  .bottom-nav {
+    left: 50% !important;
+    width: min(74vw,760px) !important;
+    height: 64px !important;
+    bottom: 10px !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* FORGEOS:ALFRED_COMMAND_BAR_INPUT_PILL_REPAIR_056K2 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --alfred-nav-056k2: 72px;
+    --alfred-orb-056k2: 68px;
+    --alfred-pill-h-056k2: 64px;
+    --alfred-safe-056k2: max(14px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .phone-shell {
+    padding-bottom: calc(var(--alfred-nav-056k2) + 148px) !important;
+  }
+
+  .command-orb-layer {
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    right: 22px !important;
+    bottom: calc(var(--alfred-nav-056k2) + var(--alfred-safe-056k2) + 16px) !important;
+    width: var(--alfred-orb-056k2) !important;
+    height: var(--alfred-orb-056k2) !important;
+    min-width: var(--alfred-orb-056k2) !important;
+    min-height: var(--alfred-orb-056k2) !important;
+    max-width: calc(100vw - 28px) !important;
+    border-radius: 999px !important;
+    z-index: 160 !important;
+    display: grid !important;
+    place-items: center !important;
+    pointer-events: auto !important;
+    transform: translate3d(0,0,0) !important;
+    transition:
+      width 720ms cubic-bezier(.16,1,.3,1),
+      height 720ms cubic-bezier(.16,1,.3,1),
+      left 720ms cubic-bezier(.16,1,.3,1),
+      right 720ms cubic-bezier(.16,1,.3,1),
+      bottom 720ms cubic-bezier(.16,1,.3,1),
+      transform 720ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .command-orb-layer::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -24px !important;
+    border-radius: 999px !important;
+    pointer-events: none !important;
+    background:
+      radial-gradient(circle at 30% 24%, rgba(242,207,117,.62), transparent 30%),
+      radial-gradient(circle at 70% 74%, rgba(100,218,255,.58), transparent 48%) !important;
+    filter: blur(22px) !important;
+    opacity: .9 !important;
+    animation: alfredCommandHalo056K2 5.2s ease-in-out infinite !important;
+  }
+
+  .command-orb-layer.is-open {
+    left: 50% !important;
+    right: auto !important;
+    width: min(408px, calc(100vw - 28px)) !important;
+    height: var(--alfred-pill-h-056k2) !important;
+    min-height: var(--alfred-pill-h-056k2) !important;
+    transform: translate3d(-50%,0,0) !important;
+  }
+
+  .command-orb-layer.is-open::before {
+    inset: -18px !important;
+    filter: blur(18px) !important;
+    opacity: .74 !important;
+  }
+
+  .command-pill {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: var(--alfred-orb-056k2) 0 0 0 !important;
+    align-items: center !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.18) !important;
+    background:
+      radial-gradient(circle at 28% 22%, rgba(247,213,132,.44), transparent 32%),
+      radial-gradient(circle at 74% 76%, rgba(100,218,255,.38), transparent 42%),
+      linear-gradient(135deg, rgba(8,18,35,.94), rgba(5,11,22,.90)) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
+    backdrop-filter: blur(22px) saturate(145%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.20),
+      0 18px 52px rgba(0,0,0,.42) !important;
+    transition:
+      grid-template-columns 720ms cubic-bezier(.16,1,.3,1),
+      background 720ms ease,
+      box-shadow 720ms ease !important;
+  }
+
+  .command-orb-layer.is-open .command-pill {
+    grid-template-columns: 56px minmax(0,1fr) 38px 38px !important;
+    gap: 6px !important;
+    padding: 0 8px 0 4px !important;
+  }
+
+  .command-pill-slash {
+    position: relative !important;
+    width: var(--alfred-orb-056k2) !important;
+    height: var(--alfred-orb-056k2) !important;
+    min-width: var(--alfred-orb-056k2) !important;
+    min-height: var(--alfred-orb-056k2) !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(245,248,255,.72), transparent 18%),
+      radial-gradient(circle at 68% 76%, rgba(100,218,255,.70), transparent 36%),
+      linear-gradient(135deg, #F7D584 0%, #EFC45C 38%, #76DBFF 100%) !important;
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,.42),
+      inset 0 -8px 18px rgba(5,11,22,.20),
+      0 10px 30px rgba(100,218,255,.24) !important;
+    transition:
+      width 720ms cubic-bezier(.16,1,.3,1),
+      height 720ms cubic-bezier(.16,1,.3,1),
+      min-width 720ms cubic-bezier(.16,1,.3,1),
+      min-height 720ms cubic-bezier(.16,1,.3,1),
+      transform 720ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .command-orb-layer.is-open .command-pill-slash {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    transform: scale(.96) !important;
+  }
+
+  .command-pill-slash::before {
+    content: "" !important;
+    width: 36px !important;
+    height: 22px !important;
+    display: block !important;
+    background: linear-gradient(135deg, rgba(5,11,22,.94), rgba(10,26,47,.88)) !important;
+    clip-path: polygon(0 12%,41% 41%,50% 34%,59% 41%,100% 12%,76% 50%,100% 88%,59% 59%,50% 66%,41% 59%,0 88%,24% 50%) !important;
+  }
+
+  .command-pill-slash::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 9px !important;
+    height: 13px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(180deg,#F5F8FF,#BDEEFF) !important;
+    box-shadow: 0 0 12px rgba(100,218,255,.48) !important;
+  }
+
+  .command-pill-input,
+  .command-pill input,
+  .command-pill [contenteditable="true"],
+  .command-pill [role="textbox"] {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    border: 0 !important;
+    outline: 0 !important;
+    padding: 0 2px !important;
+    background: transparent !important;
+    color: #F5F8FF !important;
+    caret-color: #F2CF75 !important;
+    font-size: 15px !important;
+    font-weight: 650 !important;
+    letter-spacing: 0 !important;
+    opacity: 0 !important;
+    transform: translateX(-8px) !important;
+    pointer-events: none !important;
+    transition:
+      opacity 360ms ease 170ms,
+      transform 520ms cubic-bezier(.16,1,.3,1) 120ms !important;
+  }
+
+  .command-pill-input::placeholder,
+  .command-pill input::placeholder {
+    color: rgba(220,230,244,.62) !important;
+  }
+
+  .command-orb-layer.is-open .command-pill-input,
+  .command-orb-layer.is-open .command-pill input,
+  .command-orb-layer.is-open .command-pill [contenteditable="true"],
+  .command-orb-layer.is-open .command-pill [role="textbox"] {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    pointer-events: auto !important;
+  }
+
+  .command-pill-close,
+  .command-pill-submit-056k2 {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.16) !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    transform: scale(.78) !important;
+    pointer-events: none !important;
+    color: #F5F8FF !important;
+    background: rgba(245,248,255,.08) !important;
+    transition:
+      opacity 280ms ease 220ms,
+      transform 420ms cubic-bezier(.16,1,.3,1) 180ms !important;
+  }
+
+  .command-pill-submit-056k2 {
+    background: linear-gradient(135deg, rgba(242,207,117,.94), rgba(100,218,255,.78)) !important;
+    color: #050B16 !important;
+    font-size: 17px !important;
+    font-weight: 900 !important;
+  }
+
+  .command-orb-layer.is-open .command-pill-close,
+  .command-orb-layer.is-open .command-pill-submit-056k2 {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  @keyframes alfredCommandHalo056K2 {
+    0%,100% { transform: scale(.95); opacity:.58; }
+    50% { transform: scale(1.08); opacity:.92; }
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .command-orb-layer {
+    right: 22px !important;
+    bottom: 82px !important;
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+  }
+
+  .command-orb-layer.is-open {
+    left: 50% !important;
+    right: auto !important;
+    bottom: 82px !important;
+    width: min(520px, calc(100vw - 42px)) !important;
+    height: 58px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .command-pill {
+    min-height: 58px !important;
+  }
+
+  .command-orb-layer.is-open .command-pill {
+    grid-template-columns: 48px minmax(0,1fr) 34px 34px !important;
+  }
+}
+
+/* FORGEOS:ALFRED_COMMAND_BAR_MOBILE_HARD_RESET_056K3 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --alfred-056k3-nav: 72px;
+    --alfred-056k3-safe: max(14px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .command-orb-layer {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .phone-shell {
+    padding-bottom: calc(var(--alfred-056k3-nav) + 144px) !important;
+  }
+
+  .alfred-command-root-056k3 {
+    position: fixed !important;
+    z-index: 180 !important;
+    right: 22px !important;
+    bottom: calc(var(--alfred-056k3-nav) + var(--alfred-056k3-safe) + 18px) !important;
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 999px !important;
+    display: grid !important;
+    place-items: center !important;
+    pointer-events: auto !important;
+    transition:
+      width 760ms cubic-bezier(.16,1,.3,1),
+      height 760ms cubic-bezier(.16,1,.3,1),
+      right 760ms cubic-bezier(.16,1,.3,1),
+      bottom 760ms cubic-bezier(.16,1,.3,1),
+      transform 760ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k3::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -24px !important;
+    border-radius: 999px !important;
+    background:
+      radial-gradient(circle at 30% 24%, rgba(242,207,117,.66), transparent 30%),
+      radial-gradient(circle at 72% 74%, rgba(100,218,255,.62), transparent 48%) !important;
+    filter: blur(22px) !important;
+    opacity: .88 !important;
+    pointer-events: none !important;
+    animation: alfredCommandHalo056K3 5.2s ease-in-out infinite !important;
+  }
+
+  .alfred-command-root-056k3.is-open {
+    left: 50% !important;
+    right: auto !important;
+    width: min(410px, calc(100vw - 28px)) !important;
+    height: 66px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .alfred-command-shell-056k3 {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: 68px 0 0 0 !important;
+    align-items: center !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.18) !important;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(247,213,132,.46), transparent 31%),
+      radial-gradient(circle at 76% 74%, rgba(100,218,255,.42), transparent 42%),
+      linear-gradient(135deg, rgba(8,18,35,.96), rgba(5,11,22,.91)) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
+    backdrop-filter: blur(22px) saturate(145%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.21),
+      0 18px 52px rgba(0,0,0,.42) !important;
+    transition:
+      grid-template-columns 760ms cubic-bezier(.16,1,.3,1),
+      padding 760ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k3.is-open .alfred-command-shell-056k3 {
+    grid-template-columns: 50px minmax(0, 1fr) 36px 36px !important;
+    gap: 8px !important;
+    padding: 0 8px 0 4px !important;
+  }
+
+  .alfred-command-launcher-056k3 {
+    position: relative !important;
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(245,248,255,.72), transparent 18%),
+      radial-gradient(circle at 68% 76%, rgba(100,218,255,.70), transparent 36%),
+      linear-gradient(135deg, #F7D584 0%, #EFC45C 38%, #76DBFF 100%) !important;
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,.42),
+      inset 0 -8px 18px rgba(5,11,22,.20),
+      0 10px 30px rgba(100,218,255,.24) !important;
+    transition:
+      width 760ms cubic-bezier(.16,1,.3,1),
+      height 760ms cubic-bezier(.16,1,.3,1),
+      min-width 760ms cubic-bezier(.16,1,.3,1),
+      min-height 760ms cubic-bezier(.16,1,.3,1),
+      transform 760ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k3.is-open .alfred-command-launcher-056k3 {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    transform: scale(.96) !important;
+  }
+
+  .alfred-command-launcher-056k3::before {
+    content: "" !important;
+    width: 36px !important;
+    height: 22px !important;
+    display: block !important;
+    background: linear-gradient(135deg, rgba(5,11,22,.94), rgba(10,26,47,.88)) !important;
+    clip-path: polygon(0 12%,41% 41%,50% 34%,59% 41%,100% 12%,76% 50%,100% 88%,59% 59%,50% 66%,41% 59%,0 88%,24% 50%) !important;
+  }
+
+  .alfred-command-launcher-056k3::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 9px !important;
+    height: 13px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(180deg,#F5F8FF,#BDEEFF) !important;
+    box-shadow: 0 0 12px rgba(100,218,255,.48) !important;
+  }
+
+  .alfred-command-input-056k3 {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    border: 0 !important;
+    outline: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: #F5F8FF !important;
+    caret-color: #F2CF75 !important;
+    font-size: 15px !important;
+    font-weight: 650 !important;
+    letter-spacing: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateX(-8px) !important;
+    transition:
+      opacity 360ms ease 180ms,
+      transform 520ms cubic-bezier(.16,1,.3,1) 120ms !important;
+  }
+
+  .alfred-command-input-056k3::placeholder {
+    color: rgba(220,230,244,.66) !important;
+  }
+
+  .alfred-command-root-056k3.is-open .alfred-command-input-056k3 {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateX(0) !important;
+  }
+
+  .alfred-command-close-056k3,
+  .alfred-command-submit-056k3 {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.16) !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    transform: scale(.78) !important;
+    pointer-events: none !important;
+    color: #F5F8FF !important;
+    background: rgba(245,248,255,.08) !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    transition:
+      opacity 280ms ease 220ms,
+      transform 420ms cubic-bezier(.16,1,.3,1) 180ms !important;
+  }
+
+  .alfred-command-submit-056k3 {
+    background: linear-gradient(135deg, rgba(242,207,117,.94), rgba(100,218,255,.78)) !important;
+    color: #050B16 !important;
+  }
+
+  .alfred-command-root-056k3.is-open .alfred-command-close-056k3,
+  .alfred-command-root-056k3.is-open .alfred-command-submit-056k3 {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  @keyframes alfredCommandHalo056K3 {
+    0%,100% { transform: scale(.95); opacity:.58; }
+    50% { transform: scale(1.08); opacity:.92; }
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .alfred-command-root-056k3 {
+    right: 22px !important;
+    bottom: 82px !important;
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .alfred-command-root-056k3.is-open {
+    left: 50% !important;
+    right: auto !important;
+    bottom: 82px !important;
+    width: min(540px, calc(100vw - 42px)) !important;
+    height: 58px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .alfred-command-shell-056k3 {
+    grid-template-columns: 58px 0 0 0 !important;
+  }
+
+  .alfred-command-root-056k3.is-open .alfred-command-shell-056k3 {
+    grid-template-columns: 44px minmax(0, 1fr) 32px 32px !important;
+  }
+
+  .alfred-command-launcher-056k3 {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+  }
+}
+
+/* FORGEOS:ALFRED_MOBILE_COMMAND_PALETTE_ACTIONS_056K4 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --alfred-056k4-nav: 72px;
+    --alfred-056k4-safe: max(14px, env(safe-area-inset-bottom, 0px));
+    --alfred-056k4-keyboard: 0px;
+    --alfred-056k4-bottom: calc(var(--alfred-056k4-nav) + var(--alfred-056k4-safe) + 18px);
+    --alfred-056k4-panel-w: min(410px, calc(100vw - 28px));
+  }
+
+  html.alfred-keyboard-open-056k4 {
+    --alfred-056k4-bottom: calc(var(--alfred-056k4-keyboard) + 12px);
+  }
+
+  .command-orb-layer,
+  .alfred-command-root-056k3 {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .phone-shell {
+    padding-bottom: calc(var(--alfred-056k4-nav) + 160px) !important;
+  }
+
+  .alfred-command-root-056k4 {
+    position: fixed !important;
+    z-index: 190 !important;
+    right: 22px !important;
+    bottom: var(--alfred-056k4-bottom) !important;
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 999px !important;
+    pointer-events: auto !important;
+    transition:
+      width 720ms cubic-bezier(.16,1,.3,1),
+      height 720ms cubic-bezier(.16,1,.3,1),
+      right 720ms cubic-bezier(.16,1,.3,1),
+      bottom 260ms ease,
+      transform 720ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k4::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -24px !important;
+    border-radius: 999px !important;
+    background:
+      radial-gradient(circle at 30% 24%, rgba(242,207,117,.58), transparent 30%),
+      radial-gradient(circle at 74% 74%, rgba(100,218,255,.56), transparent 48%) !important;
+    filter: blur(22px) !important;
+    opacity: .82 !important;
+    pointer-events: none !important;
+    animation: alfredCommandHalo056K4 5.2s ease-in-out infinite !important;
+  }
+
+  .alfred-command-root-056k4.is-open {
+    left: 50% !important;
+    right: auto !important;
+    width: var(--alfred-056k4-panel-w) !important;
+    height: 64px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .alfred-command-results-056k4 {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 76px !important;
+    width: var(--alfred-056k4-panel-w) !important;
+    max-height: min(44vh, 292px) !important;
+    overflow: auto !important;
+    border-radius: 26px !important;
+    border: 1px solid rgba(223,240,255,.16) !important;
+    background:
+      radial-gradient(circle at 16% 12%, rgba(242,207,117,.16), transparent 28%),
+      radial-gradient(circle at 90% 88%, rgba(100,218,255,.18), transparent 32%),
+      rgba(5,11,22,.94) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+    backdrop-filter: blur(24px) saturate(150%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.14),
+      0 24px 58px rgba(0,0,0,.48) !important;
+    padding: 8px !important;
+    opacity: 0 !important;
+    transform: translateY(12px) scale(.98) !important;
+    pointer-events: none !important;
+    transition:
+      opacity 220ms ease,
+      transform 360ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k4.is-open.has-results .alfred-command-results-056k4,
+  .alfred-command-root-056k4.is-open.has-query .alfred-command-results-056k4 {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  .alfred-command-result-056k4 {
+    width: 100% !important;
+    min-height: 58px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    padding: 10px 12px !important;
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+    color: #F5F8FF !important;
+    background: transparent !important;
+    text-align: left !important;
+  }
+
+  .alfred-command-result-056k4.is-active,
+  .alfred-command-result-056k4:active {
+    background: rgba(245,248,255,.08) !important;
+  }
+
+  .alfred-result-icon-056k4 {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #050B16 !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    background: linear-gradient(135deg, #F2CF75, #64DAFF) !important;
+  }
+
+  .alfred-result-main-056k4 {
+    min-width: 0 !important;
+    display: grid !important;
+    gap: 2px !important;
+  }
+
+  .alfred-result-title-056k4 {
+    color: #F5F8FF !important;
+    font-size: 14px !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .alfred-result-subtitle-056k4 {
+    color: rgba(220,230,244,.64) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .alfred-result-lock-056k4 {
+    color: #F2CF75 !important;
+    font-size: 11px !important;
+    font-weight: 850 !important;
+    border: 1px solid rgba(242,207,117,.22) !important;
+    border-radius: 999px !important;
+    padding: 5px 8px !important;
+  }
+
+  .alfred-command-shell-056k4 {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: 68px 0 0 0 !important;
+    align-items: center !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.18) !important;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(247,213,132,.40), transparent 31%),
+      radial-gradient(circle at 76% 74%, rgba(100,218,255,.36), transparent 42%),
+      linear-gradient(135deg, rgba(8,18,35,.96), rgba(5,11,22,.91)) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
+    backdrop-filter: blur(22px) saturate(145%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.21),
+      0 18px 52px rgba(0,0,0,.42) !important;
+    transition:
+      grid-template-columns 720ms cubic-bezier(.16,1,.3,1),
+      padding 720ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k4.is-open .alfred-command-shell-056k4 {
+    grid-template-columns: 50px minmax(0, 1fr) 36px 36px !important;
+    gap: 8px !important;
+    padding: 0 8px 0 4px !important;
+  }
+
+  .alfred-command-launcher-056k4 {
+    position: relative !important;
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(245,248,255,.74), transparent 18%),
+      radial-gradient(circle at 68% 76%, rgba(100,218,255,.70), transparent 36%),
+      linear-gradient(135deg, #F7D584 0%, #EFC45C 36%, #76DBFF 100%) !important;
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,.42),
+      inset 0 -8px 18px rgba(5,11,22,.20),
+      0 10px 30px rgba(100,218,255,.24) !important;
+  }
+
+  .alfred-command-root-056k4.is-open .alfred-command-launcher-056k4 {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+  }
+
+  .alfred-command-mark-056k4 {
+    position: relative !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    background:
+      conic-gradient(from 45deg,
+        transparent 0 8%,
+        rgba(5,11,22,.96) 8% 19%,
+        transparent 19% 33%,
+        rgba(5,11,22,.96) 33% 44%,
+        transparent 44% 58%,
+        rgba(5,11,22,.96) 58% 69%,
+        transparent 69% 83%,
+        rgba(5,11,22,.96) 83% 94%,
+        transparent 94% 100%) !important;
+    filter: drop-shadow(0 1px 8px rgba(5,11,22,.25)) !important;
+  }
+
+  .alfred-command-mark-056k4::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 11px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(180deg,#F5F8FF,#BDEEFF) !important;
+    box-shadow: 0 0 12px rgba(100,218,255,.48) !important;
+  }
+
+  .alfred-command-input-056k4 {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    border: 0 !important;
+    outline: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: #F5F8FF !important;
+    caret-color: #F2CF75 !important;
+    font-size: 15px !important;
+    font-weight: 650 !important;
+    letter-spacing: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateX(-8px) !important;
+    transition:
+      opacity 320ms ease 160ms,
+      transform 460ms cubic-bezier(.16,1,.3,1) 110ms !important;
+  }
+
+  .alfred-command-input-056k4::placeholder {
+    color: rgba(220,230,244,.66) !important;
+  }
+
+  .alfred-command-root-056k4.is-open .alfred-command-input-056k4 {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateX(0) !important;
+  }
+
+  .alfred-command-close-056k4,
+  .alfred-command-submit-056k4 {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.16) !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    transform: scale(.78) !important;
+    pointer-events: none !important;
+    color: #F5F8FF !important;
+    background: rgba(245,248,255,.08) !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    transition:
+      opacity 260ms ease 210ms,
+      transform 360ms cubic-bezier(.16,1,.3,1) 160ms !important;
+  }
+
+  .alfred-command-submit-056k4 {
+    background: linear-gradient(135deg, rgba(242,207,117,.94), rgba(100,218,255,.78)) !important;
+    color: #050B16 !important;
+  }
+
+  .alfred-command-root-056k4.is-open .alfred-command-close-056k4,
+  .alfred-command-root-056k4.is-open .alfred-command-submit-056k4 {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  @keyframes alfredCommandHalo056K4 {
+    0%,100% { transform: scale(.95); opacity:.58; }
+    50% { transform: scale(1.08); opacity:.92; }
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .alfred-command-root-056k4 {
+    right: 22px !important;
+    bottom: var(--alfred-056k4-bottom) !important;
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .alfred-command-root-056k4.is-open {
+    left: 50% !important;
+    right: auto !important;
+    width: min(540px, calc(100vw - 42px)) !important;
+    height: 58px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .alfred-command-results-056k4 {
+    bottom: 68px !important;
+    max-height: min(38vh, 190px) !important;
+  }
+
+  .alfred-command-shell-056k4 {
+    grid-template-columns: 58px 0 0 0 !important;
+  }
+
+  .alfred-command-root-056k4.is-open .alfred-command-shell-056k4 {
+    grid-template-columns: 44px minmax(0, 1fr) 32px 32px !important;
+  }
+
+  .alfred-command-launcher-056k4 {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+  }
+}
+
+/* FORGEOS:ALFRED_IOS_COMMAND_PALETTE_POLISH_056K5 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --alfred-056k5-nav: 72px;
+    --alfred-056k5-safe: max(14px, env(safe-area-inset-bottom, 0px));
+    --alfred-056k5-keyboard: 0px;
+    --alfred-056k5-bottom: calc(var(--alfred-056k5-nav) + var(--alfred-056k5-safe) + 18px);
+    --alfred-056k5-width: min(410px, calc(100vw - 28px));
+  }
+
+  html.alfred-keyboard-open-056k5 {
+    --alfred-056k5-bottom: calc(var(--alfred-056k5-keyboard) + 14px);
+  }
+
+  .command-orb-layer,
+  .alfred-command-root-056k3,
+  .alfred-command-root-056k4 {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .phone-shell {
+    padding-bottom: calc(var(--alfred-056k5-nav) + 160px) !important;
+  }
+
+  .alfred-command-root-056k5 {
+    position: fixed !important;
+    z-index: 210 !important;
+    right: 22px !important;
+    bottom: var(--alfred-056k5-bottom) !important;
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 999px !important;
+    pointer-events: auto !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    transition:
+      width 780ms cubic-bezier(.16,1,.3,1),
+      height 780ms cubic-bezier(.16,1,.3,1),
+      right 780ms cubic-bezier(.16,1,.3,1),
+      bottom 260ms ease,
+      transform 780ms cubic-bezier(.16,1,.3,1),
+      filter 780ms ease !important;
+  }
+
+  .alfred-command-root-056k5::before,
+  .alfred-command-root-056k5::after {
+    content: "" !important;
+    position: absolute !important;
+    border-radius: 999px !important;
+    pointer-events: none !important;
+  }
+
+  .alfred-command-root-056k5::before {
+    inset: -30px !important;
+    background:
+      radial-gradient(circle at 28% 22%, rgba(242,207,117,.72), transparent 30%),
+      radial-gradient(circle at 76% 76%, rgba(100,218,255,.70), transparent 48%),
+      radial-gradient(circle at 50% 48%, rgba(245,248,255,.16), transparent 38%) !important;
+    filter: blur(26px) !important;
+    opacity: .92 !important;
+    animation: alfredLiquidHalo056K5 4.8s ease-in-out infinite !important;
+  }
+
+  .alfred-command-root-056k5::after {
+    inset: -4px !important;
+    border: 1px solid rgba(242,207,117,.36) !important;
+    box-shadow:
+      0 0 0 1px rgba(100,218,255,.14),
+      0 0 26px rgba(100,218,255,.28),
+      0 0 44px rgba(242,207,117,.16) !important;
+    opacity: .78 !important;
+    animation: alfredLiquidRing056K5 3.9s ease-in-out infinite !important;
+  }
+
+  .alfred-command-root-056k5.is-open {
+    left: 50% !important;
+    right: auto !important;
+    width: var(--alfred-056k5-width) !important;
+    height: 64px !important;
+    transform: translate3d(-50%, 0, 0) scale(1) !important;
+  }
+
+  .alfred-command-root-056k5.is-open::before {
+    inset: -20px !important;
+    filter: blur(22px) !important;
+    opacity: .82 !important;
+  }
+
+  .alfred-command-results-056k5 {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 76px !important;
+    width: var(--alfred-056k5-width) !important;
+    max-height: min(42vh, 270px) !important;
+    overflow: auto !important;
+    border-radius: 28px !important;
+    border: 1px solid rgba(223,240,255,.17) !important;
+    background:
+      radial-gradient(circle at 16% 12%, rgba(242,207,117,.14), transparent 28%),
+      radial-gradient(circle at 92% 90%, rgba(100,218,255,.16), transparent 34%),
+      rgba(5,11,22,.90) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
+    backdrop-filter: blur(28px) saturate(170%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.16),
+      0 24px 58px rgba(0,0,0,.48) !important;
+    padding: 8px !important;
+    opacity: 0 !important;
+    transform: translateY(14px) scale(.985) !important;
+    pointer-events: none !important;
+    transition:
+      opacity 240ms ease,
+      transform 380ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k5.is-open.has-query.has-results .alfred-command-results-056k5 {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  .alfred-command-result-056k5 {
+    width: 100% !important;
+    min-height: 56px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    padding: 10px 12px !important;
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+    color: #F5F8FF !important;
+    background: transparent !important;
+    text-align: left !important;
+    transition: background 180ms ease, transform 180ms ease !important;
+  }
+
+  .alfred-command-result-056k5.is-active,
+  .alfred-command-result-056k5:active {
+    background: rgba(245,248,255,.08) !important;
+    transform: scale(.995) !important;
+  }
+
+  .alfred-result-icon-056k5 {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: #050B16 !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    background: linear-gradient(135deg, #F2CF75, #64DAFF) !important;
+  }
+
+  .alfred-result-main-056k5 {
+    min-width: 0 !important;
+    display: grid !important;
+    gap: 2px !important;
+  }
+
+  .alfred-result-title-056k5 {
+    color: #F5F8FF !important;
+    font-size: 14px !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .alfred-result-subtitle-056k5 {
+    color: rgba(220,230,244,.64) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .alfred-result-lock-056k5 {
+    color: #F2CF75 !important;
+    font-size: 11px !important;
+    font-weight: 850 !important;
+    border: 1px solid rgba(242,207,117,.22) !important;
+    border-radius: 999px !important;
+    padding: 5px 8px !important;
+  }
+
+  .alfred-command-shell-056k5 {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: 68px 0 0 0 !important;
+    align-items: center !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.18) !important;
+    background:
+      radial-gradient(circle at 28% 20%, rgba(247,213,132,.38), transparent 30%),
+      radial-gradient(circle at 78% 74%, rgba(100,218,255,.34), transparent 42%),
+      linear-gradient(135deg, rgba(8,18,35,.88), rgba(5,11,22,.84)) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(165%) !important;
+    backdrop-filter: blur(26px) saturate(165%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.21),
+      inset 0 -1px 0 rgba(5,11,22,.56),
+      0 18px 52px rgba(0,0,0,.42) !important;
+    transition:
+      grid-template-columns 780ms cubic-bezier(.16,1,.3,1),
+      padding 780ms cubic-bezier(.16,1,.3,1),
+      background 780ms ease,
+      box-shadow 780ms ease !important;
+  }
+
+  .alfred-command-root-056k5.is-open .alfred-command-shell-056k5 {
+    grid-template-columns: 50px minmax(0, 1fr) 36px 36px !important;
+    gap: 8px !important;
+    padding: 0 8px 0 4px !important;
+  }
+
+  .alfred-command-launcher-056k5 {
+    position: relative !important;
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(245,248,255,.72), transparent 18%),
+      radial-gradient(circle at 69% 77%, rgba(100,218,255,.70), transparent 38%),
+      linear-gradient(135deg, #F7D584 0%, #EFC45C 38%, #76DBFF 100%) !important;
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,.42),
+      inset 0 -9px 18px rgba(5,11,22,.20),
+      0 10px 30px rgba(100,218,255,.24) !important;
+    transition:
+      width 780ms cubic-bezier(.16,1,.3,1),
+      height 780ms cubic-bezier(.16,1,.3,1),
+      min-width 780ms cubic-bezier(.16,1,.3,1),
+      min-height 780ms cubic-bezier(.16,1,.3,1),
+      transform 780ms cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  .alfred-command-root-056k5.is-open .alfred-command-launcher-056k5 {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    transform: scale(.96) !important;
+  }
+
+  .alfred-bowtie-mark-056k5 {
+    position: relative !important;
+    width: 38px !important;
+    height: 26px !important;
+    display: block !important;
+  }
+
+  .alfred-bowtie-mark-056k5::before,
+  .alfred-bowtie-mark-056k5::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 3px !important;
+    width: 18px !important;
+    height: 20px !important;
+    background: linear-gradient(135deg, rgba(5,11,22,.96), rgba(10,26,47,.88)) !important;
+    border-radius: 13px 4px 13px 4px !important;
+    box-shadow: inset 0 1px 0 rgba(245,248,255,.20) !important;
+  }
+
+  .alfred-bowtie-mark-056k5::before {
+    left: 0 !important;
+    transform: skewX(-10deg) rotate(3deg) !important;
+    clip-path: polygon(0 5%, 100% 38%, 100% 62%, 0 95%) !important;
+  }
+
+  .alfred-bowtie-mark-056k5::after {
+    right: 0 !important;
+    transform: skewX(10deg) rotate(-3deg) !important;
+    clip-path: polygon(100% 5%, 0 38%, 0 62%, 100% 95%) !important;
+  }
+
+  .alfred-bowtie-knot-056k5 {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 11px !important;
+    height: 16px !important;
+    border-radius: 999px !important;
+    transform: translate(-50%, -50%) !important;
+    background: linear-gradient(180deg,#F5F8FF,#BDEEFF) !important;
+    box-shadow:
+      0 0 0 1px rgba(5,11,22,.22),
+      0 0 12px rgba(100,218,255,.46) !important;
+  }
+
+  .alfred-command-input-056k5 {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    border: 0 !important;
+    outline: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: #F5F8FF !important;
+    caret-color: #F2CF75 !important;
+    font-size: 15px !important;
+    font-weight: 650 !important;
+    letter-spacing: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateX(-8px) !important;
+    transition:
+      opacity 330ms ease 170ms,
+      transform 470ms cubic-bezier(.16,1,.3,1) 120ms !important;
+  }
+
+  .alfred-command-input-056k5::placeholder {
+    color: rgba(220,230,244,.66) !important;
+  }
+
+  .alfred-command-root-056k5.is-open .alfred-command-input-056k5 {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateX(0) !important;
+  }
+
+  .alfred-command-close-056k5,
+  .alfred-command-submit-056k5 {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.16) !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    transform: scale(.78) !important;
+    pointer-events: none !important;
+    color: #F5F8FF !important;
+    background: rgba(245,248,255,.08) !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    transition:
+      opacity 280ms ease 220ms,
+      transform 380ms cubic-bezier(.16,1,.3,1) 170ms !important;
+  }
+
+  .alfred-command-submit-056k5 {
+    background: linear-gradient(135deg, rgba(242,207,117,.94), rgba(100,218,255,.78)) !important;
+    color: #050B16 !important;
+  }
+
+  .alfred-command-root-056k5.is-open .alfred-command-close-056k5,
+  .alfred-command-root-056k5.is-open .alfred-command-submit-056k5 {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  @keyframes alfredLiquidHalo056K5 {
+    0%, 100% { transform: scale(.94); opacity:.62; }
+    50% { transform: scale(1.10); opacity:.98; }
+  }
+
+  @keyframes alfredLiquidRing056K5 {
+    0%, 100% { transform: scale(.98); opacity:.48; }
+    50% { transform: scale(1.06); opacity:.86; }
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .alfred-command-root-056k5 {
+    right: 22px !important;
+    bottom: var(--alfred-056k5-bottom) !important;
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .alfred-command-root-056k5.is-open {
+    left: 50% !important;
+    right: auto !important;
+    width: min(540px, calc(100vw - 42px)) !important;
+    height: 58px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .alfred-command-results-056k5 {
+    bottom: 68px !important;
+    max-height: min(38vh, 190px) !important;
+  }
+
+  .alfred-command-shell-056k5 {
+    grid-template-columns: 58px 0 0 0 !important;
+  }
+
+  .alfred-command-root-056k5.is-open .alfred-command-shell-056k5 {
+    grid-template-columns: 44px minmax(0, 1fr) 32px 32px !important;
+  }
+
+  .alfred-command-launcher-056k5 {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+  }
+}
+
+/* FORGEOS:COMMAND_CLOSE_NAV_PILL_POLISH_056K6 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --forge-nav-056k6-h: 74px;
+    --forge-nav-056k6-safe: max(14px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .phone-shell {
+    padding-bottom: calc(var(--forge-nav-056k6-h) + 170px) !important;
+  }
+
+  .alfred-bowtie-mark-056k5 {
+    width: 40px !important;
+    height: 25px !important;
+    filter: drop-shadow(0 4px 10px rgba(5,11,22,.24)) !important;
+  }
+
+  .alfred-bowtie-mark-056k5::before,
+  .alfred-bowtie-mark-056k5::after {
+    top: 4px !important;
+    width: 18px !important;
+    height: 17px !important;
+    border-radius: 11px 5px 11px 5px !important;
+    background:
+      radial-gradient(circle at 36% 30%, rgba(245,248,255,.16), transparent 34%),
+      linear-gradient(135deg, rgba(5,11,22,.96), rgba(10,26,47,.86)) !important;
+  }
+
+  .alfred-bowtie-mark-056k5::before {
+    left: 2px !important;
+    clip-path: polygon(0 8%, 100% 35%, 100% 65%, 0 92%) !important;
+    transform: skewX(-7deg) rotate(2deg) !important;
+  }
+
+  .alfred-bowtie-mark-056k5::after {
+    right: 2px !important;
+    clip-path: polygon(100% 8%, 0 35%, 0 65%, 100% 92%) !important;
+    transform: skewX(7deg) rotate(-2deg) !important;
+  }
+
+  .alfred-bowtie-knot-056k5 {
+    width: 10px !important;
+    height: 14px !important;
+    background: linear-gradient(180deg, #F5F8FF, #BDEEFF) !important;
+  }
+
+  .alfred-command-results-056k5 {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .alfred-command-root-056k5.is-open.has-query.has-results .alfred-command-results-056k5 {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .bottom-nav {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: var(--forge-nav-056k6-safe) !important;
+    width: min(92vw, 398px) !important;
+    height: var(--forge-nav-056k6-h) !important;
+    transform: translateX(-50%) translateZ(0) !important;
+    z-index: 150 !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: center !important;
+    gap: 2px !important;
+    padding: 7px 9px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.17) !important;
+    background:
+      radial-gradient(circle at 20% 8%, rgba(242,207,117,.16), transparent 28%),
+      radial-gradient(circle at 78% 92%, rgba(100,218,255,.18), transparent 34%),
+      linear-gradient(135deg, rgba(8,18,35,.82), rgba(5,11,22,.76)) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(175%) !important;
+    backdrop-filter: blur(28px) saturate(175%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.18),
+      inset 0 -1px 0 rgba(5,11,22,.62),
+      0 20px 54px rgba(0,0,0,.46),
+      0 0 42px rgba(100,218,255,.13) !important;
+    overflow: hidden !important;
+  }
+
+  .bottom-nav::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -24px 28px auto 28px !important;
+    height: 48px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, rgba(242,207,117,.20), rgba(100,218,255,.18)) !important;
+    filter: blur(22px) !important;
+    opacity: .72 !important;
+    pointer-events: none !important;
+  }
+
+  .bottom-nav > * {
+    position: relative !important;
+    z-index: 1 !important;
+    min-width: 0 !important;
+    height: 58px !important;
+    border-radius: 22px !important;
+    display: grid !important;
+    grid-template-rows: 25px 20px !important;
+    align-items: center !important;
+    justify-items: center !important;
+    align-content: center !important;
+    gap: 2px !important;
+    padding: 5px 2px !important;
+    color: rgba(220,230,244,.66) !important;
+    font-size: 11px !important;
+    font-weight: 760 !important;
+    letter-spacing: 0 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: 0 !important;
+    transition:
+      color 260ms ease,
+      background 260ms ease,
+      transform 260ms cubic-bezier(.16,1,.3,1),
+      text-shadow 260ms ease !important;
+  }
+
+  .bottom-nav > *::before {
+    content: none !important;
+  }
+
+  .bottom-nav > *.is-active-056k6,
+  .bottom-nav > *.active,
+  .bottom-nav > *[aria-current="page"],
+  .bottom-nav > *:nth-child(4) {
+    color: #F7D584 !important;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(242,207,117,.18), transparent 42%),
+      rgba(245,248,255,.045) !important;
+    text-shadow: 0 0 18px rgba(242,207,117,.28) !important;
+  }
+
+  .bottom-nav > *:active {
+    transform: scale(.96) !important;
+    background: rgba(245,248,255,.07) !important;
+  }
+
+  .forge-nav-icon-056k6 {
+    width: 23px !important;
+    height: 23px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: currentColor !important;
+    opacity: .94 !important;
+    filter: drop-shadow(0 0 12px rgba(100,218,255,.08)) !important;
+  }
+
+  .forge-nav-icon-056k6 svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke: currentColor !important;
+    stroke-width: 2.15 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    fill: none !important;
+  }
+
+  .forge-nav-label-056k6 {
+    display: block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    font-size: 11px !important;
+    font-weight: 780 !important;
+    line-height: 1 !important;
+  }
+
+  .bottom-nav > *.is-active-056k6 .forge-nav-icon-056k6,
+  .bottom-nav > *:nth-child(4) .forge-nav-icon-056k6 {
+    color: #F2CF75 !important;
+    filter:
+      drop-shadow(0 0 12px rgba(242,207,117,.28))
+      drop-shadow(0 0 14px rgba(100,218,255,.12)) !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .bottom-nav {
+    width: min(74vw, 760px) !important;
+    height: 64px !important;
+    bottom: 10px !important;
+    padding: 6px 8px !important;
+  }
+
+  .bottom-nav > * {
+    height: 50px !important;
+    grid-template-rows: 22px 17px !important;
+  }
+}
+
+/* FORGEOS:NAVIGATION_PILL_HARD_RESET_056K7 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --forge-nav-056k7-h: 76px;
+    --forge-nav-056k7-safe: max(14px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .bottom-nav {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .phone-shell {
+    padding-bottom: calc(var(--forge-nav-056k7-h) + 172px) !important;
+  }
+
+  .forge-nav-root-056k7 {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: var(--forge-nav-056k7-safe) !important;
+    width: min(92vw, 404px) !important;
+    height: var(--forge-nav-056k7-h) !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    z-index: 170 !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: center !important;
+    gap: 3px !important;
+    padding: 8px 10px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(223,240,255,.18) !important;
+    background:
+      radial-gradient(circle at 20% 4%, rgba(242,207,117,.16), transparent 30%),
+      radial-gradient(circle at 78% 96%, rgba(100,218,255,.20), transparent 36%),
+      linear-gradient(135deg, rgba(8,18,35,.80), rgba(5,11,22,.72)) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+    backdrop-filter: blur(30px) saturate(180%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.19),
+      inset 0 -1px 0 rgba(5,11,22,.66),
+      0 20px 56px rgba(0,0,0,.48),
+      0 0 42px rgba(100,218,255,.13) !important;
+    overflow: hidden !important;
+  }
+
+  .forge-nav-root-056k7::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -28px 30px auto 30px !important;
+    height: 56px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, rgba(242,207,117,.20), rgba(100,218,255,.18)) !important;
+    filter: blur(24px) !important;
+    opacity: .72 !important;
+    pointer-events: none !important;
+  }
+
+  .forge-nav-item-056k7 {
+    position: relative !important;
+    z-index: 1 !important;
+    min-width: 0 !important;
+    height: 58px !important;
+    border: 0 !important;
+    border-radius: 24px !important;
+    padding: 6px 2px 5px !important;
+    display: grid !important;
+    grid-template-rows: 25px 18px !important;
+    justify-items: center !important;
+    align-content: center !important;
+    gap: 3px !important;
+    background: transparent !important;
+    color: rgba(220,230,244,.66) !important;
+    text-decoration: none !important;
+    font: inherit !important;
+    transition:
+      color 260ms ease,
+      background 260ms ease,
+      transform 260ms cubic-bezier(.16,1,.3,1),
+      box-shadow 260ms ease,
+      text-shadow 260ms ease !important;
+  }
+
+  .forge-nav-item-056k7.is-active {
+    color: #F7D584 !important;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(242,207,117,.18), transparent 44%),
+      rgba(245,248,255,.055) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.08),
+      0 0 26px rgba(242,207,117,.09) !important;
+    text-shadow: 0 0 18px rgba(242,207,117,.28) !important;
+  }
+
+  .forge-nav-item-056k7:active {
+    transform: scale(.96) !important;
+  }
+
+  .forge-nav-icon-056k7 {
+    width: 24px !important;
+    height: 24px !important;
+    display: grid !important;
+    place-items: center !important;
+    color: currentColor !important;
+  }
+
+  .forge-nav-icon-056k7 svg {
+    width: 23px !important;
+    height: 23px !important;
+    stroke: currentColor !important;
+    stroke-width: 2.05 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    fill: none !important;
+  }
+
+  .forge-nav-label-056k7 {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    color: currentColor !important;
+    font-size: 11px !important;
+    font-weight: 780 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .forge-nav-item-056k7.is-active .forge-nav-icon-056k7 {
+    filter:
+      drop-shadow(0 0 12px rgba(242,207,117,.30))
+      drop-shadow(0 0 14px rgba(100,218,255,.14)) !important;
+  }
+
+  .alfred-bowtie-mark-056k7 {
+    width: 40px !important;
+    height: 26px !important;
+    display: block !important;
+  }
+
+  .alfred-bowtie-mark-056k7 svg {
+    width: 40px !important;
+    height: 26px !important;
+    display: block !important;
+    filter: drop-shadow(0 4px 10px rgba(5,11,22,.26)) !important;
+  }
+
+  .alfred-bowtie-mark-056k5 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .forge-nav-root-056k7 {
+    width: min(74vw, 760px) !important;
+    height: 64px !important;
+    bottom: 10px !important;
+    padding: 6px 8px !important;
+  }
+
+  .forge-nav-item-056k7 {
+    height: 50px !important;
+    grid-template-rows: 22px 16px !important;
+  }
+}
+
+/* FORGEOS:NAV_MARK_MOTION_MICRO_POLISH_056K8 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --forge-nav-056k8-safe: max(10px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .phone-shell {
+    padding-bottom: calc(76px + var(--forge-nav-056k8-safe) + 110px) !important;
+  }
+
+  .forge-nav-root-056k7 {
+    bottom: var(--forge-nav-056k8-safe) !important;
+    height: 72px !important;
+    padding: 7px 9px !important;
+    overflow: hidden !important;
+  }
+
+  .forge-nav-root-056k7::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 0 !important;
+    left: var(--forge-nav-indicator-x-056k8, calc(60% + 5px)) !important;
+    top: 8px !important;
+    width: calc((100% - 18px) / 5) !important;
+    height: 56px !important;
+    border-radius: 999px !important;
+    background:
+      radial-gradient(circle at 50% 8%, rgba(242,207,117,.18), transparent 44%),
+      radial-gradient(circle at 50% 100%, rgba(100,218,255,.12), transparent 50%),
+      rgba(245,248,255,.040) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245,248,255,.08),
+      0 0 24px rgba(242,207,117,.08) !important;
+    opacity: .82 !important;
+    transform: translate3d(0, 0, 0) scale(.92) !important;
+    transition:
+      left 520ms cubic-bezier(.16,1,.3,1),
+      transform 520ms cubic-bezier(.16,1,.3,1),
+      opacity 360ms ease !important;
+    pointer-events: none !important;
+  }
+
+  .forge-nav-root-056k7.is-switching-056k8::after {
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    opacity: .96 !important;
+  }
+
+  .forge-nav-item-056k7 {
+    height: 56px !important;
+    border-radius: 22px !important;
+    background: transparent !important;
+    transition:
+      color 360ms ease,
+      transform 360ms cubic-bezier(.16,1,.3,1),
+      text-shadow 360ms ease,
+      opacity 360ms ease !important;
+  }
+
+  .forge-nav-item-056k7.is-active {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .forge-nav-item-056k7.is-pressing-056k8 {
+    transform: scale(.94) translateY(1px) !important;
+  }
+
+  .forge-nav-icon-056k7 {
+    transition:
+      transform 420ms cubic-bezier(.16,1,.3,1),
+      opacity 320ms ease,
+      filter 420ms ease !important;
+  }
+
+  .forge-nav-label-056k7 {
+    transition:
+      transform 420ms cubic-bezier(.16,1,.3,1),
+      opacity 320ms ease !important;
+  }
+
+  .forge-nav-item-056k7.is-active .forge-nav-icon-056k7 {
+    transform: translateY(-1px) scale(1.05) !important;
+  }
+
+  .forge-nav-item-056k7.is-active .forge-nav-label-056k7 {
+    transform: translateY(-1px) !important;
+  }
+
+  .forge-nav-item-056k7:not(.is-active) {
+    opacity: .88 !important;
+  }
+
+  .forge-nav-item-056k7:not(.is-active) .forge-nav-icon-056k7 {
+    transform: scale(.96) !important;
+  }
+
+  .alfred-bowtie-mark-056k7 {
+    width: 42px !important;
+    height: 26px !important;
+  }
+
+  .alfred-bowtie-mark-056k7 svg {
+    width: 42px !important;
+    height: 26px !important;
+  }
+
+  .alfred-bowtie-mark-056k7 .alfred-bowtie-wing-056k8 {
+    fill: #071224 !important;
+    transform-box: fill-box !important;
+    transform-origin: center !important;
+  }
+
+  .alfred-command-root-056k5.is-open .alfred-bowtie-mark-056k7 {
+    transform: scale(.92) !important;
+  }
+
+  .alfred-command-root-056k5::before {
+    opacity: .92 !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .forge-nav-root-056k7 {
+    bottom: 8px !important;
+    height: 62px !important;
+  }
+
+  .forge-nav-root-056k7::after {
+    top: 7px !important;
+    height: 48px !important;
+  }
+}
+
+/* FORGEOS:NAV_CENTER_ICONS_PREMIUM_POLISH_056K9 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  .forge-nav-root-056k7 {
+    --forge-nav-indicator-left-056k9: 0px;
+    --forge-nav-indicator-width-056k9: calc((100% - 18px) / 5);
+  }
+
+  .forge-nav-root-056k7::after {
+    left: var(--forge-nav-indicator-left-056k9) !important;
+    width: var(--forge-nav-indicator-width-056k9) !important;
+    top: 8px !important;
+    height: 56px !important;
+    transform: translate3d(0, 0, 0) scale(.88) !important;
+    background:
+      radial-gradient(circle at 50% 8%, rgba(242,207,117,.16), transparent 44%),
+      radial-gradient(circle at 50% 100%, rgba(100,218,255,.11), transparent 52%),
+      rgba(245,248,255,.035) !important;
+  }
+
+  .forge-nav-root-056k7.is-switching-056k8::after,
+  .forge-nav-root-056k7.is-switching-056k9::after {
+    transform: translate3d(0, 0, 0) scale(.96) !important;
+  }
+
+  .forge-nav-icon-056k7 {
+    width: 25px !important;
+    height: 25px !important;
+  }
+
+  .forge-nav-icon-056k7 svg {
+    width: 25px !important;
+    height: 25px !important;
+    overflow: visible !important;
+  }
+
+  .forge-nav-icon-056k7 .forge-nav-premium-fill-056k9 {
+    fill: currentColor !important;
+    opacity: .16 !important;
+  }
+
+  .forge-nav-icon-056k7 .forge-nav-premium-stroke-056k9 {
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    opacity: .96 !important;
+  }
+
+  .forge-nav-item-056k7.is-active .forge-nav-icon-056k7 .forge-nav-premium-fill-056k9 {
+    opacity: .26 !important;
+  }
+
+  .forge-nav-item-056k7.is-active .forge-nav-icon-056k7 .forge-nav-premium-stroke-056k9 {
+    opacity: 1 !important;
+  }
+
+  .forge-nav-label-056k7 {
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+  }
+}
+
+
+/* FORGEOS:ALFRED_MOBILE_SMART_WIDGET_PAGER_056L */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --forge-smart-dot-step-056l: 18px;
+    --forge-smart-dot-size-056l: 8px;
+  }
+
+  #smart-widget-stack,
+  .smart-widget-stack {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 2 !important;
+    width: min(100%, calc(100vw - 40px)) !important;
+    margin: 22px auto 28px !important;
+    overflow: visible !important;
+  }
+
+  #smart-widget-stack[hidden],
+  .smart-widget-stack[hidden] {
+    display: block !important;
+  }
+
+  .forge-smart-widget-header-056l {
+    display: flex !important;
+    align-items: end !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    margin: 0 2px 12px !important;
+  }
+
+  .forge-smart-widget-eyebrow-056l {
+    color: rgba(245, 248, 255, 0.58) !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+  }
+
+  .forge-smart-widget-title-056l {
+    color: #f7d584 !important;
+    font-size: 1.35rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    margin: 3px 0 0 !important;
+  }
+
+  .forge-smart-widget-state-056l {
+    color: rgba(242, 207, 117, 0.92) !important;
+    border: 1px solid rgba(242, 207, 117, 0.28) !important;
+    background: rgba(242, 207, 117, 0.08) !important;
+    border-radius: 999px !important;
+    padding: 7px 11px !important;
+    font-size: 0.75rem !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+  }
+
+  .smart-widget-carousel.forge-smart-widget-carousel-056l {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .smart-widget-carousel.forge-smart-widget-carousel-056l::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .smart-widget-carousel.forge-smart-widget-carousel-056l > .forge-smart-widget-page-056l {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    scroll-snap-align: center !important;
+    scroll-snap-stop: always !important;
+    box-sizing: border-box !important;
+    transform: translateZ(0) scale(0.984) !important;
+    opacity: 0.68 !important;
+    transition: transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 420ms ease, filter 420ms ease !important;
+  }
+
+  .smart-widget-carousel.forge-smart-widget-carousel-056l > .forge-smart-widget-page-056l.is-active-056l {
+    transform: translateZ(0) scale(1) !important;
+    opacity: 1 !important;
+    filter: saturate(1.08) !important;
+  }
+
+  .forge-smart-widget-page-056l.smart-widget-card,
+  .forge-smart-widget-page-056l.smart-widget-panel,
+  .smart-widget-carousel.forge-smart-widget-carousel-056l > .forge-smart-widget-page-056l {
+    min-height: 196px !important;
+    padding: 24px 24px 22px !important;
+    border-radius: 32px !important;
+    border: 1px solid rgba(199, 229, 255, 0.18) !important;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(242, 207, 117, 0.16), transparent 35%),
+      radial-gradient(circle at 92% 22%, rgba(100, 218, 255, 0.18), transparent 38%),
+      linear-gradient(145deg, rgba(11, 24, 45, 0.94), rgba(6, 13, 28, 0.88)) !important;
+    box-shadow:
+      0 22px 54px rgba(0, 0, 0, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(100, 218, 255, 0.08) !important;
+    backdrop-filter: blur(24px) saturate(1.35) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(1.35) !important;
+  }
+
+  .forge-smart-widget-kicker-056l,
+  .smart-widget-chip,
+  .smart-widget-meta {
+    display: inline-flex !important;
+    align-items: center !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin: 0 0 14px !important;
+    border-radius: 999px !important;
+    padding: 7px 10px !important;
+    color: rgba(242, 207, 117, 0.95) !important;
+    border: 1px solid rgba(242, 207, 117, 0.22) !important;
+    background: rgba(242, 207, 117, 0.08) !important;
+    font-size: 0.72rem !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+  }
+
+  .forge-smart-widget-page-056l h3,
+  .forge-smart-widget-page-056l .smart-widget-title {
+    color: #f5f8ff !important;
+    margin: 0 0 8px !important;
+    font-size: clamp(1.34rem, 5vw, 1.72rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+    font-weight: 930 !important;
+  }
+
+  .forge-smart-widget-page-056l p,
+  .forge-smart-widget-page-056l .smart-widget-subtitle,
+  .forge-smart-widget-page-056l .smart-widget-why,
+  .forge-smart-widget-page-056l .smart-widget-uncertainty,
+  .forge-smart-widget-page-056l .smart-widget-prompt {
+    color: rgba(220, 230, 244, 0.78) !important;
+    font-size: 1rem !important;
+    line-height: 1.28 !important;
+    margin: 0 0 10px !important;
+  }
+
+  .forge-smart-widget-page-056l .smart-widget-evidence,
+  .forge-smart-widget-page-056l .smart-widget-contexts {
+    margin-top: 14px !important;
+  }
+
+  .smart-widget-dots-056l {
+    --forge-smart-dot-progress-056l: 0;
+    --forge-smart-dot-index-056l: 0;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    height: 28px !important;
+    width: fit-content !important;
+    min-width: 92px !important;
+    margin: 13px auto 0 !important;
+    padding: 7px 10px !important;
+    border-radius: 999px !important;
+    background: rgba(7, 18, 36, 0.42) !important;
+    border: 1px solid rgba(223, 240, 255, 0.11) !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(16px) saturate(1.25) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(1.25) !important;
+  }
+
+  .smart-widget-dot-056l {
+    width: var(--forge-smart-dot-size-056l) !important;
+    height: var(--forge-smart-dot-size-056l) !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    padding: 0 !important;
+    background: rgba(220, 230, 244, 0.28) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10) !important;
+    cursor: pointer !important;
+    transition: transform 260ms ease, background 260ms ease, opacity 260ms ease !important;
+  }
+
+  .smart-widget-dot-056l.is-active-056l {
+    background: rgba(245, 248, 255, 0.72) !important;
+    transform: scale(0.86) !important;
+    opacity: 0 !important;
+  }
+
+  .smart-widget-dot-glider-056l {
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    width: 18px !important;
+    height: 10px !important;
+    border-radius: 999px !important;
+    transform:
+      translateX(calc(var(--forge-smart-dot-progress-056l) * var(--forge-smart-dot-step-056l)))
+      translateY(-50%) !important;
+    background: linear-gradient(90deg, #f2cf75 0%, #76dbff 100%) !important;
+    box-shadow: 0 0 18px rgba(100, 218, 255, 0.42), 0 0 14px rgba(242, 207, 117, 0.24) !important;
+    transition:
+      transform 360ms cubic-bezier(0.2, 0.9, 0.2, 1),
+      width 260ms ease,
+      border-radius 260ms ease !important;
+    pointer-events: none !important;
+  }
+
+  .smart-widget-dots-056l.is-moving-right-056l .smart-widget-dot-glider-056l {
+    width: 30px !important;
+    border-radius: 14px 999px 999px 14px !important;
+  }
+
+  .smart-widget-dots-056l.is-moving-left-056l .smart-widget-dot-glider-056l {
+    width: 30px !important;
+    border-radius: 999px 14px 14px 999px !important;
+  }
+
+  @media (max-width: 900px) and (orientation: landscape) {
+    #smart-widget-stack,
+    .smart-widget-stack {
+      width: min(100%, calc(100vw - 56px)) !important;
+      margin: 12px auto 18px !important;
+    }
+
+    .forge-smart-widget-header-056l {
+      margin-bottom: 8px !important;
+    }
+
+    .forge-smart-widget-page-056l.smart-widget-card,
+    .forge-smart-widget-page-056l.smart-widget-panel,
+    .smart-widget-carousel.forge-smart-widget-carousel-056l > .forge-smart-widget-page-056l {
+      min-height: 150px !important;
+      padding: 18px 20px 16px !important;
+      border-radius: 26px !important;
+    }
+
+    .forge-smart-widget-page-056l h3,
+    .forge-smart-widget-page-056l .smart-widget-title {
+      font-size: 1.18rem !important;
+    }
+
+    .forge-smart-widget-page-056l p,
+    .forge-smart-widget-page-056l .smart-widget-subtitle,
+    .forge-smart-widget-page-056l .smart-widget-why,
+    .forge-smart-widget-page-056l .smart-widget-uncertainty,
+    .forge-smart-widget-page-056l .smart-widget-prompt {
+      font-size: 0.88rem !important;
+    }
+  }
+}
