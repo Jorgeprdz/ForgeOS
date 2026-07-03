@@ -4747,3 +4747,24 @@ NEXT: `056H_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_FINAL_REVIEW`
 - no browser storage
 
 NEXT: `056H_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_FINAL_REVIEW`
+
+## Alfred Static Preview Desktop Canvas Layout Tuning 056G6
+
+056G6 adds dedicated desktop/tablet Alfred dashboard canvas layout inspired by the approved reference.
+
+- mobile layout preserved
+- desktop/tablet old stretched-card flow hidden
+- desktop sidebar, hero, KPI strip, panels, smart context preview, and bottom command affordance added
+- no provider runtime
+- no CRM write
+- no calendar create
+- no send
+- no approval mutation
+- no truth mutation
+- no audio runtime
+- no speech engine
+- no live search
+- no network calls
+- no browser storage
+
+NEXT: `056H_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_FINAL_REVIEW`

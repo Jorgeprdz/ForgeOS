@@ -2575,3 +2575,390 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:LANDSCAPE_FLOW_FIX_056G5:END */
+
+/* FORGEOS:DESKTOP_CANVAS_LAYOUT_056G6:START */
+.alfred-desktop-canvas-056g6 {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  body {
+    overflow-x: hidden !important;
+  }
+
+  .desktop-menu-toggle,
+  .desktop-nav,
+  .command-orb-layer,
+  .command-live-context,
+  .bottom-nav {
+    display: none !important;
+  }
+
+  .phone-shell {
+    background:
+      radial-gradient(circle at 78% 9%, rgba(67, 184, 255, 0.14), transparent 30%),
+      linear-gradient(135deg, #020817 0%, #051020 52%, #061529 100%) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    max-width: none !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    padding: 0 !important;
+    width: 100vw !important;
+  }
+
+  .phone-shell > :not(.alfred-desktop-canvas-056g6) {
+    display: none !important;
+  }
+
+  .alfred-desktop-canvas-056g6 {
+    color: rgba(244, 249, 255, 0.94);
+    display: grid !important;
+    grid-template-columns: 232px minmax(0, 1fr);
+    min-height: 100vh;
+    width: 100vw;
+  }
+
+  .alfred-desktop-sidebar-056g6 {
+    background: linear-gradient(180deg, rgba(2, 7, 18, 0.96), rgba(3, 12, 27, 0.96));
+    border-right: 1px solid rgba(129, 195, 255, 0.14);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 30px 22px;
+  }
+
+  .alfred-desktop-brand-056g6 {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: #f2d28c;
+  }
+
+  .alfred-bowtie-056g6 {
+    align-items: center;
+    background: linear-gradient(135deg, #f3d691, #ba812e);
+    border-radius: 12px;
+    color: #06111f;
+    display: inline-flex;
+    font-weight: 900;
+    height: 34px;
+    justify-content: center;
+    width: 34px;
+  }
+
+  .alfred-desktop-nav-056g6 {
+    display: grid;
+    gap: 10px;
+  }
+
+  .alfred-desktop-nav-056g6 span {
+    border-radius: 10px;
+    color: rgba(239, 247, 255, 0.72);
+    font-weight: 800;
+    padding: 14px 16px;
+  }
+
+  .alfred-desktop-nav-056g6 .active,
+  .alfred-desktop-nav-056g6 span:nth-child(4) {
+    background: rgba(49, 136, 255, 0.16);
+    color: #f8d990;
+    box-shadow: inset 0 0 0 1px rgba(248, 217, 144, 0.16);
+  }
+
+  .alfred-desktop-profile-056g6 {
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .alfred-desktop-profile-056g6 > span {
+    align-items: center;
+    background: rgba(108, 171, 255, 0.18);
+    border-radius: 999px;
+    display: inline-flex;
+    font-weight: 900;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+  }
+
+  .alfred-desktop-profile-056g6 small {
+    color: rgba(239, 247, 255, 0.62);
+    display: block;
+  }
+
+  .alfred-desktop-main-056g6 {
+    display: grid;
+    gap: 18px;
+    margin: 0 auto;
+    max-width: 1240px;
+    padding: 34px clamp(28px, 4vw, 56px) 36px;
+    width: 100%;
+  }
+
+  .alfred-desktop-title-056g6 span {
+    color: rgba(239, 247, 255, 0.76);
+    font-size: 1rem;
+  }
+
+  .alfred-desktop-title-056g6 h1 {
+    font-size: clamp(2.3rem, 4vw, 3.7rem);
+    line-height: 1;
+    margin: 8px 0 0;
+  }
+
+  .alfred-hero-card-056g6,
+  .alfred-kpi-strip-056g6,
+  .alfred-panel-056g6,
+  .alfred-smart-preview-056g6,
+  .alfred-desktop-command-056g6 {
+    background: linear-gradient(135deg, rgba(11, 28, 49, 0.92), rgba(5, 15, 31, 0.84));
+    border: 1px solid rgba(151, 211, 255, 0.18);
+    border-radius: 16px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035), 0 18px 60px rgba(0, 0, 0, 0.24);
+  }
+
+  .alfred-hero-card-056g6 {
+    align-items: center;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 132px minmax(0, 1fr) auto;
+    padding: 22px 28px;
+  }
+
+  .alfred-avatar-056g6 {
+    align-items: center;
+    background: radial-gradient(circle at 40% 30%, #f7d98f, #8b5d1f 78%);
+    border: 1px solid rgba(255, 230, 164, 0.6);
+    border-radius: 999px;
+    color: #07101c;
+    display: flex;
+    font-size: 2.5rem;
+    font-weight: 950;
+    height: 118px;
+    justify-content: center;
+    width: 118px;
+  }
+
+  .alfred-label-056g6 {
+    color: #f5d88f;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+  }
+
+  .alfred-hero-card-056g6 h2 {
+    font-size: clamp(1.55rem, 2.3vw, 2.25rem);
+    line-height: 1.12;
+    margin: 0;
+  }
+
+  .alfred-hero-card-056g6 p:last-child {
+    color: #f7d483;
+    font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+    margin: 6px 0 0;
+  }
+
+  .alfred-static-button-056g6 {
+    background: linear-gradient(135deg, #f3d897, #c98e3c);
+    border: 0;
+    border-radius: 999px;
+    color: #111724;
+    font: inherit;
+    font-weight: 900;
+    min-height: 50px;
+    padding: 0 30px;
+  }
+
+  .alfred-kpi-strip-056g6 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: hidden;
+  }
+
+  .alfred-kpi-strip-056g6 article {
+    border-right: 1px solid rgba(151, 211, 255, 0.14);
+    display: grid;
+    gap: 5px;
+    padding: 18px 22px;
+  }
+
+  .alfred-kpi-strip-056g6 article:last-child {
+    border-right: 0;
+  }
+
+  .alfred-kpi-strip-056g6 span,
+  .alfred-panel-056g6 small,
+  .alfred-smart-preview-056g6 span {
+    color: rgba(239, 247, 255, 0.68);
+  }
+
+  .alfred-kpi-strip-056g6 strong {
+    color: #58a7ff;
+    font-size: clamp(1.45rem, 2.6vw, 2.35rem);
+  }
+
+  .alfred-kpi-strip-056g6 .green { color: #72dc94; }
+  .alfred-kpi-strip-056g6 .red { color: #ff6969; }
+  .alfred-kpi-strip-056g6 .gold { color: #f3c96d; }
+
+  .alfred-kpi-strip-056g6 i {
+    background: linear-gradient(90deg, #338cff 78%, rgba(255,255,255,0.12) 78%);
+    border-radius: 999px;
+    display: block;
+    height: 7px;
+    width: 100%;
+  }
+
+  .alfred-dashboard-grid-056g6 {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 1.1fr 1fr 1fr;
+  }
+
+  .alfred-panel-056g6 {
+    padding: 20px 22px;
+  }
+
+  .alfred-panel-056g6 h2,
+  .alfred-smart-preview-056g6 h2 {
+    font-size: 1.24rem;
+    margin: 0 0 14px;
+  }
+
+  .alfred-table-056g6,
+  .alfred-risk-box-056g6,
+  .alfred-agenda-056g6 {
+    background: rgba(3, 13, 29, 0.46);
+    border: 1px solid rgba(151, 211, 255, 0.12);
+    border-radius: 12px;
+    margin: 0 0 14px;
+    padding: 12px 14px;
+  }
+
+  .alfred-table-056g6 p,
+  .alfred-risk-box-056g6 p {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+  }
+
+  .alfred-table-056g6 strong,
+  .alfred-risk-box-056g6 b {
+    color: #f1c86e;
+  }
+
+  .alfred-agenda-056g6 {
+    display: grid;
+    gap: 12px;
+    padding-left: 34px;
+  }
+
+  .alfred-smart-preview-056g6 {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 0.75fr 1.25fr;
+    padding: 20px 22px;
+  }
+
+  .alfred-smart-preview-056g6 p {
+    color: rgba(239, 247, 255, 0.72);
+    margin: 0;
+  }
+
+  .alfred-smart-cards-056g6 {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .alfred-smart-cards-056g6 article {
+    background: rgba(5, 18, 38, 0.72);
+    border: 1px solid rgba(151, 211, 255, 0.14);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .alfred-smart-cards-056g6 strong {
+    color: #f6d58a;
+    display: block;
+    font-size: 1.12rem;
+    margin: 6px 0;
+  }
+
+  .alfred-desktop-command-056g6 {
+    align-items: center;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: auto 1fr auto;
+    margin: 6px auto 0;
+    max-width: 980px;
+    min-height: 74px;
+    padding: 12px 18px;
+    width: 94%;
+    box-shadow:
+      0 0 22px rgba(108, 205, 255, 0.24),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .alfred-desktop-command-056g6 p {
+    color: rgba(239, 247, 255, 0.72);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .alfred-command-icon-056g6 {
+    align-items: center;
+    background: rgba(67, 139, 255, 0.24);
+    border-radius: 999px;
+    display: flex;
+    font-size: 1.45rem;
+    font-weight: 900;
+    height: 50px;
+    justify-content: center;
+    width: 50px;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1120px) {
+  .alfred-desktop-canvas-056g6 {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+
+  .alfred-desktop-main-056g6 {
+    padding: 26px 24px 30px;
+  }
+
+  .alfred-hero-card-056g6 {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .alfred-avatar-056g6 {
+    height: 82px;
+    width: 82px;
+  }
+
+  .alfred-static-button-056g6 {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .alfred-kpi-strip-056g6 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .alfred-dashboard-grid-056g6,
+  .alfred-smart-preview-056g6 {
+    grid-template-columns: 1fr;
+  }
+}
+/* FORGEOS:DESKTOP_CANVAS_LAYOUT_056G6:END */
