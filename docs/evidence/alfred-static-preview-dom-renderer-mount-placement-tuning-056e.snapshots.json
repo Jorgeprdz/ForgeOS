@@ -1,0 +1,107 @@
+{
+  "phase": "056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_PLACEMENT_TUNING",
+  "source": "ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT",
+  "generatedAt": "2026-07-03T02:59:44Z",
+  "targetPreviewRoot": "docs/static-preview/forge-alive",
+  "designDirection": {
+    "principle": "Alfred should feel like an integrated intelligence layer, not a technical debug card.",
+    "placement": "inside_existing_alfred_forge_card",
+    "language": "product_language_not_technical_mount_language",
+    "technicalMetadataVisible": false,
+    "visualPresence": "compact"
+  },
+  "screenshots": [
+    {
+      "label": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "path": "docs/evidence/alfred-static-preview-dom-renderer-mount-placement-tuning-056e-desktop.png",
+      "result": "PASS",
+      "observations": [
+        "No separate Alfred static mount card is visible.",
+        "Alfred signal is integrated inside the existing ALFRED / FORGE card.",
+        "The mount no longer floats to the right of the hero.",
+        "Hero balance and left-column composition are preserved.",
+        "Safety appears as subtle product copy."
+      ]
+    },
+    {
+      "label": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 1000
+      },
+      "path": "docs/evidence/alfred-static-preview-dom-renderer-mount-placement-tuning-056e-mobile.png",
+      "result": "PASS",
+      "observations": [
+        "No heavy Alfred card appears before Plan de hoy.",
+        "Alfred remains inside the existing ALFRED / FORGE card.",
+        "The hierarchy remains greeting, compact Alfred signal, plan, opportunities.",
+        "Text remains legible without overflow.",
+        "Safety signals remain visible but subtle."
+      ]
+    }
+  ],
+  "acceptance": {
+    "noSeparateLargeCard": true,
+    "noVisibleAlfredStaticMountTitle": true,
+    "noVisible056BMetadata": true,
+    "noDuplicateAlfredForgeBlock": true,
+    "desktopDoesNotFloatRightOfHero": true,
+    "mobileDoesNotInsertHeavyCardBeforePlan": true,
+    "premiumVisualSystemPreserved": true,
+    "minimalEffectiveChange": true
+  },
+  "boundary": {
+    "staticPreviewOnly": true,
+    "placementTuningOnly": true,
+    "newEventListenersForAlfred": false,
+    "providerRuntime": false,
+    "crmWrite": false,
+    "calendarCreate": false,
+    "send": false,
+    "approvalMutation": false,
+    "truthMutation": false,
+    "audioRuntime": false,
+    "speechEngine": false,
+    "liveSearch": false,
+    "networkCalls": false,
+    "browserStorage": false,
+    "externalDependencies": false
+  },
+  "validation": {
+    "desktopPlacementQa": "PASS",
+    "mobilePlacementQa": "PASS",
+    "alfredIntegrationMasterTest": "PASS 20/20",
+    "forbiddenApiScan": "PASS",
+    "screenshotDimensionCheck": "PASS",
+    "gitDiffCheck": "PASS"
+  },
+  "autocopy_report": {
+    "phase": "056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_PLACEMENT_TUNING",
+    "status": "PASS",
+    "desktopPlacementQa": "PASS",
+    "mobilePlacementQa": "PASS",
+    "integratedInExistingAlfredForgeCard": true,
+    "separateTechnicalCardRemoved": true,
+    "visibleTechnicalMountLabel": false,
+    "visible056BMetadata": false,
+    "visualAdjustmentRequired": true,
+    "providerRuntime": false,
+    "crmWrite": false,
+    "calendarCreate": false,
+    "send": false,
+    "approvalMutation": false,
+    "truthMutation": false,
+    "audioRuntime": false,
+    "speechEngine": false,
+    "liveSearch": false,
+    "networkCalls": false,
+    "browserStorage": false,
+    "externalDependencies": false
+  },
+  "decision": "PASS_056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_PLACEMENT_TUNING_SNAPSHOTS_GENERATED",
+  "next": "056F_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_ACCESSIBILITY_QA"
+}

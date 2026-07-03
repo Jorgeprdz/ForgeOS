@@ -2456,6 +2456,15 @@ GREEN FORGE ALIVE STATIC PREVIEW MILESTONE CLOSURE / IMPLEMENTED
 |   |-- GREEN desktop visual QA passed
 |   |-- GREEN mobile visual QA passed
 |   |-- GREEN Alfred mount visible without broken layout
-|   |-- GREEN no visual adjustment required
+|   |-- YELLOW placement required product-design tuning after review
 |   |-- RED no provider runtime, CRM write, calendar create, send, approval mutation, truth mutation, audio, speech, live search, network, browser storage, or external dependency
-|   |-- NEXT 056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_ACCESSIBILITY_QA
+|   |-- NEXT 056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_PLACEMENT_TUNING
+
+|-- GREEN 056E Alfred Static Preview DOM Renderer Mount Placement Tuning
+|   |-- GREEN separate technical mount card removed
+|   |-- GREEN Alfred integrated into existing ALFRED / FORGE card
+|   |-- GREEN desktop placement QA passed
+|   |-- GREEN mobile placement QA passed
+|   |-- GREEN product language replaces technical mount language
+|   |-- RED no provider runtime, CRM write, calendar create, send, approval mutation, truth mutation, audio, speech, live search, network, browser storage, or external dependency
+|   |-- NEXT 056F_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_ACCESSIBILITY_QA

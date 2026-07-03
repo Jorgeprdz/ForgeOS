@@ -1443,12 +1443,24 @@ Next:
 
 # Alfred Static Preview DOM Renderer Mount Visual QA Roadmap Status
 
-056D_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_VISUAL_QA: GREEN / VISUAL QA PASSED.
+056D_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_VISUAL_QA: GREEN / TECHNICAL VISUAL QA PASSED; PLACEMENT TUNING REQUIRED.
 
-Desktop and mobile visual QA confirm Alfred appears in Forge Alive static preview without broken layout. No visual adjustment was required.
+Desktop and mobile visual QA confirmed Alfred appeared in Forge Alive static preview without broken layout. Product-design review found the placement too technical and visually heavy, requiring 056E placement tuning before accessibility QA.
 
 Boundary remains static preview only: no provider runtime, no CRM write, no calendar create, no send, no approval mutation, no truth mutation, no audio runtime, no speech engine, no live search, no network calls, no browser storage, and no external dependencies.
 
 Next:
 
-- 056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_ACCESSIBILITY_QA.
+- 056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_PLACEMENT_TUNING.
+
+# Alfred Static Preview DOM Renderer Mount Placement Tuning Roadmap Status
+
+056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_PLACEMENT_TUNING: GREEN / PLACEMENT TUNED.
+
+Alfred's static preview mount is now integrated into the existing `ALFRED / FORGE` card as a compact product signal. The separate technical `ALFRED STATIC MOUNT` card is removed, visible `056B` mount metadata is removed, and desktop/mobile placement QA passed.
+
+Boundary remains static preview only: no provider runtime, no CRM write, no calendar create, no send, no approval mutation, no truth mutation, no audio runtime, no speech engine, no live search, no network calls, no browser storage, and no external dependencies.
+
+Next:
+
+- 056F_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_ACCESSIBILITY_QA.

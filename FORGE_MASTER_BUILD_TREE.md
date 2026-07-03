@@ -4544,7 +4544,7 @@ NEXT: `056D_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_VISUAL_QA`
 - mobile visual QA passed
 - Alfred mount visible
 - no broken layout observed
-- no visual adjustment required
+- initial visual QA passed technically, but placement required product-design tuning
 - no provider runtime
 - no CRM write
 - no calendar create
@@ -4558,4 +4558,29 @@ NEXT: `056D_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_VISUAL_QA`
 - no browser storage
 - no external dependencies
 
-NEXT: `056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_ACCESSIBILITY_QA`
+NEXT: `056E_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_PLACEMENT_TUNING`
+
+## Alfred Static Preview DOM Renderer Mount Placement Tuning 056E
+
+056E tunes Alfred's static preview mount placement so it belongs visually to Forge Alive instead of appearing as a technical card.
+
+- separate `ALFRED STATIC MOUNT` card removed
+- Alfred signal integrated into existing `ALFRED / FORGE` card
+- visible copy changed to product language
+- desktop placement QA passed
+- mobile placement QA passed
+- no visible `056B` mount metadata
+- no provider runtime
+- no CRM write
+- no calendar create
+- no send
+- no approval mutation
+- no truth mutation
+- no audio runtime
+- no speech engine
+- no live search
+- no network calls
+- no browser storage
+- no external dependencies
+
+NEXT: `056F_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_ACCESSIBILITY_QA`
