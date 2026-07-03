@@ -247,4 +247,4 @@ function assertViewModelSafety(vm) {
   pass("Serialized UI view model contains no forbidden true execution flags");
 }
 
-console.log(`Alfred Review Action Packet UI View Model PASS ${passCount}/18`);
+console.log(`Alfred Review Action Packet UI View Model PASS ${passCount}/19`);
