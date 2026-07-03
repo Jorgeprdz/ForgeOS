@@ -2652,3 +2652,188 @@
   window.addEventListener("resize", schedule056P, { passive: true });
   window.addEventListener("orientationchange", schedule056P, { passive: true });
 })();
+
+
+/* FORGEOS:RESTORE_FOCUS_WIDGETS_AND_BOWTIE_056P2 */
+(function () {
+  "use strict";
+
+  var widgets = [
+    ["Seguimiento", "86", "Seguimiento prioritario", "Relacion abierta con riesgo de enfriarse.", "El humano decide tono y momento."],
+    ["Decision", "78", "Senales para decidir", "Forge ordena contexto antes de sugerir accion.", "Senal no es decision. Contexto no es verdad."],
+    ["Juicio", "92", "Falta contexto", "Primero mejora el juicio; luego decide.", "Unknown no es cero."],
+    ["Revision", "80", "Abrir plan de accion", "Usa Alfred para revisar /Follow Juan.", "Preview only. Requiere aprobacion."]
+  ];
+
+  function isMobile() {
+    return window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+  }
+
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (typeof text === "string") node.textContent = text;
+    return node;
+  }
+
+  function bowtieSvg() {
+    return '<svg viewBox="0 0 84 52" aria-hidden="true"><path d="M6 13 C16 6 29 10 38 22 L38 30 C29 42 16 46 6 39 C11 31 11 21 6 13Z" fill="#061326"/><path d="M78 13 C68 6 55 10 46 22 L46 30 C55 42 68 46 78 39 C73 31 73 21 78 13Z" fill="#061326"/><rect x="36" y="20" width="12" height="12" rx="5" fill="#F5F8FF"/><path d="M11 16 C20 11 30 14 37 24" stroke="#F2CF75" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M73 16 C64 11 54 14 47 24" stroke="#76DBFF" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>';
+  }
+
+  function text(node) {
+    return String(node && node.textContent || "").replace(/\s+/g, " ").trim();
+  }
+
+  function findText(needles) {
+    var lower = needles.map(function (item) { return item.toLowerCase(); });
+    return Array.prototype.slice.call(document.querySelectorAll("h1,h2,h3,h4,p,span,div,section,article")).find(function (node) {
+      var value = text(node).toLowerCase();
+      if (!value || value.length > 800) return false;
+      return lower.some(function (needle) { return value.indexOf(needle) !== -1; });
+    }) || null;
+  }
+
+  function nearestCard(node) {
+    var current = node;
+    var candidate = node;
+    var hops = 0;
+    while (current && current !== document.body && hops < 10) {
+      if (current.matches && current.matches("article, section, .card, [class*='card'], [class*='panel'], [class*='widget']")) {
+        candidate = current;
+        var size = text(current).length;
+        if (size > 70 && size < 1800) return current;
+      }
+      current = current.parentElement;
+      hops += 1;
+    }
+    return candidate && candidate !== document.body ? candidate : null;
+  }
+
+  function replaceA() {
+    var alfredLabel = findText(["ALFRED / FORGE", "ALFRED"]);
+    var container = alfredLabel ? nearestCard(alfredLabel) : document;
+    Array.prototype.slice.call((container || document).querySelectorAll("div,span,button")).forEach(function (node) {
+      if (node.dataset.bowtie056p2 === "ready") return;
+      if (text(node) !== "A") return;
+      var rect = node.getBoundingClientRect();
+      if (rect.width < 34 || rect.width > 96 || rect.height < 34 || rect.height > 96) return;
+      node.dataset.bowtie056p2 = "ready";
+      node.classList.add("forge-alfred-a-replaced-056p2");
+      node.innerHTML = bowtieSvg();
+    });
+  }
+
+  function setIndex(root, dots, requested) {
+    var previous = Number(root.dataset.focusIndex056p2 || "0");
+    var index = Math.max(0, Math.min(widgets.length - 1, requested));
+    root.dataset.focusIndex056p2 = String(index);
+    root.style.setProperty("--forge-focus-index-056p2", String(index));
+    dots.style.setProperty("--forge-focus-dot-index-056p2", String(index));
+    dots.classList.toggle("is-moving-right-056p2", index >= previous);
+    dots.classList.toggle("is-moving-left-056p2", index < previous);
+    window.clearTimeout(dots._timer056p2);
+    dots._timer056p2 = window.setTimeout(function () {
+      dots.classList.remove("is-moving-right-056p2", "is-moving-left-056p2");
+    }, 260);
+    Array.prototype.forEach.call(dots.querySelectorAll(".forge-focus-dot-056p2"), function (dot, dotIndex) {
+      dot.classList.toggle("is-active-056p2", dotIndex === index);
+      dot.setAttribute("aria-current", dotIndex === index ? "true" : "false");
+    });
+  }
+
+  function buildFocus() {
+    var root = el("section", "forge-focus-root-056p2");
+    root.style.setProperty("--forge-focus-index-056p2", "0");
+    root.setAttribute("aria-label", "Alfred enfoque del dia");
+
+    var hero = el("div", "forge-focus-hero-056p2");
+    var mark = el("div", "forge-bowtie-disc-056p2");
+    mark.innerHTML = bowtieSvg();
+    hero.appendChild(mark);
+    var copy = el("div");
+    copy.appendChild(el("div", "forge-focus-eyebrow-056p2", "Alfred Concierge"));
+    copy.appendChild(el("h2", "forge-focus-title-056p2", "Haz esto ahora"));
+    copy.appendChild(el("div", "forge-focus-subtitle-056p2", "Revisa seguimiento prioritario antes de que se enfrie."));
+    hero.appendChild(copy);
+    root.appendChild(hero);
+
+    var viewport = el("div", "forge-focus-viewport-056p2");
+    var track = el("div", "forge-focus-track-056p2");
+    widgets.forEach(function (widget, index) {
+      var card = el("article", "forge-focus-card-056p2");
+      var top = el("div", "forge-focus-card-top-056p2");
+      top.appendChild(el("div", "forge-focus-kicker-056p2", widget[0]));
+      top.appendChild(el("div", "forge-focus-score-056p2", widget[1]));
+      card.appendChild(top);
+      card.appendChild(el("h3", "", widget[2]));
+      card.appendChild(el("p", "", widget[3]));
+      card.appendChild(el("p", "", widget[4]));
+      track.appendChild(card);
+    });
+    viewport.appendChild(track);
+    root.appendChild(viewport);
+
+    var dots = el("div", "forge-focus-dots-056p2");
+    dots.appendChild(el("span", "forge-focus-glider-056p2"));
+    widgets.forEach(function (_widget, index) {
+      var dot = el("button", "forge-focus-dot-056p2");
+      dot.type = "button";
+      dot.setAttribute("aria-label", "Ver senal " + (index + 1));
+      dot.addEventListener("click", function () { setIndex(root, dots, index); });
+      dots.appendChild(dot);
+    });
+    root.appendChild(dots);
+
+    var startX = 0;
+    viewport.addEventListener("touchstart", function (event) {
+      if (!event.touches || !event.touches.length) return;
+      startX = event.touches[0].clientX;
+    }, { passive: true });
+    viewport.addEventListener("touchend", function (event) {
+      if (!event.changedTouches || !event.changedTouches.length) return;
+      var delta = event.changedTouches[0].clientX - startX;
+      if (Math.abs(delta) < 34) return;
+      var current = Number(root.dataset.focusIndex056p2 || "0");
+      setIndex(root, dots, current + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+    setIndex(root, dots, 0);
+    return root;
+  }
+
+  function hideOldSmartWidgets() {
+    Array.prototype.forEach.call(document.querySelectorAll("#smart-widget-stack, .smart-widget-stack, .forge-smart-widget-pager-root-056l3, .forge-ux99-focus-root-056p"), function (node) {
+      if (!node.closest(".forge-focus-root-056p2")) {
+        node.classList.add("forge-ux99-old-smart-hidden-056p");
+        node.setAttribute("aria-hidden", "true");
+      }
+    });
+  }
+
+  function mountFocus() {
+    if (!isMobile()) return;
+    document.documentElement.classList.add("forge-ux99-mobile-056p2");
+    var focus = document.querySelector(".forge-focus-root-056p2");
+    if (!focus) {
+      focus = buildFocus();
+      var plan = nearestCard(findText(["Plan de hoy"]));
+      if (plan && plan.parentElement) {
+        plan.insertAdjacentElement("afterend", focus);
+      } else {
+        document.body.insertBefore(focus, document.body.firstElementChild || null);
+      }
+    }
+    hideOldSmartWidgets();
+    replaceA();
+  }
+
+  function schedule() {
+    [60, 240, 700, 1400, 2600, 4200].forEach(function (delay) {
+      window.setTimeout(mountFocus, delay);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", schedule);
+  window.addEventListener("load", schedule);
+  window.addEventListener("resize", schedule, { passive: true });
+  window.addEventListener("orientationchange", schedule, { passive: true });
+})();
