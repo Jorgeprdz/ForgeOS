@@ -2165,3 +2165,41 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:ALFRED_FLOATING_ACTION_FIX_056G1:END */
+
+/* FORGEOS:ALFRED_FAB_PLACEMENT_TUNING_056G2:START */
+@media (max-width: 640px) {
+  .command-orb-layer {
+    bottom: 22px !important;
+    right: 18px !important;
+    top: auto !important;
+    width: auto !important;
+    z-index: 58 !important;
+    transform: translateY(-2px);
+  }
+
+  .command-pill {
+    min-height: 42px !important;
+    padding: 0 !important;
+    border-radius: 999px !important;
+    box-shadow:
+      0 0 8px rgba(110, 217, 255, 0.2),
+      0 0 16px rgba(226, 180, 86, 0.1) !important;
+  }
+
+  .command-pill-slash {
+    height: 40px !important;
+    width: 40px !important;
+    font-size: 1.35rem !important;
+  }
+
+  .command-pill-input,
+  .command-pill-close,
+  .command-live-context {
+    display: none !important;
+  }
+
+  .bottom-nav {
+    z-index: 56 !important;
+  }
+}
+/* FORGEOS:ALFRED_FAB_PLACEMENT_TUNING_056G2:END */

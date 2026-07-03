@@ -4657,3 +4657,24 @@ NEXT: `056H_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_FINAL_REVIEW`
 - no browser storage
 
 NEXT: `056H_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_FINAL_REVIEW`
+
+## Alfred Static Preview DOM Renderer Mount FAB Placement Tuning 056G2
+
+056G2 tunes the intentional mobile floating slash command placement.
+
+- slash command remains mobile floating action button
+- placement tuned lower-right
+- pre-change styles backed up locally under .forge-backups/056g2-*
+- no provider runtime
+- no CRM write
+- no calendar create
+- no send
+- no approval mutation
+- no truth mutation
+- no audio runtime
+- no speech engine
+- no live search
+- no network calls
+- no browser storage
+
+NEXT: `056H_ALFRED_STATIC_PREVIEW_DOM_RENDERER_MOUNT_FINAL_REVIEW`
