@@ -1504,3 +1504,192 @@
     window.setTimeout(mountSmartWidgetPager056L, 160);
   });
 })();
+
+
+/* FORGEOS:ALFRED_MOBILE_SMART_WIDGET_PAGER_DOTS_REPAIR_056L2 */
+(function () {
+  "use strict";
+
+  var cards056L2 = [
+    {
+      kicker: "Seguimiento",
+      score: "86",
+      title: "Seguimiento prioritario",
+      body: "Relacion abierta con riesgo de enfriarse.",
+      why: "Por que ahora: hay senales de seguimiento pendiente.",
+      limit: "Incertidumbre: el humano decide tono y momento.",
+      chips: ["Autoridad humana", "Solo revision"]
+    },
+    {
+      kicker: "Decision",
+      score: "78",
+      title: "Senales para decidir",
+      body: "Forge muestra contexto para ordenar criterio antes de actuar.",
+      why: "Por que ahora: hay oportunidades que pueden perder temperatura.",
+      limit: "Senal no es decision. Contexto no es verdad.",
+      chips: ["Contexto vivo", "Sin ejecucion"]
+    },
+    {
+      kicker: "Juicio",
+      score: "92",
+      title: "Falta contexto",
+      body: "Primero mejora el juicio; luego decide si vale la pena actuar.",
+      why: "Por que ahora: la incertidumbre pesa mas que ejecutar rapido.",
+      limit: "Unknown no es cero. Alfred no inventa evidencia.",
+      chips: ["Hold humano", "Ley cero"]
+    },
+    {
+      kicker: "Siguiente revision",
+      score: "80",
+      title: "Abrir plan de accion",
+      body: "Usa Alfred para revisar comandos como /Follow Juan o /Mandar mensaje.",
+      why: "Por que ahora: la command bar convierte intencion en preview revisable.",
+      limit: "Preview only. Toda accion requiere aprobacion.",
+      chips: ["Preview", "No envio"]
+    }
+  ];
+
+  function isMobile056L2() {
+    return window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+  }
+
+  function el056L2(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (typeof text === "string") node.textContent = text;
+    return node;
+  }
+
+  function renderCard056L2(card, index) {
+    var article = el056L2("article", "forge-smart-widget-card-056l2");
+    article.setAttribute("role", "group");
+    article.setAttribute("aria-label", "Senal inteligente " + (index + 1) + " de 4");
+
+    var top = el056L2("div", "forge-smart-widget-card-top-056l2");
+    top.appendChild(el056L2("div", "forge-smart-widget-kicker-056l2", card.kicker));
+    var score = el056L2("div", "forge-smart-widget-score-056l2");
+    score.appendChild(el056L2("strong", "", card.score));
+    score.appendChild(el056L2("span", "", "senal"));
+    top.appendChild(score);
+    article.appendChild(top);
+
+    article.appendChild(el056L2("h3", "", card.title));
+    article.appendChild(el056L2("p", "forge-smart-widget-body-056l2", card.body));
+
+    var chips = el056L2("div", "forge-smart-widget-chips-056l2");
+    card.chips.forEach(function (chip) {
+      chips.appendChild(el056L2("span", "forge-smart-widget-chip-056l2", chip));
+    });
+    article.appendChild(chips);
+
+    article.appendChild(el056L2("p", "forge-smart-widget-why-056l2", card.why));
+    article.appendChild(el056L2("p", "forge-smart-widget-limit-056l2", card.limit));
+    return article;
+  }
+
+  function clearLegacySmartWidgetDots056L2(stack) {
+    Array.prototype.forEach.call(stack.querySelectorAll(
+      ".smart-widget-dots, .smart-widget-dots-056i, .smart-widget-dots-056j, .smart-widget-dots-056l, .smart-widget-mouse-controls"
+    ), function (node) {
+      if (!node.closest(".forge-smart-widget-pager-root-056l2")) {
+        node.setAttribute("hidden", "true");
+        node.style.display = "none";
+      }
+    });
+  }
+
+  function mountSmartWidgetPager056L2() {
+    if (!isMobile056L2()) return;
+    var stack = document.getElementById("smart-widget-stack") || document.querySelector(".smart-widget-stack");
+    if (!stack) return;
+
+    clearLegacySmartWidgetDots056L2(stack);
+
+    var existing = stack.querySelector(".forge-smart-widget-pager-root-056l2");
+    if (existing) return;
+
+    stack.classList.add("forge-smart-widget-stack-normalized-056l2");
+    stack.hidden = false;
+    stack.removeAttribute("hidden");
+
+    var root = el056L2("section", "forge-smart-widget-pager-root-056l2");
+    root.setAttribute("aria-label", "Senales inteligentes");
+    root.style.setProperty("--forge-smart-widget-index-056l2", "0");
+
+    var heading = el056L2("header", "forge-smart-widget-heading-056l2");
+    heading.appendChild(el056L2("div", "forge-smart-widget-eyebrow-056l2", "Contexto vivo"));
+    heading.appendChild(el056L2("h2", "", "Senales para decidir"));
+    heading.appendChild(el056L2("p", "", "Forge muestra contexto; el humano decide."));
+    root.appendChild(heading);
+
+    var viewport = el056L2("div", "forge-smart-widget-viewport-056l2");
+    var track = el056L2("div", "forge-smart-widget-track-056l2");
+    cards056L2.forEach(function (card, index) {
+      track.appendChild(renderCard056L2(card, index));
+    });
+    viewport.appendChild(track);
+    root.appendChild(viewport);
+
+    var dots = el056L2("div", "forge-smart-widget-dots-056l2");
+    dots.setAttribute("aria-label", "Indicador de senales inteligentes");
+    var glider = el056L2("span", "forge-smart-widget-glider-056l2");
+    glider.setAttribute("aria-hidden", "true");
+    dots.appendChild(glider);
+    cards056L2.forEach(function (_card, index) {
+      var dot = el056L2("button", "forge-smart-widget-dot-056l2");
+      dot.type = "button";
+      dot.setAttribute("aria-label", "Ver senal " + (index + 1));
+      dot.addEventListener("click", function () {
+        setIndex056L2(root, dots, index);
+      });
+      dots.appendChild(dot);
+    });
+    root.appendChild(dots);
+    stack.appendChild(root);
+
+    var touchStartX = 0;
+    viewport.addEventListener("touchstart", function (event) {
+      if (!event.touches || !event.touches.length) return;
+      touchStartX = event.touches[0].clientX;
+    }, { passive: true });
+    viewport.addEventListener("touchend", function (event) {
+      if (!event.changedTouches || !event.changedTouches.length) return;
+      var delta = event.changedTouches[0].clientX - touchStartX;
+      var current = Number(root.dataset.smartWidgetIndex056l2 || "0");
+      if (Math.abs(delta) < 34) return;
+      setIndex056L2(root, dots, current + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+
+    setIndex056L2(root, dots, 0);
+  }
+
+  function setIndex056L2(root, dots, requestedIndex) {
+    var max = cards056L2.length - 1;
+    var previous = Number(root.dataset.smartWidgetIndex056l2 || "0");
+    var index = Math.max(0, Math.min(max, requestedIndex));
+    root.dataset.smartWidgetIndex056l2 = String(index);
+    root.style.setProperty("--forge-smart-widget-index-056l2", String(index));
+    dots.style.setProperty("--forge-smart-dot-active-056l2", String(index));
+    dots.classList.toggle("is-moving-right-056l2", index >= previous);
+    dots.classList.toggle("is-moving-left-056l2", index < previous);
+
+    window.clearTimeout(dots._forgeSmartWidgetMotion056L2);
+    dots._forgeSmartWidgetMotion056L2 = window.setTimeout(function () {
+      dots.classList.remove("is-moving-right-056l2", "is-moving-left-056l2");
+    }, 280);
+
+    Array.prototype.forEach.call(dots.querySelectorAll(".forge-smart-widget-dot-056l2"), function (dot, dotIndex) {
+      dot.classList.toggle("is-active-056l2", dotIndex === index);
+      dot.setAttribute("aria-current", dotIndex === index ? "true" : "false");
+    });
+  }
+
+  function scheduleSmartWidgetPager056L2() {
+    window.setTimeout(mountSmartWidgetPager056L2, 60);
+    window.setTimeout(mountSmartWidgetPager056L2, 260);
+    window.setTimeout(mountSmartWidgetPager056L2, 720);
+  }
+
+  document.addEventListener("DOMContentLoaded", scheduleSmartWidgetPager056L2);
+  window.addEventListener("load", scheduleSmartWidgetPager056L2);
+})();

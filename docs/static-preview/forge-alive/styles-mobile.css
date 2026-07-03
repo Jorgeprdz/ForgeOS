@@ -3162,3 +3162,291 @@
     }
   }
 }
+
+
+/* FORGEOS:ALFRED_MOBILE_SMART_WIDGET_PAGER_DOTS_REPAIR_056L2 */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  #smart-widget-stack.forge-smart-widget-stack-normalized-056l2,
+  .smart-widget-stack.forge-smart-widget-stack-normalized-056l2 {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: min(100%, calc(100vw - 40px)) !important;
+    margin: 20px auto 26px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  #smart-widget-stack.forge-smart-widget-stack-normalized-056l2 > :not(.forge-smart-widget-pager-root-056l2),
+  .smart-widget-stack.forge-smart-widget-stack-normalized-056l2 > :not(.forge-smart-widget-pager-root-056l2) {
+    display: none !important;
+  }
+
+  .forge-smart-widget-stack-normalized-056l2 .smart-widget-dots:not(.forge-smart-widget-dots-056l2),
+  .forge-smart-widget-stack-normalized-056l2 .smart-widget-dots-056i,
+  .forge-smart-widget-stack-normalized-056l2 .smart-widget-dots-056j,
+  .forge-smart-widget-stack-normalized-056l2 .smart-widget-dots-056l,
+  .forge-smart-widget-stack-normalized-056l2 .smart-widget-mouse-controls {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .forge-smart-widget-pager-root-056l2 {
+    display: block !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .forge-smart-widget-heading-056l2 {
+    border: 1px solid rgba(199, 229, 255, 0.16) !important;
+    border-radius: 30px !important;
+    padding: 23px 24px !important;
+    margin: 0 0 18px !important;
+    background:
+      radial-gradient(circle at 82% 22%, rgba(100, 218, 255, 0.16), transparent 42%),
+      linear-gradient(145deg, rgba(9, 23, 43, 0.94), rgba(7, 15, 31, 0.9)) !important;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+    backdrop-filter: blur(22px) saturate(1.28) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(1.28) !important;
+  }
+
+  .forge-smart-widget-eyebrow-056l2 {
+    color: rgba(245, 248, 255, 0.62) !important;
+    font-size: 0.72rem !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+    margin-bottom: 8px !important;
+  }
+
+  .forge-smart-widget-heading-056l2 h2 {
+    color: #fff6dc !important;
+    font-size: clamp(1.7rem, 7.1vw, 2.22rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: 0 !important;
+    margin: 0 0 8px !important;
+    font-weight: 950 !important;
+  }
+
+  .forge-smart-widget-heading-056l2 p {
+    color: rgba(220, 230, 244, 0.76) !important;
+    font-size: 1rem !important;
+    line-height: 1.24 !important;
+    margin: 0 !important;
+  }
+
+  .forge-smart-widget-viewport-056l2 {
+    width: 100% !important;
+    overflow: hidden !important;
+    border-radius: 32px !important;
+  }
+
+  .forge-smart-widget-track-056l2 {
+    display: flex !important;
+    width: 400% !important;
+    transform: translate3d(calc(var(--forge-smart-widget-index-056l2, 0) * -25%), 0, 0) !important;
+    transition: transform 560ms cubic-bezier(0.2, 0.86, 0.18, 1) !important;
+    will-change: transform !important;
+  }
+
+  .forge-smart-widget-card-056l2 {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+    min-height: 300px !important;
+    box-sizing: border-box !important;
+    padding: 28px 26px 26px !important;
+    border-radius: 32px !important;
+    border: 1px solid rgba(199, 229, 255, 0.17) !important;
+    background:
+      radial-gradient(circle at 18% 10%, rgba(242, 207, 117, 0.14), transparent 38%),
+      radial-gradient(circle at 94% 22%, rgba(100, 218, 255, 0.16), transparent 40%),
+      linear-gradient(146deg, rgba(10, 26, 47, 0.95), rgba(6, 14, 29, 0.9)) !important;
+    box-shadow:
+      0 24px 58px rgba(0, 0, 0, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.075),
+      inset 0 -1px 0 rgba(100, 218, 255, 0.07) !important;
+    backdrop-filter: blur(24px) saturate(1.32) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(1.32) !important;
+  }
+
+  .forge-smart-widget-card-top-056l2 {
+    display: flex !important;
+    align-items: start !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .forge-smart-widget-kicker-056l2 {
+    color: rgba(245, 248, 255, 0.58) !important;
+    font-size: 0.82rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+  }
+
+  .forge-smart-widget-score-056l2 {
+    min-width: 58px !important;
+    border-radius: 18px !important;
+    padding: 9px 9px 8px !important;
+    text-align: center !important;
+    color: #f7d584 !important;
+    border: 1px solid rgba(242, 207, 117, 0.22) !important;
+    background: rgba(242, 207, 117, 0.07) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .forge-smart-widget-score-056l2 strong {
+    display: block !important;
+    font-size: 1.05rem !important;
+    line-height: 1 !important;
+    font-weight: 950 !important;
+  }
+
+  .forge-smart-widget-score-056l2 span {
+    display: block !important;
+    color: rgba(245, 248, 255, 0.54) !important;
+    font-size: 0.56rem !important;
+    line-height: 1.1 !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    margin-top: 4px !important;
+  }
+
+  .forge-smart-widget-card-056l2 h3 {
+    color: #f5f8ff !important;
+    font-size: clamp(1.52rem, 6.6vw, 2rem) !important;
+    line-height: 1.06 !important;
+    letter-spacing: 0 !important;
+    font-weight: 950 !important;
+    margin: 0 0 12px !important;
+  }
+
+  .forge-smart-widget-body-056l2,
+  .forge-smart-widget-limit-056l2,
+  .forge-smart-widget-why-056l2 {
+    color: rgba(220, 230, 244, 0.76) !important;
+    font-size: 1.04rem !important;
+    line-height: 1.32 !important;
+    margin: 0 0 16px !important;
+  }
+
+  .forge-smart-widget-chips-056l2 {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin: 22px 0 18px !important;
+  }
+
+  .forge-smart-widget-chip-056l2 {
+    color: rgba(242, 207, 117, 0.92) !important;
+    border: 1px solid rgba(242, 207, 117, 0.22) !important;
+    background: rgba(242, 207, 117, 0.07) !important;
+    border-radius: 999px !important;
+    padding: 7px 10px !important;
+    font-size: 0.7rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+  }
+
+  .forge-smart-widget-dots-056l2 {
+    --forge-smart-dot-active-056l2: 0;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 96px !important;
+    height: 30px !important;
+    margin: 14px auto 0 !important;
+    padding: 0 12px !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    background: rgba(7, 18, 36, 0.50) !important;
+    border: 1px solid rgba(223, 240, 255, 0.12) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(16px) saturate(1.25) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(1.25) !important;
+  }
+
+  .forge-smart-widget-dot-056l2 {
+    width: 8px !important;
+    height: 8px !important;
+    min-width: 8px !important;
+    border-radius: 999px !important;
+    border: 0 !important;
+    padding: 0 !important;
+    background: rgba(220, 230, 244, 0.30) !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  .forge-smart-widget-dot-056l2.is-active-056l2 {
+    opacity: 0 !important;
+  }
+
+  .forge-smart-widget-glider-056l2 {
+    position: absolute !important;
+    left: 18px !important;
+    top: 50% !important;
+    width: 18px !important;
+    height: 10px !important;
+    border-radius: 999px !important;
+    transform: translate3d(calc(var(--forge-smart-dot-active-056l2) * 18px), -50%, 0) !important;
+    background: linear-gradient(90deg, #f2cf75 0%, #76dbff 100%) !important;
+    box-shadow: 0 0 14px rgba(100, 218, 255, 0.36), 0 0 12px rgba(242, 207, 117, 0.20) !important;
+    transition:
+      transform 420ms cubic-bezier(0.2, 0.86, 0.18, 1),
+      width 240ms ease,
+      border-radius 240ms ease !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  .forge-smart-widget-dots-056l2.is-moving-right-056l2 .forge-smart-widget-glider-056l2 {
+    width: 24px !important;
+    border-radius: 12px 999px 999px 12px !important;
+  }
+
+  .forge-smart-widget-dots-056l2.is-moving-left-056l2 .forge-smart-widget-glider-056l2 {
+    width: 24px !important;
+    border-radius: 999px 12px 12px 999px !important;
+  }
+
+  @media (max-width: 900px) and (orientation: landscape) {
+    #smart-widget-stack.forge-smart-widget-stack-normalized-056l2,
+    .smart-widget-stack.forge-smart-widget-stack-normalized-056l2 {
+      width: min(100%, calc(100vw - 56px)) !important;
+      margin: 12px auto 18px !important;
+    }
+
+    .forge-smart-widget-heading-056l2 {
+      padding: 16px 18px !important;
+      border-radius: 24px !important;
+      margin-bottom: 12px !important;
+    }
+
+    .forge-smart-widget-card-056l2 {
+      min-height: 178px !important;
+      padding: 18px 20px 16px !important;
+      border-radius: 26px !important;
+    }
+
+    .forge-smart-widget-card-056l2 h3 {
+      font-size: 1.24rem !important;
+    }
+
+    .forge-smart-widget-body-056l2,
+    .forge-smart-widget-limit-056l2,
+    .forge-smart-widget-why-056l2 {
+      font-size: 0.88rem !important;
+      margin-bottom: 9px !important;
+    }
+  }
+}
