@@ -1,0 +1,93 @@
+/* FORGEOS:ALFRED_MOBILE_UX92_CONTENT_COHESION_POLISH_056R */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  .forge-ux99-focus-056q {
+    position: relative !important;
+    margin-top: 12px !important;
+    margin-bottom: 24px !important;
+    background:
+      radial-gradient(circle at 18% 16%, rgba(242, 207, 117, 0.18), transparent 34%),
+      radial-gradient(circle at 82% 22%, rgba(100, 218, 255, 0.2), transparent 40%),
+      linear-gradient(158deg, rgba(9, 26, 48, 0.9), rgba(7, 16, 31, 0.78)) !important;
+    border: 1px solid rgba(199, 229, 255, 0.18) !important;
+    box-shadow:
+      0 22px 54px rgba(0, 0, 0, 0.32),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 34px rgba(100, 218, 255, 0.08) !important;
+  }
+
+  .forge-ux99-focus-056q::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -9px !important;
+    left: 50% !important;
+    width: 52px !important;
+    height: 6px !important;
+    border-radius: 999px !important;
+    transform: translateX(-50%) !important;
+    background: linear-gradient(90deg, rgba(242, 207, 117, 0.92), rgba(118, 219, 255, 0.92)) !important;
+    box-shadow: 0 0 18px rgba(118, 219, 255, 0.34) !important;
+    opacity: 0.82 !important;
+  }
+
+  .forge-ux99-hero-056q {
+    align-items: center !important;
+    gap: 14px !important;
+    padding-bottom: 2px !important;
+  }
+
+  .forge-ux99-eyebrow-056q {
+    color: rgba(242, 207, 117, 0.78) !important;
+    letter-spacing: 0.22em !important;
+  }
+
+  .forge-ux99-title-056q {
+    margin-top: 2px !important;
+    font-size: clamp(25px, 7vw, 34px) !important;
+    line-height: 1.02 !important;
+  }
+
+  .forge-ux99-subtitle-056q {
+    max-width: 230px !important;
+    color: rgba(226, 235, 248, 0.74) !important;
+  }
+
+  .forge-ux99-card-056q {
+    min-height: 188px !important;
+    background:
+      linear-gradient(180deg, rgba(10, 28, 52, 0.68), rgba(6, 14, 28, 0.7)) !important;
+    border-color: rgba(199, 229, 255, 0.13) !important;
+  }
+
+  .forge-ux99-card-056q h3 {
+    max-width: 240px !important;
+    font-size: clamp(22px, 6.2vw, 28px) !important;
+    line-height: 1.06 !important;
+  }
+
+  .forge-ux99-card-056q p {
+    color: rgba(226, 235, 248, 0.72) !important;
+  }
+
+  .forge-ux92-bowtie-mark-056r,
+  .forge-ux99-a-bowtie-056q.forge-ux92-bowtie-mark-056r {
+    display: grid !important;
+    place-items: center !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .forge-ux92-bowtie-mark-056r svg {
+    width: 72% !important;
+    height: 72% !important;
+    display: block !important;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.26)) !important;
+  }
+
+  .forge-ux92-card-simplified-056r {
+    background:
+      radial-gradient(circle at 14% 12%, rgba(242, 207, 117, 0.12), transparent 34%),
+      radial-gradient(circle at 86% 24%, rgba(100, 218, 255, 0.12), transparent 38%),
+      rgba(8, 18, 35, 0.78) !important;
+  }
+}
