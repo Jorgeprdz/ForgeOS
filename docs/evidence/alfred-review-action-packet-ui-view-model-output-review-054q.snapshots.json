@@ -1,0 +1,3676 @@
+{
+  "phase": "054Q_ALFRED_REVIEW_ACTION_PACKET_UI_VIEW_MODEL_OUTPUT_REVIEW",
+  "source": "ALFRED_REVIEW_ACTION_PACKET_UI_VIEW_MODEL",
+  "sourcePhase": "054P_ALFRED_REVIEW_ACTION_PACKET_UI_VIEW_MODEL_IMPLEMENTATION",
+  "reviewMode": "docs/evidence output review only",
+  "boundary": "no DOM UI implementation, no audio runtime, no speech engine, no schemas, no live search, no approval/send/runtime/truth mutation",
+  "aggregateSafety": {
+    "previewOnly": true,
+    "reviewOnly": true,
+    "notApproved": true,
+    "notSendable": true,
+    "createsTruth": false,
+    "executesRuntime": false,
+    "sendsMessage": false,
+    "writesCrm": false,
+    "createsCalendarEvent": false,
+    "audioRuntimeEnabled": false,
+    "speechEngineEnabled": false,
+    "providerRuntimeEnabled": false,
+    "liveSearchEnabled": false,
+    "mayExecuteProviderAction": false,
+    "mayWriteCrm": false,
+    "mayCreateCalendarEvent": false,
+    "maySendMessage": false,
+    "mayApproveArtifact": false,
+    "mayCreateTruth": false,
+    "mayStartAudioRuntime": false,
+    "mayStartSpeechEngine": false,
+    "mayCallLiveSearch": false
+  },
+  "casesReviewed": 13,
+  "cases": [
+    {
+      "id": "memory_juan_interest_followup_ui",
+      "command": "/Memoria Hoy vi a Juan. Me dijo que si le interesa retiro, pero quiere revisarlo con su esposa. Me pidio que le hable la proxima semana.",
+      "expectedPacketType": "MEMORY_REVIEW_PACKET",
+      "packetType": "MEMORY_REVIEW_PACKET",
+      "sourceCommand": "/Memoria",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Memory",
+          "tone": "cyan"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Memory review packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 2,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare memory entry for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        },
+        {
+          "id": "ALFRED_ACTION_02",
+          "title": "Prepare follow-up candidate for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_71228e36",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for meeting memory with product interest and follow-up timing.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "memory_lariza_couple_product_ui",
+      "command": "/Memoria A Lariza le interesa para ella y su novio. Les intereso retiro y Vida Mujer.",
+      "expectedPacketType": "MEMORY_REVIEW_PACKET",
+      "packetType": "MEMORY_REVIEW_PACKET",
+      "sourceCommand": "/Memoria",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Memory",
+          "tone": "cyan"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Memory review packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 7,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare memory entry for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_2a87b156",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for couple context and product interest.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "referral_luis_from_giovanni_ui",
+      "command": "/Referido Luis Perez es referido de Giovanni Islas, compañero del trabajo.",
+      "expectedPacketType": "REFERRAL_CAPTURE_REVIEW_PACKET",
+      "packetType": "REFERRAL_CAPTURE_REVIEW_PACKET",
+      "sourceCommand": "/Referido",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Referral",
+          "tone": "blue"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Referral capture packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 6,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare referral capture for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_47c53b7f",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for referral capture without CRM write.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "agenda_maria_friday_11_ui",
+      "command": "/Agenda Tengo cita con Maria el viernes a las 11.",
+      "expectedPacketType": "CALENDAR_EVENT_DRAFT_REVIEW_PACKET",
+      "packetType": "CALENDAR_EVENT_DRAFT_REVIEW_PACKET",
+      "sourceCommand": "/Agenda",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Calendar draft",
+          "tone": "gold"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Calendar draft packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 2,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare calendar event draft for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        },
+        {
+          "id": "ALFRED_ACTION_02",
+          "title": "Prepare follow-up candidate for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_4d24ddf7",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for calendar draft with disabled provider CTA.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "create_event_maria_friday_11_ui",
+      "command": "/Crear evento con Maria el viernes a las 11 para revisar su plan de proteccion.",
+      "expectedPacketType": "CALENDAR_EVENT_DRAFT_REVIEW_PACKET",
+      "packetType": "CALENDAR_EVENT_DRAFT_REVIEW_PACKET",
+      "sourceCommand": "/Crear evento",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Calendar draft",
+          "tone": "gold"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Calendar draft packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 2,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare calendar event draft for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        },
+        {
+          "id": "ALFRED_ACTION_02",
+          "title": "Prepare follow-up candidate for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_50e4b009",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for event draft that remains non-executable.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "quote_lariza_partner_ui",
+      "command": "/Cotizar Lariza y su novio retiro y Vida Mujer.",
+      "expectedPacketType": "PRODUCT_INTELLIGENCE_REVIEW_PACKET",
+      "packetType": "PRODUCT_INTELLIGENCE_REVIEW_PACKET",
+      "sourceCommand": "/Cotizar",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Product intelligence",
+          "tone": "violet"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Product intelligence packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 6,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare product intelligence artifact for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_9f9a9c40",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for product intelligence without sale or approval.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "projection_juan_commission_ui",
+      "command": "/Proyectar comision de Juan",
+      "expectedPacketType": "PRODUCT_INTELLIGENCE_REVIEW_PACKET",
+      "packetType": "PRODUCT_INTELLIGENCE_REVIEW_PACKET",
+      "sourceCommand": "/Proyectar",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Product intelligence",
+          "tone": "violet"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Product intelligence packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare product intelligence artifact for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_907786c7",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for projection while preserving no compensation truth.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "sales_presentation_maria_ui",
+      "command": "/Presentación de venta para Maria",
+      "expectedPacketType": "PRODUCT_INTELLIGENCE_REVIEW_PACKET",
+      "packetType": "PRODUCT_INTELLIGENCE_REVIEW_PACKET",
+      "sourceCommand": "/Presentación",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Product intelligence",
+          "tone": "violet"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Product intelligence packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare product intelligence artifact for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_6cd60252",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for sales presentation artifact preparation only.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "message_draft_juan_ui",
+      "command": "/Mejora este mensaje Hola Juan te busco para hablar de retiro y ver cuando podemos agendar.",
+      "expectedPacketType": "MESSAGE_DRAFT_REVIEW_PACKET",
+      "packetType": "MESSAGE_DRAFT_REVIEW_PACKET",
+      "sourceCommand": "/Mejora este mensaje",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Message draft",
+          "tone": "green"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Message draft packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 2,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare message draft for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_7e76cd83",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for message draft without send.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "follow_up_juan_ui",
+      "command": "/Follow Juan retiro proxima semana",
+      "expectedPacketType": "FOLLOW_UP_REVIEW_PACKET",
+      "packetType": "FOLLOW_UP_REVIEW_PACKET",
+      "sourceCommand": "/Follow",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Follow-up",
+          "tone": "orange"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Follow-up review packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 3,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare follow-up candidate for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_4b7db626",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for follow-up packet without task creation.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "chatbot_context_maria_ui",
+      "command": "/Chatbot ayudame a preparar una cita de retiro con Maria",
+      "expectedPacketType": "CHATBOT_CONTEXT_REVIEW_PACKET",
+      "packetType": "CHATBOT_CONTEXT_REVIEW_PACKET",
+      "sourceCommand": "/Chatbot",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Chatbot context",
+          "tone": "indigo"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Chatbot context packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 3,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Open review context without execution",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_0367f4f3",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for chatbot context without runtime execution.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "plain_text_universal_index_ui",
+      "command": "Juan retiro proxima semana",
+      "expectedPacketType": "UNIVERSAL_INDEX_REVIEW_PACKET",
+      "packetType": "UNIVERSAL_INDEX_REVIEW_PACKET",
+      "sourceCommand": "/Index",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Universal index",
+          "tone": "slate"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Universal index packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 3,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 2,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare follow-up candidate for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        },
+        {
+          "id": "ALFRED_ACTION_02",
+          "title": "Prepare universal index result for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_2d8344df",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for plain text universal index without live search.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    },
+    {
+      "id": "voice_transcription_memory_ui",
+      "command": "/Memoria Tengo cita con Maria el viernes a las 11",
+      "expectedPacketType": "VOICE_TRANSCRIPTION_REVIEW_PACKET",
+      "packetType": "VOICE_TRANSCRIPTION_REVIEW_PACKET",
+      "sourceCommand": "/Memoria",
+      "statusPills": [
+        {
+          "id": "packet-type",
+          "label": "Voice preview",
+          "tone": "pink"
+        },
+        {
+          "id": "preview-only",
+          "label": "Preview only",
+          "tone": "safe"
+        },
+        {
+          "id": "human-review-required",
+          "label": "Human review required",
+          "tone": "warning"
+        },
+        {
+          "id": "not-approved",
+          "label": "Not approved",
+          "tone": "locked"
+        },
+        {
+          "id": "not-sendable",
+          "label": "Not sendable",
+          "tone": "locked"
+        }
+      ],
+      "safetyBanner": {
+        "bannerId": "alfred-review-boundary",
+        "tone": "warning",
+        "title": "Human review required",
+        "message": "Voice transcription packet is ready for review only. No message, CRM, calendar, provider, audio, live-search, approval, revenue, commission, payout, or truth action has been executed.",
+        "flags": {
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false,
+          "createsTask": false,
+          "createsRevenueTruth": false,
+          "createsCompensationTruth": false,
+          "createsPayoutTruth": false,
+          "audioRuntimeEnabled": false,
+          "speechEngineEnabled": false,
+          "providerRuntimeEnabled": false,
+          "liveSearchEnabled": false,
+          "requiresHumanConfirmation": true,
+          "memoryWriteRequiresReview": true,
+          "calendarCreateRequiresConfirmation": true,
+          "crmWriteRequiresConfirmation": true,
+          "sendMessageRequiresConfirmation": true,
+          "transcriptionPreviewOnly": true
+        },
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "sections": [
+        {
+          "sectionId": "summary",
+          "title": "What Alfred understood",
+          "priority": 10,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "extracted_facts",
+          "title": "Extracted candidates",
+          "priority": 20,
+          "rowsCount": 5,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "voice_transcription_preview",
+          "title": "Voice transcription preview",
+          "priority": 25,
+          "rowsCount": 4,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "proposed_actions",
+          "title": "Prepared review actions",
+          "priority": 30,
+          "rowsCount": 3,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "uncertainty",
+          "title": "Needs confirmation",
+          "priority": 40,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "human_review_questions",
+          "title": "Human review checklist",
+          "priority": 50,
+          "rowsCount": 1,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "safety_boundary",
+          "title": "Safety boundary",
+          "priority": 60,
+          "rowsCount": 13,
+          "previewOnly": true,
+          "reviewOnly": true
+        },
+        {
+          "sectionId": "forbidden_actions",
+          "title": "Disabled actions",
+          "priority": 70,
+          "rowsCount": 12,
+          "previewOnly": true,
+          "reviewOnly": true
+        }
+      ],
+      "actionCards": [
+        {
+          "id": "ALFRED_ACTION_01",
+          "title": "Prepare memory entry for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        },
+        {
+          "id": "ALFRED_ACTION_02",
+          "title": "Prepare calendar event draft for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        },
+        {
+          "id": "ALFRED_ACTION_03",
+          "title": "Prepare follow-up candidate for human review",
+          "previewOnly": true,
+          "reviewOnly": true,
+          "notApproved": true,
+          "notSendable": true,
+          "createsTruth": false,
+          "executesRuntime": false,
+          "sendsMessage": false,
+          "writesCrm": false,
+          "createsCalendarEvent": false
+        }
+      ],
+      "reviewCta": {
+        "id": "open-human-review-panel",
+        "label": "Open human review",
+        "enabled": true,
+        "disabled": false,
+        "uiNavigationOnly": true,
+        "routeHint": "alfred/review/ALFRED_REVIEW_PACKET_73e8ebfc",
+        "executionState": "UI_NAVIGATION_ONLY",
+        "requiresHumanConfirmation": true,
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "providerRuntimeEnabled": false,
+        "liveSearchEnabled": false
+      },
+      "disabledProviderCtas": [
+        {
+          "id": "send-message",
+          "label": "Send message",
+          "disabled": true,
+          "reason": "Messages require explicit human approval and a delivery gate before sending."
+        },
+        {
+          "id": "create-calendar-event",
+          "label": "Create calendar event",
+          "disabled": true,
+          "reason": "Calendar writes require explicit human confirmation and a future calendar adapter gate."
+        },
+        {
+          "id": "write-crm",
+          "label": "Write CRM",
+          "disabled": true,
+          "reason": "CRM writes are outside this view model and require a future explicit write gate."
+        },
+        {
+          "id": "approve-product-artifact",
+          "label": "Approve artifact",
+          "disabled": true,
+          "reason": "Product, proposal, commission, and payout truth cannot be approved by Alfred."
+        },
+        {
+          "id": "start-audio-runtime",
+          "label": "Start microphone runtime",
+          "disabled": true,
+          "reason": "Voice is preview-only here. No audio runtime or speech engine is enabled."
+        }
+      ],
+      "renderContract": {
+        "mayRenderInCommandBarDrawer": true,
+        "mayRenderInReviewPanel": true,
+        "mayRenderInMobileSheet": true,
+        "mayRenderInDesktopSidePanel": true,
+        "mayRenderVoicePreview": true,
+        "mayRenderDisabledProviderActions": true,
+        "mayRequestHumanReview": true,
+        "mayExecuteProviderAction": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendarEvent": false,
+        "maySendMessage": false,
+        "mayApproveArtifact": false,
+        "mayCreateTruth": false,
+        "mayStartAudioRuntime": false,
+        "mayStartSpeechEngine": false,
+        "mayCallLiveSearch": false
+      },
+      "sourcePacketSafety": {
+        "previewOnly": true,
+        "reviewOnly": true,
+        "notApproved": true,
+        "notSendable": true,
+        "createsTruth": false,
+        "executesRuntime": false,
+        "requiresHumanConfirmation": true,
+        "sendsMessage": false,
+        "writesCrm": false,
+        "createsCalendarEvent": false,
+        "createsTask": false,
+        "createsRevenueTruth": false,
+        "createsCompensationTruth": false,
+        "createsPayoutTruth": false,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "liveSearchEnabled": false,
+        "providerRuntimeEnabled": false,
+        "memoryWriteRequiresReview": true,
+        "calendarCreateRequiresConfirmation": true,
+        "crmWriteRequiresConfirmation": true,
+        "sendMessageRequiresConfirmation": true,
+        "transcriptionPreviewOnly": true
+      },
+      "sourcePacketVoice": {
+        "voiceCaptureSupportedByContract": true,
+        "transcriptionPreviewOnly": true,
+        "audioRuntimeEnabled": false,
+        "speechEngineEnabled": false,
+        "transcriptionRequiresReview": true
+      },
+      "purpose": "Review UI for voice transcription preview without audio runtime or speech engine.",
+      "decision": "PASS_REVIEW_ONLY_NO_EXECUTION"
+    }
+  ],
+  "decision": "PASS_054Q_ALFRED_REVIEW_ACTION_PACKET_UI_VIEW_MODEL_OUTPUT_REVIEW_SNAPSHOTS_GENERATED",
+  "next": "054R_ALFRED_REVIEW_ACTION_PACKET_STATIC_PREVIEW_BINDING_SCOPE"
+}
