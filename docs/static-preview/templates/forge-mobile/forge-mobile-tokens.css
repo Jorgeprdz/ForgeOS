@@ -1,0 +1,16 @@
+:root {
+  --forge-navy-950: #050B16;
+  --forge-navy-900: #071224;
+  --forge-navy-850: #0A1A2F;
+  --forge-gold-500: #F2CF75;
+  --forge-gold-600: #EFC45C;
+  --forge-cyan-400: #76DBFF;
+  --forge-white: #F5F8FF;
+  --forge-muted: rgba(220, 230, 244, 0.72);
+  --forge-border: rgba(223, 240, 255, 0.16);
+  --forge-glass: rgba(8, 18, 35, 0.76);
+  --forge-radius-card: 30px;
+  --forge-radius-pill: 999px;
+  --forge-blur: 22px;
+  --forge-shadow-card: 0 22px 54px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}

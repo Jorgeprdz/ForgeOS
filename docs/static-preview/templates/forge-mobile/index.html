@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050B16">
+  <title>Forge Mobile Template</title>
+  <link rel="stylesheet" href="./forge-mobile-tokens.css">
+  <link rel="stylesheet" href="./forge-mobile-shell.css">
+  <link rel="stylesheet" href="./forge-mobile-components.css">
+  <script src="./forge-mobile-template.js" defer></script>
+</head>
+<body>
+  <main class="forge-mobile-shell">
+    <div class="forge-safe-ribbon">Muestra segura · solo lectura</div>
+
+    <header class="forge-mobile-header">
+      <div>
+        <div class="forge-kicker">Forge Alive</div>
+        <h1>Buenos días, Jorge</h1>
+        <p>Mi día · Vista estática segura</p>
+      </div>
+      <button class="forge-profile-avatar" type="button" aria-label="Abrir perfil">F</button>
+    </header>
+
+    <section class="forge-card forge-alfred-card">
+      <div class="forge-mark forge-bowtie-mark" aria-hidden="true">
+        <svg viewBox="0 0 96 58">
+          <path d="M9 17C21 8 35 11 45 25C35 41 21 48 9 40C15 32 15 25 9 17Z" fill="#061326"/>
+          <path d="M87 17C75 8 61 11 51 25C61 41 75 48 87 40C81 32 81 25 87 17Z" fill="#061326"/>
+          <path d="M12 18C23 11 35 14 43 26" fill="none" stroke="#F2CF75" stroke-width="3" stroke-linecap="round"/>
+          <path d="M84 18C73 11 61 14 53 26" fill="none" stroke="#76DBFF" stroke-width="3" stroke-linecap="round"/>
+          <rect x="42" y="22" width="12" height="14" rx="5" fill="#F5F8FF"/>
+        </svg>
+      </div>
+      <div>
+        <div class="forge-kicker">Alfred / Forge</div>
+        <h2>Haz esto ahora</h2>
+        <p>Prioriza seguimiento antes de que se enfríe.</p>
+        <div class="forge-lock-row">Solo lectura · revisión humana</div>
+        <div class="forge-lock-row">Sin envío · sin CRM · sin calendario</div>
+      </div>
+    </section>
+
+    <section class="forge-card forge-plan-card">
+      <div class="forge-card-top">
+        <span>Prioridad alta</span>
+        <span>Solo lectura</span>
+      </div>
+      <h2>Plan de hoy</h2>
+      <p>Revisa señales, razón clara, advertencias y siguiente acción antes de decidir.</p>
+      <button class="forge-gold-button" type="button">Iniciar revisión del día</button>
+    </section>
+
+    <section class="forge-smart-widget" aria-label="Smart Widgets">
+      <div class="forge-smart-head">
+        <div class="forge-mark forge-bowtie-mark" aria-hidden="true">
+          <svg viewBox="0 0 96 58">
+            <path d="M9 17C21 8 35 11 45 25C35 41 21 48 9 40C15 32 15 25 9 17Z" fill="#061326"/>
+            <path d="M87 17C75 8 61 11 51 25C61 41 75 48 87 40C81 32 81 25 87 17Z" fill="#061326"/>
+            <rect x="42" y="22" width="12" height="14" rx="5" fill="#F5F8FF"/>
+          </svg>
+        </div>
+        <div>
+          <div class="forge-kicker">Siguiente mejor acción</div>
+          <h2>Seguimiento prioritario</h2>
+          <p>Juan necesita revisión antes de que se enfríe.</p>
+        </div>
+      </div>
+
+      <div class="forge-widget-viewport">
+        <div class="forge-widget-track">
+          <article class="forge-widget-card">
+            <div class="forge-card-top"><span>Seguimiento</span><strong>86</strong></div>
+            <h3>Por qué ahora</h3>
+            <p>Hay señales de seguimiento pendiente. El humano decide tono y momento.</p>
+          </article>
+          <article class="forge-widget-card">
+            <div class="forge-card-top"><span>Decisión</span><strong>78</strong></div>
+            <h3>Señales para decidir</h3>
+            <p>Señal no es decisión. Contexto no es verdad.</p>
+          </article>
+          <article class="forge-widget-card">
+            <div class="forge-card-top"><span>Juicio</span><strong>92</strong></div>
+            <h3>Falta contexto</h3>
+            <p>Primero mejora el juicio; luego decide.</p>
+          </article>
+          <article class="forge-widget-card">
+            <div class="forge-card-top"><span>Revisión</span><strong>80</strong></div>
+            <h3>Abrir plan</h3>
+            <p>Usa Alfred para revisar una acción en preview.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="forge-widget-dots" aria-label="Cambiar Smart Widget">
+        <span class="forge-widget-glider" aria-hidden="true"></span>
+        <button type="button" class="is-active" aria-current="true" aria-label="Ver tarjeta 1"></button>
+        <button type="button" aria-label="Ver tarjeta 2"></button>
+        <button type="button" aria-label="Ver tarjeta 3"></button>
+        <button type="button" aria-label="Ver tarjeta 4"></button>
+      </div>
+    </section>
+
+    <section class="forge-metric-grid">
+      <article class="forge-card forge-metric-card">
+        <span>Meta mensual</span>
+        <strong>64%</strong>
+        <p>6 / 10 familias protegidas</p>
+      </article>
+      <article class="forge-card forge-metric-card">
+        <span>Seguimiento</span>
+        <strong>78%</strong>
+        <p>Seguimiento activo</p>
+      </article>
+    </section>
+
+    <section class="forge-card forge-list-card">
+      <div class="forge-card-top"><h2>Oportunidades</h2><span>Muestra</span></div>
+      <div class="forge-list-row"><strong>Lariza</strong><span>Pidió revisar opciones · 2 días</span></div>
+      <div class="forge-list-row"><strong>Octavio</strong><span>Falta confirmar cita · 5 días</span></div>
+      <div class="forge-list-row"><strong>María</strong><span>Necesita razón clara · 8 días</span></div>
+    </section>
+  </main>
+
+  <button class="forge-alfred-orb" type="button" aria-label="Abrir Alfred">
+    <span class="forge-bowtie-mini" aria-hidden="true"></span>
+  </button>
+
+  <nav class="forge-bottom-nav" aria-label="Navegación principal">
+    <button type="button"><span>⌂</span>Inicio</button>
+    <button type="button"><span>◇</span>Pipeline</button>
+    <button type="button"><span>☼</span>Clientes</button>
+    <button type="button" class="is-active"><span>∞</span>Alfred</button>
+    <button type="button"><span>···</span>Más</button>
+  </nav>
+</body>
+</html>
