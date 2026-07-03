@@ -1,4 +1,4 @@
-/* FORGEOS:UX99_HARD_MOUNT_FOCUS_LAYER_056Q */
+/* FORGEOS:UX99_HARD_MOUNT_FOCUS_LAYER_056Q2 */
 (function () {
   "use strict";
 
@@ -28,35 +28,54 @@
     return '<svg viewBox="0 0 84 52" aria-hidden="true"><path d="M6 13 C16 6 29 10 38 22 L38 30 C29 42 16 46 6 39 C11 31 11 21 6 13Z" fill="#061326"/><path d="M78 13 C68 6 55 10 46 22 L46 30 C55 42 68 46 78 39 C73 31 73 21 78 13Z" fill="#061326"/><rect x="36" y="20" width="12" height="12" rx="5" fill="#F5F8FF"/><path d="M11 16 C20 11 30 14 37 24" stroke="#F2CF75" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M73 16 C64 11 54 14 47 24" stroke="#76DBFF" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>';
   }
 
-  function findText(needles) {
-    var lower = needles.map(function (needle) { return needle.toLowerCase(); });
-    return Array.prototype.slice.call(document.querySelectorAll("h1,h2,h3,h4,p,span,div,section,article")).find(function (node) {
-      var value = txt(node).toLowerCase();
-      if (!value || value.length > 900) return false;
-      return lower.some(function (needle) { return value.indexOf(needle) !== -1; });
-    }) || null;
+  function hasAnyText(node, needles) {
+    var value = txt(node).toLowerCase();
+    return needles.some(function (needle) {
+      return value.indexOf(needle.toLowerCase()) !== -1;
+    });
   }
 
-  function nearestCard(node) {
-    var current = node;
-    var fallback = node;
-    var hops = 0;
-    while (current && current !== document.body && hops < 12) {
-      if (current.matches && current.matches("article, section, .card, [class*='card'], [class*='panel'], [class*='widget']")) {
-        fallback = current;
-        var size = txt(current).length;
-        if (size > 70 && size < 1900) return current;
-      }
-      current = current.parentElement;
-      hops += 1;
-    }
-    return fallback && fallback !== document.body ? fallback : null;
+  function candidates() {
+    return Array.prototype.slice.call(document.querySelectorAll("article, section, div, main"));
+  }
+
+  function rectUsable(node) {
+    var rect = node.getBoundingClientRect();
+    return rect.width >= 260 && rect.height >= 120 && rect.height <= 620;
+  }
+
+  function findOuterCardByTexts(required, optional) {
+    var matches = candidates().filter(function (node) {
+      if (!rectUsable(node)) return false;
+      if (!required.every(function (needle) { return hasAnyText(node, [needle]); })) return false;
+      if (optional && optional.length && !hasAnyText(node, optional)) return false;
+      return true;
+    });
+    if (!matches.length) return null;
+    matches.sort(function (a, b) {
+      var ar = a.getBoundingClientRect();
+      var br = b.getBoundingClientRect();
+      var aScore = Math.abs(ar.width - window.innerWidth + 40) + Math.abs(ar.height - 240);
+      var bScore = Math.abs(br.width - window.innerWidth + 40) + Math.abs(br.height - 240);
+      return aScore - bScore;
+    });
+    return matches[0];
+  }
+
+  function findPlanCard() {
+    return findOuterCardByTexts(["Plan de hoy"], ["Iniciar revision", "Iniciar revisión", "Prioridad alta"]) ||
+      findOuterCardByTexts(["Plan de hoy"], []);
+  }
+
+  function findAlfredCard() {
+    return findOuterCardByTexts(["Detecte un cuello", "Detecté un cuello"], ["ALFRED / FORGE", "Follow Juan"]) ||
+      findOuterCardByTexts(["Detecte un cuello", "Detecté un cuello"], []);
   }
 
   function setIndex(root, dots, requested) {
-    var previous = Number(root.dataset.index056q || "0");
+    var previous = Number(root.dataset.index056q2 || "0");
     var index = Math.max(0, Math.min(widgets.length - 1, requested));
-    root.dataset.index056q = String(index);
+    root.dataset.index056q2 = String(index);
     root.style.setProperty("--ux99-index-056q", String(index));
     dots.style.setProperty("--ux99-dot-index-056q", String(index));
     dots.classList.toggle("is-moving-right-056q", index >= previous);
@@ -109,9 +128,7 @@
       var dot = el("button", "forge-ux99-dot-056q");
       dot.type = "button";
       dot.setAttribute("aria-label", "Ver senal " + (index + 1));
-      dot.addEventListener("click", function () {
-        setIndex(root, dots, index);
-      });
+      dot.addEventListener("click", function () { setIndex(root, dots, index); });
       dots.appendChild(dot);
     });
     root.appendChild(dots);
@@ -125,7 +142,7 @@
       if (!event.changedTouches || !event.changedTouches.length) return;
       var delta = event.changedTouches[0].clientX - startX;
       if (Math.abs(delta) < 34) return;
-      var current = Number(root.dataset.index056q || "0");
+      var current = Number(root.dataset.index056q2 || "0");
       setIndex(root, dots, current + (delta < 0 ? 1 : -1));
     }, { passive: true });
 
@@ -134,13 +151,13 @@
   }
 
   function replaceA() {
-    var alfredCard = nearestCard(findText(["ALFRED / FORGE", "Detecte un cuello", "Detecté un cuello"]));
+    var alfredCard = findAlfredCard();
     if (!alfredCard) return;
     Array.prototype.forEach.call(alfredCard.querySelectorAll("div,span,button"), function (node) {
       if (node.dataset.bowtie056q === "ready") return;
       if (txt(node) !== "A") return;
       var rect = node.getBoundingClientRect();
-      if (rect.width < 30 || rect.width > 100 || rect.height < 30 || rect.height > 100) return;
+      if (rect.width < 30 || rect.width > 110 || rect.height < 30 || rect.height > 110) return;
       node.dataset.bowtie056q = "ready";
       node.classList.add("forge-ux99-a-bowtie-056q");
       node.innerHTML = bowtieSvg();
@@ -156,18 +173,33 @@
     });
   }
 
+  function ensureFocusMounted() {
+    var existing = document.querySelector(".forge-ux99-focus-056q");
+    var plan = findPlanCard();
+    if (!existing) {
+      existing = buildFocus();
+    }
+
+    if (plan && plan.parentElement) {
+      if (existing.parentElement !== plan.parentElement || existing.previousElementSibling !== plan) {
+        plan.insertAdjacentElement("afterend", existing);
+      }
+    } else if (!existing.parentElement) {
+      var alfredCard = findAlfredCard();
+      if (alfredCard && alfredCard.parentElement) {
+        alfredCard.insertAdjacentElement("afterend", existing);
+      } else {
+        document.body.insertBefore(existing, document.body.firstElementChild || null);
+      }
+    }
+    existing.classList.remove("forge-ux99-hide-056q");
+    existing.removeAttribute("aria-hidden");
+  }
+
   function mount() {
     if (!isMobile()) return;
     document.documentElement.classList.add("forge-ux99-hard-056q");
-    if (!document.querySelector(".forge-ux99-focus-056q")) {
-      var focus = buildFocus();
-      var plan = nearestCard(findText(["Plan de hoy"]));
-      if (plan && plan.parentElement) {
-        plan.insertAdjacentElement("afterend", focus);
-      } else {
-        document.body.insertBefore(focus, document.body.firstElementChild || null);
-      }
-    }
+    ensureFocusMounted();
     hideOldWidgets();
     replaceA();
   }
