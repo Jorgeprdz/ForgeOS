@@ -216,3 +216,54 @@ Siguiente trabajo recomendado:
 1. Hacer commit/checkpoint si aún no está hecho.
 2. Evitar más microparches visuales sobre esta superficie.
 3. Pasar a documentación, evidencia y siguiente módulo de Forge.
+
+## Anexo 056U-A: Alcance Mobile Only
+
+Este cierre corresponde **únicamente a la versión mobile** de Alfred Static Preview.
+
+No debe interpretarse como cierre completo de toda la superficie Alfred Static Preview.
+
+### Mobile
+
+Estado:
+
+`MOBILE_DESIGN_CLOSED_056U`
+
+La versión mobile queda cerrada para esta fase porque:
+
+- la jerarquía principal ya comunica la promesa de Forge;
+- Alfred se entiende como concierge de acción;
+- el Smart Widget prioritario aparece después de `Plan de hoy`;
+- la navegación inferior y el orb son suficientemente premium para beta;
+- los límites de static preview permanecen visibles.
+
+### Desktop
+
+Estado:
+
+`DESKTOP_DESIGN_PENDING_POLISH`
+
+La versión desktop **todavía no queda cerrada**.
+
+Existe una base de dashboard premium parcialmente implementada, pero requiere más trabajo antes de considerarse lista:
+
+- pulido visual de layout desktop;
+- consistencia de sidebar/header;
+- jerarquía de Alfred Intelligence;
+- integración refinada de command bar desktop;
+- revisión de densidad de métricas y cards;
+- validación responsive desktop/tablet;
+- evidencia visual nueva;
+- cierre documental propio.
+
+### Regla de interpretación
+
+Cuando este documento diga que el diseño queda cerrado, se refiere a:
+
+> Alfred Static Preview mobile.
+
+No se refiere a:
+
+> Alfred Static Preview desktop.
+
+La versión desktop debe tratarse como una fase posterior con su propio alcance, QA visual, evidencia y documento de cierre.
