@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -59,10 +59,70 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Build Pages artifact directory
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const { execFileSync } = require('child_process');
+
+          const siteDir = '_site';
+          fs.rmSync(siteDir, { recursive: true, force: true });
+          fs.mkdirSync(siteDir, { recursive: true });
+
+          const trackedFiles = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
+            .split('\0')
+            .filter(Boolean);
+
+          const publicExtensions = new Set([
+            '.css',
+            '.html',
+            '.ico',
+            '.jpeg',
+            '.jpg',
+            '.js',
+            '.json',
+            '.map',
+            '.png',
+            '.svg',
+            '.txt',
+            '.webmanifest',
+            '.webp'
+          ]);
+
+          const publicRootFiles = new Set([
+            '.nojekyll',
+            '_redirects',
+            'manifest.json'
+          ]);
+
+          function isPublicFile(file) {
+            if (file.startsWith('.github/')) return false;
+            if (file.startsWith('docs/evidence/')) return false;
+            if (!file.startsWith('docs/')) return publicRootFiles.has(file);
+            if (file.includes('/tests/')) return false;
+            if (/(^|\/)([^/]*-)?(master-)?test(s)?\.(js|json)$/i.test(file)) return false;
+            if (/\.(pdf|xlsx|zip)$/i.test(file)) return false;
+            if (publicRootFiles.has(file)) return true;
+            return publicExtensions.has(path.extname(file).toLowerCase());
+          }
+
+          for (const file of trackedFiles.filter(isPublicFile)) {
+            const publicPath = file.startsWith('docs/') ? file.slice('docs/'.length) : file;
+            const target = path.join(siteDir, publicPath);
+            fs.mkdirSync(path.dirname(target), { recursive: true });
+            fs.copyFileSync(file, target);
+          }
+
+          fs.copyFileSync('env.js', path.join(siteDir, 'env.js'));
+          console.log(`Prepared ${trackedFiles.filter(isPublicFile).length + 1} public file(s) in ${siteDir}`);
+          EOF
+          du -sh _site
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
