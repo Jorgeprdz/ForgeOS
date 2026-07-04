@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="./styles.css?v=056H">
   <link rel="stylesheet" href="./styles-mobile.css?v=056q2" media="(max-width: 767px), (max-width: 900px) and (orientation: landscape)">
   <link rel="stylesheet" href="./styles-desktop.css?v=056k9" media="(min-width: 901px)">
+  <link rel="stylesheet" href="./alfred-desktop-command-workspace-056y.css?v=056y" media="(min-width: 901px)">
   <link rel="stylesheet" href="./alfred-ux99-hard-mount.css?v=056q2">
   <link rel="stylesheet" href="./alfred-ux92-cohesion-polish.css?v=056r" media="(max-width: 767px), (max-width: 900px) and (orientation: landscape)">
   <link rel="stylesheet" href="./alfred-smart-widget-stable-056t.css?v=056t" media="(max-width: 767px), (max-width: 900px) and (orientation: landscape)">
@@ -15,6 +16,115 @@
 </head>
 <body>
   <main class="phone-shell" aria-label="Forge Alive vista estática">
+
+  <!-- FORGEOS:DESKTOP_COMMAND_WORKSPACE_056Y:START -->
+<section class="forge-desktop-workspace-056y" style="display:none" aria-label="Forge Desktop Command Workspace">
+  <aside class="dw-sidebar-056y" aria-label="Navegación desktop">
+    <div class="dw-brand-056y"><span class="dw-bowtie-056y" aria-hidden="true"></span><div><strong>Forge OS</strong><span>Alfred</span></div></div>
+    <nav class="dw-nav-056y" aria-label="Navegación principal">
+      <button class="is-active" type="button"><span class="dw-nav-icon-056y">⌂</span>Inicio</button>
+      <button type="button"><span class="dw-nav-icon-056y">▽</span>Pipeline</button>
+      <button type="button"><span class="dw-nav-icon-056y">◎</span>Clientes</button>
+      <button type="button"><span class="dw-nav-icon-056y">◫</span>Cotizaciones</button>
+      <button type="button"><span class="dw-nav-icon-056y">▤</span>Pólizas</button>
+      <button type="button"><span class="dw-nav-icon-056y">↗</span>Reportes</button>
+      <button type="button"><span class="dw-nav-icon-056y">∞</span>Alfred</button>
+    </nav>
+    <div class="dw-sidebar-profile-056y"><span class="dw-avatar-056y">J</span><div><strong>Jorge Fernández</strong><br><small>Asesor financiero</small></div><span>⌄</span></div>
+  </aside>
+
+  <main class="dw-main-056y">
+    <div class="dw-topbar-056y">
+      <div class="dw-breadcrumb-056y">Forge OS / <strong>Mi día</strong></div>
+      <div class="dw-top-actions-056y">
+        <button class="dw-icon-button-056y" type="button" aria-label="Notificaciones">!</button>
+        <button class="dw-icon-button-056y" type="button" aria-label="Configuración">⚙</button>
+        <span class="dw-avatar-056y">J</span>
+      </div>
+    </div>
+
+    <div class="dw-heading-056y">
+      <div><h1>Mi día</h1><p>Workspace operativo · Vista estática segura</p></div>
+      <div class="dw-lock-note-056y">Preview · requiere aprobación humana</div>
+    </div>
+
+    <section class="dw-command-zone-056y" aria-label="Command bar">
+      <div class="dw-command-shell-056y">
+        <div class="dw-command-row-056y">
+          <span class="dw-bowtie-056y" aria-hidden="true"></span>
+          <input class="dw-command-input-056y" type="text" inputmode="text" autocomplete="off" placeholder="/cotizar, /subir póliza, /buscar cliente, /follow Juan..." aria-label="Command bar Alfred">
+          <button class="dw-command-submit-056y" type="button">Preview</button>
+        </div>
+        <div class="dw-command-results-056y" role="listbox" aria-label="Resultados de command bar"></div>
+      </div>
+      <div class="dw-quick-056y" aria-label="Acciones rápidas">
+        <button type="button" data-command-value="/cotizar GMM Lariza">+ Cotizar GMM</button>
+        <button type="button" data-command-value="/subir póliza Octavio">⇧ Subir póliza</button>
+        <button type="button" data-command-value="/pipeline riesgo alto">Revisar pipeline</button>
+        <button type="button" data-command-value="/seguimiento atrasado">Seguimiento atrasado</button>
+        <button type="button" data-command-value="/buscar cliente María">Buscar cliente</button>
+        <span class="dw-lock-note-056y">Solo preview · sin envío · sin CRM</span>
+      </div>
+    </section>
+
+    <section class="dw-kpi-strip-056y" aria-label="Indicadores">
+      <article class="dw-kpi-056y"><span>Probabilidad meta mensual</span><strong style="color:#6fb8ff">78%</strong><p>Meta: 80%</p></article>
+      <article class="dw-kpi-056y"><span>Producción esperada</span><strong style="color:#73e59a">$142,000</strong><p>Meta: $200,000</p></article>
+      <article class="dw-kpi-056y"><span>Gap vs meta</span><strong style="color:#ff6b6b">$58,000</strong><p>29% del objetivo</p></article>
+      <article class="dw-kpi-056y"><span>Riesgo seguimiento</span><strong style="color:#f2cf75">3 clientes</strong><p>Requieren atención</p></article>
+    </section>
+
+    <section class="dw-grid-056y">
+      <article class="dw-table-shell-056y">
+        <header class="dw-panel-header-056y"><h2>Oportunidades prioritarias</h2><span>Tabla operativa</span></header>
+        <table class="dw-table-056y">
+          <thead><tr><th>Cliente</th><th>Etapa</th><th>Prob.</th><th>Último contacto</th><th>Siguiente acción</th><th>Acciones</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dw-client-056y"><span>L</span>Lariza<br><small>GMM</small></span></td><td><span class="dw-chip-056y blue">Propuesta</span></td><td style="color:#6fb8ff">72%</td><td>Hace 5 días<br><small>12 may 2025</small></td><td>Llamar a Lariza<br><small>Hoy</small></td><td><span class="dw-inline-actions-056y"><button class="dw-inline-action-056y">Revisar</button><button class="dw-inline-action-056y">Follow</button></span></td></tr>
+            <tr><td><span class="dw-client-056y"><span>O</span>Octavio<br><small>GMM</small></span></td><td><span class="dw-chip-056y">Presentación</span></td><td style="color:#6fb8ff">65%</td><td>Hace 8 días<br><small>9 may 2025</small></td><td>Enviar propuesta<br><small>Mañana</small></td><td><span class="dw-inline-actions-056y"><button class="dw-inline-action-056y">Revisar</button><button class="dw-inline-action-056y">Follow</button></span></td></tr>
+            <tr><td><span class="dw-client-056y"><span>M</span>María<br><small>Vida</small></span></td><td><span class="dw-chip-056y gold">Evaluación</span></td><td style="color:#f2cf75">40%</td><td>Hace 12 días<br><small>5 may 2025</small></td><td>Aclarar objeciones<br><small>13 may 2025</small></td><td><span class="dw-inline-actions-056y"><button class="dw-inline-action-056y">Revisar</button><button class="dw-inline-action-056y">Cotizar</button></span></td></tr>
+            <tr><td><span class="dw-client-056y"><span>J</span>Juan<br><small>GMM</small></span></td><td><span class="dw-chip-056y green">Descubrimiento</span></td><td style="color:#ff6b6b">25%</td><td>Hace 15 días<br><small>2 may 2025</small></td><td>Reagendar reunión<br><small>14 may 2025</small></td><td><span class="dw-inline-actions-056y"><button class="dw-inline-action-056y">Revisar</button><button class="dw-inline-action-056y">Abrir</button></span></td></tr>
+          </tbody>
+        </table>
+        <div class="dw-table-foot-056y">Mostrando 4 de 4 oportunidades · acciones en preview</div>
+      </article>
+
+      <article class="dw-panel-056y">
+        <header class="dw-panel-header-056y"><h2>Motor de seguimiento</h2><span>Riesgo</span></header>
+        <div class="dw-risk-list-056y">
+          <div class="dw-risk-card-056y"><strong>Lariza <span class="dw-chip-056y red">Riesgo alto</span></strong><p>Sin contacto en 5 días. Interés alto. Probabilidad puede caer si no se atiende.</p></div>
+          <div class="dw-risk-card-056y"><strong>Octavio <span class="dw-chip-056y gold">Riesgo medio</span></strong><p>Sin avance desde última reunión. Enviar propuesta mejora probabilidad.</p></div>
+          <div class="dw-risk-card-056y"><strong>María <span class="dw-chip-056y gold">Riesgo medio</span></strong><p>Objeción de costo no resuelta. Aclarar beneficios clave.</p></div>
+        </div>
+      </article>
+
+      <article class="dw-table-shell-056y dw-docs-056y">
+        <header class="dw-panel-header-056y"><h2>Cotizaciones y pólizas</h2><span>Workflow documental</span></header>
+        <table class="dw-table-056y">
+          <thead><tr><th>Documento</th><th>Cliente</th><th>Tipo</th><th>Estado</th><th>Última actualización</th><th>Responsable</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr><td>COT-2025-0487</td><td>Lariza</td><td>GMM</td><td><span class="dw-chip-056y">Borrador</span></td><td>12 may 2025, 10:21</td><td>Jorge Fernández</td><td><button class="dw-inline-action-056y">Abrir</button></td></tr>
+            <tr><td>POL-2025-0312</td><td>Octavio</td><td>Vida</td><td><span class="dw-chip-056y gold">Pendiente revisión</span></td><td>9 may 2025, 16:45</td><td>Jorge Fernández</td><td><button class="dw-inline-action-056y">Abrir</button></td></tr>
+            <tr><td>COT-2025-0471</td><td>María</td><td>GMM</td><td><span class="dw-chip-056y red">Falta documento</span></td><td>5 may 2025, 11:02</td><td>Jorge Fernández</td><td><button class="dw-inline-action-056y">Abrir</button></td></tr>
+            <tr><td>POL-2025-0289</td><td>Juan</td><td>GMM</td><td><span class="dw-chip-056y green">Listo para preview</span></td><td>2 may 2025, 09:33</td><td>Jorge Fernández</td><td><button class="dw-inline-action-056y">Abrir</button></td></tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+  </main>
+
+  <aside class="dw-rail-056y" aria-label="Alfred contextual">
+    <div class="dw-rail-title-056y"><span class="dw-bowtie-056y" aria-hidden="true"></span> Alfred</div>
+    <div>
+      <section class="dw-alfred-card-056y"><h3>Haz esto ahora</h3><ul><li>Llama a Lariza.</li><li>Envía propuesta a Octavio.</li><li>Aclara objeciones con María.</li></ul></section>
+      <section class="dw-alfred-card-056y"><h3>Por qué ahora</h3><p>Lariza mostró alta intención. Octavio está evaluando alternativas. María necesita claridad para decidir.</p></section>
+      <section class="dw-alfred-card-056y"><h3>Límites</h3><p>Alfred está en modo preview. No se envían correos ni mensajes. No se crean registros en CRM.</p></section>
+      <section class="dw-alfred-card-056y dw-recommended-command-056y"><h3>Comando recomendado</h3><span class="dw-command-code-056y">/llamar Lariza ahora</span><p>Abrirá un preview con contexto listo.</p><button class="dw-command-submit-056y" type="button">Preparar preview</button></section>
+    </div>
+    <div class="dw-alfred-card-056y"><h3>Feedback</h3><p>Califica si esta recomendación fue útil.</p><div class="dw-feedback-056y"><button type="button">↑</button><button type="button">↓</button></div></div>
+  </aside>
+</section>
+<!-- FORGEOS:DESKTOP_COMMAND_WORKSPACE_056Y:END -->
 
   <!-- FORGEOS:ALFRED_DESKTOP_DASHBOARD_CONSOLIDATED:START -->
   <section class="alfred-desktop-app-056g7 alfred-desktop-dashboard" aria-label="Alfred desktop dashboard preview">
@@ -410,6 +520,7 @@
 
   <script src="./sample-data.js"></script>
   <script src="./alfred-desktop-dashboard.js?v=056H"></script>
+  <script src="./alfred-desktop-command-workspace-056y.js?v=056y" defer></script>
   <script src="./smart-widget-stack.js?v=054F" type="module"></script>
   <script src="./command-bar-orb.js?v=056H" type="module"></script>
   <script src="./alfred-responsive-ui.js?v=056q2" defer></script>
