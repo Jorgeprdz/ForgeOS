@@ -4111,3 +4111,29 @@ section#genesis-cards.genesis-cards-stack .article-zero-reminder.compact {
   }
 }
 /* FORGEOS:ALFRED_DESKTOP_DASHBOARD_CONSOLIDATED:END */
+
+/* FORGEOS:MOBILE_DESKTOP_LAYER_GUARD_057A1 */
+/* Global guard: desktop 056Y DOM exists in index.html, but must never render as raw HTML on mobile. */
+.phone-shell > .forge-desktop-workspace-056y {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+@media (max-width: 900px) {
+  .phone-shell > .forge-desktop-workspace-056y,
+  .forge-desktop-workspace-056y {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .bottom-nav,
+  .phone-shell > .bottom-nav {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+/* FORGEOS:MOBILE_DESKTOP_LAYER_GUARD_057A1:END */
