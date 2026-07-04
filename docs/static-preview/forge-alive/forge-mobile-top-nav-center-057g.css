@@ -1,0 +1,54 @@
+/* FORGEOS:FORGE_MOBILE_TOP_NAV_CENTER_057G:START */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  .forge-mobile-context-nav-057d {
+    box-sizing: border-box !important;
+    width: min(calc(100vw - 44px), 640px) !important;
+    max-width: calc(100vw - 44px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    justify-self: center !important;
+    align-self: center !important;
+    overflow: hidden !important;
+    overscroll-behavior-x: contain !important;
+    grid-auto-columns: minmax(0, 1fr) !important;
+  }
+
+  .forge-mobile-context-nav-057d button {
+    min-width: 0 !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .forge-mobile-context-nav-057d button span,
+  .forge-mobile-context-nav-057d button strong,
+  .forge-mobile-context-nav-057d button em {
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .phone-shell > .forge-mobile-context-nav-057d,
+  main .forge-mobile-context-nav-057d {
+    margin-inline: auto !important;
+  }
+
+  @media (max-width: 390px) {
+    .forge-mobile-context-nav-057d {
+      width: calc(100vw - 34px) !important;
+      max-width: calc(100vw - 34px) !important;
+      gap: 4px !important;
+      padding: 5px !important;
+    }
+
+    .forge-mobile-context-nav-057d button {
+      font-size: 8.8px !important;
+      padding-left: 3px !important;
+      padding-right: 3px !important;
+    }
+  }
+}
+/* FORGEOS:FORGE_MOBILE_TOP_NAV_CENTER_057G:END */
