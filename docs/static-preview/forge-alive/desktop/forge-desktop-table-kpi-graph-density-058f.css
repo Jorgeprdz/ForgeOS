@@ -1,0 +1,272 @@
+/* FORGEOS:FORGE_DESKTOP_TABLE_KPI_GRAPH_DENSITY_058F:START */
+
+@media (min-width: 901px) {
+  :root {
+    --forge-058f-gold: #f6d674;
+    --forge-058f-gold-soft: rgba(246, 214, 116, 0.78);
+    --forge-058f-cyan: #7ee7df;
+    --forge-058f-cyan-soft: rgba(126, 231, 223, 0.72);
+    --forge-058f-navy: #06111d;
+    --forge-058f-panel: rgba(8, 18, 32, 0.74);
+    --forge-058f-panel-strong: rgba(10, 22, 38, 0.88);
+    --forge-058f-line: rgba(159, 214, 226, 0.16);
+    --forge-058f-line-strong: rgba(246, 214, 116, 0.25);
+  }
+
+  /* Canonical Alfred bow tie: one geometry, multiple sizes. */
+  .forge-desktop-workspace-056y .forge-alfred-mark,
+  .forge-desktop-workspace-056y [class*="forge-alfred-mark"] {
+    position: relative !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    flex: 0 0 auto !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    background:
+      radial-gradient(circle at 28% 24%, rgba(255,255,255,0.85), transparent 0 15%, transparent 27%),
+      linear-gradient(135deg, #f8d875 0%, #d8a944 48%, #77e3dc 100%) !important;
+    border: 1px solid rgba(255, 238, 169, 0.42) !important;
+    box-shadow:
+      0 0 0 1px rgba(126, 231, 223, 0.12),
+      0 12px 28px rgba(126, 231, 223, 0.12),
+      inset 0 1px 2px rgba(255,255,255,0.28) !important;
+  }
+
+  .forge-desktop-workspace-056y .forge-alfred-mark::before,
+  .forge-desktop-workspace-056y [class*="forge-alfred-mark"]::before {
+    content: "" !important;
+    width: 70% !important;
+    height: 42% !important;
+    border-radius: 999px !important;
+    background:
+      radial-gradient(ellipse at 24% 50%, #07111d 0 38%, transparent 39%),
+      radial-gradient(ellipse at 76% 50%, #07111d 0 38%, transparent 39%),
+      radial-gradient(circle at 50% 50%, #dff8f5 0 10%, transparent 11%) !important;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.38)) !important;
+    transform: translateZ(0) !important;
+  }
+
+  .forge-desktop-workspace-056y .forge-alfred-mark::after,
+  .forge-desktop-workspace-056y [class*="forge-alfred-mark"]::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: -20% !important;
+    border-radius: inherit !important;
+    background: radial-gradient(circle, rgba(126,231,223,0.23), transparent 58%) !important;
+    opacity: 0.42 !important;
+    z-index: -1 !important;
+    animation: forgeAlfredHalo058F 4.8s ease-in-out infinite !important;
+  }
+
+  .forge-desktop-workspace-056y .forge-alfred-mark--micro,
+  .forge-desktop-workspace-056y [class*="forge-alfred-mark--micro"] {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+  }
+
+  .forge-desktop-workspace-056y .forge-alfred-mark--inline,
+  .forge-desktop-workspace-056y [class*="forge-alfred-mark--inline"] {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+  }
+
+  .forge-desktop-workspace-056y .forge-alfred-mark--orb,
+  .forge-desktop-workspace-056y [class*="forge-alfred-mark--orb"] {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    box-shadow:
+      0 0 0 1px rgba(255, 238, 169, 0.34),
+      0 0 34px rgba(126, 231, 223, 0.22),
+      0 14px 32px rgba(0,0,0,0.24),
+      inset 0 1px 2px rgba(255,255,255,0.3) !important;
+  }
+
+  /* Command area stays premium but gives space back to the table at laptop widths. */
+  .forge-desktop-workspace-056y [class*="command"] {
+    text-wrap: balance;
+  }
+
+  .forge-desktop-workspace-056y [class*="suggest"],
+  .forge-desktop-workspace-056y [class*="quick"] {
+    gap: clamp(8px, 0.8vw, 12px) !important;
+  }
+
+  .forge-desktop-workspace-056y [class*="suggest"] button,
+  .forge-desktop-workspace-056y [class*="quick"] button,
+  .forge-desktop-workspace-056y [class*="command"] button {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+  }
+
+  /* KPI density: indicators must read as data, not decoration. */
+  .forge-desktop-workspace-056y [class*="kpi"] {
+    min-height: 86px !important;
+  }
+
+  .forge-desktop-workspace-056y [class*="spark"],
+  .forge-desktop-workspace-056y [class*="graph"],
+  .forge-desktop-workspace-056y [class*="trend"] {
+    position: relative !important;
+    min-height: 18px !important;
+    border-radius: 999px !important;
+    overflow: hidden !important;
+  }
+
+  .forge-desktop-workspace-056y [class*="spark"]::after,
+  .forge-desktop-workspace-056y [class*="graph"]::after,
+  .forge-desktop-workspace-056y [class*="trend"]::after {
+    content: "" !important;
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, var(--forge-058f-gold), var(--forge-058f-cyan)) !important;
+    opacity: 0.55 !important;
+  }
+
+  .forge-desktop-workspace-056y [class*="dot"],
+  .forge-desktop-workspace-056y [class*="activity"] i,
+  .forge-desktop-workspace-056y [class*="activity"] b {
+    box-shadow: 0 0 12px rgba(126, 231, 223, 0.18) !important;
+  }
+
+  /* Main table: stop split labels and make row actions professionally scannable. */
+  .forge-desktop-workspace-056y table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  .forge-desktop-workspace-056y th,
+  .forge-desktop-workspace-056y td {
+    vertical-align: middle !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+  }
+
+  .forge-desktop-workspace-056y th {
+    white-space: nowrap !important;
+    color: rgba(226, 236, 246, 0.6) !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  .forge-desktop-workspace-056y td:first-child,
+  .forge-desktop-workspace-056y th:first-child {
+    width: 19% !important;
+  }
+
+  .forge-desktop-workspace-056y td:nth-child(2),
+  .forge-desktop-workspace-056y th:nth-child(2) {
+    width: 14% !important;
+  }
+
+  .forge-desktop-workspace-056y td:nth-child(3),
+  .forge-desktop-workspace-056y th:nth-child(3) {
+    width: 10% !important;
+  }
+
+  .forge-desktop-workspace-056y td:last-child,
+  .forge-desktop-workspace-056y th:last-child {
+    width: 14% !important;
+  }
+
+  .forge-desktop-workspace-056y td button,
+  .forge-desktop-workspace-056y [class*="table"] button,
+  .forge-desktop-workspace-056y [class*="opportun"] button {
+    min-width: 64px !important;
+    padding: 8px 12px !important;
+    border-radius: 14px !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    line-height: 1 !important;
+  }
+
+  .forge-desktop-workspace-056y [class*="badge"],
+  .forge-desktop-workspace-056y [class*="stage"],
+  .forge-desktop-workspace-056y [class*="pill"] {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+  }
+
+  .forge-desktop-workspace-056y [class*="opportun"] {
+    border-color: rgba(126, 231, 223, 0.16) !important;
+  }
+
+  /* Motor / rail hierarchy. */
+  .forge-desktop-workspace-056y [class*="follow"],
+  .forge-desktop-workspace-056y [class*="engine"],
+  .forge-desktop-workspace-056y [class*="rail"] {
+    text-wrap: pretty;
+  }
+
+  .forge-desktop-workspace-056y [class*="engine"] article,
+  .forge-desktop-workspace-056y [class*="rail"] article,
+  .forge-desktop-workspace-056y [class*="rail"] section {
+    border-color: rgba(246, 214, 116, 0.18) !important;
+  }
+
+  @keyframes forgeAlfredHalo058F {
+    0%, 100% {
+      opacity: 0.28;
+      transform: scale(0.92);
+    }
+    50% {
+      opacity: 0.58;
+      transform: scale(1.08);
+    }
+  }
+
+  @media (min-width: 901px) and (max-width: 1399px) {
+    .forge-desktop-workspace-056y [class*="suggest"],
+    .forge-desktop-workspace-056y [class*="quick"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+
+    .forge-desktop-workspace-056y [class*="suggest"] button,
+    .forge-desktop-workspace-056y [class*="quick"] button {
+      min-height: 44px !important;
+      font-size: 13px !important;
+    }
+
+    .forge-desktop-workspace-056y td button,
+    .forge-desktop-workspace-056y [class*="table"] button,
+    .forge-desktop-workspace-056y [class*="opportun"] button {
+      min-width: 58px !important;
+      padding-inline: 10px !important;
+      font-size: 12px !important;
+    }
+
+    .forge-desktop-workspace-056y th,
+    .forge-desktop-workspace-056y td {
+      font-size: 12px !important;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .forge-desktop-workspace-056y td:last-child {
+      white-space: nowrap !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .forge-desktop-workspace-056y .forge-alfred-mark::after,
+    .forge-desktop-workspace-056y [class*="forge-alfred-mark"]::after {
+      animation: none !important;
+    }
+  }
+}
+
+/* FORGEOS:FORGE_DESKTOP_TABLE_KPI_GRAPH_DENSITY_058F:END */
