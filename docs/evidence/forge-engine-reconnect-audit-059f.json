@@ -1,0 +1,43 @@
+{
+  "phase": "059F_ENGINE_RECONNECT_VISUAL_QA_AND_AUDIT_LOCK",
+  "status": "PASS",
+  "chain": [
+    "059B_STATIC_ACTION_PACKET_BRIDGE",
+    "059E_STATIC_ENGINE_ADAPTER_DRY_RUN_IMPLEMENTATION"
+  ],
+  "samplePacket": {
+    "packetVersion": "059B.static.preview",
+    "packetId": "forge-static-action-0001",
+    "actionId": "client.follow.preview",
+    "sourceSurface": "desktop.command_workspace",
+    "sourcePlatform": "desktop",
+    "sourceModule": "clientes",
+    "humanLabel": "Follow Juan",
+    "previewMode": true,
+    "requiresHumanApproval": true,
+    "safeIntent": "Prepare a read-only follow-up preview."
+  },
+  "expectedDryRun": {
+    "dryRunStatus": "DRY_RUN_ACCEPTED",
+    "adapterCandidate": "static.follow_up_draft",
+    "previewMode": true,
+    "requiresHumanApproval": true,
+    "executionAllowed": false,
+    "writesAllowed": false,
+    "sendAllowed": false,
+    "calendarAllowed": false,
+    "crmAllowed": false
+  },
+  "refusalPath": {
+    "dryRunStatus": "DRY_RUN_REFUSED",
+    "reason": "UNKNOWN_ACTION_ID"
+  },
+  "safety": {
+    "providerExecution": false,
+    "messageSend": false,
+    "crmWrite": false,
+    "calendarCreate": false,
+    "browserStorageMutation": false,
+    "liveExternalData": false
+  }
+}
