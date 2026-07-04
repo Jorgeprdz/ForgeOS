@@ -1,0 +1,70 @@
+/* FORGEOS:FORGE_MOBILE_WIDGET_GRID_DEDUP_057M:START */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-057j[data-forge-057m-hidden="true"] {
+    display: none !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-grid-057j {
+    margin-top: 10px !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-widget-kicker-057j span:last-child {
+    opacity: 0.86 !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-widget-preview-label-057m {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 20px !important;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(244, 211, 121, 0.22) !important;
+    color: rgba(250, 223, 145, 0.9) !important;
+    background: rgba(244, 202, 94, 0.08) !important;
+    font-size: 9px !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-widget-days-057m {
+    position: relative !important;
+    z-index: 1 !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 8px !important;
+    margin: 8px 0 0 !important;
+    color: rgba(202, 216, 234, 0.58) !important;
+    font-size: 10px !important;
+    font-weight: 850 !important;
+    text-align: center !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-057j[data-forge-057l-role="activity-points"] .forge-widget-chart-057j {
+    margin-top: 8px !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-057j[data-forge-057l-role="commissions-chart"] .forge-widget-copy-057j,
+  html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-057j[data-forge-057l-role="production-chart"] .forge-widget-copy-057j,
+  html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-057j[data-forge-057l-role="activity-points"] .forge-widget-copy-057j {
+    max-width: 24ch !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-057j[data-forge-057l-role="production-chart"] .forge-widget-action-057j {
+    width: min(100%, 210px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  html.forge-mobile-widget-grid-dedup-057m .forge-widget-grid-note-057j {
+    display: none !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .forge-mobile-widget-grid-dedup-057m {
+    --forge-057m-desktop-noop: 1;
+  }
+}
+/* FORGEOS:FORGE_MOBILE_WIDGET_GRID_DEDUP_057M:END */
