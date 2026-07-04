@@ -1781,3 +1781,18 @@ DECISION=PASS_060B_REAL_ENGINE_CANDIDATE_INVENTORY_AND_SELECTION
 NEXT=060C_SELECTED_ENGINE_DRY_RUN_ADAPTER_SCOPE
 
 <!-- END FORGEOS:REAL_ENGINE_CANDIDATE_SELECTION_060B -->
+
+<!-- BEGIN FORGEOS:SELECTED_ENGINE_DRY_RUN_ADAPTER_SCOPE_060C -->
+## 060C Selected Engine Dry Run Adapter Scope
+
+Status: PASS
+
+Selected path:
+`report.open.preview -> selected.report_read_model_preview`
+
+060C scopes the dry-run adapter contract for the selected report/read-model path. It remains docs-only and does not connect a real engine.
+
+DECISION=PASS_060C_SELECTED_ENGINE_DRY_RUN_ADAPTER_SCOPE
+
+NEXT=060D_SELECTED_ENGINE_DRY_RUN_ADAPTER_IMPLEMENTATION
+<!-- END FORGEOS:SELECTED_ENGINE_DRY_RUN_ADAPTER_SCOPE_060C -->
