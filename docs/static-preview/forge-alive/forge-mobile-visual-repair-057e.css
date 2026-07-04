@@ -1,0 +1,124 @@
+/* FORGEOS:FORGE_MOBILE_VISUAL_REPAIR_057E:START */
+
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  :root {
+    --forge-mobile-nav-height-057e: 72px;
+    --forge-mobile-orb-size-057e: 62px;
+    --forge-mobile-safe-bottom-057e: max(14px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .phone-shell {
+    padding-bottom: calc(var(--forge-mobile-nav-height-057e) + var(--forge-mobile-orb-size-057e) + 96px) !important;
+  }
+
+  .forge-mobile-context-nav-057d {
+    grid-auto-columns: minmax(72px, 1fr) !important;
+    gap: 5px !important;
+    margin: 14px auto 14px !important;
+    padding: 6px !important;
+    width: calc(100% - 2px) !important;
+    border-radius: 34px !important;
+  }
+
+  .forge-mobile-context-nav-057d button {
+    min-height: 48px !important;
+    padding: 7px 7px !important;
+    border-radius: 20px !important;
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+  }
+
+  .forge-mobile-context-nav-057d button svg {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  .forge-mobile-context-nav-057d button.is-active {
+    color: #f2cf75 !important;
+    background:
+      radial-gradient(circle at 38% 20%, rgba(242, 207, 117, 0.28), transparent 30%),
+      rgba(255, 255, 255, 0.07) !important;
+  }
+
+  .assistant-card,
+  [aria-labelledby="alfred-forge-heading"] {
+    margin-top: 14px !important;
+  }
+
+  .plan-card {
+    position: relative !important;
+    z-index: 2 !important;
+    margin-bottom: 26px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .plan-card .primary-action,
+  .plan-card button,
+  .plan-card a {
+    position: relative !important;
+    z-index: 3 !important;
+  }
+
+  .command-orb-layer {
+    width: var(--forge-mobile-orb-size-057e) !important;
+    height: var(--forge-mobile-orb-size-057e) !important;
+    min-width: var(--forge-mobile-orb-size-057e) !important;
+    min-height: var(--forge-mobile-orb-size-057e) !important;
+    bottom: calc(var(--forge-mobile-nav-height-057e) + var(--forge-mobile-safe-bottom-057e) + 22px) !important;
+    right: 22px !important;
+  }
+
+  .command-orb-layer:not(.is-open) {
+    transform: translateY(10px) scale(0.96) !important;
+  }
+
+  .command-orb-layer.is-open {
+    transform: translateY(0) scale(1) !important;
+  }
+
+  .bottom-nav {
+    height: var(--forge-mobile-nav-height-057e) !important;
+    min-height: var(--forge-mobile-nav-height-057e) !important;
+    bottom: var(--forge-mobile-safe-bottom-057e) !important;
+  }
+
+  .forge-smart-widget-static-056u,
+  .forge-smart-widget-stable-056t {
+    margin-top: 18px !important;
+  }
+
+  .forge-smart-widget-static-056u[data-forge-057d-ready="true"] .forge-smart-widget-static-dots-056u {
+    margin-top: 12px !important;
+  }
+
+  @media (max-height: 860px) {
+    .forge-mobile-context-nav-057d {
+      margin-top: 10px !important;
+      margin-bottom: 12px !important;
+    }
+
+    .forge-mobile-context-nav-057d button {
+      min-height: 44px !important;
+      font-size: 9.5px !important;
+    }
+
+    .forge-mobile-context-nav-057d button svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+
+    .command-orb-layer:not(.is-open) {
+      transform: translateY(18px) scale(0.92) !important;
+    }
+  }
+}
+
+@media (min-width: 901px) {
+  .forge-mobile-context-nav-057d,
+  .bottom-nav {
+    display: none !important;
+  }
+}
+
+/* FORGEOS:FORGE_MOBILE_VISUAL_REPAIR_057E:END */
