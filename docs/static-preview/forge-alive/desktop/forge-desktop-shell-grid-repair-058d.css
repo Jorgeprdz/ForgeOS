@@ -1,0 +1,575 @@
+/* FORGEOS:DESKTOP_SHELL_GRID_REPAIR_058D */
+@media (min-width: 901px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    background: #050b16 !important;
+  }
+
+  .phone-shell {
+    display: block !important;
+    align-items: initial !important;
+    justify-content: initial !important;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+  }
+
+  .forge-desktop-workspace-056y {
+    --dw-058d-sidebar: 188px;
+    --dw-058d-rail: 292px;
+    --dw-058d-gap: 16px;
+    --dw-058d-panel-radius: 18px;
+    display: grid !important;
+    grid-template-columns: var(--dw-058d-sidebar) minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    gap: 0 var(--dw-058d-gap) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    padding-right: var(--dw-058d-gap) !important;
+    box-sizing: border-box !important;
+    justify-items: stretch !important;
+  }
+
+  .dw-sidebar-056y {
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
+    position: sticky !important;
+    top: 0 !important;
+    align-self: start !important;
+    width: var(--dw-058d-sidebar) !important;
+    min-width: 0 !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 18px 14px !important;
+    box-sizing: border-box !important;
+  }
+
+  .dw-main-056y {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 18px 0 28px !important;
+    margin: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas:
+      "top"
+      "title"
+      "command"
+      "kpis"
+      "work" !important;
+    grid-template-rows: auto auto auto auto auto !important;
+    row-gap: 14px !important;
+    align-content: start !important;
+    box-sizing: border-box !important;
+    justify-self: stretch !important;
+  }
+
+  .dw-topbar-056y {
+    grid-area: top !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+  }
+
+  .dw-heading-056y {
+    grid-area: title !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: end !important;
+    gap: 18px !important;
+  }
+
+  .dw-heading-056y h1 {
+    font-size: clamp(36px, 3vw, 48px) !important;
+    line-height: 0.98 !important;
+  }
+
+  .dw-command-zone-056y {
+    grid-area: command !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    align-self: start !important;
+    position: relative !important;
+    z-index: 30 !important;
+  }
+
+  .dw-command-shell-056y {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    border-radius: 20px !important;
+    border-color: rgba(118, 219, 255, 0.22) !important;
+    background:
+      linear-gradient(135deg, rgba(8, 18, 35, 0.94), rgba(10, 26, 47, 0.82)),
+      radial-gradient(circle at 12% 0%, rgba(242, 207, 117, 0.12), transparent 36%) !important;
+    box-shadow:
+      0 18px 46px rgba(0, 0, 0, 0.3),
+      0 0 32px rgba(100, 218, 255, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+  }
+
+  .dw-command-row-056y {
+    grid-template-columns: 34px minmax(0, 1fr) 98px !important;
+    min-height: 54px !important;
+    padding: 8px 10px !important;
+  }
+
+  .dw-command-row-056y input {
+    min-width: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    font-size: 15px !important;
+  }
+
+  .dw-quick-056y {
+    gap: 8px !important;
+    margin-top: 9px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .dw-quick-056y button {
+    min-height: 32px !important;
+    padding: 0 11px !important;
+    font-size: 11.5px !important;
+    border-radius: 999px !important;
+  }
+
+  .dw-quick-056y .dw-lock-note-056y {
+    flex: 1 1 auto !important;
+    min-width: 190px !important;
+    margin-left: auto !important;
+    text-align: right !important;
+  }
+
+  .dw-kpi-strip-056y {
+    grid-area: kpis !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    align-self: start !important;
+  }
+
+  .dw-kpi-056y {
+    min-width: 0 !important;
+    min-height: 82px !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .dw-kpi-056y span {
+    font-size: 10.5px !important;
+    line-height: 1.24 !important;
+  }
+
+  .dw-kpi-056y strong {
+    margin-top: 6px !important;
+    font-size: clamp(22px, 1.8vw, 28px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .dw-kpi-056y p {
+    margin-top: 5px !important;
+    font-size: 10.5px !important;
+    line-height: 1.2 !important;
+  }
+
+  .dw-grid-056y {
+    grid-area: work !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    align-items: start !important;
+  }
+
+  .dw-table-shell-056y,
+  .dw-panel-056y,
+  .dw-kpi-056y,
+  .dw-rail-056y,
+  .dw-alfred-card-056y {
+    box-sizing: border-box !important;
+  }
+
+  .dw-table-shell-056y,
+  .dw-panel-056y {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    border-radius: var(--dw-058d-panel-radius) !important;
+    overflow: hidden !important;
+  }
+
+  .dw-table-056y {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    font-size: 12px !important;
+  }
+
+  .dw-table-056y th,
+  .dw-table-056y td {
+    padding: 10px 10px !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .dw-table-056y th:nth-child(4),
+  .dw-table-056y td:nth-child(4),
+  .dw-table-056y th:nth-child(5),
+  .dw-table-056y td:nth-child(5) {
+    display: table-cell !important;
+  }
+
+  .dw-docs-056y {
+    grid-column: 1 / -1 !important;
+    margin: 0 !important;
+  }
+
+  .dw-docs-056y .dw-table-056y th:nth-child(5),
+  .dw-docs-056y .dw-table-056y td:nth-child(5),
+  .dw-docs-056y .dw-table-056y th:nth-child(6),
+  .dw-docs-056y .dw-table-056y td:nth-child(6) {
+    display: table-cell !important;
+  }
+
+  .dw-panel-header-056y {
+    min-height: 48px !important;
+    padding: 0 14px !important;
+  }
+
+  .dw-panel-header-056y h2 {
+    font-size: 14px !important;
+  }
+
+  .dw-risk-list-056y {
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  .dw-risk-card-056y {
+    padding: 12px !important;
+  }
+
+  .dw-risk-card-056y strong {
+    font-size: 13px !important;
+  }
+
+  .dw-risk-card-056y p {
+    font-size: 11.5px !important;
+    line-height: 1.38 !important;
+  }
+
+  .dw-rail-056y {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    position: relative !important;
+    top: auto !important;
+    align-self: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    margin: 0 0 24px !important;
+    border-radius: var(--dw-058d-panel-radius) !important;
+  }
+
+  .dw-rail-title-056y {
+    grid-column: 1 / -1 !important;
+    min-height: 34px !important;
+  }
+
+  .dw-rail-056y > div:not(.dw-rail-title-056y) {
+    min-width: 0 !important;
+  }
+
+  .dw-rail-056y > div:nth-of-type(2) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .dw-alfred-card-056y {
+    min-width: 0 !important;
+    padding: 11px !important;
+    border-radius: 14px !important;
+  }
+
+  .dw-alfred-card-056y h3 {
+    font-size: 13px !important;
+    margin-bottom: 7px !important;
+  }
+
+  .dw-alfred-card-056y p,
+  .dw-alfred-card-056y li {
+    font-size: 11.5px !important;
+    line-height: 1.38 !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1399px) {
+  .forge-desktop-workspace-056y {
+    --dw-058d-sidebar: 184px;
+    --dw-058d-gap: 14px;
+  }
+
+  .dw-brand-056y strong {
+    font-size: 16px !important;
+  }
+
+  .dw-brand-056y span,
+  .dw-sidebar-profile-056y small {
+    font-size: 11px !important;
+  }
+
+  .dw-nav-056y button {
+    grid-template-columns: 22px minmax(0, 1fr) !important;
+    min-height: 40px !important;
+    gap: 9px !important;
+    padding: 0 10px !important;
+    font-size: 13px !important;
+  }
+
+  .dw-sidebar-profile-056y {
+    grid-template-columns: 32px minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .dw-sidebar-profile-056y > span:last-child {
+    display: none !important;
+  }
+
+  .dw-sidebar-profile-056y .dw-avatar-056y {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .dw-heading-056y h1 {
+    font-size: 36px !important;
+  }
+
+  .dw-heading-056y p {
+    font-size: 13px !important;
+  }
+
+  .dw-lock-note-056y {
+    font-size: 11px !important;
+  }
+
+  .dw-command-row-056y {
+    min-height: 52px !important;
+  }
+
+  .dw-kpi-strip-056y {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .dw-kpi-056y {
+    min-height: 76px !important;
+    padding: 10px !important;
+  }
+
+  .dw-kpi-056y strong {
+    font-size: 21px !important;
+  }
+
+  .dw-grid-056y {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .dw-panel-056y,
+  .dw-docs-056y {
+    grid-column: 1 !important;
+  }
+
+  .dw-table-056y {
+    font-size: 11.25px !important;
+  }
+
+  .dw-table-056y th,
+  .dw-table-056y td {
+    padding: 8px 8px !important;
+  }
+
+  .dw-docs-056y .dw-table-056y th:nth-child(5),
+  .dw-docs-056y .dw-table-056y td:nth-child(5),
+  .dw-docs-056y .dw-table-056y th:nth-child(6),
+  .dw-docs-056y .dw-table-056y td:nth-child(6) {
+    display: none !important;
+  }
+
+  .dw-rail-056y {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .dw-rail-056y > div:nth-of-type(2) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 1400px) and (max-width: 1599px) {
+  .forge-desktop-workspace-056y {
+    --dw-058d-sidebar: 192px;
+    --dw-058d-gap: 14px;
+    grid-template-columns: var(--dw-058d-sidebar) minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+  }
+
+  .dw-sidebar-056y {
+    grid-row: 1 / span 2 !important;
+    width: var(--dw-058d-sidebar) !important;
+  }
+
+  .dw-main-056y {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    row-gap: 12px !important;
+  }
+
+  .dw-heading-056y h1 {
+    font-size: 38px !important;
+  }
+
+  .dw-grid-056y {
+    grid-template-columns: minmax(0, 1.28fr) minmax(248px, 0.62fr) !important;
+    gap: 12px !important;
+  }
+
+  .dw-table-056y {
+    font-size: 11.25px !important;
+  }
+
+  .dw-table-056y th,
+  .dw-table-056y td {
+    padding: 8px 8px !important;
+  }
+
+  .dw-docs-056y .dw-table-056y th:nth-child(5),
+  .dw-docs-056y .dw-table-056y td:nth-child(5),
+  .dw-docs-056y .dw-table-056y th:nth-child(6),
+  .dw-docs-056y .dw-table-056y td:nth-child(6) {
+    display: none !important;
+  }
+
+  .dw-rail-056y {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    margin-bottom: 24px !important;
+  }
+
+  .dw-rail-056y > div:nth-of-type(2) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .forge-desktop-workspace-056y {
+    --dw-058d-sidebar: 212px;
+    --dw-058d-rail: 300px;
+    --dw-058d-gap: 18px;
+    grid-template-columns: var(--dw-058d-sidebar) minmax(0, 1fr) var(--dw-058d-rail) !important;
+    grid-template-rows: auto !important;
+  }
+
+  .dw-sidebar-056y {
+    grid-row: 1 !important;
+    width: var(--dw-058d-sidebar) !important;
+  }
+
+  .dw-main-056y {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    padding-top: 20px !important;
+    row-gap: 15px !important;
+  }
+
+  .dw-rail-056y {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    position: sticky !important;
+    top: 0 !important;
+    width: var(--dw-058d-rail) !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-content: start !important;
+    padding: 14px !important;
+    margin: 0 !important;
+  }
+
+  .dw-rail-056y > div:nth-of-type(2) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .dw-grid-056y {
+    grid-template-columns: minmax(0, 1.42fr) minmax(300px, 0.62fr) !important;
+    gap: 15px !important;
+  }
+
+  .dw-table-056y {
+    font-size: 12.5px !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .forge-desktop-workspace-056y {
+    --dw-058d-sidebar: 220px;
+    --dw-058d-rail: 316px;
+    --dw-058d-gap: 20px;
+  }
+
+  .dw-main-056y {
+    row-gap: 16px !important;
+  }
+}
+/* FORGEOS:DESKTOP_SHELL_GRID_REPAIR_058D:END */
