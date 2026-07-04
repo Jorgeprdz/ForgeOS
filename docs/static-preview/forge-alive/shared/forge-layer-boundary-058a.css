@@ -1,0 +1,42 @@
+/*
+  Forge Alive layer boundary 058A.
+  Visibility guards only. No visual redesign.
+*/
+
+.forge-desktop-workspace-056y,
+.alfred-desktop-app-056g7 {
+  display: none !important;
+}
+
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  .phone-shell > .forge-desktop-workspace-056y,
+  .forge-desktop-workspace-056y,
+  .alfred-desktop-app-056g7 {
+    display: none !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .phone-shell > .forge-desktop-workspace-056y,
+  .forge-desktop-workspace-056y {
+    display: grid !important;
+  }
+
+  .alfred-desktop-app-056g7 {
+    display: none !important;
+  }
+
+  .phone-shell > .bottom-nav,
+  .bottom-nav,
+  .forge-mobile-context-nav-057d,
+  .forge-mobile-widget-grid-057j,
+  .forge-mobile-widget-grid-dedup-057m,
+  .forge-nav-root-056k7,
+  .alfred-command-root-056k3,
+  .alfred-command-root-056k4,
+  .alfred-command-root-056k5,
+  .forge-ux99-focus-root-056p,
+  .forge-focus-root-056p2 {
+    display: none !important;
+  }
+}
