@@ -438,3 +438,21 @@
   }
 }
 /* FORGEOS:PROFILE_MENU_PREP_SIDEBAR_IDENTITY_REPAIR_060Y:END */
+
+/* FORGEOS:TOPBAR_PROFILE_ICON_CLEANUP_060Z:START */
+@media (min-width: 901px) {
+  [data-forge-topbar-redundant-profile-icon-060z="true"] {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+/* FORGEOS:TOPBAR_PROFILE_ICON_CLEANUP_060Z:END */

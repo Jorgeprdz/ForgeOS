@@ -1089,3 +1089,104 @@
   window.__forgeRunProfileMenuPrepSidebarIdentityRepair060Y = runProfileRepair;
 })();
 /* FORGEOS:PROFILE_MENU_PREP_SIDEBAR_IDENTITY_REPAIR_060Y:END */
+
+/* FORGEOS:TOPBAR_PROFILE_ICON_CLEANUP_060Z:START */
+(function () {
+  "use strict";
+
+  function textOf(node) {
+    if (!node) {
+      return "";
+    }
+    return String(node.textContent || node.value || node.getAttribute("aria-label") || node.title || "").trim();
+  }
+
+  function visibleRect(node) {
+    if (!node || typeof node.getBoundingClientRect !== "function") {
+      return null;
+    }
+    var rect = node.getBoundingClientRect();
+    if (!rect || rect.width <= 0 || rect.height <= 0) {
+      return null;
+    }
+    return rect;
+  }
+
+  function findProfileAnchor() {
+    var anchor = document.querySelector("[data-forge-profile-anchor-060y='true']");
+    if (anchor) {
+      return anchor;
+    }
+    var nodes = Array.prototype.slice.call(document.querySelectorAll("button, [role='button'], a, div, span"));
+    var candidates = nodes.filter(function (node) {
+      var rect = visibleRect(node);
+      if (!rect || textOf(node) !== "J") {
+        return false;
+      }
+      return rect.top < 170 && rect.left > Math.max(640, window.innerWidth * 0.68) && rect.width >= 34 && rect.width <= 78 && rect.height >= 34 && rect.height <= 78;
+    });
+    candidates.sort(function (a, b) {
+      return visibleRect(b).left - visibleRect(a).left;
+    });
+    return candidates[0] || null;
+  }
+
+  function isRedundantTopbarIcon(node, anchorRect) {
+    var rect = visibleRect(node);
+    if (!rect || !anchorRect) {
+      return false;
+    }
+    if (node.getAttribute("data-forge-profile-anchor-060y") === "true" || textOf(node) === "J") {
+      return false;
+    }
+    var nearProfile = rect.top < 170 &&
+      rect.right <= anchorRect.left + 4 &&
+      rect.left >= anchorRect.left - 150 &&
+      rect.width >= 28 &&
+      rect.width <= 70 &&
+      rect.height >= 28 &&
+      rect.height <= 70;
+    if (!nearProfile) {
+      return false;
+    }
+    var label = textOf(node).toLowerCase();
+    return label === "!" ||
+      label.indexOf("!") !== -1 ||
+      label.indexOf("gear") !== -1 ||
+      label.indexOf("settings") !== -1 ||
+      label.indexOf("config") !== -1 ||
+      label.indexOf("ajuste") !== -1 ||
+      label.indexOf("opcion") !== -1 ||
+      label.length <= 2;
+  }
+
+  function cleanupTopbarIcons() {
+    var anchor = findProfileAnchor();
+    var anchorRect = visibleRect(anchor);
+    if (!anchor || !anchorRect) {
+      return;
+    }
+
+    var nodes = Array.prototype.slice.call(document.querySelectorAll("button, [role='button'], a, div, span"));
+    nodes.forEach(function (node) {
+      if (node === anchor || anchor.contains(node) || node.closest(".forge-profile-menu-060y")) {
+        return;
+      }
+      if (isRedundantTopbarIcon(node, anchorRect)) {
+        node.setAttribute("data-forge-topbar-redundant-profile-icon-060z", "true");
+        node.setAttribute("aria-hidden", "true");
+        node.setAttribute("tabindex", "-1");
+      }
+    });
+    document.documentElement.setAttribute("data-forge-topbar-profile-icons-clean-060z", "true");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", cleanupTopbarIcons, { once: true });
+  } else {
+    cleanupTopbarIcons();
+  }
+  window.addEventListener("load", cleanupTopbarIcons);
+  window.__forgeRunTopbarProfileIconCleanup060Z = cleanupTopbarIcons;
+})();
+/* FORGEOS:TOPBAR_PROFILE_ICON_CLEANUP_060Z:END */
