@@ -388,3 +388,144 @@
   window.__forgeRunPublicPreviewInteractionVisualRepair060M = runRepair;
 })();
 /* FORGEOS:PUBLIC_PREVIEW_INTERACTION_VISUAL_REPAIR_060M:END */
+
+/* FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_060S:START */
+(function () {
+  "use strict";
+
+  var DESKTOP_QUERY = "(min-width: 901px)";
+
+  function isDesktop() {
+    return !window.matchMedia || window.matchMedia(DESKTOP_QUERY).matches;
+  }
+
+  function textOf(node) {
+    if (!node) {
+      return "";
+    }
+    return String(node.value || node.textContent || node.getAttribute("aria-label") || "").trim();
+  }
+
+  function visibleRect(node) {
+    if (!node || typeof node.getBoundingClientRect !== "function") {
+      return null;
+    }
+    var rect = node.getBoundingClientRect();
+    if (!rect || rect.width <= 0 || rect.height <= 0) {
+      return null;
+    }
+    return rect;
+  }
+
+  function commandInput() {
+    return document.querySelector(".dw-command-input-056y, .command-pill-input, [aria-controls='forge-command-results-060m']");
+  }
+
+  function commandRoot(input) {
+    if (!input) {
+      return null;
+    }
+    return input.closest(".dw-command-zone-056y, .dw-command-shell-056y, .command-shell, .dw-command-card-056y") || input.parentElement;
+  }
+
+  function markResultPanel(root, input) {
+    var panel = document.getElementById(input.getAttribute("aria-controls") || "forge-command-results-060m");
+    if (!panel && root) {
+      panel = root.querySelector("[role='listbox'], .forge-command-results-060m, .command-results");
+    }
+    if (!panel) {
+      return null;
+    }
+    panel.setAttribute("data-forge-command-results-panel-060s", "true");
+    return panel;
+  }
+
+  function markStaticSuggestions(root, panel) {
+    if (!root) {
+      return [];
+    }
+    var candidates = Array.prototype.slice.call(root.querySelectorAll("div, section, article, li, button"));
+    return candidates.filter(function (node) {
+      if (node === panel || (panel && panel.contains(node))) {
+        return false;
+      }
+      var content = textOf(node).toLowerCase();
+      return content.indexOf("cotizar") !== -1 && content.indexOf("/cotizar") !== -1;
+    }).map(function (node) {
+      node.setAttribute("data-forge-static-command-suggestions-060s", "true");
+      return node;
+    });
+  }
+
+  function setOverlayGeometry(root, input) {
+    var rootRect = visibleRect(root);
+    var inputRect = visibleRect(input);
+    if (!rootRect || !inputRect) {
+      return;
+    }
+    var top = Math.max(56, Math.round(inputRect.bottom - rootRect.top + 10));
+    var left = Math.max(12, Math.round(inputRect.left - rootRect.left));
+    var right = Math.max(12, Math.round(rootRect.right - inputRect.right));
+    root.style.setProperty("--forge-command-overlay-top-060s", top + "px");
+    root.style.setProperty("--forge-command-overlay-left-060s", left + "px");
+    root.style.setProperty("--forge-command-overlay-right-060s", right + "px");
+  }
+
+  function setActive(root, suggestions, active) {
+    if (!root) {
+      return;
+    }
+    if (active) {
+      root.setAttribute("data-forge-command-overlay-active-060s", "true");
+    } else {
+      root.removeAttribute("data-forge-command-overlay-active-060s");
+    }
+    suggestions.forEach(function (node) {
+      if (active) {
+        node.setAttribute("data-forge-static-command-suggestions-collapsed-060s", "true");
+      } else {
+        node.removeAttribute("data-forge-static-command-suggestions-collapsed-060s");
+      }
+    });
+  }
+
+  function runOverlayPolish() {
+    if (!isDesktop()) {
+      return;
+    }
+    var input = commandInput();
+    var root = commandRoot(input);
+    if (!input || !root) {
+      return;
+    }
+    root.setAttribute("data-forge-command-overlay-root-060s", "true");
+    var panel = markResultPanel(root, input);
+    var suggestions = markStaticSuggestions(root, panel);
+
+    function update() {
+      setOverlayGeometry(root, input);
+      setActive(root, suggestions, Boolean(input.value && input.value.trim()));
+    }
+
+    input.addEventListener("focus", update);
+    input.addEventListener("input", update);
+    input.addEventListener("keydown", function () {
+      window.setTimeout(update, 0);
+    });
+    input.addEventListener("blur", function () {
+      window.setTimeout(function () {
+        setActive(root, suggestions, false);
+      }, 160);
+    });
+    update();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runOverlayPolish, { once: true });
+  } else {
+    runOverlayPolish();
+  }
+  window.addEventListener("load", runOverlayPolish);
+  window.__forgeRunCommandBarSearchOverlayPolish060S = runOverlayPolish;
+})();
+/* FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_060S:END */

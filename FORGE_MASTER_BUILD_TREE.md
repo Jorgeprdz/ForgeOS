@@ -5250,3 +5250,19 @@ DECISION=PASS_060R_COMMAND_BAR_SEARCH_QA_LOCK
 
 NEXT=061A_NEXT_FORGE_ALIVE_SCOPE
 <!-- FORGEOS:COMMAND_BAR_SEARCH_QA_LOCK_060R:END -->
+
+<!-- FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_IMPLEMENTATION_060S:START -->
+060S polishes the 060Q command bar search open state.
+
+It keeps input interactivity, collapses static suggestions only during an active query, and positions results as a floating overlay without reserving dead vertical space.
+
+Cache-bust:
+
+`060s`
+
+Boundary remains static preview visual polish only: no provider runtime, no CRM write, no calendar create, no send, no browser storage, no network calls, and no real engine execution.
+
+DECISION=PASS_060S_COMMAND_BAR_SEARCH_OVERLAY_POLISH_IMPLEMENTATION
+
+NEXT=060T_COMMAND_BAR_SEARCH_OVERLAY_VISUAL_QA_LOCK
+<!-- FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_IMPLEMENTATION_060S:END -->

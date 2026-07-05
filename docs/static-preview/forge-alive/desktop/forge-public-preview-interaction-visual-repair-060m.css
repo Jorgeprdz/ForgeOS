@@ -165,3 +165,53 @@
   }
 }
 /* FORGEOS:PUBLIC_PREVIEW_INTERACTION_VISUAL_REPAIR_060M:END */
+
+/* FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_060S:START */
+@media (min-width: 901px) {
+  [data-forge-command-overlay-root-060s="true"] {
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  [data-forge-command-overlay-root-060s="true"][data-forge-command-overlay-active-060s="true"] {
+    z-index: 80 !important;
+  }
+
+  [data-forge-static-command-suggestions-060s="true"][data-forge-static-command-suggestions-collapsed-060s="true"] {
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-width: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  [data-forge-command-results-panel-060s="true"] {
+    position: absolute !important;
+    top: var(--forge-command-overlay-top-060s, 72px) !important;
+    left: var(--forge-command-overlay-left-060s, 18px) !important;
+    right: var(--forge-command-overlay-right-060s, 18px) !important;
+    z-index: 120 !important;
+    max-height: min(420px, calc(100vh - var(--forge-command-overlay-top-060s, 72px) - 72px)) !important;
+    overflow: auto !important;
+    border: 1px solid rgba(126, 211, 255, 0.2) !important;
+    border-radius: 18px !important;
+    background: rgba(8, 22, 34, 0.96) !important;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(255, 255, 255, 0.04) inset !important;
+    backdrop-filter: blur(18px) saturate(130%) !important;
+  }
+
+  [data-forge-command-overlay-root-060s="true"]:not([data-forge-command-overlay-active-060s="true"]) [data-forge-command-results-panel-060s="true"] {
+    display: none !important;
+  }
+
+  [data-forge-command-overlay-root-060s="true"][data-forge-command-overlay-active-060s="true"] [data-forge-command-results-panel-060s="true"] {
+    display: block !important;
+  }
+}
+/* FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_060S:END */
