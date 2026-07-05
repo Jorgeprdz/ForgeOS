@@ -1220,7 +1220,6 @@
   window.__forgePolishProfileMenuCopyAndSpacing061B = polishProfileMenuCopy;
 })();
 /* FORGEOS:PROFILE_MENU_COPY_AND_SPACING_POLISH_061B:END */
-
 /* FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:START */
 (function () {
   "use strict";
