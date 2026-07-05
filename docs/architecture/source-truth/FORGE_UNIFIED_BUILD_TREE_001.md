@@ -3175,3 +3175,32 @@ DECISION=PASS_061E_PREMIUM_FINAL_POLISH_IMPLEMENTATION
 
 NEXT=061F_PREMIUM_FINAL_POLISH_VISUAL_QA_LOCK
 <!-- FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:END -->
+
+<!-- FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:START -->
+## 061G Premium Final Visual Repair Implementation
+
+Status: PASS / IMPLEMENTED.
+
+061G implements the narrow repair required after the 061F visual QA failure.
+
+Implementation area:
+
+- `docs/static-preview/forge-alive/index.html`
+- `docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.css`
+- `docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js`
+- `docs/static-preview/forge-alive/smart-widget-stack.js`
+
+Evidence:
+
+- `docs/architecture/source-truth/FORGE_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_CLOSURE_061G.md`
+- `docs/evidence/FORGE_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G.md`
+- `docs/evidence/FORGE_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_CERTIFICATE_061G.md`
+
+Boundary:
+
+Static visual preview repair only. Behavior remains preview-safe and non-executing.
+
+DECISION=PASS_061G_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION
+
+NEXT=061H_PREMIUM_FINAL_VISUAL_REPAIR_QA_LOCK
+<!-- FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:END -->

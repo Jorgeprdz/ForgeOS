@@ -5487,3 +5487,33 @@ DECISION=PASS_061E_PREMIUM_FINAL_POLISH_IMPLEMENTATION
 
 NEXT=061F_PREMIUM_FINAL_POLISH_VISUAL_QA_LOCK
 <!-- FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:END -->
+
+<!-- FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:START -->
+## 061G Premium Final Visual Repair Implementation
+
+Status: PASS / IMPLEMENTED.
+
+061G repairs the visual blockers found in 061F without converting the failed 061F QA lock into PASS.
+
+Implemented:
+
+- Table action clipping repair for 1366 and 1440 desktop widths.
+- Command CTA clipping repair.
+- Tablet landscape 901-1199 overflow guard.
+- Public smart widget syntax repair.
+- Cache bust advanced to `061g`.
+
+Artifacts:
+
+- `docs/architecture/source-truth/FORGE_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_CLOSURE_061G.md`
+- `docs/evidence/FORGE_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G.md`
+- `docs/evidence/FORGE_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_CERTIFICATE_061G.md`
+
+Boundary:
+
+Static visual preview repair only. No provider/runtime activation, real auth, CRM mutation, calendar mutation, send, browser persistence, browser request behavior from the app, media/speech behavior, dependency change, or real engine execution.
+
+DECISION=PASS_061G_PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION
+
+NEXT=061H_PREMIUM_FINAL_VISUAL_REPAIR_QA_LOCK
+<!-- FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:END -->

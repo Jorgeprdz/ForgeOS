@@ -1247,3 +1247,30 @@
   window.__forgeMarkPremiumFinalPolish061E = markPremiumPolishReady;
 })();
 /* FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:END */
+
+/* FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:START */
+(function () {
+  "use strict";
+
+  var DESKTOP_QUERY = "(min-width: 901px)";
+
+  function isDesktop() {
+    return !window.matchMedia || window.matchMedia(DESKTOP_QUERY).matches;
+  }
+
+  function markVisualRepairReady() {
+    if (!isDesktop()) {
+      return;
+    }
+    document.documentElement.setAttribute("data-forge-premium-final-visual-repair-061g", "true");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", markVisualRepairReady, { once: true });
+  } else {
+    markVisualRepairReady();
+  }
+  window.addEventListener("load", markVisualRepairReady);
+  window.__forgeMarkPremiumFinalVisualRepair061G = markVisualRepairReady;
+})();
+/* FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:END */

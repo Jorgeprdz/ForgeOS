@@ -137,7 +137,7 @@ function renderWidget(card, index) {
 
   const top = el("div", "smart-widget-card-top");
   const titleBlock = el("div", "smart-widget-title-block");
-  titleBlock.appendChild(el("p", "smart-widget-eyebrow", formatWidgetFamilyLabel(card.family))));
+  titleBlock.appendChild(el("p", "smart-widget-eyebrow", formatWidgetFamilyLabel(card.family)));
   titleBlock.appendChild(el("h3", "", card.title));
   titleBlock.appendChild(el("p", "smart-widget-subtitle", card.subtitle));
   top.appendChild(titleBlock);
