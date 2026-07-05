@@ -5548,3 +5548,52 @@ DECISION=PASS_061H_PREMIUM_FINAL_VISUAL_REPAIR_QA_LOCK
 
 NEXT=061I_PREMIUM_FINAL_DECISION_LOCK
 <!-- FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_QA_LOCK_061H:END -->
+
+<!-- FORGEOS:PREMIUM_FINAL_DECISION_LOCK_061I:START -->
+## 061I Premium Final Decision Lock
+
+Status: PASS / LOCKED.
+
+061I closes the premium static command preview stage for Forge Alive.
+
+Final state:
+
+`PREMIUM_STATIC_COMMAND_PREVIEW_LOCKED`
+
+Final rating:
+
+`9.0 / 10`
+
+Ceiling before real modules:
+
+`9.1 / 10`
+
+Decision basis:
+
+- 061E implemented premium final polish.
+- 061F failed visual QA at `8.3 / 10`.
+- 061G repaired visual blockers.
+- 061H certified public Pages evidence at `9.0 / 10`.
+
+Stop rule:
+
+No broad visual polish should continue without new evidence or a specific product need. The next quality jump requires connected modules, unified read models, and action contracts.
+
+Recommended next scopes:
+
+- `062A_ACTION_CONTRACTS_SCOPE`
+- `062B_READ_MODEL_UNIFICATION_SCOPE`
+- `062C_COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION`
+
+Artifacts:
+
+- `docs/architecture/source-truth/FORGE_PREMIUM_FINAL_DECISION_LOCK_061I.md`
+- `docs/evidence/FORGE_PREMIUM_FINAL_DECISION_LOCK_061I.md`
+- `docs/evidence/FORGE_PREMIUM_FINAL_DECISION_LOCK_CERTIFICATE_061I.md`
+
+DECISION=PASS_061I_PREMIUM_FINAL_DECISION_LOCK
+
+FINAL_STATE=PREMIUM_STATIC_COMMAND_PREVIEW_LOCKED
+
+NEXT=062A_ACTION_CONTRACTS_SCOPE
+<!-- FORGEOS:PREMIUM_FINAL_DECISION_LOCK_061I:END -->
