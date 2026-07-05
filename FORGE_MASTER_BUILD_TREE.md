@@ -5660,3 +5660,31 @@ DECISION=PASS_062B_READ_MODEL_UNIFICATION_SCOPE
 
 NEXT=062C_COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION
 <!-- FORGEOS:READ_MODEL_UNIFICATION_SCOPE_062B:END -->
+
+<!-- FORGEOS:COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION_062C:START -->
+## 062C Command Bar Action Contract Implementation
+
+Status: PASS / IMPLEMENTED.
+
+062C binds the command bar to a local preview-safe `forge.alive.workspace.read_model.v1` object, action registry, and command catalog.
+
+Implemented contracts:
+
+- `command.quick_actions`
+- `report.prepare_preview`
+- `opportunity.review`
+- `client.follow_preview`
+- `quote.prepare_preview`
+- `record.open_preview`
+
+Public cache:
+`062c`
+
+Boundary:
+
+Static preview contract implementation only. No module connection, external effect, auth behavior, provider execution, browser persistence, browser request, or real engine behavior is enabled.
+
+DECISION=PASS_062C_COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION
+
+NEXT=062D_COMMAND_BAR_ACTION_CONTRACT_QA_LOCK
+<!-- FORGEOS:COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION_062C:END -->

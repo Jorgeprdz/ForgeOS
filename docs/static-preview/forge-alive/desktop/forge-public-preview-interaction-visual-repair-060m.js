@@ -1274,3 +1274,356 @@
   window.__forgeMarkPremiumFinalVisualRepair061G = markVisualRepairReady;
 })();
 /* FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:END */
+
+/* FORGEOS:COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION_062C:START */
+(function () {
+  "use strict";
+
+  var READ_MODEL = {
+    modelName: "forge.alive.workspace.read_model.v1",
+    workspace: {
+      workspaceId: "forge-alive-static-command-preview",
+      workspaceName: "Mi dia",
+      surface: "desktop.command_workspace",
+      mode: "static_preview",
+      ownerDisplayName: "Jorge Fernandez"
+    },
+    previewPolicy: {
+      requiresHumanApproval: true,
+      externalEffectsAllowed: false,
+      recordMutationAllowed: false,
+      scheduleMutationAllowed: false,
+      messageDeliveryAllowed: false,
+      providerExecutionAllowed: false
+    },
+    actionRegistry: [
+      {
+        actionId: "command.quick_actions",
+        label: "/quick actions",
+        aliases: ["/", "/quick", "/quick actions", "acciones"],
+        contractStatus: "preview_only",
+        sourceModule: "command_bar",
+        requiresHumanApproval: false,
+        previewOnly: true,
+        blockedReasonIds: ["preview_only_boundary"]
+      },
+      {
+        actionId: "report.prepare_preview",
+        label: "Preparar preview",
+        aliases: ["preparar", "preview", "reporte"],
+        contractStatus: "needs_approval",
+        sourceModule: "reportes",
+        requiresHumanApproval: true,
+        previewOnly: true,
+        blockedReasonIds: ["approval_required"]
+      },
+      {
+        actionId: "opportunity.review",
+        label: "Revisar oportunidad",
+        aliases: ["revisar", "review", "lariza"],
+        contractStatus: "preview_only",
+        sourceModule: "pipeline",
+        requiresHumanApproval: false,
+        previewOnly: true,
+        blockedReasonIds: ["preview_only_boundary"]
+      },
+      {
+        actionId: "client.follow_preview",
+        label: "Preparar follow",
+        aliases: ["follow", "/follow", "seguimiento"],
+        contractStatus: "needs_approval",
+        sourceModule: "clientes",
+        requiresHumanApproval: true,
+        previewOnly: true,
+        blockedReasonIds: ["approval_required"]
+      },
+      {
+        actionId: "quote.prepare_preview",
+        label: "Preparar cotizacion",
+        aliases: ["cotizar", "/cotizar", "cotizacion"],
+        contractStatus: "needs_approval",
+        sourceModule: "cotizaciones",
+        requiresHumanApproval: true,
+        previewOnly: true,
+        blockedReasonIds: ["approval_required"]
+      },
+      {
+        actionId: "record.open_preview",
+        label: "Abrir detalle",
+        aliases: ["abrir", "detalle", "open"],
+        contractStatus: "preview_only",
+        sourceModule: "workspace",
+        requiresHumanApproval: false,
+        previewOnly: true,
+        blockedReasonIds: ["preview_only_boundary"]
+      }
+    ],
+    commandCatalog: [
+      {
+        commandId: "quick-actions",
+        actionId: "command.quick_actions",
+        title: "/quick actions",
+        subtitle: "Lista acciones preview-safe disponibles para este workspace.",
+        tokens: ["/", "/quick", "quick", "actions", "acciones"],
+        targetType: "workspace",
+        targetId: "forge-alive-static-command-preview"
+      },
+      {
+        commandId: "prepare-report-preview",
+        actionId: "report.prepare_preview",
+        title: "Preparar preview",
+        subtitle: "Construye un resumen revisable sin ejecutar efectos reales.",
+        tokens: ["preparar", "preview", "reporte", "alfred"],
+        targetType: "workspace",
+        targetId: "forge-alive-static-command-preview"
+      },
+      {
+        commandId: "review-lariza",
+        actionId: "opportunity.review",
+        title: "Revisar Lariza",
+        subtitle: "Abre detalle local de oportunidad y riesgo.",
+        tokens: ["revisar", "review", "lariza", "oportunidad"],
+        targetType: "opportunity",
+        targetId: "opp-lariza-gmm"
+      },
+      {
+        commandId: "follow-juan",
+        actionId: "client.follow_preview",
+        title: "/follow Juan",
+        subtitle: "Prepara seguimiento con aprobacion humana requerida.",
+        tokens: ["follow", "/follow", "juan", "seguimiento"],
+        targetType: "client",
+        targetId: "client-juan"
+      },
+      {
+        commandId: "quote-lariza",
+        actionId: "quote.prepare_preview",
+        title: "/cotizar GMM Lariza",
+        subtitle: "Prepara workspace de cotizacion sin emitir documentos.",
+        tokens: ["cotizar", "/cotizar", "cotizacion", "gmm", "lariza"],
+        targetType: "opportunity",
+        targetId: "opp-lariza-gmm"
+      },
+      {
+        commandId: "open-octavio",
+        actionId: "record.open_preview",
+        title: "Abrir Octavio",
+        subtitle: "Abre detalle local del registro en modo preview.",
+        tokens: ["abrir", "open", "octavio", "detalle"],
+        targetType: "client",
+        targetId: "client-octavio"
+      }
+    ],
+    blockedReasons: [
+      {
+        reasonId: "preview_only_boundary",
+        message: "Disponible solo como preview seguro."
+      },
+      {
+        reasonId: "approval_required",
+        message: "Requiere aprobacion humana antes de cualquier efecto real."
+      }
+    ]
+  };
+
+  var activeIndex = 0;
+  var currentRows = [];
+
+  function normalize(value) {
+    return String(value || "").toLowerCase().trim();
+  }
+
+  function findInput() {
+    return document.querySelector(".dw-command-input-056y, .command-pill-input");
+  }
+
+  function findRoot(input) {
+    return input && (input.closest(".dw-command-zone-056y") || input.closest(".dw-command-shell-056y") || input.parentElement);
+  }
+
+  function actionById(actionId) {
+    return READ_MODEL.actionRegistry.filter(function (action) {
+      return action.actionId === actionId;
+    })[0] || null;
+  }
+
+  function statusLabel(action) {
+    if (!action) {
+      return "blocked";
+    }
+    if (action.contractStatus === "needs_approval") {
+      return "approval";
+    }
+    return action.contractStatus.replace("_", " ");
+  }
+
+  function ensurePanel(root, input) {
+    var panel = document.getElementById("forge-contract-results-062c");
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.id = "forge-contract-results-062c";
+      panel.className = "forge-contract-results-062c dw-command-results-056y";
+      panel.setAttribute("role", "listbox");
+      panel.setAttribute("data-forge-contract-results-panel-062c", "true");
+      panel.hidden = true;
+      root.appendChild(panel);
+    }
+    input.setAttribute("aria-controls", panel.id);
+    input.setAttribute("aria-autocomplete", "list");
+    return panel;
+  }
+
+  function ensureStatus(root) {
+    var status = root.querySelector(".forge-contract-preview-status-062c");
+    if (!status) {
+      status = document.createElement("div");
+      status.className = "forge-contract-preview-status-062c";
+      status.setAttribute("aria-live", "polite");
+      status.setAttribute("data-forge-contract-status-062c", "true");
+      root.appendChild(status);
+    }
+    return status;
+  }
+
+  function queryRows(query) {
+    var q = normalize(query);
+    if (!q) {
+      return [];
+    }
+    if (q === "/" || q === "/quick" || q === "/quick actions") {
+      return READ_MODEL.commandCatalog.slice(0);
+    }
+    return READ_MODEL.commandCatalog.filter(function (command) {
+      var haystack = [command.title, command.subtitle].concat(command.tokens || []).join(" ");
+      return normalize(haystack).indexOf(q) !== -1;
+    });
+  }
+
+  function hidePanel(root, panel) {
+    if (panel) {
+      panel.hidden = true;
+      panel.innerHTML = "";
+    }
+    if (root) {
+      root.removeAttribute("data-forge-contract-panel-active-062c");
+    }
+    currentRows = [];
+    activeIndex = 0;
+  }
+
+  function selectCommand(root, input, command) {
+    var action = actionById(command.actionId);
+    var status = ensureStatus(root);
+    input.value = command.title;
+    input.setAttribute("data-forge-selected-action-contract-062c", command.actionId);
+    status.textContent = command.title + " - " + (action ? action.label : "Accion bloqueada") + " - " + statusLabel(action) + ". Sin efectos reales.";
+    window.dispatchEvent(new CustomEvent("forge:action-contract-preview:062c", {
+      detail: {
+        commandId: command.commandId,
+        actionId: command.actionId,
+        targetType: command.targetType,
+        targetId: command.targetId,
+        status: action ? action.contractStatus : "blocked",
+        previewOnly: true
+      }
+    }));
+  }
+
+  function render(input) {
+    var root = findRoot(input);
+    if (!root) {
+      return;
+    }
+    var panel = ensurePanel(root, input);
+    currentRows = queryRows(input.value);
+    if (!currentRows.length) {
+      hidePanel(root, panel);
+      return;
+    }
+    activeIndex = Math.min(activeIndex, currentRows.length - 1);
+    root.setAttribute("data-forge-contract-panel-active-062c", "true");
+    panel.hidden = false;
+    panel.innerHTML = currentRows.map(function (command, index) {
+      var action = actionById(command.actionId);
+      return '<button type="button" class="forge-contract-result-062c" role="option" data-index="' + index + '" aria-selected="' + (index === activeIndex ? "true" : "false") + '">' +
+        '<span><span class="forge-contract-result-062c__title">' + command.title + '</span>' +
+        '<span class="forge-contract-result-062c__subtitle">' + command.subtitle + '</span></span>' +
+        '<span class="forge-contract-result-062c__status">' + statusLabel(action) + '</span>' +
+      '</button>';
+    }).join("");
+  }
+
+  function bind() {
+    var input = findInput();
+    if (!input || input.getAttribute("data-forge-contract-bound-062c") === "true") {
+      return;
+    }
+    var root = findRoot(input);
+    if (!root) {
+      return;
+    }
+    var panel = ensurePanel(root, input);
+    input.setAttribute("data-forge-contract-bound-062c", "true");
+    input.setAttribute("placeholder", "/quick actions");
+    root.setAttribute("data-forge-read-model-bound-062c", READ_MODEL.modelName);
+
+    input.addEventListener("input", function () {
+      activeIndex = 0;
+      render(input);
+    });
+
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        hidePanel(root, panel);
+        return;
+      }
+      if (!currentRows.length) {
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        activeIndex = (activeIndex + 1) % currentRows.length;
+        render(input);
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        activeIndex = (activeIndex + currentRows.length - 1) % currentRows.length;
+        render(input);
+      }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        selectCommand(root, input, currentRows[activeIndex]);
+        hidePanel(root, panel);
+      }
+    });
+
+    panel.addEventListener("click", function (event) {
+      var button = event.target.closest(".forge-contract-result-062c");
+      if (!button) {
+        return;
+      }
+      var index = Number(button.getAttribute("data-index"));
+      if (currentRows[index]) {
+        selectCommand(root, input, currentRows[index]);
+        hidePanel(root, panel);
+        input.focus();
+      }
+    });
+
+    document.documentElement.setAttribute("data-forge-action-contracts-062c", "true");
+  }
+
+  function run() {
+    window.__forgeAliveWorkspaceReadModel062C = READ_MODEL;
+    bind();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run, { once: true });
+  } else {
+    run();
+  }
+  window.addEventListener("load", run);
+  window.__forgeRunCommandBarActionContracts062C = run;
+})();
+/* FORGEOS:COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION_062C:END */

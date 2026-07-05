@@ -1098,3 +1098,87 @@
   }
 }
 /* FORGEOS:PREMIUM_FINAL_VISUAL_REPAIR_IMPLEMENTATION_061G:END */
+
+/* FORGEOS:COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION_062C:START */
+@media (min-width: 901px) {
+  .forge-contract-results-062c {
+    position: absolute;
+    left: var(--forge-contract-left-062c, 32px);
+    right: var(--forge-contract-right-062c, 32px);
+    top: var(--forge-contract-top-062c, calc(100% + 10px));
+    z-index: 120;
+    display: grid;
+    gap: 8px;
+    max-height: min(360px, 48vh);
+    overflow: auto;
+    padding: 10px;
+    border: 1px solid rgba(139, 232, 255, 0.22);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(8, 20, 34, 0.98), rgba(4, 11, 20, 0.96));
+    box-shadow:
+      0 30px 90px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+
+  .forge-contract-results-062c[hidden] {
+    display: none !important;
+  }
+
+  .forge-contract-result-062c {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(139, 232, 255, 0.12);
+    border-radius: 13px;
+    color: rgba(245, 250, 255, 0.94);
+    background: rgba(255, 255, 255, 0.045);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .forge-contract-result-062c:hover,
+  .forge-contract-result-062c[aria-selected="true"] {
+    border-color: rgba(255, 220, 122, 0.38);
+    background: rgba(255, 220, 122, 0.09);
+  }
+
+  .forge-contract-result-062c__title {
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .forge-contract-result-062c__subtitle {
+    margin-top: 3px;
+    color: rgba(214, 226, 238, 0.72);
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+
+  .forge-contract-result-062c__status {
+    justify-self: end;
+    border: 1px solid rgba(139, 232, 255, 0.18);
+    border-radius: 999px;
+    padding: 5px 8px;
+    color: rgba(155, 238, 255, 0.88);
+    background: rgba(139, 232, 255, 0.08);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .forge-contract-preview-status-062c {
+    margin: 8px 38px 0;
+    color: rgba(214, 226, 238, 0.68);
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  [data-forge-contract-panel-active-062c="true"] .dw-command-results-056y:not(.forge-contract-results-062c) {
+    display: none !important;
+  }
+}
+/* FORGEOS:COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION_062C:END */

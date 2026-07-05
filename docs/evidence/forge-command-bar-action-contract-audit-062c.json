@@ -1,0 +1,25 @@
+{
+  "phase": "062C_COMMAND_BAR_ACTION_CONTRACT_IMPLEMENTATION",
+  "status": "PASS",
+  "modelName": "forge.alive.workspace.read_model.v1",
+  "cacheVersion": "062c",
+  "contractsImplemented": [
+    "command.quick_actions",
+    "report.prepare_preview",
+    "opportunity.review",
+    "client.follow_preview",
+    "quote.prepare_preview",
+    "record.open_preview"
+  ],
+  "commandTokens": [
+    "/quick actions",
+    "/cotizar",
+    "follow",
+    "revisar",
+    "abrir",
+    "preview"
+  ],
+  "previewOnly": true,
+  "realEffectsEnabled": false,
+  "next": "062D_COMMAND_BAR_ACTION_CONTRACT_QA_LOCK"
+}
