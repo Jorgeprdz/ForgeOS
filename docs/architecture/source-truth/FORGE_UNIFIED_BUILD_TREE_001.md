@@ -2966,6 +2966,36 @@ DECISION=PASS_061A_TOPBAR_PROFILE_ICON_CLEANUP_VISUAL_QA_LOCK
 NEXT=061B_NEXT_FORGE_ALIVE_SCOPE
 <!-- FORGEOS:TOPBAR_PROFILE_ICON_CLEANUP_VISUAL_QA_LOCK_061A:END -->
 
+<!-- FORGEOS:PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_061C:START -->
+## 061C Profile Menu Copy And Spacing Visual QA Lock
+
+Status: PASS / LOCKED
+
+Forge Alive public `061b` profile menu copy and spacing are visually QA-locked.
+
+Locked behavior:
+
+- only the J profile avatar remains visible in the topbar cluster
+- command bar remains `/quick actions`
+- J opens the profile menu
+- menu exposes identity, theme, options, logout, and preview-safe status copy
+- `Cerrar sesión` includes the accent
+- menu spacing is visually separated from underlying content
+- sidebar footer remains hidden
+- no operational execution is introduced
+
+Evidence:
+
+- `docs/evidence/forge-profile-menu-copy-spacing-visual-qa-audit-061c.json`
+- `docs/evidence/FORGE_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_061C.md`
+- `docs/evidence/FORGE_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_CERTIFICATE_061C.md`
+- `docs/architecture/source-truth/FORGE_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_CLOSURE_061C.md`
+
+DECISION=PASS_061C_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK
+
+NEXT=061D_PREMIUM_FINAL_POLISH_SCOPE
+<!-- FORGEOS:PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_061C:END -->
+
 <!-- FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_IMPLEMENTATION_060S:START -->
 060S polishes the 060Q command bar search open state.
 

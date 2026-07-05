@@ -1,0 +1,128 @@
+{
+  "phase": "061C_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK",
+  "status": "PASS",
+  "date": "2026-07-05",
+  "repo_head_before_qa_lock": "9265aa8",
+  "expected_commit": "9265aa8 fix: polish profile menu copy and spacing",
+  "public_preview_url": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=061b",
+  "mode": "read-only visual QA lock with screenshot evidence",
+  "boundary": {
+    "static_preview_mutation": false,
+    "css_js_html_mutation": false,
+    "crm_write": false,
+    "calendar_create": false,
+    "send": false,
+    "provider_execution": false,
+    "real_engine_execution": false
+  },
+  "screenshots": [
+    "docs/evidence/forge-profile-menu-copy-spacing-061c-closed-1366x768.png",
+    "docs/evidence/forge-profile-menu-copy-spacing-061c-menu-open-1366x768.png",
+    "docs/evidence/forge-profile-menu-copy-spacing-061c-closed-1440x1000.png",
+    "docs/evidence/forge-profile-menu-copy-spacing-061c-menu-open-1440x1000.png",
+    "docs/evidence/forge-profile-menu-copy-spacing-061c-closed-1920x1080.png",
+    "docs/evidence/forge-profile-menu-copy-spacing-061c-menu-open-1920x1080.png"
+  ],
+  "visual_checks": [
+    {
+      "check": "topbar shows only the J avatar visually",
+      "result": "PASS",
+      "evidence": "Closed screenshots show only the J profile avatar in the top-right cluster."
+    },
+    {
+      "check": "two old icons beside J do not appear visually",
+      "result": "PASS",
+      "evidence": "Closed and menu-open screenshots show no visible old adjacent icons."
+    },
+    {
+      "check": "command bar says only /quick actions",
+      "result": "PASS",
+      "evidence": "Closed and menu-open screenshots show /quick actions."
+    },
+    {
+      "check": "profile menu opens by clicking J",
+      "result": "PASS",
+      "evidence": "Menu-open screenshots show the menu anchored below J."
+    },
+    {
+      "check": "profile menu required copy is present",
+      "result": "PASS",
+      "evidence": "Menu audit confirmed Jorge Fernandez, Asesor financiero, Cambiar tema, Opciones, Cerrar sesión, and Vista estática segura."
+    },
+    {
+      "check": "Cerrar sesión has accent",
+      "result": "PASS",
+      "evidence": "Menu audit confirmed hasCerrarSesionAccent=true and hasCerrarSesionNoAccent=false."
+    },
+    {
+      "check": "menu has visual separation from content",
+      "result": "PASS",
+      "evidence": "Menu-open screenshots show a visible anchored gap and improved separation; BiDi audit measured 26px from avatar bottom to menu top."
+    },
+    {
+      "check": "sidebar does not show bottom Jorge Fernandez footer",
+      "result": "PASS",
+      "evidence": "BiDi audit confirmed sidebarFooterDisplay=none."
+    },
+    {
+      "check": "no real actions are executed",
+      "result": "PASS",
+      "evidence": "Menu remains static preview and displays Vista estática segura."
+    }
+  ],
+  "bidi_audit_summary": [
+    {
+      "viewport": "1366x768",
+      "topbarJCount": 1,
+      "redundantIconsMarked": 2,
+      "menuHidden": false,
+      "menuGapFromAnchor": 26,
+      "menuItemsPresent": ["Jorge Fernandez", "Asesor financiero", "Cambiar tema", "Opciones", "Cerrar sesión", "Vista estática segura"],
+      "sidebarFooterDisplay": "none",
+      "commandBarPlaceholder": "/quick actions"
+    },
+    {
+      "viewport": "1440x1000",
+      "topbarJCount": 1,
+      "redundantIconsMarked": 2,
+      "menuHidden": false,
+      "menuGapFromAnchor": 26,
+      "menuItemsPresent": ["Jorge Fernandez", "Asesor financiero", "Cambiar tema", "Opciones", "Cerrar sesión", "Vista estática segura"],
+      "sidebarFooterDisplay": "none",
+      "commandBarPlaceholder": "/quick actions"
+    },
+    {
+      "viewport": "1920x1080",
+      "topbarJCount": 1,
+      "redundantIconsMarked": 2,
+      "menuHidden": false,
+      "menuGapFromAnchor": 26,
+      "menuItemsPresent": ["Jorge Fernandez", "Asesor financiero", "Cambiar tema", "Opciones", "Cerrar sesión", "Vista estática segura"],
+      "sidebarFooterDisplay": "none",
+      "commandBarPlaceholder": "/quick actions"
+    }
+  ],
+  "remaining_risks": [
+    "Firefox reported an existing smart-widget-stack syntax warning during screenshot capture; the visible 061C desktop surface rendered and the warning is outside this evidence lock boundary."
+  ],
+  "validation_commands": [
+    {
+      "command": "git status --short --branch",
+      "result": "PASS"
+    },
+    {
+      "command": "node --check docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    },
+    {
+      "command": "safety scan for prohibited runtime, storage, network, and real action tokens",
+      "result": "PASS_NO_MATCHES"
+    }
+  ],
+  "decision": "PASS_061C_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK",
+  "next": "061D_PREMIUM_FINAL_POLISH_SCOPE"
+}

@@ -5280,6 +5280,36 @@ DECISION=PASS_061A_TOPBAR_PROFILE_ICON_CLEANUP_VISUAL_QA_LOCK
 NEXT=061B_NEXT_FORGE_ALIVE_SCOPE
 <!-- FORGEOS:TOPBAR_PROFILE_ICON_CLEANUP_VISUAL_QA_LOCK_061A:END -->
 
+<!-- FORGEOS:PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_061C:START -->
+## 061C Profile Menu Copy And Spacing Visual QA Lock
+
+Status: PASS / LOCKED
+
+061C locks public visual QA evidence for Forge Alive profile menu copy and spacing after 061B.
+
+Accepted behavior:
+
+- topbar remains clean with only the J profile avatar
+- command bar remains `/quick actions`
+- profile menu opens from J
+- profile menu includes `Jorge Fernandez`, `Asesor financiero`, `Cambiar tema`, `Opciones`, `Cerrar sesión`, and `Vista estática segura`
+- `Cerrar sesión` includes the accent
+- menu has visible separation from underlying content
+- sidebar footer remains hidden
+- static preview boundary remains intact
+
+Evidence:
+
+- `docs/evidence/forge-profile-menu-copy-spacing-visual-qa-audit-061c.json`
+- `docs/evidence/FORGE_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_061C.md`
+- `docs/evidence/FORGE_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_CERTIFICATE_061C.md`
+- `docs/architecture/source-truth/FORGE_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_CLOSURE_061C.md`
+
+DECISION=PASS_061C_PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK
+
+NEXT=061D_PREMIUM_FINAL_POLISH_SCOPE
+<!-- FORGEOS:PROFILE_MENU_COPY_AND_SPACING_VISUAL_QA_LOCK_061C:END -->
+
 <!-- FORGEOS:COMMAND_BAR_SEARCH_OVERLAY_POLISH_IMPLEMENTATION_060S:START -->
 060S polishes the 060Q command bar search open state.
 
