@@ -584,3 +584,140 @@
   window.__forgeRunCommandBarInputOnlyCleanup060U = hideStaticSuggestions;
 })();
 /* FORGEOS:COMMAND_BAR_INPUT_ONLY_CLEANUP_060U:END */
+
+/* FORGEOS:COMMAND_BAR_RESTORE_INPUT_REPAIR_060V:START */
+(function () {
+  "use strict";
+
+  var DESKTOP_QUERY = "(min-width: 901px)";
+
+  function isDesktop() {
+    return !window.matchMedia || window.matchMedia(DESKTOP_QUERY).matches;
+  }
+
+  function textOf(node) {
+    if (!node) {
+      return "";
+    }
+    return String(node.value || node.textContent || node.getAttribute("aria-label") || "").trim();
+  }
+
+  function commandInput() {
+    return document.querySelector(".dw-command-input-056y, .command-pill-input, input[aria-controls='forge-command-results-060m']");
+  }
+
+  function commandRoot(input) {
+    if (!input) {
+      return null;
+    }
+    return input.closest(".dw-command-zone-056y, .dw-command-shell-056y, .dw-command-card-056y, .command-shell") || input.parentElement;
+  }
+
+  function restoreNode(node) {
+    if (!node) {
+      return;
+    }
+    node.removeAttribute("data-forge-command-static-suggestion-060u");
+    node.removeAttribute("data-forge-command-hidden-secondary-060v");
+    node.removeAttribute("aria-hidden");
+  }
+
+  function hideNode(node) {
+    if (!node) {
+      return;
+    }
+    node.setAttribute("data-forge-command-hidden-secondary-060v", "true");
+    node.setAttribute("aria-hidden", "true");
+  }
+
+  function looksLikeSecondaryCommandBlock(node, input, root) {
+    if (!node || node === input || node.contains(input)) {
+      return false;
+    }
+    if (node.closest("[data-forge-command-results-panel-060s='true']")) {
+      return false;
+    }
+    var content = textOf(node).toLowerCase();
+    if (!content) {
+      return false;
+    }
+    if (content.indexOf("preview seguro") !== -1 || content.indexOf("abre workspace") !== -1) {
+      return true;
+    }
+    if (content.indexOf("/cotizar") !== -1 || content.indexOf("/follow") !== -1 || content.indexOf("/llamar") !== -1 || content.indexOf("/buscar") !== -1 || content.indexOf("/mandar") !== -1 || content.indexOf("/subir") !== -1) {
+      return true;
+    }
+    return false;
+  }
+
+  function repairCommandBar() {
+    if (!isDesktop()) {
+      return;
+    }
+
+    var input = commandInput();
+    var root = commandRoot(input);
+    if (!input || !root) {
+      return;
+    }
+
+    restoreNode(input);
+    restoreNode(root);
+    restoreNode(root.closest(".dw-command-zone-056y"));
+    restoreNode(root.closest(".dw-command-shell-056y"));
+    restoreNode(root.closest(".dw-command-card-056y"));
+
+    input.removeAttribute("aria-readonly");
+    input.removeAttribute("tabindex");
+    input.setAttribute("inputmode", "text");
+    input.setAttribute("autocomplete", "off");
+    if ("readOnly" in input) {
+      input.readOnly = false;
+    }
+
+    var inputRow = input.closest(".dw-command-row-056y, .dw-command-input-row-056y, .command-input-row") || input.parentElement;
+    if (inputRow) {
+      restoreNode(inputRow);
+      inputRow.setAttribute("data-forge-command-input-row-060v", "true");
+    }
+
+    Array.prototype.slice.call(root.querySelectorAll("[data-forge-command-static-suggestion-060u='true']")).forEach(function (node) {
+      restoreNode(node);
+    });
+
+    var secondarySelectors = [
+      ".dw-command-suggestions-058e",
+      ".dw-command-suggestions-056y",
+      ".command-suggestions",
+      ".dw-decision-strip-058e"
+    ];
+    Array.prototype.slice.call(root.querySelectorAll(secondarySelectors.join(","))).forEach(function (node) {
+      if (!node.contains(input)) {
+        hideNode(node);
+      }
+    });
+
+    Array.prototype.slice.call(root.querySelectorAll("div, section, article, ul, li, button")).forEach(function (node) {
+      if (!looksLikeSecondaryCommandBlock(node, input, root)) {
+        return;
+      }
+      var shell = node.closest(".dw-command-zone-056y, .dw-command-shell-056y, .dw-command-card-056y");
+      if (shell && shell.contains(input) && shell === node) {
+        return;
+      }
+      hideNode(node);
+    });
+
+    document.documentElement.setAttribute("data-forge-command-input-restored-060v", "true");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", repairCommandBar, { once: true });
+  } else {
+    repairCommandBar();
+  }
+  window.addEventListener("load", repairCommandBar);
+  window.addEventListener("forge:local-read-model-source:060i", repairCommandBar);
+  window.__forgeRunCommandBarRestoreInputRepair060V = repairCommandBar;
+})();
+/* FORGEOS:COMMAND_BAR_RESTORE_INPUT_REPAIR_060V:END */

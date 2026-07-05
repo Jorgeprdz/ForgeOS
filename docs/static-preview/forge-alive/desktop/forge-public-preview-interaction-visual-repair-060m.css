@@ -245,3 +245,63 @@
   }
 }
 /* FORGEOS:COMMAND_BAR_INPUT_ONLY_CLEANUP_060U:END */
+
+/* FORGEOS:COMMAND_BAR_RESTORE_INPUT_REPAIR_060V:START */
+@media (min-width: 901px) {
+  .dw-command-zone-056y,
+  .dw-command-shell-056y,
+  .dw-command-card-056y,
+  .dw-command-zone-056y[data-forge-command-static-suggestion-060u="true"],
+  .dw-command-shell-056y[data-forge-command-static-suggestion-060u="true"],
+  .dw-command-card-056y[data-forge-command-static-suggestion-060u="true"] {
+    display: block !important;
+    height: auto !important;
+    min-height: unset !important;
+    max-height: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .dw-command-input-056y,
+  .command-pill-input,
+  input[aria-controls="forge-command-results-060m"],
+  .dw-command-input-056y[data-forge-command-static-suggestion-060u="true"],
+  .command-pill-input[data-forge-command-static-suggestion-060u="true"] {
+    display: inline-flex !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 44px !important;
+    max-height: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  [data-forge-command-hidden-secondary-060v="true"],
+  .dw-command-zone-056y [data-forge-command-hidden-secondary-060v="true"],
+  .dw-command-shell-056y [data-forge-command-hidden-secondary-060v="true"],
+  .dw-command-card-056y [data-forge-command-hidden-secondary-060v="true"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  [data-forge-command-input-row-060v="true"] {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+}
+/* FORGEOS:COMMAND_BAR_RESTORE_INPUT_REPAIR_060V:END */
