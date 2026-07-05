@@ -495,3 +495,380 @@
   }
 }
 /* FORGEOS:PROFILE_MENU_COPY_AND_SPACING_POLISH_061B:END */
+
+/* FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:START */
+@media (min-width: 901px) {
+  .dw-main-056y {
+    row-gap: 12px !important;
+  }
+
+  .dw-heading-056y {
+    margin-bottom: -2px !important;
+  }
+
+  .dw-heading-056y h1 {
+    letter-spacing: 0 !important;
+  }
+
+  .dw-heading-056y p {
+    color: rgba(226, 232, 240, 0.58) !important;
+  }
+
+  .dw-heading-056y .dw-lock-note-056y {
+    align-self: center !important;
+    min-height: 26px !important;
+    padding: 0 10px !important;
+    border: 1px solid rgba(139, 232, 255, 0.13) !important;
+    border-radius: 999px !important;
+    background: rgba(139, 232, 255, 0.055) !important;
+    color: rgba(226, 232, 240, 0.58) !important;
+    font-size: 11px !important;
+    font-weight: 760 !important;
+    letter-spacing: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  .dw-command-zone-056y {
+    margin-bottom: -2px !important;
+    z-index: 70 !important;
+  }
+
+  .dw-command-shell-056y {
+    border-radius: 18px !important;
+    border-color: rgba(139, 232, 255, 0.24) !important;
+    background:
+      linear-gradient(135deg, rgba(9, 21, 36, 0.96), rgba(7, 18, 31, 0.91)),
+      radial-gradient(circle at 6% 12%, rgba(246, 214, 116, 0.12), transparent 34%) !important;
+    box-shadow:
+      0 18px 46px rgba(0, 0, 0, 0.28),
+      0 0 0 1px rgba(255, 255, 255, 0.035),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .dw-command-shell-056y:focus-within {
+    border-color: rgba(246, 214, 116, 0.34) !important;
+    box-shadow:
+      0 20px 52px rgba(0, 0, 0, 0.32),
+      0 0 0 1px rgba(246, 214, 116, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09) !important;
+  }
+
+  .dw-command-row-056y {
+    grid-template-columns: 32px minmax(0, 1fr) auto !important;
+    min-height: 50px !important;
+    padding: 7px 9px 7px 11px !important;
+    gap: 9px !important;
+  }
+
+  .dw-command-row-056y input,
+  .dw-command-input-056y {
+    min-height: 38px !important;
+    font-size: 14.5px !important;
+    font-weight: 720 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .dw-command-row-056y input::placeholder,
+  .dw-command-input-056y::placeholder {
+    color: rgba(232, 239, 249, 0.72) !important;
+    font-weight: 760 !important;
+  }
+
+  .dw-command-submit-056y {
+    min-width: 0 !important;
+    height: 34px !important;
+    padding: 0 13px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 8px 22px rgba(246, 214, 116, 0.12) !important;
+    font-size: 11.5px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .dw-command-preview-058e {
+    display: none !important;
+  }
+
+  .dw-command-results-056y,
+  [data-forge-command-results-panel-060s="true"] {
+    top: var(--forge-command-overlay-top-060s, 62px) !important;
+    left: var(--forge-command-overlay-left-060s, 12px) !important;
+    right: var(--forge-command-overlay-right-060s, 12px) !important;
+    max-height: min(360px, calc(100vh - var(--forge-command-overlay-top-060s, 62px) - 78px)) !important;
+    padding: 8px !important;
+    border-radius: 18px !important;
+    border-color: rgba(139, 232, 255, 0.2) !important;
+    background:
+      linear-gradient(180deg, rgba(8, 20, 34, 0.985), rgba(4, 11, 21, 0.975)) !important;
+    box-shadow:
+      0 30px 84px rgba(0, 0, 0, 0.52),
+      0 0 0 1px rgba(139, 232, 255, 0.055),
+      inset 0 1px 0 rgba(255, 255, 255, 0.075) !important;
+  }
+
+  .dw-command-results-056y button {
+    min-height: 46px !important;
+    padding: 9px 11px !important;
+    border-radius: 13px !important;
+  }
+
+  .dw-command-results-056y span,
+  .dw-command-results-056y strong,
+  .dw-command-results-056y small {
+    letter-spacing: 0 !important;
+  }
+
+  .dw-command-results-056y small {
+    color: rgba(226, 232, 240, 0.5) !important;
+  }
+
+  .dw-decision-strip-058e {
+    grid-template-columns: 34px minmax(0, 1fr) auto !important;
+    gap: 12px !important;
+    min-height: 78px !important;
+    margin-top: 0 !important;
+    padding: 12px 14px !important;
+    border-radius: 18px !important;
+    border-color: rgba(246, 214, 116, 0.2) !important;
+    background:
+      linear-gradient(135deg, rgba(10, 23, 38, 0.92), rgba(8, 22, 35, 0.82)),
+      radial-gradient(circle at 5% 48%, rgba(246, 214, 116, 0.12), transparent 28%) !important;
+    box-shadow:
+      0 14px 38px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .dw-decision-strip-058e::before {
+    opacity: 0.24 !important;
+    filter: blur(18px) !important;
+  }
+
+  .dw-decision-strip-058e span:not(.forge-alfred-mark) {
+    color: rgba(246, 214, 116, 0.82) !important;
+    font-size: 9.5px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .dw-decision-strip-058e strong {
+    margin-top: 1px !important;
+    font-size: 15px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .dw-decision-strip-058e p {
+    max-width: 620px !important;
+    margin-top: 2px !important;
+    color: rgba(226, 232, 240, 0.56) !important;
+    font-size: 11.5px !important;
+    line-height: 1.3 !important;
+  }
+
+  .dw-decision-strip-058e button {
+    min-height: 34px !important;
+    padding: 0 13px !important;
+    font-size: 11.5px !important;
+    letter-spacing: 0 !important;
+    box-shadow: 0 8px 22px rgba(246, 214, 116, 0.12) !important;
+  }
+
+  .dw-kpi-strip-056y {
+    gap: 10px !important;
+    margin-top: -2px !important;
+  }
+
+  .dw-kpi-056y {
+    min-height: 76px !important;
+    padding: 11px 12px !important;
+    border-radius: 15px !important;
+  }
+
+  .dw-kpi-056y span,
+  .dw-kpi-056y strong,
+  .dw-kpi-056y p {
+    letter-spacing: 0 !important;
+  }
+
+  .dw-kpi-056y span {
+    color: rgba(226, 232, 240, 0.58) !important;
+    font-size: 10.5px !important;
+  }
+
+  .dw-kpi-056y strong {
+    margin-top: 5px !important;
+    font-size: clamp(22px, 1.75vw, 27px) !important;
+  }
+
+  .dw-kpi-056y p {
+    margin-top: 4px !important;
+    color: rgba(226, 232, 240, 0.5) !important;
+    font-size: 10.5px !important;
+  }
+
+  .dw-sparkline-058e,
+  .dw-risk-trend-058e,
+  .dw-activity-dots-058e {
+    height: 12px !important;
+    margin-top: 6px !important;
+    opacity: 0.82 !important;
+  }
+
+  .forge-profile-menu-060y {
+    width: 286px !important;
+    top: calc(var(--forge-profile-menu-top-060y, 86px) + 14px) !important;
+    right: max(var(--forge-profile-menu-right-060y, 34px), 28px) !important;
+    padding: 13px !important;
+    border-radius: 17px !important;
+    border-color: rgba(139, 232, 255, 0.28) !important;
+    background:
+      linear-gradient(180deg, rgba(10, 24, 38, 0.985), rgba(5, 13, 23, 0.97)) !important;
+    box-shadow:
+      0 36px 96px rgba(0, 0, 0, 0.58),
+      0 0 0 1px rgba(139, 232, 255, 0.075),
+      0 0 48px rgba(139, 232, 255, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .forge-profile-menu-060y::before {
+    top: -8px !important;
+    right: 20px !important;
+    background: rgba(10, 24, 38, 0.985) !important;
+  }
+
+  .forge-profile-menu-060y__head {
+    grid-template-columns: 42px 1fr !important;
+    padding: 3px 3px 12px !important;
+  }
+
+  .forge-profile-menu-060y__avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .forge-profile-menu-060y__name,
+  .forge-profile-menu-060y__role,
+  .forge-profile-menu-060y__status,
+  .forge-profile-menu-060y__action {
+    letter-spacing: 0 !important;
+  }
+
+  .forge-profile-menu-060y__actions {
+    gap: 6px !important;
+    padding-top: 9px !important;
+  }
+
+  .forge-profile-menu-060y__action {
+    min-height: 38px !important;
+    padding: 9px 10px !important;
+    border-radius: 11px !important;
+    background: rgba(255, 255, 255, 0.035) !important;
+  }
+
+  .forge-profile-menu-060y__status {
+    padding-top: 7px !important;
+    color: rgba(226, 232, 240, 0.54) !important;
+  }
+
+  .dw-rail-056y {
+    row-gap: 12px !important;
+  }
+
+  .dw-alfred-card-056y {
+    border-color: rgba(139, 232, 255, 0.12) !important;
+  }
+
+  .dw-alfred-card-056y h3,
+  .dw-alfred-card-056y p,
+  .dw-alfred-card-056y li {
+    letter-spacing: 0 !important;
+  }
+
+  .dw-grid-056y {
+    gap: 12px !important;
+  }
+
+  .dw-panel-header-056y {
+    min-height: 44px !important;
+    padding: 0 13px !important;
+  }
+
+  .dw-panel-header-056y h2,
+  .dw-panel-header-056y span {
+    letter-spacing: 0 !important;
+  }
+
+  .dw-table-056y {
+    font-size: 11.5px !important;
+  }
+
+  .dw-table-056y th,
+  .dw-table-056y td {
+    padding: 9px 10px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .dw-inline-actions-056y {
+    gap: 5px !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .dw-inline-action-056y {
+    min-height: 27px !important;
+    min-width: 58px !important;
+    padding: 0 9px !important;
+    border-radius: 9px !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .dw-chip-056y {
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .dw-table-foot-056y {
+    color: rgba(226, 232, 240, 0.48) !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1440px) {
+  .dw-decision-strip-058e {
+    grid-template-columns: 32px minmax(0, 1fr) auto !important;
+    min-height: 74px !important;
+  }
+
+  .dw-decision-strip-058e p {
+    max-width: 500px !important;
+  }
+
+  .dw-command-submit-056y,
+  .dw-decision-strip-058e button {
+    padding: 0 11px !important;
+  }
+
+  .forge-profile-menu-060y {
+    width: 274px !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .dw-main-056y {
+    row-gap: 14px !important;
+  }
+
+  .dw-command-zone-056y {
+    max-width: 100% !important;
+  }
+
+  .dw-decision-strip-058e p {
+    max-width: 720px !important;
+  }
+
+  .forge-profile-menu-060y {
+    right: calc(var(--forge-profile-menu-right-060y, 34px) + 8px) !important;
+  }
+}
+/* FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:END */

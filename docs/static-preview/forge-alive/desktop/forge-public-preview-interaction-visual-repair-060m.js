@@ -1220,3 +1220,30 @@
   window.__forgePolishProfileMenuCopyAndSpacing061B = polishProfileMenuCopy;
 })();
 /* FORGEOS:PROFILE_MENU_COPY_AND_SPACING_POLISH_061B:END */
+
+/* FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:START */
+(function () {
+  "use strict";
+
+  var DESKTOP_QUERY = "(min-width: 901px)";
+
+  function isDesktop() {
+    return !window.matchMedia || window.matchMedia(DESKTOP_QUERY).matches;
+  }
+
+  function markPremiumPolishReady() {
+    if (!isDesktop()) {
+      return;
+    }
+    document.documentElement.setAttribute("data-forge-premium-final-polish-061e", "true");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", markPremiumPolishReady, { once: true });
+  } else {
+    markPremiumPolishReady();
+  }
+  window.addEventListener("load", markPremiumPolishReady);
+  window.__forgeMarkPremiumFinalPolish061E = markPremiumPolishReady;
+})();
+/* FORGEOS:PREMIUM_FINAL_POLISH_IMPLEMENTATION_061E:END */
