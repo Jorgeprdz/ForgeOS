@@ -327,3 +327,114 @@
   }
 }
 /* FORGEOS:COMMAND_BAR_QUICK_ACTIONS_PLACEHOLDER_060X:END */
+
+/* FORGEOS:PROFILE_MENU_PREP_SIDEBAR_IDENTITY_REPAIR_060Y:START */
+@media (min-width: 901px) {
+  [data-forge-sidebar-profile-footer-060y="true"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  [data-forge-profile-anchor-060y="true"] {
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 80 !important;
+    outline: 0 !important;
+  }
+
+  [data-forge-profile-anchor-060y="true"]:focus-visible {
+    box-shadow: 0 0 0 3px rgba(139, 232, 255, 0.28) !important;
+  }
+
+  .forge-profile-menu-060y {
+    position: fixed;
+    top: var(--forge-profile-menu-top-060y, 86px);
+    right: var(--forge-profile-menu-right-060y, 34px);
+    width: 274px;
+    padding: 12px;
+    border: 1px solid rgba(139, 232, 255, 0.18);
+    border-radius: 18px;
+    background: rgba(7, 16, 27, 0.94);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: rgba(246, 249, 255, 0.96);
+    z-index: 120;
+    backdrop-filter: blur(18px);
+  }
+
+  .forge-profile-menu-060y[hidden] {
+    display: none !important;
+  }
+
+  .forge-profile-menu-060y__head {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 4px 4px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .forge-profile-menu-060y__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    color: #121621;
+    background: var(--forge-google-profile-image-060y, linear-gradient(135deg, #fff2a8, #6ee7f9));
+    overflow: hidden;
+  }
+
+  .forge-profile-menu-060y__name {
+    font-weight: 850;
+    font-size: 14px;
+    line-height: 1.15;
+  }
+
+  .forge-profile-menu-060y__role,
+  .forge-profile-menu-060y__status {
+    color: rgba(220, 230, 244, 0.68);
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .forge-profile-menu-060y__actions {
+    display: grid;
+    gap: 6px;
+    padding-top: 10px;
+  }
+
+  .forge-profile-menu-060y__action {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px 11px;
+    background: rgba(255, 255, 255, 0.045);
+    color: rgba(246, 249, 255, 0.92);
+    text-align: left;
+    font: inherit;
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .forge-profile-menu-060y__action:hover,
+  .forge-profile-menu-060y__action:focus-visible {
+    background: rgba(139, 232, 255, 0.12);
+    border-color: rgba(139, 232, 255, 0.22);
+    outline: 0;
+  }
+
+  .forge-profile-menu-060y__status {
+    min-height: 18px;
+    padding: 8px 4px 2px;
+  }
+}
+/* FORGEOS:PROFILE_MENU_PREP_SIDEBAR_IDENTITY_REPAIR_060Y:END */

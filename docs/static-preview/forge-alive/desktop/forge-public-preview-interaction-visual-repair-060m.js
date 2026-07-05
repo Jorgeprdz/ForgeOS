@@ -874,3 +874,218 @@
   window.__forgeApplyCommandBarQuickActionsPlaceholder060X = applyPlaceholder;
 })();
 /* FORGEOS:COMMAND_BAR_QUICK_ACTIONS_PLACEHOLDER_060X:END */
+
+/* FORGEOS:PROFILE_MENU_PREP_SIDEBAR_IDENTITY_REPAIR_060Y:START */
+(function () {
+  "use strict";
+
+  var MENU_ID = "forge-profile-menu-060y";
+
+  function textOf(node) {
+    if (!node) {
+      return "";
+    }
+    return String(node.textContent || node.value || node.getAttribute("aria-label") || "").trim();
+  }
+
+  function visibleRect(node) {
+    if (!node || typeof node.getBoundingClientRect !== "function") {
+      return null;
+    }
+    var rect = node.getBoundingClientRect();
+    if (!rect || rect.width <= 0 || rect.height <= 0) {
+      return null;
+    }
+    return rect;
+  }
+
+  function findProfileAnchor() {
+    var existing = document.querySelector("[data-forge-profile-anchor-060y='true']");
+    if (existing) {
+      return existing;
+    }
+    var nodes = Array.prototype.slice.call(document.querySelectorAll("button, [role='button'], a, div, span"));
+    var matches = nodes.filter(function (node) {
+      var rect = visibleRect(node);
+      var text = textOf(node);
+      if (!rect || text !== "J") {
+        return false;
+      }
+      return rect.top < 170 && rect.left > Math.max(640, window.innerWidth * 0.68) && rect.width >= 34 && rect.width <= 78 && rect.height >= 34 && rect.height <= 78;
+    });
+    matches.sort(function (a, b) {
+      var ar = visibleRect(a);
+      var br = visibleRect(b);
+      return (br.left + br.top) - (ar.left + ar.top);
+    });
+    return matches[0] || null;
+  }
+
+  function hideSidebarIdentity() {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll("aside *, nav *, [class*='side'] *, [class*='rail'] *"));
+    var candidates = nodes.filter(function (node) {
+      var text = textOf(node);
+      if (text.indexOf("Jorge") === -1 || text.indexOf("Asesor financiero") === -1) {
+        return false;
+      }
+      var rect = visibleRect(node);
+      return rect && rect.left < 360 && rect.top > 260 && rect.width < 340 && rect.height < 180;
+    });
+    candidates.sort(function (a, b) {
+      var ar = visibleRect(a);
+      var br = visibleRect(b);
+      return (ar.width * ar.height) - (br.width * br.height);
+    });
+    var target = candidates[0];
+    if (target && !target.closest("#" + MENU_ID)) {
+      target.setAttribute("data-forge-sidebar-profile-footer-060y", "true");
+      target.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  function profileMenu() {
+    var menu = document.getElementById(MENU_ID);
+    if (menu) {
+      return menu;
+    }
+    menu = document.createElement("div");
+    menu.id = MENU_ID;
+    menu.className = "forge-profile-menu-060y";
+    menu.hidden = true;
+    menu.setAttribute("role", "menu");
+    menu.setAttribute("aria-label", "Menu de perfil");
+    menu.innerHTML =
+      '<div class="forge-profile-menu-060y__head">' +
+        '<div class="forge-profile-menu-060y__avatar" data-forge-google-profile-ready-060y="true">J</div>' +
+        '<div>' +
+          '<div class="forge-profile-menu-060y__name">Jorge Fernandez</div>' +
+          '<div class="forge-profile-menu-060y__role">Asesor financiero</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="forge-profile-menu-060y__actions">' +
+        '<button class="forge-profile-menu-060y__action" type="button" role="menuitem" data-forge-profile-action-060y="theme">Cambiar tema</button>' +
+        '<button class="forge-profile-menu-060y__action" type="button" role="menuitem" data-forge-profile-action-060y="options">Opciones</button>' +
+        '<button class="forge-profile-menu-060y__action" type="button" role="menuitem" data-forge-profile-action-060y="logout">Cerrar sesion</button>' +
+      '</div>' +
+      '<div class="forge-profile-menu-060y__status" aria-live="polite">Vista estatica segura</div>';
+    document.body.appendChild(menu);
+    return menu;
+  }
+
+  function placeMenu(anchor, menu) {
+    var rect = visibleRect(anchor);
+    if (!rect) {
+      return;
+    }
+    var right = Math.max(18, Math.round(window.innerWidth - rect.right));
+    var top = Math.round(rect.bottom + 12);
+    menu.style.setProperty("--forge-profile-menu-right-060y", right + "px");
+    menu.style.setProperty("--forge-profile-menu-top-060y", top + "px");
+  }
+
+  function setStatus(menu, text) {
+    var status = menu.querySelector(".forge-profile-menu-060y__status");
+    if (status) {
+      status.textContent = text;
+    }
+  }
+
+  function bindMenu(anchor, menu) {
+    if (anchor.getAttribute("data-forge-profile-bound-060y") === "true") {
+      return;
+    }
+    anchor.setAttribute("data-forge-profile-bound-060y", "true");
+    anchor.setAttribute("data-forge-profile-anchor-060y", "true");
+    anchor.setAttribute("role", "button");
+    anchor.setAttribute("tabindex", "0");
+    anchor.setAttribute("aria-haspopup", "menu");
+    anchor.setAttribute("aria-expanded", "false");
+    anchor.setAttribute("aria-controls", MENU_ID);
+    anchor.setAttribute("title", "Perfil y opciones");
+
+    function openMenu() {
+      placeMenu(anchor, menu);
+      menu.hidden = false;
+      anchor.setAttribute("aria-expanded", "true");
+    }
+
+    function closeMenu() {
+      menu.hidden = true;
+      anchor.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleMenu(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      if (menu.hidden) {
+        openMenu();
+      } else {
+        closeMenu();
+      }
+    }
+
+    anchor.addEventListener("click", toggleMenu);
+    anchor.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        toggleMenu(event);
+      }
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+    document.addEventListener("click", function (event) {
+      if (menu.hidden) {
+        return;
+      }
+      if (event.target === anchor || anchor.contains(event.target) || menu.contains(event.target)) {
+        return;
+      }
+      closeMenu();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+    window.addEventListener("resize", function () {
+      if (!menu.hidden) {
+        placeMenu(anchor, menu);
+      }
+    });
+
+    Array.prototype.slice.call(menu.querySelectorAll("[data-forge-profile-action-060y]")).forEach(function (button) {
+      button.addEventListener("click", function () {
+        var action = button.getAttribute("data-forge-profile-action-060y");
+        if (action === "theme") {
+          setStatus(menu, "Cambio de tema preparado en preview.");
+        } else if (action === "options") {
+          setStatus(menu, "Opciones preparadas para cuenta.");
+        } else if (action === "logout") {
+          setStatus(menu, "Cerrar sesion requiere autenticacion real.");
+        }
+      });
+    });
+  }
+
+  function runProfileRepair() {
+    hideSidebarIdentity();
+    var anchor = findProfileAnchor();
+    if (!anchor) {
+      return;
+    }
+    var menu = profileMenu();
+    bindMenu(anchor, menu);
+    document.documentElement.setAttribute("data-forge-profile-menu-ready-060y", "true");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runProfileRepair, { once: true });
+  } else {
+    runProfileRepair();
+  }
+  window.addEventListener("load", runProfileRepair);
+  window.__forgeRunProfileMenuPrepSidebarIdentityRepair060Y = runProfileRepair;
+})();
+/* FORGEOS:PROFILE_MENU_PREP_SIDEBAR_IDENTITY_REPAIR_060Y:END */
