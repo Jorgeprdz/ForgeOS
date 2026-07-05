@@ -5219,3 +5219,34 @@ DECISION=PASS_060M_PUBLIC_PREVIEW_INTERACTION_VISUAL_REPAIR_IMPLEMENTATION
 
 NEXT=060N_PUBLIC_PREVIEW_INTERACTION_VISUAL_REPAIR_QA_LOCK
 <!-- FORGEOS:PUBLIC_PREVIEW_INTERACTION_VISUAL_REPAIR_IMPLEMENTATION_060M:END -->
+
+<!-- FORGEOS:COMMAND_BAR_SEARCH_QA_LOCK_060R:START -->
+## 060R Command Bar Search QA Lock
+
+Status: PASS / LOCKED
+
+060R locks QA evidence for the Forge Alive command bar search behavior after 060Q.
+
+Accepted behavior:
+
+- command bar cache version `060q`
+- editable command input
+- Spotlight-style floating results panel
+- no results panel on empty input
+- no visible input focus rectangle
+- no static suggestion overlap while results are active
+- static preview only
+
+Evidence:
+
+- `docs/evidence/forge-command-bar-search-qa-audit-060r.json`
+- `docs/evidence/FORGE_COMMAND_BAR_SEARCH_QA_LOCK_060R.md`
+- `docs/evidence/FORGE_COMMAND_BAR_SEARCH_QA_LOCK_CERTIFICATE_060R.md`
+- `docs/architecture/source-truth/FORGE_COMMAND_BAR_SEARCH_QA_LOCK_CLOSURE_060R.md`
+
+Boundary remains static preview only: no provider runtime, no CRM write, no calendar create, no send, no browser storage, no network calls, and no real engine execution.
+
+DECISION=PASS_060R_COMMAND_BAR_SEARCH_QA_LOCK
+
+NEXT=061A_NEXT_FORGE_ALIVE_SCOPE
+<!-- FORGEOS:COMMAND_BAR_SEARCH_QA_LOCK_060R:END -->

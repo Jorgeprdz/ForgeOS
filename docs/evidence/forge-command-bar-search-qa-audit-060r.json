@@ -1,0 +1,70 @@
+{
+  "phase": "060R_COMMAND_BAR_SEARCH_QA_LOCK",
+  "status": "PASS",
+  "date": "2026-07-05",
+  "repo_head_before_qa_lock": "2a9bac8",
+  "public_preview_url": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=060q",
+  "verified_static_preview_files": [
+    "docs/static-preview/forge-alive/index.html",
+    "docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js",
+    "docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.css",
+    "docs/static-preview/forge-alive/desktop/forge-desktop-visual-line-cleanup-058i.css"
+  ],
+  "cache_version": {
+    "command_bar_interaction_layer": "060q",
+    "desktop_focus_cleanup_layer": "058i2"
+  },
+  "qa_checks": [
+    {
+      "check": "index.html loads the 060q command interaction layer",
+      "result": "PASS",
+      "evidence": "index.html references forge-public-preview-interaction-visual-repair-060m.css?v=060q and forge-public-preview-interaction-visual-repair-060m.js?v=060q"
+    },
+    {
+      "check": "command bar is clickable and editable",
+      "result": "PASS",
+      "evidence": "input is type=text with inputmode=text and autocomplete=off; repair layer removes aria-readonly/tabindex locks and sets readOnly=false"
+    },
+    {
+      "check": "results panel is floating and not permanently attached to layout",
+      "result": "PASS",
+      "evidence": "dw-command-results-056y is absolute positioned under the command shell and controlled by hidden/is-command-active-060m state"
+    },
+    {
+      "check": "no results panel when input is empty",
+      "result": "PASS",
+      "evidence": "updateResults hides results when !input.value.trim()"
+    },
+    {
+      "check": "no focus rectangle around the command input",
+      "result": "PASS",
+      "evidence": "command input focus and focus-visible states set transparent background, transparent border, box-shadow none, and outline 0"
+    },
+    {
+      "check": "static suggestions do not overlap the active results panel",
+      "result": "PASS",
+      "evidence": "dw-command-zone-056y.is-command-active-060m hides dw-command-suggestions-058e with opacity 0, pointer-events none, and visibility hidden"
+    },
+    {
+      "check": "no real actions are enabled",
+      "result": "PASS",
+      "evidence": "static preview remains preview-only; no CRM write, no calendar create, no message delivery, no provider runtime, no browser storage, and no network calls were introduced"
+    }
+  ],
+  "validation_commands": [
+    {
+      "command": "node --check docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    },
+    {
+      "command": "rg prohibited runtime/storage/network/action tokens against verified static preview files",
+      "result": "PASS_NO_MATCHES"
+    }
+  ],
+  "decision": "PASS_060R_COMMAND_BAR_SEARCH_QA_LOCK",
+  "next": "061A_NEXT_FORGE_ALIVE_SCOPE"
+}
