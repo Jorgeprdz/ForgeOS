@@ -2518,3 +2518,24 @@ DECISION=PASS_062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
 
 NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
 <!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:END -->
+
+<!-- FORGEOS:PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4:START -->
+## 062F4 Public Pages Command Contract QA Lock
+
+062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY: PASS / PUBLIC PAGES QA LOCKED.
+
+GitHub Pages now serves the validated `?v=062f3c` command contract binding. Mobile command payloads work publicly, and tablet/desktop command behavior remains stable.
+
+No cache-bust-only commit or deploy nudge was required.
+
+Evidence:
+
+- `docs/evidence/forge-public-pages-command-contract-qa-audit-062f4.json`
+- `docs/evidence/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4.md`
+- `docs/evidence/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_CERTIFICATE_062F4.md`
+- `docs/architecture/source-truth/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_CLOSURE_062F4.md`
+
+DECISION=PASS_062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
+
+NEXT=062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK
+<!-- FORGEOS:PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4:END -->

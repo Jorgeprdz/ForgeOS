@@ -5893,3 +5893,37 @@ DECISION=PASS_062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
 
 NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
 <!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:END -->
+
+<!-- FORGEOS:PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4:START -->
+## 062F4 Public Pages Command Contract QA Lock
+
+Status: PASS / PUBLIC PAGES QA LOCKED.
+
+062F4 confirms GitHub Pages deploy sync after local desktop/mobile QA passed.
+
+Public URL:
+`https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=062f3c`
+
+Confirmed:
+
+- public HTML serves `?v=062f3c` CSS/JS;
+- stale `?v=062e` assets were not observed for the validated URL;
+- public JS contains `MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C`;
+- mobile command contract payloads work publicly;
+- tablet/desktop command contracts remain stable publicly.
+
+Boundary:
+
+Public QA/deploy sync evidence only. No UI behavior mutation, CRM write, calendar creation, message delivery, auth behavior, runtime/storage, provider execution, or real engine behavior was performed.
+
+Evidence:
+
+- `docs/evidence/forge-public-pages-command-contract-qa-audit-062f4.json`
+- `docs/evidence/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4.md`
+- `docs/evidence/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_CERTIFICATE_062F4.md`
+- `docs/architecture/source-truth/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_CLOSURE_062F4.md`
+
+DECISION=PASS_062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
+
+NEXT=062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK
+<!-- FORGEOS:PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4:END -->

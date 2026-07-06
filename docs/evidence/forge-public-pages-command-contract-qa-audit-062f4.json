@@ -1,0 +1,108 @@
+{
+  "phase": "062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY",
+  "mode": "public Pages deploy sync retry after local desktop/mobile QA pass",
+  "boundary": "public QA/deploy sync evidence only; no UI behavior mutation unless cache-bust-only is required; no CRM; no calendar; no send; no auth; no runtime/storage; no provider execution; no real engine execution",
+  "publicUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=062f3c",
+  "publicJsUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js?v=062f3c",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "publicHtmlUses062f3c",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "publicJsHas062F3CMarker",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "publicJsHasPayloadEvent",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "pageRuntimeUrl062f3c",
+      "passed": true,
+      "detail": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=062f3c"
+    },
+    {
+      "name": "mobileBindingPresent",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "mobileQuickActionsVisible",
+      "passed": true,
+      "detail": "/quick actions\nLista acciones preview-safe disponibles para este workspace.\nPREVIEW ONLY\nPreparar preview\nConstruye un resumen revisable sin ejecutar efectos reales.\nAPPROVAL\nRevis"
+    },
+    {
+      "name": "mobileQuickActionsLegible",
+      "passed": true,
+      "detail": "{'height': 330, 'text': '/quick actions\\nLista acciones preview-safe disponibles para este workspace.\\nPREVIEW ONLY\\nPreparar preview\\nConstruye un resumen revisable sin ejecutar efectos reales.\\nAPPROVAL\\nRevisar Lariza\\nAbre detalle local de oportunidad y riesgo.\\nPREVIEW ONLY\\n/follow Juan\\nPrepara seguimiento con aprobacion humana requerida.\\nAPPROVAL\\n/cotizar GMM Lariza\\nPrepara workspace de cotizacion sin emitir documentos.\\nAPPROVAL\\nAbrir Octavio\\nAbre detalle local del registro en modo preview.\\nPREVIEW ONLY', 'visible': True, 'width': 380}"
+    },
+    {
+      "name": "mobileCotizarPayloadVisible",
+      "passed": true,
+      "detail": "quote.prepare_preview / quote.prepare_preview\nNEEDS APPROVAL\n\nPrepara workspace de cotizacion sin emitir documentos. Fuente: cotizaciones. Bloqueos: Requiere aprobacion human"
+    },
+    {
+      "name": "mobileFollowPayloadVisible",
+      "passed": true,
+      "detail": "client.follow_preview / client.follow_preview\nNEEDS APPROVAL\n\nPrepara seguimiento con aprobacion humana requerida. Fuente: clientes. Bloqueos: Requiere aprobacion humana ante"
+    },
+    {
+      "name": "mobileRevisarPayloadVisible",
+      "passed": true,
+      "detail": "opportunity.review / opportunity.review\nPREVIEW ONLY\n\nAbre detalle local de oportunidad y riesgo. Fuente: pipeline. Bloqueos: Disponible solo como preview seguro.. Policy:"
+    },
+    {
+      "name": "mobileAbrirPayloadVisible",
+      "passed": true,
+      "detail": "record.open_preview / record.open_preview\nPREVIEW ONLY\n\nAbre detalle local del registro en modo preview. Fuente: workspace. Bloqueos: Disponible solo como preview seguro.. "
+    },
+    {
+      "name": "mobileNoHorizontalOverflow",
+      "passed": true,
+      "detail": "[488, 500]"
+    },
+    {
+      "name": "noRealEffectsPayloadPolicy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "tabletQuickActionsVisibleLegible",
+      "passed": true,
+      "detail": "[1012, 1024]"
+    },
+    {
+      "name": "desktopQuickActionsVisibleLegible",
+      "passed": true,
+      "detail": "[1354, 1366]"
+    },
+    {
+      "name": "desktopCotizarPayloadVisible",
+      "passed": true,
+      "detail": "{'actionId': 'quote.prepare_preview', 'blockedReasons': ['Requiere aprobacion humana antes de cualquier efecto real.'], 'commandId': 'quote-lariza', 'modelName': 'forge.alive.workspace.read_model.v1', 'policy': {'externalEffectsAllowed': False, 'messageDeliveryAllowed': False, 'providerExecutionAllowed': False, 'recordMutationAllowed': False, 'scheduleMutationAllowed': False}, 'previewOnly': True, 'previewSummary': 'Prepara workspace de cotizacion sin emitir documentos.', 'realEffectsAllowed': False, 'requiresHumanApproval': True, 'sourceModule': 'cotizaciones', 'status': 'needs_approval', 'targetId': 'opp-lariza-gmm', 'targetType': 'opportunity'}"
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "docs/evidence/forge-pages-command-contract-062f4-mobile-quick-actions-390x844.png",
+    "docs/evidence/forge-pages-command-contract-062f4-mobile-cotizar-390x844.png",
+    "docs/evidence/forge-pages-command-contract-062f4-mobile-follow-390x844.png",
+    "docs/evidence/forge-pages-command-contract-062f4-mobile-revisar-390x844.png",
+    "docs/evidence/forge-pages-command-contract-062f4-mobile-abrir-390x844.png",
+    "docs/evidence/forge-pages-command-contract-062f4-tablet-quick-actions-1024x768.png",
+    "docs/evidence/forge-pages-command-contract-062f4-desktop-quick-actions-1366x768.png",
+    "docs/evidence/forge-pages-command-contract-062f4-desktop-cotizar-1366x768.png"
+  ],
+  "deploySync": {
+    "htmlHas062f3c": true,
+    "htmlHas062e": false,
+    "jsHasMarker": true
+  },
+  "decision": "PASS_062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY",
+  "next": "062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK"
+}
