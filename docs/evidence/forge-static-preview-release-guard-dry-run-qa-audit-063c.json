@@ -1,0 +1,165 @@
+{
+  "phase": "063C_STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_RETRY",
+  "mode": "dry-run QA retry for repaired static preview release guard",
+  "status": "PASS",
+  "cacheVersion": "062f3c",
+  "publicUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=062f3c",
+  "localUrl": "http://127.0.0.1:8080/docs/static-preview/forge-alive/?v=062f3c",
+  "nextPhase": "063D_STATIC_PREVIEW_RELEASE_GUARD_DECISION_LOCK",
+  "requiredMarkers": [
+    "MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C",
+    "QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1",
+    "ACTION_CONTRACT_READ_MODEL_PREVIEW_BINDING_062E"
+  ],
+  "requiredViewports": [
+    "mobile:390x844 tablet:1024x768 desktop:1366x768 desktop:1920x1080"
+  ],
+  "requiredCommandTests": [
+    "/quick actions | /cotizar GMM Lariza | Follow Juan | Revisar Lariza | Abrir Octavio | Preview"
+  ],
+  "base": {
+    "phase": "063B1_STATIC_PREVIEW_RELEASE_GUARD_MARKER_PARSING_REPAIR",
+    "commit": "bc14401 fix: parse release guard markers"
+  },
+  "retrySummary": {
+    "markerParsingRepairConfirmed": true,
+    "spaceSeparatedMarkersDetectedIndividually": true,
+    "cacheBustLocal": "PASS",
+    "cacheBustPublic": "PASS",
+    "localMarkers": "PASS",
+    "publicMarkers": "PASS",
+    "jsSyntax": "PASS",
+    "safetyScan": "PASS",
+    "manualChecklistPrinted": true,
+    "guardMutatedUi": false,
+    "guardCommittedOrPushedByItself": false
+  },
+  "checks": [
+    {
+      "status": "PASS",
+      "name": "PHASE",
+      "detail": "defined"
+    },
+    {
+      "status": "PASS",
+      "name": "CACHE_VERSION",
+      "detail": "defined"
+    },
+    {
+      "status": "PASS",
+      "name": "PUBLIC_URL",
+      "detail": "defined"
+    },
+    {
+      "status": "PASS",
+      "name": "LOCAL_URL",
+      "detail": "defined"
+    },
+    {
+      "status": "PASS",
+      "name": "NEXT_PHASE",
+      "detail": "defined"
+    },
+    {
+      "status": "PASS",
+      "name": "REQUIRED_MARKERS",
+      "detail": "MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1 ACTION_CONTRACT_READ_MODEL_PREVIEW_BINDING_062E"
+    },
+    {
+      "status": "PASS",
+      "name": "trackedWorktree",
+      "detail": "clean"
+    },
+    {
+      "status": "PASS",
+      "name": "indexFile",
+      "detail": "docs/static-preview/forge-alive/index.html"
+    },
+    {
+      "status": "PASS",
+      "name": "criticalAssetCache",
+      "detail": "all critical asset lines use 062f3c"
+    },
+    {
+      "status": "PASS",
+      "name": "marker:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C",
+      "detail": "found locally"
+    },
+    {
+      "status": "PASS",
+      "name": "marker:QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1",
+      "detail": "found locally"
+    },
+    {
+      "status": "PASS",
+      "name": "marker:ACTION_CONTRACT_READ_MODEL_PREVIEW_BINDING_062E",
+      "detail": "found locally"
+    },
+    {
+      "status": "PASS",
+      "name": "nodeCheck:docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js",
+      "detail": "ok"
+    },
+    {
+      "status": "PASS",
+      "name": "gitDiffCheck",
+      "detail": "ok"
+    },
+    {
+      "status": "PASS",
+      "name": "safetyScan",
+      "detail": "no prohibited tokens in scoped targets"
+    },
+    {
+      "status": "PASS",
+      "name": "publicHtmlCache",
+      "detail": "contains 062f3c"
+    },
+    {
+      "status": "PASS",
+      "name": "publicCriticalAssets",
+      "detail": "critical assets use 062f3c"
+    },
+    {
+      "status": "PASS",
+      "name": "publicAssetDownload",
+      "detail": "downloaded https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.css?v=062f3c"
+    },
+    {
+      "status": "PASS",
+      "name": "publicAssetDownload",
+      "detail": "downloaded https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.css?v=062f3c"
+    },
+    {
+      "status": "PASS",
+      "name": "publicAssetDownload",
+      "detail": "downloaded https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js?v=062f3c"
+    },
+    {
+      "status": "PASS",
+      "name": "publicMarker:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C",
+      "detail": "found in downloaded critical assets"
+    },
+    {
+      "status": "PASS",
+      "name": "publicMarker:QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1",
+      "detail": "found in downloaded critical assets"
+    },
+    {
+      "status": "PASS",
+      "name": "publicMarker:ACTION_CONTRACT_READ_MODEL_PREVIEW_BINDING_062E",
+      "detail": "found in downloaded critical assets"
+    },
+    {
+      "status": "PASS",
+      "name": "manualChecklist",
+      "detail": "printed required viewports and command tests"
+    }
+  ],
+  "failures": [],
+  "warnings": [],
+  "holds": [],
+  "scriptDoesNotCommitOrPush": true,
+  "scriptDoesNotReplaceVisualQa": true,
+  "resultToken": "PASS_063C_STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_RETRY"
+}

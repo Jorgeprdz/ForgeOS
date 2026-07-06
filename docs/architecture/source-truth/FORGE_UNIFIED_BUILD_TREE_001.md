@@ -3720,3 +3720,43 @@ DECISION=PASS_063B1_STATIC_PREVIEW_RELEASE_GUARD_MARKER_PARSING_REPAIR
 
 NEXT=063C_STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_RETRY
 <!-- FORGEOS:STATIC_PREVIEW_RELEASE_GUARD_MARKER_PARSING_REPAIR_063B1:END -->
+
+<!-- FORGEOS:STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_RETRY_063C:START -->
+## 063C Static Preview Release Guard Dry-Run QA Retry
+
+Status: PASS / DRY-RUN QA LOCKED.
+
+063C retry validates the repaired release guard against the current public Forge Alive static preview release.
+
+Release:
+`CACHE_VERSION=062f3c`
+
+Confirmed:
+
+- marker parsing repair confirmed;
+- space-separated markers detected individually;
+- cache bust local OK;
+- cache bust public OK;
+- markers local OK;
+- markers public OK;
+- JS syntax OK;
+- safety scan OK;
+- manual checklist printed;
+- guard did not mutate UI;
+- guard did not commit or push by itself.
+
+Boundary:
+
+Guard dry-run evidence only. No Forge Alive UI behavior, CSS, JS, HTML preview behavior, CRM, calendar, send, auth, provider execution, or real engine execution changed.
+
+Evidence:
+
+- `docs/evidence/forge-static-preview-release-guard-dry-run-qa-audit-063c.json`
+- `docs/evidence/FORGE_STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_063C.md`
+- `docs/evidence/FORGE_STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_CERTIFICATE_063C.md`
+- `docs/architecture/source-truth/FORGE_STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_CLOSURE_063C.md`
+
+DECISION=PASS_063C_STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_RETRY
+
+NEXT=063D_STATIC_PREVIEW_RELEASE_GUARD_DECISION_LOCK
+<!-- FORGEOS:STATIC_PREVIEW_RELEASE_GUARD_DRY_RUN_QA_RETRY_063C:END -->
