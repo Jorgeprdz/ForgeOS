@@ -2692,3 +2692,29 @@ DECISION=PASS_063D_STATIC_PREVIEW_RELEASE_GUARD_DECISION_LOCK
 
 NEXT=064A_REAL_MODULE_CONNECTION_SCOPE
 <!-- FORGEOS:STATIC_PREVIEW_RELEASE_GUARD_DECISION_LOCK_063D:END -->
+
+<!-- FORGEOS:BACKEND_MODULE_OWNERSHIP_MAP_064B:START -->
+## 064B Backend Module Ownership Map
+
+064B_BACKEND_MODULE_OWNERSHIP_MAP: PASS / MAP LOCKED.
+
+Decision:
+`BACKEND_MODULE_OWNERSHIP_MAP_LOCKED`
+
+The backend ownership map is locked before any real module connection. Future backend work must now scope domain contracts from this map.
+
+Boundary:
+
+Docs/map only. No UI mutation, backend connection, CRM write, calendar creation, send, auth runtime, provider execution, or real engine execution.
+
+Evidence:
+
+- `docs/architecture/source-truth/FORGE_BACKEND_MODULE_OWNERSHIP_MAP_064B.md`
+- `docs/evidence/FORGE_BACKEND_MODULE_OWNERSHIP_MAP_064B.md`
+- `docs/evidence/FORGE_BACKEND_MODULE_OWNERSHIP_MAP_CERTIFICATE_064B.md`
+- `docs/evidence/forge-backend-module-ownership-map-audit-064b.json`
+
+DECISION=PASS_064B_BACKEND_MODULE_OWNERSHIP_MAP
+
+NEXT=064C_BACKEND_DOMAIN_CONTRACTS_SCOPE
+<!-- FORGEOS:BACKEND_MODULE_OWNERSHIP_MAP_064B:END -->

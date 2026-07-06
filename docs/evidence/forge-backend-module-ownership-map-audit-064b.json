@@ -1,0 +1,284 @@
+{
+  "phase": "064B_BACKEND_MODULE_OWNERSHIP_MAP",
+  "mode": "backend ownership map documentation",
+  "status": "PASS",
+  "base": {
+    "sourcePhase": "064A_BACKEND_MODULE_TREE_GAP_AUDIT",
+    "sourceReport": "/data/data/com.termux/files/home/064A_BACKEND_MODULE_TREE_GAP_AUDIT_RESULT_20260706_133057.md",
+    "lastCommittedLock": "88edfe0 docs: lock static preview release guard decision"
+  },
+  "decision": "BACKEND_MODULE_OWNERSHIP_MAP_LOCKED",
+  "boundary": {
+    "docsOnly": true,
+    "uiMutation": false,
+    "backendConnection": false,
+    "crmWrite": false,
+    "calendarCreate": false,
+    "send": false,
+    "authRuntime": false,
+    "providerExecution": false,
+    "realEngineExecution": false
+  },
+  "ownershipPrinciples": [
+    "One module has one conceptual owner.",
+    "Read ownership is separate from write ownership.",
+    "Action ownership is separate from action execution.",
+    "Adapters cannot create truth.",
+    "Preview payloads are not backend contracts until mapped.",
+    "No module connects until owner, read model, action contract, approval, audit, capability, and error/freshness policies are explicit."
+  ],
+  "moduleMap": [
+    {
+      "module": "Command Bar",
+      "status": "LOCKED_PREVIEW",
+      "domainOwner": "Universal Command OS / Alfred",
+      "readOwner": "Forge Alive workspace read model",
+      "writeOwner": "NONE_UNTIL_BACKEND_CONTRACT",
+      "actionOwner": "Action Contracts",
+      "adapterOwner": "Backend API Boundary pending",
+      "next": "064C_COMMAND_BACKEND_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Alfred / reasoning layer",
+      "status": "PARTIAL",
+      "domainOwner": "Universal Command OS / Alfred",
+      "readOwner": "Manager OS and Forge Alive read models",
+      "writeOwner": "NONE",
+      "actionOwner": "Action Contracts + Human Approval Gate",
+      "adapterOwner": "Provider/runtime adapters blocked",
+      "next": "064E_BACKEND_APPROVAL_AND_AUDIT_CONTRACTS_SCOPE"
+    },
+    {
+      "module": "Action Contracts",
+      "status": "LOCKED_PREVIEW",
+      "domainOwner": "Command OS",
+      "readOwner": "Read Model layer",
+      "writeOwner": "NONE_UNTIL_DOMAIN_CONTRACTS",
+      "actionOwner": "Action Contract Registry",
+      "adapterOwner": "Backend API Boundary pending",
+      "next": "064C_BACKEND_DOMAIN_CONTRACTS_SCOPE"
+    },
+    {
+      "module": "Read Models",
+      "status": "PARTIAL",
+      "domainOwner": "Read Model Boundary",
+      "readOwner": "Domain-specific read owners pending",
+      "writeOwner": "NONE",
+      "actionOwner": "NONE",
+      "adapterOwner": "Data adapters pending",
+      "next": "064D_BACKEND_READ_MODEL_CONTRACTS_SCOPE"
+    },
+    {
+      "module": "Approval Gates",
+      "status": "PARTIAL",
+      "domainOwner": "Human Approval Gate",
+      "readOwner": "Approval artifact read model pending",
+      "writeOwner": "Approval persistence pending",
+      "actionOwner": "Human reviewer only",
+      "adapterOwner": "Audit/Persistence Boundary pending",
+      "next": "064E_BACKEND_APPROVAL_AND_AUDIT_CONTRACTS_SCOPE"
+    },
+    {
+      "module": "CRM / Clientes",
+      "status": "MISSING_DESIGN_FROM_ZERO",
+      "domainOwner": "Client Domain pending",
+      "readOwner": "Client read model pending",
+      "writeOwner": "CRM write owner pending",
+      "actionOwner": "Client action contracts pending",
+      "adapterOwner": "CRM adapter pending",
+      "next": "064C_CLIENT_CRM_DOMAIN_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Oportunidades / Pipeline",
+      "status": "PARTIAL",
+      "domainOwner": "Revenue / Opportunity Domain pending",
+      "readOwner": "Opportunity read model pending",
+      "writeOwner": "Pipeline write owner pending",
+      "actionOwner": "Opportunity action contracts pending",
+      "adapterOwner": "Opportunity adapter pending",
+      "next": "064C_OPPORTUNITY_PIPELINE_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Cotizaciones",
+      "status": "PARTIAL",
+      "domainOwner": "Product Intelligence / Quote Domain",
+      "readOwner": "Quote read model pending",
+      "writeOwner": "Quote preparation owner pending",
+      "actionOwner": "Quote action contracts pending",
+      "adapterOwner": "Carrier quote adapter pending",
+      "next": "064C_QUOTE_DOMAIN_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Polizas",
+      "status": "PARTIAL_RICH_SKELETON",
+      "domainOwner": "Policy & Sales Operations",
+      "readOwner": "Policy read model pending",
+      "writeOwner": "Policy write/update owner pending",
+      "actionOwner": "Policy action contracts pending",
+      "adapterOwner": "Policy evidence/adapters pending",
+      "next": "064C_POLICY_DOMAIN_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Seguimiento",
+      "status": "PARTIAL",
+      "domainOwner": "Advisor OS / Policy Tasks pending split",
+      "readOwner": "Follow-up read model pending",
+      "writeOwner": "Task write owner pending",
+      "actionOwner": "Follow-up action contracts pending",
+      "adapterOwner": "Task/calendar adapters blocked",
+      "next": "064C_FOLLOWUP_TASK_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Calendario",
+      "status": "SCOPE_ONLY_BLOCKED",
+      "domainOwner": "Calendar Adapter Boundary pending",
+      "readOwner": "Calendar availability/context read model pending",
+      "writeOwner": "Calendar create owner blocked",
+      "actionOwner": "Approval-gated calendar action pending",
+      "adapterOwner": "Calendar provider adapter pending",
+      "next": "064F_CALENDAR_ADAPTER_SCOPE"
+    },
+    {
+      "module": "Documentos",
+      "status": "PARTIAL",
+      "domainOwner": "Evidence / Policy Operations",
+      "readOwner": "Document/evidence read model pending",
+      "writeOwner": "Document intake/storage owner pending",
+      "actionOwner": "Evidence action contracts pending",
+      "adapterOwner": "OCR/import adapters pending",
+      "next": "064C_DOCUMENT_EVIDENCE_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Comunicaciones",
+      "status": "PARTIAL",
+      "domainOwner": "Message Generation / Delivery Boundary",
+      "readOwner": "Message draft read model pending",
+      "writeOwner": "Delivery send owner blocked",
+      "actionOwner": "Human Approval Gate",
+      "adapterOwner": "Delivery adapters pending",
+      "next": "064E_APPROVAL_AND_DELIVERY_CONTRACTS_SCOPE"
+    },
+    {
+      "module": "Perfil / Usuario / Auth",
+      "status": "PARTIAL_SKELETON",
+      "domainOwner": "Platform Auth pending",
+      "readOwner": "Profile read model pending",
+      "writeOwner": "Profile/settings write owner pending",
+      "actionOwner": "Auth/profile actions pending",
+      "adapterOwner": "Auth service boundary pending",
+      "next": "064C_IDENTITY_AUTH_PROFILE_SCOPE"
+    },
+    {
+      "module": "Settings / Theme",
+      "status": "SKELETON_ONLY",
+      "domainOwner": "Settings Domain pending",
+      "readOwner": "Settings read model pending",
+      "writeOwner": "Preference write owner pending",
+      "actionOwner": "Settings actions pending",
+      "adapterOwner": "Storage/settings adapter pending",
+      "next": "064C_SETTINGS_PREFERENCES_SCOPE"
+    },
+    {
+      "module": "Integrations",
+      "status": "SCOPE_ONLY_PARTIAL",
+      "domainOwner": "Integration Boundary pending",
+      "readOwner": "Connector capability read model pending",
+      "writeOwner": "External write owner blocked",
+      "actionOwner": "Connector action contracts pending",
+      "adapterOwner": "Provider adapters pending",
+      "next": "064F_INTEGRATION_ADAPTER_BOUNDARY_SCOPE"
+    },
+    {
+      "module": "Audit / Evidence",
+      "status": "PARTIAL",
+      "domainOwner": "Audit / Evidence / Provenance",
+      "readOwner": "Audit/event read model pending",
+      "writeOwner": "Audit persistence owner pending",
+      "actionOwner": "Audit event contracts pending",
+      "adapterOwner": "Persistence adapter pending",
+      "next": "064E_BACKEND_APPROVAL_AND_AUDIT_CONTRACTS_SCOPE"
+    },
+    {
+      "module": "Release Guard",
+      "status": "LOCKED_TOOLING",
+      "domainOwner": "Static Preview Release Guard",
+      "readOwner": "Guard audit/report output",
+      "writeOwner": "NONE",
+      "actionOwner": "NONE",
+      "adapterOwner": "NONE",
+      "next": "MAINTAIN"
+    },
+    {
+      "module": "Data Adapters",
+      "status": "PARTIAL",
+      "domainOwner": "Adapter Boundary pending",
+      "readOwner": "Domain read owners pending",
+      "writeOwner": "Domain write owners pending",
+      "actionOwner": "Action contracts pending",
+      "adapterOwner": "Unified adapter registry pending",
+      "next": "064D_BACKEND_READ_MODEL_CONTRACTS_SCOPE"
+    },
+    {
+      "module": "Backend API Boundary",
+      "status": "MISSING_DESIGN_FROM_ZERO",
+      "domainOwner": "Platform API Boundary pending",
+      "readOwner": "Route read owners pending",
+      "writeOwner": "Route write owners pending",
+      "actionOwner": "Capability-gated route actions pending",
+      "adapterOwner": "Backend adapters pending",
+      "next": "064C_BACKEND_API_BOUNDARY_SCOPE"
+    },
+    {
+      "module": "Permissions / Capability Model",
+      "status": "PARTIAL_SCOPE_ONLY",
+      "domainOwner": "Capability Model pending",
+      "readOwner": "Capability read model pending",
+      "writeOwner": "Policy owner pending",
+      "actionOwner": "Capability evaluator pending",
+      "adapterOwner": "Policy/capability adapter pending",
+      "next": "064E_BACKEND_CAPABILITY_AND_APPROVAL_SCOPE"
+    },
+    {
+      "module": "Error Model",
+      "status": "SKELETON_ONLY",
+      "domainOwner": "Backend Error Model pending",
+      "readOwner": "Error read model pending",
+      "writeOwner": "NONE except audit",
+      "actionOwner": "Error handling policy pending",
+      "adapterOwner": "Error envelope adapter pending",
+      "next": "064C_BACKEND_ERROR_MODEL_SCOPE"
+    },
+    {
+      "module": "Empty States",
+      "status": "MISSING_DESIGN_FROM_ZERO",
+      "domainOwner": "Read Model Boundary pending",
+      "readOwner": "Domain read owners pending",
+      "writeOwner": "NONE",
+      "actionOwner": "NONE",
+      "adapterOwner": "Read model adapters pending",
+      "next": "064D_BACKEND_EMPTY_STATE_CONTRACT_SCOPE"
+    },
+    {
+      "module": "Sync / Freshness Model",
+      "status": "PARTIAL",
+      "domainOwner": "Platform Sync / Evidence Freshness",
+      "readOwner": "Freshness read model pending",
+      "writeOwner": "Sync queue owner pending",
+      "actionOwner": "Sync conflict policy pending",
+      "adapterOwner": "Sync adapters pending",
+      "next": "064G_SYNC_FRESHNESS_SCOPE"
+    }
+  ],
+  "blockedUntilContracts": [
+    "real command execution",
+    "CRM/client writes",
+    "calendar creation",
+    "message send",
+    "quote approval",
+    "policy updates",
+    "document storage truth",
+    "provider/runtime connector calls",
+    "mutating backend API routes"
+  ],
+  "next": "064C_BACKEND_DOMAIN_CONTRACTS_SCOPE"
+}

@@ -6174,3 +6174,43 @@ DECISION=PASS_063D_STATIC_PREVIEW_RELEASE_GUARD_DECISION_LOCK
 
 NEXT=064A_REAL_MODULE_CONNECTION_SCOPE
 <!-- FORGEOS:STATIC_PREVIEW_RELEASE_GUARD_DECISION_LOCK_063D:END -->
+
+<!-- FORGEOS:BACKEND_MODULE_OWNERSHIP_MAP_064B:START -->
+## 064B Backend Module Ownership Map
+
+Status: PASS / MAP LOCKED.
+
+Decision:
+`BACKEND_MODULE_OWNERSHIP_MAP_LOCKED`
+
+064B converts the 064A backend gap audit into the master ownership map required before real module connection.
+
+Locked ownership lanes:
+
+- domain owner;
+- read owner;
+- write owner;
+- action owner;
+- adapter owner;
+- connection rule;
+- next contract phase.
+
+Connection rule:
+
+No module may connect to real backend behavior until owner, read model, action contract, approval, audit, capability, error, and freshness policies are explicit.
+
+Boundary:
+
+Docs/map only. No UI mutation, backend connection, CRM write, calendar creation, send, auth runtime, provider execution, or real engine execution.
+
+Evidence:
+
+- `docs/architecture/source-truth/FORGE_BACKEND_MODULE_OWNERSHIP_MAP_064B.md`
+- `docs/evidence/FORGE_BACKEND_MODULE_OWNERSHIP_MAP_064B.md`
+- `docs/evidence/FORGE_BACKEND_MODULE_OWNERSHIP_MAP_CERTIFICATE_064B.md`
+- `docs/evidence/forge-backend-module-ownership-map-audit-064b.json`
+
+DECISION=PASS_064B_BACKEND_MODULE_OWNERSHIP_MAP
+
+NEXT=064C_BACKEND_DOMAIN_CONTRACTS_SCOPE
+<!-- FORGEOS:BACKEND_MODULE_OWNERSHIP_MAP_064B:END -->
