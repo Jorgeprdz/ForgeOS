@@ -3891,3 +3891,58 @@ DECISION=PASS_064C_BACKEND_DOMAIN_CONTRACTS_SCOPE
 
 NEXT=064D_BACKEND_READ_MODEL_CONTRACTS_SCOPE
 <!-- FORGEOS:BACKEND_DOMAIN_CONTRACTS_SCOPE_064C:END -->
+
+<!-- FORGEOS:BACKEND_READ_MODEL_CONTRACTS_SCOPE_064D:START -->
+## 064D Backend Read Model Contracts Scope
+
+Status: PASS / SCOPED.
+
+064D defines backend read model contracts for the domains scoped in 064C.
+
+Required read envelope:
+
+- read model id
+- schema version
+- domain id
+- source of truth
+- source evidence
+- generated timestamp
+- freshness status
+- capabilities
+- approval context
+- entities and relationships
+- metrics
+- empty state
+- safe errors
+- blocked effects
+- audit correlation
+- UI projection
+
+Freshness statuses:
+
+- `fresh`
+- `possibly_stale`
+- `stale`
+- `source_unavailable`
+- `not_connected`
+- `preview_static`
+
+Global rule:
+
+No backend source can be treated as truth until its read model declares source evidence, freshness, empty-state semantics, safe error envelope, capability context, approval context, blocked effects, and UI projection boundary.
+
+Artifacts:
+
+- `docs/architecture/source-truth/FORGE_BACKEND_READ_MODEL_CONTRACTS_SCOPE_064D.md`
+- `docs/evidence/FORGE_BACKEND_READ_MODEL_CONTRACTS_SCOPE_064D.md`
+- `docs/evidence/FORGE_BACKEND_READ_MODEL_CONTRACTS_SCOPE_CERTIFICATE_064D.md`
+- `docs/evidence/forge-backend-read-model-contracts-scope-audit-064d.json`
+
+Boundary:
+
+Documentation-only scope. No UI, backend connection, CRM, calendar, message, auth, provider, browser persistence, browser request, or real engine behavior is changed.
+
+DECISION=PASS_064D_BACKEND_READ_MODEL_CONTRACTS_SCOPE
+
+NEXT=064E_BACKEND_APPROVAL_AND_AUDIT_CONTRACTS_SCOPE
+<!-- FORGEOS:BACKEND_READ_MODEL_CONTRACTS_SCOPE_064D:END -->
