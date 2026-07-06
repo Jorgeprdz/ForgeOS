@@ -2497,3 +2497,24 @@ DECISION=PASS_062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR
 
 NEXT=062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
 <!-- FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:END -->
+
+<!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:START -->
+## 062F3D Local Mobile Command Contract QA Lock
+
+062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK: PASS / LOCAL QA LOCKED.
+
+Local evidence confirms mobile command contracts work for quick actions, quote, follow, review, and open commands. Desktop/tablet command behavior remains stable.
+
+This is local QA evidence only. Public Pages still needs the deploy-sync retry.
+
+Evidence:
+
+- `docs/evidence/forge-local-mobile-command-contract-qa-audit-062f3d.json`
+- `docs/evidence/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D.md`
+- `docs/evidence/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_CERTIFICATE_062F3D.md`
+- `docs/architecture/source-truth/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_CLOSURE_062F3D.md`
+
+DECISION=PASS_062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
+
+NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
+<!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:END -->

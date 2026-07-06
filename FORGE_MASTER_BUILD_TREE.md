@@ -5860,3 +5860,36 @@ DECISION=PASS_062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR
 
 NEXT=062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
 <!-- FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:END -->
+
+<!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:START -->
+## 062F3D Local Mobile Command Contract QA Lock
+
+Status: PASS / LOCAL QA LOCKED.
+
+062F3D validates locally that the 062F3C mobile command contract binding works and that desktop/tablet command surfaces did not regress.
+
+Validated:
+
+- mobile `/quick actions`;
+- mobile `quote.prepare_preview`;
+- mobile `client.follow_preview`;
+- mobile `opportunity.review`;
+- mobile `record.open_preview`;
+- visible no-effect policy copy;
+- desktop/tablet stability.
+
+Boundary:
+
+Local QA evidence only. No static preview source, CSS, JS, HTML, CRM, calendar, send, auth, runtime/storage, provider execution, or real engine behavior was changed.
+
+Evidence:
+
+- `docs/evidence/forge-local-mobile-command-contract-qa-audit-062f3d.json`
+- `docs/evidence/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D.md`
+- `docs/evidence/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_CERTIFICATE_062F3D.md`
+- `docs/architecture/source-truth/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_CLOSURE_062F3D.md`
+
+DECISION=PASS_062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
+
+NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
+<!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:END -->

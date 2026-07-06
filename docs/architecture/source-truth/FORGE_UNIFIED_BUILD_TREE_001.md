@@ -3520,3 +3520,33 @@ DECISION=PASS_062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR
 
 NEXT=062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
 <!-- FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:END -->
+
+<!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:START -->
+## 062F3D Local Mobile Command Contract QA Lock
+
+Status: PASS / LOCAL QA LOCKED.
+
+062F3D locks local visual and interaction evidence for the 062F3C mobile command contract binding repair.
+
+Confirmed:
+
+- mobile command results are visible and legible;
+- mobile action preview payloads render for quote, follow, review, and open commands;
+- source/status/blockers/policy are visible in payload states;
+- desktop/tablet command behavior remains stable.
+
+Boundary:
+
+Local QA evidence only. No static preview source, CSS, JS, HTML, CRM, calendar, send, auth, runtime/storage, provider execution, or real engine behavior was changed.
+
+Evidence:
+
+- `docs/evidence/forge-local-mobile-command-contract-qa-audit-062f3d.json`
+- `docs/evidence/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D.md`
+- `docs/evidence/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_CERTIFICATE_062F3D.md`
+- `docs/architecture/source-truth/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_CLOSURE_062F3D.md`
+
+DECISION=PASS_062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
+
+NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
+<!-- FORGEOS:LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D:END -->

@@ -1,0 +1,87 @@
+{
+  "phase": "062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK",
+  "mode": "local mobile command contract visual + interaction QA lock",
+  "boundary": "local QA evidence only; no static preview mutation; no CSS/JS/HTML mutation; no CRM; no calendar; no send; no auth; no runtime/storage; no provider execution; no real engine execution",
+  "baseCommit": "a2f2fdd fix: bind mobile command contracts",
+  "url": "http://127.0.0.1:8080/docs/static-preview/forge-alive/?v=062f3c",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "baseCommitExpected",
+      "passed": true,
+      "detail": "a2f2fdd validated before capture"
+    },
+    {
+      "name": "localUrl062f3c",
+      "passed": true,
+      "detail": "http://127.0.0.1:8080/docs/static-preview/forge-alive/?v=062f3c"
+    },
+    {
+      "name": "mobileBindingPresent",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "mobileQuickActionsVisible",
+      "passed": true,
+      "detail": "/quick actions\nLista acciones preview-safe disponibles para este workspace.\nPREVIEW ONLY\nPreparar preview\nConstruye un resumen revisable sin ejecutar efectos reales.\nAPPROVAL\nRevis"
+    },
+    {
+      "name": "mobileQuickActionsLegible",
+      "passed": true,
+      "detail": "{'height': 330, 'text': '/quick actions\\nLista acciones preview-safe disponibles para este workspace.\\nPREVIEW ONLY\\nPreparar preview\\nConstruye un resumen revisable sin ejecutar efectos reales.\\nAPPROVAL\\nRevisar Lariza\\nAbre detalle local de oportunidad y riesgo.\\nPREVIEW ONLY\\n/follow Juan\\nPrepara seguimiento con aprobacion humana requerida.\\nAPPROVAL\\n/cotizar GMM Lariza\\nPrepara workspace de cotizacion sin emitir documentos.\\nAPPROVAL\\nAbrir Octavio\\nAbre detalle local del registro en modo preview.\\nPREVIEW ONLY', 'visible': True, 'width': 380}"
+    },
+    {
+      "name": "mobileCotizarPayloadVisible",
+      "passed": true,
+      "detail": "quote.prepare_preview / quote.prepare_preview\nNEEDS APPROVAL\n\nPrepara workspace de cotizacion sin emitir documentos. Fuente: cotizaciones. Bloqueos: Requiere aproba"
+    },
+    {
+      "name": "mobileFollowPayloadVisible",
+      "passed": true,
+      "detail": "client.follow_preview / client.follow_preview\nNEEDS APPROVAL\n\nPrepara seguimiento con aprobacion humana requerida. Fuente: clientes. Bloqueos: Requiere aprobacion h"
+    },
+    {
+      "name": "mobileRevisarPayloadVisible",
+      "passed": true,
+      "detail": "opportunity.review / opportunity.review\nPREVIEW ONLY\n\nAbre detalle local de oportunidad y riesgo. Fuente: pipeline. Bloqueos: Disponible solo como preview seguro"
+    },
+    {
+      "name": "mobileAbrirPayloadVisible",
+      "passed": true,
+      "detail": "record.open_preview / record.open_preview\nPREVIEW ONLY\n\nAbre detalle local del registro en modo preview. Fuente: workspace. Bloqueos: Disponible solo como preview"
+    },
+    {
+      "name": "mobileNoHorizontalOverflow",
+      "passed": true,
+      "detail": "[488, 500]"
+    },
+    {
+      "name": "noRealEffectsPayloadPolicy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "tabletQuickActionsStable",
+      "passed": true,
+      "detail": "[1012, 1024]"
+    },
+    {
+      "name": "desktopQuickActionsStable",
+      "passed": true,
+      "detail": "[1354, 1366]"
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "docs/evidence/forge-mobile-command-contract-qa-062f3d-mobile-quick-actions-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-qa-062f3d-mobile-cotizar-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-qa-062f3d-mobile-follow-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-qa-062f3d-mobile-revisar-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-qa-062f3d-mobile-abrir-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-qa-062f3d-tablet-quick-actions-1024x768.png",
+    "docs/evidence/forge-mobile-command-contract-qa-062f3d-desktop-quick-actions-1366x768.png"
+  ],
+  "decision": "PASS_062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK",
+  "next": "062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY"
+}
