@@ -5825,3 +5825,38 @@ DECISION=PASS_062F3_LOCAL_SERVER_QUICK_ACTIONS_QA
 
 NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
 <!-- FORGEOS:LOCAL_QUICK_ACTIONS_QA_062F3:END -->
+
+<!-- FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:START -->
+## 062F3C Mobile Command Contract Binding Repair
+
+Status: PASS / IMPLEMENTED.
+
+062F3C repairs the 062F3B mobile blocker by binding the mobile Alfred command input to the same static preview command catalog and action registry used by desktop/tablet.
+
+Implemented:
+
+- `/quick actions` mobile result panel;
+- mobile preview payloads for quote, follow, review, and open commands;
+- `window.__forgeLastActionPreviewPayload062E`;
+- `forge:action-preview-payload:062e`;
+- visible no-effect policy copy;
+- desktop/tablet preservation checks.
+
+Local cache:
+`062f3c`
+
+Boundary:
+
+Mobile static preview binding only. No CRM write, calendar creation, message delivery, auth behavior, provider execution, browser persistence, browser request behavior from the app, or real engine behavior is enabled.
+
+Evidence:
+
+- `docs/evidence/forge-mobile-command-contract-binding-repair-audit-062f3c.json`
+- `docs/evidence/FORGE_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C.md`
+- `docs/evidence/FORGE_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_CERTIFICATE_062F3C.md`
+- `docs/architecture/source-truth/FORGE_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_CLOSURE_062F3C.md`
+
+DECISION=PASS_062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR
+
+NEXT=062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
+<!-- FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:END -->

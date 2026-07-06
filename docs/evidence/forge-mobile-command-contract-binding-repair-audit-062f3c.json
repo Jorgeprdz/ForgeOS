@@ -1,0 +1,80 @@
+{
+  "phase": "062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR",
+  "mode": "local mobile command contract binding repair validation",
+  "url": "http://127.0.0.1:8080/docs/static-preview/forge-alive/?v=062f3c",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "localUrl062f3c",
+      "passed": true,
+      "detail": "http://127.0.0.1:8080/docs/static-preview/forge-alive/?v=062f3c"
+    },
+    {
+      "name": "mobileBindingPresent",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "mobileQuickActionsVisible",
+      "passed": true,
+      "detail": "{'height': 330, 'text': '/quick actions\\nLista acciones preview-safe disponibles para este workspace.\\nPREVIEW ONLY\\nPreparar preview\\nConstruye un resumen revisable sin ejecutar efectos reales.\\nAPPROVAL\\nRevisar Lariza\\nAbre detalle local de oportunidad y riesgo.\\nPREVIEW ONLY\\n/follow Juan\\nPrepara seguimiento con aprobacion humana requerida.\\nAPPROVAL\\n/cotizar GMM Lariza\\nPrepara workspace de cotizacion sin emitir documentos.\\nAPPROVAL\\nAbrir Octavio\\nAbre detalle local del registro en modo preview.\\nPREVIEW ONLY', 'visible': True, 'width': 380}"
+    },
+    {
+      "name": "mobileQuickActionsLegible",
+      "passed": true,
+      "detail": "/quick actions\nLista acciones preview-safe disponibles para este workspace.\nPREVIEW ONLY\nPreparar preview\nConstruye un resumen revisable sin ejecutar efectos re"
+    },
+    {
+      "name": "mobileCotizarPayloadVisible",
+      "passed": true,
+      "detail": "quote.prepare_preview / quote.prepare_preview\nNEEDS APPROVAL\n\nPrepara workspace de cotizacion sin emitir documentos. Fuente:"
+    },
+    {
+      "name": "mobileFollowPayloadVisible",
+      "passed": true,
+      "detail": "client.follow_preview / client.follow_preview\nNEEDS APPROVAL\n\nPrepara seguimiento con aprobacion humana requerida. Fuente: c"
+    },
+    {
+      "name": "mobileRevisarPayloadVisible",
+      "passed": true,
+      "detail": "opportunity.review / opportunity.review\nPREVIEW ONLY\n\nAbre detalle local de oportunidad y riesgo. Fuente: pipeline. Bloqu"
+    },
+    {
+      "name": "mobileAbrirPayloadVisible",
+      "passed": true,
+      "detail": "record.open_preview / record.open_preview\nPREVIEW ONLY\n\nAbre detalle local del registro en modo preview. Fuente: workspace"
+    },
+    {
+      "name": "policyBlocksRealEffects",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "noHorizontalOverflow",
+      "passed": true,
+      "detail": "[488, 500]"
+    },
+    {
+      "name": "tabletQuickActionsStable",
+      "passed": true,
+      "detail": "[1012, 1024]"
+    },
+    {
+      "name": "desktopQuickActionsStable",
+      "passed": true,
+      "detail": "[1354, 1366]"
+    }
+  ],
+  "failures": [],
+  "screenshots": [
+    "docs/evidence/forge-mobile-command-contract-062f3c-mobile-quick-actions-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-062f3c-mobile-cotizar-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-062f3c-mobile-follow-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-062f3c-mobile-revisar-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-062f3c-mobile-abrir-390x844.png",
+    "docs/evidence/forge-mobile-command-contract-062f3c-tablet-quick-actions-1024x768.png",
+    "docs/evidence/forge-mobile-command-contract-062f3c-desktop-quick-actions-1366x768.png"
+  ],
+  "decision": "PASS_062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR",
+  "next": "062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK"
+}

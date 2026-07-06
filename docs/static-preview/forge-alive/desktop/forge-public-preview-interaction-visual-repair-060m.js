@@ -1888,3 +1888,276 @@
   window.__forgeRunQuickActionsPanelActiveStateRepair062F1 = bind;
 })();
 /* FORGEOS:QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1:END */
+
+/* FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:START */
+(function () {
+  "use strict";
+
+  var activeIndex = 0;
+  var currentRows = [];
+
+  function normalize(value) {
+    return String(value || "").toLowerCase().trim().replace(/\s+/g, " ");
+  }
+
+  function isMobileViewport() {
+    return window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+  }
+
+  function getReadModel() {
+    return window.__forgeAliveWorkspaceReadModel062C || null;
+  }
+
+  function findRoot() {
+    return document.querySelector(".alfred-command-root-056k5");
+  }
+
+  function findInput(root) {
+    return root && root.querySelector(".alfred-command-input-056k5");
+  }
+
+  function findResults(root) {
+    return root && root.querySelector(".alfred-command-results-056k5");
+  }
+
+  function actionById(model, actionId) {
+    if (!model || !model.actionRegistry) {
+      return null;
+    }
+    return model.actionRegistry.filter(function (action) {
+      return action.actionId === actionId;
+    })[0] || null;
+  }
+
+  function commandById(model, commandId) {
+    if (!model || !model.commandCatalog) {
+      return null;
+    }
+    return model.commandCatalog.filter(function (command) {
+      return command.commandId === commandId;
+    })[0] || null;
+  }
+
+  function statusLabel(action) {
+    if (!action) {
+      return "blocked";
+    }
+    if (action.contractStatus === "needs_approval") {
+      return "approval";
+    }
+    return action.contractStatus.replace("_", " ");
+  }
+
+  function blockedReasons(model, action) {
+    var ids = action && action.blockedReasonIds ? action.blockedReasonIds : ["preview_only_boundary"];
+    var reasons = model && model.blockedReasons ? model.blockedReasons : [];
+    return ids.map(function (id) {
+      var found = reasons.filter(function (reason) {
+        return reason.reasonId === id;
+      })[0];
+      return found ? found.message : id;
+    });
+  }
+
+  function queryRows(model, value) {
+    var q = normalize(value);
+    if (!model || !model.commandCatalog || !q) {
+      return [];
+    }
+    if (q === "/" || q === "/quick" || q === "/quick actions" || q === "quick actions") {
+      return model.commandCatalog.slice(0);
+    }
+    return model.commandCatalog.filter(function (command) {
+      var haystack = [command.title, command.subtitle].concat(command.tokens || []).join(" ");
+      return normalize(haystack).indexOf(q) !== -1;
+    });
+  }
+
+  function buildPayload(model, command) {
+    var action = actionById(model, command.actionId);
+    var policy = model && model.previewPolicy ? model.previewPolicy : {};
+    return {
+      modelName: model ? model.modelName : "forge.alive.workspace.read_model.v1",
+      actionId: command.actionId,
+      commandId: command.commandId,
+      targetType: command.targetType,
+      targetId: command.targetId,
+      status: action ? action.contractStatus : "blocked",
+      sourceModule: action ? action.sourceModule : "unknown",
+      previewSummary: command.subtitle || "Preview preparado sin efectos reales.",
+      blockedReasons: blockedReasons(model, action),
+      requiresHumanApproval: action ? !!action.requiresHumanApproval : true,
+      realEffectsAllowed: false,
+      previewOnly: true,
+      policy: {
+        externalEffectsAllowed: !!policy.externalEffectsAllowed,
+        recordMutationAllowed: !!policy.recordMutationAllowed,
+        scheduleMutationAllowed: !!policy.scheduleMutationAllowed,
+        messageDeliveryAllowed: !!policy.messageDeliveryAllowed,
+        providerExecutionAllowed: !!policy.providerExecutionAllowed
+      }
+    };
+  }
+
+  function renderPayload(results, payload) {
+    var panel = results.querySelector(".forge-mobile-action-preview-payload-062f3c");
+    if (!panel) {
+      panel = document.createElement("section");
+      panel.className = "forge-mobile-action-preview-payload-062f3c";
+      panel.setAttribute("aria-live", "polite");
+      panel.setAttribute("data-forge-mobile-action-preview-payload-panel-062f3c", "true");
+      results.appendChild(panel);
+    }
+    panel.innerHTML =
+      '<div class="forge-mobile-action-preview-payload-062f3c__head">' +
+        '<div class="forge-mobile-action-preview-payload-062f3c__title">' + payload.actionId + '</div>' +
+        '<div class="forge-mobile-action-preview-payload-062f3c__status">' + payload.status.replace("_", " ") + '</div>' +
+      '</div>' +
+      '<p class="forge-mobile-action-preview-payload-062f3c__body">' +
+        payload.previewSummary + ' Fuente: ' + payload.sourceModule + '. ' +
+        'Bloqueos: ' + payload.blockedReasons.join("; ") + '. ' +
+        'Policy: no CRM, no calendario, no envio, no provider. ' +
+        'Efectos reales: desactivados.' +
+      '</p>';
+  }
+
+  function selectCommand(root, input, results, command) {
+    var model = getReadModel();
+    var payload = buildPayload(model, command);
+    input.value = command.title;
+    window.__forgeLastActionPreviewPayload062E = payload;
+    document.documentElement.setAttribute("data-forge-action-preview-payload-ready-062e", "true");
+    document.documentElement.setAttribute("data-forge-mobile-command-contract-selected-062f3c", command.actionId);
+    root.classList.add("is-open");
+    root.classList.add("has-query");
+    root.classList.add("has-results");
+    root.setAttribute("data-forge-mobile-command-output-visible-062f3c", "true");
+    results.textContent = "";
+    renderPayload(results, payload);
+    window.dispatchEvent(new CustomEvent("forge:action-preview-payload:062e", {
+      detail: payload
+    }));
+    window.dispatchEvent(new CustomEvent("forge:action-contract-preview:062c", {
+      detail: {
+        commandId: command.commandId,
+        actionId: command.actionId,
+        targetType: command.targetType,
+        targetId: command.targetId,
+        status: payload.status,
+        previewOnly: true
+      }
+    }));
+    [0, 180].forEach(function (delay) {
+      window.setTimeout(function () {
+        root.classList.add("is-open");
+        root.classList.add("has-query");
+        root.classList.add("has-results");
+        root.setAttribute("data-forge-mobile-command-output-visible-062f3c", "true");
+        results.textContent = "";
+        renderPayload(results, payload);
+      }, delay);
+    });
+  }
+
+  function renderRows(root, input, results) {
+    var model = getReadModel();
+    currentRows = queryRows(model, input.value);
+    results.textContent = "";
+    activeIndex = Math.min(activeIndex, Math.max(currentRows.length - 1, 0));
+    root.classList.toggle("has-query", String(input.value || "").trim().length > 0);
+    root.classList.toggle("has-results", currentRows.length > 0);
+    root.setAttribute("data-forge-mobile-command-results-count-062f3c", String(currentRows.length));
+    if (currentRows.length > 0) {
+      root.setAttribute("data-forge-mobile-command-output-visible-062f3c", "true");
+    } else {
+      root.removeAttribute("data-forge-mobile-command-output-visible-062f3c");
+    }
+
+    currentRows.forEach(function (command, index) {
+      var action = actionById(model, command.actionId);
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "alfred-command-result-062f3c";
+      button.setAttribute("role", "option");
+      button.setAttribute("data-index", String(index));
+      button.setAttribute("aria-selected", index === activeIndex ? "true" : "false");
+      button.innerHTML =
+        '<span>' +
+          '<span class="alfred-command-result-062f3c__title">' + command.title + '</span>' +
+          '<span class="alfred-command-result-062f3c__subtitle">' + command.subtitle + '</span>' +
+        '</span>' +
+        '<span class="alfred-command-result-062f3c__status">' + statusLabel(action) + '</span>';
+      button.addEventListener("click", function () {
+        selectCommand(root, input, results, command);
+      });
+      results.appendChild(button);
+    });
+  }
+
+  function bind() {
+    if (!isMobileViewport()) {
+      return;
+    }
+    var root = findRoot();
+    var input = findInput(root);
+    var results = findResults(root);
+    if (!root || !input || !results || input.getAttribute("data-forge-mobile-command-contract-bound-062f3c") === "true") {
+      return;
+    }
+
+    root.setAttribute("data-forge-mobile-command-contract-bound-062f3c", "true");
+    input.setAttribute("data-forge-mobile-command-contract-bound-062f3c", "true");
+    input.setAttribute("placeholder", "/quick actions");
+
+    input.addEventListener("input", function () {
+      activeIndex = 0;
+      renderRows(root, input, results);
+      window.setTimeout(function () {
+        if (currentRows.length > 0) {
+          root.classList.add("has-results");
+          root.setAttribute("data-forge-mobile-command-output-visible-062f3c", "true");
+        }
+      }, 0);
+    });
+
+    input.addEventListener("keydown", function (event) {
+      if (!currentRows.length) {
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        activeIndex = (activeIndex + 1) % currentRows.length;
+        renderRows(root, input, results);
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        activeIndex = (activeIndex + currentRows.length - 1) % currentRows.length;
+        renderRows(root, input, results);
+      }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        selectCommand(root, input, results, currentRows[activeIndex]);
+      }
+    });
+
+    document.documentElement.setAttribute("data-forge-mobile-command-contract-binding-062f3c", "true");
+    renderRows(root, input, results);
+  }
+
+  function scheduleBind() {
+    bind();
+    window.setTimeout(bind, 250);
+    window.setTimeout(bind, 800);
+    window.setTimeout(bind, 1600);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleBind, { once: true });
+  } else {
+    scheduleBind();
+  }
+  window.addEventListener("load", scheduleBind);
+  window.addEventListener("resize", scheduleBind);
+  window.__forgeRunMobileCommandContractBindingRepair062F3C = scheduleBind;
+})();
+/* FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:END */

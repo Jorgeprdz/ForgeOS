@@ -1318,3 +1318,140 @@
   }
 }
 /* FORGEOS:QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1:END */
+
+/* FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:START */
+@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+  .alfred-command-root-056k5[data-forge-mobile-command-contract-bound-062f3c="true"].has-results .alfred-command-results-056k5 {
+    display: grid !important;
+    gap: 8px !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
+    visibility: visible !important;
+  }
+
+  .alfred-command-root-056k5[data-forge-mobile-command-contract-bound-062f3c="true"].is-open {
+    width: min(calc(100vw - 32px), 380px) !important;
+  }
+
+  .alfred-command-root-056k5[data-forge-mobile-command-contract-bound-062f3c="true"][data-forge-mobile-command-output-visible-062f3c="true"] .alfred-command-results-056k5 {
+    display: grid !important;
+    gap: 8px !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
+    visibility: visible !important;
+  }
+
+  .alfred-command-root-056k5[data-forge-mobile-command-contract-bound-062f3c="true"] .alfred-command-results-056k5 {
+    width: 100% !important;
+    max-height: min(46vh, 330px) !important;
+    overflow: auto !important;
+  }
+
+  .alfred-command-result-062f3c {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-height: 62px !important;
+    padding: 11px 12px !important;
+    border: 1px solid rgba(139, 232, 255, 0.16) !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.055) !important;
+    color: #f5f8ff !important;
+    text-align: left !important;
+  }
+
+  .alfred-command-result-062f3c[aria-selected="true"] {
+    border-color: rgba(245, 213, 128, 0.36) !important;
+    background: linear-gradient(135deg, rgba(245, 213, 128, 0.13), rgba(117, 231, 223, 0.08)) !important;
+  }
+
+  .alfred-command-result-062f3c__title,
+  .alfred-command-result-062f3c__subtitle {
+    display: block !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .alfred-command-result-062f3c__title {
+    font-size: 13px !important;
+    font-weight: 850 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .alfred-command-result-062f3c__subtitle {
+    margin-top: 4px !important;
+    color: rgba(226, 232, 240, 0.72) !important;
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+  }
+
+  .alfred-command-result-062f3c__status {
+    border: 1px solid rgba(139, 232, 255, 0.24) !important;
+    border-radius: 999px !important;
+    padding: 5px 8px !important;
+    color: rgba(155, 238, 255, 0.92) !important;
+    background: rgba(139, 232, 255, 0.1) !important;
+    font-size: 10px !important;
+    font-weight: 850 !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+  }
+
+  .forge-mobile-action-preview-payload-062f3c {
+    display: grid !important;
+    gap: 7px !important;
+    margin-top: 8px !important;
+    padding: 12px !important;
+    border: 1px solid rgba(245, 213, 128, 0.22) !important;
+    border-radius: 18px !important;
+    color: rgba(245, 248, 255, 0.92) !important;
+    background:
+      linear-gradient(180deg, rgba(12, 26, 42, 0.96), rgba(5, 13, 24, 0.94)) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 18px 46px rgba(0, 0, 0, 0.34) !important;
+  }
+
+  .forge-mobile-action-preview-payload-062f3c__head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+  }
+
+  .forge-mobile-action-preview-payload-062f3c__title {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    color: #f8fbff !important;
+    font-size: 13px !important;
+    font-weight: 850 !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .forge-mobile-action-preview-payload-062f3c__status {
+    flex: 0 0 auto !important;
+    border: 1px solid rgba(245, 213, 128, 0.3) !important;
+    border-radius: 999px !important;
+    padding: 4px 7px !important;
+    color: rgba(245, 213, 128, 0.95) !important;
+    background: rgba(245, 213, 128, 0.1) !important;
+    font-size: 10px !important;
+    font-weight: 850 !important;
+    text-transform: uppercase !important;
+  }
+
+  .forge-mobile-action-preview-payload-062f3c__body {
+    margin: 0 !important;
+    color: rgba(226, 232, 240, 0.78) !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+}
+/* FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:END */

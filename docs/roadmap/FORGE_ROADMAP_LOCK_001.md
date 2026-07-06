@@ -2476,3 +2476,24 @@ DECISION=PASS_062F3_LOCAL_SERVER_QUICK_ACTIONS_QA
 
 NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
 <!-- FORGEOS:LOCAL_QUICK_ACTIONS_QA_062F3:END -->
+
+<!-- FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:START -->
+## 062F3C Mobile Command Contract Binding Repair
+
+062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR: PASS / IMPLEMENTED.
+
+Mobile command UI now resolves `/quick actions`, quote, follow, review, and open commands against the same static preview read-model contract used by desktop/tablet.
+
+Local evidence confirms visible mobile results, visible preview-safe payloads, no-effect policy copy, and no desktop/tablet regression.
+
+Evidence:
+
+- `docs/evidence/forge-mobile-command-contract-binding-repair-audit-062f3c.json`
+- `docs/evidence/FORGE_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C.md`
+- `docs/evidence/FORGE_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_CERTIFICATE_062F3C.md`
+- `docs/architecture/source-truth/FORGE_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_CLOSURE_062F3C.md`
+
+DECISION=PASS_062F3C_MOBILE_COMMAND_CONTRACT_BINDING_REPAIR
+
+NEXT=062F3D_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK
+<!-- FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:END -->
