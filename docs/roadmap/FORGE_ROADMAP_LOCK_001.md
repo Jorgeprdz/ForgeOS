@@ -2455,3 +2455,24 @@ DECISION=PASS_062F1_QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR
 
 NEXT=062F2_ACTION_CONTRACT_READ_MODEL_PREVIEW_QA_LOCK
 <!-- FORGEOS:QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1:END -->
+
+<!-- FORGEOS:LOCAL_QUICK_ACTIONS_QA_062F3:START -->
+## 062F3 Local Server Quick Actions QA
+
+062F3_LOCAL_SERVER_QUICK_ACTIONS_QA: PASS / LOCAL QA LOCKED.
+
+The repo source on `main` serves the 062F1 repair correctly through a local static server. `/quick actions` opens a visible result panel locally, payload previews remain preview-safe, and mobile/tablet guards remain stable.
+
+This is local QA evidence only. Public Pages still requires a deploy-sync retry because 062F2 observed stale public assets.
+
+Evidence:
+
+- `docs/evidence/forge-local-quick-actions-qa-audit-062f3.json`
+- `docs/evidence/FORGE_LOCAL_QUICK_ACTIONS_QA_062F3.md`
+- `docs/evidence/FORGE_LOCAL_QUICK_ACTIONS_QA_CERTIFICATE_062F3.md`
+- `docs/architecture/source-truth/FORGE_LOCAL_QUICK_ACTIONS_QA_CLOSURE_062F3.md`
+
+DECISION=PASS_062F3_LOCAL_SERVER_QUICK_ACTIONS_QA
+
+NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
+<!-- FORGEOS:LOCAL_QUICK_ACTIONS_QA_062F3:END -->

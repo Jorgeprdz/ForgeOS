@@ -1,0 +1,275 @@
+{
+  "phase": "062F3_LOCAL_SERVER_QUICK_ACTIONS_QA",
+  "mode": "local static server QA before Pages retry",
+  "boundary": "local QA evidence only; no static preview mutation; no CSS/JS/HTML mutation; no CRM; no calendar; no send; no auth; no runtime/storage; no provider execution; no real engine execution",
+  "commitExpected": "3ecb7c2 fix: repair quick actions panel active state",
+  "url": "http://127.0.0.1:8080/docs/static-preview/forge-alive/?v=062f1",
+  "status": "PASS",
+  "screenshots": [
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-quick-actions-1366x768.png",
+      "viewport": "1366x768",
+      "query": "/quick actions",
+      "selected": false
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-cotizar-1366x768.png",
+      "viewport": "1366x768",
+      "query": "/cotizar GMM Lariza",
+      "selected": true
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-follow-1366x768.png",
+      "viewport": "1366x768",
+      "query": "Follow Juan",
+      "selected": true
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-revisar-1366x768.png",
+      "viewport": "1366x768",
+      "query": "Revisar Lariza",
+      "selected": true
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-abrir-1366x768.png",
+      "viewport": "1366x768",
+      "query": "Abrir Octavio",
+      "selected": true
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-mobile-390x844.png",
+      "viewport": "390x844",
+      "query": null,
+      "selected": false
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-tablet-landscape-1024x768.png",
+      "viewport": "1024x768",
+      "query": null,
+      "selected": false
+    }
+  ],
+  "checks": {
+    "localServerLoads": true,
+    "localIndexLoadsCssJs062f1": true,
+    "localJsContains062f1Repair": true,
+    "localCssContains062f1Repair": true,
+    "pageLoadsNoBlank": true,
+    "binding062ePresent": true,
+    "quickRepair062f1Present": true,
+    "quickActionsPanelActiveAttr": true,
+    "quickActionsPanelVisible": true,
+    "quickActionsPanelLegible": true,
+    "cotizarPayloadQuotePrepare": true,
+    "followJuanPayloadApproval": true,
+    "revisarLarizaPreviewOnly": true,
+    "abrirOctavioPreviewOnly": true,
+    "payloadShowsRealEffectsDisabled": true,
+    "payloadShowsSourceStatusBlocksPolicy": true,
+    "policyBlocksRealEffects": true,
+    "noHorizontalOverflowMobileTablet": true,
+    "topbarJVisible": true,
+    "profileMenuSafe": true,
+    "noRealActionTextBoundary": true
+  },
+  "payloads": {
+    "forge-local-quick-actions-062f3-cotizar-1366x768.png_payload": {
+      "actionId": "quote.prepare_preview",
+      "blockedReasons": [
+        "Requiere aprobacion humana antes de cualquier efecto real."
+      ],
+      "commandId": "quote-lariza",
+      "modelName": "forge.alive.workspace.read_model.v1",
+      "policy": {
+        "externalEffectsAllowed": false,
+        "messageDeliveryAllowed": false,
+        "providerExecutionAllowed": false,
+        "recordMutationAllowed": false,
+        "scheduleMutationAllowed": false
+      },
+      "previewOnly": true,
+      "previewSummary": "Prepara workspace de cotizacion sin emitir documentos.",
+      "realEffectsAllowed": false,
+      "requiresHumanApproval": true,
+      "sourceModule": "cotizaciones",
+      "status": "needs_approval",
+      "targetId": "opp-lariza-gmm",
+      "targetType": "opportunity"
+    },
+    "forge-local-quick-actions-062f3-follow-1366x768.png_payload": {
+      "actionId": "client.follow_preview",
+      "blockedReasons": [
+        "Requiere aprobacion humana antes de cualquier efecto real."
+      ],
+      "commandId": "follow-juan",
+      "modelName": "forge.alive.workspace.read_model.v1",
+      "policy": {
+        "externalEffectsAllowed": false,
+        "messageDeliveryAllowed": false,
+        "providerExecutionAllowed": false,
+        "recordMutationAllowed": false,
+        "scheduleMutationAllowed": false
+      },
+      "previewOnly": true,
+      "previewSummary": "Prepara seguimiento con aprobacion humana requerida.",
+      "realEffectsAllowed": false,
+      "requiresHumanApproval": true,
+      "sourceModule": "clientes",
+      "status": "needs_approval",
+      "targetId": "client-juan",
+      "targetType": "client"
+    },
+    "forge-local-quick-actions-062f3-revisar-1366x768.png_payload": {
+      "actionId": "opportunity.review",
+      "blockedReasons": [
+        "Disponible solo como preview seguro."
+      ],
+      "commandId": "review-lariza",
+      "modelName": "forge.alive.workspace.read_model.v1",
+      "policy": {
+        "externalEffectsAllowed": false,
+        "messageDeliveryAllowed": false,
+        "providerExecutionAllowed": false,
+        "recordMutationAllowed": false,
+        "scheduleMutationAllowed": false
+      },
+      "previewOnly": true,
+      "previewSummary": "Abre detalle local de oportunidad y riesgo.",
+      "realEffectsAllowed": false,
+      "requiresHumanApproval": false,
+      "sourceModule": "pipeline",
+      "status": "preview_only",
+      "targetId": "opp-lariza-gmm",
+      "targetType": "opportunity"
+    },
+    "forge-local-quick-actions-062f3-abrir-1366x768.png_payload": {
+      "actionId": "record.open_preview",
+      "blockedReasons": [
+        "Disponible solo como preview seguro."
+      ],
+      "commandId": "open-octavio",
+      "modelName": "forge.alive.workspace.read_model.v1",
+      "policy": {
+        "externalEffectsAllowed": false,
+        "messageDeliveryAllowed": false,
+        "providerExecutionAllowed": false,
+        "recordMutationAllowed": false,
+        "scheduleMutationAllowed": false
+      },
+      "previewOnly": true,
+      "previewSummary": "Abre detalle local del registro en modo preview.",
+      "realEffectsAllowed": false,
+      "requiresHumanApproval": false,
+      "sourceModule": "workspace",
+      "status": "preview_only",
+      "targetId": "client-octavio",
+      "targetType": "client"
+    }
+  },
+  "profileMenu": {
+    "clicked": true,
+    "labelsPresent": {
+      "Jorge Fernandez": true,
+      "Asesor financiero": true,
+      "Cambiar tema": true,
+      "Opciones": true,
+      "Cerrar sesión": true,
+      "Vista estática segura": true
+    }
+  },
+  "quickActionsPanelEvidence": [
+    {
+      "className": "dw-command-results-056y",
+      "display": "grid",
+      "hidden": false,
+      "opacity": "1",
+      "rect": {
+        "height": 18,
+        "width": 882,
+        "x": 282,
+        "y": 215.28334045410156
+      },
+      "text": "",
+      "visibility": "visible"
+    },
+    {
+      "className": "forge-contract-results-062c dw-command-results-056y",
+      "display": "grid",
+      "hidden": false,
+      "opacity": "1",
+      "rect": {
+        "height": 286.4333190917969,
+        "width": 1038,
+        "x": 250,
+        "y": 226.28334045410156
+      },
+      "text": "/quick actions\nLista acciones preview-safe disponibles para este workspace.\nPREVIEW ONLY\nPreparar preview\nConstruye un resumen revisable sin ejecutar efectos reales.\nAPPROVAL\nRevisar Lariza\nAbre detalle local de oportunidad y riesgo.\nPREVIEW ONLY\n/follow Juan\nPrepara seguimiento con aprobacion humana requerida.\nAPPROVAL\n/cotizar GMM Lariza\nPrepara workspace de cotizacion sin emitir documentos.\nAPPROVAL\nAbrir Octavio\nAbre detalle local del registro en modo preview.\nPREVIEW ONLY",
+      "visibility": "visible"
+    }
+  ],
+  "overflowMeasurements": [
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-quick-actions-1366x768.png",
+      "viewport": "1366x768",
+      "scrollWidth": 1354,
+      "clientWidth": 1354,
+      "bodyScrollWidth": 1354,
+      "bodyClientWidth": 1354
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-cotizar-1366x768.png",
+      "viewport": "1366x768",
+      "scrollWidth": 1354,
+      "clientWidth": 1354,
+      "bodyScrollWidth": 1354,
+      "bodyClientWidth": 1354
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-follow-1366x768.png",
+      "viewport": "1366x768",
+      "scrollWidth": 1354,
+      "clientWidth": 1354,
+      "bodyScrollWidth": 1354,
+      "bodyClientWidth": 1354
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-revisar-1366x768.png",
+      "viewport": "1366x768",
+      "scrollWidth": 1354,
+      "clientWidth": 1354,
+      "bodyScrollWidth": 1354,
+      "bodyClientWidth": 1354
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-abrir-1366x768.png",
+      "viewport": "1366x768",
+      "scrollWidth": 1354,
+      "clientWidth": 1354,
+      "bodyScrollWidth": 1354,
+      "bodyClientWidth": 1354
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-mobile-390x844.png",
+      "viewport": "390x844",
+      "scrollWidth": 488,
+      "clientWidth": 488,
+      "bodyScrollWidth": 488,
+      "bodyClientWidth": 488
+    },
+    {
+      "path": "docs/evidence/forge-local-quick-actions-062f3-tablet-landscape-1024x768.png",
+      "viewport": "1024x768",
+      "scrollWidth": 1012,
+      "clientWidth": 1012,
+      "bodyScrollWidth": 1012,
+      "bodyClientWidth": 1012
+    }
+  ],
+  "decisionToken": "PASS_062F3_LOCAL_SERVER_QUICK_ACTIONS_QA",
+  "next": "062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY",
+  "notes": [
+    "Local static server confirms repo source serves 062F1 CSS/JS cache-busted assets.",
+    "/quick actions panel is visible locally with nonzero panel dimensions.",
+    "Payload panels remain preview-safe and no app mutation was performed during QA."
+  ]
+}

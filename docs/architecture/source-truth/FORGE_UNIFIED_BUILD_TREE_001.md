@@ -3459,3 +3459,33 @@ DECISION=PASS_062F1_QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR
 
 NEXT=062F2_ACTION_CONTRACT_READ_MODEL_PREVIEW_QA_LOCK
 <!-- FORGEOS:QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1:END -->
+
+<!-- FORGEOS:LOCAL_QUICK_ACTIONS_QA_062F3:START -->
+## 062F3 Local Server Quick Actions QA
+
+Status: PASS / LOCAL QA LOCKED.
+
+062F3 validates the 062F1 quick actions active-state repair against local static serving before another public Pages retry.
+
+Local URL:
+`http://127.0.0.1:8080/docs/static-preview/forge-alive/?v=062f1`
+
+Confirmed:
+
+- local source serves `?v=062f1` CSS/JS;
+- repaired JS/CSS include `QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1`;
+- `/quick actions` shows a visible command result panel;
+- preview payload contracts remain safe and no-effect;
+- mobile/tablet guards remain stable.
+
+Evidence:
+
+- `docs/evidence/forge-local-quick-actions-qa-audit-062f3.json`
+- `docs/evidence/FORGE_LOCAL_QUICK_ACTIONS_QA_062F3.md`
+- `docs/evidence/FORGE_LOCAL_QUICK_ACTIONS_QA_CERTIFICATE_062F3.md`
+- `docs/architecture/source-truth/FORGE_LOCAL_QUICK_ACTIONS_QA_CLOSURE_062F3.md`
+
+DECISION=PASS_062F3_LOCAL_SERVER_QUICK_ACTIONS_QA
+
+NEXT=062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
+<!-- FORGEOS:LOCAL_QUICK_ACTIONS_QA_062F3:END -->
