@@ -1,0 +1,41 @@
+{
+  "phase": "065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK",
+  "status": "PASS",
+  "decision": "CLIENT_CRM_READ_ONLY_ADAPTER_LOCKED",
+  "basePhase": "065C_CLIENT_CRM_READ_ONLY_ADAPTER_QA_LOCK",
+  "lockedAdapter": {
+    "adapterId": "forge.client_crm.read_only.adapter.v1",
+    "adapterFile": "platform/adapters/client-crm/client-crm-read-only-adapter-065b.js",
+    "testFile": "tests/client-crm-read-only-adapter-065b-test.js",
+    "adapterType": "local_static_fixture",
+    "adapterMode": "read_only",
+    "domainId": "client_crm"
+  },
+  "lockedRoutes": [
+    "forge.api.read.client_crm.list.v1",
+    "forge.api.read.client_crm.detail.v1"
+  ],
+  "lockedGuarantees": [
+    "backend_read_model_envelope",
+    "safe_empty_state",
+    "CLIENT_CRM_NOT_MODELED",
+    "read_model_used_audit_event",
+    "all_safety_flags_false"
+  ],
+  "stillBlocked": [
+    "crm_write",
+    "calendar_create",
+    "message_send",
+    "quote_create",
+    "policy_update",
+    "provider_call",
+    "secret_access",
+    "browser_persistence",
+    "real_engine_execution"
+  ],
+  "uiMutation": false,
+  "backendConnection": false,
+  "crmWrite": false,
+  "realEffectsEnabled": false,
+  "next": "066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE"
+}

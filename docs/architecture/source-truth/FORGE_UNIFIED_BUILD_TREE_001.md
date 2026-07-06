@@ -4160,3 +4160,30 @@ DECISION=PASS_065C_CLIENT_CRM_READ_ONLY_ADAPTER_QA_LOCK
 
 NEXT=065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK
 <!-- FORGE:065C_CLIENT_CRM_READ_ONLY_ADAPTER_QA_LOCK:END -->
+
+<!-- FORGE:065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK:START -->
+## 065D Client CRM Read-Only Adapter Decision Lock
+
+065D locks the 065B/065C Client CRM read-only adapter as the first accepted implemented backend module adapter pattern.
+
+Decision:
+`CLIENT_CRM_READ_ONLY_ADAPTER_LOCKED`
+
+Locked adapter:
+`forge.client_crm.read_only.adapter.v1`
+
+Locked properties:
+
+- local static fixture;
+- read-only mode;
+- list/detail routes;
+- backend read model envelope;
+- safe empty state;
+- `CLIENT_CRM_NOT_MODELED`;
+- audit event `read_model_used`;
+- all real-effect flags false.
+
+DECISION=PASS_065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK
+
+NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+<!-- FORGE:065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK:END -->
