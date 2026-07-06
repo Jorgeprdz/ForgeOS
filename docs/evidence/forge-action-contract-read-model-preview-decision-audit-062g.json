@@ -1,0 +1,58 @@
+{
+  "phase": "062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK",
+  "mode": "documental decision lock after local and public command contract QA",
+  "boundary": "docs/decision only; no UI mutation; no CSS/JS/HTML mutation; no CRM; no calendar; no send; no auth; no runtime/storage; no provider execution; no real engine execution",
+  "baseCommit": "4e6b873 docs: lock public command contract qa",
+  "decision": "ACTION_CONTRACT_READ_MODEL_PREVIEW_LOCKED",
+  "status": "PASS",
+  "rating": "9.1 / 10",
+  "staticPreviewCeilingBeforeRealModuleConnection": "9.1 / 10",
+  "closedBase": [
+    "062A action contracts scope",
+    "062B read model unification scope",
+    "062C command bar action contract implementation",
+    "062C1 command result visual repair",
+    "062D command contract QA lock",
+    "062E action preview payload binding",
+    "062F1 quick actions active-state repair",
+    "062F3 local quick actions QA",
+    "062F3C mobile command contract binding repair",
+    "062F3D local mobile command contract QA",
+    "062F4 public Pages command contract QA"
+  ],
+  "lockedSummary": {
+    "desktopCommandContractsWork": true,
+    "tabletCommandContractsWork": true,
+    "mobileCommandContractsWork": true,
+    "quickActionsVisibleLegible": true,
+    "cotizarGmmLarizaActionId": "quote.prepare_preview",
+    "followJuanActionId": "client.follow_preview",
+    "revisarLarizaActionId": "opportunity.review",
+    "abrirOctavioActionId": "record.open_preview",
+    "payloadUsesReadModelActionContractShape": true,
+    "payloadExposesPreviewSafeStatusSourceBlockingPolicy": true,
+    "realEffectsRemainDisabled": true,
+    "localQaPassed": true,
+    "publicPagesQaPassed": true,
+    "pagesServesCurrentAssets": "?v=062f3c"
+  },
+  "guardrails": {
+    "crm": "disabled",
+    "calendar": "disabled",
+    "send": "disabled",
+    "auth": "not enabled",
+    "provider": "not executed",
+    "storage": "not enabled",
+    "browserRequestEffects": "not enabled",
+    "realEngine": "not executed"
+  },
+  "evidence": [
+    "docs/evidence/forge-public-pages-command-contract-qa-audit-062f4.json",
+    "docs/evidence/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4.md",
+    "docs/evidence/FORGE_PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_CERTIFICATE_062F4.md",
+    "docs/evidence/forge-local-mobile-command-contract-qa-audit-062f3d.json",
+    "docs/evidence/FORGE_LOCAL_MOBILE_COMMAND_CONTRACT_QA_LOCK_062F3D.md"
+  ],
+  "result": "PASS_062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK",
+  "next": "063A_STATIC_PREVIEW_RELEASE_GUARD_SCOPE"
+}

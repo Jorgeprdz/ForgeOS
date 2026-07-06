@@ -3581,3 +3581,43 @@ DECISION=PASS_062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
 
 NEXT=062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK
 <!-- FORGEOS:PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4:END -->
+
+<!-- FORGEOS:ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G:START -->
+## 062G Action Contract Read Model Preview Decision Lock
+
+Status: PASS / DECISION LOCKED.
+
+Decision:
+`ACTION_CONTRACT_READ_MODEL_PREVIEW_LOCKED`
+
+Rating:
+`9.1 / 10`
+
+062G closes the static command action contract/read-model preview track. The static preview has reached the ceiling before real module connection.
+
+Confirmed:
+
+- desktop/tablet/mobile command contracts work;
+- command payloads resolve to the expected preview action ids;
+- payloads expose preview-safe status/source/blocking/policy;
+- local QA and public Pages QA passed;
+- Pages serves current `?v=062f3c` assets;
+- real effects remain disabled.
+
+Boundary:
+
+Decision/docs only. No UI, CSS, JS, HTML, CRM, calendar, send, auth, runtime/storage, provider execution, or real engine behavior was changed.
+
+Evidence:
+
+- `docs/architecture/source-truth/FORGE_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G.md`
+- `docs/evidence/FORGE_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G.md`
+- `docs/evidence/FORGE_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_CERTIFICATE_062G.md`
+- `docs/evidence/forge-action-contract-read-model-preview-decision-audit-062g.json`
+
+DECISION=ACTION_CONTRACT_READ_MODEL_PREVIEW_LOCKED
+
+RESULT=PASS_062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK
+
+NEXT=063A_STATIC_PREVIEW_RELEASE_GUARD_SCOPE
+<!-- FORGEOS:ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G:END -->

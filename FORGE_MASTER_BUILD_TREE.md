@@ -5927,3 +5927,48 @@ DECISION=PASS_062F4_PUBLIC_PAGES_DEPLOY_SYNC_RETRY
 
 NEXT=062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK
 <!-- FORGEOS:PUBLIC_PAGES_COMMAND_CONTRACT_QA_LOCK_062F4:END -->
+
+<!-- FORGEOS:ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G:START -->
+## 062G Action Contract Read Model Preview Decision Lock
+
+Status: PASS / DECISION LOCKED.
+
+Decision:
+`ACTION_CONTRACT_READ_MODEL_PREVIEW_LOCKED`
+
+Rating:
+`9.1 / 10`
+
+062G locks the action contract/read-model preview track after local and public command contract QA passed.
+
+Locked summary:
+
+- desktop command contracts work;
+- tablet command contracts work;
+- mobile command contracts work;
+- `/quick actions` is visible and legible;
+- `/cotizar GMM Lariza` resolves to `quote.prepare_preview`;
+- `Follow Juan` resolves to `client.follow_preview`;
+- `Revisar Lariza` resolves to `opportunity.review`;
+- `Abrir Octavio` resolves to `record.open_preview`;
+- payload exposes preview-safe status/source/blocking/policy;
+- real effects remain disabled;
+- Pages serves current `?v=062f3c` assets.
+
+Boundary:
+
+Decision/docs only. No UI, CSS, JS, HTML, CRM, calendar, send, auth, runtime/storage, provider execution, or real engine behavior was changed.
+
+Evidence:
+
+- `docs/architecture/source-truth/FORGE_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G.md`
+- `docs/evidence/FORGE_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G.md`
+- `docs/evidence/FORGE_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_CERTIFICATE_062G.md`
+- `docs/evidence/forge-action-contract-read-model-preview-decision-audit-062g.json`
+
+DECISION=ACTION_CONTRACT_READ_MODEL_PREVIEW_LOCKED
+
+RESULT=PASS_062G_ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK
+
+NEXT=063A_STATIC_PREVIEW_RELEASE_GUARD_SCOPE
+<!-- FORGEOS:ACTION_CONTRACT_READ_MODEL_PREVIEW_DECISION_LOCK_062G:END -->
