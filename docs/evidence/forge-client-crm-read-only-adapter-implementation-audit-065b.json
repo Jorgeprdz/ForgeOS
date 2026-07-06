@@ -1,0 +1,34 @@
+{
+  "phase": "065B_CLIENT_CRM_READ_ONLY_ADAPTER_IMPLEMENTATION",
+  "status": "PASS",
+  "basePhase": "065A_CLIENT_CRM_READ_ONLY_ADAPTER_SCOPE",
+  "adapterFile": "platform/adapters/client-crm/client-crm-read-only-adapter-065b.js",
+  "testFile": "tests/client-crm-read-only-adapter-065b-test.js",
+  "adapter": {
+    "adapterId": "forge.client_crm.read_only.adapter.v1",
+    "adapterType": "local_static_fixture",
+    "adapterMode": "read_only",
+    "routeClass": "read_only",
+    "domainId": "client_crm"
+  },
+  "routesImplemented": [
+    "forge.api.read.client_crm.list.v1",
+    "forge.api.read.client_crm.detail.v1"
+  ],
+  "fixtures": [
+    "client_preview_lariza",
+    "client_preview_octavio"
+  ],
+  "outputs": [
+    "readModelEnvelope",
+    "auditEvent",
+    "emptyState",
+    "safeErrors",
+    "safety"
+  ],
+  "uiMutation": false,
+  "backendConnection": false,
+  "crmWrite": false,
+  "realEffectsEnabled": false,
+  "next": "065C_CLIENT_CRM_READ_ONLY_ADAPTER_QA_LOCK"
+}

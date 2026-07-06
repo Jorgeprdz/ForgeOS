@@ -4105,3 +4105,34 @@ DECISION=PASS_065A_CLIENT_CRM_READ_ONLY_ADAPTER_SCOPE
 
 NEXT=065B_CLIENT_CRM_READ_ONLY_ADAPTER_IMPLEMENTATION
 <!-- FORGE:065A_CLIENT_CRM_READ_ONLY_ADAPTER_SCOPE:END -->
+
+<!-- FORGE:065B_CLIENT_CRM_READ_ONLY_ADAPTER_IMPLEMENTATION:START -->
+## 065B Client CRM Read-Only Adapter Implementation
+
+065B implements the first Client CRM adapter as a local static read-only fixture.
+
+Files:
+
+- `platform/adapters/client-crm/client-crm-read-only-adapter-065b.js`
+- `tests/client-crm-read-only-adapter-065b-test.js`
+
+Adapter:
+`forge.client_crm.read_only.adapter.v1`
+
+Routes:
+
+- `forge.api.read.client_crm.list.v1`
+- `forge.api.read.client_crm.detail.v1`
+
+Safety:
+
+- no backend connection;
+- no CRM write;
+- no provider runtime;
+- no secret access;
+- no real effects.
+
+DECISION=PASS_065B_CLIENT_CRM_READ_ONLY_ADAPTER_IMPLEMENTATION
+
+NEXT=065C_CLIENT_CRM_READ_ONLY_ADAPTER_QA_LOCK
+<!-- FORGE:065B_CLIENT_CRM_READ_ONLY_ADAPTER_IMPLEMENTATION:END -->
