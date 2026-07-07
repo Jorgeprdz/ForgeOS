@@ -7074,5 +7074,32 @@ DECISION=PASS_068D_POLICY_READ_MODEL_DECISION_LOCK
 
 LOCKED_DECISION=POLICY_READ_MODEL_LOCKED_AS_TEMPORARY_LOCAL_STATIC_READ_ONLY_ADAPTER
 
-NEXT=069A_QUOTE_READ_MODEL_SCOPE
+NEXT=069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE
 <!-- FORGE:068D_POLICY_READ_MODEL_DECISION_LOCK:END -->
+
+<!-- FORGE:069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE:START -->
+## 069A Quote Read Model And Existing Engine Reconciliation Scope
+
+069A reconciles the planned Quote Read Model lane with existing quote, cotizacion, product, proposal, parser, fixture, and quote-policy comparison modules.
+
+Locked decision:
+`QUOTE_READ_MODEL_EXISTING_ENGINE_RECONCILIATION_SCOPED`
+
+Alternative not selected:
+`QUOTE_READ_MODEL_SOURCE_GAP_SCOPED`
+
+Scope:
+
+- do not invent a new quote engine;
+- treat existing quote-related engines as candidate engines until inputs, outputs, evidence, freshness, tests, and side effects are mapped;
+- separate Existing Quote Engine, Quote Read Model, Quote Action Contract, and Approval Gate;
+- define `QUOTE_READ_MODEL_NOT_MODELED` as the safe error;
+- keep Quote Read Model read-only and preview-safe;
+- no CRM, policy, quote, pipeline, task, calendar, message, provider, auth, secret, persistence, backend, real engine, approval bypass, or invented quote truth.
+
+DECISION=PASS_069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE
+
+LOCKED_DECISION=QUOTE_READ_MODEL_EXISTING_ENGINE_RECONCILIATION_SCOPED
+
+NEXT=069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE
+<!-- FORGE:069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE:END -->

@@ -1,0 +1,165 @@
+{
+  "phase": "069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE",
+  "lockedDecision": "QUOTE_READ_MODEL_EXISTING_ENGINE_RECONCILIATION_SCOPED",
+  "alternativeDecisionNotSelected": "QUOTE_READ_MODEL_SOURCE_GAP_SCOPED",
+  "basePhase": "068D_POLICY_READ_MODEL_DECISION_LOCK",
+  "baseCommit": "60068fc",
+  "next": "069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE",
+  "safeErrorCode": "QUOTE_READ_MODEL_NOT_MODELED",
+  "discoveryConclusion": {
+    "existingQuoteRelatedEnginesFound": true,
+    "newQuoteEngineAuthorized": false,
+    "quoteReadModelImplementationAuthorized": false,
+    "inputOutputMappingRequiredFirst": true
+  },
+  "existingModulesFound": [
+    {
+      "path": "gmm-quote-summary-engine.js",
+      "purpose": "Summarizes GMM quote text into prospect, product, plan, premium, coverage, deductible, coinsurance and advisor summary fields.",
+      "classification": "existing_quote_summary_engine",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Monetary and coverage fields can be misread as real quote truth without evidence, freshness, and preview labels."
+    },
+    {
+      "path": "product-intelligence/evidence/gmm-quote-parser.js",
+      "purpose": "Parses structured GMM quote fields from text.",
+      "classification": "quote_parser_evidence_helper",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Parser output is candidate evidence and must not become final truth by itself."
+    },
+    {
+      "path": "product-intelligence/quotes/quotation-extraction-result.entity.js",
+      "purpose": "Creates quotation extraction result envelope with raw text, extracted fields, confidence, and createdAt.",
+      "classification": "quote_extraction_entity",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Generated identifiers and timestamps require deterministic preview wrapping before QA."
+    },
+    {
+      "path": "product-intelligence/quotes/quotation-input.entity.js",
+      "purpose": "File exists but no legible content was observed in current static inspection.",
+      "classification": "unclear_quote_entity_gap",
+      "readOnlyCandidate": false,
+      "realEffectRisk": "Needs 069B mapping before use."
+    },
+    {
+      "path": "quote-to-policy-comparison-engine.js",
+      "purpose": "Compares quote summary to issued policy summary and produces changed fields, expectation gaps, alerts and warnings.",
+      "classification": "policy_quote_bridge_comparison_engine",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Comparison must not be treated as coverage, claim, or issued-policy truth."
+    },
+    {
+      "path": "proposal-family-engine.js",
+      "purpose": "Groups quote summaries into proposal scenarios and labels economic, balanced, and premium options.",
+      "classification": "proposal_scenario_grouping_engine",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Scenario grouping can be misread as recommendation without action-contract boundary."
+    },
+    {
+      "path": "fixtures/vida-mujer-quote-fixture.json",
+      "purpose": "Static Vida Mujer quote-like fixture with UDI premium and coverage fields.",
+      "classification": "quote_fixture",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Fixture values require source metadata and preview labels."
+    },
+    {
+      "path": "docs/04-product-intelligence/FORGE_LARIZA_QUOTE_REVIEW.md",
+      "purpose": "Human-readable GMM quote review from a quote PDF.",
+      "classification": "quote_review_evidence_doc",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Quote values remain illustrative and source-linked."
+    },
+    {
+      "path": "docs/04-product-intelligence/FORGE_QUOTE_VS_POLICY_ANALYSIS.md",
+      "purpose": "Compares quote document to policy document and states issued policy controls.",
+      "classification": "quote_policy_boundary_evidence_doc",
+      "readOnlyCandidate": true,
+      "realEffectRisk": "Must not infer issued terms from quote assumptions."
+    }
+  ],
+  "requiredSeparation": {
+    "existingQuoteEngine": "candidate_engine_until_inputs_outputs_evidence_and_side_effects_are_mapped",
+    "quoteReadModel": "read_only_preview_safe_envelope_for_existing_quote_candidates_summaries_or_comparisons",
+    "quoteActionContract": "future_prepare_generate_send_save_convert_quote_actions_require_contract",
+    "approvalGate": "required_before_any_real_quote_execution_or_send"
+  },
+  "candidateReadModelFields": [
+    "quote_id",
+    "client_ref",
+    "policy_ref",
+    "opportunity_ref",
+    "product_ref",
+    "quote_type",
+    "quote_status",
+    "carrier_ref",
+    "premium_preview",
+    "coverage_summary",
+    "deductible_preview",
+    "coinsurance_preview",
+    "sum_assured_preview",
+    "payment_frequency",
+    "valid_until",
+    "assumptions",
+    "exclusions_or_waiting_periods",
+    "source_engine_ref",
+    "source_evidence_ids",
+    "freshness_metadata",
+    "audit_event",
+    "blocked_effects",
+    "safety_flags"
+  ],
+  "openQuestionsFor069B": [
+    "Which motor is the primary source for each quote family?",
+    "What minimum inputs does each motor require?",
+    "Does the motor calculate premium or only assemble proposal context?",
+    "Do outputs have traceable evidence?",
+    "Which fixtures are reliable enough for deterministic QA?",
+    "Which tests are reusable?",
+    "Can each motor run in no-effect mode?",
+    "Does each motor distinguish preview from real quote?",
+    "What requires approval gate?",
+    "Which fields come from Product Intelligence and must not be duplicated?"
+  ],
+  "notAuthorized": [
+    "new_quote_engine",
+    "new_product_database",
+    "carrier_truth",
+    "premium_real_without_source",
+    "coverage_real_without_evidence",
+    "recommendation_as_fact",
+    "real_pdf_or_proposal",
+    "quote_send",
+    "provider_call",
+    "quote_write",
+    "policy_write",
+    "crm_write",
+    "pipeline_write",
+    "task_calendar_message_action"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false
+  },
+  "validations": [
+    "python3 -m json.tool docs/evidence/forge-quote-read-model-existing-engine-reconciliation-scope-audit-069a.json",
+    "rg markers",
+    "git diff --check",
+    "scoped safety scan",
+    "git diff --cached --check"
+  ]
+}
