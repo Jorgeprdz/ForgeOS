@@ -4765,3 +4765,35 @@ LOCKED_DECISION=QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPED
 
 NEXT=069C_QUOTE_READ_MODEL_ADAPTER_IMPLEMENTATION
 <!-- FORGE:069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE:END -->
+
+<!-- FORGE:069C_QUOTE_READ_MODEL_ADAPTER_IMPLEMENTATION:START -->
+## 069C Quote Read Model Adapter Implementation
+
+069C implements a local/static/read-only Quote Read Model adapter using the existing `gmm-quote-summary-engine.js`.
+
+Locked decision:
+`QUOTE_READ_MODEL_LOCAL_STATIC_EXISTING_ENGINE_WRAPPER_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-read-model/quote-read-model-adapter-069c.js`
+- `tests/quote-read-model-adapter-069c-test.js`
+
+Boundary:
+
+- existing-engine wrapper only;
+- no new quote engine;
+- no new product database;
+- schema `forge.backend.read_model.v1`;
+- source engine `gmm-quote-summary-engine.js`;
+- safe error `QUOTE_READ_MODEL_NOT_MODELED`;
+- all quote values are preview/non-binding;
+- all safety flags false;
+- no CRM, policy, quote, pipeline, task, calendar, message, provider, auth, secret, persistence, backend, real engine, approval bypass, or invented quote truth.
+
+DECISION=PASS_069C_QUOTE_READ_MODEL_ADAPTER_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_READ_MODEL_LOCAL_STATIC_EXISTING_ENGINE_WRAPPER_IMPLEMENTED
+
+NEXT=069D_QUOTE_READ_MODEL_ADAPTER_QA_LOCK
+<!-- FORGE:069C_QUOTE_READ_MODEL_ADAPTER_IMPLEMENTATION:END -->
