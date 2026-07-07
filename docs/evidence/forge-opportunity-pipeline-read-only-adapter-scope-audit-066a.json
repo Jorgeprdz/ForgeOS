@@ -1,0 +1,75 @@
+{
+  "phase": "066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE",
+  "status": "PASS",
+  "basePhase": "065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK",
+  "adapter": {
+    "adapterId": "forge.opportunity_pipeline.read_only.adapter.v1",
+    "adapterMode": "read_only",
+    "routeClass": "read_only",
+    "domainId": "opportunity_pipeline"
+  },
+  "routesScoped": [
+    "forge.api.read.opportunity_pipeline.list.v1",
+    "forge.api.read.opportunity_pipeline.detail.v1"
+  ],
+  "allowedReads": [
+    "opportunity_id",
+    "client_ref",
+    "display_name",
+    "stage",
+    "status",
+    "priority",
+    "expected_value_preview",
+    "probability",
+    "next_action",
+    "followup_due_state",
+    "risk_flags",
+    "policy_summary_refs",
+    "quote_summary_refs",
+    "source_evidence_ids",
+    "freshness_metadata"
+  ],
+  "forbiddenEffects": [
+    "opportunity_create",
+    "opportunity_update",
+    "opportunity_delete",
+    "opportunity_merge",
+    "opportunity_stage_mutation",
+    "task_create",
+    "calendar_create",
+    "message_send",
+    "quote_create",
+    "policy_update",
+    "provider_call",
+    "secret_access",
+    "browser_persistence",
+    "action_execution",
+    "real_engine_execution"
+  ],
+  "safeErrors": [
+    "OPPORTUNITY_PIPELINE_SOURCE_UNAVAILABLE",
+    "OPPORTUNITY_PIPELINE_PERMISSION_BLOCKED",
+    "OPPORTUNITY_PIPELINE_SCHEMA_MISMATCH",
+    "OPPORTUNITY_PIPELINE_STALE_SOURCE",
+    "OPPORTUNITY_PIPELINE_NOT_MODELED",
+    "OPPORTUNITY_PIPELINE_UNSAFE_FIELD_BLOCKED"
+  ],
+  "capabilitiesAllowed": [
+    "opportunity.read.preview",
+    "opportunity.read.summary",
+    "opportunity.read.detail"
+  ],
+  "firstImplementationConstraint": [
+    "local_static_fixture",
+    "non_sensitive_sample_fixture",
+    "generated_fixture",
+    "read_only_adapter_mock"
+  ],
+  "scopeOnly": true,
+  "uiMutation": false,
+  "backendConnection": false,
+  "crmWrite": false,
+  "pipelineWrite": false,
+  "realEffectsEnabled": false,
+  "next": "066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION"
+}

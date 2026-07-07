@@ -4272,3 +4272,42 @@ DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
 
 NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 <!-- FORGE:065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL:END -->
+
+<!-- FORGE:066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE:START -->
+## 066A Opportunity Pipeline Read-Only Adapter Scope
+
+Status: PASS
+
+Adapter scoped:
+`forge.opportunity_pipeline.read_only.adapter.v1`
+
+Routes scoped:
+
+- `forge.api.read.opportunity_pipeline.list.v1`
+- `forge.api.read.opportunity_pipeline.detail.v1`
+
+Allowed boundary:
+
+- route class `read_only`;
+- adapter mode `read_only`;
+- local/static first implementation only;
+- read model envelope output;
+- safe empty states and safe errors;
+- audit event `read_model_used`.
+
+Blocked:
+
+- opportunity write;
+- stage mutation;
+- task create;
+- calendar create;
+- message send;
+- provider runtime;
+- secret access;
+- browser persistence;
+- real engine execution.
+
+DECISION=PASS_066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+
+NEXT=066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION
+<!-- FORGE:066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE:END -->
