@@ -7166,3 +7166,34 @@ LOCKED_DECISION=QUOTE_READ_MODEL_LOCAL_STATIC_EXISTING_ENGINE_WRAPPER_IMPLEMENTE
 
 NEXT=069D_QUOTE_READ_MODEL_ADAPTER_QA_LOCK
 <!-- FORGE:069C_QUOTE_READ_MODEL_ADAPTER_IMPLEMENTATION:END -->
+
+<!-- FORGE:069D_QUOTE_READ_MODEL_ADAPTER_QA_LOCK:START -->
+## 069D Quote Read Model Adapter QA Lock
+
+069D validates the 069C Quote Read Model adapter as a preview-safe local/static/read-only wrapper around `gmm-quote-summary-engine.js`.
+
+Locked decision:
+`QUOTE_READ_MODEL_ADAPTER_QA_LOCKED`
+
+Validated:
+
+- manifest values under `manifest`;
+- adapter id `forge.quote.read_model.adapter.v1`;
+- adapter type `local_static_existing_engine_wrapper`;
+- read-only route and schema `forge.backend.read_model.v1`;
+- source engine `gmm-quote-summary-engine.js`;
+- safe error `QUOTE_READ_MODEL_NOT_MODELED`;
+- `listQuotes()` modeled quote output;
+- deterministic `getQuoteDetail()` output;
+- `filter_no_match` empty state for missing quotes;
+- preview/non-binding `premium_preview`;
+- evidence and freshness metadata;
+- required blocked effects;
+- all safety flags false.
+
+DECISION=PASS_069D_QUOTE_READ_MODEL_ADAPTER_QA_LOCK
+
+LOCKED_DECISION=QUOTE_READ_MODEL_ADAPTER_QA_LOCKED
+
+NEXT=069E_QUOTE_READ_MODEL_ADAPTER_DECISION_LOCK
+<!-- FORGE:069D_QUOTE_READ_MODEL_ADAPTER_QA_LOCK:END -->
