@@ -3306,3 +3306,37 @@ DECISION=PASS_066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 
 NEXT=066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION
 <!-- FORGE:066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE:END -->
+
+<!-- FORGE:066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION:START -->
+## 066B Opportunity Pipeline Read-Only Adapter Implementation
+
+066B implements the Opportunity Pipeline adapter as a local static read-only fixture.
+
+Files:
+
+- `platform/adapters/opportunity-pipeline/opportunity-pipeline-read-only-adapter-066b.js`
+- `tests/opportunity-pipeline-read-only-adapter-066b-test.js`
+
+Adapter:
+`forge.opportunity_pipeline.read_only.adapter.v1`
+
+Routes:
+
+- `forge.api.read.opportunity_pipeline.list.v1`
+- `forge.api.read.opportunity_pipeline.detail.v1`
+
+Safety:
+
+- no backend connection;
+- no CRM write;
+- no pipeline write;
+- no task creation;
+- no calendar creation;
+- no provider runtime;
+- no secret access;
+- no real effects.
+
+DECISION=PASS_066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION
+
+NEXT=066C_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_QA_LOCK
+<!-- FORGE:066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION:END -->

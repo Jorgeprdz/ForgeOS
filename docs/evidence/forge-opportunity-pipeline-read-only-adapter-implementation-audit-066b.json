@@ -1,0 +1,35 @@
+{
+  "phase": "066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION",
+  "status": "PASS",
+  "basePhase": "066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE",
+  "adapterFile": "platform/adapters/opportunity-pipeline/opportunity-pipeline-read-only-adapter-066b.js",
+  "testFile": "tests/opportunity-pipeline-read-only-adapter-066b-test.js",
+  "adapter": {
+    "adapterId": "forge.opportunity_pipeline.read_only.adapter.v1",
+    "adapterType": "local_static_fixture",
+    "adapterMode": "read_only",
+    "routeClass": "read_only",
+    "domainId": "opportunity_pipeline"
+  },
+  "routesImplemented": [
+    "forge.api.read.opportunity_pipeline.list.v1",
+    "forge.api.read.opportunity_pipeline.detail.v1"
+  ],
+  "fixtures": [
+    "opp_preview_lariza_review",
+    "opp_preview_octavio_open"
+  ],
+  "outputs": [
+    "readModelEnvelope",
+    "auditEvent",
+    "emptyState",
+    "safeErrors",
+    "safety"
+  ],
+  "uiMutation": false,
+  "backendConnection": false,
+  "crmWrite": false,
+  "pipelineWrite": false,
+  "realEffectsEnabled": false,
+  "next": "066C_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_QA_LOCK"
+}
