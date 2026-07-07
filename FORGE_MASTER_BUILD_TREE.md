@@ -7656,3 +7656,43 @@ LOCKED_DECISION=QUOTE_APPROVAL_GATE_INTEGRATION_LOCKED_AS_LOCAL_STATIC_NO_EFFECT
 
 NEXT=073A_QUOTE_PDF_PREVIEW_ENGINE_REPO_PROMOTION_SCOPE
 <!-- FORGE:072D_QUOTE_APPROVAL_GATE_INTEGRATION_DECISION_LOCK:END -->
+
+<!-- FORGE:073A_PRODUCT_INTELLIGENCE_BEFORE_QUOTE_PROMOTION_CHECKPOINT:START -->
+## 073A Product Intelligence Before Quote Promotion Checkpoint
+
+073A confirms that Product Intelligence is not a blank slate before Quote PDF / Quote Preview promotion.
+
+Existing implemented pieces include:
+
+- coverage intelligence subset under `product-intelligence/coverage/`;
+- medical event coverage engines and smoke tests;
+- GMM quote parser and out-of-pocket calculation;
+- Vida Mujer survival / AVE knowledge engines;
+- Imagina Ser / Solucionline retirement parsers;
+- UDI, MXN, Banxico, currency timeline, and projection engines;
+- quote PDF preview parser/calculation surface;
+- Product Intelligence docs and evidence under `docs/04-product-intelligence/`.
+
+Current classification:
+
+- Product Intelligence exists as implemented specialist modules and tests.
+- Product Intelligence is not yet unified as a canonical read model / product ontology.
+- Quote promotion must not treat Imagina Ser as the universal architecture.
+- Quote promotion must not duplicate existing Product Intelligence calculators, parsers, or evidence rules.
+
+Decision recommendation:
+`PRODUCT_INTELLIGENCE_EXISTS_BUT_REQUIRES_UNIFIED_READ_MODEL_BEFORE_QUOTE_PROMOTION`
+
+Recommended next scope:
+`073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE`
+
+Boundary:
+
+- no UI mutation;
+- no backend real;
+- no CRM, policy, quote, or pipeline write;
+- no task, calendar, or message action;
+- no provider execution with effects;
+- no auth, secrets, or browser persistence;
+- no invented product, premium, coverage, projection, or quote truth.
+<!-- FORGE:073A_PRODUCT_INTELLIGENCE_BEFORE_QUOTE_PROMOTION_CHECKPOINT:END -->
