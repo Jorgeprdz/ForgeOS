@@ -1,0 +1,485 @@
+{
+  "phase": "069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE",
+  "lockedDecision": "QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPED",
+  "alternativeDecisionNotSelected": "QUOTE_EXISTING_ENGINE_MAPPING_NEEDS_REPAIR_OR_WRAPPER_SCOPE",
+  "basePhase": "069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE",
+  "baseCommit": "79ecb43",
+  "next": "069C_QUOTE_READ_MODEL_ADAPTER_IMPLEMENTATION",
+  "alternativeNextNotSelected": "069C_QUOTE_ENGINE_NO_EFFECT_WRAPPER_SCOPE",
+  "safeErrorCode": "QUOTE_READ_MODEL_NOT_MODELED",
+  "schemaVersion": "forge.backend.read_model.v1",
+  "mode": "read_only",
+  "mappingConclusion": {
+    "mappingSufficientFor069CAdapter": true,
+    "primaryCandidate": "gmm-quote-summary-engine.js",
+    "newQuoteEngineAuthorized": false,
+    "newProductDatabaseAuthorized": false,
+    "intermediateWrapperScopeRequired": false,
+    "adapterMustAddEnvelopeEvidenceFreshnessAndSafety": true
+  },
+  "modules": [
+    {
+      "file": "gmm-quote-summary-engine.js",
+      "moduleType": "quote_summary_engine_parser",
+      "domain": "gmm_quote_preview",
+      "status": "usable_candidate",
+      "recommendedRole": "primary_candidate_for_069C",
+      "inputs": {
+        "shape": "{ text: string }",
+        "requiredFields": [
+          "text"
+        ],
+        "optionalFields": [],
+        "sourceAssumptions": "OCR or static quote text",
+        "origin": [
+          "document_derived",
+          "fixture_derived"
+        ]
+      },
+      "outputs": {
+        "shape": "plain_object_summary",
+        "fieldsProduced": [
+          "product",
+          "plan",
+          "prospect",
+          "age",
+          "gender",
+          "territoriality",
+          "zone",
+          "sumInsured",
+          "deductible",
+          "coinsurance",
+          "coinsuranceCap",
+          "tabulator",
+          "currency",
+          "paymentMode",
+          "premium",
+          "optionalCoverages",
+          "advisor",
+          "quoteDate",
+          "startDate",
+          "salesSummary",
+          "decisionQuestions",
+          "warnings"
+        ],
+        "monetaryFields": [
+          "premium",
+          "sumInsured",
+          "deductible",
+          "coinsuranceCap",
+          "optionalCoverages.premium"
+        ],
+        "coverageFields": [
+          "optionalCoverages",
+          "territoriality",
+          "tabulator",
+          "plan"
+        ],
+        "carrierProductFields": [
+          "product"
+        ],
+        "confidenceFreshnessEvidenceFields": [],
+        "warningsErrorsEmptyState": [
+          "warnings_present",
+          "no_formal_errors",
+          "no_formal_empty_state"
+        ]
+      },
+      "evidenceFreshness": {
+        "sourceEvidenceIdsAvailable": false,
+        "freshnessMetadataAvailable": false,
+        "confidenceAvailable": false,
+        "rawSourceRetainedInOutput": false,
+        "deterministicFixtureAvailable": true
+      },
+      "sideEffectRisk": {
+        "writes": false,
+        "providerCalls": false,
+        "network": false,
+        "browserPersistence": false,
+        "generatedIdsOrTimestamps": false,
+        "realEngineExecution": false,
+        "approvalRequired": false,
+        "safetyFlagsMissing": true
+      },
+      "reuseDecision": "primary_candidate_for_069C"
+    },
+    {
+      "file": "product-intelligence/evidence/gmm-quote-parser.js",
+      "moduleType": "quote_evidence_parser",
+      "domain": "gmm_quote_evidence",
+      "status": "usable_candidate",
+      "recommendedRole": "evidence_parser_candidate",
+      "inputs": {
+        "shape": "{ text: string }",
+        "requiredFields": [
+          "text"
+        ],
+        "optionalFields": [],
+        "sourceAssumptions": "OCR or static quote text",
+        "origin": [
+          "document_derived",
+          "fixture_derived"
+        ]
+      },
+      "outputs": {
+        "shape": "plain_object_parser_output",
+        "fieldsProduced": [
+          "productType",
+          "productName",
+          "plan",
+          "deductible",
+          "coinsurance.percent",
+          "coinsurance.maxOutOfPocket",
+          "sumAssured",
+          "territoriality",
+          "tabulator",
+          "currency",
+          "annualPremium"
+        ],
+        "monetaryFields": [
+          "annualPremium",
+          "deductible",
+          "sumAssured",
+          "coinsurance.maxOutOfPocket"
+        ],
+        "coverageFields": [
+          "deductible",
+          "coinsurance",
+          "sumAssured",
+          "territoriality",
+          "tabulator"
+        ],
+        "carrierProductFields": [
+          "productType",
+          "productName"
+        ],
+        "confidenceFreshnessEvidenceFields": [],
+        "warningsErrorsEmptyState": [
+          "unknown_values",
+          "null_values",
+          "no_formal_safe_error"
+        ]
+      },
+      "evidenceFreshness": {
+        "sourceEvidenceIdsAvailable": false,
+        "freshnessMetadataAvailable": false,
+        "confidenceAvailable": false,
+        "rawSourceRetainedInOutput": false,
+        "deterministicFixtureAvailable": true
+      },
+      "sideEffectRisk": {
+        "writes": false,
+        "providerCalls": false,
+        "network": false,
+        "browserPersistence": false,
+        "generatedIdsOrTimestamps": false,
+        "realEngineExecution": false,
+        "approvalRequired": false,
+        "safetyFlagsMissing": true
+      },
+      "reuseDecision": "evidence_parser_candidate"
+    },
+    {
+      "file": "product-intelligence/quotes/quotation-extraction-result.entity.js",
+      "moduleType": "quote_extraction_entity",
+      "domain": "quote_extraction",
+      "status": "needs_wrapping",
+      "recommendedRole": "excluded_until_wrapped",
+      "inputs": {
+        "shape": "{ quotationInputId, rawText, extractedFields, confidence }",
+        "requiredFields": [],
+        "optionalFields": [
+          "quotationInputId",
+          "rawText",
+          "extractedFields",
+          "confidence"
+        ],
+        "sourceAssumptions": "post OCR/parser result",
+        "origin": [
+          "engine_derived",
+          "document_derived"
+        ]
+      },
+      "outputs": {
+        "shape": "entity_object",
+        "fieldsProduced": [
+          "id",
+          "quotationInputId",
+          "rawText",
+          "extractedFields",
+          "confidence",
+          "createdAt"
+        ],
+        "monetaryFields": [
+          "extractedFields"
+        ],
+        "coverageFields": [
+          "extractedFields"
+        ],
+        "carrierProductFields": [
+          "extractedFields"
+        ],
+        "confidenceFreshnessEvidenceFields": [
+          "confidence"
+        ],
+        "warningsErrorsEmptyState": []
+      },
+      "evidenceFreshness": {
+        "sourceEvidenceIdsAvailable": false,
+        "freshnessMetadataAvailable": false,
+        "confidenceAvailable": true,
+        "rawSourceRetainedInOutput": true,
+        "deterministicFixtureAvailable": false
+      },
+      "sideEffectRisk": {
+        "writes": false,
+        "providerCalls": false,
+        "network": false,
+        "browserPersistence": false,
+        "generatedIdsOrTimestamps": true,
+        "realEngineExecution": false,
+        "approvalRequired": false,
+        "safetyFlagsMissing": true
+      },
+      "reuseDecision": "excluded_until_wrapped"
+    },
+    {
+      "file": "product-intelligence/quotes/quotation-input.entity.js",
+      "moduleType": "empty_quote_input_entity_file",
+      "domain": "quote_extraction",
+      "status": "needs_inspection",
+      "recommendedRole": "excluded_until_source_owner_defined",
+      "inputs": {
+        "shape": "not_modeled",
+        "requiredFields": [],
+        "optionalFields": [],
+        "sourceAssumptions": "unclear",
+        "origin": [
+          "unclear"
+        ]
+      },
+      "outputs": {
+        "shape": "none_observed",
+        "fieldsProduced": [],
+        "monetaryFields": [],
+        "coverageFields": [],
+        "carrierProductFields": [],
+        "confidenceFreshnessEvidenceFields": [],
+        "warningsErrorsEmptyState": []
+      },
+      "evidenceFreshness": {
+        "sourceEvidenceIdsAvailable": false,
+        "freshnessMetadataAvailable": false,
+        "confidenceAvailable": false,
+        "rawSourceRetainedInOutput": false,
+        "deterministicFixtureAvailable": false
+      },
+      "sideEffectRisk": {
+        "writes": false,
+        "providerCalls": false,
+        "network": false,
+        "browserPersistence": false,
+        "generatedIdsOrTimestamps": false,
+        "realEngineExecution": false,
+        "approvalRequired": false,
+        "safetyFlagsMissing": true
+      },
+      "reuseDecision": "excluded_until_source_owner_defined"
+    },
+    {
+      "file": "quote-to-policy-comparison-engine.js",
+      "moduleType": "quote_policy_comparison_engine",
+      "domain": "quote_policy_bridge",
+      "status": "usable_candidate",
+      "recommendedRole": "comparison_enrichment_candidate",
+      "inputs": {
+        "shape": "{ quoteSummary, policySummary }",
+        "requiredFields": [
+          "quoteSummary",
+          "policySummary"
+        ],
+        "optionalFields": [
+          "partial quote/policy fields"
+        ],
+        "sourceAssumptions": "prepared quote and policy summaries",
+        "origin": [
+          "engine_derived"
+        ]
+      },
+      "outputs": {
+        "shape": "comparison_object",
+        "fieldsProduced": [
+          "identityMatch",
+          "confidence",
+          "warnings",
+          "stayedSame",
+          "changed",
+          "contractualFacts",
+          "expectationGaps",
+          "advisorAlerts",
+          "clientExplanation"
+        ],
+        "monetaryFields": [
+          "premium",
+          "deductible",
+          "sumInsured",
+          "coinsuranceCap"
+        ],
+        "coverageFields": [
+          "product",
+          "plan",
+          "territoriality",
+          "optionalCoverages"
+        ],
+        "carrierProductFields": [
+          "product",
+          "plan"
+        ],
+        "confidenceFreshnessEvidenceFields": [
+          "confidence"
+        ],
+        "warningsErrorsEmptyState": [
+          "warnings_present",
+          "no_formal_safe_error"
+        ]
+      },
+      "evidenceFreshness": {
+        "sourceEvidenceIdsAvailable": false,
+        "freshnessMetadataAvailable": false,
+        "confidenceAvailable": true,
+        "rawSourceRetainedInOutput": false,
+        "deterministicFixtureAvailable": true
+      },
+      "sideEffectRisk": {
+        "writes": false,
+        "providerCalls": false,
+        "network": false,
+        "browserPersistence": false,
+        "generatedIdsOrTimestamps": false,
+        "realEngineExecution": false,
+        "approvalRequired": false,
+        "safetyFlagsMissing": true
+      },
+      "reuseDecision": "comparison_enrichment_candidate"
+    },
+    {
+      "file": "proposal-family-engine.js",
+      "moduleType": "proposal_scenario_grouping_engine",
+      "domain": "quote_proposal_grouping",
+      "status": "usable_candidate",
+      "recommendedRole": "proposal_grouping_candidate",
+      "reuseDecision": "proposal_grouping_candidate"
+    },
+    {
+      "file": "fixtures/vida-mujer-quote-fixture.json",
+      "moduleType": "quote_like_fixture",
+      "domain": "vida_mujer_product_intelligence",
+      "status": "needs_wrapping",
+      "recommendedRole": "fixture_only_candidate",
+      "reuseDecision": "fixture_only_candidate"
+    },
+    {
+      "file": "docs/04-product-intelligence/FORGE_LARIZA_QUOTE_REVIEW.md",
+      "moduleType": "human_quote_review_doc",
+      "domain": "gmm_quote_review",
+      "status": "usable_candidate",
+      "recommendedRole": "product_intelligence_source_candidate",
+      "reuseDecision": "product_intelligence_source_candidate"
+    },
+    {
+      "file": "docs/04-product-intelligence/FORGE_QUOTE_VS_POLICY_ANALYSIS.md",
+      "moduleType": "quote_policy_boundary_doc",
+      "domain": "quote_policy_bridge",
+      "status": "usable_candidate",
+      "recommendedRole": "comparison_enrichment_candidate",
+      "reuseDecision": "comparison_enrichment_candidate"
+    }
+  ],
+  "fieldsMappableIn069C": [
+    "quote_id",
+    "client_ref",
+    "policy_ref",
+    "opportunity_ref",
+    "product_ref",
+    "quote_type",
+    "quote_status",
+    "carrier_ref",
+    "premium_preview",
+    "coverage_summary",
+    "deductible_preview",
+    "coinsurance_preview",
+    "sum_assured_preview",
+    "payment_frequency",
+    "assumptions",
+    "source_engine_ref",
+    "source_evidence_ids",
+    "freshness_metadata",
+    "audit_event",
+    "blocked_effects",
+    "safety_flags"
+  ],
+  "fieldsNotMappableYet": [
+    "canonical_carrier_truth",
+    "binding_real_premium",
+    "contractual_coverage_truth",
+    "valid_until_without_source",
+    "exclusions_or_waiting_periods_without_source",
+    "provider_quote_id",
+    "quote_pdf_or_proposal_artifact",
+    "send_save_convert_quote_state",
+    "approval_status_for_quote_generation",
+    "policy_linked_truth_without_policy_read_model_evidence"
+  ],
+  "requiredGuardsFor069C": [
+    "local_static_fixture_only",
+    "read_only_adapter_mode",
+    "deterministic_quote_id",
+    "no_generated_ids_or_Date_now",
+    "no_crypto_randomUUID",
+    "no_provider_runtime_network_storage",
+    "no_quote_policy_crm_pipeline_write",
+    "no_task_calendar_message_action",
+    "all_safety_flags_false",
+    "blocked_effects_explicit",
+    "source_evidence_ids_required",
+    "freshness_metadata_required",
+    "safe_empty_state",
+    "QUOTE_READ_MODEL_NOT_MODELED"
+  ],
+  "testAssetsFor069C": [
+    "forge-gmm-sprint-2-smoke-test.js",
+    "forge-gmm-sprint-3-smoke-test.js",
+    "forge-gmm-sprint-4-smoke-test.js",
+    "forge-gmm-real-case-smoke-test.js",
+    "proposal-family-smoke-test.js",
+    "tests/real-gmm-quote-test.js",
+    "tests/gmm-out-of-pocket-test.js"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false
+  },
+  "validations": [
+    "python3 -m json.tool docs/evidence/forge-quote-existing-engine-input-output-mapping-scope-audit-069b.json",
+    "rg markers",
+    "git diff --check",
+    "scoped safety scan",
+    "git diff --cached --check"
+  ]
+}

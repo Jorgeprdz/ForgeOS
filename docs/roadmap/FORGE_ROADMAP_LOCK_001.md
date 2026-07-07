@@ -3729,3 +3729,34 @@ LOCKED_DECISION=QUOTE_READ_MODEL_EXISTING_ENGINE_RECONCILIATION_SCOPED
 
 NEXT=069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE
 <!-- FORGE:069A_QUOTE_READ_MODEL_AND_EXISTING_ENGINE_RECONCILIATION_SCOPE:END -->
+
+<!-- FORGE:069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE:START -->
+## 069B Quote Existing Engine Input Output Mapping Scope
+
+069B maps existing quote engine inputs and outputs before Quote Read Model adapter implementation.
+
+Locked decision:
+`QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPED`
+
+Alternative not selected:
+`QUOTE_EXISTING_ENGINE_MAPPING_NEEDS_REPAIR_OR_WRAPPER_SCOPE`
+
+Mapping decision:
+
+- primary candidate: `gmm-quote-summary-engine.js`;
+- parser candidate: `product-intelligence/evidence/gmm-quote-parser.js`;
+- comparison enrichment: `quote-to-policy-comparison-engine.js`;
+- proposal grouping: `proposal-family-engine.js`;
+- fixture-only: `fixtures/vida-mujer-quote-fixture.json`;
+- source docs: `FORGE_LARIZA_QUOTE_REVIEW.md` and `FORGE_QUOTE_VS_POLICY_ANALYSIS.md`;
+- safe error: `QUOTE_READ_MODEL_NOT_MODELED`;
+- schema: `forge.backend.read_model.v1`;
+- mode: `read_only`;
+- no new quote engine or product database.
+
+DECISION=PASS_069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE
+
+LOCKED_DECISION=QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPED
+
+NEXT=069C_QUOTE_READ_MODEL_ADAPTER_IMPLEMENTATION
+<!-- FORGE:069B_QUOTE_EXISTING_ENGINE_INPUT_OUTPUT_MAPPING_SCOPE:END -->
