@@ -1,0 +1,116 @@
+{
+  "phase": "066B1_OPPORTUNITY_PIPELINE_EXISTING_MODULE_RECONCILIATION",
+  "status": "PASS",
+  "decision": "PASS_066B1_OPPORTUNITY_PIPELINE_EXISTING_MODULE_RECONCILIATION",
+  "reconciliationDecision": "KEEP_066B_AS_TEMPORARY_LOCAL_STATIC_SHIM",
+  "next": "066C_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_QA_LOCK_OR_REPAIR",
+  "boundary": {
+    "mode": "docs_and_read_only_audit",
+    "uiMutation": false,
+    "backendConnection": false,
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerExecution": false,
+    "storageUse": false,
+    "realEngineExecution": false
+  },
+  "existingModulesReviewed": [
+    {
+      "module": "SMNYL Pipeline Engine",
+      "file": "rule-packs/smnyl/smnyl-pipeline-engine.js",
+      "status": "existing_rule_pack_helper",
+      "summary": "Builds stage counts and expected value from prospect records.",
+      "reusableAs": "future_rule_pack_enrichment_candidate",
+      "dropInReplacementFor066B": false
+    },
+    {
+      "module": "SMNYL Opportunity Engine",
+      "file": "rule-packs/smnyl/smnyl-opportunity-engine.js",
+      "status": "existing_rule_pack_signal",
+      "summary": "Detects simple portfolio opportunities such as premium without GMM and family protection update.",
+      "reusableAs": "future_signal_source_candidate",
+      "dropInReplacementFor066B": false
+    },
+    {
+      "module": "Prospect Pipeline Engine",
+      "file": "advisor-os/prospecting/prospect-pipeline-engine.js",
+      "status": "existing_prospecting_helper",
+      "summary": "Groups prospects by prospecting status buckets.",
+      "reusableAs": "future_prospect_stage_source_candidate",
+      "dropInReplacementFor066B": false
+    },
+    {
+      "module": "Opportunity Detector Engine",
+      "file": "advisor-os/discovery/opportunity-detector-engine.js",
+      "status": "existing_discovery_signal",
+      "summary": "Detects hot unpaid leads and sums potential pipeline value.",
+      "reusableAs": "future_detection_signal_candidate",
+      "dropInReplacementFor066B": false
+    },
+    {
+      "module": "Relationship Opportunity Engine",
+      "file": "relationship-opportunity-engine.js",
+      "status": "existing_relationship_signal_engine",
+      "summary": "Ranks relationship-driven opportunities and returns best opportunity context.",
+      "reusableAs": "strong_future_signal_source_candidate",
+      "dropInReplacementFor066B": false
+    },
+    {
+      "module": "Referral Opportunity Engine",
+      "file": "referral-opportunity-engine.js",
+      "status": "existing_referral_signal_engine",
+      "summary": "Detects referral opportunity likelihood, timing, approach, and confidence.",
+      "reusableAs": "future_referral_signal_source_candidate",
+      "dropInReplacementFor066B": false
+    },
+    {
+      "module": "Pipeline Stage Engine",
+      "file": "pipeline-stage-engine.js",
+      "status": "existing_stage_helper",
+      "summary": "Defines stages and advances a lead to the next stage in memory.",
+      "reusableAs": "not_for_read_only_adapter_without_boundary",
+      "dropInReplacementFor066B": false
+    },
+    {
+      "module": "Forge Alive Smart Widget Read Model",
+      "file": "manager-os/forge-alive/forge-alive-smart-widget-stack-read-model.js",
+      "status": "existing_ui_projection_consumer",
+      "summary": "Creates an opportunity rescue widget from opportunity signals.",
+      "reusableAs": "consumer_projection_not_source",
+      "dropInReplacementFor066B": false
+    }
+  ],
+  "adapter066bReviewed": {
+    "file": "platform/adapters/opportunity-pipeline/opportunity-pipeline-read-only-adapter-066b.js",
+    "test": "tests/opportunity-pipeline-read-only-adapter-066b-test.js",
+    "adapterId": "forge.opportunity_pipeline.read_only.adapter.v1",
+    "routes": [
+      "forge.api.read.opportunity_pipeline.list.v1",
+      "forge.api.read.opportunity_pipeline.detail.v1"
+    ],
+    "sourceOfTruth": "local_static_fixture_only",
+    "schemaVersion": "forge.backend.read_model.v1",
+    "safeError": "OPPORTUNITY_PIPELINE_NOT_MODELED",
+    "allSafetyFlagsDisabled": true
+  },
+  "missingForDirectReuse": [
+    "canonical Opportunity Pipeline ownership",
+    "source priority between relationship, referral, prospecting, SMNYL rule-pack, and widget signals",
+    "read model normalization mapping",
+    "freshness model",
+    "source evidence model",
+    "blocked effects and audit mapping",
+    "adapter route contract mapping"
+  ],
+  "riskIfConnectedNow": [
+    "duplicate opportunity truth",
+    "mixed domain ownership",
+    "heuristic signals treated as durable pipeline records",
+    "loss of read-only adapter envelope",
+    "loss of explicit safety and audit policy",
+    "accidental stage mutation path"
+  ]
+}

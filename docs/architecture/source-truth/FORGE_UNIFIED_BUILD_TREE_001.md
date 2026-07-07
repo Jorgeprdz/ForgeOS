@@ -4367,3 +4367,43 @@ DECISION=PASS_066C_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_QA_LOCK
 
 NEXT=066D_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_DECISION_LOCK
 <!-- FORGE:066C_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_QA_LOCK:END -->
+
+<!-- FORGE:066B1_OPPORTUNITY_PIPELINE_EXISTING_MODULE_RECONCILIATION:START -->
+## 066B1 Opportunity Pipeline Existing Module Reconciliation
+
+Status: PASS
+
+066B1 reconciles the 066B local/static Opportunity Pipeline adapter with older opportunity, pipeline, prospecting, relationship, referral, widget, and rule-pack modules already present in Forge.
+
+Existing modules reviewed:
+
+- `rule-packs/smnyl/smnyl-pipeline-engine.js`;
+- `rule-packs/smnyl/smnyl-opportunity-engine.js`;
+- `advisor-os/prospecting/prospect-pipeline-engine.js`;
+- `advisor-os/discovery/opportunity-detector-engine.js`;
+- `relationship-opportunity-engine.js`;
+- `referral-opportunity-engine.js`;
+- `pipeline-stage-engine.js`;
+- `manager-os/forge-alive/forge-alive-smart-widget-stack-read-model.js`.
+
+Decision:
+`KEEP_066B_AS_TEMPORARY_LOCAL_STATIC_SHIM`
+
+Rationale:
+Existing modules contain reusable signals and helpers, but none currently exposes the full 066A/066B read-only adapter contract with `forge.backend.read_model.v1`, route identity, freshness, source evidence, blocked effects, audit event, safe errors, and disabled safety flags.
+
+Boundary:
+
+- no backend connection;
+- no CRM write;
+- no pipeline write;
+- no calendar creation;
+- no message send;
+- no auth/provider execution;
+- no storage use;
+- no real engine execution.
+
+DECISION=PASS_066B1_OPPORTUNITY_PIPELINE_EXISTING_MODULE_RECONCILIATION
+
+NEXT=066C_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_QA_LOCK_OR_REPAIR
+<!-- FORGE:066B1_OPPORTUNITY_PIPELINE_EXISTING_MODULE_RECONCILIATION:END -->
