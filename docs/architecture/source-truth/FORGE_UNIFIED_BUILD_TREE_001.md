@@ -5327,3 +5327,39 @@ Boundary:
 - no auth, secrets, or browser persistence;
 - no invented product, premium, coverage, projection, or quote truth.
 <!-- FORGE:073A_PRODUCT_INTELLIGENCE_BEFORE_QUOTE_PROMOTION_CHECKPOINT:END -->
+
+<!-- FORGE:073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE:START -->
+## 073B Product Intelligence Foundation Reconciliation Scope
+
+073B scopes reconciliation of the existing Product Intelligence foundation before further Quote PDF / Quote Preview promotion.
+
+Locked decision:
+`PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPED`
+
+Confirmed existing Product Intelligence surfaces:
+
+- coverage intelligence under `product-intelligence/coverage/`;
+- evidence parsers under `product-intelligence/evidence/`;
+- quote entities under `product-intelligence/quotes/`;
+- projection engines under `product-intelligence/projections/`;
+- GMM parser/calculator/tests;
+- Vida Mujer / AVE knowledge engines/tests;
+- Imagina Ser / Solucionline / retirement parser and projection engines/tests;
+- ORVI / SeguBeca product-specific candidates;
+- Banxico / UDI / MXN / currency timeline / future value engines;
+- Product Intelligence documents under `docs/04-product-intelligence/`.
+
+Scope decision:
+
+- Imagina Ser is a proven case, not the universal architecture.
+- GMM, Vida Mujer, AVE, ORVI, SeguBeca, and future product families must fit one Product Intelligence foundation.
+- Quote promotion must reuse existing calculators, parsers, bridges, and evidence rules.
+- Quote promotion must not duplicate Product Intelligence logic.
+- Product Intelligence must define a unified read model before quote promotion.
+
+DECISION=PASS_073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE
+
+LOCKED_DECISION=PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPED
+
+NEXT=073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE
+<!-- FORGE:073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE:END -->

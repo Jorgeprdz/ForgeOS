@@ -1,0 +1,162 @@
+{
+  "phase": "073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE",
+  "lockedDecision": "PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPED",
+  "next": "073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE",
+  "base": {
+    "phase": "073A_PRODUCT_INTELLIGENCE_BEFORE_QUOTE_PROMOTION_CHECKPOINT",
+    "present": true,
+    "decision": "PRODUCT_INTELLIGENCE_EXISTS_BUT_REQUIRES_UNIFIED_READ_MODEL_BEFORE_QUOTE_PROMOTION"
+  },
+  "mode": "docs_reconciliation_scope_only",
+  "inventory": {
+    "coverage": {
+      "path": "product-intelligence/coverage/",
+      "classification": "coverage_intelligence",
+      "examples": [
+        "coverage-intelligence-orchestrator.js",
+        "gmm-out-of-pocket-engine.js",
+        "medical-events/*",
+        "coverage/tests/*"
+      ]
+    },
+    "evidence": {
+      "path": "product-intelligence/evidence/",
+      "classification": "parser_evidence_extractor_quote_preview_surface",
+      "examples": [
+        "forge-quote-pdf-preview-engine.js",
+        "gmm-quote-parser.js",
+        "solucionline-retirement-parser.js"
+      ]
+    },
+    "quotes": {
+      "path": "product-intelligence/quotes/",
+      "classification": "quote_entities",
+      "examples": [
+        "quotation-input.entity.js",
+        "quotation-extraction-result.entity.js"
+      ]
+    },
+    "projections": {
+      "path": "product-intelligence/projections/",
+      "classification": "projection_engine",
+      "examples": [
+        "projection-engine.js",
+        "projection-milestone-engine.js",
+        "life-expectancy-projection-engine.js"
+      ]
+    },
+    "gmm": {
+      "classification": "parser_calculator_coverage_intelligence",
+      "examples": [
+        "product-intelligence/evidence/gmm-quote-parser.js",
+        "product-intelligence/coverage/gmm-out-of-pocket-engine.js",
+        "tests/real-gmm-quote-test.js",
+        "tests/gmm-out-of-pocket-test.js"
+      ]
+    },
+    "vidaMujerAve": {
+      "classification": "calculator_product_specific_bridge_product_knowledge",
+      "examples": [
+        "product-intelligence/knowledge/vida-mujer-survival-schedule-engine.js",
+        "product-intelligence/knowledge/ave/shared-ave-growth-engine.js",
+        "product-intelligence/knowledge/ave/shared-ave-portfolio-engine.js",
+        "tests/forge-shared-ave-master-test.js"
+      ]
+    },
+    "imaginaSerRetirement": {
+      "classification": "parser_projection_bridge_quote_preview_surface",
+      "examples": [
+        "product-intelligence/evidence/solucionline-retirement-parser.js",
+        "product-intelligence/evidence/forge-quote-pdf-preview-engine.js",
+        "retirement-future-udi-projection-engine.js",
+        "imagina-ser-future-mxn-bridge.js"
+      ]
+    },
+    "orviSeguBeca": {
+      "classification": "product_specific_bridge_docs_evidence_candidate",
+      "examples": [
+        "orvi-decision-engine.js",
+        "orvi-mxn-conversion-engine.js",
+        "segu-beca-client-presentation-engine.js",
+        "segu-beca-education-comparison-engine.js"
+      ]
+    },
+    "currencyBanxico": {
+      "classification": "shared_product_intelligence_utility_projection_dependency",
+      "examples": [
+        "shared-banxico-rate-engine.js",
+        "shared-banxico-edge-provider.js",
+        "exchange-rate-cache-engine.js",
+        "shared-policy-currency-timeline-engine.js",
+        "future-currency-value-engine.js"
+      ]
+    }
+  },
+  "foundationMustOwn": [
+    "product_identity",
+    "product_family",
+    "coverage_semantics",
+    "premium_semantics",
+    "currency_semantics",
+    "projection_semantics",
+    "evidence_refs",
+    "freshness_metadata",
+    "source_ownership",
+    "confidence_unknown_state",
+    "product_specific_adapter_references"
+  ],
+  "foundationMustNotOwn": [
+    "quote_write",
+    "provider_execution",
+    "policy_truth",
+    "recommendation_as_fact",
+    "crm_write",
+    "pipeline_write",
+    "task_create",
+    "calendar_create",
+    "message_action"
+  ],
+  "sourcePriority": [
+    "product_schema_ontology",
+    "product_specific_parser",
+    "evidence_extraction",
+    "projection_calculator",
+    "banxico_cache_currency_engines",
+    "quote_pdf_preview"
+  ],
+  "explicitStatements": {
+    "imaginaSerIsProvenCaseNotUniversalArchitecture": true,
+    "gmmVidaMujerAveOrviSeguBecaAndFutureFamiliesMustFitFoundation": true,
+    "quotePromotionMustReuseExistingCalculatorsAndParsers": true,
+    "quotePromotionMustNotDuplicateProductIntelligence": true
+  },
+  "prohibitedSurfaces": {
+    "uiMutation": false,
+    "backendReal": false,
+    "crmWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "pipelineWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "providerExecutionWithEffects": false,
+    "auth": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "inventedProductTruth": false,
+    "inventedPremiumTruth": false,
+    "inventedCoverageTruth": false,
+    "inventedProjectionTruth": false,
+    "inventedQuoteTruth": false
+  },
+  "validation": {
+    "jsonTool": "PASS",
+    "markerScan": "PASS",
+    "gitDiffCheck": "PASS",
+    "scopedSafetyScan": "PASS",
+    "stagedDiffCheck": "PENDING"
+  }
+}
