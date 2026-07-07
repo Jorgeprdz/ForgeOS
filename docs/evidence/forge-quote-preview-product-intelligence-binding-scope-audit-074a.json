@@ -1,0 +1,94 @@
+{
+  "phase": "074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE",
+  "lockedDecision": "QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPED",
+  "next": "074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION",
+  "base": {
+    "phase": "073F_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_DECISION_LOCK",
+    "commit": "d04275c",
+    "lockedDecision": "PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_CATALOG",
+    "confirmed": true
+  },
+  "binding": {
+    "quotePreviewConsumesProductIntelligence": true,
+    "quotePreviewOwnsProductSemantics": false,
+    "parserSelectionOutsideProductIntelligence": false,
+    "calculatorSelectionOutsideProductIntelligence": false,
+    "duplicatesProductIntelligenceLogic": false,
+    "quotePdfPreviewRole": "consumer_reference_only"
+  },
+  "inputs": [
+    "quote_preview_request_id",
+    "product_family_hint",
+    "product_ref_hint",
+    "carrier_ref_hint",
+    "source_document_ref",
+    "source_evidence_refs",
+    "requested_preview_mode"
+  ],
+  "outputs": [
+    "quote_preview_binding_id",
+    "product_intelligence_ref",
+    "product_family",
+    "parser_ref",
+    "calculator_refs",
+    "coverage_semantics_ref",
+    "premium_semantics_ref",
+    "currency_semantics_ref",
+    "projection_semantics_ref",
+    "evidence_requirements",
+    "freshness_requirements",
+    "blocked_effects",
+    "safety_flags",
+    "safe_error"
+  ],
+  "safeErrors": [
+    "QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_NOT_BOUND",
+    "QUOTE_PREVIEW_PRODUCT_FAMILY_NOT_MAPPED",
+    "QUOTE_PREVIEW_PARSER_NOT_MAPPED",
+    "QUOTE_PREVIEW_CALCULATOR_NOT_MAPPED",
+    "QUOTE_PREVIEW_SOURCE_EVIDENCE_REQUIRED",
+    "QUOTE_PREVIEW_FRESHNESS_REQUIRED"
+  ],
+  "sourcePriority": [
+    "explicit_product_family_hint",
+    "product_intelligence_product_ref_match",
+    "carrier_product_evidence_match",
+    "parser_supported_product_family",
+    "unknown_or_not_modeled_state"
+  ],
+  "nonAuthorization": {
+    "pdfRead": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "quoteGeneration": false,
+    "providerCall": false,
+    "quoteWrite": false,
+    "quoteSend": false,
+    "crmWrite": false,
+    "policyWrite": false,
+    "pipelineWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "backendConnection": false,
+    "browserPersistence": false,
+    "secretAccess": false,
+    "realEngineExecution": false
+  },
+  "future074B": {
+    "adapterMode": "local_static_no_effect_binding_adapter",
+    "referencesOnly": true,
+    "executionAllowed": false
+  },
+  "validations": {
+    "jsonTool": "PASS",
+    "markerScan": "PASS",
+    "gitDiffCheck": "PASS",
+    "scopedSafetyScan": "PASS",
+    "stagedDiffCheck": "PASS"
+  },
+  "finalToken": "PASS_074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE"
+}

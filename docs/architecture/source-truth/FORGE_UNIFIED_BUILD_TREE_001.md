@@ -5496,3 +5496,35 @@ LOCKED_DECISION=PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_LOCKED_AS_LOCAL_STATIC_R
 
 NEXT=074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE
 <!-- FORGE:073F_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_DECISION_LOCK:END -->
+
+<!-- FORGE:074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE:START -->
+## 074A Quote Preview Product Intelligence Binding Scope
+
+074A scopes the binding between Quote Preview and the Product Intelligence Unified Read Model.
+
+Locked decision:
+`QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPED`
+
+Scope:
+
+- Quote Preview must consume Product Intelligence read model.
+- Quote Preview must not own product semantics.
+- Quote Preview must not choose parsers/calculators outside Product Intelligence references.
+- Quote Preview must not duplicate Product Intelligence logic.
+- Quote Preview must inherit evidence requirements, freshness requirements, blocked effects, and safety flags from Product Intelligence.
+
+Safe errors:
+
+- `QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_NOT_BOUND`
+- `QUOTE_PREVIEW_PRODUCT_FAMILY_NOT_MAPPED`
+- `QUOTE_PREVIEW_PARSER_NOT_MAPPED`
+- `QUOTE_PREVIEW_CALCULATOR_NOT_MAPPED`
+- `QUOTE_PREVIEW_SOURCE_EVIDENCE_REQUIRED`
+- `QUOTE_PREVIEW_FRESHNESS_REQUIRED`
+
+DECISION=PASS_074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPED
+
+NEXT=074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION
+<!-- FORGE:074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE:END -->
