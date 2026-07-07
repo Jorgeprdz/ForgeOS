@@ -7457,3 +7457,32 @@ LOCKED_DECISION=QUOTE_ACTION_CONTRACT_LOCAL_STATIC_NO_EFFECT_IMPLEMENTED
 
 NEXT=071C_QUOTE_ACTION_CONTRACT_QA_LOCK
 <!-- FORGE:071B_QUOTE_ACTION_CONTRACT_IMPLEMENTATION:END -->
+
+<!-- FORGE:071C_QUOTE_ACTION_CONTRACT_QA_LOCK:START -->
+## 071C Quote Action Contract QA Lock
+
+071C locks QA for the local/static/no-effect Quote Action Contract implementation.
+
+Locked decision:
+`QUOTE_ACTION_CONTRACT_QA_LOCKED`
+
+QA confirms:
+
+- `forge.quote.action_contract.v1`;
+- no-effect preview contracts allowed without approval;
+- real-effect quote action contracts require approval;
+- payload integrity enforced;
+- source evidence required;
+- freshness required;
+- rollback plan required;
+- execution result timing enforced;
+- all default safety flags false;
+- no new quote engine;
+- quote execution unauthorized.
+
+DECISION=PASS_071C_QUOTE_ACTION_CONTRACT_QA_LOCK
+
+LOCKED_DECISION=QUOTE_ACTION_CONTRACT_QA_LOCKED
+
+NEXT=071D_QUOTE_ACTION_CONTRACT_DECISION_LOCK
+<!-- FORGE:071C_QUOTE_ACTION_CONTRACT_QA_LOCK:END -->
