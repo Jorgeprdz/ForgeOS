@@ -7395,3 +7395,29 @@ LOCKED_DECISION=ACTION_CONTRACT_APPROVAL_GATE_SCHEMA_LOCKED_AS_LOCAL_STATIC_NO_E
 
 NEXT=071A_QUOTE_ACTION_CONTRACT_SCOPE
 <!-- FORGE:070E_ACTION_CONTRACT_APPROVAL_GATE_SCHEMA_DECISION_LOCK:END -->
+
+<!-- FORGE:071A_QUOTE_ACTION_CONTRACT_SCOPE:START -->
+## 071A Quote Action Contract Scope
+
+071A scopes the Quote Action Contract lane after Quote Read Model and Approval Gate schema locks.
+
+Locked decision:
+`QUOTE_ACTION_CONTRACT_SCOPED`
+
+Scope:
+
+- do not create a new quote engine;
+- use existing quote engine/read model as candidate source;
+- define no-effect preview action families;
+- define approval-required real-effect action families;
+- require action contract schema `forge.action_contract.v1`;
+- require approval gate schema `forge.approval_gate.v1`;
+- require source evidence, freshness, payload integrity, idempotency, rollback, audit, and approval for real effects;
+- all safety flags default false.
+
+DECISION=PASS_071A_QUOTE_ACTION_CONTRACT_SCOPE
+
+LOCKED_DECISION=QUOTE_ACTION_CONTRACT_SCOPED
+
+NEXT=071B_QUOTE_ACTION_CONTRACT_IMPLEMENTATION
+<!-- FORGE:071A_QUOTE_ACTION_CONTRACT_SCOPE:END -->
