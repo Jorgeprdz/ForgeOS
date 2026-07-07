@@ -1,0 +1,115 @@
+{
+  "phase": "067A_OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPE",
+  "status": "PASS",
+  "decision": "OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPED",
+  "basePhases": [
+    "066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION",
+    "066B1_OPPORTUNITY_PIPELINE_EXISTING_MODULE_RECONCILIATION",
+    "066C_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_QA_LOCK",
+    "066D_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_DECISION_LOCK"
+  ],
+  "lockedPriorDecision": "OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_LOCKED_AS_TEMPORARY_LOCAL_STATIC_SHIM",
+  "temporaryShimPreserved": true,
+  "principalSourceCandidate": "relationship-opportunity-engine.js",
+  "moduleRoles": [
+    {
+      "module": "relationship-opportunity-engine.js",
+      "role": "source_of_truth_candidate",
+      "boundary": "candidate_only_requires_evidence_freshness_audit_empty_state_safe_error_no_effect_policy"
+    },
+    {
+      "module": "referral-opportunity-engine.js",
+      "role": "signal_source_and_enrichment_source",
+      "boundary": "referral_context_only_not_full_opportunity_truth"
+    },
+    {
+      "module": "advisor-os/prospecting/prospect-pipeline-engine.js",
+      "role": "source_of_truth_candidate_for_prospect_pipeline_state",
+      "boundary": "unsafe_until_ownership_stage_semantics_and_no_effect_boundary_exist"
+    },
+    {
+      "module": "advisor-os/discovery/opportunity-detector-engine.js",
+      "role": "signal_source",
+      "boundary": "detected_signal_cannot_become_fact_without_evidence_and_audit"
+    },
+    {
+      "module": "rule-packs/smnyl/smnyl-opportunity-engine.js",
+      "role": "enrichment_source_and_rules_interpreter",
+      "boundary": "cannot_create_opportunity_truth_alone"
+    },
+    {
+      "module": "rule-packs/smnyl/smnyl-pipeline-engine.js",
+      "role": "enrichment_source_and_stage_policy_interpreter",
+      "boundary": "cannot_mutate_stage"
+    },
+    {
+      "module": "manager-os/forge-alive/forge-alive-smart-widget-stack-read-model.js",
+      "role": "ui_projection_consumer",
+      "boundary": "excluded_from_read_only_source_ownership"
+    },
+    {
+      "module": "pipeline-stage-engine.js",
+      "role": "stage_taxonomy_and_enrichment_source",
+      "boundary": "unsafe_until_stage_ownership_and_mutation_boundary_are_separated"
+    }
+  ],
+  "requiredFieldMappings": [
+    "opportunity_id",
+    "client_ref",
+    "display_name",
+    "stage",
+    "status",
+    "priority",
+    "probability",
+    "expected_value_preview",
+    "next_action",
+    "followup_due_state",
+    "risk_flags",
+    "policy_summary_refs",
+    "quote_summary_refs",
+    "source_evidence",
+    "freshness",
+    "audit_event",
+    "blocked_effects",
+    "safety_flags"
+  ],
+  "notMappableYet": [
+    "real_money_without_evidence",
+    "real_premium_without_source_truth",
+    "stage_mutation",
+    "crm_write",
+    "task_calendar_message_action",
+    "provider_runtime_execution",
+    "invented_recommendations",
+    "forecast_as_fact",
+    "opportunity_truth_without_source_ownership"
+  ],
+  "requiredContractsBeforeImplementation": [
+    "canonical_source_ownership",
+    "source_priority",
+    "input_schema",
+    "output_read_model_schema",
+    "freshness_model",
+    "evidence_model",
+    "error_model",
+    "permission_capability_model",
+    "no_effect_adapter_policy",
+    "audit_event_mapping",
+    "empty_state_rules"
+  ],
+  "uiMutation": false,
+  "backendConnection": false,
+  "crmWrite": false,
+  "pipelineWrite": false,
+  "taskCreate": false,
+  "calendarCreate": false,
+  "messageSend": false,
+  "authReal": false,
+  "providerRuntime": false,
+  "secretAccess": false,
+  "browserPersistence": false,
+  "realEngineExecution": false,
+  "realEffectsAllowed": false,
+  "realEffectsEnabled": false,
+  "next": "067B_RELATIONSHIP_OPPORTUNITY_SIGNAL_ADAPTER_SCOPE"
+}

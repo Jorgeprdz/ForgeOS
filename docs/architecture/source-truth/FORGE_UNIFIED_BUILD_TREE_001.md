@@ -4414,3 +4414,35 @@ DECISION=PASS_066D_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_DECISION_LOCK
 
 NEXT=067A_OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPE
 <!-- FORGE:066D_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_DECISION_LOCK:END -->
+
+<!-- FORGE:067A_OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPE:START -->
+## 067A Opportunity Pipeline Canonical Source Mapping Scope
+
+067A scopes how Opportunity Pipeline should map existing modules toward a future canonical read model without replacing the 066B temporary local/static/read-only shim.
+
+Decision:
+`OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPED`
+
+Principal source candidate for next scope:
+`relationship-opportunity-engine.js`
+
+Module roles:
+
+- `relationship-opportunity-engine.js`: source of truth candidate for relationship-derived opportunity signals;
+- `referral-opportunity-engine.js`: signal and enrichment source;
+- `advisor-os/prospecting/prospect-pipeline-engine.js`: source candidate for prospect pipeline state, unsafe until ownership exists;
+- `advisor-os/discovery/opportunity-detector-engine.js`: signal source;
+- `rule-packs/smnyl/smnyl-opportunity-engine.js`: enrichment and rules interpreter;
+- `rule-packs/smnyl/smnyl-pipeline-engine.js`: enrichment and stage policy interpreter;
+- `manager-os/forge-alive/forge-alive-smart-widget-stack-read-model.js`: UI projection consumer, excluded from source ownership;
+- `pipeline-stage-engine.js`: stage taxonomy/enrichment source, unsafe until mutation boundary is separated.
+
+Required before implementation:
+canonical source ownership, source priority, input schema, output read model schema, freshness model, evidence model, error model, permission/capability model, no-effect adapter policy, audit event mapping, and empty state rules.
+
+DECISION=PASS_067A_OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPE
+
+LOCKED_DECISION=OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPED
+
+NEXT=067B_RELATIONSHIP_OPPORTUNITY_SIGNAL_ADAPTER_SCOPE
+<!-- FORGE:067A_OPPORTUNITY_PIPELINE_CANONICAL_SOURCE_MAPPING_SCOPE:END -->
