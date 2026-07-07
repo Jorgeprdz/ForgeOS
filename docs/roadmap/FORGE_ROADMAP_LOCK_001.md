@@ -3145,3 +3145,125 @@ DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
 
 NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 <!-- FORGE:065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL:END -->
+
+<!-- FORGE:065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER:START -->
+## 065E1 Roadmap Hold / Parked / Pending Register
+
+Status: PASS / ROADMAP REGISTERED
+
+Current completed lock:
+`065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL`
+
+Active next:
+`066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+
+### HOLD
+
+`066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+
+Reason:
+Ready to continue, but intentionally held until the operator chooses whether to run the docs-only scope via Termux shell or use Codex for the next implementation-heavy phase.
+
+Rule:
+Do not start `066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION` until `066A` is committed and pushed.
+
+### PARKED
+
+`065F_IOS_STATIC_PREVIEW_LAYOUT_OVERFLOW_REPAIR`
+
+Reason:
+iOS Safari screenshot shows horizontal layout drift/overflow.
+
+Boundary when resumed:
+UI/CSS repair only. No backend, CRM, calendar, send, auth, provider, recording, or real engine execution.
+
+### PENDING REVIEW
+
+`PRODUCT_INTELLIGENCE_REVIEW`
+
+Purpose:
+Re-open Product Intelligence source truth and catalog/data modules before deeper quote behavior.
+
+`QUOTE_MODULES_REVIEW`
+
+Purpose:
+Review quote/cotizacion modules and Product Intelligence database usage before any quote adapter or quote preview work.
+
+### PENDING FUTURE SCOPES
+
+`OYE_ALFRED_WAKE_VOICE_SYSTEM_SCOPE`
+
+- wake phrase: Oye Alfred;
+- voice activation;
+- hands-free mode;
+- spoken command to action preview;
+- confirmation before execution;
+- fallback to text;
+- microphone consent;
+- visible listening indicator;
+- no passive listening without permission;
+- no real execution without approval gate.
+
+`NOTES_SYSTEM_SCOPE`
+
+- notes by client;
+- notes by policy;
+- notes by appointment;
+- quick notes by voice/text;
+- automatic tags;
+- AI context;
+- integrated timeline.
+
+`REAL_TIME_CONVERSATION_COPILOT_SCOPE`
+
+- real-time listening;
+- transcription;
+- objection detection;
+- response suggestions;
+- next-best question;
+- emotional analysis;
+- automatic post-appointment summary.
+
+Lock:
+Requires explicit permission, recording consent, retention/privacy rules, and provider-runtime boundary before implementation.
+
+`LEAD_GENERATION_BOOST_SCOPE`
+
+- prospect generation;
+- intelligent referrals;
+- dormant contact reactivation;
+- outreach scripts;
+- prospecting campaigns;
+- lead scoring;
+- daily suggestions for who to contact.
+
+Lock:
+No outreach/send/campaign execution until separately scoped.
+
+`SALES_PRESENTATION_SYSTEM_SCOPE`
+
+- sales scripts;
+- financial needs analysis;
+- initial appointment structure;
+- closing appointment structure;
+- presentation creator;
+- product-specific arguments;
+- financial storytelling;
+- expected objections;
+- post-presentation summary.
+
+### Operating Rule
+
+Every session must end with:
+
+- `CURRENT`;
+- `NEXT`;
+- `HOLD`;
+- `PARKED`;
+- `PENDING`;
+- `DO_NOT_FORGET`.
+
+DECISION=PASS_065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER
+
+NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+<!-- FORGE:065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER:END -->

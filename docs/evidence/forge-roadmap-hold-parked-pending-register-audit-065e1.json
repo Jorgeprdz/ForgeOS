@@ -1,0 +1,27 @@
+{
+  "phase": "065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER",
+  "status": "PASS",
+  "basePhase": "065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL",
+  "hold": ["066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE"],
+  "parked": ["065F_IOS_STATIC_PREVIEW_LAYOUT_OVERFLOW_REPAIR"],
+  "pendingReview": ["PRODUCT_INTELLIGENCE_REVIEW", "QUOTE_MODULES_REVIEW"],
+  "pendingFutureScopes": [
+    "OYE_ALFRED_WAKE_VOICE_SYSTEM_SCOPE",
+    "NOTES_SYSTEM_SCOPE",
+    "REAL_TIME_CONVERSATION_COPILOT_SCOPE",
+    "LEAD_GENERATION_BOOST_SCOPE",
+    "SALES_PRESENTATION_SYSTEM_SCOPE"
+  ],
+  "roadmapOnly": true,
+  "uiMutation": false,
+  "backendConnection": false,
+  "crmWrite": false,
+  "pipelineWrite": false,
+  "calendarCreate": false,
+  "messageSend": false,
+  "authReal": false,
+  "providerRuntime": false,
+  "recordingEnabled": false,
+  "realEffectsEnabled": false,
+  "next": "066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE"
+}
