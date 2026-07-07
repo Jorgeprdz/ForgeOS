@@ -5154,3 +5154,32 @@ LOCKED_DECISION=QUOTE_ACTION_CONTRACT_LOCKED_AS_LOCAL_STATIC_NO_EFFECT_CONTRACT
 
 NEXT=072A_QUOTE_APPROVAL_GATE_INTEGRATION_SCOPE
 <!-- FORGE:071D_QUOTE_ACTION_CONTRACT_DECISION_LOCK:END -->
+
+<!-- FORGE:072A_QUOTE_APPROVAL_GATE_INTEGRATION_SCOPE:START -->
+## 072A Quote Approval Gate Integration Scope
+
+072A scopes the local/static/no-effect integration between Quote Action Contract and Approval Gate schema.
+
+Locked decision:
+`QUOTE_APPROVAL_GATE_INTEGRATION_SCOPED`
+
+Scope:
+
+- integrate Quote Action Contract with Approval Gate schema;
+- do not execute quote actions;
+- do not approve quote actions;
+- require human approval for real quote effects;
+- require payload integrity;
+- require source evidence;
+- require freshness;
+- require rollback plan;
+- require idempotency for executable actions;
+- block approval inference from preview/open/click/type/view;
+- all safety flags default false.
+
+DECISION=PASS_072A_QUOTE_APPROVAL_GATE_INTEGRATION_SCOPE
+
+LOCKED_DECISION=QUOTE_APPROVAL_GATE_INTEGRATION_SCOPED
+
+NEXT=072B_QUOTE_APPROVAL_GATE_INTEGRATION_IMPLEMENTATION
+<!-- FORGE:072A_QUOTE_APPROVAL_GATE_INTEGRATION_SCOPE:END -->
