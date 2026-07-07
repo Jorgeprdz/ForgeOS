@@ -1,0 +1,105 @@
+{
+  "phase": "073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE",
+  "lockedDecision": "PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPED",
+  "next": "073D_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_IMPLEMENTATION",
+  "base": {
+    "phase": "073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE",
+    "present": true,
+    "decision": "PASS_073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE",
+    "lockedDecision": "PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPED"
+  },
+  "schema": {
+    "schemaVersion": "forge.product_intelligence.read_model.v1",
+    "domainId": "product_intelligence",
+    "mode": "read_only",
+    "routeClass": "preview_safe"
+  },
+  "requiredFields": [
+    "product_intelligence_id",
+    "product_ref",
+    "product_identity",
+    "product_family",
+    "carrier_ref",
+    "market_ref",
+    "source_module_refs",
+    "parser_refs",
+    "calculator_refs",
+    "coverage_semantics",
+    "premium_semantics",
+    "currency_semantics",
+    "projection_semantics",
+    "quote_semantics",
+    "policy_semantics",
+    "evidence_refs",
+    "freshness_metadata",
+    "source_ownership",
+    "confidence_state",
+    "unknown_state",
+    "blocked_state",
+    "not_modeled_state",
+    "adapter_refs",
+    "audit_event",
+    "blocked_effects",
+    "safety_flags"
+  ],
+  "productFamilySupport": [
+    "GMM",
+    "Vida Mujer",
+    "AVE",
+    "Imagina Ser",
+    "ORVI",
+    "SeguBeca",
+    "future product families"
+  ],
+  "sourcePriority": [
+    "product schema / ontology",
+    "source ownership map",
+    "product-specific parser",
+    "evidence extraction",
+    "coverage intelligence",
+    "projection calculator",
+    "Banxico/cache/currency engines",
+    "quote PDF preview consumer"
+  ],
+  "safeErrors": [
+    "PRODUCT_INTELLIGENCE_READ_MODEL_NOT_MODELED",
+    "PRODUCT_INTELLIGENCE_SOURCE_EVIDENCE_REQUIRED",
+    "PRODUCT_INTELLIGENCE_FRESHNESS_REQUIRED",
+    "PRODUCT_INTELLIGENCE_PRODUCT_FAMILY_NOT_MAPPED",
+    "PRODUCT_INTELLIGENCE_CALCULATOR_NOT_MAPPED"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false
+  },
+  "explicitBoundaries": {
+    "notQuoteIssuance": true,
+    "notPolicyTruth": true,
+    "notCarrierTruthWithoutSourceOwnership": true,
+    "notRecommendationAsFact": true,
+    "mustNotDuplicateParsersOrCalculators": true,
+    "quotePdfPreviewIsConsumerNotAuthority": true
+  },
+  "validation": {
+    "jsonTool": "PASS",
+    "markerScan": "PASS",
+    "gitDiffCheck": "PASS",
+    "scopedSafetyScan": "PASS",
+    "stagedDiffCheck": "PASS"
+  }
+}

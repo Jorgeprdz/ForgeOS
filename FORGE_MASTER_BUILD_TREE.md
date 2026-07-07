@@ -7732,3 +7732,51 @@ LOCKED_DECISION=PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPED
 
 NEXT=073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE
 <!-- FORGE:073B_PRODUCT_INTELLIGENCE_FOUNDATION_RECONCILIATION_SCOPE:END -->
+
+<!-- FORGE:073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE:START -->
+## 073C Product Intelligence Unified Read Model Scope
+
+073C scopes the unified Product Intelligence Read Model before further Quote PDF / Quote Preview promotion.
+
+Locked decision:
+`PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPED`
+
+Schema:
+
+- `schemaVersion`: `forge.product_intelligence.read_model.v1`
+- `domainId`: `product_intelligence`
+- `mode`: `read_only`
+- `routeClass`: `preview_safe`
+
+The read model is:
+
+- read-only;
+- preview-safe;
+- evidence-backed;
+- freshness-aware;
+- source-ownership-aware;
+- shared across GMM, Vida Mujer, AVE, Imagina Ser, ORVI, SeguBeca, and future product families.
+
+The read model is not:
+
+- quote issuance;
+- policy truth;
+- carrier truth without source ownership;
+- recommendation as fact;
+- provider execution;
+- a duplicate parser, calculator, or quote engine.
+
+Safe errors:
+
+- `PRODUCT_INTELLIGENCE_READ_MODEL_NOT_MODELED`
+- `PRODUCT_INTELLIGENCE_SOURCE_EVIDENCE_REQUIRED`
+- `PRODUCT_INTELLIGENCE_FRESHNESS_REQUIRED`
+- `PRODUCT_INTELLIGENCE_PRODUCT_FAMILY_NOT_MAPPED`
+- `PRODUCT_INTELLIGENCE_CALCULATOR_NOT_MAPPED`
+
+DECISION=PASS_073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE
+
+LOCKED_DECISION=PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPED
+
+NEXT=073D_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_IMPLEMENTATION
+<!-- FORGE:073C_PRODUCT_INTELLIGENCE_UNIFIED_READ_MODEL_SCOPE:END -->
