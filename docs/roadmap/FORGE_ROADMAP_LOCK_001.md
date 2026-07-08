@@ -4802,3 +4802,33 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_QA_LOCKED
 
 NEXT=076D_QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_DECISION_LOCK
 <!-- FORGE:076C_QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_QA_LOCK:END -->
+
+<!-- FORGE:076D_QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_DECISION_LOCK:START -->
+## 076D Quote Preview PDF Engine Repo Promotion Decision Lock
+
+076D decision-locks the Quote Preview PDF Engine repo promotion adapter as a local/static/read-only reference adapter.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_ADAPTER`
+
+Confirmed:
+
+- adapter manifest is valid;
+- schema `forge.quote_preview.pdf_engine.repo_promotion.v1`;
+- Product Intelligence binding is required;
+- Product Intelligence remains upstream semantic authority;
+- Quote Preview PDF Engine remains downstream consumer/reference only;
+- GMM, Vida Mujer, AVE, Imagina Ser, ORVI, and SeguBeca are mapped;
+- Imagina Ser remains a proven case, not universal architecture;
+- missing/unmapped product families return safe errors;
+- promotion shape validates;
+- reference chain includes 073D, 074B, 075B, and PDF preview engine refs;
+- all safety flags remain false;
+- no PDF read, parser execution, calculator execution, Banxico call, provider call, quote write, backend connection, or real engine execution occurs.
+
+DECISION=PASS_076D_QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_ADAPTER
+
+NEXT=077A_QUOTE_PREVIEW_PDF_ENGINE_TEXT_EVIDENCE_EXTRACTION_SCOPE
+<!-- FORGE:076D_QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_DECISION_LOCK:END -->
