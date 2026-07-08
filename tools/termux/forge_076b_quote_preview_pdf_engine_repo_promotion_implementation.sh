@@ -1059,6 +1059,20 @@ PY
 
 pass "build tree / roadmap updated"
 
+stage "STAGE 9B TRIM TREE EOF BLANKS"
+python3 - <<'PYTRIM'
+from pathlib import Path
+
+for path in [
+    Path("FORGE_MASTER_BUILD_TREE.md"),
+    Path("docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md"),
+    Path("docs/roadmap/FORGE_ROADMAP_LOCK_001.md"),
+]:
+    text = path.read_text()
+    path.write_text(text.rstrip() + "\n")
+    print(f"trimmed EOF blanks: {path}")
+PYTRIM
+
 stage "STAGE 10 SAVE SCRIPT IN REPO"
 mkdir -p "$(dirname "$SCRIPT_IN_REPO")"
 cp "$0" "$SCRIPT_IN_REPO"
