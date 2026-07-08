@@ -6738,3 +6738,39 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_LOCKED_AS_L
 
 NEXT=083A_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPE
 <!-- FORGE:082D_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_DECISION_LOCK:END -->
+
+<!-- FORGE:083A_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPE:START -->
+## 083A Quote Preview PDF Engine Parser Ownership Scope
+
+083A scopes parser ownership for the Quote Preview PDF Engine path.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPED`
+
+Active blocking gate:
+
+- `parser_ownership_resolved`
+
+Scoped parser candidates:
+
+- `policy-operations/evidence/policy-ocr-engine.js`
+- `product-intelligence/evidence/solucionline-retirement-parser.js`
+- `product-intelligence/evidence/gmm-quote-parser.js`
+- `product-intelligence/evidence/forge-quote-pdf-preview-engine.js`
+
+083B must implement a local/static/read-only parser ownership registry.
+
+Boundaries:
+
+- no parser execution;
+- no PDF read;
+- no OCR/calculator/Banxico/provider/test execution;
+- no new parser creation;
+- preview engine is not parser truth.
+
+DECISION=PASS_083A_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPED
+
+NEXT=083B_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_IMPLEMENTATION
+<!-- FORGE:083A_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPE:END -->
