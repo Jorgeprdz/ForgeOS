@@ -6756,3 +6756,40 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_SCOPED
 
 NEXT=090B_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_IMPLEMENTATION
 <!-- FORGE:090A_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_SCOPE:END -->
+
+<!-- FORGE:090B_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_IMPLEMENTATION:START -->
+## 090B Quote Preview Safe Copy and Badge System Implementation
+
+090B implements a local/static/read-only safe copy and badge system registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-safe-copy-badge-system-registry-adapter-090b.js`
+- `tests/quote-preview-safe-copy-badge-system-registry-adapter-090b-test.js`
+
+Registry status:
+
+- `copy_badges_mapped_no_effect_language_no_truth`
+
+Required badges implemented:
+
+- Preview
+- Solo lectura
+- Revisión humana
+- No cotización oficial
+- Sin envío
+- Sin CRM
+- Sin calendario
+- Fuente no vinculada
+- Hash no verificado
+- Quote truth bloqueado
+
+DECISION=PASS_090B_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=090C_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_QA_LOCK
+<!-- FORGE:090B_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_IMPLEMENTATION:END -->
