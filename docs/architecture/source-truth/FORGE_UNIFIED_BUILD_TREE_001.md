@@ -7580,3 +7580,53 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPED
 
 NEXT=089B_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_IMPLEMENTATION
 <!-- FORGE:089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE:END -->
+
+<!-- FORGE:089B_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_IMPLEMENTATION:START -->
+## 089B Quote Preview Safe Visual Layout Spec Implementation
+
+089B implements a local/static/read-only safe visual layout spec registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-safe-visual-layout-spec-registry-adapter-089b.js`
+- `tests/quote-preview-safe-visual-layout-spec-registry-adapter-089b-test.js`
+
+Registry status:
+
+- `visual_layout_specs_mapped_no_render_no_effects`
+
+Layout specs:
+
+- `desktop_safe_visual_layout`
+- `tablet_safe_visual_layout`
+- `mobile_safe_visual_layout`
+
+Visual style tokens:
+
+- midnight navy;
+- dark glass cards;
+- warm gold CTAs;
+- muted cyan safety badges;
+- preview / no-quote labels always visible.
+
+Every spec preserves:
+
+- `render_allowed=false`
+- `screen_render_allowed=false`
+- `component_render_allowed=false`
+- `ui_mutation_allowed=false`
+- `css_injection_allowed=false`
+- `dom_write_allowed=false`
+- `quote_truth_allowed=false`
+- `execution_allowed=false`
+- `write_allowed=false`
+
+DECISION=PASS_089B_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=089C_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_QA_LOCK
+<!-- FORGE:089B_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_IMPLEMENTATION:END -->
