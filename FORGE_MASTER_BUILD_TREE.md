@@ -8367,3 +8367,38 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_LOC
 
 NEXT=078A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_SCOPE
 <!-- FORGE:077D_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_DECISION_LOCK:END -->
+
+<!-- FORGE:078A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_SCOPE:START -->
+## 078A Quote Preview PDF Engine Canonical Test Evidence Scope
+
+078A scopes canonical test evidence classification for the Quote Preview PDF Engine path.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_SCOPED`
+
+Base:
+
+- 077D locked the existing surfaces canonical mapping as a local/static/read-only reference catalog.
+
+Scope:
+
+- classify existing test evidence candidates;
+- do not execute real PDF/OCR/parser/calculator/Banxico/provider tests;
+- do not create new extractor/parser/calculator/test engine;
+- distinguish real PDF evidence, parser evidence, deterministic calculator evidence, rate/cache metadata, fixture evidence, smoke tests, and governance guardrail tests;
+- prevent fixture tests from being treated as real PDF evidence;
+- prevent governance tests from being treated as extraction proof;
+- prevent provider integration tests from being treated as runtime-safe without a future gate;
+- prevent preview summaries from becoming quote truth;
+- prevent invented expected financial values.
+
+Next:
+
+- `078B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_IMPLEMENTATION` must implement a local/static/read-only canonical test evidence registry only.
+
+DECISION=PASS_078A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_SCOPED
+
+NEXT=078B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_IMPLEMENTATION
+<!-- FORGE:078A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_SCOPE:END -->
