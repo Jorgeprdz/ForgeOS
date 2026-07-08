@@ -5844,3 +5844,50 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_LOCKED_AS_LOCAL_STATIC_R
 
 NEXT=077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE
 <!-- FORGE:076D_QUOTE_PREVIEW_PDF_ENGINE_REPO_PROMOTION_DECISION_LOCK:END -->
+
+<!-- FORGE:077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE:START -->
+## 077A Quote Preview PDF Engine Existing Tests and Engines Reconciliation Scope
+
+077A scopes reconciliation of existing quote/PDF tests and engines before any new extractor, parser, calculator, Banxico, provider, or quote engine work.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPED`
+
+Audit verdict:
+
+- `VERDICT=PARTIAL_DUPLICATION_RISK`
+- `DUPLICATION_RISK=MEDIUM`
+- `NO_NEW_EXTRACTOR_BEFORE_RECONCILIATION=YES`
+
+Discovery evidence:
+
+- `/data/data/com.termux/files/home/forge-discovery-20260707_212348/DISCOVERY_077A_PRECHECK_EXISTING_QUOTE_PDF_TESTS_AND_ENGINES_REPORT_20260707_212348.json`
+
+Scope confirmed:
+
+- existing tests and engines must be reconciled before implementation;
+- 076B/076D remain valid as read-only governance/promotion adapters;
+- no new PDF extractor may be created before reconciliation;
+- no new parser may be created before reconciliation;
+- no new calculator may be created before reconciliation;
+- Product Intelligence remains upstream semantic authority;
+- Quote Preview remains downstream consumer;
+- 077B must implement canonical mapping only, not extraction or execution.
+
+Candidate canonical boundaries:
+
+- PDF extraction: `policy-operations/evidence/policy-ocr-engine.js`;
+- PDF preview/orchestration: `product-intelligence/evidence/forge-quote-pdf-preview-engine.js`;
+- Solucionline parser: `CANONICAL_DECISION_REQUIRED`;
+- Imagina Ser calculations: `retirement-future-udi-projection-engine.js` + `imagina-ser-future-mxn-bridge.js`;
+- UDI projection: `retirement-future-udi-projection-engine.js`;
+- Banxico/rates: `exchange-rate-cache-engine.js` over shared Banxico providers;
+- GMM parser: `product-intelligence/evidence/gmm-quote-parser.js`;
+- GMM summary: `gmm-quote-summary-engine.js`.
+
+DECISION=PASS_077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPED
+
+NEXT=077B_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_IMPLEMENTATION
+<!-- FORGE:077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE:END -->
