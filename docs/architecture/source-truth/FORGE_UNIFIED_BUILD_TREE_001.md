@@ -7504,3 +7504,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCKED
 
 NEXT=088D_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_DECISION_LOCK
 <!-- FORGE:088C_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCK:END -->
+
+<!-- FORGE:088D_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_DECISION_LOCK:START -->
+## 088D Quote Preview Safe Screen Composition Decision Lock
+
+088D decision-locks the 088B/088C safe screen composition registry as a local/static/read-only reference registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY`
+
+Confirmed:
+
+- five screen compositions exist;
+- every composition blocks screen rendering;
+- every composition blocks UI mutation;
+- every composition blocks quote truth;
+- every composition blocks execution;
+- every composition blocks writes;
+- reference screen includes value table and evidence panel;
+- human review screen includes human review card.
+
+Next:
+
+- `089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE` may scope safe visual layout spec.
+- No screen rendering, component rendering, UI mutation, or execution is authorized.
+
+DECISION=PASS_088D_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY
+
+NEXT=089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE
+<!-- FORGE:088D_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_DECISION_LOCK:END -->
