@@ -5110,3 +5110,36 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_QA_LOCKED
 
 NEXT=078D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_DECISION_LOCK
 <!-- FORGE:078C_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_QA_LOCK:END -->
+
+<!-- FORGE:078D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_DECISION_LOCK:START -->
+## 078D Quote Preview PDF Engine Canonical Test Evidence Decision Lock
+
+078D decision-locks the 078B/078C canonical test evidence registry as a local/static/read-only reference registry.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY`
+
+Confirmed:
+
+- evidence registry is locked as read-only reference registry;
+- fixture tests are not real PDF/OCR evidence;
+- governance tests are not extraction proof;
+- Banxico/cache integration candidates require future runtime gate;
+- expected financial values require provenance review;
+- retirement/Solucionline parser evidence remains decision-required where ownership is unresolved;
+- retirement MXN projection evidence must rely on existing UDI/MXN engines;
+- Product Intelligence remains upstream;
+- Quote Preview remains downstream;
+- all safety flags remain false;
+- no test/PDF/OCR/parser/calculator/Banxico/provider execution is authorized.
+
+Next:
+
+- `079A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPE` may scope canonical test evidence provenance only.
+
+DECISION=PASS_078D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY
+
+NEXT=079A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPE
+<!-- FORGE:078D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_DECISION_LOCK:END -->
