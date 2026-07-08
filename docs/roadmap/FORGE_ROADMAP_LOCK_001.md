@@ -6200,3 +6200,29 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_LOCAL_STATIC_READ_ONLY_IMPLEME
 
 NEXT=086C_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCK
 <!-- FORGE:086B_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_IMPLEMENTATION:END -->
+
+<!-- FORGE:086C_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCK:START -->
+## 086C Quote Preview Safe UX State Model QA Lock
+
+086C QA locks the 086B safe UX state model registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCKED`
+
+QA validated:
+
+- registry shape validates;
+- nine safe UX states exist;
+- quote truth is blocked in every state;
+- execution is blocked in every state;
+- writes are blocked in every state;
+- preview labeling is required;
+- human review state exists;
+- all safety flags remain false.
+
+DECISION=PASS_086C_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCKED
+
+NEXT=086D_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_DECISION_LOCK
+<!-- FORGE:086C_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCK:END -->
