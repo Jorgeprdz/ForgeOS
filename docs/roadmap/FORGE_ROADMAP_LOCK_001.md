@@ -5769,3 +5769,42 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPED
 
 NEXT=083B_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_IMPLEMENTATION
 <!-- FORGE:083A_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPE:END -->
+
+<!-- FORGE:083B_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_IMPLEMENTATION:START -->
+## 083B Quote Preview PDF Engine Parser Ownership Implementation
+
+083B implements a local/static/read-only parser ownership registry.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-pdf-engine-parser-ownership-registry-adapter-083b.js`
+- `tests/quote-preview-pdf-engine-parser-ownership-registry-adapter-083b-test.js`
+
+Registry status:
+
+- `ownership_mapped_execution_blocked`
+
+Ownership entries:
+
+- `owner_policy_ocr_engine_reference`
+- `owner_solucionline_retirement_parser`
+- `owner_gmm_quote_parser`
+- `owner_quote_pdf_preview_engine`
+
+Boundaries:
+
+- no parser execution;
+- no PDF read;
+- no OCR/calculator/Banxico/provider/test execution;
+- no backend or quote write;
+- no new parser creation.
+
+DECISION=PASS_083B_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=083C_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_QA_LOCK
+<!-- FORGE:083B_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_IMPLEMENTATION:END -->
