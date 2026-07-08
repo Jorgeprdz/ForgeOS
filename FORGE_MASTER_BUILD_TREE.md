@@ -7980,3 +7980,26 @@ LOCKED_DECISION=QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_LOCKED_AS_LOCAL_STATI
 
 NEXT=075A_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_SCOPE
 <!-- FORGE:074D_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_DECISION_LOCK:END -->
+
+<!-- FORGE:075A_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_SCOPE:START -->
+## 075A Quote Preview PDF Engine Product Intelligence Integration Scope
+
+075A scopes the integration between Quote Preview PDF Engine and the locked Quote Preview Product Intelligence binding layer.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_SCOPED`
+
+Integration rule:
+
+`Quote Preview PDF request -> Quote Preview Product Intelligence Binding -> Product Intelligence Read Model -> allowed references only`
+
+075A confirms that Quote Preview PDF behavior must bind through Product Intelligence before using quote-specific preview, parser, calculator, currency, projection, or evidence surfaces.
+
+This phase authorizes no PDF read, OCR, parser execution, calculator execution, Banxico call, quote generation, provider call, backend connection, write, or invented truth.
+
+DECISION=PASS_075A_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_SCOPED
+
+NEXT=075B_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_IMPLEMENTATION
+<!-- FORGE:075A_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_SCOPE:END -->
