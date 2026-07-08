@@ -1,0 +1,503 @@
+# Forge Quote Preview Safe UX Component Contract Scope 087A
+
+PHASE=087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE
+
+STATUS=PASS
+
+DECISION=PASS_087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPED
+
+NEXT=087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION
+
+## Evidence Summary
+
+087A scopes safe UX component contracts only.
+
+## Discovery Evidence
+
+```json
+{
+  "discoveryJson": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/DISCOVERY_077A_PRECHECK_EXISTING_QUOTE_PDF_TESTS_AND_ENGINES_REPORT_20260707_212348.json",
+  "counts": {
+    "test_files_total": 164,
+    "engine_parser_preview_quote_candidates_total": 594,
+    "rg_hits_total": 59058,
+    "real_quote_test_candidate_files": 78
+  },
+  "knownSurfacesPresent": [
+    "product-intelligence/evidence/forge-quote-pdf-preview-engine.js",
+    "retirement-future-udi-projection-engine.js",
+    "imagina-ser-future-mxn-bridge.js",
+    "shared-banxico-rate-engine.js",
+    "shared-banxico-edge-provider.js",
+    "platform/adapters/quote-preview/quote-preview-pdf-engine-repo-promotion-adapter-076b.js",
+    "platform/adapters/quote-preview/quote-preview-pdf-product-intelligence-integration-adapter-075b.js",
+    "platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js",
+    "platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js"
+  ],
+  "realQuoteTestCandidateFiles": [
+    "tests/action-contract-approval-gate-schema-070c-test.js",
+    "tests/advisor-development-counting-weighting-engine-test.js",
+    "tests/advisor-development-development-bonus-engine-test.js",
+    "tests/advisor-development-rule-pack-integration-test.js",
+    "tests/advisor-development-rule-pack-loader-test.js",
+    "tests/advisor-development-rule-pack-validator-test.js",
+    "tests/advisor-development-training-allowance-engine-test.js",
+    "tests/alpha-runtime/forge-alpha-runtime.test.js",
+    "tests/banxico-edge-provider-test.js",
+    "tests/banxico-token-security-test.js",
+    "tests/bonus-rule-pack-contract-test.js",
+    "tests/business-rules-test.js",
+    "tests/carrier-revenue-adapter-contract-test.js",
+    "tests/carrier-rule-router-test.js",
+    "tests/client-crm-read-only-adapter-065b-test.js",
+    "tests/commission-statement-evidence-packet-test.js",
+    "tests/critical-path-test.js",
+    "tests/evidence-inbox-router-contract-test.js",
+    "tests/evidence-source-test.js",
+    "tests/fixtures/presentation-basic-imagina-ser.json",
+    "tests/forge-shared-ave-master-test.js",
+    "tests/gmm-out-of-pocket-test.js",
+    "tests/integration/discovery-signal-extractor.integration.test.js",
+    "tests/new-professional-connection-bonus-engine-test.js",
+    "tests/new-professional-gmmi-initial-premium-bonus-engine-test.js",
+    "tests/new-professional-gmmi-initial-premium-growth-annual-bonus-engine-test.js",
+    "tests/new-professional-gmmi-renewal-premium-bonus-engine-test.js",
+    "tests/new-professional-life-initial-bonus-engine-test.js",
+    "tests/new-professional-rule-pack-integration-test.js",
+    "tests/new-professional-rule-pack-validator-test.js",
+    "tests/opportunity-pipeline-read-model-normalization-067d-test.js",
+    "tests/opportunity-pipeline-read-only-adapter-066b-test.js",
+    "tests/organization-rules-fixture-validation-test.js",
+    "tests/partner-2026-rule-pack-loader-test.js",
+    "tests/partner-2026-rule-pack-validator-test.js",
+    "tests/partner-activity-bonus-calculator-test.js",
+    "tests/partner-activity-bonus-contract-test.js",
+    "tests/partner-advisor-qualification-explainability-engine-test.js",
+    "tests/partner-alta-partner-bonus-calculator-test.js",
+    "tests/partner-alta-partner-bonus-orchestrator-test.js",
+    "tests/partner-annual-productivity-bonus-orchestrator-test.js",
+    "tests/partner-fixed-support-calculator-test.js",
+    "tests/partner-fixed-support-orchestrator-test.js",
+    "tests/partner-juan-real-exercise-regression-test.js",
+    "tests/partner-month7-real-income-scenario-test.js",
+    "tests/partner-monthly-cashflow-projection-engine-test.js",
+    "tests/partner-official-evidence-test.js",
+    "tests/partner-ownership-real-scenario-blackbox-test.js",
+    "tests/partner-payout-truth-gate-test.js",
+    "tests/partner-pcv-2026-bonus-coverage-audit-test.js",
+    "tests/partner-quarterly-bonus-calculator-test.js",
+    "tests/partner-spreadsheet-monthly-fact-adapter-test.js",
+    "tests/partner-support-requirement-by-career-month-test.js",
+    "tests/partner-transition-candidate-readiness-audit-test.js",
+    "tests/policy-evidence-packet-test.js",
+    "tests/policy-read-model-adapter-068b-test.js",
+    "tests/presentation-pipeline-test.js",
+    "tests/product-intelligence-read-model-adapter-073d-test.js",
+    "tests/product-intelligence/forge-quote-pdf-preview-engine-test.js",
+    "tests/quote-action-contract-071b-test.js",
+    "tests/quote-approval-gate-integration-072b-test.js",
+    "tests/quote-preview-pdf-engine-repo-promotion-adapter-076b-test.js",
+    "tests/quote-preview-pdf-product-intelligence-integration-adapter-075b-test.js",
+    "tests/quote-preview-product-intelligence-binding-adapter-074b-test.js",
+    "tests/quote-read-model-adapter-069c-test.js",
+    "tests/real-gmm-quote-test.js",
+    "tests/real-pdf-ocr-test.js",
+    "tests/real-retirement-mxn-scenario-test.js",
+    "tests/real-retirement-scenario-test.js",
+    "tests/revenue-snapshot-test.js",
+    "tests/rule-pack-identity-snapshot-test.js",
+    "tests/run-all-tests.js",
+    "tests/services/forge-alpha-service.test.js",
+    "tests/smoke-test.js",
+    "tests/supabase-rls-foundation-test.js",
+    "tests/truth/truth-validators-phase-a-test.js",
+    "tests/vida-mujer-real-test.js",
+    "tests/vida-mujer-survival-schedule-test.js"
+  ],
+  "recommendation": {
+    "do_not_create_new_pdf_extractor": true,
+    "next_should_be_reconciliation_scope": "077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE",
+    "why": [
+      "Existing repo surfaces and tests must be inventoried before new extraction work.",
+      "If real quotation tests already exist, they should become canonical fixture/evidence tests.",
+      "Existing engines should be bound/reconciled with Product Intelligence rather than duplicated."
+    ]
+  },
+  "artifacts": {
+    "test_files": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/test-files.txt",
+    "engine_files": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/engine-files.txt",
+    "rg_hits": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/rg-hits.txt",
+    "real_quote_tests": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/real-quote-test-candidates.txt",
+    "exports_report": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/js-exports-and-functions.txt"
+  }
+}
+```
+
+## Component Contract Scope
+
+```json
+{
+  "status": "PASS",
+  "phase": "087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE",
+  "scope_type": "safe_ux_component_contract_scope_only",
+  "safe_ux_state_status_before_087a": "safe_state_model_mapped_no_effects",
+  "preview_vs_quote_truth_boundary_status_before_087a": "preview_boundary_mapped_quote_truth_blocked",
+  "component_count": 8,
+  "components": [
+    {
+      "component_id": "quote_preview_shell",
+      "component_name": "QuotePreviewShell",
+      "component_kind": "layout_container_contract",
+      "responsibility": "Owns read-only composition slots and passes safe UX state to children.",
+      "consumes_state_ids": [
+        "empty",
+        "pdf_candidate_detected",
+        "file_hash_not_verified",
+        "source_trace_not_bound",
+        "parser_owner_decision_required",
+        "deterministic_inputs_not_verified",
+        "preview_reference_available",
+        "quote_truth_blocked",
+        "ready_for_human_review"
+      ],
+      "required_props": [
+        "state_id",
+        "badges",
+        "safe_actions",
+        "blocked_actions"
+      ],
+      "allowed_actions": [
+        "view_empty_state",
+        "view_reference_preview",
+        "open_evidence_panel",
+        "open_provenance_panel",
+        "request_human_review"
+      ],
+      "blocked_actions": [
+        "issue_quote",
+        "send_quote",
+        "write_quote",
+        "write_crm",
+        "write_policy",
+        "write_pipeline",
+        "connect_provider",
+        "connect_backend",
+        "run_parser",
+        "run_calculator",
+        "call_banxico",
+        "read_pdf"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "component_id": "quote_preview_status_card",
+      "component_name": "QuotePreviewStatusCard",
+      "component_kind": "status_card_contract",
+      "responsibility": "Shows current state label, description, severity and required preview/not-quote badges.",
+      "consumes_state_ids": [
+        "empty",
+        "pdf_candidate_detected",
+        "file_hash_not_verified",
+        "source_trace_not_bound",
+        "parser_owner_decision_required",
+        "deterministic_inputs_not_verified",
+        "preview_reference_available",
+        "quote_truth_blocked",
+        "ready_for_human_review"
+      ],
+      "required_props": [
+        "display_label",
+        "description",
+        "state_kind",
+        "required_badges"
+      ],
+      "allowed_actions": [
+        "view_reference_preview"
+      ],
+      "blocked_actions": [
+        "issue_quote",
+        "send_quote",
+        "write_quote"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "component_id": "quote_preview_evidence_panel",
+      "component_name": "QuotePreviewEvidencePanel",
+      "component_kind": "evidence_panel_contract",
+      "responsibility": "Shows evidence/provenance references without reading PDFs or executing parsers.",
+      "consumes_state_ids": [
+        "pdf_candidate_detected",
+        "file_hash_not_verified",
+        "source_trace_not_bound",
+        "preview_reference_available",
+        "ready_for_human_review"
+      ],
+      "required_props": [
+        "evidence_refs",
+        "provenance_refs",
+        "source_trace_status",
+        "verification_status"
+      ],
+      "allowed_actions": [
+        "open_evidence_panel",
+        "open_provenance_panel"
+      ],
+      "blocked_actions": [
+        "read_pdf",
+        "run_parser",
+        "run_calculator",
+        "call_banxico"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "component_id": "quote_preview_warning_stack",
+      "component_name": "QuotePreviewWarningStack",
+      "component_kind": "warning_stack_contract",
+      "responsibility": "Displays blocking/warning reasons in priority order.",
+      "consumes_state_ids": [
+        "file_hash_not_verified",
+        "source_trace_not_bound",
+        "parser_owner_decision_required",
+        "deterministic_inputs_not_verified",
+        "quote_truth_blocked"
+      ],
+      "required_props": [
+        "safe_errors",
+        "blocked_actions",
+        "required_badges"
+      ],
+      "allowed_actions": [
+        "open_evidence_panel",
+        "open_provenance_panel"
+      ],
+      "blocked_actions": [
+        "issue_quote",
+        "send_quote",
+        "write_quote",
+        "connect_backend"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "component_id": "quote_preview_value_table",
+      "component_name": "QuotePreviewValueTable",
+      "component_kind": "read_only_value_table_contract",
+      "responsibility": "Shows preview/reference values only when labeled as not verified and not quote.",
+      "consumes_state_ids": [
+        "preview_reference_available",
+        "ready_for_human_review",
+        "deterministic_inputs_not_verified",
+        "source_trace_not_bound"
+      ],
+      "required_props": [
+        "rows",
+        "source_trace_status",
+        "verification_status",
+        "required_badges"
+      ],
+      "allowed_actions": [
+        "view_reference_preview",
+        "copy_preview_reference_summary"
+      ],
+      "blocked_actions": [
+        "write_quote",
+        "issue_quote",
+        "send_quote",
+        "run_calculator"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "component_id": "quote_preview_action_bar",
+      "component_name": "QuotePreviewActionBar",
+      "component_kind": "safe_action_contract",
+      "responsibility": "Exposes only safe read/review actions and blocks quote/provider/write actions.",
+      "consumes_state_ids": [
+        "empty",
+        "pdf_candidate_detected",
+        "file_hash_not_verified",
+        "source_trace_not_bound",
+        "parser_owner_decision_required",
+        "deterministic_inputs_not_verified",
+        "preview_reference_available",
+        "quote_truth_blocked",
+        "ready_for_human_review"
+      ],
+      "required_props": [
+        "allowed_actions",
+        "blocked_actions"
+      ],
+      "allowed_actions": [
+        "view_reference_preview",
+        "open_evidence_panel",
+        "open_provenance_panel",
+        "request_human_review",
+        "copy_preview_reference_summary"
+      ],
+      "blocked_actions": [
+        "issue_quote",
+        "send_quote",
+        "write_quote",
+        "write_crm",
+        "write_policy",
+        "write_pipeline",
+        "connect_provider",
+        "connect_backend"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "component_id": "quote_preview_human_review_card",
+      "component_name": "QuotePreviewHumanReviewCard",
+      "component_kind": "human_review_contract",
+      "responsibility": "Explains why human review is required and exposes review request as a non-effect action.",
+      "consumes_state_ids": [
+        "ready_for_human_review",
+        "parser_owner_decision_required",
+        "quote_truth_blocked"
+      ],
+      "required_props": [
+        "review_reason",
+        "safe_errors",
+        "required_badges"
+      ],
+      "allowed_actions": [
+        "request_human_review",
+        "open_evidence_panel"
+      ],
+      "blocked_actions": [
+        "issue_quote",
+        "send_quote",
+        "write_quote",
+        "connect_provider",
+        "connect_backend"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "component_id": "quote_preview_badges_bar",
+      "component_name": "QuotePreviewBadgesBar",
+      "component_kind": "badge_contract",
+      "responsibility": "Shows preview/no-quote/no-verified badges required by state and boundary.",
+      "consumes_state_ids": [
+        "empty",
+        "pdf_candidate_detected",
+        "file_hash_not_verified",
+        "source_trace_not_bound",
+        "parser_owner_decision_required",
+        "deterministic_inputs_not_verified",
+        "preview_reference_available",
+        "quote_truth_blocked",
+        "ready_for_human_review"
+      ],
+      "required_props": [
+        "required_badges"
+      ],
+      "allowed_actions": [
+        "view_reference_preview"
+      ],
+      "blocked_actions": [
+        "issue_quote",
+        "send_quote",
+        "write_quote"
+      ],
+      "render_allowed": false,
+      "ui_mutation_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    }
+  ],
+  "required_087b_output": {
+    "adapter_type": "local_static_read_only_safe_ux_component_contract_registry",
+    "must_not_render_components": true,
+    "must_not_mutate_ui": true,
+    "must_not_create_quote_truth": true,
+    "must_not_write_quote": true,
+    "must_not_connect_backend": true,
+    "must_map_components_to_safe_states": true,
+    "required_fields": [
+      "component_id",
+      "component_name",
+      "component_kind",
+      "responsibility",
+      "consumes_state_ids",
+      "required_props",
+      "allowed_actions",
+      "blocked_actions",
+      "render_allowed",
+      "ui_mutation_allowed",
+      "quote_truth_allowed",
+      "execution_allowed",
+      "write_allowed",
+      "required_badges",
+      "safe_errors",
+      "safety_flags"
+    ]
+  },
+  "next_decision_after_087d": "quote_preview_safe_screen_composition_scope",
+  "safety_flags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
+```
+
+## Final
+
+DECISION=PASS_087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPED
+
+NEXT=087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION

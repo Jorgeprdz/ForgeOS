@@ -9629,3 +9629,40 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_LOCKED_AS_LOCAL_STATIC_READ_ON
 
 NEXT=087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE
 <!-- FORGE:086D_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_DECISION_LOCK:END -->
+
+<!-- FORGE:087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE:START -->
+## 087A Quote Preview Safe UX Component Contract Scope
+
+087A scopes safe UX component contracts for Quote Preview.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPED`
+
+Scoped component contracts:
+
+- `QuotePreviewShell`
+- `QuotePreviewStatusCard`
+- `QuotePreviewEvidencePanel`
+- `QuotePreviewWarningStack`
+- `QuotePreviewValueTable`
+- `QuotePreviewActionBar`
+- `QuotePreviewHumanReviewCard`
+- `QuotePreviewBadgesBar`
+
+087B must implement a local/static/read-only safe UX component contract registry.
+
+Boundaries:
+
+- no component rendering;
+- no UI mutation;
+- no quote truth creation;
+- no quote write/send;
+- no CRM/policy/pipeline writes;
+- no provider/backend connection.
+
+DECISION=PASS_087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPED
+
+NEXT=087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION
+<!-- FORGE:087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE:END -->
