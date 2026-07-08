@@ -6530,3 +6530,48 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_LOCKED_AS_LOCAL_STATIC_REA
 
 NEXT=089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE
 <!-- FORGE:088D_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_DECISION_LOCK:END -->
+
+<!-- FORGE:089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE:START -->
+## 089A Quote Preview Safe Visual Layout Spec Scope
+
+089A scopes safe visual layout specs for Quote Preview.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPED`
+
+Scoped layout specs:
+
+- `desktop_safe_visual_layout`
+- `tablet_safe_visual_layout`
+- `mobile_safe_visual_layout`
+
+Visual direction:
+
+- midnight navy / dark premium interface;
+- fixed sidebar on desktop;
+- command bar near the top;
+- hero risk card;
+- metric card grid;
+- operational opportunity table;
+- mobile single-column card stack;
+- warm gold CTA;
+- muted cyan safety badges;
+- preview / no-quote labels always visible.
+
+089B must implement a local/static/read-only safe visual layout spec registry.
+
+Boundaries:
+
+- no screen rendering;
+- no component rendering;
+- no UI mutation;
+- no CSS injection;
+- no DOM writes;
+- no quote truth creation.
+
+DECISION=PASS_089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPED
+
+NEXT=089B_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_IMPLEMENTATION
+<!-- FORGE:089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE:END -->

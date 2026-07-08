@@ -1,0 +1,329 @@
+# Forge Quote Preview Safe Visual Layout Spec Scope 089A
+
+PHASE=089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE
+
+STATUS=PASS
+
+DECISION=PASS_089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPED
+
+NEXT=089B_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_IMPLEMENTATION
+
+## Evidence Summary
+
+089A scopes safe visual layout specs only.
+
+## Discovery Evidence
+
+```json
+{
+  "discoveryJson": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/DISCOVERY_077A_PRECHECK_EXISTING_QUOTE_PDF_TESTS_AND_ENGINES_REPORT_20260707_212348.json",
+  "counts": {
+    "test_files_total": 164,
+    "engine_parser_preview_quote_candidates_total": 594,
+    "rg_hits_total": 59058,
+    "real_quote_test_candidate_files": 78
+  },
+  "knownSurfacesPresent": [
+    "product-intelligence/evidence/forge-quote-pdf-preview-engine.js",
+    "retirement-future-udi-projection-engine.js",
+    "imagina-ser-future-mxn-bridge.js",
+    "shared-banxico-rate-engine.js",
+    "shared-banxico-edge-provider.js",
+    "platform/adapters/quote-preview/quote-preview-pdf-engine-repo-promotion-adapter-076b.js",
+    "platform/adapters/quote-preview/quote-preview-pdf-product-intelligence-integration-adapter-075b.js",
+    "platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js",
+    "platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js"
+  ],
+  "realQuoteTestCandidateFiles": [
+    "tests/action-contract-approval-gate-schema-070c-test.js",
+    "tests/advisor-development-counting-weighting-engine-test.js",
+    "tests/advisor-development-development-bonus-engine-test.js",
+    "tests/advisor-development-rule-pack-integration-test.js",
+    "tests/advisor-development-rule-pack-loader-test.js",
+    "tests/advisor-development-rule-pack-validator-test.js",
+    "tests/advisor-development-training-allowance-engine-test.js",
+    "tests/alpha-runtime/forge-alpha-runtime.test.js",
+    "tests/banxico-edge-provider-test.js",
+    "tests/banxico-token-security-test.js",
+    "tests/bonus-rule-pack-contract-test.js",
+    "tests/business-rules-test.js",
+    "tests/carrier-revenue-adapter-contract-test.js",
+    "tests/carrier-rule-router-test.js",
+    "tests/client-crm-read-only-adapter-065b-test.js",
+    "tests/commission-statement-evidence-packet-test.js",
+    "tests/critical-path-test.js",
+    "tests/evidence-inbox-router-contract-test.js",
+    "tests/evidence-source-test.js",
+    "tests/fixtures/presentation-basic-imagina-ser.json",
+    "tests/forge-shared-ave-master-test.js",
+    "tests/gmm-out-of-pocket-test.js",
+    "tests/integration/discovery-signal-extractor.integration.test.js",
+    "tests/new-professional-connection-bonus-engine-test.js",
+    "tests/new-professional-gmmi-initial-premium-bonus-engine-test.js",
+    "tests/new-professional-gmmi-initial-premium-growth-annual-bonus-engine-test.js",
+    "tests/new-professional-gmmi-renewal-premium-bonus-engine-test.js",
+    "tests/new-professional-life-initial-bonus-engine-test.js",
+    "tests/new-professional-rule-pack-integration-test.js",
+    "tests/new-professional-rule-pack-validator-test.js",
+    "tests/opportunity-pipeline-read-model-normalization-067d-test.js",
+    "tests/opportunity-pipeline-read-only-adapter-066b-test.js",
+    "tests/organization-rules-fixture-validation-test.js",
+    "tests/partner-2026-rule-pack-loader-test.js",
+    "tests/partner-2026-rule-pack-validator-test.js",
+    "tests/partner-activity-bonus-calculator-test.js",
+    "tests/partner-activity-bonus-contract-test.js",
+    "tests/partner-advisor-qualification-explainability-engine-test.js",
+    "tests/partner-alta-partner-bonus-calculator-test.js",
+    "tests/partner-alta-partner-bonus-orchestrator-test.js",
+    "tests/partner-annual-productivity-bonus-orchestrator-test.js",
+    "tests/partner-fixed-support-calculator-test.js",
+    "tests/partner-fixed-support-orchestrator-test.js",
+    "tests/partner-juan-real-exercise-regression-test.js",
+    "tests/partner-month7-real-income-scenario-test.js",
+    "tests/partner-monthly-cashflow-projection-engine-test.js",
+    "tests/partner-official-evidence-test.js",
+    "tests/partner-ownership-real-scenario-blackbox-test.js",
+    "tests/partner-payout-truth-gate-test.js",
+    "tests/partner-pcv-2026-bonus-coverage-audit-test.js",
+    "tests/partner-quarterly-bonus-calculator-test.js",
+    "tests/partner-spreadsheet-monthly-fact-adapter-test.js",
+    "tests/partner-support-requirement-by-career-month-test.js",
+    "tests/partner-transition-candidate-readiness-audit-test.js",
+    "tests/policy-evidence-packet-test.js",
+    "tests/policy-read-model-adapter-068b-test.js",
+    "tests/presentation-pipeline-test.js",
+    "tests/product-intelligence-read-model-adapter-073d-test.js",
+    "tests/product-intelligence/forge-quote-pdf-preview-engine-test.js",
+    "tests/quote-action-contract-071b-test.js",
+    "tests/quote-approval-gate-integration-072b-test.js",
+    "tests/quote-preview-pdf-engine-repo-promotion-adapter-076b-test.js",
+    "tests/quote-preview-pdf-product-intelligence-integration-adapter-075b-test.js",
+    "tests/quote-preview-product-intelligence-binding-adapter-074b-test.js",
+    "tests/quote-read-model-adapter-069c-test.js",
+    "tests/real-gmm-quote-test.js",
+    "tests/real-pdf-ocr-test.js",
+    "tests/real-retirement-mxn-scenario-test.js",
+    "tests/real-retirement-scenario-test.js",
+    "tests/revenue-snapshot-test.js",
+    "tests/rule-pack-identity-snapshot-test.js",
+    "tests/run-all-tests.js",
+    "tests/services/forge-alpha-service.test.js",
+    "tests/smoke-test.js",
+    "tests/supabase-rls-foundation-test.js",
+    "tests/truth/truth-validators-phase-a-test.js",
+    "tests/vida-mujer-real-test.js",
+    "tests/vida-mujer-survival-schedule-test.js"
+  ],
+  "recommendation": {
+    "do_not_create_new_pdf_extractor": true,
+    "next_should_be_reconciliation_scope": "077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE",
+    "why": [
+      "Existing repo surfaces and tests must be inventoried before new extraction work.",
+      "If real quotation tests already exist, they should become canonical fixture/evidence tests.",
+      "Existing engines should be bound/reconciled with Product Intelligence rather than duplicated."
+    ]
+  },
+  "artifacts": {
+    "test_files": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/test-files.txt",
+    "engine_files": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/engine-files.txt",
+    "rg_hits": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/rg-hits.txt",
+    "real_quote_tests": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/real-quote-test-candidates.txt",
+    "exports_report": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/js-exports-and-functions.txt"
+  }
+}
+```
+
+## Visual Layout Spec Scope
+
+```json
+{
+  "status": "PASS",
+  "phase": "089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE",
+  "scope_type": "safe_visual_layout_spec_scope_only",
+  "screen_composition_status_before_089a": "screen_compositions_mapped_no_render_no_effects",
+  "visual_layout_spec_count": 3,
+  "layout_specs": [
+    {
+      "layout_spec_id": "desktop_safe_visual_layout",
+      "layout_mode": "desktop_two_column",
+      "viewport_class": "desktop",
+      "intended_screen_refs": [
+        "QuotePreviewIntakeScreen",
+        "QuotePreviewBlockedScreen",
+        "QuotePreviewReferenceScreen",
+        "QuotePreviewHumanReviewScreen"
+      ],
+      "navigation_pattern": "fixed_left_sidebar",
+      "main_grid": "content_max_width_1180_two_column",
+      "visual_hierarchy": [
+        "breadcrumb",
+        "page_title",
+        "approval_pill",
+        "command_bar",
+        "hero_risk_card",
+        "metric_card_grid",
+        "priority_table"
+      ],
+      "card_density": "comfortable",
+      "primary_cta_treatment": "warm_gold_rounded_button",
+      "safety_badge_treatment": "muted_cyan_pill_with_shield",
+      "warning_treatment": "gold_accented_glass_card",
+      "table_treatment": "dark_operational_table_with_soft_dividers",
+      "render_allowed": false,
+      "screen_render_allowed": false,
+      "component_render_allowed": false,
+      "ui_mutation_allowed": false,
+      "css_injection_allowed": false,
+      "dom_write_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "layout_spec_id": "tablet_safe_visual_layout",
+      "layout_mode": "tablet_two_column",
+      "viewport_class": "tablet",
+      "intended_screen_refs": [
+        "QuotePreviewIntakeScreen",
+        "QuotePreviewReferenceScreen"
+      ],
+      "navigation_pattern": "compact_left_sidebar_or_bottom_nav",
+      "main_grid": "content_fluid_two_column_collapsible",
+      "visual_hierarchy": [
+        "page_title",
+        "approval_pill",
+        "command_bar",
+        "hero_risk_card",
+        "metric_card_grid",
+        "priority_table"
+      ],
+      "card_density": "medium",
+      "primary_cta_treatment": "warm_gold_rounded_button",
+      "safety_badge_treatment": "muted_cyan_pill_with_shield",
+      "warning_treatment": "gold_accented_glass_card",
+      "table_treatment": "responsive_table_or_card_list",
+      "render_allowed": false,
+      "screen_render_allowed": false,
+      "component_render_allowed": false,
+      "ui_mutation_allowed": false,
+      "css_injection_allowed": false,
+      "dom_write_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    },
+    {
+      "layout_spec_id": "mobile_safe_visual_layout",
+      "layout_mode": "mobile_single_column",
+      "viewport_class": "mobile",
+      "intended_screen_refs": [
+        "QuotePreviewEmptyScreen",
+        "QuotePreviewIntakeScreen",
+        "QuotePreviewBlockedScreen",
+        "QuotePreviewReferenceScreen",
+        "QuotePreviewHumanReviewScreen"
+      ],
+      "navigation_pattern": "bottom_tab_bar",
+      "main_grid": "single_column_stacked_cards",
+      "visual_hierarchy": [
+        "mobile_header",
+        "approval_pill",
+        "command_bar",
+        "hero_risk_card",
+        "metric_card_grid_two_columns",
+        "priority_list_cards",
+        "bottom_nav"
+      ],
+      "card_density": "compact_but_readable",
+      "primary_cta_treatment": "warm_gold_full_width_or_inline_button",
+      "safety_badge_treatment": "muted_cyan_pill_with_shield",
+      "warning_treatment": "gold_accented_glass_card",
+      "table_treatment": "priority_list_cards_not_table",
+      "render_allowed": false,
+      "screen_render_allowed": false,
+      "component_render_allowed": false,
+      "ui_mutation_allowed": false,
+      "css_injection_allowed": false,
+      "dom_write_allowed": false,
+      "quote_truth_allowed": false,
+      "execution_allowed": false,
+      "write_allowed": false
+    }
+  ],
+  "visual_style_tokens": {
+    "color_system": "midnight_navy_with_warm_gold_and_cyan_safety_accents",
+    "surface_style": "dark_glass_cards_soft_borders_subtle_glow",
+    "typography_style": "large_clear_page_title_medium_weight_labels_compact_operational_text",
+    "spacing_style": "generous_desktop_compact_mobile",
+    "cta_style": "warm_gold_primary_buttons",
+    "safety_label_style": "preview_not_quote_pills_always_visible"
+  },
+  "required_089b_output": {
+    "adapter_type": "local_static_read_only_safe_visual_layout_spec_registry",
+    "must_not_render_screen": true,
+    "must_not_mutate_ui": true,
+    "must_not_inject_css": true,
+    "must_not_create_quote_truth": true,
+    "must_map_layout_specs_to_safe_screen_compositions": true,
+    "required_fields": [
+      "layout_spec_id",
+      "layout_mode",
+      "viewport_class",
+      "intended_screen_refs",
+      "navigation_pattern",
+      "main_grid",
+      "visual_hierarchy",
+      "card_density",
+      "primary_cta_treatment",
+      "safety_badge_treatment",
+      "warning_treatment",
+      "table_treatment",
+      "render_allowed",
+      "screen_render_allowed",
+      "component_render_allowed",
+      "ui_mutation_allowed",
+      "css_injection_allowed",
+      "dom_write_allowed",
+      "quote_truth_allowed",
+      "execution_allowed",
+      "write_allowed",
+      "safe_errors",
+      "safety_flags"
+    ]
+  },
+  "next_decision_after_089d": "quote_preview_safe_copy_and_badge_system_scope",
+  "safety_flags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
+```
+
+## Final
+
+DECISION=PASS_089A_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_SCOPED
+
+NEXT=089B_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_IMPLEMENTATION
