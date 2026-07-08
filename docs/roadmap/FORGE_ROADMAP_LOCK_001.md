@@ -5477,3 +5477,54 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_LO
 
 NEXT=081A_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPE
 <!-- FORGE:080D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_DECISION_LOCK:END -->
+
+<!-- FORGE:081A_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPE:START -->
+## 081A Quote Preview PDF Engine Real PDF File Hash Provenance Scope
+
+081A scopes real PDF file/hash provenance for the Quote Preview PDF Engine path.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPED`
+
+Base:
+
+- 080D locked the execution readiness review matrix as `not_ready_for_execution`.
+
+First blocking gate:
+
+- `real_pdf_file_or_hash_ready`
+
+Scoped candidates:
+
+- `real_pdf_ocr_solucionline_candidate`
+- `real_gmm_quote_candidate`
+- `real_retirement_scenario_candidate`
+- `real_retirement_mxn_scenario_candidate`
+
+081B must implement a local/static/read-only file/hash provenance registry.
+
+081B must preserve:
+
+- no PDF read;
+- no PDF hash computation;
+- declared hash only;
+- declared file size only;
+- hash verification status remains `not_verified`;
+- file read status remains `not_read`;
+- execution allowed remains `false`.
+
+Blocked misuse:
+
+- hash computation disguised as scope;
+- PDF read disguised as provenance;
+- fixture-as-real-PDF;
+- unverified source document as truth;
+- execution before file/hash gate;
+- OCR/parser before file/hash gate.
+
+DECISION=PASS_081A_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPED
+
+NEXT=081B_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_IMPLEMENTATION
+<!-- FORGE:081A_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPE:END -->
