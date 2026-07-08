@@ -6999,3 +6999,36 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_DETERMINISTIC_INPUT_SOURCE_TRACE_LOCKED
 
 NEXT=085A_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPE
 <!-- FORGE:084D_QUOTE_PREVIEW_PDF_ENGINE_DETERMINISTIC_INPUT_SOURCE_TRACE_DECISION_LOCK:END -->
+
+<!-- FORGE:085A_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPE:START -->
+## 085A Quote Preview PDF Engine Preview vs Quote Truth Boundary Scope
+
+085A scopes the Preview vs Quote Truth boundary for the Quote Preview PDF Engine path.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPED`
+
+Scoped boundary surfaces:
+
+- `quote_pdf_preview_engine`
+- `expected_value_source_trace_registry`
+- `provider_backend_quote_truth`
+- `quote_preview_ui`
+
+085B must implement a local/static/read-only Preview vs Quote Truth boundary registry.
+
+Boundaries:
+
+- preview reference may be allowed;
+- quote truth creation remains blocked;
+- provider runtime remains blocked;
+- backend connection remains blocked;
+- quote write/send remains blocked;
+- user-visible preview must be labeled as preview, not quote.
+
+DECISION=PASS_085A_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPED
+
+NEXT=085B_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_IMPLEMENTATION
+<!-- FORGE:085A_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPE:END -->
