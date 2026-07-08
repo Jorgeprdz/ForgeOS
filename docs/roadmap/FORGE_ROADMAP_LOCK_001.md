@@ -5435,3 +5435,45 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_QA
 
 NEXT=080D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_DECISION_LOCK
 <!-- FORGE:080C_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_QA_LOCK:END -->
+
+<!-- FORGE:080D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_DECISION_LOCK:START -->
+## 080D Quote Preview PDF Engine Canonical Execution Readiness Review Decision Lock
+
+080D decision-locks the 080B/080C execution readiness review matrix as a local/static/read-only not-ready reference matrix.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_LOCKED_AS_LOCAL_STATIC_READ_ONLY_NOT_READY_REFERENCE_MATRIX`
+
+Readiness decision:
+
+- `not_ready_for_execution`
+
+Satisfied gates:
+
+- canonical surface mapping locked;
+- canonical test evidence locked;
+- canonical provenance locked;
+- fixture-as-real-PDF guard ready;
+- governance-as-extraction-proof guard ready;
+- duplicate engine/parser/calculator creation guard ready.
+
+Blocking gates:
+
+- real PDF file/hash readiness;
+- expected-value source trace readiness;
+- deterministic input source trace readiness;
+- parser ownership resolution;
+- Banxico/provider runtime gate;
+- preview-vs-quote-truth boundary.
+
+Next:
+
+- `081A_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPE` may scope real PDF file/hash provenance only.
+- No PDF/OCR/parser/calculator/Banxico/provider/test execution is authorized.
+
+DECISION=PASS_080D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_LOCKED_AS_LOCAL_STATIC_READ_ONLY_NOT_READY_REFERENCE_MATRIX
+
+NEXT=081A_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPE
+<!-- FORGE:080D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_DECISION_LOCK:END -->
