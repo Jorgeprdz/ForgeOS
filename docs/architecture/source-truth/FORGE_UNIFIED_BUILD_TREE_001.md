@@ -7659,3 +7659,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_QA_LOCKED
 
 NEXT=089D_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_DECISION_LOCK
 <!-- FORGE:089C_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_QA_LOCK:END -->
+
+<!-- FORGE:089D_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_DECISION_LOCK:START -->
+## 089D Quote Preview Safe Visual Layout Spec Decision Lock
+
+089D decision-locks the 089B/089C safe visual layout spec registry as a local/static/read-only reference registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY`
+
+Confirmed:
+
+- three visual layout specs exist;
+- desktop/tablet/mobile specs are mapped;
+- every spec blocks rendering;
+- every spec blocks UI mutation;
+- every spec blocks CSS injection and DOM writes;
+- every spec blocks quote truth, execution, and writes;
+- dark premium visual language is preserved;
+- warm gold CTA and cyan safety badges are preserved.
+
+Next:
+
+- `090A_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_SCOPE` may scope safe copy and badge system.
+- No screen rendering, component rendering, UI mutation, CSS injection, DOM writes, or execution are authorized.
+
+DECISION=PASS_089D_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY
+
+NEXT=090A_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_SCOPE
+<!-- FORGE:089D_QUOTE_PREVIEW_SAFE_VISUAL_LAYOUT_SPEC_DECISION_LOCK:END -->
