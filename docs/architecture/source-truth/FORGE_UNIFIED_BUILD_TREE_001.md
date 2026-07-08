@@ -7297,3 +7297,46 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPED
 
 NEXT=087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION
 <!-- FORGE:087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE:END -->
+
+<!-- FORGE:087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION:START -->
+## 087B Quote Preview Safe UX Component Contract Implementation
+
+087B implements a local/static/read-only safe UX component contract registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-safe-ux-component-contract-registry-adapter-087b.js`
+- `tests/quote-preview-safe-ux-component-contract-registry-adapter-087b-test.js`
+
+Registry status:
+
+- `component_contracts_mapped_no_render_no_effects`
+
+Component contracts:
+
+- `QuotePreviewShell`
+- `QuotePreviewStatusCard`
+- `QuotePreviewEvidencePanel`
+- `QuotePreviewWarningStack`
+- `QuotePreviewValueTable`
+- `QuotePreviewActionBar`
+- `QuotePreviewHumanReviewCard`
+- `QuotePreviewBadgesBar`
+
+Every component contract preserves:
+
+- `render_allowed=false`
+- `ui_mutation_allowed=false`
+- `quote_truth_allowed=false`
+- `execution_allowed=false`
+- `write_allowed=false`
+
+DECISION=PASS_087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=087C_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_QA_LOCK
+<!-- FORGE:087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION:END -->
