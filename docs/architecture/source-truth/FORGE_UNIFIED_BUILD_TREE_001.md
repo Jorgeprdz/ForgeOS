@@ -7823,3 +7823,31 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_QA_LOCKED
 
 NEXT=090D_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_DECISION_LOCK
 <!-- FORGE:090C_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_QA_LOCK:END -->
+
+<!-- FORGE:090D_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_DECISION_LOCK:START -->
+## 090D Quote Preview Safe Copy and Badge System Decision Lock
+
+090D decision-locks the 090B/090C safe copy and badge system registry as a local/static/read-only reference registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY`
+
+Confirmed:
+
+- ten safe badges exist;
+- seven safe copy blocks exist;
+- required safety badges exist;
+- forbidden effect language is blocked;
+- copy blocks preserve preview/read-only/human-review boundary.
+
+Next:
+
+- `091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE` may scope safe UI implementation.
+- No backend, quote truth, provider call, parser/calculator/Banxico execution, CRM/policy/pipeline/quote writes, send, or calendar creation are authorized.
+
+DECISION=PASS_090D_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY
+
+NEXT=091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE
+<!-- FORGE:090D_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_DECISION_LOCK:END -->

@@ -1,0 +1,58 @@
+{
+  "phase": "090D_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_DECISION_LOCK",
+  "status": "PASS",
+  "decision": "PASS_090D_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_DECISION_LOCK",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY",
+  "base": {
+    "phase": "090C_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_QA_LOCK",
+    "confirmed": true,
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_QA_LOCKED"
+  },
+  "next": "091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE",
+  "lockedAs": "local_static_read_only_reference_registry",
+  "decisionAssertions": {
+  "status": "PASS",
+  "locked_as": "local_static_read_only_reference_registry",
+  "overall_copy_badge_status": "copy_badges_mapped_no_effect_language_no_truth",
+  "badge_count": 10,
+  "copy_block_count": 7,
+  "next_scope": "091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE",
+  "no_official_quote_claims": true,
+  "no_send_claims": true,
+  "no_crm_claims": true,
+  "no_calendar_claims": true,
+  "no_quote_truth_claims": true,
+  "all_safety_flags_false": true
+},
+  "confirmed": {
+    "badgeCount": 10,
+    "copyBlockCount": 7,
+    "requiredSafetyBadgesPresent": true,
+    "forbiddenEffectLanguageBlocked": true,
+    "copyBlocksPreservePreviewBoundary": true,
+    "allSafetyFlagsFalse": true
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
