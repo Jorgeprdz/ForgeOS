@@ -7163,3 +7163,45 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_SCOPED
 
 NEXT=086B_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_IMPLEMENTATION
 <!-- FORGE:086A_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_SCOPE:END -->
+
+<!-- FORGE:086B_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_IMPLEMENTATION:START -->
+## 086B Quote Preview Safe UX State Model Implementation
+
+086B implements a local/static/read-only safe UX state model registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-safe-ux-state-model-registry-adapter-086b.js`
+- `tests/quote-preview-safe-ux-state-model-registry-adapter-086b-test.js`
+
+Registry status:
+
+- `safe_state_model_mapped_no_effects`
+
+Safe UX states:
+
+- `empty`
+- `pdf_candidate_detected`
+- `file_hash_not_verified`
+- `source_trace_not_bound`
+- `parser_owner_decision_required`
+- `deterministic_inputs_not_verified`
+- `preview_reference_available`
+- `quote_truth_blocked`
+- `ready_for_human_review`
+
+Every state preserves:
+
+- `quote_truth_allowed=false`
+- `execution_allowed=false`
+- `write_allowed=false`
+
+DECISION=PASS_086B_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=086C_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCK
+<!-- FORGE:086B_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_IMPLEMENTATION:END -->
