@@ -5653,3 +5653,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_SCOPED
 
 NEXT=082B_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_IMPLEMENTATION
 <!-- FORGE:082A_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_SCOPE:END -->
+
+<!-- FORGE:082B_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_IMPLEMENTATION:START -->
+## 082B Quote Preview PDF Engine Expected Value Source Trace Implementation
+
+082B implements a local/static/read-only expected-value source trace registry.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Registry status:
+
+- `not_bound_not_verified_not_ready`
+
+Trace candidates:
+
+- `trace_gmm_out_of_pocket_expected_values`
+- `trace_real_retirement_mxn_expected_values`
+- `trace_retirement_future_udi_deterministic_inputs`
+
+Every trace remains:
+
+- `source_trace_status=not_bound`
+- `verification_status=not_verified`
+- `execution_allowed=false`
+
+DECISION=PASS_082B_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=082C_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_QA_LOCK
+<!-- FORGE:082B_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_IMPLEMENTATION:END -->
