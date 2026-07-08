@@ -1,0 +1,367 @@
+# Forge Quote Preview PDF Engine Canonical Execution Readiness Review Scope 080A
+
+PHASE=080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE
+
+STATUS=PASS
+
+DECISION=PASS_080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPED
+
+NEXT=080B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_IMPLEMENTATION
+
+## Evidence Summary
+
+080A scopes an execution readiness review. It does not execute anything.
+
+The review uses the locked 077D/078D/079D reference catalogs and registries to classify readiness gates before any future controlled fixture/PDF execution.
+
+## Discovery Evidence
+
+Discovery JSON:
+
+`/data/data/com.termux/files/home/forge-discovery-20260707_212348/DISCOVERY_077A_PRECHECK_EXISTING_QUOTE_PDF_TESTS_AND_ENGINES_REPORT_20260707_212348.json`
+
+Discovery report:
+
+`/data/data/com.termux/files/home/forge-discovery-20260707_212348/DISCOVERY_077A_PRECHECK_EXISTING_QUOTE_PDF_TESTS_AND_ENGINES_REPORT_20260707_212348.md`
+
+Discovery digest:
+
+```json
+{
+  "discoveryJson": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/DISCOVERY_077A_PRECHECK_EXISTING_QUOTE_PDF_TESTS_AND_ENGINES_REPORT_20260707_212348.json",
+  "counts": {
+    "test_files_total": 164,
+    "engine_parser_preview_quote_candidates_total": 594,
+    "rg_hits_total": 59058,
+    "real_quote_test_candidate_files": 78
+  },
+  "knownSurfacesPresent": [
+    "product-intelligence/evidence/forge-quote-pdf-preview-engine.js",
+    "retirement-future-udi-projection-engine.js",
+    "imagina-ser-future-mxn-bridge.js",
+    "shared-banxico-rate-engine.js",
+    "shared-banxico-edge-provider.js",
+    "platform/adapters/quote-preview/quote-preview-pdf-engine-repo-promotion-adapter-076b.js",
+    "platform/adapters/quote-preview/quote-preview-pdf-product-intelligence-integration-adapter-075b.js",
+    "platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js",
+    "platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js"
+  ],
+  "realQuoteTestCandidateFiles": [
+    "tests/action-contract-approval-gate-schema-070c-test.js",
+    "tests/advisor-development-counting-weighting-engine-test.js",
+    "tests/advisor-development-development-bonus-engine-test.js",
+    "tests/advisor-development-rule-pack-integration-test.js",
+    "tests/advisor-development-rule-pack-loader-test.js",
+    "tests/advisor-development-rule-pack-validator-test.js",
+    "tests/advisor-development-training-allowance-engine-test.js",
+    "tests/alpha-runtime/forge-alpha-runtime.test.js",
+    "tests/banxico-edge-provider-test.js",
+    "tests/banxico-token-security-test.js",
+    "tests/bonus-rule-pack-contract-test.js",
+    "tests/business-rules-test.js",
+    "tests/carrier-revenue-adapter-contract-test.js",
+    "tests/carrier-rule-router-test.js",
+    "tests/client-crm-read-only-adapter-065b-test.js",
+    "tests/commission-statement-evidence-packet-test.js",
+    "tests/critical-path-test.js",
+    "tests/evidence-inbox-router-contract-test.js",
+    "tests/evidence-source-test.js",
+    "tests/fixtures/presentation-basic-imagina-ser.json",
+    "tests/forge-shared-ave-master-test.js",
+    "tests/gmm-out-of-pocket-test.js",
+    "tests/integration/discovery-signal-extractor.integration.test.js",
+    "tests/new-professional-connection-bonus-engine-test.js",
+    "tests/new-professional-gmmi-initial-premium-bonus-engine-test.js",
+    "tests/new-professional-gmmi-initial-premium-growth-annual-bonus-engine-test.js",
+    "tests/new-professional-gmmi-renewal-premium-bonus-engine-test.js",
+    "tests/new-professional-life-initial-bonus-engine-test.js",
+    "tests/new-professional-rule-pack-integration-test.js",
+    "tests/new-professional-rule-pack-validator-test.js",
+    "tests/opportunity-pipeline-read-model-normalization-067d-test.js",
+    "tests/opportunity-pipeline-read-only-adapter-066b-test.js",
+    "tests/organization-rules-fixture-validation-test.js",
+    "tests/partner-2026-rule-pack-loader-test.js",
+    "tests/partner-2026-rule-pack-validator-test.js",
+    "tests/partner-activity-bonus-calculator-test.js",
+    "tests/partner-activity-bonus-contract-test.js",
+    "tests/partner-advisor-qualification-explainability-engine-test.js",
+    "tests/partner-alta-partner-bonus-calculator-test.js",
+    "tests/partner-alta-partner-bonus-orchestrator-test.js",
+    "tests/partner-annual-productivity-bonus-orchestrator-test.js",
+    "tests/partner-fixed-support-calculator-test.js",
+    "tests/partner-fixed-support-orchestrator-test.js",
+    "tests/partner-juan-real-exercise-regression-test.js",
+    "tests/partner-month7-real-income-scenario-test.js",
+    "tests/partner-monthly-cashflow-projection-engine-test.js",
+    "tests/partner-official-evidence-test.js",
+    "tests/partner-ownership-real-scenario-blackbox-test.js",
+    "tests/partner-payout-truth-gate-test.js",
+    "tests/partner-pcv-2026-bonus-coverage-audit-test.js",
+    "tests/partner-quarterly-bonus-calculator-test.js",
+    "tests/partner-spreadsheet-monthly-fact-adapter-test.js",
+    "tests/partner-support-requirement-by-career-month-test.js",
+    "tests/partner-transition-candidate-readiness-audit-test.js",
+    "tests/policy-evidence-packet-test.js",
+    "tests/policy-read-model-adapter-068b-test.js",
+    "tests/presentation-pipeline-test.js",
+    "tests/product-intelligence-read-model-adapter-073d-test.js",
+    "tests/product-intelligence/forge-quote-pdf-preview-engine-test.js",
+    "tests/quote-action-contract-071b-test.js",
+    "tests/quote-approval-gate-integration-072b-test.js",
+    "tests/quote-preview-pdf-engine-repo-promotion-adapter-076b-test.js",
+    "tests/quote-preview-pdf-product-intelligence-integration-adapter-075b-test.js",
+    "tests/quote-preview-product-intelligence-binding-adapter-074b-test.js",
+    "tests/quote-read-model-adapter-069c-test.js",
+    "tests/real-gmm-quote-test.js",
+    "tests/real-pdf-ocr-test.js",
+    "tests/real-retirement-mxn-scenario-test.js",
+    "tests/real-retirement-scenario-test.js",
+    "tests/revenue-snapshot-test.js",
+    "tests/rule-pack-identity-snapshot-test.js",
+    "tests/run-all-tests.js",
+    "tests/services/forge-alpha-service.test.js",
+    "tests/smoke-test.js",
+    "tests/supabase-rls-foundation-test.js",
+    "tests/truth/truth-validators-phase-a-test.js",
+    "tests/vida-mujer-real-test.js",
+    "tests/vida-mujer-survival-schedule-test.js"
+  ],
+  "recommendation": {
+    "do_not_create_new_pdf_extractor": true,
+    "next_should_be_reconciliation_scope": "077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE",
+    "why": [
+      "Existing repo surfaces and tests must be inventoried before new extraction work.",
+      "If real quotation tests already exist, they should become canonical fixture/evidence tests.",
+      "Existing engines should be bound/reconciled with Product Intelligence rather than duplicated."
+    ]
+  },
+  "artifacts": {
+    "test_files": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/test-files.txt",
+    "engine_files": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/engine-files.txt",
+    "rg_hits": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/rg-hits.txt",
+    "real_quote_tests": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/real-quote-test-candidates.txt",
+    "exports_report": "/data/data/com.termux/files/home/forge-discovery-20260707_212348/js-exports-and-functions.txt"
+  }
+}
+```
+
+## Readiness Scope
+
+```json
+{
+  "status": "PASS",
+  "phase": "080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE",
+  "scope_type": "canonical_execution_readiness_review_scope_only",
+  "execution_allowed_in_080a": false,
+  "pdf_read_allowed_in_080a": false,
+  "ocr_execution_allowed_in_080a": false,
+  "parser_execution_allowed_in_080a": false,
+  "calculator_execution_allowed_in_080a": false,
+  "banxico_call_allowed_in_080a": false,
+  "provider_call_allowed_in_080a": false,
+  "test_execution_allowed_in_080a": false,
+  "backend_connection_allowed_in_080a": false,
+  "quote_write_allowed_in_080a": false,
+  "source_catalog_refs": {
+    "surfaces": {
+      "adapter_id": "forge.quote_preview.pdf_engine.existing_surfaces.canonical_mapping.adapter.v1",
+      "schemaVersion": "forge.quote_preview.pdf_engine.existing_surfaces.canonical_mapping.v1",
+      "surface_count": 17
+    },
+    "evidence": {
+      "adapter_id": "forge.quote_preview.pdf_engine.canonical_test_evidence.registry.adapter.v1",
+      "schemaVersion": "forge.quote_preview.pdf_engine.canonical_test_evidence.registry.v1",
+      "evidence_count": 11
+    },
+    "provenance": {
+      "adapter_id": "forge.quote_preview.pdf_engine.canonical_test_evidence.provenance.registry.adapter.v1",
+      "schemaVersion": "forge.quote_preview.pdf_engine.canonical_test_evidence.provenance.registry.v1",
+      "provenance_count": 12
+    }
+  },
+  "readiness_gates": [
+    {
+      "gate_id": "canonical_surface_mapping_locked",
+      "source": "077D",
+      "status": "satisfied",
+      "evidence": "existing surfaces mapped as local/static/read-only reference catalog",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "canonical_test_evidence_locked",
+      "source": "078D",
+      "status": "satisfied",
+      "evidence": "canonical test evidence registry locked as local/static/read-only reference registry",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "canonical_provenance_locked",
+      "source": "079D",
+      "status": "satisfied",
+      "evidence": "provenance registry locked as local/static/read-only reference registry",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "real_pdf_file_or_hash_ready",
+      "source": "079B",
+      "status": "not_ready",
+      "evidence": "real PDF provenance requires file path or hash before execution",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "expected_value_source_trace_ready",
+      "source": "079B",
+      "status": "not_ready",
+      "evidence": "expected financial values require source trace before execution",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "deterministic_input_source_trace_ready",
+      "source": "079B",
+      "status": "not_ready",
+      "evidence": "UDI/current value/growth inputs require traceable source",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "parser_ownership_resolved",
+      "source": "077D/078D",
+      "status": "not_ready",
+      "evidence": "Solucionline parser remains decision-required where ownership is unresolved",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "banxico_provider_runtime_gate_ready",
+      "source": "079B",
+      "status": "not_ready",
+      "evidence": "Banxico/provider metadata requires future runtime gate",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "fixture_not_real_pdf_guard_ready",
+      "source": "079D",
+      "status": "satisfied",
+      "evidence": "fixture-as-real-PDF misuse is blocked",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "governance_not_extraction_proof_guard_ready",
+      "source": "079D",
+      "status": "satisfied",
+      "evidence": "governance-as-extraction-proof misuse is blocked",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "duplicate_engine_creation_guard_ready",
+      "source": "079D",
+      "status": "satisfied",
+      "evidence": "duplicate engine/parser/calculator creation is blocked",
+      "blocks_execution_if_failed": true
+    },
+    {
+      "gate_id": "quote_truth_boundary_ready",
+      "source": "073D-079D",
+      "status": "not_ready",
+      "evidence": "Quote Preview remains downstream; execution readiness must still define preview vs quote truth boundary",
+      "blocks_execution_if_failed": true
+    }
+  ],
+  "satisfied_gates": [
+    "canonical_surface_mapping_locked",
+    "canonical_test_evidence_locked",
+    "canonical_provenance_locked",
+    "fixture_not_real_pdf_guard_ready",
+    "governance_not_extraction_proof_guard_ready",
+    "duplicate_engine_creation_guard_ready"
+  ],
+  "not_ready_gates": [
+    "real_pdf_file_or_hash_ready",
+    "expected_value_source_trace_ready",
+    "deterministic_input_source_trace_ready",
+    "parser_ownership_resolved",
+    "banxico_provider_runtime_gate_ready",
+    "quote_truth_boundary_ready"
+  ],
+  "overall_readiness": "not_ready_for_execution",
+  "required_080b_output": {
+    "adapter_type": "local_static_read_only_execution_readiness_review_matrix",
+    "must_not_execute_tests": true,
+    "must_not_read_pdfs": true,
+    "must_not_run_ocr": true,
+    "must_not_run_parsers": true,
+    "must_not_run_calculators": true,
+    "must_not_call_banxico": true,
+    "must_not_connect_backend": true,
+    "required_fields": [
+      "gate_id",
+      "gate_status",
+      "source_phase",
+      "source_registry_refs",
+      "blocking_reason",
+      "readiness_decision",
+      "required_next_action",
+      "execution_policy",
+      "safe_errors",
+      "safety_flags"
+    ]
+  },
+  "recommended_next_after_080d": [
+    "resolve parser ownership before execution",
+    "bind expected values to traceable sources",
+    "bind real PDF fixtures to file paths or hashes",
+    "define Banxico/provider runtime gate separately",
+    "define preview-vs-quote-truth boundary before any quote execution"
+  ],
+  "safety_flags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
+```
+
+## Commands
+
+- `python3 -m json.tool "/data/data/com.termux/files/home/forge-discovery-20260707_212348/DISCOVERY_077A_PRECHECK_EXISTING_QUOTE_PDF_TESTS_AND_ENGINES_REPORT_20260707_212348.json"`
+- `node --check platform/adapters/quote-preview/quote-preview-pdf-engine-existing-surfaces-canonical-mapping-adapter-077b.js`
+- `node --check tests/quote-preview-pdf-engine-existing-surfaces-canonical-mapping-adapter-077b-test.js`
+- `node tests/quote-preview-pdf-engine-existing-surfaces-canonical-mapping-adapter-077b-test.js`
+- `node --check platform/adapters/quote-preview/quote-preview-pdf-engine-canonical-test-evidence-registry-adapter-078b.js`
+- `node --check tests/quote-preview-pdf-engine-canonical-test-evidence-registry-adapter-078b-test.js`
+- `node tests/quote-preview-pdf-engine-canonical-test-evidence-registry-adapter-078b-test.js`
+- `node --check platform/adapters/quote-preview/quote-preview-pdf-engine-canonical-test-evidence-provenance-registry-adapter-079b.js`
+- `node --check tests/quote-preview-pdf-engine-canonical-test-evidence-provenance-registry-adapter-079b-test.js`
+- `node tests/quote-preview-pdf-engine-canonical-test-evidence-provenance-registry-adapter-079b-test.js`
+- local/static/read-only readiness scope builder
+- `python3 -m json.tool docs/evidence/forge-quote-preview-pdf-engine-canonical-execution-readiness-review-scope-audit-080a.json`
+- marker scan
+- `git diff --check`
+- scoped safety scan
+- `git diff --cached --check`
+
+## Final
+
+DECISION=PASS_080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPED
+
+NEXT=080B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_IMPLEMENTATION

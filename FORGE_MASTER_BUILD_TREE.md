@@ -8679,3 +8679,50 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_LOCK
 
 NEXT=080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE
 <!-- FORGE:079D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_DECISION_LOCK:END -->
+
+<!-- FORGE:080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE:START -->
+## 080A Quote Preview PDF Engine Canonical Execution Readiness Review Scope
+
+080A scopes a canonical execution readiness review for the Quote Preview PDF Engine path.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPED`
+
+Base:
+
+- 077D existing surfaces reference catalog;
+- 078D canonical test evidence reference registry;
+- 079D canonical test evidence provenance reference registry.
+
+Readiness result:
+
+- `not_ready_for_execution`
+
+Satisfied gates:
+
+- canonical surface mapping locked;
+- canonical test evidence locked;
+- canonical provenance locked;
+- fixture-as-real-PDF guard ready;
+- governance-as-extraction-proof guard ready;
+- duplicate engine/parser/calculator creation guard ready.
+
+Not-ready gates:
+
+- real PDF file/hash readiness;
+- expected-value source trace readiness;
+- deterministic input source trace readiness;
+- parser ownership resolution;
+- Banxico/provider runtime gate;
+- preview-vs-quote-truth boundary.
+
+Next:
+
+- `080B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_IMPLEMENTATION` must implement a local/static/read-only execution readiness review matrix only.
+
+DECISION=PASS_080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPED
+
+NEXT=080B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_IMPLEMENTATION
+<!-- FORGE:080A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_EXECUTION_READINESS_REVIEW_SCOPE:END -->
