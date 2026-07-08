@@ -9709,3 +9709,32 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_LOCAL_STATIC_READ_ONLY_
 
 NEXT=087C_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_QA_LOCK
 <!-- FORGE:087B_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_IMPLEMENTATION:END -->
+
+<!-- FORGE:087C_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_QA_LOCK:START -->
+## 087C Quote Preview Safe UX Component Contract QA Lock
+
+087C QA locks the 087B safe UX component contract registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_QA_LOCKED`
+
+QA validated:
+
+- registry shape validates;
+- eight component contracts exist;
+- every component blocks rendering;
+- every component blocks UI mutation;
+- every component blocks quote truth;
+- every component blocks execution;
+- every component blocks writes;
+- value table is read-only;
+- action bar exposes safe actions only;
+- human review contract exists;
+- all safety flags remain false.
+
+DECISION=PASS_087C_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_QA_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_QA_LOCKED
+
+NEXT=087D_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_DECISION_LOCK
+<!-- FORGE:087C_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_QA_LOCK:END -->
