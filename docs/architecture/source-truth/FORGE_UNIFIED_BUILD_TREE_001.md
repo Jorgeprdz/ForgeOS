@@ -6533,3 +6533,49 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPED
 
 NEXT=081B_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_IMPLEMENTATION
 <!-- FORGE:081A_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_SCOPE:END -->
+<!-- FORGE:081B_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_IMPLEMENTATION:START -->
+## 081B Quote Preview PDF Engine Real PDF File Hash Provenance Implementation
+
+081B implements a local/static/read-only real PDF file/hash provenance registry.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-pdf-engine-real-pdf-file-hash-provenance-registry-adapter-081b.js`
+- `tests/quote-preview-pdf-engine-real-pdf-file-hash-provenance-registry-adapter-081b-test.js`
+
+Registry status:
+
+- `not_bound_not_verified_not_ready`
+
+Bound candidates:
+
+- `real_pdf_ocr_solucionline_candidate`
+- `real_gmm_quote_candidate`
+- `real_retirement_scenario_candidate`
+- `real_retirement_mxn_scenario_candidate`
+
+Every binding remains:
+
+- `candidate_file_path=null`
+- `declared_sha256=null`
+- `declared_file_size_bytes=null`
+- `hash_verification_status=not_verified`
+- `file_read_status=not_read`
+- `execution_allowed=false`
+
+Boundaries:
+
+- no PDF read;
+- no hash computation;
+- no OCR/parser/calculator/Banxico/provider/test execution;
+- no backend or quote write.
+
+DECISION=PASS_081B_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=081C_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_QA_LOCK
+<!-- FORGE:081B_QUOTE_PREVIEW_PDF_ENGINE_REAL_PDF_FILE_HASH_PROVENANCE_IMPLEMENTATION:END -->
