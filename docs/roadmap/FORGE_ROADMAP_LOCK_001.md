@@ -6470,3 +6470,32 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_LOCAL_STATIC_READ_ONLY_IMP
 
 NEXT=088C_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCK
 <!-- FORGE:088B_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_IMPLEMENTATION:END -->
+
+<!-- FORGE:088C_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCK:START -->
+## 088C Quote Preview Safe Screen Composition QA Lock
+
+088C QA locks the 088B safe screen composition registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCKED`
+
+QA validated:
+
+- registry shape validates;
+- five screen compositions exist;
+- every composition blocks screen rendering;
+- every composition blocks UI mutation;
+- every composition blocks quote truth;
+- every composition blocks execution;
+- every composition blocks writes;
+- reference screen includes value table and evidence panel;
+- human review screen includes human review card;
+- mobile composition coverage exists;
+- all safety flags remain false.
+
+DECISION=PASS_088C_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCKED
+
+NEXT=088D_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_DECISION_LOCK
+<!-- FORGE:088C_QUOTE_PREVIEW_SAFE_SCREEN_COMPOSITION_QA_LOCK:END -->
