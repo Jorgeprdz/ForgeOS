@@ -9600,3 +9600,32 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCKED
 
 NEXT=086D_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_DECISION_LOCK
 <!-- FORGE:086C_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_QA_LOCK:END -->
+
+<!-- FORGE:086D_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_DECISION_LOCK:START -->
+## 086D Quote Preview Safe UX State Model Decision Lock
+
+086D decision-locks the 086B/086C safe UX state model registry as a local/static/read-only reference registry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY`
+
+Confirmed:
+
+- nine safe UX states exist;
+- quote truth is blocked in every state;
+- execution is blocked in every state;
+- writes are blocked in every state;
+- preview label is required;
+- human review state exists.
+
+Next:
+
+- `087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE` may scope safe UX component contracts.
+- No UI mutation or execution is authorized.
+
+DECISION=PASS_086D_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_LOCKED_AS_LOCAL_STATIC_READ_ONLY_REFERENCE_REGISTRY
+
+NEXT=087A_QUOTE_PREVIEW_SAFE_UX_COMPONENT_CONTRACT_SCOPE
+<!-- FORGE:086D_QUOTE_PREVIEW_SAFE_UX_STATE_MODEL_DECISION_LOCK:END -->
