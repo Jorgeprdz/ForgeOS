@@ -5235,3 +5235,36 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_LOCA
 
 NEXT=079C_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_QA_LOCK
 <!-- FORGE:079B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_IMPLEMENTATION:END -->
+
+<!-- FORGE:079C_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_QA_LOCK:START -->
+## 079C Quote Preview PDF Engine Canonical Test Evidence Provenance QA Lock
+
+079C QA locks the local/static/read-only canonical test evidence provenance registry implemented in 079B.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_QA_LOCKED`
+
+QA validated:
+
+- adapter identity and schema are valid;
+- mode `read_only`;
+- route class `preview_safe`;
+- provenance registry shape validates;
+- required provenance fields are present;
+- real PDF file provenance requires file or hash;
+- expected value provenance requires source trace;
+- deterministic projection inputs require traceable sources;
+- Banxico/provider metadata requires future runtime gate;
+- fixture text provenance remains fixture-only;
+- governance assertion provenance remains governance-only;
+- duplicate engine/parser/calculator creation is blocked;
+- missing provenance returns safe error;
+- all safety flags remain false;
+- no PDF/OCR/parser/calculator/Banxico/provider/test execution is introduced.
+
+DECISION=PASS_079C_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_QA_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_QA_LOCKED
+
+NEXT=079D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_DECISION_LOCK
+<!-- FORGE:079C_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_QA_LOCK:END -->
