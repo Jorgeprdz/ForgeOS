@@ -5665,3 +5665,29 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_LOCAL_
 
 NEXT=075C_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_QA_LOCK
 <!-- FORGE:075B_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_IMPLEMENTATION:END -->
+
+<!-- FORGE:075C_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_QA_LOCK:START -->
+## 075C Quote Preview PDF Engine Product Intelligence Integration QA Lock
+
+075C QA locks the local/static/read-only Quote Preview PDF Engine Product Intelligence Integration adapter implemented in 075B.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_QA_LOCKED`
+
+QA validated:
+
+- PDF Preview context integrates through the 074B Quote Preview Product Intelligence Binding;
+- GMM references Product Intelligence GMM;
+- Imagina Ser remains a proven case, not universal architecture;
+- Quote PDF Preview remains downstream consumer/reference only;
+- missing or unmapped product families return safe errors;
+- integration shape validates or remains object-shaped with safe error behavior;
+- all safety flags remain false;
+- no PDF read, parser execution, calculator execution, Banxico call, provider call, backend connection, quote write, or real engine execution occurs.
+
+DECISION=PASS_075C_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_QA_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_QA_LOCKED
+
+NEXT=075D_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_DECISION_LOCK
+<!-- FORGE:075C_QUOTE_PREVIEW_PDF_ENGINE_PRODUCT_INTELLIGENCE_INTEGRATION_QA_LOCK:END -->
