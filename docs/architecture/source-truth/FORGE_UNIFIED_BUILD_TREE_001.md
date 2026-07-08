@@ -5528,3 +5528,32 @@ LOCKED_DECISION=QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPED
 
 NEXT=074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION
 <!-- FORGE:074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE:END -->
+
+<!-- FORGE:074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION:START -->
+## 074B Quote Preview Product Intelligence Binding Implementation
+
+074B implements a local/static/no-effect Quote Preview to Product Intelligence binding adapter.
+
+Locked decision:
+`QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented surfaces:
+
+- `platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js`
+- `tests/quote-preview-product-intelligence-binding-adapter-074b-test.js`
+
+Confirmed:
+
+- GMM binds to GMM Product Intelligence reference.
+- Imagina Ser binds but remains non-universal.
+- Quote PDF Preview remains consumer/reference only.
+- Missing product family returns safe error.
+- All safety flags remain false.
+- Parser, calculator, Banxico, PDF, provider, backend, and real engine execution markers remain false.
+
+DECISION=PASS_074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=074C_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_QA_LOCK
+<!-- FORGE:074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION:END -->

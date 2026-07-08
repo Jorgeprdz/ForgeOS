@@ -1,0 +1,78 @@
+{
+  "phase": "074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION",
+  "status": "PASS",
+  "decision": "PASS_074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION",
+  "lockedDecision": "QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_LOCAL_STATIC_READ_ONLY_IMPLEMENTED",
+  "next": "074C_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_QA_LOCK",
+  "base": {
+    "phase": "074A_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPE",
+    "commit": "07a4cc9",
+    "lockedDecision": "QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_SCOPED",
+    "confirmed": true
+  },
+  "implementation": {
+    "adapterPath": "platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js",
+    "testPath": "tests/quote-preview-product-intelligence-binding-adapter-074b-test.js",
+    "adapterId": "forge.quote_preview.product_intelligence.binding.adapter.v1",
+    "schemaVersion": "forge.quote_preview.product_intelligence.binding.v1",
+    "mode": "read_only",
+    "routeClass": "preview_safe",
+    "domainId": "quote_preview",
+    "importsProductIntelligenceReadModel073D": true,
+    "importsQuotePdfParser": false,
+    "importsCalculatorEngines": false,
+    "banxicoCall": false,
+    "pdfRead": false,
+    "realEngineExecution": false
+  },
+  "behavior": {
+    "gmmBindsToProductIntelligence": true,
+    "imaginaSerBindsButNonUniversal": true,
+    "quotePdfPreviewRole": "consumer_reference_only",
+    "missingFamilyReturnsSafeError": true,
+    "bindingShapeValidates": true
+  },
+  "safeErrors": [
+    "QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_NOT_BOUND",
+    "QUOTE_PREVIEW_PRODUCT_FAMILY_NOT_MAPPED",
+    "QUOTE_PREVIEW_PARSER_NOT_MAPPED",
+    "QUOTE_PREVIEW_CALCULATOR_NOT_MAPPED",
+    "QUOTE_PREVIEW_SOURCE_EVIDENCE_REQUIRED",
+    "QUOTE_PREVIEW_FRESHNESS_REQUIRED"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "pdfRead": false,
+    "providerCall": false,
+    "quoteGeneration": false,
+    "quoteSend": false
+  },
+  "validations": {
+    "nodeCheckAdapter": "PASS",
+    "nodeCheckTest": "PASS",
+    "nodeTest": "PASS",
+    "jsonTool": "PASS",
+    "markerScan": "PASS",
+    "gitDiffCheck": "PASS",
+    "scopedSafetyScan": "PASS",
+    "stagedDiffCheck": "PASS"
+  },
+  "finalToken": "PASS_074B_QUOTE_PREVIEW_PRODUCT_INTELLIGENCE_BINDING_IMPLEMENTATION"
+}
