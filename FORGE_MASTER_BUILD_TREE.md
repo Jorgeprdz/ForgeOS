@@ -8565,3 +8565,47 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOP
 
 NEXT=079B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_IMPLEMENTATION
 <!-- FORGE:079A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPE:END -->
+
+<!-- FORGE:079B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_IMPLEMENTATION:START -->
+## 079B Quote Preview PDF Engine Canonical Test Evidence Provenance Implementation
+
+079B implements a local/static/read-only provenance registry for canonical test evidence.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-pdf-engine-canonical-test-evidence-provenance-registry-adapter-079b.js`
+- `tests/quote-preview-pdf-engine-canonical-test-evidence-provenance-registry-adapter-079b-test.js`
+
+The registry classifies provenance requirements without executing tests or engines.
+
+Classified provenance types:
+
+- real PDF file provenance;
+- OCR text output provenance;
+- fixture text provenance;
+- expected value provenance;
+- deterministic input provenance;
+- rate/cache provenance;
+- provider metadata provenance;
+- governance assertion provenance;
+- existing engine reference provenance.
+
+Boundaries:
+
+- fixture-as-real-PDF claims are blocked;
+- governance-as-extraction-proof claims are blocked;
+- invented expected values are blocked;
+- untraceable projections are blocked;
+- Banxico/provider runtime requires future gate;
+- duplicate engine/parser/calculator creation is blocked;
+- no PDF/OCR/parser/calculator/Banxico/provider/test execution is authorized.
+
+DECISION=PASS_079B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=079C_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_QA_LOCK
+<!-- FORGE:079B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_IMPLEMENTATION:END -->
