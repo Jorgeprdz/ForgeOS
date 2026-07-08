@@ -4886,3 +4886,37 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATI
 
 NEXT=077B_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_IMPLEMENTATION
 <!-- FORGE:077A_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_TESTS_AND_ENGINES_RECONCILIATION_SCOPE:END -->
+
+<!-- FORGE:077B_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_IMPLEMENTATION:START -->
+## 077B Quote Preview PDF Engine Existing Surfaces Canonical Mapping Implementation
+
+077B implements a local/static/read-only canonical mapping adapter for existing quote/PDF tests and engines.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-pdf-engine-existing-surfaces-canonical-mapping-adapter-077b.js`
+- `tests/quote-preview-pdf-engine-existing-surfaces-canonical-mapping-adapter-077b-test.js`
+
+Mapped existing boundaries:
+
+- PDF extraction: `policy-operations/evidence/policy-ocr-engine.js`;
+- PDF preview/orchestration: `product-intelligence/evidence/forge-quote-pdf-preview-engine.js`;
+- Solucionline parser: `product-intelligence/evidence/solucionline-retirement-parser.js` with `canonical_decision_required`;
+- GMM parser: `product-intelligence/evidence/gmm-quote-parser.js`;
+- GMM summary: `gmm-quote-summary-engine.js`;
+- UDI future projection: `retirement-future-udi-projection-engine.js`;
+- Imagina Ser future MXN bridge: `imagina-ser-future-mxn-bridge.js`;
+- Rates/cache/providers: `exchange-rate-cache-engine.js`, `shared-banxico-rate-engine.js`, `shared-banxico-edge-provider.js`;
+- governance adapters 073D, 074B, 075B, 076B.
+
+No new extractor, parser, calculator, Banxico provider, quote engine, backend connection, or real effect is authorized.
+
+DECISION=PASS_077B_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=077C_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_QA_LOCK
+<!-- FORGE:077B_QUOTE_PREVIEW_PDF_ENGINE_EXISTING_SURFACES_CANONICAL_MAPPING_IMPLEMENTATION:END -->
