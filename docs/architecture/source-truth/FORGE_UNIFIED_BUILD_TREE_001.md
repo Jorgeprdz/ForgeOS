@@ -6148,3 +6148,51 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_LOCKED_AS_LOCAL
 
 NEXT=079A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPE
 <!-- FORGE:078D_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_DECISION_LOCK:END -->
+
+<!-- FORGE:079A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPE:START -->
+## 079A Quote Preview PDF Engine Canonical Test Evidence Provenance Scope
+
+079A scopes provenance classification for canonical test evidence.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPED`
+
+Base:
+
+- 078D locked the canonical test evidence registry as a local/static/read-only reference registry.
+
+Scope:
+
+- classify real PDF file provenance;
+- classify OCR text output provenance;
+- classify fixture text provenance;
+- classify expected financial value provenance;
+- classify deterministic input provenance;
+- classify rate/cache provenance;
+- classify provider metadata provenance;
+- classify governance assertion provenance;
+- classify existing engine reference provenance.
+
+Blocked misuse:
+
+- fixture-as-real-PDF claims;
+- governance-as-extraction-proof claims;
+- invented expected values;
+- untraceable projections;
+- hardcoded financial truth;
+- provider runtime without future gate;
+- network calls without future gate;
+- secret access without future gate;
+- new engine creation;
+- duplicate parser/calculator creation.
+
+Next:
+
+- `079B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_IMPLEMENTATION` must implement a local/static/read-only provenance registry only.
+
+DECISION=PASS_079A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPED
+
+NEXT=079B_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_IMPLEMENTATION
+<!-- FORGE:079A_QUOTE_PREVIEW_PDF_ENGINE_CANONICAL_TEST_EVIDENCE_PROVENANCE_SCOPE:END -->
