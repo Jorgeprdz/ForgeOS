@@ -6027,3 +6027,41 @@ LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPED
 
 NEXT=085B_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_IMPLEMENTATION
 <!-- FORGE:085A_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_SCOPE:END -->
+
+<!-- FORGE:085B_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_IMPLEMENTATION:START -->
+## 085B Quote Preview PDF Engine Preview vs Quote Truth Boundary Implementation
+
+085B implements a local/static/read-only Preview vs Quote Truth boundary registry.
+
+Locked decision:
+`QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_LOCAL_STATIC_READ_ONLY_IMPLEMENTED`
+
+Implemented:
+
+- `platform/adapters/quote-preview/quote-preview-pdf-engine-preview-vs-quote-truth-boundary-registry-adapter-085b.js`
+- `tests/quote-preview-pdf-engine-preview-vs-quote-truth-boundary-registry-adapter-085b-test.js`
+
+Registry status:
+
+- `preview_boundary_mapped_quote_truth_blocked`
+
+Boundary entries:
+
+- `boundary_quote_preview_pdf_engine`
+- `boundary_quote_preview_expected_values`
+- `boundary_real_quote_truth_provider_backend`
+- `boundary_user_visible_quote_preview_ui`
+
+Boundaries:
+
+- preview references may be allowed;
+- quote truth creation remains blocked;
+- provider/backend quote truth remains blocked;
+- user-visible preview requires preview labeling.
+
+DECISION=PASS_085B_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_LOCAL_STATIC_READ_ONLY_IMPLEMENTED
+
+NEXT=085C_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_QA_LOCK
+<!-- FORGE:085B_QUOTE_PREVIEW_PDF_ENGINE_PREVIEW_VS_QUOTE_TRUTH_BOUNDARY_IMPLEMENTATION:END -->
