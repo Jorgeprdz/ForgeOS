@@ -1,0 +1,28 @@
+# Forge Quote Preview PDF Engine Expected Value Source Trace Decision Lock 082D
+
+PHASE=082D_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_DECISION_LOCK
+
+STATUS=PASS
+
+DECISION=PASS_082D_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_LOCKED_AS_LOCAL_STATIC_READ_ONLY_NOT_BOUND_NOT_VERIFIED_REFERENCE_REGISTRY
+
+NEXT=083A_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPE
+
+082D decision-locks the 082B/082C expected-value source trace registry as a local/static/read-only not-bound/not-verified reference registry.
+
+Confirmed:
+
+- all three expected-value source trace candidates exist;
+- all traces remain `not_bound`;
+- all expected values remain `not_verified`;
+- all executions remain `false`;
+- expected-value verification remains blocked;
+- parser/calculator/Banxico execution remains blocked.
+
+DECISION=PASS_082D_QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_PDF_ENGINE_EXPECTED_VALUE_SOURCE_TRACE_LOCKED_AS_LOCAL_STATIC_READ_ONLY_NOT_BOUND_NOT_VERIFIED_REFERENCE_REGISTRY
+
+NEXT=083A_QUOTE_PREVIEW_PDF_ENGINE_PARSER_OWNERSHIP_SCOPE
