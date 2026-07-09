@@ -1,0 +1,210 @@
+# Forge Quote Preview Safe Static UI Source Patch Regression Scope Evidence 094A
+
+PHASE=094A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_SCOPE
+
+STATUS=PASS
+
+DECISION=PASS_094A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_SCOPED
+
+NEXT=094B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_PLAN
+
+## Regression Scope JSON
+
+```json
+{
+  "phase": "094A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_SCOPE",
+  "status": "PASS",
+  "scopeType": "safe_static_ui_source_patch_regression_scope_only",
+  "base": {
+    "093DDecision": "docs/evidence/forge-quote-preview-safe-static-ui-source-patch-decision-audit-093d.json",
+    "093BPatchManifest": "docs/evidence/forge-quote-preview-safe-static-ui-source-patch-implementation-manifest-093b.json"
+  },
+  "patchedFilesUnderRegression": [
+    {
+      "path": "docs/static-preview/forge-alive/alfred-desktop-dashboard.js",
+      "exists": true,
+      "markerStart": "/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:START */",
+      "markerEnd": "/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:END */",
+      "requiredLabels": [
+        "Preview",
+        "Solo lectura",
+        "Revisión humana",
+        "No cotización oficial",
+        "Sin envío",
+        "Sin CRM",
+        "Sin calendario"
+      ],
+      "requiredFalsePermissions": [
+        "officialQuoteAllowed",
+        "quoteTruthAllowed",
+        "sendAllowed",
+        "crmWriteAllowed",
+        "calendarCreateAllowed",
+        "backendConnectionAllowed",
+        "providerCallAllowed",
+        "parserExecutionAllowed",
+        "calculatorExecutionAllowed",
+        "banxicoCallAllowed",
+        "newActionHandlerAllowed",
+        "businessLogicChangeAllowed",
+        "dataFlowChangeAllowed"
+      ],
+      "regressionRequired": true
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-desktop-command-workspace-056y.js",
+      "exists": true,
+      "markerStart": "/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:START */",
+      "markerEnd": "/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:END */",
+      "requiredLabels": [
+        "Preview",
+        "Solo lectura",
+        "Revisión humana",
+        "No cotización oficial",
+        "Sin envío",
+        "Sin CRM",
+        "Sin calendario"
+      ],
+      "requiredFalsePermissions": [
+        "officialQuoteAllowed",
+        "quoteTruthAllowed",
+        "sendAllowed",
+        "crmWriteAllowed",
+        "calendarCreateAllowed",
+        "backendConnectionAllowed",
+        "providerCallAllowed",
+        "parserExecutionAllowed",
+        "calculatorExecutionAllowed",
+        "banxicoCallAllowed",
+        "newActionHandlerAllowed",
+        "businessLogicChangeAllowed",
+        "dataFlowChangeAllowed"
+      ],
+      "regressionRequired": true
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-responsive-ui.js",
+      "exists": true,
+      "markerStart": "/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:START */",
+      "markerEnd": "/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:END */",
+      "requiredLabels": [
+        "Preview",
+        "Solo lectura",
+        "Revisión humana",
+        "No cotización oficial",
+        "Sin envío",
+        "Sin CRM",
+        "Sin calendario"
+      ],
+      "requiredFalsePermissions": [
+        "officialQuoteAllowed",
+        "quoteTruthAllowed",
+        "sendAllowed",
+        "crmWriteAllowed",
+        "calendarCreateAllowed",
+        "backendConnectionAllowed",
+        "providerCallAllowed",
+        "parserExecutionAllowed",
+        "calculatorExecutionAllowed",
+        "banxicoCallAllowed",
+        "newActionHandlerAllowed",
+        "businessLogicChangeAllowed",
+        "dataFlowChangeAllowed"
+      ],
+      "regressionRequired": true
+    }
+  ],
+  "patchedFileCount": 3,
+  "regressionScope": {
+    "mustVerifyPatchedFilesExist": true,
+    "mustVerifyMarkersPresent": true,
+    "mustVerifyRequiredVisibleSafetyCopyPresent": true,
+    "mustVerifyRequiredFalsePermissionFlagsPresent": true,
+    "mustVerifyNoActionHandlersAdded": true,
+    "mustVerifyBusinessLogicUnchanged": true,
+    "mustVerifyDataFlowUnchanged": true,
+    "mustVerifyNoBackendConnectionAdded": true,
+    "mustVerifyNoQuoteTruthCreated": true,
+    "mustVerifyNoSendCrmCalendarEnabled": true,
+    "mustVerifyAllSafetyFlagsFalse": true
+  },
+  "allowedRegressionKindFor094B": [
+    "static manifest validation",
+    "static patched file marker validation",
+    "static required visible copy validation",
+    "static required false permission validation",
+    "static audit consistency validation"
+  ],
+  "notAllowedRegressionKindFor094B": [
+    "runtime execution",
+    "UI rendering",
+    "component rendering",
+    "screen rendering",
+    "browser persistence",
+    "network call",
+    "backend connection",
+    "provider call",
+    "parser execution",
+    "calculator execution",
+    "Banxico call",
+    "quote truth creation",
+    "send action",
+    "CRM write",
+    "calendar creation",
+    "business calculation change",
+    "data flow change",
+    "new action handler"
+  ],
+  "sourceEditsAuthorizedIn094A": false,
+  "regressionExecutionAuthorizedIn094A": false,
+  "094BMustRemainStatic": true,
+  "next": "094B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_PLAN",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
+```
+
+## Semantic QA
+
+```json
+{
+  "status": "PASS",
+  "regressionScopeValidated": true,
+  "errors": [],
+  "patchedFileCount": 3,
+  "sourceEditsAuthorizedIn094A": false,
+  "regressionExecutionAuthorizedIn094A": false,
+  "094BMustRemainStatic": true,
+  "allSafetyFlagsFalse": true,
+  "next": "094B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_PLAN"
+}
+```
+
+DECISION=PASS_094A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_SCOPED
+
+NEXT=094B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_PLAN
