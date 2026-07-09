@@ -10313,3 +10313,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCKED
 
 NEXT=091D_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_DECISION_LOCK
 <!-- FORGE:091C_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCK:END -->
+
+<!-- FORGE:091D_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_DECISION_LOCK:START -->
+## 091D Quote Preview Safe UI Implementation Plan Decision Lock
+
+091D decision-locks the 091B/091C safe UI implementation plan as prerequisite for future safe static UI patch scope.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_LOCKED_AS_STATIC_UI_PATCH_PREREQUISITE`
+
+Confirmed:
+
+- plan-only;
+- QA-locked by 091C;
+- canonical UI file selection still required;
+- safe static UI contract exists;
+- copy/badge bindings are required;
+- no UI patch is authorized by 091D;
+- all effects remain blocked;
+- all safety flags remain false.
+
+Next:
+
+- `092A_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPE` may scope a safe static UI patch.
+- 092A must explicitly select canonical UI files before any source patch.
+
+DECISION=PASS_091D_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_LOCKED_AS_STATIC_UI_PATCH_PREREQUISITE
+
+NEXT=092A_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPE
+<!-- FORGE:091D_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_DECISION_LOCK:END -->
