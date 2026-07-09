@@ -1,0 +1,207 @@
+{
+  "phase": "106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN",
+  "status": "PASS",
+  "decision": "PASS_106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN",
+  "lockedDecision": "REDACTED_TEXT_SAMPLING_DRY_RUN_COMPLETE_WITH_NO_RAW_TEXT_COMMIT_NO_FIELD_EXTRACTION",
+  "basePhase": "106J_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_GATE",
+  "schemaVersion": "106C.1",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
+  "localRunDirectoryOutsideRepo": "/storage/emulated/0/Forge Gemini/pdf-dry-run-local",
+  "localSampleOutsideRepoRedacted": "[LOCAL_SAMPLE_PATH_OUTSIDE_REPO_REDACTED]",
+  "rawPdfReference": "[LOCAL_PDF_PATH_REDACTED_OUTSIDE_REPO]",
+  "operatorTokenAccepted": "SAMPLE_REDACTED_TEXT_ONLY",
+  "extractorMethodRedacted": "pdftotext_stdout_memory_only",
+  "sourceTextProcessedInMemoryOnly": true,
+  "redactionAppliedBeforeCommit": true,
+  "sampleCount": 6,
+  "redactedSampleWindows": [
+    {
+      "redactedLine": "[SAFE_LABEL:ASEGURADO_LABEL] : [TEXT_REDACTED] [TEXT_REDACTED]",
+      "labelHits": [
+        "ASEGURADO_LABEL"
+      ],
+      "charCountRedacted": 62
+    },
+    {
+      "redactedLine": "[TEXT_REDACTED] [TEXT_REDACTED] [TEXT_REDACTED] : [DATE_REDACTED] [SAFE_LABEL:EDAD] : [NUMBER_REDACTED]",
+      "labelHits": [
+        "EDAD"
+      ],
+      "charCountRedacted": 103
+    },
+    {
+      "redactedLine": "[TEXT_REDACTED] : [TEXT_REDACTED] [SAFE_LABEL:FUMADOR] : [TEXT_REDACTED]",
+      "labelHits": [
+        "FUMADOR"
+      ],
+      "charCountRedacted": 72
+    },
+    {
+      "redactedLine": "[TEXT_REDACTED] [TEXT_REDACTED] [TEXT_REDACTED] : [SAFE_LABEL:PAGO] [TEXT_REDACTED] [SAFE_LABEL:MONEDA] : [TEXT_REDACTED]",
+      "labelHits": [
+        "MONEDA",
+        "PAGO"
+      ],
+      "charCountRedacted": 121
+    },
+    {
+      "redactedLine": "[TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [TEXT_REDACTED] [TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [SAFE_LABEL:SUMA] [SAFE_LABEL:ASEGURADA] [SAFE_LABEL:PRIMA] [SA...",
+      "labelHits": [
+        "ANUAL",
+        "ASEGURADA",
+        "COBERTURA",
+        "PRIMA",
+        "SUMA"
+      ],
+      "charCountRedacted": 160
+    },
+    {
+      "redactedLine": "[SAFE_LABEL:PRIMA] [SAFE_LABEL:TOTAL] [SAFE_LABEL:ANUAL] [AMOUNT_REDACTED]",
+      "labelHits": [
+        "ANUAL",
+        "PRIMA",
+        "TOTAL"
+      ],
+      "charCountRedacted": 74
+    }
+  ],
+  "redactionCounts": {
+    "totalLinesSeenInMemory": 70,
+    "redactedLinesCreated": 70,
+    "safeLabelHitTypes": {
+      "ASEGURADO_LABEL": 2,
+      "EDAD": 2,
+      "FUMADOR": 1,
+      "MONEDA": 1,
+      "PAGO": 4,
+      "ANUAL": 3,
+      "ASEGURADA": 1,
+      "COBERTURA": 2,
+      "PRIMA": 6,
+      "SUMA": 1,
+      "TOTAL": 2,
+      "MENSUAL": 4,
+      "SEMESTRAL": 1,
+      "TRIMESTRAL": 1,
+      "PRODUCTO": 2,
+      "FORMA": 1,
+      "PLAN": 1,
+      "POLIZA_LABEL": 1,
+      "BENEFICIOS": 1
+    },
+    "samplesSelected": 6
+  },
+  "layoutShapeReport": {
+    "hasSafeLabelHits": true,
+    "topSafeLabelHits": [
+      [
+        "PRIMA",
+        6
+      ],
+      [
+        "MENSUAL",
+        4
+      ],
+      [
+        "PAGO",
+        4
+      ],
+      [
+        "ANUAL",
+        3
+      ],
+      [
+        "ASEGURADO_LABEL",
+        2
+      ],
+      [
+        "COBERTURA",
+        2
+      ],
+      [
+        "EDAD",
+        2
+      ],
+      [
+        "PRODUCTO",
+        2
+      ],
+      [
+        "TOTAL",
+        2
+      ],
+      [
+        "ASEGURADA",
+        1
+      ],
+      [
+        "BENEFICIOS",
+        1
+      ],
+      [
+        "FORMA",
+        1
+      ]
+    ],
+    "maxSampleChars": 160,
+    "maxSampleWindows": 6
+  },
+  "rawTextCommittedToRepo": false,
+  "rawTextWrittenToLocalFile": false,
+  "rawPdfCommittedToRepo": false,
+  "actualPdfPathCommittedToRepo": false,
+  "fieldExtractionExecuted": false,
+  "fieldMappingExecuted": false,
+  "ocrExecuted": false,
+  "parserExecuted": false,
+  "calculatorExecuted": false,
+  "quoteTruthCreated": false,
+  "officialQuoteCreated": false,
+  "uiPopulated": false,
+  "presentationGenerated": false,
+  "backendConnectionUsed": false,
+  "crmWriteUsed": false,
+  "humanReviewRequired": true,
+  "nextGate": {
+    "nextPhase": "106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE",
+    "purpose": "Define safe mapping from redacted layout labels to extraction targets, without extracting values.",
+    "fieldExtractionStillForbidden": true,
+    "parserExecutionStillForbidden": true,
+    "quoteTruthStillForbidden": true
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
+  },
+  "sourceUiChanged": false,
+  "next": "106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE"
+}

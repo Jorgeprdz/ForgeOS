@@ -8875,3 +8875,42 @@ LOCKED_DECISION=REDACTED_TEXT_SAMPLING_GATE_LOCKED_WITH_NO_FIELD_EXTRACTION_NO_P
 
 NEXT=106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN
 <!-- FORGE:106J_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_GATE:END -->
+
+<!-- FORGE:106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN:START -->
+## 106K Quote Preview Redacted Text Sampling Dry Run
+
+106K creates the first redacted text layout samples from the real PDF text layer.
+
+Locked decision:
+`REDACTED_TEXT_SAMPLING_DRY_RUN_COMPLETE_WITH_NO_RAW_TEXT_COMMIT_NO_FIELD_EXTRACTION`
+
+Confirmed:
+
+- operator token accepted;
+- source text processed in memory only;
+- redaction applied before commit;
+- redacted samples created;
+- raw text was not committed;
+- raw text was not written to local raw file;
+- actual PDF path was not committed;
+- field extraction was not executed;
+- field mapping was not executed;
+- OCR execution remains disabled;
+- parser execution remains disabled;
+- calculator execution remains disabled;
+- quote truth remains disabled;
+- source UI was not changed;
+- all safety flags remain false.
+
+SAMPLE_COUNT=6
+
+LABEL_HITS_COUNT=12
+
+EXTRACTOR_METHOD=pdftotext_stdout_memory_only
+
+DECISION=PASS_106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN
+
+LOCKED_DECISION=REDACTED_TEXT_SAMPLING_DRY_RUN_COMPLETE_WITH_NO_RAW_TEXT_COMMIT_NO_FIELD_EXTRACTION
+
+NEXT=106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE
+<!-- FORGE:106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN:END -->

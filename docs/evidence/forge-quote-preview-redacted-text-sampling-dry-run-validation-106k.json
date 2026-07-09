@@ -1,0 +1,23 @@
+{
+  "phase": "106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN",
+  "status": "PASS",
+  "decision": "PASS_106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN",
+  "lockedDecision": "REDACTED_TEXT_SAMPLING_DRY_RUN_COMPLETE_WITH_NO_RAW_TEXT_COMMIT_NO_FIELD_EXTRACTION",
+  "operatorTokenAccepted": true,
+  "sourceTextProcessedInMemoryOnly": true,
+  "redactionAppliedBeforeCommit": true,
+  "sampleCount": 6,
+  "extractorMethodRedacted": "pdftotext_stdout_memory_only",
+  "rawTextCommittedToRepo": false,
+  "rawTextWrittenToLocalFile": false,
+  "fieldExtractionExecuted": false,
+  "fieldMappingExecuted": false,
+  "ocrExecuted": false,
+  "parserExecuted": false,
+  "calculatorExecuted": false,
+  "quoteTruthCreated": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE",
+  "errors": []
+}
