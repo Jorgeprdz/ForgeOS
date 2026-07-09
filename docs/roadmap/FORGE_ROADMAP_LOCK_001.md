@@ -7068,3 +7068,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_QA_LOCKED
 
 NEXT=092D_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_DECISION_LOCK
 <!-- FORGE:092C_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_QA_LOCK:END -->
+
+<!-- FORGE:092D_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_DECISION_LOCK:START -->
+## 092D Quote Preview Safe Static UI Patch Plan Decision Lock
+
+092D decision-locks the 092B/092C safe static UI patch plan as prerequisite for future safe static UI source patch scope.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE`
+
+Confirmed:
+
+- patch-plan-only;
+- QA-locked by 092C;
+- required visible safety copy preserved;
+- forbidden patch effects preserved;
+- planned operations do not authorize source edits;
+- no source patch is authorized by 092D;
+- all effects remain blocked;
+- all safety flags remain false.
+
+Next:
+
+- `093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE` may scope a safe static UI source patch.
+- 093A must explicitly authorize only narrowly selected UI source files.
+
+DECISION=PASS_092D_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE
+
+NEXT=093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE
+<!-- FORGE:092D_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_DECISION_LOCK:END -->
