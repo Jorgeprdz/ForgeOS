@@ -1,0 +1,163 @@
+{
+  "phase": "097B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN",
+  "status": "PASS",
+  "decision": "PASS_097B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_LOCKED",
+  "planType": "safe_static_html_module_entry_source_patch_regression_plan_only",
+  "base": {
+    "phase": "097A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_SCOPE",
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_SCOPED",
+    "source": "docs/evidence/forge-quote-preview-safe-module-entry-source-patch-regression-scope-097a.json"
+  },
+  "patchedFilesPlannedForRegression": [
+    {
+      "path": "docs/static-preview/forge-alive/index.html",
+      "patchKind": "static_html_metadata_and_safe_entry_attributes_only",
+      "underRegression": true
+    }
+  ],
+  "requiredStaticFragmentsForRegression": [
+    "FORGE:096B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_IMPLEMENTATION:START",
+    "FORGE:096B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_IMPLEMENTATION:END",
+    "data-forge-module-entry-096b=\"quote-preview-safe-entry\"",
+    "data-forge-module-entry-command-096b=\"quote-preview-safe-entry\"",
+    "data-forge-module-entry-panel-096b=\"quote-preview-safe-entry\"",
+    "id=\"forge-quote-preview-safe-entry-panel-096b\"",
+    "id=\"forge-quote-preview-safe-entry-note-096b\"",
+    "data-forge-candidate-route-096b=\"#cotizaciones\"",
+    "data-forge-candidate-command-096b=\"/cotizar\"",
+    "data-forge-preview-only-096b=\"true\"",
+    "data-forge-human-review-required-096b=\"true\"",
+    "data-forge-official-quote-allowed-096b=\"false\"",
+    "data-forge-quote-truth-allowed-096b=\"false\"",
+    "data-forge-send-allowed-096b=\"false\"",
+    "data-forge-crm-write-allowed-096b=\"false\"",
+    "data-forge-calendar-create-allowed-096b=\"false\"",
+    "data-forge-backend-connection-allowed-096b=\"false\"",
+    "data-forge-parser-execution-allowed-096b=\"false\"",
+    "data-forge-calculator-execution-allowed-096b=\"false\"",
+    "data-forge-banxico-call-allowed-096b=\"false\"",
+    "Preview · Solo lectura · Revisión humana · No cotización oficial · Sin envío · Sin CRM · Sin calendario"
+  ],
+  "plannedRegressionChecks": [
+    {
+      "id": "097B_CHECK_ONLY_INDEX_HTML_UNDER_REGRESSION",
+      "description": "Plan static verification that the 096B patch remains limited to index.html.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "manifest_and_audit_consistency_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_096B_MARKERS_PRESENT",
+      "description": "Plan static verification that the 096B start and end markers remain present.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "static_fragment_presence_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_MODULE_ENTRY_ATTRIBUTES_PRESENT",
+      "description": "Plan static verification that the Cotizaciones module entry attributes remain present.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "static_attribute_presence_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_COTIZAR_COMMAND_ATTRIBUTES_PRESENT",
+      "description": "Plan static verification that the /cotizar command attributes remain present.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "static_attribute_presence_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_COTIZACIONES_PANEL_ATTRIBUTES_PRESENT",
+      "description": "Plan static verification that the Cotizaciones y pólizas panel attributes remain present.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "static_attribute_presence_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_SAFE_BOUNDARY_NOTE_PRESENT",
+      "description": "Plan static verification that the preview-only safety note remains present.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "static_copy_presence_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_PATCH_REMAINS_STATIC_HTML_ATTRIBUTES_ONLY",
+      "description": "Plan static verification that the patch remains metadata and safe attributes only.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "static_boundary_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_NO_SCRIPT_TAG_ADDED_BY_096B",
+      "description": "Plan static verification that no script tag exists inside the 096B patch block.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "patch_block_scan_only",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_NO_INLINE_EVENT_HANDLER_ADDED",
+      "description": "Plan static verification that no inline event handler exists in the 096B patch block.",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "method": "patch_block_scan_only",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_NO_ROUTE_OR_NAVIGATION_EXECUTION",
+      "description": "Plan audit verification that no route binding or navigation execution was performed.",
+      "target": "096B/096C/096D evidence",
+      "method": "evidence_consistency_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_NO_RUNTIME_OR_REAL_EFFECTS",
+      "description": "Plan audit verification that no runtime execution or real effects were performed.",
+      "target": "096B/096C/096D evidence",
+      "method": "evidence_consistency_check",
+      "executionAuthorizedIn097B": false
+    },
+    {
+      "id": "097B_CHECK_ALL_SAFETY_FLAGS_FALSE",
+      "description": "Plan audit verification that all safety flags remain false.",
+      "target": "097B plan and prior evidence",
+      "method": "safety_flag_consistency_check",
+      "executionAuthorizedIn097B": false
+    }
+  ],
+  "plannedRegressionCheckCount": 12,
+  "plannedPatchedFileCount": 1,
+  "sourceEditsAuthorizedIn097B": false,
+  "regressionExecutionAuthorizedIn097B": false,
+  "routeExecutionAuthorizedIn097B": false,
+  "navigationExecutionAuthorizedIn097B": false,
+  "uiRenderingAuthorizedIn097B": false,
+  "runtimeExecutionAuthorizedIn097B": false,
+  "realEffectsAuthorizedIn097B": false,
+  "mustBeExecutedBy097EOrLaterOnlyAfterQaAndDecision": true,
+  "next": "097C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCK",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": []
+}
