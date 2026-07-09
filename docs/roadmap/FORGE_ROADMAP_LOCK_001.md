@@ -6911,3 +6911,31 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_LOCKED
 
 NEXT=091C_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCK
 <!-- FORGE:091B_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN:END -->
+
+<!-- FORGE:091C_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCK:START -->
+## 091C Quote Preview Safe UI Implementation Plan QA Lock
+
+091C QA locks the 091B safe UI implementation plan.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCKED`
+
+QA validated:
+
+- 091B plan shape validates;
+- implementation zones exist;
+- canonical selection rules exist;
+- safe static UI contract exists;
+- copy/badge bindings are required;
+- blocked effect kinds are confirmed;
+- no UI source edit is authorized in 091B;
+- all safety flags remain false.
+
+091C does not edit UI source files.
+
+DECISION=PASS_091C_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCKED
+
+NEXT=091D_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_DECISION_LOCK
+<!-- FORGE:091C_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_QA_LOCK:END -->
