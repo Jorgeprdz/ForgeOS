@@ -1,0 +1,537 @@
+{
+  "phase": "092A_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_092A_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPE",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPED",
+  "base": {
+    "phase": "091D_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_DECISION_LOCK",
+    "confirmed": true,
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN_LOCKED_AS_STATIC_UI_PATCH_PREREQUISITE"
+  },
+  "next": "092B_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN",
+  "scope": {
+  "phase": "092A_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPE",
+  "status": "PASS",
+  "scopeType": "safe_static_ui_patch_scope_only",
+  "base": {
+    "091D": "docs/evidence/forge-quote-preview-safe-ui-implementation-plan-decision-audit-091d.json",
+    "091BPlan": "docs/evidence/forge-quote-preview-safe-ui-implementation-plan-091b.json",
+    "091ADiscovery": "docs/evidence/forge-quote-preview-safe-ui-implementation-surface-discovery-091a.json"
+  },
+  "canonicalUiFileShortlist": [
+    {
+      "path": "docs/static-preview/forge-alive/alfred-desktop-dashboard.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 97
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-desktop-command-workspace-056y.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 95
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-responsive-ui.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-smart-widget-stable-056t.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-smart-widget-static-056u.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-ux92-cohesion-polish.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-ux94-smart-widget-editorial.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-ux99-hard-mount.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "manager-os/alfred-review-action-packet-static-preview-binding.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "manager-os/alfred-review-action-packet-static-preview-dom-renderer.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "manager-os/alfred-review-action-packet-static-preview-dom-surface-binding.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "manager-os/alfred-review-action-packet-static-preview-surface-binding.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    }
+  ],
+  "deferredCandidates": [
+    {
+      "path": "manager-os/alfred-static-preview-dom-renderer-integration.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 85
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-desktop-command-workspace-056y.css",
+      "exists": true,
+      "suffix": ".css",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 83
+    },
+    {
+      "path": "docs/static-preview/forge-alive/command-bar-orb.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 77
+    },
+    {
+      "path": "docs/static-preview/forge-alive/desktop/forge-desktop-command-workspace-upgrade-058e.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 77
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-smart-widget-stable-056t.css",
+      "exists": true,
+      "suffix": ".css",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 73
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-smart-widget-static-056u.css",
+      "exists": true,
+      "suffix": ".css",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 73
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-ux92-cohesion-polish.css",
+      "exists": true,
+      "suffix": ".css",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 73
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-ux99-hard-mount.css",
+      "exists": true,
+      "suffix": ".css",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 73
+    },
+    {
+      "path": "docs/static-preview/forge-alive/desktop/forge-desktop-visual-polish-alfred-mark-058g.css",
+      "exists": true,
+      "suffix": ".css",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 73
+    },
+    {
+      "path": "docs/static-preview/forge-alive/desktop/forge-local-read-model-preview-ui-binding-060l.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/desktop/forge-public-preview-interaction-visual-repair-060m.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/forge-mobile-pattern-057d.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/forge-mobile-top-nav-center-057g.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/forge-mobile-visual-polish-057f.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/forge-mobile-visual-repair-057e.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/forge-mobile-widget-grid-057j.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/forge-mobile-widget-grid-dedup-057m.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/forge-mobile-widget-grid-polish-057l.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/genesis-beta-loop-card-data.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/genesis-beta-loop-cards.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/sample-data.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/shared/forge-local-read-model-source-adapter-060i.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 67
+    },
+    {
+      "path": "docs/static-preview/forge-alive/desktop/forge-desktop-command-workspace-upgrade-058e.css",
+      "exists": true,
+      "suffix": ".css",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": false,
+      "score": 65
+    },
+    {
+      "path": "manager-os/tests/alfred-review-action-packet-static-preview-binding-master-test.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": true,
+      "score": 55
+    },
+    {
+      "path": "manager-os/tests/alfred-review-action-packet-static-preview-dom-renderer-master-test.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": true,
+      "score": 55
+    },
+    {
+      "path": "manager-os/tests/alfred-review-action-packet-static-preview-dom-surface-binding-master-test.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": true,
+      "score": 55
+    },
+    {
+      "path": "manager-os/tests/alfred-review-action-packet-static-preview-surface-binding-master-test.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": true,
+      "score": 55
+    },
+    {
+      "path": "manager-os/tests/alfred-static-preview-dom-renderer-integration-master-test.js",
+      "exists": true,
+      "suffix": ".js",
+      "isSourceCandidate": true,
+      "isDocsOrEvidence": false,
+      "isTestOrSpec": true,
+      "score": 55
+    }
+  ],
+  "canonicalSelectionRequiredBefore092BPatch": true,
+  "uiSourceEditsAuthorizedIn092A": false,
+  "staticUiPatchAuthorizedIn092A": false,
+  "plannedPatchBoundaryFor092B": {
+    "allowed": [
+      "select canonical UI file or files from shortlist",
+      "produce exact patch plan before source edit",
+      "bind visible copy to safe copy and badge system",
+      "preserve desktop/mobile layer boundary",
+      "preserve preview/read-only/human-review/no-official-quote boundary"
+    ],
+    "notAllowed": [
+      "source edit without canonical file selection",
+      "backend connection",
+      "provider call",
+      "parser execution",
+      "calculator execution",
+      "Banxico call",
+      "quote truth creation",
+      "official quote claim",
+      "send action",
+      "CRM write",
+      "calendar creation",
+      "runtime browser storage or network primitives"
+    ]
+  },
+  "requiredVisibleSafetyCopy": [
+    "Preview",
+    "Solo lectura",
+    "Revisión humana",
+    "No cotización oficial",
+    "Sin envío",
+    "Sin CRM",
+    "Sin calendario"
+  ],
+  "requiredLineage": [
+    "086D safe UX state model",
+    "087D safe component contracts",
+    "088D safe screen composition",
+    "089D safe visual layout spec",
+    "089R template reconciliation",
+    "090D safe copy and badge system",
+    "091D safe UI implementation plan decision"
+  ],
+  "next": "092B_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN",
+  "notAuthorized": {
+    "uiSourceEditsIn092A": false,
+    "componentImplementation": false,
+    "screenRendering": false,
+    "componentRendering": false,
+    "uiMutation": false,
+    "cssInjection": false,
+    "domWrite": false,
+    "quoteTruthCreation": false,
+    "backendConnection": false,
+    "providerCall": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "send": false,
+    "crmWrite": false,
+    "calendarCreate": false
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+},
+  "semanticQa": {
+  "status": "PASS",
+  "scopeValidated": true,
+  "errors": [],
+  "canonicalShortlistCount": 12,
+  "canonicalSelectionRequiredBefore092BPatch": true,
+  "uiSourceEditsAuthorizedIn092A": false,
+  "staticUiPatchAuthorizedIn092A": false,
+  "requiredVisibleSafetyCopyValidated": true,
+  "plannedPatchBoundaryValidated": true,
+  "allEffectsBlocked": true,
+  "allSafetyFlagsFalse": true,
+  "next": "092B_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN"
+},
+  "confirmed": {
+    "scopeOnly": true,
+    "canonicalSelectionRequiredBefore092BPatch": true,
+    "uiSourceEditsAuthorizedIn092A": false,
+    "staticUiPatchAuthorizedIn092A": false,
+    "requiredVisibleSafetyCopyValidated": true,
+    "plannedPatchBoundaryValidated": true,
+    "allEffectsBlocked": true,
+    "allSafetyFlagsFalse": true
+  },
+  "notAuthorized": {
+    "uiSourceEditsIn092A": false,
+    "componentImplementation": false,
+    "screenRendering": false,
+    "componentRendering": false,
+    "uiMutation": false,
+    "cssInjection": false,
+    "domWrite": false,
+    "quoteTruthCreation": false,
+    "backendConnection": false,
+    "providerCall": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "send": false,
+    "crmWrite": false,
+    "calendarCreate": false
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
