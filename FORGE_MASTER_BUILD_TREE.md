@@ -12523,3 +12523,45 @@ LOCKED_DECISION=FIELD_CANDIDATE_EXTRACTION_DRY_RUN_COMPLETE_WITH_REDACTED_PLACEH
 
 NEXT=106R_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_GATE
 <!-- FORGE:106Q_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_DRY_RUN:END -->
+
+<!-- FORGE:106R_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_GATE:START -->
+## 106R Quote Preview Candidate Review Packet Gate
+
+106R locks the gate for a human review packet from redacted candidates only.
+
+Locked decision:
+`CANDIDATE_REVIEW_PACKET_GATE_LOCKED_FOR_HUMAN_REVIEW_ONLY_NO_REAL_VALUES_NO_TRUTH`
+
+Confirmed:
+
+- manual operator token not required;
+- review packet contract created;
+- review checklist created;
+- review packet from redacted candidates only;
+- candidate records are not truth;
+- human review required;
+- raw PDF access forbidden;
+- raw text access forbidden;
+- raw value extraction forbidden;
+- real value extraction forbidden;
+- candidate truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- source UI was not changed;
+- all safety flags remain false.
+
+CANDIDATE_RECORD_COUNT=28
+
+REVIEW_READY_CRITICAL_TARGET_COUNT=6
+
+CRITICAL_TARGET_COUNT=6
+
+DECISION=PASS_106R_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_GATE
+
+LOCKED_DECISION=CANDIDATE_REVIEW_PACKET_GATE_LOCKED_FOR_HUMAN_REVIEW_ONLY_NO_REAL_VALUES_NO_TRUTH
+
+NEXT=106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN
+<!-- FORGE:106R_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_GATE:END -->
