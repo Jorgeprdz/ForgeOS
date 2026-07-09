@@ -10,35 +10,35 @@
   },
   "next": "093D_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_DECISION_LOCK",
   "semanticQa": {
-  "status": "PASS",
-  "sourcePatchQaValidated": true,
-  "errors": [],
-  "patchedFileCount": 3,
-  "patchedFiles": [
-    {
-      "path": "docs/static-preview/forge-alive/alfred-desktop-dashboard.js",
-      "validated": true
-    },
-    {
-      "path": "docs/static-preview/forge-alive/alfred-desktop-command-workspace-056y.js",
-      "validated": true
-    },
-    {
-      "path": "docs/static-preview/forge-alive/alfred-responsive-ui.js",
-      "validated": true
-    }
-  ],
-  "staticCopyOnly": true,
-  "newActionHandlersAdded": false,
-  "businessLogicChanged": false,
-  "dataFlowChanged": false,
-  "backendConnectionAdded": false,
-  "quoteTruthCreated": false,
-  "sendEnabled": false,
-  "crmWriteEnabled": false,
-  "calendarCreateEnabled": false,
-  "next": "093D_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_DECISION_LOCK"
-},
+    "status": "PASS",
+    "sourcePatchQaValidated": true,
+    "errors": [],
+    "patchedFileCount": 3,
+    "patchedFiles": [
+      {
+        "path": "docs/static-preview/forge-alive/alfred-desktop-dashboard.js",
+        "validated": true
+      },
+      {
+        "path": "docs/static-preview/forge-alive/alfred-desktop-command-workspace-056y.js",
+        "validated": true
+      },
+      {
+        "path": "docs/static-preview/forge-alive/alfred-responsive-ui.js",
+        "validated": true
+      }
+    ],
+    "staticCopyOnly": true,
+    "newActionHandlersAdded": false,
+    "businessLogicChanged": false,
+    "dataFlowChanged": false,
+    "backendConnectionAdded": false,
+    "quoteTruthCreated": false,
+    "sendEnabled": false,
+    "crmWriteEnabled": false,
+    "calendarCreateEnabled": false,
+    "next": "093D_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_DECISION_LOCK"
+  },
   "qaValidated": {
     "patchManifestValidated": true,
     "patchedSourceFilesExist": true,
@@ -52,7 +52,8 @@
     "quoteTruthCreated": false,
     "sendEnabled": false,
     "crmWriteEnabled": false,
-    "calendarCreateEnabled": false
+    "calendarCreateEnabled": false,
+    "allSafetyFlagsFalse": true
   },
   "safetyFlags": {
     "crmWrite": false,
