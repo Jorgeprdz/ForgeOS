@@ -8595,3 +8595,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_
 
 NEXT=097D_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_DECISION_LOCK
 <!-- FORGE:097C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCK:END -->
+
+<!-- FORGE:097D_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_DECISION_LOCK:START -->
+## 097D Quote Preview Safe Module Entry Source Patch Regression Plan Decision Lock
+
+097D decision-locks the static regression plan after the 097C QA lock.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_LOCKED_AS_STATIC_VALIDATION_PREREQUISITE`
+
+Confirmed:
+
+- decision lock only;
+- 097A regression scope validates;
+- 097B regression plan validates;
+- 097C QA lock validates;
+- every planned check has execution disabled;
+- 097E static validation gate is present;
+- no source edits authorized in 097D;
+- no regression execution authorized in 097D;
+- no route or navigation execution authorized in 097D;
+- no UI rendering authorized in 097D;
+- no runtime execution authorized in 097D;
+- no real effects authorized in 097D;
+- all safety flags remain false.
+
+DECISION=PASS_097D_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_DECISION_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_LOCKED_AS_STATIC_VALIDATION_PREREQUISITE
+
+NEXT=097E_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION
+<!-- FORGE:097D_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_DECISION_LOCK:END -->
