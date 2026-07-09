@@ -7851,3 +7851,40 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_LOCKED_AS_LOCAL_STATIC_
 
 NEXT=091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE
 <!-- FORGE:090D_QUOTE_PREVIEW_SAFE_COPY_AND_BADGE_SYSTEM_DECISION_LOCK:END -->
+
+<!-- FORGE:091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE:START -->
+## 091A Quote Preview Safe UI Implementation Scope
+
+091A scopes safe UI implementation through read-only UI surface discovery.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPED`
+
+Outputs:
+
+- `docs/architecture/source-truth/FORGE_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE_091A.md`
+- `docs/evidence/FORGE_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE_091A.md`
+- `docs/evidence/forge-quote-preview-safe-ui-implementation-surface-discovery-091a.json`
+- `docs/evidence/FORGE_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SURFACE_DISCOVERY_091A.md`
+- `docs/evidence/forge-quote-preview-safe-ui-implementation-scope-audit-091a.json`
+
+091A does not edit UI source files.
+
+091B must select canonical UI files before any safe static UI implementation plan.
+
+Forbidden without later explicit unlock:
+
+- backend connection;
+- quote truth;
+- provider call;
+- parser/calculator/Banxico execution;
+- CRM/policy/pipeline/quote writes;
+- send;
+- calendar creation.
+
+DECISION=PASS_091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPED
+
+NEXT=091B_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_PLAN
+<!-- FORGE:091A_QUOTE_PREVIEW_SAFE_UI_IMPLEMENTATION_SCOPE:END -->
