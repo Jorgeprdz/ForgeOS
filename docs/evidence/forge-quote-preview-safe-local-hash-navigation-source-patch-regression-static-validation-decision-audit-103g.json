@@ -1,0 +1,42 @@
+{
+  "phase": "103G_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION_DECISION_LOCK",
+  "status": "PASS",
+  "decision": "PASS_103G_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION_DECISION_LOCK",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_LOCKED_AS_VALIDATED",
+  "decisionResult": {
+    "decisionLockValidated": true,
+    "errors": [],
+    "sourcePatchRegressionLockedAsValidated": true,
+    "nextMayScopeVisualConfirmationOnly": true
+  },
+  "sourceEditsAuthorizedIn103G": false,
+  "staticValidationReexecutionAuthorizedIn103G": false,
+  "navigationExecutionAuthorizedIn103G": false,
+  "uiRenderingAuthorizedIn103G": false,
+  "runtimeExecutionAuthorizedIn103G": false,
+  "realEffectsAuthorizedIn103G": false,
+  "next": "104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}

@@ -11340,3 +11340,37 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_LOCKED_AS_
 
 NEXT=103A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_SCOPE
 <!-- FORGE:102BCD_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_FAST_TRACK:END -->
+
+<!-- FORGE:103ABCDEFG_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_FAST_TRACK:START -->
+## 103ABCDEFG Quote Preview Safe Local Hash Navigation Source Patch Regression Fast Track
+
+103ABCDEFG validates and locks regression for the 102BCD safe local hash navigation patch.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_LOCKED_AS_VALIDATED`
+
+Confirmed:
+
+- regression scope, plan, QA, decision, static validation, QA, and final decision are locked;
+- validated file is `docs/static-preview/forge-alive/index.html`;
+- static link remains present: `href="#cotizaciones"`;
+- static target remains present exactly once: `id="cotizaciones"`;
+- 102B link and target patch markers remain present;
+- required 102B static fragments remain present;
+- forbidden true safety attributes are absent;
+- no script tag, inline handler, JavaScript listener, or imperative navigation exists inside the 102B patch blocks;
+- no source edits performed in 103ABCDEFG;
+- no navigation executed;
+- no UI rendering performed;
+- no runtime execution performed;
+- no real effects performed;
+- all safety flags remain false.
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/#cotizaciones
+
+DECISION=PASS_103ABCDEFG_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_FAST_TRACK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_LOCKED_AS_VALIDATED
+
+NEXT=104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE
+<!-- FORGE:103ABCDEFG_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_FAST_TRACK:END -->

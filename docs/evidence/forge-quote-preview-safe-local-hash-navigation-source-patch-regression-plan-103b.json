@@ -1,0 +1,159 @@
+{
+  "phase": "103B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_PLAN",
+  "status": "PASS",
+  "decision": "PASS_103B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_PLAN",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_PLAN_LOCKED",
+  "planType": "static_regression_plan_only",
+  "base": {
+    "phase": "103A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_SCOPE",
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_SCOPED",
+    "source": "docs/evidence/forge-quote-preview-safe-local-hash-navigation-source-patch-regression-scope-103a.json"
+  },
+  "plannedChecks": [
+    {
+      "id": "103B_CHECK_102B_LINK_PATCH_MARKERS_PRESENT",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_102B_TARGET_PATCH_MARKERS_PRESENT",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_HREF_COTIZACIONES_PRESENT",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_ID_COTIZACIONES_PRESENT_EXACTLY_ONCE",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_REQUIRED_STATIC_FRAGMENTS_PRESENT",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_FALSE_SAFETY_ATTRIBUTES_PRESENT",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_FORBIDDEN_TRUE_ATTRIBUTES_ABSENT",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_NO_SCRIPT_INSIDE_102B_PATCH_BLOCKS",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_NO_INLINE_HANDLER_INSIDE_102B_PATCH_BLOCKS",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_NO_LISTENER_INSIDE_102B_PATCH_BLOCKS",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_NO_IMPERATIVE_NAVIGATION_INSIDE_102B_PATCH_BLOCKS",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_ONLY_INDEX_HTML_UNDER_REGRESSION",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_NO_RUNTIME_OR_REAL_EFFECTS",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    },
+    {
+      "id": "103B_CHECK_ALL_SAFETY_FLAGS_FALSE",
+      "target": "docs/static-preview/forge-alive/index.html",
+      "executionAuthorizedIn103B": false
+    }
+  ],
+  "plannedCheckCount": 14,
+  "requiredStaticFragmentsForRegression": [
+    "<!-- FORGE:102B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_LINK_PATCH:START -->",
+    "<!-- FORGE:102B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_LINK_PATCH:END -->",
+    "<!-- FORGE:102B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_TARGET_PATCH:START -->",
+    "<!-- FORGE:102B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_TARGET_PATCH:END -->",
+    "href=\"#cotizaciones\"",
+    "id=\"cotizaciones\"",
+    "data-forge-safe-local-hash-navigation-102b=\"quote-preview-safe-entry\"",
+    "data-forge-local-hash-link-102b=\"#cotizaciones\"",
+    "data-forge-safe-local-hash-target-102b=\"quote-preview-safe-entry\"",
+    "data-forge-local-hash-target-102b=\"#cotizaciones\"",
+    "data-forge-local-hash-target-panel-102b=\"forge-quote-preview-safe-entry-panel-096b\"",
+    "data-forge-local-hash-target-note-102b=\"forge-quote-preview-safe-entry-note-096b\"",
+    "aria-controls=\"forge-quote-preview-safe-entry-panel-096b\"",
+    "aria-describedby=\"forge-quote-preview-safe-entry-note-096b\"",
+    "data-forge-preview-only-102b=\"true\"",
+    "data-forge-human-review-required-102b=\"true\"",
+    "data-forge-static-anchor-only-102b=\"true\"",
+    "data-forge-static-anchor-target-only-102b=\"true\"",
+    "data-forge-script-creation-allowed-102b=\"false\"",
+    "data-forge-inline-event-handler-allowed-102b=\"false\"",
+    "data-forge-javascript-listener-allowed-102b=\"false\"",
+    "data-forge-javascript-source-edit-allowed-102b=\"false\"",
+    "data-forge-css-source-edit-allowed-102b=\"false\"",
+    "data-forge-route-binding-execution-allowed-102b=\"false\"",
+    "data-forge-navigation-execution-allowed-102b=\"false\"",
+    "data-forge-ui-rendering-allowed-102b=\"false\"",
+    "data-forge-runtime-execution-allowed-102b=\"false\"",
+    "data-forge-real-effects-allowed-102b=\"false\"",
+    "data-forge-official-quote-allowed-102b=\"false\"",
+    "data-forge-quote-truth-allowed-102b=\"false\"",
+    "data-forge-backend-connection-allowed-102b=\"false\"",
+    "data-forge-provider-call-allowed-102b=\"false\"",
+    "data-forge-parser-execution-allowed-102b=\"false\"",
+    "data-forge-calculator-execution-allowed-102b=\"false\"",
+    "data-forge-banxico-call-allowed-102b=\"false\"",
+    "data-forge-send-allowed-102b=\"false\"",
+    "data-forge-crm-write-allowed-102b=\"false\"",
+    "data-forge-calendar-create-allowed-102b=\"false\"",
+    "data-forge-business-logic-change-allowed-102b=\"false\"",
+    "data-forge-data-flow-change-allowed-102b=\"false\""
+  ],
+  "sourceEditsAuthorizedIn103B": false,
+  "regressionExecutionAuthorizedIn103B": false,
+  "navigationExecutionAuthorizedIn103B": false,
+  "uiRenderingAuthorizedIn103B": false,
+  "runtimeExecutionAuthorizedIn103B": false,
+  "realEffectsAuthorizedIn103B": false,
+  "103EMayExecuteStaticValidationOnlyAfterQaAndDecision": true,
+  "next": "103C_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCK",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": []
+}
