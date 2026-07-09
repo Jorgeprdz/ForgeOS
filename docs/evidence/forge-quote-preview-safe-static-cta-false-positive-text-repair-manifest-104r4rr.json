@@ -1,0 +1,29 @@
+{
+  "phase": "104R4RR_QUOTE_PREVIEW_SAFE_STATIC_CTA_FALSE_POSITIVE_TEXT_REPAIR",
+  "status": "PASS",
+  "patchedFiles": [
+    {
+      "path": "docs/static-preview/forge-alive/index.html",
+      "operations": [
+        "removed false-positive legacy workflow label from index html comments and markup",
+        "preserved exactly one disabled static + Nueva cotización CTA",
+        "preserved static href #cotizaciones",
+        "preserved target id cotizaciones"
+      ]
+    }
+  ],
+  "patchedFileCount": 1,
+  "onlyIndexHtmlEdited": true,
+  "legacyWorkflowLabelRemoved": true,
+  "newQuoteCtaPresentExactlyOnce": true,
+  "scriptTagCreated": false,
+  "inlineEventHandlerCreated": false,
+  "javascriptListenerCreated": false,
+  "imperativeNavigationCreated": false,
+  "javascriptSourceEdited": false,
+  "cssSourceEdited": false,
+  "runtimeExecutionPerformed": false,
+  "realEffectsPerformed": false,
+  "errors": [],
+  "next": "104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE"
+}

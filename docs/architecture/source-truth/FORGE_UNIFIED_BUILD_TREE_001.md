@@ -9132,3 +9132,35 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_REPAIRED_TO_MATCH_SIDEB
 
 NEXT=104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE
 <!-- FORGE:104R3_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_NAV_ITEM_SIZE_REPAIR:END -->
+
+<!-- FORGE:104R4RR_QUOTE_PREVIEW_SAFE_STATIC_CTA_FALSE_POSITIVE_TEXT_REPAIR:START -->
+## 104R4RR Quote Preview Safe Static CTA False Positive Text Repair
+
+104R4RR removes the false-positive legacy label text from index.html.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_STATIC_CTA_REPAIR_FALSE_POSITIVE_TEXT_REMOVED`
+
+Confirmed:
+
+- legacy workflow label text removed from index.html;
+- exactly one disabled static `+ Nueva cotización` CTA remains;
+- CTA is preview-only and cannot create a quote;
+- static `href="#cotizaciones"` preserved;
+- target `id="cotizaciones"` preserved exactly once;
+- no script tag created;
+- no inline event handler created;
+- no JavaScript listener created;
+- no imperative navigation created;
+- no runtime execution performed;
+- no real effects performed;
+- all safety flags remain false.
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=104r4rr#cotizaciones
+
+DECISION=PASS_104R4RR_QUOTE_PREVIEW_SAFE_STATIC_CTA_FALSE_POSITIVE_TEXT_REPAIR
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_CTA_REPAIR_FALSE_POSITIVE_TEXT_REMOVED
+
+NEXT=104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE
+<!-- FORGE:104R4RR_QUOTE_PREVIEW_SAFE_STATIC_CTA_FALSE_POSITIVE_TEXT_REPAIR:END -->
