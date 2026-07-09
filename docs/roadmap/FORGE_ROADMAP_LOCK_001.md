@@ -9276,3 +9276,55 @@ LOCKED_DECISION=HUMAN_REVIEW_DECISION_GATE_LOCKED_FOR_LOCATION_DISPOSITIONS_ONLY
 
 NEXT=106U_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_DRY_RUN
 <!-- FORGE:106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE:END -->
+
+<!-- FORGE:106U_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_DRY_RUN:START -->
+## 106U Quote Preview Human Review Decision Dry Run
+
+106U creates pending location decision records only.
+
+Locked decision:
+`HUMAN_REVIEW_DECISION_DRY_RUN_COMPLETE_AS_PENDING_LOCATION_DECISIONS_ONLY_NO_HUMAN_APPROVAL_NO_TRUTH`
+
+Confirmed:
+
+- manual operator token not required;
+- internal dry-run guard accepted;
+- decision records created;
+- decisions are location-only;
+- all dry-run dispositions remain keep_pending;
+- human decision was not executed;
+- actual human review was not marked complete;
+- decision records are simulated only;
+- candidate records remain not truth;
+- raw PDF not accessed;
+- raw text not accessed;
+- raw value not extracted;
+- real value not extracted;
+- real value approval not executed;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- source UI was not changed;
+- all safety flags remain false.
+
+DECISION_RECORD_COUNT=28
+
+DECISION_COVERED_CRITICAL_TARGET_COUNT=6
+
+CRITICAL_TARGET_COUNT=6
+
+KEEP_PENDING_DECISION_COUNT=28
+
+RECOMMENDED_MANUAL_PDF_LOOKUP_COUNT=27
+
+RECOMMENDED_BLOCKED_AMBIGUOUS_COUNT=1
+
+DECISION=PASS_106U_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_DRY_RUN
+
+LOCKED_DECISION=HUMAN_REVIEW_DECISION_DRY_RUN_COMPLETE_AS_PENDING_LOCATION_DECISIONS_ONLY_NO_HUMAN_APPROVAL_NO_TRUTH
+
+NEXT=106V_QUOTE_PREVIEW_LOCATION_DECISION_ROUTER_GATE
+<!-- FORGE:106U_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_DRY_RUN:END -->
