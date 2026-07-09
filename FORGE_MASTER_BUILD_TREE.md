@@ -11306,3 +11306,37 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_SCOPED
 
 NEXT=102B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_IMPLEMENTATION
 <!-- FORGE:102A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_SCOPE:END -->
+
+<!-- FORGE:102BCD_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_FAST_TRACK:START -->
+## 102BCD Quote Preview Safe Local Hash Navigation Source Patch Fast Track
+
+102BCD implements and locks safe static local hash navigation for Quote Preview / Cotizaciones.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_LOCKED_AS_SAFE_STATIC_LOCAL_HASH_ANCHOR`
+
+Confirmed:
+
+- patched file: `docs/static-preview/forge-alive/index.html`;
+- created static visible anchor: `href="#cotizaciones"`;
+- created static target anchor: `id="cotizaciones"`;
+- only authorized file edited;
+- patch kind: static local hash anchor and accessibility semantics only;
+- no script tag, inline handler, or JavaScript listener created;
+- no imperative navigation created;
+- no JavaScript or CSS source edited;
+- no route binding or navigation executed by script;
+- no UI rendering or runtime execution performed;
+- no backend/provider/parser/calculator/Banxico call performed;
+- no official quote or quote truth created;
+- no send, CRM, or calendar effect performed;
+- no business logic or data flow changed;
+- no real effects performed;
+- all safety flags remain false.
+
+DECISION=PASS_102BCD_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_FAST_TRACK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_LOCKED_AS_SAFE_STATIC_LOCAL_HASH_ANCHOR
+
+NEXT=103A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_SCOPE
+<!-- FORGE:102BCD_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_FAST_TRACK:END -->

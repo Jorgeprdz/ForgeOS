@@ -1,0 +1,48 @@
+{
+  "phase": "102D_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_DECISION_LOCK",
+  "status": "PASS",
+  "decision": "PASS_102D_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_DECISION_LOCK",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_LOCKED_AS_SAFE_STATIC_LOCAL_HASH_ANCHOR",
+  "base": {
+    "phase": "102C_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_QA_LOCK",
+    "confirmed": true,
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_QA_LOCKED"
+  },
+  "decisionResult": {
+    "decisionLockValidated": true,
+    "errors": [],
+    "safeStaticLocalHashNavigationLocked": true,
+    "patchedFile": "docs/static-preview/forge-alive/index.html",
+    "nextMayScopeRegressionOnly": true,
+    "sourceEditsAuthorizedIn102D": false,
+    "navigationExecutionAuthorizedIn102D": false,
+    "uiRenderingAuthorizedIn102D": false,
+    "runtimeExecutionAuthorizedIn102D": false,
+    "realEffectsAuthorizedIn102D": false,
+    "allSafetyFlagsFalse": true
+  },
+  "next": "103A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_SCOPE",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
