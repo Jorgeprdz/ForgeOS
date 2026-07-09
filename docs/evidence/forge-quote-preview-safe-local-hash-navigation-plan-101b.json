@@ -1,0 +1,89 @@
+{
+  "phase": "101B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_PLAN",
+  "status": "PASS",
+  "decision": "PASS_101B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_PLAN",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_PLAN_LOCKED",
+  "planType": "safe_local_hash_navigation_plan_only",
+  "base": {
+    "phase": "101A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_SCOPE",
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SCOPED",
+    "source": "docs/evidence/forge-quote-preview-safe-local-hash-navigation-scope-101a.json"
+  },
+  "plannedNavigation": {
+    "hash": "#cotizaciones",
+    "targetPanelId": "forge-quote-preview-safe-entry-panel-096b",
+    "navigationType": "local_hash_navigation_only",
+    "runtimeExecutionAuthorized": false,
+    "realEffectsAuthorized": false
+  },
+  "plannedSteps": [
+    {
+      "id": "101B_PLAN_SAFE_HASH_ANCHOR_TARGET",
+      "description": "Plan safe local hash anchor semantics for #cotizaciones.",
+      "target": "#cotizaciones",
+      "executionAuthorizedIn101B": false
+    },
+    {
+      "id": "101B_PLAN_STATIC_TARGET_PANEL_ACCESSIBILITY",
+      "description": "Plan static relationship between local hash navigation and target panel.",
+      "target": "forge-quote-preview-safe-entry-panel-096b",
+      "executionAuthorizedIn101B": false
+    },
+    {
+      "id": "101B_PLAN_NO_SCRIPT_NO_LISTENER_BOUNDARY",
+      "description": "Plan no scripts, no inline handlers, and no listener creation.",
+      "target": "source patch boundary",
+      "executionAuthorizedIn101B": false
+    },
+    {
+      "id": "101B_PLAN_PREVIEW_ONLY_HUMAN_REVIEW_BOUNDARY",
+      "description": "Plan preservation of preview-only and human-review-required boundary.",
+      "target": "quote-preview-safe-entry",
+      "executionAuthorizedIn101B": false
+    },
+    {
+      "id": "101B_PLAN_NO_REAL_EFFECTS_BOUNDARY",
+      "description": "Plan no backend, provider, parser, calculator, Banxico, send, CRM, calendar, or quote truth effects.",
+      "target": "effect boundary",
+      "executionAuthorizedIn101B": false
+    },
+    {
+      "id": "101B_PLAN_102A_SOURCE_PATCH_SCOPE_GATE",
+      "description": "Plan that 102A must scope any source patch before implementation.",
+      "target": "102A prerequisite",
+      "executionAuthorizedIn101B": false
+    }
+  ],
+  "plannedStepCount": 6,
+  "sourceEditsAuthorizedIn101B": false,
+  "navigationExecutionAuthorizedIn101B": false,
+  "uiRenderingAuthorizedIn101B": false,
+  "runtimeExecutionAuthorizedIn101B": false,
+  "realEffectsAuthorizedIn101B": false,
+  "mustBeScopedBy102ABeforeSourcePatch": true,
+  "next": "101C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_PLAN_QA_LOCK",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": []
+}

@@ -8875,3 +8875,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_
 
 NEXT=101A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_SCOPE
 <!-- FORGE:100ABCDEFG_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_REGRESSION_FAST_TRACK:END -->
+
+<!-- FORGE:101ABCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_FAST_TRACK:START -->
+## 101ABCD Quote Preview Safe Local Hash Navigation Fast Track
+
+101ABCD locks safe local hash navigation planning for Quote Preview / Cotizaciones.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE`
+
+Confirmed:
+
+- safe local hash navigation scoped;
+- safe local hash navigation plan locked;
+- safe local hash navigation QA locked;
+- safe local hash navigation decision locked;
+- hash: `#cotizaciones`;
+- target panel id: `forge-quote-preview-safe-entry-panel-096b`;
+- 102A may scope source patch only;
+- no source edits authorized in 101ABCD;
+- no navigation execution authorized in 101ABCD;
+- no UI rendering authorized in 101ABCD;
+- no runtime execution authorized in 101ABCD;
+- no real effects authorized in 101ABCD;
+- all safety flags remain false.
+
+DECISION=PASS_101ABCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_FAST_TRACK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE
+
+NEXT=102A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_SCOPE
+<!-- FORGE:101ABCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SAFE_LOCAL_HASH_NAVIGATION_FAST_TRACK:END -->
