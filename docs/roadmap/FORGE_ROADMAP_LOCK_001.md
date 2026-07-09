@@ -8336,3 +8336,33 @@ LOCKED_DECISION=NEW_QUOTE_PAGE_REPAIRED_TO_DEDICATED_STATIC_ROUTE_WITH_ENABLED_I
 
 NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
 <!-- FORGE:105DR_QUOTE_PREVIEW_NEW_QUOTE_PAGE_ROUTE_MODEL_REPAIR:END -->
+
+<!-- FORGE:105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR:START -->
+## 105DR2 Quote Preview New Quote PDF First Presentation Repair
+
+105DR2 repairs the dedicated Nueva cotización route into a PDF-first, less-clicks workflow.
+
+Locked decision:
+`NEW_QUOTE_PAGE_REPAIRED_TO_PDF_FIRST_LESS_CLICKS_PRESENTATION_WORKFLOW`
+
+Confirmed:
+
+- dedicated static route preserved;
+- index CTA points to `./nueva-cotizacion/?v=105dr2`;
+- PDF upload is now the first workflow step;
+- file picker accepts PDF but does not read or process it;
+- fields are positioned as Forge-autofillable from future PDF extraction;
+- user can add prospect context manually;
+- safe action is now `Generar presentación de ventas`;
+- generation remains disabled until future explicit gate;
+- no PDF reading, parser execution, prompt generation, presentation generation, backend, CRM write, provider runtime, calculator, messaging, or real effects were added;
+- all safety flags remain false.
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2
+
+DECISION=PASS_105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR
+
+LOCKED_DECISION=NEW_QUOTE_PAGE_REPAIRED_TO_PDF_FIRST_LESS_CLICKS_PRESENTATION_WORKFLOW
+
+NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
+<!-- FORGE:105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR:END -->

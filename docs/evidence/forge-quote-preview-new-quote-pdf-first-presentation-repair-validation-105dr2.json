@@ -1,0 +1,15 @@
+{
+  "phase": "105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR",
+  "status": "PASS",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2",
+  "routeModel": "dedicated_static_page",
+  "workflowModel": "pdf_first_less_clicks_sales_presentation_preparation",
+  "indexCtaUses105dr2": true,
+  "pdfUploadFirstWorkflowPresent": true,
+  "pdfFileInputPresent": true,
+  "textInputsEnabled": true,
+  "salesPresentationButtonPresentDisabled": true,
+  "allSafetyFlagsFalse": true,
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
+  "errors": []
+}

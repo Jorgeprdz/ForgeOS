@@ -1,0 +1,93 @@
+# Forge Quote Preview New Quote PDF First Presentation Repair Evidence 105DR2
+
+PHASE=105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR
+STATUS=PASS
+DECISION=PASS_105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR
+LOCKED_DECISION=NEW_QUOTE_PAGE_REPAIRED_TO_PDF_FIRST_LESS_CLICKS_PRESENTATION_WORKFLOW
+NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
+
+## Test URL
+
+https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2
+
+## Repair JSON
+
+{
+  "phase": "105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR",
+  "status": "PATCHED",
+  "decision": "PASS_105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR",
+  "lockedDecision": "NEW_QUOTE_PAGE_REPAIRED_TO_PDF_FIRST_LESS_CLICKS_PRESENTATION_WORKFLOW",
+  "indexFile": "docs/static-preview/forge-alive/index.html",
+  "newPageFile": "docs/static-preview/forge-alive/nueva-cotizacion/index.html",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2",
+  "routeModel": "dedicated_static_page",
+  "workflowModel": "pdf_first_less_clicks_sales_presentation_preparation",
+  "sourceModified": false,
+  "changes": [
+    "updated index CTA to 105dr2 dedicated route",
+    "moved PDF upload to first visible workflow step",
+    "added local PDF file picker without reading or processing",
+    "renamed manual fields as Forge-autofillable fields",
+    "reframed checklist around PDF extraction and context",
+    "replaced safe action with Generar presentación de ventas disabled CTA",
+    "documented future context plus quote plus advisor notes to generated sales presentation prompt"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false
+  },
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS"
+}
+
+## Validation JSON
+
+{
+  "phase": "105DR2_QUOTE_PREVIEW_NEW_QUOTE_PDF_FIRST_PRESENTATION_REPAIR",
+  "status": "PASS",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2",
+  "routeModel": "dedicated_static_page",
+  "workflowModel": "pdf_first_less_clicks_sales_presentation_preparation",
+  "indexCtaUses105dr2": true,
+  "pdfUploadFirstWorkflowPresent": true,
+  "pdfFileInputPresent": true,
+  "textInputsEnabled": true,
+  "salesPresentationButtonPresentDisabled": true,
+  "allSafetyFlagsFalse": true,
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
+  "errors": []
+}
+
+## Confirmed
+
+- PDF-first workflow is visible.
+- File picker accepts PDF.
+- Text fields remain enabled locally.
+- Generate sales presentation button exists and remains disabled.
+- No PDF reading, parser execution, prompt generation, presentation generation, backend connection, CRM write, or real effect is enabled.

@@ -14,12 +14,11 @@
       --forge-muted: rgba(203, 213, 225, 0.68);
       --forge-cyan: rgba(125, 249, 255, 0.94);
       --forge-gold: rgba(250, 204, 21, 0.96);
+      --forge-green: rgba(74, 222, 128, 0.92);
       --forge-radius: 28px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -37,14 +36,12 @@
         linear-gradient(135deg, #020617 0%, #08111f 52%, #020617 100%);
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .fq-page-105dr {
       width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 28px 0 46px;
+      padding: clamp(42px, 5vh, 64px) 0 52px;
     }
 
     .fq-top-105dr {
@@ -88,6 +85,7 @@
     }
 
     .fq-shell-105dr {
+      overflow: visible;
       border: 1px solid rgba(125, 249, 255, 0.22);
       border-radius: var(--forge-radius);
       background:
@@ -116,14 +114,15 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 4.25rem);
-      line-height: 0.96;
-      letter-spacing: -0.07em;
+      font-size: clamp(1.85rem, 3vw, 3.28rem);
+      line-height: 1.06;
+      letter-spacing: -0.055em;
+      text-wrap: balance;
     }
 
     .fq-subtitle-105dr {
       margin: 14px 0 0;
-      max-width: 720px;
+      max-width: 760px;
       color: var(--forge-muted);
       font-size: clamp(1rem, 1.4vw, 1.18rem);
       line-height: 1.55;
@@ -150,6 +149,59 @@
       white-space: nowrap;
     }
 
+    .fq-upload-105dr {
+      margin-bottom: 18px;
+      border: 1px solid rgba(74, 222, 128, 0.26);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 0 0, rgba(74, 222, 128, 0.16), transparent 36%),
+        rgba(15, 23, 42, 0.72);
+      padding: clamp(16px, 2vw, 22px);
+    }
+
+    .fq-upload-head-105dr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .fq-upload-head-105dr h2 {
+      margin: 0;
+      font-size: 1.12rem;
+      letter-spacing: -0.03em;
+    }
+
+    .fq-upload-head-105dr p {
+      margin: 6px 0 0;
+      color: var(--forge-muted);
+      line-height: 1.5;
+      font-size: 0.9rem;
+    }
+
+    .fq-upload-pill-105dr {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(74, 222, 128, 0.28);
+      border-radius: 999px;
+      padding: 0.48rem 0.72rem;
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--forge-green);
+      font-size: 0.74rem;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .fq-file-105dr {
+      width: 100%;
+      border: 1px dashed rgba(125, 249, 255, 0.36);
+      border-radius: 20px;
+      background: rgba(2, 6, 23, 0.32);
+      padding: 1rem;
+      color: var(--forge-muted);
+    }
+
     .fq-grid-105dr {
       display: grid;
       grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.72fr);
@@ -165,9 +217,7 @@
       backdrop-filter: blur(18px);
     }
 
-    .fq-card-105dr + .fq-card-105dr {
-      margin-top: 16px;
-    }
+    .fq-card-105dr + .fq-card-105dr { margin-top: 16px; }
 
     .fq-card-105dr h2 {
       margin: 0 0 14px;
@@ -264,14 +314,24 @@
       cursor: not-allowed;
     }
 
+    .fq-disabled-105dr.fq-presentation-105dr {
+      border-color: rgba(125, 249, 255, 0.26);
+      background: rgba(125, 249, 255, 0.1);
+      color: rgba(235, 250, 255, 0.58);
+    }
+
     .fq-safe-stack-105dr {
       display: grid;
       gap: 16px;
     }
 
+    .fq-note-gap-105dr { margin-top: 14px; }
+    .fq-note-gap-small-105dr { margin-top: 10px; }
+
     @media (max-width: 980px) {
       .fq-hero-105dr,
-      .fq-grid-105dr {
+      .fq-grid-105dr,
+      .fq-upload-head-105dr {
         grid-template-columns: 1fr;
       }
 
@@ -283,7 +343,7 @@
     @media (max-width: 640px) {
       .fq-page-105dr {
         width: min(100% - 20px, 1180px);
-        padding-top: 16px;
+        padding-top: 24px;
       }
 
       .fq-top-105dr {
@@ -312,10 +372,13 @@
     data-forge-calculator-execution-allowed="false"
     data-forge-backend-connection-allowed="false"
     data-forge-quote-truth-allowed="false"
+    data-forge-pdf-read-allowed="false"
+    data-forge-parser-execution-allowed="false"
+    data-forge-presentation-generation-allowed="false"
   >
     <nav class="fq-top-105dr" aria-label="Navegación segura">
       <div class="fq-brand-105dr"><span class="fq-orb-105dr" aria-hidden="true"></span> Forge Alive · Nueva cotización</div>
-      <a class="fq-back-105dr" href="../?v=105dr#cotizaciones" data-forge-local-navigation-only="true">← Volver a Cotizaciones</a>
+      <a class="fq-back-105dr" href="../?v=105dr2#cotizaciones" data-forge-local-navigation-only="true">← Volver a Cotizaciones</a>
     </nav>
 
     <section class="fq-shell-105dr" aria-labelledby="nueva-cotizacion-title">
@@ -323,7 +386,7 @@
         <div>
           <p class="fq-eyebrow-105dr">Preview intake seguro</p>
           <h1 id="nueva-cotizacion-title">Nuevo borrador de cotización</h1>
-          <p class="fq-subtitle-105dr">Prepara contexto para un preview. No genera cotización oficial.</p>
+          <p class="fq-subtitle-105dr">No genera cotización oficial. Primero sube el PDF de Solución Online. Forge deberá trabajar menos al usuario: extraer contexto, llenar campos posibles y dejar sólo los faltantes para revisión humana.</p>
         </div>
         <div class="fq-badges-105dr" aria-label="Estado seguro">
           <span class="fq-badge-105dr">Preview</span>
@@ -332,41 +395,62 @@
         </div>
       </header>
 
+      <section class="fq-upload-105dr" aria-label="Carga inicial de PDF de cotización">
+        <div class="fq-upload-head-105dr">
+          <div>
+            <h2>Sube el PDF de cotización</h2>
+            <p>Usa el PDF descargado desde Solución Online con la cotización emitida por Seguros Monterrey. En fases futuras, Forge leerá el documento y prellenará los campos posibles.</p>
+          </div>
+          <span class="fq-upload-pill-105dr">Primer paso recomendado</span>
+        </div>
+        <input
+          id="fq-solution-online-pdf-105dr"
+          class="fq-file-105dr"
+          type="file"
+          accept="application/pdf,.pdf"
+          data-forge-local-file-picker-only="true"
+          data-forge-pdf-read-allowed="false"
+          data-forge-parser-execution-allowed="false"
+          data-forge-real-effects-allowed="false"
+        >
+        <p class="fq-help-105dr">Selector local visible para el flujo. En esta vista no se lee, no se sube y no se procesa el PDF.</p>
+      </section>
+
       <div class="fq-grid-105dr">
         <div>
           <section class="fq-card-105dr" aria-label="Campos de preparación">
-            <h2>Contexto de preparación</h2>
+            <h2>Datos autocompletables por Forge</h2>
             <div class="fq-form-grid-105dr" data-forge-inputs-enabled="true" data-forge-persistence-allowed="false">
               <div class="fq-field-105dr">
                 <label for="fq-client-105dr">Cliente</label>
-                <input id="fq-client-105dr" class="fq-input-105dr" type="text" autocomplete="off" placeholder="Escribe o pega el nombre del cliente">
-                <p class="fq-help-105dr">Campo local de captura visual. No guarda, no envía y no escribe CRM.</p>
+                <input id="fq-client-105dr" class="fq-input-105dr" type="text" autocomplete="off" placeholder="Forge lo llenará desde el PDF si está disponible">
+                <p class="fq-help-105dr">Campo editable local. No guarda, no envía y no escribe CRM.</p>
               </div>
 
               <div class="fq-field-105dr">
                 <label for="fq-product-family-105dr">Familia de producto</label>
-                <input id="fq-product-family-105dr" class="fq-input-105dr" type="text" autocomplete="off" placeholder="Ej. línea o familia a validar, sin producto oficial">
+                <input id="fq-product-family-105dr" class="fq-input-105dr" type="text" autocomplete="off" placeholder="Forge la detectará desde la cotización cuando el parser esté autorizado">
                 <p class="fq-help-105dr">No crea producto candidato ni verdad de producto.</p>
               </div>
 
               <div class="fq-field-105dr">
-                <label for="fq-objective-105dr">Objetivo del asesor</label>
-                <textarea id="fq-objective-105dr" class="fq-textarea-105dr" autocomplete="off" placeholder="Describe el objetivo de preparación del preview"></textarea>
+                <label for="fq-objective-105dr">Contexto del cliente o prospecto</label>
+                <textarea id="fq-objective-105dr" class="fq-textarea-105dr" autocomplete="off" placeholder="Agrega notas del cliente, necesidad, objeciones, objetivo o contexto comercial"></textarea>
               </div>
 
               <div class="fq-field-105dr">
-                <label for="fq-intent-105dr">Intención del preview</label>
-                <input id="fq-intent-105dr" class="fq-input-105dr" type="text" autocomplete="off" placeholder="Preparación, revisión, comparación o seguimiento">
+                <label for="fq-intent-105dr">Intención de venta</label>
+                <input id="fq-intent-105dr" class="fq-input-105dr" type="text" autocomplete="off" placeholder="Ej. protección, retiro, educación, GMM, seguimiento o cierre">
               </div>
             </div>
           </section>
 
-          <section class="fq-card-105dr" aria-label="Checklist de contexto requerido">
-            <h2>Checklist de contexto requerido</h2>
+          <section class="fq-card-105dr" aria-label="Checklist de extracción y contexto">
+            <h2>Checklist de extracción y contexto</h2>
             <ul class="fq-list-105dr">
-              <li><span>Contexto del cliente</span><strong class="fq-state-105dr">Pendiente</strong></li>
-              <li><span>Contexto de producto</span><strong class="fq-state-105dr">Pendiente</strong></li>
-              <li><span>Documentos y datos mínimos</span><strong class="fq-state-105dr">No cargados</strong></li>
+              <li><span>PDF de Solución Online</span><strong class="fq-state-105dr">Pendiente</strong></li>
+              <li><span>Datos extraíbles del PDF</span><strong class="fq-state-105dr">Bloqueados hasta parser</strong></li>
+              <li><span>Contexto del prospecto</span><strong class="fq-state-105dr">Editable</strong></li>
               <li><span>Revisión humana</span><strong class="fq-state-105dr">Obligatoria</strong></li>
             </ul>
           </section>
@@ -375,14 +459,14 @@
         <aside class="fq-safe-stack-105dr" aria-label="Estado seguro">
           <section class="fq-card-105dr">
             <h2>Product Intelligence</h2>
-            <p class="fq-note-105dr">Product Intelligence no está cargado en el preview estático. Este módulo sólo muestra preparación y faltantes.</p>
+            <p class="fq-note-105dr">Product Intelligence no está cargado en el preview estático. En una fase futura sólo podrá usar datos extraídos del PDF y contexto ingresado por el usuario, sin inventar información.</p>
           </section>
 
           <section class="fq-card-105dr">
             <h2>Readiness del preview</h2>
             <ul class="fq-list-105dr">
               <li><span>Estado</span><strong class="fq-state-105dr">No listo</strong></li>
-              <li><span>Motivo</span><strong class="fq-state-105dr">Faltan datos mínimos</strong></li>
+              <li><span>Motivo</span><strong class="fq-state-105dr">Falta PDF y parser autorizado</strong></li>
               <li><span>Cotización oficial</span><strong class="fq-state-105dr">Bloqueada</strong></li>
             </ul>
           </section>
@@ -390,16 +474,16 @@
           <section class="fq-card-105dr">
             <h2>Acciones seguras</h2>
             <button
-              class="fq-disabled-105dr"
+              class="fq-disabled-105dr fq-presentation-105dr"
               type="button"
               disabled
               aria-disabled="true"
               data-forge-real-effects-allowed="false"
-              data-forge-calculator-execution-allowed="false"
-              data-forge-provider-runtime-allowed="false"
-            >Preparar preview</button>
-            <p class="fq-note-105dr" style="margin-top: 14px;">Forge organiza la preparación y señala faltantes. La revisión humana sigue siendo obligatoria.</p>
-            <p class="fq-note-105dr" style="margin-top: 10px;">Faltan datos mínimos. No se ejecutan cálculos, proveedores ni escrituras.</p>
+              data-forge-presentation-generation-allowed="false"
+              data-forge-prompt-generation-allowed="false"
+            >Generar presentación de ventas</button>
+            <p class="fq-note-105dr fq-note-gap-105dr">Futuro flujo: contexto del cliente + datos extraídos de la cotización + notas del asesor → prompt estructurado → presentación de ventas generada por IA.</p>
+            <p class="fq-note-105dr fq-note-gap-small-105dr">En esta vista no se genera presentación, no se lee PDF y no se ejecutan cálculos, proveedores ni escrituras.</p>
           </section>
         </aside>
       </div>
