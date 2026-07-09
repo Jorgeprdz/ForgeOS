@@ -1,0 +1,52 @@
+{
+  "phase": "104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPED",
+  "scopeType": "manual_visual_confirmation_scope_only",
+  "base": {
+    "phase": "103ABCDEFG_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_FAST_TRACK",
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_LOCKED_AS_VALIDATED",
+    "source": "docs/evidence/forge-quote-preview-safe-local-hash-navigation-source-patch-regression-fast-track-audit-103abcdefg.json"
+  },
+  "manualVisualConfirmationTarget": {
+    "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/#cotizaciones",
+    "expectedHash": "#cotizaciones",
+    "expectedTargetId": "cotizaciones",
+    "expectedPanelId": "forge-quote-preview-safe-entry-panel-096b",
+    "expectedUserVisibleArea": "Cotizaciones / Quote Preview panel",
+    "expectedBoundaryCopy": "Preview / sólo lectura / revisión humana / no cotización oficial"
+  },
+  "scopeAllowsOnlyHumanManualObservation": true,
+  "sourceEditsAuthorizedIn104A": false,
+  "automatedBrowserExecutionAuthorizedIn104A": false,
+  "navigationExecutionByForgeAuthorizedIn104A": false,
+  "uiRenderingByForgeAuthorizedIn104A": false,
+  "runtimeExecutionAuthorizedIn104A": false,
+  "realEffectsAuthorizedIn104A": false,
+  "next": "104B_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_PLAN",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": []
+}

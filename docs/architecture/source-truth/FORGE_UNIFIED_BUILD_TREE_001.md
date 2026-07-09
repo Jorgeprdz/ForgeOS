@@ -9005,3 +9005,34 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION
 
 NEXT=104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE
 <!-- FORGE:103ABCDEFG_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_SOURCE_PATCH_REGRESSION_FAST_TRACK:END -->
+
+<!-- FORGE:104ABCD_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_FAST_TRACK:START -->
+## 104ABCD Quote Preview Safe Local Hash Navigation Visual Confirmation Fast Track
+
+104ABCD locks manual visual confirmation readiness for safe local hash navigation.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_LOCKED_AS_MANUAL_CHECK_READY`
+
+Confirmed:
+
+- manual visual confirmation scoped;
+- manual visual confirmation plan locked;
+- manual visual confirmation QA locked;
+- manual visual confirmation decision locked;
+- test URL: `https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/#cotizaciones`;
+- 104E ready for user manual result;
+- no source edits authorized in 104ABCD;
+- no automated browser execution authorized in 104ABCD;
+- no navigation execution by Forge authorized in 104ABCD;
+- no UI rendering by Forge authorized in 104ABCD;
+- no runtime execution authorized in 104ABCD;
+- no real effects authorized in 104ABCD;
+- all safety flags remain false.
+
+DECISION=PASS_104ABCD_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_FAST_TRACK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_LOCKED_AS_MANUAL_CHECK_READY
+
+NEXT=104E_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_MANUAL_VISUAL_CONFIRMATION_RESULT
+<!-- FORGE:104ABCD_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_FAST_TRACK:END -->

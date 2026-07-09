@@ -1,0 +1,56 @@
+{
+  "phase": "104D_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_DECISION_LOCK",
+  "status": "PASS",
+  "decision": "PASS_104D_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_DECISION_LOCK",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_LOCKED_AS_MANUAL_CHECK_READY",
+  "base": {
+    "phase": "104C_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_PLAN_QA_LOCK",
+    "confirmed": true,
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_PLAN_QA_LOCKED",
+    "source": "docs/evidence/forge-quote-preview-safe-local-hash-navigation-visual-confirmation-plan-qa-audit-104c.json"
+  },
+  "decisionResult": {
+    "decisionLockValidated": true,
+    "errors": [],
+    "manualVisualConfirmationReady": true,
+    "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/#cotizaciones",
+    "104EExpectedUserResultFormat": {
+      "status": "PASS or HOLD",
+      "observedUrlHash": "#cotizaciones",
+      "observedVisualArea": "Cotizaciones / Quote Preview",
+      "observedBoundary": "preview-only / human-review / no official quote",
+      "observedIssues": []
+    },
+    "sourceEditsAuthorizedIn104D": false,
+    "automatedBrowserExecutionAuthorizedIn104D": false,
+    "navigationExecutionByForgeAuthorizedIn104D": false,
+    "uiRenderingByForgeAuthorizedIn104D": false,
+    "runtimeExecutionAuthorizedIn104D": false,
+    "realEffectsAuthorizedIn104D": false,
+    "allSafetyFlagsFalse": true
+  },
+  "next": "104E_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_MANUAL_VISUAL_CONFIRMATION_RESULT",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
