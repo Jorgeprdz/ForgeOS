@@ -8986,3 +8986,39 @@ LOCKED_DECISION=LAYOUT_LABEL_MAP_DRY_RUN_COMPLETE_WITH_LABEL_HINTS_ONLY_NO_VALUE
 
 NEXT=106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE
 <!-- FORGE:106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN:END -->
+
+<!-- FORGE:106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE:START -->
+## 106N Quote Preview Field Anchor Window Gate
+
+106N locks the gate for safe field anchor windows.
+
+Locked decision:
+`FIELD_ANCHOR_WINDOW_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH`
+
+Confirmed:
+
+- anchor rules created;
+- critical targets covered by anchor labels;
+- anchor windows are context, not values;
+- operator token required for 106O;
+- raw PDF access forbidden;
+- raw text access forbidden;
+- value extraction forbidden;
+- field candidate extraction forbidden;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- quote truth forbidden;
+- source UI was not changed;
+- all safety flags remain false.
+
+CRITICAL_TARGET_COUNT=6
+
+ANCHOR_COVERED_CRITICAL_TARGET_COUNT=6
+
+DECISION=PASS_106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE
+
+LOCKED_DECISION=FIELD_ANCHOR_WINDOW_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH
+
+NEXT=106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN
+<!-- FORGE:106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE:END -->

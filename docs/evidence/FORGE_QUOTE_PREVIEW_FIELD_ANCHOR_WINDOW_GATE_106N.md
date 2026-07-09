@@ -1,0 +1,379 @@
+# Forge Quote Preview Field Anchor Window Gate Evidence 106N
+
+PHASE=106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE
+STATUS=PASS
+DECISION=PASS_106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE
+LOCKED_DECISION=FIELD_ANCHOR_WINDOW_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH
+NEXT=106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN
+
+## Gate JSON
+
+{
+  "phase": "106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE",
+  "status": "PASS",
+  "decision": "PASS_106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE",
+  "lockedDecision": "FIELD_ANCHOR_WINDOW_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH",
+  "basePhase": "106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN",
+  "schemaVersion": "106C.1",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
+  "gateType": "field_anchor_window_gate_only",
+  "sourceUiChanged": false,
+  "inputSummary": {
+    "labelMapRecordCount": 14,
+    "criticalTargetCount": 6,
+    "missingCriticalTargetsFrom106M": [],
+    "labelsAvailableFrom106M": [
+      "ANUAL",
+      "ASEGURADA",
+      "BENEFICIOS",
+      "COBERTURA",
+      "EDAD",
+      "FORMA",
+      "FUMADOR",
+      "MENSUAL",
+      "MONEDA",
+      "PAGO",
+      "PRIMA",
+      "PRODUCTO",
+      "SUMA",
+      "TOTAL"
+    ]
+  },
+  "operatorTokenRequiredFor106O": "SCOPE_FIELD_ANCHOR_WINDOWS_ONLY",
+  "anchorWindowDefinitionFor106O": {
+    "nextPhase": "106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN",
+    "purpose": "Create redacted anchor windows around safe labels only. No value extraction.",
+    "sourceAllowed": "committed_redacted_samples_and_committed_label_map_only",
+    "rawPdfAccessAllowed": false,
+    "rawTextAccessAllowed": false,
+    "valueExtractionAllowed": false,
+    "fieldCandidateExtractionAllowed": false,
+    "parserExecutionAllowed": false,
+    "ocrExecutionAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "quoteTruthAllowed": false,
+    "uiPopulationAllowed": false,
+    "maxWindowBeforeLines": 1,
+    "maxWindowAfterLines": 4,
+    "redactedContextOnly": true,
+    "humanReviewRequired": true
+  },
+  "targetAnchorRules": {
+    "plan_sum_insured_and_premium": {
+      "anchorLabels": [
+        "PRIMA",
+        "SUMA",
+        "ASEGURADA",
+        "PLAN"
+      ],
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "purpose": "Locate redacted context around plan, sum insured and premium labels only."
+    },
+    "payment_form_currency_and_validity": {
+      "anchorLabels": [
+        "PAGO",
+        "FORMA",
+        "MONEDA",
+        "VIGENCIA",
+        "FRECUENCIA",
+        "MENSUAL",
+        "ANUAL",
+        "SEMESTRAL",
+        "TRIMESTRAL"
+      ],
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "purpose": "Locate redacted context around payment, currency and validity labels only."
+    },
+    "total_aportado": {
+      "anchorLabels": [
+        "TOTAL",
+        "APORTADO"
+      ],
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "purpose": "Locate redacted context around total contribution labels only."
+    },
+    "total_recuperacion": {
+      "anchorLabels": [
+        "TOTAL",
+        "RECUPERACION"
+      ],
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "purpose": "Locate redacted context around total recovery labels only."
+    },
+    "values_benefits_or_scenarios_relevant_to_plan": {
+      "anchorLabels": [
+        "BENEFICIO",
+        "BENEFICIOS",
+        "COBERTURA"
+      ],
+      "windowBeforeLines": 1,
+      "windowAfterLines": 4,
+      "valueExtractionAllowed": false,
+      "purpose": "Locate redacted context around benefit and coverage labels only."
+    },
+    "missing_items_before_presentation": {
+      "anchorLabels": [
+        "EDAD",
+        "SEXO",
+        "FUMADOR",
+        "VIGENCIA"
+      ],
+      "windowBeforeLines": 1,
+      "windowAfterLines": 2,
+      "valueExtractionAllowed": false,
+      "purpose": "Locate redacted context around missing review fields only."
+    }
+  },
+  "anchorTargetCoverage": [
+    {
+      "targetField": "plan_sum_insured_and_premium",
+      "anchorLabelsAllowed": [
+        "PRIMA",
+        "SUMA",
+        "ASEGURADA",
+        "PLAN"
+      ],
+      "anchorLabelsAvailableFrom106M": [
+        "PRIMA",
+        "SUMA",
+        "ASEGURADA"
+      ],
+      "anchorCoverageStatus": "anchor_labels_available",
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "payment_form_currency_and_validity",
+      "anchorLabelsAllowed": [
+        "PAGO",
+        "FORMA",
+        "MONEDA",
+        "VIGENCIA",
+        "FRECUENCIA",
+        "MENSUAL",
+        "ANUAL",
+        "SEMESTRAL",
+        "TRIMESTRAL"
+      ],
+      "anchorLabelsAvailableFrom106M": [
+        "PAGO",
+        "FORMA",
+        "MONEDA",
+        "MENSUAL",
+        "ANUAL"
+      ],
+      "anchorCoverageStatus": "anchor_labels_available",
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "total_aportado",
+      "anchorLabelsAllowed": [
+        "TOTAL",
+        "APORTADO"
+      ],
+      "anchorLabelsAvailableFrom106M": [
+        "TOTAL"
+      ],
+      "anchorCoverageStatus": "anchor_labels_available",
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "total_recuperacion",
+      "anchorLabelsAllowed": [
+        "TOTAL",
+        "RECUPERACION"
+      ],
+      "anchorLabelsAvailableFrom106M": [
+        "TOTAL"
+      ],
+      "anchorCoverageStatus": "anchor_labels_available",
+      "windowBeforeLines": 1,
+      "windowAfterLines": 3,
+      "valueExtractionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "values_benefits_or_scenarios_relevant_to_plan",
+      "anchorLabelsAllowed": [
+        "BENEFICIO",
+        "BENEFICIOS",
+        "COBERTURA"
+      ],
+      "anchorLabelsAvailableFrom106M": [
+        "BENEFICIOS",
+        "COBERTURA"
+      ],
+      "anchorCoverageStatus": "anchor_labels_available",
+      "windowBeforeLines": 1,
+      "windowAfterLines": 4,
+      "valueExtractionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "missing_items_before_presentation",
+      "anchorLabelsAllowed": [
+        "EDAD",
+        "SEXO",
+        "FUMADOR",
+        "VIGENCIA"
+      ],
+      "anchorLabelsAvailableFrom106M": [
+        "EDAD",
+        "FUMADOR"
+      ],
+      "anchorCoverageStatus": "anchor_labels_available",
+      "windowBeforeLines": 1,
+      "windowAfterLines": 2,
+      "valueExtractionAllowed": false,
+      "humanReviewRequired": true
+    }
+  ],
+  "allowedAnchorWindowOutputsFor106O": [
+    "target_field",
+    "anchor_label",
+    "redacted_context_window",
+    "window_before_lines",
+    "window_after_lines",
+    "coverage_status",
+    "human_review_required",
+    "raw_value_extraction_false"
+  ],
+  "forbiddenAnchorWindowOutputs": [
+    "raw_pdf_text",
+    "raw_page_text",
+    "actual_pdf_path",
+    "unredacted_client_identity",
+    "unredacted_quote_identifier",
+    "unredacted_financial_amount",
+    "unredacted_sum_insured",
+    "unredacted_premium",
+    "unredacted_total_aportado",
+    "unredacted_total_recuperacion",
+    "field_candidate_value",
+    "official_quote_truth"
+  ],
+  "anchorRules": {
+    "anchorWindowsAreContextNotValues": true,
+    "labelsAreHintsNotTruth": true,
+    "humanReviewRequired": true,
+    "valueExtractionAllowed": false,
+    "fieldCandidateExtractionAllowed": false,
+    "parserExecutionAllowed": false,
+    "ocrExecutionAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "quoteTruthAllowed": false,
+    "uiPopulationAllowed": false
+  },
+  "closedGatesRemainClosed": [
+    "raw_text_access",
+    "raw_text_commit",
+    "raw_pdf_access",
+    "value_extraction",
+    "field_candidate_extraction",
+    "ocr_execution",
+    "parser_execution",
+    "calculator_execution",
+    "quote_truth",
+    "official_quote",
+    "ui_population",
+    "backend_connection",
+    "crm_write",
+    "prompt_generation",
+    "presentation_generation",
+    "real_effects"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
+  },
+  "next": "106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN"
+}
+
+## Validation JSON
+
+{
+  "phase": "106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE",
+  "status": "PASS",
+  "decision": "PASS_106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE",
+  "lockedDecision": "FIELD_ANCHOR_WINDOW_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH",
+  "gateType": "field_anchor_window_gate_only",
+  "operatorTokenRequiredFor106O": "SCOPE_FIELD_ANCHOR_WINDOWS_ONLY",
+  "criticalTargetCount": 6,
+  "anchorCoveredCriticalTargetCount": 6,
+  "anchorWindowsAreContextNotValues": true,
+  "rawPdfAccessAllowed": false,
+  "rawTextAccessAllowed": false,
+  "valueExtractionAllowed": false,
+  "fieldCandidateExtractionAllowed": false,
+  "ocrExecutionAllowed": false,
+  "parserExecutionAllowed": false,
+  "calculatorExecutionAllowed": false,
+  "quoteTruthAllowed": false,
+  "uiPopulationAllowed": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN",
+  "errors": []
+}
+
+## Confirmed
+
+- Field anchor window gate locked.
+- Anchor rules were created.
+- Critical targets are covered by anchor labels.
+- Operator token required for 106O.
+- Anchor windows are context, not values.
+- Raw PDF access is forbidden.
+- Raw text access is forbidden.
+- Value extraction is forbidden.
+- Field candidate extraction is forbidden.
+- OCR execution is forbidden.
+- Parser execution is forbidden.
+- Calculator execution is forbidden.
+- Quote truth is forbidden.
+- Source UI was not changed.
