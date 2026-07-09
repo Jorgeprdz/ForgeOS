@@ -9231,3 +9231,31 @@ LOCKED_DECISION=NEW_QUOTE_PAGE_DISCOVERY_SANITIZED_READY_FOR_DESIGN_PLAN
 
 NEXT=105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN
 <!-- FORGE:105AR_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DISCOVERY_SAFETY_REPAIR:END -->
+
+<!-- FORGE:105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN:START -->
+## 105B Quote Preview New Quote Page Design Plan
+
+105B creates the design plan for the future `#nueva-cotizacion` view.
+
+Locked decision:
+`NEW_QUOTE_PAGE_DESIGN_PLAN_READY_FOR_SOURCE_PATCH_SCOPE`
+
+Confirmed:
+
+- destination remains `#nueva-cotizacion`;
+- recommended pattern remains `hash-toggled-embedded-panel`;
+- page concept is a safe quote preparation desk;
+- the page is not an official quote engine;
+- source UI implementation did not occur in 105B;
+- design plan uses placeholder-safe schema from 105AR;
+- Product Intelligence remains upstream readiness context only;
+- Quote Preview remains downstream preview shell only;
+- human review remains required;
+- all safety flags remain false.
+
+DECISION=PASS_105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN
+
+LOCKED_DECISION=NEW_QUOTE_PAGE_DESIGN_PLAN_READY_FOR_SOURCE_PATCH_SCOPE
+
+NEXT=105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE
+<!-- FORGE:105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN:END -->

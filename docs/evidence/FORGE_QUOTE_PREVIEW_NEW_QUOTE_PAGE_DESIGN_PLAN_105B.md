@@ -1,0 +1,278 @@
+# Forge Quote Preview New Quote Page Design Plan Evidence 105B
+
+PHASE=105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN
+STATUS=PASS
+DECISION=PASS_105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN
+LOCKED_DECISION=NEW_QUOTE_PAGE_DESIGN_PLAN_READY_FOR_SOURCE_PATCH_SCOPE
+NEXT=105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE
+
+## Basis
+
+105B converts the sanitized 105A/105AR discovery into a design plan.
+
+## Design JSON
+
+{
+  "phase": "105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN",
+  "status": "PASS",
+  "decision": "PASS_105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN",
+  "lockedDecision": "NEW_QUOTE_PAGE_DESIGN_PLAN_READY_FOR_SOURCE_PATCH_SCOPE",
+  "basis": {
+    "previousPhase": "105AR_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DISCOVERY_SAFETY_REPAIR",
+    "previousStatus": "PASS",
+    "discoveryReport": "docs/architecture/source-truth/FORGE_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DISCOVERY_105A.md",
+    "discoveryJson": "docs/evidence/forge-quote-preview-new-quote-page-discovery-105a.json"
+  },
+  "designPlan": {
+    "destination": "#nueva-cotizacion",
+    "pattern": "hash-toggled-embedded-panel",
+    "viewKind": "embedded_module_view_under_cotizaciones",
+    "title": "Nuevo borrador de cotización",
+    "positioning": "Safe quote preparation desk, not an official quote engine.",
+    "primaryUserGoal": "Prepare context for a human-reviewed quote preview.",
+    "sourceImplementationOccurredIn105B": false,
+    "ctaActivationPlanForFuturePhase": {
+      "currentState": "CTA remains preview-only after 104E.",
+      "futureSafeNavigation": "105D may convert the CTA into a local hash anchor to #nueva-cotizacion after 105C scope approval.",
+      "allowedBehavior": "local static preview navigation only",
+      "blockedBehavior": [
+        "official quote creation",
+        "premium calculation",
+        "provider runtime",
+        "backend connection",
+        "CRM write",
+        "message send",
+        "calendar creation"
+      ]
+    },
+    "informationArchitecture": [
+      {
+        "section": "safety_header",
+        "purpose": "Make preview-only status unmistakable.",
+        "elements": [
+          "title",
+          "Preview badge",
+          "Requiere revisión humana badge",
+          "Sin efectos reales badge",
+          "Volver a Cotizaciones local anchor"
+        ]
+      },
+      {
+        "section": "intake_workspace",
+        "purpose": "Show what context is selected or missing.",
+        "elements": [
+          "client selection placeholder",
+          "product family placeholder",
+          "advisor objective placeholder",
+          "quote intent placeholder"
+        ]
+      },
+      {
+        "section": "required_context_checklist",
+        "purpose": "List required context without inventing values.",
+        "elements": [
+          "client context pending",
+          "product family pending",
+          "advisor objective pending",
+          "document context pending",
+          "human review pending"
+        ]
+      },
+      {
+        "section": "product_intelligence_readiness",
+        "purpose": "Show Product Intelligence as upstream readiness only.",
+        "elements": [
+          "not loaded in static preview",
+          "no official decision",
+          "no product truth created",
+          "human review required"
+        ]
+      },
+      {
+        "section": "preview_readiness",
+        "purpose": "Explain whether a preview can be prepared later.",
+        "elements": [
+          "not ready missing required context",
+          "blocked official quote",
+          "blocked calculator",
+          "blocked provider runtime"
+        ]
+      },
+      {
+        "section": "safe_action_panel",
+        "purpose": "Offer safe next actions without real effects.",
+        "elements": [
+          "Preparar preview disabled",
+          "Volver a Cotizaciones local anchor",
+          "Revisión humana requerida note"
+        ]
+      }
+    ],
+    "layout": {
+      "desktop": {
+        "shell": "existing Forge Alive desktop shell",
+        "grid": "two-column operational layout",
+        "leftColumn": [
+          "intake workspace",
+          "required context checklist"
+        ],
+        "rightColumn": [
+          "Product Intelligence readiness",
+          "preview readiness",
+          "safe action panel"
+        ],
+        "header": "full-width safety header above columns"
+      },
+      "tablet": {
+        "shell": "same content with stacked or wrapped columns",
+        "rule": "no CTA overlap, no card clipping, readable badges"
+      },
+      "mobile": {
+        "shell": "single-column card stack",
+        "rule": "no floating action overlapping content, large touch targets, visible safety badges"
+      }
+    },
+    "componentContract": {
+      "reuseExisting": [
+        "dw-main-056y",
+        "dw-panel-header-056y",
+        "dw-lock-note-056y",
+        "dw-chip-056y",
+        "dw-static-new-quote-cta-056y",
+        "dw-nav-link-056y",
+        "dw-nav-056y",
+        "dw-nav-icon-056y"
+      ],
+      "newComponentsToScopeIn105C": [
+        "dw-new-quote-view-056y",
+        "dw-new-quote-shell-056y",
+        "dw-new-quote-hero-056y",
+        "dw-new-quote-intake-grid-056y",
+        "dw-new-quote-section-card-056y",
+        "dw-new-quote-readiness-card-056y",
+        "dw-new-quote-safe-action-panel-056y",
+        "dw-new-quote-backlink-056y",
+        "dw-new-quote-checklist-056y"
+      ],
+      "stylingRule": "Use existing Forge tokens and classes first. Avoid inline style hacks."
+    },
+    "copyModel": {
+      "title": "Nuevo borrador de cotización",
+      "subtitle": "Prepara contexto para un preview. No genera cotización oficial.",
+      "badges": [
+        "Preview",
+        "Requiere revisión humana",
+        "Sin efectos reales"
+      ],
+      "primaryDisabledAction": "Preparar preview",
+      "secondaryAction": "Volver a Cotizaciones",
+      "safetyNote": "Forge organiza la preparación y señala faltantes. La revisión humana sigue siendo obligatoria.",
+      "blockedStateCopy": "Faltan datos mínimos. No se ejecutan cálculos, proveedores ni escrituras."
+    },
+    "safeStaticSchema": {
+      "quoteDraftId": "preview-draft-placeholder",
+      "clientId": null,
+      "clientName": "pending_client_selection",
+      "clientStatus": "pending",
+      "productLine": "pending_product_family_selection",
+      "productCandidate": null,
+      "objective": "pending_advisor_input",
+      "quoteIntent": "prepare_preview_only",
+      "requiredInputs": [],
+      "missingInputs": [],
+      "assumptions": [],
+      "productIntelligenceStatus": "not_loaded_in_static_preview",
+      "previewReadiness": "not_ready_missing_required_context",
+      "humanReviewRequired": true,
+      "mockDataOnly": true,
+      "quoteTruthAllowed": false,
+      "officialQuoteAllowed": false,
+      "providerRuntimeAllowed": false,
+      "calculatorExecutionAllowed": false,
+      "parserExecutionAllowed": false,
+      "backendConnectionAllowed": false,
+      "realEffectsAllowed": false
+    },
+    "screenshotQaPlan": {
+      "desktop": [
+        "new view visible at #nueva-cotizacion",
+        "sidebar context preserved",
+        "Cotizaciones remains active context",
+        "two-column layout aligned",
+        "CTA does not overlap content",
+        "preview badges visible"
+      ],
+      "tablet": [
+        "layout wraps safely",
+        "badges remain readable",
+        "safe action panel visible"
+      ],
+      "mobile": [
+        "single-column stack",
+        "no floating overlap",
+        "touch targets readable",
+        "safety labels visible"
+      ]
+    },
+    "passHoldForFutureImplementation": {
+      "passRequires": [
+        "source patch scope approved in 105C",
+        "no source truth invention",
+        "hash target exists exactly once",
+        "CTA only performs local navigation",
+        "all real-effect flags remain false",
+        "screenshots pass in 105E",
+        "human visual confirmation passes in 105F"
+      ],
+      "holdIf": [
+        "official quote appears",
+        "premium appears",
+        "coverage values appear",
+        "specific product candidate appears without trusted source",
+        "calculator or provider runtime is implied",
+        "backend or CRM write is introduced",
+        "safety copy is missing",
+        "visual QA screenshots fail"
+      ]
+    }
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false
+  },
+  "next": "105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE"
+}
+
+## Confirmed
+
+- No source UI implementation occurred.
+- Destination remains #nueva-cotizacion.
+- Pattern remains hash-toggled embedded panel.
+- Data model remains placeholder-safe.
+- All real-effect flags remain false.
+- Next phase is 105C source patch scope.

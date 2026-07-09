@@ -1,0 +1,28 @@
+{
+  "phase": "105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN",
+  "status": "PASS",
+  "decision": "PASS_105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN",
+  "lockedDecision": "NEW_QUOTE_PAGE_DESIGN_PLAN_READY_FOR_SOURCE_PATCH_SCOPE",
+  "confirmed": {
+    "designPlanCreated": true,
+    "destinationIsNuevaCotizacion": true,
+    "patternIsHashToggledEmbeddedPanel": true,
+    "sourceImplementationDidNotOccur": true,
+    "schemaPlaceholderSafe": true,
+    "allSafetyFlagsFalse": true,
+    "nextIs105C": true
+  },
+  "validation": {
+    "phase": "105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN",
+    "status": "PASS",
+    "destination": "#nueva-cotizacion",
+    "pattern": "hash-toggled-embedded-panel",
+    "sourceImplementationOccurredIn105B": false,
+    "schemaPlaceholderSafe": true,
+    "allSafetyFlagsFalse": true,
+    "next": "105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE",
+    "errors": []
+  },
+  "next": "105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE",
+  "errors": []
+}
