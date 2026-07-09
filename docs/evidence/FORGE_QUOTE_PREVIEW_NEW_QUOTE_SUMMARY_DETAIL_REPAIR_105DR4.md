@@ -1,0 +1,101 @@
+# Forge Quote Preview New Quote Summary Detail Repair Evidence 105DR4
+
+PHASE=105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR
+STATUS=PASS
+DECISION=PASS_105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR
+LOCKED_DECISION=NEW_QUOTE_PAGE_SUMMARY_REPAIRED_WITH_NON_DUPLICATED_QUOTE_DETAILS
+NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
+
+## Test URL
+
+https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr4
+
+## Repair JSON
+
+{
+  "phase": "105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR",
+  "status": "PATCHED",
+  "decision": "PASS_105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR",
+  "lockedDecision": "NEW_QUOTE_PAGE_SUMMARY_REPAIRED_WITH_NON_DUPLICATED_QUOTE_DETAILS",
+  "indexFile": "docs/static-preview/forge-alive/index.html",
+  "newPageFile": "docs/static-preview/forge-alive/nueva-cotizacion/index.html",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr4",
+  "routeModel": "dedicated_static_page",
+  "workflowModel": "pdf_first_less_clicks_quote_summary_detail_print_sales_presentation_preparation",
+  "sourceModified": true,
+  "changes": [
+    "removed duplicated client row from quote summary",
+    "removed duplicated product/family row from quote summary",
+    "kept plan, sum insured and premium row",
+    "kept payment form, currency and validity row",
+    "added total aportado",
+    "added total recuperación",
+    "added relevant values/benefits/scenarios depending on plan",
+    "kept faltantes before presenting",
+    "kept local print summary button",
+    "kept PDF reading and parser execution disabled"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "printAutomation": false
+  },
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS"
+}
+
+## Validation JSON
+
+{
+  "phase": "105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR",
+  "status": "PASS",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr4",
+  "routeModel": "dedicated_static_page",
+  "workflowModel": "pdf_first_less_clicks_quote_summary_detail_print_sales_presentation_preparation",
+  "summaryClientRemoved": true,
+  "summaryProductFamilyRemoved": true,
+  "planSumInsuredPremiumPresent": true,
+  "paymentCurrencyValidityPresent": true,
+  "totalAportadoPresent": true,
+  "totalRecuperacionPresent": true,
+  "planDependentBenefitsPresent": true,
+  "printSummaryButtonPresent": true,
+  "salesPresentationButtonPresentDisabled": true,
+  "allSafetyFlagsFalse": true,
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
+  "errors": []
+}
+
+## Confirmed
+
+- Summary no longer duplicates client, product, or family.
+- Summary focuses on quote review details.
+- Print summary remains local.
+- PDF reading and parser execution remain disabled.
+- Sales presentation CTA remains visible and disabled.

@@ -11804,3 +11804,34 @@ LOCKED_DECISION=NEW_QUOTE_PAGE_REPAIRED_WITH_QUOTE_SUMMARY_AND_PRINT_REVIEW
 
 NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
 <!-- FORGE:105DR3_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_PRINT_REPAIR:END -->
+
+<!-- FORGE:105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR:START -->
+## 105DR4 Quote Preview New Quote Summary Detail Repair
+
+105DR4 repairs the quote summary so it does not duplicate client, product, or family fields.
+
+Locked decision:
+`NEW_QUOTE_PAGE_SUMMARY_REPAIRED_WITH_NON_DUPLICATED_QUOTE_DETAILS`
+
+Confirmed:
+
+- summary no longer duplicates client field;
+- summary no longer duplicates product/family field;
+- summary focuses on quote review details;
+- total aportado added;
+- total recuperación added;
+- plan-dependent benefits/scenarios row added;
+- print summary remains local browser dialog only;
+- PDF reading remains disabled;
+- parser execution remains disabled;
+- sales presentation generation remains disabled;
+- all safety flags remain false.
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr4
+
+DECISION=PASS_105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR
+
+LOCKED_DECISION=NEW_QUOTE_PAGE_SUMMARY_REPAIRED_WITH_NON_DUPLICATED_QUOTE_DETAILS
+
+NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
+<!-- FORGE:105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR:END -->

@@ -1,0 +1,19 @@
+{
+  "phase": "105DR4_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_DETAIL_REPAIR",
+  "status": "PASS",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr4",
+  "routeModel": "dedicated_static_page",
+  "workflowModel": "pdf_first_less_clicks_quote_summary_detail_print_sales_presentation_preparation",
+  "summaryClientRemoved": true,
+  "summaryProductFamilyRemoved": true,
+  "planSumInsuredPremiumPresent": true,
+  "paymentCurrencyValidityPresent": true,
+  "totalAportadoPresent": true,
+  "totalRecuperacionPresent": true,
+  "planDependentBenefitsPresent": true,
+  "printSummaryButtonPresent": true,
+  "salesPresentationButtonPresentDisabled": true,
+  "allSafetyFlagsFalse": true,
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
+  "errors": []
+}

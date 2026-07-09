@@ -475,7 +475,7 @@
   >
     <nav class="fq-top-105dr" aria-label="Navegación segura">
       <div class="fq-brand-105dr"><span class="fq-orb-105dr" aria-hidden="true"></span> Forge Alive · Nueva cotización</div>
-      <a class="fq-back-105dr" href="../?v=105dr3#cotizaciones" data-forge-local-navigation-only="true">← Volver a Cotizaciones</a>
+      <a class="fq-back-105dr" href="../?v=105dr4#cotizaciones" data-forge-local-navigation-only="true">← Volver a Cotizaciones</a>
     </nav>
 
     <section class="fq-shell-105dr" aria-labelledby="nueva-cotizacion-title">
@@ -544,28 +544,32 @@
 
           <section class="fq-card-105dr fq-quote-summary-105dr" aria-label="Resumen de la cotización para revisión">
             <h2>Resumen de la cotización</h2>
-            <p class="fq-note-105dr">Cuando el parser esté autorizado, Forge llenará este resumen con datos extraídos del PDF de Solución Online. Por ahora queda como vista previa segura, sin inventar números ni crear verdad de cotización.</p>
+            <p class="fq-note-105dr">Cuando el parser esté autorizado, Forge llenará este resumen con datos extraídos del PDF de Solución Online. No repite cliente, producto ni familia porque esos campos ya están arriba. Si el PDF no contiene un dato, queda pendiente para revisión humana.</p>
 
             <div class="fq-summary-grid-105dr">
-              <div class="fq-summary-row-105dr">
-                <span class="fq-summary-label-105dr">Cliente</span>
-                <strong class="fq-summary-value-105dr">Pendiente de PDF</strong>
-              </div>
-              <div class="fq-summary-row-105dr">
-                <span class="fq-summary-label-105dr">Producto o familia</span>
-                <strong class="fq-summary-value-105dr">Pendiente de extracción</strong>
-              </div>
               <div class="fq-summary-row-105dr">
                 <span class="fq-summary-label-105dr">Plan, suma asegurada y prima</span>
                 <strong class="fq-summary-value-105dr">Pendiente de parser autorizado</strong>
               </div>
               <div class="fq-summary-row-105dr">
                 <span class="fq-summary-label-105dr">Forma de pago, moneda y vigencia</span>
-                <strong class="fq-summary-value-105dr">Pendiente de revisión</strong>
+                <strong class="fq-summary-value-105dr">Pendiente de extracción</strong>
+              </div>
+              <div class="fq-summary-row-105dr">
+                <span class="fq-summary-label-105dr">Total aportado</span>
+                <strong class="fq-summary-value-105dr">Sólo si el PDF lo contiene</strong>
+              </div>
+              <div class="fq-summary-row-105dr">
+                <span class="fq-summary-label-105dr">Total recuperación</span>
+                <strong class="fq-summary-value-105dr">Según producto, plan y PDF</strong>
+              </div>
+              <div class="fq-summary-row-105dr">
+                <span class="fq-summary-label-105dr">Valores, beneficios o escenarios relevantes</span>
+                <strong class="fq-summary-value-105dr">Dependiente del plan</strong>
               </div>
               <div class="fq-summary-row-105dr">
                 <span class="fq-summary-label-105dr">Faltantes antes de presentar</span>
-                <strong class="fq-summary-value-105dr">Revisión humana requerida</strong>
+                <strong class="fq-summary-value-105dr">Se mostrarán según el plan detectado</strong>
               </div>
             </div>
 
