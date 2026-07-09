@@ -10782,3 +10782,33 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_STATIC_REGRESSION_LOCK
 
 NEXT=095A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SCOPE
 <!-- FORGE:094G_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION_DECISION_LOCK:END -->
+
+<!-- FORGE:095ABCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_FAST_TRACK:START -->
+## 095ABCD Quote Preview Safe Module Entry Fast Track
+
+095ABCD locks the safe module entry contract for Quote Preview / Cotizaciones.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_MODULE_ENTRY_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE`
+
+Confirmed:
+
+- existing Cotizaciones entry signals discovered;
+- safe module entry scope locked;
+- safe module entry plan locked;
+- safe module entry QA locked;
+- safe module entry decision locked;
+- no source edits authorized in 095ABCD;
+- no route execution authorized in 095ABCD;
+- no navigation execution authorized in 095ABCD;
+- no UI rendering authorized in 095ABCD;
+- no runtime execution authorized in 095ABCD;
+- no real effects authorized in 095ABCD;
+- all safety flags remain false.
+
+DECISION=PASS_095ABCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_FAST_TRACK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE
+
+NEXT=096A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_SCOPE
+<!-- FORGE:095ABCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_FAST_TRACK:END -->

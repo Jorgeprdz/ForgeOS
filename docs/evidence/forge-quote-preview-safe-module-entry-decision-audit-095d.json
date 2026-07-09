@@ -1,0 +1,49 @@
+{
+  "phase": "095D_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_DECISION_LOCK",
+  "status": "PASS",
+  "decision": "PASS_095D_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_DECISION_LOCK",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE",
+  "base": {
+    "phase": "095C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_PLAN_QA_LOCK",
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_PLAN_QA_LOCKED",
+    "source": "docs/evidence/forge-quote-preview-safe-module-entry-plan-qa-audit-095c.json"
+  },
+  "decisionResult": {
+    "decisionLockValidated": true,
+    "errors": [],
+    "safeModuleEntryLocked": true,
+    "sourcePatchNotAuthorizedBy095D": true,
+    "096AMayScopeSourcePatchOnly": true,
+    "sourceEditsAuthorizedIn095D": false,
+    "routeBindingAuthorizedIn095D": false,
+    "navigationExecutionAuthorizedIn095D": false,
+    "uiRenderingAuthorizedIn095D": false,
+    "runtimeExecutionAuthorizedIn095D": false,
+    "realEffectsAuthorizedIn095D": false,
+    "allSafetyFlagsFalse": true
+  },
+  "next": "096A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_SCOPE",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "phase": "095A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SCOPE",
+  "status": "PASS",
+  "source": "docs/static-preview/forge-alive/index.html",
+  "discoveryType": "static_html_entry_signal_discovery_only",
+  "existingEntrySignals": {
+    "navCotizacionesButtonPresent": true,
+    "cotizarCommandPresent": true,
+    "cotizacionesPanelPresent": true,
+    "previewHumanApprovalCopyPresent": true,
+    "safeNoSendCopyPresent": true,
+    "safeNoCrmCopyPresent": true,
+    "safeNoCalendarCopyPresent": true,
+    "preparePreviewCopyPresent": true
+  },
+  "requiredSignalsPresent": true,
+  "errors": [],
+  "sourceEditsPerformed": false,
+  "uiRenderingPerformed": false,
+  "routeBindingPerformed": false,
+  "navigationExecutionPerformed": false,
+  "next": "095B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_PLAN"
+}
