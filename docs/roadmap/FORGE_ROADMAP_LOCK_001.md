@@ -8159,3 +8159,42 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_CTA_REPAIR_FALSE_POSITIVE_TEXT_REMOVED
 
 NEXT=104A_QUOTE_PREVIEW_SAFE_LOCAL_HASH_NAVIGATION_VISUAL_CONFIRMATION_SCOPE
 <!-- FORGE:104R4RR_QUOTE_PREVIEW_SAFE_STATIC_CTA_FALSE_POSITIVE_TEXT_REPAIR:END -->
+
+<!-- FORGE:104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT:START -->
+## 104E Quote Preview Cotizaciones Visual Confirmation Result
+
+104E records Codex screenshot QA plus human visual confirmation for the Cotizaciones nav and CTA visual repair.
+
+Locked decision:
+`COTIZACIONES_NAV_AND_CTA_VISUALLY_CONFIRMED_BY_CODEX_AND_HUMAN`
+
+Confirmed:
+
+- Codex visual fix completed with commit `937e7f8`;
+- screenshot evidence exists for top, Cotizaciones section, and tablet view;
+- user confirmed manual visual inspection passed;
+- Cotizaciones nav item is visually aligned;
+- Cotizaciones CTA is right-aligned and visually approved;
+- `id="cotizaciones"` exists exactly once;
+- `href="#cotizaciones"` exists;
+- `+ Nueva cotización` exists exactly once;
+- CTA remains disabled or preview-only;
+- no visible legacy/debug text remains;
+- no runtime execution performed;
+- no real effects performed;
+- all safety flags remain false.
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=codex-visual-fix#cotizaciones
+
+SCREENSHOT_TOP=docs/evidence/forge-codex-cotizaciones-visual-fix-top-1440x1000.png
+
+SCREENSHOT_COTIZACIONES=docs/evidence/forge-codex-cotizaciones-visual-fix-cotizaciones-1440x2200.png
+
+SCREENSHOT_TABLET=docs/evidence/forge-codex-cotizaciones-visual-fix-tablet-1024x768.png
+
+DECISION=PASS_104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT
+
+LOCKED_DECISION=COTIZACIONES_NAV_AND_CTA_VISUALLY_CONFIRMED_BY_CODEX_AND_HUMAN
+
+NEXT=105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE
+<!-- FORGE:104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT:END -->

@@ -1,0 +1,259 @@
+# Forge Quote Preview Cotizaciones Visual Confirmation Evidence 104E
+
+PHASE=104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT
+
+STATUS=PASS
+
+DECISION=PASS_104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT
+
+LOCKED_DECISION=COTIZACIONES_NAV_AND_CTA_VISUALLY_CONFIRMED_BY_CODEX_AND_HUMAN
+
+NEXT=105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE
+
+## Result JSON
+
+```json
+{
+  "phase": "104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+  "status": "PASS",
+  "decision": "PASS_104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+  "lockedDecision": "COTIZACIONES_NAV_AND_CTA_VISUALLY_CONFIRMED_BY_CODEX_AND_HUMAN",
+  "codex": {
+    "status": "PASS_CODEX_QUOTE_PREVIEW_COTIZACIONES_VISUAL_FIX_COMPLETE",
+    "commit": "937e7f8",
+    "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=codex-visual-fix#cotizaciones",
+    "screenshots": {
+      "top": "docs/evidence/forge-codex-cotizaciones-visual-fix-top-1440x1000.png",
+      "cotizaciones": "docs/evidence/forge-codex-cotizaciones-visual-fix-cotizaciones-1440x2200.png",
+      "tablet": "docs/evidence/forge-codex-cotizaciones-visual-fix-tablet-1024x768.png"
+    },
+    "designGuidelinesRead": [
+      "Forge mobile/desktop design systems",
+      "Forge UI tokens",
+      "interaction rules",
+      "desktop template/component contracts",
+      "mobile navigation/grid contracts",
+      "desktop/mobile layer boundary",
+      "quote preview safe UX/component/screen/visual layout locks"
+    ],
+    "designSystemDecision": [
+      "reused dw-nav-056y",
+      "reused dw-nav-icon-056y",
+      "reused dw-panel-header-056y",
+      "added dw-nav-link-056y for safe href anchor parity",
+      "added dw-static-new-quote-cta-056y using Forge cyan/green preview-safe palette"
+    ]
+  },
+  "humanVisualInspection": {
+    "status": "PASS",
+    "statement": "Inspección visual passed",
+    "cotizacionesSidebarItemAligned": true,
+    "cotizacionesIconAligned": true,
+    "cotizacionesFontAndPillAdjusted": true,
+    "newQuoteCtaRightAligned": true,
+    "noVisibleWorkflowDocumental": true,
+    "noVisibleDebugText": true
+  },
+  "staticValidation": {
+    "idCotizacionesCount": 1,
+    "hrefCotizacionesCount": 1,
+    "visibleNewQuoteCtaCount": 1,
+    "rawNewQuoteCtaCount": 1,
+    "requiredDesignClassesPresent": true,
+    "ctaIsDisabledOrAriaDisabled": true,
+    "ctaPreviewSafe": true,
+    "visibleForbiddenDebugTextAbsent": true
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": [],
+  "next": "105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE"
+}
+```
+
+## Manifest JSON
+
+```json
+{
+  "phase": "104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+  "status": "PASS",
+  "sourceEditedBy104E": false,
+  "codexCommitConfirmed": "937e7f8",
+  "evidenceFiles": [
+    "docs/evidence/forge-codex-cotizaciones-visual-fix-top-1440x1000.png",
+    "docs/evidence/forge-codex-cotizaciones-visual-fix-cotizaciones-1440x2200.png",
+    "docs/evidence/forge-codex-cotizaciones-visual-fix-tablet-1024x768.png",
+    "docs/evidence/forge-quote-preview-cotizaciones-visual-confirmation-result-104e.json",
+    "docs/evidence/forge-quote-preview-cotizaciones-visual-confirmation-manifest-104e.json",
+    "docs/evidence/forge-quote-preview-cotizaciones-visual-confirmation-audit-104e.json"
+  ],
+  "confirmed": {
+    "codexVisualFixPassed": true,
+    "humanInspectionPassed": true,
+    "screenshotEvidencePresent": true,
+    "cotizacionesHashPreserved": true,
+    "newQuoteCtaPresentExactlyOnce": true,
+    "newQuoteCtaDisabledOrPreviewOnly": true,
+    "noVisibleDebugText": true,
+    "noRealEffects": true
+  },
+  "next": "105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE",
+  "errors": []
+}
+```
+
+## Audit JSON
+
+```json
+{
+  "phase": "104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+  "status": "PASS",
+  "decision": "PASS_104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+  "lockedDecision": "COTIZACIONES_NAV_AND_CTA_VISUALLY_CONFIRMED_BY_CODEX_AND_HUMAN",
+  "basis": [
+    "Codex visual fix reported PASS with screenshots",
+    "User confirmed manual visual inspection passed",
+    "Static validation confirms hash, target, CTA, safety and no visible debug strings"
+  ],
+  "result": {
+    "phase": "104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+    "status": "PASS",
+    "decision": "PASS_104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+    "lockedDecision": "COTIZACIONES_NAV_AND_CTA_VISUALLY_CONFIRMED_BY_CODEX_AND_HUMAN",
+    "codex": {
+      "status": "PASS_CODEX_QUOTE_PREVIEW_COTIZACIONES_VISUAL_FIX_COMPLETE",
+      "commit": "937e7f8",
+      "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=codex-visual-fix#cotizaciones",
+      "screenshots": {
+        "top": "docs/evidence/forge-codex-cotizaciones-visual-fix-top-1440x1000.png",
+        "cotizaciones": "docs/evidence/forge-codex-cotizaciones-visual-fix-cotizaciones-1440x2200.png",
+        "tablet": "docs/evidence/forge-codex-cotizaciones-visual-fix-tablet-1024x768.png"
+      },
+      "designGuidelinesRead": [
+        "Forge mobile/desktop design systems",
+        "Forge UI tokens",
+        "interaction rules",
+        "desktop template/component contracts",
+        "mobile navigation/grid contracts",
+        "desktop/mobile layer boundary",
+        "quote preview safe UX/component/screen/visual layout locks"
+      ],
+      "designSystemDecision": [
+        "reused dw-nav-056y",
+        "reused dw-nav-icon-056y",
+        "reused dw-panel-header-056y",
+        "added dw-nav-link-056y for safe href anchor parity",
+        "added dw-static-new-quote-cta-056y using Forge cyan/green preview-safe palette"
+      ]
+    },
+    "humanVisualInspection": {
+      "status": "PASS",
+      "statement": "Inspección visual passed",
+      "cotizacionesSidebarItemAligned": true,
+      "cotizacionesIconAligned": true,
+      "cotizacionesFontAndPillAdjusted": true,
+      "newQuoteCtaRightAligned": true,
+      "noVisibleWorkflowDocumental": true,
+      "noVisibleDebugText": true
+    },
+    "staticValidation": {
+      "idCotizacionesCount": 1,
+      "hrefCotizacionesCount": 1,
+      "visibleNewQuoteCtaCount": 1,
+      "rawNewQuoteCtaCount": 1,
+      "requiredDesignClassesPresent": true,
+      "ctaIsDisabledOrAriaDisabled": true,
+      "ctaPreviewSafe": true,
+      "visibleForbiddenDebugTextAbsent": true
+    },
+    "safetyFlags": {
+      "crmWrite": false,
+      "pipelineWrite": false,
+      "policyWrite": false,
+      "quoteWrite": false,
+      "taskCreate": false,
+      "calendarCreate": false,
+      "messageSend": false,
+      "authReal": false,
+      "providerRuntime": false,
+      "secretAccess": false,
+      "browserPersistence": false,
+      "realEngineExecution": false,
+      "realEffectsAllowed": false,
+      "realEffectsEnabled": false,
+      "backendConnection": false,
+      "pdfRead": false,
+      "ocrExecution": false,
+      "parserExecution": false,
+      "calculatorExecution": false,
+      "banxicoCall": false,
+      "testExecution": false
+    },
+    "errors": [],
+    "next": "105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE"
+  },
+  "manifest": {
+    "phase": "104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT",
+    "status": "PASS",
+    "sourceEditedBy104E": false,
+    "codexCommitConfirmed": "937e7f8",
+    "evidenceFiles": [
+      "docs/evidence/forge-codex-cotizaciones-visual-fix-top-1440x1000.png",
+      "docs/evidence/forge-codex-cotizaciones-visual-fix-cotizaciones-1440x2200.png",
+      "docs/evidence/forge-codex-cotizaciones-visual-fix-tablet-1024x768.png",
+      "docs/evidence/forge-quote-preview-cotizaciones-visual-confirmation-result-104e.json",
+      "docs/evidence/forge-quote-preview-cotizaciones-visual-confirmation-manifest-104e.json",
+      "docs/evidence/forge-quote-preview-cotizaciones-visual-confirmation-audit-104e.json"
+    ],
+    "confirmed": {
+      "codexVisualFixPassed": true,
+      "humanInspectionPassed": true,
+      "screenshotEvidencePresent": true,
+      "cotizacionesHashPreserved": true,
+      "newQuoteCtaPresentExactlyOnce": true,
+      "newQuoteCtaDisabledOrPreviewOnly": true,
+      "noVisibleDebugText": true,
+      "noRealEffects": true
+    },
+    "next": "105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE",
+    "errors": []
+  },
+  "next": "105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE",
+  "errors": []
+}
+```
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=codex-visual-fix#cotizaciones
+
+SCREENSHOT_TOP=docs/evidence/forge-codex-cotizaciones-visual-fix-top-1440x1000.png
+
+SCREENSHOT_COTIZACIONES=docs/evidence/forge-codex-cotizaciones-visual-fix-cotizaciones-1440x2200.png
+
+SCREENSHOT_TABLET=docs/evidence/forge-codex-cotizaciones-visual-fix-tablet-1024x768.png
+
+DECISION=PASS_104E_QUOTE_PREVIEW_COTIZACIONES_VISUAL_CONFIRMATION_RESULT
+
+LOCKED_DECISION=COTIZACIONES_NAV_AND_CTA_VISUALLY_CONFIRMED_BY_CODEX_AND_HUMAN
+
+NEXT=105A_QUOTE_PREVIEW_SAFE_MODULE_VIEW_ACTIVATION_SCOPE
