@@ -1,0 +1,18 @@
+{
+  "phase": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
+  "status": "PASS",
+  "routeModel": "dedicated_static_page",
+  "workflowModel": "pdf_first_less_clicks_sales_presentation_preparation",
+  "screenshotsPresent": true,
+  "screenshots": {
+    "desktop": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-desktop.png",
+    "tablet": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-tablet.png",
+    "mobile": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-mobile.png"
+  },
+  "allSafetyFlagsFalse": true,
+  "automatedVisualJudgment": false,
+  "humanVisualConfirmationRequired": true,
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2",
+  "next": "105F_QUOTE_PREVIEW_NEW_QUOTE_PAGE_HUMAN_VISUAL_CONFIRMATION",
+  "errors": []
+}
