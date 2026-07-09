@@ -1,0 +1,477 @@
+{
+  "phase": "106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN",
+  "status": "PASS",
+  "decision": "PASS_106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN",
+  "lockedDecision": "LAYOUT_LABEL_MAP_DRY_RUN_COMPLETE_WITH_LABEL_HINTS_ONLY_NO_VALUES",
+  "basePhase": "106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE",
+  "schemaVersion": "106C.1",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
+  "operatorTokenAccepted": "MAP_REDACTED_LABELS_ONLY",
+  "mapType": "safe_label_to_target_field_hints_only",
+  "sourceUiChanged": false,
+  "inputSummary": {
+    "sampleCount": 6,
+    "activeMappedLabelCount": 14,
+    "labelMapRecordCount": 14,
+    "criticalTargetCount": 6
+  },
+  "labelMapRecords": [
+    {
+      "safeLabel": "ANUAL",
+      "candidateTargetFields": [
+        "payment_form_currency_and_validity"
+      ],
+      "occurrenceCountInRedactedSamples": 2,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 4,
+          "redactedLine": "[TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [TEXT_REDACTED] [TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [SAFE_LABEL:SUMA] [SAFE_LABEL:ASEGURADA] [SAFE_LABEL:PRIMA] [SA...",
+          "charCountRedacted": 160
+        },
+        {
+          "sampleWindowIndex": 5,
+          "redactedLine": "[SAFE_LABEL:PRIMA] [SAFE_LABEL:TOTAL] [SAFE_LABEL:ANUAL] [AMOUNT_REDACTED]",
+          "charCountRedacted": 74
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "ASEGURADA",
+      "candidateTargetFields": [
+        "plan_sum_insured_and_premium"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 4,
+          "redactedLine": "[TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [TEXT_REDACTED] [TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [SAFE_LABEL:SUMA] [SAFE_LABEL:ASEGURADA] [SAFE_LABEL:PRIMA] [SA...",
+          "charCountRedacted": 160
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "BENEFICIOS",
+      "candidateTargetFields": [
+        "values_benefits_or_scenarios_relevant_to_plan"
+      ],
+      "occurrenceCountInRedactedSamples": 0,
+      "redactedOccurrenceWindows": [],
+      "hintStrength": "low",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "COBERTURA",
+      "candidateTargetFields": [
+        "values_benefits_or_scenarios_relevant_to_plan"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 4,
+          "redactedLine": "[TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [TEXT_REDACTED] [TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [SAFE_LABEL:SUMA] [SAFE_LABEL:ASEGURADA] [SAFE_LABEL:PRIMA] [SA...",
+          "charCountRedacted": 160
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "EDAD",
+      "candidateTargetFields": [
+        "missing_items_before_presentation"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 1,
+          "redactedLine": "[TEXT_REDACTED] [TEXT_REDACTED] [TEXT_REDACTED] : [DATE_REDACTED] [SAFE_LABEL:EDAD] : [NUMBER_REDACTED]",
+          "charCountRedacted": 103
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "FORMA",
+      "candidateTargetFields": [
+        "payment_form_currency_and_validity"
+      ],
+      "occurrenceCountInRedactedSamples": 0,
+      "redactedOccurrenceWindows": [],
+      "hintStrength": "low",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "FUMADOR",
+      "candidateTargetFields": [
+        "missing_items_before_presentation"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 2,
+          "redactedLine": "[TEXT_REDACTED] : [TEXT_REDACTED] [SAFE_LABEL:FUMADOR] : [TEXT_REDACTED]",
+          "charCountRedacted": 72
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "MENSUAL",
+      "candidateTargetFields": [
+        "payment_form_currency_and_validity"
+      ],
+      "occurrenceCountInRedactedSamples": 0,
+      "redactedOccurrenceWindows": [],
+      "hintStrength": "low",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "MONEDA",
+      "candidateTargetFields": [
+        "payment_form_currency_and_validity"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 3,
+          "redactedLine": "[TEXT_REDACTED] [TEXT_REDACTED] [TEXT_REDACTED] : [SAFE_LABEL:PAGO] [TEXT_REDACTED] [SAFE_LABEL:MONEDA] : [TEXT_REDACTED]",
+          "charCountRedacted": 121
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "PAGO",
+      "candidateTargetFields": [
+        "payment_form_currency_and_validity"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 3,
+          "redactedLine": "[TEXT_REDACTED] [TEXT_REDACTED] [TEXT_REDACTED] : [SAFE_LABEL:PAGO] [TEXT_REDACTED] [SAFE_LABEL:MONEDA] : [TEXT_REDACTED]",
+          "charCountRedacted": 121
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "PRIMA",
+      "candidateTargetFields": [
+        "plan_sum_insured_and_premium",
+        "payment_form_currency_and_validity"
+      ],
+      "occurrenceCountInRedactedSamples": 2,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 4,
+          "redactedLine": "[TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [TEXT_REDACTED] [TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [SAFE_LABEL:SUMA] [SAFE_LABEL:ASEGURADA] [SAFE_LABEL:PRIMA] [SA...",
+          "charCountRedacted": 160
+        },
+        {
+          "sampleWindowIndex": 5,
+          "redactedLine": "[SAFE_LABEL:PRIMA] [SAFE_LABEL:TOTAL] [SAFE_LABEL:ANUAL] [AMOUNT_REDACTED]",
+          "charCountRedacted": 74
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "PRODUCTO",
+      "candidateTargetFields": [
+        "product_family",
+        "product_name_or_plan"
+      ],
+      "occurrenceCountInRedactedSamples": 0,
+      "redactedOccurrenceWindows": [],
+      "hintStrength": "low",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "SUMA",
+      "candidateTargetFields": [
+        "plan_sum_insured_and_premium"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 4,
+          "redactedLine": "[TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [TEXT_REDACTED] [TEXT_REDACTED] [SAFE_LABEL:COBERTURA] [SAFE_LABEL:SUMA] [SAFE_LABEL:ASEGURADA] [SAFE_LABEL:PRIMA] [SA...",
+          "charCountRedacted": 160
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    },
+    {
+      "safeLabel": "TOTAL",
+      "candidateTargetFields": [
+        "total_aportado",
+        "total_recuperacion"
+      ],
+      "occurrenceCountInRedactedSamples": 1,
+      "redactedOccurrenceWindows": [
+        {
+          "sampleWindowIndex": 5,
+          "redactedLine": "[SAFE_LABEL:PRIMA] [SAFE_LABEL:TOTAL] [SAFE_LABEL:ANUAL] [AMOUNT_REDACTED]",
+          "charCountRedacted": 74
+        }
+      ],
+      "hintStrength": "medium",
+      "labelsAreHintsNotTruth": true,
+      "valueExtractionExecuted": false,
+      "fieldCandidateExtractionExecuted": false,
+      "parserExecutionExecuted": false,
+      "quoteTruthCreated": false,
+      "humanReviewRequired": true
+    }
+  ],
+  "targetCoverageReport": [
+    {
+      "targetField": "plan_sum_insured_and_premium",
+      "displayLabel": "Plan, suma asegurada y prima",
+      "mappedSafeLabels": [
+        "ASEGURADA",
+        "PRIMA",
+        "SUMA"
+      ],
+      "coverageStatus": "covered_by_label_hints",
+      "valueExtractionExecuted": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "payment_form_currency_and_validity",
+      "displayLabel": "Forma de pago, moneda y vigencia",
+      "mappedSafeLabels": [
+        "ANUAL",
+        "FORMA",
+        "MENSUAL",
+        "MONEDA",
+        "PAGO",
+        "PRIMA"
+      ],
+      "coverageStatus": "covered_by_label_hints",
+      "valueExtractionExecuted": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "total_aportado",
+      "displayLabel": "Total aportado",
+      "mappedSafeLabels": [
+        "TOTAL"
+      ],
+      "coverageStatus": "covered_by_label_hints",
+      "valueExtractionExecuted": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "total_recuperacion",
+      "displayLabel": "Total recuperación",
+      "mappedSafeLabels": [
+        "TOTAL"
+      ],
+      "coverageStatus": "covered_by_label_hints",
+      "valueExtractionExecuted": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "values_benefits_or_scenarios_relevant_to_plan",
+      "displayLabel": "Valores, beneficios o escenarios relevantes",
+      "mappedSafeLabels": [
+        "BENEFICIOS",
+        "COBERTURA"
+      ],
+      "coverageStatus": "covered_by_label_hints",
+      "valueExtractionExecuted": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "missing_items_before_presentation",
+      "displayLabel": "Faltantes antes de presentar",
+      "mappedSafeLabels": [
+        "EDAD",
+        "FUMADOR"
+      ],
+      "coverageStatus": "covered_by_label_hints",
+      "valueExtractionExecuted": false,
+      "humanReviewRequired": true
+    }
+  ],
+  "ambiguousTargets": [
+    {
+      "targetField": "missing_items_before_presentation",
+      "mappedSafeLabels": [
+        "EDAD",
+        "FUMADOR"
+      ],
+      "reason": "multiple_labels_point_to_same_target_or_label_points_to_multiple_targets",
+      "autoSelectionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "payment_form_currency_and_validity",
+      "mappedSafeLabels": [
+        "ANUAL",
+        "FORMA",
+        "MENSUAL",
+        "MONEDA",
+        "PAGO",
+        "PRIMA"
+      ],
+      "reason": "multiple_labels_point_to_same_target_or_label_points_to_multiple_targets",
+      "autoSelectionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "plan_sum_insured_and_premium",
+      "mappedSafeLabels": [
+        "ASEGURADA",
+        "PRIMA",
+        "SUMA"
+      ],
+      "reason": "multiple_labels_point_to_same_target_or_label_points_to_multiple_targets",
+      "autoSelectionAllowed": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "values_benefits_or_scenarios_relevant_to_plan",
+      "mappedSafeLabels": [
+        "BENEFICIOS",
+        "COBERTURA"
+      ],
+      "reason": "multiple_labels_point_to_same_target_or_label_points_to_multiple_targets",
+      "autoSelectionAllowed": false,
+      "humanReviewRequired": true
+    }
+  ],
+  "missingCriticalTargets": [],
+  "rulesConfirmed": {
+    "labelsAreHintsNotTruth": true,
+    "valueExtractionExecuted": false,
+    "fieldCandidateExtractionExecuted": false,
+    "rawValueExtractionExecuted": false,
+    "parserExecutionExecuted": false,
+    "ocrExecutionExecuted": false,
+    "calculatorExecutionExecuted": false,
+    "quoteTruthCreated": false,
+    "uiPopulationExecuted": false,
+    "humanReviewRequired": true,
+    "autoSelectionAllowed": false
+  },
+  "nextGate": {
+    "nextPhase": "106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE",
+    "purpose": "Define a gate for locating redacted field anchor windows around mapped labels. Values remain forbidden until a later explicit gate.",
+    "operatorTokenRequired": "SCOPE_FIELD_ANCHOR_WINDOWS_ONLY",
+    "valueExtractionStillForbidden": true,
+    "parserExecutionStillForbidden": true,
+    "quoteTruthStillForbidden": true
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
+  },
+  "next": "106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE"
+}

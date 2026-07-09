@@ -12322,3 +12322,41 @@ LOCKED_DECISION=LAYOUT_LABEL_MAP_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_
 
 NEXT=106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN
 <!-- FORGE:106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE:END -->
+
+<!-- FORGE:106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN:START -->
+## 106M Quote Preview Layout Label Map Dry Run
+
+106M creates the first formal safe-label to target-field hint map.
+
+Locked decision:
+`LAYOUT_LABEL_MAP_DRY_RUN_COMPLETE_WITH_LABEL_HINTS_ONLY_NO_VALUES`
+
+Confirmed:
+
+- operator token accepted;
+- label map records created;
+- target coverage report created;
+- ambiguous targets reported;
+- labels are hints, not truth;
+- human review required;
+- value extraction was not executed;
+- field candidate extraction was not executed;
+- OCR execution remains disabled;
+- parser execution remains disabled;
+- calculator execution remains disabled;
+- quote truth remains disabled;
+- source UI was not changed;
+- all safety flags remain false.
+
+LABEL_MAP_RECORD_COUNT=14
+
+COVERED_CRITICAL_TARGET_COUNT=6
+
+MISSING_CRITICAL_TARGETS=none
+
+DECISION=PASS_106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN
+
+LOCKED_DECISION=LAYOUT_LABEL_MAP_DRY_RUN_COMPLETE_WITH_LABEL_HINTS_ONLY_NO_VALUES
+
+NEXT=106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE
+<!-- FORGE:106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN:END -->
