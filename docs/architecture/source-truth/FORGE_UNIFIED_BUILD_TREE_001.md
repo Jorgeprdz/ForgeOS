@@ -8009,3 +8009,38 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPED
 
 NEXT=092B_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN
 <!-- FORGE:092A_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_SCOPE:END -->
+
+<!-- FORGE:092B_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN:START -->
+## 092B Quote Preview Safe Static UI Patch Plan
+
+092B creates a safe static UI patch plan for Quote Preview.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_LOCKED`
+
+Outputs:
+
+- `docs/architecture/source-truth/FORGE_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_092B.md`
+- `docs/evidence/FORGE_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_092B.md`
+- `docs/evidence/forge-quote-preview-safe-static-ui-patch-plan-092b.json`
+- `docs/evidence/forge-quote-preview-safe-static-ui-patch-plan-audit-092b.json`
+
+092B does not edit UI source files and does not execute the patch.
+
+Confirmed:
+
+- patch-plan-only;
+- selected canonical UI files recorded when available;
+- planned safe static patch operations recorded;
+- required visible safety copy preserved;
+- forbidden patch effects preserved;
+- no source edit authorized;
+- no static patch execution authorized;
+- all effects remain blocked.
+
+DECISION=PASS_092B_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_LOCKED
+
+NEXT=092C_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_QA_LOCK
+<!-- FORGE:092B_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN:END -->
