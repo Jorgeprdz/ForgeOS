@@ -7324,3 +7324,33 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_PLAN_LOCKED
 
 NEXT=094E_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION
 <!-- FORGE:094D_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_PLAN_DECISION_LOCK:END -->
+
+<!-- FORGE:094E_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION:START -->
+## 094E Quote Preview Safe Static UI Source Patch Regression Static Validation
+
+094E performs static validation for the safe static UI source patch regression plan.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_STATIC_REGRESSION_VALIDATED`
+
+Confirmed:
+
+- static validation performed;
+- patched files exist;
+- 093B markers are present;
+- required visible safety copy is present;
+- required false permission flags are present;
+- forbidden true permission flags are absent;
+- no source edits performed;
+- no UI rendering performed;
+- no runtime execution performed;
+- no backend/provider/parser/calculator/Banxico call performed;
+- no quote truth/send/CRM/calendar effect performed;
+- all safety flags remain false.
+
+DECISION=PASS_094E_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_STATIC_REGRESSION_VALIDATED
+
+NEXT=094F_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION_QA_LOCK
+<!-- FORGE:094E_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_REGRESSION_STATIC_VALIDATION:END -->
