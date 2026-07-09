@@ -1,0 +1,21 @@
+{
+  "phase": "106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE",
+  "lockedDecision": "PARSER_ADAPTER_SCOPE_LOCKED_WITH_NO_PDF_READ_NO_OCR_NO_PARSER_EXECUTION",
+  "schemaVersion": "106C.1",
+  "scopeType": "parser_adapter_scope_only",
+  "realPdfUsed": false,
+  "rawPdfTouched": false,
+  "pdfReadEnabled": false,
+  "ocrExecutionEnabled": false,
+  "parserExecutionEnabled": false,
+  "calculatorExecutionEnabled": false,
+  "quoteTruthAllowed": false,
+  "sourceUiChanged": false,
+  "redactionBeforeCommitRequired": "yes",
+  "humanReviewBeforeUiUse": "required",
+  "allSafetyFlagsFalse": true,
+  "next": "106F_QUOTE_PREVIEW_REAL_PDF_LOCAL_DRY_RUN_PREP",
+  "errors": []
+}

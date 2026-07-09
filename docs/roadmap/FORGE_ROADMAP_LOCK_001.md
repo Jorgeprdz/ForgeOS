@@ -8667,3 +8667,38 @@ LOCKED_DECISION=SAMPLE_EXTRACTION_DRY_RUN_REPORT_LOCKED_WITH_REDACTED_CANDIDATES
 
 NEXT=106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE
 <!-- FORGE:106D_QUOTE_PREVIEW_SAMPLE_EXTRACTION_DRY_RUN_REPORT:END -->
+
+<!-- FORGE:106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE:START -->
+## 106E Quote Preview Parser Adapter Scope
+
+106E defines the future local-only parser adapter boundary.
+
+Locked decision:
+`PARSER_ADAPTER_SCOPE_LOCKED_WITH_NO_PDF_READ_NO_OCR_NO_PARSER_EXECUTION`
+
+Confirmed:
+
+- parser adapter scope defined;
+- future adapter pipeline defined;
+- adapter inputs and outputs defined;
+- redaction contract defined;
+- human review required before UI use;
+- no financial inference allowed;
+- no missing value calculation allowed;
+- no official quote claims allowed;
+- PDF read remains disabled;
+- OCR execution remains disabled;
+- parser execution remains disabled;
+- calculator execution remains disabled;
+- quote truth remains disabled;
+- source UI was not changed;
+- all safety flags remain false.
+
+LOCAL_RUN_DIR=/storage/emulated/0/Forge Gemini/pdf-dry-run-local
+
+DECISION=PASS_106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE
+
+LOCKED_DECISION=PARSER_ADAPTER_SCOPE_LOCKED_WITH_NO_PDF_READ_NO_OCR_NO_PARSER_EXECUTION
+
+NEXT=106F_QUOTE_PREVIEW_REAL_PDF_LOCAL_DRY_RUN_PREP
+<!-- FORGE:106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE:END -->

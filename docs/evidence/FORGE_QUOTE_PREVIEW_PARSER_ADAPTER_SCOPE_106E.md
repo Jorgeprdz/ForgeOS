@@ -1,0 +1,271 @@
+# Forge Quote Preview Parser Adapter Scope Evidence 106E
+
+PHASE=106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE
+STATUS=PASS
+DECISION=PASS_106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE
+LOCKED_DECISION=PARSER_ADAPTER_SCOPE_LOCKED_WITH_NO_PDF_READ_NO_OCR_NO_PARSER_EXECUTION
+NEXT=106F_QUOTE_PREVIEW_REAL_PDF_LOCAL_DRY_RUN_PREP
+
+## Scope JSON
+
+{
+  "phase": "106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE",
+  "lockedDecision": "PARSER_ADAPTER_SCOPE_LOCKED_WITH_NO_PDF_READ_NO_OCR_NO_PARSER_EXECUTION",
+  "basePhase": "106D_QUOTE_PREVIEW_SAMPLE_EXTRACTION_DRY_RUN_REPORT",
+  "schemaVersion": "106C.1",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
+  "localRunDirectoryOutsideRepo": "/storage/emulated/0/Forge Gemini/pdf-dry-run-local",
+  "scopeType": "parser_adapter_scope_only",
+  "sourceUiChanged": false,
+  "adapterPurpose": "Define future local-only adapter boundaries for transforming a Solucion Online PDF into redacted dry-run candidates.",
+  "executionState": {
+    "realPdfUsed": false,
+    "rawPdfTouched": false,
+    "pdfSubmitAllowed": false,
+    "pdfReadEnabled": false,
+    "ocrExecutionEnabled": false,
+    "parserExecutionEnabled": false,
+    "calculatorExecutionEnabled": false,
+    "backendConnectionEnabled": false,
+    "quoteTruthAllowed": false,
+    "officialQuoteAllowed": false,
+    "promptGenerationEnabled": false,
+    "presentationGenerationEnabled": false
+  },
+  "adapterPipelineFutureOnly": [
+    {
+      "step": "local_pdf_reference",
+      "purpose": "Accept a local PDF path outside repo or uploaded-file reference in a controlled dry-run.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    },
+    {
+      "step": "text_layer_probe",
+      "purpose": "Check whether the PDF has selectable text before OCR is even considered.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    },
+    {
+      "step": "ocr_fallback_gate",
+      "purpose": "Define whether OCR is needed only if text layer is absent. OCR requires a separate later gate.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    },
+    {
+      "step": "solucion_online_layout_detector",
+      "purpose": "Detect known Solucion Online quote sections and tables without creating quote truth.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    },
+    {
+      "step": "field_candidate_mapper",
+      "purpose": "Map extracted candidates into locked 106C field keys.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    },
+    {
+      "step": "redaction_filter",
+      "purpose": "Convert local raw candidates into commit-safe redacted candidates.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    },
+    {
+      "step": "confidence_and_status_assigner",
+      "purpose": "Assign status and confidence without choosing ambiguous values automatically.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    },
+    {
+      "step": "dry_run_report_writer",
+      "purpose": "Write redacted field matrix, confidence report and human review report.",
+      "enabledNow": "no",
+      "rawDataCommitAllowed": "no"
+    }
+  ],
+  "adapterInputsFutureOnly": {
+    "allowed": [
+      "local_pdf_path_outside_repo",
+      "uploaded_file_reference_in_chat",
+      "manual_user_context",
+      "locked_106c_schema"
+    ],
+    "forbidden": [
+      "raw_pdf_inside_repo",
+      "raw_pdf_text_inside_repo",
+      "browser_persistent_storage",
+      "backend_service",
+      "crm_record",
+      "provider_runtime"
+    ]
+  },
+  "adapterOutputsFutureOnly": {
+    "localOnlyMayContainRaw": [
+      "temporary_raw_text_cache_outside_repo_if_later_gate_allows",
+      "temporary_layout_debug_outside_repo_if_later_gate_allows"
+    ],
+    "commitSafeOnlyIfRedacted": [
+      "field_presence_matrix",
+      "redacted_extraction_candidates",
+      "confidence_report",
+      "missing_fields_report",
+      "parser_gap_report",
+      "human_review_required"
+    ],
+    "alwaysForbidden": [
+      "raw_pdf",
+      "raw_pdf_text",
+      "unredacted_client_identity",
+      "unredacted_quote_identifier",
+      "unredacted_financial_value_tied_to_person",
+      "screenshots_of_raw_pdf",
+      "official_quote_truth"
+    ]
+  },
+  "fieldMappingContract": {
+    "schemaSource": "106C.1",
+    "fieldKeys": [
+      "document_id_or_quote_reference",
+      "quote_date",
+      "validity_date_or_period",
+      "client_name",
+      "product_family",
+      "product_name_or_plan",
+      "plan_sum_insured_and_premium",
+      "payment_form_currency_and_validity",
+      "total_aportado",
+      "total_recuperacion",
+      "values_benefits_or_scenarios_relevant_to_plan",
+      "missing_items_before_presentation",
+      "commercial_angle_from_user_notes",
+      "client_objective_from_user_notes",
+      "quote_highlights"
+    ],
+    "quoteSummaryFields": [
+      "plan_sum_insured_and_premium",
+      "payment_form_currency_and_validity",
+      "total_aportado",
+      "total_recuperacion",
+      "values_benefits_or_scenarios_relevant_to_plan",
+      "missing_items_before_presentation"
+    ],
+    "autofillFields": [
+      "client_name",
+      "product_family",
+      "commercial_angle_from_user_notes",
+      "client_objective_from_user_notes"
+    ],
+    "manualOnlyFields": [
+      "commercial_angle_from_user_notes",
+      "client_objective_from_user_notes"
+    ]
+  },
+  "redactionContract": {
+    "redactionMustRunBeforeCommit": "yes",
+    "rawValuesRemainLocalOnly": "yes",
+    "sourceLocationHintMayBeCommittedOnlyIfRedacted": "yes",
+    "financialValuesMustBeRedactedUnlessSyntheticOrExplicitlyApproved": "yes",
+    "clientIdentityMustBeRedacted": "yes",
+    "quoteIdentifierMustBeRedacted": "yes"
+  },
+  "adapterGuards": {
+    "noAutoUiPopulation": "yes",
+    "humanReviewBeforeUiUse": "required",
+    "noFinancialInference": "yes",
+    "noMissingValueCalculation": "yes",
+    "noOfficialQuoteClaims": "yes",
+    "noPresentationGeneration": "yes",
+    "noBackendConnection": "yes",
+    "noCrmWrite": "yes"
+  },
+  "nextPhaseRequirements": {
+    "nextPhase": "106F_QUOTE_PREVIEW_REAL_PDF_LOCAL_DRY_RUN_PREP",
+    "mustProvideBeforeAnyRealPdfProbe": [
+      "explicit local PDF path outside repo or uploaded file reference",
+      "confirmation that raw PDF will not be committed",
+      "redaction-first report target",
+      "dry-run only confirmation",
+      "no quote truth confirmation"
+    ],
+    "stillRequiresSeparateGateFor": [
+      "actual PDF text extraction",
+      "OCR fallback",
+      "parser execution",
+      "UI population",
+      "presentation generation"
+    ]
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
+  },
+  "next": "106F_QUOTE_PREVIEW_REAL_PDF_LOCAL_DRY_RUN_PREP"
+}
+
+## Validation JSON
+
+{
+  "phase": "106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_106E_QUOTE_PREVIEW_PARSER_ADAPTER_SCOPE",
+  "lockedDecision": "PARSER_ADAPTER_SCOPE_LOCKED_WITH_NO_PDF_READ_NO_OCR_NO_PARSER_EXECUTION",
+  "schemaVersion": "106C.1",
+  "scopeType": "parser_adapter_scope_only",
+  "realPdfUsed": false,
+  "rawPdfTouched": false,
+  "pdfReadEnabled": false,
+  "ocrExecutionEnabled": false,
+  "parserExecutionEnabled": false,
+  "calculatorExecutionEnabled": false,
+  "quoteTruthAllowed": false,
+  "sourceUiChanged": false,
+  "redactionBeforeCommitRequired": "yes",
+  "humanReviewBeforeUiUse": "required",
+  "allSafetyFlagsFalse": true,
+  "next": "106F_QUOTE_PREVIEW_REAL_PDF_LOCAL_DRY_RUN_PREP",
+  "errors": []
+}
+
+## Confirmed
+
+- Parser adapter scope defined.
+- Future pipeline defined.
+- Adapter inputs defined.
+- Adapter outputs defined.
+- Redaction contract defined.
+- Human review required.
+- PDF read remains disabled.
+- OCR remains disabled.
+- Parser remains disabled.
+- Quote truth remains disabled.
+- Source UI was not changed.
