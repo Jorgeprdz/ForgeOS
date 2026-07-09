@@ -7134,3 +7134,37 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPED
 
 NEXT=093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION
 <!-- FORGE:093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE:END -->
+
+<!-- FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:START -->
+## 093B Quote Preview Safe Static UI Source Patch Implementation
+
+093B applies the first authorized safe static UI source patch for Quote Preview.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTED`
+
+Outputs:
+
+- `docs/architecture/source-truth/FORGE_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION_093B.md`
+- `docs/evidence/FORGE_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION_093B.md`
+- `docs/evidence/forge-quote-preview-safe-static-ui-source-patch-implementation-manifest-093b.json`
+- `docs/evidence/forge-quote-preview-safe-static-ui-source-patch-implementation-audit-093b.json`
+
+Confirmed:
+
+- authorized files only;
+- static copy/badge metadata only;
+- no action handlers added;
+- no business logic changed;
+- no data flow changed;
+- no backend connection added;
+- no quote truth created;
+- no send/CRM/calendar enabled;
+- all safety flags remain false.
+
+DECISION=PASS_093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTED
+
+NEXT=093C_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_QA_LOCK
+<!-- FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:END -->

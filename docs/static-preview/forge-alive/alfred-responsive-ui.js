@@ -1,3 +1,41 @@
+
+
+/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:START */
+const FORGE_QUOTE_PREVIEW_SAFE_STATIC_BOUNDARY_093B = Object.freeze({
+  phase: '093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION',
+  boundary: 'static_safe_preview_boundary_only',
+  labels: [
+    'Preview',
+    'Solo lectura',
+    'Revisión humana',
+    'No cotización oficial',
+    'Sin envío',
+    'Sin CRM',
+    'Sin calendario',
+  ],
+  copy: {
+    primary: 'Este preview es solo una referencia operativa. No es una cotización oficial.',
+    review: 'Requiere revisión humana antes de cualquier acción real.',
+    boundary: 'Sin envío, sin CRM, sin calendario y sin cambios reales.',
+  },
+  permissions: {
+    officialQuoteAllowed: false,
+    quoteTruthAllowed: false,
+    sendAllowed: false,
+    crmWriteAllowed: false,
+    calendarCreateAllowed: false,
+    backendConnectionAllowed: false,
+    providerCallAllowed: false,
+    parserExecutionAllowed: false,
+    calculatorExecutionAllowed: false,
+    banxicoCallAllowed: false,
+    newActionHandlerAllowed: false,
+    businessLogicChangeAllowed: false,
+    dataFlowChangeAllowed: false,
+  },
+});
+/* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:END */
+
 /* FORGEOS:ALFRED_RESPONSIVE_UI_056J:START */
 (function () {
   const MOBILE_QUERY = "(max-width: 767px), (max-width: 900px) and (orientation: landscape)";
