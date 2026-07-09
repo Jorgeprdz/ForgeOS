@@ -1,0 +1,22 @@
+{
+  "phase": "106I_QUOTE_PREVIEW_TEXT_LAYER_RESULT_ROUTER",
+  "status": "PASS",
+  "decision": "PASS_106I_QUOTE_PREVIEW_TEXT_LAYER_RESULT_ROUTER",
+  "lockedDecision": "TEXT_LAYER_PRESENT_ROUTE_LOCKED_TO_REDACTED_TEXT_SAMPLING_GATE",
+  "textLayerPresenceCandidate": "present_candidate",
+  "pageCountCandidate": 2,
+  "ocrNeededCandidate": "no_candidate",
+  "routeReason": "text_layer_present_candidate",
+  "nextRoute": "106J_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_GATE",
+  "redactedTextSamplingGateRecommended": true,
+  "ocrFallbackNeededNow": false,
+  "fieldExtractionExecuted": false,
+  "ocrExecuted": false,
+  "parserExecuted": false,
+  "calculatorExecuted": false,
+  "quoteTruthAllowed": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "106J_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_GATE",
+  "errors": []
+}

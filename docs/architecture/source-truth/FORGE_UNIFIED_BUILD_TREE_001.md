@@ -9807,3 +9807,40 @@ LOCKED_DECISION=TEXT_LAYER_PROBE_DRY_RUN_EXECUTED_WITH_NO_RAW_TEXT_COMMIT_NO_OCR
 
 NEXT=106I_QUOTE_PREVIEW_TEXT_LAYER_RESULT_ROUTER
 <!-- FORGE:106H_QUOTE_PREVIEW_REAL_PDF_TEXT_LAYER_PROBE_DRY_RUN:END -->
+
+<!-- FORGE:106I_QUOTE_PREVIEW_TEXT_LAYER_RESULT_ROUTER:START -->
+## 106I Quote Preview Text Layer Result Router
+
+106I routes the 106H text layer probe result.
+
+Locked decision:
+`TEXT_LAYER_PRESENT_ROUTE_LOCKED_TO_REDACTED_TEXT_SAMPLING_GATE`
+
+Confirmed:
+
+- text layer result read from 106H evidence;
+- result is present_candidate;
+- page count candidate is 2;
+- OCR needed candidate is no_candidate;
+- next route is redacted text sampling gate;
+- OCR fallback is not needed now;
+- field extraction was not executed;
+- OCR execution remains disabled;
+- parser execution remains disabled;
+- calculator execution remains disabled;
+- quote truth remains disabled;
+- source UI was not changed;
+- all safety flags remain false.
+
+TEXT_LAYER_PRESENCE_CANDIDATE=present_candidate
+
+PAGE_COUNT_CANDIDATE=2
+
+OCR_NEEDED_CANDIDATE=no_candidate
+
+DECISION=PASS_106I_QUOTE_PREVIEW_TEXT_LAYER_RESULT_ROUTER
+
+LOCKED_DECISION=TEXT_LAYER_PRESENT_ROUTE_LOCKED_TO_REDACTED_TEXT_SAMPLING_GATE
+
+NEXT=106J_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_GATE
+<!-- FORGE:106I_QUOTE_PREVIEW_TEXT_LAYER_RESULT_ROUTER:END -->
