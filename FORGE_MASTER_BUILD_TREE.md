@@ -11653,3 +11653,32 @@ LOCKED_DECISION=NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE_READY_FOR_IMPLEMENTATION
 
 NEXT=105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION
 <!-- FORGE:105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE:END -->
+
+<!-- FORGE:105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION:START -->
+## 105D Quote Preview New Quote Page Source Patch Implementation
+
+105D implements the static `#nueva-cotizacion` preview-only page.
+
+Locked decision:
+`NEW_QUOTE_PAGE_STATIC_SOURCE_PATCH_READY_FOR_VISUAL_QA`
+
+Confirmed:
+
+- source patch modified only `docs/static-preview/forge-alive/index.html`;
+- `id="nueva-cotizacion"` exists exactly once;
+- `href="#nueva-cotizacion"` exists;
+- `href="#cotizaciones"` remains present;
+- `+ Nueva cotización` remains visible exactly once;
+- `Preparar preview` remains disabled;
+- page is a quote preparation desk, not an official quote engine;
+- all real-effect flags remain false;
+- visual QA is required next.
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=105d#nueva-cotizacion
+
+DECISION=PASS_105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION
+
+LOCKED_DECISION=NEW_QUOTE_PAGE_STATIC_SOURCE_PATCH_READY_FOR_VISUAL_QA
+
+NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
+<!-- FORGE:105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION:END -->

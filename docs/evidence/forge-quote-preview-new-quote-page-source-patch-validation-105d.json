@@ -1,0 +1,17 @@
+{
+  "phase": "105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION",
+  "status": "PASS",
+  "sourceFile": "docs/static-preview/forge-alive/index.html",
+  "sourceModifiedIn105D": true,
+  "idNuevaCotizacionCount": 1,
+  "hrefNuevaCotizacionCount": 2,
+  "hrefCotizacionesCount": 2,
+  "visibleNewQuoteCtaCount": 1,
+  "requiredClassesPresent": true,
+  "requiredVisibleCopyPresent": true,
+  "ctaIsLocalAnchor": true,
+  "preparePreviewDisabled": true,
+  "allSafetyFlagsFalse": true,
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
+  "errors": []
+}
