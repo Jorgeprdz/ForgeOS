@@ -1,0 +1,376 @@
+# Forge Quote Preview Field Candidate Extraction Gate Evidence 106P
+
+PHASE=106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE
+STATUS=PASS
+DECISION=PASS_106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE
+LOCKED_DECISION=FIELD_CANDIDATE_EXTRACTION_GATE_LOCKED_FOR_REDACTED_CANDIDATES_ONLY_NO_TRUTH
+NEXT=106Q_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_DRY_RUN
+
+## Gate JSON
+
+{
+  "phase": "106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE",
+  "status": "PASS",
+  "decision": "PASS_106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE",
+  "lockedDecision": "FIELD_CANDIDATE_EXTRACTION_GATE_LOCKED_FOR_REDACTED_CANDIDATES_ONLY_NO_TRUTH",
+  "basePhase": "106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN",
+  "schemaVersion": "106C.1",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
+  "gateType": "field_candidate_extraction_gate_only",
+  "sourceUiChanged": false,
+  "fastTrackMode": {
+    "manualOperatorTokenRequired": false,
+    "internalDryRunGuard": "REDACTED_FIELD_CANDIDATES_ONLY",
+    "reason": "106P is a safe gate phase and does not access raw PDF/text or execute candidate extraction."
+  },
+  "inputSummary": {
+    "anchorWindowRecordCount": 13,
+    "availableTargetsFromAnchorWindows": [
+      "missing_items_before_presentation",
+      "payment_form_currency_and_validity",
+      "plan_sum_insured_and_premium",
+      "total_aportado",
+      "total_recuperacion",
+      "values_benefits_or_scenarios_relevant_to_plan"
+    ],
+    "criticalTargetCount": 6
+  },
+  "candidateExtractionDefinitionFor106Q": {
+    "nextPhase": "106Q_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_DRY_RUN",
+    "purpose": "Create redacted field candidates from committed redacted anchor windows only.",
+    "sourceAllowed": "committed_redacted_anchor_windows_only",
+    "rawPdfAccessAllowed": false,
+    "rawTextAccessAllowed": false,
+    "actualPdfPathAccessAllowed": false,
+    "rawValueExtractionAllowed": false,
+    "realValueExtractionAllowed": false,
+    "redactedPlaceholderCandidateAllowed": true,
+    "fieldCandidateExtractionAllowedOnlyAsRedactedPlaceholders": true,
+    "parserExecutionAllowed": false,
+    "ocrExecutionAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "quoteTruthAllowed": false,
+    "uiPopulationAllowed": false,
+    "presentationGenerationAllowed": false,
+    "humanReviewRequired": true
+  },
+  "candidateRecordContract": {
+    "fieldKey": "106C target field key",
+    "targetDisplayLabel": "human label from schema",
+    "anchorLabel": "safe label only",
+    "redactedCandidateClass": "placeholder class only, never raw value",
+    "candidateValueRedacted": "placeholder only such as [AMOUNT_REDACTED] or null",
+    "sourceRedactedWindowRef": "committed redacted anchor window index",
+    "status": [
+      "found_redacted_placeholder_candidate",
+      "not_found_in_redacted_anchor_windows",
+      "ambiguous_redacted_context_requires_review",
+      "manual_review_required"
+    ],
+    "confidence": [
+      "none",
+      "low",
+      "medium"
+    ],
+    "needsHumanReview": true,
+    "mayPopulateUi": false,
+    "mayCreateQuoteTruth": false,
+    "mayGeneratePresentation": false
+  },
+  "targetCandidateRules": {
+    "plan_sum_insured_and_premium": {
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[NUMBER_REDACTED]",
+        "[SAFE_LABEL:PRIMA]",
+        "[SAFE_LABEL:SUMA]",
+        "[SAFE_LABEL:ASEGURADA]"
+      ],
+      "candidateStatusIfFound": "found_redacted_placeholder_candidate",
+      "candidateStatusIfMissing": "not_found_in_redacted_anchor_windows",
+      "humanReviewRequired": true
+    },
+    "payment_form_currency_and_validity": {
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[DATE_REDACTED]",
+        "[SAFE_LABEL:PAGO]",
+        "[SAFE_LABEL:MONEDA]",
+        "[SAFE_LABEL:VIGENCIA]"
+      ],
+      "candidateStatusIfFound": "found_redacted_placeholder_candidate",
+      "candidateStatusIfMissing": "not_found_in_redacted_anchor_windows",
+      "humanReviewRequired": true
+    },
+    "total_aportado": {
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[SAFE_LABEL:TOTAL]",
+        "[SAFE_LABEL:APORTADO]"
+      ],
+      "candidateStatusIfFound": "found_redacted_placeholder_candidate",
+      "candidateStatusIfMissing": "not_found_in_redacted_anchor_windows",
+      "humanReviewRequired": true
+    },
+    "total_recuperacion": {
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[SAFE_LABEL:TOTAL]",
+        "[SAFE_LABEL:RECUPERACION]"
+      ],
+      "candidateStatusIfFound": "found_redacted_placeholder_candidate",
+      "candidateStatusIfMissing": "not_found_in_redacted_anchor_windows",
+      "humanReviewRequired": true
+    },
+    "values_benefits_or_scenarios_relevant_to_plan": {
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[PERCENT_REDACTED]",
+        "[SAFE_LABEL:BENEFICIO]",
+        "[SAFE_LABEL:BENEFICIOS]",
+        "[SAFE_LABEL:COBERTURA]"
+      ],
+      "candidateStatusIfFound": "found_redacted_placeholder_candidate",
+      "candidateStatusIfMissing": "not_found_in_redacted_anchor_windows",
+      "humanReviewRequired": true
+    },
+    "missing_items_before_presentation": {
+      "allowedRedactedCandidateClasses": [
+        "[TEXT_REDACTED]",
+        "[NUMBER_REDACTED]",
+        "[DATE_REDACTED]",
+        "[SAFE_LABEL:EDAD]",
+        "[SAFE_LABEL:SEXO]",
+        "[SAFE_LABEL:FUMADOR]"
+      ],
+      "candidateStatusIfFound": "ambiguous_redacted_context_requires_review",
+      "candidateStatusIfMissing": "manual_review_required",
+      "humanReviewRequired": true
+    }
+  },
+  "candidateTargetCoverage": [
+    {
+      "targetField": "plan_sum_insured_and_premium",
+      "targetDisplayLabel": "Plan, suma asegurada y prima",
+      "anchorWindowRecordCount": 4,
+      "candidateExtractionGateStatus": "ready_for_redacted_candidate_dry_run",
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[NUMBER_REDACTED]",
+        "[SAFE_LABEL:PRIMA]",
+        "[SAFE_LABEL:SUMA]",
+        "[SAFE_LABEL:ASEGURADA]"
+      ],
+      "valueExtractionAllowed": false,
+      "rawValueExtractionAllowed": false,
+      "candidateMayCreateTruth": false,
+      "candidateMayPopulateUi": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "payment_form_currency_and_validity",
+      "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+      "anchorWindowRecordCount": 4,
+      "candidateExtractionGateStatus": "ready_for_redacted_candidate_dry_run",
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[DATE_REDACTED]",
+        "[SAFE_LABEL:PAGO]",
+        "[SAFE_LABEL:MONEDA]",
+        "[SAFE_LABEL:VIGENCIA]"
+      ],
+      "valueExtractionAllowed": false,
+      "rawValueExtractionAllowed": false,
+      "candidateMayCreateTruth": false,
+      "candidateMayPopulateUi": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "total_aportado",
+      "targetDisplayLabel": "Total aportado",
+      "anchorWindowRecordCount": 1,
+      "candidateExtractionGateStatus": "ready_for_redacted_candidate_dry_run",
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[SAFE_LABEL:TOTAL]",
+        "[SAFE_LABEL:APORTADO]"
+      ],
+      "valueExtractionAllowed": false,
+      "rawValueExtractionAllowed": false,
+      "candidateMayCreateTruth": false,
+      "candidateMayPopulateUi": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "total_recuperacion",
+      "targetDisplayLabel": "Total recuperación",
+      "anchorWindowRecordCount": 1,
+      "candidateExtractionGateStatus": "ready_for_redacted_candidate_dry_run",
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[SAFE_LABEL:TOTAL]",
+        "[SAFE_LABEL:RECUPERACION]"
+      ],
+      "valueExtractionAllowed": false,
+      "rawValueExtractionAllowed": false,
+      "candidateMayCreateTruth": false,
+      "candidateMayPopulateUi": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "values_benefits_or_scenarios_relevant_to_plan",
+      "targetDisplayLabel": "Valores, beneficios o escenarios relevantes",
+      "anchorWindowRecordCount": 1,
+      "candidateExtractionGateStatus": "ready_for_redacted_candidate_dry_run",
+      "allowedRedactedCandidateClasses": [
+        "[AMOUNT_REDACTED]",
+        "[PERCENT_REDACTED]",
+        "[SAFE_LABEL:BENEFICIO]",
+        "[SAFE_LABEL:BENEFICIOS]",
+        "[SAFE_LABEL:COBERTURA]"
+      ],
+      "valueExtractionAllowed": false,
+      "rawValueExtractionAllowed": false,
+      "candidateMayCreateTruth": false,
+      "candidateMayPopulateUi": false,
+      "humanReviewRequired": true
+    },
+    {
+      "targetField": "missing_items_before_presentation",
+      "targetDisplayLabel": "Faltantes antes de presentar",
+      "anchorWindowRecordCount": 2,
+      "candidateExtractionGateStatus": "ready_for_redacted_candidate_dry_run",
+      "allowedRedactedCandidateClasses": [
+        "[TEXT_REDACTED]",
+        "[NUMBER_REDACTED]",
+        "[DATE_REDACTED]",
+        "[SAFE_LABEL:EDAD]",
+        "[SAFE_LABEL:SEXO]",
+        "[SAFE_LABEL:FUMADOR]"
+      ],
+      "valueExtractionAllowed": false,
+      "rawValueExtractionAllowed": false,
+      "candidateMayCreateTruth": false,
+      "candidateMayPopulateUi": false,
+      "humanReviewRequired": true
+    }
+  ],
+  "rulesConfirmed": {
+    "candidateExtractionGateOnly": true,
+    "futureCandidatesAreRedactedPlaceholdersOnly": true,
+    "rawPdfAccessAllowed": false,
+    "rawTextAccessAllowed": false,
+    "rawValueExtractionAllowed": false,
+    "realValueExtractionAllowed": false,
+    "parserExecutionAllowed": false,
+    "ocrExecutionAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "quoteTruthAllowed": false,
+    "uiPopulationAllowed": false,
+    "presentationGenerationAllowed": false,
+    "humanReviewRequired": true,
+    "candidatesAreNotTruth": true
+  },
+  "closedGatesRemainClosed": [
+    "raw_pdf_access",
+    "raw_text_access",
+    "raw_value_extraction",
+    "real_value_extraction",
+    "parser_execution",
+    "ocr_execution",
+    "calculator_execution",
+    "quote_truth",
+    "official_quote",
+    "ui_population",
+    "backend_connection",
+    "crm_write",
+    "prompt_generation",
+    "presentation_generation",
+    "real_effects"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
+  },
+  "next": "106Q_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_DRY_RUN"
+}
+
+## Validation JSON
+
+{
+  "phase": "106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE",
+  "status": "PASS",
+  "decision": "PASS_106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE",
+  "lockedDecision": "FIELD_CANDIDATE_EXTRACTION_GATE_LOCKED_FOR_REDACTED_CANDIDATES_ONLY_NO_TRUTH",
+  "gateType": "field_candidate_extraction_gate_only",
+  "manualOperatorTokenRequired": false,
+  "internalDryRunGuard": "REDACTED_FIELD_CANDIDATES_ONLY",
+  "anchorWindowRecordCount": 13,
+  "candidateReadyCriticalTargetCount": 6,
+  "criticalTargetCount": 6,
+  "redactedPlaceholderCandidateAllowed": true,
+  "rawPdfAccessAllowed": false,
+  "rawTextAccessAllowed": false,
+  "rawValueExtractionAllowed": false,
+  "realValueExtractionAllowed": false,
+  "parserExecutionAllowed": false,
+  "ocrExecutionAllowed": false,
+  "calculatorExecutionAllowed": false,
+  "quoteTruthAllowed": false,
+  "uiPopulationAllowed": false,
+  "presentationGenerationAllowed": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "106Q_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_DRY_RUN",
+  "errors": []
+}
+
+## Confirmed
+
+- Field candidate extraction gate locked.
+- Manual operator token is not required.
+- Candidate record contract was created.
+- Target candidate rules were created.
+- Future candidates are redacted placeholders only.
+- Raw PDF access is forbidden.
+- Raw text access is forbidden.
+- Raw value extraction is forbidden.
+- Real value extraction is forbidden.
+- Parser execution is forbidden.
+- OCR execution is forbidden.
+- Calculator execution is forbidden.
+- Quote truth is forbidden.
+- UI population is forbidden.
+- Presentation generation is forbidden.
+- Human review is required.
+- Candidates are not truth.
+- Source UI was not changed.

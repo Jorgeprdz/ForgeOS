@@ -10067,3 +10067,45 @@ LOCKED_DECISION=FIELD_ANCHOR_WINDOW_DRY_RUN_COMPLETE_WITH_REDACTED_CONTEXT_ONLY_
 
 NEXT=106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE
 <!-- FORGE:106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN:END -->
+
+<!-- FORGE:106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE:START -->
+## 106P Quote Preview Field Candidate Extraction Gate
+
+106P locks the gate for redacted field candidates only.
+
+Locked decision:
+`FIELD_CANDIDATE_EXTRACTION_GATE_LOCKED_FOR_REDACTED_CANDIDATES_ONLY_NO_TRUTH`
+
+Confirmed:
+
+- manual operator token not required;
+- candidate record contract created;
+- target candidate rules created;
+- future candidates are redacted placeholders only;
+- raw PDF access forbidden;
+- raw text access forbidden;
+- raw value extraction forbidden;
+- real value extraction forbidden;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- human review required;
+- candidates are not truth;
+- source UI was not changed;
+- all safety flags remain false.
+
+ANCHOR_WINDOW_RECORD_COUNT=13
+
+CANDIDATE_READY_CRITICAL_TARGET_COUNT=6
+
+CRITICAL_TARGET_COUNT=6
+
+DECISION=PASS_106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE
+
+LOCKED_DECISION=FIELD_CANDIDATE_EXTRACTION_GATE_LOCKED_FOR_REDACTED_CANDIDATES_ONLY_NO_TRUTH
+
+NEXT=106Q_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_DRY_RUN
+<!-- FORGE:106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE:END -->
