@@ -1,0 +1,13 @@
+{
+  "phase": "105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "sourceModifiedIn105C": false,
+  "authorizedBoundary": [
+    "docs/static-preview/forge-alive/index.html"
+  ],
+  "destination": "#nueva-cotizacion",
+  "pattern": "hash-toggled-embedded-panel",
+  "allSafetyFlagsFalse": true,
+  "next": "105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION",
+  "errors": []
+}

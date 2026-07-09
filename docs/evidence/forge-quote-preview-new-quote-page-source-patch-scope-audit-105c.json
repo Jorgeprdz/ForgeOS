@@ -1,0 +1,29 @@
+{
+  "phase": "105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE",
+  "lockedDecision": "NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE_READY_FOR_IMPLEMENTATION",
+  "confirmed": {
+    "sourceImplementationDidNotOccur": true,
+    "authorizedBoundaryIsSingleIndexHtml": true,
+    "destinationScoped": true,
+    "patternScoped": true,
+    "allSafetyFlagsFalse": true,
+    "nextIs105D": true
+  },
+  "validation": {
+    "phase": "105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE",
+    "status": "PASS",
+    "sourceModifiedIn105C": false,
+    "authorizedBoundary": [
+      "docs/static-preview/forge-alive/index.html"
+    ],
+    "destination": "#nueva-cotizacion",
+    "pattern": "hash-toggled-embedded-panel",
+    "allSafetyFlagsFalse": true,
+    "next": "105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION",
+    "errors": []
+  },
+  "next": "105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION",
+  "errors": []
+}

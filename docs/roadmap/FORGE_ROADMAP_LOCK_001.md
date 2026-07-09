@@ -8254,3 +8254,28 @@ LOCKED_DECISION=NEW_QUOTE_PAGE_DESIGN_PLAN_READY_FOR_SOURCE_PATCH_SCOPE
 
 NEXT=105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE
 <!-- FORGE:105B_QUOTE_PREVIEW_NEW_QUOTE_PAGE_DESIGN_PLAN:END -->
+
+<!-- FORGE:105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE:START -->
+## 105C Quote Preview New Quote Page Source Patch Scope
+
+105C defines the source patch scope for the future `#nueva-cotizacion` implementation.
+
+Locked decision:
+`NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE_READY_FOR_IMPLEMENTATION`
+
+Confirmed:
+
+- source implementation did not occur in 105C;
+- `docs/static-preview/forge-alive/index.html` was inspected but not modified;
+- 105D may modify only `docs/static-preview/forge-alive/index.html`;
+- 105D may add static HTML and CSS only;
+- 105D may add local static navigation to `#nueva-cotizacion`;
+- 105D must not introduce official quote outputs, premiums, coverage values, projections, rates, provider runtime, backend, CRM writes, messages, tasks, calendar actions, parser execution, calculator execution, PDF reading, OCR, Banxico calls, auth, or browser persistence;
+- all safety flags remain false.
+
+DECISION=PASS_105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE
+
+LOCKED_DECISION=NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE_READY_FOR_IMPLEMENTATION
+
+NEXT=105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION
+<!-- FORGE:105C_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_SCOPE:END -->
