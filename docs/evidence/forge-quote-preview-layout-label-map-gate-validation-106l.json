@@ -1,0 +1,23 @@
+{
+  "phase": "106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE",
+  "status": "PASS",
+  "decision": "PASS_106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE",
+  "lockedDecision": "LAYOUT_LABEL_MAP_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH",
+  "gateType": "layout_label_map_gate_only",
+  "sampleCount": 6,
+  "labelHitTypeCount": 15,
+  "activeMappedLabelCount": 14,
+  "operatorTokenRequiredFor106M": "MAP_REDACTED_LABELS_ONLY",
+  "labelsAreHintsNotTruth": true,
+  "valueExtractionAllowed": false,
+  "fieldCandidateExtractionAllowed": false,
+  "ocrExecutionAllowed": false,
+  "parserExecutionAllowed": false,
+  "calculatorExecutionAllowed": false,
+  "quoteTruthAllowed": false,
+  "uiPopulationAllowed": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN",
+  "errors": []
+}

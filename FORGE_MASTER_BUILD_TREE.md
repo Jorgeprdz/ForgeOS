@@ -12288,3 +12288,37 @@ LOCKED_DECISION=REDACTED_TEXT_SAMPLING_DRY_RUN_COMPLETE_WITH_NO_RAW_TEXT_COMMIT_
 
 NEXT=106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE
 <!-- FORGE:106K_QUOTE_PREVIEW_REDACTED_TEXT_SAMPLING_DRY_RUN:END -->
+
+<!-- FORGE:106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE:START -->
+## 106L Quote Preview Layout Label Map Gate
+
+106L locks the gate for mapping safe redacted labels to future target fields.
+
+Locked decision:
+`LAYOUT_LABEL_MAP_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH`
+
+Confirmed:
+
+- safe labels read from 106K;
+- active label hints created;
+- labels are hints, not truth;
+- human review required;
+- value extraction forbidden;
+- field candidate extraction forbidden;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- quote truth forbidden;
+- source UI was not changed;
+- all safety flags remain false.
+
+LABEL_HIT_TYPE_COUNT=15
+
+ACTIVE_MAPPED_LABEL_COUNT=14
+
+DECISION=PASS_106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE
+
+LOCKED_DECISION=LAYOUT_LABEL_MAP_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARSER_NO_QUOTE_TRUTH
+
+NEXT=106M_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_DRY_RUN
+<!-- FORGE:106L_QUOTE_PREVIEW_LAYOUT_LABEL_MAP_GATE:END -->
