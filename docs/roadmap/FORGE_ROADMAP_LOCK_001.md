@@ -7466,3 +7466,35 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_SCOPED
 
 NEXT=096B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_IMPLEMENTATION
 <!-- FORGE:096A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_SCOPE:END -->
+
+<!-- FORGE:096BCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_FAST_TRACK:START -->
+## 096BCD Quote Preview Safe Module Entry Source Patch Fast Track
+
+096BCD implements and locks the safe static source patch for the Quote Preview / Cotizaciones module entry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_LOCKED_AS_SAFE_STATIC_ENTRY`
+
+Repair note:
+
+- existing script tags in `index.html` are treated as pre-existing static preview structure;
+- 096B is validated by checking that no script tag exists inside the 096B patch block.
+
+Confirmed:
+
+- only `docs/static-preview/forge-alive/index.html` was edited;
+- static HTML metadata and safe entry attributes only;
+- Cotizaciones entry now has safe static module attributes;
+- /cotizar command now has safe static module attributes;
+- Cotizaciones y pólizas panel now has safe static module attributes;
+- no script tag was added by 096B;
+- no inline event handler, JavaScript listener, JS source edit, or CSS source edit was added;
+- no route binding, navigation execution, UI rendering, runtime execution, or real effects were performed;
+- all safety flags remain false.
+
+DECISION=PASS_096BCD_REPAIR_SCRIPT_TAG_FALSE_POSITIVE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_LOCKED_AS_SAFE_STATIC_ENTRY
+
+NEXT=097A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_SCOPE
+<!-- FORGE:096BCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_FAST_TRACK:END -->
