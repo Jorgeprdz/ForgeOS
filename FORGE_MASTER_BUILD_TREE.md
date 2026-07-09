@@ -11682,3 +11682,31 @@ LOCKED_DECISION=NEW_QUOTE_PAGE_STATIC_SOURCE_PATCH_READY_FOR_VISUAL_QA
 
 NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
 <!-- FORGE:105D_QUOTE_PREVIEW_NEW_QUOTE_PAGE_SOURCE_PATCH_IMPLEMENTATION:END -->
+
+<!-- FORGE:105DR_QUOTE_PREVIEW_NEW_QUOTE_PAGE_ROUTE_MODEL_REPAIR:START -->
+## 105DR Quote Preview New Quote Page Route Model Repair
+
+105DR repairs 105D from embedded hash panel to dedicated static page route.
+
+Locked decision:
+`NEW_QUOTE_PAGE_REPAIRED_TO_DEDICATED_STATIC_ROUTE_WITH_ENABLED_INPUTS`
+
+Confirmed:
+
+- dedicated static route created at `docs/static-preview/forge-alive/nueva-cotizacion/index.html`;
+- index CTA points to `./nueva-cotizacion/?v=105dr`;
+- embedded `id="nueva-cotizacion"` panel removed from index;
+- local text input fields are enabled on the dedicated page;
+- no persistence, submission, backend, CRM, provider, calculator, parser, PDF, OCR, Banxico, auth, messaging, tasks, calendar, or real effects were added;
+- `Preparar preview` remains disabled;
+- all safety flags remain false;
+- 105E visual QA must be rerun.
+
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr
+
+DECISION=PASS_105DR_QUOTE_PREVIEW_NEW_QUOTE_PAGE_ROUTE_MODEL_REPAIR
+
+LOCKED_DECISION=NEW_QUOTE_PAGE_REPAIRED_TO_DEDICATED_STATIC_ROUTE_WITH_ENABLED_INPUTS
+
+NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
+<!-- FORGE:105DR_QUOTE_PREVIEW_NEW_QUOTE_PAGE_ROUTE_MODEL_REPAIR:END -->

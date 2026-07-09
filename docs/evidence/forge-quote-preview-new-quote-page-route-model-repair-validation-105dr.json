@@ -1,0 +1,13 @@
+{
+  "phase": "105DR_QUOTE_PREVIEW_NEW_QUOTE_PAGE_ROUTE_MODEL_REPAIR",
+  "status": "PASS",
+  "embeddedHashPanelRemovedFromIndex": true,
+  "dedicatedRouteHrefCount": 1,
+  "newPageExists": true,
+  "enabledInputCount": 3,
+  "enabledTextareaCount": 1,
+  "preparePreviewDisabled": true,
+  "allSafetyFlagsFalse": true,
+  "next": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
+  "errors": []
+}
