@@ -8104,3 +8104,38 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_LOCKED_AS_SOURCE_PATCH_S
 
 NEXT=093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE
 <!-- FORGE:092D_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_DECISION_LOCK:END -->
+
+<!-- FORGE:093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE:START -->
+## 093A Quote Preview Safe Static UI Source Patch Scope
+
+093A scopes a future safe static UI source patch for Quote Preview.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPED`
+
+Outputs:
+
+- `docs/architecture/source-truth/FORGE_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE_093A.md`
+- `docs/evidence/FORGE_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE_093A.md`
+- `docs/evidence/forge-quote-preview-safe-static-ui-source-patch-scope-093a.json`
+- `docs/evidence/forge-quote-preview-safe-static-ui-source-patch-scope-audit-093a.json`
+
+093A does not edit UI source files.
+
+Confirmed:
+
+- source-patch-scope-only;
+- authorized source patch files scoped for 093B;
+- no source edits authorized in 093A;
+- 093B may edit only authorized files;
+- 093B must fail if no authorized files exist;
+- required visible safety copy preserved;
+- forbidden patch effects preserved;
+- all effects remain blocked.
+
+DECISION=PASS_093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPED
+
+NEXT=093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION
+<!-- FORGE:093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE:END -->

@@ -1,0 +1,304 @@
+{
+  "phase": "093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPED",
+  "base": {
+    "phase": "092D_QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_DECISION_LOCK",
+    "confirmed": true,
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_STATIC_UI_PATCH_PLAN_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE"
+  },
+  "next": "093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION",
+  "sourcePatchScope": {
+  "phase": "093A_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "scopeType": "safe_static_ui_source_patch_scope_only",
+  "base": {
+    "092DDecision": "docs/evidence/forge-quote-preview-safe-static-ui-patch-plan-decision-audit-092d.json",
+    "092BPatchPlan": "docs/evidence/forge-quote-preview-safe-static-ui-patch-plan-092b.json"
+  },
+  "authorizedSourcePatchFilesFor093B": [
+    {
+      "path": "docs/static-preview/forge-alive/alfred-desktop-dashboard.js",
+      "suffix": ".js",
+      "exists": true,
+      "score": 97,
+      "authorizedFor093BPlanning": true,
+      "authorizedFor093AEdit": false,
+      "authorizedOperationTypesFor093B": [
+        "static_safe_boundary_copy_patch"
+      ],
+      "plannedOperationsFrom092B": [
+        {
+          "operation": "add_static_quote_preview_boundary_section",
+          "operationType": "planned_static_source_patch_only",
+          "placementRule": "near dashboard or Alfred decision header, compact and non-executing",
+          "requiredVisibleCopy": [
+            "Preview",
+            "Solo lectura",
+            "No cotización oficial"
+          ],
+          "optionalRiskCopy": [
+            "Sin envío",
+            "Sin CRM",
+            "Sin calendario"
+          ],
+          "sourceEditAuthorizedBy092B": false
+        }
+      ],
+      "patchLimits": {
+        "mayAddStaticSafetyCopy": true,
+        "mayAddStaticBadges": true,
+        "mayMoveBusinessLogic": false,
+        "mayChangeDataFlow": false,
+        "mayAddHandlers": false,
+        "mayAddBackendCalls": false,
+        "mayCreateQuoteTruth": false,
+        "maySend": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendar": false
+      }
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-desktop-command-workspace-056y.js",
+      "suffix": ".js",
+      "exists": true,
+      "score": 95,
+      "authorizedFor093BPlanning": true,
+      "authorizedFor093AEdit": false,
+      "authorizedOperationTypesFor093B": [
+        "static_safe_boundary_copy_patch"
+      ],
+      "plannedOperationsFrom092B": [
+        {
+          "operation": "add_or_update_visible_preview_boundary_badge_stack",
+          "operationType": "planned_static_source_patch_only",
+          "placementRule": "near existing preview/status/header boundary, without changing data flow",
+          "requiredVisibleCopy": [
+            "Preview",
+            "Solo lectura",
+            "No cotización oficial",
+            "Revisión humana"
+          ],
+          "optionalRiskCopy": [
+            "Sin envío",
+            "Sin CRM",
+            "Sin calendario"
+          ],
+          "sourceEditAuthorizedBy092B": false
+        }
+      ],
+      "patchLimits": {
+        "mayAddStaticSafetyCopy": true,
+        "mayAddStaticBadges": true,
+        "mayMoveBusinessLogic": false,
+        "mayChangeDataFlow": false,
+        "mayAddHandlers": false,
+        "mayAddBackendCalls": false,
+        "mayCreateQuoteTruth": false,
+        "maySend": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendar": false
+      }
+    },
+    {
+      "path": "docs/static-preview/forge-alive/alfred-responsive-ui.js",
+      "suffix": ".js",
+      "exists": true,
+      "score": 85,
+      "authorizedFor093BPlanning": true,
+      "authorizedFor093AEdit": false,
+      "authorizedOperationTypesFor093B": [
+        "static_safe_boundary_copy_patch"
+      ],
+      "plannedOperationsFrom092B": [
+        {
+          "operation": "add_or_update_visible_preview_boundary_badge_stack",
+          "operationType": "planned_static_source_patch_only",
+          "placementRule": "near existing preview/status/header boundary, without changing data flow",
+          "requiredVisibleCopy": [
+            "Preview",
+            "Solo lectura",
+            "No cotización oficial",
+            "Revisión humana"
+          ],
+          "optionalRiskCopy": [
+            "Sin envío",
+            "Sin CRM",
+            "Sin calendario"
+          ],
+          "sourceEditAuthorizedBy092B": false
+        }
+      ],
+      "patchLimits": {
+        "mayAddStaticSafetyCopy": true,
+        "mayAddStaticBadges": true,
+        "mayMoveBusinessLogic": false,
+        "mayChangeDataFlow": false,
+        "mayAddHandlers": false,
+        "mayAddBackendCalls": false,
+        "mayCreateQuoteTruth": false,
+        "maySend": false,
+        "mayWriteCrm": false,
+        "mayCreateCalendar": false
+      }
+    }
+  ],
+  "authorizedSourcePatchFileCount": 3,
+  "sourceEditsAuthorizedIn093A": false,
+  "sourcePatchExecutionAuthorizedIn093A": false,
+  "093BMayEditOnlyAuthorizedFiles": true,
+  "093BMustFailIfNoAuthorizedFiles": true,
+  "allowedPatchKindFor093B": [
+    "static safety copy insertion",
+    "static safety badge insertion",
+    "non-executing preview boundary copy",
+    "non-executing human review boundary copy"
+  ],
+  "requiredVisibleSafetyCopy": [
+    "Preview",
+    "Solo lectura",
+    "Revisión humana",
+    "No cotización oficial",
+    "Sin envío",
+    "Sin CRM",
+    "Sin calendario"
+  ],
+  "forbiddenPatchEffects": [
+    "backend connection",
+    "provider call",
+    "parser execution",
+    "calculator execution",
+    "Banxico call",
+    "quote truth creation",
+    "official quote claim",
+    "send action",
+    "CRM write",
+    "calendar creation",
+    "runtime browser storage or network primitives",
+    "new action handler",
+    "business calculation change",
+    "data flow change"
+  ],
+  "patchScopeConstraints": [
+    "093A is scope-only and must not edit UI source files.",
+    "093B may only touch authorizedSourcePatchFilesFor093B.",
+    "093B must be a narrow static copy/badge patch only.",
+    "093B must not alter business logic, data flow, backend, provider, parser, calculator, Banxico, CRM, calendar, policy, pipeline, quote, or send modules.",
+    "093B must preserve desktop/mobile layer boundaries from 089R.",
+    "093B must preserve safe copy and badge labels from 090D.",
+    "093B must produce before/after evidence and a reversible backup."
+  ],
+  "next": "093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION",
+  "notAuthorized": {
+    "uiSourceEditsIn093A": false,
+    "componentImplementationIn093A": false,
+    "screenRendering": false,
+    "componentRendering": false,
+    "uiMutation": false,
+    "cssInjection": false,
+    "domWrite": false,
+    "quoteTruthCreation": false,
+    "backendConnection": false,
+    "providerCall": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "send": false,
+    "crmWrite": false,
+    "calendarCreate": false
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+},
+  "semanticQa": {
+  "status": "PASS",
+  "scopeValidated": true,
+  "errors": [],
+  "authorizedSourcePatchFileCount": 3,
+  "sourceEditsAuthorizedIn093A": false,
+  "sourcePatchExecutionAuthorizedIn093A": false,
+  "093BMayEditOnlyAuthorizedFiles": true,
+  "093BMustFailIfNoAuthorizedFiles": true,
+  "requiredVisibleSafetyCopyValidated": true,
+  "forbiddenPatchEffectsValidated": true,
+  "authorizedFileLimitsValidated": true,
+  "allEffectsBlocked": true,
+  "allSafetyFlagsFalse": true,
+  "next": "093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION"
+},
+  "confirmed": {
+    "scopeOnly": true,
+    "authorizedSourcePatchFilesScopedFor093B": true,
+    "sourceEditsAuthorizedIn093A": false,
+    "sourcePatchExecutionAuthorizedIn093A": false,
+    "093BMayEditOnlyAuthorizedFiles": true,
+    "093BMustFailIfNoAuthorizedFiles": true,
+    "requiredVisibleSafetyCopyValidated": true,
+    "forbiddenPatchEffectsValidated": true,
+    "allEffectsBlocked": true,
+    "allSafetyFlagsFalse": true
+  },
+  "notAuthorized": {
+    "uiSourceEditsIn093A": false,
+    "componentImplementationIn093A": false,
+    "screenRendering": false,
+    "componentRendering": false,
+    "uiMutation": false,
+    "cssInjection": false,
+    "domWrite": false,
+    "quoteTruthCreation": false,
+    "backendConnection": false,
+    "providerCall": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "send": false,
+    "crmWrite": false,
+    "calendarCreate": false
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  }
+}
