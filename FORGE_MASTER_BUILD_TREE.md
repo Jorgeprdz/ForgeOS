@@ -11968,3 +11968,40 @@ LOCKED_DECISION=REAL_PDF_DRY_RUN_SCOPE_LOCKED_WITH_REDACTION_AND_NO_RAW_PDF_COMM
 
 NEXT=106C_QUOTE_PREVIEW_EXTRACTION_SCHEMA_LOCK
 <!-- FORGE:106B_QUOTE_PREVIEW_REAL_PDF_DRY_RUN_SCOPE:END -->
+
+<!-- FORGE:106C_QUOTE_PREVIEW_EXTRACTION_SCHEMA_LOCK:START -->
+## 106C Quote Preview Extraction Schema Lock
+
+106C locks the redacted dry-run candidate extraction schema.
+
+Locked decision:
+`PDF_EXTRACTION_SCHEMA_LOCKED_FOR_REDACTED_DRY_RUN_CANDIDATES_ONLY`
+
+Confirmed:
+
+- schema version 106C.1 locked;
+- candidate record contract locked;
+- field list locked;
+- status enum locked;
+- confidence enum locked;
+- redaction classes locked;
+- UI mapping locked;
+- dry-run report sections locked;
+- quote summary fields include total aportado and total recuperación;
+- raw values remain local-only and must not be committed;
+- PDF read remains disabled;
+- parser execution remains disabled;
+- OCR execution remains disabled;
+- calculator execution remains disabled;
+- quote truth remains disabled;
+- source UI was not changed;
+- all safety flags remain false.
+
+LOCAL_RUN_DIR=/storage/emulated/0/Forge Gemini/pdf-dry-run-local
+
+DECISION=PASS_106C_QUOTE_PREVIEW_EXTRACTION_SCHEMA_LOCK
+
+LOCKED_DECISION=PDF_EXTRACTION_SCHEMA_LOCKED_FOR_REDACTED_DRY_RUN_CANDIDATES_ONLY
+
+NEXT=106D_QUOTE_PREVIEW_SAMPLE_EXTRACTION_DRY_RUN_REPORT
+<!-- FORGE:106C_QUOTE_PREVIEW_EXTRACTION_SCHEMA_LOCK:END -->

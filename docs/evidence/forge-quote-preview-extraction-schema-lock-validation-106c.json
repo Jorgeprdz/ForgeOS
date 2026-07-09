@@ -1,0 +1,45 @@
+{
+  "phase": "106C_QUOTE_PREVIEW_EXTRACTION_SCHEMA_LOCK",
+  "status": "PASS",
+  "decision": "PASS_106C_QUOTE_PREVIEW_EXTRACTION_SCHEMA_LOCK",
+  "lockedDecision": "PDF_EXTRACTION_SCHEMA_LOCKED_FOR_REDACTED_DRY_RUN_CANDIDATES_ONLY",
+  "schemaVersion": "106C.1",
+  "fieldCount": 15,
+  "statusEnumLocked": [
+    "not_attempted",
+    "found_redacted_candidate",
+    "not_found_in_pdf",
+    "ambiguous_needs_review",
+    "manual_input_required",
+    "blocked_until_parser_gate",
+    "blocked_until_human_review"
+  ],
+  "confidenceEnumLocked": [
+    "none",
+    "low",
+    "medium",
+    "high",
+    "human_verified"
+  ],
+  "redactionClassesLocked": [
+    "client_identity",
+    "date_or_validity",
+    "financial_value",
+    "free_text",
+    "product_label",
+    "quote_identifier",
+    "source_location_hint"
+  ],
+  "requiredQuoteSummaryFieldsPresent": true,
+  "pdfReadAllowedInThisPhase": false,
+  "parserExecutionAllowedInThisPhase": false,
+  "ocrExecutionAllowedInThisPhase": false,
+  "calculatorExecutionAllowedInThisPhase": false,
+  "quoteTruthAllowed": false,
+  "rawPdfCommitAllowed": false,
+  "unredactedEvidenceCommitAllowed": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "106D_QUOTE_PREVIEW_SAMPLE_EXTRACTION_DRY_RUN_REPORT",
+  "errors": []
+}
