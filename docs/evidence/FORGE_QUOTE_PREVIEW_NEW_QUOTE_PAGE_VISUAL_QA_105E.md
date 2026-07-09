@@ -3,12 +3,12 @@
 PHASE=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
 STATUS=PASS
 DECISION=PASS_105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
-LOCKED_DECISION=NEW_QUOTE_PAGE_PDF_FIRST_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION
+LOCKED_DECISION=NEW_QUOTE_PAGE_UPLOAD_SEND_SUMMARY_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION
 NEXT=105F_QUOTE_PREVIEW_NEW_QUOTE_PAGE_HUMAN_VISUAL_CONFIRMATION
 
 ## Test URL
 
-https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2
+https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5
 
 ## QA JSON
 
@@ -16,33 +16,36 @@ https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/
   "phase": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
   "status": "PASS",
   "decision": "PASS_105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
-  "lockedDecision": "NEW_QUOTE_PAGE_PDF_FIRST_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION",
+  "lockedDecision": "NEW_QUOTE_PAGE_UPLOAD_SEND_SUMMARY_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION",
   "routeModel": "dedicated_static_page",
-  "workflowModel": "pdf_first_less_clicks_sales_presentation_preparation",
-  "indexFile": "docs/static-preview/forge-alive/index.html",
-  "newPageFile": "docs/static-preview/forge-alive/nueva-cotizacion/index.html",
-  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2",
+  "workflowModel": "pdf_first_upload_send_summary_detail_print_sales_presentation_preparation",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
   "screenshots": {
-    "desktop": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-desktop.png",
-    "tablet": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-tablet.png",
-    "mobile": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-mobile.png"
+    "desktop": "docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-desktop.png",
+    "tablet": "docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-tablet.png",
+    "mobile": "docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-mobile.png"
   },
   "screenshotSizes": {
-    "desktop": 658538,
-    "tablet": 658538,
-    "mobile": 658538
+    "desktop": 619313,
+    "tablet": 619313,
+    "mobile": 619313
   },
+  "forgeGeminiDirectory": "/storage/emulated/0/Forge Gemini",
   "manualScreenshotMode": true,
   "automatedVisualJudgment": false,
   "requiresHumanVisualConfirmation": true,
   "staticChecks": {
-    "pdfFilePickerVisible": true,
-    "pdfReadEnabled": false,
-    "parserExecutionEnabled": false,
-    "textInputsEnabled": true,
+    "clearPdfSelectVisible": true,
+    "sendPdfButtonVisible": true,
+    "sendPdfButtonEnabled": false,
+    "checklistRemoved": true,
+    "quoteSummaryVisible": true,
+    "printSummaryButtonVisible": true,
     "salesPresentationCtaVisible": true,
     "salesPresentationGenerationEnabled": false,
-    "screenshotFilesPresent": true
+    "pdfSubmitAllowed": false,
+    "pdfReadEnabled": false,
+    "parserExecutionEnabled": false
   },
   "safetyFlags": {
     "crmWrite": false,
@@ -73,7 +76,9 @@ https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/
     "backendConnectionAllowed": false,
     "quoteTruthAllowed": false,
     "presentationGenerationAllowed": false,
-    "promptGenerationAllowed": false
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
   },
   "next": "105F_QUOTE_PREVIEW_NEW_QUOTE_PAGE_HUMAN_VISUAL_CONFIRMATION"
 }
@@ -84,24 +89,25 @@ https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/
   "phase": "105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS",
   "status": "PASS",
   "routeModel": "dedicated_static_page",
-  "workflowModel": "pdf_first_less_clicks_sales_presentation_preparation",
+  "workflowModel": "pdf_first_upload_send_summary_detail_print_sales_presentation_preparation",
   "screenshotsPresent": true,
   "screenshots": {
-    "desktop": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-desktop.png",
-    "tablet": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-tablet.png",
-    "mobile": "docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-mobile.png"
+    "desktop": "docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-desktop.png",
+    "tablet": "docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-tablet.png",
+    "mobile": "docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-mobile.png"
   },
   "allSafetyFlagsFalse": true,
   "automatedVisualJudgment": false,
   "humanVisualConfirmationRequired": true,
-  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
   "next": "105F_QUOTE_PREVIEW_NEW_QUOTE_PAGE_HUMAN_VISUAL_CONFIRMATION",
   "errors": []
 }
 
 ## Confirmed
 
-- PDF-first screenshot files exist.
+- 105DR5 screenshot evidence exists.
+- Screenshots were copied to Forge Gemini.
 - Static validation passed.
 - All real-effect flags remain false.
 - Human visual confirmation is still required.

@@ -9375,36 +9375,42 @@ NEXT=105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
 <!-- FORGE:105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS:START -->
 ## 105E Quote Preview New Quote Page Visual QA With Screenshots
 
-105E records screenshot evidence for the PDF-first dedicated Nueva cotización page.
+105E records screenshot evidence for the 105DR5 PDF upload-send, quote summary, and print review workflow.
 
 Locked decision:
-`NEW_QUOTE_PAGE_PDF_FIRST_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION`
+`NEW_QUOTE_PAGE_UPLOAD_SEND_SUMMARY_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION`
 
 Confirmed:
 
-- PDF-first screenshot files were recorded;
+- 105DR5 screenshot files were recorded;
+- screenshots were copied to Forge Gemini;
 - source static validation passed;
-- PDF file picker is visible but PDF reading is disabled;
-- text inputs are enabled locally;
+- clear PDF select is visible;
+- Enviar PDF para extracción is visible and disabled;
+- checklist is removed;
+- quote summary detail is visible;
+- print summary button is visible;
 - sales presentation CTA is visible but generation is disabled;
+- PDF submit/read/parser remain disabled;
 - all real-effect flags remain false;
 - automated visual judgment is false;
 - human visual confirmation is required in 105F.
 
-TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr2
+TEST_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5
 
-SCREENSHOT_DESKTOP=docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-desktop.png
+SCREENSHOT_DESKTOP=docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-desktop.png
 
-SCREENSHOT_TABLET=docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-tablet.png
+SCREENSHOT_TABLET=docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-tablet.png
 
-SCREENSHOT_MOBILE=docs/evidence/forge-new-quote-page-pdf-first-visual-qa-105e-mobile.png
+SCREENSHOT_MOBILE=docs/evidence/forge-new-quote-page-upload-send-summary-visual-qa-105e-mobile.png
 
 DECISION=PASS_105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS
 
-LOCKED_DECISION=NEW_QUOTE_PAGE_PDF_FIRST_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION
+LOCKED_DECISION=NEW_QUOTE_PAGE_UPLOAD_SEND_SUMMARY_SCREENSHOT_EVIDENCE_READY_FOR_HUMAN_VISUAL_CONFIRMATION
 
 NEXT=105F_QUOTE_PREVIEW_NEW_QUOTE_PAGE_HUMAN_VISUAL_CONFIRMATION
 <!-- FORGE:105E_QUOTE_PREVIEW_NEW_QUOTE_PAGE_VISUAL_QA_WITH_SCREENSHOTS:END -->
+
 
 <!-- FORGE:105DR3_QUOTE_PREVIEW_NEW_QUOTE_SUMMARY_PRINT_REPAIR:START -->
 ## 105DR3 Quote Preview New Quote Summary Print Repair
