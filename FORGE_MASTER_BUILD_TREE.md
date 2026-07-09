@@ -10931,3 +10931,36 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_LOC
 
 NEXT=097C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCK
 <!-- FORGE:097B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN:END -->
+
+<!-- FORGE:097C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCK:START -->
+## 097C Quote Preview Safe Module Entry Source Patch Regression Plan QA Lock
+
+097C QA-locks the static regression plan created in 097B.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCKED`
+
+Confirmed:
+
+- QA lock only;
+- 097A regression scope validates;
+- 097B regression plan validates;
+- planned patched file is `docs/static-preview/forge-alive/index.html`;
+- required static fragments are recorded;
+- required planned check IDs are recorded;
+- every planned check has execution disabled;
+- 097E execution gate is present;
+- no source edits authorized in 097C;
+- no regression execution authorized in 097C;
+- no route or navigation execution authorized in 097C;
+- no UI rendering authorized in 097C;
+- no runtime execution authorized in 097C;
+- no real effects authorized in 097C;
+- all safety flags remain false.
+
+DECISION=PASS_097C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCK
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCKED
+
+NEXT=097D_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_DECISION_LOCK
+<!-- FORGE:097C_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_REGRESSION_PLAN_QA_LOCK:END -->
