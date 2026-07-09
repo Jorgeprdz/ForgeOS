@@ -12138,3 +12138,41 @@ LOCKED_DECISION=TEXT_LAYER_PROBE_GATE_LOCKED_WITH_NO_CONTENT_READ_AND_NO_RAW_TEX
 
 NEXT=106H_QUOTE_PREVIEW_REAL_PDF_TEXT_LAYER_PROBE_DRY_RUN
 <!-- FORGE:106G_QUOTE_PREVIEW_REAL_PDF_TEXT_LAYER_PROBE_GATE:END -->
+
+<!-- FORGE:106H_QUOTE_PREVIEW_REAL_PDF_TEXT_LAYER_PROBE_DRY_RUN:START -->
+## 106H Quote Preview Real PDF Text Layer Probe Dry Run
+
+106H performs the first local text-layer probe against the real PDF reference.
+
+Locked decision:
+`TEXT_LAYER_PROBE_DRY_RUN_EXECUTED_WITH_NO_RAW_TEXT_COMMIT_NO_OCR_NO_PARSER`
+
+Confirmed:
+
+- operator token accepted;
+- local binary probe executed;
+- text layer probe executed;
+- text layer presence candidate recorded;
+- raw PDF was not committed;
+- actual PDF path was not committed;
+- raw PDF text was not committed;
+- OCR execution remains disabled;
+- parser execution remains disabled;
+- field extraction was not executed;
+- calculator execution remains disabled;
+- quote truth remains disabled;
+- source UI was not changed;
+- all safety flags remain false.
+
+TEXT_LAYER_PRESENCE_CANDIDATE=present_candidate
+
+PAGE_COUNT_CANDIDATE=2
+
+OCR_NEEDED_CANDIDATE=no_candidate
+
+DECISION=PASS_106H_QUOTE_PREVIEW_REAL_PDF_TEXT_LAYER_PROBE_DRY_RUN
+
+LOCKED_DECISION=TEXT_LAYER_PROBE_DRY_RUN_EXECUTED_WITH_NO_RAW_TEXT_COMMIT_NO_OCR_NO_PARSER
+
+NEXT=106I_QUOTE_PREVIEW_TEXT_LAYER_RESULT_ROUTER
+<!-- FORGE:106H_QUOTE_PREVIEW_REAL_PDF_TEXT_LAYER_PROBE_DRY_RUN:END -->
