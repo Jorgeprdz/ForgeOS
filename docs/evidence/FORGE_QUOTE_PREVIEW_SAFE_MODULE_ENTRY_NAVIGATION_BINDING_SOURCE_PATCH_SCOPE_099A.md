@@ -1,0 +1,248 @@
+# Forge Quote Preview Safe Module Entry Navigation Binding Source Patch Scope Evidence 099A
+
+PHASE=099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE
+
+STATUS=PASS
+
+DECISION=PASS_099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPED
+
+NEXT=099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION
+
+## Discovery
+
+```json
+{
+  "phase": "099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "source": "docs/static-preview/forge-alive/index.html",
+  "discoveryType": "static_source_patch_scope_discovery_only",
+  "signals": {
+    "indexExists": true,
+    "candidateRouteHashPresent": true,
+    "candidateCommandPresent": true,
+    "targetPanelIdPresent": true,
+    "targetNoteIdPresent": true,
+    "previewOnlyPresent": true,
+    "humanReviewRequiredPresent": true,
+    "routeExecutionDisabledPresent": true,
+    "navigationExecutionDisabledPresent": true,
+    "officialQuoteDisabledPresent": true,
+    "quoteTruthDisabledPresent": true,
+    "sendDisabledPresent": true,
+    "crmDisabledPresent": true,
+    "calendarDisabledPresent": true,
+    "safeCopyPresent": true
+  },
+  "forbiddenRuntimeSignalsInside096BPatchBlock": {
+    "scriptInside096BPatchBlock": false,
+    "inlineHandlerInside096BPatchBlock": false,
+    "listenerInside096BPatchBlock": false,
+    "routeOrNavigationTriggerInside096BPatchBlock": false
+  },
+  "candidatePatchTarget": {
+    "authorizedFile": "docs/static-preview/forge-alive/index.html",
+    "targetPanelId": "forge-quote-preview-safe-entry-panel-096b",
+    "targetNoteId": "forge-quote-preview-safe-entry-note-096b",
+    "candidateRouteHash": "#cotizaciones",
+    "candidateCommand": "/cotizar",
+    "candidateElementCount": 3
+  },
+  "sourceEditsPerformedIn099A": false,
+  "navigationBindingPerformedIn099A": false,
+  "routeBindingPerformedIn099A": false,
+  "navigationExecutionPerformedIn099A": false,
+  "uiRenderingPerformedIn099A": false,
+  "runtimeExecutionPerformedIn099A": false,
+  "realEffectsPerformedIn099A": false,
+  "errors": [],
+  "next": "099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION"
+}
+```
+
+## Source Patch Scope
+
+```json
+{
+  "phase": "099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPED",
+  "scopeType": "source_patch_scope_only",
+  "base": {
+    "phase": "098BCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_FAST_TRACK",
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE",
+    "source": "docs/evidence/forge-quote-preview-safe-module-entry-navigation-binding-fast-track-audit-098bcd.json"
+  },
+  "authorizedSourcePatchFor099B": {
+    "authorizedFiles": [
+      {
+        "path": "docs/static-preview/forge-alive/index.html",
+        "authorization": "ONLY_FILE_AUTHORIZED_FOR_099B_SOURCE_PATCH",
+        "patchKind": "safe_static_navigation_binding_metadata_and_accessibility_attributes_only",
+        "allowedOperations": [
+          "add 099B static data-forge navigation-binding attributes to existing Quote Preview / Cotizaciones entry",
+          "add 099B static aria relationship attributes if target panel and note ids already exist",
+          "add 099B static safe boundary note reference if needed",
+          "add 099B static candidate hash metadata",
+          "preserve all 096B false safety attributes"
+        ],
+        "notAllowedOperations": [
+          "create script tag",
+          "create inline event handler",
+          "create JavaScript listener",
+          "edit JavaScript source",
+          "edit CSS source",
+          "execute route binding",
+          "execute navigation",
+          "render UI",
+          "connect backend",
+          "call provider",
+          "execute parser",
+          "execute calculator",
+          "call Banxico",
+          "create official quote",
+          "create quote truth",
+          "send message",
+          "write CRM",
+          "create calendar event",
+          "change business logic",
+          "change data flow",
+          "perform real effect"
+        ]
+      }
+    ],
+    "authorizedFileCount": 1,
+    "candidateRouteHash": "#cotizaciones",
+    "targetPanelId": "forge-quote-preview-safe-entry-panel-096b",
+    "targetNoteId": "forge-quote-preview-safe-entry-note-096b",
+    "candidateCommand": "/cotizar"
+  },
+  "required099BImplementationBoundaries": {
+    "sourceEditsAuthorizedIn099B": true,
+    "onlyAuthorizedFileMayBeEdited": true,
+    "onlyStaticHtmlMetadataAndAccessibilityAttributes": true,
+    "scriptTagCreationAllowedIn099B": false,
+    "inlineEventHandlerAllowedIn099B": false,
+    "javascriptListenerAllowedIn099B": false,
+    "javascriptSourceEditAllowedIn099B": false,
+    "cssSourceEditAllowedIn099B": false,
+    "routeBindingExecutionAllowedIn099B": false,
+    "navigationExecutionAllowedIn099B": false,
+    "uiRenderingAllowedIn099B": false,
+    "runtimeExecutionAllowedIn099B": false,
+    "backendConnectionAllowedIn099B": false,
+    "providerCallAllowedIn099B": false,
+    "parserExecutionAllowedIn099B": false,
+    "calculatorExecutionAllowedIn099B": false,
+    "banxicoCallAllowedIn099B": false,
+    "officialQuoteCreationAllowedIn099B": false,
+    "quoteTruthCreationAllowedIn099B": false,
+    "sendAllowedIn099B": false,
+    "crmWriteAllowedIn099B": false,
+    "calendarCreateAllowedIn099B": false,
+    "businessLogicChangeAllowedIn099B": false,
+    "dataFlowChangeAllowedIn099B": false,
+    "realEffectsAllowedIn099B": false
+  },
+  "sourceEditsPerformedIn099A": false,
+  "navigationBindingPerformedIn099A": false,
+  "routeBindingPerformedIn099A": false,
+  "navigationExecutionPerformedIn099A": false,
+  "uiRenderingPerformedIn099A": false,
+  "runtimeExecutionPerformedIn099A": false,
+  "realEffectsPerformedIn099A": false,
+  "next": "099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION",
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": []
+}
+```
+
+## Audit
+
+```json
+{
+  "phase": "099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPED",
+  "base": {
+    "phase": "098BCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_FAST_TRACK",
+    "confirmed": true,
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE"
+  },
+  "next": "099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION",
+  "confirmed": {
+    "scopeOnly": true,
+    "authorizedFileCountIsOne": true,
+    "authorizedFileIsIndexHtml": true,
+    "sourceEditsPerformedIn099A": false,
+    "navigationBindingPerformedIn099A": false,
+    "routeBindingPerformedIn099A": false,
+    "navigationExecutionPerformedIn099A": false,
+    "uiRenderingPerformedIn099A": false,
+    "runtimeExecutionPerformedIn099A": false,
+    "realEffectsPerformedIn099A": false,
+    "099BMayEditOnlyAuthorizedFile": true,
+    "099BMayAddOnlyStaticNavigationMetadataAndAccessibilityAttributes": true,
+    "099BMayNotCreateScriptOrRuntimeHandlers": true,
+    "allSafetyFlagsFalse": true
+  },
+  "authorizedFilesFor099B": [
+    "docs/static-preview/forge-alive/index.html"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": []
+}
+```
+
+DECISION=PASS_099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPED
+
+NEXT=099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION

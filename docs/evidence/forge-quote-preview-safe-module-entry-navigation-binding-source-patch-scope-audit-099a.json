@@ -1,0 +1,55 @@
+{
+  "phase": "099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE",
+  "status": "PASS",
+  "decision": "PASS_099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE",
+  "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPED",
+  "base": {
+    "phase": "098BCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_FAST_TRACK",
+    "confirmed": true,
+    "lockedDecision": "QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_LOCKED_AS_SOURCE_PATCH_SCOPE_PREREQUISITE"
+  },
+  "next": "099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION",
+  "confirmed": {
+    "scopeOnly": true,
+    "authorizedFileCountIsOne": true,
+    "authorizedFileIsIndexHtml": true,
+    "sourceEditsPerformedIn099A": false,
+    "navigationBindingPerformedIn099A": false,
+    "routeBindingPerformedIn099A": false,
+    "navigationExecutionPerformedIn099A": false,
+    "uiRenderingPerformedIn099A": false,
+    "runtimeExecutionPerformedIn099A": false,
+    "realEffectsPerformedIn099A": false,
+    "099BMayEditOnlyAuthorizedFile": true,
+    "099BMayAddOnlyStaticNavigationMetadataAndAccessibilityAttributes": true,
+    "099BMayNotCreateScriptOrRuntimeHandlers": true,
+    "allSafetyFlagsFalse": true
+  },
+  "authorizedFilesFor099B": [
+    "docs/static-preview/forge-alive/index.html"
+  ],
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false
+  },
+  "errors": []
+}

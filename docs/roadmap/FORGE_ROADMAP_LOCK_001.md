@@ -7777,3 +7777,35 @@ LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_LOCKED_AS_SOU
 
 NEXT=099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE
 <!-- FORGE:098BCD_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_FAST_TRACK:END -->
+
+<!-- FORGE:099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE:START -->
+## 099A Quote Preview Safe Module Entry Navigation Binding Source Patch Scope
+
+099A scopes the source patch for safe navigation binding of the Quote Preview / Cotizaciones entry.
+
+Locked decision:
+`QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPED`
+
+Confirmed:
+
+- scope only;
+- authorized file count is one;
+- authorized file is `docs/static-preview/forge-alive/index.html`;
+- 099B may edit only the authorized file;
+- 099B may add only static navigation-binding metadata and accessibility attributes;
+- 099B may not create scripts, inline handlers, or runtime listeners;
+- no source edits performed in 099A;
+- no navigation binding performed in 099A;
+- no route binding performed in 099A;
+- no navigation execution performed in 099A;
+- no UI rendering performed in 099A;
+- no runtime execution performed in 099A;
+- no real effects performed in 099A;
+- all safety flags remain false.
+
+DECISION=PASS_099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE
+
+LOCKED_DECISION=QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPED
+
+NEXT=099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION
+<!-- FORGE:099A_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_SCOPE:END -->
