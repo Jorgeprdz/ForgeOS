@@ -1,0 +1,884 @@
+# Forge Quote Preview Candidate Review Packet Dry Run Evidence 106S
+
+PHASE=106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN
+STATUS=PASS
+DECISION=PASS_106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN
+LOCKED_DECISION=CANDIDATE_REVIEW_PACKET_DRY_RUN_COMPLETE_FROM_REDACTED_CANDIDATES_ONLY_NO_VALUES_NO_TRUTH
+NEXT=106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE
+
+## Packet JSON
+
+{
+  "phase": "106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN",
+  "status": "PASS",
+  "decision": "PASS_106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN",
+  "lockedDecision": "CANDIDATE_REVIEW_PACKET_DRY_RUN_COMPLETE_FROM_REDACTED_CANDIDATES_ONLY_NO_VALUES_NO_TRUTH",
+  "basePhase": "106R_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_GATE",
+  "schemaVersion": "106C.1",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
+  "packetId": "FORGE-QUOTE-PREVIEW-REDACTED-CANDIDATE-REVIEW-106S",
+  "packetType": "human_review_packet_from_redacted_candidates_only",
+  "sourceUiChanged": false,
+  "fastTrackMode": {
+    "manualOperatorTokenRequired": false,
+    "internalDryRunGuardAccepted": "HUMAN_REVIEW_PACKET_FROM_REDACTED_CANDIDATES_ONLY"
+  },
+  "sourcePolicy": {
+    "usedCommittedRedactedCandidateRecordsOnly": true,
+    "rawPdfAccessed": false,
+    "rawTextAccessed": false,
+    "actualPdfPathAccessed": false,
+    "rawValueExtracted": false,
+    "realValueExtracted": false,
+    "candidateApprovalAsTruth": false
+  },
+  "summary": {
+    "candidateRecordCount": 28,
+    "reviewLineItemCount": 28,
+    "criticalTargetCount": 6,
+    "reviewSectionCount": 6,
+    "ambiguousOrMissingGroupCount": 1,
+    "allCriticalTargetsHaveReviewSections": true
+  },
+  "criticalTargetCoverage": [
+    {
+      "fieldKey": "plan_sum_insured_and_premium",
+      "targetDisplayLabel": "Plan, suma asegurada y prima",
+      "candidateRecordCount": 11,
+      "foundRedactedPlaceholderCount": 11,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "payment_form_currency_and_validity",
+      "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+      "candidateRecordCount": 6,
+      "foundRedactedPlaceholderCount": 5,
+      "missingOrAmbiguousCount": 1,
+      "sectionStatus": "ready_for_human_review",
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "total_aportado",
+      "targetDisplayLabel": "Total aportado",
+      "candidateRecordCount": 2,
+      "foundRedactedPlaceholderCount": 2,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "total_recuperacion",
+      "targetDisplayLabel": "Total recuperación",
+      "candidateRecordCount": 2,
+      "foundRedactedPlaceholderCount": 2,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "values_benefits_or_scenarios_relevant_to_plan",
+      "targetDisplayLabel": "Valores, beneficios o escenarios relevantes",
+      "candidateRecordCount": 1,
+      "foundRedactedPlaceholderCount": 1,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "missing_items_before_presentation",
+      "targetDisplayLabel": "Faltantes antes de presentar",
+      "candidateRecordCount": 6,
+      "foundRedactedPlaceholderCount": 6,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "humanReviewRequired": true
+    }
+  ],
+  "candidateGroupsByField": [
+    {
+      "fieldKey": "plan_sum_insured_and_premium",
+      "targetDisplayLabel": "Plan, suma asegurada y prima",
+      "candidateRecordCount": 11,
+      "foundRedactedPlaceholderCount": 11,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "candidateLineItems": [
+        {
+          "candidateId": "106Q-CAND-0001",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "ASEGURADA",
+          "redactedCandidateClass": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRedacted": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0002",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "ASEGURADA",
+          "redactedCandidateClass": "[SAFE_LABEL:SUMA]",
+          "candidateValueRedacted": "[SAFE_LABEL:SUMA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0003",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "ASEGURADA",
+          "redactedCandidateClass": "[SAFE_LABEL:ASEGURADA]",
+          "candidateValueRedacted": "[SAFE_LABEL:ASEGURADA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0004",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "PRIMA",
+          "redactedCandidateClass": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRedacted": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0005",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "PRIMA",
+          "redactedCandidateClass": "[SAFE_LABEL:SUMA]",
+          "candidateValueRedacted": "[SAFE_LABEL:SUMA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0006",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "PRIMA",
+          "redactedCandidateClass": "[SAFE_LABEL:ASEGURADA]",
+          "candidateValueRedacted": "[SAFE_LABEL:ASEGURADA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0007",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "SUMA",
+          "redactedCandidateClass": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRedacted": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0008",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "SUMA",
+          "redactedCandidateClass": "[SAFE_LABEL:SUMA]",
+          "candidateValueRedacted": "[SAFE_LABEL:SUMA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0009",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "SUMA",
+          "redactedCandidateClass": "[SAFE_LABEL:ASEGURADA]",
+          "candidateValueRedacted": "[SAFE_LABEL:ASEGURADA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0010",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "PRIMA",
+          "redactedCandidateClass": "[AMOUNT_REDACTED]",
+          "candidateValueRedacted": "[AMOUNT_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0011",
+          "fieldKey": "plan_sum_insured_and_premium",
+          "targetDisplayLabel": "Plan, suma asegurada y prima",
+          "anchorLabel": "PRIMA",
+          "redactedCandidateClass": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRedacted": "[SAFE_LABEL:PRIMA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        }
+      ],
+      "reviewInstructions": [
+        "Treat every candidate as a redacted location hint only.",
+        "Do not treat candidate placeholders as real values.",
+        "Do not populate UI from this packet.",
+        "Do not generate presentation from this packet.",
+        "Keep quote truth disabled until a later explicit phase."
+      ],
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "payment_form_currency_and_validity",
+      "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+      "candidateRecordCount": 6,
+      "foundRedactedPlaceholderCount": 5,
+      "missingOrAmbiguousCount": 1,
+      "sectionStatus": "ready_for_human_review",
+      "candidateLineItems": [
+        {
+          "candidateId": "106Q-CAND-0012",
+          "fieldKey": "payment_form_currency_and_validity",
+          "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+          "anchorLabel": "MONEDA",
+          "redactedCandidateClass": "[SAFE_LABEL:PAGO]",
+          "candidateValueRedacted": "[SAFE_LABEL:PAGO]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0013",
+          "fieldKey": "payment_form_currency_and_validity",
+          "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+          "anchorLabel": "MONEDA",
+          "redactedCandidateClass": "[SAFE_LABEL:MONEDA]",
+          "candidateValueRedacted": "[SAFE_LABEL:MONEDA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0014",
+          "fieldKey": "payment_form_currency_and_validity",
+          "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+          "anchorLabel": "PAGO",
+          "redactedCandidateClass": "[SAFE_LABEL:PAGO]",
+          "candidateValueRedacted": "[SAFE_LABEL:PAGO]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0015",
+          "fieldKey": "payment_form_currency_and_validity",
+          "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+          "anchorLabel": "PAGO",
+          "redactedCandidateClass": "[SAFE_LABEL:MONEDA]",
+          "candidateValueRedacted": "[SAFE_LABEL:MONEDA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0016",
+          "fieldKey": "payment_form_currency_and_validity",
+          "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+          "anchorLabel": "ANUAL",
+          "redactedCandidateClass": null,
+          "candidateValueRedacted": null,
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "not_found_in_redacted_anchor_windows",
+          "confidence": "none",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0017",
+          "fieldKey": "payment_form_currency_and_validity",
+          "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+          "anchorLabel": "ANUAL",
+          "redactedCandidateClass": "[AMOUNT_REDACTED]",
+          "candidateValueRedacted": "[AMOUNT_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        }
+      ],
+      "reviewInstructions": [
+        "Treat every candidate as a redacted location hint only.",
+        "Do not treat candidate placeholders as real values.",
+        "Do not populate UI from this packet.",
+        "Do not generate presentation from this packet.",
+        "Keep quote truth disabled until a later explicit phase."
+      ],
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "total_aportado",
+      "targetDisplayLabel": "Total aportado",
+      "candidateRecordCount": 2,
+      "foundRedactedPlaceholderCount": 2,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "candidateLineItems": [
+        {
+          "candidateId": "106Q-CAND-0018",
+          "fieldKey": "total_aportado",
+          "targetDisplayLabel": "Total aportado",
+          "anchorLabel": "TOTAL",
+          "redactedCandidateClass": "[AMOUNT_REDACTED]",
+          "candidateValueRedacted": "[AMOUNT_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0019",
+          "fieldKey": "total_aportado",
+          "targetDisplayLabel": "Total aportado",
+          "anchorLabel": "TOTAL",
+          "redactedCandidateClass": "[SAFE_LABEL:TOTAL]",
+          "candidateValueRedacted": "[SAFE_LABEL:TOTAL]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        }
+      ],
+      "reviewInstructions": [
+        "Treat every candidate as a redacted location hint only.",
+        "Do not treat candidate placeholders as real values.",
+        "Do not populate UI from this packet.",
+        "Do not generate presentation from this packet.",
+        "Keep quote truth disabled until a later explicit phase."
+      ],
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "total_recuperacion",
+      "targetDisplayLabel": "Total recuperación",
+      "candidateRecordCount": 2,
+      "foundRedactedPlaceholderCount": 2,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "candidateLineItems": [
+        {
+          "candidateId": "106Q-CAND-0020",
+          "fieldKey": "total_recuperacion",
+          "targetDisplayLabel": "Total recuperación",
+          "anchorLabel": "TOTAL",
+          "redactedCandidateClass": "[AMOUNT_REDACTED]",
+          "candidateValueRedacted": "[AMOUNT_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0021",
+          "fieldKey": "total_recuperacion",
+          "targetDisplayLabel": "Total recuperación",
+          "anchorLabel": "TOTAL",
+          "redactedCandidateClass": "[SAFE_LABEL:TOTAL]",
+          "candidateValueRedacted": "[SAFE_LABEL:TOTAL]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        }
+      ],
+      "reviewInstructions": [
+        "Treat every candidate as a redacted location hint only.",
+        "Do not treat candidate placeholders as real values.",
+        "Do not populate UI from this packet.",
+        "Do not generate presentation from this packet.",
+        "Keep quote truth disabled until a later explicit phase."
+      ],
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "values_benefits_or_scenarios_relevant_to_plan",
+      "targetDisplayLabel": "Valores, beneficios o escenarios relevantes",
+      "candidateRecordCount": 1,
+      "foundRedactedPlaceholderCount": 1,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "candidateLineItems": [
+        {
+          "candidateId": "106Q-CAND-0022",
+          "fieldKey": "values_benefits_or_scenarios_relevant_to_plan",
+          "targetDisplayLabel": "Valores, beneficios o escenarios relevantes",
+          "anchorLabel": "COBERTURA",
+          "redactedCandidateClass": "[SAFE_LABEL:COBERTURA]",
+          "candidateValueRedacted": "[SAFE_LABEL:COBERTURA]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "found_redacted_placeholder_candidate",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        }
+      ],
+      "reviewInstructions": [
+        "Treat every candidate as a redacted location hint only.",
+        "Do not treat candidate placeholders as real values.",
+        "Do not populate UI from this packet.",
+        "Do not generate presentation from this packet.",
+        "Keep quote truth disabled until a later explicit phase."
+      ],
+      "humanReviewRequired": true
+    },
+    {
+      "fieldKey": "missing_items_before_presentation",
+      "targetDisplayLabel": "Faltantes antes de presentar",
+      "candidateRecordCount": 6,
+      "foundRedactedPlaceholderCount": 6,
+      "missingOrAmbiguousCount": 0,
+      "sectionStatus": "ready_for_human_review",
+      "candidateLineItems": [
+        {
+          "candidateId": "106Q-CAND-0023",
+          "fieldKey": "missing_items_before_presentation",
+          "targetDisplayLabel": "Faltantes antes de presentar",
+          "anchorLabel": "EDAD",
+          "redactedCandidateClass": "[TEXT_REDACTED]",
+          "candidateValueRedacted": "[TEXT_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "ambiguous_redacted_context_requires_review",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0024",
+          "fieldKey": "missing_items_before_presentation",
+          "targetDisplayLabel": "Faltantes antes de presentar",
+          "anchorLabel": "EDAD",
+          "redactedCandidateClass": "[NUMBER_REDACTED]",
+          "candidateValueRedacted": "[NUMBER_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "ambiguous_redacted_context_requires_review",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0025",
+          "fieldKey": "missing_items_before_presentation",
+          "targetDisplayLabel": "Faltantes antes de presentar",
+          "anchorLabel": "EDAD",
+          "redactedCandidateClass": "[DATE_REDACTED]",
+          "candidateValueRedacted": "[DATE_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "ambiguous_redacted_context_requires_review",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0026",
+          "fieldKey": "missing_items_before_presentation",
+          "targetDisplayLabel": "Faltantes antes de presentar",
+          "anchorLabel": "EDAD",
+          "redactedCandidateClass": "[SAFE_LABEL:EDAD]",
+          "candidateValueRedacted": "[SAFE_LABEL:EDAD]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "ambiguous_redacted_context_requires_review",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0027",
+          "fieldKey": "missing_items_before_presentation",
+          "targetDisplayLabel": "Faltantes antes de presentar",
+          "anchorLabel": "FUMADOR",
+          "redactedCandidateClass": "[TEXT_REDACTED]",
+          "candidateValueRedacted": "[TEXT_REDACTED]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "ambiguous_redacted_context_requires_review",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        },
+        {
+          "candidateId": "106Q-CAND-0028",
+          "fieldKey": "missing_items_before_presentation",
+          "targetDisplayLabel": "Faltantes antes de presentar",
+          "anchorLabel": "FUMADOR",
+          "redactedCandidateClass": "[SAFE_LABEL:FUMADOR]",
+          "candidateValueRedacted": "[SAFE_LABEL:FUMADOR]",
+          "candidateValueRaw": null,
+          "candidateValueReal": null,
+          "status": "ambiguous_redacted_context_requires_review",
+          "confidence": "medium",
+          "needsHumanReview": true,
+          "reviewDisposition": "needs_manual_value_review",
+          "candidateIsTruth": false,
+          "uiPopulationAllowed": false,
+          "quoteTruthAllowed": false,
+          "presentationGenerationAllowed": false
+        }
+      ],
+      "reviewInstructions": [
+        "Treat every candidate as a redacted location hint only.",
+        "Do not treat candidate placeholders as real values.",
+        "Do not populate UI from this packet.",
+        "Do not generate presentation from this packet.",
+        "Keep quote truth disabled until a later explicit phase."
+      ],
+      "humanReviewRequired": true
+    }
+  ],
+  "ambiguousOrMissingItems": [
+    {
+      "fieldKey": "payment_form_currency_and_validity",
+      "missingOrAmbiguousRecordCount": 1,
+      "status": "needs_human_review",
+      "reason": "one_or_more_candidates_lack_redacted_placeholder_class"
+    }
+  ],
+  "humanReviewChecklist": [
+    {
+      "checkId": "review-redacted-location",
+      "label": "Confirm candidates are redacted location hints only.",
+      "status": "required_pending_human",
+      "mayCreateTruth": false
+    },
+    {
+      "checkId": "review-missing-or-ambiguous",
+      "label": "Review missing or ambiguous candidate groups.",
+      "status": "required_pending_human",
+      "mayCreateTruth": false
+    },
+    {
+      "checkId": "review-no-ui-population",
+      "label": "Confirm no candidate can populate the UI yet.",
+      "status": "passed_by_gate",
+      "mayCreateTruth": false
+    },
+    {
+      "checkId": "review-no-presentation",
+      "label": "Confirm no presentation can be generated from candidates yet.",
+      "status": "passed_by_gate",
+      "mayCreateTruth": false
+    },
+    {
+      "checkId": "review-no-real-values",
+      "label": "Confirm no real values were extracted or committed.",
+      "status": "passed_by_gate",
+      "mayCreateTruth": false
+    }
+  ],
+  "blockedActions": [
+    "raw_pdf_access",
+    "raw_text_access",
+    "raw_value_extraction",
+    "real_value_extraction",
+    "candidate_approval_as_truth",
+    "ui_population",
+    "presentation_generation",
+    "parser_execution",
+    "ocr_execution",
+    "calculator_execution",
+    "backend_connection",
+    "crm_write"
+  ],
+  "rulesConfirmed": {
+    "reviewPacketCreated": true,
+    "reviewPacketFromRedactedCandidatesOnly": true,
+    "candidateRecordsAreNotTruth": true,
+    "humanReviewRequired": true,
+    "rawPdfAccessed": false,
+    "rawTextAccessed": false,
+    "actualPdfPathAccessed": false,
+    "rawValueExtracted": false,
+    "realValueExtracted": false,
+    "candidateApprovalAsTruth": false,
+    "parserExecuted": false,
+    "ocrExecuted": false,
+    "calculatorExecuted": false,
+    "quoteTruthCreated": false,
+    "uiPopulated": false,
+    "presentationGenerated": false,
+    "backendConnectionUsed": false,
+    "crmWriteUsed": false
+  },
+  "nextGate": {
+    "nextPhase": "106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE",
+    "purpose": "Define safe human review dispositions without approving real values or creating quote truth.",
+    "manualOperatorTokenRequired": false,
+    "currentPhaseRealValuesExtracted": false,
+    "currentPhaseQuoteTruthCreated": false
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
+  },
+  "next": "106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE"
+}
+
+## Validation JSON
+
+{
+  "phase": "106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN",
+  "status": "PASS",
+  "decision": "PASS_106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN",
+  "lockedDecision": "CANDIDATE_REVIEW_PACKET_DRY_RUN_COMPLETE_FROM_REDACTED_CANDIDATES_ONLY_NO_VALUES_NO_TRUTH",
+  "manualOperatorTokenRequired": false,
+  "internalDryRunGuardAccepted": "HUMAN_REVIEW_PACKET_FROM_REDACTED_CANDIDATES_ONLY",
+  "packetType": "human_review_packet_from_redacted_candidates_only",
+  "candidateRecordCount": 28,
+  "reviewLineItemCount": 28,
+  "criticalTargetCount": 6,
+  "reviewSectionCount": 6,
+  "ambiguousOrMissingGroupCount": 1,
+  "reviewPacketCreated": true,
+  "reviewPacketFromRedactedCandidatesOnly": true,
+  "candidateRecordsAreNotTruth": true,
+  "rawPdfAccessed": false,
+  "rawTextAccessed": false,
+  "rawValueExtracted": false,
+  "realValueExtracted": false,
+  "candidateApprovalAsTruth": false,
+  "parserExecuted": false,
+  "ocrExecuted": false,
+  "calculatorExecuted": false,
+  "quoteTruthCreated": false,
+  "uiPopulated": false,
+  "presentationGenerated": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE",
+  "errors": []
+}
+
+## Confirmed
+
+- Manual operator token is not required.
+- Internal dry-run guard accepted.
+- Review packet was created.
+- Review packet is from redacted candidates only.
+- Candidate records are not truth.
+- Human review is required.
+- Raw PDF was not accessed.
+- Raw text was not accessed.
+- Raw value was not extracted.
+- Real value was not extracted.
+- Candidate truth is forbidden.
+- Parser was not executed.
+- OCR was not executed.
+- Calculator was not executed.
+- Quote truth was not created.
+- UI was not populated.
+- Presentation was not generated.
+- Source UI was not changed.

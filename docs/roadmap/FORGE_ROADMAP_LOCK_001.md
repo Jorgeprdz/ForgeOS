@@ -9191,3 +9191,48 @@ LOCKED_DECISION=CANDIDATE_REVIEW_PACKET_GATE_LOCKED_FOR_HUMAN_REVIEW_ONLY_NO_REA
 
 NEXT=106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN
 <!-- FORGE:106R_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_GATE:END -->
+
+<!-- FORGE:106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN:START -->
+## 106S Quote Preview Candidate Review Packet Dry Run
+
+106S creates a human review packet from committed redacted candidate records only.
+
+Locked decision:
+`CANDIDATE_REVIEW_PACKET_DRY_RUN_COMPLETE_FROM_REDACTED_CANDIDATES_ONLY_NO_VALUES_NO_TRUTH`
+
+Confirmed:
+
+- manual operator token not required;
+- internal dry-run guard accepted;
+- review packet created;
+- review packet from redacted candidates only;
+- candidate records are not truth;
+- human review required;
+- raw PDF not accessed;
+- raw text not accessed;
+- raw value not extracted;
+- real value not extracted;
+- candidate truth forbidden;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- source UI was not changed;
+- all safety flags remain false.
+
+CANDIDATE_RECORD_COUNT=28
+
+REVIEW_LINE_ITEM_COUNT=28
+
+REVIEW_SECTION_COUNT=6
+
+AMBIGUOUS_OR_MISSING_GROUP_COUNT=1
+
+DECISION=PASS_106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN
+
+LOCKED_DECISION=CANDIDATE_REVIEW_PACKET_DRY_RUN_COMPLETE_FROM_REDACTED_CANDIDATES_ONLY_NO_VALUES_NO_TRUTH
+
+NEXT=106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE
+<!-- FORGE:106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN:END -->
