@@ -10027,3 +10027,43 @@ LOCKED_DECISION=FIELD_ANCHOR_WINDOW_GATE_LOCKED_WITH_NO_VALUE_EXTRACTION_NO_PARS
 
 NEXT=106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN
 <!-- FORGE:106N_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_GATE:END -->
+
+<!-- FORGE:106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN:START -->
+## 106O Quote Preview Field Anchor Window Dry Run
+
+106O creates redacted anchor windows around safe labels.
+
+Locked decision:
+`FIELD_ANCHOR_WINDOW_DRY_RUN_COMPLETE_WITH_REDACTED_CONTEXT_ONLY_NO_VALUES`
+
+Confirmed:
+
+- operator token accepted;
+- anchor window records created;
+- only committed redacted samples used;
+- only committed label map used;
+- raw PDF not accessed;
+- raw text not accessed;
+- raw text not committed;
+- anchor windows are context, not values;
+- value extraction was not executed;
+- field candidate extraction was not executed;
+- OCR execution remains disabled;
+- parser execution remains disabled;
+- calculator execution remains disabled;
+- quote truth remains disabled;
+- source UI was not changed;
+- all safety flags remain false.
+
+ANCHOR_WINDOW_RECORD_COUNT=13
+
+COVERED_CRITICAL_TARGET_COUNT=6
+
+MISSING_ANCHOR_WINDOWS=none
+
+DECISION=PASS_106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN
+
+LOCKED_DECISION=FIELD_ANCHOR_WINDOW_DRY_RUN_COMPLETE_WITH_REDACTED_CONTEXT_ONLY_NO_VALUES
+
+NEXT=106P_QUOTE_PREVIEW_FIELD_CANDIDATE_EXTRACTION_GATE
+<!-- FORGE:106O_QUOTE_PREVIEW_FIELD_ANCHOR_WINDOW_DRY_RUN:END -->
