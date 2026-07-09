@@ -10241,3 +10241,43 @@ LOCKED_DECISION=CANDIDATE_REVIEW_PACKET_DRY_RUN_COMPLETE_FROM_REDACTED_CANDIDATE
 
 NEXT=106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE
 <!-- FORGE:106S_QUOTE_PREVIEW_CANDIDATE_REVIEW_PACKET_DRY_RUN:END -->
+
+<!-- FORGE:106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE:START -->
+## 106T Quote Preview Human Review Decision Gate
+
+106T locks the gate for human review decisions as location dispositions only.
+
+Locked decision:
+`HUMAN_REVIEW_DECISION_GATE_LOCKED_FOR_LOCATION_DISPOSITIONS_ONLY_NO_REAL_VALUES_NO_TRUTH`
+
+Confirmed:
+
+- manual operator token not required;
+- allowed dispositions created;
+- decision record contract created;
+- decisions are location-only;
+- candidate records remain not truth;
+- real value approval forbidden;
+- candidate truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- source UI was not changed;
+- all safety flags remain false.
+
+REVIEW_LINE_ITEM_COUNT=28
+
+DECISION_READY_CRITICAL_TARGET_COUNT=6
+
+CRITICAL_TARGET_COUNT=6
+
+ALLOWED_DISPOSITION_COUNT=5
+
+DECISION=PASS_106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE
+
+LOCKED_DECISION=HUMAN_REVIEW_DECISION_GATE_LOCKED_FOR_LOCATION_DISPOSITIONS_ONLY_NO_REAL_VALUES_NO_TRUTH
+
+NEXT=106U_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_DRY_RUN
+<!-- FORGE:106T_QUOTE_PREVIEW_HUMAN_REVIEW_DECISION_GATE:END -->
