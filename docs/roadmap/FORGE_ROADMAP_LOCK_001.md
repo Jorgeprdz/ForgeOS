@@ -10134,3 +10134,51 @@ LOCKED_DECISION=ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE_LOCKED_WITH_OPERA
 
 NEXT=107M_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE
 <!-- FORGE:107L_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE:END -->
+
+<!-- FORGE:107M_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE:START -->
+## 107M Quote Preview Actual Manual Value Capture Execution Gate
+
+107M accepts 107L authorization and prepares the actual manual value capture boundary.
+
+Locked decision:
+`ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE_LOCKED_BOUNDARY_READY_NO_CAPTURE_IN_107M_NO_TRUTH_NO_UI`
+
+Confirmed:
+
+- manual operator token not required this phase;
+- authorization from 107L required;
+- authorization from 107L accepted;
+- actual manual value capture boundary prepared;
+- actual manual value capture not executed in 107M;
+- captured values remain null in 107M;
+- captured value count is zero;
+- approved value count is zero;
+- actual manual value capture allowed in 107N only;
+- captured value commit forbidden in 107N;
+- raw captured value commit forbidden in 107N;
+- redacted capture receipt allowed in 107N;
+- captured values cannot become truth in 107N;
+- real value approval forbidden;
+- candidate truth forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- backend connection not used;
+- provider runtime not used;
+- source UI was not changed;
+- all safety flags remain false.
+
+ACTUAL_CAPTURE_AUTHORIZATION_ENTRY_COUNT=6
+
+LOCAL_INPUT_SCOPE_ENTRY_COUNT=6
+
+INCLUDED_IN_107N_LOCAL_INPUT_RUN_COUNT=6
+
+BLOCKED_LOCAL_INPUT_SCOPE_ENTRY_COUNT=0
+
+DECISION=PASS_107M_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE
+
+LOCKED_DECISION=ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE_LOCKED_BOUNDARY_READY_NO_CAPTURE_IN_107M_NO_TRUTH_NO_UI
+
+NEXT=107N_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_LOCAL_INPUT_RUN
+<!-- FORGE:107M_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE:END -->
