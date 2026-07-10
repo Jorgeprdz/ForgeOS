@@ -11049,3 +11049,50 @@ LOCKED_DECISION=MANUAL_VALUE_CAPTURE_EXECUTION_GATE_LOCKED_NO_CAPTURE_YET_NULL_V
 
 NEXT=107K_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN
 <!-- FORGE:107J_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_EXECUTION_GATE:END -->
+
+<!-- FORGE:107K_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN:START -->
+## 107K Quote Preview Manual Value Capture Input Packet Dry Run
+
+107K creates a blank input packet for future manual value capture.
+
+Locked decision:
+`MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN_COMPLETE_WITH_BLANK_INPUTS_NULL_VALUES_NO_TRUTH_NO_UI`
+
+Confirmed:
+
+- manual value capture input packet created;
+- packet is blank;
+- source is execution scope entries from 107J only;
+- manual operator token not required this phase;
+- manual value capture not executed;
+- actual manual value capture forbidden in 107K;
+- captured values remain null;
+- captured value count is zero;
+- approved value count is zero;
+- actual capture requires future manual token;
+- real value approval forbidden;
+- candidate truth forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- backend connection not used;
+- provider runtime not used;
+- source UI was not changed;
+- all safety flags remain false.
+
+EXECUTION_SCOPE_ENTRY_COUNT=6
+
+INPUT_PACKET_ENTRY_COUNT=6
+
+MONEY_FORMAT_HINT_ENTRY_COUNT=6
+
+DATE_FORMAT_HINT_ENTRY_COUNT=0
+
+FUTURE_MANUAL_CAPTURE_TOKEN_NAME=AUTHORIZE_ACTUAL_MANUAL_VALUE_CAPTURE_LOCAL_ONLY
+
+DECISION=PASS_107K_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN
+
+LOCKED_DECISION=MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN_COMPLETE_WITH_BLANK_INPUTS_NULL_VALUES_NO_TRUTH_NO_UI
+
+NEXT=107L_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE
+<!-- FORGE:107K_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN:END -->
