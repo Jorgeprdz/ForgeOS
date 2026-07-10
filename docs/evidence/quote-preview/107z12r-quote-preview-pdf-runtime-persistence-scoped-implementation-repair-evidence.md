@@ -1,0 +1,98 @@
+# 107Z12R — Scoped implementation repair evidence
+
+Status: **PASS**
+
+```json
+{
+  "chain": "107Z12R_QUOTE_PREVIEW_PDF_RUNTIME_PERSISTENCE_SCOPED_IMPLEMENTATION_REPAIR_GATE",
+  "status": "PASS",
+  "generated_at_local_stamp": "20260710_113712",
+  "implementation": {
+    "IMPLEMENTATION_SCOPE_ID": "QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1",
+    "IMPLEMENTATION_COMPLETE": true,
+    "SOURCE_CODE_WRITTEN": true,
+    "PERSISTENCE_CONTRACT_CREATED": true,
+    "STORE_MODULE_CREATED": true,
+    "PERSISTENCE_COORDINATOR_CREATED": true,
+    "MODAL_IDENTITY_WIRING_CHANGED": true,
+    "SYNTHETIC_TEST_FILE_COMMITTED": false,
+    "SYNTHETIC_TEST_EXECUTED": true,
+    "LIVE_RUNTIME_EXECUTED": false,
+    "RUNTIME_PERSISTENCE_EFFECT_EXECUTED": false,
+    "REQUIRED_CONFIRMATION_FIELD_COUNT": 8,
+    "REQUIRED_CONFIRMATION_FIELDS": [
+      "name",
+      "family",
+      "product",
+      "insured",
+      "sumAssured",
+      "annualPremium",
+      "plannedOrAvePremium",
+      "coveragePeriod"
+    ],
+    "CONTRACT_PATH": "platform/adapters/quote-preview/quote-preview-pdf-result-persistence-contract.js",
+    "STORE_PATH": "platform/runtime/quote-preview/quote-preview-pdf-result-store.js",
+    "COORDINATOR_PATH": "platform/adapters/quote-preview/quote-preview-pdf-result-persistence-coordinator.js",
+    "MODAL_PATH": "docs/static-preview/forge-alive/assets/forge-quote-preview-confirmation-modal-107q.js",
+    "NEXT_GATE": "107Z13_QUOTE_PREVIEW_PDF_RUNTIME_PERSISTENCE_SOURCE_VALIDATION_AND_DRY_RUN_GATE"
+  },
+  "source_receipts": {
+    "CONTRACT_SHA256": "e7f5d74b32115c98bbec5f9f8ad7b1e4503fa87a6c668fdf4919c7a0fa29f322",
+    "STORE_SHA256": "3f5271c8b66485603051411b84a1260cf2d2590385ff4e34243eb31322b871d5",
+    "COORDINATOR_SHA256": "07d06906c235a144215dc21e1c1bde611fe87896cdb1daf3d71b574caf75fd25",
+    "MODAL_SHA256_BEFORE": "0d39d0ac1ecc823b1888d01c1386f58cbb6945544756aae27989bf62100749d4",
+    "MODAL_SHA256_AFTER": "bf299e2f968d01f5569980e30bb823572eecf44ad90a1f8d5c5f6959e6edc85d"
+  },
+  "synthetic_tests": {
+    "PASS_COUNT": 12,
+    "MARKERS": [
+      "PASS_WRITE_RETURNS_EXACT_IDENTITY",
+      "PASS_READ_REQUIRES_EXACT_IDENTITY",
+      "PASS_NO_HIDDEN_LATEST_FALLBACK",
+      "PASS_EVENT_REFERENCE_ONLY",
+      "PASS_EIGHT_FIELDS_ROUND_TRIP",
+      "PASS_AMBIGUOUS_FIELD_PRESERVED",
+      "PASS_NO_RAW_PDF_OR_SECRETS",
+      "PASS_RETENTION_BOUNDARY",
+      "PASS_NO_QUOTE_TRUTH",
+      "PASS_SINGLE_WRITER_SINGLE_READER",
+      "PASS_MODAL_IDENTITY_WIRING",
+      "PASS_107Z12_SYNTHETIC_CONTRACT_TESTS"
+    ]
+  },
+  "authorization": {
+    "IMPLEMENTATION_AUTHORIZED": true,
+    "SOURCE_CODE_WRITE_AUTHORIZED": true,
+    "LIVE_RUNTIME_EXECUTION_AUTHORIZED": false,
+    "RUNTIME_PERSISTENCE_EFFECT_EXECUTION_AUTHORIZED": false,
+    "BACKEND_CONNECTION_AUTHORIZED": false,
+    "PDF_READ_AUTHORIZED": false,
+    "OCR_EXECUTION_AUTHORIZED": false,
+    "PARSER_EXECUTION_AUTHORIZED": false,
+    "OFFICIAL_QUOTE_WRITE_AUTHORIZED": false,
+    "QUOTE_TRUTH_AUTHORIZED": false,
+    "REAL_EFFECTS_AUTHORIZED": false
+  },
+  "constitutional_flags": {
+    "NEW_ENGINE_CREATED": false,
+    "NEW_CACHE_CREATED": false,
+    "NEW_PERSISTENCE_STORE_CREATED": true,
+    "NEW_PERSISTENCE_CONTRACT_CREATED": true,
+    "NEW_PERSISTENCE_COORDINATOR_CREATED": true,
+    "DUPLICATE_BRIDGE_CREATED": false,
+    "PDF_READ_EXECUTED": false,
+    "PARSER_EXECUTED": false,
+    "OCR_EXECUTED": false,
+    "SOURCE_UI_CHANGED": true,
+    "SOURCE_UI_VISUAL_CHANGED": false,
+    "QUOTE_TRUTH_ALLOWED": false,
+    "REAL_ENGINE_EXECUTION": false,
+    "BACKEND_CONNECTION": false,
+    "TEST_EXECUTION": true
+  },
+  "protected_owners": {
+    "ENGINE_MODIFIED": false,
+    "ADAPTER_MODIFIED": false
+  }
+}
+```
