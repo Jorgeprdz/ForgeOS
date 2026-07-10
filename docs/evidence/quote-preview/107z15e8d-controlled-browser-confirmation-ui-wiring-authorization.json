@@ -1,0 +1,115 @@
+{
+  "chain": "107Z15E8D_CONTROLLED_BROWSER_CONFIRMATION_UI_WIRING_AUTHORIZATION_GATE",
+  "scopeId": "QUOTE_PREVIEW_CONTROLLED_BROWSER_CONFIRMATION_UI_WIRING_V1",
+  "status": "PASS",
+  "authorizationComplete": true,
+  "previousImplementationProof": "/storage/emulated/0/ForgeGemini/Reports/107Z15E8CR2_20260710_161217/107Z15E8CR2_PROOF_20260710_161217.json",
+  "previousPersistenceAdapter": "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-persistence-adapter.js",
+  "decision": "AUTHORIZE_DEDICATED_CONFIRMATION_UI_ACTION_WIRING",
+  "noFurtherDiscovery": true,
+  "sourceChangeAuthorized": true,
+  "allowedSourceFiles": [
+    "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-ui-wiring.js",
+    "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-ui-wiring.test.js"
+  ],
+  "authorizedApi": {
+    "exportName": "bindQuotePreviewConfirmationPersistenceUi",
+    "signature": "function bindQuotePreviewConfirmationPersistenceUi(options = {})",
+    "requiredOptions": {
+      "surface": "object exposing subscribeAccept, subscribeEdit, and readPendingPreview",
+      "store": "official persistence store interface exposing writePreviewResult and readPreviewResult",
+      "createPreviewResultId": "function returning a non-empty previewResultId string",
+      "now": "function returning current epoch milliseconds",
+      "ttlMs": "positive finite lifetime in milliseconds"
+    },
+    "optionalSurfaceCallbacks": {
+      "notifyPersisted": "called after a successful confirmed persistence",
+      "notifyEditRequested": "called after edit without persistence",
+      "notifyError": "called for accept-handler failures"
+    },
+    "returnShape": {
+      "dispose": "idempotent function that unsubscribes accept and edit handlers",
+      "getState": "returns frozen diagnostic state without quote truth promotion"
+    }
+  },
+  "authorizedFlow": [
+    "validate the injected surface contract",
+    "validate the injected official store interface",
+    "subscribe exactly one accept handler and one edit handler",
+    "accept handler reads the pending preview from surface.readPendingPreview()",
+    "accept handler creates previewResultId, createdAt, and expiresAt from injected factories",
+    "accept handler calls persistConfirmedQuotePreviewPdfResult with confirmed: true",
+    "accept handler notifies surface.notifyPersisted when provided",
+    "edit handler never calls the persistence adapter or store",
+    "edit handler notifies surface.notifyEditRequested when provided",
+    "dispose unsubscribes both handlers and is idempotent",
+    "duplicate accept while a persistence call is active is rejected"
+  ],
+  "requiredTests": [
+    "reject an invalid surface contract",
+    "reject an invalid official store interface",
+    "subscribe exactly one accept handler and one edit handler",
+    "prove accept reads the pending preview from the surface",
+    "prove accept passes confirmed: true to the persistence adapter",
+    "prove accept generates deterministic createdAt and expiresAt from injected time",
+    "prove accept uses the injected previewResultId factory",
+    "prove edit performs zero persistence calls and zero store writes",
+    "prove notifyPersisted receives the persistence result",
+    "prove notifyEditRequested is invoked without persistence",
+    "prove notifyError receives accept-handler failures",
+    "prove duplicate concurrent accept is blocked",
+    "prove dispose unsubscribes both handlers exactly once",
+    "prove no direct window, document, or localStorage access exists",
+    "prove no engine, generic bridge, or quote-truth logic is introduced"
+  ],
+  "forbiddenChanges": [
+    "any runtime source file other than the two allowed files",
+    "the confirmed persistence adapter",
+    "the persistence coordinator",
+    "the persistence contract",
+    "the persistence store",
+    "utils.js",
+    "manager-os/provider-runtime/provider-runtime-boundary-contract.js",
+    "DOM selectors or direct browser-global access",
+    "direct localStorage access",
+    "modal rendering",
+    "new extraction engine",
+    "generic cross-domain bridge",
+    "hardcoded canonical quote fields",
+    "persistence on edit",
+    "persistence before explicit accept",
+    "promotion of PDF extraction to official quote truth"
+  ],
+  "dependencyContract": {
+    "persistenceAdapterPath": "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-persistence-adapter.js",
+    "persistenceExport": "persistConfirmedQuotePreviewPdfResult",
+    "storePolicy": "official store interface must be injected; wiring must not create a backend",
+    "surfacePolicy": "UI surface must be injected; wiring must not query DOM globals"
+  },
+  "actionSemantics": {
+    "acceptPersists": true,
+    "acceptConfirmedValue": true,
+    "editPersists": false,
+    "editStoreWrites": 0,
+    "duplicateConcurrentAcceptAllowed": false,
+    "disposeIdempotent": true
+  },
+  "implementationConstraints": {
+    "noScopeExpansion": true,
+    "noFurtherDiscovery": true,
+    "noDomGlobals": true,
+    "noDirectLocalStorage": true,
+    "noModalRendering": true,
+    "noNewEngine": true,
+    "noGenericBridge": true,
+    "noQuoteTruthPromotion": true,
+    "exactAllowedSourceFilesOnly": true
+  },
+  "next": "107Z15E8E_CONTROLLED_BROWSER_CONFIRMATION_UI_WIRING_SCOPED_IMPLEMENTATION_GATE",
+  "sourceCodeWritten": false,
+  "browserExecuted": false,
+  "pdfReadExecuted": false,
+  "localStorageWriteExecuted": false,
+  "backendConnection": false,
+  "quoteTruthAllowed": false
+}
