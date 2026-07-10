@@ -11096,3 +11096,46 @@ LOCKED_DECISION=MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN_COMPLETE_WITH_BLANK_IN
 
 NEXT=107L_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE
 <!-- FORGE:107K_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_INPUT_PACKET_DRY_RUN:END -->
+
+<!-- FORGE:107L_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE:START -->
+## 107L Quote Preview Actual Manual Value Capture Authorization Gate
+
+107L collects explicit manual operator authorization for the actual manual value capture execution gate.
+
+Locked decision:
+`ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE_LOCKED_WITH_OPERATOR_CONFIRMATION_NO_CAPTURE_NO_TRUTH_NO_UI`
+
+Confirmed:
+
+- manual operator token required this phase;
+- manual operator token accepted;
+- authorization collected in 107L;
+- actual manual value capture authorized for 107M;
+- actual manual value capture not executed in 107L;
+- captured values remain null;
+- captured value count is zero;
+- approved value count is zero;
+- real value approval forbidden;
+- candidate truth forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- backend connection not used;
+- provider runtime not used;
+- source UI was not changed;
+- all safety flags remain false.
+
+INPUT_PACKET_ENTRY_COUNT=6
+
+ELIGIBLE_ACTUAL_CAPTURE_AUTHORIZATION_ENTRY_COUNT=6
+
+BLOCKED_ACTUAL_CAPTURE_AUTHORIZATION_ENTRY_COUNT=0
+
+OPERATOR_TOKEN_NAME=AUTHORIZE_ACTUAL_MANUAL_VALUE_CAPTURE_LOCAL_ONLY
+
+DECISION=PASS_107L_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE
+
+LOCKED_DECISION=ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE_LOCKED_WITH_OPERATOR_CONFIRMATION_NO_CAPTURE_NO_TRUTH_NO_UI
+
+NEXT=107M_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE
+<!-- FORGE:107L_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_AUTHORIZATION_GATE:END -->
