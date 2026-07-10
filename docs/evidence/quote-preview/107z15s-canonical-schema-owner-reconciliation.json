@@ -1,0 +1,1953 @@
+{
+  "chain": "107Z15S_CANONICAL_SCHEMA_OWNER_RECONCILIATION_GATE",
+  "status": "PASS",
+  "generated_at_local_stamp": "20260710_124203",
+  "reconciliation": {
+    "IMPLEMENTATION_SCOPE_ID": "QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1",
+    "SCHEMA_OWNER_RECONCILIATION_COMPLETE": true,
+    "CANONICAL_SCHEMA_MATCH_CONFIRMED": false,
+    "CANONICAL_SCHEMA_MISMATCH_CONFIRMED": true,
+    "ENGINE_OWNED_FIELD_COUNT": 6,
+    "ADAPTER_DERIVED_ONLY_FIELD_COUNT": 2,
+    "PERSISTENCE_OR_UI_ONLY_FIELD_COUNT": 0,
+    "UNOWNED_CANONICAL_FIELD_COUNT": 0,
+    "ALL_EIGHT_FIELDS_HAVE_PRODUCTIVE_RUNTIME_OWNER": true,
+    "MANUAL_MAPPING_GATE_SAFE_TO_CONTINUE": false,
+    "SCHEMA_CHANGED": false,
+    "MANUAL_MAPPING_APPROVED": false,
+    "SOURCE_CODE_WRITTEN": false,
+    "REAL_ENGINE_EXECUTION": false,
+    "PARSER_EXECUTED": false,
+    "CONTROLLED_BROWSER_EXECUTION": false,
+    "PDF_READ_EXECUTED": false,
+    "BACKEND_CONNECTION": false,
+    "QUOTE_TRUTH_ALLOWED": false,
+    "NEXT_GATE": "107Z15S1_CANONICAL_SCHEMA_CORRECTION_AUTHORIZATION_GATE"
+  },
+  "fields": [
+    {
+      "canonicalField": "name",
+      "classification": "ADAPTER_DERIVED_ONLY",
+      "runtimeOwner": "adapter",
+      "directEngineMapping": null,
+      "engineAliases": [],
+      "normalizedNativeKeys": [],
+      "proposalRankedCandidates": [],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [],
+        "adapter": [
+          119,
+          120,
+          120,
+          121
+        ],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": [
+          17,
+          18,
+          23,
+          24,
+          29,
+          30,
+          35,
+          36,
+          41,
+          42,
+          47,
+          48,
+          53,
+          54,
+          55,
+          60,
+          61
+        ]
+      },
+      "engineEvidence": false,
+      "adapterEvidence": true,
+      "persistenceEvidence": true,
+      "modalEvidence": true,
+      "engineSnippets": [],
+      "adapterSnippets": [
+        {
+          "term": "name",
+          "line": 118,
+          "excerpt": " .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9]+/g, '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result)"
+        },
+        {
+          "term": "name",
+          "line": 119,
+          "excerpt": "ormalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9]+/g, '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === tr"
+        },
+        {
+          "term": "name",
+          "line": 119,
+          "excerpt": "('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9]+/g, '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) retu"
+        },
+        {
+          "term": "name",
+          "line": 120,
+          "excerpt": " '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) return true;\n  if (result && result.ok === true) return true;\n  if (result &"
+        },
+        {
+          "term": "name",
+          "line": 120,
+          "excerpt": "ce(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) return true;\n  if (result && result.ok === true) return true;\n  if (result && result.valid ="
+        },
+        {
+          "term": "name",
+          "line": 121,
+          "excerpt": "unction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) return true;\n  if (result && result.ok === true) return true;\n  if (result && result.valid === true) return true;\n  if (result &&"
+        }
+      ],
+      "contractSnippets": [
+        {
+          "term": "name",
+          "line": 2,
+          "excerpt": "sistenceContract=api;})(typeof globalThis!==\"undefined\"?globalThis:this,function(){\"use strict\";\nvar CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!"
+        },
+        {
+          "term": "name",
+          "line": 3,
+          "excerpt": "){\"use strict\";\nvar CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeo"
+        },
+        {
+          "term": "name",
+          "line": 14,
+          "excerpt": "tIdentity:identity(id),persistenceContractId:CONTRACT_ID,__forgePersistenceIdentityEvent:true});}\nreturn Object.freeze({CONTRACT_ID:CONTRACT_ID,SCHEMA_VERSION:SCHEMA_VERSION,EVENT_NAME:EVENT_NAME,REQUIRED_FIELDS:REQUIRED_FIELDS,normalizeIdentity:identity,assertSafePayload:function(v){scan(v,\"$\");return true;},extractAuthorizedFields:fieldsFrom,createRecord:record,validateRecord:record,createExtraction"
+        },
+        {
+          "term": "name",
+          "line": 14,
+          "excerpt": "dentity(id),persistenceContractId:CONTRACT_ID,__forgePersistenceIdentityEvent:true});}\nreturn Object.freeze({CONTRACT_ID:CONTRACT_ID,SCHEMA_VERSION:SCHEMA_VERSION,EVENT_NAME:EVENT_NAME,REQUIRED_FIELDS:REQUIRED_FIELDS,normalizeIdentity:identity,assertSafePayload:function(v){scan(v,\"$\");return true;},extractAuthorizedFields:fieldsFrom,createRecord:record,validateRecord:record,createExtractionReadyDetail"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": [
+        {
+          "term": "name",
+          "line": 5,
+          "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label:"
+        },
+        {
+          "term": "name",
+          "line": 7,
+          "excerpt": "n () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_o"
+        },
+        {
+          "term": "name",
+          "line": 8,
+          "excerpt": "  { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" }"
+        },
+        {
+          "term": "name",
+          "line": 16,
+          "excerpt": "ieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\""
+        },
+        {
+          "term": "name",
+          "line": 17,
+          "excerpt": "d_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data"
+        },
+        {
+          "term": "name",
+          "line": 17,
+          "excerpt": "ium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"produ"
+        },
+        {
+          "term": "name",
+          "line": 18,
+          "excerpt": "ma AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n   "
+        },
+        {
+          "term": "name",
+          "line": 19,
+          "excerpt": "\"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n   "
+        }
+      ]
+    },
+    {
+      "canonicalField": "family",
+      "classification": "ADAPTER_DERIVED_ONLY",
+      "runtimeOwner": "adapter",
+      "directEngineMapping": null,
+      "engineAliases": [],
+      "normalizedNativeKeys": [],
+      "proposalRankedCandidates": [],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [],
+        "adapter": [
+          288
+        ],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": []
+      },
+      "engineEvidence": false,
+      "adapterEvidence": true,
+      "persistenceEvidence": true,
+      "modalEvidence": false,
+      "engineSnippets": [],
+      "adapterSnippets": [
+        {
+          "term": "family",
+          "line": 17,
+          "excerpt": "ce/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NOT_INTEGRATED',\n  PRODUCT_FAMILY_NOT_MAPPED: 'QUOTE_PREVIEW_PDF_PRODUCT_FAMILY_NOT_MAPPED',\n  BINDING_REQUIRED: 'QUOTE_PREVIEW_PDF_BINDING_REQUIRED',\n  SOURCE_EVIDENCE_REQUIRED: 'QUOTE_PREVIEW_PDF_SOURCE_EVIDENCE_REQUIRED',\n  FRESHNESS_REQUIRED: 'QUOTE"
+        },
+        {
+          "term": "family",
+          "line": 17,
+          "excerpt": "d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NOT_INTEGRATED',\n  PRODUCT_FAMILY_NOT_MAPPED: 'QUOTE_PREVIEW_PDF_PRODUCT_FAMILY_NOT_MAPPED',\n  BINDING_REQUIRED: 'QUOTE_PREVIEW_PDF_BINDING_REQUIRED',\n  SOURCE_EVIDENCE_REQUIRED: 'QUOTE_PREVIEW_PDF_SOURCE_EVIDENCE_REQUIRED',\n  FRESHNESS_REQUIRED: 'QUOTE_PREVIEW_PDF_FRESHNESS_REQUIRED',\n  PDF_ENGINE"
+        },
+        {
+          "term": "family",
+          "line": 85,
+          "excerpt": "ion_id',\n  'quote_preview_request_id',\n  'quote_preview_pdf_engine_ref',\n  'quote_preview_pdf_engine_role',\n  'quote_preview_binding_ref',\n  'product_intelligence_ref',\n  'product_family',\n  'parser_ref',\n  'calculator_refs',\n  'coverage_semantics_ref',\n  'premium_semantics_ref',\n  'currency_semantics_ref',\n  'projection_semantics_ref',\n  'evidence_requirements',\n  'freshness_requirements',\n  'extractio"
+        },
+        {
+          "term": "family",
+          "line": 186,
+          "excerpt": "W_PDF_ENGINE_REF,\n    quote_preview_pdf_engine_role: 'consumer_reference_only',\n    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: nu"
+        },
+        {
+          "term": "family",
+          "line": 186,
+          "excerpt": "pdf_engine_role: 'consumer_reference_only',\n    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null"
+        },
+        {
+          "term": "family",
+          "line": 186,
+          "excerpt": "umer_reference_only',\n    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_seman"
+        },
+        {
+          "term": "family",
+          "line": 186,
+          "excerpt": "    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    ev"
+        },
+        {
+          "term": "family",
+          "line": 186,
+          "excerpt": "_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    evidence_requiremen"
+        }
+      ],
+      "contractSnippets": [
+        {
+          "term": "family",
+          "line": 3,
+          "excerpt": "trict\";\nvar CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"obj"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": [
+        {
+          "term": "family",
+          "line": 6,
+          "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\""
+        },
+        {
+          "term": "family",
+          "line": 22,
+          "excerpt": "R_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"pr"
+        },
+        {
+          "term": "family",
+          "line": 23,
+          "excerpt": "   '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"p"
+        },
+        {
+          "term": "family",
+          "line": 25,
+          "excerpt": "field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n"
+        },
+        {
+          "term": "family",
+          "line": 26,
+          "excerpt": "ld=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_nam"
+        }
+      ]
+    },
+    {
+      "canonicalField": "product",
+      "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+      "runtimeOwner": "engine",
+      "directEngineMapping": "product",
+      "engineAliases": [],
+      "normalizedNativeKeys": [
+        "product"
+      ],
+      "proposalRankedCandidates": [
+        "product"
+      ],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [
+          109,
+          240
+        ],
+        "adapter": [
+          3,
+          11,
+          12,
+          13,
+          13,
+          208,
+          245,
+          278,
+          288
+        ],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": []
+      },
+      "engineEvidence": true,
+      "adapterEvidence": true,
+      "persistenceEvidence": true,
+      "modalEvidence": false,
+      "engineSnippets": [
+        {
+          "term": "product",
+          "line": 68,
+          "excerpt": ";\n  const birthLine = findLine(/Fecha de nacimiento:/i);\n  const genderLine = findLine(/G[eé]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] "
+        },
+        {
+          "term": "product",
+          "line": 69,
+          "excerpt": " findLine(/G[eé]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(prod"
+        },
+        {
+          "term": "product",
+          "line": 69,
+          "excerpt": "é]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match("
+        },
+        {
+          "term": "product",
+          "line": 69,
+          "excerpt": "ationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+"
+        },
+        {
+          "term": "product",
+          "line": 70,
+          "excerpt": "]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${con"
+        },
+        {
+          "term": "product",
+          "line": 70,
+          "excerpt": "x((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${continuationLine}`);\n  const productMatch = prod"
+        },
+        {
+          "term": "product",
+          "line": 70,
+          "excerpt": "ine));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${continuationLine}`);\n  const productMatch = productLine.match(/(IMAGINA SER.*?)\\s"
+        },
+        {
+          "term": "product",
+          "line": 71,
+          "excerpt": "ductIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${continuationLine}`);\n  const productMatch = productLine.match(/(IMAGINA SER.*?)\\s+([0-9]+\\s+a[nñ]os)\\s+([0-9,]+)\\s+([0-9,.]+)/i);\n  const t"
+        }
+      ],
+      "adapterSnippets": [
+        {
+          "term": "product",
+          "line": 3,
+          "excerpt": "'use strict';\n\nconst bindingAdapter = require('./quote-preview-product-intelligence-binding-adapter-074b.js');\n\nconst ADAPTER_ID = 'forge.quote_preview.pdf_engine_product_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integ"
+        },
+        {
+          "term": "product",
+          "line": 5,
+          "excerpt": "'use strict';\n\nconst bindingAdapter = require('./quote-preview-product-intelligence-binding-adapter-074b.js');\n\nconst ADAPTER_ID = 'forge.quote_preview.pdf_engine_product_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integration.v1';\nconst DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MOD"
+        },
+        {
+          "term": "product",
+          "line": 6,
+          "excerpt": "binding-adapter-074b.js');\n\nconst ADAPTER_ID = 'forge.quote_preview.pdf_engine_product_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integration.v1';\nconst DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MODE = 'read_only';\nconst ROUTE_CLASS = 'preview_safe';\n\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-i"
+        },
+        {
+          "term": "product",
+          "line": 7,
+          "excerpt": "duct_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integration.v1';\nconst DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MODE = 'read_only';\nconst ROUTE_CLASS = 'preview_safe';\n\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-intelligence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF"
+        },
+        {
+          "term": "product",
+          "line": 11,
+          "excerpt": "const DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MODE = 'read_only';\nconst ROUTE_CLASS = 'preview_safe';\n\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-intelligence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF "
+        },
+        {
+          "term": "product",
+          "line": 12,
+          "excerpt": "\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-intelligence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF = 'platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_I"
+        },
+        {
+          "term": "product",
+          "line": 13,
+          "excerpt": "igence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF = 'platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NO"
+        },
+        {
+          "term": "product",
+          "line": 13,
+          "excerpt": "nst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF = 'platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NOT_INTEGRATED',\n  PRODUCT_FAMILY_NOT_MAPPED: 'QUOTE_PRE"
+        }
+      ],
+      "contractSnippets": [
+        {
+          "term": "product",
+          "line": 3,
+          "excerpt": "r CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Arra"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": [
+        {
+          "term": "product",
+          "line": 6,
+          "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_p"
+        },
+        {
+          "term": "product",
+          "line": 7,
+          "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"plan"
+        },
+        {
+          "term": "product",
+          "line": 7,
+          "excerpt": "trict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", la"
+        },
+        {
+          "term": "product",
+          "line": 22,
+          "excerpt": " SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[n"
+        },
+        {
+          "term": "product",
+          "line": 23,
+          "excerpt": "e: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-f"
+        },
+        {
+          "term": "product",
+          "line": 25,
+          "excerpt": " '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n"
+        },
+        {
+          "term": "product",
+          "line": 26,
+          "excerpt": "orge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insu"
+        },
+        {
+          "term": "product",
+          "line": 28,
+          "excerpt": "  ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"as"
+        }
+      ]
+    },
+    {
+      "canonicalField": "insured",
+      "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+      "runtimeOwner": "engine",
+      "directEngineMapping": null,
+      "engineAliases": [
+        "sumInsured"
+      ],
+      "normalizedNativeKeys": [],
+      "proposalRankedCandidates": [
+        "sumInsured"
+      ],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [],
+        "adapter": [],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": []
+      },
+      "engineEvidence": true,
+      "adapterEvidence": false,
+      "persistenceEvidence": true,
+      "modalEvidence": false,
+      "engineSnippets": [
+        {
+          "term": "insured",
+          "line": 64,
+          "excerpt": ")\n    .filter(Boolean);\n  const findLine = (pattern) => lines.find((line) => pattern.test(line)) || '';\n\n  const advisorLine = findLine(/Asesor profesional de seguros:/i);\n  const insuredLine = findLine(/Asegurado:/i);\n  const birthLine = findLine(/Fecha de nacimiento:/i);\n  const genderLine = findLine(/G[eé]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productInd"
+        },
+        {
+          "term": "insured",
+          "line": 94,
+          "excerpt": "IT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    sing"
+        },
+        {
+          "term": "insured",
+          "line": 111,
+          "excerpt": " {\n    detectedQuoteDomain: 'life',\n    sourceLayout: 'solucionline_imagina_ser_economic_scenarios',\n    product: 'IMAGINA SER',\n    plan: planText || 'IMAGINA SER',\n    prospect: insuredLine ? cleanValue(insuredLine.replace(/Asegurado:/i, '')) : null,\n    age: birthMatch ? birthMatch[2] : null,\n    gender: genderMatch ? genderMatch[1] : null,\n    smoker: genderMatch ? genderMatch[2] : null,\n    birthDat"
+        },
+        {
+          "term": "insured",
+          "line": 111,
+          "excerpt": "n: 'life',\n    sourceLayout: 'solucionline_imagina_ser_economic_scenarios',\n    product: 'IMAGINA SER',\n    plan: planText || 'IMAGINA SER',\n    prospect: insuredLine ? cleanValue(insuredLine.replace(/Asegurado:/i, '')) : null,\n    age: birthMatch ? birthMatch[2] : null,\n    gender: genderMatch ? genderMatch[1] : null,\n    smoker: genderMatch ? genderMatch[2] : null,\n    birthDate: birthMatch ? birthMatc"
+        },
+        {
+          "term": "insured",
+          "line": 120,
+          "excerpt": " ? liquidationMatch[2] : 'UDI',\n    policyTerm: productMatch ? cleanValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumVa"
+        },
+        {
+          "term": "insured",
+          "line": 153,
+          "excerpt": "m(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiM"
+        },
+        {
+          "term": "insured",
+          "line": 153,
+          "excerpt": "entYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiMxn);\n  const canProject = canConve"
+        },
+        {
+          "term": "insured",
+          "line": 190,
+          "excerpt": " null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: pr"
+        }
+      ],
+      "adapterSnippets": [],
+      "contractSnippets": [
+        {
+          "term": "insured",
+          "line": 3,
+          "excerpt": "ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": [
+        {
+          "term": "insured",
+          "line": 8,
+          "excerpt": "T = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planea"
+        },
+        {
+          "term": "insured",
+          "line": 9,
+          "excerpt": "  { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo "
+        },
+        {
+          "term": "insured",
+          "line": 34,
+          "excerpt": "y\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"sum"
+        },
+        {
+          "term": "insured",
+          "line": 35,
+          "excerpt": "[\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-f"
+        },
+        {
+          "term": "insured",
+          "line": 37,
+          "excerpt": " '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n  "
+        },
+        {
+          "term": "insured",
+          "line": 38,
+          "excerpt": "a-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n    ],\n    annual_premium: [\n      '[name=\"an"
+        },
+        {
+          "term": "insured",
+          "line": 40,
+          "excerpt": "    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n    ],\n    annual_premium: [\n      '[name=\"annual_premium\"]',\n      '[name=\""
+        },
+        {
+          "term": "insured",
+          "line": 41,
+          "excerpt": "    '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n    ],\n    annual_premium: [\n      '[name=\"annual_premium\"]',\n      '[name=\"prima_anual\"]',\n      '[data-"
+        }
+      ]
+    },
+    {
+      "canonicalField": "sumAssured",
+      "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+      "runtimeOwner": "engine",
+      "directEngineMapping": null,
+      "engineAliases": [
+        "sumInsured"
+      ],
+      "normalizedNativeKeys": [],
+      "proposalRankedCandidates": [
+        "sumInsured"
+      ],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [],
+        "adapter": [],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": []
+      },
+      "engineEvidence": true,
+      "adapterEvidence": false,
+      "persistenceEvidence": true,
+      "modalEvidence": false,
+      "engineSnippets": [
+        {
+          "term": "sumInsured",
+          "line": 94,
+          "excerpt": "|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    sing"
+        },
+        {
+          "term": "sumInsured",
+          "line": 120,
+          "excerpt": "tch ? liquidationMatch[2] : 'UDI',\n    policyTerm: productMatch ? cleanValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumVa"
+        },
+        {
+          "term": "sumInsured",
+          "line": 153,
+          "excerpt": "From(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiM"
+        },
+        {
+          "term": "sumInsured",
+          "line": 153,
+          "excerpt": "aymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiMxn);\n  const canProject = canConve"
+        },
+        {
+          "term": "sumInsured",
+          "line": 190,
+          "excerpt": " != null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: pr"
+        },
+        {
+          "term": "sumInsured",
+          "line": 191,
+          "excerpt": "ey(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: projectedMxn(sumInsur"
+        },
+        {
+          "term": "sumInsured",
+          "line": 191,
+          "excerpt": " udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: projectedMxn(sumInsuredUdi),\n    savingsGoalM"
+        },
+        {
+          "term": "sumInsured",
+          "line": 195,
+          "excerpt": "i,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: projectedMxn(sumInsuredUdi),\n    savingsGoalMxnProjectedAtPolicyTerm: projectedMxn(savingsGoalUdi),\n    totalPaidMxnTodayAssumption: paymentYears && premiumUdi != null ? roundMoney((mxn(premiumU"
+        }
+      ],
+      "adapterSnippets": [],
+      "contractSnippets": [
+        {
+          "term": "sumAssured",
+          "line": 3,
+          "excerpt": "REVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction c"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": []
+    },
+    {
+      "canonicalField": "annualPremium",
+      "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+      "runtimeOwner": "engine",
+      "directEngineMapping": "annualPremium",
+      "engineAliases": [],
+      "normalizedNativeKeys": [
+        "annualPremium"
+      ],
+      "proposalRankedCandidates": [
+        "annualPremium"
+      ],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [
+          95
+        ],
+        "adapter": [],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": []
+      },
+      "engineEvidence": true,
+      "adapterEvidence": false,
+      "persistenceEvidence": true,
+      "modalEvidence": false,
+      "engineSnippets": [
+        {
+          "term": "annualPremium",
+          "line": 95,
+          "excerpt": "+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    singlePaymentUdi: scenarioValues[offset],\n    m"
+        },
+        {
+          "term": "annualPremium",
+          "line": 121,
+          "excerpt": "nValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? format"
+        },
+        {
+          "term": "annualPremium",
+          "line": 122,
+          "excerpt": "mentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    payment"
+        },
+        {
+          "term": "annualPremium",
+          "line": 152,
+          "excerpt": "diGrowthRate);\n  const policyYears = yearsFrom(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  "
+        },
+        {
+          "term": "annualPremium",
+          "line": 189,
+          "excerpt": "diMxnAtPolicyTerm: canProject && policyYears != null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n "
+        },
+        {
+          "term": "annualPremium",
+          "line": 243,
+          "excerpt": "result.prospect || '', 'UDI proyectada', calculation.projectedUdiMxnAtPolicyTerm || ''],\n      ['Prima anual UDI', calculation.premiumUdi || '', 'Prima anual MXN hoy', calculation.annualPremiumMxnToday || ''],\n      ['Suma asegurada UDI', calculation.sumInsuredUdi || '', 'Suma asegurada MXN hoy', calculation.sumInsuredMxnToday || '']\n    ],\n    DatosPDF: Object.entries(result).filter(([key]) => key !== 'calcul"
+        }
+      ],
+      "adapterSnippets": [],
+      "contractSnippets": [
+        {
+          "term": "annualPremium",
+          "line": 3,
+          "excerpt": "ULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction clone(v){return JS"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": []
+    },
+    {
+      "canonicalField": "plannedOrAvePremium",
+      "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+      "runtimeOwner": "engine",
+      "directEngineMapping": null,
+      "engineAliases": [
+        "annualPremium",
+        "baseAnnualPremium",
+        "plannedAnnual",
+        "plannedMonthly",
+        "plannedQuarterly",
+        "plannedSemiannual",
+        "premium",
+        "premiumTable",
+        "totalAnnualPremium"
+      ],
+      "normalizedNativeKeys": [],
+      "proposalRankedCandidates": [
+        "annualPremium",
+        "baseAnnualPremium",
+        "plannedAnnual",
+        "plannedMonthly",
+        "plannedQuarterly",
+        "plannedSemiannual",
+        "premium",
+        "premiumTable",
+        "totalAnnualPremium"
+      ],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [],
+        "adapter": [],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": []
+      },
+      "engineEvidence": true,
+      "adapterEvidence": false,
+      "persistenceEvidence": true,
+      "modalEvidence": false,
+      "engineSnippets": [
+        {
+          "term": "annualPremium",
+          "line": 95,
+          "excerpt": "+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    singlePaymentUdi: scenarioValues[offset],\n    m"
+        },
+        {
+          "term": "annualPremium",
+          "line": 121,
+          "excerpt": "nValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? format"
+        },
+        {
+          "term": "annualPremium",
+          "line": 122,
+          "excerpt": "mentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    payment"
+        },
+        {
+          "term": "annualPremium",
+          "line": 152,
+          "excerpt": "diGrowthRate);\n  const policyYears = yearsFrom(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  "
+        },
+        {
+          "term": "annualPremium",
+          "line": 189,
+          "excerpt": "diMxnAtPolicyTerm: canProject && policyYears != null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n "
+        },
+        {
+          "term": "annualPremium",
+          "line": 243,
+          "excerpt": "result.prospect || '', 'UDI proyectada', calculation.projectedUdiMxnAtPolicyTerm || ''],\n      ['Prima anual UDI', calculation.premiumUdi || '', 'Prima anual MXN hoy', calculation.annualPremiumMxnToday || ''],\n      ['Suma asegurada UDI', calculation.sumInsuredUdi || '', 'Suma asegurada MXN hoy', calculation.sumInsuredMxnToday || '']\n    ],\n    DatosPDF: Object.entries(result).filter(([key]) => key !== 'calcul"
+        },
+        {
+          "term": "baseAnnualPremium",
+          "line": 121,
+          "excerpt": "cleanValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? format"
+        },
+        {
+          "term": "plannedAnnual",
+          "line": 133,
+          "excerpt": "ll,\n      plannedMonthly: plannedPremiumValues[0] ?? null,\n      plannedQuarterly: plannedPremiumValues[1] ?? null,\n      plannedSemiannual: plannedPremiumValues[2] ?? null,\n      plannedAnnual: plannedPremiumValues[3] ?? null\n    },\n    retirementInterestRate: interestValues.length ? `${interestValues[0]}%` : null,\n    retirementScenarioBase: scenario(2),\n    retirementScenarioFavorable: scenario(4),\n    reti"
+        }
+      ],
+      "adapterSnippets": [
+        {
+          "term": "premium",
+          "line": 53,
+          "excerpt": ",\n  pdfRead: false\n});\n\nconst BLOCKED_EFFECTS = Object.freeze([\n  'pdf_read',\n  'pdf_ocr',\n  'parser_execute',\n  'calculator_execute',\n  'banxico_call',\n  'projection_execute',\n  'premium_calculate_real',\n  'coverage_truth_claim',\n  'quote_create',\n  'quote_update',\n  'quote_send',\n  'quote_pdf_generate',\n  'proposal_generate',\n  'provider_call',\n  'policy_write',\n  'crm_write',\n  'pipeline_write',\n  'ta"
+        },
+        {
+          "term": "premium",
+          "line": 89,
+          "excerpt": "uote_preview_pdf_engine_role',\n  'quote_preview_binding_ref',\n  'product_intelligence_ref',\n  'product_family',\n  'parser_ref',\n  'calculator_refs',\n  'coverage_semantics_ref',\n  'premium_semantics_ref',\n  'currency_semantics_ref',\n  'projection_semantics_ref',\n  'evidence_requirements',\n  'freshness_requirements',\n  'extraction_plan',\n  'blocked_effects',\n  'safety_flags',\n  'safe_error',\n  'audit_event"
+        },
+        {
+          "term": "premium",
+          "line": 190,
+          "excerpt": "est, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    evidence_requirements: buildEvidenceRequirements(request),\n    freshness_requirements: buildFreshnessRequirements(),\n    ext"
+        },
+        {
+          "term": "premium",
+          "line": 315,
+          "excerpt": " parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemanticsRef']) || null,\n    projection_seman"
+        },
+        {
+          "term": "premium",
+          "line": 315,
+          "excerpt": "tor_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemanticsRef']) || null,\n    projection_semantics_ref: getField(binding, ['projection_se"
+        },
+        {
+          "term": "premium",
+          "line": 315,
+          "excerpt": "\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemanticsRef']) || null,\n    projection_semantics_ref: getField(binding, ['projection_semantics_ref', 'projection"
+        }
+      ],
+      "contractSnippets": [
+        {
+          "term": "plannedOrAvePremium",
+          "line": 3,
+          "excerpt": "1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction clone(v){return JSON.parse(JSON.stringify"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": []
+    },
+    {
+      "canonicalField": "coveragePeriod",
+      "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+      "runtimeOwner": "engine",
+      "directEngineMapping": null,
+      "engineAliases": [
+        "coverage",
+        "guaranteePeriod"
+      ],
+      "normalizedNativeKeys": [],
+      "proposalRankedCandidates": [
+        "coverage",
+        "guaranteePeriod"
+      ],
+      "adapterGetFieldAliasGroups": [],
+      "sourceOccurrenceLines": {
+        "engine": [],
+        "adapter": [],
+        "contract": [
+          3
+        ],
+        "store": [],
+        "coordinator": [],
+        "modal": []
+      },
+      "engineEvidence": true,
+      "adapterEvidence": false,
+      "persistenceEvidence": true,
+      "modalEvidence": false,
+      "engineSnippets": [
+        {
+          "term": "coverage",
+          "line": 87,
+          "excerpt": "íóúÑñ]+).*Fumador:\\s*([A-Za-zÁÉÍÓÚáéíóúÑñ]+)/i);\n  const liquidationMatch = liquidationLine.match(/Opci[oó]n de liquidaci[oó]n:\\s*(.*?)\\s+Moneda:\\s*([A-Z]+)/i);\n\n  const additionalCoverages = [];\n  for (const line of lines) {\n    const match = line.match(/^(BAM UI|AV UI|BIT 65|BMA 65|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      cove"
+        },
+        {
+          "term": "coverage",
+          "line": 91,
+          "excerpt": " (const line of lines) {\n    const match = line.match(/^(BAM UI|AV UI|BIT 65|BMA 65|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= o"
+        },
+        {
+          "term": "coverage",
+          "line": 92,
+          "excerpt": "{\n    const match = line.match(/^(BAM UI|AV UI|BIT 65|BMA 65|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    polic"
+        },
+        {
+          "term": "coverage",
+          "line": 140,
+          "excerpt": "able: scenario(4),\n    retirementScenarioUnfavorable: scenario(6),\n    guaranteePeriod: (guaranteeLine.match(/garant[ií]a de\\s+([0-9]+\\s+a[nñ]os)/i) || [])[1] || null,\n    optionalCoverages: additionalCoverages,\n    advisor: advisorLine ? cleanValue(advisorLine.replace(/Asesor profesional de seguros:/i, '')) : null,\n    quoteDate: (studyDateLine.match(/d[ií]a\\s+([0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{2,4})/i) || ["
+        },
+        {
+          "term": "coverage",
+          "line": 140,
+          "excerpt": "  retirementScenarioUnfavorable: scenario(6),\n    guaranteePeriod: (guaranteeLine.match(/garant[ií]a de\\s+([0-9]+\\s+a[nñ]os)/i) || [])[1] || null,\n    optionalCoverages: additionalCoverages,\n    advisor: advisorLine ? cleanValue(advisorLine.replace(/Asesor profesional de seguros:/i, '')) : null,\n    quoteDate: (studyDateLine.match(/d[ií]a\\s+([0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{2,4})/i) || [])[1] || null,\n    ex"
+        },
+        {
+          "term": "guaranteePeriod",
+          "line": 139,
+          "excerpt": "length ? `${interestValues[0]}%` : null,\n    retirementScenarioBase: scenario(2),\n    retirementScenarioFavorable: scenario(4),\n    retirementScenarioUnfavorable: scenario(6),\n    guaranteePeriod: (guaranteeLine.match(/garant[ií]a de\\s+([0-9]+\\s+a[nñ]os)/i) || [])[1] || null,\n    optionalCoverages: additionalCoverages,\n    advisor: advisorLine ? cleanValue(advisorLine.replace(/Asesor profesional de seguros:/i, '"
+        }
+      ],
+      "adapterSnippets": [
+        {
+          "term": "coverage",
+          "line": 54,
+          "excerpt": "t BLOCKED_EFFECTS = Object.freeze([\n  'pdf_read',\n  'pdf_ocr',\n  'parser_execute',\n  'calculator_execute',\n  'banxico_call',\n  'projection_execute',\n  'premium_calculate_real',\n  'coverage_truth_claim',\n  'quote_create',\n  'quote_update',\n  'quote_send',\n  'quote_pdf_generate',\n  'proposal_generate',\n  'provider_call',\n  'policy_write',\n  'crm_write',\n  'pipeline_write',\n  'task_create',\n  'calendar_creat"
+        },
+        {
+          "term": "coverage",
+          "line": 88,
+          "excerpt": "review_pdf_engine_ref',\n  'quote_preview_pdf_engine_role',\n  'quote_preview_binding_ref',\n  'product_intelligence_ref',\n  'product_family',\n  'parser_ref',\n  'calculator_refs',\n  'coverage_semantics_ref',\n  'premium_semantics_ref',\n  'currency_semantics_ref',\n  'projection_semantics_ref',\n  'evidence_requirements',\n  'freshness_requirements',\n  'extraction_plan',\n  'blocked_effects',\n  'safety_flags',\n  '"
+        },
+        {
+          "term": "coverage",
+          "line": 189,
+          "excerpt": "\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    evidence_requirements: buildEvidenceRequirements(request),\n    freshness_requirements: buil"
+        },
+        {
+          "term": "coverage",
+          "line": 314,
+          "excerpt": " === 'imagina ser'\n      ? 'proven_case_not_universal_architecture'\n      : 'product_family_reference',\n    parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantic"
+        },
+        {
+          "term": "coverage",
+          "line": 314,
+          "excerpt": "universal_architecture'\n      : 'product_family_reference',\n    parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantic"
+        },
+        {
+          "term": "coverage",
+          "line": 314,
+          "excerpt": "    : 'product_family_reference',\n    parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemantics"
+        }
+      ],
+      "contractSnippets": [
+        {
+          "term": "coveragePeriod",
+          "line": 3,
+          "excerpt": "VENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction clone(v){return JSON.parse(JSON.stringify(v));}\nfunction sc"
+        }
+      ],
+      "coordinatorSnippets": [],
+      "modalSnippets": []
+    }
+  ],
+  "analysis": {
+    "status": "PASS",
+    "reason": null,
+    "requiredFields": [
+      "name",
+      "family",
+      "product",
+      "insured",
+      "sumAssured",
+      "annualPremium",
+      "plannedOrAvePremium",
+      "coveragePeriod"
+    ],
+    "reconciliation": {
+      "complete": true,
+      "canonicalSchemaMatchConfirmed": false,
+      "canonicalSchemaMismatchConfirmed": true,
+      "engineOwnedFieldCount": 6,
+      "adapterDerivedOnlyFieldCount": 2,
+      "persistenceOrUiOnlyFieldCount": 0,
+      "unownedCanonicalFieldCount": 0,
+      "allEightFieldsHaveProductiveRuntimeOwner": true,
+      "manualMappingGateSafeToContinue": false
+    },
+    "fields": [
+      {
+        "canonicalField": "name",
+        "classification": "ADAPTER_DERIVED_ONLY",
+        "runtimeOwner": "adapter",
+        "directEngineMapping": null,
+        "engineAliases": [],
+        "normalizedNativeKeys": [],
+        "proposalRankedCandidates": [],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [],
+          "adapter": [
+            119,
+            120,
+            120,
+            121
+          ],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": [
+            17,
+            18,
+            23,
+            24,
+            29,
+            30,
+            35,
+            36,
+            41,
+            42,
+            47,
+            48,
+            53,
+            54,
+            55,
+            60,
+            61
+          ]
+        },
+        "engineEvidence": false,
+        "adapterEvidence": true,
+        "persistenceEvidence": true,
+        "modalEvidence": true,
+        "engineSnippets": [],
+        "adapterSnippets": [
+          {
+            "term": "name",
+            "line": 118,
+            "excerpt": " .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9]+/g, '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result)"
+          },
+          {
+            "term": "name",
+            "line": 119,
+            "excerpt": "ormalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9]+/g, '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === tr"
+          },
+          {
+            "term": "name",
+            "line": 119,
+            "excerpt": "('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-z0-9]+/g, '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) retu"
+          },
+          {
+            "term": "name",
+            "line": 120,
+            "excerpt": " '_')\n    .replace(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) return true;\n  if (result && result.ok === true) return true;\n  if (result &"
+          },
+          {
+            "term": "name",
+            "line": 120,
+            "excerpt": "ce(/^_+|_+$/g, '') || 'unknown';\n}\n\nfunction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) return true;\n  if (result && result.ok === true) return true;\n  if (result && result.valid ="
+          },
+          {
+            "term": "name",
+            "line": 121,
+            "excerpt": "unction getField(object, names) {\n  for (const name of names) {\n    if (object && Object.prototype.hasOwnProperty.call(object, name) && object[name] != null) {\n      return object[name];\n    }\n  }\n  return undefined;\n}\n\nfunction validationOk(result) {\n  if (result === true) return true;\n  if (result && result.ok === true) return true;\n  if (result && result.valid === true) return true;\n  if (result &&"
+          }
+        ],
+        "contractSnippets": [
+          {
+            "term": "name",
+            "line": 2,
+            "excerpt": "sistenceContract=api;})(typeof globalThis!==\"undefined\"?globalThis:this,function(){\"use strict\";\nvar CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!"
+          },
+          {
+            "term": "name",
+            "line": 3,
+            "excerpt": "){\"use strict\";\nvar CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeo"
+          },
+          {
+            "term": "name",
+            "line": 14,
+            "excerpt": "tIdentity:identity(id),persistenceContractId:CONTRACT_ID,__forgePersistenceIdentityEvent:true});}\nreturn Object.freeze({CONTRACT_ID:CONTRACT_ID,SCHEMA_VERSION:SCHEMA_VERSION,EVENT_NAME:EVENT_NAME,REQUIRED_FIELDS:REQUIRED_FIELDS,normalizeIdentity:identity,assertSafePayload:function(v){scan(v,\"$\");return true;},extractAuthorizedFields:fieldsFrom,createRecord:record,validateRecord:record,createExtraction"
+          },
+          {
+            "term": "name",
+            "line": 14,
+            "excerpt": "dentity(id),persistenceContractId:CONTRACT_ID,__forgePersistenceIdentityEvent:true});}\nreturn Object.freeze({CONTRACT_ID:CONTRACT_ID,SCHEMA_VERSION:SCHEMA_VERSION,EVENT_NAME:EVENT_NAME,REQUIRED_FIELDS:REQUIRED_FIELDS,normalizeIdentity:identity,assertSafePayload:function(v){scan(v,\"$\");return true;},extractAuthorizedFields:fieldsFrom,createRecord:record,validateRecord:record,createExtractionReadyDetail"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": [
+          {
+            "term": "name",
+            "line": 5,
+            "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label:"
+          },
+          {
+            "term": "name",
+            "line": 7,
+            "excerpt": "n () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_o"
+          },
+          {
+            "term": "name",
+            "line": 8,
+            "excerpt": "  { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" }"
+          },
+          {
+            "term": "name",
+            "line": 16,
+            "excerpt": "ieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\""
+          },
+          {
+            "term": "name",
+            "line": 17,
+            "excerpt": "d_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data"
+          },
+          {
+            "term": "name",
+            "line": 17,
+            "excerpt": "ium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"produ"
+          },
+          {
+            "term": "name",
+            "line": 18,
+            "excerpt": "ma AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n   "
+          },
+          {
+            "term": "name",
+            "line": 19,
+            "excerpt": "\"coverage_period\", label: \"Periodo Cobertura\" }\n  ];\n\n  const SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n   "
+          }
+        ]
+      },
+      {
+        "canonicalField": "family",
+        "classification": "ADAPTER_DERIVED_ONLY",
+        "runtimeOwner": "adapter",
+        "directEngineMapping": null,
+        "engineAliases": [],
+        "normalizedNativeKeys": [],
+        "proposalRankedCandidates": [],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [],
+          "adapter": [
+            288
+          ],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": []
+        },
+        "engineEvidence": false,
+        "adapterEvidence": true,
+        "persistenceEvidence": true,
+        "modalEvidence": false,
+        "engineSnippets": [],
+        "adapterSnippets": [
+          {
+            "term": "family",
+            "line": 17,
+            "excerpt": "ce/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NOT_INTEGRATED',\n  PRODUCT_FAMILY_NOT_MAPPED: 'QUOTE_PREVIEW_PDF_PRODUCT_FAMILY_NOT_MAPPED',\n  BINDING_REQUIRED: 'QUOTE_PREVIEW_PDF_BINDING_REQUIRED',\n  SOURCE_EVIDENCE_REQUIRED: 'QUOTE_PREVIEW_PDF_SOURCE_EVIDENCE_REQUIRED',\n  FRESHNESS_REQUIRED: 'QUOTE"
+          },
+          {
+            "term": "family",
+            "line": 17,
+            "excerpt": "d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NOT_INTEGRATED',\n  PRODUCT_FAMILY_NOT_MAPPED: 'QUOTE_PREVIEW_PDF_PRODUCT_FAMILY_NOT_MAPPED',\n  BINDING_REQUIRED: 'QUOTE_PREVIEW_PDF_BINDING_REQUIRED',\n  SOURCE_EVIDENCE_REQUIRED: 'QUOTE_PREVIEW_PDF_SOURCE_EVIDENCE_REQUIRED',\n  FRESHNESS_REQUIRED: 'QUOTE_PREVIEW_PDF_FRESHNESS_REQUIRED',\n  PDF_ENGINE"
+          },
+          {
+            "term": "family",
+            "line": 85,
+            "excerpt": "ion_id',\n  'quote_preview_request_id',\n  'quote_preview_pdf_engine_ref',\n  'quote_preview_pdf_engine_role',\n  'quote_preview_binding_ref',\n  'product_intelligence_ref',\n  'product_family',\n  'parser_ref',\n  'calculator_refs',\n  'coverage_semantics_ref',\n  'premium_semantics_ref',\n  'currency_semantics_ref',\n  'projection_semantics_ref',\n  'evidence_requirements',\n  'freshness_requirements',\n  'extractio"
+          },
+          {
+            "term": "family",
+            "line": 186,
+            "excerpt": "W_PDF_ENGINE_REF,\n    quote_preview_pdf_engine_role: 'consumer_reference_only',\n    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: nu"
+          },
+          {
+            "term": "family",
+            "line": 186,
+            "excerpt": "pdf_engine_role: 'consumer_reference_only',\n    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null"
+          },
+          {
+            "term": "family",
+            "line": 186,
+            "excerpt": "umer_reference_only',\n    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_seman"
+          },
+          {
+            "term": "family",
+            "line": 186,
+            "excerpt": "    quote_preview_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    ev"
+          },
+          {
+            "term": "family",
+            "line": 186,
+            "excerpt": "_binding_ref: BINDING_ADAPTER_REF,\n    product_intelligence_ref: null,\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    evidence_requiremen"
+          }
+        ],
+        "contractSnippets": [
+          {
+            "term": "family",
+            "line": 3,
+            "excerpt": "trict\";\nvar CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"obj"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": [
+          {
+            "term": "family",
+            "line": 6,
+            "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\""
+          },
+          {
+            "term": "family",
+            "line": 22,
+            "excerpt": "R_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"pr"
+          },
+          {
+            "term": "family",
+            "line": 23,
+            "excerpt": "   '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"p"
+          },
+          {
+            "term": "family",
+            "line": 25,
+            "excerpt": "field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n"
+          },
+          {
+            "term": "family",
+            "line": 26,
+            "excerpt": "ld=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_nam"
+          }
+        ]
+      },
+      {
+        "canonicalField": "product",
+        "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+        "runtimeOwner": "engine",
+        "directEngineMapping": "product",
+        "engineAliases": [],
+        "normalizedNativeKeys": [
+          "product"
+        ],
+        "proposalRankedCandidates": [
+          "product"
+        ],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [
+            109,
+            240
+          ],
+          "adapter": [
+            3,
+            11,
+            12,
+            13,
+            13,
+            208,
+            245,
+            278,
+            288
+          ],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": []
+        },
+        "engineEvidence": true,
+        "adapterEvidence": true,
+        "persistenceEvidence": true,
+        "modalEvidence": false,
+        "engineSnippets": [
+          {
+            "term": "product",
+            "line": 68,
+            "excerpt": ";\n  const birthLine = findLine(/Fecha de nacimiento:/i);\n  const genderLine = findLine(/G[eé]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] "
+          },
+          {
+            "term": "product",
+            "line": 69,
+            "excerpt": " findLine(/G[eé]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(prod"
+          },
+          {
+            "term": "product",
+            "line": 69,
+            "excerpt": "é]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match("
+          },
+          {
+            "term": "product",
+            "line": 69,
+            "excerpt": "ationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+"
+          },
+          {
+            "term": "product",
+            "line": 70,
+            "excerpt": "]n:/i);\n  const productIndex = lines.findIndex((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${con"
+          },
+          {
+            "term": "product",
+            "line": 70,
+            "excerpt": "x((line) => /IMAGINA SER/i.test(line));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${continuationLine}`);\n  const productMatch = prod"
+          },
+          {
+            "term": "product",
+            "line": 70,
+            "excerpt": "ine));\n  const productLine = productIndex >= 0 ? lines[productIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${continuationLine}`);\n  const productMatch = productLine.match(/(IMAGINA SER.*?)\\s"
+          },
+          {
+            "term": "product",
+            "line": 71,
+            "excerpt": "ductIndex] : '';\n  const continuationLine = productIndex >= 0 && /LIMITADOS/i.test(lines[productIndex + 1] || '') ? lines[productIndex + 1] : '';\n  const planText = cleanValue(`${(productLine.match(/(IMAGINA SER.*?)(?:\\d+\\s+a[nñ]os|$)/i) || [])[1] || 'IMAGINA SER'} ${continuationLine}`);\n  const productMatch = productLine.match(/(IMAGINA SER.*?)\\s+([0-9]+\\s+a[nñ]os)\\s+([0-9,]+)\\s+([0-9,.]+)/i);\n  const t"
+          }
+        ],
+        "adapterSnippets": [
+          {
+            "term": "product",
+            "line": 3,
+            "excerpt": "'use strict';\n\nconst bindingAdapter = require('./quote-preview-product-intelligence-binding-adapter-074b.js');\n\nconst ADAPTER_ID = 'forge.quote_preview.pdf_engine_product_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integ"
+          },
+          {
+            "term": "product",
+            "line": 5,
+            "excerpt": "'use strict';\n\nconst bindingAdapter = require('./quote-preview-product-intelligence-binding-adapter-074b.js');\n\nconst ADAPTER_ID = 'forge.quote_preview.pdf_engine_product_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integration.v1';\nconst DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MOD"
+          },
+          {
+            "term": "product",
+            "line": 6,
+            "excerpt": "binding-adapter-074b.js');\n\nconst ADAPTER_ID = 'forge.quote_preview.pdf_engine_product_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integration.v1';\nconst DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MODE = 'read_only';\nconst ROUTE_CLASS = 'preview_safe';\n\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-i"
+          },
+          {
+            "term": "product",
+            "line": 7,
+            "excerpt": "duct_intelligence.integration.adapter.v1';\nconst SCHEMA_VERSION = 'forge.quote_preview.pdf_engine_product_intelligence.integration.v1';\nconst DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MODE = 'read_only';\nconst ROUTE_CLASS = 'preview_safe';\n\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-intelligence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF"
+          },
+          {
+            "term": "product",
+            "line": 11,
+            "excerpt": "const DOMAIN_ID = 'quote_preview_pdf_engine_product_intelligence_integration';\nconst MODE = 'read_only';\nconst ROUTE_CLASS = 'preview_safe';\n\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-intelligence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF "
+          },
+          {
+            "term": "product",
+            "line": 12,
+            "excerpt": "\nconst QUOTE_PREVIEW_PDF_ENGINE_REF = 'product-intelligence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF = 'platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_I"
+          },
+          {
+            "term": "product",
+            "line": 13,
+            "excerpt": "igence/evidence/forge-quote-pdf-preview-engine.js';\nconst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF = 'platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NO"
+          },
+          {
+            "term": "product",
+            "line": 13,
+            "excerpt": "nst BINDING_ADAPTER_REF = 'platform/adapters/quote-preview/quote-preview-product-intelligence-binding-adapter-074b.js';\nconst PRODUCT_INTELLIGENCE_ADAPTER_REF = 'platform/adapters/product-intelligence/product-intelligence-read-model-adapter-073d.js';\n\nconst SAFE_ERROR_CODES = Object.freeze({\n  NOT_INTEGRATED: 'QUOTE_PREVIEW_PDF_PRODUCT_INTELLIGENCE_NOT_INTEGRATED',\n  PRODUCT_FAMILY_NOT_MAPPED: 'QUOTE_PRE"
+          }
+        ],
+        "contractSnippets": [
+          {
+            "term": "product",
+            "line": 3,
+            "excerpt": "r CONTRACT_ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Arra"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": [
+          {
+            "term": "product",
+            "line": 6,
+            "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_p"
+          },
+          {
+            "term": "product",
+            "line": 7,
+            "excerpt": "(function () {\n  \"use strict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"plan"
+          },
+          {
+            "term": "product",
+            "line": 7,
+            "excerpt": "trict\";\n\n  const FIELD_CONTRACT = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", la"
+          },
+          {
+            "term": "product",
+            "line": 22,
+            "excerpt": " SELECTOR_MAP = {\n    client_name: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[n"
+          },
+          {
+            "term": "product",
+            "line": 23,
+            "excerpt": "e: [\n      '[name=\"client_name\"]',\n      '[name=\"nombre\"]',\n      '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-f"
+          },
+          {
+            "term": "product",
+            "line": 25,
+            "excerpt": " '[data-field=\"client_name\"]',\n      '[data-forge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n"
+          },
+          {
+            "term": "product",
+            "line": 26,
+            "excerpt": "orge-field=\"client_name\"]'\n    ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insu"
+          },
+          {
+            "term": "product",
+            "line": 28,
+            "excerpt": "  ],\n    product_family: [\n      '[name=\"product_family\"]',\n      '[name=\"familia\"]',\n      '[data-field=\"product_family\"]',\n      '[data-forge-field=\"product_family\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"as"
+          }
+        ]
+      },
+      {
+        "canonicalField": "insured",
+        "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+        "runtimeOwner": "engine",
+        "directEngineMapping": null,
+        "engineAliases": [
+          "sumInsured"
+        ],
+        "normalizedNativeKeys": [],
+        "proposalRankedCandidates": [
+          "sumInsured"
+        ],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [],
+          "adapter": [],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": []
+        },
+        "engineEvidence": true,
+        "adapterEvidence": false,
+        "persistenceEvidence": true,
+        "modalEvidence": false,
+        "engineSnippets": [
+          {
+            "term": "insured",
+            "line": 64,
+            "excerpt": ")\n    .filter(Boolean);\n  const findLine = (pattern) => lines.find((line) => pattern.test(line)) || '';\n\n  const advisorLine = findLine(/Asesor profesional de seguros:/i);\n  const insuredLine = findLine(/Asegurado:/i);\n  const birthLine = findLine(/Fecha de nacimiento:/i);\n  const genderLine = findLine(/G[eé]nero:/i);\n  const liquidationLine = findLine(/Opci[oó]n de liquidaci[oó]n:/i);\n  const productInd"
+          },
+          {
+            "term": "insured",
+            "line": 94,
+            "excerpt": "IT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    sing"
+          },
+          {
+            "term": "insured",
+            "line": 111,
+            "excerpt": " {\n    detectedQuoteDomain: 'life',\n    sourceLayout: 'solucionline_imagina_ser_economic_scenarios',\n    product: 'IMAGINA SER',\n    plan: planText || 'IMAGINA SER',\n    prospect: insuredLine ? cleanValue(insuredLine.replace(/Asegurado:/i, '')) : null,\n    age: birthMatch ? birthMatch[2] : null,\n    gender: genderMatch ? genderMatch[1] : null,\n    smoker: genderMatch ? genderMatch[2] : null,\n    birthDat"
+          },
+          {
+            "term": "insured",
+            "line": 111,
+            "excerpt": "n: 'life',\n    sourceLayout: 'solucionline_imagina_ser_economic_scenarios',\n    product: 'IMAGINA SER',\n    plan: planText || 'IMAGINA SER',\n    prospect: insuredLine ? cleanValue(insuredLine.replace(/Asegurado:/i, '')) : null,\n    age: birthMatch ? birthMatch[2] : null,\n    gender: genderMatch ? genderMatch[1] : null,\n    smoker: genderMatch ? genderMatch[2] : null,\n    birthDate: birthMatch ? birthMatc"
+          },
+          {
+            "term": "insured",
+            "line": 120,
+            "excerpt": " ? liquidationMatch[2] : 'UDI',\n    policyTerm: productMatch ? cleanValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumVa"
+          },
+          {
+            "term": "insured",
+            "line": 153,
+            "excerpt": "m(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiM"
+          },
+          {
+            "term": "insured",
+            "line": 153,
+            "excerpt": "entYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiMxn);\n  const canProject = canConve"
+          },
+          {
+            "term": "insured",
+            "line": 190,
+            "excerpt": " null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: pr"
+          }
+        ],
+        "adapterSnippets": [],
+        "contractSnippets": [
+          {
+            "term": "insured",
+            "line": 3,
+            "excerpt": "ID=\"QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": [
+          {
+            "term": "insured",
+            "line": 8,
+            "excerpt": "T = [\n    { fieldKey: \"client_name\", label: \"Nombre\" },\n    { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planea"
+          },
+          {
+            "term": "insured",
+            "line": 9,
+            "excerpt": "  { fieldKey: \"product_family\", label: \"Familia\" },\n    { fieldKey: \"product_name\", label: \"Producto\" },\n    { fieldKey: \"insured_name\", label: \"Asegurado\" },\n    { fieldKey: \"sum_insured\", label: \"Suma Asegurada\" },\n    { fieldKey: \"annual_premium\", label: \"Prima Anual\" },\n    { fieldKey: \"planned_or_ave_premium\", label: \"Prima AVE / Prima Planeada\" },\n    { fieldKey: \"coverage_period\", label: \"Periodo "
+          },
+          {
+            "term": "insured",
+            "line": 34,
+            "excerpt": "y\"]'\n    ],\n    product_name: [\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"sum"
+          },
+          {
+            "term": "insured",
+            "line": 35,
+            "excerpt": "[\n      '[name=\"product_name\"]',\n      '[name=\"producto\"]',\n      '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-f"
+          },
+          {
+            "term": "insured",
+            "line": 37,
+            "excerpt": " '[data-field=\"product_name\"]',\n      '[data-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n  "
+          },
+          {
+            "term": "insured",
+            "line": 38,
+            "excerpt": "a-forge-field=\"product_name\"]'\n    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n    ],\n    annual_premium: [\n      '[name=\"an"
+          },
+          {
+            "term": "insured",
+            "line": 40,
+            "excerpt": "    ],\n    insured_name: [\n      '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n    ],\n    annual_premium: [\n      '[name=\"annual_premium\"]',\n      '[name=\""
+          },
+          {
+            "term": "insured",
+            "line": 41,
+            "excerpt": "    '[name=\"insured_name\"]',\n      '[name=\"asegurado\"]',\n      '[data-field=\"insured_name\"]',\n      '[data-forge-field=\"insured_name\"]'\n    ],\n    sum_insured: [\n      '[name=\"sum_insured\"]',\n      '[name=\"suma_asegurada\"]',\n      '[data-field=\"sum_insured\"]',\n      '[data-forge-field=\"sum_insured\"]'\n    ],\n    annual_premium: [\n      '[name=\"annual_premium\"]',\n      '[name=\"prima_anual\"]',\n      '[data-"
+          }
+        ]
+      },
+      {
+        "canonicalField": "sumAssured",
+        "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+        "runtimeOwner": "engine",
+        "directEngineMapping": null,
+        "engineAliases": [
+          "sumInsured"
+        ],
+        "normalizedNativeKeys": [],
+        "proposalRankedCandidates": [
+          "sumInsured"
+        ],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [],
+          "adapter": [],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": []
+        },
+        "engineEvidence": true,
+        "adapterEvidence": false,
+        "persistenceEvidence": true,
+        "modalEvidence": false,
+        "engineSnippets": [
+          {
+            "term": "sumInsured",
+            "line": 94,
+            "excerpt": "|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    sing"
+          },
+          {
+            "term": "sumInsured",
+            "line": 120,
+            "excerpt": "tch ? liquidationMatch[2] : 'UDI',\n    policyTerm: productMatch ? cleanValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumVa"
+          },
+          {
+            "term": "sumInsured",
+            "line": 153,
+            "excerpt": "From(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiM"
+          },
+          {
+            "term": "sumInsured",
+            "line": 153,
+            "excerpt": "aymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  const canConvert = Number.isFinite(udiMxn);\n  const canProject = canConve"
+          },
+          {
+            "term": "sumInsured",
+            "line": 190,
+            "excerpt": " != null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: pr"
+          },
+          {
+            "term": "sumInsured",
+            "line": 191,
+            "excerpt": "ey(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: projectedMxn(sumInsur"
+          },
+          {
+            "term": "sumInsured",
+            "line": 191,
+            "excerpt": " udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: projectedMxn(sumInsuredUdi),\n    savingsGoalM"
+          },
+          {
+            "term": "sumInsured",
+            "line": 195,
+            "excerpt": "i,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n    sumInsuredMxnProjectedAtPolicyTerm: projectedMxn(sumInsuredUdi),\n    savingsGoalMxnProjectedAtPolicyTerm: projectedMxn(savingsGoalUdi),\n    totalPaidMxnTodayAssumption: paymentYears && premiumUdi != null ? roundMoney((mxn(premiumU"
+          }
+        ],
+        "adapterSnippets": [],
+        "contractSnippets": [
+          {
+            "term": "sumAssured",
+            "line": 3,
+            "excerpt": "REVIEW_PDF_RESULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction c"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": []
+      },
+      {
+        "canonicalField": "annualPremium",
+        "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+        "runtimeOwner": "engine",
+        "directEngineMapping": "annualPremium",
+        "engineAliases": [],
+        "normalizedNativeKeys": [
+          "annualPremium"
+        ],
+        "proposalRankedCandidates": [
+          "annualPremium"
+        ],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [
+            95
+          ],
+          "adapter": [],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": []
+        },
+        "engineEvidence": true,
+        "adapterEvidence": false,
+        "persistenceEvidence": true,
+        "modalEvidence": false,
+        "engineSnippets": [
+          {
+            "term": "annualPremium",
+            "line": 95,
+            "excerpt": "+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    singlePaymentUdi: scenarioValues[offset],\n    m"
+          },
+          {
+            "term": "annualPremium",
+            "line": 121,
+            "excerpt": "nValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? format"
+          },
+          {
+            "term": "annualPremium",
+            "line": 122,
+            "excerpt": "mentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    payment"
+          },
+          {
+            "term": "annualPremium",
+            "line": 152,
+            "excerpt": "diGrowthRate);\n  const policyYears = yearsFrom(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  "
+          },
+          {
+            "term": "annualPremium",
+            "line": 189,
+            "excerpt": "diMxnAtPolicyTerm: canProject && policyYears != null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n "
+          },
+          {
+            "term": "annualPremium",
+            "line": 243,
+            "excerpt": "result.prospect || '', 'UDI proyectada', calculation.projectedUdiMxnAtPolicyTerm || ''],\n      ['Prima anual UDI', calculation.premiumUdi || '', 'Prima anual MXN hoy', calculation.annualPremiumMxnToday || ''],\n      ['Suma asegurada UDI', calculation.sumInsuredUdi || '', 'Suma asegurada MXN hoy', calculation.sumInsuredMxnToday || '']\n    ],\n    DatosPDF: Object.entries(result).filter(([key]) => key !== 'calcul"
+          }
+        ],
+        "adapterSnippets": [],
+        "contractSnippets": [
+          {
+            "term": "annualPremium",
+            "line": 3,
+            "excerpt": "ULT_PERSISTENCE_V1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction clone(v){return JS"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": []
+      },
+      {
+        "canonicalField": "plannedOrAvePremium",
+        "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+        "runtimeOwner": "engine",
+        "directEngineMapping": null,
+        "engineAliases": [
+          "annualPremium",
+          "baseAnnualPremium",
+          "plannedAnnual",
+          "plannedMonthly",
+          "plannedQuarterly",
+          "plannedSemiannual",
+          "premium",
+          "premiumTable",
+          "totalAnnualPremium"
+        ],
+        "normalizedNativeKeys": [],
+        "proposalRankedCandidates": [
+          "annualPremium",
+          "baseAnnualPremium",
+          "plannedAnnual",
+          "plannedMonthly",
+          "plannedQuarterly",
+          "plannedSemiannual",
+          "premium",
+          "premiumTable",
+          "totalAnnualPremium"
+        ],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [],
+          "adapter": [],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": []
+        },
+        "engineEvidence": true,
+        "adapterEvidence": false,
+        "persistenceEvidence": true,
+        "modalEvidence": false,
+        "engineSnippets": [
+          {
+            "term": "annualPremium",
+            "line": 95,
+            "excerpt": "+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    policyYear: scenarioValues[0],\n    age: scenarioValues[1],\n    singlePaymentUdi: scenarioValues[offset],\n    m"
+          },
+          {
+            "term": "annualPremium",
+            "line": 121,
+            "excerpt": "nValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? format"
+          },
+          {
+            "term": "annualPremium",
+            "line": 122,
+            "excerpt": "mentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    payment"
+          },
+          {
+            "term": "annualPremium",
+            "line": 152,
+            "excerpt": "diGrowthRate);\n  const policyYears = yearsFrom(result.policyTerm);\n  const paymentYears = yearsFrom(result.paymentTerm) || policyYears;\n  const premiumUdi = numberFrom(result.totalAnnualPremium || result.premium);\n  const sumInsuredUdi = numberFrom(result.sumInsured);\n  const savingsGoalUdi = numberFrom(result.retirementScenarioBase && result.retirementScenarioBase.singlePaymentUdi);\n  const warnings = [];\n\n  "
+          },
+          {
+            "term": "annualPremium",
+            "line": 189,
+            "excerpt": "diMxnAtPolicyTerm: canProject && policyYears != null ? roundMoney(udiMxn * Math.pow(1 + udiGrowthRate, policyYears)) : null,\n    policyYears,\n    paymentYears,\n    premiumUdi,\n    annualPremiumMxnToday: mxn(premiumUdi),\n    sumInsuredUdi,\n    sumInsuredMxnToday: mxn(sumInsuredUdi),\n    savingsGoalUdi,\n    savingsGoalMxnToday: mxn(savingsGoalUdi),\n    premiumMxnProjectedAtPolicyTerm: projectedMxn(premiumUdi),\n "
+          },
+          {
+            "term": "annualPremium",
+            "line": 243,
+            "excerpt": "result.prospect || '', 'UDI proyectada', calculation.projectedUdiMxnAtPolicyTerm || ''],\n      ['Prima anual UDI', calculation.premiumUdi || '', 'Prima anual MXN hoy', calculation.annualPremiumMxnToday || ''],\n      ['Suma asegurada UDI', calculation.sumInsuredUdi || '', 'Suma asegurada MXN hoy', calculation.sumInsuredMxnToday || '']\n    ],\n    DatosPDF: Object.entries(result).filter(([key]) => key !== 'calcul"
+          },
+          {
+            "term": "baseAnnualPremium",
+            "line": 121,
+            "excerpt": "cleanValue(productMatch[2]) : null,\n    paymentTerm: paymentTermMatch ? `${paymentTermMatch[1]} años` : null,\n    sumInsured: productMatch ? formatUdi(productMatch[3]) : null,\n    baseAnnualPremium: productMatch ? formatUdi(productMatch[4]) : null,\n    totalAnnualPremium: totalPremiumValues.length ? formatUdi(totalPremiumValues[totalPremiumValues.length - 1]) : null,\n    premium: totalPremiumValues.length ? format"
+          },
+          {
+            "term": "plannedAnnual",
+            "line": 133,
+            "excerpt": "ll,\n      plannedMonthly: plannedPremiumValues[0] ?? null,\n      plannedQuarterly: plannedPremiumValues[1] ?? null,\n      plannedSemiannual: plannedPremiumValues[2] ?? null,\n      plannedAnnual: plannedPremiumValues[3] ?? null\n    },\n    retirementInterestRate: interestValues.length ? `${interestValues[0]}%` : null,\n    retirementScenarioBase: scenario(2),\n    retirementScenarioFavorable: scenario(4),\n    reti"
+          }
+        ],
+        "adapterSnippets": [
+          {
+            "term": "premium",
+            "line": 53,
+            "excerpt": ",\n  pdfRead: false\n});\n\nconst BLOCKED_EFFECTS = Object.freeze([\n  'pdf_read',\n  'pdf_ocr',\n  'parser_execute',\n  'calculator_execute',\n  'banxico_call',\n  'projection_execute',\n  'premium_calculate_real',\n  'coverage_truth_claim',\n  'quote_create',\n  'quote_update',\n  'quote_send',\n  'quote_pdf_generate',\n  'proposal_generate',\n  'provider_call',\n  'policy_write',\n  'crm_write',\n  'pipeline_write',\n  'ta"
+          },
+          {
+            "term": "premium",
+            "line": 89,
+            "excerpt": "uote_preview_pdf_engine_role',\n  'quote_preview_binding_ref',\n  'product_intelligence_ref',\n  'product_family',\n  'parser_ref',\n  'calculator_refs',\n  'coverage_semantics_ref',\n  'premium_semantics_ref',\n  'currency_semantics_ref',\n  'projection_semantics_ref',\n  'evidence_requirements',\n  'freshness_requirements',\n  'extraction_plan',\n  'blocked_effects',\n  'safety_flags',\n  'safe_error',\n  'audit_event"
+          },
+          {
+            "term": "premium",
+            "line": 190,
+            "excerpt": "est, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    evidence_requirements: buildEvidenceRequirements(request),\n    freshness_requirements: buildFreshnessRequirements(),\n    ext"
+          },
+          {
+            "term": "premium",
+            "line": 315,
+            "excerpt": " parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemanticsRef']) || null,\n    projection_seman"
+          },
+          {
+            "term": "premium",
+            "line": 315,
+            "excerpt": "tor_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemanticsRef']) || null,\n    projection_semantics_ref: getField(binding, ['projection_se"
+          },
+          {
+            "term": "premium",
+            "line": 315,
+            "excerpt": "\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemanticsRef']) || null,\n    projection_semantics_ref: getField(binding, ['projection_semantics_ref', 'projection"
+          }
+        ],
+        "contractSnippets": [
+          {
+            "term": "plannedOrAvePremium",
+            "line": 3,
+            "excerpt": "1\",SCHEMA_VERSION=\"1\",EVENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction clone(v){return JSON.parse(JSON.stringify"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": []
+      },
+      {
+        "canonicalField": "coveragePeriod",
+        "classification": "ENGINE_NATIVE_OR_ENGINE_DERIVED",
+        "runtimeOwner": "engine",
+        "directEngineMapping": null,
+        "engineAliases": [
+          "coverage",
+          "guaranteePeriod"
+        ],
+        "normalizedNativeKeys": [],
+        "proposalRankedCandidates": [
+          "coverage",
+          "guaranteePeriod"
+        ],
+        "adapterGetFieldAliasGroups": [],
+        "sourceOccurrenceLines": {
+          "engine": [],
+          "adapter": [],
+          "contract": [
+            3
+          ],
+          "store": [],
+          "coordinator": [],
+          "modal": []
+        },
+        "engineEvidence": true,
+        "adapterEvidence": false,
+        "persistenceEvidence": true,
+        "modalEvidence": false,
+        "engineSnippets": [
+          {
+            "term": "coverage",
+            "line": 87,
+            "excerpt": "íóúÑñ]+).*Fumador:\\s*([A-Za-zÁÉÍÓÚáéíóúÑñ]+)/i);\n  const liquidationMatch = liquidationLine.match(/Opci[oó]n de liquidaci[oó]n:\\s*(.*?)\\s+Moneda:\\s*([A-Z]+)/i);\n\n  const additionalCoverages = [];\n  for (const line of lines) {\n    const match = line.match(/^(BAM UI|AV UI|BIT 65|BMA 65|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      cove"
+          },
+          {
+            "term": "coverage",
+            "line": 91,
+            "excerpt": " (const line of lines) {\n    const match = line.match(/^(BAM UI|AV UI|BIT 65|BMA 65|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= o"
+          },
+          {
+            "term": "coverage",
+            "line": 92,
+            "excerpt": "{\n    const match = line.match(/^(BAM UI|AV UI|BIT 65|BMA 65|BAIT 65)\\s+(.+?)\\s+(Amparado|[0-9,]+)\\s+([0-9,.]+)$/i);\n    if (!match) continue;\n    additionalCoverages.push({\n      coverage: match[1],\n      term: cleanValue(match[2]),\n      sumInsured: cleanValue(match[3]),\n      annualPremium: formatUdi(match[4])\n    });\n  }\n\n  const scenario = (offset) => scenarioValues.length >= offset + 2 ? {\n    polic"
+          },
+          {
+            "term": "coverage",
+            "line": 140,
+            "excerpt": "able: scenario(4),\n    retirementScenarioUnfavorable: scenario(6),\n    guaranteePeriod: (guaranteeLine.match(/garant[ií]a de\\s+([0-9]+\\s+a[nñ]os)/i) || [])[1] || null,\n    optionalCoverages: additionalCoverages,\n    advisor: advisorLine ? cleanValue(advisorLine.replace(/Asesor profesional de seguros:/i, '')) : null,\n    quoteDate: (studyDateLine.match(/d[ií]a\\s+([0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{2,4})/i) || ["
+          },
+          {
+            "term": "coverage",
+            "line": 140,
+            "excerpt": "  retirementScenarioUnfavorable: scenario(6),\n    guaranteePeriod: (guaranteeLine.match(/garant[ií]a de\\s+([0-9]+\\s+a[nñ]os)/i) || [])[1] || null,\n    optionalCoverages: additionalCoverages,\n    advisor: advisorLine ? cleanValue(advisorLine.replace(/Asesor profesional de seguros:/i, '')) : null,\n    quoteDate: (studyDateLine.match(/d[ií]a\\s+([0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{2,4})/i) || [])[1] || null,\n    ex"
+          },
+          {
+            "term": "guaranteePeriod",
+            "line": 139,
+            "excerpt": "length ? `${interestValues[0]}%` : null,\n    retirementScenarioBase: scenario(2),\n    retirementScenarioFavorable: scenario(4),\n    retirementScenarioUnfavorable: scenario(6),\n    guaranteePeriod: (guaranteeLine.match(/garant[ií]a de\\s+([0-9]+\\s+a[nñ]os)/i) || [])[1] || null,\n    optionalCoverages: additionalCoverages,\n    advisor: advisorLine ? cleanValue(advisorLine.replace(/Asesor profesional de seguros:/i, '"
+          }
+        ],
+        "adapterSnippets": [
+          {
+            "term": "coverage",
+            "line": 54,
+            "excerpt": "t BLOCKED_EFFECTS = Object.freeze([\n  'pdf_read',\n  'pdf_ocr',\n  'parser_execute',\n  'calculator_execute',\n  'banxico_call',\n  'projection_execute',\n  'premium_calculate_real',\n  'coverage_truth_claim',\n  'quote_create',\n  'quote_update',\n  'quote_send',\n  'quote_pdf_generate',\n  'proposal_generate',\n  'provider_call',\n  'policy_write',\n  'crm_write',\n  'pipeline_write',\n  'task_create',\n  'calendar_creat"
+          },
+          {
+            "term": "coverage",
+            "line": 88,
+            "excerpt": "review_pdf_engine_ref',\n  'quote_preview_pdf_engine_role',\n  'quote_preview_binding_ref',\n  'product_intelligence_ref',\n  'product_family',\n  'parser_ref',\n  'calculator_refs',\n  'coverage_semantics_ref',\n  'premium_semantics_ref',\n  'currency_semantics_ref',\n  'projection_semantics_ref',\n  'evidence_requirements',\n  'freshness_requirements',\n  'extraction_plan',\n  'blocked_effects',\n  'safety_flags',\n  '"
+          },
+          {
+            "term": "coverage",
+            "line": 189,
+            "excerpt": "\n    product_family: getField(request, ['product_family_hint', 'productFamilyHint', 'product_family', 'productFamily']) || null,\n    parser_ref: null,\n    calculator_refs: [],\n    coverage_semantics_ref: null,\n    premium_semantics_ref: null,\n    currency_semantics_ref: null,\n    projection_semantics_ref: null,\n    evidence_requirements: buildEvidenceRequirements(request),\n    freshness_requirements: buil"
+          },
+          {
+            "term": "coverage",
+            "line": 314,
+            "excerpt": " === 'imagina ser'\n      ? 'proven_case_not_universal_architecture'\n      : 'product_family_reference',\n    parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantic"
+          },
+          {
+            "term": "coverage",
+            "line": 314,
+            "excerpt": "universal_architecture'\n      : 'product_family_reference',\n    parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantic"
+          },
+          {
+            "term": "coverage",
+            "line": 314,
+            "excerpt": "    : 'product_family_reference',\n    parser_ref: parserRef || null,\n    calculator_refs: calculatorRefs,\n    coverage_semantics_ref: getField(binding, ['coverage_semantics_ref', 'coverageSemanticsRef']) || null,\n    premium_semantics_ref: getField(binding, ['premium_semantics_ref', 'premiumSemanticsRef']) || null,\n    currency_semantics_ref: getField(binding, ['currency_semantics_ref', 'currencySemantics"
+          }
+        ],
+        "contractSnippets": [
+          {
+            "term": "coveragePeriod",
+            "line": 3,
+            "excerpt": "VENT_NAME=\"forge:quote-preview:extraction-ready\";\nvar REQUIRED_FIELDS=Object.freeze([\"name\", \"family\", \"product\", \"insured\", \"sumAssured\", \"annualPremium\", \"plannedOrAvePremium\", \"coveragePeriod\"]);\nfunction err(ok,code,msg){if(!ok){var e=new Error(msg);e.code=code;throw e;}}\nfunction obj(v){return !!v&&typeof v===\"object\"&&!Array.isArray(v);}\nfunction clone(v){return JSON.parse(JSON.stringify(v));}\nfunction sc"
+          }
+        ],
+        "coordinatorSnippets": [],
+        "modalSnippets": []
+      }
+    ],
+    "sourceReceipts": {
+      "engine": "d164ce99e24adde28cad3c5e558617eecaa97645f69c888d0ff3ee217e318014",
+      "adapter": "10e23cda8585af3a6650f220c724a5c8ea9b9dc04e0ecebd5941e3391fed971d",
+      "contract": "e7f5d74b32115c98bbec5f9f8ad7b1e4503fa87a6c668fdf4919c7a0fa29f322",
+      "store": "3f5271c8b66485603051411b84a1260cf2d2590385ff4e34243eb31322b871d5",
+      "coordinator": "07d06906c235a144215dc21e1c1bde611fe87896cdb1daf3d71b574caf75fd25",
+      "modal": "bf299e2f968d01f5569980e30bb823572eecf44ad90a1f8d5c5f6959e6edc85d"
+    },
+    "nextGate": "107Z15S1_CANONICAL_SCHEMA_CORRECTION_AUTHORIZATION_GATE",
+    "boundaries": {
+      "schemaChanged": false,
+      "manualMappingApproved": false,
+      "sourceCodeWritten": false,
+      "engineExecuted": false,
+      "parserExecuted": false,
+      "browserExecuted": false,
+      "pdfReadExecuted": false,
+      "backendConnection": false,
+      "quoteTruthAllowed": false
+    }
+  },
+  "sourceProposal": "/data/data/com.termux/files/home/107Z15R5M_NATIVE_MAPPING_REVIEW_PROPOSAL_20260710_122947.json",
+  "authorization": {
+    "CANONICAL_SCHEMA_CORRECTION_AUTHORIZATION_GATE_AUTHORIZED": true,
+    "MANUAL_MAPPING_APPROVAL_GATE_AUTHORIZED": false,
+    "SCHEMA_CHANGE_AUTHORIZED": false,
+    "SOURCE_CODE_WRITE_AUTHORIZED": false,
+    "REAL_EFFECTS_AUTHORIZED": false
+  },
+  "constitutional_flags": {
+    "NEW_ENGINE_CREATED": false,
+    "NEW_CACHE_CREATED": false,
+    "DUPLICATE_BRIDGE_CREATED": false,
+    "SCHEMA_CHANGED": false,
+    "SOURCE_UI_CHANGED": false,
+    "REAL_ENGINE_EXECUTION": false,
+    "PARSER_EXECUTED": false,
+    "CONTROLLED_BROWSER_EXECUTION": false,
+    "PDF_READ_EXECUTED": false,
+    "BACKEND_CONNECTION": false,
+    "QUOTE_TRUTH_ALLOWED": false,
+    "STATIC_SOURCE_INSPECTION_EXECUTED": true,
+    "TEST_EXECUTION": true
+  }
+}
