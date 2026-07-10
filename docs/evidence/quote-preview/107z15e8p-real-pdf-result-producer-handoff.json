@@ -1,0 +1,42 @@
+{
+  "chain": "107Z15E8P_REAL_PDF_RESULT_PRODUCER_TO_POPUP_INVOCATION_SCOPE_GATE",
+  "scopeId": "QUOTE_PREVIEW_REAL_PDF_RESULT_PRODUCER_HANDOFF_V1",
+  "status": "PASS",
+  "handoffComplete": true,
+  "previousClosureProof": "/storage/emulated/0/ForgeGemini/Reports/107Z15E8O_20260710_165125/107Z15E8O_PROOF_20260710_165125.json",
+  "decision": "USE_EXISTING_INVOCATION_AS_FINAL_PRODUCER_HANDOFF_NO_NEW_WRAPPER",
+  "existingInvocationIsFinalHandoff": true,
+  "invocationFile": "platform/ui/quote-preview/quote-preview-pdf-flow-popup-invocation.js",
+  "invocationExport": "createQuotePreviewPdfFlowPopupInvocation",
+  "invocationSha256": "394576d9227b2c015535e4b747ea714760b5920f51eae91ca0429bba8e2e36b7",
+  "newWrapperAuthorized": false,
+  "sourceChangeAuthorized": false,
+  "furtherDiscoveryAllowed": false,
+  "realProductHostCallSiteRequired": true,
+  "requiredProductionCall": "invocation.present({ nativeResult, context, ambiguity, source })",
+  "productHostRequirements": {
+    "exactCallSiteMustBeNamedBeforeSourceChange": true,
+    "mustAlreadyOwnNativeResult": true,
+    "mustAlreadyOwnContext": true,
+    "mayForwardAmbiguity": true,
+    "mayForwardSourceMetadata": true,
+    "mustNotDelegatePdfReading": true,
+    "mustNotDelegateExtraction": true,
+    "mustNotDelegateOcr": true,
+    "mustNotPromotePdfToOfficialTruth": true
+  },
+  "prohibitedNextSteps": [
+    "another invocation wrapper",
+    "another popup host",
+    "another generic bridge",
+    "automatic producer discovery",
+    "runtime source change without naming the exact product host call site"
+  ],
+  "next": "EXPLICIT_PRODUCT_HOST_CALL_SITE_REQUIRED",
+  "sourceCodeWritten": false,
+  "browserExecuted": false,
+  "pdfReadExecuted": false,
+  "extractionExecuted": false,
+  "backendConnection": false,
+  "quoteTruthAllowed": false
+}
