@@ -9770,3 +9770,48 @@ LOCKED_DECISION=LOCAL_ONLY_LOOKUP_RESULT_REVIEW_GATE_LOCKED_FOR_REDACTED_RESULT_
 
 NEXT=107E_QUOTE_PREVIEW_REDACTED_LOOKUP_RESULT_MAPPING_GATE
 <!-- FORGE:107D_QUOTE_PREVIEW_LOCAL_ONLY_LOOKUP_RESULT_REVIEW_GATE:END -->
+
+<!-- FORGE:107E_QUOTE_PREVIEW_REDACTED_LOOKUP_RESULT_MAPPING_GATE:START -->
+## 107E Quote Preview Redacted Lookup Result Mapping Gate
+
+107E defines mapping from redacted lookup signals to field-level candidate states.
+
+Locked decision:
+`REDACTED_LOOKUP_RESULT_MAPPING_GATE_LOCKED_NO_VALUES_NO_TRUTH_NO_UI`
+
+Confirmed:
+
+- mapping gate only;
+- manual operator token not required this phase;
+- source is committed redacted lookup results only;
+- redacted mapping allowed for 107F;
+- ready fields present;
+- raw PDF not accessed;
+- raw text not accessed;
+- raw text not committed;
+- raw value not extracted;
+- real value not extracted;
+- real value approval forbidden;
+- candidate truth forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- backend connection not used;
+- provider runtime not used;
+- source UI was not changed;
+- all safety flags remain false.
+
+LOOKUP_RESULT_COUNT=27
+
+READY_FIELD_COUNT=6
+
+NOT_READY_FIELD_COUNT=0
+
+ALL_CRITICAL_FIELDS_READY_FOR_REDACTED_MAPPING=true
+
+DECISION=PASS_107E_QUOTE_PREVIEW_REDACTED_LOOKUP_RESULT_MAPPING_GATE
+
+LOCKED_DECISION=REDACTED_LOOKUP_RESULT_MAPPING_GATE_LOCKED_NO_VALUES_NO_TRUTH_NO_UI
+
+NEXT=107F_QUOTE_PREVIEW_REDACTED_LOOKUP_RESULT_MAPPING_DRY_RUN
+<!-- FORGE:107E_QUOTE_PREVIEW_REDACTED_LOOKUP_RESULT_MAPPING_GATE:END -->
