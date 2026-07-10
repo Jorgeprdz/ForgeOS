@@ -1,0 +1,125 @@
+{
+  "chain": "107Z15E8F_CONTROLLED_BROWSER_CONFIRMATION_UI_SURFACE_BINDING_AUTHORIZATION_GATE",
+  "scopeId": "QUOTE_PREVIEW_CONTROLLED_BROWSER_CONFIRMATION_UI_SURFACE_BINDING_V1",
+  "status": "PASS",
+  "authorizationComplete": true,
+  "previousImplementationProof": "/storage/emulated/0/ForgeGemini/Reports/107Z15E8E_20260710_161739/107Z15E8E_PROOF_20260710_161739.json",
+  "previousWiringFile": "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-ui-wiring.js",
+  "decision": "AUTHORIZE_EXPLICIT_TARGET_CONFIRMATION_UI_SURFACE_BINDING",
+  "noFurtherDiscovery": true,
+  "sourceChangeAuthorized": true,
+  "allowedSourceFiles": [
+    "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-ui-surface-binding.js",
+    "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-ui-surface-binding.test.js"
+  ],
+  "authorizedApi": {
+    "exportName": "bindQuotePreviewConfirmationUiSurface",
+    "signature": "function bindQuotePreviewConfirmationUiSurface(options = {})",
+    "requiredOptions": {
+      "acceptTarget": "EventTarget-like object exposing addEventListener and removeEventListener",
+      "editTarget": "EventTarget-like object exposing addEventListener and removeEventListener",
+      "readPendingPreview": "function returning { nativeResult, context, ambiguity?, source? }",
+      "store": "official persistence store interface",
+      "createPreviewResultId": "function returning a non-empty previewResultId",
+      "now": "function returning current epoch milliseconds",
+      "ttlMs": "positive finite lifetime in milliseconds"
+    },
+    "optionalOptions": {
+      "acceptEventName": "non-empty string, defaults to click",
+      "editEventName": "non-empty string, defaults to click",
+      "notifyPersisted": "successful persistence callback",
+      "notifyEditRequested": "edit callback with no persistence",
+      "notifyError": "accept-handler error callback"
+    },
+    "returnShape": {
+      "dispose": "idempotent function removing both target listeners through existing wiring disposal",
+      "getState": "delegated frozen diagnostic state"
+    }
+  },
+  "authorizedFlow": [
+    "validate acceptTarget and editTarget as EventTarget-like injected objects",
+    "validate readPendingPreview and optional notification callbacks",
+    "create an injected surface implementing subscribeAccept, subscribeEdit, and readPendingPreview",
+    "subscribeAccept must add exactly one listener to acceptTarget",
+    "subscribeEdit must add exactly one listener to editTarget",
+    "each unsubscribe must remove the exact listener it added",
+    "delegate action semantics to bindQuotePreviewConfirmationPersistenceUi",
+    "accept event must flow to confirmed persistence through existing wiring",
+    "edit event must produce zero persistence calls and zero store writes",
+    "dispose must remove both listeners exactly once",
+    "no document lookup, selector lookup, window access, or backend creation is permitted"
+  ],
+  "requiredTests": [
+    "reject invalid acceptTarget",
+    "reject invalid editTarget",
+    "reject invalid readPendingPreview",
+    "subscribe exactly one accept listener and one edit listener",
+    "use click as the default event name",
+    "support injected acceptEventName and editEventName",
+    "forward accept events to the existing wiring",
+    "prove accept persists through the existing confirmed adapter chain",
+    "forward edit events without persistence",
+    "prove edit performs zero store writes and zero store reads",
+    "forward notifyPersisted, notifyEditRequested, and notifyError",
+    "remove the exact listeners on dispose",
+    "prove dispose is idempotent",
+    "prove events after dispose have no effect",
+    "prove no window, document, querySelector, getElementById, or localStorage access exists",
+    "prove no engine, generic bridge, backend creation, or quote-truth logic is introduced"
+  ],
+  "forbiddenChanges": [
+    "any runtime source file other than the two allowed files",
+    "the existing UI wiring module",
+    "the confirmed persistence adapter",
+    "the persistence coordinator",
+    "the persistence contract",
+    "the persistence store",
+    "utils.js",
+    "manager-os/provider-runtime/provider-runtime-boundary-contract.js",
+    "document.querySelector or document.getElementById",
+    "window or document globals",
+    "direct localStorage access",
+    "store or backend creation",
+    "new extraction engine",
+    "generic cross-domain bridge",
+    "hardcoded canonical quote fields",
+    "persistence on edit",
+    "promotion of PDF extraction to official quote truth"
+  ],
+  "dependencyContract": {
+    "wiringPath": "platform/adapters/quote-preview/quote-preview-controlled-browser-confirmation-ui-wiring.js",
+    "wiringExport": "bindQuotePreviewConfirmationPersistenceUi",
+    "targetPolicy": "accept and edit targets must be injected explicitly",
+    "lookupPolicy": "surface binding must not discover or query DOM elements",
+    "storePolicy": "store is forwarded to existing wiring; no backend creation"
+  },
+  "eventSemantics": {
+    "defaultAcceptEventName": "click",
+    "defaultEditEventName": "click",
+    "acceptPersists": true,
+    "editPersists": false,
+    "editStoreWrites": 0,
+    "removeExactListenerOnDispose": true
+  },
+  "implementationConstraints": {
+    "noScopeExpansion": true,
+    "noFurtherDiscovery": true,
+    "explicitTargetInjectionRequired": true,
+    "noWindowGlobal": true,
+    "noDocumentGlobal": true,
+    "noDomSelectors": true,
+    "noDirectLocalStorage": true,
+    "noBackendCreation": true,
+    "noNewEngine": true,
+    "noGenericBridge": true,
+    "noQuoteTruthPromotion": true,
+    "exactAllowedSourceFilesOnly": true
+  },
+  "next": "107Z15E8G_CONTROLLED_BROWSER_CONFIRMATION_UI_SURFACE_BINDING_SCOPED_IMPLEMENTATION_GATE",
+  "sourceCodeWritten": false,
+  "browserExecuted": false,
+  "pdfReadExecuted": false,
+  "localStorageWriteExecuted": false,
+  "backendConnection": false,
+  "quoteTruthAllowed": false
+}
