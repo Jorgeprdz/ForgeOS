@@ -1,0 +1,777 @@
+# 107Z15R — Existing extractor API contract resolution evidence
+
+Status: **PASS**
+
+```json
+{
+  "chain": "107Z15R_EXISTING_EXTRACTOR_API_CONTRACT_RESOLUTION_GATE",
+  "status": "PASS",
+  "generated_at_local_stamp": "20260710_120725",
+  "resolution": {
+    "IMPLEMENTATION_SCOPE_ID": "QUOTE_PREVIEW_PDF_RESULT_PERSISTENCE_V1",
+    "API_CONTRACT_RESOLVED": true,
+    "ENGINE_CALLABLE_RESOLVED": true,
+    "ADAPTER_CALLABLE_RESOLVED": true,
+    "ENGINE_INPUT_CONTRACT_RESOLVED": true,
+    "ADAPTER_INPUT_CONTRACT_RESOLVED": true,
+    "ENGINE_CALLABLE": "extractSolucionlineLifeQuoteFields",
+    "ENGINE_ARITY": 1,
+    "ENGINE_PARAMETERS": [
+      "text"
+    ],
+    "ENGINE_INPUT_KIND": "SINGLE_OBJECT_OR_VALUE",
+    "ENGINE_RECOMMENDED_INVOCATION": {
+      "strategyId": "UNRESOLVED",
+      "argumentTemplate": []
+    },
+    "ADAPTER_CALLABLE": "buildQuotePreviewPdfIntegrationError",
+    "ADAPTER_ARITY": 1,
+    "ADAPTER_PARAMETERS": [
+      "code",
+      "request",
+      "message"
+    ],
+    "ADAPTER_INPUT_KIND": "MULTI_ARGUMENT",
+    "ADAPTER_RECOMMENDED_INVOCATION": {
+      "strategyId": "RESOLVED_ADAPTER_MULTI_ARGUMENT",
+      "argumentTemplate": [
+        "__ENGINE_OUTPUT__",
+        {
+          "mode": "quote-preview",
+          "domain": "life",
+          "synthetic": true
+        }
+      ]
+    },
+    "PREVIOUS_PROBE_FAILURE_CLASSIFIED": true,
+    "TARGETED_SYNTHETIC_INVOCATION_AUTHORIZED": true,
+    "SOURCE_CODE_WRITTEN": false,
+    "SOURCE_UI_CHANGED": false,
+    "REAL_ENGINE_EXECUTION": false,
+    "PARSER_EXECUTED": false,
+    "PDF_READ_EXECUTED": false,
+    "OCR_EXECUTED": false,
+    "PROVIDER_RUNTIME_EXECUTED": false,
+    "BACKEND_CONNECTION": false,
+    "QUOTE_TRUTH_ALLOWED": false,
+    "NEXT_GATE": "107Z15R2_EXISTING_EXTRACTOR_TARGETED_SYNTHETIC_INVOCATION_GATE"
+  },
+  "api_contract_resolution": {
+    "status": "PASS",
+    "reason": null,
+    "requiredFields": [
+      "name",
+      "family",
+      "product",
+      "insured",
+      "sumAssured",
+      "annualPremium",
+      "plannedOrAvePremium",
+      "coveragePeriod"
+    ],
+    "sourceReceipts": {
+      "engineFileSha256": "d164ce99e24adde28cad3c5e558617eecaa97645f69c888d0ff3ee217e318014",
+      "adapterFileSha256": "10e23cda8585af3a6650f220c724a5c8ea9b9dc04e0ecebd5941e3391fed971d"
+    },
+    "engine": {
+      "resolved": true,
+      "winner": {
+        "path": "extractSolucionlineLifeQuoteFields",
+        "ownerPath": null,
+        "name": "extractSolucionlineLifeQuoteFields",
+        "arity": 1,
+        "score": 126,
+        "scoreReasons": [
+          "name_token:extract",
+          "name_token:field",
+          "name_token:quote",
+          "required_field_mentions:2",
+          "practical_arity"
+        ],
+        "parameters": [
+          "text"
+        ],
+        "inputContract": {
+          "kind": "SINGLE_OBJECT_OR_VALUE",
+          "parameters": [
+            "text"
+          ],
+          "textProperties": [],
+          "domainProperties": [],
+          "allAccessedProperties": []
+        },
+        "fieldEvidence": [
+          {
+            "field": "name",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "family",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "product",
+            "occurrenceCount": 1
+          },
+          {
+            "field": "insured",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "sumAssured",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "annualPremium",
+            "occurrenceCount": 1
+          },
+          {
+            "field": "plannedOrAvePremium",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "coveragePeriod",
+            "occurrenceCount": 0
+          }
+        ],
+        "sourceSha256": "8af5104835a02cc62c20a9a9a4d1c9708fc1016b9b48e08a23773b91555d539d",
+        "sourceLength": 5284,
+        "recommendedInvocation": {
+          "strategyId": "UNRESOLVED",
+          "argumentTemplate": []
+        }
+      },
+      "candidates": [
+        {
+          "path": "extractSolucionlineLifeQuoteFields",
+          "ownerPath": null,
+          "name": "extractSolucionlineLifeQuoteFields",
+          "arity": 1,
+          "score": 126,
+          "scoreReasons": [
+            "name_token:extract",
+            "name_token:field",
+            "name_token:quote",
+            "required_field_mentions:2",
+            "practical_arity"
+          ],
+          "parameters": [
+            "text"
+          ],
+          "inputContract": {
+            "kind": "SINGLE_OBJECT_OR_VALUE",
+            "parameters": [
+              "text"
+            ],
+            "textProperties": [],
+            "domainProperties": [],
+            "allAccessedProperties": []
+          },
+          "fieldMentionCount": 2,
+          "sourceSha256": "8af5104835a02cc62c20a9a9a4d1c9708fc1016b9b48e08a23773b91555d539d",
+          "sourceLength": 5284
+        },
+        {
+          "path": "summarizeForgeQuotePdfText",
+          "ownerPath": null,
+          "name": "summarizeForgeQuotePdfText",
+          "arity": 0,
+          "score": 110,
+          "scoreReasons": [
+            "name_token:quote",
+            "explicit_text_property"
+          ],
+          "parameters": [
+            "input"
+          ],
+          "inputContract": {
+            "kind": "OBJECT_WITH_TEXT_PROPERTY",
+            "parameters": [
+              "input"
+            ],
+            "textProperties": [
+              "text",
+              "rawText"
+            ],
+            "domainProperties": [],
+            "allAccessedProperties": [
+              "quoteText",
+              "rawText",
+              "text"
+            ]
+          },
+          "fieldMentionCount": 0,
+          "sourceSha256": "02ac0e629c72fa6088cd880559a361ce29a25ab7d5ec581c8af31a5193d43bd4",
+          "sourceLength": 910
+        },
+        {
+          "path": "buildForgeQuoteExcelTables",
+          "ownerPath": null,
+          "name": "buildForgeQuoteExcelTables",
+          "arity": 1,
+          "score": 58,
+          "scoreReasons": [
+            "name_token:quote",
+            "required_field_mentions:1",
+            "practical_arity"
+          ],
+          "parameters": [
+            "summary"
+          ],
+          "inputContract": {
+            "kind": "SINGLE_OBJECT_OR_VALUE",
+            "parameters": [
+              "summary"
+            ],
+            "textProperties": [],
+            "domainProperties": [],
+            "allAccessedProperties": [
+              "result"
+            ]
+          },
+          "fieldMentionCount": 1,
+          "sourceSha256": "e2c85b7a0b3f3d851a951d21360a1bf3304d298565c6fce0a63e14590bd918b0",
+          "sourceLength": 1042
+        },
+        {
+          "path": "detectQuoteDomain",
+          "ownerPath": null,
+          "name": "detectQuoteDomain",
+          "arity": 1,
+          "score": 50,
+          "scoreReasons": [
+            "name_token:quote",
+            "practical_arity"
+          ],
+          "parameters": [
+            "text"
+          ],
+          "inputContract": {
+            "kind": "SINGLE_OBJECT_OR_VALUE",
+            "parameters": [
+              "text"
+            ],
+            "textProperties": [],
+            "domainProperties": [],
+            "allAccessedProperties": []
+          },
+          "fieldMentionCount": 0,
+          "sourceSha256": "56c7a195c5c42ebdb0a8b016b49661f627c60ca19f207d19aebe8e32ac9e6e91",
+          "sourceLength": 727
+        },
+        {
+          "path": "buildCalculation",
+          "ownerPath": null,
+          "name": "buildCalculation",
+          "arity": 1,
+          "score": 20,
+          "scoreReasons": [
+            "practical_arity"
+          ],
+          "parameters": [
+            "result",
+            "options"
+          ],
+          "inputContract": {
+            "kind": "MULTI_ARGUMENT",
+            "parameters": [
+              "result",
+              "options"
+            ],
+            "textProperties": [],
+            "domainProperties": [],
+            "allAccessedProperties": [
+              "paymentTerm",
+              "policyTerm",
+              "premium",
+              "retirementScenarioBase",
+              "retirementScenarioFavorable",
+              "retirementScenarioUnfavorable",
+              "sumInsured",
+              "totalAnnualPremium",
+              "udiDate",
+              "udiGrowthEvidence",
+              "udiGrowthRate",
+              "udiGrowthSource",
+              "udiMxn",
+              "udiSource"
+            ]
+          },
+          "fieldMentionCount": 0,
+          "sourceSha256": "20d15f1d8c23df4dc6d82c6ba9284e574bb2bf95ba7e4784b76879df47058b92",
+          "sourceLength": 3318
+        }
+      ]
+    },
+    "adapter": {
+      "resolved": true,
+      "winner": {
+        "path": "buildQuotePreviewPdfIntegrationError",
+        "ownerPath": null,
+        "name": "buildQuotePreviewPdfIntegrationError",
+        "arity": 1,
+        "score": 110,
+        "scoreReasons": [
+          "name_token:integrat",
+          "name_token:quote",
+          "name_token:preview",
+          "practical_arity"
+        ],
+        "parameters": [
+          "code",
+          "request",
+          "message"
+        ],
+        "inputContract": {
+          "kind": "MULTI_ARGUMENT",
+          "parameters": [
+            "code",
+            "request",
+            "message"
+          ],
+          "textProperties": [],
+          "domainProperties": [],
+          "allAccessedProperties": []
+        },
+        "fieldEvidence": [
+          {
+            "field": "name",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "family",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "product",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "insured",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "sumAssured",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "annualPremium",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "plannedOrAvePremium",
+            "occurrenceCount": 0
+          },
+          {
+            "field": "coveragePeriod",
+            "occurrenceCount": 0
+          }
+        ],
+        "sourceSha256": "00f83d8e41384dc8f981054334aa6713f5a19703f5c4d37fc490a8b0c57495fe",
+        "sourceLength": 1966,
+        "recommendedInvocation": {
+          "strategyId": "RESOLVED_ADAPTER_MULTI_ARGUMENT",
+          "argumentTemplate": [
+            "__ENGINE_OUTPUT__",
+            {
+              "mode": "quote-preview",
+              "domain": "life",
+              "synthetic": true
+            }
+          ]
+        }
+      },
+      "candidates": [
+        {
+          "path": "buildQuotePreviewPdfIntegrationError",
+          "ownerPath": null,
+          "name": "buildQuotePreviewPdfIntegrationError",
+          "arity": 1,
+          "score": 110,
+          "scoreReasons": [
+            "name_token:integrat",
+            "name_token:quote",
+            "name_token:preview",
+            "practical_arity"
+          ],
+          "parameters": [
+            "code",
+            "request",
+            "message"
+          ],
+          "inputContract": {
+            "kind": "MULTI_ARGUMENT",
+            "parameters": [
+              "code",
+              "request",
+              "message"
+            ],
+            "textProperties": [],
+            "domainProperties": [],
+            "allAccessedProperties": []
+          },
+          "fieldMentionCount": 0,
+          "sourceSha256": "00f83d8e41384dc8f981054334aa6713f5a19703f5c4d37fc490a8b0c57495fe",
+          "sourceLength": 1966
+        },
+        {
+          "path": "validateQuotePreviewPdfProductIntelligenceIntegrationShape",
+          "ownerPath": null,
+          "name": "validateQuotePreviewPdfProductIntelligenceIntegrationShape",
+          "arity": 1,
+          "score": 110,
+          "scoreReasons": [
+            "name_token:integrat",
+            "name_token:quote",
+            "name_token:preview",
+            "practical_arity"
+          ],
+          "parameters": [
+            "integration"
+          ],
+          "inputContract": {
+            "kind": "SINGLE_OBJECT_OR_VALUE",
+            "parameters": [
+              "integration"
+            ],
+            "textProperties": [],
+            "domainProperties": [],
+            "allAccessedProperties": [
+              "safety_flags"
+            ]
+          },
+          "fieldMentionCount": 0,
+          "sourceSha256": "69ed721069a72cbef9f82c5c65d88d030b7e334eb43ae15c3c2473c37646f313",
+          "sourceLength": 477
+        },
+        {
+          "path": "integrateQuotePreviewPdfEngineWithProductIntelligence",
+          "ownerPath": null,
+          "name": "integrateQuotePreviewPdfEngineWithProductIntelligence",
+          "arity": 0,
+          "score": 98,
+          "scoreReasons": [
+            "name_token:integrat",
+            "name_token:quote",
+            "name_token:preview",
+            "required_field_mentions:1"
+          ],
+          "parameters": [
+            "request"
+          ],
+          "inputContract": {
+            "kind": "SINGLE_OBJECT_OR_VALUE",
+            "parameters": [
+              "request"
+            ],
+            "textProperties": [],
+            "domainProperties": [],
+            "allAccessedProperties": []
+          },
+          "fieldMentionCount": 1,
+          "sourceSha256": "1ebe13bc2563bd4a8c5aa1cbca218161886ab96ca1fe43d158ab026ae21f9a4e",
+          "sourceLength": 5605
+        }
+      ]
+    },
+    "previousProbeAnalysis": {
+      "reason": "NO_ENGINE_EXPORT_PROVED_EIGHT_FIELD_DIFFERENTIAL_EXTRACTION",
+      "engineAttemptCount": 20,
+      "adapterAttemptCount": 0,
+      "winnerAttemptCount": 4,
+      "attemptedWinnerStrategies": [
+        "CONTENT_OBJECT",
+        "TEXT_AND_OPTIONS",
+        "TEXT_OBJECT",
+        "TEXT_ONLY"
+      ],
+      "recommendedWasPreviouslyTried": false,
+      "diagnosis": "The prior probe reached the likely owner but its generic fixture or projection did not match the resolved contract strongly enough."
+    },
+    "nextGate": "107Z15R2_EXISTING_EXTRACTOR_TARGETED_SYNTHETIC_INVOCATION_GATE"
+  },
+  "previous_probe": {
+    "status": "HOLD",
+    "reason": "NO_ENGINE_EXPORT_PROVED_EIGHT_FIELD_DIFFERENTIAL_EXTRACTION",
+    "requiredFields": [
+      "name",
+      "family",
+      "product",
+      "insured",
+      "sumAssured",
+      "annualPremium",
+      "plannedOrAvePremium",
+      "coveragePeriod"
+    ],
+    "engineExports": [
+      {
+        "path": "extractSolucionlineLifeQuoteFields",
+        "arity": 1,
+        "name": "extractSolucionlineLifeQuoteFields",
+        "score": 100
+      },
+      {
+        "path": "buildForgeQuoteExcelTables",
+        "arity": 1,
+        "name": "buildForgeQuoteExcelTables",
+        "score": 40
+      },
+      {
+        "path": "detectQuoteDomain",
+        "arity": 1,
+        "name": "detectQuoteDomain",
+        "score": 40
+      },
+      {
+        "path": "summarizeForgeQuotePdfText",
+        "arity": 0,
+        "name": "summarizeForgeQuotePdfText",
+        "score": 40
+      },
+      {
+        "path": "buildCalculation",
+        "arity": 1,
+        "name": "buildCalculation",
+        "score": 10
+      }
+    ],
+    "adapterExports": [
+      {
+        "path": "integrateQuotePreviewPdfEngineWithProductIntelligence",
+        "arity": 0,
+        "name": "integrateQuotePreviewPdfEngineWithProductIntelligence",
+        "score": 130
+      },
+      {
+        "path": "validateQuotePreviewPdfProductIntelligenceIntegrationShape",
+        "arity": 1,
+        "name": "validateQuotePreviewPdfProductIntelligenceIntegrationShape",
+        "score": 130
+      },
+      {
+        "path": "buildQuotePreviewPdfIntegrationError",
+        "arity": 1,
+        "name": "buildQuotePreviewPdfIntegrationError",
+        "score": 100
+      }
+    ],
+    "attempts": [
+      {
+        "role": "engine",
+        "callable": "extractSolucionlineLifeQuoteFields",
+        "strategy": "TEXT_ONLY",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "extractSolucionlineLifeQuoteFields",
+        "strategy": "TEXT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "extractSolucionlineLifeQuoteFields",
+        "strategy": "TEXT_AND_OPTIONS",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "extractSolucionlineLifeQuoteFields",
+        "strategy": "CONTENT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildForgeQuoteExcelTables",
+        "strategy": "TEXT_ONLY",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildForgeQuoteExcelTables",
+        "strategy": "TEXT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildForgeQuoteExcelTables",
+        "strategy": "TEXT_AND_OPTIONS",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildForgeQuoteExcelTables",
+        "strategy": "CONTENT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "detectQuoteDomain",
+        "strategy": "TEXT_ONLY",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "detectQuoteDomain",
+        "strategy": "TEXT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "detectQuoteDomain",
+        "strategy": "TEXT_AND_OPTIONS",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "detectQuoteDomain",
+        "strategy": "CONTENT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "summarizeForgeQuotePdfText",
+        "strategy": "TEXT_ONLY",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "summarizeForgeQuotePdfText",
+        "strategy": "TEXT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "summarizeForgeQuotePdfText",
+        "strategy": "TEXT_AND_OPTIONS",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "summarizeForgeQuotePdfText",
+        "strategy": "CONTENT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildCalculation",
+        "strategy": "TEXT_ONLY",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildCalculation",
+        "strategy": "TEXT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildCalculation",
+        "strategy": "TEXT_AND_OPTIONS",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      },
+      {
+        "role": "engine",
+        "callable": "buildCalculation",
+        "strategy": "CONTENT_OBJECT",
+        "status": "NO_MATCH",
+        "fieldsPathA": null,
+        "fieldsPathB": null,
+        "differentialFieldCount": 0
+      }
+    ]
+  },
+  "source_receipts": {
+    "ENGINE_SHA256": "d164ce99e24adde28cad3c5e558617eecaa97645f69c888d0ff3ee217e318014",
+    "ADAPTER_SHA256": "10e23cda8585af3a6650f220c724a5c8ea9b9dc04e0ecebd5941e3391fed971d"
+  },
+  "authorization": {
+    "TARGETED_SYNTHETIC_INVOCATION_AUTHORIZED": true,
+    "SOURCE_CODE_WRITE_AUTHORIZED": false,
+    "PDF_READ_AUTHORIZED": false,
+    "OCR_EXECUTION_AUTHORIZED": false,
+    "PROVIDER_RUNTIME_AUTHORIZED": false,
+    "BACKEND_CONNECTION_AUTHORIZED": false,
+    "OFFICIAL_QUOTE_WRITE_AUTHORIZED": false,
+    "QUOTE_TRUTH_AUTHORIZED": false,
+    "REAL_CUSTOMER_DATA_AUTHORIZED": false,
+    "REAL_EFFECTS_AUTHORIZED": false
+  },
+  "constitutional_flags": {
+    "NEW_ENGINE_CREATED": false,
+    "NEW_CACHE_CREATED": false,
+    "DUPLICATE_BRIDGE_CREATED": false,
+    "SOURCE_UI_CHANGED": false,
+    "REAL_ENGINE_EXECUTION": false,
+    "PARSER_EXECUTED": false,
+    "PDF_READ_EXECUTED": false,
+    "OCR_EXECUTED": false,
+    "PROVIDER_RUNTIME_EXECUTED": false,
+    "BACKEND_CONNECTION": false,
+    "QUOTE_TRUTH_ALLOWED": false,
+    "TEST_EXECUTION": true,
+    "STATIC_API_INSPECTION_EXECUTED": true
+  },
+  "inputs": {
+    "IMPLEMENTATION_STATUS": "PASS",
+    "BROWSER_STATUS": "PASS"
+  }
+}
+```
