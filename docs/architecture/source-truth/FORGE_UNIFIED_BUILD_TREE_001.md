@@ -10522,3 +10522,53 @@ LOCKED_DECISION=ACTUAL_PDF_LOOKUP_AUTHORIZATION_GATE_LOCKED_AS_NOT_AUTHORIZED_NO
 
 NEXT=106Z_QUOTE_PREVIEW_ACTUAL_PDF_LOOKUP_AUTHORIZATION_PACKET_DRY_RUN
 <!-- FORGE:106Y_QUOTE_PREVIEW_ACTUAL_PDF_LOOKUP_AUTHORIZATION_GATE:END -->
+
+<!-- FORGE:106Z_QUOTE_PREVIEW_ACTUAL_PDF_LOOKUP_AUTHORIZATION_PACKET_DRY_RUN:START -->
+## 106Z Quote Preview Actual PDF Lookup Authorization Packet Dry Run
+
+106Z creates the not-authorized authorization packet for actual PDF lookup and closes the 106 chain.
+
+Locked decision:
+`ACTUAL_PDF_LOOKUP_AUTHORIZATION_PACKET_COMPLETE_AS_NOT_AUTHORIZED_NO_PDF_ACCESS_NO_VALUES_NO_TRUTH`
+
+Confirmed:
+
+- authorization packet created;
+- authorization not granted now;
+- manual operator token not required this phase;
+- future manual operator token required;
+- future explicit gate required;
+- future local-only scope required;
+- actual PDF lookup not authorized now;
+- actual PDF lookup not executed now;
+- human operator confirmation not collected now;
+- raw PDF not accessed;
+- raw text not accessed;
+- actual PDF path not accessed;
+- raw value not extracted;
+- real value not extracted;
+- real value approval not executed;
+- candidate truth forbidden;
+- OCR execution forbidden;
+- parser execution forbidden;
+- calculator execution forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- source UI was not changed;
+- all safety flags remain false.
+
+LOOKUP_LINE_ITEM_COUNT=27
+
+BLOCKED_AMBIGUOUS_ITEM_COUNT=1
+
+LOOKUP_ELIGIBLE_FIELD_COUNT=6
+
+FUTURE_OPERATOR_TOKEN_NAME=AUTHORIZE_ACTUAL_PDF_LOOKUP_LOCAL_ONLY
+
+DECISION=PASS_106Z_QUOTE_PREVIEW_ACTUAL_PDF_LOOKUP_AUTHORIZATION_PACKET_DRY_RUN
+
+LOCKED_DECISION=ACTUAL_PDF_LOOKUP_AUTHORIZATION_PACKET_COMPLETE_AS_NOT_AUTHORIZED_NO_PDF_ACCESS_NO_VALUES_NO_TRUTH
+
+NEXT=107A_QUOTE_PREVIEW_LOCAL_ONLY_ACTUAL_PDF_LOOKUP_AUTHORIZATION_GATE
+<!-- FORGE:106Z_QUOTE_PREVIEW_ACTUAL_PDF_LOOKUP_AUTHORIZATION_PACKET_DRY_RUN:END -->
