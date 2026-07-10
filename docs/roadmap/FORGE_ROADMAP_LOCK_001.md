@@ -9867,3 +9867,44 @@ LOCKED_DECISION=REDACTED_LOOKUP_RESULT_MAPPING_DRY_RUN_COMPLETE_WITH_FIELD_CANDI
 
 NEXT=107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE
 <!-- FORGE:107F_QUOTE_PREVIEW_REDACTED_LOOKUP_RESULT_MAPPING_DRY_RUN:END -->
+
+<!-- FORGE:107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE:START -->
+## 107G Quote Preview Manual Value Capture Gate
+
+107G defines the manual value capture boundary and prepares 107H template creation.
+
+Locked decision:
+`MANUAL_VALUE_CAPTURE_GATE_LOCKED_FOR_TEMPLATE_PREP_ONLY_NO_VALUES_NO_TRUTH_NO_UI`
+
+Confirmed:
+
+- manual value capture gate only;
+- source is field candidate states from 107F only;
+- manual operator token not required this phase;
+- manual value capture not executed;
+- captured values remain null;
+- actual capture requires future manual token;
+- real value approval forbidden;
+- candidate truth forbidden;
+- quote truth forbidden;
+- UI population forbidden;
+- presentation generation forbidden;
+- backend connection not used;
+- provider runtime not used;
+- source UI was not changed;
+- all safety flags remain false.
+
+FIELD_CANDIDATE_RECORD_COUNT=6
+
+ELIGIBLE_CAPTURE_SPEC_COUNT=6
+
+BLOCKED_CAPTURE_SPEC_COUNT=0
+
+FUTURE_MANUAL_CAPTURE_TOKEN_NAME=AUTHORIZE_MANUAL_VALUE_CAPTURE_LOCAL_ONLY
+
+DECISION=PASS_107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE
+
+LOCKED_DECISION=MANUAL_VALUE_CAPTURE_GATE_LOCKED_FOR_TEMPLATE_PREP_ONLY_NO_VALUES_NO_TRUTH_NO_UI
+
+NEXT=107H_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_TEMPLATE_DRY_RUN
+<!-- FORGE:107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE:END -->

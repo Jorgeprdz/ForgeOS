@@ -1,0 +1,385 @@
+# Forge Quote Preview Manual Value Capture Gate Evidence 107G
+
+PHASE=107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE
+STATUS=PASS
+DECISION=PASS_107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE
+LOCKED_DECISION=MANUAL_VALUE_CAPTURE_GATE_LOCKED_FOR_TEMPLATE_PREP_ONLY_NO_VALUES_NO_TRUTH_NO_UI
+NEXT=107H_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_TEMPLATE_DRY_RUN
+
+## Gate JSON
+
+{
+  "phase": "107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE",
+  "status": "PASS",
+  "decision": "PASS_107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE",
+  "lockedDecision": "MANUAL_VALUE_CAPTURE_GATE_LOCKED_FOR_TEMPLATE_PREP_ONLY_NO_VALUES_NO_TRUTH_NO_UI",
+  "basePhase": "107F_QUOTE_PREVIEW_REDACTED_LOOKUP_RESULT_MAPPING_DRY_RUN",
+  "schemaVersion": "106C.1",
+  "testUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/nueva-cotizacion/?v=105dr5",
+  "gateType": "manual_value_capture_gate_template_prep_only",
+  "sourceUiChanged": false,
+  "fastTrackMode": {
+    "manualOperatorTokenRequiredThisPhase": false,
+    "reason": "107G is gate-only and does not capture or approve real values."
+  },
+  "inputSummary": {
+    "fieldCandidateRecordCount": 6,
+    "eligibleCaptureSpecCount": 6,
+    "blockedCaptureSpecCount": 0,
+    "sourceReadyForManualValueCaptureCount": 6,
+    "sourceBlockedFieldCandidateCount": 0
+  },
+  "manualCapturePolicy": {
+    "gateOnly": true,
+    "sourceAllowed": "field_candidate_states_from_107f_only",
+    "manualCaptureExecutedIn107G": false,
+    "manualOperatorTokenRequiredThisPhase": false,
+    "manualOperatorTokenRequiredForActualCaptureLater": true,
+    "futureManualCaptureTokenName": "AUTHORIZE_MANUAL_VALUE_CAPTURE_LOCAL_ONLY",
+    "realValueApprovalAllowedIn107G": false,
+    "candidateApprovalAsTruthAllowedIn107G": false,
+    "quoteTruthAllowedIn107G": false,
+    "uiPopulationAllowedIn107G": false,
+    "presentationGenerationAllowedIn107G": false,
+    "backendConnectionAllowedIn107G": false,
+    "providerRuntimeAllowedIn107G": false
+  },
+  "captureInputSpecs": [
+    {
+      "captureSpecId": "107G-CAPTURE-SPEC-0001",
+      "sourceFieldCandidateId": "107F-FIELD-CAND-0001",
+      "fieldKey": "plan_sum_insured_and_premium",
+      "targetDisplayLabel": "Plan, suma asegurada y prima",
+      "candidateState": "redacted_signal_candidate_requires_manual_value_later",
+      "captureEligibilityStatus": "eligible_for_107h_capture_template",
+      "expectedManualInputKindLater": "manual_text_or_amount_entry_later",
+      "sourceLookupResultCount": 11,
+      "matchedLookupResultCount": 11,
+      "hasMoneyLikeSignal": true,
+      "hasDateLikeSignal": false,
+      "hasPercentLikeSignal": false,
+      "hasLongNumberSignal": false,
+      "signalSummary": {
+        "moneyLikeSignalResultCount": 11,
+        "dateLikeSignalResultCount": 0,
+        "percentLikeSignalResultCount": 0,
+        "longNumberSignalResultCount": 0,
+        "emailLikeSignalResultCount": 0,
+        "phoneLikeSignalResultCount": 11
+      },
+      "manualValueCaptureExecutedIn107G": false,
+      "manualValueCaptured": false,
+      "capturedRawValue": null,
+      "capturedNormalizedValue": null,
+      "approvedRealValue": null,
+      "captureCanBecomeTruthIn107G": false,
+      "realValueApprovalAllowedIn107G": false,
+      "candidateApprovalAsTruthAllowedIn107G": false,
+      "quoteTruthAllowedIn107G": false,
+      "uiPopulationAllowedIn107G": false,
+      "presentationGenerationAllowedIn107G": false
+    },
+    {
+      "captureSpecId": "107G-CAPTURE-SPEC-0002",
+      "sourceFieldCandidateId": "107F-FIELD-CAND-0002",
+      "fieldKey": "payment_form_currency_and_validity",
+      "targetDisplayLabel": "Forma de pago, moneda y vigencia",
+      "candidateState": "redacted_signal_candidate_requires_manual_value_later",
+      "captureEligibilityStatus": "eligible_for_107h_capture_template",
+      "expectedManualInputKindLater": "manual_text_or_amount_entry_later",
+      "sourceLookupResultCount": 5,
+      "matchedLookupResultCount": 5,
+      "hasMoneyLikeSignal": true,
+      "hasDateLikeSignal": true,
+      "hasPercentLikeSignal": false,
+      "hasLongNumberSignal": false,
+      "signalSummary": {
+        "moneyLikeSignalResultCount": 5,
+        "dateLikeSignalResultCount": 4,
+        "percentLikeSignalResultCount": 0,
+        "longNumberSignalResultCount": 0,
+        "emailLikeSignalResultCount": 0,
+        "phoneLikeSignalResultCount": 1
+      },
+      "manualValueCaptureExecutedIn107G": false,
+      "manualValueCaptured": false,
+      "capturedRawValue": null,
+      "capturedNormalizedValue": null,
+      "approvedRealValue": null,
+      "captureCanBecomeTruthIn107G": false,
+      "realValueApprovalAllowedIn107G": false,
+      "candidateApprovalAsTruthAllowedIn107G": false,
+      "quoteTruthAllowedIn107G": false,
+      "uiPopulationAllowedIn107G": false,
+      "presentationGenerationAllowedIn107G": false
+    },
+    {
+      "captureSpecId": "107G-CAPTURE-SPEC-0003",
+      "sourceFieldCandidateId": "107F-FIELD-CAND-0003",
+      "fieldKey": "total_aportado",
+      "targetDisplayLabel": "Total aportado",
+      "candidateState": "redacted_signal_candidate_requires_manual_value_later",
+      "captureEligibilityStatus": "eligible_for_107h_capture_template",
+      "expectedManualInputKindLater": "manual_text_or_amount_entry_later",
+      "sourceLookupResultCount": 2,
+      "matchedLookupResultCount": 2,
+      "hasMoneyLikeSignal": false,
+      "hasDateLikeSignal": false,
+      "hasPercentLikeSignal": false,
+      "hasLongNumberSignal": false,
+      "signalSummary": {
+        "moneyLikeSignalResultCount": 0,
+        "dateLikeSignalResultCount": 0,
+        "percentLikeSignalResultCount": 0,
+        "longNumberSignalResultCount": 0,
+        "emailLikeSignalResultCount": 0,
+        "phoneLikeSignalResultCount": 2
+      },
+      "manualValueCaptureExecutedIn107G": false,
+      "manualValueCaptured": false,
+      "capturedRawValue": null,
+      "capturedNormalizedValue": null,
+      "approvedRealValue": null,
+      "captureCanBecomeTruthIn107G": false,
+      "realValueApprovalAllowedIn107G": false,
+      "candidateApprovalAsTruthAllowedIn107G": false,
+      "quoteTruthAllowedIn107G": false,
+      "uiPopulationAllowedIn107G": false,
+      "presentationGenerationAllowedIn107G": false
+    },
+    {
+      "captureSpecId": "107G-CAPTURE-SPEC-0004",
+      "sourceFieldCandidateId": "107F-FIELD-CAND-0004",
+      "fieldKey": "total_recuperacion",
+      "targetDisplayLabel": "Total recuperación",
+      "candidateState": "redacted_signal_candidate_requires_manual_value_later",
+      "captureEligibilityStatus": "eligible_for_107h_capture_template",
+      "expectedManualInputKindLater": "manual_text_or_amount_entry_later",
+      "sourceLookupResultCount": 2,
+      "matchedLookupResultCount": 2,
+      "hasMoneyLikeSignal": false,
+      "hasDateLikeSignal": false,
+      "hasPercentLikeSignal": false,
+      "hasLongNumberSignal": false,
+      "signalSummary": {
+        "moneyLikeSignalResultCount": 0,
+        "dateLikeSignalResultCount": 0,
+        "percentLikeSignalResultCount": 0,
+        "longNumberSignalResultCount": 0,
+        "emailLikeSignalResultCount": 0,
+        "phoneLikeSignalResultCount": 2
+      },
+      "manualValueCaptureExecutedIn107G": false,
+      "manualValueCaptured": false,
+      "capturedRawValue": null,
+      "capturedNormalizedValue": null,
+      "approvedRealValue": null,
+      "captureCanBecomeTruthIn107G": false,
+      "realValueApprovalAllowedIn107G": false,
+      "candidateApprovalAsTruthAllowedIn107G": false,
+      "quoteTruthAllowedIn107G": false,
+      "uiPopulationAllowedIn107G": false,
+      "presentationGenerationAllowedIn107G": false
+    },
+    {
+      "captureSpecId": "107G-CAPTURE-SPEC-0005",
+      "sourceFieldCandidateId": "107F-FIELD-CAND-0005",
+      "fieldKey": "values_benefits_or_scenarios_relevant_to_plan",
+      "targetDisplayLabel": "Valores, beneficios o escenarios relevantes",
+      "candidateState": "redacted_signal_candidate_requires_manual_value_later",
+      "captureEligibilityStatus": "eligible_for_107h_capture_template",
+      "expectedManualInputKindLater": "manual_text_or_amount_entry_later",
+      "sourceLookupResultCount": 1,
+      "matchedLookupResultCount": 1,
+      "hasMoneyLikeSignal": true,
+      "hasDateLikeSignal": false,
+      "hasPercentLikeSignal": false,
+      "hasLongNumberSignal": false,
+      "signalSummary": {
+        "moneyLikeSignalResultCount": 1,
+        "dateLikeSignalResultCount": 0,
+        "percentLikeSignalResultCount": 0,
+        "longNumberSignalResultCount": 0,
+        "emailLikeSignalResultCount": 0,
+        "phoneLikeSignalResultCount": 1
+      },
+      "manualValueCaptureExecutedIn107G": false,
+      "manualValueCaptured": false,
+      "capturedRawValue": null,
+      "capturedNormalizedValue": null,
+      "approvedRealValue": null,
+      "captureCanBecomeTruthIn107G": false,
+      "realValueApprovalAllowedIn107G": false,
+      "candidateApprovalAsTruthAllowedIn107G": false,
+      "quoteTruthAllowedIn107G": false,
+      "uiPopulationAllowedIn107G": false,
+      "presentationGenerationAllowedIn107G": false
+    },
+    {
+      "captureSpecId": "107G-CAPTURE-SPEC-0006",
+      "sourceFieldCandidateId": "107F-FIELD-CAND-0006",
+      "fieldKey": "missing_items_before_presentation",
+      "targetDisplayLabel": "Faltantes antes de presentar",
+      "candidateState": "redacted_signal_candidate_requires_manual_value_later",
+      "captureEligibilityStatus": "eligible_for_107h_capture_template",
+      "expectedManualInputKindLater": "manual_text_or_amount_entry_later",
+      "sourceLookupResultCount": 6,
+      "matchedLookupResultCount": 6,
+      "hasMoneyLikeSignal": true,
+      "hasDateLikeSignal": true,
+      "hasPercentLikeSignal": false,
+      "hasLongNumberSignal": false,
+      "signalSummary": {
+        "moneyLikeSignalResultCount": 6,
+        "dateLikeSignalResultCount": 6,
+        "percentLikeSignalResultCount": 0,
+        "longNumberSignalResultCount": 0,
+        "emailLikeSignalResultCount": 0,
+        "phoneLikeSignalResultCount": 0
+      },
+      "manualValueCaptureExecutedIn107G": false,
+      "manualValueCaptured": false,
+      "capturedRawValue": null,
+      "capturedNormalizedValue": null,
+      "approvedRealValue": null,
+      "captureCanBecomeTruthIn107G": false,
+      "realValueApprovalAllowedIn107G": false,
+      "candidateApprovalAsTruthAllowedIn107G": false,
+      "quoteTruthAllowedIn107G": false,
+      "uiPopulationAllowedIn107G": false,
+      "presentationGenerationAllowedIn107G": false
+    }
+  ],
+  "captureTemplateDefinitionFor107H": {
+    "nextPhase": "107H_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_TEMPLATE_DRY_RUN",
+    "purpose": "Create a blank manual value capture template from field candidate states without entering real values.",
+    "dryRunOnly": true,
+    "sourceAllowed": "capture_specs_from_107g_only",
+    "manualOperatorTokenRequiredIn107H": false,
+    "manualValueCaptureExecutedIn107H": false,
+    "capturedValuesMustRemainNullIn107H": true,
+    "realValueApprovalAllowedIn107H": false,
+    "candidateApprovalAsTruthAllowedIn107H": false,
+    "quoteTruthAllowedIn107H": false,
+    "uiPopulationAllowedIn107H": false,
+    "presentationGenerationAllowedIn107H": false,
+    "futureActualCaptureRequiresManualToken": true
+  },
+  "blockedActionsRemainBlocked": [
+    "manual_value_capture_in_107g",
+    "real_value_capture",
+    "real_value_approval",
+    "candidate_approval_as_truth",
+    "quote_truth",
+    "ui_population",
+    "presentation_generation",
+    "backend_connection",
+    "provider_runtime",
+    "crm_write"
+  ],
+  "rulesConfirmed": {
+    "manualValueCaptureGateOnly": true,
+    "sourceIsFieldCandidateStatesFrom107FOnly": true,
+    "manualOperatorTokenRequiredThisPhase": false,
+    "manualValueCaptureExecutedIn107G": false,
+    "capturedValuesRemainNull": true,
+    "actualCaptureRequiresFutureManualToken": true,
+    "realValueApprovalAllowedIn107G": false,
+    "candidateApprovalAsTruthAllowedIn107G": false,
+    "quoteTruthAllowedIn107G": false,
+    "uiPopulationAllowedIn107G": false,
+    "presentationGenerationAllowedIn107G": false,
+    "backendConnectionUsedIn107G": false,
+    "providerRuntimeUsedIn107G": false
+  },
+  "safetyFlags": {
+    "crmWrite": false,
+    "pipelineWrite": false,
+    "policyWrite": false,
+    "quoteWrite": false,
+    "taskCreate": false,
+    "calendarCreate": false,
+    "messageSend": false,
+    "authReal": false,
+    "providerRuntime": false,
+    "secretAccess": false,
+    "browserPersistence": false,
+    "realEngineExecution": false,
+    "realEffectsAllowed": false,
+    "realEffectsEnabled": false,
+    "backendConnection": false,
+    "pdfRead": false,
+    "ocrExecution": false,
+    "parserExecution": false,
+    "calculatorExecution": false,
+    "banxicoCall": false,
+    "testExecution": false,
+    "officialQuoteAllowed": false,
+    "providerRuntimeAllowed": false,
+    "calculatorExecutionAllowed": false,
+    "parserExecutionAllowed": false,
+    "backendConnectionAllowed": false,
+    "quoteTruthAllowed": false,
+    "presentationGenerationAllowed": false,
+    "promptGenerationAllowed": false,
+    "pdfSubmitAllowed": false,
+    "printAutomation": false
+  },
+  "next": "107H_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_TEMPLATE_DRY_RUN"
+}
+
+## Validation JSON
+
+{
+  "phase": "107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE",
+  "status": "PASS",
+  "decision": "PASS_107G_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_GATE",
+  "lockedDecision": "MANUAL_VALUE_CAPTURE_GATE_LOCKED_FOR_TEMPLATE_PREP_ONLY_NO_VALUES_NO_TRUTH_NO_UI",
+  "gateType": "manual_value_capture_gate_template_prep_only",
+  "manualOperatorTokenRequiredThisPhase": false,
+  "fieldCandidateRecordCount": 6,
+  "eligibleCaptureSpecCount": 6,
+  "blockedCaptureSpecCount": 0,
+  "manualValueCaptureGateOnly": true,
+  "sourceIsFieldCandidateStatesFrom107FOnly": true,
+  "manualValueCaptureExecutedIn107G": false,
+  "capturedValuesRemainNull": true,
+  "actualCaptureRequiresFutureManualToken": true,
+  "futureManualCaptureTokenName": "AUTHORIZE_MANUAL_VALUE_CAPTURE_LOCAL_ONLY",
+  "realValueApprovalAllowedIn107G": false,
+  "candidateApprovalAsTruthAllowedIn107G": false,
+  "quoteTruthAllowedIn107G": false,
+  "uiPopulationAllowedIn107G": false,
+  "presentationGenerationAllowedIn107G": false,
+  "backendConnectionUsedIn107G": false,
+  "providerRuntimeUsedIn107G": false,
+  "manualOperatorTokenRequiredIn107H": false,
+  "manualValueCaptureExecutedIn107H": false,
+  "capturedValuesMustRemainNullIn107H": true,
+  "realValueApprovalAllowedIn107H": false,
+  "candidateApprovalAsTruthAllowedIn107H": false,
+  "quoteTruthAllowedIn107H": false,
+  "uiPopulationAllowedIn107H": false,
+  "presentationGenerationAllowedIn107H": false,
+  "sourceUiChanged": false,
+  "allSafetyFlagsFalse": true,
+  "next": "107H_QUOTE_PREVIEW_MANUAL_VALUE_CAPTURE_TEMPLATE_DRY_RUN",
+  "errors": []
+}
+
+## Confirmed
+
+- Manual value capture gate only.
+- Source is field candidate states from 107F only.
+- Manual operator token is not required this phase.
+- Manual value capture was not executed.
+- Captured values remain null.
+- Actual capture requires a future manual token.
+- Real value approval is forbidden.
+- Candidate truth is forbidden.
+- Quote truth is forbidden.
+- UI population is forbidden.
+- Presentation generation is forbidden.
+- Backend connection was not used.
+- Provider runtime was not used.
+- Source UI was not changed.
