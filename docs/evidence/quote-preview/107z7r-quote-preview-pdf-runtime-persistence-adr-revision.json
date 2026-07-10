@@ -1,0 +1,183 @@
+{
+  "chain": "107Z7R_QUOTE_PREVIEW_PDF_RUNTIME_PERSISTENCE_ADR_DRAFT_REVISION_GATE",
+  "status": "PASS",
+  "generated_at_local_stamp": "20260709_233313",
+  "adr": {
+    "ADR_STATUS": "DRAFT_REVISED",
+    "ADR_APPROVED": false,
+    "ADR_NUMBER_ASSIGNED": false,
+    "TITLE": "Quote Preview PDF runtime persistence and ownership",
+    "CONTEXT": "Forge has a probable canonical PDF preview engine and an existing confirmation modal/UI, but source inspection did not prove a canonical runtime owner, cache, writer, reader or complete call chain.",
+    "RECOMMENDED_OPTION": "DEDICATED_LOCAL_PREVIEW_RESULT_STORE",
+    "RECOMMENDATION_STATUS": "PENDING_REVISED_CONSTITUTIONAL_REVIEW",
+    "OPTIONS": [
+      {
+        "id": "A",
+        "name": "REUSE_EXISTING_GENERIC_RUNTIME",
+        "status": "REJECTED_PENDING_NEW_EVIDENCE",
+        "description": "Reuse an existing generic repository, runtime state or cache.",
+        "advantages": [
+          "Avoids duplicate infrastructure.",
+          "Potentially minimizes implementation surface."
+        ],
+        "risks": [
+          "No canonical owner, writer, reader, key or complete call chain is proven.",
+          "Premature reuse could couple Quote Preview to an unrelated domain."
+        ],
+        "acceptance_condition": "New source evidence must prove ownership, writer, reader, identity and downstream call chain before this option can return to review."
+      },
+      {
+        "id": "B",
+        "name": "EPHEMERAL_IN_MEMORY_HANDOFF",
+        "status": "NOT_RECOMMENDED",
+        "description": "Pass the extraction result directly in memory from the engine to the confirmation modal without a persistence boundary.",
+        "advantages": [
+          "Small implementation surface.",
+          "No persistent client data."
+        ],
+        "risks": [
+          "Result may be lost on reload or navigation.",
+          "Popup and UI lifecycle become tightly coupled.",
+          "Conflicts with the locked user flow that expects writer, cache and reader.",
+          "Makes deterministic review and edit recovery weaker."
+        ],
+        "acceptance_condition": "Could only be chosen if the persistence requirement is explicitly revoked by a later constitutional decision."
+      },
+      {
+        "id": "C",
+        "name": "DEDICATED_LOCAL_PREVIEW_RESULT_STORE",
+        "status": "DRAFT_RECOMMENDATION_PENDING_APPROVAL",
+        "description": "Create one narrowly scoped offline-first preview-result store owned by Product Intelligence handoff infrastructure and consumed read-only by Quote Preview.",
+        "advantages": [
+          "Matches the locked PDF → writer → cache → popup/UI flow.",
+          "Provides deterministic reload, confirmation and edit behavior.",
+          "Keeps extraction output separate from quote truth.",
+          "Allows one explicit writer, reader, schema, identity and event contract."
+        ],
+        "risks": [
+          "Introduces a new runtime persistence surface.",
+          "Could become a duplicate cache if later evidence reveals an existing owner.",
+          "Requires strict lifecycle, retention, redaction and deletion rules."
+        ],
+        "acceptance_condition": "Requires explicit ADR approval and a final duplicate-infrastructure check immediately before implementation."
+      }
+    ],
+    "REQUIRED_CONTRACT": {
+      "ownership": "A single canonical module must own preview-result lifecycle. The UI and modal must never own parsing or persistence.",
+      "input": "Structured extraction output produced upstream by the authorized Product Intelligence PDF engine or its existing product-specific extractors.",
+      "schema": {
+        "required_confirmation_fields": [
+          "name",
+          "family",
+          "product",
+          "insured",
+          "sumAssured",
+          "annualPremium",
+          "plannedOrAvePremium",
+          "coveragePeriod"
+        ],
+        "required_metadata": [
+          "schemaVersion",
+          "sourceDocumentHashOrReference",
+          "extractorIdentity",
+          "createdAt",
+          "reviewStatus",
+          "fieldConfidenceOrReviewFlags"
+        ],
+        "forbidden_fields": [
+          "rawPdfBytes",
+          "providerSecrets",
+          "backendCredentials",
+          "quoteTruthStatus",
+          "automaticOfficialQuoteApproval"
+        ]
+      },
+      "writer": "Exactly one explicit writer API may persist a preview extraction result. It must reject unknown schema versions and must not write quote truth.",
+      "reader": "Exactly one explicit reader API may return the latest authorized preview result by explicit identity. No hidden latest default is allowed.",
+      "identity": "The cache/store key must be explicit and versioned. Selection by an implicit global latest record is prohibited.",
+      "event": "After a successful local write, the existing 'forge:quote-preview:extraction-ready' event may notify the modal. The event must carry an identity/reference, not become the data store.",
+      "confirmation": {
+        "yes": "Mark the preview result as user-confirmed for UI population only. This still does not create quote truth.",
+        "no": "Load the same preview result into edit mode without requiring manual transcription of values already extracted."
+      },
+      "retention": "Retention and deletion policy must be explicitly selected during implementation design. No indefinite retention is authorized by this draft.",
+      "boundaries": [
+        "Product Intelligence remains upstream.",
+        "Quote Preview remains downstream.",
+        "The PDF engine is reference input, never quote truth.",
+        "No CRM, backend, provider, policy, pipeline, message or calendar writes.",
+        "Manual capture is fallback-only for absent or ambiguous fields.",
+        "No parser, OCR or PDF reading inside the popup or UI."
+      ]
+    },
+    "ACCEPTANCE_CRITERIA": [
+      "A final pre-implementation discovery confirms no canonical equivalent exists.",
+      "One canonical owner path is approved.",
+      "One explicit versioned identity/key contract is approved.",
+      "One writer and one reader API are named and documented.",
+      "The eight-field schema and metadata contract are approved.",
+      "The extraction-ready event carries only an identity/reference.",
+      "Yes and No actions consume the same stored preview result.",
+      "No operation can mark the result as quote truth.",
+      "All real-effect flags remain false.",
+      "Implementation receives a separate RoboCop gate after ADR approval."
+    ],
+    "REJECTION_CONDITIONS": [
+      "An existing canonical cache, writer, reader or owner is proven before implementation.",
+      "The proposed store would persist raw PDF bytes or secrets.",
+      "The store would be shared with Banxico, Revenue, CRM or another unrelated domain.",
+      "The UI or modal would parse PDFs or become persistence owner.",
+      "The implementation would use a hidden latest-record default.",
+      "The result could become official quote truth without explicit downstream gates."
+    ]
+  },
+  "canonical_inputs": {
+    "PDF_ENGINE_PATH": "product-intelligence/evidence/forge-quote-pdf-preview-engine.js",
+    "CONFIRMATION_MODAL_PATH": "docs/static-preview/forge-alive/assets/forge-quote-preview-confirmation-modal-107q.js",
+    "QUOTE_PREVIEW_UI_PATH": "docs/static-preview/forge-alive/index.html",
+    "CONFIRMATION_EVENT": "forge:quote-preview:extraction-ready",
+    "CONFIRMATION_FIELD_COUNT": 8
+  },
+  "prior_gate_receipt": {
+    "107Z4_CLASSIFICATION": "EXISTING_GENERIC_RUNTIME_CONTRACT_NOT_YET_PROVEN",
+    "107Z5_STATUS": "HOLD",
+    "107Z5_COMPLETE_CALL_CHAIN_PROVEN": false,
+    "107Z6_OUTCOME": "ADR_PREPARATION_REQUIRED",
+    "107Z6_RUNTIME_OWNER_PROVEN": false
+  },
+  "authorization": {
+    "ADR_REVISION_CREATED": true,
+    "REVISED_REVIEW_AUTHORIZED": true,
+    "ADR_APPROVED": false,
+    "IMPLEMENTATION_AUTHORIZED": false,
+    "CACHE_CREATION_AUTHORIZED": false,
+    "BRIDGE_CREATION_AUTHORIZED": false,
+    "UI_INTEGRATION_AUTHORIZED": false,
+    "RUNTIME_WRITE_AUTHORIZED": false
+  },
+  "constitutional_flags": {
+    "NEW_ENGINE_CREATED": false,
+    "NEW_CACHE_CREATED": false,
+    "DUPLICATE_BRIDGE_CREATED": false,
+    "PDF_READ_EXECUTED": false,
+    "PARSER_EXECUTED": false,
+    "OCR_EXECUTED": false,
+    "SOURCE_UI_CHANGED": false,
+    "QUOTE_TRUTH_ALLOWED": false,
+    "REAL_ENGINE_EXECUTION": false,
+    "BACKEND_CONNECTION": false,
+    "TEST_EXECUTION": false
+  },
+  "revision": {
+    "REVISION_APPLIED": true,
+    "FAILED_CHECK_ID": "ADR_0027_RULE_ALIGNED",
+    "FAILED_CHECK_LABEL": "Draft aligns with no hidden latest-rule defaults",
+    "FAILED_CHECK_EVIDENCE": "ADR-0027 and draft both require explicit selection",
+    "REVISION_SCOPE": "TARGETED_SINGLE_CHECK_ONLY",
+    "ADR_0027_CANDIDATES": [
+      "docs/02-adr-candidates/ADR-0027_COMPENSATION_RULE_PACK_BOUNDARY.md"
+    ],
+    "REVISED_ADR_PATH": "/storage/emulated/0/Forge OS/docs/architecture/quote-preview/107z7r-quote-preview-pdf-runtime-persistence-adr-revised-draft.md",
+    "NEXT_GATE": "107Z8R_QUOTE_PREVIEW_PDF_RUNTIME_PERSISTENCE_ADR_REVISED_REVIEW_GATE"
+  }
+}
