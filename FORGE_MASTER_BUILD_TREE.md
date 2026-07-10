@@ -13556,3 +13556,34 @@ LOCKED_DECISION=ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE_LOCKED_BOUNDARY_READY
 
 NEXT=107N_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_LOCAL_INPUT_RUN
 <!-- FORGE:107M_QUOTE_PREVIEW_ACTUAL_MANUAL_VALUE_CAPTURE_EXECUTION_GATE:END -->
+
+<!-- FORGE:107N_QUOTE_PREVIEW_AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_CORRECTION_GATE:START -->
+## 107N Quote Preview Auto PDF Extraction Confirmation Flow Correction Gate
+
+107N supersedes the overcomplicated manual transcription route.
+
+Locked decision:
+`AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_LOCKED_MANUAL_TRANSCRIPTION_DEPRECATED`
+
+Confirmed:
+
+- user should not transcribe PDF values;
+- Forge must read the PDF automatically;
+- Forge must extract required fields automatically;
+- Forge must show a confirmation modal;
+- Sí fills the UI after confirmation;
+- No opens editable UI;
+- manual capture is fallback only;
+- quote truth is still forbidden;
+- UI not changed in this phase;
+- presentation not generated;
+- all safety flags remain false.
+
+CONFIRMATION_FIELD_COUNT=8
+
+DECISION=PASS_107N_QUOTE_PREVIEW_AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_CORRECTION_GATE
+
+LOCKED_DECISION=AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_LOCKED_MANUAL_TRANSCRIPTION_DEPRECATED
+
+NEXT=107O_QUOTE_PREVIEW_AUTO_PDF_VALUE_EXTRACTION_LOCAL_RUN_GATE
+<!-- FORGE:107N_QUOTE_PREVIEW_AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_CORRECTION_GATE:END -->

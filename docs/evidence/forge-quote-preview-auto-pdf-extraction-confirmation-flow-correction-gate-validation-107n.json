@@ -1,0 +1,23 @@
+{
+  "phase": "107N_QUOTE_PREVIEW_AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_CORRECTION_GATE",
+  "status": "PASS",
+  "decision": "PASS_107N_QUOTE_PREVIEW_AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_CORRECTION_GATE",
+  "lockedDecision": "AUTO_PDF_EXTRACTION_CONFIRMATION_FLOW_LOCKED_MANUAL_TRANSCRIPTION_DEPRECATED",
+  "manualTranscriptionByUserDeprecated": true,
+  "manualCaptureAllowedOnlyAsFallback": true,
+  "pdfAutoExtractionRequired": true,
+  "confirmationModalRequired": true,
+  "confirmationFieldCount": 8,
+  "yesAutoFillsUiAfterConfirmation": true,
+  "noOpensEditableUi": true,
+  "rawExtractedValuesCommitAllowed": false,
+  "redactedExtractionReceiptCommitAllowed": true,
+  "quoteTruthAllowed": false,
+  "uiChangedInThisPhase": false,
+  "presentationGenerated": false,
+  "backendConnectionUsed": false,
+  "providerRuntimeUsed": false,
+  "allSafetyFlagsFalse": true,
+  "next": "107O_QUOTE_PREVIEW_AUTO_PDF_VALUE_EXTRACTION_LOCAL_RUN_GATE",
+  "errors": []
+}
