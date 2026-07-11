@@ -1804,6 +1804,123 @@
     return rows;
   }
 
+
+  function normalizeVisibleSummaryLabel(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[\/·,]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function findVisibleSummaryValueNode(labelCandidates) {
+    const wanted = labelCandidates
+      .map(normalizeVisibleSummaryLabel)
+      .filter(Boolean);
+
+    const rows = Array.from(document.querySelectorAll(".fq-summary-row-105dr"));
+    for (const row of rows) {
+      const label = row.querySelector(".fq-summary-label-105dr");
+      const value = row.querySelector(".fq-summary-value-105dr");
+      const normalizedLabel = normalizeVisibleSummaryLabel(label?.textContent || "");
+      if (value && wanted.some(candidate => normalizedLabel === candidate || normalizedLabel.includes(candidate) || candidate.includes(normalizedLabel))) {
+        return value;
+      }
+    }
+
+    return null;
+  }
+
+  function writeVisibleBenefitRuntimeGrid(rows, emptyText) {
+    const target = findVisibleSummaryValueNode([
+      "Valores, beneficios o escenarios relevantes",
+      "Valores beneficios escenarios relevantes",
+      "Valores / beneficios / escenarios"
+    ]);
+
+    if (!target) return false;
+
+    const cleanRows = rows
+      .filter(item => item && item.value !== null && item.value !== undefined && String(item.value).trim() !== "");
+
+    target.textContent = "";
+
+    if (!cleanRows.length) {
+      target.textContent = emptyText || "Sin beneficios adicionales detectados.";
+      return true;
+    }
+
+    const wrapper = document.createElement("dl");
+    wrapper.className = "fq-runtime-grid-107z15e8s";
+
+    for (const item of cleanRows) {
+      const dt = document.createElement("dt");
+      dt.textContent = item.label || "Detalle";
+
+      const dd = document.createElement("dd");
+      dd.textContent = item.value;
+
+      wrapper.append(dt, dd);
+    }
+
+    target.appendChild(wrapper);
+    return true;
+  }
+
+  function benefitFallbackRows(calc) {
+    return [
+      { label: "Total aportado", value: formatUdiWithMxn(calc.totalContributed, calc.currency, calc.totalContributedMXN, calc.udiRateMetadata).join(" · ") },
+      { label: "Recuperación base", value: formatUdiWithMxn(calc.totalRecovery, calc.currency, calc.totalRecoveryMXN, calc.udiRateMetadata).join(" · ") },
+      { label: "Valor UDI", value: isUdiCurrency(calc.currency) ? formatUdiMetadataLine(calc.udiRateMetadata) : null },
+      { label: "UDI proyectada a retiro", value: hasValue(calc.projectedUdiAtRetirement) ? `$${Number(calc.projectedUdiAtRetirement).toLocaleString("es-MX", { maximumFractionDigits: 3 })} MXN` : null },
+      { label: "Protección actual", value: formatMxn(calc.currentProtectionMXN) },
+      { label: "Renta mensual a retiro", value: formatMxn(calc.monthlyIncomeMXN) },
+      { label: "Renta anual a retiro", value: formatMxn(calc.annualIncomeMXN) },
+      ...calc.accumulatedIncome.map(item => ({ label: `Renta acumulada a ${item.toAge}`, value: formatMxn(item.mxn) })),
+      { label: "Escenario base", value: scenarioText(calc.base, calc.currency) },
+      { label: "Escenario favorable", value: scenarioText(calc.favorable, calc.currency) },
+      { label: "Escenario desfavorable", value: scenarioText(calc.unfavorable, calc.currency) },
+      { label: "Tasa de retiro", value: calc.interestRate },
+      { label: "Periodo de garantía", value: calc.guaranteePeriod },
+      { label: "Plazo de pagos", value: `${calc.paymentYears} años` },
+      { label: "Asesor", value: calc.advisor },
+      { label: "Fecha de cotización", value: calc.quoteDate },
+      ...calc.optionalCoverages.map(item => ({
+        label: item.coverage || "Cobertura adicional",
+        value: [
+          item.term,
+          hasValue(item.sumInsured) ? `Suma asegurada: ${formatAmount(item.sumInsured, calc.currency)}` : null,
+          hasValue(item.annualPremium) ? `Prima anual: ${formatAmount(item.annualPremium, calc.currency)}` : null
+        ].filter(Boolean).join(" · ")
+      })),
+    ];
+  }
+
+  function renderVisibleDynamicBenefitSummary(calc) {
+    const fallbackRows = benefitFallbackRows(calc);
+    const dynamicRows = buildDynamicBenefitSummaryRows(calc);
+
+    writeVisibleBenefitRuntimeGrid(
+      dynamicRows.length ? dynamicRows : fallbackRows,
+      "El PDF no entregó valores adicionales."
+    );
+
+    if (!dynamicRows.length && !benefitSummaryApiSync()?.buildQuoteBenefitSummary) {
+      window.addEventListener("forge:quote-benefit-summary-ready", () => {
+        const lateRows = buildDynamicBenefitSummaryRows(calc);
+        writeVisibleBenefitRuntimeGrid(
+          lateRows.length ? lateRows : fallbackRows,
+          "El PDF no entregó valores adicionales."
+        );
+      }, { once: true });
+    }
+
+    return dynamicRows;
+  }
+
+
   function buildDynamicBenefitSummaryRows(calc) {
     const benefitApi = benefitSummaryApiSync();
     if (!benefitApi?.buildQuoteBenefitSummary) return [];
@@ -1850,27 +1967,9 @@
       [calc.paymentMode, calc.currency, calc.coveragePeriod].filter(Boolean).join(" · "),
       formatUdiMetadataLine(calc.udiRateMetadata)
     ]);
-    const dynamicBenefitRows = buildDynamicBenefitSummaryRows(calc);
+    const dynamicBenefitRows = renderVisibleDynamicBenefitSummary(calc);
     // DYNAMIC_BENEFIT_SUMMARY_ROWS_107z15p2
-    writeRuntimeGrid("Valores, beneficios o escenarios relevantes", dynamicBenefitRows.length ? dynamicBenefitRows : [
-      { label: "Total aportado", value: formatUdiWithMxn(calc.totalContributed, calc.currency, calc.totalContributedMXN, calc.udiRateMetadata).join(" · ") },
-      { label: "Recuperación base", value: formatUdiWithMxn(calc.totalRecovery, calc.currency, calc.totalRecoveryMXN, calc.udiRateMetadata).join(" · ") },
-      { label: "Valor UDI", value: isUdiCurrency(calc.currency) ? formatUdiMetadataLine(calc.udiRateMetadata) : null },
-      { label: "UDI proyectada a retiro", value: hasValue(calc.projectedUdiAtRetirement) ? `$${Number(calc.projectedUdiAtRetirement).toLocaleString("es-MX", { maximumFractionDigits: 3 })} MXN` : null },
-      { label: "Protección actual", value: formatMxn(calc.currentProtectionMXN) },
-      { label: "Renta mensual a retiro", value: formatMxn(calc.monthlyIncomeMXN) },
-      { label: "Renta anual a retiro", value: formatMxn(calc.annualIncomeMXN) },
-      ...calc.accumulatedIncome.map(item => ({ label: `Renta acumulada a ${item.toAge}`, value: formatMxn(item.mxn) })),
-      { label: "Escenario base", value: scenarioText(calc.base, calc.currency) },
-      { label: "Escenario favorable", value: scenarioText(calc.favorable, calc.currency) },
-      { label: "Escenario desfavorable", value: scenarioText(calc.unfavorable, calc.currency) },
-      { label: "Tasa de retiro", value: calc.interestRate },
-      { label: "Periodo de garantía", value: calc.guaranteePeriod },
-      { label: "Plazo de pagos", value: `${calc.paymentYears} años` },
-      { label: "Asesor", value: calc.advisor },
-      { label: "Fecha de cotización", value: calc.quoteDate },
-      ...calc.optionalCoverages.map(item => ({ label: item.coverage || "Cobertura adicional", value: [item.term, hasValue(item.sumInsured) ? `Suma asegurada: ${formatAmount(item.sumInsured, calc.currency)}` : null, hasValue(item.annualPremium) ? `Prima anual: ${formatAmount(item.annualPremium, calc.currency)}` : null].filter(Boolean).join(" · ") })),
-    ], "El PDF no entregó valores adicionales.");
+    writeRuntimeGrid("Valores, beneficios o escenarios relevantes", dynamicBenefitRows.length ? dynamicBenefitRows : benefitFallbackRows(calc), "El PDF no entregó valores adicionales.");
     const missing = [["Forma de pago", calc.paymentMode], ["Moneda", calc.currency], ["Recuperación base", calc.totalRecovery], ["Escenario favorable", calc.favorable], ["Escenario desfavorable", calc.unfavorable]].filter(([,value]) => !hasValue(value)).map(([label]) => ({ label: "Pendiente", value: label }));
     writeRuntimeGrid("Faltantes antes de presentar", missing, "Cotización calculada. No quedan campos principales pendientes.");
   }
