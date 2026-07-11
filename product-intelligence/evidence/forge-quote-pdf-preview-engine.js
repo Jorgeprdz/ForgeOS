@@ -52,7 +52,371 @@ function detectQuoteDomain(text) {
   return 'unknown';
 }
 
+// FORGE_IMAGINA_SER_ECONOMIC_SCENARIOS_V2
+function forgeExtractImaginaSerEconomicScenarios(text) {
+  const normalizedText = String(text || "")
+    .replace(/\r/g, "");
+
+  const lines = normalizedText.split("\n");
+
+  if (!/IMAGINA\s+SER/i.test(normalizedText)) {
+    return null;
+  }
+
+  const clean = value => String(value ?? "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const columns = line => String(line || "")
+    .trim()
+    .split(/\s{2,}/)
+    .map(clean)
+    .filter(Boolean);
+
+  const numeric = value => {
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    const cleaned = String(value)
+      .replace(/,/g, "")
+      .replace(/[^\d.-]/g, "");
+
+    if (!cleaned) {
+      return null;
+    }
+
+    const parsed = Number(cleaned);
+
+    return Number.isFinite(parsed)
+      ? parsed
+      : null;
+  };
+
+  const findLine = pattern =>
+    lines.find(line => pattern.test(line)) || "";
+
+  const fieldAfterColon = (line, label) => {
+    const pattern = new RegExp(
+      `${label}\\s*:\\s*(.+?)\\s*$`,
+      "i"
+    );
+
+    const match = String(line || "").match(pattern);
+
+    return match
+      ? clean(match[1])
+      : null;
+  };
+
+  const advisorLine = findLine(
+    /Asesor profesional de seguros:/i
+  );
+
+  const insuredLine = findLine(
+    /Asegurado:/i
+  );
+
+  const birthLine = findLine(
+    /Fecha de nacimiento:/i
+  );
+
+  const genderLine = findLine(
+    /G[eé]nero:/i
+  );
+
+  const liquidationLine = findLine(
+    /Opci[oó]n de liquidaci[oó]n:/i
+  );
+
+  const coverageIndex = lines.findIndex(
+    line => {
+      const cells = columns(line);
+
+      return (
+        cells.length >= 4
+        && /^IMAGINA\s+SER\s+\d+\s+PAGOS$/i.test(
+          cells[0]
+        )
+        && /^\d+\s+a[nñ]os$/i.test(cells[1])
+        && numeric(cells[2]) !== null
+        && numeric(cells[3]) !== null
+      );
+    }
+  );
+
+  if (coverageIndex < 0) {
+    return null;
+  }
+
+  const coverageCells = columns(
+    lines[coverageIndex]
+  );
+
+  const limitedLine =
+    lines
+      .slice(
+        coverageIndex + 1,
+        coverageIndex + 4
+      )
+      .find(
+        line => /^\s*LIMITADOS\s+\d+\s*$/i.test(
+          line
+        )
+      )
+    || "";
+
+  const limitedMatch = limitedLine.match(
+    /LIMITADOS\s+(\d+)/i
+  );
+
+  const plan = clean(
+    `${coverageCells[0]} ${
+      limitedMatch
+        ? `LIMITADOS ${limitedMatch[1]}`
+        : ""
+    }`
+  );
+
+  const paymentYears = limitedMatch
+    ? numeric(limitedMatch[1])
+    : null;
+
+  const policyTerm = coverageCells[1] || null;
+  const sumInsured = numeric(coverageCells[2]);
+  const baseAnnualPremium = numeric(coverageCells[3]);
+
+  const birthMatch = birthLine.match(
+    /Fecha de nacimiento:\s*(\d{1,2}\/\d{1,2}\/\d{4}).*?Edad:\s*(\d+)/i
+  );
+
+  const genderMatch = genderLine.match(
+    /G[eé]nero:\s*([A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+).*?Fumador:\s*([A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)/i
+  );
+
+  const liquidationMatch = liquidationLine.match(
+    /Opci[oó]n de liquidaci[oó]n:\s*(.*?)\s+Moneda:\s*([A-Z]+)/i
+  );
+
+  const premiumValues = line => {
+    const cells = columns(line);
+
+    return cells
+      .slice(1)
+      .map(numeric);
+  };
+
+  const basicPremiumLine = findLine(
+    /^\s*Prima b[aá]sica\s+/i
+  );
+
+  const plannedPremiumLine = findLine(
+    /^\s*Prima planeada\s+/i
+  );
+
+  const totalPremiumLine = findLine(
+    /^\s*Prima total\s+/i
+  );
+
+  const totalAnnualLine = findLine(
+    /Prima Total Anual/i
+  );
+
+  const basicPremiumValues = premiumValues(
+    basicPremiumLine
+  );
+
+  const plannedPremiumValues = premiumValues(
+    plannedPremiumLine
+  );
+
+  const totalTablePremiumValues = premiumValues(
+    totalPremiumLine
+  );
+
+  const totalAnnualValues = columns(
+    totalAnnualLine
+  )
+    .slice(1)
+    .map(numeric)
+    .filter(value => value !== null);
+
+  const totalAnnualPremium =
+    totalAnnualValues.length
+      ? totalAnnualValues[
+          totalAnnualValues.length - 1
+        ]
+      : (
+          totalTablePremiumValues[3]
+          ?? basicPremiumValues[3]
+          ?? null
+        );
+
+  const policyYears = numeric(policyTerm);
+
+  let scenarioValues = null;
+
+  for (const line of lines) {
+    const cells = columns(line);
+
+    if (cells.length < 8) {
+      continue;
+    }
+
+    const values = cells
+      .slice(0, 8)
+      .map(numeric);
+
+    if (
+      values.every(value => value !== null)
+      && values[0] === policyYears
+    ) {
+      scenarioValues = values;
+      break;
+    }
+  }
+
+  const scenario = offset => (
+    scenarioValues
+      ? {
+          year: scenarioValues[0],
+          age: scenarioValues[1],
+          singlePaymentUdi:
+            scenarioValues[offset],
+          monthlyIncomeUdi:
+            scenarioValues[offset + 1]
+        }
+      : null
+  );
+
+  const interestLine = findLine(
+    /inter[eé]s utilizada/i
+  );
+
+  const retirementInterestMatch =
+    interestLine.match(
+      /([0-9]+(?:\.[0-9]+)?)\s*%/
+    );
+
+  const guaranteeLine = findLine(
+    /periodo de garant[ií]a/i
+  );
+
+  const guaranteeMatch =
+    guaranteeLine.match(
+      /garant[ií]a\s+de\s+([0-9]+\s+a[nñ]os)/i
+    );
+
+  const studyDateLine = findLine(
+    /Este estudio se realiz[oó].*d[ií]a/i
+  );
+
+  const quoteDateMatch =
+    studyDateLine.match(
+      /d[ií]a\s+(\d{1,2}\/\d{1,2}\/\d{4})/i
+    );
+
+  return {
+    detectedQuoteDomain: "life",
+    sourceLayout:
+      "solucionline_imagina_ser_economic_scenarios",
+    product: "IMAGINA SER",
+    plan,
+    prospect: fieldAfterColon(
+      insuredLine,
+      "Asegurado"
+    ),
+    age: birthMatch ? birthMatch[2] : null,
+    gender: genderMatch ? genderMatch[1] : null,
+    smoker: genderMatch ? genderMatch[2] : null,
+    birthDate: birthMatch ? birthMatch[1] : null,
+    liquidationOption:
+      liquidationMatch
+        ? clean(liquidationMatch[1])
+        : null,
+    currency:
+      liquidationMatch
+        ? liquidationMatch[2]
+        : "UDI",
+    policyTerm,
+    paymentTerm:
+      paymentYears !== null
+        ? `${paymentYears} años`
+        : null,
+    sumInsured,
+    baseAnnualPremium,
+    totalAnnualPremium,
+    premium: totalAnnualPremium,
+    paymentMode: "Anual",
+    premiumTable: {
+      monthly:
+        basicPremiumValues[0]
+        ?? totalTablePremiumValues[0]
+        ?? null,
+      quarterly:
+        basicPremiumValues[1]
+        ?? totalTablePremiumValues[1]
+        ?? null,
+      semiannual:
+        basicPremiumValues[2]
+        ?? totalTablePremiumValues[2]
+        ?? null,
+      annual:
+        basicPremiumValues[3]
+        ?? totalTablePremiumValues[3]
+        ?? totalAnnualPremium
+        ?? null,
+      plannedMonthly:
+        plannedPremiumValues[0]
+        ?? null,
+      plannedQuarterly:
+        plannedPremiumValues[1]
+        ?? null,
+      plannedSemiannual:
+        plannedPremiumValues[2]
+        ?? null,
+      plannedAnnual:
+        plannedPremiumValues[3]
+        ?? null
+    },
+    retirementInterestRate:
+      retirementInterestMatch
+        ? `${retirementInterestMatch[1]}%`
+        : null,
+    retirementScenarioBase:
+      scenario(2),
+    retirementScenarioFavorable:
+      scenario(4),
+    retirementScenarioUnfavorable:
+      scenario(6),
+    guaranteePeriod:
+      guaranteeMatch
+        ? guaranteeMatch[1]
+        : null,
+    optionalCoverages: [],
+    advisor: fieldAfterColon(
+      advisorLine,
+      "Asesor profesional de seguros"
+    ),
+    quoteDate:
+      quoteDateMatch
+        ? quoteDateMatch[1]
+        : null,
+    extractionSource:
+      "pdf_text_life_fallback"
+  };
+}
+
 function extractSolucionlineLifeQuoteFields(text) {
+
+  const forgeImaginaSerEconomicScenarios =
+    forgeExtractImaginaSerEconomicScenarios(
+      text
+    );
+
+  if (forgeImaginaSerEconomicScenarios) {
+    return forgeImaginaSerEconomicScenarios;
+  }
   if (!/Solucionline|Escenarios Econ[oó]micos|IMAGINA SER/i.test(text)) return null;
 
   const lines = String(text).split(/\r?\n/)
