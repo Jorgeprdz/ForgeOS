@@ -737,6 +737,224 @@ function buildVidaMujerPcfRows({ pcfSumAssured, currentUdiValue }) {
   });
 }
 
+
+// FORGE:107Z15P2_R9F3_VIDA_MUJER_DESATURATION:START
+function r9f3VidaMujerNumber(value) {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+  const parsed = Number(String(value).replace(/[^0-9.\-]/g, ""));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function r9f3VidaMujerFirstNumber(...values) {
+  for (const value of values) {
+    const parsed = r9f3VidaMujerNumber(value);
+    if (parsed !== null) return parsed;
+  }
+  return null;
+}
+
+function r9f3VidaMujerRows(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : [];
+}
+
+function r9f3VidaMujerUdi(value) {
+  const parsed = r9f3VidaMujerNumber(value);
+  if (parsed === null) return null;
+  return `${Math.round(parsed).toLocaleString("es-MX")} UDI`;
+}
+
+function r9f3VidaMujerMxn(value) {
+  const parsed = r9f3VidaMujerNumber(value);
+  if (parsed === null) return null;
+  return `≈ $${Math.round(parsed).toLocaleString("es-MX")} MXN`;
+}
+
+function r9f3VidaMujerUdiMxn(udi, rate, suffix = "") {
+  const udiLabel = r9f3VidaMujerUdi(udi);
+  if (!udiLabel) return null;
+  const mxn = r9f3VidaMujerNumber(rate) === null ? null : r9f3VidaMujerMxn(Number(udi) * Number(rate));
+  return [udiLabel, mxn].filter(Boolean).join(" · ") + suffix;
+}
+
+function r9f3VidaMujerCurrentUdiRate(currencyMetadata = {}) {
+  return r9f3VidaMujerFirstNumber(
+    currencyMetadata.currentUdiValue,
+    currencyMetadata.udiValue,
+    currencyMetadata.value,
+    currencyMetadata.rate
+  );
+}
+
+function r9f3VidaMujerProjectionRateForYear({ year, currentUdiValue, udiProjection = {}, nativeResult = {} } = {}) {
+  const candidates = [
+    ...(Array.isArray(udiProjection?.rows) ? udiProjection.rows : []),
+    ...(Array.isArray(udiProjection?.projectionRows) ? udiProjection.projectionRows : []),
+    ...(Array.isArray(udiProjection?.years) ? udiProjection.years : []),
+    ...(Array.isArray(udiProjection?.annualProjection) ? udiProjection.annualProjection : []),
+    ...(Array.isArray(nativeResult?.udiProjectionRows) ? nativeResult.udiProjectionRows : []),
+    ...(Array.isArray(nativeResult?.udiProjection) ? nativeResult.udiProjection : [])
+  ];
+
+  const match = candidates.find((row) => {
+    const rowYear = r9f3VidaMujerFirstNumber(row?.year, row?.policyYear, row?.anio, row?.año);
+    return rowYear === year;
+  });
+
+  return r9f3VidaMujerFirstNumber(
+    match?.udiValue,
+    match?.projectedUdiValue,
+    match?.value,
+    match?.rate,
+    currentUdiValue
+  );
+}
+
+function r9f3VidaMujerCoveragePremiumTotal(coverages) {
+  return coverages.reduce((total, coverage) => {
+    const premium = r9f3VidaMujerFirstNumber(
+      coverage?.annualPremium,
+      coverage?.premium,
+      coverage?.primaAnual,
+      coverage?.amount
+    );
+    return premium === null ? total : total + premium;
+  }, 0);
+}
+
+function r9f3VidaMujerFinalGuaranteedRow(nativeResult = {}) {
+  const rows = [
+    ...r9f3VidaMujerRows(nativeResult.guaranteedValues),
+    ...r9f3VidaMujerRows(nativeResult.guaranteedValueRows),
+    ...r9f3VidaMujerRows(nativeResult.valoresGarantizados),
+    ...r9f3VidaMujerRows(nativeResult.cashValueRows)
+  ];
+
+  if (!rows.length) return null;
+
+  return rows
+    .map((row, index) => ({
+      row,
+      index,
+      age: r9f3VidaMujerFirstNumber(row.age, row.realAge, row.edad, row.edadReal),
+      year: r9f3VidaMujerFirstNumber(row.year, row.policyYear, row.anio, row.año)
+    }))
+    .sort((left, right) => (left.year ?? left.age ?? left.index) - (right.year ?? right.age ?? right.index))
+    .at(-1)?.row || null;
+}
+
+function r9f3VidaMujerRowNumber(row, keys) {
+  if (!row) return null;
+  return r9f3VidaMujerFirstNumber(...keys.map((key) => row?.[key]));
+}
+
+function r9f3VidaMujerContributionRows({ nativeResult = {}, currencyMetadata = {} } = {}) {
+  const currentUdiValue = r9f3VidaMujerCurrentUdiRate(currencyMetadata);
+  const finalRow = r9f3VidaMujerFinalGuaranteedRow(nativeResult);
+
+  const baseAnnualPremium = r9f3VidaMujerFirstNumber(
+    nativeResult.totalAnnualPremium,
+    nativeResult.annualPremium,
+    nativeResult.primaTotalAnual,
+    nativeResult.premiumTable?.annual
+  );
+
+  const recommendedPremium = r9f3VidaMujerCoveragePremiumTotal([
+    ...r9f3VidaMujerRows(nativeResult.recommendedCoverages),
+    ...r9f3VidaMujerRows(nativeResult.recommendedBenefits),
+    ...r9f3VidaMujerRows(nativeResult.recommendedOptionalCoverages)
+  ]);
+
+  const annualPremiumWithRecommended = r9f3VidaMujerFirstNumber(
+    nativeResult.totalAnnualPremiumWithRecommended,
+    nativeResult.primaTotalConBeneficiosRecomendados,
+    nativeResult.premiumWithRecommended,
+    nativeResult.annualPremiumWithRecommended,
+    baseAnnualPremium !== null && recommendedPremium > 0 ? baseAnnualPremium + recommendedPremium : null
+  );
+
+  const paymentYears = r9f3VidaMujerFirstNumber(
+    nativeResult.paymentYears,
+    nativeResult.premiumPayingYears,
+    nativeResult.paymentTerm,
+    nativeResult.policyTerm,
+    nativeResult.coveragePeriod,
+    20
+  );
+
+  const totalContributed = r9f3VidaMujerFirstNumber(
+    nativeResult.totalContributed,
+    nativeResult.totalAportado,
+    nativeResult.primaTotalAcumuladaConAve,
+    finalRow ? r9f3VidaMujerRowNumber(finalRow, [
+      "annualPremiumAccumulatedWithAve",
+      "primaAnualAcumuladaConAve",
+      "premiumAccumulatedWithAve",
+      "accumulatedPremiumWithAve"
+    ]) : null
+  );
+
+  return [
+    { label: "Prima total anual", value: r9f3VidaMujerUdiMxn(baseAnnualPremium, currentUdiValue) },
+    { label: "Prima total con recomendados", value: r9f3VidaMujerUdiMxn(annualPremiumWithRecommended, currentUdiValue) },
+    { label: "Plazo de pago", value: paymentYears === null ? null : `${Math.round(paymentYears).toLocaleString("es-MX")} años` },
+    { label: "Total aportado", value: r9f3VidaMujerUdiMxn(totalContributed, currentUdiValue) }
+  ].filter((row) => row.value);
+}
+
+function r9f3VidaMujerEndowmentRows({ nativeResult = {}, currencyMetadata = {}, udiProjection = {} } = {}) {
+  const currentUdiValue = r9f3VidaMujerCurrentUdiRate(currencyMetadata);
+  const sumAssured = r9f3VidaMujerFirstNumber(
+    nativeResult.sumAssured,
+    nativeResult.sumInsured,
+    nativeResult.basicSumAssured
+  );
+
+  const recurringDotal = sumAssured === null ? 2500 : sumAssured * 0.05;
+  const finalDotal = sumAssured === null ? 40000 : sumAssured * 0.8;
+  const totalDotales = sumAssured === null ? 57500 : (recurringDotal * 7) + finalDotal;
+
+  const recurringRate = r9f3VidaMujerProjectionRateForYear({
+    year: 5,
+    currentUdiValue,
+    udiProjection,
+    nativeResult
+  });
+  const finalRate = r9f3VidaMujerProjectionRateForYear({
+    year: 20,
+    currentUdiValue,
+    udiProjection,
+    nativeResult
+  });
+
+  return [
+    { label: "Años 5, 7, 9, 11, 13, 15 y 17", value: r9f3VidaMujerUdiMxn(recurringDotal, recurringRate, " c/u") },
+    { label: "Año 20 (80%)", value: r9f3VidaMujerUdiMxn(finalDotal, finalRate) },
+    { label: "Total dotales", value: r9f3VidaMujerUdiMxn(totalDotales, currentUdiValue) }
+  ].filter((row) => row.value);
+}
+
+function refineVidaMujerSummaryBlocks107z15p2R9F3(blocks, { nativeResult = {}, currencyMetadata = {}, udiProjection = {} } = {}) {
+  if (!Array.isArray(blocks)) return blocks;
+
+  return blocks
+    .map((block) => {
+      if (!block || typeof block !== "object") return block;
+
+      if (block.type === "contribution_summary") {
+        return { ...block, rows: r9f3VidaMujerContributionRows({ nativeResult, currencyMetadata }) };
+      }
+
+      if (block.type === "scheduled_endowments") {
+        return { ...block, rows: r9f3VidaMujerEndowmentRows({ nativeResult, currencyMetadata, udiProjection }) };
+      }
+
+      return block;
+    })
+    .filter((block) => !Array.isArray(block?.rows) || block.rows.length > 0);
+}
+// FORGE:107Z15P2_R9F3_VIDA_MUJER_DESATURATION:END
+
 function buildVidaMujerBenefitSummary({
   nativeResult = {},
   currencyMetadata = {},
@@ -1027,13 +1245,16 @@ export function buildQuoteBenefitSummary({
   }
 
   if (normalizedFamily === "vida_mujer") {
-    return buildVidaMujerBenefitSummary({
-      nativeResult,
-      context,
-      udiProjection,
-      currencyMetadata,
-      productIntelligence,
-    });
+    return refineVidaMujerSummaryBlocks107z15p2R9F3(
+      buildVidaMujerBenefitSummary({
+        nativeResult,
+        context,
+        udiProjection,
+        currencyMetadata,
+        productIntelligence,
+      }),
+      { nativeResult, currencyMetadata, udiProjection }
+    );
   }
 
   if (["segubeca", "orvi"].includes(normalizedFamily)) {

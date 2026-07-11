@@ -338,12 +338,18 @@ assert.ok(r8FindBlock(vidaMujerBlocks, "recommended_benefits"), "Vida Mujer debe
 assert.equal(r8FindBlock(vidaMujerBlocks, "retirement_scenarios"), undefined, "Vida Mujer no debe usar escenarios de retiro.");
 
 const vidaContribution = r8FindBlock(vidaMujerBlocks, "contribution_summary");
-assert.ok(vidaContribution.rows.some((row) => row.value === "152,136 UDI"), "Total aportado debe venir de prima acumulada con AVE.");
+assert.ok(vidaContribution.rows.some((row) => String(row.value).includes("152,136 UDI")), "Total aportado debe venir de prima acumulada con AVE.");
+
+assert.ok(vidaContribution.rows.some((row) => row.label === "Prima total anual" && String(row.value).includes("3,062 UDI")), "Prima total anual debe mostrarse en Lo que aportas.");
+assert.ok(vidaContribution.rows.some((row) => row.label === "Prima total con recomendados" && String(row.value).includes("3,890 UDI")), "Prima total con recomendados debe mostrarse en Lo que aportas.");
+assert.ok(vidaContribution.rows.some((row) => row.label === "Plazo de pago" && String(row.value).includes("20 años")), "Plazo de pago debe mostrarse en Lo que aportas.");
+
 
 const vidaEndowments = r8FindBlock(vidaMujerBlocks, "scheduled_endowments");
-assert.ok(vidaEndowments.rows.some((row) => row.label === "Dotal año 5" && row.value === "2,500 UDI"));
-assert.ok(vidaEndowments.rows.some((row) => row.label === "Dotal final año 20" && row.value === "40,000 UDI"));
-assert.ok(vidaEndowments.rows.some((row) => row.label === "Total dotales por supervivencia" && row.value === "57,500 UDI"));
+assert.ok(vidaEndowments.rows.some((row) => row.label === "Años 5, 7, 9, 11, 13, 15 y 17" && String(row.value).includes("2,500 UDI")), "Dotales recurrentes deben agruparse como 2,500 UDI c/u.");
+assert.ok(vidaEndowments.rows.some((row) => row.label === "Año 20 (80%)" && String(row.value).includes("40,000 UDI")), "Dotal final debe mostrarse como año 20 80%.");
+assert.ok(vidaEndowments.rows.some((row) => row.label === "Total dotales" && String(row.value).includes("57,500 UDI")), "Total dotales debe mantenerse sin duplicados.");
+
 
 const vidaRecovery = r8FindBlock(vidaMujerBlocks, "recovery_summary");
 assert.ok(vidaRecovery.rows.some((row) => row.label === "Valor de rescate AVE" && row.value === "107,486 UDI"));
