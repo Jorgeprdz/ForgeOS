@@ -1509,12 +1509,46 @@
     const annualPremium = nativeResult.premiumTable?.annual ?? nativeResult.totalAnnualPremium ?? nativeResult.premium;
     const plannedAnnual = nativeResult.premiumTable?.plannedAnnual ?? nativeResult.plannedAnnualPremium ?? null;
     const basicAnnual = nativeResult.baseAnnualPremium ?? null;
+    const retirementAge =
+      parseYears(nativeResult.retirementAge) ??
+      parseYears(nativeResult.plan) ??
+      null;
+    const coverageYears = parseYears(nativeResult.policyTerm);
+    const currentAge =
+      parseYears(nativeResult.currentAge ?? nativeResult.insuredAge ?? nativeResult.age) ??
+      (
+        Number.isFinite(Number(retirementAge)) && Number.isFinite(Number(coverageYears))
+          ? Number(retirementAge) - Number(coverageYears)
+          : null
+      );
     return {
       productName: nativeResult.product ?? nativeResult.plan ?? null,
       currency: nativeResult.currency ?? "UDI",
-      currentAge: parseYears(nativeResult.currentAge ?? nativeResult.age),
-      retirementAge: parseYears(nativeResult.retirementAge),
-      coverageYears: parseYears(nativeResult.policyTerm),
+      currentAge,
+      retirementAge,
+      coverageYears,
+      sumAssuredUdi: nativeResult.sumInsured ?? nativeResult.sumAssured ?? null,
+      savingsUdiGrowthRate:
+        nativeResult.savingsUdiGrowthRate ??
+        nativeResult.annualUdiGrowthRate ??
+        nativeResult.savingsProjectionRate ??
+        null,
+      retirementUdiGrowthRate:
+        nativeResult.retirementUdiGrowthRate ??
+        nativeResult.retirementProjectionRate ??
+        null,
+      projectedUdiAtRetirement:
+        nativeResult.projectedUdiAtRetirement ??
+        nativeResult.projectedUdiValueAtRetirement ??
+        null,
+      annualIncomeUdiAtRetirement:
+        base?.annualIncomeUdi ??
+        base?.annualIncome ??
+        (
+          Number.isFinite(Number(base?.monthlyIncomeUdi))
+            ? Number(base.monthlyIncomeUdi) * 12
+            : null
+        ),
       premiumStructure: {
         basicAnnualPremium: Number.isFinite(Number(basicAnnual)) ? Number(basicAnnual) : null,
         plannedAnnualContribution: Number.isFinite(Number(plannedAnnual)) ? Number(plannedAnnual) : null,
@@ -1562,6 +1596,15 @@
       totalRecovery: base && hasValue(base.singlePaymentUdi) ? Number(base.singlePaymentUdi) : null,
       totalContributedMXN: retirementScenario?.summary?.totalContributedMXN ?? null,
       totalRecoveryMXN: retirementScenario?.summary?.lumpSumMXN ?? null,
+      projectedUdiAtRetirement: retirementScenario?.summary?.projectedUdiAtRetirement ?? null,
+      monthlyIncomeMXN: retirementScenario?.summary?.monthlyIncomeMXN ?? null,
+      annualIncomeMXN: retirementScenario?.summary?.annualIncomeMXN ?? null,
+      currentProtectionMXN:
+        retirementScenario?.summary?.udiProjection?.protection?.death?.mxnCurrent ??
+        null,
+      accumulatedIncome:
+        retirementScenario?.summary?.udiProjection?.retirement?.accumulatedIncome ??
+        [],
       udiRateMetadata,
       retirementScenarioStatus: retirementScenario?.status ?? null,
       paymentYears,
@@ -1592,6 +1635,11 @@
       { label: "Total aportado", value: formatUdiWithMxn(calc.totalContributed, calc.currency, calc.totalContributedMXN, calc.udiRateMetadata).join(" · ") },
       { label: "Recuperación base", value: formatUdiWithMxn(calc.totalRecovery, calc.currency, calc.totalRecoveryMXN, calc.udiRateMetadata).join(" · ") },
       { label: "Valor UDI", value: isUdiCurrency(calc.currency) ? formatUdiMetadataLine(calc.udiRateMetadata) : null },
+      { label: "UDI proyectada a retiro", value: hasValue(calc.projectedUdiAtRetirement) ? `$${Number(calc.projectedUdiAtRetirement).toLocaleString("es-MX", { maximumFractionDigits: 3 })} MXN` : null },
+      { label: "Protección actual", value: formatMxn(calc.currentProtectionMXN) },
+      { label: "Renta mensual a retiro", value: formatMxn(calc.monthlyIncomeMXN) },
+      { label: "Renta anual a retiro", value: formatMxn(calc.annualIncomeMXN) },
+      ...calc.accumulatedIncome.map(item => ({ label: `Renta acumulada a ${item.toAge}`, value: formatMxn(item.mxn) })),
       { label: "Escenario base", value: scenarioText(calc.base, calc.currency) },
       { label: "Escenario favorable", value: scenarioText(calc.favorable, calc.currency) },
       { label: "Escenario desfavorable", value: scenarioText(calc.unfavorable, calc.currency) },

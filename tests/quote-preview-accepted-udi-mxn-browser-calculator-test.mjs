@@ -28,6 +28,9 @@ const parsedQuote = {
   currentAge: 40,
   retirementAge: 65,
   coverageYears: 25,
+  sumAssuredUdi: 50000,
+  savingsUdiGrowthRate: 0.04,
+  retirementUdiGrowthRate: 0.045,
   premiumStructure: {
     basicAnnualPremium: 1000,
     plannedAnnualContribution: 250,
@@ -50,9 +53,18 @@ const scenario = calculators.buildRetirementPresentationScenario({
 
 assert.equal(scenario.status, "READY");
 assert.equal(scenario.summary.totalContributedUDI, 15000);
-assert.equal(scenario.summary.totalContributedMXN, 15000 * metadata.currentUdiValue);
+const expectedContributed = Array.from({ length: 12 }).reduce(
+  (sum, _, index) => sum + 1250 * metadata.currentUdiValue * Math.pow(1.04, index),
+  0
+);
+assert.equal(scenario.summary.totalContributedMXN, expectedContributed);
+assert.notEqual(scenario.summary.totalContributedMXN, 15000 * metadata.currentUdiValue);
 assert.equal(scenario.summary.lumpSumUDI, 22000);
-assert.equal(scenario.summary.lumpSumMXN, 22000 * metadata.currentUdiValue);
+assert.equal(
+  scenario.summary.lumpSumMXN,
+  22000 * scenario.summary.projectedUdiAtRetirement
+);
+assert.notEqual(scenario.summary.lumpSumMXN, 22000 * metadata.currentUdiValue);
 assert.equal(scenario.summary.currencySource.source, "BANXICO_SIE_API");
 assert.equal(scenario.summary.currencySource.sourceDate, verifiedRate.rates.UDI_MXN.date);
 
