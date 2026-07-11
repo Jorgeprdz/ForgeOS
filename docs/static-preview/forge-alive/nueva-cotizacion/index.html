@@ -1953,6 +1953,55 @@
         .trim();
     }
 
+
+    function parsePlainBenefitNumber(value) {
+      const raw = String(value ?? "")
+        .replace(/,/g, "")
+        .replace(/\s+/g, "")
+        .trim();
+
+      if (!/^-?\d+(\.\d+)?$/.test(raw)) return null;
+
+      const number = Number(raw);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function formatRoundedMxnValue(value) {
+      return `≈ $${new Intl.NumberFormat("es-MX", {
+        maximumFractionDigits: 0
+      }).format(Math.round(Number(value)))} MXN`;
+    }
+
+    function formatRoundedUdiValue(value) {
+      return `${new Intl.NumberFormat("es-MX", {
+        maximumFractionDigits: 0
+      }).format(Math.round(Number(value)))} UDI`;
+    }
+
+    function formatContributionProtectionValue(concept, rawValue) {
+      const normalizedConcept = normalizeVisibleSummaryLabel(concept);
+      const number = parsePlainBenefitNumber(rawValue);
+
+      if (number === null) return rawValue;
+
+      if (
+        normalizedConcept.includes("total aportado proyectado") ||
+        normalizedConcept.includes("suma asegurada actual")
+      ) {
+        return formatRoundedMxnValue(number);
+      }
+
+      if (
+        normalizedConcept.includes("total aportado") ||
+        normalizedConcept.includes("suma asegurada")
+      ) {
+        return formatRoundedUdiValue(number);
+      }
+
+      return rawValue;
+    }
+
+
     function tableRowsFromValue(label, value) {
       const segments = splitBenefitSegments(value);
       const result = [];
@@ -1974,7 +2023,7 @@
 
           result.push({
             concept: concept || label || "Detalle",
-            value: conceptValue || "Pendiente"
+            value: formatContributionProtectionValue(concept, conceptValue || "Pendiente")
           });
           continue;
         }
@@ -1986,7 +2035,7 @@
         } else {
           result.push({
             concept: label || "Detalle",
-            value: segment
+            value: formatContributionProtectionValue(label || "Detalle", segment)
           });
         }
       }
@@ -1994,7 +2043,7 @@
       if (!result.length && value) {
         result.push({
           concept: label || "Detalle",
-          value: String(value)
+          value: formatContributionProtectionValue(label || "Detalle", String(value))
         });
       }
 
