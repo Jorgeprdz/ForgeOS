@@ -802,6 +802,89 @@
       margin-bottom: 8px;
     }
   }
+
+/* FORGE:107Z15P2_R5_BENEFIT_TABLES:START */
+.fq-benefit-summary-107z15p2 {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.fq-benefit-block-107z15p2 {
+  border: 1px solid rgba(132, 222, 245, 0.18);
+  border-radius: 16px;
+  background: rgba(4, 12, 31, 0.38);
+  padding: 12px;
+  overflow: hidden;
+}
+
+.fq-benefit-title-107z15p2 {
+  margin: 0 0 10px;
+  font-size: 0.98rem;
+  line-height: 1.25;
+  color: #f5d84a;
+}
+
+.fq-benefit-table-wrap-107z15p2 {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.fq-benefit-table-107z15p2 {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.fq-benefit-table-107z15p2 th,
+.fq-benefit-table-107z15p2 td {
+  padding: 7px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  vertical-align: top;
+}
+
+.fq-benefit-table-107z15p2 th {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 800;
+  text-align: left;
+  white-space: nowrap;
+  width: 38%;
+}
+
+.fq-benefit-table-107z15p2 td {
+  color: #f5d84a;
+  font-weight: 800;
+}
+
+.fq-benefit-missing-list-107z15p2 {
+  margin: 0;
+  padding-left: 18px;
+  color: #f5d84a;
+  font-weight: 800;
+}
+
+.fq-benefit-missing-list-107z15p2 li + li {
+  margin-top: 6px;
+}
+
+@media (max-width: 760px) {
+  .fq-benefit-block-107z15p2 {
+    padding: 10px;
+  }
+
+  .fq-benefit-table-107z15p2 {
+    font-size: 0.84rem;
+  }
+
+  .fq-benefit-table-107z15p2 th,
+  .fq-benefit-table-107z15p2 td {
+    padding: 6px;
+  }
+}
+/* FORGE:107Z15P2_R5_BENEFIT_TABLES:END */
+
 </style>
 <script src="../../quote-preview-live/forge-quote-preview-bundle.js"></script>
 <script type="module" src="../../quote-preview-live/forge-quote-calculators.js"></script>
@@ -1852,22 +1935,236 @@
       return true;
     }
 
-    const wrapper = document.createElement("dl");
-    wrapper.className = "fq-runtime-grid-107z15e8s";
+    function splitBenefitSegments(value) {
+      return String(value || "")
+        .split(/\s*·\s*/)
+        .map(segment => segment.trim())
+        .filter(Boolean);
+    }
 
-    for (const item of cleanRows) {
-      const dt = document.createElement("dt");
-      dt.textContent = item.label || "Detalle";
+    function humanizeTechnicalText(value) {
+      return String(value || "")
+        .replace(/_/g, " ")
+        .replace(/\bmissing\b/gi, "")
+        .replace(/\bfalta escenario favorable\b/gi, "Falta escenario favorable")
+        .replace(/\bfalta escenario desfavorable\b/gi, "Falta escenario desfavorable")
+        .replace(/\bfalta escenario unfavorable\b/gi, "Falta escenario desfavorable")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
 
-      const dd = document.createElement("dd");
-      dd.textContent = item.value;
+    function tableRowsFromValue(label, value) {
+      const segments = splitBenefitSegments(value);
+      const result = [];
 
-      wrapper.append(dt, dd);
+      for (const rawSegment of segments) {
+        const segment = humanizeTechnicalText(rawSegment);
+        if (!segment) continue;
+
+        const isContinuation =
+          /^≈\s*\$/i.test(segment) ||
+          /^udi proyectada\s*:/i.test(segment) ||
+          /^edad\s+\d+/i.test(segment);
+
+        const colonIndex = segment.indexOf(":");
+
+        if (colonIndex > 0 && !isContinuation) {
+          const concept = segment.slice(0, colonIndex).trim();
+          const conceptValue = segment.slice(colonIndex + 1).trim();
+
+          result.push({
+            concept: concept || label || "Detalle",
+            value: conceptValue || "Pendiente"
+          });
+          continue;
+        }
+
+        if (result.length) {
+          result[result.length - 1].value = [result[result.length - 1].value, segment]
+            .filter(Boolean)
+            .join(" · ");
+        } else {
+          result.push({
+            concept: label || "Detalle",
+            value: segment
+          });
+        }
+      }
+
+      if (!result.length && value) {
+        result.push({
+          concept: label || "Detalle",
+          value: String(value)
+        });
+      }
+
+      return result;
+    }
+
+    function appendTableBlock(container, title, sourceRows) {
+      const rowsForTable = [];
+
+      for (const row of sourceRows) {
+        rowsForTable.push(...tableRowsFromValue(row.label, row.value));
+      }
+
+      if (!rowsForTable.length) return;
+
+      const block = document.createElement("section");
+      block.className = "fq-benefit-block-107z15p2";
+
+      const heading = document.createElement("h4");
+      heading.className = "fq-benefit-title-107z15p2";
+      heading.textContent = title;
+
+      const wrap = document.createElement("div");
+      wrap.className = "fq-benefit-table-wrap-107z15p2";
+
+      const table = document.createElement("table");
+      table.className = "fq-benefit-table-107z15p2";
+
+      const tbody = document.createElement("tbody");
+
+      for (const item of rowsForTable) {
+        const tr = document.createElement("tr");
+
+        const th = document.createElement("th");
+        th.scope = "row";
+        th.textContent = humanizeTechnicalText(item.concept);
+
+        const td = document.createElement("td");
+        td.textContent = humanizeTechnicalText(item.value);
+
+        tr.append(th, td);
+        tbody.appendChild(tr);
+      }
+
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      block.append(heading, wrap);
+      container.appendChild(block);
+    }
+
+    function appendMissingBlock(container, sourceRows) {
+      const values = [];
+
+      for (const row of sourceRows) {
+        for (const segment of splitBenefitSegments([row.label, row.value].filter(Boolean).join(": "))) {
+          const clean = humanizeTechnicalText(segment);
+          if (!clean) continue;
+          if (/^faltante escenario$/i.test(clean)) continue;
+          if (/^faltantes antes de presentar$/i.test(clean)) continue;
+          if (!values.includes(clean)) values.push(clean);
+        }
+      }
+
+      if (!values.length) return;
+
+      const block = document.createElement("section");
+      block.className = "fq-benefit-block-107z15p2";
+
+      const heading = document.createElement("h4");
+      heading.className = "fq-benefit-title-107z15p2";
+      heading.textContent = "Faltantes antes de presentar";
+
+      const list = document.createElement("ul");
+      list.className = "fq-benefit-missing-list-107z15p2";
+
+      for (const value of values) {
+        const li = document.createElement("li");
+        li.textContent = value;
+        list.appendChild(li);
+      }
+
+      block.append(heading, list);
+      container.appendChild(block);
+    }
+
+    function scenarioOrder(row) {
+      const label = normalizeVisibleSummaryLabel(row.label);
+      if (label.includes("actual") || label.includes("base")) return 1;
+      if (label.includes("favorable")) return 2;
+      if (label.includes("desfavorable") || label.includes("unfavorable")) return 3;
+      return 9;
+    }
+
+    const groups = {
+      contribution: [],
+      protection: [],
+      scenarios: [],
+      missing: [],
+      other: []
+    };
+
+    for (const row of cleanRows) {
+      const normalizedLabel = normalizeVisibleSummaryLabel(row.label);
+      const normalizedValue = normalizeVisibleSummaryLabel(row.value);
+
+      if (
+        normalizedLabel.includes("faltante") ||
+        normalizedLabel.includes("pendiente") ||
+        normalizedValue.includes("missing") ||
+        normalizedValue.includes("falta escenario")
+      ) {
+        groups.missing.push(row);
+        continue;
+      }
+
+      if (normalizedLabel.includes("escenario")) {
+        groups.scenarios.push(row);
+        continue;
+      }
+
+      if (
+        normalizedLabel.includes("aporta") ||
+        normalizedLabel.includes("aportado") ||
+        normalizedValue.includes("total aportado")
+      ) {
+        groups.contribution.push(row);
+        continue;
+      }
+
+      if (
+        normalizedLabel.includes("protege") ||
+        normalizedLabel.includes("proteccion") ||
+        normalizedValue.includes("suma asegurada")
+      ) {
+        groups.protection.push(row);
+        continue;
+      }
+
+      groups.other.push(row);
+    }
+
+    groups.scenarios.sort((a, b) => scenarioOrder(a) - scenarioOrder(b));
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "fq-benefit-summary-107z15p2";
+
+    if (groups.contribution.length) {
+      appendTableBlock(wrapper, "Lo que aportas", groups.contribution);
+    }
+
+    if (groups.protection.length) {
+      appendTableBlock(wrapper, "Lo que proteges", groups.protection);
+    }
+
+    for (const scenario of groups.scenarios) {
+      appendTableBlock(wrapper, humanizeTechnicalText(scenario.label), [scenario]);
+    }
+
+    if (groups.other.length) {
+      appendTableBlock(wrapper, "Otros detalles", groups.other);
+    }
+
+    if (groups.missing.length) {
+      appendMissingBlock(wrapper, groups.missing);
     }
 
     target.appendChild(wrapper);
     return true;
   }
+
 
   function benefitFallbackRows(calc) {
     return [
