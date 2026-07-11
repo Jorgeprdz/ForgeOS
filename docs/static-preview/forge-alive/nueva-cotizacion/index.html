@@ -793,6 +793,7 @@
   }
 </style>
 <script src="../../../quote-preview-live/forge-quote-preview-bundle.js"></script>
+<script type="module" src="../../../quote-preview-live/forge-quote-calculators.mjs"></script>
 <script>
 "use strict";
 
@@ -1370,6 +1371,113 @@
     return value;
   }
 
+  // FORGE:107Z15F0_ACCEPT_REAL_CALCULATOR_LOWER_ROWS:START
+  function parseYears(value) {
+    const match = String(value ?? "").match(/([0-9]{1,3})/);
+    return match ? Number(match[1]) : null;
+  }
+
+  function scenarioObject(nativeResult, key, legacyPrefix) {
+    if (nativeResult[key] && typeof nativeResult[key] === "object") return nativeResult[key];
+    const singlePaymentUdi = nativeResult[`${legacyPrefix}SinglePayment`] ?? nativeResult[`${legacyPrefix}SinglePaymentUdi`] ?? null;
+    const monthlyIncomeUdi = nativeResult[`${legacyPrefix}MonthlyIncome`] ?? nativeResult[`${legacyPrefix}MonthlyIncomeUdi`] ?? null;
+    return hasValue(singlePaymentUdi) || hasValue(monthlyIncomeUdi) ? { singlePaymentUdi, monthlyIncomeUdi } : null;
+  }
+
+  function scenarioText(scenario, currency) {
+    if (!scenario) return null;
+    return [
+      hasValue(scenario.singlePaymentUdi) ? `Pago único: ${formatAmount(scenario.singlePaymentUdi, currency)}` : null,
+      hasValue(scenario.monthlyIncomeUdi) ? `Renta mensual: ${formatAmount(scenario.monthlyIncomeUdi, currency)}` : null,
+    ].filter(Boolean).join(" · ") || null;
+  }
+
+  function findSummaryTarget(labels) {
+    const wanted = labels.map(normalize);
+    for (const node of document.querySelectorAll("dt,th,label,strong,span,p,div")) {
+      const text = normalize(node.textContent);
+      if (!text || text.length > 100 || !wanted.some(label => text === label || text.startsWith(`${label}:`))) continue;
+      const box = node.closest("tr,li,dl > div,[class*='row'],[class*='item'],[class*='summary'],article,section") || node.parentElement;
+      if (!box) continue;
+      const candidates = [...box.querySelectorAll("dd,output,[data-forge-value],[class*='value'],strong,span,p,div")].filter(candidate => {
+        if (candidate === node || candidate.contains(node)) return false;
+        const value = normalize(candidate.textContent);
+        return value === "no identificado en el pdf." || value === "no identificado en el pdf" || value === "no identificado" || candidate.hasAttribute("data-forge-runtime-value");
+      });
+      if (candidates.length) return candidates[candidates.length - 1];
+      if (node.nextElementSibling) return node.nextElementSibling;
+    }
+    return null;
+  }
+
+  function setSummaryValue(labels, value) {
+    const target = findSummaryTarget(labels);
+    if (!target) return false;
+    target.textContent = hasValue(value) ? String(value) : "No identificado en el PDF.";
+    target.setAttribute("data-forge-runtime-value", "true");
+    return true;
+  }
+
+  async function calculatorApi() {
+    if (window.ForgeQuoteCalculators?.calculateTotalContributed) return window.ForgeQuoteCalculators;
+    return new Promise((resolve, reject) => {
+      const timer = window.setTimeout(() => reject(new Error("El módulo de calculadora no terminó de cargar.")), 5000);
+      window.addEventListener("forge:quote-calculators-ready", event => { window.clearTimeout(timer); resolve(event.detail); }, { once: true });
+    });
+  }
+
+  async function calculateAcceptedQuote(currentPacket) {
+    const nativeResult = currentPacket?.nativeResult || {};
+    const annualPremium = nativeResult.premiumTable?.annual ?? nativeResult.totalAnnualPremium ?? nativeResult.premium;
+    const paymentYears = parseYears(nativeResult.paymentTerm) ?? parseYears(nativeResult.plan);
+    if (!Number.isFinite(Number(annualPremium))) throw new Error("La prima anual no está disponible para la calculadora.");
+    if (!Number.isFinite(paymentYears)) throw new Error("El plazo de pagos no está disponible para la calculadora.");
+    const calculators = await calculatorApi();
+    const totalContributed = calculators.calculateTotalContributed({ totalAnnualPremium: Number(annualPremium), premiumPayingYears: paymentYears });
+    const currency = nativeResult.currency ?? "UDI";
+    const base = scenarioObject(nativeResult, "retirementScenarioBase", "retirementBase");
+    const favorable = scenarioObject(nativeResult, "retirementScenarioFavorable", "retirementFavorable");
+    const unfavorable = scenarioObject(nativeResult, "retirementScenarioUnfavorable", "retirementUnfavorable");
+    return {
+      totalContributed,
+      totalRecovery: base && hasValue(base.singlePaymentUdi) ? Number(base.singlePaymentUdi) : null,
+      paymentYears,
+      currency,
+      base,
+      favorable,
+      unfavorable,
+      paymentMode: nativeResult.paymentMode ?? nativeResult.liquidationOption ?? null,
+      interestRate: nativeResult.retirementInterestRate ?? null,
+      guaranteePeriod: nativeResult.guaranteePeriod ?? null,
+      advisor: nativeResult.advisor ?? null,
+      quoteDate: nativeResult.quoteDate ?? null,
+      optionalCoverages: Array.isArray(nativeResult.optionalCoverages) ? nativeResult.optionalCoverages : [],
+    };
+  }
+
+  function renderAcceptedQuote(calc) {
+    setSummaryValue(["Total aportado"], formatAmount(calc.totalContributed, calc.currency));
+    setSummaryValue(["Total recuperación", "Recuperación total"], formatAmount(calc.totalRecovery, calc.currency));
+    setSummaryValue(["Forma de pago"], calc.paymentMode);
+    setSummaryValue(["Moneda"], calc.currency);
+    writeRuntimeGrid("Valores / beneficios / escenarios", [
+      { label: "Total aportado", value: formatAmount(calc.totalContributed, calc.currency) },
+      { label: "Recuperación base", value: formatAmount(calc.totalRecovery, calc.currency) },
+      { label: "Escenario base", value: scenarioText(calc.base, calc.currency) },
+      { label: "Escenario favorable", value: scenarioText(calc.favorable, calc.currency) },
+      { label: "Escenario desfavorable", value: scenarioText(calc.unfavorable, calc.currency) },
+      { label: "Tasa de retiro", value: calc.interestRate },
+      { label: "Periodo de garantía", value: calc.guaranteePeriod },
+      { label: "Plazo de pagos", value: `${calc.paymentYears} años` },
+      { label: "Asesor", value: calc.advisor },
+      { label: "Fecha de cotización", value: calc.quoteDate },
+      ...calc.optionalCoverages.map(item => ({ label: item.coverage || "Cobertura adicional", value: [item.term, hasValue(item.sumInsured) ? `Suma asegurada: ${formatAmount(item.sumInsured, calc.currency)}` : null, hasValue(item.annualPremium) ? `Prima anual: ${formatAmount(item.annualPremium, calc.currency)}` : null].filter(Boolean).join(" · ") })),
+    ], "El PDF no entregó valores adicionales.");
+    const missing = [["Forma de pago", calc.paymentMode], ["Moneda", calc.currency], ["Recuperación base", calc.totalRecovery], ["Escenario favorable", calc.favorable], ["Escenario desfavorable", calc.unfavorable]].filter(([,value]) => !hasValue(value)).map(([label]) => ({ label: "Pendiente", value: label }));
+    writeRuntimeGrid("Faltantes antes de presentar", missing, "Cotización calculada. No quedan campos principales pendientes.");
+  }
+  // FORGE:107Z15F0_ACCEPT_REAL_CALCULATOR_LOWER_ROWS:END
+
   const invocation =
     api.createQuotePreviewPdfFlowPopupInvocation({
       documentLike: document,
@@ -1393,17 +1501,21 @@
       now: () => Date.now(),
       ttlMs: 24 * 60 * 60 * 1000,
       onPersisted() {
-        status.textContent =
-          "Cotización confirmada y guardada durante esta sesión.";
-        status.setAttribute(
-          "data-forge-state",
-          "accepted"
-        );
-
-        setReadiness(
-          "Cotización confirmada · lista para revisión comercial",
-          "accepted"
-        );
+        status.textContent = "Calculando cotización confirmada…";
+        status.setAttribute("data-forge-state", "calculating");
+        void calculateAcceptedQuote(packet)
+          .then(calculation => {
+            renderAcceptedQuote(calculation);
+            status.textContent = "Cotización calculada y guardada durante esta sesión.";
+            status.setAttribute("data-forge-state", "accepted");
+            setReadiness("Cotización calculada · lista para revisión comercial", "accepted");
+          })
+          .catch(error => {
+            status.textContent = error?.message || String(error);
+            status.setAttribute("data-forge-state", "error");
+            setReadiness("La cotización fue confirmada, pero el cálculo requiere revisión.", "error");
+            console.error("[107Z15F0_ACCEPT_CALCULATOR]", error);
+          });
       },
       onEditRequested() {
         status.textContent =

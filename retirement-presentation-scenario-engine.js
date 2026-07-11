@@ -48,6 +48,21 @@ export async function getVerifiedUdiRateMetadata({
   }
 }
 
+export function calculateTotalContributed({
+  totalAnnualPremium = 0,
+  premiumPayingYears = 0,
+} = {}) {
+  const annualPremium = Number(totalAnnualPremium);
+  const payingYears = Number(premiumPayingYears);
+  if (!Number.isFinite(annualPremium) || annualPremium < 0) {
+    throw new TypeError("totalAnnualPremium must be a finite non-negative number");
+  }
+  if (!Number.isFinite(payingYears) || payingYears < 0) {
+    throw new TypeError("premiumPayingYears must be a finite non-negative number");
+  }
+  return annualPremium * payingYears;
+}
+
 export function buildRetirementPresentationScenario({
   parsedQuote = {},
   udiRateMetadata = {}
@@ -89,8 +104,7 @@ export function buildRetirementPresentationScenario({
 
   const premium = parsedQuote.premiumStructure;
 
-  const totalContributed =
-    premium.totalAnnualPremium * premium.premiumPayingYears;
+  const totalContributed = calculateTotalContributed(premium);
 
   const ages = [
     parsedQuote.retirementAge,
