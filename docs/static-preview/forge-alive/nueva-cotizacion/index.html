@@ -567,7 +567,57 @@
         gap: 4px;
       }
     }
-  </style>
+
+  /* FORGE:107Z15P2_R9C_RESPONSIVE:START */
+  [data-forge-module="dedicated-new-quote-static-route"] *,
+  [data-forge-module="dedicated-new-quote-static-route"] *::before,
+  [data-forge-module="dedicated-new-quote-static-route"] *::after {
+    box-sizing: border-box;
+  }
+
+  [data-forge-module="dedicated-new-quote-static-route"] {
+    overflow-x: hidden;
+  }
+
+  [data-forge-module="dedicated-new-quote-static-route"] .fq-card-105dr,
+  [data-forge-module="dedicated-new-quote-static-route"] .fq-upload-105dr,
+  [data-forge-module="dedicated-new-quote-static-route"] .fq-quote-summary-105dr,
+  [data-forge-module="dedicated-new-quote-static-route"] .fq-runtime-grid-107z15e8s,
+  [data-forge-module="dedicated-new-quote-static-route"] .fq-benefit-summary-107z15p2,
+  [data-forge-module="dedicated-new-quote-static-route"] .fq-benefit-block-107z15p2 {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  @media (max-width: 1180px) {
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-main-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-body-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-layout-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-grid-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-preview-grid-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-content-grid-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-two-column-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-form-grid-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-benefit-summary-107z15p2 {
+      grid-template-columns: 1fr !important;
+    }
+
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-card-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-upload-105dr,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-quote-summary-105dr {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 760px) {
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-runtime-grid-107z15e8s dl,
+    [data-forge-module="dedicated-new-quote-static-route"] .fq-benefit-table-107z15p2 tr {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  /* FORGE:107Z15P2_R9C_RESPONSIVE:END */
+
+</style>
 </head>
 <body>
   <main
@@ -1660,8 +1710,257 @@
     };
   }
 
+  // FORGE:107Z15P2_R9C_ACCEPT_BRIDGE:START
+  function normalizeAcceptedKey107z15p2R9C(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+  }
+
+  function finiteAcceptedNumber107z15p2R9C(value) {
+    if (value === null || value === undefined || value === "") return null;
+    if (typeof value === "number") return Number.isFinite(value) ? value : null;
+    const normalized = String(value).replace(/[^0-9.\-]/g, "");
+    if (!normalized) return null;
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function firstAcceptedNumber107z15p2R9C(...values) {
+    for (const value of values) {
+      const parsed = finiteAcceptedNumber107z15p2R9C(value);
+      if (parsed !== null) return parsed;
+    }
+    return null;
+  }
+
+  function acceptedArray107z15p2R9C(value) {
+    return Array.isArray(value) ? value.filter(Boolean) : [];
+  }
+
+  function acceptedFinalGuaranteedRow107z15p2R9C(nativeResult) {
+    const rows = [
+      ...acceptedArray107z15p2R9C(nativeResult.guaranteedValues),
+      ...acceptedArray107z15p2R9C(nativeResult.guaranteedValueRows),
+      ...acceptedArray107z15p2R9C(nativeResult.valoresGarantizados),
+      ...acceptedArray107z15p2R9C(nativeResult.cashValueRows)
+    ];
+    if (!rows.length) return null;
+    return rows
+      .map((row, index) => ({
+        row,
+        index,
+        age: firstAcceptedNumber107z15p2R9C(row.age, row.realAge, row.edad, row.edadReal),
+        year: firstAcceptedNumber107z15p2R9C(row.year, row.policyYear, row.anio, row.año)
+      }))
+      .sort((a, b) => (a.year ?? a.age ?? a.index) - (b.year ?? b.age ?? b.index))
+      .at(-1)?.row || null;
+  }
+
+  function acceptedRowNumber107z15p2R9C(row, keys) {
+    if (!row) return null;
+    return firstAcceptedNumber107z15p2R9C(...keys.map(key => row[key]));
+  }
+
+  function acceptedCoverageName107z15p2R9C(coverage) {
+    return String(coverage?.name ?? coverage?.coverage ?? coverage?.label ?? coverage?.description ?? coverage?.benefit ?? coverage?.code ?? "");
+  }
+
+  function acceptedCoverageMatches107z15p2R9C(coverage, patterns) {
+    const haystack = normalizeAcceptedKey107z15p2R9C(acceptedCoverageName107z15p2R9C(coverage));
+    return patterns.some(pattern => haystack.includes(normalizeAcceptedKey107z15p2R9C(pattern)));
+  }
+
+  function acceptedCoverageAmount107z15p2R9C(coverage) {
+    return firstAcceptedNumber107z15p2R9C(
+      coverage?.sumAssured,
+      coverage?.sumInsured,
+      coverage?.sumaAsegurada,
+      coverage?.insuredAmount,
+      coverage?.amount,
+      coverage?.value
+    );
+  }
+
+  function findAcceptedCoverageAmount107z15p2R9C(coverages, patterns) {
+    const found = coverages.find(coverage => acceptedCoverageMatches107z15p2R9C(coverage, patterns));
+    return found ? acceptedCoverageAmount107z15p2R9C(found) : null;
+  }
+
+  function acceptedProductFamily107z15p2R9C(packet, nativeResult) {
+    return (
+      packet?.productFamily ??
+      packet?.family ??
+      packet?.product_family ??
+      packet?.context?.productFamily ??
+      packet?.context?.product_family ??
+      nativeResult?.productFamily ??
+      nativeResult?.product_family ??
+      nativeResult?.family ??
+      nativeResult?.product ??
+      packet?.product ??
+      null
+    );
+  }
+
+  function acceptedProduct107z15p2R9C(packet, nativeResult) {
+    return packet?.product ?? packet?.context?.product ?? nativeResult?.product ?? nativeResult?.plan ?? null;
+  }
+
+  function isVidaMujerAccepted107z15p2R9C(packet, nativeResult) {
+    const family = normalizeAcceptedKey107z15p2R9C(acceptedProductFamily107z15p2R9C(packet, nativeResult));
+    const product = normalizeAcceptedKey107z15p2R9C(acceptedProduct107z15p2R9C(packet, nativeResult));
+    return family.includes("vida_mujer") || product.includes("vida_mujer");
+  }
+
+  function acceptedUdiRateMetadata107z15p2R9C(packet, nativeResult) {
+    return packet?.currencyMetadata || packet?.udiRateMetadata || nativeResult?.currencyMetadata || nativeResult?.udiRateMetadata || {
+      currentUdiValue: nativeResult?.currentUdiValue ?? nativeResult?.udiValue ?? null
+    };
+  }
+
+  function acceptedCurrentUdi107z15p2R9C(metadata) {
+    return firstAcceptedNumber107z15p2R9C(metadata?.currentUdiValue, metadata?.udiValue, metadata?.value, metadata?.rate);
+  }
+
+  function acceptedMxn107z15p2R9C(amountUdi, udiRate) {
+    const amount = finiteAcceptedNumber107z15p2R9C(amountUdi);
+    const rate = finiteAcceptedNumber107z15p2R9C(udiRate);
+    if (amount === null || rate === null) return null;
+    return amount * rate;
+  }
+
+  function buildAcceptedNativeResult107z15p2R9C(packet = {}) {
+    const original = packet?.nativeResult && typeof packet.nativeResult === "object" ? packet.nativeResult : {};
+    const premiumTable = { ...(original.premiumTable || {}) };
+
+    if (premiumTable.annual === undefined) {
+      premiumTable.annual = packet.annualPremium ?? packet.primaAnual ?? original.totalAnnualPremium ?? original.annualPremium ?? original.premium;
+    }
+
+    if (premiumTable.plannedAnnual === undefined) {
+      premiumTable.plannedAnnual = packet.plannedOrAvePremium ?? packet.plannedAnnualPremium ?? packet.avePremium ?? original.annualPremiumWithAve ?? original.primaAnualConAve ?? original.plannedAnnualPremium ?? original.premiumTable?.plannedAnnual;
+    }
+
+    return {
+      ...original,
+      product: original.product ?? packet.product ?? packet.context?.product ?? null,
+      productFamily: original.productFamily ?? packet.productFamily ?? packet.family ?? packet.context?.productFamily ?? packet.context?.product_family ?? null,
+      product_family: original.product_family ?? packet.product_family ?? packet.context?.product_family ?? null,
+      prospect: original.prospect ?? original.insured ?? packet.insured ?? packet.name ?? packet.context?.name ?? null,
+      insured: original.insured ?? original.prospect ?? packet.insured ?? packet.name ?? packet.context?.name ?? null,
+      sumInsured: original.sumInsured ?? original.sumAssured ?? packet.sumAssured ?? packet.sumInsured ?? null,
+      sumAssured: original.sumAssured ?? original.sumInsured ?? packet.sumAssured ?? packet.sumInsured ?? null,
+      totalAnnualPremium: original.totalAnnualPremium ?? original.annualPremium ?? packet.annualPremium ?? packet.primaAnual ?? null,
+      annualPremium: original.annualPremium ?? original.totalAnnualPremium ?? packet.annualPremium ?? packet.primaAnual ?? null,
+      annualPremiumWithAve: original.annualPremiumWithAve ?? original.primaAnualConAve ?? packet.plannedOrAvePremium ?? packet.avePremium ?? packet.plannedAnnualPremium ?? null,
+      paymentTerm: original.paymentTerm ?? packet.paymentTerm ?? packet.coveragePeriod ?? null,
+      policyTerm: original.policyTerm ?? packet.coveragePeriod ?? original.coveragePeriod ?? null,
+      coveragePeriod: original.coveragePeriod ?? packet.coveragePeriod ?? original.policyTerm ?? null,
+      premiumTable
+    };
+  }
+
+  function calculateVidaMujerAccepted107z15p2R9C(packet, nativeResult) {
+    const coverages = [
+      ...acceptedArray107z15p2R9C(nativeResult.coverages),
+      ...acceptedArray107z15p2R9C(nativeResult.basicCoverages),
+      ...acceptedArray107z15p2R9C(nativeResult.includedCoverages),
+      ...acceptedArray107z15p2R9C(nativeResult.optionalCoverages),
+      ...acceptedArray107z15p2R9C(nativeResult.additionalCoverages)
+    ];
+    const finalGuaranteed = acceptedFinalGuaranteedRow107z15p2R9C(nativeResult);
+    const udiRateMetadata = acceptedUdiRateMetadata107z15p2R9C(packet, nativeResult);
+    const currentUdi = acceptedCurrentUdi107z15p2R9C(udiRateMetadata);
+
+    const paymentYears = firstAcceptedNumber107z15p2R9C(nativeResult.paymentYears, nativeResult.premiumPayingYears, nativeResult.paymentTerm, nativeResult.policyTerm, nativeResult.coveragePeriod, packet.coveragePeriod) ?? 20;
+    const sumAssured = firstAcceptedNumber107z15p2R9C(nativeResult.sumAssured, nativeResult.sumInsured, nativeResult.basicSumAssured, packet.sumAssured, findAcceptedCoverageAmount107z15p2R9C(coverages, ["vida mujer", "fallecimiento", "basico", "básico"]));
+    const annualPremium = firstAcceptedNumber107z15p2R9C(nativeResult.totalAnnualPremium, nativeResult.annualPremium, nativeResult.premiumTable?.annual, packet.annualPremium);
+
+    const annualPremiumWithAve = firstAcceptedNumber107z15p2R9C(
+      nativeResult.annualPremiumWithAve,
+      nativeResult.primaAnualConAve,
+      nativeResult.premiumTable?.plannedAnnual,
+      packet.plannedOrAvePremium,
+      finalGuaranteed ? acceptedRowNumber107z15p2R9C(finalGuaranteed, ["annualPremiumWithAve", "primaAnualConAve", "premiumWithAve"]) : null,
+      nativeResult.guaranteedValues?.[0] ? acceptedRowNumber107z15p2R9C(nativeResult.guaranteedValues[0], ["annualPremiumAccumulatedWithAve", "primaAnualAcumuladaConAve", "premiumAccumulatedWithAve", "accumulatedPremiumWithAve"]) : null
+    );
+
+    const totalContributed = firstAcceptedNumber107z15p2R9C(
+      nativeResult.totalContributed,
+      nativeResult.totalAportado,
+      nativeResult.primaTotalAcumuladaConAve,
+      finalGuaranteed ? acceptedRowNumber107z15p2R9C(finalGuaranteed, ["annualPremiumAccumulatedWithAve", "primaAnualAcumuladaConAve", "premiumAccumulatedWithAve", "accumulatedPremiumWithAve"]) : null,
+      annualPremiumWithAve !== null ? annualPremiumWithAve * paymentYears : null
+    );
+
+    const aveSurrenderValue = firstAcceptedNumber107z15p2R9C(
+      nativeResult.aveSurrenderValue,
+      nativeResult.valorRescateAve,
+      finalGuaranteed ? acceptedRowNumber107z15p2R9C(finalGuaranteed, ["aveSurrenderValue", "valorRescateAve", "valorDeRescateAve", "rescueValueAve"]) : null
+    );
+
+    const survivalTotal = firstAcceptedNumber107z15p2R9C(nativeResult.survivalTotal, nativeResult.totalSurvival, nativeResult.totalDotales, sumAssured !== null ? sumAssured * 1.15 : null);
+    const tableRecovery = firstAcceptedNumber107z15p2R9C(nativeResult.totalRecovery, nativeResult.recuperacionTotal, finalGuaranteed ? acceptedRowNumber107z15p2R9C(finalGuaranteed, ["totalRecovery", "recuperacionTotal", "recoveryTotal"]) : null);
+    const commercialRecovery = firstAcceptedNumber107z15p2R9C(nativeResult.commercialRecovery, nativeResult.recuperacionComercial, survivalTotal !== null && aveSurrenderValue !== null ? survivalTotal + aveSurrenderValue : null, tableRecovery);
+
+    return {
+      nativeResult: {
+        ...nativeResult,
+        totalContributed,
+        totalRecovery: tableRecovery,
+        commercialRecovery,
+        survivalTotal,
+        totalDotales: survivalTotal,
+        aveSurrenderValue,
+        valorRescateAve: aveSurrenderValue
+      },
+      productFamily: acceptedProductFamily107z15p2R9C(packet, nativeResult),
+      product: acceptedProduct107z15p2R9C(packet, nativeResult),
+      client: nativeResult.prospect ?? nativeResult.insured ?? packet.insured ?? packet.name ?? null,
+      currency: nativeResult.currency ?? packet.currency ?? "UDI",
+      annualPremium,
+      annualPremiumWithAve,
+      paymentYears,
+      paymentMode: nativeResult.paymentMode ?? "Anual",
+      coveragePeriod: nativeResult.policyTerm ?? nativeResult.coveragePeriod ?? packet.coveragePeriod ?? `${paymentYears} años`,
+      guaranteePeriod: nativeResult.guaranteePeriod ?? null,
+      advisor: nativeResult.advisor ?? null,
+      quoteDate: nativeResult.quoteDate ?? null,
+      totalContributed,
+      totalContributedMXN: acceptedMxn107z15p2R9C(totalContributed, currentUdi),
+      totalRecovery: commercialRecovery,
+      totalRecoveryMXN: acceptedMxn107z15p2R9C(commercialRecovery, currentUdi),
+      udiRateMetadata,
+      optionalCoverages: acceptedArray107z15p2R9C(nativeResult.optionalCoverages),
+      accumulatedIncome: [],
+      base: null,
+      favorable: null,
+      unfavorable: null,
+      interestRate: nativeResult.retirementInterestRate ?? null,
+      projectedUdiAtRetirement: null,
+      currentProtectionMXN: acceptedMxn107z15p2R9C(sumAssured, currentUdi),
+      monthlyIncomeMXN: null,
+      annualIncomeMXN: null
+    };
+  }
+
+  function isPdfSelection107z15p2R9C(file) {
+    const name = String(file?.name || "");
+    return file?.type === "application/pdf" || /\.pdf$/i.test(name);
+  }
+  // FORGE:107Z15P2_R9C_ACCEPT_BRIDGE:END
+
+
+
   async function calculateAcceptedQuote(currentPacket) {
-    const nativeResult = currentPacket?.nativeResult || {};
+    const nativeResult = buildAcceptedNativeResult107z15p2R9C(currentPacket);
+    if (isVidaMujerAccepted107z15p2R9C(currentPacket, nativeResult)) {
+      return calculateVidaMujerAccepted107z15p2R9C(currentPacket, nativeResult);
+    }
     const annualPremium = nativeResult.premiumTable?.annual ?? nativeResult.totalAnnualPremium ?? nativeResult.premium;
     const paymentYears = parseYears(nativeResult.paymentTerm) ?? parseYears(nativeResult.plan);
     if (!Number.isFinite(Number(annualPremium))) throw new Error("La prima anual no está disponible para la calculadora.");
@@ -2454,7 +2753,7 @@
     });
 
   input.accept =
-    ".json,application/json";
+    ".json,application/json,.pdf,application/pdf";
   input.setAttribute(
     "data-forge-local-packet-input",
     "true"
@@ -2464,10 +2763,10 @@
   );
 
   label.textContent =
-    "Seleccionar resultado extraído";
+    "Seleccionar resultado extraído o PDF";
 
   submit.textContent =
-    "Revisar resultado extraído";
+    "Revisar resultado";
   submit.disabled = true;
   submit.setAttribute(
     "aria-disabled",
@@ -2475,7 +2774,7 @@
   );
 
   status.textContent =
-    "Selecciona forge-quote-preview-real-packet.json.";
+    "Selecciona JSON extraído o PDF de Solucionline.";
 
   if (uploadSection) {
     const heading =
@@ -2512,9 +2811,21 @@
 
       if (!file) {
         status.textContent =
-          "Selecciona forge-quote-preview-real-packet.json.";
+          "Selecciona JSON extraído o PDF de Solucionline.";
         return;
       }
+
+      // FORGE:107Z15P2_R9C_PDF_BRANCH
+      if (isPdfSelection107z15p2R9C(file)) {
+        status.textContent =
+          "PDF seleccionado. La extracción directa queda pendiente; usa JSON extraído mientras se conecta el parser PDF.";
+        setReadiness(
+          "PDF seleccionado · parser PDF pendiente de conexión en preview",
+          "pending"
+        );
+        return;
+      }
+
 
       try {
         const raw = await file.text();
