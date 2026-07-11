@@ -734,6 +734,136 @@
   }
   /* FORGE:107Z15P2_R9D_BENEFIT_LAYOUT:END */
 
+
+  /* FORGE:107Z15P2_R9E_WIDE_BENEFIT_LAYOUT:START */
+  body[data-forge-benefit-layout-expanded="true"] [data-forge-actions-panel="true"] {
+    display: none !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr {
+    grid-column: 1 / -1 !important;
+    width: min(calc(100vw - 136px), 1400px) !important;
+    max-width: min(calc(100vw - 136px), 1400px) !important;
+    justify-self: stretch !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-runtime-grid-107z15e8s dl[data-forge-benefit-panel="true"] {
+    display: grid !important;
+    grid-template-columns: 220px minmax(0, 1fr) !important;
+    align-items: start;
+    gap: 18px;
+    width: 100%;
+    max-width: 100%;
+    padding: 18px !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-runtime-grid-107z15e8s dl[data-forge-benefit-panel="true"] > dt {
+    display: block !important;
+    width: auto !important;
+    max-width: 220px !important;
+    margin: 0 !important;
+    text-align: left !important;
+    line-height: 1.18;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-runtime-grid-107z15e8s dl[data-forge-benefit-panel="true"] > dd {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+    overflow: visible !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-summary-107z15p2 {
+    display: grid !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(2, minmax(330px, 1fr)) !important;
+    grid-auto-flow: dense;
+    gap: 16px !important;
+    align-items: start;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2 {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 16px !important;
+    overflow: visible !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="contribution"],
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="protection"],
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="endowments"],
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="recovery"],
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="women_health"],
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="recommended"] {
+    grid-column: auto !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-title-107z15p2 {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    line-height: 1.18;
+    margin-bottom: 12px;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-table-wrap-107z15p2 {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-table-107z15p2 {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-table-107z15p2 th {
+    width: 56%;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-table-107z15p2 td {
+    width: 44%;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-table-107z15p2 th,
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-table-107z15p2 td {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.22;
+    vertical-align: top;
+  }
+
+  @media (max-width: 1050px) {
+    body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr {
+      width: calc(100vw - 48px) !important;
+      max-width: calc(100vw - 48px) !important;
+    }
+
+    body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-runtime-grid-107z15e8s dl[data-forge-benefit-panel="true"] {
+      grid-template-columns: 1fr !important;
+    }
+
+    body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-runtime-grid-107z15e8s dl[data-forge-benefit-panel="true"] > dt {
+      max-width: none !important;
+    }
+
+    body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-summary-107z15p2 {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  /* FORGE:107Z15P2_R9E_WIDE_BENEFIT_LAYOUT:END */
+
 </style>
 </head>
 <body>
@@ -897,7 +1027,7 @@
             </ul>
           </section>
 
-          <section class="fq-card-105dr">
+          <section class="fq-card-105dr" data-forge-actions-panel="true">
             <h2>Acciones seguras</h2>
             <button
               class="fq-disabled-105dr fq-presentation-105dr"
@@ -2488,6 +2618,63 @@
     return "other";
   }
   // FORGE:107Z15P2_R9D_BENEFIT_BLOCK_KEY:END
+
+  // FORGE:107Z15P2_R9E_LAYOUT_NORMALIZER:START
+  function benefitBlockKey107z15p2R9E(title) {
+    const normalized = String(title || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    if (normalized.includes("aporta")) return "contribution";
+    if (normalized.includes("protege")) return "protection";
+    if (normalized.includes("dotal")) return "endowments";
+    if (normalized.includes("recuper")) return "recovery";
+    if (normalized.includes("pcf") || normalized.includes("enfermedad")) return "women_health";
+    if (normalized.includes("recomend")) return "recommended";
+    return "other";
+  }
+
+  function normalizeBenefitLayout107z15p2R9E() {
+    const summaries = Array.from(document.querySelectorAll(".fq-benefit-summary-107z15p2"));
+    if (!summaries.length) return;
+
+    document.body.setAttribute("data-forge-benefit-layout-expanded", "true");
+
+    for (const summary of summaries) {
+      const panel = summary.closest("dl");
+      if (panel) {
+        panel.setAttribute("data-forge-benefit-panel", "true");
+      }
+
+      const valueCell = summary.closest("dd");
+      if (valueCell) {
+        valueCell.setAttribute("data-forge-benefit-panel-value", "true");
+      }
+
+      const blocks = Array.from(summary.querySelectorAll(".fq-benefit-block-107z15p2"));
+      for (const block of blocks) {
+        const title = block.querySelector(".fq-benefit-title-107z15p2")?.textContent || "";
+        block.setAttribute("data-forge-benefit-block", benefitBlockKey107z15p2R9E(title));
+      }
+    }
+  }
+
+  if (!window.__FORGE_107Z15P2_R9E_LAYOUT_OBSERVER__) {
+    window.__FORGE_107Z15P2_R9E_LAYOUT_OBSERVER__ = true;
+    const r9eObserver = new MutationObserver(() => {
+      window.requestAnimationFrame(normalizeBenefitLayout107z15p2R9E);
+    });
+    r9eObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+    window.addEventListener("load", normalizeBenefitLayout107z15p2R9E);
+    window.requestAnimationFrame(normalizeBenefitLayout107z15p2R9E);
+  }
+  // FORGE:107Z15P2_R9E_LAYOUT_NORMALIZER:END
+
+
 
 
 
