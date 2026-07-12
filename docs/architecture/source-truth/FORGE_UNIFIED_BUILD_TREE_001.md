@@ -11335,3 +11335,210 @@ RECOMMENDED_ROUTE=reuse_existing_extractor_and_cache_contract
 
 NEXT=107Y_QUOTE_PREVIEW_EXISTING_PDF_CACHE_CONTRACT_LOCK
 <!-- FORGE:107X_QUOTE_PREVIEW_EXISTING_PDF_EXTRACTOR_CACHE_DISCOVERY:END -->
+
+<!-- FORGE:107Z15P2_R12_UNIFIED_BUILD_TREE_PARK_MOBILE_UI:START -->
+
+## 107z15p2 R12 Unified Build Tree Update: Mobile UI Parked
+
+**UpdatedAt:** 20260711_192528
+**Baseline HEAD:** `610d7d2c8601c092fa4d5fd9f3da537af75145b5`
+**Status:** ACTIVE DOCUMENTATION UPDATE
+**Primary live page:** `docs/static-preview/forge-alive/nueva-cotizacion/index.html`
+
+### Executive decision
+
+Mobile UI is officially **PARKED** for the Nueva Cotización track.
+
+This is intentional. The current priority is the functional desktop/browser path:
+
+```text
+PDF file
+→ browser PDF parser
+→ accepted quote packet
+→ confirmation modal
+→ accepted quote render
+→ Vida Mujer benefit summary
+```
+
+Mobile layout is known to be broken on a real phone and must not be used as a PASS criterion until the dedicated mobile repair patch is opened.
+
+### Status board
+
+| Area | Status | Notes |
+|---|---:|---|
+| JSON2 accepted quote flow | PASS | JSON2 remains the stable reference fixture path. |
+| Vida Mujer dynamic summary | PASS | Contribution, protection, endowments, recovery, PCF, and recommended benefits render from accepted quote data. |
+| Accepted quote modularization | PASS | Runtime split into bridge, adapter, renderer, and layout modules. |
+| Browser PDF parser | IN PROGRESS | Browser-side PDF parser exists and is being hardened for Vida Mujer extraction. |
+| Desktop/tablet QA | ACTIVE | Continue validating the functional path here. |
+| Mobile UI | PARKED | Broken on real phone. Dedicated repair later. |
+| Server PDF parser | NOT ACTIVE | Current public-page strategy is browser-side parsing. |
+
+### Current module map
+
+```text
+docs/static-preview/forge-alive/nueva-cotizacion/index.html
+├─ Markup
+├─ Base CSS
+├─ Existing DOM helpers
+├─ fieldModel
+├─ applyPacketToExistingPage
+├─ writeRuntimeGrid
+└─ setReadiness
+
+docs/static-preview/quote-preview-live/
+├─ forge-accepted-quote-adapter.js
+│  ├─ Normalizes accepted quote packets
+│  ├─ Preserves nativeResult
+│  ├─ Detects Vida Mujer accepted packets
+│  └─ Builds fallback UDI/MXN rows
+│
+├─ forge-accepted-quote-bridge.js
+│  ├─ Wires file upload
+│  ├─ Handles JSON accepted quote flow
+│  ├─ Opens confirmation modal
+│  ├─ Accepts quote
+│  └─ Renders final accepted quote
+│
+├─ forge-benefit-summary-renderer.js
+│  ├─ Renders dynamic benefit summary
+│  ├─ Contribution rows
+│  ├─ Protection rows
+│  ├─ Scheduled endowment rows
+│  ├─ Recovery rows
+│  ├─ Women health / PCF rows
+│  └─ Recommended benefit rows
+│
+├─ forge-benefit-summary-layout.js
+│  ├─ Accepted benefit summary layout observer
+│  └─ Desktop responsive helpers
+│
+├─ forge-pdf-browser-parser.js
+│  ├─ Loads PDF.js in browser
+│  ├─ Extracts PDF text
+│  ├─ Parses Vida Mujer fields
+│  ├─ Protects against numeric collisions such as BAIT 60 P / BIT 60 P
+│  ├─ Builds accepted quote packet
+│  └─ Sends PDF through JSON-compatible accepted quote flow
+│
+├─ forge-quote-benefit-summary.js
+├─ forge-quote-calculators.js
+└─ quote-benefit-summary-engine.js
+```
+
+### Vida Mujer canonical summary model
+
+Vida Mujer must not render as retirement scenarios.
+
+Expected sections:
+
+```text
+- Lo que aportas
+- Protección
+- Dotales por supervivencia
+- Recuperación
+- Beneficios para enfermedades de la mujer / PCF
+- Beneficios recomendados
+- Información faltante only when real fields are missing
+```
+
+Reference values for the current sanitized Vida Mujer fixture/PDF family:
+
+```text
+Prima total anual: 3,062 UDI
+Prima total con recomendados: 3,890 UDI
+Plazo de pago: 20 años
+Total aportado: 152,136 UDI
+
+Dotales:
+Años 5, 7, 9, 11, 13, 15 y 17: 2,500 UDI c/u
+Año 20: 40,000 UDI
+Total dotales: 57,500 UDI
+
+Reference recovery fields:
+Valor de Rescate AVE: 107,486 UDI
+Valor en efectivo: 40,000 UDI
+Recuperación Total reference: 147,486 UDI
+```
+
+### Parked scope: Mobile UI
+
+Do not patch these items during PDF/parser work:
+
+```text
+- Mobile page layout
+- Mobile modal layout
+- Mobile selector ergonomics
+- Mobile benefit summary layout
+- Mobile overflow
+- Mobile card stacking
+```
+
+Future dedicated patch:
+
+```text
+R12_MOBILE_UI_REPAIR
+```
+
+Entry criteria for the future mobile patch:
+
+```text
+- PDF flow stable on desktop/tablet viewport.
+- JSON2 flow stable.
+- No active parser HOLDs.
+```
+
+Exit criteria for the future mobile patch:
+
+```text
+- No horizontal overflow on real phone.
+- Modal fits the viewport.
+- Buttons are usable with thumb.
+- File selector is usable.
+- Benefit summary renders in one clean column.
+- Cards do not become narrow salchichas.
+- Tested on physical Android phone.
+```
+
+### Active roadmap after this update
+
+```text
+ACTIVE:
+R11D_PDF_DESKTOP_MANUAL_QA
+- Test PDF on live GitHub Pages desktop/tablet viewport.
+- Confirm modal values.
+- Accept quote.
+- Compare rendered summary against JSON2.
+
+NEXT:
+R11E_PDF_EXTRACTION_POLISH
+- Only if real PDF still misses fields or maps wrong values.
+- Parser-only patch.
+- No UI work.
+
+PARKED:
+R12_MOBILE_UI_REPAIR
+- Dedicated mobile-first patch later.
+- No parser or calculation changes.
+
+LATER:
+R13_PDF_MULTI_PRODUCT_DISCOVERY
+- Discover other product PDFs after Vida Mujer stabilizes.
+```
+
+### Non-negotiables
+
+```text
+- Do not hardcode client names or real PDF identifiers.
+- Do not expose private credentials or API secrets.
+- Do not place restricted service credentials in browser code.
+- Do not change financial calculations during UI or parser patches.
+- Do not mix mobile UI repair with parser repair.
+- Do not treat Mobile UI as PASS until R12_MOBILE_UI_REPAIR is explicitly opened.
+- JSON2 must remain stable.
+- PDF parser must produce the same accepted quote shape consumed by JSON2.
+- Prefer exact git add paths.
+- Commit and push only after PASS validations.
+```
+
+<!-- FORGE:107Z15P2_R12_UNIFIED_BUILD_TREE_PARK_MOBILE_UI:END -->
