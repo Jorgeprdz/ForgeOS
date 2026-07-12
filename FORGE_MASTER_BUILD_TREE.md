@@ -14456,3 +14456,68 @@ Status: `IMPLEMENTED_PENDING_SOURCE_ADAPTER`
 
 NEXT: `R15B_ORVI_REAL_SOURCE_OWNERSHIP_AND_PARSER_READINESS`
 <!-- FORGE:R15A_ORVI_PRODUCT_INTELLIGENCE_CANONICAL_MODEL_IMPLEMENTATION:END -->
+
+<!-- FORGE:R15B_ORVI_REAL_SOURCE_OWNERSHIP_AND_PARSER_READINESS:START -->
+## R15B ORVI Real Source Ownership And Parser Readiness
+
+Status: `SOURCE_OWNER_UNRESOLVED / BLOCKED_PENDING_REAL_ORVI_QUOTE_PDF`
+
+### Decisions
+
+- Canonical semantic owner remains `product-intelligence`.
+- Primary source owner: `UNRESOLVED_PENDING_REAL_ORVI_QUOTE_PDF`.
+- Tracked workbook role: `DERIVED_SCENARIO_AND_PROJECTION_EVIDENCE_ONLY`.
+- Tracked workbook parser authority: `NO`.
+- Parser readiness: `BLOCKED_PENDING_REAL_ORVI_QUOTE_PDF`.
+- Privacy status: `TRACKED_WORKBOOK_PRIVACY_REVIEW_REQUIRED`.
+- Existing `orvi-ocr-extractor.js` remains evidence only and is not parser owner.
+
+### Workbook classification
+
+- ORVI workbook candidates found in tracked files: `1`.
+- Workbook contains multiple sheets: `true`.
+- ORVI formula cells: `64`.
+- ORVI numeric constants: `382`.
+- UDI-growth formula hits: `2`.
+- UDI-to-MXN multiplication formula hits: `44`.
+- Manual literal-adjustment formula hits: `1`.
+- Timeline-like rows: `46`.
+- Unclassified free-text cells in the top region: `1`.
+- No cell value, formula text, free-text content, client identity, or local filename was committed.
+
+The workbook is a derived scenario and projection artifact. It mixes manual inputs, formulas, UDI growth, MXN conversion, and multi-product context. It may support comparison and validation, but it cannot own contractual product truth or parser semantics.
+
+### PDF source search
+
+- PDFs considered: `46`.
+- PDFs scanned: `46`.
+- ORVI PDF candidates: `3`.
+- Qualified ORVI quote candidates: `0`.
+- Best structural score: `7`.
+- Candidate fingerprints remain private in the local report and are not committed.
+
+### Parser authorization boundary
+
+R15B does not implement a parser.
+
+A parser contract may be authorized only when a real ORVI quote PDF candidate demonstrates:
+
+1. ORVI product identity.
+2. UDI denomination.
+3. Sum assured.
+4. Annual premium.
+5. Payment variant or term.
+6. Timeline rows.
+7. Source provenance.
+8. Privacy-safe fixture strategy.
+9. Missing-as-missing behavior.
+10. A mapping into the R15A canonical model.
+
+### Privacy boundary
+
+- Potential identity-like or unclassified free text is not printed or committed.
+- A privacy flag does not prove a real identity, but it requires review before the workbook can remain a trusted project artifact.
+- No existing workbook, PDF, parser, engine, runtime, or UI file was modified.
+
+NEXT: `R15B1_ORVI_TRACKED_WORKBOOK_PRIVACY_REMEDIATION_AND_SOURCE_SANITIZATION`
+<!-- FORGE:R15B_ORVI_REAL_SOURCE_OWNERSHIP_AND_PARSER_READINESS:END -->
