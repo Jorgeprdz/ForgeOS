@@ -108,10 +108,18 @@ function lineItems(block, predicate = () => true) {
     .filter(predicate)
     .map((line) => ({
       id: line.id || normalizeKey(line.label),
-      label: line.label || line.id || "Detalle",
+      label: commercialImaginaSerLabel(line),
       value: lineValue(line),
       evidence: line
     }));
+}
+
+function commercialImaginaSerLabel(line = {}) {
+  const id = normalizeKey(line.id || line.label);
+  if (id === "premium_paying_years") return "Plazo de aportación";
+  if (id === "total_contributed_udi") return "Total aportado";
+  if (id === "total_contributed_mxn_projected") return "Total aportado proyectado";
+  return line.label || line.id || "Detalle";
 }
 
 function scenarioItems(retirementBlock, formatAmount, { omitBaseSinglePayment = false } = {}) {
@@ -143,7 +151,7 @@ function constructionItems(retirementBlock, formatAmount) {
   if (base.singlePayment) {
     items.push({
       id: "base_goal",
-      label: "Meta patrimonial en escenario base",
+      label: "Meta patrimonial",
       value: formatAmount(base.singlePayment),
       evidence: base.singlePayment
     });
@@ -153,7 +161,7 @@ function constructionItems(retirementBlock, formatAmount) {
     const targetAge = accumulated.toAge ?? accumulated.age ?? accumulated.targetAge;
     items.push({
       id: `accumulated_${targetAge || items.length + 1}`,
-      label: targetAge ? `Valor acumulado a edad ${targetAge}` : "Valor acumulado",
+      label: targetAge ? `Valor futuro · edad ${targetAge}` : "Valor futuro",
       value: formatAmount(accumulated),
       evidence: accumulated
     });
@@ -239,6 +247,7 @@ function renderImaginaSerDashboard(model, { documentRef, appendValue } = {}) {
   if (!model || model.productType !== IMAGINA_SER_PRODUCT_TYPE) return null;
   const dashboard = createProductDashboard({ documentRef });
   dashboard.dataset.forgeProductType = IMAGINA_SER_PRODUCT_TYPE;
+  dashboard.dataset.forgeProductLayout = "imagina_ser_desktop_r13g";
 
   for (const modelSection of model.sections || []) {
     const card = createProductDashboardSection({

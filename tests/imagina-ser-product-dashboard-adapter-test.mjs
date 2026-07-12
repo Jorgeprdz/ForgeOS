@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import {
   buildImaginaSerDashboardModel,
   formatImaginaSerAmount,
@@ -100,7 +101,12 @@ assert.deepEqual(
   ["Resumen del plan", "Lo que aportas", "Lo que construyes", "Lo que proteges"]
 );
 assert.equal(model.sections.find((section) => section.kind === "summary").items[0].value, "15 años");
+assert.equal(model.sections.find((section) => section.kind === "summary").items[0].label, "Plazo de aportación");
+assert.equal(model.sections.find((section) => section.kind === "contribution").items[0].label, "Total aportado");
+assert.equal(model.sections.find((section) => section.kind === "contribution").items[1].label, "Total aportado proyectado");
 assert.equal(model.sections.find((section) => section.kind === "construction").items[0].evidence, benefitSummary[2].scenarios[0].singlePayment);
+assert.equal(model.sections.find((section) => section.kind === "construction").items[0].label, "Meta patrimonial");
+assert.equal(model.sections.find((section) => section.kind === "construction").items[1].label, "Valor futuro · edad 75");
 assert.ok(formattedObjects.includes(benefitSummary[2].scenarios[0].singlePayment));
 assert.equal(model.sections.some((section) => section.kind === "future_scenario"), false);
 const constructionSection = model.sections.find((section) => section.kind === "construction");
@@ -113,6 +119,7 @@ assert.ok(model.missingInformation.includes("No hay otros detalles con evidencia
 
 const dashboard = renderImaginaSerDashboard(model, { documentRef });
 assert.equal(dashboard.dataset.forgeProductType, "imagina_ser");
+assert.equal(dashboard.dataset.forgeProductLayout, "imagina_ser_desktop_r13g");
 assert.equal(dashboard.className, "fq-benefit-dashboard-107z15p2");
 assert.equal(dashboard.children[0].dataset.forgeProductSection, "summary");
 assert.equal(dashboard.children.at(-1).dataset.forgeProductSection, "missing_information");
@@ -146,5 +153,16 @@ assert.ok(integratedModel.sections.some((section) => section.kind === "construct
 assert.equal(integratedModel.sections.some((section) => section.kind === "future_scenario"), false);
 assert.ok(integratedModel.missingInformation.includes("Faltan datos de aportación"));
 assert.ok(integratedModel.missingInformation.includes("Faltan datos de protección"));
+
+const layoutSource = fs.readFileSync(
+  new URL("../docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js", import.meta.url),
+  "utf8"
+);
+assert.match(layoutSource, /data-forge-product-type=\\?"imagina_ser\\?"/);
+assert.match(layoutSource, /data-forge-product-section=\\?"construction\\?"/);
+assert.match(layoutSource, /grid-column:\s*1 \/ -1/);
+assert.match(layoutSource, /@media \(min-width: 1181px\)/);
+assert.match(layoutSource, /data-forge-benefit-block=\\?"endowments\\?"/);
+assert.match(layoutSource, /data-forge-benefit-block=\\?"recommended\\?"/);
 
 console.log("PASS Imagina Ser product dashboard adapter R13C");

@@ -161,6 +161,86 @@ function installBenefitDashboardStyles107z15p2R11M() {
       hyphens: none !important;
     }
 
+    @media (min-width: 1181px) {
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"] {
+        grid-auto-flow: dense;
+        grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+        gap: 18px 20px !important;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="summary"] {
+        grid-column: span 3;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="contribution"] {
+        grid-column: span 4;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="protection"] {
+        grid-column: span 5;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="construction"] {
+        grid-column: 1 / -1;
+        padding: 24px;
+        border-color: rgba(244, 216, 93, .22);
+        background: linear-gradient(145deg, rgba(26, 48, 76, .94), rgba(8, 20, 39, .84));
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="recommended"] {
+        grid-column: span 5;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="secondary_details"] {
+        grid-column: span 7;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="missing_information"] {
+        grid-column: 1 / -1;
+        padding-block: 16px;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="summary"] .fq-benefit-mini-grid-107z15p2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="contribution"] .fq-benefit-mini-grid-107z15p2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="construction"] .fq-benefit-mini-grid-107z15p2 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="construction"] .fq-benefit-mini-card-107z15p2:first-child {
+        grid-column: span 2;
+        background: rgba(244, 216, 93, .075);
+        border-color: rgba(244, 216, 93, .19);
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="construction"] .fq-benefit-card-title-107z15p2 {
+        font-size: 1.16rem;
+        margin-bottom: 18px;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-value-107z15p2 {
+        font-size: clamp(.84rem, 1vw, 1rem);
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="construction"] .fq-benefit-mini-card-107z15p2:first-child .fq-benefit-value-107z15p2 {
+        font-size: clamp(1rem, 1.45vw, 1.28rem);
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-value-part-107z15p2 {
+        white-space: nowrap;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="imagina_ser"]
+        .fq-benefit-value-part-107z15p2[data-value-kind="mxn"] {
+        font-size: clamp(.72rem, .85vw, .82rem);
+      }
+    }
+
     @media (max-width: 1180px) and (min-width: 761px) {
       .fq-benefit-dashboard-107z15p2 { grid-template-columns: repeat(8, minmax(0, 1fr)) !important; gap: 16px !important; }
       .fq-benefit-card-107z15p2 { grid-column: span 4; }
