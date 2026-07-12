@@ -874,6 +874,10 @@ function benefitFallbackRows(calc) {
 }
 
 function buildDynamicBenefitSummary(calc) {
+  const nativeBenefitSummary = calc?.nativeResult?.benefitSummary || calc?.benefitSummary;
+  if (nativeBenefitSummary && isSegubecaProduct({ ...calc, benefitSummary: nativeBenefitSummary })) {
+    return nativeBenefitSummary;
+  }
   const benefitApi = benefitSummaryApiSync();
   if (!benefitApi?.buildQuoteBenefitSummary) return null;
 

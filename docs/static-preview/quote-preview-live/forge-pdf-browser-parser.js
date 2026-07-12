@@ -1,5 +1,6 @@
 // FORGE:107Z15P2_R11E_SOLUCIONLINE_LAYOUT_AWARE_PDF_PARSER:START
 import { parseSolucionlineRetirementQuote } from "./forge-solucionline-retirement-parser.js";
+import { parseSolucionlineSegubecaQuote } from "./forge-segubeca-solucionline-parser.js";
 
 const PDFJS_CDN_VERSION_107Z15P2_R11E = "4.10.38";
 const PDFJS_MODULE_URL_107Z15P2_R11E = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.mjs`;
@@ -440,6 +441,179 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
   return pages.join("\n\n");
 }
 
+
+function segubecaLineR14C(id, label, value, unit = undefined) {
+  return { id, label, value, unit };
+}
+
+function segubecaAmountR14C(udi = null, mxn = null, usd = null) {
+  return { udi, mxn, usd };
+}
+
+function segubecaCoverageFieldsR14C(item) {
+  return [
+    { label: "Plazo", value: item.coveragePeriod || "Con evidencia" },
+    { label: "Suma asegurada", value: typeof item.sumAssured === "number" ? segubecaAmountR14C(item.sumAssured, null, null) : item.sumAssured },
+    { label: "Prima", value: typeof item.annualPremium === "number" ? segubecaAmountR14C(item.annualPremium, null, null) : item.annualPremium }
+  ].filter((field) => field.value !== null && field.value !== undefined && field.value !== "");
+}
+
+function buildSegubecaBenefitSummaryR14C(parsed) {
+  const base = parsed.baseCoverage || {};
+  const finalGuaranteedRow = parsed.guaranteedRows?.[parsed.guaranteedRows.length - 1] || null;
+  const firstAdministrationRow = parsed.administrationRows?.[0] || null;
+  const finalAdministrationRow = parsed.administrationRows?.[parsed.administrationRows.length - 1] || null;
+
+  const blocks = [
+    {
+      type: "summary_plan",
+      lines: [
+        segubecaLineR14C("product", "Producto", parsed.planVariant || parsed.productName),
+        segubecaLineR14C("currency", "Moneda", parsed.currency),
+        segubecaLineR14C("payment_term", "Plazo de aportación", base.coverageYears, "years"),
+        segubecaLineR14C("child_age", "Edad del menor", parsed.participants?.child_age)
+      ].filter((line) => line.value !== null && line.value !== undefined && line.value !== "")
+    },
+    {
+      type: "participants",
+      participant_modality: parsed.participants?.participant_modality || "unknown",
+      participants: {
+        primary_insured: parsed.participants?.primary_insured || null,
+        joint_insured: parsed.participants?.joint_insured || null,
+        child_or_education_beneficiary: parsed.participants?.child_or_education_beneficiary || null
+      }
+    },
+    {
+      type: "contribution_summary",
+      lines: [
+        segubecaLineR14C("annual_premium", "Prima total anual", parsed.totalAnnualPremium, "UDI"),
+        segubecaLineR14C("annual_premium_with_recommended", "Prima con beneficios recomendados", parsed.totalWithRecommended, "UDI"),
+        segubecaLineR14C("total_contributed", "Prima anual acumulada", finalGuaranteedRow?.accumulatedAnnualPremiumWithAve, "UDI")
+      ].filter((line) => line.value !== null && line.value !== undefined && line.value !== "")
+    },
+    {
+      type: "education_goal",
+      lines: [
+        segubecaLineR14C("target_amount", "Meta educativa", segubecaAmountR14C(base.sumAssured ?? finalGuaranteedRow?.basicSumAssured ?? null, null, null)),
+        segubecaLineR14C("target_age", "Edad objetivo", firstAdministrationRow?.insuredAge ?? 18)
+      ].filter((line) => line.value !== null && line.value !== undefined && line.value !== "")
+    },
+    {
+      type: "payout_options",
+      lines: [
+        segubecaLineR14C("payout_mode", "Forma de entrega", firstAdministrationRow ? "Entrega mensual estimada" : null),
+        segubecaLineR14C("monthly_payout", "Mensualidad educativa", firstAdministrationRow?.monthlyDelivery ?? null, "UDI"),
+        segubecaLineR14C("payout_duration", "Duración de entrega", parsed.administrationYears ? parsed.administrationYears * 12 : null, "months"),
+        segubecaLineR14C("accumulated_delivery", "Entrega acumulada", finalAdministrationRow?.accumulatedDelivery ?? null, "UDI")
+      ].filter((line) => line.value !== null && line.value !== undefined && line.value !== "")
+    },
+    {
+      type: "protection_summary",
+      lines: [
+        ...parsed.coverages.map((coverage) => segubecaLineR14C(
+          coverage.name,
+          coverage.name.replace(/\s+\([^)]+\)/g, ""),
+          typeof coverage.sumAssured === "number" ? segubecaAmountR14C(coverage.sumAssured, null, null) : coverage.sumAssured || coverage.annualPremium
+        )),
+        segubecaLineR14C("death_benefit_during_administration", "Beneficio por fallecimiento en administración", firstAdministrationRow?.deathBenefit ?? null, "UDI")
+      ].filter((line) => line.value !== null && line.value !== undefined && line.value !== "")
+    },
+    {
+      type: "additional_coverages",
+      benefits: parsed.recommendedCoverages.map((coverage) => ({
+        name: coverage.name.replace(/\s+\([^)]+\)/g, ""),
+        fields: segubecaCoverageFieldsR14C(coverage),
+        value: coverage.annualPremium !== null && coverage.annualPremium !== undefined ? segubecaAmountR14C(coverage.annualPremium, null, null) : "Con evidencia"
+      }))
+    },
+    {
+      type: "secondary_details",
+      lines: [
+        segubecaLineR14C("interest_rate", "Tasa estimada administración", parsed.interestRate !== null ? `${parsed.interestRate}% anual` : null),
+        segubecaLineR14C("final_cash_value", "Valor en efectivo final", finalAdministrationRow?.cashValue ?? null, "UDI"),
+        segubecaLineR14C("final_recovery", "Recuperación total final", finalGuaranteedRow?.totalRecovery ?? null, "UDI")
+      ].filter((line) => line.value !== null && line.value !== undefined && line.value !== "")
+    },
+    {
+      type: "missing_information",
+      missing: parsed.missing_information || []
+    }
+  ];
+
+  return { blocks };
+}
+
+export function parseSegubecaPdfTextToAcceptedQuotePacket(text, options = {}) {
+  const parsed = options.parsedResult || parseSolucionlineSegubecaQuote({ text });
+  const benefitSummary = buildSegubecaBenefitSummaryR14C(parsed);
+  const primaryInsured = parsed.participants?.primary_insured || "Contratante SeguBeca";
+  const child = parsed.participants?.child_or_education_beneficiary || "Menor SeguBeca";
+
+  const nativeResult = {
+    source: "browser_pdf_parser",
+    extractionVersion: "R14C_segubeca_pdf_intake",
+    product: parsed.productName,
+    productName: parsed.planVariant || parsed.productName,
+    productFamily: "segubeca",
+    product_family: "segubeca",
+    productType: "segubeca",
+    product_type: "segubeca",
+    currency: parsed.currency,
+    primaryInsured,
+    insured: primaryInsured,
+    childOrEducationBeneficiary: child,
+    participants: parsed.participants,
+    baseCoverage: parsed.baseCoverage,
+    coverages: parsed.coverages,
+    recommendedCoverages: parsed.recommendedCoverages,
+    guaranteedRows: parsed.guaranteedRows,
+    administrationRows: parsed.administrationRows,
+    monthlyDelivery: parsed.monthlyDelivery,
+    accumulatedDelivery: parsed.accumulatedDelivery,
+    totalAnnualPremium: parsed.totalAnnualPremium,
+    annualPremiumWithRecommended: parsed.totalWithRecommended,
+    benefitSummary,
+    evidence: parsed.evidence,
+    missing_information: parsed.missing_information
+  };
+
+  return {
+    schemaVersion: "forge.accepted_quote_packet.v1",
+    source: "browser_pdf_parser",
+    extractionVersion: "R14C_segubeca_pdf_intake",
+    fileName: options.fileName || null,
+    family: "segubeca",
+    productFamily: "segubeca",
+    product_family: "segubeca",
+    product: parsed.productName,
+    productName: parsed.planVariant || parsed.productName,
+    productType: "segubeca",
+    product_type: "segubeca",
+    insured: primaryInsured,
+    name: primaryInsured,
+    childOrEducationBeneficiary: child,
+    age: parsed.participants?.primary_age ?? null,
+    childAge: parsed.participants?.child_age ?? null,
+    currency: parsed.currency,
+    sumAssured: parsed.baseCoverage?.sumAssured ?? null,
+    annualPremium: parsed.totalAnnualPremium,
+    annualPremiumWithRecommended: parsed.totalWithRecommended,
+    paymentYears: parsed.baseCoverage?.coverageYears ?? null,
+    coveragePeriod: parsed.baseCoverage?.coveragePeriod ?? null,
+    benefitSummary,
+    context: {
+      family: "segubeca",
+      productFamily: "segubeca",
+      product_family: "segubeca",
+      product: parsed.productName,
+      productType: "segubeca",
+      product_type: "segubeca"
+    },
+    nativeResult
+  };
+}
+
+
 export function parseVidaMujerPdfTextToAcceptedQuotePacket(text, options = {}) {
   return buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options);
 }
@@ -554,37 +728,13 @@ export function parseImaginaSerPdfTextToAcceptedQuotePacket(text, options = {}) 
 
 export function parsePdfTextToAcceptedQuotePacket(text, options = {}) {
   const source = compactText107z15p2R11E(text);
-  if (/vida\s+mujer/i.test(source)) {
-    return parseVidaMujerPdfTextToAcceptedQuotePacket(text, options);
+  if (/segu\s*beca|segubeca/i.test(source)) {
+    return parseSegubecaPdfTextToAcceptedQuotePacket(text, { ...options, route: "R14C_segubeca_route" });
   }
-
-  const retirementCandidate = parseSolucionlineRetirementQuote({ text });
-  if (retirementCandidate?.evidence?.productName === "SOURCE_TEXT") {
-    return parseImaginaSerPdfTextToAcceptedQuotePacket(text, {
-      ...options,
-      parsedResult: retirementCandidate
-    });
+  if (/imagina\s+ser|imagina\s*ser/i.test(source)) {
+    return parseImaginaSerPdfTextToAcceptedQuotePacket(text, options);
   }
-
-  return {
-    schemaVersion: "forge.accepted_quote_packet.v1",
-    source: "browser_pdf_parser",
-    extractionVersion: "R13E_product_router",
-    fileName: options.fileName || null,
-    family: null,
-    productFamily: null,
-    product_family: null,
-    product: null,
-    context: {},
-    nativeResult: {
-      source: "browser_pdf_parser",
-      extractionVersion: "R13E_product_router",
-      product: null,
-      productFamily: null,
-      missing_information: ["No se identificó un producto compatible en el PDF"]
-    },
-    missing_information: ["No se identificó un producto compatible en el PDF"]
-  };
+  return parseVidaMujerPdfTextToAcceptedQuotePacket(text, options);
 }
 
 export async function parsePdfFileToAcceptedQuotePacket(file, options = {}) {
