@@ -1,0 +1,121 @@
+{
+  "contract_id": "orvi.solucionline.pdf.parser-contract.v1",
+  "fixture_id": "orvi-solucionline-synthetic-usd-10pay-v1",
+  "synthetic_fixture": true,
+  "product_type": "orvi",
+  "source_type": "solucionline_pdf",
+  "document": {
+    "plan_label": "ORVI SYNTHETIC 10 PAY USD",
+    "currency": "USD",
+    "payment_term_years": 10,
+    "coverage_duration_years": 58,
+    "page_count": 3,
+    "text_layer_status": "present",
+    "illustrative_not_contract": true,
+    "quote_validity_days": 21,
+    "source_version_label": "SYNTHETIC-V1"
+  },
+  "insured": {
+    "age": 41,
+    "gender": "other",
+    "smoker": null,
+    "preferred": false
+  },
+  "coverages": [
+    {
+      "code": "ORVI_BASE_SYNTH",
+      "label": "ORVI synthetic basic protection",
+      "coverage_term": { "state": "numeric", "value": 58, "unit": "years", "displayed_text": "58 years", "source_page": 1, "source_section": "coverages", "confidence": 1 },
+      "sum_assured": { "state": "numeric", "value": 73250, "unit": "USD", "displayed_text": "73,250", "source_page": 1, "source_section": "coverages", "confidence": 1 },
+      "annual_premium": { "state": "numeric", "value": 1387.4, "unit": "USD", "displayed_text": "1,387.40", "source_page": 1, "source_section": "coverages", "confidence": 1 }
+    },
+    {
+      "code": "ASSIST_SYNTH",
+      "label": "Synthetic assistance benefit",
+      "coverage_term": { "state": "not_applicable", "value": null, "unit": null, "displayed_text": null, "source_page": 1, "source_section": "coverages", "confidence": 1 },
+      "sum_assured": { "state": "amparado", "value": null, "unit": "USD", "displayed_text": "AMPARADO", "source_page": 1, "source_section": "coverages", "confidence": 1 },
+      "annual_premium": { "state": "sin_costo", "value": null, "unit": "USD", "displayed_text": "SIN COSTO", "source_page": 1, "source_section": "coverages", "confidence": 1 }
+    },
+    {
+      "code": "ACCIDENT_SYNTH",
+      "label": "Synthetic accidental protection",
+      "coverage_term": { "state": "numeric", "value": 24, "unit": "years", "displayed_text": "24 years", "source_page": 1, "source_section": "coverages", "confidence": 1 },
+      "sum_assured": { "state": "numeric", "value": 73250, "unit": "USD", "displayed_text": "73,250", "source_page": 1, "source_section": "coverages", "confidence": 1 },
+      "annual_premium": { "state": "numeric", "value": 93.6, "unit": "USD", "displayed_text": "93.60", "source_page": 1, "source_section": "coverages", "confidence": 1 }
+    }
+  ],
+  "recommended_benefits": [
+    {
+      "code": "OPTION_SYNTH",
+      "label": "Synthetic optional benefit",
+      "sum_assured": { "state": "numeric", "value": 41800, "unit": "USD", "displayed_text": "41,800", "source_page": 1, "source_section": "recommended_benefits", "confidence": 1 },
+      "annual_premium": { "state": "numeric", "value": 211.3, "unit": "USD", "displayed_text": "211.30", "source_page": 1, "source_section": "recommended_benefits", "confidence": 1 }
+    }
+  ],
+  "premium_summary": {
+    "base_total_annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481.00", "source_page": 1, "source_section": "premium_summary", "confidence": 1 },
+    "displayed_total_with_recommended": { "state": "numeric", "value": 1707.55, "unit": "USD", "displayed_text": "1,707.55", "source_page": 1, "source_section": "premium_summary", "confidence": 1 },
+    "visible_line_item_sum": { "state": "numeric", "value": 1692.3, "unit": "USD", "displayed_text": "1,692.30", "source_page": 1, "source_section": "derived_comparison_only", "confidence": 1 },
+    "reconciliation": {
+      "status": "source_displayed_total_unreconciled",
+      "source_total_preserved": true,
+      "recomputed_override_applied": false
+    }
+  },
+  "guaranteed_values": {
+    "columns": [
+      "real_age",
+      "policy_year",
+      "annual_premium",
+      "additional_premium",
+      "guaranteed_surrender_value",
+      "cash_value",
+      "total_recovery"
+    ],
+    "rows": [
+      { "real_age": 41, "policy_year": 1, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 181, "unit": "USD", "displayed_text": "181", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 181, "unit": "USD", "displayed_text": "181", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 42, "policy_year": 2, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 377, "unit": "USD", "displayed_text": "377", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 212, "unit": "USD", "displayed_text": "212", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 589, "unit": "USD", "displayed_text": "589", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 43, "policy_year": 3, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 586, "unit": "USD", "displayed_text": "586", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 691, "unit": "USD", "displayed_text": "691", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 1277, "unit": "USD", "displayed_text": "1,277", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 44, "policy_year": 4, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 809, "unit": "USD", "displayed_text": "809", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 1249, "unit": "USD", "displayed_text": "1,249", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 2058, "unit": "USD", "displayed_text": "2,058", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 45, "policy_year": 5, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 1047, "unit": "USD", "displayed_text": "1,047", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 1891, "unit": "USD", "displayed_text": "1,891", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 2938, "unit": "USD", "displayed_text": "2,938", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 46, "policy_year": 6, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 1302, "unit": "USD", "displayed_text": "1,302", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 2619, "unit": "USD", "displayed_text": "2,619", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 3921, "unit": "USD", "displayed_text": "3,921", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 47, "policy_year": 7, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 1573, "unit": "USD", "displayed_text": "1,573", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 3436, "unit": "USD", "displayed_text": "3,436", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 5009, "unit": "USD", "displayed_text": "5,009", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 48, "policy_year": 8, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 1862, "unit": "USD", "displayed_text": "1,862", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 4348, "unit": "USD", "displayed_text": "4,348", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 6210, "unit": "USD", "displayed_text": "6,210", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 49, "policy_year": 9, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 2169, "unit": "USD", "displayed_text": "2,169", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 5360, "unit": "USD", "displayed_text": "5,360", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 7529, "unit": "USD", "displayed_text": "7,529", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 50, "policy_year": 10, "annual_premium": { "state": "numeric", "value": 1481, "unit": "USD", "displayed_text": "1,481", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "numeric", "value": 173, "unit": "USD", "displayed_text": "173", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 2495, "unit": "USD", "displayed_text": "2,495", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 6480, "unit": "USD", "displayed_text": "6,480", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 8975, "unit": "USD", "displayed_text": "8,975", "source_page": 1, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 51, "policy_year": 11, "annual_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 2684, "unit": "USD", "displayed_text": "2,684", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 7112, "unit": "USD", "displayed_text": "7,112", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 9796, "unit": "USD", "displayed_text": "9,796", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 52, "policy_year": 12, "annual_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 2887, "unit": "USD", "displayed_text": "2,887", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 7781, "unit": "USD", "displayed_text": "7,781", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 10668, "unit": "USD", "displayed_text": "10,668", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 53, "policy_year": 13, "annual_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 3105, "unit": "USD", "displayed_text": "3,105", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 8489, "unit": "USD", "displayed_text": "8,489", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 11594, "unit": "USD", "displayed_text": "11,594", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 54, "policy_year": 14, "annual_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 3339, "unit": "USD", "displayed_text": "3,339", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 9238, "unit": "USD", "displayed_text": "9,238", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 12577, "unit": "USD", "displayed_text": "12,577", "source_page": 2, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 55, "policy_year": 15, "annual_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 3590, "unit": "USD", "displayed_text": "3,590", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 10032, "unit": "USD", "displayed_text": "10,032", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 13622, "unit": "USD", "displayed_text": "13,622", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 } },
+      { "real_age": 56, "policy_year": 16, "annual_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "additional_premium": { "state": "explicit_zero", "value": 0, "unit": "USD", "displayed_text": "0", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "guaranteed_surrender_value": { "state": "numeric", "value": 3859, "unit": "USD", "displayed_text": "3,859", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "cash_value": { "state": "numeric", "value": 10874, "unit": "USD", "displayed_text": "10,874", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 }, "total_recovery": { "state": "numeric", "value": 14733, "unit": "USD", "displayed_text": "14,733", "source_page": 3, "source_section": "guaranteed_values", "confidence": 1 } }
+    ]
+  },
+  "glossary": [
+    { "term": "Annual premium", "definition": "Synthetic description for parser-contract validation only." },
+    { "term": "Total recovery", "definition": "Synthetic guaranteed-value description for parser-contract validation only." }
+  ],
+  "notes": [
+    "All fixture amounts are synthetic and denominated in USD.",
+    "This fixture is illustrative and is not an insurance contract.",
+    "No identity or contact information is retained."
+  ],
+  "source_trace": [
+    { "field": "document.plan_label", "source_page": 1, "source_section": "header", "status": "synthetic_confirmed", "confidence": 1 },
+    { "field": "guaranteed_values.rows", "source_page": 1, "source_section": "guaranteed_values", "status": "synthetic_confirmed", "confidence": 1 }
+  ],
+  "privacy": {
+    "pii_redacted": true,
+    "real_source_values_copied": false,
+    "retained_identity_fields": []
+  },
+  "ownership": {
+    "canonical_owner": "product-intelligence",
+    "parser_ref": null,
+    "runtime_ref": null,
+    "renderer_ref": null
+  },
+  "recommendation": null,
+  "mxn_projection": null,
+  "missing_information": []
+}

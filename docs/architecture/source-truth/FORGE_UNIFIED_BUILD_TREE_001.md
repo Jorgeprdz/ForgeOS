@@ -11613,3 +11613,20 @@ Status: `REAL_SOURCE_CONFIRMED / READY_FOR_PARSER_CONTRACT_AND_SYNTHETIC_FIXTURE
 
 NEXT: `R15D_ORVI_PDF_PARSER_CONTRACT_AND_SYNTHETIC_FIXTURE`
 <!-- FORGE:R15C_ORVI_REAL_QUOTE_PDF_SOURCE_INTAKE:END -->
+
+<!-- FORGE:R15D_ORVI_PDF_PARSER_CONTRACT_AND_SYNTHETIC_FIXTURE:START -->
+## Product Intelligence / ORVI R15D
+
+Status: `PARSER_CONTRACT_IMPLEMENTED / PARSER_PENDING`
+
+- Canonical owner: `product-intelligence`.
+- Primary extraction source remains the real Solucionline quote outside Git.
+- Parser contract and synthetic three-page-equivalent fixture are implemented.
+- Contract supports dynamic UDI/USD currency and positive payment terms.
+- Explicit zero, `SIN COSTO`, `Amparado`, missing, unreadable, and not-applicable states remain distinct.
+- Displayed-source totals may not be silently recomputed.
+- Parser, runtime, renderer, recommendation, and MXN projection remain unauthorized.
+- Future dashboard checkpoints must derive from payment term and available timeline rows.
+
+NEXT: `R15E_ORVI_SOLUCIONLINE_PDF_TEXT_PARSER_IMPLEMENTATION_AND_CANONICAL_MAPPING`
+<!-- FORGE:R15D_ORVI_PDF_PARSER_CONTRACT_AND_SYNTHETIC_FIXTURE:END -->

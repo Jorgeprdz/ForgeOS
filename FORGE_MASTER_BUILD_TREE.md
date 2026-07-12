@@ -14615,3 +14615,54 @@ R15D may not yet wire runtime, MXN conversion, recommendations, dashboard, or UI
 
 NEXT: `R15D_ORVI_PDF_PARSER_CONTRACT_AND_SYNTHETIC_FIXTURE`
 <!-- FORGE:R15C_ORVI_REAL_QUOTE_PDF_SOURCE_INTAKE:END -->
+
+<!-- FORGE:R15D_ORVI_PDF_PARSER_CONTRACT_AND_SYNTHETIC_FIXTURE:START -->
+## R15D ORVI PDF Parser Contract And Synthetic Fixture
+
+Status: `PASS_CONTRACT / PARSER_IMPLEMENTATION_PENDING`
+
+### Implemented
+
+- Parser-envelope contract: `product-intelligence/quotes/orvi-pdf-parser-contract.js`.
+- Synthetic three-page-equivalent text fixture: `fixtures/orvi-solucionline-synthetic-quote.txt`.
+- Synthetic expected envelope: `fixtures/orvi-solucionline-synthetic-expected.json`.
+- Contract regression: `tests/orvi-pdf-parser-contract-test.mjs`.
+- Product Intelligence remains the canonical semantic owner.
+- Parser, runtime, and renderer refs remain `null`.
+
+### Contract boundaries
+
+- Supported source currencies are `UDI` and `USD`.
+- Payment term is extracted as a positive integer and is not hardcoded to 20.
+- Timeline contains seven canonical columns.
+- `numeric`, `explicit_zero`, `SIN COSTO`, `Amparado`, `missing`, `unreadable`, and `not applicable` remain distinct states.
+- Displayed totals are preserved independently from visible line-item sums.
+- Recomputed override is forbidden.
+- Client and advisor identity fields are forbidden in parser envelopes.
+- Recommendation and MXN projection remain unauthorized.
+- Synthetic fixtures contain no real source values or personal data.
+
+### Downstream ORVI dashboard interpretation parked
+
+Owner-supplied commercial interpretation is recorded for later Product Intelligence/dashboard modules, not as parser truth:
+
+- ORVI is presented as protection with a limited payment period and continuing protection according to the contracted variant.
+- Common commercial variants may include 6, 10, 15, or 20 payment years and UDI or USD denominations.
+- Recovery checkpoints must be dynamic from the contracted payment term and available timeline rows, never hardcoded to 20/25/30.
+- The future dashboard must separate protection, guaranteed recovery, cumulative contributions, recovery difference, recovery ratio, and projected MXN equivalents.
+- Projected MXN values are scenarios, not contractual guarantees.
+- Cancellation or continuation remains a human decision.
+
+### Prohibited
+
+- No parser implementation.
+- No execution against the real PDF.
+- No real PDF, text, identity, or quote values committed.
+- No source adapter.
+- No calculation engine execution.
+- No UDI/USD projection wiring.
+- No recommendation.
+- No runtime, renderer, dashboard, route, or UI change.
+
+NEXT: `R15E_ORVI_SOLUCIONLINE_PDF_TEXT_PARSER_IMPLEMENTATION_AND_CANONICAL_MAPPING`
+<!-- FORGE:R15D_ORVI_PDF_PARSER_CONTRACT_AND_SYNTHETIC_FIXTURE:END -->
