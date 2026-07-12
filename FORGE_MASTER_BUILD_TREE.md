@@ -14521,3 +14521,32 @@ A parser contract may be authorized only when a real ORVI quote PDF candidate de
 
 NEXT: `R15B1_ORVI_TRACKED_WORKBOOK_PRIVACY_REMEDIATION_AND_SOURCE_SANITIZATION`
 <!-- FORGE:R15B_ORVI_REAL_SOURCE_OWNERSHIP_AND_PARSER_READINESS:END -->
+
+<!-- FORGE:R15B1_ORVI_TRACKED_WORKBOOK_PRIVACY_REMEDIATION_AND_SOURCE_SANITIZATION:START -->
+## R15B1 ORVI Tracked Workbook Privacy Remediation And Source Sanitization
+
+Status: `PASS_PRIVACY_REMEDIATION / WORKBOOK_REMAINS_DERIVED_EVIDENCE`
+
+### Minimum repair
+
+- One identity-like shared string in the merged ORVI workbook header was replaced by the neutral product label `ORVI`.
+- The private value was never printed or committed.
+- The authorized target had one usage and zero formula references.
+- Inside the XLSX package, only `xl/sharedStrings.xml` changed.
+- Formula count remains `64`.
+- Timeline-like rows remain `46`.
+- The workbook remains derived scenario and projection evidence.
+- Workbook parser authority remains `NO`.
+- Product Intelligence remains the canonical semantic owner.
+- Parser readiness remains blocked pending a qualified real ORVI quote PDF.
+- Existing ORVI engines, parser browser, runtime, package configuration, dashboard, and UI remain unchanged.
+
+### Privacy status
+
+- Before: `TRACKED_WORKBOOK_PRIVACY_REVIEW_REQUIRED`.
+- After: `TRACKED_WORKBOOK_PRIVACY_REMEDIATED`.
+- Private occurrences remaining in workbook XML: `0`.
+- Regression: `tests/orvi-tracked-workbook-privacy-sanitization-test.py`.
+
+NEXT: `R15C_ORVI_REAL_QUOTE_PDF_SOURCE_INTAKE`
+<!-- FORGE:R15B1_ORVI_TRACKED_WORKBOOK_PRIVACY_REMEDIATION_AND_SOURCE_SANITIZATION:END -->
