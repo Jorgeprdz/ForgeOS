@@ -37,7 +37,11 @@ Prima total con beneficios recomendados 3,890.21
 
 for (const [name, sampleText] of Object.entries({ solucionlineRows, headerCollisionRows })) {
   const packet = parseVidaMujerPdfTextToAcceptedQuotePacket(sampleText, {
-    currentUdiValue: 8.82994,
+    currencyMetadata: {
+      currentUdiValue: 8.82994,
+      source: "TEST_VERIFIED_CACHE",
+      sourceDate: "2026-07-11"
+    },
     fileName: `${name}.pdf`
   });
 
@@ -54,6 +58,12 @@ for (const [name, sampleText] of Object.entries({ solucionlineRows, headerCollis
   assert.equal(packet.nativeResult.cashValue, 40000, name);
   assert.equal(packet.nativeResult.aveSurrenderValue, 107486, name);
   assert.equal(packet.nativeResult.recoveryTotal, 147486, name);
+  assert.equal(packet.currencyMetadata.currentUdiValue, 8.82994, name);
+  assert.equal(packet.currencyMetadata.source, "TEST_VERIFIED_CACHE", name);
+  if (name === "solucionlineRows") {
+    assert.ok(packet.nativeResult.recommendedCoverages.some((coverage) => coverage.code === "PEP"), name);
+    assert.ok(packet.nativeResult.recommendedCoverages.some((coverage) => coverage.code === "CLP"), name);
+  }
   assert.equal(packet.missing_information.length, 0, name);
 }
 

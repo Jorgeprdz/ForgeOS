@@ -257,6 +257,8 @@ function calculateVidaMujerAccepted107z15p2R9C(packet, nativeResult) {
     },
     productFamily: acceptedProductFamily107z15p2R9C(packet, nativeResult),
     product: acceptedProduct107z15p2R9C(packet, nativeResult),
+    context: packet?.context || {},
+    productIntelligence: packet?.productIntelligence || null,
     client: nativeResult.prospect ?? nativeResult.insured ?? packet.insured ?? packet.name ?? null,
     currency: nativeResult.currency ?? packet.currency ?? "UDI",
     annualPremium,
@@ -272,6 +274,7 @@ function calculateVidaMujerAccepted107z15p2R9C(packet, nativeResult) {
     totalRecovery: commercialRecovery,
     totalRecoveryMXN: acceptedMxn107z15p2R9C(commercialRecovery, currentUdi),
     udiRateMetadata,
+    udiProjection: packet?.udiProjection || nativeResult?.udiProjection || null,
     optionalCoverages: acceptedArray107z15p2R9C(nativeResult.optionalCoverages),
     accumulatedIncome: [],
     base: null,
@@ -383,6 +386,17 @@ async function browserUdiRateProvider() {
   return null;
 }
 
+async function enrichPacketWithUdiRuntime107z15p2R11F2(packet) {
+  const runtime = globalThis.ForgeUdiMxnRuntime;
+  if (!runtime || typeof runtime.enrichAcceptedQuotePacket !== "function") return packet;
+
+  try {
+    return await runtime.enrichAcceptedQuotePacket(packet);
+  } catch (error) {
+    return packet;
+  }
+}
+
 function validatePacket(value) {
   if (!value || typeof value !== "object") {
     throw new Error("El paquete debe ser un objeto JSON.");
@@ -405,9 +419,10 @@ function isPdfSelection107z15p2R9C(file) {
 }
 
 async function calculateAcceptedQuote(currentPacket) {
-  const nativeResult = buildAcceptedNativeResult107z15p2R9C(currentPacket);
-  if (isVidaMujerAccepted107z15p2R9C(currentPacket, nativeResult)) {
-    return calculateVidaMujerAccepted107z15p2R9C(currentPacket, nativeResult);
+  const enrichedPacket = await enrichPacketWithUdiRuntime107z15p2R11F2(currentPacket);
+  const nativeResult = buildAcceptedNativeResult107z15p2R9C(enrichedPacket);
+  if (isVidaMujerAccepted107z15p2R9C(enrichedPacket, nativeResult)) {
+    return calculateVidaMujerAccepted107z15p2R9C(enrichedPacket, nativeResult);
   }
 
   const annualPremium = nativeResult.premiumTable?.annual ?? nativeResult.totalAnnualPremium ?? nativeResult.premium;
@@ -450,10 +465,10 @@ async function calculateAcceptedQuote(currentPacket) {
       [],
     udiProjection: retirementScenario?.summary?.udiProjection ?? null,
     nativeResult,
-    context: currentPacket?.context || {},
-    productIntelligence: currentPacket?.productIntelligence || null,
-    productFamily: currentPacket?.context?.productFamily || currentPacket?.context?.product_family || nativeResult.productFamily || nativeResult.product_family || null,
-    product: nativeResult.product || currentPacket?.context?.product || null,
+    context: enrichedPacket?.context || {},
+    productIntelligence: enrichedPacket?.productIntelligence || null,
+    productFamily: enrichedPacket?.context?.productFamily || enrichedPacket?.context?.product_family || nativeResult.productFamily || nativeResult.product_family || null,
+    product: nativeResult.product || enrichedPacket?.context?.product || null,
     udiRateMetadata,
     retirementScenarioStatus: retirementScenario?.status ?? null,
     paymentYears,

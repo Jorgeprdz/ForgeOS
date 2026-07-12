@@ -322,6 +322,13 @@ const vidaMujerBlocks = buildQuoteBenefitSummary({
       },
     ],
   },
+  udiProjection: {
+    rows: Array.from({ length: 20 }, (_, index) => ({
+      year: index + 1,
+      policyYear: index + 1,
+      projectedUdiValue: 8.82994 * Math.pow(1.04, index),
+    })),
+  },
   currencyMetadata: {
     currentUdiValue: 8.82994,
   },
@@ -349,6 +356,14 @@ const vidaEndowments = r8FindBlock(vidaMujerBlocks, "scheduled_endowments");
 assert.ok(vidaEndowments.rows.some((row) => row.label === "Años 5, 7, 9, 11, 13, 15 y 17" && String(row.value).includes("2,500 UDI")), "Dotales recurrentes deben agruparse como 2,500 UDI c/u.");
 assert.ok(vidaEndowments.rows.some((row) => row.label === "Año 20 (80%)" && String(row.value).includes("40,000 UDI")), "Dotal final debe mostrarse como año 20 80%.");
 assert.ok(vidaEndowments.rows.some((row) => row.label === "Total dotales" && String(row.value).includes("57,500 UDI")), "Total dotales debe mantenerse sin duplicados.");
+assert.deepEqual(vidaEndowments.calendar.years, [5, 7, 9, 11, 13, 15, 17, 20], "Dotales deben tener calendario horizontal.");
+assert.deepEqual(
+  vidaEndowments.calendar.payments.map((payment) => payment.udi),
+  [2500, 2500, 2500, 2500, 2500, 2500, 2500, 40000],
+  "Calendario de dotales debe conservar UDI correctas."
+);
+assert.ok(vidaEndowments.calendar.payments.every((payment) => payment.mxn > 0), "Cada dotal debe tener MXN proyectado cuando existe proyección.");
+assert.ok(vidaEndowments.calendar.total.mxn > 57500 * 8.82994, "Total dotales MXN debe usar proyección anual, no conversión plana.");
 
 
 const vidaRecovery = r8FindBlock(vidaMujerBlocks, "recovery_summary");
@@ -360,6 +375,10 @@ const vidaPcf = r8FindBlock(vidaMujerBlocks, "women_health_benefits");
 assert.ok(vidaPcf.rows.some((row) => row.label.includes("Tumor maligno de mama") && row.value.includes("50,000 UDI")));
 assert.ok(vidaPcf.rows.some((row) => row.label.includes("Tumor maligno de mama localizado") && row.value.includes("23,500 UDI")));
 assert.ok(vidaPcf.rows.some((row) => row.value.includes("≈ $441,497 MXN")));
+
+const vidaRecommended = r8FindBlock(vidaMujerBlocks, "recommended_benefits");
+assert.ok(vidaRecommended.rows.some((row) => row.label.includes("PEP") && row.value.includes("Estatus: recomendado")));
+assert.ok(vidaRecommended.rows.some((row) => row.label.includes("CLP") && row.value.includes("Prima MXN")));
 
 const sparseVidaMujerBlocks = buildQuoteBenefitSummary({
   productFamily: "Vida Mujer",

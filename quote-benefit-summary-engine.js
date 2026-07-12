@@ -777,6 +777,11 @@ function r9f3VidaMujerUdiMxn(udi, rate, suffix = "") {
   return [udiLabel, mxn].filter(Boolean).join(" · ") + suffix;
 }
 
+function r9f3VidaMujerProjectedUdiMxn(udi, rate) {
+  const value = r9f3VidaMujerUdiMxn(udi, rate);
+  return value || `${r9f3VidaMujerUdi(udi)} · MXN proyectado pendiente: motor UDI no disponible.`;
+}
+
 function r9f3VidaMujerCurrentUdiRate(currencyMetadata = {}) {
   return r9f3VidaMujerFirstNumber(
     currencyMetadata.currentUdiValue,
@@ -787,13 +792,19 @@ function r9f3VidaMujerCurrentUdiRate(currencyMetadata = {}) {
 }
 
 function r9f3VidaMujerProjectionRateForYear({ year, currentUdiValue, udiProjection = {}, nativeResult = {} } = {}) {
+  const timeline = udiProjection?.timeline;
   const candidates = [
     ...(Array.isArray(udiProjection?.rows) ? udiProjection.rows : []),
     ...(Array.isArray(udiProjection?.projectionRows) ? udiProjection.projectionRows : []),
     ...(Array.isArray(udiProjection?.years) ? udiProjection.years : []),
     ...(Array.isArray(udiProjection?.annualProjection) ? udiProjection.annualProjection : []),
+    ...(Array.isArray(timeline) ? timeline : []),
+    ...(Array.isArray(timeline?.savings) ? timeline.savings : []),
+    ...(Array.isArray(timeline?.retirement) ? timeline.retirement : []),
     ...(Array.isArray(nativeResult?.udiProjectionRows) ? nativeResult.udiProjectionRows : []),
-    ...(Array.isArray(nativeResult?.udiProjection) ? nativeResult.udiProjection : [])
+    ...(Array.isArray(nativeResult?.udiProjection) ? nativeResult.udiProjection : []),
+    ...(Array.isArray(nativeResult?.udiProjection?.rows) ? nativeResult.udiProjection.rows : []),
+    ...(Array.isArray(nativeResult?.udiProjection?.projectionRows) ? nativeResult.udiProjection.projectionRows : [])
   ];
 
   const match = candidates.find((row) => {
@@ -805,8 +816,7 @@ function r9f3VidaMujerProjectionRateForYear({ year, currentUdiValue, udiProjecti
     match?.udiValue,
     match?.projectedUdiValue,
     match?.value,
-    match?.rate,
-    currentUdiValue
+    match?.rate
   );
 }
 
@@ -902,7 +912,7 @@ function r9f3VidaMujerContributionRows({ nativeResult = {}, currencyMetadata = {
   ].filter((row) => row.value);
 }
 
-function r9f3VidaMujerEndowmentRows({ nativeResult = {}, currencyMetadata = {}, udiProjection = {} } = {}) {
+function r9f3VidaMujerEndowmentSummary({ nativeResult = {}, currencyMetadata = {}, udiProjection = {} } = {}) {
   const currentUdiValue = r9f3VidaMujerCurrentUdiRate(currencyMetadata);
   const sumAssured = r9f3VidaMujerFirstNumber(
     nativeResult.sumAssured,
@@ -910,28 +920,52 @@ function r9f3VidaMujerEndowmentRows({ nativeResult = {}, currencyMetadata = {}, 
     nativeResult.basicSumAssured
   );
 
-  const recurringDotal = sumAssured === null ? 2500 : sumAssured * 0.05;
-  const finalDotal = sumAssured === null ? 40000 : sumAssured * 0.8;
+  if (sumAssured === null) return { rows: [], calendar: null };
+
+  const recurringDotal = sumAssured * 0.05;
+  const finalDotal = sumAssured * 0.8;
   const totalDotales = sumAssured === null ? 57500 : (recurringDotal * 7) + finalDotal;
+  const payments = [5, 7, 9, 11, 13, 15, 17, 20].map((year) => {
+    const amountUdi = year === 20 ? finalDotal : recurringDotal;
+    const projectedUdiValue = r9f3VidaMujerProjectionRateForYear({
+      year,
+      currentUdiValue,
+      udiProjection,
+      nativeResult
+    });
+    const projectedMxn =
+      r9f3VidaMujerNumber(projectedUdiValue) === null
+        ? null
+        : amountUdi * projectedUdiValue;
 
-  const recurringRate = r9f3VidaMujerProjectionRateForYear({
-    year: 5,
-    currentUdiValue,
-    udiProjection,
-    nativeResult
-  });
-  const finalRate = r9f3VidaMujerProjectionRateForYear({
-    year: 20,
-    currentUdiValue,
-    udiProjection,
-    nativeResult
+    return {
+      year,
+      percent: year === 20 ? 80 : 5,
+      udi: amountUdi,
+      mxn: projectedMxn,
+      projectedUdiValue
+    };
   });
 
-  return [
-    { label: "Años 5, 7, 9, 11, 13, 15 y 17", value: r9f3VidaMujerUdiMxn(recurringDotal, recurringRate, " c/u") },
-    { label: "Año 20 (80%)", value: r9f3VidaMujerUdiMxn(finalDotal, finalRate) },
-    { label: "Total dotales", value: r9f3VidaMujerUdiMxn(totalDotales, currentUdiValue) }
-  ].filter((row) => row.value);
+  const totalProjectedMxn = payments.every((payment) => r9f3VidaMujerNumber(payment.mxn) !== null)
+    ? payments.reduce((total, payment) => total + payment.mxn, 0)
+    : null;
+
+  return {
+    rows: [
+      { label: "Años 5, 7, 9, 11, 13, 15 y 17", value: r9f3VidaMujerProjectedUdiMxn(recurringDotal, payments[0]?.projectedUdiValue) + " c/u" },
+      { label: "Año 20 (80%)", value: r9f3VidaMujerProjectedUdiMxn(finalDotal, payments.at(-1)?.projectedUdiValue) },
+      { label: "Total dotales", value: [r9f3VidaMujerUdi(totalDotales), totalProjectedMxn === null ? "MXN proyectado pendiente: motor UDI no disponible." : `${r9f3VidaMujerMxn(totalProjectedMxn)} proyectado`].filter(Boolean).join(" · ") }
+    ].filter((row) => row.value),
+    calendar: {
+      years: payments.map((payment) => payment.year),
+      payments,
+      total: {
+        udi: totalDotales,
+        mxn: totalProjectedMxn
+      }
+    }
+  };
 }
 
 function refineVidaMujerSummaryBlocks107z15p2R9F3(blocks, { nativeResult = {}, currencyMetadata = {}, udiProjection = {} } = {}) {
@@ -946,7 +980,8 @@ function refineVidaMujerSummaryBlocks107z15p2R9F3(blocks, { nativeResult = {}, c
       }
 
       if (block.type === "scheduled_endowments") {
-        return { ...block, rows: r9f3VidaMujerEndowmentRows({ nativeResult, currencyMetadata, udiProjection }) };
+        const endowments = r9f3VidaMujerEndowmentSummary({ nativeResult, currencyMetadata, udiProjection });
+        return { ...block, rows: endowments.rows, calendar: endowments.calendar };
       }
 
       return block;
@@ -1175,9 +1210,20 @@ function buildVidaMujerBenefitSummary({
     const amount = vidaMujerCoverageAmount(coverage);
     const premium = vidaMujerCoveragePremium(coverage);
     const parts = [
+      "Estatus: recomendado",
       vidaMujerUdiLabel(amount),
+      currentUdiValue !== null && amount !== null ? vidaMujerMxnLabel(amount * currentUdiValue) : null,
       premium !== null ? `Prima: ${vidaMujerUdiLabel(premium)}` : null,
+      currentUdiValue !== null && premium !== null ? `Prima MXN: ${vidaMujerMxnLabel(premium * currentUdiValue)}` : null,
     ].filter(Boolean);
+
+    if (/pep/i.test(name)) {
+      parts.push("Detalle PEP: fuente Forge Intelligence disponible; recomendado del PDF.");
+    }
+
+    if (/clp|cuidados\s+a\s+largo\s+plazo/i.test(name)) {
+      parts.push("Detalle CLP: recomendado del PDF.");
+    }
 
     if (name && parts.length) {
       recommendedRows.push({

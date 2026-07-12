@@ -63,32 +63,6 @@ function parseAmounts107z15p2R11E(value) {
     .filter((item) => item !== null);
 }
 
-function findCurrentUdiValue107z15p2R11E() {
-  const globalCandidates = [
-    globalThis?.ForgeQuoteCalculators?.currentUdiValue,
-    globalThis?.ForgeQuoteCalculators?.udiValue,
-    globalThis?.ForgeQuoteCalculators?.state?.currentUdiValue,
-    globalThis?.ForgeUdi?.currentUdiValue,
-    globalThis?.FORGE_CURRENT_UDI_VALUE,
-    globalThis?.FORGE_QUOTE_CURRENT_UDI_VALUE
-  ];
-
-  for (const candidate of globalCandidates) {
-    const parsed = numberFromText107z15p2R11E(candidate);
-    if (parsed !== null && parsed > 1) return parsed;
-  }
-
-  if (typeof localStorage !== "undefined") {
-    for (const key of Object.keys(localStorage)) {
-      if (!/udi/i.test(key)) continue;
-      const parsed = numberFromText107z15p2R11E(localStorage.getItem(key));
-      if (parsed !== null && parsed > 1) return parsed;
-    }
-  }
-
-  return null;
-}
-
 function getSolucionlineRows107z15p2R11E(text) {
   return lines107z15p2R11E(text).filter((line) => line.length > 1 && !/^[-.]+$/.test(line));
 }
@@ -293,7 +267,22 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
     sumaAseguradaBasico: finalGuaranteedRow.sumAssured
   } : null;
 
-  const currentUdiValue = numberFromText107z15p2R11E(options.currentUdiValue) ?? findCurrentUdiValue107z15p2R11E();
+  const inputCurrencyMetadata =
+    options.currencyMetadata && typeof options.currencyMetadata === "object"
+      ? options.currencyMetadata
+      : {};
+  const currentUdiValue = numberFromText107z15p2R11E(
+    options.currentUdiValue ??
+    inputCurrencyMetadata.currentUdiValue ??
+    inputCurrencyMetadata.udiValue ??
+    inputCurrencyMetadata.value ??
+    inputCurrencyMetadata.rate
+  );
+  const currencyMetadata = {
+    ...inputCurrencyMetadata,
+    currentUdiValue,
+    source: inputCurrencyMetadata.source || (currentUdiValue ? "provided_verified_udi_metadata" : "not_available")
+  };
 
   const nativeResult = {
     source: "browser_pdf_parser",
@@ -333,6 +322,7 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
     recommendedCoverages: parseRecommendedCoverages107z15p2R11E(rows),
     guaranteedValues: guaranteedFinalRow ? [guaranteedFinalRow] : [],
     guaranteedValueRows: guaranteedFinalRow ? [guaranteedFinalRow] : [],
+    currencyMetadata,
     missing_information: missingInformation,
     rawText,
     rows
@@ -366,10 +356,7 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
       product,
       insured: person.insured
     },
-    currencyMetadata: {
-      currentUdiValue,
-      source: currentUdiValue ? "browser_cache_or_global" : "not_available"
-    },
+    currencyMetadata,
     nativeResult,
     missing_information: missingInformation
   };
@@ -442,6 +429,17 @@ export async function parsePdfFileToAcceptedQuotePacket(file, options = {}) {
   });
 }
 
+async function enrichPacketWithUdiRuntime107z15p2R11F2(packet) {
+  const runtime = globalThis.ForgeUdiMxnRuntime;
+  if (!runtime || typeof runtime.enrichAcceptedQuotePacket !== "function") return packet;
+
+  try {
+    return await runtime.enrichAcceptedQuotePacket(packet);
+  } catch (error) {
+    return packet;
+  }
+}
+
 function isPdfFile107z15p2R11E(file) {
   return Boolean(file) && (
     file.type === "application/pdf" ||
@@ -476,7 +474,9 @@ function setPdfStatus107z15p2R11E(input, message, tone = "info") {
 async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
   setPdfStatus107z15p2R11E(input, "PDF recibido. Extrayendo renglones del estudio…", "info");
 
-  const packet = await parsePdfFileToAcceptedQuotePacket(file, { fileName: file.name });
+  const packet = await enrichPacketWithUdiRuntime107z15p2R11F2(
+    await parsePdfFileToAcceptedQuotePacket(file, { fileName: file.name })
+  );
 
   if (packet?.missing_information?.length) {
     setPdfStatus107z15p2R11E(

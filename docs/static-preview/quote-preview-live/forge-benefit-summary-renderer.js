@@ -210,6 +210,13 @@ function formatBenefitLine(line) {
   return values.length ? values.join(" · ") : null;
 }
 
+function formatProjectedCalendarMxn(value) {
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+    return "MXN proyectado pendiente";
+  }
+  return formatMxn(Number(value)) || "MXN proyectado pendiente";
+}
+
 function scenarioBenefitRows(block) {
   const rows = [];
   const scenarios = Array.isArray(block?.scenarios) ? block.scenarios : [];
@@ -278,6 +285,14 @@ function benefitSummaryToRuntimeRows(benefitSummary) {
     }
 
     if (Array.isArray(block.rows)) {
+      if (block.type === "scheduled_endowments" && block.calendar) {
+        rows.push({
+          label: title,
+          value: "Calendario de dotales",
+          calendar: block.calendar
+        });
+      }
+
       for (const row of block.rows) {
         const label = row.label || row.title || title;
         const value = formatBenefitLine(row) || row.value || row.text;
@@ -435,13 +450,15 @@ function tableRowsFromValue(label, value) {
 }
 
 function appendTableBlock(container, title, sourceRows) {
+  const calendarRows = sourceRows.filter((row) => row.calendar);
   const rowsForTable = [];
 
   for (const row of sourceRows) {
+    if (row.calendar) continue;
     rowsForTable.push(...tableRowsFromValue(row.label, row.value));
   }
 
-  if (!rowsForTable.length) return;
+  if (!rowsForTable.length && !calendarRows.length) return;
 
   const block = document.createElement("section");
   block.className = "fq-benefit-block-107z15p2";
@@ -450,32 +467,89 @@ function appendTableBlock(container, title, sourceRows) {
   heading.className = "fq-benefit-title-107z15p2";
   heading.textContent = title;
 
+  for (const row of calendarRows) {
+    appendEndowmentCalendar(block, row.calendar);
+  }
+
+  if (rowsForTable.length) {
+    const wrap = document.createElement("div");
+    wrap.className = "fq-benefit-table-wrap-107z15p2";
+
+    const table = document.createElement("table");
+    table.className = "fq-benefit-table-107z15p2";
+
+    const tbody = document.createElement("tbody");
+
+    for (const item of rowsForTable) {
+      const tr = document.createElement("tr");
+
+      const th = document.createElement("th");
+      th.scope = "row";
+      th.textContent = humanizeTechnicalText(item.concept);
+
+      const td = document.createElement("td");
+      td.textContent = humanizeTechnicalText(item.value);
+
+      tr.append(th, td);
+      tbody.appendChild(tr);
+    }
+
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    block.appendChild(wrap);
+  }
+
+  block.prepend(heading);
+  container.appendChild(block);
+}
+
+function appendEndowmentCalendar(container, calendar) {
+  const payments = Array.isArray(calendar?.payments)
+    ? calendar.payments
+    : [];
+  if (!payments.length) return;
+
   const wrap = document.createElement("div");
-  wrap.className = "fq-benefit-table-wrap-107z15p2";
+  wrap.className = "fq-benefit-table-wrap-107z15p2 fq-benefit-calendar-wrap-107z15p2";
 
   const table = document.createElement("table");
-  table.className = "fq-benefit-table-107z15p2";
+  table.className = "fq-benefit-table-107z15p2 fq-benefit-calendar-107z15p2";
 
   const tbody = document.createElement("tbody");
+  const rows = [
+    {
+      label: "Año",
+      cells: payments.map((payment) => payment.year)
+    },
+    {
+      label: "UDI",
+      cells: payments.map((payment) => `${formatBenefitNumber(payment.udi, 0)} UDI`)
+    },
+    {
+      label: "MXN proyectado",
+      cells: payments.map((payment) => formatProjectedCalendarMxn(payment.mxn))
+    }
+  ];
 
-  for (const item of rowsForTable) {
+  for (const item of rows) {
     const tr = document.createElement("tr");
-
     const th = document.createElement("th");
     th.scope = "row";
-    th.textContent = humanizeTechnicalText(item.concept);
+    th.textContent = item.label;
+    tr.appendChild(th);
 
-    const td = document.createElement("td");
-    td.textContent = humanizeTechnicalText(item.value);
+    for (const cellValue of item.cells) {
+      const td = document.createElement("td");
+      td.textContent = String(cellValue);
+      tr.appendChild(td);
+    }
 
-    tr.append(th, td);
     tbody.appendChild(tr);
   }
 
   table.appendChild(tbody);
   wrap.appendChild(table);
-  block.append(heading, wrap);
-  container.appendChild(block);
+  container.appendChild(wrap);
 }
 
 function appendMissingBlock(container, sourceRows) {

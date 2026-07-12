@@ -7,6 +7,10 @@ const calculators = await import(
   pathToFileURL(path.resolve("docs/quote-preview-live/forge-quote-calculators.mjs")).href
 );
 
+const runtimeModule = await import(
+  pathToFileURL(path.resolve("docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js")).href
+);
+
 const verifiedRate = {
   ...JSON.parse(fs.readFileSync("forge-rate-cache.json", "utf8")),
   cacheStatus: "CACHE_HIT"
@@ -21,6 +25,35 @@ assert.equal(metadata.currentUdiValue, verifiedRate.rates.UDI_MXN.value);
 assert.equal(metadata.source, "BANXICO_SIE_API");
 assert.equal(metadata.sourceDate, verifiedRate.rates.UDI_MXN.date);
 assert.equal(metadata.sourceMode, "CACHE");
+
+const udiRuntime = runtimeModule.createForgeUdiMxnRuntime({
+  rateProvider: async () => verifiedRate,
+  annualGrowthRate: 0.04,
+  maxPolicyYear: 20
+});
+
+assert.equal(await udiRuntime.getCurrentUdiValue(), verifiedRate.rates.UDI_MXN.value);
+assert.equal(
+  await udiRuntime.convertUdiToCurrentMxn(3062),
+  3062 * verifiedRate.rates.UDI_MXN.value
+);
+const projectedYear5 = await udiRuntime.projectUdiValueForPolicyYear(5);
+assert.equal(projectedYear5, verifiedRate.rates.UDI_MXN.value * Math.pow(1.04, 4));
+assert.equal(
+  await udiRuntime.convertUdiToProjectedMxn(2500, 5),
+  2500 * projectedYear5
+);
+
+const enrichedVidaMujerPacket = await udiRuntime.enrichAcceptedQuotePacket({
+  context: { product: "Vida Mujer" },
+  nativeResult: {
+    product: "Vida Mujer",
+    currency: "UDI",
+    paymentYears: 20
+  }
+});
+assert.equal(enrichedVidaMujerPacket.currencyMetadata.currentUdiValue, verifiedRate.rates.UDI_MXN.value);
+assert.equal(enrichedVidaMujerPacket.nativeResult.udiProjectionRows.length, 20);
 
 const parsedQuote = {
   productName: "IMAGINA SER TEST",
@@ -99,6 +132,7 @@ const benefitRenderer = fs.readFileSync(
 
 assert.match(hostHtml, /forge-accepted-quote-adapter\.js/);
 assert.match(hostHtml, /forge-benefit-summary-renderer\.js/);
+assert.match(hostHtml, /forge-udi-mxn-runtime\.js/);
 assert.match(hostHtml, /ForgeNuevaCotizacionAcceptedQuoteRuntime/);
 assert.match(benefitRenderer, /formatUdiWithMxn/);
 assert.match(benefitRenderer, /Valor UDI:/);
@@ -106,5 +140,6 @@ assert.match(benefitRenderer, /Fuente: \$\{sourceLabel \|\| "motor verificado"\}
 assert.match(benefitRenderer, /MXN pendiente: falta valor UDI verificado\./);
 assert.match(acceptedAdapter, /getVerifiedUdiRateMetadata\(\{ rateProvider: browserUdiRateProvider \}\)/);
 assert.match(acceptedAdapter, /buildRetirementPresentationScenario/);
+assert.match(acceptedAdapter, /ForgeUdiMxnRuntime/);
 
 console.log("PASS quote preview accepted UDI MXN browser calculator");
