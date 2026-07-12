@@ -13955,3 +13955,98 @@ LOCKED_DECISION=R13D_REGISTERED_R13E_IMPLEMENTATION_REQUIRES_SEPARATE_GATE
 
 NEXT=R13E_IMAGINA_SER_PDF_INTAKE_AND_DASHBOARD_POLISH_IMPLEMENTATION
 <!-- FORGE:R13D_IMAGINA_SER_PDF_INTAKE_AND_DASHBOARD_POLISH_DISCOVERY_AND_READINESS:END -->
+
+<!-- FORGE:R13F_IMAGINA_SER_DESKTOP_VISUAL_POLISH_AND_REAL_PDF_QA_DISCOVERY_AND_READINESS:START -->
+## R13F Imagina Ser Desktop Visual Polish And Real PDF QA Discovery And Readiness
+
+R13F registers and locks discovery/readiness for a desktop-only Imagina Ser visual polish and evidence-preserving real-PDF QA pass over the implemented R13E flow.
+
+Status:
+
+`DISCOVERY_LOCKED_IMPLEMENTATION_READY_WITH_CONDITIONS`
+
+Board approval:
+
+`APPROVED_BY_PROJECT_OWNER_FOR_R13F_VISUAL_POLISH_AND_QA`
+
+Miranda approval:
+
+`APPROVED_WITH_DISCIPLINED_VISUAL_ONLY_SCOPE`
+
+Applicable authority:
+
+- `FORGE_CONSTITUTION_V3.md`;
+- ADR-003 Recommendation vs Decision Authority Boundary;
+- ADR-004 No Invented Recommendations;
+- ADR-005 Product Truth Boundary;
+- ADR-007 Forecast Truth Boundary;
+- ADR-008 Economic Evidence Boundary.
+
+Discovery findings:
+
+- R13E already owns direct Imagina Ser PDF routing, shared-parser integration, zero-decimal presentation, scenario integration inside `Lo que construyes`, and Vida Mujer compatibility;
+- `forge-imagina-ser-product-dashboard-adapter.js` already emits semantic product sections and remains the preferred product-specific presentation boundary;
+- `forge-product-dashboard-template.js` already owns neutral dashboard primitives and may change only when a reusable neutral primitive is necessary;
+- desktop balance may be improved without recalculation, parser changes, Product Truth changes, DOM overlays, or post-render mutation;
+- `Lo que construyes` must remain the principal section and a separate duplicated `Escenario futuro` section remains prohibited;
+- values must preserve existing UDI-primary, projected-MXN-secondary, zero-decimal presentation;
+- local Downloads contains several Solucionline PDFs and Imagina Ser reference documents, but product identity and suitability for quote QA must be verified locally at execution time; filenames alone are not evidence.
+
+Required R13G visual implementation:
+
+- improve horizontal use and card proportions for desktop Imagina Ser only;
+- make `Lo que construyes` the dominant visual section;
+- reduce unused space in `Lo que aportas` without narrowing text into vertical or clipped layouts;
+- clarify evidence-preserving commercial labels such as `Meta patrimonial`, `Total aportado`, and projected totals without changing underlying values;
+- keep large values complete with zero decimals and thousands separators;
+- preserve scenario/forecast labels and never present forecast as fact;
+- avoid empty cards, duplicated scenario sections, DOM overlays, observers, reparenting, and one-viewport CSS;
+- preserve Vida Mujer selectors, renderer output, layout behavior, and values;
+- do not optimize or modify mobile.
+
+R13G implementation allowlist:
+
+- `docs/static-preview/quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js`;
+- `docs/static-preview/quote-preview-live/forge-product-dashboard-template.js` only for a neutral reusable primitive;
+- `docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js` only for scoped reusable desktop CSS with Vida Mujer regression proof;
+- `docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js` only if strictly required for clean routing;
+- relevant files under `tests/`;
+- `docs/evidence/r13f-imagina-ser-desktop-visual-polish-and-real-pdf-qa.md` for final execution evidence.
+
+Prohibited surfaces:
+
+- parser implementations, including `forge-pdf-browser-parser.js`;
+- mobile UI, `app.js`, schemas, routes, rule packs, financial calculations, Product Truth, and unrelated files;
+- real-client fixtures, committed PDFs, client hardcoding, sensitive data, invented values, benefits, forecasts, scenarios, premiums, or coverages.
+
+Required R13G QA:
+
+- current accepted Imagina Ser JSON;
+- direct Imagina Ser PDF when locally available and product evidence confirms identity;
+- Vida Mujer direct PDF regression;
+- two or three additional real PDFs only when locally available and product evidence confirms they are relevant; otherwise record `REAL_PDF_QA=LIMITED_NO_LOCAL_FIXTURES`;
+- desktop visual inspection for overflow, clipping, empty space, card proportions, title/label clarity, large-value completeness, and section duplication;
+- no real PDF or sensitive content copied into the repository.
+
+Required R13G validation:
+
+- clean initial worktree and exact baseline confirmation;
+- `node --check` for every changed JavaScript/test file;
+- `tests/imagina-ser-product-dashboard-adapter-test.mjs`;
+- `tests/product-dashboard-template-test.mjs`;
+- `tests/quote-benefit-summary-engine-test.mjs`;
+- `tests/pdf-browser-parser-smoke-test.mjs`;
+- parser ownership test;
+- assertions for zero-decimal large values, no separate `Escenario futuro`, principal `Lo que construyes`, and Vida Mujer selector/output preservation;
+- `git diff --check`, privacy check, exact changed-file allowlist, and prohibited-surface audit.
+
+Evidence:
+
+- `docs/evidence/r13f-imagina-ser-desktop-visual-polish-and-real-pdf-qa.md`
+
+DECISION=PASS_R13F_IMAGINA_SER_DESKTOP_VISUAL_POLISH_AND_REAL_PDF_QA_DISCOVERY_AND_READINESS
+
+LOCKED_DECISION=R13F_REGISTERED_R13G_IMPLEMENTATION_REQUIRES_SEPARATE_GATE
+
+NEXT=R13G_IMAGINA_SER_DESKTOP_VISUAL_POLISH_AND_REAL_PDF_QA_IMPLEMENTATION
+<!-- FORGE:R13F_IMAGINA_SER_DESKTOP_VISUAL_POLISH_AND_REAL_PDF_QA_DISCOVERY_AND_READINESS:END -->
