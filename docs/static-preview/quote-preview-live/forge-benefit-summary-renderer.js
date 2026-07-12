@@ -1,4 +1,7 @@
-import { normalizeBenefitLayout107z15p2R9E } from "./forge-benefit-summary-layout.js";
+import {
+  benefitBlockKey107z15p2R9E,
+  normalizeBenefitLayout107z15p2R9E
+} from "./forge-benefit-summary-layout.js";
 
 function hasValue(value) {
   return value !== null && value !== undefined && value !== "";
@@ -449,7 +452,39 @@ function tableRowsFromValue(label, value) {
   return result;
 }
 
-function appendTableBlock(container, title, sourceRows) {
+function benefitValueKind(value) {
+  const normalized = normalizeVisibleSummaryLabel(value);
+  if (/\bmxn\b/i.test(value) || /^≈?\s*\$/i.test(value)) return "mxn";
+  if (normalized.includes("amparado") || normalized.includes("estatus recomendado")) return "status";
+  if (normalized.includes("fuente forge") || normalized.includes("detalle ") || normalized.includes("pendiente")) return "note";
+  return "udi";
+}
+
+function appendSemanticValue(container, rawValue) {
+  const parts = splitBenefitSegments(humanizeTechnicalText(rawValue));
+  for (const part of parts.length ? parts : [String(rawValue || "")]) {
+    const span = document.createElement("span");
+    span.className = "fq-benefit-value-part-107z15p2";
+    span.dataset.valueKind = benefitValueKind(part);
+    span.textContent = part;
+    container.appendChild(span);
+  }
+}
+
+function createBenefitRow(item) {
+  const row = document.createElement("div");
+  row.className = "fq-benefit-row-107z15p2";
+  const label = document.createElement("div");
+  label.className = "fq-benefit-label-107z15p2";
+  label.textContent = humanizeTechnicalText(item.concept);
+  const value = document.createElement("div");
+  value.className = "fq-benefit-value-107z15p2";
+  appendSemanticValue(value, item.value);
+  row.append(label, value);
+  return row;
+}
+
+function appendTableBlock(container, title, sourceRows, blockKey = null) {
   const calendarRows = sourceRows.filter((row) => row.calendar);
   const rowsForTable = [];
 
@@ -458,45 +493,45 @@ function appendTableBlock(container, title, sourceRows) {
     rowsForTable.push(...tableRowsFromValue(row.label, row.value));
   }
 
+  if (blockKey === "endowments" && calendarRows.length) rowsForTable.length = 0;
+
   if (!rowsForTable.length && !calendarRows.length) return;
 
   const block = document.createElement("section");
-  block.className = "fq-benefit-block-107z15p2";
+  block.className = "fq-benefit-card-107z15p2";
+  block.dataset.forgeBenefitBlock = blockKey || benefitBlockKey107z15p2R9E(title);
 
   const heading = document.createElement("h4");
-  heading.className = "fq-benefit-title-107z15p2";
+  heading.className = "fq-benefit-card-title-107z15p2";
   heading.textContent = title;
 
   for (const row of calendarRows) {
     appendEndowmentCalendar(block, row.calendar);
   }
 
-  if (rowsForTable.length) {
-    const wrap = document.createElement("div");
-    wrap.className = "fq-benefit-table-wrap-107z15p2";
-
-    const table = document.createElement("table");
-    table.className = "fq-benefit-table-107z15p2";
-
-    const tbody = document.createElement("tbody");
-
+  if (rowsForTable.length && block.dataset.forgeBenefitBlock === "contribution") {
+    const grid = document.createElement("div");
+    grid.className = "fq-benefit-mini-grid-107z15p2";
     for (const item of rowsForTable) {
-      const tr = document.createElement("tr");
-
-      const th = document.createElement("th");
-      th.scope = "row";
-      th.textContent = humanizeTechnicalText(item.concept);
-
-      const td = document.createElement("td");
-      td.textContent = humanizeTechnicalText(item.value);
-
-      tr.append(th, td);
-      tbody.appendChild(tr);
+      const tile = document.createElement("div");
+      tile.className = "fq-benefit-mini-card-107z15p2";
+      const label = document.createElement("div");
+      label.className = "fq-benefit-label-107z15p2";
+      label.textContent = humanizeTechnicalText(item.concept);
+      const value = document.createElement("div");
+      value.className = "fq-benefit-value-107z15p2";
+      appendSemanticValue(value, item.value);
+      tile.append(label, value);
+      grid.appendChild(tile);
     }
-
-    table.appendChild(tbody);
-    wrap.appendChild(table);
-    block.appendChild(wrap);
+    block.appendChild(grid);
+  } else if (rowsForTable.length) {
+    const rows = document.createElement("div");
+    rows.className = block.dataset.forgeBenefitBlock === "women_health"
+      ? "fq-benefit-pcf-grid-107z15p2"
+      : "fq-benefit-rows-107z15p2";
+    rowsForTable.forEach((item) => rows.appendChild(createBenefitRow(item)));
+    block.appendChild(rows);
   }
 
   block.prepend(heading);
@@ -513,81 +548,145 @@ function appendEndowmentCalendar(container, calendar) {
   const finalPayment = payments.find((payment) => Number(payment.year) === 20) || null;
 
   const schedule = document.createElement("div");
-  schedule.className = "fq-endowment-schedule-107z15p2";
+  schedule.className = "fq-benefit-dotales-107z15p2";
 
   if (recurrent.length) {
-    const recurrentBlock = document.createElement("div");
-    recurrentBlock.className = "fq-endowment-schedule-card-107z15p2 fq-endowment-schedule-card-wide-107z15p2";
-
     const subtitle = document.createElement("p");
-    subtitle.className = "fq-endowment-schedule-subtitle-107z15p2";
+    subtitle.className = "fq-benefit-dotales-kicker-107z15p2";
     subtitle.textContent = "5% = 2,500 UDI c/u";
-
-    const table = document.createElement("table");
-    table.className = "fq-endowment-schedule-table-107z15p2";
-
-    const tbody = document.createElement("tbody");
-    const rows = [
-      ["Años", ...recurrent.map((payment) => payment.year)],
-      ["UDI", ...recurrent.map((payment) => `${formatBenefitNumber(payment.udi, 0)} UDI`)],
-      ["MXN", ...recurrent.map((payment) => formatProjectedCalendarMxn(payment.mxn))]
-    ];
-
-    for (const rowValues of rows) {
-      const tr = document.createElement("tr");
-      rowValues.forEach((cellValue, index) => {
-        const cell = document.createElement(index === 0 ? "th" : "td");
-        if (index === 0) cell.scope = "row";
-        cell.textContent = String(cellValue);
-        tr.appendChild(cell);
-      });
-      tbody.appendChild(tr);
+    const chips = document.createElement("div");
+    chips.className = "fq-benefit-dotal-chips-107z15p2";
+    for (const payment of recurrent) {
+      const chip = document.createElement("div");
+      chip.className = "fq-benefit-dotal-chip-107z15p2";
+      const year = document.createElement("span");
+      year.className = "fq-benefit-dotal-year-107z15p2";
+      year.textContent = `Año ${payment.year}`;
+      const udi = document.createElement("strong");
+      udi.className = "fq-benefit-dotal-udi-107z15p2";
+      udi.textContent = `${formatBenefitNumber(payment.udi, 0)} UDI`;
+      const mxn = document.createElement("span");
+      mxn.className = "fq-benefit-dotal-mxn-107z15p2";
+      mxn.textContent = formatProjectedCalendarMxn(payment.mxn);
+      chip.append(year, udi, mxn);
+      chips.appendChild(chip);
     }
-
-    table.appendChild(tbody);
-    recurrentBlock.append(subtitle, table);
-    schedule.appendChild(recurrentBlock);
+    schedule.append(subtitle, chips);
   }
+
+  const totals = document.createElement("div");
+  totals.className = "fq-benefit-dotal-totals-107z15p2";
 
   if (finalPayment) {
     const finalBlock = document.createElement("div");
-    finalBlock.className = "fq-endowment-schedule-card-107z15p2";
-    finalBlock.innerHTML = "";
+    finalBlock.className = "fq-benefit-dotal-summary-107z15p2";
 
     const label = document.createElement("span");
-    label.className = "fq-endowment-schedule-label-107z15p2";
+    label.className = "fq-benefit-label-107z15p2";
     label.textContent = "Año 20 (80%)";
 
     const udi = document.createElement("strong");
+    udi.className = "fq-benefit-dotal-udi-107z15p2";
     udi.textContent = `${formatBenefitNumber(finalPayment.udi, 0)} UDI`;
 
     const mxn = document.createElement("span");
+    mxn.className = "fq-benefit-dotal-mxn-107z15p2";
     mxn.textContent = formatProjectedCalendarMxn(finalPayment.mxn);
 
     finalBlock.append(label, udi, mxn);
-    schedule.appendChild(finalBlock);
+    totals.appendChild(finalBlock);
   }
 
   const total = calendar?.total;
   if (total) {
     const totalBlock = document.createElement("div");
-    totalBlock.className = "fq-endowment-schedule-card-107z15p2 fq-endowment-schedule-total-107z15p2";
+    totalBlock.className = "fq-benefit-dotal-summary-107z15p2";
 
     const label = document.createElement("span");
-    label.className = "fq-endowment-schedule-label-107z15p2";
+    label.className = "fq-benefit-label-107z15p2";
     label.textContent = "Total dotales / recuperación por supervivencia";
 
     const udi = document.createElement("strong");
+    udi.className = "fq-benefit-dotal-udi-107z15p2";
     udi.textContent = `${formatBenefitNumber(total.udi, 0)} UDI`;
 
     const mxn = document.createElement("span");
+    mxn.className = "fq-benefit-dotal-mxn-107z15p2";
     mxn.textContent = formatProjectedCalendarMxn(total.mxn);
 
     totalBlock.append(label, udi, mxn);
-    schedule.appendChild(totalBlock);
+    totals.appendChild(totalBlock);
   }
 
+  if (totals.children.length) schedule.appendChild(totals);
+
   container.appendChild(schedule);
+}
+
+function recommendedBenefitName(label) {
+  return humanizeTechnicalText(label).replace(/^Recomendado\s*-\s*/i, "").trim();
+}
+
+function recommendedBenefitFields(value) {
+  const fields = [];
+  for (const rawPart of splitBenefitSegments(value)) {
+    const part = humanizeTechnicalText(rawPart);
+    if (/^Detalle\s+(PEP|CLP)/i.test(part)) continue;
+    if (/^Estatus:/i.test(part)) fields.push({ label: "Estatus", value: part.replace(/^Estatus:\s*/i, "") });
+    else if (/^Prima MXN:/i.test(part)) fields.push({ label: "Prima MXN", value: part.replace(/^Prima MXN:\s*/i, "") });
+    else if (/^Prima:/i.test(part)) fields.push({ label: "Prima UDI", value: part.replace(/^Prima:\s*/i, "") });
+    else if (/MXN/i.test(part)) fields.push({ label: "Suma asegurada MXN", value: part });
+    else if (/UDI/i.test(part)) fields.push({ label: "Suma asegurada", value: part });
+  }
+  return fields;
+}
+
+function appendRecommendedBlock(container, sourceRows) {
+  if (!sourceRows.length) return;
+  const block = document.createElement("section");
+  block.className = "fq-benefit-card-107z15p2";
+  block.dataset.forgeBenefitBlock = "recommended";
+  const heading = document.createElement("h4");
+  heading.className = "fq-benefit-card-title-107z15p2";
+  heading.textContent = "Beneficios recomendados";
+  block.appendChild(heading);
+
+  const totalRow = sourceRows.find((row) => normalizeVisibleSummaryLabel(row.label).includes("prima total con beneficios recomendados"));
+  if (totalRow) {
+    const total = document.createElement("div");
+    total.className = "fq-benefit-recommended-total-107z15p2";
+    const totalValue = String(totalRow.value || "").replace(/^Prima total con beneficios recomendados:\s*/i, "");
+    total.appendChild(createBenefitRow({ concept: "Prima total con beneficios recomendados", value: totalValue }));
+    block.appendChild(total);
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "fq-benefit-recommended-grid-107z15p2";
+  for (const row of sourceRows.filter((item) => /^recomendado\s*-/i.test(String(item.label || "")))) {
+    const card = document.createElement("article");
+    card.className = "fq-benefit-recommended-card-107z15p2";
+    const name = document.createElement("h5");
+    name.className = "fq-benefit-recommended-name-107z15p2";
+    name.textContent = recommendedBenefitName(row.label);
+    const fields = document.createElement("div");
+    fields.className = "fq-benefit-recommended-fields-107z15p2";
+    for (const item of recommendedBenefitFields(row.value)) {
+      const field = document.createElement("div");
+      field.className = "fq-benefit-recommended-field-107z15p2";
+      const label = document.createElement("div");
+      label.className = "fq-benefit-label-107z15p2";
+      label.textContent = item.label;
+      const value = document.createElement("div");
+      value.className = "fq-benefit-value-107z15p2";
+      appendSemanticValue(value, item.value);
+      field.append(label, value);
+      fields.appendChild(field);
+    }
+    card.append(name, fields);
+    grid.appendChild(card);
+  }
+  if (grid.children.length) block.appendChild(grid);
+  container.appendChild(block);
 }
 
 function appendMissingBlock(container, sourceRows) {
@@ -606,10 +705,11 @@ function appendMissingBlock(container, sourceRows) {
   if (!values.length) return;
 
   const block = document.createElement("section");
-  block.className = "fq-benefit-block-107z15p2";
+  block.className = "fq-benefit-card-107z15p2";
+  block.dataset.forgeBenefitBlock = "missing";
 
   const heading = document.createElement("h4");
-  heading.className = "fq-benefit-title-107z15p2";
+  heading.className = "fq-benefit-card-title-107z15p2";
   heading.textContent = "Faltantes antes de presentar";
 
   const list = document.createElement("ul");
@@ -684,6 +784,15 @@ function writeVisibleBenefitRuntimeGrid(rows, emptyText) {
     }
 
     if (
+      normalizedLabel.includes("fallecimiento") ||
+      normalizedLabel === "pcf cancer femenino" ||
+      normalizedLabel.includes("lo que proteges")
+    ) {
+      groups.protection.push(row);
+      continue;
+    }
+
+    if (
       normalizedLabel.includes("pcf") ||
       normalizedLabel.includes("cancer") ||
       normalizedLabel.includes("tumor") ||
@@ -723,9 +832,13 @@ function writeVisibleBenefitRuntimeGrid(rows, emptyText) {
     }
 
     if (
-      normalizedLabel.includes("aporta") ||
-      normalizedLabel.includes("aportado") ||
-      normalizedValue.includes("total aportado")
+      normalizedLabel.includes("prima anual base") ||
+      normalizedLabel.includes("prima ave anual") ||
+      normalizedLabel.includes("prima anual total con ave") ||
+      normalizedLabel.includes("total aportado") ||
+      normalizedLabel.includes("prima anual acumulada con ave") ||
+      normalizedLabel.includes("plazo de pago") ||
+      normalizedLabel.includes("lo que aportas")
     ) {
       groups.contribution.push(row);
       continue;
@@ -746,20 +859,27 @@ function writeVisibleBenefitRuntimeGrid(rows, emptyText) {
   groups.scenarios.sort((a, b) => scenarioOrder(a) - scenarioOrder(b));
 
   const wrapper = document.createElement("div");
-  wrapper.className = "fq-benefit-summary-107z15p2";
+  wrapper.className = "fq-benefit-dashboard-107z15p2";
 
-  if (groups.contribution.length) appendTableBlock(wrapper, "Lo que aportas", groups.contribution);
-  if (groups.protection.length) appendTableBlock(wrapper, "Lo que proteges", groups.protection);
-  if (groups.endowments.length) appendTableBlock(wrapper, "Dotales por supervivencia", groups.endowments);
-  if (groups.recovery.length) appendTableBlock(wrapper, "Recuperación", groups.recovery);
-  if (groups.womenHealth.length) appendTableBlock(wrapper, "Tabla de enfermedades protegidas PCF", groups.womenHealth);
-  if (groups.recommended.length) appendTableBlock(wrapper, "Beneficios recomendados", groups.recommended);
+  if (groups.contribution.length) appendTableBlock(wrapper, "Lo que aportas", groups.contribution, "contribution");
+  if (groups.protection.length) appendTableBlock(wrapper, "Lo que proteges", groups.protection, "protection");
+  if (groups.endowments.length) appendTableBlock(wrapper, "Dotales por supervivencia", groups.endowments, "endowments");
+  if (groups.recovery.length) appendTableBlock(wrapper, "Recuperación", groups.recovery.filter((row) => !normalizeVisibleSummaryLabel(row.label).includes("dotales por supervivencia")), "recovery");
+  if (groups.womenHealth.length) appendTableBlock(wrapper, "Tabla de enfermedades protegidas PCF", groups.womenHealth, "women_health");
+  if (groups.recommended.length) appendRecommendedBlock(wrapper, groups.recommended);
 
   for (const scenario of groups.scenarios) {
     appendTableBlock(wrapper, humanizeTechnicalText(scenario.label), [scenario]);
   }
 
-  if (groups.other.length) appendTableBlock(wrapper, "Otros detalles", groups.other);
+  const otherRows = groups.other.filter((row) => {
+    const label = normalizeVisibleSummaryLabel(row.label);
+    return label.includes("bait invalidez") ||
+      label.includes("bam asistencia") ||
+      label.includes("av apoyo en vida") ||
+      label.includes("bit exencion");
+  });
+  if (otherRows.length) appendTableBlock(wrapper, "Otros detalles", otherRows, "other");
   if (groups.missing.length) appendMissingBlock(wrapper, groups.missing);
 
   target.appendChild(wrapper);
