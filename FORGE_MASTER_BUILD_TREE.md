@@ -13866,3 +13866,92 @@ LOCKED_DECISION=R13B_REGISTERED_R13C_IMPLEMENTATION_REQUIRES_SEPARATE_GATE
 
 NEXT=R13C_IMAGINA_SER_PRODUCT_DASHBOARD_ADAPTER_IMPLEMENTATION
 <!-- FORGE:R13B_IMAGINA_SER_PRODUCT_DASHBOARD_ADAPTER_DISCOVERY_AND_READINESS:END -->
+
+<!-- FORGE:R13D_IMAGINA_SER_PDF_INTAKE_AND_DASHBOARD_POLISH_DISCOVERY_AND_READINESS:START -->
+## R13D Imagina Ser PDF Intake And Dashboard Polish Discovery And Readiness
+
+R13D registers and locks discovery/readiness for product-aware direct PDF intake and evidence-preserving Imagina Ser dashboard polish.
+
+Status:
+
+`DISCOVERY_LOCKED_IMPLEMENTATION_READY_WITH_CONDITIONS`
+
+Board approval:
+
+`APPROVED_FOR_R13D_IMPLEMENTATION_WITH_IMAGINA_SER_PARSER_BOUNDARY`
+
+Miranda approval:
+
+`APPROVED`
+
+Root cause:
+
+- `docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js` currently routes every direct PDF through `parseVidaMujerPdfTextToAcceptedQuotePacket()`;
+- non-Vida Mujer PDFs therefore receive the Vida Mujer-specific missing message even when the text identifies Imagina Ser;
+- the accepted JSON flow is separate and already reaches the R13C Imagina Ser dashboard adapter;
+- `product-intelligence/evidence/solucionline-retirement-parser.js` already provides the canonical candidate parser for Imagina Ser/Solucionline retirement quote text.
+
+Required R13E intake architecture:
+
+```text
+direct PDF
+-> existing browser text extraction
+-> evidence-based product detection
+-> Vida Mujer parser OR existing Solucionline retirement parser
+-> product-specific accepted-quote packet mapping
+-> existing accepted JSON handoff
+```
+
+Intake boundaries:
+
+- preserve the current Vida Mujer parser and packet output;
+- recognize Imagina Ser only from sufficient product text evidence;
+- reuse `parseSolucionlineRetirementQuote()` rather than create duplicate retirement parsing rules;
+- map only parser-emitted fields into the accepted-quote contract;
+- preserve parser evidence states and convert missing evidence to Imagina Ser-specific `missing_information`;
+- never emit the Vida Mujer-specific error for a positively identified Imagina Ser PDF;
+- unknown product remains unknown and must not be coerced into either product family;
+- accepted JSON behavior remains unchanged.
+
+Required R13E dashboard polish:
+
+- round UDI and MXN to zero decimals for presentation only;
+- apply thousands separators and preserve UDI as primary / MXN as secondary;
+- do not modify underlying Product Intelligence or scenario values;
+- merge evidence duplicated between `Lo que construyes` and `Escenario futuro` into the primary construction section;
+- omit a separate future-scenario section when it would repeat the same evidence;
+- keep scenario labels and forecast boundaries visible inside the compact construction presentation;
+- use the available desktop grid without changing mobile behavior;
+- preserve all Vida Mujer selectors, layout, grouping, and formatting.
+
+Implementation boundaries:
+
+- only the Imagina Ser branch of direct PDF intake may change parser integration;
+- desktop Imagina Ser adapter/template presentation only;
+- no mobile, schema, route, `app.js`, or rule-pack changes;
+- no client hardcoding, sensitive data, real-client fixtures, DOM overlays, product-value hardcoding, or financial recalculation;
+- no implementation source is authorized by this R13D registration commit;
+- functional implementation is deferred to `R13E_IMAGINA_SER_PDF_INTAKE_AND_DASHBOARD_POLISH_IMPLEMENTATION`.
+
+Required R13E validation:
+
+- `node --check` for every changed JavaScript file;
+- direct Imagina Ser PDF-text intake test proving no Vida Mujer error;
+- accepted Imagina Ser JSON regression;
+- zero-decimal UDI/MXN presentation assertions with thousands separators;
+- construction/future-scenario deduplication assertion;
+- Vida Mujer parser, logic, and selector regression;
+- reusable template, quote benefit-summary, PDF browser parser smoke, and parser ownership tests;
+- `git diff --check`;
+- privacy check and exact changed-file allowlist.
+
+Evidence:
+
+- `docs/evidence/r13d-imagina-ser-pdf-intake-and-dashboard-polish.md`
+
+DECISION=PASS_R13D_IMAGINA_SER_PDF_INTAKE_AND_DASHBOARD_POLISH_DISCOVERY_AND_READINESS
+
+LOCKED_DECISION=R13D_REGISTERED_R13E_IMPLEMENTATION_REQUIRES_SEPARATE_GATE
+
+NEXT=R13E_IMAGINA_SER_PDF_INTAKE_AND_DASHBOARD_POLISH_IMPLEMENTATION
+<!-- FORGE:R13D_IMAGINA_SER_PDF_INTAKE_AND_DASHBOARD_POLISH_DISCOVERY_AND_READINESS:END -->
