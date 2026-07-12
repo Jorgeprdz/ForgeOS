@@ -14273,3 +14273,22 @@ DECISION=PASS_R14I_SEGUBECA_DESKTOP_RESPONSIVE_LAYOUT_REPAIR
 
 NEXT=R14I_CLOSED
 <!-- FORGE:R14I_SEGUBECA_DESKTOP_RESPONSIVE_LAYOUT_REPAIR:END -->
+
+<!-- FORGE:R14J_SEGUBECA_PROJECTED_MXN_RUNTIME_INTEGRATION:START -->
+## R14J SeguBeca Projected MXN Runtime Integration
+
+Status: FUNCTIONAL_PASS pending validated commit; live visual inspection delegated to repository owner.
+
+- Baseline: `7c64ea4220c7058677d490eaeab36cf5a2642837`.
+- Owner: Quote Preview browser UDI/MXN runtime.
+- Scope: enrich SeguBeca native UDI values with current/projected MXN while preserving UDI and provenance.
+- Product rule: 4.5% annual UDI projection for SeguBeca, derived from canonical evidence and the SB workbook model.
+- Current values use verified current UDI; future education and administration values use policy-year projection.
+- Total contributions are converted year by year, not with one future or current rate.
+- Missing verified UDI rate returns `BLOCKED_NO_VERIFIED_UDI_RATE`.
+- Parser, renderer, dashboard adapter, layout, Excel, rate cache, Vida Mujer, Imagina Ser, and ORVI remain outside the change boundary.
+- FUNCTIONAL_PASS requires focused tests, all non-browser regressions, exact staging, privacy, commit, push, and clean 0/0.
+- Browser-dependent tests are listed for repository-owner manual inspection at 768/1024/1366/1536.
+
+Next after functional PASS: owner visual/financial spot-check of the versioned live SeguBeca quote; ORVI remains separate.
+<!-- FORGE:R14J_SEGUBECA_PROJECTED_MXN_RUNTIME_INTEGRATION:END -->
