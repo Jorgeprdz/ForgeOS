@@ -509,47 +509,85 @@ function appendEndowmentCalendar(container, calendar) {
     : [];
   if (!payments.length) return;
 
-  const wrap = document.createElement("div");
-  wrap.className = "fq-benefit-table-wrap-107z15p2 fq-benefit-calendar-wrap-107z15p2";
+  const recurrent = payments.filter((payment) => Number(payment.year) !== 20);
+  const finalPayment = payments.find((payment) => Number(payment.year) === 20) || null;
 
-  const table = document.createElement("table");
-  table.className = "fq-benefit-table-107z15p2 fq-benefit-calendar-107z15p2";
+  const schedule = document.createElement("div");
+  schedule.className = "fq-endowment-schedule-107z15p2";
 
-  const tbody = document.createElement("tbody");
-  const rows = [
-    {
-      label: "Año",
-      cells: payments.map((payment) => payment.year)
-    },
-    {
-      label: "UDI",
-      cells: payments.map((payment) => `${formatBenefitNumber(payment.udi, 0)} UDI`)
-    },
-    {
-      label: "MXN proyectado",
-      cells: payments.map((payment) => formatProjectedCalendarMxn(payment.mxn))
+  if (recurrent.length) {
+    const recurrentBlock = document.createElement("div");
+    recurrentBlock.className = "fq-endowment-schedule-card-107z15p2 fq-endowment-schedule-card-wide-107z15p2";
+
+    const subtitle = document.createElement("p");
+    subtitle.className = "fq-endowment-schedule-subtitle-107z15p2";
+    subtitle.textContent = "5% = 2,500 UDI c/u";
+
+    const table = document.createElement("table");
+    table.className = "fq-endowment-schedule-table-107z15p2";
+
+    const tbody = document.createElement("tbody");
+    const rows = [
+      ["Años", ...recurrent.map((payment) => payment.year)],
+      ["UDI", ...recurrent.map((payment) => `${formatBenefitNumber(payment.udi, 0)} UDI`)],
+      ["MXN", ...recurrent.map((payment) => formatProjectedCalendarMxn(payment.mxn))]
+    ];
+
+    for (const rowValues of rows) {
+      const tr = document.createElement("tr");
+      rowValues.forEach((cellValue, index) => {
+        const cell = document.createElement(index === 0 ? "th" : "td");
+        if (index === 0) cell.scope = "row";
+        cell.textContent = String(cellValue);
+        tr.appendChild(cell);
+      });
+      tbody.appendChild(tr);
     }
-  ];
 
-  for (const item of rows) {
-    const tr = document.createElement("tr");
-    const th = document.createElement("th");
-    th.scope = "row";
-    th.textContent = item.label;
-    tr.appendChild(th);
-
-    for (const cellValue of item.cells) {
-      const td = document.createElement("td");
-      td.textContent = String(cellValue);
-      tr.appendChild(td);
-    }
-
-    tbody.appendChild(tr);
+    table.appendChild(tbody);
+    recurrentBlock.append(subtitle, table);
+    schedule.appendChild(recurrentBlock);
   }
 
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-  container.appendChild(wrap);
+  if (finalPayment) {
+    const finalBlock = document.createElement("div");
+    finalBlock.className = "fq-endowment-schedule-card-107z15p2";
+    finalBlock.innerHTML = "";
+
+    const label = document.createElement("span");
+    label.className = "fq-endowment-schedule-label-107z15p2";
+    label.textContent = "Año 20 (80%)";
+
+    const udi = document.createElement("strong");
+    udi.textContent = `${formatBenefitNumber(finalPayment.udi, 0)} UDI`;
+
+    const mxn = document.createElement("span");
+    mxn.textContent = formatProjectedCalendarMxn(finalPayment.mxn);
+
+    finalBlock.append(label, udi, mxn);
+    schedule.appendChild(finalBlock);
+  }
+
+  const total = calendar?.total;
+  if (total) {
+    const totalBlock = document.createElement("div");
+    totalBlock.className = "fq-endowment-schedule-card-107z15p2 fq-endowment-schedule-total-107z15p2";
+
+    const label = document.createElement("span");
+    label.className = "fq-endowment-schedule-label-107z15p2";
+    label.textContent = "Total dotales / recuperación por supervivencia";
+
+    const udi = document.createElement("strong");
+    udi.textContent = `${formatBenefitNumber(total.udi, 0)} UDI`;
+
+    const mxn = document.createElement("span");
+    mxn.textContent = formatProjectedCalendarMxn(total.mxn);
+
+    totalBlock.append(label, udi, mxn);
+    schedule.appendChild(totalBlock);
+  }
+
+  container.appendChild(schedule);
 }
 
 function appendMissingBlock(container, sourceRows) {
@@ -827,11 +865,13 @@ function renderAcceptedQuote(calc, { writeRuntimeGrid } = {}) {
   ]);
   const dynamicBenefitRows = renderVisibleDynamicBenefitSummary(calc);
   if (typeof writeRuntimeGrid === "function") {
-    writeRuntimeGrid(
-      "Valores, beneficios o escenarios relevantes",
-      dynamicBenefitRows.length ? dynamicBenefitRows : benefitFallbackRows(calc),
-      "El PDF no entregó valores adicionales."
-    );
+    if (!dynamicBenefitRows.length) {
+      writeRuntimeGrid(
+        "Valores, beneficios o escenarios relevantes",
+        benefitFallbackRows(calc),
+        "El PDF no entregó valores adicionales."
+      );
+    }
     const missing = [
       ["Forma de pago", calc.paymentMode],
       ["Moneda", calc.currency],

@@ -273,6 +273,7 @@ export {
 
   function compactDotalesCard107z15p2R11F(card) {
     if (!card || card.dataset.forgeR11fCompacted === "true") return;
+    if (card?.querySelector?.(".fq-endowment-schedule-107z15p2")) return;
     const text = card.textContent || "";
     const normalized = normalize107z15p2R11F(text);
     if (!normalized.includes("dotales por supervivencia")) return;
@@ -322,7 +323,11 @@ export {
       cards.push(card);
 
       if (headingText.includes("dotales por supervivencia")) {
-        compactDotalesCard107z15p2R11F(card);
+        if (card.querySelector?.(".fq-endowment-schedule-107z15p2")) {
+          card.classList.add("forge-107z15p2-r11f-wide-card", "forge-107z15p2-r11f-schedule-card");
+        } else {
+          compactDotalesCard107z15p2R11F(card);
+        }
       } else if (
         headingText.includes("beneficios recomendados") ||
         headingText.includes("tabla de enfermedades protegidas pcf") ||

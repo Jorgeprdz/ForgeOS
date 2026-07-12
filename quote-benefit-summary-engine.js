@@ -861,6 +861,17 @@ function r9f3VidaMujerRowNumber(row, keys) {
 function r9f3VidaMujerContributionRows({ nativeResult = {}, currencyMetadata = {} } = {}) {
   const currentUdiValue = r9f3VidaMujerCurrentUdiRate(currencyMetadata);
   const finalRow = r9f3VidaMujerFinalGuaranteedRow(nativeResult);
+  const guaranteedRows = [
+    ...r9f3VidaMujerRows(nativeResult.guaranteedValues),
+    ...r9f3VidaMujerRows(nativeResult.guaranteedValueRows),
+    ...r9f3VidaMujerRows(nativeResult.valoresGarantizados),
+    ...r9f3VidaMujerRows(nativeResult.cashValueRows)
+  ].sort((left, right) => {
+    const leftYear = r9f3VidaMujerFirstNumber(left?.year, left?.policyYear, left?.age, left?.edad);
+    const rightYear = r9f3VidaMujerFirstNumber(right?.year, right?.policyYear, right?.age, right?.edad);
+    return (leftYear ?? 0) - (rightYear ?? 0);
+  });
+  const firstRow = guaranteedRows[0] || null;
 
   const baseAnnualPremium = r9f3VidaMujerFirstNumber(
     nativeResult.totalAnnualPremium,
@@ -881,6 +892,29 @@ function r9f3VidaMujerContributionRows({ nativeResult = {}, currencyMetadata = {
     nativeResult.premiumWithRecommended,
     nativeResult.annualPremiumWithRecommended,
     baseAnnualPremium !== null && recommendedPremium > 0 ? baseAnnualPremium + recommendedPremium : null
+  );
+
+  const annualPremiumTotalWithAve = r9f3VidaMujerFirstNumber(
+    nativeResult.annualPremiumTotalWithAve,
+    nativeResult.annualPremiumWithAve,
+    nativeResult.primaAnualTotalConAve,
+    nativeResult.primaAnualConAve,
+    nativeResult.premiumTable?.plannedAnnual,
+    firstRow ? r9f3VidaMujerRowNumber(firstRow, [
+      "annualPremiumAccumulatedWithAve",
+      "primaAnualAcumuladaConAve",
+      "premiumAccumulatedWithAve",
+      "accumulatedPremiumWithAve"
+    ]) : null
+  );
+
+  const annualAvePremium = r9f3VidaMujerFirstNumber(
+    nativeResult.annualAvePremium,
+    nativeResult.primaAveAnual,
+    nativeResult.premiumTable?.annualAve,
+    annualPremiumTotalWithAve !== null && baseAnnualPremium !== null
+      ? annualPremiumTotalWithAve - baseAnnualPremium
+      : null
   );
 
   const paymentYears = r9f3VidaMujerFirstNumber(
@@ -905,10 +939,12 @@ function r9f3VidaMujerContributionRows({ nativeResult = {}, currencyMetadata = {
   );
 
   return [
-    { label: "Prima total anual", value: r9f3VidaMujerUdiMxn(baseAnnualPremium, currentUdiValue) },
-    { label: "Prima total con recomendados", value: r9f3VidaMujerUdiMxn(annualPremiumWithRecommended, currentUdiValue) },
+    { label: "Prima anual base", value: r9f3VidaMujerUdiMxn(baseAnnualPremium, currentUdiValue) },
+    { label: "Prima AVE anual", value: r9f3VidaMujerUdiMxn(annualAvePremium, currentUdiValue) },
+    { label: "Prima anual total con AVE", value: r9f3VidaMujerUdiMxn(annualPremiumTotalWithAve, currentUdiValue) },
+    { label: "Prima total con beneficios recomendados", value: r9f3VidaMujerUdiMxn(annualPremiumWithRecommended, currentUdiValue) },
     { label: "Plazo de pago", value: paymentYears === null ? null : `${Math.round(paymentYears).toLocaleString("es-MX")} años` },
-    { label: "Total aportado", value: r9f3VidaMujerUdiMxn(totalContributed, currentUdiValue) }
+    { label: "Total aportado / Prima anual acumulada con AVE", value: r9f3VidaMujerUdiMxn(totalContributed, currentUdiValue) }
   ].filter((row) => row.value);
 }
 

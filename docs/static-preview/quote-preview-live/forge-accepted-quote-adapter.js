@@ -174,6 +174,7 @@ function buildAcceptedNativeResult107z15p2R9C(packet = {}) {
   if (premiumTable.plannedAnnual === undefined) {
     premiumTable.plannedAnnual =
       packet.plannedOrAvePremium ??
+      packet.annualPremiumTotalWithAve ??
       packet.plannedAnnualPremium ??
       packet.avePremium ??
       original.annualPremiumWithAve ??
@@ -193,7 +194,10 @@ function buildAcceptedNativeResult107z15p2R9C(packet = {}) {
     sumAssured: original.sumAssured ?? original.sumInsured ?? packet.sumAssured ?? packet.sumInsured ?? null,
     totalAnnualPremium: original.totalAnnualPremium ?? original.annualPremium ?? packet.annualPremium ?? packet.primaAnual ?? null,
     annualPremium: original.annualPremium ?? original.totalAnnualPremium ?? packet.annualPremium ?? packet.primaAnual ?? null,
-    annualPremiumWithAve: original.annualPremiumWithAve ?? original.primaAnualConAve ?? packet.plannedOrAvePremium ?? packet.avePremium ?? packet.plannedAnnualPremium ?? null,
+    annualPremiumWithAve: original.annualPremiumWithAve ?? original.primaAnualConAve ?? original.annualPremiumTotalWithAve ?? packet.annualPremiumTotalWithAve ?? packet.plannedOrAvePremium ?? packet.avePremium ?? packet.plannedAnnualPremium ?? null,
+    annualPremiumTotalWithAve: original.annualPremiumTotalWithAve ?? original.primaAnualTotalConAve ?? packet.annualPremiumTotalWithAve ?? packet.plannedOrAvePremium ?? null,
+    annualAvePremium: original.annualAvePremium ?? original.primaAveAnual ?? packet.annualAvePremium ?? null,
+    annualPremiumAccumulatedWithAve: original.annualPremiumAccumulatedWithAve ?? original.primaTotalAcumuladaConAve ?? packet.annualPremiumAccumulatedWithAve ?? null,
     paymentTerm: original.paymentTerm ?? packet.paymentTerm ?? packet.coveragePeriod ?? null,
     policyTerm: original.policyTerm ?? packet.coveragePeriod ?? original.coveragePeriod ?? null,
     coveragePeriod: original.coveragePeriod ?? packet.coveragePeriod ?? original.policyTerm ?? null,
@@ -219,14 +223,23 @@ function calculateVidaMujerAccepted107z15p2R9C(packet, nativeResult) {
 
   const annualPremiumWithAve = firstAcceptedNumber107z15p2R9C(
     nativeResult.annualPremiumWithAve,
+    nativeResult.annualPremiumTotalWithAve,
+    nativeResult.primaAnualTotalConAve,
     nativeResult.primaAnualConAve,
     nativeResult.premiumTable?.plannedAnnual,
     packet.plannedOrAvePremium,
     finalGuaranteed ? acceptedRowNumber107z15p2R9C(finalGuaranteed, ["annualPremiumWithAve", "primaAnualConAve", "premiumWithAve"]) : null,
     nativeResult.guaranteedValues?.[0] ? acceptedRowNumber107z15p2R9C(nativeResult.guaranteedValues[0], ["annualPremiumAccumulatedWithAve", "primaAnualAcumuladaConAve", "premiumAccumulatedWithAve", "accumulatedPremiumWithAve"]) : null
   );
+  const annualAvePremium = firstAcceptedNumber107z15p2R9C(
+    nativeResult.annualAvePremium,
+    nativeResult.primaAveAnual,
+    nativeResult.premiumTable?.annualAve,
+    annualPremiumWithAve !== null && annualPremium !== null ? annualPremiumWithAve - annualPremium : null
+  );
 
   const totalContributed = firstAcceptedNumber107z15p2R9C(
+    nativeResult.annualPremiumAccumulatedWithAve,
     nativeResult.totalContributed,
     nativeResult.totalAportado,
     nativeResult.primaTotalAcumuladaConAve,
@@ -263,6 +276,7 @@ function calculateVidaMujerAccepted107z15p2R9C(packet, nativeResult) {
     currency: nativeResult.currency ?? packet.currency ?? "UDI",
     annualPremium,
     annualPremiumWithAve,
+    annualAvePremium,
     paymentYears,
     paymentMode: nativeResult.paymentMode ?? "Anual",
     coveragePeriod: nativeResult.policyTerm ?? nativeResult.coveragePeriod ?? packet.coveragePeriod ?? `${paymentYears} años`,

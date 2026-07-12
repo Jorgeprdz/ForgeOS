@@ -52,6 +52,9 @@ for (const [name, sampleText] of Object.entries({ solucionlineRows, headerCollis
   assert.equal(packet.sumAssured, 50000, name);
   assert.equal(packet.annualPremium, 3062, name);
   assert.equal(packet.annualPremiumWithRecommended, 3890, name);
+  assert.equal(packet.annualPremiumTotalWithAve, 7607, name);
+  assert.equal(packet.annualAvePremium, 4545, name);
+  assert.equal(packet.annualPremiumAccumulatedWithAve, 152136, name);
   assert.equal(packet.plannedOrAvePremium, 7607, name);
   assert.equal(packet.coveragePeriod, "20 años", name);
   assert.equal(packet.nativeResult.totalContributed, 152136, name);

@@ -798,11 +798,14 @@
 
   body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="contribution"],
   body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="protection"],
-  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="endowments"],
   body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="recovery"],
   body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="women_health"],
   body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="recommended"] {
     grid-column: auto !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="endowments"] {
+    grid-column: 1 / -1 !important;
   }
 
   body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-title-107z15p2 {
@@ -916,6 +919,76 @@
     }
   }
   /* FORGE:107Z15P2_R9E_WIDE_BENEFIT_LAYOUT:END */
+
+/* FORGE:107Z15P2_R11G_DOTALES_AVE_DESKTOP_RESCUE:START */
+@media (min-width: 900px) {
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr,
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr * {
+    box-sizing: border-box;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr {
+    overflow: visible !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-grid-107z15p2,
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-blocks-107z15p2 {
+    display: grid !important;
+    grid-template-columns: minmax(360px, 1fr) minmax(360px, 1fr) !important;
+    align-items: start !important;
+    gap: 20px !important;
+    overflow: visible !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2 {
+    min-width: 0 !important;
+    max-width: none !important;
+    overflow: visible !important;
+    position: relative !important;
+    z-index: auto !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-benefit-block-107z15p2[data-forge-benefit-block="endowments"] {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-endowment-schedule-107z15p2 {
+    display: grid !important;
+    grid-template-columns: minmax(420px, 1fr) minmax(190px, 0.36fr) minmax(250px, 0.46fr) !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-endowment-schedule-card-107z15p2 {
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-endowment-schedule-table-107z15p2 {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-endowment-schedule-table-107z15p2 th,
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-endowment-schedule-table-107z15p2 td {
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    vertical-align: middle !important;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1180px) {
+  body[data-forge-benefit-layout-expanded="true"] .fq-quote-summary-105dr .fq-endowment-schedule-107z15p2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* FORGE:107Z15P2_R11G_DOTALES_AVE_DESKTOP_RESCUE:END */
 
 </style>
 </head>
@@ -1210,22 +1283,85 @@
   font-weight: 800;
 }
 
-.fq-benefit-calendar-wrap-107z15p2 {
-  margin-bottom: 10px;
+.fq-endowment-schedule-107z15p2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 0.34fr) minmax(230px, 0.42fr);
+  gap: 12px;
+  align-items: stretch;
 }
 
-.fq-benefit-calendar-107z15p2 {
-  min-width: 760px;
+.fq-endowment-schedule-card-107z15p2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid rgba(132, 222, 245, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.045);
+  padding: 12px;
+}
+
+.fq-endowment-schedule-card-wide-107z15p2 {
+  min-width: 0;
+}
+
+.fq-endowment-schedule-subtitle-107z15p2,
+.fq-endowment-schedule-label-107z15p2 {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.fq-endowment-schedule-card-107z15p2 strong {
+  color: #f5d84a;
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.fq-endowment-schedule-card-107z15p2 span:not(.fq-endowment-schedule-label-107z15p2) {
+  color: #f5d84a;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.fq-endowment-schedule-table-107z15p2 {
+  width: 100%;
+  border-collapse: collapse;
   table-layout: fixed;
 }
 
-.fq-benefit-calendar-107z15p2 th {
-  width: 132px;
+.fq-endowment-schedule-table-107z15p2 th,
+.fq-endowment-schedule-table-107z15p2 td {
+  padding: 7px 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  vertical-align: middle;
+  white-space: normal;
 }
 
-.fq-benefit-calendar-107z15p2 td {
-  text-align: center;
-  white-space: nowrap;
+.fq-endowment-schedule-table-107z15p2 th {
+  width: 76px;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 900;
+  text-align: left;
+}
+
+.fq-endowment-schedule-table-107z15p2 td {
+  color: #f5d84a;
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.fq-endowment-schedule-total-107z15p2 {
+  background: rgba(245, 216, 74, 0.1);
+}
+
+@media (max-width: 1180px) {
+  .fq-endowment-schedule-107z15p2 {
+    grid-template-columns: 1fr;
+  }
 }
 
 .fq-benefit-missing-list-107z15p2 {
@@ -1364,6 +1500,17 @@
         )
           ? premiumTable.plannedAnnual
           : null,
+      annualAvePremium:
+        nativeResult.annualAvePremium ??
+        nativeResult.primaAveAnual ??
+        premiumTable.annualAve ??
+        null,
+      annualPremiumAccumulatedWithAve:
+        nativeResult.annualPremiumAccumulatedWithAve ??
+        nativeResult.primaTotalAcumuladaConAve ??
+        premiumTable.accumulatedWithAve ??
+        nativeResult.totalContributed ??
+        null,
       paymentMode:
         nativeResult.paymentMode ?? null,
       currency:
@@ -1687,9 +1834,23 @@
       )
     );
     assignNearLabel(
-      ["Prima planeada"],
+      ["Prima anual total con AVE"],
       formatAmount(
         model.plannedAnnual,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Prima AVE anual"],
+      formatAmount(
+        model.annualAvePremium,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Prima acumulada con AVE"],
+      formatAmount(
+        model.annualPremiumAccumulatedWithAve,
         currency
       )
     );

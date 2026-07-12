@@ -229,6 +229,7 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
   const person = parseInsured107z15p2R11E(rows, rawText);
   const base = parseVidaMujerCoverage107z15p2R11E(rows);
   const guaranteedRows = parseGuaranteedRows107z15p2R11E(rows);
+  const firstGuaranteedRow = guaranteedRows[0] || null;
   const finalGuaranteedRow = guaranteedRows[guaranteedRows.length - 1] || null;
 
   const sumAssured = base.sumAssured ?? finalGuaranteedRow?.sumAssured ?? null;
@@ -239,9 +240,19 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
   const coveragePeriod = base.coveragePeriod ?? `${paymentYears} años`;
 
   const totalContributed = finalGuaranteedRow?.annualPremiumAccumulatedWithAve ?? null;
-  const plannedOrAvePremium = totalContributed && paymentYears
-    ? Math.round(totalContributed / paymentYears)
+  const annualPremiumTotalWithAve = roundNumber107z15p2R11E(
+    guaranteedRows.length > 1
+      ? firstGuaranteedRow?.annualPremiumAccumulatedWithAve
+      : (
+          totalContributed && paymentYears
+            ? totalContributed / paymentYears
+            : null
+        )
+  );
+  const annualAvePremium = annualPremiumTotalWithAve !== null && annualPremium !== null
+    ? annualPremiumTotalWithAve - annualPremium
     : null;
+  const plannedOrAvePremium = annualPremiumTotalWithAve;
 
   if (!product) missingInformation.push("No se detectó producto Vida Mujer en el PDF.");
   if (!sumAssured) missingInformation.push("Suma asegurada básica.");
@@ -304,10 +315,17 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
     premiumTable: {
       annual: annualPremium,
       plannedAnnual: plannedOrAvePremium,
+      annualAve: annualAvePremium,
+      annualTotalWithAve: annualPremiumTotalWithAve,
+      accumulatedWithAve: totalContributed,
       annualWithRecommended: annualPremiumWithRecommended
     },
     totalAnnualPremium: annualPremium,
     totalAnnualPremiumWithRecommended: annualPremiumWithRecommended,
+    annualAvePremium,
+    primaAveAnual: annualAvePremium,
+    annualPremiumTotalWithAve,
+    primaAnualTotalConAve: annualPremiumTotalWithAve,
     totalContributed,
     primaTotalAcumuladaConAve: totalContributed,
     aveSurrenderValue: guaranteedFinalRow?.aveSurrenderValue ?? null,
@@ -345,6 +363,9 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
     sumInsured: sumAssured,
     annualPremium,
     annualPremiumWithRecommended,
+    annualAvePremium,
+    annualPremiumTotalWithAve,
+    annualPremiumAccumulatedWithAve: totalContributed,
     plannedOrAvePremium,
     coveragePeriod,
     paymentYears,

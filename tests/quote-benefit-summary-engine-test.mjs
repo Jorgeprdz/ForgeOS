@@ -347,9 +347,12 @@ assert.equal(r8FindBlock(vidaMujerBlocks, "retirement_scenarios"), undefined, "V
 const vidaContribution = r8FindBlock(vidaMujerBlocks, "contribution_summary");
 assert.ok(vidaContribution.rows.some((row) => String(row.value).includes("152,136 UDI")), "Total aportado debe venir de prima acumulada con AVE.");
 
-assert.ok(vidaContribution.rows.some((row) => row.label === "Prima total anual" && String(row.value).includes("3,062 UDI")), "Prima total anual debe mostrarse en Lo que aportas.");
-assert.ok(vidaContribution.rows.some((row) => row.label === "Prima total con recomendados" && String(row.value).includes("3,890 UDI")), "Prima total con recomendados debe mostrarse en Lo que aportas.");
+assert.ok(vidaContribution.rows.some((row) => row.label === "Prima anual base" && String(row.value).includes("3,062 UDI")), "Prima anual base debe mostrarse en Lo que aportas.");
+assert.ok(vidaContribution.rows.some((row) => row.label === "Prima AVE anual" && String(row.value).includes("4,545 UDI")), "Prima AVE anual debe derivarse de total con AVE menos prima base.");
+assert.ok(vidaContribution.rows.some((row) => row.label === "Prima anual total con AVE" && String(row.value).includes("7,607 UDI")), "Prima anual total con AVE debe mostrarse sin llamarse Prima AVE.");
+assert.ok(vidaContribution.rows.some((row) => row.label === "Prima total con beneficios recomendados" && String(row.value).includes("3,890 UDI")), "Prima total con recomendados debe mostrarse en Lo que aportas.");
 assert.ok(vidaContribution.rows.some((row) => row.label === "Plazo de pago" && String(row.value).includes("20 años")), "Plazo de pago debe mostrarse en Lo que aportas.");
+assert.ok(vidaContribution.rows.some((row) => row.label === "Total aportado / Prima anual acumulada con AVE" && String(row.value).includes("152,136 UDI")), "Prima acumulada con AVE debe mostrarse como total aportado.");
 
 
 const vidaEndowments = r8FindBlock(vidaMujerBlocks, "scheduled_endowments");

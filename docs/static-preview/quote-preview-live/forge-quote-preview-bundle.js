@@ -160,7 +160,7 @@ const FIELD_DEFINITIONS = Object.freeze([
   }),
   Object.freeze({
     key: "plannedOrAvePremium",
-    label: "Prima planeada / AVE",
+    label: "Prima anual total con AVE",
   }),
   Object.freeze({
     key: "coveragePeriod",
@@ -378,7 +378,7 @@ function createQuotePreviewConfirmationPopup(options = {}) {
       fieldsContainer.removeChild(child);
     }
 
-    for (const definition of FIELD_DEFINITIONS) {
+    function renderFieldRow(definition, rawValue) {
       const row = createElement("div");
       const label = createElement("span");
       const value = createElement("span");
@@ -408,7 +408,7 @@ function createQuotePreviewConfirmationPopup(options = {}) {
       label.textContent = definition.label;
       value.textContent = String(
         formatFieldValue(
-          fields[definition.key],
+          rawValue,
           definition.key,
           fields
         )
@@ -434,6 +434,50 @@ function createQuotePreviewConfirmationPopup(options = {}) {
       append(row, label);
       append(row, value);
       append(fieldsContainer, row);
+    }
+
+    function previewNumber(...values) {
+      for (const value of values) {
+        if (value === null || value === undefined || value === "") continue;
+        const number = Number(String(value).replace(/[^0-9.\-]/g, ""));
+        if (Number.isFinite(number)) return number;
+      }
+      return null;
+    }
+
+    for (const definition of FIELD_DEFINITIONS) {
+      renderFieldRow(definition, fields[definition.key]);
+
+      if (definition.key === "annualPremium") {
+        const nativeResult = pendingPreview?.nativeResult || {};
+        const annualAvePremium = previewNumber(
+          nativeResult.annualAvePremium,
+          nativeResult.primaAveAnual,
+          nativeResult.premiumTable?.annualAve
+        );
+        if (annualAvePremium !== null) {
+          renderFieldRow({
+            key: "annualAvePremium",
+            label: "Prima AVE anual"
+          }, annualAvePremium);
+        }
+      }
+
+      if (definition.key === "plannedOrAvePremium") {
+        const nativeResult = pendingPreview?.nativeResult || {};
+        const accumulatedWithAve = previewNumber(
+          nativeResult.annualPremiumAccumulatedWithAve,
+          nativeResult.totalContributed,
+          nativeResult.primaTotalAcumuladaConAve,
+          nativeResult.premiumTable?.accumulatedWithAve
+        );
+        if (accumulatedWithAve !== null) {
+          renderFieldRow({
+            key: "annualPremiumAccumulatedWithAve",
+            label: "Prima acumulada con AVE"
+          }, accumulatedWithAve);
+        }
+      }
     }
   }
 
