@@ -61,6 +61,11 @@ assert.equal(packet.productFamily, "segubeca");
 assert.equal(packet.productType, "segubeca");
 assert.equal(packet.productName, "SeguBeca 18");
 assert.equal(packet.nativeResult.monthlyDelivery, 637);
+assert.equal(packet.sumAssured, 30000);
+assert.equal(packet.annualPremium, 2524.19);
+assert.equal(packet.coveragePeriod, "14 años");
+assert.equal(packet.totalRecovery, 30000);
+assert.equal(packet.nativeResult.totalRecovery, 30000);
 assert.equal(packet.benefitSummary.blocks.some((block) => block.type === "education_goal"), true);
 assert.equal(packet.benefitSummary.blocks.some((block) => block.type === "payout_options"), true);
 

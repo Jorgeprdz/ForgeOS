@@ -254,11 +254,36 @@ function recommendedItems(block) {
 
   if (!values.length) return lineItems(block);
 
-  return values.map((item) => ({
-    label: item.name || item.label || item.id || "Beneficio",
-    value: item.value || item.description || item.status || item.premium || item.sumAssured || "Con evidencia estructurada",
-    evidence: item
-  })).filter((item) => item.label && item.value);
+  return values.map((item) => {
+    const rawValue = item.value ?? item.description ?? item.status ?? item.premium ?? item.sumAssured ?? null;
+    const value = rawValue && typeof rawValue === "object"
+      ? formatSegubecaAmount(rawValue)
+      : rawValue !== null && rawValue !== undefined && rawValue !== ""
+        ? String(rawValue)
+        : "Con evidencia estructurada";
+
+    const fields = Array.isArray(item.fields)
+      ? item.fields.map((field) => {
+          const rawFieldValue = field?.value;
+          const fieldValue = rawFieldValue && typeof rawFieldValue === "object"
+            ? formatSegubecaAmount(rawFieldValue)
+            : rawFieldValue !== null && rawFieldValue !== undefined
+              ? String(rawFieldValue)
+              : null;
+          return {
+            label: field?.label || "Detalle",
+            value: fieldValue
+          };
+        }).filter((field) => field.value)
+      : [];
+
+    return {
+      label: item.name || item.label || item.id || "Beneficio",
+      value,
+      fields,
+      evidence: item
+    };
+  }).filter((item) => item.label && item.value);
 }
 
 function firstBlock(blocks, names) {
@@ -333,7 +358,7 @@ function appendItemGrid(card, modelSection, { documentRef, appendValue } = {}) {
     if (isRecommended) {
       grid.appendChild(createRecommendedBenefitCard({
         name: item.label,
-        fields: [{ label: "Detalle", value: item.value }],
+        fields: item.fields?.length ? item.fields : [{ label: "Detalle", value: item.value }],
         appendValue,
         documentRef
       }));

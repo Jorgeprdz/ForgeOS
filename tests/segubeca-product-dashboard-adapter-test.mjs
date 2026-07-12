@@ -74,5 +74,23 @@ assert.equal(dashboard.dataset.forgeProductLayout, "segubeca_desktop_r14a");
 assert.equal(dashboard.className, "fq-benefit-dashboard-107z15p2");
 assert.ok(dashboard.children.some((child) => child.dataset.forgeProductSection === "education_goal"));
 assert.ok(dashboard.children.some((child) => child.dataset.forgeProductSection === "participants"));
+const recommendedModel = buildSegubecaDashboardModel([
+  {
+    type: "additional_coverages",
+    benefits: [
+      {
+        name: "Cobertura de prueba",
+        value: { udi: 1234.4 },
+        fields: [
+          { label: "Prima", value: { udi: 50.4 } }
+        ]
+      }
+    ]
+  }
+]);
+const recommendedSection = recommendedModel.sections.find((section) => section.kind === "additional_coverages");
+assert.ok(recommendedSection);
+assert.equal(recommendedSection.items[0].value.includes("[object Object]"), false);
+assert.equal(recommendedSection.items[0].fields[0].value.includes("[object Object]"), false);
 
 console.log("PASS SeguBeca product dashboard adapter R14A");

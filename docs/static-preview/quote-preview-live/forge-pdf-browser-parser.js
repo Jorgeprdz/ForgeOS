@@ -546,8 +546,11 @@ function buildSegubecaBenefitSummaryR14C(parsed) {
 export function parseSegubecaPdfTextToAcceptedQuotePacket(text, options = {}) {
   const parsed = options.parsedResult || parseSolucionlineSegubecaQuote({ text });
   const benefitSummary = buildSegubecaBenefitSummaryR14C(parsed);
-  const primaryInsured = parsed.participants?.primary_insured || "Contratante SeguBeca";
-  const child = parsed.participants?.child_or_education_beneficiary || "Menor SeguBeca";
+  const primaryInsured = parsed.participants?.primary_insured || null;
+  const child = parsed.participants?.child_or_education_beneficiary || null;
+  const finalGuaranteedRow = parsed.guaranteedRows?.[parsed.guaranteedRows.length - 1] || null;
+  const finalAdministrationRow = parsed.administrationRows?.[parsed.administrationRows.length - 1] || null;
+  const totalRecovery = finalGuaranteedRow?.totalRecovery ?? finalAdministrationRow?.accumulatedDelivery ?? null;
 
   const nativeResult = {
     source: "browser_pdf_parser",
@@ -571,7 +574,13 @@ export function parseSegubecaPdfTextToAcceptedQuotePacket(text, options = {}) {
     monthlyDelivery: parsed.monthlyDelivery,
     accumulatedDelivery: parsed.accumulatedDelivery,
     totalAnnualPremium: parsed.totalAnnualPremium,
+    annualPremium: parsed.totalAnnualPremium,
     annualPremiumWithRecommended: parsed.totalWithRecommended,
+    plannedOrAvePremium: parsed.totalWithRecommended,
+    sumAssured: parsed.baseCoverage?.sumAssured ?? null,
+    sumInsured: parsed.baseCoverage?.sumAssured ?? null,
+    coveragePeriod: parsed.baseCoverage?.coveragePeriod ?? null,
+    totalRecovery,
     benefitSummary,
     evidence: parsed.evidence,
     missing_information: parsed.missing_information
@@ -598,6 +607,8 @@ export function parseSegubecaPdfTextToAcceptedQuotePacket(text, options = {}) {
     sumAssured: parsed.baseCoverage?.sumAssured ?? null,
     annualPremium: parsed.totalAnnualPremium,
     annualPremiumWithRecommended: parsed.totalWithRecommended,
+    plannedOrAvePremium: parsed.totalWithRecommended,
+    totalRecovery,
     paymentYears: parsed.baseCoverage?.coverageYears ?? null,
     coveragePeriod: parsed.baseCoverage?.coveragePeriod ?? null,
     benefitSummary,

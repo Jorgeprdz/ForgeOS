@@ -241,6 +241,69 @@ function installBenefitDashboardStyles107z15p2R11M() {
       }
     }
 
+
+    @media (min-width: 1181px) {
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"] {
+        grid-auto-flow: dense;
+        grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+        gap: 18px 20px !important;
+        width: 100% !important;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="summary"],
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="participants"],
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="contribution"] {
+        grid-column: span 4;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="education_goal"] {
+        grid-column: span 5;
+        border-color: rgba(244, 216, 93, .22);
+        background: linear-gradient(145deg, rgba(26, 48, 76, .94), rgba(8, 20, 39, .84));
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="payout"] {
+        grid-column: span 7;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="protection"],
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="included_benefits"],
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="additional_coverages"] {
+        grid-column: span 6;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="secondary_details"],
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="missing_information"] {
+        grid-column: 1 / -1;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-mini-grid-107z15p2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-card-107z15p2[data-forge-product-section="contribution"]
+        .fq-benefit-mini-grid-107z15p2 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-recommended-grid-107z15p2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-label-107z15p2,
+      .fq-benefit-dashboard-107z15p2[data-forge-product-type="segubeca"]
+        .fq-benefit-value-107z15p2 {
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+      }
+    }
+
     @media (max-width: 1180px) and (min-width: 761px) {
       .fq-benefit-dashboard-107z15p2 { grid-template-columns: repeat(8, minmax(0, 1fr)) !important; gap: 16px !important; }
       .fq-benefit-card-107z15p2 { grid-column: span 4; }

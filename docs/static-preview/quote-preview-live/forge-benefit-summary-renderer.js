@@ -999,6 +999,21 @@ function renderAcceptedQuote(calc, { writeRuntimeGrid } = {}) {
     [calc.paymentMode, calc.currency, calc.coveragePeriod].filter(Boolean).join(" · "),
     formatUdiMetadataLine(calc.udiRateMetadata)
   ]);
+  if (isSegubecaProduct(calc)) {
+    const missingValues = calc?.nativeResult?.missing_information || calc?.missing_information || [];
+    setSummaryValue(
+      "Faltantes antes de presentar",
+      Array.isArray(missingValues) && missingValues.length
+        ? missingValues.join(" · ")
+        : "Sin faltantes críticos detectados"
+    );
+
+    const totalRecovery = calc?.totalRecovery ?? calc?.nativeResult?.totalRecovery ?? null;
+    if (totalRecovery !== null && totalRecovery !== undefined && totalRecovery !== "") {
+      setSummaryValue("Total recuperación", `${formatRoundedUdiValue(totalRecovery)} UDI`);
+    }
+  }
+
   const dynamicBenefitRows = renderVisibleDynamicBenefitSummary(calc);
   if (typeof writeRuntimeGrid === "function") {
     if (!dynamicBenefitRows.length) {
