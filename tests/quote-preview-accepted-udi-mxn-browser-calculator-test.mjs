@@ -88,12 +88,23 @@ const hostHtml = fs.readFileSync(
   "docs/static-preview/forge-alive/nueva-cotizacion/index.html",
   "utf8"
 );
+const acceptedAdapter = fs.readFileSync(
+  "docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js",
+  "utf8"
+);
+const benefitRenderer = fs.readFileSync(
+  "docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js",
+  "utf8"
+);
 
-assert.match(hostHtml, /formatUdiWithMxn/);
-assert.match(hostHtml, /Valor UDI:/);
-assert.match(hostHtml, /Fuente: \$\{sourceLabel \|\| "motor verificado"\}/);
-assert.match(hostHtml, /MXN pendiente: falta valor UDI verificado\./);
-assert.match(hostHtml, /getVerifiedUdiRateMetadata\(\{ rateProvider: browserUdiRateProvider \}\)/);
-assert.match(hostHtml, /buildRetirementPresentationScenario/);
+assert.match(hostHtml, /forge-accepted-quote-adapter\.js/);
+assert.match(hostHtml, /forge-benefit-summary-renderer\.js/);
+assert.match(hostHtml, /ForgeNuevaCotizacionAcceptedQuoteRuntime/);
+assert.match(benefitRenderer, /formatUdiWithMxn/);
+assert.match(benefitRenderer, /Valor UDI:/);
+assert.match(benefitRenderer, /Fuente: \$\{sourceLabel \|\| "motor verificado"\}/);
+assert.match(benefitRenderer, /MXN pendiente: falta valor UDI verificado\./);
+assert.match(acceptedAdapter, /getVerifiedUdiRateMetadata\(\{ rateProvider: browserUdiRateProvider \}\)/);
+assert.match(acceptedAdapter, /buildRetirementPresentationScenario/);
 
 console.log("PASS quote preview accepted UDI MXN browser calculator");
