@@ -14050,3 +14050,95 @@ LOCKED_DECISION=R13F_REGISTERED_R13G_IMPLEMENTATION_REQUIRES_SEPARATE_GATE
 
 NEXT=R13G_IMAGINA_SER_DESKTOP_VISUAL_POLISH_AND_REAL_PDF_QA_IMPLEMENTATION
 <!-- FORGE:R13F_IMAGINA_SER_DESKTOP_VISUAL_POLISH_AND_REAL_PDF_QA_DISCOVERY_AND_READINESS:END -->
+
+<!-- FORGE:R14_SEGUBECA_PRODUCT_DASHBOARD_DISCOVERY_AND_READINESS:START -->
+## R14 SeguBeca Product Dashboard Discovery And Readiness
+
+R14 registers SeguBeca as the next planned multiproduct dashboard consumer for Quote Preview / Product Intelligence UI.
+
+Status:
+
+`DISCOVERY_LOCKED_IMPLEMENTATION_READY_WITH_CONDITIONS`
+
+Board approval:
+
+`APPROVED_FOR_DISCOVERY_READINESS_AND_REGISTRATION_ONLY`
+
+Miranda approval:
+
+`APPROVED`
+
+Discovery findings:
+
+- SeguBeca is a planned education-goal life dashboard consumer, not a retirement dashboard and not a Vida Mujer clone.
+- The approved reusable product-dashboard line from R13A/R13C/R13E/R13G may be reused for presentation primitives only.
+- Product Intelligence remains the owner of product semantics, evidence, roles, participant structure, contribution facts, education goal, payout mode, and missing information.
+- SeguBeca must support participant structures when evidenced: padre/madre plus menor, or papá plus mamá plus menor in a mancomunado/joint-style plan.
+- Forge must not assume roles when the PDF or structured output does not prove them.
+- The menor must be modeled as the child associated with the education goal unless evidence explicitly says otherwise.
+- The dashboard narrative should prioritize education goal, delivery/payout, contribution, protection continuity, participants, benefits, and missing information.
+- Local inventory discovered `6` sanitized SeguBeca PDF candidate(s) and `230` sanitized repo text hit(s), without recording filenames or client data.
+
+Implementation boundaries:
+
+- discovery/readiness only in R14;
+- no UI/runtime implementation;
+- no parser implementation;
+- no mobile work;
+- no schemas, routes, `app.js`, rule packs, fixtures with real client data, secrets, sensitive data, or hardcoded product values;
+- no invented benefits, premiums, coverages, forecasts, values, roles, or recommendations;
+- no DOM overlay hacks;
+- no Product Truth movement from Product Intelligence into dashboard rendering.
+
+Expected future R14A dashboard sections:
+
+- Resumen del plan;
+- Quiénes quedan protegidos / participantes;
+- Lo que aportas;
+- Meta educativa;
+- Cómo se entrega;
+- Lo que proteges;
+- Beneficios incluidos;
+- Coberturas u opciones adicionales;
+- Otros detalles;
+- missing_information.
+
+Participant model readiness:
+
+- `primary_insured`;
+- `joint_insured`;
+- `child_or_education_beneficiary`;
+- `participant_modality`: `individual`, `joint`, or `unknown`;
+- participant-role-specific `missing_information`.
+
+Readiness decision:
+
+- discovery and registration are complete;
+- architecture is ready with the conditions above;
+- implementation is not authorized by this gate;
+- a new Constitutional Gate and Board approval are required before source changes;
+- implementation is deferred to `R14A_SEGUBECA_PRODUCT_DASHBOARD_ADAPTER_IMPLEMENTATION`.
+
+Required R14A validation:
+
+- `node --check` for every changed JavaScript file;
+- existing product-dashboard template tests;
+- existing quote benefit-summary tests;
+- Vida Mujer and Imagina Ser non-regression;
+- Segubeca adapter tests;
+- PDF/parser tests only if parser or intake is separately authorized;
+- `git diff --check`;
+- privacy check on added lines;
+- exact-path staging only;
+- confirmation that mobile, parsers, schemas, routes, `app.js`, and rule packs remain unchanged unless separately authorized.
+
+Evidence:
+
+- `docs/evidence/r14-segubeca-product-dashboard-discovery-and-readiness.md`
+
+DECISION=PASS_R14_SEGUBECA_PRODUCT_DASHBOARD_DISCOVERY_AND_READINESS
+
+LOCKED_DECISION=R14_SEGUBECA_DASHBOARD_REGISTERED_IMPLEMENTATION_REQUIRES_SEPARATE_AUTHORIZATION
+
+NEXT=R14A_SEGUBECA_PRODUCT_DASHBOARD_ADAPTER_IMPLEMENTATION
+<!-- FORGE:R14_SEGUBECA_PRODUCT_DASHBOARD_DISCOVERY_AND_READINESS:END -->
