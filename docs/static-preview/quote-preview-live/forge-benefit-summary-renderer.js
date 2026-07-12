@@ -16,6 +16,11 @@ import {
   isImaginaSerProduct,
   renderImaginaSerDashboard
 } from "./forge-imagina-ser-product-dashboard-adapter.js";
+import {
+  buildSegubecaDashboardModel,
+  isSegubecaProduct,
+  renderSegubecaDashboard
+} from "./forge-segubeca-product-dashboard-adapter.js";
 
 function hasValue(value) {
   return value !== null && value !== undefined && value !== "";
@@ -927,12 +932,35 @@ function renderImaginaSerBenefitSummary(calc, benefitSummary) {
   return true;
 }
 
+function renderSegubecaBenefitSummary(calc, benefitSummary) {
+  if (!benefitSummary || !isSegubecaProduct({ ...calc, benefitSummary })) return false;
+  const target = findVisibleSummaryValueNode([
+    "Valores, beneficios o escenarios relevantes",
+    "Valores beneficios escenarios relevantes",
+    "Valores beneficios o escenarios relevantes"
+  ]);
+  if (!target) return false;
+
+  const model = buildSegubecaDashboardModel(benefitSummary);
+  const dashboard = renderSegubecaDashboard(model, {
+    appendValue: appendSemanticValue
+  });
+  if (!dashboard) return false;
+
+  target.innerHTML = "";
+  target.appendChild(dashboard);
+  return true;
+}
+
 function renderVisibleDynamicBenefitSummary(calc) {
   const fallbackRows = benefitFallbackRows(calc);
   const benefitSummary = buildDynamicBenefitSummary(calc);
   const dynamicRows = benefitSummaryToRuntimeRows(benefitSummary);
 
-  if (!renderImaginaSerBenefitSummary(calc, benefitSummary)) {
+  if (
+    !renderSegubecaBenefitSummary(calc, benefitSummary) &&
+    !renderImaginaSerBenefitSummary(calc, benefitSummary)
+  ) {
     writeVisibleBenefitRuntimeGrid(
       dynamicRows.length ? dynamicRows : fallbackRows,
       "El PDF no entregó valores adicionales."
@@ -943,7 +971,10 @@ function renderVisibleDynamicBenefitSummary(calc) {
     globalThis.addEventListener("forge:quote-benefit-summary-ready", () => {
       const lateSummary = buildDynamicBenefitSummary(calc);
       const lateRows = benefitSummaryToRuntimeRows(lateSummary);
-      if (!renderImaginaSerBenefitSummary(calc, lateSummary)) {
+      if (
+        !renderSegubecaBenefitSummary(calc, lateSummary) &&
+        !renderImaginaSerBenefitSummary(calc, lateSummary)
+      ) {
         writeVisibleBenefitRuntimeGrid(
           lateRows.length ? lateRows : fallbackRows,
           "El PDF no entregó valores adicionales."
