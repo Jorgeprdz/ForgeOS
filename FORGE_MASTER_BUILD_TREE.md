@@ -13778,3 +13778,91 @@ LOCKED_DECISION=R13_PRODUCT_DASHBOARD_TEMPLATE_REGISTERED_IMPLEMENTATION_REQUIRE
 
 NEXT=R13A_PRODUCT_DASHBOARD_TEMPLATE_IMPLEMENTATION
 <!-- FORGE:R13_PRODUCT_DASHBOARD_TEMPLATE_DISCOVERY_AND_BOARD_GATE:END -->
+
+<!-- FORGE:R13B_IMAGINA_SER_PRODUCT_DASHBOARD_ADAPTER_DISCOVERY_AND_READINESS:START -->
+## R13B Imagina Ser Product Dashboard Adapter Discovery And Readiness
+
+R13B registers and locks discovery/readiness for the first Imagina Ser consumer of the reusable R13A product-dashboard template.
+
+Status:
+
+`DISCOVERY_LOCKED_IMPLEMENTATION_READY_WITH_CONDITIONS`
+
+Board approval:
+
+`APPROVED_FOR_IMAGINA_SER_ADAPTER_IMPLEMENTATION_WITH_DECLARED_BOUNDARIES`
+
+Miranda approval:
+
+`APPROVED`
+
+Canonical data flow:
+
+```text
+accepted quote
+-> quote benefit summary engine
+-> Product Intelligence blocks
+-> Imagina Ser dashboard adapter
+-> R13A reusable product-dashboard template
+```
+
+Discovery findings:
+
+- `quote-benefit-summary-engine.js` already recognizes `imagina_ser` and emits Product Intelligence-owned `contribution_summary`, `protection_summary`, `retirement_scenarios`, and `missing_information` blocks;
+- `forge-benefit-summary-renderer.js` already converts those blocks into runtime rows, but its visible grouping remains oriented around the Vida Mujer-compatible renderer;
+- `forge-product-dashboard-template.js` owns neutral presentation primitives and section kinds for summary, contribution, construction, protection, future scenarios, recommended benefits, secondary details, and missing information;
+- R13C must consume structured Product Intelligence blocks and must not read parser internals or recalculate product values;
+- recovery values, recommended benefits, and secondary details may render only when supported by structured evidence;
+- absent evidence must remain omitted or become clean `missing_information` output.
+
+Implementation boundaries:
+
+- desktop Quote Preview / Product Intelligence UI only;
+- Vida Mujer remains unchanged and continues using its compatible renderer path;
+- no parser, PDF extraction, mobile, schema, route, `app.js`, or rule-pack changes;
+- no product, premium, coverage, recovery value, benefit, forecast, or scenario invention;
+- no client hardcoding, sensitive data, DOM overlays, or duplicate Product Intelligence logic;
+- adapter responsibility is presentation mapping only;
+- scenario values must preserve their evidence and forecast labels.
+
+Planned Imagina Ser narrative:
+
+- Resumen del plan, only from identified structured plan metadata;
+- Lo que aportas, from `contribution_summary`;
+- Lo que construyes, only from evidence-backed accumulated or retirement construction values;
+- Lo que proteges, from `protection_summary`;
+- Escenario futuro, from `retirement_scenarios`, explicitly labeled as scenarios;
+- Beneficios recomendados, only when an official structured block exists;
+- Otros detalles, only from evidence-backed unmapped details;
+- `missing_information`, from Product Intelligence missing blocks and adapter-required absent sections.
+
+Readiness decision:
+
+- R13B discovery, registration, and readiness are complete;
+- implementation is ready with the conditions above;
+- no adapter or runtime source was created or modified in R13B;
+- implementation is deferred to `R13C_IMAGINA_SER_PRODUCT_DASHBOARD_ADAPTER_IMPLEMENTATION`;
+- R13C requires a fresh Constitutional Gate that cites this readiness lock and exact source allowlist.
+
+Required R13C validation:
+
+- `node --check` for every changed JavaScript file;
+- `tests/product-dashboard-template-test.mjs`;
+- `tests/quote-benefit-summary-engine-test.mjs`;
+- `tests/pdf-browser-parser-smoke-test.mjs`;
+- parser ownership test;
+- dedicated Imagina Ser adapter/config test;
+- Vida Mujer logical and visual compatibility;
+- `git diff --check`;
+- privacy check and exact changed-file allowlist.
+
+Evidence:
+
+- `docs/evidence/r13b-imagina-ser-product-dashboard-adapter.md`
+
+DECISION=PASS_R13B_IMAGINA_SER_PRODUCT_DASHBOARD_ADAPTER_DISCOVERY_AND_READINESS
+
+LOCKED_DECISION=R13B_REGISTERED_R13C_IMPLEMENTATION_REQUIRES_SEPARATE_GATE
+
+NEXT=R13C_IMAGINA_SER_PRODUCT_DASHBOARD_ADAPTER_IMPLEMENTATION
+<!-- FORGE:R13B_IMAGINA_SER_PRODUCT_DASHBOARD_ADAPTER_DISCOVERY_AND_READINESS:END -->
