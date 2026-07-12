@@ -1,11 +1,11 @@
-// FORGE:107Z15P2_R11C_HARDEN_VIDA_MUJER_BROWSER_PDF_EXTRACTION:START
-const PDFJS_CDN_VERSION_107Z15P2_R11C = "4.10.38";
-const PDFJS_MODULE_URL_107Z15P2_R11C = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11C}/build/pdf.mjs`;
-const PDFJS_WORKER_URL_107Z15P2_R11C = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11C}/build/pdf.worker.mjs`;
+// FORGE:107Z15P2_R11E_SOLUCIONLINE_LAYOUT_AWARE_PDF_PARSER:START
+const PDFJS_CDN_VERSION_107Z15P2_R11E = "4.10.38";
+const PDFJS_MODULE_URL_107Z15P2_R11E = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.mjs`;
+const PDFJS_WORKER_URL_107Z15P2_R11E = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.worker.mjs`;
 
-let pdfjsPromise107z15p2R11C = null;
+let pdfjsPromise107z15p2R11E = null;
 
-function normalizeText107z15p2R11C(value) {
+function normalizeText107z15p2R11E(value) {
   return String(value || "")
     .normalize("NFKC")
     .replace(/\u00a0/g, " ")
@@ -14,13 +14,21 @@ function normalizeText107z15p2R11C(value) {
     .trim();
 }
 
-function compactText107z15p2R11C(value) {
-  return normalizeText107z15p2R11C(value).replace(/\s+/g, " ").trim();
+function compactText107z15p2R11E(value) {
+  return normalizeText107z15p2R11E(value).replace(/\s+/g, " ").trim();
 }
 
-function numberFromText107z15p2R11C(value) {
+function lines107z15p2R11E(text) {
+  return normalizeText107z15p2R11E(text)
+    .split(/\n+/)
+    .map((line) => line.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
+function numberFromText107z15p2R11E(value) {
   if (value === null || value === undefined || value === "") return null;
   if (typeof value === "number") return Number.isFinite(value) ? value : null;
+
   const raw = String(value).replace(/[^\d,.\-]/g, "");
   if (!raw) return null;
 
@@ -43,48 +51,19 @@ function numberFromText107z15p2R11C(value) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function roundNumber107z15p2R11C(value) {
-  const parsed = numberFromText107z15p2R11C(value);
+function roundNumber107z15p2R11E(value) {
+  const parsed = numberFromText107z15p2R11E(value);
   return parsed === null ? null : Math.round(parsed);
 }
 
-function uniqueSorted107z15p2R11C(values) {
-  return [...new Set(values.filter((value) => Number.isFinite(value)))].sort((a, b) => a - b);
+function parseAmounts107z15p2R11E(value) {
+  const matches = String(value || "").match(/\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?/g) || [];
+  return matches
+    .map(numberFromText107z15p2R11E)
+    .filter((item) => item !== null);
 }
 
-function decimalCandidates107z15p2R11C(text) {
-  const source = compactText107z15p2R11C(text);
-  const matches = source.match(/\b\d{1,3}(?:,\d{3})*\.\d{2,5}\b|\b\d+\.\d{2,5}\b/g) || [];
-  return matches.map(numberFromText107z15p2R11C).filter((value) => value !== null);
-}
-
-function integerCandidates107z15p2R11C(text) {
-  const source = compactText107z15p2R11C(text);
-  const matches = source.match(/\b\d{1,3}(?:,\d{3})+\b|\b\d{4,6}\b/g) || [];
-  return matches.map(numberFromText107z15p2R11C).filter((value) => value !== null);
-}
-
-function matchNumber107z15p2R11C(text, patterns) {
-  const source = compactText107z15p2R11C(text);
-  for (const pattern of patterns) {
-    const match = source.match(pattern);
-    if (!match) continue;
-    const value = numberFromText107z15p2R11C(match[1] ?? match[0]);
-    if (value !== null) return value;
-  }
-  return null;
-}
-
-function matchText107z15p2R11C(text, patterns) {
-  const source = compactText107z15p2R11C(text);
-  for (const pattern of patterns) {
-    const match = source.match(pattern);
-    if (match?.[1]) return match[1].trim().replace(/\s{2,}/g, " ");
-  }
-  return null;
-}
-
-function findCurrentUdiValue107z15p2R11C() {
+function findCurrentUdiValue107z15p2R11E() {
   const globalCandidates = [
     globalThis?.ForgeQuoteCalculators?.currentUdiValue,
     globalThis?.ForgeQuoteCalculators?.udiValue,
@@ -95,14 +74,14 @@ function findCurrentUdiValue107z15p2R11C() {
   ];
 
   for (const candidate of globalCandidates) {
-    const parsed = numberFromText107z15p2R11C(candidate);
+    const parsed = numberFromText107z15p2R11E(candidate);
     if (parsed !== null && parsed > 1) return parsed;
   }
 
   if (typeof localStorage !== "undefined") {
     for (const key of Object.keys(localStorage)) {
       if (!/udi/i.test(key)) continue;
-      const parsed = numberFromText107z15p2R11C(localStorage.getItem(key));
+      const parsed = numberFromText107z15p2R11E(localStorage.getItem(key));
       if (parsed !== null && parsed > 1) return parsed;
     }
   }
@@ -110,317 +89,282 @@ function findCurrentUdiValue107z15p2R11C() {
   return null;
 }
 
-function chooseSumAssured107z15p2R11C(text) {
-  const source = compactText107z15p2R11C(text);
-
-  const direct = matchNumber107z15p2R11C(source, [
-    /Suma\s+Asegurada\s+B[aá]sico[\s\S]{0,120}?([0-9]{1,3}(?:,[0-9]{3})+)/i,
-    /Suma\s+Asegurada[\s\S]{0,120}?([0-9]{1,3}(?:,[0-9]{3})+)\s*(?:UDI|UDIS)/i,
-    /Vida\s+Mujer[\s\S]{0,220}?([0-9]{1,3}(?:,[0-9]{3})+)\s*(?:UDI|UDIS)?/i
-  ]);
-
-  if (direct !== null && direct >= 1000) return direct;
-
-  const candidates = integerCandidates107z15p2R11C(source)
-    .filter((value) => value >= 1000 && value <= 500000);
-
-  const coverageLike = candidates.filter((value) => value >= 10000 && value <= 250000);
-  if (!coverageLike.length) return null;
-
-  const counts = new Map();
-  for (const value of coverageLike) counts.set(value, (counts.get(value) || 0) + 1);
-
-  return [...counts.entries()]
-    .sort((a, b) => {
-      const countScore = b[1] - a[1];
-      if (countScore) return countScore;
-      const basicPreference = Math.abs(a[0] - 50000) - Math.abs(b[0] - 50000);
-      if (basicPreference) return basicPreference;
-      return a[0] - b[0];
-    })[0][0];
+function getSolucionlineRows107z15p2R11E(text) {
+  return lines107z15p2R11E(text).filter((line) => line.length > 1 && !/^[-.]+$/.test(line));
 }
 
-function choosePremiums107z15p2R11C(text) {
-  const source = compactText107z15p2R11C(text);
-
-  let annualPremiumRaw = matchNumber107z15p2R11C(source, [
-    /Prima\s+Total\s+Anual(?!\s+con)[\s\S]{0,140}?([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})/i,
-    /Prima\s+Anual\s+Total(?!\s+con)[\s\S]{0,140}?([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})/i
-  ]);
-
-  let annualPremiumWithRecommendedRaw = matchNumber107z15p2R11C(source, [
-    /Prima\s+Total\s+con\s+Recomendad[oa]s[\s\S]{0,160}?([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})/i,
-    /Prima\s+Total\s+Anual\s+con\s+Recomendad[oa]s[\s\S]{0,160}?([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})/i
-  ]);
-
-  const decimals = uniqueSorted107z15p2R11C(decimalCandidates107z15p2R11C(source));
-  const largePremiums = decimals.filter((value) => value >= 1000 && value <= 10000);
-
-  if (annualPremiumWithRecommendedRaw === null && largePremiums.length) {
-    annualPremiumWithRecommendedRaw = largePremiums[largePremiums.length - 1];
-  }
-
-  if (annualPremiumRaw === null && largePremiums.length >= 2) {
-    annualPremiumRaw = largePremiums[largePremiums.length - 2];
-  } else if (annualPremiumRaw === null && largePremiums.length === 1) {
-    annualPremiumRaw = largePremiums[0];
-  }
-
-  return {
-    annualPremiumRaw,
-    annualPremium: roundNumber107z15p2R11C(annualPremiumRaw),
-    annualPremiumWithRecommended: roundNumber107z15p2R11C(annualPremiumWithRecommendedRaw)
-  };
+function pickFirstMatchingRow107z15p2R11E(rows, pattern) {
+  return rows.find((row) => pattern.test(row)) || null;
 }
 
-function chooseFinalValues107z15p2R11C(text, sumAssured) {
-  const source = compactText107z15p2R11C(text);
-  const integers = uniqueSorted107z15p2R11C(
-    integerCandidates107z15p2R11C(source).filter((value) => value >= 1000 && value <= 600000)
-  );
-
-  let totalContributed = matchNumber107z15p2R11C(source, [
-    /Prima\s+Anual\s+Acumulada\s+con\s+AVE[\s\S]{0,140}?([0-9]{1,3}(?:,[0-9]{3})+)/i,
-    /Acumulada\s+con\s+AVE[\s\S]{0,140}?([0-9]{1,3}(?:,[0-9]{3})+)/i
-  ]);
-
-  let aveSurrenderValue = matchNumber107z15p2R11C(source, [
-    /Valor\s+de\s+Rescate\s+AVE[\s\S]{0,140}?([0-9]{1,3}(?:,[0-9]{3})+)/i
-  ]);
-
-  let cashValue = matchNumber107z15p2R11C(source, [
-    /Valor\s+en\s+Efectivo[\s\S]{0,140}?([0-9]{1,3}(?:,[0-9]{3})+)/i
-  ]);
-
-  let recoveryTotal = matchNumber107z15p2R11C(source, [
-    /Recuperaci[oó]n\s+Total[\s\S]{0,140}?([0-9]{1,3}(?:,[0-9]{3})+)/i
-  ]);
-
-  const recoveryPercentage = matchNumber107z15p2R11C(source, [
-    /(?:Porcentaje|%)\s+Recuperaci[oó]n[\s\S]{0,80}?([0-9]{1,3}(?:\.[0-9]+)?)/i,
-    /([0-9]{1,3}(?:\.[0-9]+)?)\s*%\s*Recuperaci[oó]n/i
-  ]);
-
-  if (totalContributed === null) {
-    const plausibleTotals = integers.filter((value) => value >= 100000 && value <= 500000);
-    if (plausibleTotals.length) totalContributed = plausibleTotals[plausibleTotals.length - 1];
-  }
-
-  if (cashValue === null && sumAssured) {
-    cashValue = Math.round(sumAssured * 0.8);
-  }
-
-  if (recoveryTotal === null) {
-    const plausibleRecoveries = integers
-      .filter((value) => value >= 80000 && value <= 400000)
-      .filter((value) => totalContributed === null || value < totalContributed)
-      .filter((value) => !cashValue || value !== cashValue);
-    if (plausibleRecoveries.length) recoveryTotal = plausibleRecoveries[plausibleRecoveries.length - 1];
-  }
-
-  if (aveSurrenderValue === null && recoveryTotal !== null && cashValue !== null) {
-    const derived = recoveryTotal - cashValue;
-    if (derived > 0) aveSurrenderValue = derived;
-  }
-
-  if (aveSurrenderValue === null) {
-    const plausibleAve = integers
-      .filter((value) => value >= 50000 && value <= 300000)
-      .filter((value) => value !== totalContributed && value !== recoveryTotal && value !== cashValue && value !== sumAssured);
-    if (plausibleAve.length) aveSurrenderValue = plausibleAve[0];
-  }
-
-  return {
-    totalContributed,
-    aveSurrenderValue,
-    cashValue,
-    recoveryTotal,
-    recoveryPercentage
-  };
-}
-
-function parseCoveragePremium107z15p2R11C(text, code) {
-  const source = compactText107z15p2R11C(text);
-  const rx = new RegExp(String.raw`\b${code}\b[\s\S]{0,220}?([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})`, "i");
-  const match = source.match(rx);
-  return match ? numberFromText107z15p2R11C(match[1]) : null;
-}
-
-function parseCoverageAmount107z15p2R11C(text, code) {
-  const source = compactText107z15p2R11C(text);
-  const rx = new RegExp(String.raw`\b${code}\b[\s\S]{0,220}?([0-9]{1,3}(?:,[0-9]{3})+)\s*(?:UDI|UDIS)?`, "i");
-  const match = source.match(rx);
-  const parsed = match ? numberFromText107z15p2R11C(match[1]) : null;
-  return parsed !== null && parsed >= 1000 ? parsed : null;
-}
-
-function parseRecommendedCoverages107z15p2R11C(text) {
-  const definitions = [
-    { code: "ADAPTA", label: "ADAPTA 5 REN" },
-    { code: "BMA", label: "BMA" },
-    { code: "PEP", label: "PEP A" },
-    { code: "CLP", label: "CLP 1 REN" }
-  ];
-
-  return definitions
-    .map((item) => {
-      const annualPremium = parseCoveragePremium107z15p2R11C(text, item.code);
-      const sumAssured = parseCoverageAmount107z15p2R11C(text, item.code);
-      if (annualPremium === null && sumAssured === null) return null;
-      return { code: item.code, label: item.label, sumAssured, annualPremium };
-    })
-    .filter(Boolean);
-}
-
-function parseBaseCoverages107z15p2R11C(text, sumAssured) {
-  const definitions = [
-    { code: "BAM", label: "BAM UI 1 REN" },
-    { code: "BAIT", label: "BAIT 60 P" },
-    { code: "AV", label: "AV UI 1 REN" },
-    { code: "BIT", label: "BIT 60 P" },
-    { code: "PCF", label: "PCF A" }
-  ];
-
-  return definitions
-    .map((item) => {
-      const annualPremium = parseCoveragePremium107z15p2R11C(text, item.code);
-      const parsedSumAssured = parseCoverageAmount107z15p2R11C(text, item.code);
-      if (annualPremium === null && parsedSumAssured === null && item.code !== "PCF") return null;
+function parseInsured107z15p2R11E(rows, text) {
+  for (const row of rows) {
+    const match = row.match(/^Titular\s+(.+?)\s+\d{2}\/\d{2}\/\d{4}\s+(\d{1,3})\s+(Femenino|Masculino)\s+(No|Si|Sí)$/i);
+    if (match) {
       return {
-        code: item.code,
-        label: item.label,
-        sumAssured: parsedSumAssured ?? (item.code === "PCF" ? sumAssured : null),
-        annualPremium
+        insured: match[1].trim(),
+        age: numberFromText107z15p2R11E(match[2]),
+        gender: match[3],
+        smokingStatus: /^no$/i.test(match[4]) ? "No fumador" : match[4]
       };
-    })
-    .filter(Boolean);
+    }
+  }
+
+  const source = compactText107z15p2R11E(text);
+  const fallback = source.match(/Titular\s+(.+?)\s+\d{2}\/\d{2}\/\d{4}\s+(\d{1,3})\s+(Femenino|Masculino)\s+(No|Si|Sí)/i);
+  if (fallback) {
+    return {
+      insured: fallback[1].trim(),
+      age: numberFromText107z15p2R11E(fallback[2]),
+      gender: fallback[3],
+      smokingStatus: /^no$/i.test(fallback[4]) ? "No fumador" : fallback[4]
+    };
+  }
+
+  return {
+    insured: "Prospecto Vida Mujer",
+    age: null,
+    gender: undefined,
+    smokingStatus: undefined
+  };
 }
 
-function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11C(text, options = {}) {
-  const rawText = normalizeText107z15p2R11C(text);
-  const source = compactText107z15p2R11C(rawText);
+function parseVidaMujerCoverage107z15p2R11E(rows) {
+  const row = pickFirstMatchingRow107z15p2R11E(rows, /^Vida\s+Mujer\b/i);
+  if (!row) return {};
+
+  const match = row.match(/^Vida\s+Mujer(?:\s+\(Vida\s+Mujer\))?\s+(\d{1,2}\s*años)\s+([0-9]{1,3}(?:,[0-9]{3})+)\s+([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})/i);
+  if (match) {
+    return {
+      coveragePeriod: match[1].trim(),
+      paymentYears: numberFromText107z15p2R11E(match[1]),
+      sumAssured: numberFromText107z15p2R11E(match[2]),
+      baseCoveragePremium: numberFromText107z15p2R11E(match[3])
+    };
+  }
+
+  const nums = parseAmounts107z15p2R11E(row);
+  const sumAssured = nums.find((value) => value >= 10000 && value <= 500000) ?? null;
+  const premium = [...nums].reverse().find((value) => value >= 1000 && value <= 10000 && value !== sumAssured) ?? null;
+  const years = nums.find((value) => value >= 5 && value <= 99) ?? 20;
+
+  return {
+    coveragePeriod: `${years} años`,
+    paymentYears: years,
+    sumAssured,
+    baseCoveragePremium: premium
+  };
+}
+
+function parseAnnualPremium107z15p2R11E(rows, text) {
+  for (const row of rows) {
+    const match = row.match(/^Prima\s+Total\s+Anual\s+([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})$/i);
+    if (match) return numberFromText107z15p2R11E(match[1]);
+  }
+
+  const source = compactText107z15p2R11E(text);
+  const match = source.match(/Prima\s+Total\s+Anual\s+([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})/i);
+  return match ? numberFromText107z15p2R11E(match[1]) : null;
+}
+
+function parseAnnualPremiumWithRecommended107z15p2R11E(rows, text) {
+  for (const row of rows) {
+    const match = row.match(/^Prima\s+total\s+con\s+beneficios\s+recomendados\s+([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})$/i);
+    if (match) return numberFromText107z15p2R11E(match[1]);
+  }
+
+  const source = compactText107z15p2R11E(text);
+  const match = source.match(/Prima\s+total\s+con\s+beneficios\s+recomendados\s+([0-9]{1,3}(?:,[0-9]{3})*\.[0-9]{2})/i);
+  return match ? numberFromText107z15p2R11E(match[1]) : null;
+}
+
+function parseGuaranteedRows107z15p2R11E(rows) {
+  const guaranteed = [];
+
+  for (const row of rows) {
+    const match = row.match(/^([0-9]{1,3}\.[0-9]{2})\s*%\s+(\d{1,3})\s+([0-9]{1,3}(?:,[0-9]{3})*)\s+([0-9]{1,3}(?:,[0-9]{3})*)\s+([0-9]{1,3}(?:,[0-9]{3})*)\s+([0-9]{1,3}(?:,[0-9]{3})*|0)\s+([0-9]{1,3}(?:,[0-9]{3})*)\s+([0-9]{1,3}(?:,[0-9]{3})*)$/);
+    if (!match) continue;
+
+    guaranteed.push({
+      recoveryPercentage: numberFromText107z15p2R11E(match[1]),
+      age: numberFromText107z15p2R11E(match[2]),
+      annualPremium: numberFromText107z15p2R11E(match[3]),
+      annualPremiumAccumulatedWithAve: numberFromText107z15p2R11E(match[4]),
+      primaAnualAcumuladaConAve: numberFromText107z15p2R11E(match[4]),
+      aveSurrenderValue: numberFromText107z15p2R11E(match[5]),
+      valorRescateAve: numberFromText107z15p2R11E(match[5]),
+      cashValue: numberFromText107z15p2R11E(match[6]),
+      valorEnEfectivo: numberFromText107z15p2R11E(match[6]),
+      recoveryTotal: numberFromText107z15p2R11E(match[7]),
+      recuperacionTotal: numberFromText107z15p2R11E(match[7]),
+      sumAssured: numberFromText107z15p2R11E(match[8]),
+      sumaAseguradaBasico: numberFromText107z15p2R11E(match[8])
+    });
+  }
+
+  return guaranteed.sort((a, b) => (a.age || 0) - (b.age || 0));
+}
+
+function parseCoverageRow107z15p2R11E(row, code, label) {
+  const nums = parseAmounts107z15p2R11E(row);
+  const amount = nums.find((value) => value >= 10000 && value <= 500000) ?? null;
+  const premium = [...nums].reverse().find((value) => value > 0 && value < 10000 && value !== amount && ![1, 5, 17, 20, 60].includes(value)) ?? null;
+  return { code, label, sumAssured: amount, annualPremium: premium };
+}
+
+function parseBaseCoverages107z15p2R11E(rows, sumAssured) {
+  const defs = [
+    ["BAM", /BAM\s+UI/i, "BAM UI"],
+    ["BAIT", /BAIT\s+60\s+P/i, "BAIT 60 P"],
+    ["AV", /AV\s+UI/i, "AV UI"],
+    ["BIT", /BIT\s+60\s+P/i, "BIT 60 P"],
+    ["PCF", /PCF\s+A/i, "PCF A"]
+  ];
+
+  return defs.map(([code, rx, label]) => {
+    const row = rows.find((item) => rx.test(item));
+    if (!row) return null;
+    const parsed = parseCoverageRow107z15p2R11E(row, code, label);
+    if (code === "PCF" && !parsed.sumAssured) parsed.sumAssured = sumAssured;
+    return parsed;
+  }).filter(Boolean);
+}
+
+function parseRecommendedCoverages107z15p2R11E(rows) {
+  const defs = [
+    ["ADAPTA", /^ADAPTA\b/i, "ADAPTA"],
+    ["BMA", /Beneficio\s+por\s+Muerte\s+Accidental|BMA/i, "BMA"],
+    ["PEP", /Complicaciones\s+del\s+Embarazo|PEP\s+A/i, "PEP A"],
+    ["CLP", /Cuidados\s+a\s+Largo\s+Plazo|CLP/i, "CLP"]
+  ];
+
+  return defs.map(([code, rx, label]) => {
+    const row = rows.find((item) => rx.test(item));
+    if (!row) return null;
+    return parseCoverageRow107z15p2R11E(row, code, label);
+  }).filter(Boolean);
+}
+
+function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {}) {
+  const rawText = normalizeText107z15p2R11E(text);
+  const rows = getSolucionlineRows107z15p2R11E(rawText);
+  const source = compactText107z15p2R11E(rawText);
   const product = /vida\s+mujer/i.test(source) ? "Vida Mujer" : null;
   const missingInformation = [];
 
-  if (!product) missingInformation.push("No se detectó producto Vida Mujer en el PDF.");
+  const person = parseInsured107z15p2R11E(rows, rawText);
+  const base = parseVidaMujerCoverage107z15p2R11E(rows);
+  const guaranteedRows = parseGuaranteedRows107z15p2R11E(rows);
+  const finalGuaranteedRow = guaranteedRows[guaranteedRows.length - 1] || null;
 
-  const insured = matchText107z15p2R11C(source, [
-    /(?:Nombre|Titular|Asegurad[ao])\s*:?\s*([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ.\s]{4,80}?)(?=\s+(?:Edad|Sexo|Fuma|Producto|Plan|RFC|Fecha|Vida\s+Mujer)\b)/i
-  ]) || "Prospecto Vida Mujer";
+  const sumAssured = base.sumAssured ?? finalGuaranteedRow?.sumAssured ?? null;
+  const annualPremiumFromTotal = parseAnnualPremium107z15p2R11E(rows, rawText);
+  const annualPremium = roundNumber107z15p2R11E(annualPremiumFromTotal ?? finalGuaranteedRow?.annualPremium ?? null);
+  const annualPremiumWithRecommended = roundNumber107z15p2R11E(parseAnnualPremiumWithRecommended107z15p2R11E(rows, rawText));
+  const paymentYears = base.paymentYears ?? 20;
+  const coveragePeriod = base.coveragePeriod ?? `${paymentYears} años`;
 
-  const age = matchNumber107z15p2R11C(source, [
-    /(?:Edad|Edad real)\s*:?\s*(\d{1,3})/i
-  ]);
-
-  const sumAssured = chooseSumAssured107z15p2R11C(source);
-  const premiums = choosePremiums107z15p2R11C(source);
-  const paymentYears = matchNumber107z15p2R11C(source, [
-    /Plazo\s+de\s+pago[\s\S]{0,80}?(\d{1,2})\s*años/i,
-    /Vida\s+Mujer[\s\S]{0,80}?(\d{1,2})\s*años/i
-  ]) ?? 20;
-
-  const policyTerm = matchText107z15p2R11C(source, [
-    /Vida\s+Mujer[\s\S]{0,80}?(\d{1,2}\s*años)/i,
-    /(?:Periodo|Per[ií]odo|Plazo)\s+de\s+cobertura[\s\S]{0,80}?(\d{1,2}\s*años)/i
-  ]) || `${paymentYears} años`;
-
-  const finalValues = chooseFinalValues107z15p2R11C(source, sumAssured);
-
-  if (sumAssured === null || sumAssured < 1000) missingInformation.push("Suma asegurada básica.");
-  if (premiums.annualPremium === null) missingInformation.push("Prima total anual.");
-  if (finalValues.totalContributed === null) missingInformation.push("Prima anual acumulada con AVE.");
-
-  const currentUdiValue = numberFromText107z15p2R11C(options.currentUdiValue) ?? findCurrentUdiValue107z15p2R11C();
-  const plannedOrAvePremium = finalValues.totalContributed && paymentYears
-    ? Math.round(finalValues.totalContributed / paymentYears)
+  const totalContributed = finalGuaranteedRow?.annualPremiumAccumulatedWithAve ?? null;
+  const plannedOrAvePremium = totalContributed && paymentYears
+    ? Math.round(totalContributed / paymentYears)
     : null;
 
-  const guaranteedFinalRow = {
+  if (!product) missingInformation.push("No se detectó producto Vida Mujer en el PDF.");
+  if (!sumAssured) missingInformation.push("Suma asegurada básica.");
+  if (!annualPremium) missingInformation.push("Prima total anual.");
+  if (!totalContributed) missingInformation.push("Prima anual acumulada con AVE.");
+
+  const guaranteedFinalRow = finalGuaranteedRow ? {
     year: paymentYears,
     policyYear: paymentYears,
-    annualPremiumAccumulatedWithAve: finalValues.totalContributed,
-    primaAnualAcumuladaConAve: finalValues.totalContributed,
-    aveSurrenderValue: finalValues.aveSurrenderValue,
-    valorRescateAve: finalValues.aveSurrenderValue,
-    cashValue: finalValues.cashValue,
-    valorEnEfectivo: finalValues.cashValue,
-    recoveryTotal: finalValues.recoveryTotal,
-    recuperacionTotal: finalValues.recoveryTotal,
-    recoveryPercentage: finalValues.recoveryPercentage,
-    porcentajeRecuperacion: finalValues.recoveryPercentage
-  };
+    age: finalGuaranteedRow.age,
+    recoveryPercentage: finalGuaranteedRow.recoveryPercentage,
+    porcentajeRecuperacion: finalGuaranteedRow.recoveryPercentage,
+    annualPremium: finalGuaranteedRow.annualPremium,
+    annualPremiumAccumulatedWithAve: finalGuaranteedRow.annualPremiumAccumulatedWithAve,
+    primaAnualAcumuladaConAve: finalGuaranteedRow.annualPremiumAccumulatedWithAve,
+    aveSurrenderValue: finalGuaranteedRow.aveSurrenderValue,
+    valorRescateAve: finalGuaranteedRow.aveSurrenderValue,
+    cashValue: finalGuaranteedRow.cashValue,
+    valorEnEfectivo: finalGuaranteedRow.cashValue,
+    recoveryTotal: finalGuaranteedRow.recoveryTotal,
+    recuperacionTotal: finalGuaranteedRow.recoveryTotal,
+    sumAssured: finalGuaranteedRow.sumAssured,
+    sumaAseguradaBasico: finalGuaranteedRow.sumAssured
+  } : null;
 
-  const recommendedCoverages = parseRecommendedCoverages107z15p2R11C(source);
+  const currentUdiValue = numberFromText107z15p2R11E(options.currentUdiValue) ?? findCurrentUdiValue107z15p2R11E();
 
   const nativeResult = {
     source: "browser_pdf_parser",
-    extractionVersion: "107z15p2_R11C",
+    extractionVersion: "107z15p2_R11E",
     product,
     productFamily: "life",
     currency: "UDI",
-    prospect: insured,
-    insured,
-    age,
-    gender: /femenino|mujer/i.test(source) ? "Femenino" : undefined,
-    smokingStatus: /no\s+fum/i.test(source) ? "No fumador" : undefined,
+    prospect: person.insured,
+    insured: person.insured,
+    age: person.age,
+    gender: person.gender,
+    smokingStatus: person.smokingStatus,
     sumInsured: sumAssured,
     sumAssured,
     basicSumAssured: sumAssured,
-    policyTerm,
-    coveragePeriod: policyTerm,
+    policyTerm: coveragePeriod,
+    coveragePeriod,
     paymentYears,
     premiumTable: {
-      annual: premiums.annualPremium,
+      annual: annualPremium,
       plannedAnnual: plannedOrAvePremium,
-      annualWithRecommended: premiums.annualPremiumWithRecommended
+      annualWithRecommended: annualPremiumWithRecommended
     },
-    totalAnnualPremium: premiums.annualPremium,
-    totalAnnualPremiumWithRecommended: premiums.annualPremiumWithRecommended,
-    totalContributed: finalValues.totalContributed,
-    primaTotalAcumuladaConAve: finalValues.totalContributed,
-    aveSurrenderValue: finalValues.aveSurrenderValue,
-    valorRescateAve: finalValues.aveSurrenderValue,
-    cashValue: finalValues.cashValue,
-    valorEnEfectivo: finalValues.cashValue,
-    recoveryTotal: finalValues.recoveryTotal,
-    recuperacionTotal: finalValues.recoveryTotal,
-    recoveryPercentage: finalValues.recoveryPercentage,
-    porcentajeRecuperacion: finalValues.recoveryPercentage,
-    coverages: parseBaseCoverages107z15p2R11C(source, sumAssured),
-    recommendedCoverages,
-    guaranteedValues: [guaranteedFinalRow],
-    guaranteedValueRows: [guaranteedFinalRow],
+    totalAnnualPremium: annualPremium,
+    totalAnnualPremiumWithRecommended: annualPremiumWithRecommended,
+    totalContributed,
+    primaTotalAcumuladaConAve: totalContributed,
+    aveSurrenderValue: guaranteedFinalRow?.aveSurrenderValue ?? null,
+    valorRescateAve: guaranteedFinalRow?.aveSurrenderValue ?? null,
+    cashValue: guaranteedFinalRow?.cashValue ?? null,
+    valorEnEfectivo: guaranteedFinalRow?.cashValue ?? null,
+    recoveryTotal: guaranteedFinalRow?.recoveryTotal ?? null,
+    recuperacionTotal: guaranteedFinalRow?.recoveryTotal ?? null,
+    recoveryPercentage: guaranteedFinalRow?.recoveryPercentage ?? null,
+    porcentajeRecuperacion: guaranteedFinalRow?.recoveryPercentage ?? null,
+    coverages: parseBaseCoverages107z15p2R11E(rows, sumAssured),
+    recommendedCoverages: parseRecommendedCoverages107z15p2R11E(rows),
+    guaranteedValues: guaranteedFinalRow ? [guaranteedFinalRow] : [],
+    guaranteedValueRows: guaranteedFinalRow ? [guaranteedFinalRow] : [],
     missing_information: missingInformation,
-    rawText
+    rawText,
+    rows
   };
 
   return {
     schemaVersion: "forge.accepted_quote_packet.v1",
     source: "browser_pdf_parser",
-    extractionVersion: "107z15p2_R11C",
+    extractionVersion: "107z15p2_R11E",
     fileName: options.fileName || null,
-    name: insured,
+    name: person.insured,
     family: "life",
     productFamily: "life",
     product_family: "life",
     product,
-    insured,
-    age,
+    insured: person.insured,
+    age: person.age,
     currency: "UDI",
     sumAssured,
     sumInsured: sumAssured,
-    annualPremium: premiums.annualPremium,
-    annualPremiumWithRecommended: premiums.annualPremiumWithRecommended,
+    annualPremium,
+    annualPremiumWithRecommended,
     plannedOrAvePremium,
-    coveragePeriod: policyTerm,
+    coveragePeriod,
     paymentYears,
     context: {
-      name: insured,
+      name: person.insured,
       family: "life",
       productFamily: "life",
       product_family: "life",
       product,
-      insured
+      insured: person.insured
     },
     currencyMetadata: {
       currentUdiValue,
@@ -431,22 +375,46 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11C(text, options = {
   };
 }
 
-async function loadPdfJs107z15p2R11C() {
-  if (!pdfjsPromise107z15p2R11C) {
-    pdfjsPromise107z15p2R11C = import(PDFJS_MODULE_URL_107Z15P2_R11C).then((pdfjsLib) => {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL_107Z15P2_R11C;
+async function loadPdfJs107z15p2R11E() {
+  if (!pdfjsPromise107z15p2R11E) {
+    pdfjsPromise107z15p2R11E = import(PDFJS_MODULE_URL_107Z15P2_R11E).then((pdfjsLib) => {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL_107Z15P2_R11E;
       return pdfjsLib;
     });
   }
-  return pdfjsPromise107z15p2R11C;
+  return pdfjsPromise107z15p2R11E;
 }
 
-export async function extractTextFromPdfFile107z15p2R11C(file) {
+function groupPdfItemsIntoRows107z15p2R11E(items) {
+  const rows = [];
+
+  for (const item of items) {
+    const value = String(item.str || "").trim();
+    if (!value) continue;
+    const transform = item.transform || [];
+    const x = Number(transform[4] || 0);
+    const y = Number(transform[5] || 0);
+
+    let row = rows.find((candidate) => Math.abs(candidate.y - y) <= 3);
+    if (!row) {
+      row = { y, items: [] };
+      rows.push(row);
+    }
+    row.items.push({ x, value });
+  }
+
+  return rows
+    .sort((a, b) => b.y - a.y)
+    .map((row) => row.items.sort((a, b) => a.x - b.x).map((item) => item.value).join(" ").replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
+export async function extractTextFromPdfFile107z15p2R11E(file) {
   if (!file || typeof file.arrayBuffer !== "function") {
     throw new Error("Archivo PDF inválido o no compatible con arrayBuffer().");
   }
 
-  const pdfjsLib = await loadPdfJs107z15p2R11C();
+  const pdfjsLib = await loadPdfJs107z15p2R11E();
   const arrayBuffer = await file.arrayBuffer();
   const documentTask = pdfjsLib.getDocument({ data: arrayBuffer });
   const pdf = await documentTask.promise;
@@ -455,37 +423,33 @@ export async function extractTextFromPdfFile107z15p2R11C(file) {
   for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
     const page = await pdf.getPage(pageNumber);
     const textContent = await page.getTextContent();
-    const pageText = textContent.items
-      .map((item) => item.str || "")
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
-    pages.push(pageText);
+    const rows = groupPdfItemsIntoRows107z15p2R11E(textContent.items);
+    pages.push(rows.join("\n"));
   }
 
   return pages.join("\n\n");
 }
 
 export function parseVidaMujerPdfTextToAcceptedQuotePacket(text, options = {}) {
-  return buildVidaMujerAcceptedQuotePacketFromText107z15p2R11C(text, options);
+  return buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options);
 }
 
 export async function parsePdfFileToAcceptedQuotePacket(file, options = {}) {
-  const text = await extractTextFromPdfFile107z15p2R11C(file);
+  const text = await extractTextFromPdfFile107z15p2R11E(file);
   return parseVidaMujerPdfTextToAcceptedQuotePacket(text, {
     ...options,
     fileName: options.fileName || file?.name || null
   });
 }
 
-function isPdfFile107z15p2R11C(file) {
+function isPdfFile107z15p2R11E(file) {
   return Boolean(file) && (
     file.type === "application/pdf" ||
     /\.pdf$/i.test(file.name || "")
   );
 }
 
-function ensurePdfStatusBox107z15p2R11C(input) {
+function ensurePdfStatusBox107z15p2R11E(input) {
   if (!input || typeof document === "undefined") return null;
   const existing = input.closest("label, section, div")?.querySelector?.("[data-forge-pdf-status='true']");
   if (existing) return existing;
@@ -501,27 +465,27 @@ function ensurePdfStatusBox107z15p2R11C(input) {
   return box;
 }
 
-function setPdfStatus107z15p2R11C(input, message, tone = "info") {
-  const box = ensurePdfStatusBox107z15p2R11C(input);
+function setPdfStatus107z15p2R11E(input, message, tone = "info") {
+  const box = ensurePdfStatusBox107z15p2R11E(input);
   if (!box) return;
   box.textContent = message;
   box.dataset.tone = tone;
   box.style.color = tone === "error" ? "#b91c1c" : tone === "success" ? "#047857" : "#2563eb";
 }
 
-async function convertPdfInputToJsonChange107z15p2R11C(input, file) {
-  setPdfStatus107z15p2R11C(input, "PDF recibido. Extrayendo campos en el navegador…", "info");
+async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
+  setPdfStatus107z15p2R11E(input, "PDF recibido. Extrayendo renglones del estudio…", "info");
 
   const packet = await parsePdfFileToAcceptedQuotePacket(file, { fileName: file.name });
 
   if (packet?.missing_information?.length) {
-    setPdfStatus107z15p2R11C(
+    setPdfStatus107z15p2R11E(
       input,
       `PDF convertido con datos faltantes: ${packet.missing_information.join(", ")}.`,
       "error"
     );
   } else {
-    setPdfStatus107z15p2R11C(input, "PDF convertido a cotización aceptada. Abriendo modal…", "success");
+    setPdfStatus107z15p2R11E(input, "PDF convertido a cotización aceptada. Abriendo modal…", "success");
   }
 
   if (typeof File === "undefined" || typeof DataTransfer === "undefined") {
@@ -544,25 +508,25 @@ async function convertPdfInputToJsonChange107z15p2R11C(input, file) {
   input.dispatchEvent(event);
 }
 
-function installPdfInputInterceptor107z15p2R11C() {
+function installPdfInputInterceptor107z15p2R11E() {
   if (typeof document === "undefined") return;
-  if (globalThis.__FORGE_107Z15P2_R11C_PDF_INTERCEPTOR__) return;
-  globalThis.__FORGE_107Z15P2_R11C_PDF_INTERCEPTOR__ = true;
+  if (globalThis.__FORGE_107Z15P2_R11E_PDF_INTERCEPTOR__) return;
+  globalThis.__FORGE_107Z15P2_R11E_PDF_INTERCEPTOR__ = true;
 
   document.addEventListener("change", (event) => {
     const input = event.target;
     if (!(input instanceof HTMLInputElement)) return;
     if (input.type !== "file") return;
     const file = input.files?.[0];
-    if (!isPdfFile107z15p2R11C(file)) return;
+    if (!isPdfFile107z15p2R11E(file)) return;
 
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
 
-    convertPdfInputToJsonChange107z15p2R11C(input, file).catch((error) => {
-      console.error("[FORGE R11C] PDF browser parser failed", error);
-      setPdfStatus107z15p2R11C(
+    convertPdfInputToJsonChange107z15p2R11E(input, file).catch((error) => {
+      console.error("[FORGE R11E] PDF browser parser failed", error);
+      setPdfStatus107z15p2R11E(
         input,
         `No pude extraer la cotización del PDF: ${error?.message || error}`,
         "error"
@@ -574,8 +538,8 @@ function installPdfInputInterceptor107z15p2R11C() {
 globalThis.ForgePdfBrowserParser = {
   parsePdfFileToAcceptedQuotePacket,
   parseVidaMujerPdfTextToAcceptedQuotePacket,
-  extractTextFromPdfFile107z15p2R11C
+  extractTextFromPdfFile107z15p2R11E
 };
 
-installPdfInputInterceptor107z15p2R11C();
-// FORGE:107Z15P2_R11C_HARDEN_VIDA_MUJER_BROWSER_PDF_EXTRACTION:END
+installPdfInputInterceptor107z15p2R11E();
+// FORGE:107Z15P2_R11E_SOLUCIONLINE_LAYOUT_AWARE_PDF_PARSER:END
