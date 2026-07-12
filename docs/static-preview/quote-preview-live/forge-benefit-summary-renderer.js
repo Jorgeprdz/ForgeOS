@@ -11,6 +11,11 @@ import {
   createProductDashboardSection,
   createRecommendedBenefitCard
 } from "./forge-product-dashboard-template.js";
+import {
+  buildImaginaSerDashboardModel,
+  isImaginaSerProduct,
+  renderImaginaSerDashboard
+} from "./forge-imagina-ser-product-dashboard-adapter.js";
 
 function hasValue(value) {
   return value !== null && value !== undefined && value !== "";
@@ -863,9 +868,9 @@ function benefitFallbackRows(calc) {
   ];
 }
 
-function buildDynamicBenefitSummaryRows(calc) {
+function buildDynamicBenefitSummary(calc) {
   const benefitApi = benefitSummaryApiSync();
-  if (!benefitApi?.buildQuoteBenefitSummary) return [];
+  if (!benefitApi?.buildQuoteBenefitSummary) return null;
 
   const nativeResult = {
     ...(calc.nativeResult || {}),
@@ -874,7 +879,7 @@ function buildDynamicBenefitSummaryRows(calc) {
     retirementScenarioUnfavorable: calc.unfavorable
   };
 
-  const benefitSummary = benefitApi.buildQuoteBenefitSummary({
+  return benefitApi.buildQuoteBenefitSummary({
     productFamily:
       calc.productFamily ||
       calc.family ||
@@ -895,26 +900,57 @@ function buildDynamicBenefitSummaryRows(calc) {
     currencyMetadata: calc.udiRateMetadata || {},
     productIntelligence: calc.productIntelligence || null
   });
+}
 
-  return benefitSummaryToRuntimeRows(benefitSummary);
+function buildDynamicBenefitSummaryRows(calc) {
+  return benefitSummaryToRuntimeRows(buildDynamicBenefitSummary(calc));
+}
+
+function renderImaginaSerBenefitSummary(calc, benefitSummary) {
+  if (!benefitSummary || !isImaginaSerProduct(calc)) return false;
+  const target = findVisibleSummaryValueNode([
+    "Valores, beneficios o escenarios relevantes",
+    "Valores beneficios escenarios relevantes",
+    "Valores / beneficios / escenarios"
+  ]);
+  if (!target) return false;
+
+  const model = buildImaginaSerDashboardModel(benefitSummary, {
+    formatAmount: formatBenefitAmount
+  });
+  const dashboard = renderImaginaSerDashboard(model, {
+    appendValue: appendSemanticValue
+  });
+  if (!dashboard) return false;
+
+  target.textContent = "";
+  target.appendChild(dashboard);
+  normalizeBenefitLayout107z15p2R9E();
+  return true;
 }
 
 function renderVisibleDynamicBenefitSummary(calc) {
   const fallbackRows = benefitFallbackRows(calc);
-  const dynamicRows = buildDynamicBenefitSummaryRows(calc);
+  const benefitSummary = buildDynamicBenefitSummary(calc);
+  const dynamicRows = benefitSummaryToRuntimeRows(benefitSummary);
 
-  writeVisibleBenefitRuntimeGrid(
-    dynamicRows.length ? dynamicRows : fallbackRows,
-    "El PDF no entregó valores adicionales."
-  );
+  if (!renderImaginaSerBenefitSummary(calc, benefitSummary)) {
+    writeVisibleBenefitRuntimeGrid(
+      dynamicRows.length ? dynamicRows : fallbackRows,
+      "El PDF no entregó valores adicionales."
+    );
+  }
 
   if (!dynamicRows.length && !benefitSummaryApiSync()?.buildQuoteBenefitSummary) {
     globalThis.addEventListener("forge:quote-benefit-summary-ready", () => {
-      const lateRows = buildDynamicBenefitSummaryRows(calc);
-      writeVisibleBenefitRuntimeGrid(
-        lateRows.length ? lateRows : fallbackRows,
-        "El PDF no entregó valores adicionales."
-      );
+      const lateSummary = buildDynamicBenefitSummary(calc);
+      const lateRows = benefitSummaryToRuntimeRows(lateSummary);
+      if (!renderImaginaSerBenefitSummary(calc, lateSummary)) {
+        writeVisibleBenefitRuntimeGrid(
+          lateRows.length ? lateRows : fallbackRows,
+          "El PDF no entregó valores adicionales."
+        );
+      }
     }, { once: true });
   }
 
@@ -959,6 +995,7 @@ const api = Object.freeze({
   renderVisibleDynamicBenefitSummary,
   writeVisibleBenefitRuntimeGrid,
   benefitFallbackRows,
+  buildDynamicBenefitSummary,
   buildDynamicBenefitSummaryRows,
   benefitSummaryToRuntimeRows,
   formatUdiWithMxn,
@@ -974,6 +1011,7 @@ export {
   renderVisibleDynamicBenefitSummary,
   writeVisibleBenefitRuntimeGrid,
   benefitFallbackRows,
+  buildDynamicBenefitSummary,
   buildDynamicBenefitSummaryRows,
   benefitSummaryToRuntimeRows,
   formatUdiWithMxn,
