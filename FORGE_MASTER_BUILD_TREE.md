@@ -14142,3 +14142,63 @@ LOCKED_DECISION=R14_SEGUBECA_DASHBOARD_REGISTERED_IMPLEMENTATION_REQUIRES_SEPARA
 
 NEXT=R14A_SEGUBECA_PRODUCT_DASHBOARD_ADAPTER_IMPLEMENTATION
 <!-- FORGE:R14_SEGUBECA_PRODUCT_DASHBOARD_DISCOVERY_AND_READINESS:END -->
+
+<!-- FORGE:R14B_SEGUBECA_EXCEL_AND_PDF_INTAKE_DISCOVERY:START -->
+## R14B SeguBeca Excel And PDF Intake Discovery
+
+Status:
+
+`DISCOVERY_LOCKED_FOR_SEGUBECA_EXCEL_AND_PDF_INTAKE`
+
+Decision:
+
+`PASS_R14B_SEGUBECA_EXCEL_AND_PDF_INTAKE_DISCOVERY`
+
+Scope:
+
+- Register sanitized discovery of SeguBeca Solucionline PDF surface.
+- Register sanitized discovery of universal Excel workbook SB structure.
+- Preserve R14A adapter as presentation consumer only.
+- Prepare a future Product Intelligence intake/parser module without implementing it.
+
+Sanitized local inventory:
+
+- SeguBeca PDF candidates detected: `9`.
+- SB workbook candidates detected: `1`.
+- No filenames, local paths, client names, e-mails, phone numbers, screenshots, raw PDF content, or workbook sample names were recorded.
+
+Discovered PDF surfaces:
+
+- product header and UDI currency;
+- role rows such as Titular and Contratante;
+- coverage table;
+- recommended-benefits table;
+- guaranteed-values table;
+- administration-of-savings table;
+- monthly delivery / accumulated delivery fields;
+- interest-rate and UDI notes when present.
+
+Discovered Excel SB surfaces:
+
+- participant age columns;
+- annuality, available, protection, UDI projection, monthly delivery, annual delivery columns;
+- 4.5% UDI projection formula pattern when present;
+- exención de pagos de primas por invalidez phrase when present.
+
+Limits:
+
+- discovery only;
+- no parser implementation;
+- no UI/runtime implementation;
+- no mobile work;
+- no schemas, routes, `app.js`, rule packs, fixtures with real client data, PDFs, Excel files, screenshots, or secrets;
+- no hardcoded sample values as universal truth.
+
+Evidence:
+
+- `docs/evidence/r14b-segubeca-excel-and-pdf-intake-discovery.md`
+
+NEXT:
+
+`R14C_SEGUBECA_SOLUCIONLINE_PDF_INTAKE_IMPLEMENTATION`
+<!-- FORGE:R14B_SEGUBECA_EXCEL_AND_PDF_INTAKE_DISCOVERY:END -->
