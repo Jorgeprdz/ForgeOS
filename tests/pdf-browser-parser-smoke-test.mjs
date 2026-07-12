@@ -3,6 +3,8 @@ import {
   parsePdfTextToAcceptedQuotePacket,
   parseVidaMujerPdfTextToAcceptedQuotePacket
 } from "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js";
+import { parseSolucionlineRetirementQuote as parseCanonicalRetirementQuote } from "../product-intelligence/evidence/solucionline-retirement-parser.js";
+import { parseSolucionlineRetirementQuote as parseBrowserRetirementQuote } from "../docs/static-preview/quote-preview-live/forge-solucionline-retirement-parser.js";
 
 const solucionlineRows = `
 Nombre
@@ -87,6 +89,10 @@ Prima total 3,000 3,000 3,000 3,000
 const imaginaPacket = parsePdfTextToAcceptedQuotePacket(imaginaSerRows, {
   fileName: "imagina-ser-test.pdf"
 });
+assert.deepEqual(
+  parseCanonicalRetirementQuote({ text: imaginaSerRows }),
+  parseBrowserRetirementQuote({ text: imaginaSerRows })
+);
 assert.equal(imaginaPacket.product, "Imagina Ser");
 assert.equal(imaginaPacket.productFamily, "imagina_ser");
 assert.equal(imaginaPacket.nativeResult.productFamily, "imagina_ser");

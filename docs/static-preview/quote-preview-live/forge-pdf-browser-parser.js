@@ -1,5 +1,5 @@
 // FORGE:107Z15P2_R11E_SOLUCIONLINE_LAYOUT_AWARE_PDF_PARSER:START
-import { parseSolucionlineRetirementQuote } from "../../../product-intelligence/evidence/solucionline-retirement-parser.js";
+import { parseSolucionlineRetirementQuote } from "./forge-solucionline-retirement-parser.js";
 
 const PDFJS_CDN_VERSION_107Z15P2_R11E = "4.10.38";
 const PDFJS_MODULE_URL_107Z15P2_R11E = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.mjs`;

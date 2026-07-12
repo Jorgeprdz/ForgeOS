@@ -22,13 +22,15 @@ R13E adds product-aware direct PDF routing, reuses the canonical Solucionline re
 | File | Reason |
 | --- | --- |
 | `docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js` | Adds evidence-based product routing, calls the canonical retirement parser, maps supported Imagina Ser fields to the accepted-quote contract, and returns neutral unknown-product output. |
+| `docs/static-preview/quote-preview-live/forge-solucionline-retirement-parser.js` | Hosts the single browser-published Solucionline parser implementation so GitHub Pages can resolve the dependency. |
+| `product-intelligence/evidence/solucionline-retirement-parser.js` | Preserves the canonical repository API as a re-export of the single browser-safe implementation. |
 | `docs/static-preview/quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js` | Adds zero-decimal Imagina Ser presentation formatting, thousands separators, projected-MXN styling, compact construction metrics, and scenario deduplication. |
 | `docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js` | Stops supplying the generic two-decimal formatter to Imagina Ser so its product adapter controls presentation only. |
 | `tests/pdf-browser-parser-smoke-test.mjs` | Adds Imagina Ser complete/incomplete PDF-text routing and routed Vida Mujer regressions. |
 | `tests/imagina-ser-product-dashboard-adapter-test.mjs` | Adds JSON routing, zero-decimal formatting, compact construction, no separate future-scenario section, and template-layout compatibility assertions. |
 | `docs/evidence/r13e-imagina-ser-pdf-intake-and-dashboard-polish-implementation.md` | Records authority, mapping, formatting, deduplication, validation, and prohibited-surface evidence. |
 
-`index.html`, the reusable template, and the canonical retirement parser did not require modification.
+`index.html` and the reusable template did not require modification. The canonical parser path remains compatible through a re-export.
 
 ## PDF intake correction
 
@@ -52,9 +54,9 @@ Consequently, a positively identified Imagina Ser PDF never enters the Vida Muje
 
 `forge-pdf-browser-parser.js` imports:
 
-`parseSolucionlineRetirementQuote()` from `product-intelligence/evidence/solucionline-retirement-parser.js`.
+`parseSolucionlineRetirementQuote()` from the browser-published shared implementation. `product-intelligence/evidence/solucionline-retirement-parser.js` re-exports the same function for existing repository consumers.
 
-No Solucionline product regex, premium parsing rule, scenario parsing rule, or financial formula was copied into browser intake.
+There is one Solucionline parser implementation. No product regex, premium parsing rule, scenario parsing rule, or financial formula is duplicated inside browser intake.
 
 The accepted-packet mapper consumes only parser output and evidence states. It maps:
 
@@ -148,7 +150,6 @@ No changes were made to:
 - real-client fixtures;
 - sensitive data;
 - unrelated parsers;
-- the canonical Solucionline parser;
 - `index.html`.
 
 ## Live validation target
