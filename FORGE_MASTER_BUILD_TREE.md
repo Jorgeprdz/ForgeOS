@@ -14202,3 +14202,38 @@ NEXT:
 
 `R14C_SEGUBECA_SOLUCIONLINE_PDF_INTAKE_IMPLEMENTATION`
 <!-- FORGE:R14B_SEGUBECA_EXCEL_AND_PDF_INTAKE_DISCOVERY:END -->
+
+<!-- FORGE:R14H_SEGUBECA_BROWSER_RENDER_INTEGRATION_REPAIR:START -->
+## R14H SeguBeca Browser Render Integration Repair
+
+Status:
+
+`IMPLEMENTATION_READY`
+
+Build Tree area:
+
+Quote Preview / Product Intelligence UI / SeguBeca accepted-render runtime.
+
+Discovery decision:
+
+- real Chromium reproduction passed with sanitized identities only;
+- the accepted renderer received a valid SeguBeca calculation with structured benefit blocks and preserved economic values;
+- the first rupture is the string-label call to `setSummaryValue`, whose array-only normalization throws `TypeError: labels.map is not a function`;
+- the static placeholders remain because rendering aborts before the SeguBeca dashboard is mounted, not because a later callback overwrites it;
+- the accepted quote adapter is not the first point of rupture and remains outside the repair surface.
+
+Authorized implementation:
+
+- normalize the renderer label input at the existing `setSummaryValue` boundary;
+- add focused browser/DOM integration coverage;
+- preserve SeguBeca totals, payment mode, currency, coverage period, structured sections, and generic-product regressions;
+- do not modify parsers, extraction rules, financial calculations, fixtures, mobile, schemas, routes, `app.js`, rule packs, or other product behavior.
+
+Evidence:
+
+- `docs/evidence/r14h-segubeca-browser-render-integration-repair.md`
+
+DECISION=PASS_R14H_DISCOVERY_AND_IMPLEMENTATION_READINESS
+
+NEXT=R14H_MINIMUM_RUNTIME_REPAIR_AND_BROWSER_VALIDATION
+<!-- FORGE:R14H_SEGUBECA_BROWSER_RENDER_INTEGRATION_REPAIR:END -->

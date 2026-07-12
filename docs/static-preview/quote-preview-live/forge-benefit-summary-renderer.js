@@ -96,7 +96,7 @@ function normalize(value) {
 }
 
 function findSummaryTarget(labels) {
-  const wanted = labels.map(normalize);
+  const wanted = (Array.isArray(labels) ? labels : [labels]).map(normalize);
   for (const node of document.querySelectorAll("dt,th,label,strong,span,p,div")) {
     const text = normalize(node.textContent);
     if (!text || text.length > 100 || !wanted.some(label => text === label || text.startsWith(`${label}:`))) continue;
@@ -1018,7 +1018,7 @@ function renderAcceptedQuote(calc, { writeRuntimeGrid } = {}) {
 
     const totalRecovery = calc?.totalRecovery ?? calc?.nativeResult?.totalRecovery ?? null;
     if (totalRecovery !== null && totalRecovery !== undefined && totalRecovery !== "") {
-      setSummaryValue("Total recuperación", `${formatRoundedUdiValue(totalRecovery)} UDI`);
+      setSummaryValue("Total recuperación", formatRoundedUdiValue(totalRecovery));
     }
   }
 
