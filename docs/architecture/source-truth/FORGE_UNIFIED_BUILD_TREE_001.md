@@ -11682,3 +11682,19 @@ Status: `CURRENCY_AUTHORITY_RECONCILED`
 
 NEXT: `R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER_AND_USD_CURRENT_EQUIVALENCE`
 <!-- FORGE:R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY:END -->
+
+<!-- FORGE:R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER:START -->
+## Product Intelligence / ORVI R15H
+
+Status: `MXN_ADAPTER_IMPLEMENTED`
+
+- UDI current equivalence: implemented.
+- UDI future 4.5% scenario: implemented, not guaranteed.
+- USD current equivalence: implemented.
+- USD future projection: blocked.
+- Dynamic checkpoint conversion: implemented.
+- Cumulative projected paid uses each payment year's projected rate.
+- No rate provider, runtime, dashboard, recommendation, or UI wiring.
+
+NEXT: `R15I_ORVI_DASHBOARD_VIEW_MODEL_AND_DYNAMIC_PROTECTION_RECOVERY_CONTRACT`
+<!-- FORGE:R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER:END -->

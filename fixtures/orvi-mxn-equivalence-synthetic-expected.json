@@ -1,0 +1,65 @@
+{
+  "fixture_id": "orvi.mxn-equivalence.synthetic-expected.v1",
+  "synthetic_only": true,
+  "udi": {
+    "rate_key": "UDI_MXN",
+    "base_rate": 10,
+    "annual_growth_rate": 0.045,
+    "current_sum_assured_mxn": 500000,
+    "checkpoints": [
+      {
+        "policy_year": 10,
+        "years_from_base": 9,
+        "projected_rate": 14.860951,
+        "projected_sum_assured_mxn": 743047.55,
+        "current_cumulative_paid_mxn": 12000,
+        "projected_cumulative_paid_mxn": 14745.85,
+        "current_total_recovery_mxn": 80000,
+        "projected_total_recovery_mxn": 118887.61,
+        "projected_recovery_difference_mxn": 104141.76,
+        "projected_recovery_ratio": 8.062445,
+        "projected_recovery_percentage": 806.244537
+      },
+      {
+        "policy_year": 15,
+        "years_from_base": 14,
+        "projected_rate": 18.519449,
+        "projected_sum_assured_mxn": 925972.45,
+        "current_cumulative_paid_mxn": 12000,
+        "projected_cumulative_paid_mxn": 14745.85,
+        "current_total_recovery_mxn": 120000,
+        "projected_total_recovery_mxn": 222233.39,
+        "projected_recovery_difference_mxn": 207487.54,
+        "projected_recovery_ratio": 15.070911,
+        "projected_recovery_percentage": 1507.09108
+      },
+      {
+        "policy_year": 20,
+        "years_from_base": 19,
+        "projected_rate": 23.078603,
+        "projected_sum_assured_mxn": 1153930.15,
+        "current_cumulative_paid_mxn": 12000,
+        "projected_cumulative_paid_mxn": 14745.85,
+        "current_total_recovery_mxn": 160000,
+        "projected_total_recovery_mxn": 369257.65,
+        "projected_recovery_difference_mxn": 354511.8,
+        "projected_recovery_ratio": 25.041463,
+        "projected_recovery_percentage": 2504.146251
+      }
+    ]
+  },
+  "usd": {
+    "rate_key": "USD_MXN_FIX",
+    "current_rate": 20,
+    "current_sum_assured_mxn": 1000000,
+    "future_status": "BLOCKED_PENDING_EXPLICIT_SCENARIO_RATE_AUTHORITY",
+    "future_annual_growth_rate": null
+  },
+  "boundaries": {
+    "recommendation": null,
+    "human_decision_required": true,
+    "future_values_are_guaranteed": false,
+    "runtime_wiring_authorized": false,
+    "dashboard_wiring_authorized": false
+  }
+}

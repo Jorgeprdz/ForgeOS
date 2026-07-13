@@ -14766,3 +14766,49 @@ Status: `PASS_AUTHORITY_RECONCILIATION`
 
 NEXT: `R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER_AND_USD_CURRENT_EQUIVALENCE`
 <!-- FORGE:R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY:END -->
+
+<!-- FORGE:R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER:START -->
+## R15H ORVI UDI MXN Projection Adapter And USD Current Equivalence
+
+Status: `PASS_ADAPTER_IMPLEMENTATION / PRIVATE_REAL_SOURCE_STRUCTURE_PASS`
+
+### Implemented
+
+- Adapter: `product-intelligence/currency/orvi-mxn-equivalence-adapter.js`.
+- Current UDI to MXN equivalence using caller-supplied verified `UDI_MXN`.
+- Future UDI scenario using 4.5% annual compound growth.
+- Current USD to MXN equivalence using caller-supplied verified `USD_MXN_FIX`.
+- Future USD remains explicitly blocked.
+- Sum-assured current MXN equivalence.
+- Sum-assured UDI-future MXN scenarios at dynamic checkpoint years.
+- Guaranteed-value current MXN equivalence.
+- Guaranteed-value UDI-future MXN scenarios.
+- Current and projected recovery difference, ratio, and percentage.
+
+### Payment accumulation rule
+
+Projected cumulative paid MXN is the sum of each annual source-currency outflow converted with the projected UDI value for that payment's own policy year.
+
+It is not calculated by multiplying all cumulative UDI paid by the checkpoint-year UDI value.
+
+### Rate boundary
+
+- The adapter receives verified rate metadata.
+- It does not call Banxico.
+- It does not read the repository cache directly.
+- Stale rate fallback is rejected.
+- No current rate value or date is committed as Product Intelligence truth.
+- Synthetic test rates are explicitly marked.
+
+### Semantic boundary
+
+- Current MXN is an equivalence at a verified rate.
+- Future UDI MXN is a scenario, not a guarantee.
+- Future USD MXN remains unavailable.
+- Recovery comparison is not investment return.
+- Recommendation remains `null`.
+- Human decision remains required.
+- Runtime and dashboard wiring remain unauthorized.
+
+NEXT: `R15I_ORVI_DASHBOARD_VIEW_MODEL_AND_DYNAMIC_PROTECTION_RECOVERY_CONTRACT`
+<!-- FORGE:R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER:END -->
