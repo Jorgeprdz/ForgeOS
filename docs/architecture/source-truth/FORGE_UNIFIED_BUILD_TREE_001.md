@@ -11744,3 +11744,18 @@ Status: `REUSABLE_TEMPLATE_RENDERER_ROUTE_READY`
 - Next: `R15L_ORVI_STATIC_PREVIEW_RUNTIME_RATE_BRIDGE_AND_END_TO_END_DASHBOARD_WIRING`.
 
 <!-- FORGE:R15K_ORVI_REUSABLE_DASHBOARD_ADAPTER:END -->
+
+<!-- FORGE:R15L_ORVI_STATIC_PREVIEW_END_TO_END:START -->
+## Product Intelligence / ORVI R15L
+
+Status: `STATIC_PREVIEW_END_TO_END_READY`
+
+- Accepted packet to canonical ORVI analytics: ready.
+- Public verified rate cache bridge: ready.
+- R15J readiness attachment: ready.
+- R15K reusable template payload: ready.
+- Manual browser visual acceptance: required.
+- Private visual packet: local report only.
+- Next: `R15M_ORVI_MANUAL_VISUAL_ACCEPTANCE_AND_RESPONSIVE_HARDENING`.
+
+<!-- FORGE:R15L_ORVI_STATIC_PREVIEW_END_TO_END:END -->

@@ -2,8 +2,8 @@ import {
   calculateAcceptedQuote,
   validatePacket,
   isPdfSelection107z15p2R9C
-} from "./forge-accepted-quote-adapter.js?v=r14g_segubeca_renderer_20260712_1";
-import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r14g_segubeca_renderer_20260712_1";
+} from "./forge-accepted-quote-adapter.js?v=r15l_orvi_end_to_end_20260712_1";
+import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r15l_orvi_end_to_end_20260712_1";
 
 function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQuoteRuntime) {
   if (!deps || deps.__initialized) return false;

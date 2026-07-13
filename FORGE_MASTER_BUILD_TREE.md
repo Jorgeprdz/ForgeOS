@@ -14913,3 +14913,26 @@ Status: `PASS_REUSABLE_TEMPLATE_ADAPTER_AND_RENDERER_WIRING`
 
 NEXT: `R15L_ORVI_STATIC_PREVIEW_RUNTIME_RATE_BRIDGE_AND_END_TO_END_DASHBOARD_WIRING`
 <!-- FORGE:R15K_ORVI_REUSABLE_DASHBOARD_ADAPTER:END -->
+
+<!-- FORGE:R15L_ORVI_STATIC_PREVIEW_END_TO_END:START -->
+## R15L ORVI Static Preview Runtime Rate Bridge And End To End Dashboard Wiring
+
+Status: `PASS_STATIC_PREVIEW_END_TO_END_WIRING / PRIVATE_VISUAL_PACKET_READY`
+
+- Browser runtime ID: `orvi.static-preview.runtime-rate-bridge.v1`.
+- Canonical Product Intelligence remains owner.
+- Five browser deployment mirrors are byte-identical to canonical R15F-R15J modules.
+- Accepted quote detects ORVI before existing product routes.
+- UDI uses public verified cache key `UDI_MXN`.
+- USD uses public verified cache key `USD_MXN_FIX`.
+- Cache records require `LATEST_VERIFIED` and an approved cache status.
+- Explicit stale or unverified entries are rejected.
+- R15J readiness is attached to the accepted calculation.
+- R15K consumes the attached payload through the existing template.
+- Future UDI remains scenario-only and future USD remains blocked.
+- No external live provider is called.
+- Recommendation remains `null`.
+- A PII-sanitized private visual packet is written outside the repo.
+
+NEXT: `R15M_ORVI_MANUAL_VISUAL_ACCEPTANCE_AND_RESPONSIVE_HARDENING`
+<!-- FORGE:R15L_ORVI_STATIC_PREVIEW_END_TO_END:END -->

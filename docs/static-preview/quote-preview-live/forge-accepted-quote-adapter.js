@@ -1,3 +1,7 @@
+import {
+  buildOrviAcceptedQuoteCalculation,
+  isOrviAcceptedQuotePacket
+} from "./forge-orvi-static-preview-runtime.js?v=r15l_orvi_runtime_20260712_1";
 const DEFAULT_CACHE_CANDIDATES = [
   "../../quote-preview-live/forge-rate-cache.json",
   "../../../quote-preview-live/forge-rate-cache.json",
@@ -530,7 +534,7 @@ function isPdfSelection107z15p2R9C(file) {
 async function calculateAcceptedQuote(currentPacket) {
   const enrichedPacket = await enrichPacketWithUdiRuntime107z15p2R11F2(currentPacket);
   const nativeResult = buildAcceptedNativeResult107z15p2R9C(enrichedPacket);
-  if (isVidaMujerAccepted107z15p2R9C(enrichedPacket, nativeResult)) {
+  if (isOrviAcceptedQuotePacket(enrichedPacket, nativeResult)) { return buildOrviAcceptedQuoteCalculation({ packet: enrichedPacket, nativeResult }); } if (isVidaMujerAccepted107z15p2R9C(enrichedPacket, nativeResult)) {
     return calculateVidaMujerAccepted107z15p2R9C(enrichedPacket, nativeResult);
   }
   if (isSegubecaAcceptedR14E(enrichedPacket, nativeResult)) {
