@@ -11698,3 +11698,20 @@ Status: `MXN_ADAPTER_IMPLEMENTED`
 
 NEXT: `R15I_ORVI_DASHBOARD_VIEW_MODEL_AND_DYNAMIC_PROTECTION_RECOVERY_CONTRACT`
 <!-- FORGE:R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER:END -->
+
+<!-- FORGE:R15I_ORVI_DASHBOARD_VIEW_MODEL_CONTRACT:START -->
+## Product Intelligence / ORVI R15I
+
+Status: `DASHBOARD_VIEW_MODEL_CONTRACT_READY`
+
+- Protection view contract: ready.
+- Guaranteed recovery view contract: ready.
+- Exact dynamic checkpoints: ready.
+- UDI future scenario disclosure: ready.
+- USD future blocked state: ready.
+- Recommendation: `null`.
+- Runtime and UI wiring: not authorized.
+- Browser validation: required after UI wiring.
+
+NEXT: `R15J_ORVI_VERIFIED_RATE_METADATA_BRIDGE_AND_RUNTIME_ORCHESTRATION_READINESS`
+<!-- FORGE:R15I_ORVI_DASHBOARD_VIEW_MODEL_CONTRACT:END -->

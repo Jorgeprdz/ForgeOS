@@ -14812,3 +14812,47 @@ It is not calculated by multiplying all cumulative UDI paid by the checkpoint-ye
 
 NEXT: `R15I_ORVI_DASHBOARD_VIEW_MODEL_AND_DYNAMIC_PROTECTION_RECOVERY_CONTRACT`
 <!-- FORGE:R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER:END -->
+
+<!-- FORGE:R15I_ORVI_DASHBOARD_VIEW_MODEL_CONTRACT:START -->
+## R15I ORVI Dashboard View Model And Dynamic Protection Recovery Contract
+
+Status: `PASS_DASHBOARD_CONTRACT_IMPLEMENTATION / PRIVATE_REAL_SOURCE_STRUCTURE_PASS`
+
+### Contract
+
+- View-model ID: `orvi.dashboard.dynamic-protection-recovery-view-model.v1`.
+- Canonical owner: `product-intelligence`.
+- Consumer surface: `dashboard_contract_only`.
+- View 1: `protection`.
+- View 2: `guaranteed_recovery`.
+- Checkpoint years come directly from R15F analytics.
+- Nearest-year substitution is forbidden.
+
+### Protection view
+
+- Preserves source-currency sum assured.
+- Shows current verified-rate MXN equivalence.
+- Shows future UDI MXN scenarios at exact dynamic checkpoints.
+- Keeps future USD MXN blocked.
+- Does not infer a contractual duration beyond the contracted variant.
+
+### Guaranteed recovery view
+
+- Preserves cumulative paid, surrender value, cash value, and total recovery.
+- Preserves recovery difference, ratio, and percentage.
+- Includes source currency, current MXN, and authorized future scenario states.
+- Labels recovery metrics as comparison only, not investment return.
+
+### Boundaries
+
+- Current MXN is equivalence at a caller-supplied verified rate.
+- Future UDI MXN is a 4.5% scenario, not a guarantee.
+- Future USD MXN remains blocked.
+- Recommendation remains `null`.
+- Human decision remains required.
+- Runtime wiring remains unauthorized.
+- UI rendering remains unauthorized.
+- Browser validation becomes mandatory only after UI wiring.
+
+NEXT: `R15J_ORVI_VERIFIED_RATE_METADATA_BRIDGE_AND_RUNTIME_ORCHESTRATION_READINESS`
+<!-- FORGE:R15I_ORVI_DASHBOARD_VIEW_MODEL_CONTRACT:END -->

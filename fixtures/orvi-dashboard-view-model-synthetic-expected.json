@@ -1,0 +1,50 @@
+{
+  "fixture_id": "orvi.dashboard-view-model.synthetic-expected.v1",
+  "synthetic_only": true,
+  "view_model_id": "orvi.dashboard.dynamic-protection-recovery-view-model.v1",
+  "navigation": [
+    "protection",
+    "guaranteed_recovery"
+  ],
+  "udi": {
+    "checkpoint_years": [
+      10,
+      15,
+      20
+    ],
+    "protection_current_mxn": 500000,
+    "protection_future_mxn": [
+      743047.55,
+      925972.45,
+      1153930.15
+    ],
+    "first_checkpoint": {
+      "policy_year": 10,
+      "current_cumulative_paid_mxn": 12000,
+      "current_total_recovery_mxn": 80000,
+      "future_cumulative_paid_mxn": 14745.85,
+      "future_total_recovery_mxn": 118887.61,
+      "future_recovery_percentage": 806.244537
+    },
+    "future_disclosure": "PROJECTED_UDI_4_5_PERCENT_SCENARIO_NOT_GUARANTEED"
+  },
+  "usd": {
+    "checkpoint_years": [
+      10,
+      15,
+      20
+    ],
+    "protection_current_mxn": 1000000,
+    "future_status": "BLOCKED_PENDING_EXPLICIT_SCENARIO_RATE_AUTHORITY"
+  },
+  "boundaries": {
+    "nearest_year_substitution": false,
+    "future_values_are_guaranteed": false,
+    "recovery_ratio_classification": "comparison_only_not_investment_return",
+    "recommendation": null,
+    "human_decision_required": true,
+    "runtime_wiring_authorized": false,
+    "ui_rendering_authorized": false,
+    "browser_validation_required_after_ui_wiring": true
+  }
+}
