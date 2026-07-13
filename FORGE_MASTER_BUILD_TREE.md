@@ -14712,3 +14712,57 @@ Status: `PASS_ANALYTICS_IMPLEMENTATION / PRIVATE_REAL_SOURCE_REGRESSION_PASS`
 
 NEXT: `R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY_AND_CURRENCY_PATH_RECONCILIATION`
 <!-- FORGE:R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS:END -->
+
+<!-- FORGE:R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY:START -->
+## R15G ORVI MXN Projection Engine Authority And Currency Path Reconciliation
+
+Status: `PASS_AUTHORITY_RECONCILIATION`
+
+### Authority split
+
+- Canonical owner remains `product-intelligence`.
+- Current UDI to MXN: `READY`, using a verified `UDI_MXN` rate at execution time.
+- Future UDI to MXN: `READY_FOR_SCENARIO_IMPLEMENTATION`, using 4.5% annual compound growth as derived scenario evidence only.
+- Current USD to MXN: `READY`, using a verified `USD_MXN_FIX` rate at execution time.
+- Future USD to MXN: `BLOCKED_PENDING_EXPLICIT_SCENARIO_RATE_AUTHORITY`.
+- No rate value or rate date is embedded in Product Intelligence.
+- Future MXN values are not guaranteed.
+- Recommendation remains `null`.
+- Human decision remains required.
+
+### Timing rule
+
+- Policy year 1 uses projection offset 0.
+- Projection offset is `policy_year - 1`.
+- A legacy path that treats policy year 1 as one full future year has no ORVI authority.
+
+### Reconciled repository surfaces
+
+- Verified-rate cache candidate: `docs/static-preview/quote-preview-live/forge-rate-cache.json`.
+- Verified UDI calculator candidate: `docs/quote-preview-live/forge-quote-calculators.mjs`.
+- Generic projection math candidate: `orvi-mxn-conversion-engine.js`.
+- Legacy ORVI MXN converter: `orvi-client-report-test.js`, authority `NO`.
+- SeguBeca UDI runtime candidate: `UNRESOLVED`, authority `NO_FOR_ORVI`.
+- ORVI workbook: `Hoja de trabajo - 4.5% UDI.xlsx`, role `DERIVED_SCENARIO_AND_PROJECTION_EVIDENCE_ONLY`.
+- ORVI 4.5% formula hits: `2`.
+- Dedicated USD future projection candidates: `1`.
+
+### Authorized for R15H
+
+- Current UDI equivalence.
+- Future UDI scenario at 4.5%, clearly labeled as projected and not guaranteed.
+- Current USD equivalence.
+- Dynamic ORVI checkpoint conversion using exact available years.
+- Sum-assured current and UDI-future MXN scenario fields.
+- Guaranteed-value checkpoint current and UDI-future MXN scenario fields.
+
+### Still blocked
+
+- Future USD projection.
+- Silent stale-rate fallback.
+- Runtime or dashboard wiring.
+- Recommendation to cancel, continue, or wait.
+- Any classification as investment return.
+
+NEXT: `R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER_AND_USD_CURRENT_EQUIVALENCE`
+<!-- FORGE:R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY:END -->

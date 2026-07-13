@@ -11665,3 +11665,20 @@ Status: `DYNAMIC_CHECKPOINT_ANALYTICS_IMPLEMENTED`
 
 NEXT: `R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY_AND_CURRENCY_PATH_RECONCILIATION`
 <!-- FORGE:R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS:END -->
+
+<!-- FORGE:R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY:START -->
+## Product Intelligence / ORVI R15G
+
+Status: `CURRENCY_AUTHORITY_RECONCILED`
+
+- UDI current: verified-rate path authorized.
+- UDI future: 4.5% derived scenario path authorized, not guaranteed.
+- USD current: verified FIX-rate path authorized.
+- USD future: blocked pending explicit scenario-rate authority.
+- Policy-year offset: `policy_year - 1`.
+- Legacy ORVI converter: no canonical authority.
+- SeguBeca runtime: no ORVI authority.
+- Runtime, dashboard, recommendation, and UI remain unauthorized.
+
+NEXT: `R15H_ORVI_UDI_MXN_PROJECTION_ADAPTER_AND_USD_CURRENT_EQUIVALENCE`
+<!-- FORGE:R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY:END -->
