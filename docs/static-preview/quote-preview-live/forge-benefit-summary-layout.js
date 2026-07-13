@@ -377,7 +377,9 @@ function installBenefitDashboardStyles107z15p2R11M() {
     line-height: 1.25;
     text-align: center;
     cursor: pointer;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
     transition:
       background-color .18s ease,
       border-color .18s ease,
@@ -516,6 +518,11 @@ function installBenefitDashboardStyles107z15p2R11M() {
     .fq-benefit-dotal-chips-107z15p2 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+    .fq-benefit-card-107z15p2[data-forge-product-section="guaranteed_recovery"][data-forge-orvi-section-ordinal="3"] {
+      grid-column: 3 / span 4;
+    }
   }
 
   @media (max-width: 760px) {
@@ -524,7 +531,7 @@ function installBenefitDashboardStyles107z15p2R11M() {
       position: sticky;
       top: 8px;
       z-index: 4;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
       margin-bottom: 14px;
       backdrop-filter: blur(16px);
     }
@@ -533,7 +540,12 @@ function installBenefitDashboardStyles107z15p2R11M() {
     .fq-benefit-orvi-view-button-107z15p2 {
       min-height: 44px;
       padding: 10px 8px;
-      font-size: .88rem;
+      font-size: clamp(.82rem, 3.5vw, .9rem);
+      line-height: 1.18;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
+      white-space: normal;
     }
 
     .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
@@ -634,6 +646,14 @@ function installBenefitDashboardStyles107z15p2R11M() {
     .fq-benefit-card-107z15p2[data-forge-product-section="future_scenario"]
     .fq-benefit-dotal-chips-107z15p2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+    .fq-benefit-card-107z15p2[data-forge-product-section="future_scenario"]
+    .fq-benefit-dotal-chips-107z15p2 > :nth-child(3):last-child {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: calc((100% - 10px) / 2);
     }
   }
 

@@ -166,6 +166,13 @@ assert.equal(
 assert.equal(switcher.children.length, 2);
 
 const [protectionButton, recoveryButton] = switcher.children;
+assert.equal(protectionButton.textContent, "Protección");
+assert.equal(recoveryButton.textContent, "Recuperación garantizada");
+assert.equal(protectionButton.getAttribute("aria-label"), "Protección");
+assert.equal(
+  recoveryButton.getAttribute("aria-label"),
+  "Recuperación garantizada",
+);
 assert.equal(
   protectionButton.dataset.forgeOrviViewActive,
   "true",
@@ -192,6 +199,12 @@ const sharedSections = sections.filter(
 
 assert.equal(protectionSections.length, 2);
 assert.equal(recoverySections.length, 3);
+assert.deepEqual(
+  recoverySections.map(
+    (section) => section.dataset.forgeOrviSectionOrdinal,
+  ),
+  ["1", "2", "3"],
+);
 assert.ok(sharedSections.length >= 1);
 assert.equal(
   protectionSections.every((section) => section.hidden === false),

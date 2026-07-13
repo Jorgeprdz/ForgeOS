@@ -15022,5 +15022,25 @@ Status: `PASS_REAL_PDF_EXTRACTION_PROJECTED_RECOVERY_AND_PROTECTION_UI_REPAIR / 
 - Recommendation remains `null`; human decision remains required.
 - Manual visual acceptance remains `PENDING_USER_REVIEW`.
 
-NEXT: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+NEXT: `R15M2C_ORVI_RESPONSIVE_NAVIGATION_AND_DIRECT_PDF_STATUS_COPY_POLISH`
 <!-- FORGE:R15M2B_ORVI_REAL_PDF_AND_PROJECTED_RECOVERY_REPAIR:END -->
+
+<!-- FORGE:R15M2C_ORVI_RESPONSIVE_NAVIGATION_AND_PDF_COPY_POLISH:START -->
+## R15M2C ORVI Responsive Navigation And Direct PDF Status Copy Polish
+
+Status: `PASS_RESPONSIVE_NAVIGATION_AND_DIRECT_PDF_STATUS_COPY_POLISH / MANUAL_VISUAL_ACCEPTANCE_PENDING_USER_REVIEW`
+
+- Mobile recovery navigation renders the complete label in at most two lines without orphan letters, internal word breaks or horizontal overflow.
+- Both sticky navigation controls retain a minimum 44px target, complete accessible names, `aria-pressed` and functional view switching.
+- At the tablet breakpoint, the third future-protection and guaranteed-recovery cards are centered at one-card width.
+- Desktop retains three-column protection and recovery arrangements.
+- Direct PDF ready copy identifies local PDF processing and does not expose the temporary accepted-quote JSON filename.
+- Visible help truthfully states that the PDF is processed locally and is not uploaded or published.
+- A genuinely selected JSON retains its JSON-specific status.
+- Product Intelligence, parser, mapper, PDF flow, modal, rate cache and all R15M2B financial calculations remain unchanged.
+- Real Chromium inspection at 360, 390, 1024 and 1440 px passes; nine screenshots remain outside Git.
+- Recommendation remains `null`; human decision remains required.
+- Manual visual acceptance remains `PENDING_USER_REVIEW`.
+
+NEXT: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+<!-- FORGE:R15M2C_ORVI_RESPONSIVE_NAVIGATION_AND_PDF_COPY_POLISH:END -->

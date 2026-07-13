@@ -169,7 +169,7 @@ assert.equal(selectedPacket.family, "ORVI");
 assert.equal(selectedPacket.productIntelligence.schema.id, "forge.product_intelligence.orvi");
 
 assert.match(page, /accept="\.json,application\/json,\.pdf,application\/pdf"/);
-assert.match(page, /forge-pdf-browser-parser\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/);
+assert.match(page, /forge-pdf-browser-parser\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/);
 assert.match(browserParserSource, /installPdfInputInterceptor107z15p2R11E\(\)/);
 assert.match(browserParserSource, /convertPdfInputToJsonChange107z15p2R11E\(input, file\)/);
 assert.match(browserParserSource, /new File\([\s\S]*application\/json/);

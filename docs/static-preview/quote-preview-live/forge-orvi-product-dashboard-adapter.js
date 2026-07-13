@@ -776,6 +776,7 @@ export function createOrviDashboardViewSwitcher(
       "aria-pressed",
       viewId === ORVI_DEFAULT_VIEW,
     );
+    setAttributeSafe(button, "aria-label", label);
 
     const activate = () => {
       const dashboard = switcher.__forgeOrviDashboard;
@@ -825,6 +826,8 @@ export function renderOrviDashboard(
   dashboard.__forgeOrviViewSections = [];
   dashboard.appendChild(switcher);
 
+  const sectionOrdinals = new Map();
+
   for (const modelSection of model.sections || []) {
     const card = createProductDashboardSection({
       title: modelSection.title,
@@ -835,6 +838,10 @@ export function renderOrviDashboard(
     card.dataset.forgeOrviView = sectionViewId(
       modelSection.kind,
     );
+    const sectionOrdinal =
+      (sectionOrdinals.get(modelSection.kind) || 0) + 1;
+    sectionOrdinals.set(modelSection.kind, sectionOrdinal);
+    card.dataset.forgeOrviSectionOrdinal = String(sectionOrdinal);
     appendSectionItems(card, modelSection, {
       documentRef,
       appendValue,

@@ -47,7 +47,20 @@ assert.match(
   /\.fq-benefit-orvi-view-button-107z15p2/,
 );
 assert.match(layout, /min-height:\s*44px/);
-assert.match(layout, /overflow-wrap:\s*anywhere/);
+assert.match(
+  layout,
+  /\.fq-benefit-orvi-view-button-107z15p2[\s\S]*?overflow-wrap:\s*normal/,
+);
+assert.doesNotMatch(
+  layout,
+  /\.fq-benefit-orvi-view-button-107z15p2\s*\{[^}]*overflow-wrap:\s*anywhere/,
+);
+assert.match(layout, /word-break:\s*normal/);
+assert.match(layout, /hyphens:\s*none/);
+assert.match(
+  layout,
+  /grid-template-columns:\s*minmax\(0,\s*\.8fr\)\s*minmax\(0,\s*1\.2fr\)/,
+);
 assert.match(
   layout,
   /@media\s*\(min-width:\s*1181px\)/,
@@ -68,6 +81,14 @@ assert.match(
   layout,
   /data-forge-orvi-view-active="true"/,
 );
+assert.match(
+  layout,
+  /data-forge-product-section="guaranteed_recovery"\]\[data-forge-orvi-section-ordinal="3"\][\s\S]*?grid-column:\s*3\s*\/\s*span\s*4/,
+);
+assert.match(
+  layout,
+  /\.fq-benefit-dotal-chips-107z15p2\s*>\s*:nth-child\(3\):last-child[\s\S]*?justify-self:\s*center/,
+);
 assert.match(layout, /FORGE:R15M2B_ORVI_PROTECTION_UI_REPAIR:START/);
 assert.match(layout, /fq-benefit-orvi-protection-primary-107z15p2/);
 assert.match(layout, /fq-benefit-orvi-protection-metadata-107z15p2/);
@@ -82,19 +103,27 @@ assert.match(
 
 assert.match(
   renderer,
-  /forge-benefit-summary-layout\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
+  /forge-benefit-summary-layout\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/,
 );
 assert.match(
   renderer,
-  /forge-orvi-product-dashboard-adapter\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
+  /forge-orvi-product-dashboard-adapter\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/,
 );
 assert.match(
   bridge,
-  /forge-benefit-summary-renderer\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
+  /forge-benefit-summary-renderer\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/,
 );
 assert.match(
   livePage,
-  /forge-accepted-quote-bridge\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
+  /forge-accepted-quote-bridge\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/,
+);
+assert.match(
+  livePage,
+  /forge-benefit-summary-renderer\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/,
+);
+assert.match(
+  livePage,
+  /forge-benefit-summary-layout\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/,
 );
 
 console.log("PASS R15M ORVI responsive layout contract", {
@@ -102,7 +131,9 @@ console.log("PASS R15M ORVI responsive layout contract", {
   tabletColumns: 8,
   mobileBreakpoint: 760,
   minimumTouchTarget: 44,
-  overflowWrap: "anywhere",
+  switcherOverflowWrap: "normal",
+  switcherColumns: "0.8fr_1.2fr",
+  tabletThirdCards: "centered",
   protectionPrimaryFullWidth: true,
   protectionMetadataCompact: true,
   futureProtectionFullWidth: true,

@@ -3,7 +3,7 @@ import {
   validatePacket,
   isPdfSelection107z15p2R9C
 } from "./forge-accepted-quote-adapter.js?v=r15l_orvi_end_to_end_20260712_1";
-import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r15m2b_orvi_pdf_recovery_ui_20260713_1";
+import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r15m2c_orvi_responsive_copy_20260713_1";
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -66,6 +66,21 @@ function buildOrviConfirmationPreview(packet = {}) {
       product_family: "ORVI",
     },
   };
+}
+
+function isDirectPdfSyntheticPacketChange(input, file, event) {
+  if (event?.isTrusted !== false) return false;
+  if (!/\.accepted-quote\.json$/i.test(file?.name || "")) return false;
+
+  const uploadContainer = input?.closest?.("section, div, label");
+  const pdfStatus = uploadContainer?.querySelector?.(
+    "[data-forge-pdf-status='true']",
+  );
+
+  return (
+    pdfStatus?.dataset?.tone === "success" &&
+    /^PDF convertido\b/i.test(pdfStatus.textContent || "")
+  );
 }
 
 function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQuoteRuntime) {
@@ -213,8 +228,21 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
       submit.disabled = false;
       submit.setAttribute("aria-disabled", "false");
 
-      status.textContent = `${file.name} cargado. Listo para revisar.`;
+      const directPdfProcessed = isDirectPdfSyntheticPacketChange(
+        input,
+        file,
+        event,
+      );
+      status.textContent = directPdfProcessed
+        ? "PDF procesado localmente. Listo para revisar."
+        : `${file.name} cargado. Listo para revisar.`;
       status.setAttribute("data-forge-state", "ready");
+      if (directPdfProcessed) {
+        setReadiness?.(
+          "PDF procesado localmente · listo para revisar",
+          "ready",
+        );
+      }
     } catch (error) {
       status.textContent = error && error.message ? error.message : String(error);
       status.setAttribute("data-forge-state", "error");
@@ -262,10 +290,15 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
 const api = Object.freeze({
   initAcceptedQuoteBridge,
   buildOrviConfirmationPreview,
+  isDirectPdfSyntheticPacketChange,
 });
 
 globalThis.ForgeAcceptedQuoteBridge = api;
 
 initAcceptedQuoteBridge();
 
-export { buildOrviConfirmationPreview, initAcceptedQuoteBridge };
+export {
+  buildOrviConfirmationPreview,
+  initAcceptedQuoteBridge,
+  isDirectPdfSyntheticPacketChange,
+};

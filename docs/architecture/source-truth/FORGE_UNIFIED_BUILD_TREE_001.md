@@ -11835,6 +11835,27 @@ Status: `PASS_REAL_PDF_EXTRACTION_PROJECTED_RECOVERY_AND_PROTECTION_UI_REPAIR / 
 - Rate cache, package configuration and other products remain unchanged.
 - Recommendation remains `null`; human decision remains required.
 - Manual visual acceptance remains `PENDING_USER_REVIEW`.
-- Next: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+- Next: `R15M2C_ORVI_RESPONSIVE_NAVIGATION_AND_DIRECT_PDF_STATUS_COPY_POLISH`.
 
 <!-- FORGE:R15M2B_ORVI_REAL_PDF_AND_PROJECTED_RECOVERY_REPAIR:END -->
+
+<!-- FORGE:R15M2C_ORVI_RESPONSIVE_NAVIGATION_AND_PDF_COPY_POLISH:START -->
+## Product Intelligence / ORVI R15M2C
+
+Status: `PASS_RESPONSIVE_NAVIGATION_AND_DIRECT_PDF_STATUS_COPY_POLISH / PENDING_USER_REVIEW`
+
+- Mobile switcher: complete `Protección` and `Recuperación garantizada` labels, maximum two recovery-label lines, no orphan letter, internal word break or horizontal overflow.
+- Mobile interaction: sticky behavior, minimum 44px targets, visible active state, full accessible labels and `aria-pressed` preserved.
+- Tablet 2+1 protection and recovery layouts: third cards explicitly centered at one-card width.
+- Desktop protection and recovery layouts: three-column regression PASS.
+- Direct PDF status: local PDF processing stated; internal accepted-quote JSON filename hidden.
+- Visible PDF help: local processing, no upload and no publication stated truthfully.
+- Genuine JSON status: preserved.
+- Product Intelligence, parser, mapper, direct-PDF route, modal, extracted data, rate cache and R15M2B financial calculations: unchanged.
+- Real ORVI selector, six-row recovery contract and other product regressions: PASS.
+- Nine real Chromium screenshots: external, opened and inspected.
+- Recommendation remains `null`; human decision remains required.
+- Manual visual acceptance remains `PENDING_USER_REVIEW`.
+- Next: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+
+<!-- FORGE:R15M2C_ORVI_RESPONSIVE_NAVIGATION_AND_PDF_COPY_POLISH:END -->
