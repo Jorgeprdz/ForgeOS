@@ -290,3 +290,128 @@
 }
 
 /* FORGEOS:R16C5H_SHARED_NAV_ACTIVE_SQUIRCLE_ALIGNMENT_AND_MOTION:END */
+
+/* FORGEOS:R16C5I_HOME_NAV_GRID_AND_SQUIRCLE_NORMALIZATION:START */
+
+@media (max-width: 900px) {
+  /*
+    Corrección exclusiva de Inicio:
+    fija los cinco controles en columnas explícitas y garantiza que el
+    squircle sea overlay absoluto, nunca un sexto item de la cuadrícula.
+  */
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-template-rows: 1fr !important;
+    grid-auto-columns: 0 !important;
+    grid-auto-rows: 0 !important;
+    grid-auto-flow: row !important;
+    contain: layout paint style !important;
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > .forge-nav-active-squircle-r16c5h {
+    position: absolute !important;
+    display: block !important;
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+    justify-self: start !important;
+    align-self: start !important;
+    inset: 0 auto auto 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+    flex: none !important;
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > [data-forge-nav-key] {
+    box-sizing: border-box !important;
+    grid-row: 1 !important;
+    justify-self: stretch !important;
+    align-self: stretch !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 58px !important;
+    inset: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    margin: 0 !important;
+    transform: none !important;
+    translate: none !important;
+    flex: none !important;
+    float: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > [data-forge-nav-key="inicio"] {
+    grid-column: 1 !important;
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > [data-forge-nav-key="pipeline"] {
+    grid-column: 2 !important;
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > [data-forge-nav-key="clientes"] {
+    grid-column: 3 !important;
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > [data-forge-nav-key="cotizaciones"] {
+    grid-column: 4 !important;
+    top: auto !important;
+    letter-spacing: -0.52px !important;
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > [data-forge-nav-key="mas"] {
+    grid-column: 5 !important;
+  }
+
+  /*
+    Neutraliza únicamente la superficie activa heredada.
+    El squircle móvil compartido sigue dibujando el estado activo.
+  */
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > button.active,
+  body[data-forge-shared-nav-page-r16c5h="home"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > button[aria-current="page"] {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  @media (orientation: landscape) {
+    body[data-forge-shared-nav-page-r16c5h="home"]
+      .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+      > [data-forge-nav-key] {
+      min-height: 52px !important;
+    }
+  }
+}
+
+/* FORGEOS:R16C5I_HOME_NAV_GRID_AND_SQUIRCLE_NORMALIZATION:END */
