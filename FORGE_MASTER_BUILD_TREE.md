@@ -14957,5 +14957,26 @@ Status: `PASS_RESPONSIVE_HARDENING / MANUAL_VISUAL_ACCEPTANCE_PENDING`
 - Browser automation is not used.
 - Manual visual acceptance is not claimed by this module.
 
-NEXT: `R15M1_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+NEXT: `R15M2_ORVI_GUARANTEED_RECOVERY_UI_SIMPLIFICATION_AND_DATA_CONSISTENCY_HARDENING`
 <!-- FORGE:R15M_ORVI_RESPONSIVE_AND_VISUAL_REVIEW:END -->
+
+<!-- FORGE:R15M2_ORVI_GUARANTEED_RECOVERY_UI_HARDENING:START -->
+## R15M2 ORVI Guaranteed Recovery UI Simplification And Data Consistency Hardening
+
+Status: `PASS_UI_SIMPLIFICATION_AND_DATA_CONSISTENCY_HARDENING / MANUAL_VISUAL_ACCEPTANCE_PENDING_USER_REVIEW`
+
+- Recovery checkpoint cards render exactly seven rows and end at `UDI proyectada`.
+- Projected rows after `UDI proyectada` are removed from presentation only.
+- Surrender value renders source UDI without MXN secondary content.
+- Visible recovery percentage is current MXN total recovery divided by current MXN total contributed; missing or zero contribution remains pending.
+- The recovery relationship explanation renders once above the cards.
+- Accepted-quote summary consumes valid attached ORVI rate metadata and preserves pending state for invalid or stale metadata.
+- ORVI summary reports only currency and canonical payment term.
+- Confirmation modal maps uppercase family, canonical product, sum assured, payment term and explicit premiums without invention.
+- Product Intelligence ownership, rate cache, canonical calculations, future UDI scenario status and future USD block are unchanged.
+- Recommendation remains `null`; human decision remains required.
+- R15M1 is not executed or closed.
+- Manual visual acceptance remains `PENDING_USER_REVIEW`.
+
+NEXT: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+<!-- FORGE:R15M2_ORVI_GUARANTEED_RECOVERY_UI_HARDENING:END -->

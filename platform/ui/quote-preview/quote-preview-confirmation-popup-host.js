@@ -105,6 +105,17 @@ function formatDefault(value) {
   return String(value);
 }
 
+function fieldLabel(definition, fields) {
+  const orvi = String(fields?.family || "").trim().toUpperCase() === "ORVI";
+  if (orvi && definition.key === "plannedOrAvePremium") {
+    return "Prima anual total con AVE";
+  }
+  if (orvi && definition.key === "coveragePeriod") {
+    return "Plazo de aportación";
+  }
+  return definition.label;
+}
+
 function createQuotePreviewConfirmationPopup(options = {}) {
   const documentLike = options.documentLike;
   const mountTarget = options.mountTarget;
@@ -272,7 +283,7 @@ function createQuotePreviewConfirmationPopup(options = {}) {
       value.className =
         "forge-quote-preview-popup__field-value";
 
-      label.textContent = definition.label;
+      label.textContent = fieldLabel(definition, fields);
       value.textContent = String(
         formatFieldValue(
           fields[definition.key],
@@ -571,4 +582,5 @@ function createQuotePreviewConfirmationPopup(options = {}) {
 module.exports = Object.freeze({
   FIELD_DEFINITIONS,
   createQuotePreviewConfirmationPopup,
+  fieldLabel,
 });

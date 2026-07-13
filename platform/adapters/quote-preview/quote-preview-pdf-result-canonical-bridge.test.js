@@ -128,6 +128,24 @@ const noInventedContext = buildQuotePreviewPdfResultCanonicalPacket(
 assert.equal(noInventedContext.name, null);
 assert.equal(noInventedContext.family, "life");
 
+const orviPacket = buildQuotePreviewPdfResultCanonicalPacket(
+  {
+    product: "ORVI SINTÉTICO",
+    prospect: null,
+    sumInsured: "50000 UDI",
+    premiumTable: { annual: null, plannedAnnual: null },
+    policyTerm: null,
+    paymentTerm: "10 años",
+  },
+  { productFamily: "orvi" },
+);
+assert.equal(orviPacket.family, "ORVI");
+assert.equal(orviPacket.coveragePeriod, "10 años");
+assert.equal(orviPacket.name, null);
+assert.equal(orviPacket.insured, null);
+assert.equal(orviPacket.annualPremium, null);
+assert.equal(orviPacket.plannedOrAvePremium, null);
+
 const coordinatorPacket = coordinator.buildQuotePreviewPdfCanonicalPersistenceInput({
   nativeResult: nativeA,
   context: contextA,

@@ -71,19 +71,19 @@ assert.match(
 
 assert.match(
   renderer,
-  /forge-benefit-summary-layout\.js\?v=r15m_orvi_visual_20260712_1/,
+  /forge-benefit-summary-layout\.js\?v=r15m2_orvi_recovery_20260712_1/,
 );
 assert.match(
   renderer,
-  /forge-orvi-product-dashboard-adapter\.js\?v=r15m_orvi_visual_20260712_1/,
+  /forge-orvi-product-dashboard-adapter\.js\?v=r15m2_orvi_recovery_20260712_1/,
 );
 assert.match(
   bridge,
-  /forge-benefit-summary-renderer\.js\?v=r15m_orvi_visual_20260712_1/,
+  /forge-benefit-summary-renderer\.js\?v=r15m2_orvi_recovery_20260712_1/,
 );
 assert.match(
   livePage,
-  /forge-accepted-quote-bridge\.js\?v=r15m_orvi_visual_20260712_1/,
+  /forge-accepted-quote-bridge\.js\?v=r15m2_orvi_recovery_20260712_1/,
 );
 
 console.log("PASS R15M ORVI responsive layout contract", {

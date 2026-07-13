@@ -238,6 +238,17 @@ function formatDefault(value) {
   return String(value);
 }
 
+function fieldLabel(definition, fields) {
+  const orvi = String(fields?.family || "").trim().toUpperCase() === "ORVI";
+  if (orvi && definition.key === "plannedOrAvePremium") {
+    return "Prima anual total con AVE";
+  }
+  if (orvi && definition.key === "coveragePeriod") {
+    return "Plazo de aportación";
+  }
+  return definition.label;
+}
+
 function createQuotePreviewConfirmationPopup(options = {}) {
   const documentLike = options.documentLike;
   const mountTarget = options.mountTarget;
@@ -405,7 +416,7 @@ function createQuotePreviewConfirmationPopup(options = {}) {
       value.className =
         "forge-quote-preview-popup__field-value";
 
-      label.textContent = definition.label;
+      label.textContent = fieldLabel(definition, fields);
       value.textContent = String(
         formatFieldValue(
           fields[definition.key],
@@ -1441,6 +1452,10 @@ function preserveNull(value) {
   return value === undefined ? null : value;
 }
 
+function isOrviFamily(value) {
+  return String(value || "").trim().toUpperCase() === "ORVI";
+}
+
 function assertContractAcceptance(packet) {
   const result = assertSafePayload(packet);
 
@@ -1475,11 +1490,11 @@ function buildQuotePreviewPdfResultCanonicalPacket(nativeResult = {}, context = 
     ? nativeResult.premiumTable
     : {};
 
+  const sourceFamily = context.productFamily ?? context.product_family;
+  const orvi = isOrviFamily(sourceFamily);
   const packet = {
     name: preserveNull(context.name),
-    family: preserveNull(
-      context.productFamily ?? context.product_family,
-    ),
+    family: preserveNull(orvi ? "ORVI" : sourceFamily),
     product: preserveNull(nativeResult.product),
     insured: preserveNull(nativeResult.prospect),
     sumAssured: preserveNull(nativeResult.sumInsured),
@@ -1487,7 +1502,9 @@ function buildQuotePreviewPdfResultCanonicalPacket(nativeResult = {}, context = 
     plannedOrAvePremium: preserveNull(
       premiumTable.plannedAnnual,
     ),
-    coveragePeriod: preserveNull(nativeResult.policyTerm),
+    coveragePeriod: preserveNull(
+      orvi ? nativeResult.paymentTerm : nativeResult.policyTerm,
+    ),
   };
 
   return assertContractAcceptance(packet);

@@ -173,13 +173,14 @@ export function formatOrviMoney(
 }
 
 function formatPercentage(value) {
+  if (value === null || value === undefined || value === "") return null;
   const formatted = formatOrviNumber(value, 2);
   return formatted ? `${formatted}%` : null;
 }
 
 function formatRate(rate) {
   if (!isRecord(rate)) return null;
-  const value = formatOrviNumber(rate.value, 6);
+  const value = formatOrviNumber(rate.value, 4);
   return value ? `$${value} MXN por UDI` : null;
 }
 
@@ -311,6 +312,21 @@ function futureProtectionSection(viewModel) {
 function currentRecoveryItems(checkpoint) {
   const source = checkpoint?.source_currency || {};
   const current = checkpoint?.current_mxn || {};
+  const currentMoneyValue = (money) => {
+    if (!isRecord(money)) return null;
+    const raw = money.value;
+    if (raw === null || raw === undefined || raw === "") return null;
+    const numeric = Number(raw);
+    return Number.isFinite(numeric) ? numeric : null;
+  };
+  const currentTotalRecovery = currentMoneyValue(current?.total_recovery);
+  const currentCumulativePaid = currentMoneyValue(current?.cumulative_paid);
+  const recoveryPercentage =
+    Number.isFinite(currentTotalRecovery) &&
+    Number.isFinite(currentCumulativePaid) &&
+    currentCumulativePaid > 0
+      ? (currentTotalRecovery / currentCumulativePaid) * 100
+      : null;
 
   return [
     item(
@@ -324,12 +340,7 @@ function currentRecoveryItems(checkpoint) {
     ),
     item(
       "Valor de rescate",
-      pairValues(
-        formatOrviMoney(source?.surrender_value),
-        formatOrviMoney(current?.surrender_value, {
-          approximate: true,
-        }),
-      ),
+      formatOrviMoney(source?.surrender_value),
     ),
     item(
       "Valor en efectivo",
@@ -357,8 +368,12 @@ function currentRecoveryItems(checkpoint) {
     ),
     item(
       "Porcentaje de recuperación",
-      formatPercentage(current?.recovery_percentage),
-      { classification: "comparison_only_not_investment_return" },
+      formatPercentage(recoveryPercentage) ||
+        "Pendiente: faltan valores MXN válidos",
+      {
+        classification: "comparison_only_not_investment_return",
+        help: "Recuperación total MXN ÷ total aportado MXN.",
+      },
     ),
   ];
 }
@@ -377,41 +392,6 @@ function futureRecoveryItems(checkpoint, sourceCurrency) {
 
   return [
     item("UDI proyectada", formatRate(future?.projected_rate)),
-    item(
-      "Total aportado proyectado",
-      formatOrviMoney(future?.cumulative_paid, {
-        approximate: true,
-      }),
-    ),
-    item(
-      "Valor de rescate proyectado",
-      formatOrviMoney(future?.surrender_value, {
-        approximate: true,
-      }),
-    ),
-    item(
-      "Valor en efectivo proyectado",
-      formatOrviMoney(future?.cash_value, {
-        approximate: true,
-      }),
-    ),
-    item(
-      "Recuperación total proyectada",
-      formatOrviMoney(future?.total_recovery, {
-        approximate: true,
-      }),
-    ),
-    item(
-      "Diferencia proyectada",
-      formatOrviMoney(future?.recovery_difference, {
-        approximate: true,
-      }),
-    ),
-    item(
-      "Porcentaje proyectado",
-      formatPercentage(future?.recovery_percentage),
-      { classification: "comparison_only_not_investment_return" },
-    ),
   ];
 }
 
@@ -568,16 +548,19 @@ function appendSectionItems(
 
   for (const value of modelSection.items) {
     const createItem = primary ? createPrimaryMetric : createMetricRow;
-    grid.appendChild(
-      createItem({
-        label: value.label,
-        value: value.value,
-        appendValue: appendValue
-          ? (target) => appendValue(target, value.value)
-          : undefined,
-        documentRef,
-      }),
-    );
+    const row = createItem({
+      label: value.label,
+      value: value.value,
+      appendValue: appendValue
+        ? (target) => appendValue(target, value.value)
+        : undefined,
+      documentRef,
+    });
+    if (value?.evidence?.help) {
+      setAttributeSafe(row, "title", value.evidence.help);
+      setAttributeSafe(row, "aria-label", `${value.label}. ${value.evidence.help}`);
+    }
+    grid.appendChild(row);
   }
   card.appendChild(grid);
 }
@@ -629,6 +612,17 @@ export function activateOrviDashboardView(
     const visible = viewId === "shared" || viewId === activeView;
     section.hidden = !visible;
     setAttributeSafe(section, "aria-hidden", !visible);
+  }
+
+  if (dashboard.__forgeOrviRecoveryExplanation) {
+    const visible =
+      activeView === ORVI_DASHBOARD_VIEW_IDS.guaranteedRecovery;
+    dashboard.__forgeOrviRecoveryExplanation.hidden = !visible;
+    setAttributeSafe(
+      dashboard.__forgeOrviRecoveryExplanation,
+      "aria-hidden",
+      !visible,
+    );
   }
 
   return activeView;
@@ -737,6 +731,17 @@ export function renderOrviDashboard(
     switcher.__forgeOrviViewButtons || [];
   dashboard.__forgeOrviViewSections = [];
   dashboard.appendChild(switcher);
+
+  const recoveryExplanation = (documentRef || globalThis.document).createElement("p");
+  recoveryExplanation.className =
+    "fq-benefit-orvi-recovery-explanation-107z15p2";
+  recoveryExplanation.dataset.forgeOrviView =
+    ORVI_DASHBOARD_VIEW_IDS.guaranteedRecovery;
+  recoveryExplanation.dataset.forgeOrviRecoveryExplanation = "true";
+  recoveryExplanation.textContent =
+    "Recuperación total = valor de rescate + valor en efectivo.";
+  dashboard.__forgeOrviRecoveryExplanation = recoveryExplanation;
+  dashboard.appendChild(recoveryExplanation);
 
   for (const modelSection of model.sections || []) {
     const card = createProductDashboardSection({

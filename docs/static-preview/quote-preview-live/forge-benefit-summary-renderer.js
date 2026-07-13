@@ -1,7 +1,7 @@
 import {
   benefitBlockKey107z15p2R9E,
   normalizeBenefitLayout107z15p2R9E
-} from "./forge-benefit-summary-layout.js?v=r15m_orvi_visual_20260712_1";
+} from "./forge-benefit-summary-layout.js?v=r15m2_orvi_recovery_20260712_1";
 import {
   createDashboardChip,
   createMetricRow,
@@ -25,7 +25,7 @@ import {
   buildOrviDashboardModel,
   isOrviProduct,
   renderOrviDashboard
-} from "./forge-orvi-product-dashboard-adapter.js?v=r15m_orvi_visual_20260712_1";
+} from "./forge-orvi-product-dashboard-adapter.js?v=r15m2_orvi_recovery_20260712_1";
 
 
 function hasValue(value) {
@@ -94,6 +94,58 @@ function formatUdiMetadataLine(udiMetadata) {
   return `Valor UDI: $${udiMetadata.currentUdiValue} MXN · Fuente: ${sourceLabel || "motor verificado"} · Fecha: ${udiMetadata.sourceDate || "sin fecha"}`;
 }
 
+const ORVI_RATE_KEYS = Object.freeze({ UDI: "UDI_MXN", USD: "USD_MXN_FIX" });
+const ORVI_RATE_SOURCE_MODES = new Set(["LIVE", "CACHE", "SYNTHETIC_TEST"]);
+
+function resolveAcceptedRateMetadata(calc = {}) {
+  if (!isOrviProduct(calc)) return calc.udiRateMetadata || null;
+  const metadata = calc.orviRateMetadata;
+  const currency = String(calc.currency || "").trim().toUpperCase();
+  const expectedRateKey = ORVI_RATE_KEYS[currency];
+  const rateValue = Number(metadata?.value);
+  const sourceMode = String(metadata?.source_mode || "").trim().toUpperCase();
+  if (
+    metadata?.stale !== false ||
+    !expectedRateKey ||
+    metadata?.rate_key !== expectedRateKey ||
+    !Number.isFinite(rateValue) ||
+    rateValue <= 0 ||
+    !hasValue(metadata?.source) ||
+    !hasValue(metadata?.source_date) ||
+    !ORVI_RATE_SOURCE_MODES.has(sourceMode)
+  ) {
+    return null;
+  }
+  return {
+    currentUdiValue: rateValue,
+    source: metadata.source,
+    sourceDate: metadata.source_date,
+    rateKey: metadata.rate_key,
+    currency,
+  };
+}
+
+function formatOrviRateMetadataLine(metadata) {
+  if (!metadata?.currentUdiValue) {
+    return "MXN pendiente: falta valor UDI verificado.";
+  }
+  const rate = Number(metadata.currentUdiValue).toLocaleString("es-MX", {
+    maximumFractionDigits: 4,
+  });
+  const rateLabel = metadata.rateKey === "USD_MXN_FIX" ? "USD/MXN" : "UDI";
+  return `Valor ${rateLabel}: $${rate} MXN · Fuente: ${metadata.source || "motor verificado"} · Fecha: ${metadata.sourceDate}`;
+}
+
+function buildOrviSummaryPaymentLine(calc = {}) {
+  const parts = [];
+  if (hasValue(calc.currency)) parts.push(String(calc.currency).toUpperCase());
+  const paymentYears = Number(calc.paymentYears);
+  if (Number.isInteger(paymentYears) && paymentYears > 0) {
+    parts.push(`${paymentYears} años de aportación`);
+  }
+  return parts.join(" · ") || null;
+}
+
 function normalize(value) {
   return String(value ?? "")
     .replace(/\s+/g, " ")
@@ -145,6 +197,18 @@ function setSummaryValue(labels, value) {
   }
   target.setAttribute("data-forge-runtime-value", "true");
   return true;
+}
+
+function setSummaryLabel(labels, value) {
+  const wanted = (Array.isArray(labels) ? labels : [labels]).map(normalize);
+  for (const node of document.querySelectorAll("dt,th,label,strong,span,p,div")) {
+    const text = normalize(node.textContent);
+    if (wanted.some(label => text === label || text.startsWith(`${label}:`))) {
+      node.textContent = value;
+      return true;
+    }
+  }
+  return false;
 }
 
 function benefitSummaryApiSync() {
@@ -1030,14 +1094,23 @@ function renderVisibleDynamicBenefitSummary(calc) {
 }
 
 function renderAcceptedQuote(calc, { writeRuntimeGrid } = {}) {
-  setSummaryValue(["Total aportado"], formatUdiWithMxn(calc.totalContributed, calc.currency, calc.totalContributedMXN, calc.udiRateMetadata));
-  setSummaryValue(["Total recuperación", "Recuperación total"], formatUdiWithMxn(calc.totalRecovery, calc.currency, calc.totalRecoveryMXN, calc.udiRateMetadata));
+  const acceptedRateMetadata = resolveAcceptedRateMetadata(calc);
+  setSummaryValue(["Total aportado"], formatUdiWithMxn(calc.totalContributed, calc.currency, calc.totalContributedMXN, acceptedRateMetadata));
+  setSummaryValue(["Total recuperación", "Recuperación total"], formatUdiWithMxn(calc.totalRecovery, calc.currency, calc.totalRecoveryMXN, acceptedRateMetadata));
   setSummaryValue(["Forma de pago"], calc.paymentMode);
   setSummaryValue(["Moneda"], calc.currency);
-  setSummaryValue(["Forma de pago, moneda y vigencia"], [
-    [calc.paymentMode, calc.currency, calc.coveragePeriod].filter(Boolean).join(" · "),
-    formatUdiMetadataLine(calc.udiRateMetadata)
-  ]);
+  if (isOrviProduct(calc)) {
+    setSummaryLabel(["Forma de pago, moneda y vigencia"], "Moneda y plazo de aportación");
+    setSummaryValue(["Moneda y plazo de aportación"], [
+      buildOrviSummaryPaymentLine(calc),
+      formatOrviRateMetadataLine(acceptedRateMetadata)
+    ]);
+  } else {
+    setSummaryValue(["Forma de pago, moneda y vigencia"], [
+      [calc.paymentMode, calc.currency, calc.coveragePeriod].filter(Boolean).join(" · "),
+      formatUdiMetadataLine(calc.udiRateMetadata)
+    ]);
+  }
   if (isSegubecaProduct(calc)) {
     const missingValues = calc?.nativeResult?.missing_information || calc?.missing_information || [];
     setSummaryValue(
@@ -1090,7 +1163,10 @@ const api = Object.freeze({
   formatUdiWithMxn,
   formatUdiMetadataLine,
   formatMxn,
-  setSummaryValue
+  setSummaryValue,
+  resolveAcceptedRateMetadata,
+  buildOrviSummaryPaymentLine,
+  formatOrviRateMetadataLine
 });
 
 globalThis.ForgeBenefitSummaryRenderer = api;
@@ -1107,5 +1183,8 @@ export {
   formatUdiWithMxn,
   formatUdiMetadataLine,
   formatMxn,
-  setSummaryValue
+  setSummaryValue,
+  resolveAcceptedRateMetadata,
+  buildOrviSummaryPaymentLine,
+  formatOrviRateMetadataLine
 };

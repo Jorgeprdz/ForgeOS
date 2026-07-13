@@ -11770,6 +11770,27 @@ Status: `RESPONSIVE_HARDENING_READY_FOR_HUMAN_REVIEW`
 - Private real-source fake-DOM regression: required.
 - Manual browser review: pending.
 - Release close: blocked until human signoff.
-- Next: `R15M1_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+- Next: `R15M2_ORVI_GUARANTEED_RECOVERY_UI_SIMPLIFICATION_AND_DATA_CONSISTENCY_HARDENING`.
 
 <!-- FORGE:R15M_ORVI_RESPONSIVE_AND_VISUAL_REVIEW:END -->
+
+<!-- FORGE:R15M2_ORVI_GUARANTEED_RECOVERY_UI_HARDENING:START -->
+## Product Intelligence / ORVI R15M2
+
+Status: `PASS_UI_SIMPLIFICATION_AND_DATA_CONSISTENCY_HARDENING / PENDING_USER_REVIEW`
+
+- Guaranteed recovery cards contain seven visible rows and end at `UDI proyectada`.
+- Surrender value is source UDI only in this view.
+- Recovery percentage presentation derives from current MXN total recovery divided by current MXN total contributed.
+- Missing or zero current MXN contribution remains pending.
+- One compact recovery relationship explanation precedes the cards.
+- Valid attached ORVI rate metadata drives accepted-summary MXN consistency; stale or invalid metadata remains pending.
+- ORVI confirmation uses canonical Product Intelligence product, sum assured, payment term and explicit premium evidence.
+- Family is uppercase `ORVI`; no client identity or premium is invented.
+- Canonical Product Intelligence, parser, mapper, rate cache, projections and other product adapters remain unchanged.
+- Recommendation is `null`; human decision is required.
+- R15M1 remains unexecuted and unclosed.
+- Manual visual acceptance is `PENDING_USER_REVIEW`.
+- Next: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+
+<!-- FORGE:R15M2_ORVI_GUARANTEED_RECOVERY_UI_HARDENING:END -->

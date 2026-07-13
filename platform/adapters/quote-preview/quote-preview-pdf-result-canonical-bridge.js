@@ -29,6 +29,10 @@ function preserveNull(value) {
   return value === undefined ? null : value;
 }
 
+function isOrviFamily(value) {
+  return String(value || "").trim().toUpperCase() === "ORVI";
+}
+
 function assertContractAcceptance(packet) {
   const result = assertSafePayload(packet);
 
@@ -63,11 +67,11 @@ function buildQuotePreviewPdfResultCanonicalPacket(nativeResult = {}, context = 
     ? nativeResult.premiumTable
     : {};
 
+  const sourceFamily = context.productFamily ?? context.product_family;
+  const orvi = isOrviFamily(sourceFamily);
   const packet = {
     name: preserveNull(context.name),
-    family: preserveNull(
-      context.productFamily ?? context.product_family,
-    ),
+    family: preserveNull(orvi ? "ORVI" : sourceFamily),
     product: preserveNull(nativeResult.product),
     insured: preserveNull(nativeResult.prospect),
     sumAssured: preserveNull(nativeResult.sumInsured),
@@ -75,7 +79,9 @@ function buildQuotePreviewPdfResultCanonicalPacket(nativeResult = {}, context = 
     plannedOrAvePremium: preserveNull(
       premiumTable.plannedAnnual,
     ),
-    coveragePeriod: preserveNull(nativeResult.policyTerm),
+    coveragePeriod: preserveNull(
+      orvi ? nativeResult.paymentTerm : nativeResult.policyTerm,
+    ),
   };
 
   return assertContractAcceptance(packet);

@@ -109,6 +109,21 @@ function installBenefitDashboardStyles107z15p2R11M() {
       letter-spacing: .01em;
     }
 
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+      .fq-benefit-orvi-recovery-explanation-107z15p2 {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 10px 14px;
+      border: 1px solid rgba(148, 163, 184, .2);
+      border-radius: 12px;
+      color: var(--fq-r11m-label);
+      background: rgba(15, 35, 60, .52);
+      font-size: .82rem;
+      font-weight: 750;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
     .fq-benefit-mini-grid-107z15p2 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
     .fq-benefit-mini-card-107z15p2,
     .fq-benefit-row-107z15p2,
