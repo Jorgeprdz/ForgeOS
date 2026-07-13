@@ -281,3 +281,151 @@
 }
 
 /* FORGEOS:R16C2_ORB_DIFFUSE_HALO:END */
+
+/* FORGEOS:R16C3_COMMAND_BAR_VISUAL_CONSISTENCY:START */
+
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] {
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] .command-orb {
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  min-height: 64px !important;
+  border-radius: 50% !important;
+  transform-origin: center !important;
+  transition:
+    opacity 320ms ease,
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 360ms ease !important;
+}
+
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] .command-pill {
+  display: grid !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateX(18px) scaleX(0.18) !important;
+  transform-origin: right center !important;
+  clip-path: inset(0 0 0 calc(100% - 64px) round 999px) !important;
+  filter: blur(4px) !important;
+  transition:
+    opacity 260ms ease,
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
+    clip-path 620ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 420ms ease,
+    visibility 0s linear 620ms !important;
+}
+
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"].is-expanded .command-pill {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateX(0) scaleX(1) !important;
+  clip-path: inset(0 0 0 0 round 999px) !important;
+  filter: blur(0) !important;
+  transition:
+    opacity 300ms ease 50ms,
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
+    clip-path 620ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 420ms ease 30ms,
+    visibility 0s linear 0s !important;
+}
+
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"].is-expanded .command-orb {
+  display: grid !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  transform: scale(0.76) rotate(-8deg) !important;
+  pointer-events: none !important;
+  transition:
+    opacity 240ms ease,
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 520ms !important;
+}
+
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"]:not(.is-expanded) .command-orb {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: scale(1) rotate(0deg) !important;
+  pointer-events: auto !important;
+}
+
+.command-pill-slash[data-forge-bow-tie-synced="true"] {
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 235, 177, 0.42) !important;
+  background:
+    radial-gradient(circle at 34% 24%, rgba(255, 242, 190, 0.92), transparent 34%),
+    linear-gradient(145deg, rgba(255, 220, 126, 0.96), rgba(111, 221, 255, 0.9)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 8px 24px rgba(55, 175, 235, 0.22) !important;
+}
+
+.command-pill-slash[data-forge-bow-tie-synced="true"] > * {
+  width: 68% !important;
+  height: 68% !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+.bottom-nav[data-forge-home-navigation-r16c="canonical"] {
+  position: fixed !important;
+  isolation: isolate !important;
+  overflow: visible !important;
+  background:
+    linear-gradient(145deg, rgba(8, 19, 36, 0.68), rgba(4, 10, 21, 0.58)) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(175%) !important;
+  backdrop-filter: blur(28px) saturate(175%) !important;
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.42),
+    0 0 34px rgba(69, 181, 238, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.11) !important;
+}
+
+.bottom-nav[data-forge-home-navigation-r16c="canonical"]::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -14px -12px -18px !important;
+  z-index: -1 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(circle at 22% 12%, rgba(255, 218, 126, 0.16), transparent 40%),
+    radial-gradient(circle at 78% 86%, rgba(88, 211, 255, 0.19), transparent 44%),
+    rgba(5, 13, 27, 0.34) !important;
+  filter: blur(18px) !important;
+  opacity: 0.9 !important;
+}
+
+html.forge-mobile-widget-grid-polished-057l .primary-card.glass .fake-cta {
+  width: 100% !important;
+  min-height: 58px !important;
+  padding: 16px 18px !important;
+  margin-top: 18px !important;
+  transform: none !important;
+}
+
+@media (max-width: 900px) {
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] .command-pill {
+    width: 100% !important;
+    min-height: 64px !important;
+    border-radius: 999px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] .command-orb,
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] .command-pill {
+    transition-duration: 120ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* FORGEOS:R16C3_COMMAND_BAR_VISUAL_CONSISTENCY:END */
