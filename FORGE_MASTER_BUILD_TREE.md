@@ -14998,5 +14998,29 @@ Status: `PASS_DIRECT_PDF_SELECTOR_AND_BROWSER_PARSER_ROUTING / MANUAL_VISUAL_ACC
 - Recommendation remains `null`; human decision remains required.
 - Manual visual acceptance remains `PENDING_USER_REVIEW`.
 
-NEXT: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+NEXT: `R15M2B_ORVI_REAL_PDF_EXTRACTION_PROJECTED_RECOVERY_MATH_AND_PROTECTION_UI_REPAIR`
 <!-- FORGE:R15M2A_ORVI_DIRECT_PDF_ROUTING:END -->
+
+<!-- FORGE:R15M2B_ORVI_REAL_PDF_AND_PROJECTED_RECOVERY_REPAIR:START -->
+## R15M2B ORVI Real PDF Extraction, Projected Recovery Math And Protection UI Repair
+
+Status: `PASS_REAL_PDF_EXTRACTION_PROJECTED_RECOVERY_AND_PROTECTION_UI_REPAIR / MANUAL_VISUAL_ACCEPTANCE_PENDING_USER_REVIEW`
+
+- The existing selector processes the real ORVI PDF locally through PDF.js; no manual JSON is required.
+- Positioned PDF.js items retain deterministic column separators and page boundaries.
+- The canonical parser recognizes real source coverages and the unchanged contract still requires at least one coverage.
+- No filename authority, OCR, invented coverage or weakened Product Intelligence boundary exists.
+- Contracted protection is full-width with a dominant source metric, integrated current MXN and compact metadata.
+- Estimated protection is full-width with responsive future-scenario cards.
+- Guaranteed-recovery cards contain exactly six rows, omit `Valor en efectivo`, omit the old explanation and end with `UDI proyectada`.
+- Surrender value remains source UDI only.
+- Projected recovery uses source recovery UDI times the full stored projected UDI rate.
+- Projected difference and percentage compare projected recovery MXN against current contributed MXN.
+- Projected percentage is comparison-only and not investment return.
+- Real Chromium flow, modal and desktop/tablet/mobile inspection pass; nine screenshots remain outside Git.
+- Rate cache, canonical ORVI parser/mapper bytes, package configuration and other product adapters are unchanged.
+- Recommendation remains `null`; human decision remains required.
+- Manual visual acceptance remains `PENDING_USER_REVIEW`.
+
+NEXT: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+<!-- FORGE:R15M2B_ORVI_REAL_PDF_AND_PROJECTED_RECOVERY_REPAIR:END -->

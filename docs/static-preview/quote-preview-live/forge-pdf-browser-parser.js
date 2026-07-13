@@ -19,6 +19,7 @@ const PDFJS_MODULE_URL_107Z15P2_R11E = `https://cdn.jsdelivr.net/npm/pdfjs-dist@
 const PDFJS_WORKER_URL_107Z15P2_R11E = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.worker.mjs`;
 
 let pdfjsPromise107z15p2R11E = null;
+const PDF_COLUMN_GAP_THRESHOLD_107Z15P2_R15M2B = 8;
 
 function normalizeText107z15p2R11E(value) {
   return String(value || "")
@@ -408,7 +409,7 @@ async function loadPdfJs107z15p2R11E() {
   return pdfjsPromise107z15p2R11E;
 }
 
-function groupPdfItemsIntoRows107z15p2R11E(items) {
+export function groupPdfItemsIntoRows107z15p2R11E(items) {
   const rows = [];
 
   for (const item of items) {
@@ -417,18 +418,43 @@ function groupPdfItemsIntoRows107z15p2R11E(items) {
     const transform = item.transform || [];
     const x = Number(transform[4] || 0);
     const y = Number(transform[5] || 0);
+    const width = Number(item.width || 0);
 
     let row = rows.find((candidate) => Math.abs(candidate.y - y) <= 3);
     if (!row) {
       row = { y, items: [] };
       rows.push(row);
     }
-    row.items.push({ x, value });
+    row.items.push({
+      x,
+      endX: x + (Number.isFinite(width) && width > 0 ? width : 0),
+      value,
+    });
   }
 
   return rows
     .sort((a, b) => b.y - a.y)
-    .map((row) => row.items.sort((a, b) => a.x - b.x).map((item) => item.value).join(" ").replace(/\s+/g, " ").trim())
+    .map((row) => {
+      const sorted = row.items.sort((a, b) => a.x - b.x);
+      let line = "";
+      let priorEndX = null;
+
+      for (const item of sorted) {
+        const gap = priorEndX === null ? 0 : item.x - priorEndX;
+        const separator =
+          line && gap >= PDF_COLUMN_GAP_THRESHOLD_107Z15P2_R15M2B
+            ? "  "
+            : line
+              ? " "
+              : "";
+        line += `${separator}${item.value}`;
+        priorEndX = priorEndX === null
+          ? item.endX
+          : Math.max(priorEndX, item.endX);
+      }
+
+      return line.trim();
+    })
     .filter(Boolean);
 }
 
@@ -450,7 +476,7 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
     pages.push(rows.join("\n"));
   }
 
-  return pages.join("\n\n");
+  return pages.join("\f");
 }
 
 
@@ -822,7 +848,7 @@ export function parseOrviPdfTextToAcceptedQuotePacket(text, options = {}) {
 
   const nativeResult = {
     source: "browser_pdf_parser",
-    extractionVersion: "R15M2A_orvi_direct_pdf_intake",
+    extractionVersion: "R15M2B_orvi_real_pdf_layout_aware",
     family: "ORVI",
     productFamily: "orvi",
     product_family: "orvi",
@@ -848,7 +874,7 @@ export function parseOrviPdfTextToAcceptedQuotePacket(text, options = {}) {
   return {
     schemaVersion: "forge.accepted_quote_packet.v1",
     source: "browser_pdf_parser",
-    extractionVersion: "R15M2A_orvi_direct_pdf_intake",
+    extractionVersion: "R15M2B_orvi_real_pdf_layout_aware",
     fileName: options.fileName || null,
     family: "ORVI",
     productFamily: "orvi",
@@ -1017,7 +1043,8 @@ globalThis.ForgePdfBrowserParser = {
   isOrviSolucionlinePdfText,
   parseImaginaSerPdfTextToAcceptedQuotePacket,
   parseVidaMujerPdfTextToAcceptedQuotePacket,
-  extractTextFromPdfFile107z15p2R11E
+  extractTextFromPdfFile107z15p2R11E,
+  groupPdfItemsIntoRows107z15p2R11E
 };
 
 installPdfInputInterceptor107z15p2R11E();

@@ -557,6 +557,106 @@ function installBenefitDashboardStyles107z15p2R11M() {
     }
   }
   /* FORGE:R15M_ORVI_RESPONSIVE_HARDENING:END */
+
+  /* FORGE:R15M2B_ORVI_PROTECTION_UI_REPAIR:START */
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-card-107z15p2[data-forge-product-section="protection"],
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-card-107z15p2[data-forge-product-section="future_scenario"] {
+    grid-column: 1 / -1 !important;
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-orvi-protection-summary-107z15p2 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-orvi-protection-primary-107z15p2 {
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid rgba(244, 216, 93, .2);
+    border-radius: 16px;
+    background:
+      linear-gradient(145deg, rgba(244, 216, 93, .1), rgba(79, 151, 255, .06));
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-orvi-protection-value-107z15p2 {
+    margin-top: 8px;
+    font-size: clamp(1.65rem, 3.5vw, 2.55rem);
+    line-height: 1.08;
+    letter-spacing: -.025em;
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-orvi-protection-equivalence-107z15p2 {
+    display: grid;
+    gap: 5px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(125, 211, 252, .14);
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-orvi-protection-equivalence-107z15p2
+  .fq-benefit-value-107z15p2 {
+    margin-top: 0;
+    color: var(--fq-r11m-mxn);
+    font-size: 1rem;
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-orvi-protection-metadata-107z15p2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-orvi-protection-metadata-107z15p2
+  .fq-benefit-mini-card-107z15p2 {
+    padding: 12px 14px;
+  }
+
+  .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+  .fq-benefit-card-107z15p2[data-forge-product-section="future_scenario"]
+  .fq-benefit-dotal-chips-107z15p2 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 1180px) and (min-width: 761px) {
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+    .fq-benefit-card-107z15p2[data-forge-product-section="future_scenario"]
+    .fq-benefit-dotal-chips-107z15p2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+    .fq-benefit-orvi-protection-primary-107z15p2 {
+      padding: 18px;
+    }
+
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+    .fq-benefit-orvi-protection-metadata-107z15p2,
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+    .fq-benefit-card-107z15p2[data-forge-product-section="future_scenario"]
+    .fq-benefit-dotal-chips-107z15p2 {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fq-benefit-dashboard-107z15p2[data-forge-product-type="orvi"]
+    .fq-benefit-row-107z15p2 {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  /* FORGE:R15M2B_ORVI_PROTECTION_UI_REPAIR:END */
   `;
   document.head.appendChild(style);
 }

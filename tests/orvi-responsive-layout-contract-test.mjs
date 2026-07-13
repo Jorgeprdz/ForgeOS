@@ -68,22 +68,33 @@ assert.match(
   layout,
   /data-forge-orvi-view-active="true"/,
 );
+assert.match(layout, /FORGE:R15M2B_ORVI_PROTECTION_UI_REPAIR:START/);
+assert.match(layout, /fq-benefit-orvi-protection-primary-107z15p2/);
+assert.match(layout, /fq-benefit-orvi-protection-metadata-107z15p2/);
+assert.match(
+  layout,
+  /data-forge-product-section="protection"\][\s\S]*?grid-column:\s*1\s*\/\s*-1\s*!important/,
+);
+assert.match(
+  layout,
+  /data-forge-product-section="future_scenario"\][\s\S]*?grid-column:\s*1\s*\/\s*-1\s*!important/,
+);
 
 assert.match(
   renderer,
-  /forge-benefit-summary-layout\.js\?v=r15m2_orvi_recovery_20260712_1/,
+  /forge-benefit-summary-layout\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
 );
 assert.match(
   renderer,
-  /forge-orvi-product-dashboard-adapter\.js\?v=r15m2_orvi_recovery_20260712_1/,
+  /forge-orvi-product-dashboard-adapter\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
 );
 assert.match(
   bridge,
-  /forge-benefit-summary-renderer\.js\?v=r15m2_orvi_recovery_20260712_1/,
+  /forge-benefit-summary-renderer\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
 );
 assert.match(
   livePage,
-  /forge-accepted-quote-bridge\.js\?v=r15m2_orvi_recovery_20260712_1/,
+  /forge-accepted-quote-bridge\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/,
 );
 
 console.log("PASS R15M ORVI responsive layout contract", {
@@ -92,6 +103,9 @@ console.log("PASS R15M ORVI responsive layout contract", {
   mobileBreakpoint: 760,
   minimumTouchTarget: 44,
   overflowWrap: "anywhere",
+  protectionPrimaryFullWidth: true,
+  protectionMetadataCompact: true,
+  futureProtectionFullWidth: true,
   productScoped: true,
   cacheBustGraph: true,
 });

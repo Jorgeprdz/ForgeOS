@@ -181,7 +181,7 @@ function formatPercentage(value) {
 function formatRate(rate) {
   if (!isRecord(rate)) return null;
   const value = formatOrviNumber(rate.value, 4);
-  return value ? `$${value} MXN por UDI` : null;
+  return value ? `${value} MXN por UDI` : null;
 }
 
 function pairValues(primary, secondary) {
@@ -233,31 +233,41 @@ function protectionSection(viewModel) {
   return section({
     key: "orvi_protection",
     kind: "protection",
-    title: protection.title || "Protección",
-    presentation: "primary_metrics",
+    title: "Protección contratada",
+    presentation: "orvi_protection_summary",
     items: [
-      item(
-        protection?.labels?.source_sum_assured ||
-          "Suma asegurada contratada",
-        formatOrviMoney(protection?.source_sum_assured),
-        protection?.source_sum_assured,
-      ),
-      item(
-        protection?.labels?.current_mxn_equivalence ||
+      {
+        role: "primary",
+        label: "Suma asegurada",
+        value: formatOrviMoney(protection?.source_sum_assured),
+        secondaryLabel:
+          protection?.labels?.current_mxn_equivalence ||
           "Equivalencia actual en MXN",
-        formatOrviMoney(protection?.current_mxn_equivalence, {
+        secondaryValue: formatOrviMoney(
+          protection?.current_mxn_equivalence,
+          {
           approximate: true,
-        }),
-        protection?.current_mxn_equivalence,
-      ),
-      item("Moneda contratada", viewModel?.source_currency),
-      item(
-        "Plazo de aportación",
-        Number.isInteger(viewModel?.payment_term_years)
+          },
+        ),
+        evidence: {
+          source: protection?.source_sum_assured,
+          current_mxn_equivalence:
+            protection?.current_mxn_equivalence,
+        },
+      },
+      {
+        role: "metadata",
+        label: "Moneda",
+        value: viewModel?.source_currency || null,
+      },
+      {
+        role: "metadata",
+        label: "Plazo de aportación",
+        value: Number.isInteger(viewModel?.payment_term_years)
           ? `${viewModel.payment_term_years} años`
           : null,
-      ),
-    ],
+      },
+    ].filter((entry) => entry?.value),
   });
 }
 
@@ -309,9 +319,10 @@ function futureProtectionSection(viewModel) {
   });
 }
 
-function currentRecoveryItems(checkpoint) {
+function currentRecoveryItems(checkpoint, sourceCurrency) {
   const source = checkpoint?.source_currency || {};
   const current = checkpoint?.current_mxn || {};
+  const future = checkpoint?.future_mxn || {};
   const currentMoneyValue = (money) => {
     if (!isRecord(money)) return null;
     const raw = money.value;
@@ -319,14 +330,57 @@ function currentRecoveryItems(checkpoint) {
     const numeric = Number(raw);
     return Number.isFinite(numeric) ? numeric : null;
   };
-  const currentTotalRecovery = currentMoneyValue(current?.total_recovery);
+  const sourceTotalRecovery = currentMoneyValue(source?.total_recovery);
+  const projectedRate = currentMoneyValue(future?.projected_rate);
   const currentCumulativePaid = currentMoneyValue(current?.cumulative_paid);
-  const recoveryPercentage =
-    Number.isFinite(currentTotalRecovery) &&
+  const projectedRecoveryMxn =
+    Number.isFinite(sourceTotalRecovery) &&
+    Number.isFinite(projectedRate) &&
+    projectedRate > 0
+      ? sourceTotalRecovery * projectedRate
+      : null;
+  const projectedDifferenceMxn =
+    Number.isFinite(projectedRecoveryMxn) &&
+    Number.isFinite(currentCumulativePaid)
+      ? projectedRecoveryMxn - currentCumulativePaid
+      : null;
+  const projectedRecoveryPercentage =
+    Number.isFinite(projectedRecoveryMxn) &&
     Number.isFinite(currentCumulativePaid) &&
     currentCumulativePaid > 0
-      ? (currentTotalRecovery / currentCumulativePaid) * 100
+      ? (projectedRecoveryMxn / currentCumulativePaid) * 100
       : null;
+  const pending = "Pendiente: faltan valores proyectados válidos";
+  const projectedRecoveryEvidence = {
+    formula:
+      "source_currency.total_recovery.value * future_mxn.projected_rate.value",
+    numerator_source: "source_currency.total_recovery.value",
+    projected_rate_source: "future_mxn.projected_rate.value",
+    classification: "comparison_only_not_investment_return",
+    not_investment_return: true,
+    result_value: projectedRecoveryMxn,
+  };
+  const projectedDifferenceEvidence = {
+    formula:
+      "projected_total_recovery.value - current_mxn.cumulative_paid.value",
+    numerator_source: "projected_total_recovery.value",
+    denominator_source: "current_mxn.cumulative_paid.value",
+    projected_rate_source: "future_mxn.projected_rate.value",
+    classification: "comparison_only_not_investment_return",
+    not_investment_return: true,
+    result_value: projectedDifferenceMxn,
+  };
+  const projectedPercentageEvidence = {
+    formula:
+      "projected_total_recovery.value / current_mxn.cumulative_paid.value * 100",
+    numerator_source: "projected_total_recovery.value",
+    denominator_source: "current_mxn.cumulative_paid.value",
+    projected_rate_source: "future_mxn.projected_rate.value",
+    classification: "comparison_only_not_investment_return",
+    not_investment_return: true,
+    help: "Recuperación proyectada MXN ÷ total aportado MXN.",
+    result_value: projectedRecoveryPercentage,
+  };
 
   return [
     item(
@@ -343,55 +397,38 @@ function currentRecoveryItems(checkpoint) {
       formatOrviMoney(source?.surrender_value),
     ),
     item(
-      "Valor en efectivo",
-      pairValues(
-        formatOrviMoney(source?.cash_value),
-        formatOrviMoney(current?.cash_value, {
-          approximate: true,
-        }),
-      ),
-    ),
-    item(
       "Recuperación total",
       pairValues(
         formatOrviMoney(source?.total_recovery),
-        formatOrviMoney(current?.total_recovery, {
+        Number.isFinite(projectedRecoveryMxn)
+          ? formatOrviMoney({ value: projectedRecoveryMxn, currency: "MXN" }, {
+            approximate: true,
+          })
+          : pending,
+      ),
+      projectedRecoveryEvidence,
+    ),
+    item(
+      "Diferencia proyectada",
+      Number.isFinite(projectedDifferenceMxn)
+        ? formatOrviMoney({ value: projectedDifferenceMxn, currency: "MXN" }, {
           approximate: true,
-        }),
-      ),
+        })
+        : pending,
+      projectedDifferenceEvidence,
     ),
     item(
-      "Diferencia actual",
-      formatOrviMoney(current?.recovery_difference, {
-        approximate: true,
-      }),
+      "Porcentaje de recuperación proyectado",
+      formatPercentage(projectedRecoveryPercentage) || pending,
+      projectedPercentageEvidence,
     ),
     item(
-      "Porcentaje de recuperación",
-      formatPercentage(recoveryPercentage) ||
-        "Pendiente: faltan valores MXN válidos",
-      {
-        classification: "comparison_only_not_investment_return",
-        help: "Recuperación total MXN ÷ total aportado MXN.",
-      },
+      "UDI proyectada",
+      sourceCurrency === "UDI"
+        ? formatRate(future?.projected_rate) || pending
+        : "No aplica para moneda contratada USD",
+      future?.projected_rate,
     ),
-  ];
-}
-
-function futureRecoveryItems(checkpoint, sourceCurrency) {
-  const future = checkpoint?.future_mxn || {};
-
-  if (sourceCurrency === "USD") {
-    return [
-      item(
-        "Escenario futuro USD/MXN",
-        statusLabel(future?.status || USD_FUTURE_BLOCK),
-      ),
-    ];
-  }
-
-  return [
-    item("UDI proyectada", formatRate(future?.projected_rate)),
   ];
 }
 
@@ -411,8 +448,7 @@ function recoverySections(viewModel) {
         .filter(Boolean)
         .join(" · "),
       items: [
-        ...currentRecoveryItems(checkpoint),
-        ...futureRecoveryItems(checkpoint, viewModel?.source_currency),
+        ...currentRecoveryItems(checkpoint, viewModel?.source_currency),
       ],
     });
   });
@@ -441,7 +477,7 @@ function disclosureSection(viewModel) {
           : null,
       ),
       item(
-        "Porcentaje de recuperación",
+        "Porcentaje de recuperación proyectado",
         "Es una comparación, no un rendimiento de inversión",
       ),
       item(
@@ -522,6 +558,74 @@ function appendSectionItems(
   { documentRef, appendValue } = {},
 ) {
   const documentTarget = documentRef || globalThis.document;
+
+  if (modelSection.presentation === "orvi_protection_summary") {
+    const summary = documentTarget.createElement("div");
+    summary.className = "fq-benefit-orvi-protection-summary-107z15p2";
+
+    const primary = modelSection.items.find(
+      (entry) => entry?.role === "primary",
+    );
+    if (primary) {
+      const primaryNode = documentTarget.createElement("div");
+      primaryNode.className =
+        "fq-benefit-orvi-protection-primary-107z15p2";
+      primaryNode.dataset.forgeOrviProtectionPrimary = "true";
+
+      const labelNode = documentTarget.createElement("div");
+      labelNode.className = PRODUCT_DASHBOARD_CLASSES.label;
+      labelNode.textContent = primary.label;
+
+      const valueNode = documentTarget.createElement("div");
+      valueNode.className =
+        `${PRODUCT_DASHBOARD_CLASSES.value} fq-benefit-orvi-protection-value-107z15p2`;
+      if (appendValue) appendValue(valueNode, primary.value);
+      else valueNode.textContent = primary.value;
+
+      const equivalenceNode = documentTarget.createElement("div");
+      equivalenceNode.className =
+        "fq-benefit-orvi-protection-equivalence-107z15p2";
+      equivalenceNode.dataset.forgeOrviCurrentMxnIntegrated = "true";
+
+      const equivalenceLabel = documentTarget.createElement("span");
+      equivalenceLabel.className = PRODUCT_DASHBOARD_CLASSES.label;
+      equivalenceLabel.textContent = primary.secondaryLabel;
+
+      const equivalenceValue = documentTarget.createElement("strong");
+      equivalenceValue.className = PRODUCT_DASHBOARD_CLASSES.value;
+      if (appendValue) appendValue(equivalenceValue, primary.secondaryValue);
+      else equivalenceValue.textContent = primary.secondaryValue;
+
+      equivalenceNode.append(equivalenceLabel, equivalenceValue);
+      primaryNode.append(labelNode, valueNode, equivalenceNode);
+      summary.appendChild(primaryNode);
+    }
+
+    const metadata = modelSection.items.filter(
+      (entry) => entry?.role === "metadata",
+    );
+    if (metadata.length) {
+      const metadataGrid = documentTarget.createElement("div");
+      metadataGrid.className =
+        "fq-benefit-orvi-protection-metadata-107z15p2";
+      for (const entry of metadata) {
+        metadataGrid.appendChild(
+          createPrimaryMetric({
+            label: entry.label,
+            value: entry.value,
+            appendValue: appendValue
+              ? (target) => appendValue(target, entry.value)
+              : undefined,
+            documentRef,
+          }),
+        );
+      }
+      summary.appendChild(metadataGrid);
+    }
+
+    card.appendChild(summary);
+    return;
+  }
 
   if (modelSection.presentation === "chips") {
     const grid = documentTarget.createElement("div");
@@ -612,17 +716,6 @@ export function activateOrviDashboardView(
     const visible = viewId === "shared" || viewId === activeView;
     section.hidden = !visible;
     setAttributeSafe(section, "aria-hidden", !visible);
-  }
-
-  if (dashboard.__forgeOrviRecoveryExplanation) {
-    const visible =
-      activeView === ORVI_DASHBOARD_VIEW_IDS.guaranteedRecovery;
-    dashboard.__forgeOrviRecoveryExplanation.hidden = !visible;
-    setAttributeSafe(
-      dashboard.__forgeOrviRecoveryExplanation,
-      "aria-hidden",
-      !visible,
-    );
   }
 
   return activeView;
@@ -731,17 +824,6 @@ export function renderOrviDashboard(
     switcher.__forgeOrviViewButtons || [];
   dashboard.__forgeOrviViewSections = [];
   dashboard.appendChild(switcher);
-
-  const recoveryExplanation = (documentRef || globalThis.document).createElement("p");
-  recoveryExplanation.className =
-    "fq-benefit-orvi-recovery-explanation-107z15p2";
-  recoveryExplanation.dataset.forgeOrviView =
-    ORVI_DASHBOARD_VIEW_IDS.guaranteedRecovery;
-  recoveryExplanation.dataset.forgeOrviRecoveryExplanation = "true";
-  recoveryExplanation.textContent =
-    "Recuperación total = valor de rescate + valor en efectivo.";
-  dashboard.__forgeOrviRecoveryExplanation = recoveryExplanation;
-  dashboard.appendChild(recoveryExplanation);
 
   for (const modelSection of model.sections || []) {
     const card = createProductDashboardSection({

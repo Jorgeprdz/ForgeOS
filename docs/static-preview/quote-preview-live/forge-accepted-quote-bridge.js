@@ -3,7 +3,7 @@ import {
   validatePacket,
   isPdfSelection107z15p2R9C
 } from "./forge-accepted-quote-adapter.js?v=r15l_orvi_end_to_end_20260712_1";
-import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r15m2_orvi_recovery_20260712_1";
+import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r15m2b_orvi_pdf_recovery_ui_20260713_1";
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);

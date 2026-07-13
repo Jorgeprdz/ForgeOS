@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 import {
   isOrviSolucionlinePdfText,
+  groupPdfItemsIntoRows107z15p2R11E,
   parseOrviPdfTextToAcceptedQuotePacket,
   parsePdfFileToAcceptedQuotePacket,
   parsePdfTextToAcceptedQuotePacket,
@@ -62,6 +63,47 @@ assert.equal(validateOrviProductIntelligence(canonicalModel).valid, true);
 assert.equal(canonicalModel.schema.id, "forge.product_intelligence.orvi");
 assert.equal(canonicalModel.ownership.canonical_owner, "product-intelligence");
 
+function positionedPdfItems(pageText) {
+  return pageText.split("\n").flatMap((line, lineIndex) => {
+    if (!line.trim()) return [];
+    const columns = line.trimEnd().split(/\s{2,}/).filter(Boolean);
+    return columns.map((str, columnIndex) => ({
+      str,
+      transform: [1, 0, 0, 1, 20 + columnIndex * 240, 800 - lineIndex * 12],
+      width: str.length * 5,
+    }));
+  });
+}
+
+const browserLayoutText = fixture
+  .split("\f")
+  .map((pageText) =>
+    groupPdfItemsIntoRows107z15p2R11E(
+      positionedPdfItems(pageText),
+    ).join("\n"),
+  )
+  .join("\f");
+const layoutCoverageLine = browserLayoutText
+  .split("\n")
+  .find((line) => line.startsWith("ORVI synthetic basic protection"));
+assert.match(layoutCoverageLine, /protection\s{2,}58 years\s{2,}73,250\s{2,}1,387\.40/);
+const browserLayoutEnvelope = parseOrviSolucionlinePdfText(browserLayoutText);
+assert.ok(browserLayoutEnvelope.coverages.length >= 1);
+assert.equal(browserLayoutEnvelope.coverages[0].label, "ORVI synthetic basic protection");
+assert.equal(browserLayoutEnvelope.coverages[0].coverage_term.value, 58);
+assert.equal(browserLayoutEnvelope.coverages[0].sum_assured.value, 73250);
+assert.equal(browserLayoutEnvelope.coverages[0].annual_premium.value, 1387.4);
+assert.equal(validateOrviPdfParserEnvelope(browserLayoutEnvelope).valid, true);
+
+const noCoverageText = fixture.replace(
+  /COVERAGES[\s\S]*?BASE TOTAL ANNUAL PREMIUM\s+1,481\.00/,
+  "COVERAGES\nCOVERAGE TERM SUM ASSURED ANNUAL PREMIUM\nBASE TOTAL ANNUAL PREMIUM 1,481.00",
+);
+assert.throws(
+  () => parseOrviSolucionlinePdfText(noCoverageText),
+  /coverages:AT_LEAST_ONE_REQUIRED/,
+);
+
 const packet = parseOrviPdfTextToAcceptedQuotePacket(fixture, {
   fileName: "documento.pdf",
 });
@@ -83,7 +125,7 @@ assert.equal(packet.human_decision_required, true);
 assert.equal(packet.nativeResult.recommendation, null);
 assert.equal(packet.nativeResult.humanDecisionRequired, true);
 assert.equal(packet.source, "browser_pdf_parser");
-assert.equal(packet.extractionVersion, "R15M2A_orvi_direct_pdf_intake");
+assert.equal(packet.extractionVersion, "R15M2B_orvi_real_pdf_layout_aware");
 assert.equal(Object.hasOwn(packet, "rawText"), false);
 assert.equal(Object.hasOwn(packet.nativeResult, "rawText"), false);
 assert.equal(
@@ -127,7 +169,7 @@ assert.equal(selectedPacket.family, "ORVI");
 assert.equal(selectedPacket.productIntelligence.schema.id, "forge.product_intelligence.orvi");
 
 assert.match(page, /accept="\.json,application\/json,\.pdf,application\/pdf"/);
-assert.match(page, /forge-pdf-browser-parser\.js\?v=r15m2a_orvi_direct_pdf_20260712_1/);
+assert.match(page, /forge-pdf-browser-parser\.js\?v=r15m2b_orvi_pdf_recovery_ui_20260713_1/);
 assert.match(browserParserSource, /installPdfInputInterceptor107z15p2R11E\(\)/);
 assert.match(browserParserSource, /convertPdfInputToJsonChange107z15p2R11E\(input, file\)/);
 assert.match(browserParserSource, /new File\([\s\S]*application\/json/);
@@ -139,6 +181,8 @@ console.log("PASS R15M2A ORVI direct PDF browser routing", {
   routePrecedence: "ORVI_SEGUBECA_IMAGINA_SER_VIDA_MUJER",
   canonicalParserUsed: true,
   canonicalMapperUsed: true,
+  positionedPdfJsItemsPreserveColumns: true,
+  coverageContractStillRequired: true,
   productIntelligenceAttached: true,
   jsonRequiredForUserFlow: false,
   recommendation: packet.recommendation,

@@ -1,7 +1,7 @@
 import {
   benefitBlockKey107z15p2R9E,
   normalizeBenefitLayout107z15p2R9E
-} from "./forge-benefit-summary-layout.js?v=r15m2_orvi_recovery_20260712_1";
+} from "./forge-benefit-summary-layout.js?v=r15m2b_orvi_pdf_recovery_ui_20260713_1";
 import {
   createDashboardChip,
   createMetricRow,
@@ -25,7 +25,7 @@ import {
   buildOrviDashboardModel,
   isOrviProduct,
   renderOrviDashboard
-} from "./forge-orvi-product-dashboard-adapter.js?v=r15m2_orvi_recovery_20260712_1";
+} from "./forge-orvi-product-dashboard-adapter.js?v=r15m2b_orvi_pdf_recovery_ui_20260713_1";
 
 
 function hasValue(value) {

@@ -11810,6 +11810,31 @@ Status: `PASS_DIRECT_PDF_SELECTOR_AND_BROWSER_PARSER_ROUTING / PENDING_USER_REVI
 - Private real-PDF structural regression: PASS, with sanitized boolean output only.
 - Browser automation: unavailable in the current Termux Chromium installation; no screenshots or visual acceptance claimed.
 - Manual visual acceptance: `PENDING_USER_REVIEW`.
-- Next: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+- Next: `R15M2B_ORVI_REAL_PDF_EXTRACTION_PROJECTED_RECOVERY_MATH_AND_PROTECTION_UI_REPAIR`.
 
 <!-- FORGE:R15M2A_ORVI_DIRECT_PDF_ROUTING:END -->
+
+<!-- FORGE:R15M2B_ORVI_REAL_PDF_AND_PROJECTED_RECOVERY_REPAIR:START -->
+## Product Intelligence / ORVI R15M2B
+
+Status: `PASS_REAL_PDF_EXTRACTION_PROJECTED_RECOVERY_AND_PROTECTION_UI_REPAIR / PENDING_USER_REVIEW`
+
+- The existing selector accepts the real ORVI PDF through PDF.js and content-based detection.
+- Browser row extraction preserves page and column layout from positioned PDF.js items.
+- The canonical parser returns at least one real source coverage; the coverage contract is unchanged and no coverage is invented.
+- Canonical Product Intelligence, parser and mapper ownership remain unchanged.
+- Protection contracted is full-width with integrated current MXN and compact currency/payment-term metadata.
+- Future protection is full-width and responsive across desktop, tablet and mobile.
+- Guaranteed-recovery cards contain exactly six rows and end at `UDI proyectada`.
+- `Valor en efectivo` and the rescue-plus-cash explanation are removed from presentation.
+- Surrender value displays source UDI only.
+- Projected recovery uses source recovery UDI multiplied by the full stored projected UDI rate.
+- Projected difference and projected percentage use current contributed MXN as the comparison base.
+- Projected percentage remains `comparison_only_not_investment_return`.
+- Real Chromium inspection and nine external screenshots pass with no horizontal overflow.
+- Rate cache, package configuration and other products remain unchanged.
+- Recommendation remains `null`; human decision remains required.
+- Manual visual acceptance remains `PENDING_USER_REVIEW`.
+- Next: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+
+<!-- FORGE:R15M2B_ORVI_REAL_PDF_AND_PROJECTED_RECOVERY_REPAIR:END -->

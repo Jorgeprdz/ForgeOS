@@ -259,28 +259,29 @@ const recoveryCards = udiModel.sections.filter(
 const requiredLabels = [
   "Total aportado",
   "Valor de rescate",
-  "Valor en efectivo",
   "Recuperación total",
-  "Diferencia actual",
-  "Porcentaje de recuperación",
+  "Diferencia proyectada",
+  "Porcentaje de recuperación proyectado",
   "UDI proyectada",
 ];
 for (const card of recoveryCards) {
-  assert.equal(card.items.length, 7);
+  assert.equal(card.items.length, 6);
   assert.deepEqual(card.items.map((entry) => entry.label), requiredLabels);
   assert.equal(card.items.at(-1).label, "UDI proyectada");
-  assert.equal(
-    card.items.some((entry) => /proyectad[oa]$/i.test(entry.label) && entry.label !== "UDI proyectada"),
-    false,
-  );
+  assert.equal(card.items.some((entry) => entry.label === "Valor en efectivo"), false);
+  assert.equal(card.items.some((entry) => entry.label === "Diferencia actual"), false);
   const surrender = card.items.find((entry) => entry.label === "Valor de rescate");
   assert.match(surrender.value, /UDI$/);
   assert.doesNotMatch(surrender.value, /MXN/);
 }
 const firstPercentage = recoveryCards[0].items.find(
-  (entry) => entry.label === "Porcentaje de recuperación",
+  (entry) => entry.label === "Porcentaje de recuperación proyectado",
 );
-assert.equal(firstPercentage.value, `${((10 * 777) / 12345 * 100).toLocaleString("es-MX", { maximumFractionDigits: 2 })}%`);
+const firstCheckpoint = viewModel("UDI").views.guaranteed_recovery.checkpoints[0];
+const firstProjectedRecovery =
+  firstCheckpoint.source_currency.total_recovery.value *
+  firstCheckpoint.future_mxn.projected_rate.value;
+assert.equal(firstPercentage.value, `${(firstProjectedRecovery / 12345 * 100).toLocaleString("es-MX", { maximumFractionDigits: 2 })}%`);
 assert.notEqual(
   firstPercentage.value,
   `${viewModel("UDI").views.guaranteed_recovery.checkpoints[0].source_currency.recovery_percentage}%`,
@@ -291,8 +292,54 @@ assert.equal(
 );
 assert.equal(
   firstPercentage.evidence.help,
-  "Recuperación total MXN ÷ total aportado MXN.",
+  "Recuperación proyectada MXN ÷ total aportado MXN.",
 );
+assert.equal(firstPercentage.evidence.not_investment_return, true);
+
+const precisionViewModel = viewModel("UDI");
+precisionViewModel.checkpoint_years = [25];
+precisionViewModel.views.guaranteed_recovery.checkpoints = [
+  checkpoint(25, "UDI"),
+];
+const precisionCheckpoint =
+  precisionViewModel.views.guaranteed_recovery.checkpoints[0];
+precisionCheckpoint.source_currency.total_recovery = money(58590, "UDI");
+precisionCheckpoint.current_mxn.cumulative_paid = money(519905.87, "MXN");
+precisionCheckpoint.current_mxn.total_recovery = money(1496740.5, "MXN");
+precisionCheckpoint.future_mxn.projected_rate = {
+  value: 25.39503,
+  currency: "MXN_PER_UDI",
+};
+const precisionModel = buildOrviDashboardModel({
+  orviDashboardViewModel: precisionViewModel,
+});
+const precisionRows = precisionModel.sections.find(
+  (entry) => entry.kind === "guaranteed_recovery",
+).items;
+const projectedRecovery = precisionRows.find(
+  (entry) => entry.label === "Recuperación total",
+);
+const projectedDifference = precisionRows.find(
+  (entry) => entry.label === "Diferencia proyectada",
+);
+const projectedPercentage = precisionRows.find(
+  (entry) => entry.label === "Porcentaje de recuperación proyectado",
+);
+assert.match(projectedRecovery.value, /58,590 UDI/);
+assert.match(projectedRecovery.value, /≈ \$1,487,894\.81 MXN/);
+assert.doesNotMatch(projectedRecovery.value, /1,496,740\.5/);
+assert.equal(projectedRecovery.evidence.result_value, 58590 * 25.39503);
+assert.equal(
+  projectedDifference.evidence.result_value,
+  58590 * 25.39503 - 519905.87,
+);
+assert.equal(
+  projectedPercentage.evidence.result_value,
+  (58590 * 25.39503 / 519905.87) * 100,
+);
+assert.equal(projectedDifference.value, "≈ $967,988.94 MXN");
+assert.equal(projectedPercentage.value, "286.19%");
+assert.equal(projectedPercentage.evidence.classification, "comparison_only_not_investment_return");
 
 for (const invalidPaid of [0, null]) {
   const pendingViewModel = viewModel("UDI");
@@ -303,9 +350,35 @@ for (const invalidPaid of [0, null]) {
   });
   const pendingPercentage = pendingModel.sections
     .find((entry) => entry.kind === "guaranteed_recovery")
-    .items.find((entry) => entry.label === "Porcentaje de recuperación");
-  assert.equal(pendingPercentage.value, "Pendiente: faltan valores MXN válidos");
+    .items.find((entry) => entry.label === "Porcentaje de recuperación proyectado");
+  assert.equal(pendingPercentage.value, "Pendiente: faltan valores proyectados válidos");
 }
+const missingRateViewModel = viewModel("UDI");
+missingRateViewModel.views.guaranteed_recovery.checkpoints[0].future_mxn.projected_rate = null;
+const missingRateRows = buildOrviDashboardModel({
+  orviDashboardViewModel: missingRateViewModel,
+}).sections.find((entry) => entry.kind === "guaranteed_recovery").items;
+assert.equal(
+  missingRateRows.find((entry) => entry.label === "Recuperación total").value,
+  "8,000 UDI · Pendiente: faltan valores proyectados válidos",
+);
+assert.equal(
+  missingRateRows.find((entry) => entry.label === "Diferencia proyectada").value,
+  "Pendiente: faltan valores proyectados válidos",
+);
+const zeroRateViewModel = viewModel("UDI");
+zeroRateViewModel.views.guaranteed_recovery.checkpoints[0].future_mxn.projected_rate = { value: 0 };
+const zeroRateRows = buildOrviDashboardModel({
+  orviDashboardViewModel: zeroRateViewModel,
+}).sections.find((entry) => entry.kind === "guaranteed_recovery").items;
+assert.equal(
+  zeroRateRows.find((entry) => entry.label === "Recuperación total").value,
+  "8,000 UDI · Pendiente: faltan valores proyectados válidos",
+);
+assert.equal(
+  missingRateRows.find((entry) => entry.label === "Porcentaje de recuperación proyectado").value,
+  "Pendiente: faltan valores proyectados válidos",
+);
 assert.equal(
   formatOrviMoney(money(500000, "MXN"), { approximate: true }),
   "≈ $500,000 MXN",
@@ -338,10 +411,15 @@ assert.equal(
 const explanationNodes = dashboard.children.filter(
   (child) => child.dataset.forgeOrviRecoveryExplanation === "true",
 );
-assert.equal(explanationNodes.length, 1);
-assert.equal(
-  explanationNodes[0].textContent,
-  "Recuperación total = valor de rescate + valor en efectivo.",
+assert.equal(explanationNodes.length, 0);
+const protectionModelSection = udiModel.sections.find(
+  (entry) => entry.kind === "protection",
+);
+assert.equal(protectionModelSection.title, "Protección contratada");
+assert.equal(protectionModelSection.presentation, "orvi_protection_summary");
+assert.deepEqual(
+  protectionModelSection.items.map((entry) => entry.role),
+  ["primary", "metadata", "metadata"],
 );
 
 const usdModel = buildOrviDashboardModel(readiness("USD"));
@@ -357,11 +435,7 @@ assert.equal(
 assert.ok(
   usdModel.sections
     .filter((entry) => entry.kind === "guaranteed_recovery")
-    .every((entry) =>
-      entry.items.some((value) =>
-        value.value.includes("falta un supuesto futuro USD/MXN"),
-      ),
-    ),
+    .every((entry) => entry.items.length === 6 && entry.items.at(-1).value === "No aplica para moneda contratada USD"),
 );
 assert.equal(buildOrviDashboardModel({ product: "ORVI 99" }), null);
 
@@ -373,9 +447,9 @@ console.log("PASS R15K ORVI reusable product dashboard adapter", {
   recoveryCards: udiModel.sections.filter(
     (entry) => entry.kind === "guaranteed_recovery",
   ).length,
-  recoveryVisibleRows: 7,
-  recoveryPercentageSource: "current_mxn",
-  recoveryExplanationInstances: 1,
+  recoveryVisibleRows: 6,
+  recoveryPercentageSource: "projected_recovery_mxn",
+  recoveryExplanationInstances: 0,
   usdFutureBlocked: true,
   recommendation: udiModel.recommendation,
 });
