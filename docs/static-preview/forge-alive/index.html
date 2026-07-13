@@ -29,9 +29,9 @@
   <link rel="stylesheet" href="./forge-alive-home-restoration-r16c.css?v=r16c_home_restoration_20260713_1">
   <link rel="stylesheet" href="./forge-alive-home-command-bar-micro-fix-r16c1.css?v=r16c5f-ios-frost-no-active-bubble">
   <link rel="stylesheet" href="assets/forge-quote-preview-confirmation-modal-107q.css" data-forge-107q-confirmation-modal-css>
-  <link rel="stylesheet" href="./forge-alive-nav-pill-active-selector-r16c5h.css?v=r16c5i-home-grid-normalization">
+  <link rel="stylesheet" href="./forge-alive-mobile-nav-r16c5j.css?v=r16c5j-clean-nav">
 </head>
-<body data-forge-shared-nav-page-r16c5h="home">
+<body data-forge-mobile-nav-page-r16c5j="home">
   <main class="phone-shell" aria-label="Forge Alive vista estática">
 
   <!-- FORGEOS:DESKTOP_COMMAND_WORKSPACE_056Y:START -->
@@ -632,20 +632,40 @@
 
     <div data-command-mobile-slot></div>
 
-    <nav class="bottom-nav" aria-label="Navegación principal" data-forge-home-navigation-r16c="canonical" data-forge-shared-nav-r16c5h="true" data-forge-active-key="inicio">
-      <button type="button" class="active" data-forge-home-section="inicio" aria-current="page" data-forge-nav-key="inicio">Inicio</button>
-      <button type="button" data-forge-home-section="pipeline" data-forge-nav-key="pipeline">Pipeline</button>
-      <button type="button" data-forge-home-section="clientes" data-forge-nav-key="clientes">Clientes</button>
-      <a
-   class="forge-home-quote-nav-r16c5" data-forge-nav-key="cotizaciones"
-   href="./nueva-cotizacion/?v=r16c5a-bottom-nav-alignment"
-   aria-label="Abrir Nueva Cotización"
-   data-forge-local-navigation-only="true"
-   data-forge-dedicated-static-route="true"
-   data-forge-home-quote-nav-r16c5a="canonical"
-  >Cotizaciones</a>
-      <button type="button" data-forge-home-section="mas" data-forge-nav-key="mas">Más</button>
-    </nav>
+    <nav
+  class="bottom-nav forge-mobile-nav-r16c5j"
+  aria-label="Navegación principal"
+  data-forge-home-navigation-r16c="canonical"
+  data-forge-mobile-nav-r16c5j="true"
+  data-forge-active-key="inicio"
+>
+  <span
+    class="forge-mobile-nav-r16c5j__selector"
+    aria-hidden="true"
+  ></span>
+  <div class="forge-mobile-nav-r16c5j__items">
+    <button type="button" class="forge-mobile-nav-r16c5j__item" data-forge-nav-key="inicio" data-forge-home-section="inicio" aria-current="page">
+      <span class="forge-mobile-nav-r16c5j__icon" aria-hidden="true">⌂</span>
+      <span class="forge-mobile-nav-r16c5j__label">Inicio</span>
+    </button>
+    <button type="button" class="forge-mobile-nav-r16c5j__item" data-forge-nav-key="pipeline" data-forge-home-section="pipeline">
+      <span class="forge-mobile-nav-r16c5j__icon" aria-hidden="true">◇</span>
+      <span class="forge-mobile-nav-r16c5j__label">Pipeline</span>
+    </button>
+    <button type="button" class="forge-mobile-nav-r16c5j__item" data-forge-nav-key="clientes" data-forge-home-section="clientes">
+      <span class="forge-mobile-nav-r16c5j__icon" aria-hidden="true">◎</span>
+      <span class="forge-mobile-nav-r16c5j__label">Clientes</span>
+    </button>
+    <a class="forge-mobile-nav-r16c5j__item" data-forge-nav-key="cotizaciones" href="./nueva-cotizacion/?v=r16c5j-clean-nav" data-forge-local-navigation-only="true" data-forge-dedicated-static-route="true">
+      <span class="forge-mobile-nav-r16c5j__icon" aria-hidden="true">▣</span>
+      <span class="forge-mobile-nav-r16c5j__label">Cotizaciones</span>
+    </a>
+    <button type="button" class="forge-mobile-nav-r16c5j__item" data-forge-nav-key="mas" data-forge-home-section="mas">
+      <span class="forge-mobile-nav-r16c5j__icon" aria-hidden="true">•••</span>
+      <span class="forge-mobile-nav-r16c5j__label">Más</span>
+    </button>
+  </div>
+</nav>
   </main>
 
   <script src="./sample-data.js"></script>
@@ -670,6 +690,6 @@
   <script src="./forge-mobile-widget-grid-polish-057l.js?v=r16c_home_restoration_20260713_1" defer></script>
   <script src="./forge-mobile-widget-grid-dedup-057m.js?v=r16c_home_restoration_20260713_1" defer></script>
   <script src="assets/forge-quote-preview-confirmation-modal-107q.js" defer data-forge-107q-confirmation-modal-js></script>
-  <script defer src="./forge-alive-nav-pill-active-selector-r16c5h.js?v=r16c5h-shared-nav-selector"></script>
+  <script defer src="./forge-alive-mobile-nav-r16c5j.js?v=r16c5j-clean-nav"></script>
 </body>
 </html>

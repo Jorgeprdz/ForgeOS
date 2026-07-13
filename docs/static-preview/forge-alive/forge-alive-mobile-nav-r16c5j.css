@@ -1,0 +1,337 @@
+/* FORGEOS:R16C5J_NAV_PILL_CLEAN_REWRITE_FROM_ZERO:START */
+
+:root {
+  --forge-mobile-nav-r16c5j-height: 76px;
+  --forge-mobile-nav-r16c5j-bottom:
+    max(14px, env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 900px) {
+  body[data-forge-mobile-nav-page-r16c5j] {
+    padding-bottom:
+      calc(
+        var(--forge-mobile-nav-r16c5j-height) +
+        env(safe-area-inset-bottom, 0px) +
+        28px
+      ) !important;
+  }
+
+  .forge-mobile-nav-r16c5j {
+    position: fixed !important;
+    z-index: 180 !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: var(--forge-mobile-nav-r16c5j-bottom) !important;
+    display: block !important;
+    visibility: visible !important;
+    box-sizing: border-box !important;
+    width: min(92vw, 404px) !important;
+    height: var(--forge-mobile-nav-r16c5j-height) !important;
+    min-height: var(--forge-mobile-nav-r16c5j-height) !important;
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    border: 1px solid rgba(238, 247, 255, 0.30) !important;
+    border-radius: 999px !important;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(214, 229, 245, 0.16) 0%,
+        rgba(110, 137, 170, 0.11) 30%,
+        rgba(31, 52, 80, 0.18) 58%,
+        rgba(7, 18, 36, 0.34) 100%
+      ) !important;
+    background-color: rgba(13, 27, 48, 0.34) !important;
+    -webkit-backdrop-filter:
+      blur(44px)
+      saturate(180%)
+      brightness(108%)
+      contrast(102%) !important;
+    backdrop-filter:
+      blur(44px)
+      saturate(180%)
+      brightness(108%)
+      contrast(102%) !important;
+    box-shadow:
+      0 20px 54px rgba(0, 0, 0, 0.44),
+      0 6px 18px rgba(0, 0, 0, 0.22),
+      0 0 30px rgba(109, 217, 255, 0.09),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.065),
+      inset 0 -1px 0 rgba(3, 12, 27, 0.42) !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+    pointer-events: auto !important;
+  }
+
+  .forge-mobile-nav-r16c5j::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    border-radius: inherit !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(241, 248, 255, 0.13) 0%,
+        rgba(225, 239, 252, 0.075) 32%,
+        rgba(169, 203, 230, 0.035) 62%,
+        rgba(255, 255, 255, 0.015) 100%
+      ) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 0 rgba(1, 8, 20, 0.28) !important;
+  }
+
+  .forge-mobile-nav-r16c5j::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 0 !important;
+    left: 10px !important;
+    right: 10px !important;
+    top: 2px !important;
+    height: 46% !important;
+    border-radius: 999px !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(255, 255, 255, 0.045) 48%,
+        rgba(255, 255, 255, 0) 100%
+      ) !important;
+    opacity: 0.72 !important;
+  }
+
+  .forge-mobile-nav-r16c5j__selector {
+    position: absolute !important;
+    z-index: 1 !important;
+    left: 0 !important;
+    top: 0 !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: var(--forge-mobile-nav-selector-w-r16c5j, 0px) !important;
+    height: var(--forge-mobile-nav-selector-h-r16c5j, 0px) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 1px solid rgba(245, 248, 255, 0.18) !important;
+    border-radius: 24px !important;
+    background:
+      radial-gradient(
+        circle at 28% 12%,
+        rgba(255, 235, 174, 0.18),
+        transparent 38%
+      ),
+      linear-gradient(
+        160deg,
+        rgba(245, 248, 255, 0.115),
+        rgba(116, 193, 227, 0.055)
+      ) !important;
+    -webkit-backdrop-filter:
+      blur(18px)
+      saturate(165%) !important;
+    backdrop-filter:
+      blur(18px)
+      saturate(165%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 0 rgba(4, 14, 30, 0.22),
+      0 8px 24px rgba(0, 0, 0, 0.15),
+      0 0 22px rgba(247, 213, 132, 0.06) !important;
+    opacity: 0 !important;
+    transform:
+      translate3d(
+        var(--forge-mobile-nav-selector-x-r16c5j, 0px),
+        var(--forge-mobile-nav-selector-y-r16c5j, 0px),
+        0
+      )
+      scale(0.94) !important;
+    transform-origin: center !important;
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      height 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 220ms ease !important;
+    pointer-events: none !important;
+    will-change: transform, width, height, opacity;
+  }
+
+  .forge-mobile-nav-r16c5j[data-forge-mobile-nav-ready-r16c5j="true"]
+    > .forge-mobile-nav-r16c5j__selector {
+    opacity: 1 !important;
+    transform:
+      translate3d(
+        var(--forge-mobile-nav-selector-x-r16c5j, 0px),
+        var(--forge-mobile-nav-selector-y-r16c5j, 0px),
+        0
+      )
+      scale(1) !important;
+  }
+
+  .forge-mobile-nav-r16c5j__items {
+    position: relative !important;
+    z-index: 2 !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-template-rows: 1fr !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 3px !important;
+  }
+
+  .forge-mobile-nav-r16c5j__item {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: grid !important;
+    grid-template-rows: 25px 18px !important;
+    place-items: center !important;
+    align-content: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    min-height: 58px !important;
+    margin: 0 !important;
+    padding: 4px 1px !important;
+    inset: auto !important;
+    border: 0 !important;
+    border-radius: 22px !important;
+    outline: 0 !important;
+    color: rgba(220, 230, 244, 0.72) !important;
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    translate: none !important;
+    font:
+      760 11px/1 system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    overflow: visible !important;
+  }
+
+  .forge-mobile-nav-r16c5j__icon,
+  .forge-mobile-nav-r16c5j__label {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: currentColor !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  .forge-mobile-nav-r16c5j__icon {
+    font-size: 21px !important;
+    font-weight: 500 !important;
+    line-height: 24px !important;
+  }
+
+  .forge-mobile-nav-r16c5j__label {
+    max-width: 100% !important;
+    font-size: 11px !important;
+    font-weight: 760 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    overflow: visible !important;
+  }
+
+  .forge-mobile-nav-r16c5j__item[data-forge-nav-key="cotizaciones"]
+    .forge-mobile-nav-r16c5j__label {
+    letter-spacing: -0.52px !important;
+  }
+
+  .forge-mobile-nav-r16c5j__item.active,
+  .forge-mobile-nav-r16c5j__item[aria-current="page"] {
+    color: #f7d584 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow:
+      0 0 10px rgba(247, 213, 132, 0.22),
+      0 0 20px rgba(247, 213, 132, 0.10) !important;
+  }
+
+  .forge-mobile-nav-r16c5j__item:active {
+    transform: scale(0.97) !important;
+  }
+
+  .forge-mobile-nav-r16c5j__item:focus-visible {
+    outline: 2px solid rgba(118, 219, 255, 0.78) !important;
+    outline-offset: -3px !important;
+  }
+
+  @media (orientation: landscape) {
+    :root {
+      --forge-mobile-nav-r16c5j-height: 64px;
+    }
+
+    .forge-mobile-nav-r16c5j {
+      width: min(74vw, 660px) !important;
+      padding-block: 4px !important;
+    }
+
+    .forge-mobile-nav-r16c5j__item {
+      min-height: 52px !important;
+      grid-template-rows: 22px 17px !important;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .forge-mobile-nav-r16c5j__label {
+      font-size: 10px !important;
+    }
+
+    .forge-mobile-nav-r16c5j__item[data-forge-nav-key="cotizaciones"]
+      .forge-mobile-nav-r16c5j__label {
+      font-size: 9px !important;
+      letter-spacing: -0.58px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .forge-mobile-nav-r16c5j__selector {
+      transition-duration: 100ms !important;
+    }
+
+    .forge-mobile-nav-r16c5j__item {
+      transition: none !important;
+    }
+  }
+}
+
+@media (min-width: 901px) {
+  .forge-mobile-nav-r16c5j {
+    display: none !important;
+  }
+}
+
+@supports not (
+  (-webkit-backdrop-filter: blur(1px)) or
+  (backdrop-filter: blur(1px))
+) {
+  .forge-mobile-nav-r16c5j {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(66, 85, 111, 0.94),
+        rgba(10, 24, 45, 0.96)
+      ) !important;
+  }
+}
+
+/* FORGEOS:R16C5J_NAV_PILL_CLEAN_REWRITE_FROM_ZERO:END */
