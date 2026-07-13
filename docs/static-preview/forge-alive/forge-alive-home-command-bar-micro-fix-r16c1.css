@@ -529,13 +529,11 @@ html.forge-mobile-widget-grid-polished-057l .primary-card.glass .fake-cta {
   Halo orgánico detrás del orb canónico.
   No modifica la burbuja, el bow tie ni la transición a command bar.
 */
-[data-command-orb-layer]
-[data-forge-home-command-orb-r16c="canonical"] {
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] {
   overflow: visible !important;
 }
 
-[data-command-orb-layer]
-[data-forge-home-command-orb-r16c="canonical"]
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"]
 .command-orb {
   position: relative !important;
   isolation: isolate !important;
@@ -546,8 +544,7 @@ html.forge-mobile-widget-grid-polished-057l .primary-card.glass .fake-cta {
   Mancha asimétrica de luz:
   varios focos de gradiente, borde blando y forma orgánica mutable.
 */
-[data-command-orb-layer]
-[data-forge-home-command-orb-r16c="canonical"]
+[data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"]
 .command-orb::before {
   content: "" !important;
   position: absolute !important;
@@ -659,8 +656,7 @@ html.forge-mobile-widget-grid-polished-057l .primary-card.glass .fake-cta {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-command-orb-layer]
-  [data-forge-home-command-orb-r16c="canonical"]
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"]
   .command-orb::before {
     animation: none !important;
     opacity: 0.58 !important;
