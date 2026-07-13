@@ -1533,3 +1533,71 @@ body[data-forge-saas-active-module-r16c5l="cotizaciones"]
 }
 
 /* FORGEOS:R16F1A_DESKTOP_TABLET_NEW_QUOTE_VISIBILITY_REPAIR:END */
+
+/* FORGEOS:R16F2_DESKTOP_TABLET_NESTED_MAIN_LAYOUT_RESET:START */
+
+/*
+  El root de la cotización es un <main> anidado. Las reglas globales de
+  escritorio lo convierten en una superficie de workspace. Este reset
+  recupera exclusivamente el flujo canónico de Cotizaciones activa.
+*/
+@media (min-width: 768px) {
+  body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+    main.fq-page-105dr[data-forge-module="dedicated-new-quote-static-route"] {
+    display: block !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    grid-auto-columns: auto !important;
+    grid-auto-rows: auto !important;
+    grid-auto-flow: row !important;
+    align-items: initial !important;
+    align-content: initial !important;
+    justify-items: initial !important;
+    justify-content: initial !important;
+    gap: 0 !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    width: min(1180px, calc(100% - 32px)) !important;
+    max-width: 1180px !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    padding: clamp(42px, 5vh, 64px) 0 52px !important;
+    overflow: visible !important;
+  }
+
+  body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+    main.fq-page-105dr[data-forge-module="dedicated-new-quote-static-route"]
+    > .fq-top-105dr {
+    display: flex !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 0 18px !important;
+  }
+
+  body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+    main.fq-page-105dr[data-forge-module="dedicated-new-quote-static-route"]
+    > .fq-shell-105dr {
+    display: block !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+}
+
+/* FORGEOS:R16F2_DESKTOP_TABLET_NESTED_MAIN_LAYOUT_RESET:END */
