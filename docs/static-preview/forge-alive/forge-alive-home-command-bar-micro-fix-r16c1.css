@@ -402,52 +402,102 @@ html.forge-mobile-widget-grid-polished-057l .primary-card.glass .fake-cta {
 
 /* FORGEOS:R16C5A_BOTTOM_NAV_QUOTE_ITEM_ALIGNMENT:END */
 
-/* FORGEOS:R16C5D_NAV_PILL_GLASS_BLUR_AND_SHADOW:START */
-/*
-  Solo mejora visual de la nav pill flotante.
-  No modifica el orb ni la command bar.
-*/
-.forge-floating-nav-pill,
-.floating-nav-pill,
-.home-floating-nav-pill,
-[data-forge-floating-nav],
-[data-forge-bottom-nav-pill],
-.forge-alive-bottom-nav {
-  background: linear-gradient(
-    180deg,
-    rgba(42, 58, 86, 0.48) 0%,
-    rgba(17, 30, 54, 0.42) 100%
-  ) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(155%) !important;
-  backdrop-filter: blur(18px) saturate(155%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.11) !important;
-  box-shadow:
-    0 14px 38px rgba(0, 0, 0, 0.34),
-    0 2px 10px rgba(0, 0, 0, 0.16),
-    0 0 0 1px rgba(240, 210, 130, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
-}
+/* FORGEOS:R16C5E_NAV_PILL_IOS_GLASS_SELECTOR_FIX:START */
 
-.forge-floating-nav-pill::before,
-.floating-nav-pill::before,
-.home-floating-nav-pill::before,
-[data-forge-floating-nav]::before,
-[data-forge-bottom-nav-pill]::before,
-.forge-alive-bottom-nav::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  border-radius: inherit !important;
-  pointer-events: none !important;
+/*
+  Cristal aplicado al selector real de la nav pill.
+  Solo cambia la superficie visual, no su geometría ni navegación.
+*/
+.bottom-nav[data-forge-home-navigation-r16c="canonical"] {
+  isolation: isolate !important;
+  overflow: hidden !important;
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 45%,
-      rgba(255, 255, 255, 0.00) 100%
+      rgba(63, 82, 111, 0.24) 0%,
+      rgba(20, 38, 65, 0.18) 48%,
+      rgba(7, 19, 38, 0.26) 100%
     ) !important;
+  background-color: rgba(10, 24, 44, 0.18) !important;
+  background-clip: padding-box !important;
+  -webkit-backdrop-filter:
+    blur(32px)
+    saturate(190%)
+    contrast(108%) !important;
+  backdrop-filter:
+    blur(32px)
+    saturate(190%)
+    contrast(108%) !important;
+  border: 1px solid rgba(225, 240, 255, 0.24) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    inset 0 -1px 0 rgba(6,16,34,0.25) !important;
+    0 18px 48px rgba(0, 0, 0, 0.42),
+    0 6px 18px rgba(0, 0, 0, 0.22),
+    0 0 28px rgba(92, 211, 255, 0.10),
+    0 0 0 1px rgba(255, 220, 139, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    inset 0 -1px 0 rgba(6, 15, 31, 0.36) !important;
 }
-/* FORGEOS:R16C5D_NAV_PILL_GLASS_BLUR_AND_SHADOW:END */
+
+.bottom-nav[data-forge-home-navigation-r16c="canonical"]::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(
+      circle at 18% 0%,
+      rgba(255, 237, 186, 0.16),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 82% 100%,
+      rgba(102, 218, 255, 0.15),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.10) 0%,
+      rgba(255, 255, 255, 0.025) 42%,
+      rgba(255, 255, 255, 0) 72%
+    ) !important;
+  filter: none !important;
+  opacity: 1 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(2, 10, 23, 0.30) !important;
+}
+
+.bottom-nav[data-forge-home-navigation-r16c="canonical"]::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 1px !important;
+  z-index: -1 !important;
+  border-radius: 999px !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(
+      110deg,
+      rgba(255, 255, 255, 0.055) 0%,
+      rgba(255, 255, 255, 0.00) 38%,
+      rgba(110, 220, 255, 0.045) 100%
+    ) !important;
+  opacity: 1 !important;
+}
+
+@supports not (
+  (-webkit-backdrop-filter: blur(1px)) or
+  (backdrop-filter: blur(1px))
+) {
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(43, 61, 89, 0.82),
+        rgba(8, 22, 43, 0.84)
+      ) !important;
+  }
+}
+
+/* FORGEOS:R16C5E_NAV_PILL_IOS_GLASS_SELECTOR_FIX:END */
