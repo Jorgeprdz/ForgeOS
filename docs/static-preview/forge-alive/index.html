@@ -1485,5 +1485,587 @@
 <script type="module" src="./quote-preview-live/forge-accepted-quote-bridge.js?v=r16a_quote_intake_empty_state_20260713_1" data-forge-saas-module-asset-r16c5l="true"></script>
 <script defer src="./forge-alive-saas-router-r16c5l.js?v=r16c5n-dom-isolation"></script>
 <!-- FORGEOS:R16C5L_QUOTE_ASSETS:END -->
+
+<!-- FORGEOS:R16E1_NEW_QUOTE_RUNTIME_PARITY_MOUNT:START -->
+<!-- Runtime funcional extraído del standalone canónico. -->
+<script src="../quote-preview-live/forge-quote-intake-state.js?v=r16a_quote_intake_empty_state_20260713_1"></script>
+<script src="../quote-preview-live/forge-quote-preview-bundle.js"></script>
+<script type="module" src="../quote-preview-live/forge-quote-calculators.js"></script>
+<script type="module" src="../quote-preview-live/forge-udi-mxn-runtime.js"></script>
+<script type="module" src="../quote-preview-live/forge-quote-benefit-summary.js"></script>
+<script type="module" src="../quote-preview-live/forge-accepted-quote-adapter.js?v=r14g_segubeca_renderer_20260712_1"></script>
+<script type="module" src="../quote-preview-live/forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1"></script>
+<script type="module" src="../quote-preview-live/forge-benefit-summary-layout.js?v=r16b_unified_dashboard_20260713_1"></script>
+<script type="module" src="../quote-preview-live/forge-pdf-browser-parser.js?v=r15m2c_orvi_responsive_copy_20260713_1"></script>
+<script type="module" src="../quote-preview-live/forge-accepted-quote-bridge.js?v=r16a_quote_intake_empty_state_20260713_1"></script>
+<script>
+"use strict";
+
+(() => {
+  const CONTRACT_ID =
+    "QUOTE_PREVIEW_EXISTING_NUEVA_COTIZACION_REAL_PACKET_INTEGRATION_V1";
+
+  const input = document.getElementById(
+    "fq-solution-online-pdf-105dr"
+  );
+  const submit = document.querySelector(
+    ".fq-send-pdf-105dr"
+  );
+  const status = document.querySelector(
+    ".fq-file-status-105dr"
+  );
+  const label = document.querySelector(
+    'label[for="fq-solution-online-pdf-105dr"]'
+  );
+  const uploadSection =
+    input && input.closest("section");
+
+  if (!input || !submit || !status || !label) {
+    console.error(
+      `[${CONTRACT_ID}] Existing upload controls were not found.`
+    );
+    return;
+  }
+
+  function normalize(value) {
+    return String(value ?? "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function hasValue(value) {
+    return (
+      value !== null &&
+      value !== undefined &&
+      value !== ""
+    );
+  }
+
+  function formatNumber(value) {
+    if (!hasValue(value)) return "—";
+
+    const numeric = Number(
+      String(value).replace(/,/g, "")
+    );
+
+    if (!Number.isFinite(numeric)) {
+      return String(value);
+    }
+
+    return new Intl.NumberFormat("es-MX", {
+      maximumFractionDigits: 2,
+    }).format(numeric);
+  }
+
+  function formatAmount(value, currency) {
+    if (!hasValue(value)) return "—";
+
+    const amount = formatNumber(value);
+    return currency
+      ? `${amount} ${currency}`
+      : amount;
+  }
+
+  function fieldModel(currentPacket) {
+    const nativeResult =
+      currentPacket.nativeResult || {};
+    const context =
+      currentPacket.context || {};
+    const premiumTable =
+      nativeResult.premiumTable || {};
+
+    const family =
+      context.productFamily ??
+      context.product_family ??
+      nativeResult.detectedQuoteDomain ??
+      null;
+
+    return {
+      client: nativeResult.prospect ?? null,
+      family,
+      product: nativeResult.product ?? null,
+      plan: nativeResult.plan ?? null,
+      sumAssured: nativeResult.sumInsured ?? null,
+      annualPremium:
+        premiumTable.annual ??
+        nativeResult.totalAnnualPremium ??
+        null,
+      plannedAnnual:
+        Object.prototype.hasOwnProperty.call(
+          premiumTable,
+          "plannedAnnual"
+        )
+          ? premiumTable.plannedAnnual
+          : null,
+      annualAvePremium:
+        nativeResult.annualAvePremium ??
+        nativeResult.primaAveAnual ??
+        premiumTable.annualAve ??
+        null,
+      annualPremiumAccumulatedWithAve:
+        nativeResult.annualPremiumAccumulatedWithAve ??
+        nativeResult.primaTotalAcumuladaConAve ??
+        premiumTable.accumulatedWithAve ??
+        nativeResult.totalContributed ??
+        null,
+      paymentMode:
+        nativeResult.paymentMode ?? null,
+      currency:
+        nativeResult.currency ?? null,
+      coveragePeriod:
+        nativeResult.policyTerm ?? null,
+      paymentTerm:
+        nativeResult.paymentTerm ?? null,
+      baseAnnualPremium:
+        nativeResult.baseAnnualPremium ?? null,
+      retirementInterestRate:
+        nativeResult.retirementInterestRate ?? null,
+      retirementScenarioBase:
+        nativeResult.retirementScenarioBase ?? null,
+      retirementScenarioFavorable:
+        nativeResult.retirementScenarioFavorable ?? null,
+      retirementScenarioUnfavorable:
+        nativeResult.retirementScenarioUnfavorable ?? null,
+      guaranteePeriod:
+        nativeResult.guaranteePeriod ?? null,
+      quoteDate:
+        nativeResult.quoteDate ?? null,
+      advisor:
+        nativeResult.advisor ?? null,
+      totalContributed:
+        nativeResult.totalContributed ??
+        nativeResult.totalContributions ??
+        null,
+      totalRecovery:
+        nativeResult.totalRecovery ??
+        nativeResult.recoveryTotal ??
+        null,
+    };
+  }
+
+  function findLabelElements(labelTexts) {
+    const wanted = labelTexts.map(normalize);
+
+    return [
+      ...document.querySelectorAll(
+        "label, dt, th, h3, h4, strong, span, p, div"
+      ),
+    ].filter(element => {
+      const text = normalize(element.textContent);
+      if (!text || text.length > 90) return false;
+
+      return wanted.some(
+        target =>
+          text === target ||
+          text.startsWith(`${target}:`)
+      );
+    });
+  }
+
+  function assignFormControl(control, value) {
+    if (!control || !hasValue(value)) return false;
+
+    if (control.tagName === "SELECT") {
+      const wanted = normalize(value);
+      const option = [...control.options].find(
+        item =>
+          normalize(item.value) === wanted ||
+          normalize(item.textContent) === wanted
+      );
+
+      control.value = option
+        ? option.value
+        : String(value);
+    } else {
+      control.value = String(value);
+    }
+
+    control.dispatchEvent(
+      new Event("input", { bubbles: true })
+    );
+    control.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+
+    return true;
+  }
+
+  function assignNearLabel(labelTexts, value) {
+    if (!hasValue(value)) return 0;
+
+    let updates = 0;
+
+    for (const labelElement of findLabelElements(
+      labelTexts
+    )) {
+      if (
+        labelElement.tagName === "LABEL" &&
+        labelElement.htmlFor
+      ) {
+        const control = document.getElementById(
+          labelElement.htmlFor
+        );
+
+        if (
+          control &&
+          control.type !== "file" &&
+          assignFormControl(control, value)
+        ) {
+          updates += 1;
+          continue;
+        }
+      }
+
+      const container =
+        labelElement.closest(
+          "tr, li, dl > div, section, article, fieldset"
+        ) ||
+        labelElement.parentElement;
+
+      if (!container) continue;
+
+      const control = container.querySelector(
+        'input:not([type="file"]), select, textarea'
+      );
+
+      if (
+        control &&
+        assignFormControl(control, value)
+      ) {
+        updates += 1;
+        continue;
+      }
+
+      let valueElement =
+        labelElement.nextElementSibling;
+
+      if (
+        !valueElement ||
+        valueElement === labelElement
+      ) {
+        valueElement = container.querySelector(
+          "dd, output, [data-forge-value], " +
+          ".fq-value-105dr, " +
+          ".fq-summary-value-105dr"
+        );
+      }
+
+      if (
+        valueElement &&
+        !labelElement.contains(valueElement)
+      ) {
+        valueElement.textContent = String(value);
+        valueElement.setAttribute(
+          "data-forge-runtime-value",
+          "true"
+        );
+        updates += 1;
+      }
+    }
+
+    return updates;
+  }
+
+  function findSectionByHeading(headingText) {
+    const target = normalize(headingText);
+
+    const heading = [
+      ...document.querySelectorAll(
+        "h2, h3, h4"
+      ),
+    ].find(item =>
+      normalize(item.textContent).includes(target)
+    );
+
+    return heading
+      ? heading.closest("section, article, div")
+      : null;
+  }
+
+  function writeRuntimeGrid(
+    headingText,
+    entries,
+    emptyMessage
+  ) {
+    const section =
+      findSectionByHeading(headingText);
+
+    if (!section) return;
+
+    section
+      .querySelectorAll(
+        '[data-forge-runtime-grid="true"]'
+      )
+      .forEach(node => node.remove());
+
+    const wrapper =
+      document.createElement("div");
+    wrapper.className =
+      "fq-runtime-grid-107z15e8s";
+    wrapper.setAttribute(
+      "data-forge-runtime-grid",
+      "true"
+    );
+
+    const usable = entries.filter(
+      entry => hasValue(entry.value)
+    );
+
+    if (usable.length === 0) {
+      const message =
+        document.createElement("p");
+      message.className =
+        "fq-runtime-empty-107z15e8s";
+      message.textContent = emptyMessage;
+      wrapper.appendChild(message);
+    } else {
+      const list = document.createElement("dl");
+
+      for (const entry of usable) {
+        const term =
+          document.createElement("dt");
+        const detail =
+          document.createElement("dd");
+
+        term.textContent = entry.label;
+        detail.textContent = String(entry.value);
+
+        list.append(term, detail);
+      }
+
+      wrapper.appendChild(list);
+    }
+
+    section.appendChild(wrapper);
+  }
+
+  function setReadiness(message, state) {
+    const candidates = [
+      ...document.querySelectorAll(
+        "[data-forge-readiness], " +
+        ".fq-readiness-105dr, " +
+        ".fq-status-105dr"
+      ),
+    ];
+
+    const textMatch = [
+      ...document.querySelectorAll(
+        "p, span, strong, div"
+      ),
+    ].find(element => {
+      const text = normalize(element.textContent);
+      return (
+        text.length < 140 &&
+        (
+          text.includes("falta pdf") ||
+          text.includes("readiness") ||
+          text.includes("parser autorizado")
+        )
+      );
+    });
+
+    const target =
+      candidates[0] || textMatch;
+
+    if (target) {
+      target.textContent = message;
+      target.setAttribute(
+        "data-forge-state",
+        state
+      );
+    }
+  }
+
+  function missingFields(model) {
+    const required = [
+      ["Cliente", model.client],
+      ["Familia", model.family],
+      ["Producto", model.product],
+      ["Plan", model.plan],
+      ["Suma asegurada", model.sumAssured],
+      ["Prima anual", model.annualPremium],
+      ["Forma de pago", model.paymentMode],
+      ["Moneda", model.currency],
+      ["Vigencia", model.coveragePeriod],
+    ];
+
+    return required
+      .filter(([, value]) => !hasValue(value))
+      .map(([name]) => name);
+  }
+
+  function applyPacketToExistingPage(
+    currentPacket
+  ) {
+    const model = fieldModel(currentPacket);
+    const currency = model.currency;
+
+    assignNearLabel(
+      ["Cliente", "Asegurado"],
+      model.client
+    );
+    assignNearLabel(
+      ["Familia", "Familia de producto"],
+      model.family
+    );
+    assignNearLabel(
+      ["Producto"],
+      model.product
+    );
+    assignNearLabel(
+      ["Plan"],
+      model.plan
+    );
+    assignNearLabel(
+      ["Suma asegurada"],
+      formatAmount(
+        model.sumAssured,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Prima anual", "Prima total anual"],
+      formatAmount(
+        model.annualPremium,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Prima anual total con AVE"],
+      formatAmount(
+        model.plannedAnnual,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Prima AVE anual"],
+      formatAmount(
+        model.annualAvePremium,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Prima acumulada con AVE"],
+      formatAmount(
+        model.annualPremiumAccumulatedWithAve,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Forma de pago"],
+      model.paymentMode
+    );
+    assignNearLabel(
+      ["Moneda"],
+      currency
+    );
+    assignNearLabel(
+      ["Vigencia", "Plazo de cobertura"],
+      model.coveragePeriod
+    );
+    assignNearLabel(
+      ["Total aportado"],
+      formatAmount(
+        model.totalContributed,
+        currency
+      )
+    );
+    assignNearLabel(
+      ["Total recuperación", "Recuperación total"],
+      formatAmount(
+        model.totalRecovery,
+        currency
+      )
+    );
+
+    writeRuntimeGrid(
+      "Valores / beneficios / escenarios",
+      [
+        {
+          label: "Tasa de retiro",
+          value:
+            model.retirementInterestRate,
+        },
+        {
+          label: "Escenario base",
+          value:
+            model.retirementScenarioBase,
+        },
+        {
+          label: "Escenario favorable",
+          value:
+            model.retirementScenarioFavorable,
+        },
+        {
+          label: "Escenario desfavorable",
+          value:
+            model.retirementScenarioUnfavorable,
+        },
+        {
+          label: "Periodo de garantía",
+          value: model.guaranteePeriod,
+        },
+        {
+          label: "Plazo de pagos",
+          value: model.paymentTerm,
+        },
+        {
+          label: "Prima básica anual",
+          value: formatAmount(
+            model.baseAnnualPremium,
+            currency
+          ),
+        },
+        {
+          label: "Fecha de cotización",
+          value: model.quoteDate,
+        },
+        {
+          label: "Asesor",
+          value: model.advisor,
+        },
+      ],
+      "El PDF no entregó valores adicionales."
+    );
+
+    const missing = missingFields(model);
+
+    writeRuntimeGrid(
+      "Faltantes antes de presentar",
+      missing.map(name => ({
+        label: "Pendiente",
+        value: name,
+      })),
+      "Campos principales completos. Revisa y confirma antes de presentar."
+    );
+
+    setReadiness(
+      "Resultado real extraído · pendiente de confirmación",
+      "pending"
+    );
+
+    return model;
+  }
+
+  // Accepted quote calculation, benefit summary rendering, and upload wiring
+  // live in docs/static-preview/quote-preview-live/forge-accepted-quote-*.js.
+
+  window.ForgeNuevaCotizacionAcceptedQuoteRuntime = {
+    contractId: CONTRACT_ID,
+    input,
+    submit,
+    status,
+    label,
+    uploadSection,
+    applyPacketToExistingPage,
+    fieldModel,
+    setReadiness,
+    writeRuntimeGrid
+  };
+})();
+
+</script>
+<!-- FORGEOS:R16E1_NEW_QUOTE_RUNTIME_PARITY_MOUNT:END -->
 </body>
 </html>
