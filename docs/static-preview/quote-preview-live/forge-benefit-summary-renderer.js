@@ -21,6 +21,12 @@ import {
   isSegubecaProduct,
   renderSegubecaDashboard
 } from "./forge-segubeca-product-dashboard-adapter.js";
+import {
+  buildOrviDashboardModel,
+  isOrviProduct,
+  renderOrviDashboard
+} from "./forge-orvi-product-dashboard-adapter.js";
+
 
 function hasValue(value) {
   return value !== null && value !== undefined && value !== "";
@@ -944,6 +950,28 @@ function renderImaginaSerBenefitSummary(calc, benefitSummary) {
   return true;
 }
 
+function renderOrviBenefitSummary(calc, benefitSummary) {
+  const input = { ...(calc || {}), benefitSummary };
+  if (!isOrviProduct(input)) return false;
+  const target = findVisibleSummaryValueNode([
+    "Valores, beneficios o escenarios relevantes",
+    "Valores beneficios escenarios relevantes",
+    "Valores beneficios o escenarios relevantes",
+    "Valores / beneficios / escenarios"
+  ]);
+  if (!target) return false;
+  const model = buildOrviDashboardModel({ ...(calc || {}), benefitSummary });
+  if (!model) return false;
+  const dashboard = renderOrviDashboard(model, {
+    appendValue: appendSemanticValue
+  });
+  if (!dashboard) return false;
+  target.textContent = "";
+  target.appendChild(dashboard);
+  normalizeBenefitLayout107z15p2R9E();
+  return true;
+}
+
 function renderSegubecaBenefitSummary(calc, benefitSummary) {
   if (!benefitSummary || !isSegubecaProduct({ ...calc, benefitSummary })) return false;
   const target = findVisibleSummaryValueNode([
@@ -971,6 +999,7 @@ function renderVisibleDynamicBenefitSummary(calc) {
   const dynamicRows = benefitSummaryToRuntimeRows(benefitSummary);
 
   if (
+    !renderOrviBenefitSummary(calc, benefitSummary) &&
     !renderSegubecaBenefitSummary(calc, benefitSummary) &&
     !renderImaginaSerBenefitSummary(calc, benefitSummary)
   ) {
@@ -985,8 +1014,9 @@ function renderVisibleDynamicBenefitSummary(calc) {
       const lateSummary = buildDynamicBenefitSummary(calc);
       const lateRows = benefitSummaryToRuntimeRows(lateSummary);
       if (
-        !renderSegubecaBenefitSummary(calc, lateSummary) &&
-        !renderImaginaSerBenefitSummary(calc, lateSummary)
+    !renderOrviBenefitSummary(calc, lateSummary) &&
+    !renderSegubecaBenefitSummary(calc, lateSummary) &&
+    !renderImaginaSerBenefitSummary(calc, lateSummary)
       ) {
         writeVisibleBenefitRuntimeGrid(
           lateRows.length ? lateRows : fallbackRows,

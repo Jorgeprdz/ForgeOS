@@ -14892,3 +14892,24 @@ Status: `PASS_ORCHESTRATION_READINESS / REUSABLE_TEMPLATE_AUTHORITY_LOCKED`
 
 NEXT: `R15K_ORVI_REUSABLE_PRODUCT_DASHBOARD_ADAPTER_AND_TEMPLATE_RENDERER_WIRING`
 <!-- FORGE:R15J_ORVI_TEMPLATE_AUTHORITY_AND_ORCHESTRATION:END -->
+
+<!-- FORGE:R15K_ORVI_REUSABLE_DASHBOARD_ADAPTER:START -->
+## R15K ORVI Reusable Product Dashboard Adapter And Template Renderer Wiring
+
+Status: `PASS_REUSABLE_TEMPLATE_ADAPTER_AND_RENDERER_WIRING`
+
+- Adapter: `orvi.reusable-product-dashboard-adapter.v1`.
+- Layout marker: `orvi_dynamic_r15k`.
+- Existing Vida Mujer product-dashboard system reused.
+- Shared template primitives and layout remain unchanged.
+- Protection and Guaranteed Recovery use shared `fq-benefit-*` classes.
+- Exact R15F checkpoint years are preserved.
+- UDI future values remain scenarios, not guarantees.
+- USD future values remain blocked.
+- Renderer order: ORVI, SeguBeca, Imagina Ser, generic fallback.
+- Immediate and late renderer paths include ORVI.
+- Live runtime payload attachment remains pending.
+- Recommendation remains `null`.
+
+NEXT: `R15L_ORVI_STATIC_PREVIEW_RUNTIME_RATE_BRIDGE_AND_END_TO_END_DASHBOARD_WIRING`
+<!-- FORGE:R15K_ORVI_REUSABLE_DASHBOARD_ADAPTER:END -->
