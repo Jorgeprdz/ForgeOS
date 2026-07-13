@@ -1,0 +1,292 @@
+/* FORGEOS:R16C5H_SHARED_NAV_ACTIVE_SQUIRCLE_ALIGNMENT_AND_MOTION:START */
+
+@media (max-width: 900px) {
+  :root {
+    --forge-nav-height-r16c5h: 76px;
+    --forge-nav-safe-bottom-r16c5h: env(safe-area-inset-bottom, 0px);
+  }
+
+  body[data-forge-shared-nav-page-r16c5h="quote"] {
+    padding-bottom:
+      calc(
+        var(--forge-nav-height-r16c5h) +
+        var(--forge-nav-safe-bottom-r16c5h) +
+        28px
+      ) !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"] {
+    position: fixed !important;
+    z-index: 180 !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom:
+      max(
+        14px,
+        var(--forge-nav-safe-bottom-r16c5h)
+      ) !important;
+    display: grid !important;
+    visibility: visible !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: center !important;
+    width: min(92vw, 404px) !important;
+    height: var(--forge-nav-height-r16c5h) !important;
+    min-height: var(--forge-nav-height-r16c5h) !important;
+    padding: 8px 10px !important;
+    gap: 3px !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    border: 1px solid rgba(238, 247, 255, 0.30) !important;
+    border-radius: 999px !important;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(214, 229, 245, 0.16) 0%,
+        rgba(110, 137, 170, 0.11) 30%,
+        rgba(31, 52, 80, 0.18) 58%,
+        rgba(7, 18, 36, 0.34) 100%
+      ) !important;
+    background-color: rgba(13, 27, 48, 0.34) !important;
+    -webkit-backdrop-filter:
+      blur(44px)
+      saturate(180%)
+      brightness(108%)
+      contrast(102%) !important;
+    backdrop-filter:
+      blur(44px)
+      saturate(180%)
+      brightness(108%)
+      contrast(102%) !important;
+    box-shadow:
+      0 20px 54px rgba(0, 0, 0, 0.44),
+      0 6px 18px rgba(0, 0, 0, 0.22),
+      0 0 30px rgba(109, 217, 255, 0.09),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.065),
+      inset 0 -1px 0 rgba(3, 12, 27, 0.42) !important;
+    pointer-events: auto !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    border-radius: inherit !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(241, 248, 255, 0.13) 0%,
+        rgba(225, 239, 252, 0.075) 32%,
+        rgba(169, 203, 230, 0.035) 62%,
+        rgba(255, 255, 255, 0.015) 100%
+      ) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 0 rgba(1, 8, 20, 0.28) !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 0 !important;
+    left: 10px !important;
+    right: 10px !important;
+    top: 2px !important;
+    height: 46% !important;
+    border-radius: 999px !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(255, 255, 255, 0.045) 48%,
+        rgba(255, 255, 255, 0) 100%
+      ) !important;
+    opacity: 0.72 !important;
+  }
+
+  .forge-nav-active-squircle-r16c5h {
+    position: absolute !important;
+    z-index: 1 !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: var(--forge-nav-selector-w-r16c5h, 0px) !important;
+    height: var(--forge-nav-selector-h-r16c5h, 0px) !important;
+    border: 1px solid rgba(245, 248, 255, 0.16) !important;
+    border-radius: 24px !important;
+    background:
+      radial-gradient(
+        circle at 28% 12%,
+        rgba(255, 235, 174, 0.18),
+        transparent 38%
+      ),
+      linear-gradient(
+        160deg,
+        rgba(245, 248, 255, 0.115),
+        rgba(116, 193, 227, 0.055)
+      ) !important;
+    -webkit-backdrop-filter:
+      blur(18px)
+      saturate(165%) !important;
+    backdrop-filter:
+      blur(18px)
+      saturate(165%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 0 rgba(4, 14, 30, 0.22),
+      0 8px 24px rgba(0, 0, 0, 0.15),
+      0 0 22px rgba(247, 213, 132, 0.06) !important;
+    opacity: 0 !important;
+    transform:
+      translate3d(
+        var(--forge-nav-selector-x-r16c5h, 0px),
+        var(--forge-nav-selector-y-r16c5h, 0px),
+        0
+      )
+      scale(0.94) !important;
+    transform-origin: center !important;
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      height 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 220ms ease !important;
+    pointer-events: none !important;
+    will-change: transform, width, height, opacity;
+  }
+
+  .bottom-nav[data-forge-nav-ready-r16c5h="true"]
+    > .forge-nav-active-squircle-r16c5h {
+    opacity: 1 !important;
+    transform:
+      translate3d(
+        var(--forge-nav-selector-x-r16c5h, 0px),
+        var(--forge-nav-selector-y-r16c5h, 0px),
+        0
+      )
+      scale(1) !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"] > button,
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    position: relative !important;
+    z-index: 2 !important;
+    display: grid !important;
+    grid-template-rows: 25px 18px !important;
+    place-items: center !important;
+    align-content: center !important;
+    min-width: 0 !important;
+    min-height: 58px !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 4px 2px !important;
+    border: 0 !important;
+    border-radius: 22px !important;
+    color: rgba(220, 230, 244, 0.72) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font:
+      760 11px/1 system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > button.active,
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > button[aria-current="page"],
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a.active,
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[aria-current="page"] {
+    color: #f7d584 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow:
+      0 0 10px rgba(247, 213, 132, 0.22),
+      0 0 20px rgba(247, 213, 132, 0.10) !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key]::before {
+    display: block !important;
+    color: currentColor !important;
+    font-size: 21px !important;
+    line-height: 24px !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key="inicio"]::before {
+    content: "⌂" !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key="pipeline"]::before {
+    content: "◇" !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key="clientes"]::before {
+    content: "◎" !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key="cotizaciones"]::before {
+    content: "▣" !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key="mas"]::before {
+    content: "•••" !important;
+  }
+
+  .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+    > a[data-forge-nav-key="cotizaciones"] {
+    letter-spacing: -0.52px !important;
+  }
+
+  @media (orientation: landscape) {
+    :root {
+      --forge-nav-height-r16c5h: 64px;
+    }
+
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"] {
+      width: min(74vw, 660px) !important;
+      padding-block: 4px !important;
+    }
+
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"] > button,
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"]
+      > a[data-forge-nav-key] {
+      min-height: 52px !important;
+      grid-template-rows: 22px 17px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .forge-nav-active-squircle-r16c5h {
+      transition-duration: 100ms !important;
+    }
+  }
+}
+
+@media (min-width: 901px) {
+  body[data-forge-shared-nav-page-r16c5h="quote"]
+    .bottom-nav[data-forge-shared-nav-r16c5h="true"] {
+    display: none !important;
+  }
+}
+
+/* FORGEOS:R16C5H_SHARED_NAV_ACTIVE_SQUIRCLE_ALIGNMENT_AND_MOTION:END */
