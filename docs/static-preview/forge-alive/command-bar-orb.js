@@ -21,25 +21,73 @@ function normalizeCommand(value) {
   return value.trim().replace(/^\//, "").toLowerCase();
 }
 
+let commandTransitionTimerR16d3 = 0;
+let commandOpenFrameR16d3 = 0;
+
 function openLayer() {
   if (!layer) return;
-  layer.classList.add("is-expanded");
-  layer.setAttribute("aria-expanded", "true");
+
+  window.clearTimeout(commandTransitionTimerR16d3);
+  window.cancelAnimationFrame(commandOpenFrameR16d3);
+
+  const pill = layer.querySelector(".command-pill");
   const input = layer.querySelector(".command-pill-input");
-  if (input) {
-    window.requestAnimationFrame(() => input.focus());
+
+  layer.classList.remove("is-closing");
+  layer.classList.add("is-opening");
+  layer.setAttribute("aria-expanded", "true");
+
+  if (pill) {
+    void pill.offsetWidth;
   }
+
+  commandOpenFrameR16d3 = window.requestAnimationFrame(() => {
+    layer.classList.add("is-expanded");
+    layer.classList.remove("is-opening");
+
+    commandOpenFrameR16d3 = window.requestAnimationFrame(() => {
+      if (input) input.focus({ preventScroll: true });
+    });
+  });
 }
 
 function closeLayer() {
   if (!layer) return;
+
+  window.clearTimeout(commandTransitionTimerR16d3);
+  window.cancelAnimationFrame(commandOpenFrameR16d3);
+
   const input = layer.querySelector(".command-pill-input");
   const results = layer.querySelector(".command-orb-results");
-  if (input) input.value = "";
+  const active = document.activeElement;
+
+  if (input) {
+    input.value = "";
+    input.blur();
+  }
+
+  if (
+    active instanceof HTMLElement &&
+    layer.contains(active)
+  ) {
+    active.blur();
+  }
+
   if (results) results.hidden = true;
-  layer.classList.remove("is-expanded", "is-typing");
+
+  layer.classList.remove(
+    "is-expanded",
+    "is-opening",
+    "is-typing",
+  );
+  layer.classList.add("is-closing");
   layer.setAttribute("aria-expanded", "false");
+
   updateCommandControls();
+
+  commandTransitionTimerR16d3 = window.setTimeout(() => {
+    layer.classList.remove("is-closing");
+  }, 460);
 }
 
 function renderResults(value) {
@@ -91,6 +139,34 @@ if (layer && layer.dataset.forgeCommandBarR16c1Bound !== "true") {
   const input = layer.querySelector(".command-pill-input");
   const send = layer.querySelector(".command-pill-send");
 
+  const captureCloseR16d3 = (event) => {
+    const target = event.target.closest(".command-pill-close");
+
+    if (!target || !layer.contains(target)) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    closeLayer();
+  };
+
+  if (
+    layer.dataset.forgeCommandCloseCaptureR16d3 !== "true"
+  ) {
+    layer.dataset.forgeCommandCloseCaptureR16d3 = "true";
+
+    layer.addEventListener(
+      "pointerdown",
+      captureCloseR16d3,
+      true,
+    );
+
+    layer.addEventListener(
+      "click",
+      captureCloseR16d3,
+      true,
+    );
+  }
+
   if (orb) {
     orb.addEventListener("click", openLayer);
   }
@@ -103,8 +179,12 @@ if (layer && layer.dataset.forgeCommandBarR16c1Bound !== "true") {
   }
 
   if (close) {
+    close.setAttribute("type", "button");
+    close.setAttribute("aria-label", "Cerrar command bar");
+
     close.addEventListener("click", (event) => {
-      event.stopPropagation();
+      event.preventDefault();
+      event.stopImmediatePropagation();
       closeLayer();
     });
   }
