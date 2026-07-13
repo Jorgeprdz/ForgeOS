@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var mobileQuery = "(max-width: 767px), (max-width: 900px) and (orientation: landscape)";
+  var mobileQuery = "(max-width: 900px)";
 
   function isMobile() {
     return window.matchMedia && window.matchMedia(mobileQuery).matches;
@@ -145,6 +145,7 @@
     if (!isMobile()) return;
 
     var root = document.querySelector(".forge-smart-widget-static-056u");
+    if (root && root.dataset.forgeHomeSmartWidgetR16c === "canonical") return;
     if (!root || root.dataset.forge057dReady === "true") return;
 
     var dots = Array.prototype.slice.call(root.querySelectorAll(".forge-smart-widget-static-dot-056u"));

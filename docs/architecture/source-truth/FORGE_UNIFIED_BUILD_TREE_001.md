@@ -11920,3 +11920,24 @@ Status: `PASS_UNIFIED_PRODUCT_DASHBOARD_HERO_METRIC_AND_ALIGNED_RESPONSIVE_GRID`
 - Next: `BOARD_SCOPE_SELECTION_AFTER_R16B`.
 
 <!-- FORGE:R16B_UNIFIED_PRODUCT_DASHBOARD_HERO_AND_GRID:END -->
+
+<!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:START -->
+## Forge Alive / Home Restoration R16C
+
+MODULE_ID: `R16C_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUCT_UI_CONSISTENCY`
+
+Status: `PASS_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUCT_UI_CONSISTENCY`
+
+- Evidence-first authority: approved 056U, 057H, 057K and 061H documentation and external visual evidence.
+- Home shell: one floating navigation pill, one real command orb and safe-area/dynamic-viewport support.
+- Smart Widgets: one visible static canonical 056U on mobile/tablet; no mobile dynamic stack or duplicate host.
+- Lifecycle: idempotent initial load, pageshow/bfcache, popstate, visibility, resize and orientation reconciliation.
+- Context carousel: one visible card, accessible controls, synchronized indicators, adaptive height and touch/keyboard operation.
+- Follow-up and Opportunities: independent and non-overlapping.
+- Browser matrix: Chrome and Playwright WebKit mobile/tablet/desktop/landscape PASS with no horizontal overflow.
+- Owner-approved floating overlay is retained without an absolute physical-separation assertion.
+- R16A, R16B and ORVI R15 protected regressions: PASS and unchanged.
+- Product truth, financial surfaces and private artifacts: unchanged and outside the repository.
+- Next: `BOARD_SCOPE_SELECTION_AFTER_R16C`.
+
+<!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:END -->

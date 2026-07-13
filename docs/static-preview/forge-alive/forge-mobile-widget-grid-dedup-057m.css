@@ -1,5 +1,5 @@
 /* FORGEOS:FORGE_MOBILE_WIDGET_GRID_DEDUP_057M:START */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   html.forge-mobile-widget-grid-dedup-057m .forge-mobile-widget-057j[data-forge-057m-hidden="true"] {
     display: none !important;
   }

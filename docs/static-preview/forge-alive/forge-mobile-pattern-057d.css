@@ -1,6 +1,6 @@
 /* FORGEOS:FORGE_MOBILE_PATTERN_057D:START */
 
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --forge-mobile-card-radius-057d: 34px;
     --forge-mobile-panel-radius-057d: 30px;

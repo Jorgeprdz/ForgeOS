@@ -1901,7 +1901,7 @@
   }
 
   function isMobileViewport() {
-    return window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+    return window.matchMedia("(max-width: 900px)").matches;
   }
 
   function getReadModel() {

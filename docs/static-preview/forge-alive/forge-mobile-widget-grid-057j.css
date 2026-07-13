@@ -1,5 +1,5 @@
 /* FORGEOS:FORGE_MOBILE_WIDGET_GRID_057J:START */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --forge-widget-radius-057j: 30px;
     --forge-widget-radius-sm-057j: 22px;

@@ -1,5 +1,5 @@
 /* FORGEOS:FORGE_MOBILE_TOP_NAV_CENTER_057G:START */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   .forge-mobile-context-nav-057d {
     box-sizing: border-box !important;
     width: min(calc(100vw - 44px), 640px) !important;

@@ -15103,3 +15103,25 @@ Status: `PASS_UNIFIED_PRODUCT_DASHBOARD_HERO_METRIC_AND_ALIGNED_RESPONSIVE_GRID`
 
 NEXT: `BOARD_SCOPE_SELECTION_AFTER_R16B`
 <!-- FORGE:R16B_UNIFIED_PRODUCT_DASHBOARD_HERO_AND_GRID:END -->
+
+<!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:START -->
+## R16C Forge Alive Home Restoration, Smart Widget Deduplication and Product UI Consistency
+
+MODULE_ID: `R16C_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUCT_UI_CONSISTENCY`
+
+Status: `PASS_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUCT_UI_CONSISTENCY`
+
+- Existing documentation and approved screenshots, not a new landing-page design, are the restoration authority.
+- The floating navigation pill and command orb are restored as single accessible instances with safe-area-aware placement.
+- Mobile and tablet retain exactly one visible canonical static Smart Widget 056U; the mobile dynamic stack is not mounted.
+- Redundant widget hosts and initializers are removed physically, with idempotent navigation, pageshow, visibility and resize reconciliation.
+- The context carousel exposes one card at a time with working previous/next, indicators, keyboard, touch and adaptive height.
+- Seguimiento and Oportunidades are independent normal-flow sections without overlap or horizontal overflow.
+- Android/Chromium and Playwright WebKit inspections pass across mobile, tablet, desktop and landscape.
+- Partial overlay by floating controls is explicitly accepted; presence, usability, scrolling and navigation remain protected.
+- R16A intake, R16B dashboards and ORVI R15 remain closed and unchanged.
+- Product Intelligence, parsers, mappers, rate cache, financial calculations, PDFs and client content remain untouched.
+- Thirty visual captures remain outside Git.
+
+NEXT: `BOARD_SCOPE_SELECTION_AFTER_R16C`
+<!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:END -->

@@ -1320,7 +1320,7 @@
 /* FORGEOS:QUICK_ACTIONS_PANEL_ACTIVE_STATE_REPAIR_062F1:END */
 
 /* FORGEOS:MOBILE_COMMAND_CONTRACT_BINDING_REPAIR_062F3C:START */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   .alfred-command-root-056k5[data-forge-mobile-command-contract-bound-062f3c="true"].has-results .alfred-command-results-056k5 {
     display: grid !important;
     gap: 8px !important;

@@ -373,7 +373,7 @@
 /* FORGEOS:ALFRED_RESPONSIVE_CSS_SPLIT_MOBILE_RESTORE_056I:END */
 
 /* FORGEOS:ALFRED_MOBILE_VISUAL_QA_REPAIR_056J:START */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --alfred-nav-height-056j: 70px;
     --alfred-orb-size-056j: 64px;
@@ -802,7 +802,7 @@
 /* FORGEOS:ALFRED_MOBILE_VISUAL_QA_REPAIR_056J:END */
 
 /* FORGEOS:ALFRED_CONCIERGE_VISUAL_REPAIR_LITE_056K */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --alfred-nav-056k: 72px;
     --alfred-orb-056k: 72px;
@@ -1033,7 +1033,7 @@
 }
 
 /* FORGEOS:ALFRED_COMMAND_BAR_INPUT_PILL_REPAIR_056K2 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --alfred-nav-056k2: 72px;
     --alfred-orb-056k2: 68px;
@@ -1298,7 +1298,7 @@
 }
 
 /* FORGEOS:ALFRED_COMMAND_BAR_MOBILE_HARD_RESET_056K3 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --alfred-056k3-nav: 72px;
     --alfred-056k3-safe: max(14px, env(safe-area-inset-bottom, 0px));
@@ -1550,7 +1550,7 @@
 }
 
 /* FORGEOS:ALFRED_MOBILE_COMMAND_PALETTE_ACTIONS_056K4 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --alfred-056k4-nav: 72px;
     --alfred-056k4-safe: max(14px, env(safe-area-inset-bottom, 0px));
@@ -1914,7 +1914,7 @@
 }
 
 /* FORGEOS:ALFRED_IOS_COMMAND_PALETTE_POLISH_056K5 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --alfred-056k5-nav: 72px;
     --alfred-056k5-safe: max(14px, env(safe-area-inset-bottom, 0px));
@@ -2336,7 +2336,7 @@
 }
 
 /* FORGEOS:COMMAND_CLOSE_NAV_PILL_POLISH_056K6 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --forge-nav-056k6-h: 74px;
     --forge-nav-056k6-safe: max(14px, env(safe-area-inset-bottom, 0px));
@@ -2536,7 +2536,7 @@
 }
 
 /* FORGEOS:NAVIGATION_PILL_HARD_RESET_056K7 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --forge-nav-056k7-h: 76px;
     --forge-nav-056k7-safe: max(14px, env(safe-area-inset-bottom, 0px));
@@ -2702,7 +2702,7 @@
 }
 
 /* FORGEOS:NAV_MARK_MOTION_MICRO_POLISH_056K8 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --forge-nav-056k8-safe: max(10px, env(safe-area-inset-bottom, 0px));
   }
@@ -2835,7 +2835,7 @@
 }
 
 /* FORGEOS:NAV_CENTER_ICONS_PREMIUM_POLISH_056K9 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   .forge-nav-root-056k7 {
     --forge-nav-indicator-left-056k9: 0px;
     --forge-nav-indicator-width-056k9: calc((100% - 18px) / 5);
@@ -2899,7 +2899,7 @@
 
 
 /* FORGEOS:ALFRED_MOBILE_SMART_WIDGET_PAGER_056L */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --forge-smart-dot-step-056l: 18px;
     --forge-smart-dot-size-056l: 8px;
@@ -3165,7 +3165,7 @@
 
 
 /* FORGEOS:ALFRED_MOBILE_SMART_WIDGET_PAGER_DOTS_REPAIR_056L2 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   #smart-widget-stack.forge-smart-widget-stack-normalized-056l2,
   .smart-widget-stack.forge-smart-widget-stack-normalized-056l2 {
     display: block !important;
@@ -3453,7 +3453,7 @@
 
 
 /* FORGEOS:ALFRED_MOBILE_SMART_WIDGET_SINGLE_STACK_056L3 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   .forge-smart-widget-duplicate-hidden-056l3 {
     display: none !important;
     visibility: hidden !important;
@@ -3951,7 +3951,7 @@
 
 
 /* FORGEOS:ALFRED_MOBILE_UX85_DENSITY_HIERARCHY_056N */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   html.forge-ux85-mobile-056n {
     --forge-ux85-card-radius: 28px;
     --forge-ux85-card-gap: 18px;
@@ -4128,7 +4128,7 @@
 
 
 /* FORGEOS:ALFRED_MOBILE_UX90_PROFILE_MENU_SMARTWIDGET_FOCUS_056O */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   html.forge-ux90-mobile-056o {
     --forge-profile-menu-bg-056o: rgba(6, 14, 29, 0.86);
     --forge-profile-menu-border-056o: rgba(223, 240, 255, 0.16);
@@ -4348,7 +4348,7 @@
 
 
 /* FORGEOS:ALFRED_MOBILE_UX99_FOCUS_LAYER_056P */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   html.forge-ux99-mobile-056p {
     --forge-ux99-card: rgba(8, 18, 35, 0.76);
     --forge-ux99-border: rgba(223, 240, 255, 0.15);
@@ -4651,7 +4651,7 @@
 
 
 /* FORGEOS:RESTORE_FOCUS_WIDGETS_AND_BOWTIE_056P2 */
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   html.forge-ux99-mobile-056p2 .forge-ux99-old-smart-hidden-056p {
     display: none !important;
     visibility: hidden !important;

@@ -4,7 +4,7 @@
 
   function isMobile() {
     return window.matchMedia &&
-      window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+      window.matchMedia("(max-width: 900px)").matches;
   }
 
   function el(tag, className, text) {
@@ -48,14 +48,6 @@
   function buildGrid() {
     var grid = el("section", "forge-mobile-widget-grid-057j");
     grid.setAttribute("aria-label", "Forge mobile widget grid");
-
-    var next = widget("4x4", "is-hero");
-    next.appendChild(kicker("Siguiente mejor acción", "86"));
-    next.appendChild(el("h2", "forge-widget-title-057j", "Seguimiento prioritario"));
-    next.appendChild(el("p", "forge-widget-copy-057j", "Juan necesita revisión antes de que se enfríe. Abre /Follow con contexto listo."));
-    next.appendChild(spark("86%"));
-    next.appendChild(el("button", "forge-widget-action-057j", "Preparar preview"));
-    grid.appendChild(next);
 
     var meta = widget("2x2");
     meta.appendChild(kicker("Meta mensual"));

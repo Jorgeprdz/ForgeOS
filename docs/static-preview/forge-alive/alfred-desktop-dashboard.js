@@ -1,7 +1,7 @@
 
 
 /* FORGE:093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION:START */
-const FORGE_QUOTE_PREVIEW_SAFE_STATIC_BOUNDARY_093B = Object.freeze({
+const FORGE_QUOTE_PREVIEW_SAFE_STATIC_BOUNDARY_093B_DASHBOARD = Object.freeze({
   phase: '093B_QUOTE_PREVIEW_SAFE_STATIC_UI_SOURCE_PATCH_IMPLEMENTATION',
   boundary: 'static_safe_preview_boundary_only',
   labels: [
@@ -50,14 +50,12 @@ function setActiveButton(buttons, selected) {
 function syncSmartWidgetSlot() {
   const stack = document.getElementById("smart-widget-stack");
   const desktopSlot = document.querySelector("[data-smart-widget-desktop-slot]");
-  const mobileSlot = document.querySelector("[data-smart-widget-mobile-slot]");
-  if (!stack || !desktopSlot || !mobileSlot) return;
+  if (!stack || !desktopSlot) return;
 
-  const targetSlot = desktopQuery.matches ? desktopSlot : mobileSlot;
-  if (stack.parentElement !== targetSlot) {
-    targetSlot.appendChild(stack);
+  if (stack.parentElement !== desktopSlot) {
+    desktopSlot.appendChild(stack);
   }
-  stack.dataset.smartWidgetSlot = desktopQuery.matches ? "desktop" : "mobile";
+  stack.dataset.smartWidgetSlot = "desktop";
 }
 
 function syncCommandSlot() {

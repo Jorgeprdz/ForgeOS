@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var MOBILE_QUERY = "(max-width: 767px), (max-width: 900px) and (orientation: landscape)";
+  var MOBILE_QUERY = "(max-width: 900px)";
   var media = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : { matches: true };
 
   function isMobile() {
@@ -40,6 +40,7 @@
     if (!isMobile()) return;
     var root = document.querySelector(".forge-smart-widget-static-056u");
     if (!root) return;
+    if (root.dataset.forgeHomeSmartWidgetR16c === "canonical") return;
 
     var track = root.querySelector(".forge-smart-widget-static-track-056u");
     var cards = Array.prototype.slice.call(root.querySelectorAll(".forge-smart-widget-static-card-056u"));
@@ -94,7 +95,7 @@
     var style = document.createElement("style");
     style.id = "forge-mobile-visual-polish-057f-style";
     style.textContent = [
-      "@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {",
+      "@media (max-width: 900px) {",
       "  .command-orb-layer.forge-orb-polish-lower-057f:not(.is-open) {",
       "    opacity: 0.76 !important;",
       "    transform: translateY(26px) scale(0.88) !important;",

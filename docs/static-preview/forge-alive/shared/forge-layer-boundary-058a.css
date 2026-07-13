@@ -8,7 +8,7 @@
   display: none !important;
 }
 
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   .phone-shell > .forge-desktop-workspace-056y,
   .forge-desktop-workspace-056y,
   .alfred-desktop-app-056g7 {

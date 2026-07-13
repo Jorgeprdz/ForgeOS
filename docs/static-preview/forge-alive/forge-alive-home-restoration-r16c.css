@@ -1,0 +1,497 @@
+/* FORGEOS:R16C_HOME_RESTORATION:START */
+:root {
+  color-scheme: dark;
+  --forge-home-safe-top-r16c: env(safe-area-inset-top, 0px);
+  --forge-home-safe-right-r16c: env(safe-area-inset-right, 0px);
+  --forge-home-safe-bottom-r16c: env(safe-area-inset-bottom, 0px);
+  --forge-home-safe-left-r16c: env(safe-area-inset-left, 0px);
+  --forge-home-nav-height-r16c: 76px;
+  --forge-home-nav-edge-r16c: max(14px, var(--forge-home-safe-bottom-r16c));
+}
+
+html {
+  background: #050b16;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  background: #050b16;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+@media (max-width: 900px) {
+  .phone-shell {
+    box-sizing: border-box !important;
+    width: min(100%, 760px) !important;
+    max-width: 760px !important;
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+    min-height: 100dvh !important;
+    margin-inline: auto !important;
+    padding-left: max(clamp(16px, 4vw, 30px), var(--forge-home-safe-left-r16c)) !important;
+    padding-right: max(clamp(16px, 4vw, 30px), var(--forge-home-safe-right-r16c)) !important;
+    padding-bottom: calc(var(--forge-home-nav-height-r16c) + var(--forge-home-safe-bottom-r16c) + 132px) !important;
+    overflow-x: hidden !important;
+  }
+
+  .phone-shell > .alfred-desktop-app-056g7,
+  .phone-shell > .forge-desktop-workspace-056y,
+  .forge-desktop-app-056g7,
+  .forge-desktop-workspace-056y {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .phone-shell > .desktop-menu-toggle,
+  .phone-shell > .desktop-nav-drawer,
+  .phone-shell > .desktop-context-toggle,
+  .phone-shell > .desktop-context-rail {
+    display: none !important;
+  }
+
+  .assistant-card[aria-labelledby="alfred-forge-heading"] {
+    gap: 12px !important;
+    padding: 18px !important;
+  }
+
+  .assistant-card[aria-labelledby="alfred-forge-heading"] .assistant-card-content {
+    gap: 4px !important;
+  }
+
+  .assistant-card[aria-labelledby="alfred-forge-heading"] h2 {
+    max-width: 15ch !important;
+    margin-block: 2px 7px !important;
+    font-size: clamp(24px, 6.8vw, 30px) !important;
+    line-height: 1 !important;
+  }
+
+  .assistant-card[aria-labelledby="alfred-forge-heading"] p {
+    max-width: 26ch !important;
+    margin: 0 !important;
+    font-size: clamp(15px, 4.2vw, 18px) !important;
+    line-height: 1.16 !important;
+  }
+
+  .assistant-card[aria-labelledby="alfred-forge-heading"] .alfred-static-mount {
+    gap: 4px !important;
+    margin-top: 9px !important;
+  }
+
+  .assistant-card[aria-labelledby="alfred-forge-heading"] .alfred-static-mount li {
+    min-height: 22px !important;
+    padding: 3px 8px !important;
+    font-size: clamp(9px, 2.7vw, 11px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .primary-card {
+    min-height: 0 !important;
+    padding: 16px 18px !important;
+  }
+
+  .primary-card h2,
+  .primary-card p {
+    margin-block: 4px !important;
+  }
+
+  .primary-card .fake-cta {
+    min-height: 44px !important;
+    margin-top: 10px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] {
+    position: relative !important;
+    display: block !important;
+    padding: 18px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .assistant-avatar {
+    position: absolute !important;
+    top: 18px !important;
+    left: 18px !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .assistant-card-content {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .eyebrow {
+    display: flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    padding-left: 56px !important;
+    font-size: 12px !important;
+    line-height: 1.1 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] h2 {
+    max-width: 15ch !important;
+    margin-block: 8px 7px !important;
+    font-size: clamp(23px, 6.4vw, 29px) !important;
+    line-height: 1 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] p:not(.eyebrow) {
+    max-width: 30ch !important;
+    margin: 0 !important;
+    font-size: clamp(15px, 4vw, 17px) !important;
+    line-height: 1.16 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .alfred-static-mount {
+    gap: 4px !important;
+    margin-top: 9px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .alfred-static-mount li {
+    min-height: 22px !important;
+    padding: 3px 8px !important;
+    font-size: clamp(9px, 2.6vw, 11px) !important;
+    line-height: 1.05 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .primary-card.glass {
+    padding: 14px 16px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .primary-card.glass p {
+    font-size: clamp(13px, 3.4vw, 15px) !important;
+    line-height: 1.15 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .primary-card.glass .fake-cta {
+    box-sizing: border-box !important;
+    width: calc(100% - 56px) !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding-block: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] {
+    position: fixed !important;
+    z-index: 180 !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: var(--forge-home-nav-edge-r16c) !important;
+    display: grid !important;
+    visibility: visible !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: center !important;
+    width: min(92vw, 404px) !important;
+    height: var(--forge-home-nav-height-r16c) !important;
+    min-height: var(--forge-home-nav-height-r16c) !important;
+    padding: 8px 10px !important;
+    gap: 3px !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    border: 1px solid rgba(223, 240, 255, 0.18) !important;
+    border-radius: 999px !important;
+    background:
+      radial-gradient(circle at 20% 4%, rgba(242, 207, 117, 0.16), transparent 30%),
+      radial-gradient(circle at 78% 96%, rgba(100, 218, 255, 0.2), transparent 36%),
+      linear-gradient(135deg, rgba(8, 18, 35, 0.9), rgba(5, 11, 22, 0.86)) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+    backdrop-filter: blur(30px) saturate(180%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(245, 248, 255, 0.19),
+      inset 0 -1px 0 rgba(5, 11, 22, 0.66),
+      0 20px 56px rgba(0, 0, 0, 0.48),
+      0 0 42px rgba(100, 218, 255, 0.13) !important;
+    pointer-events: auto !important;
+    overflow: hidden !important;
+  }
+
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] > button {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    position: relative !important;
+    display: grid !important;
+    grid-template-rows: 25px 18px !important;
+    place-items: center !important;
+    align-content: center !important;
+    min-width: 0 !important;
+    min-height: 58px !important;
+    padding: 4px 2px !important;
+    border: 0 !important;
+    border-radius: 22px !important;
+    color: rgba(220, 230, 244, 0.72) !important;
+    background: transparent !important;
+    font: 760 11px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    white-space: nowrap !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    cursor: pointer !important;
+  }
+
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] > button::before {
+    display: block !important;
+    color: currentColor !important;
+    font-size: 21px !important;
+    line-height: 24px !important;
+  }
+  .bottom-nav button[data-forge-home-section="inicio"]::before { content: "⌂" !important; }
+  .bottom-nav button[data-forge-home-section="pipeline"]::before { content: "◇" !important; }
+  .bottom-nav button[data-forge-home-section="clientes"]::before { content: "◎" !important; }
+  .bottom-nav button[data-forge-home-section="alfred"]::before { content: "⌘" !important; }
+  .bottom-nav button[data-forge-home-section="mas"]::before { content: "•••" !important; }
+
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] > button.active,
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] > button[aria-current="page"] {
+    color: #f7d584 !important;
+    background: rgba(245, 248, 255, 0.05) !important;
+    text-shadow: 0 0 18px rgba(242, 207, 117, 0.3) !important;
+  }
+
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] > button:focus-visible,
+  [data-command-orb-layer] .command-orb:focus-visible,
+  .forge-home-carousel-controls-r16c button:focus-visible {
+    outline: 3px solid #76dbff !important;
+    outline-offset: 2px !important;
+  }
+
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] {
+    position: fixed !important;
+    z-index: 200 !important;
+    left: auto !important;
+    right: max(20px, calc(var(--forge-home-safe-right-r16c) + 14px)) !important;
+    bottom: calc(var(--forge-home-nav-edge-r16c) + var(--forge-home-nav-height-r16c) + 16px) !important;
+    display: block !important;
+    visibility: visible !important;
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    filter: none !important;
+  }
+
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] .command-orb {
+    position: relative !important;
+    inset: auto !important;
+    display: grid !important;
+    visibility: visible !important;
+    place-items: center !important;
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    border-radius: 50% !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+  }
+
+  [data-command-orb-layer]:not(.is-expanded) .command-pill,
+  [data-command-orb-layer]:not(.is-expanded) .command-orb-results {
+    display: none !important;
+  }
+
+  [data-command-orb-layer].is-expanded {
+    left: max(14px, var(--forge-home-safe-left-r16c)) !important;
+    right: max(14px, var(--forge-home-safe-right-r16c)) !important;
+    width: auto !important;
+    height: 64px !important;
+  }
+
+  [data-command-orb-layer].is-expanded .command-orb {
+    display: none !important;
+  }
+
+  [data-command-orb-layer].is-expanded .command-pill {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 64px !important;
+  }
+
+  [data-command-orb-layer] input,
+  [data-command-orb-layer] [role="textbox"] {
+    font-size: max(16px, 1rem) !important;
+  }
+
+  .forge-smart-widget-static-056u[data-forge-home-smart-widget-r16c="canonical"] {
+    position: relative !important;
+    z-index: 1 !important;
+    display: block !important;
+    width: min(100%, 680px) !important;
+    margin: 20px auto !important;
+    overflow: hidden !important;
+    touch-action: pan-y pinch-zoom !important;
+  }
+
+  .forge-home-carousel-controls-r16c {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: calc(100% - 28px) !important;
+    margin: 0 auto 12px !important;
+  }
+
+  .forge-home-carousel-controls-r16c button {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    padding: 8px 14px !important;
+    border: 1px solid rgba(118, 219, 255, 0.24) !important;
+    border-radius: 999px !important;
+    color: #eef6ff !important;
+    background: rgba(7, 18, 36, 0.64) !important;
+    font: 800 0.82rem/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  }
+
+  .forge-home-carousel-controls-r16c button:disabled {
+    opacity: 0.42 !important;
+    cursor: default !important;
+  }
+
+  .forge-smart-widget-static-viewport-056u {
+    transition: height 280ms ease !important;
+    overflow: hidden !important;
+    touch-action: pan-y pinch-zoom !important;
+  }
+
+  .forge-smart-widget-static-card-056u,
+  .forge-mobile-widget-057j,
+  .panel,
+  .primary-card,
+  .assistant-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: none !important;
+  }
+
+  .forge-mobile-widget-grid-057j,
+  .phone-shell > .panel,
+  .phone-shell > .recommendations {
+    position: relative !important;
+    inset: auto !important;
+    clear: both !important;
+    isolation: isolate !important;
+  }
+
+  .forge-mobile-widget-grid-057j {
+    margin-block: 18px !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  :root { --forge-home-nav-height-r16c: 64px; }
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] {
+    width: min(74vw, 660px) !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    padding-block: 4px !important;
+  }
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"] > button {
+    min-height: 52px !important;
+    grid-template-rows: 22px 17px !important;
+  }
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+  }
+  [data-command-orb-layer][data-forge-home-command-orb-r16c="canonical"] .command-orb {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 700px) and (orientation: portrait) {
+  .forge-mobile-context-nav-057d {
+    margin-block: 4px 8px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] {
+    margin-bottom: 8px !important;
+    padding: 12px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .assistant-avatar {
+    top: 12px !important;
+    left: 12px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .eyebrow {
+    min-height: 32px !important;
+    padding-left: 42px !important;
+    font-size: 10px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] h2 {
+    max-width: 18ch !important;
+    margin-block: 4px !important;
+    font-size: 22px !important;
+    line-height: 0.98 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] p:not(.eyebrow) {
+    max-width: 42ch !important;
+    font-size: 14px !important;
+    line-height: 1.08 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .alfred-static-mount {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    margin-top: 6px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .assistant-card.glass[aria-labelledby="alfred-forge-heading"] .alfred-static-mount li {
+    min-height: 22px !important;
+    padding: 3px 5px !important;
+    font-size: 8px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .primary-card.glass {
+    padding: 7px 14px !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .primary-card.glass .card-topline {
+    font-size: 9px !important;
+    line-height: 1 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .primary-card.glass h2 {
+    margin-block: 1px !important;
+    font-size: 19px !important;
+    line-height: 1 !important;
+  }
+
+  html.forge-mobile-widget-grid-polished-057l .primary-card.glass p {
+    margin-block: 1px !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .bottom-nav[data-forge-home-navigation-r16c="canonical"],
+  .forge-smart-widget-static-056u[data-forge-home-smart-widget-r16c="canonical"] {
+    background-color: rgba(7, 18, 35, 0.98) !important;
+  }
+}
+/* FORGEOS:R16C_HOME_RESTORATION:END */

@@ -4,7 +4,7 @@
 
   function isMobile() {
     return window.matchMedia &&
-      window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+      window.matchMedia("(max-width: 900px)").matches;
   }
 
   function el(tag, className, text) {
@@ -57,11 +57,8 @@
         (title && /seguimiento prioritario/i.test(title.textContent || ""));
     });
 
-    if (nextActionWidgets.length <= 1) return;
-
-    nextActionWidgets.slice(1).forEach(function (widget) {
-      widget.setAttribute("data-forge-057m-hidden", "true");
-      widget.setAttribute("aria-hidden", "true");
+    nextActionWidgets.forEach(function (widget) {
+      widget.remove();
     });
   }
 

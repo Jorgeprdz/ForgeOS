@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var mobileQuery = "(max-width: 767px), (max-width: 900px) and (orientation: landscape)";
+  var mobileQuery = "(max-width: 900px)";
 
   function isMobile() {
     return window.matchMedia && window.matchMedia(mobileQuery).matches;
@@ -54,7 +54,7 @@
     var style = document.createElement("style");
     style.id = "forge-orb-defers-plan-057e-style";
     style.textContent = [
-      "@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {",
+      "@media (max-width: 900px) {",
       "  .command-orb-layer.forge-orb-defers-plan-057e:not(.is-open) {",
       "    opacity: 0.72 !important;",
       "    transform: translateY(34px) scale(0.86) !important;",

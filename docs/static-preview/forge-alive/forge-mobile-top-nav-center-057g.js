@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var MOBILE_QUERY = "(max-width: 767px), (max-width: 900px) and (orientation: landscape)";
+  var MOBILE_QUERY = "(max-width: 900px)";
   var media = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : { matches: true };
 
   function isMobile() {

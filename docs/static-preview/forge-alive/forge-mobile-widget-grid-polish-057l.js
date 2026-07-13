@@ -4,7 +4,7 @@
 
   function isMobile() {
     return window.matchMedia &&
-      window.matchMedia("(max-width: 767px), (max-width: 900px) and (orientation: landscape)").matches;
+      window.matchMedia("(max-width: 900px)").matches;
   }
 
   function text(node, value) {

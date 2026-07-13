@@ -1,6 +1,6 @@
 /* FORGEOS:FORGE_MOBILE_VISUAL_REPAIR_057E:START */
 
-@media (max-width: 767px), (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) {
   :root {
     --forge-mobile-nav-height-057e: 72px;
     --forge-mobile-orb-size-057e: 62px;
