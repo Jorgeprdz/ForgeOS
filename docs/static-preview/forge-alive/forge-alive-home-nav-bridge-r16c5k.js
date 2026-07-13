@@ -38,6 +38,16 @@
   }
 
   function setVisualActive(key) {
+
+    /* FORGEOS:R16C5M1_ACTIVE_MODULE_GUARD:START */
+    if (
+      document.body.dataset.forgeSaasActiveModuleR16c5l ===
+        "cotizaciones" &&
+      key !== "cotizaciones"
+    ) {
+      return;
+    }
+    /* FORGEOS:R16C5M1_ACTIVE_MODULE_GUARD:END */
     const nav = visualNav();
     const selected = visualItem(key);
 

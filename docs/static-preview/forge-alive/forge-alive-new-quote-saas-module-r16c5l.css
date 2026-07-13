@@ -1442,3 +1442,42 @@ body[data-forge-saas-module-transition-r16c5l="enter"]
   }
 }
 /* FORGE:107Z15P2_R5_BENEFIT_TABLES:END */
+
+/* FORGEOS:R16C5M1_QUOTE_MODULE_ISOLATION_CASCADE_FIX:START */
+
+/*
+  Override final y deliberadamente posterior al CSS heredado.
+  Durante Cotizaciones, ningún contenido de Inicio puede sobrevivir.
+*/
+body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+  .phone-shell
+  > * {
+  display: none !important;
+}
+
+/*
+  Solo estas tres superficies permanecen visibles:
+  módulo, slot móvil y nav aprobada.
+  El controlador heredado continúa oculto, pero operativo en el DOM.
+*/
+body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+  .phone-shell
+  > [data-forge-saas-module-host-r16c5l],
+body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+  .phone-shell
+  > [data-command-mobile-slot],
+body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+  .phone-shell
+  > .forge-mobile-nav-r16c5k-home-visual {
+  display: block !important;
+}
+
+body[data-forge-saas-active-module-r16c5l="cotizaciones"]
+  .phone-shell
+  > .forge-home-nav-controller-r16c5k {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* FORGEOS:R16C5M1_QUOTE_MODULE_ISOLATION_CASCADE_FIX:END */
