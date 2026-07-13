@@ -234,3 +234,50 @@
   }
 }
 /* FORGEOS:R16C1_COMMAND_BAR_MICRO_FIX:END */
+
+/* FORGEOS:R16C2_ORB_DIFFUSE_HALO:START */
+
+/*
+  Halo circular difuminado. El pseudo-elemento heredado deja de pulsar
+  porque su geometría producía una cápsula. El pulso vive ahora en la
+  sombra circular del orb real.
+*/
+.command-orb-layer .command-orb::before {
+  animation: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.command-orb-layer .command-orb {
+  border-radius: 50% !important;
+  animation: forge-r16c2-orb-diffuse-halo 3.8s ease-in-out infinite !important;
+  will-change: box-shadow;
+}
+
+@keyframes forge-r16c2-orb-diffuse-halo {
+  0%,
+  100% {
+    box-shadow:
+      0 0 12px 4px rgba(255, 225, 150, 0.22),
+      0 0 24px 9px rgba(110, 217, 255, 0.18),
+      0 0 38px 15px rgba(88, 153, 255, 0.08) !important;
+  }
+
+  50% {
+    box-shadow:
+      0 0 18px 7px rgba(255, 225, 150, 0.38),
+      0 0 34px 13px rgba(110, 217, 255, 0.30),
+      0 0 52px 21px rgba(88, 153, 255, 0.14) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-orb-layer .command-orb {
+    animation: none !important;
+    box-shadow:
+      0 0 14px 5px rgba(255, 225, 150, 0.24),
+      0 0 28px 10px rgba(110, 217, 255, 0.20) !important;
+  }
+}
+
+/* FORGEOS:R16C2_ORB_DIFFUSE_HALO:END */
