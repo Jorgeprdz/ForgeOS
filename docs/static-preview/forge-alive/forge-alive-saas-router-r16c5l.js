@@ -14,6 +14,120 @@
   const CLOSE_SELECTOR =
     "[data-forge-saas-module-close-r16c5l]";
 
+
+  /* FORGEOS:R16C5N_QUOTE_MODULE_ROUTER_DOM_ISOLATION:START */
+
+  const SHELL_SELECTOR = ".phone-shell";
+  const PERSISTENT_SHELL_CHILD_SELECTOR = [
+    HOST_SELECTOR,
+    "[data-command-mobile-slot]",
+    ".forge-home-nav-controller-r16c5k",
+    ".forge-mobile-nav-r16c5k-home-visual",
+  ].join(", ");
+
+  const suppressedShellChildren = new Map();
+  let shellIsolationObserver = null;
+
+  function isPersistentShellChild(child, moduleHost) {
+    return (
+      child === moduleHost ||
+      child.matches(PERSISTENT_SHELL_CHILD_SELECTOR)
+    );
+  }
+
+  function suppressShellChild(child, moduleHost) {
+    if (
+      !(child instanceof HTMLElement) ||
+      isPersistentShellChild(child, moduleHost) ||
+      suppressedShellChildren.has(child)
+    ) {
+      return;
+    }
+
+    suppressedShellChildren.set(child, {
+      display: child.style.getPropertyValue("display"),
+      displayPriority:
+        child.style.getPropertyPriority("display"),
+      ariaHidden: child.getAttribute("aria-hidden"),
+      inert:
+        "inert" in child
+          ? child.inert
+          : null,
+    });
+
+    child.dataset.forgeSaasSuppressedR16c5n = "true";
+    child.style.setProperty("display", "none", "important");
+    child.setAttribute("aria-hidden", "true");
+
+    if ("inert" in child) {
+      child.inert = true;
+    }
+  }
+
+  function isolateShellForModule(moduleHost) {
+    const shell = moduleHost.closest(SHELL_SELECTOR);
+
+    if (!shell) return false;
+
+    Array.from(shell.children).forEach((child) => {
+      suppressShellChild(child, moduleHost);
+    });
+
+    shellIsolationObserver?.disconnect();
+
+    shellIsolationObserver = new MutationObserver((records) => {
+      records.forEach((record) => {
+        record.addedNodes.forEach((node) => {
+          if (
+            node instanceof HTMLElement &&
+            node.parentElement === shell
+          ) {
+            suppressShellChild(node, moduleHost);
+          }
+        });
+      });
+    });
+
+    shellIsolationObserver.observe(shell, {
+      childList: true,
+    });
+
+    return true;
+  }
+
+  function restoreShellAfterModule() {
+    shellIsolationObserver?.disconnect();
+    shellIsolationObserver = null;
+
+    suppressedShellChildren.forEach((state, child) => {
+      if (state.display) {
+        child.style.setProperty(
+          "display",
+          state.display,
+          state.displayPriority,
+        );
+      } else {
+        child.style.removeProperty("display");
+      }
+
+      if (state.ariaHidden === null) {
+        child.removeAttribute("aria-hidden");
+      } else {
+        child.setAttribute("aria-hidden", state.ariaHidden);
+      }
+
+      if (state.inert !== null && "inert" in child) {
+        child.inert = state.inert;
+      }
+
+      delete child.dataset.forgeSaasSuppressedR16c5n;
+    });
+
+    suppressedShellChildren.clear();
+  }
+
+  /* FORGEOS:R16C5N_QUOTE_MODULE_ROUTER_DOM_ISOLATION:END */
+
   function host() {
     return document.querySelector(HOST_SELECTOR);
   }
@@ -76,6 +190,7 @@
     document.body.dataset.forgeSaasModuleTransitionR16c5l =
       "enter";
 
+    isolateShellForModule(moduleHost);
     setVisualActive(MODULE_KEY);
 
     const url = new URL(window.location.href);
@@ -123,6 +238,8 @@
 
     delete document.body.dataset.forgeSaasActiveModuleR16c5l;
     delete document.body.dataset.forgeSaasModuleTransitionR16c5l;
+
+    restoreShellAfterModule();
 
     const targetKey = options.targetKey || "inicio";
     setVisualActive(targetKey);
