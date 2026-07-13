@@ -14978,5 +14978,25 @@ Status: `PASS_UI_SIMPLIFICATION_AND_DATA_CONSISTENCY_HARDENING / MANUAL_VISUAL_A
 - R15M1 is not executed or closed.
 - Manual visual acceptance remains `PENDING_USER_REVIEW`.
 
-NEXT: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+NEXT: `R15M2A_ORVI_DIRECT_PDF_SELECTOR_AND_BROWSER_PARSER_ROUTING`
 <!-- FORGE:R15M2_ORVI_GUARANTEED_RECOVERY_UI_HARDENING:END -->
+
+<!-- FORGE:R15M2A_ORVI_DIRECT_PDF_ROUTING:START -->
+## R15M2A ORVI Direct PDF Selector And Browser Parser Routing
+
+Status: `PASS_DIRECT_PDF_SELECTOR_AND_BROWSER_PARSER_ROUTING / MANUAL_VISUAL_ACCEPTANCE_PENDING_USER_REVIEW`
+
+- The existing local PDF selector remains the only upload surface.
+- ORVI is detected from specific product identity plus guaranteed-value structure, never from filename alone.
+- Browser route order is ORVI, SeguBeca, Imagina Ser, then the existing Vida Mujer fallback.
+- Browser deployment mirrors close the canonical ORVI parser/mapper dependency graph and remain byte-identical.
+- The accepted packet attaches canonical Product Intelligence under both supported field conventions.
+- The existing in-memory JSON bridge remains an automatic implementation detail; users select only the PDF.
+- Private real-PDF structural regression passes without retaining identity or publishing source values.
+- R15M2 visual simplification and financial calculations remain unchanged.
+- Browser automation was attempted but is unavailable because the installed Chromium network subprocess cannot initialize ICU data; no screenshots or visual PASS are claimed.
+- Recommendation remains `null`; human decision remains required.
+- Manual visual acceptance remains `PENDING_USER_REVIEW`.
+
+NEXT: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`
+<!-- FORGE:R15M2A_ORVI_DIRECT_PDF_ROUTING:END -->

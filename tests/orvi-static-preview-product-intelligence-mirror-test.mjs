@@ -4,6 +4,22 @@ import { createHash } from "node:crypto";
 
 const pairs = [
   [
+    "product-intelligence/quotes/orvi-pdf-parser-contract.js",
+    "docs/static-preview/quote-preview-live/orvi-product-intelligence/quotes/orvi-pdf-parser-contract.js",
+  ],
+  [
+    "product-intelligence/quotes/orvi-solucionline-pdf-text-parser.js",
+    "docs/static-preview/quote-preview-live/orvi-product-intelligence/quotes/orvi-solucionline-pdf-text-parser.js",
+  ],
+  [
+    "product-intelligence/quotes/orvi-pdf-to-product-intelligence.js",
+    "docs/static-preview/quote-preview-live/orvi-product-intelligence/quotes/orvi-pdf-to-product-intelligence.js",
+  ],
+  [
+    "product-intelligence/knowledge/orvi-product-intelligence.js",
+    "docs/static-preview/quote-preview-live/orvi-product-intelligence/knowledge/orvi-product-intelligence.js",
+  ],
+  [
     "product-intelligence/analytics/orvi-guaranteed-value-checkpoint-analytics.js",
     "docs/static-preview/quote-preview-live/orvi-product-intelligence/analytics/orvi-guaranteed-value-checkpoint-analytics.js",
   ],
@@ -39,7 +55,7 @@ for (const [canonical, mirror] of pairs) {
   );
 }
 
-console.log("PASS R15L ORVI browser deployment mirrors", {
+console.log("PASS R15M2A ORVI browser deployment mirrors", {
   mirrorCount: pairs.length,
   byteIdentical: true,
   canonicalOwner: "product-intelligence",

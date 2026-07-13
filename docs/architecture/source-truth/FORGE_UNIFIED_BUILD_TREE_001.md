@@ -11791,6 +11791,25 @@ Status: `PASS_UI_SIMPLIFICATION_AND_DATA_CONSISTENCY_HARDENING / PENDING_USER_RE
 - Recommendation is `null`; human decision is required.
 - R15M1 remains unexecuted and unclosed.
 - Manual visual acceptance is `PENDING_USER_REVIEW`.
-- Next: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+- Next: `R15M2A_ORVI_DIRECT_PDF_SELECTOR_AND_BROWSER_PARSER_ROUTING`.
 
 <!-- FORGE:R15M2_ORVI_GUARANTEED_RECOVERY_UI_HARDENING:END -->
+
+<!-- FORGE:R15M2A_ORVI_DIRECT_PDF_ROUTING:START -->
+## Product Intelligence / ORVI R15M2A
+
+Status: `PASS_DIRECT_PDF_SELECTOR_AND_BROWSER_PARSER_ROUTING / PENDING_USER_REVIEW`
+
+- Existing PDF selector: reused; no new upload surface.
+- ORVI detection: content-based product identity plus guaranteed-value structure.
+- Browser route precedence: ORVI, SeguBeca, Imagina Ser, Vida Mujer fallback.
+- Canonical parser and mapper: consumed through byte-identical deployment mirrors.
+- Accepted quote: canonical Product Intelligence attached; recommendation `null`; human decision required.
+- Manual JSON selection: not required.
+- R15M2 visual contract and canonical calculations: unchanged.
+- Private real-PDF structural regression: PASS, with sanitized boolean output only.
+- Browser automation: unavailable in the current Termux Chromium installation; no screenshots or visual acceptance claimed.
+- Manual visual acceptance: `PENDING_USER_REVIEW`.
+- Next: `R15M3_ORVI_MANUAL_VISUAL_ACCEPTANCE_SIGNOFF_AND_RELEASE_CLOSE`.
+
+<!-- FORGE:R15M2A_ORVI_DIRECT_PDF_ROUTING:END -->

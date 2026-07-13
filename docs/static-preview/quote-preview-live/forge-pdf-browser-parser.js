@@ -1,6 +1,18 @@
 // FORGE:107Z15P2_R11E_SOLUCIONLINE_LAYOUT_AWARE_PDF_PARSER:START
 import { parseSolucionlineRetirementQuote } from "./forge-solucionline-retirement-parser.js";
 import { parseSolucionlineSegubecaQuote } from "./forge-segubeca-solucionline-parser.js";
+import {
+  assertValidOrviPdfParserEnvelope,
+} from "./orvi-product-intelligence/quotes/orvi-pdf-parser-contract.js";
+import {
+  parseOrviSolucionlinePdfText,
+} from "./orvi-product-intelligence/quotes/orvi-solucionline-pdf-text-parser.js";
+import {
+  mapOrviPdfEnvelopeToProductIntelligence,
+} from "./orvi-product-intelligence/quotes/orvi-pdf-to-product-intelligence.js";
+import {
+  validateOrviProductIntelligence,
+} from "./orvi-product-intelligence/knowledge/orvi-product-intelligence.js";
 
 const PDFJS_CDN_VERSION_107Z15P2_R11E = "4.10.38";
 const PDFJS_MODULE_URL_107Z15P2_R11E = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.mjs`;
@@ -748,8 +760,129 @@ export function parseImaginaSerPdfTextToAcceptedQuotePacket(text, options = {}) 
   };
 }
 
+function normalizeOrviDetectionTextR15M2A(value) {
+  return compactText107z15p2R11E(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+}
+
+export function isOrviSolucionlinePdfText(text) {
+  const source = normalizeOrviDetectionTextR15M2A(text);
+  if (!source) return false;
+
+  const hasSpecificIdentity =
+    /\bORVI\s+(?:SYNTHETIC\s+\d+\s+PAY|\d{1,3}(?:-\d{1,2})?)\b/.test(source) ||
+    /\bORDINARIO\s+DE\s+VIDA\b/.test(source);
+  const hasGuaranteedTable =
+    /\bVALORES?\s+GARANTIZADOS?\b/.test(source) ||
+    /\bGUARANTEED\s+VALUES?\b/.test(source);
+  const structuralMarkers = [
+    /\b(?:SUMA\s+ASEGURADA|SUM\s+ASSURED)\b/,
+    /\b(?:VALOR\s+DE\s+RESCATE|SURRENDER\s+VALUE)\b/,
+    /\b(?:VALOR\s+EN\s+EFECTIVO|CASH\s+VALUE)\b/,
+    /\b(?:RECUPERACION\s+TOTAL|TOTAL\s+RECOVERY)\b/,
+  ].filter((pattern) => pattern.test(source)).length;
+
+  return hasSpecificIdentity && hasGuaranteedTable && structuralMarkers >= 2;
+}
+
+function explicitOrviMoneyValueR15M2A(money) {
+  if (money?.truth_status !== "source_provided") return null;
+  const value = Number(money.value);
+  return Number.isFinite(value) ? value : null;
+}
+
+export function parseOrviPdfTextToAcceptedQuotePacket(text, options = {}) {
+  const envelope = parseOrviSolucionlinePdfText(text, options.parserOptions || {});
+  assertValidOrviPdfParserEnvelope(envelope);
+
+  const productIntelligence = mapOrviPdfEnvelopeToProductIntelligence(envelope);
+  const validation = validateOrviProductIntelligence(productIntelligence);
+  if (!validation.valid) {
+    throw new TypeError(`Invalid ORVI Product Intelligence: ${validation.errors.join(",")}`);
+  }
+
+  const product = productIntelligence.identity.detected_product_name;
+  const currency = productIntelligence.identity.currency;
+  const paymentYears = productIntelligence.premium_structure.payment_term_years;
+  const sumAssured = explicitOrviMoneyValueR15M2A(
+    productIntelligence.protection_summary.basic_sum_assured,
+  );
+  const annualPremium = explicitOrviMoneyValueR15M2A(
+    productIntelligence.premium_structure.basic_annual_premium,
+  );
+  const totalAnnualPremium = explicitOrviMoneyValueR15M2A(
+    productIntelligence.premium_structure.total_annual_premium,
+  );
+  const missingInformation = [...productIntelligence.missing_information];
+  const paymentTerm = Number.isInteger(paymentYears) && paymentYears > 0
+    ? `${paymentYears} años`
+    : null;
+
+  const nativeResult = {
+    source: "browser_pdf_parser",
+    extractionVersion: "R15M2A_orvi_direct_pdf_intake",
+    family: "ORVI",
+    productFamily: "orvi",
+    product_family: "orvi",
+    product,
+    productName: product,
+    currency,
+    sumAssured,
+    sumInsured: sumAssured,
+    paymentYears,
+    paymentTerm,
+    premiumTable: {
+      annual: annualPremium,
+      plannedAnnual: totalAnnualPremium,
+    },
+    missing_information: missingInformation,
+    recommendation: null,
+    humanDecisionRequired: true,
+    human_decision_required: true,
+    productIntelligence,
+    product_intelligence: productIntelligence,
+  };
+
+  return {
+    schemaVersion: "forge.accepted_quote_packet.v1",
+    source: "browser_pdf_parser",
+    extractionVersion: "R15M2A_orvi_direct_pdf_intake",
+    fileName: options.fileName || null,
+    family: "ORVI",
+    productFamily: "orvi",
+    product_family: "orvi",
+    product,
+    productName: product,
+    currency,
+    sumAssured,
+    sumInsured: sumAssured,
+    paymentYears,
+    paymentTerm,
+    annualPremium,
+    totalAnnualPremium,
+    context: {
+      family: "ORVI",
+      productFamily: "orvi",
+      product_family: "orvi",
+      product,
+    },
+    nativeResult,
+    productIntelligence,
+    product_intelligence: productIntelligence,
+    missing_information: missingInformation,
+    recommendation: null,
+    humanDecisionRequired: true,
+    human_decision_required: true,
+  };
+}
+
 export function parsePdfTextToAcceptedQuotePacket(text, options = {}) {
   const source = compactText107z15p2R11E(text);
+  if (isOrviSolucionlinePdfText(source)) {
+    return parseOrviPdfTextToAcceptedQuotePacket(text, options);
+  }
   if (/segu\s*beca|segubeca/i.test(source)) {
     return parseSegubecaPdfTextToAcceptedQuotePacket(text, { ...options, route: "R14C_segubeca_route" });
   }
@@ -760,10 +893,14 @@ export function parsePdfTextToAcceptedQuotePacket(text, options = {}) {
 }
 
 export async function parsePdfFileToAcceptedQuotePacket(file, options = {}) {
-  const text = await extractTextFromPdfFile107z15p2R11E(file);
+  const {
+    extractTextFromPdfFile = extractTextFromPdfFile107z15p2R11E,
+    ...packetOptions
+  } = options;
+  const text = await extractTextFromPdfFile(file);
   return parsePdfTextToAcceptedQuotePacket(text, {
-    ...options,
-    fileName: options.fileName || file?.name || null
+    ...packetOptions,
+    fileName: packetOptions.fileName || file?.name || null
   });
 }
 
@@ -876,6 +1013,8 @@ function installPdfInputInterceptor107z15p2R11E() {
 globalThis.ForgePdfBrowserParser = {
   parsePdfFileToAcceptedQuotePacket,
   parsePdfTextToAcceptedQuotePacket,
+  parseOrviPdfTextToAcceptedQuotePacket,
+  isOrviSolucionlinePdfText,
   parseImaginaSerPdfTextToAcceptedQuotePacket,
   parseVidaMujerPdfTextToAcceptedQuotePacket,
   extractTextFromPdfFile107z15p2R11E
