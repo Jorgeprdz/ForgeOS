@@ -522,3 +522,157 @@ html.forge-mobile-widget-grid-polished-057l .primary-card.glass .fake-cta {
 }
 
 /* FORGEOS:R16C5F_NAV_PILL_IOS_FROST_AND_ACTIVE_BUBBLE_REMOVAL:END */
+
+/* FORGEOS:R16D1_ORB_PULSING_GRADIENT_STAIN_HALO:START */
+
+/*
+  Halo orgánico detrás del orb canónico.
+  No modifica la burbuja, el bow tie ni la transición a command bar.
+*/
+[data-command-orb-layer]
+[data-forge-home-command-orb-r16c="canonical"] {
+  overflow: visible !important;
+}
+
+[data-command-orb-layer]
+[data-forge-home-command-orb-r16c="canonical"]
+.command-orb {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: visible !important;
+}
+
+/*
+  Mancha asimétrica de luz:
+  varios focos de gradiente, borde blando y forma orgánica mutable.
+*/
+[data-command-orb-layer]
+[data-forge-home-command-orb-r16c="canonical"]
+.command-orb::before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  left: 50% !important;
+  top: 50% !important;
+  inset: auto !important;
+  width: 112px !important;
+  height: 98px !important;
+  margin: -49px 0 0 -56px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius:
+    58% 42% 64% 36% /
+    44% 61% 39% 56% !important;
+  clip-path: none !important;
+  background:
+    radial-gradient(
+      ellipse at 31% 30%,
+      rgba(255, 229, 151, 0.72) 0%,
+      rgba(255, 211, 112, 0.34) 24%,
+      rgba(255, 211, 112, 0.08) 48%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at 72% 65%,
+      rgba(93, 220, 255, 0.62) 0%,
+      rgba(76, 184, 255, 0.30) 28%,
+      rgba(73, 135, 255, 0.10) 52%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse at 52% 48%,
+      rgba(99, 189, 255, 0.28) 0%,
+      rgba(76, 126, 255, 0.12) 45%,
+      transparent 74%
+    ) !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  filter:
+    blur(15px)
+    saturate(132%)
+    brightness(108%) !important;
+  opacity: 0.54 !important;
+  transform:
+    translate3d(-2px, 2px, 0)
+    rotate(-8deg)
+    scale(0.91) !important;
+  transform-origin: 50% 50% !important;
+  pointer-events: none !important;
+  animation:
+    forge-r16d1-orb-gradient-stain-pulse
+    4.4s
+    cubic-bezier(0.45, 0, 0.24, 1)
+    infinite !important;
+  will-change:
+    opacity,
+    transform,
+    filter,
+    border-radius !important;
+}
+
+@keyframes forge-r16d1-orb-gradient-stain-pulse {
+  0%,
+  100% {
+    opacity: 0.43;
+    border-radius:
+      58% 42% 64% 36% /
+      44% 61% 39% 56%;
+    transform:
+      translate3d(-3px, 2px, 0)
+      rotate(-9deg)
+      scale(0.89);
+    filter:
+      blur(14px)
+      saturate(126%)
+      brightness(104%);
+  }
+
+  46% {
+    opacity: 0.78;
+    border-radius:
+      42% 58% 39% 61% /
+      57% 43% 62% 38%;
+    transform:
+      translate3d(3px, -2px, 0)
+      rotate(5deg)
+      scale(1.15);
+    filter:
+      blur(20px)
+      saturate(148%)
+      brightness(114%);
+  }
+
+  72% {
+    opacity: 0.59;
+    border-radius:
+      63% 37% 52% 48% /
+      39% 56% 44% 61%;
+    transform:
+      translate3d(1px, 1px, 0)
+      rotate(-2deg)
+      scale(1.02);
+    filter:
+      blur(17px)
+      saturate(138%)
+      brightness(109%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-command-orb-layer]
+  [data-forge-home-command-orb-r16c="canonical"]
+  .command-orb::before {
+    animation: none !important;
+    opacity: 0.58 !important;
+    transform:
+      translate3d(0, 0, 0)
+      rotate(-4deg)
+      scale(1) !important;
+    filter:
+      blur(17px)
+      saturate(136%)
+      brightness(108%) !important;
+  }
+}
+
+/* FORGEOS:R16D1_ORB_PULSING_GRADIENT_STAIN_HALO:END */
