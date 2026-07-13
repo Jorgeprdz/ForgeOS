@@ -1,0 +1,43 @@
+{
+  "analytics_id": "orvi.guaranteed-value.dynamic-checkpoint-analytics.v1",
+  "currency": "UDI",
+  "payment_term_years": 10,
+  "target_years": [10, 15, 20],
+  "selected_years": [10, 15, 20],
+  "missing_target_years": [],
+  "checkpoints": [
+    {
+      "policy_year": 10,
+      "payment_phase": "payment_completion",
+      "cumulative_paid": 12000,
+      "total_recovery": 8000,
+      "recovery_difference": -4000,
+      "recovery_ratio": 0.666667,
+      "recovery_percentage": 66.666667,
+      "break_even_status": "recovery_below_cumulative_paid"
+    },
+    {
+      "policy_year": 15,
+      "payment_phase": "post_payment",
+      "cumulative_paid": 12000,
+      "total_recovery": 12000,
+      "recovery_difference": 0,
+      "recovery_ratio": 1,
+      "recovery_percentage": 100,
+      "break_even_status": "recovery_equals_cumulative_paid"
+    },
+    {
+      "policy_year": 20,
+      "payment_phase": "post_payment",
+      "cumulative_paid": 12000,
+      "total_recovery": 16000,
+      "recovery_difference": 4000,
+      "recovery_ratio": 1.333333,
+      "recovery_percentage": 133.333333,
+      "break_even_status": "recovery_above_cumulative_paid"
+    }
+  ],
+  "readiness": "COMPLETE",
+  "recommendation": null,
+  "mxn_status": "not_evaluated"
+}

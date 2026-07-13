@@ -14685,3 +14685,30 @@ Status: `PASS_PARSER_IMPLEMENTATION / PRIVATE_REAL_SOURCE_REGRESSION_PASS`
 
 NEXT: `R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS`
 <!-- FORGE:R15E_ORVI_SOLUCIONLINE_PDF_TEXT_PARSER_IMPLEMENTATION_AND_CANONICAL_MAPPING:END -->
+
+<!-- FORGE:R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS:START -->
+## R15F ORVI Guaranteed Value Dynamic Checkpoint Analytics
+
+Status: `PASS_ANALYTICS_IMPLEMENTATION / PRIVATE_REAL_SOURCE_REGRESSION_PASS`
+
+- Analytics ID: `orvi.guaranteed-value.dynamic-checkpoint-analytics.v1`.
+- Canonical owner: `product-intelligence`.
+- Analytics surface: `product-intelligence/analytics/orvi-guaranteed-value-checkpoint-analytics.js`.
+- Synthetic expected fixture: `fixtures/orvi-guaranteed-value-dynamic-checkpoints-expected.json`.
+- Regression: `tests/orvi-guaranteed-value-checkpoint-analytics-test.mjs`.
+- Checkpoints derive from the source payment term and exact available timeline years.
+- Default strategy: payment completion, then the next five-year milestone, then five years later.
+- Examples validated: 6 -> 6/10/15, 10 -> 10/15/20, 15 -> 15/20/25, 20 -> 20/25/30.
+- Nearest-year substitution is forbidden.
+- Cumulative paid separates base premium, additional premium, and combined paid amount.
+- Total recovery remains source-provided.
+- Recovery difference and recovery ratio are derived comparisons.
+- Recovery ratio is not labeled as investment return.
+- ORVI remains classified as life-insurance protection, not an investment product.
+- Recommendation remains `null`; cancellation or continuation remains a human decision.
+- UDI/USD source-unit analytics are implemented.
+- MXN projection, runtime, renderer, dashboard, route, and UI remain unauthorized.
+- Private real-source regression retains only structural and boolean results.
+
+NEXT: `R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY_AND_CURRENCY_PATH_RECONCILIATION`
+<!-- FORGE:R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS:END -->

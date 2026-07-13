@@ -11646,3 +11646,22 @@ Status: `TEXT_PARSER_IMPLEMENTED / CANONICAL_MAPPING_IMPLEMENTED`
 
 NEXT: `R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS`
 <!-- FORGE:R15E_ORVI_SOLUCIONLINE_PDF_TEXT_PARSER_IMPLEMENTATION_AND_CANONICAL_MAPPING:END -->
+
+<!-- FORGE:R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS:START -->
+## Product Intelligence / ORVI R15F
+
+Status: `DYNAMIC_CHECKPOINT_ANALYTICS_IMPLEMENTED`
+
+- Product Intelligence remains canonical owner.
+- Dynamic checkpoints are payment-term driven and require exact timeline years.
+- Default year strategy supports 6/10/15/20 payment variants without hardcoding 20/25/30.
+- Cumulative base premium, additional premium, and total paid are auditable.
+- Guaranteed surrender value, cash value, and total recovery remain separate.
+- Recovery difference and percentage are comparison analytics, not investment return.
+- Missing premium components block derived totals instead of becoming zero.
+- Source currency remains UDI or USD.
+- Recommendation remains null.
+- MXN scenarios, runtime, renderer, dashboard, and UI remain pending.
+
+NEXT: `R15G_ORVI_MXN_PROJECTION_ENGINE_AUTHORITY_AND_CURRENCY_PATH_RECONCILIATION`
+<!-- FORGE:R15F_ORVI_GUARANTEED_VALUE_DYNAMIC_CHECKPOINT_ANALYTICS:END -->
