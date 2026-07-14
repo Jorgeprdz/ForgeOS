@@ -15125,3 +15125,41 @@ Status: `PASS_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUC
 
 NEXT: `BOARD_SCOPE_SELECTION_AFTER_R16C`
 <!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:END -->
+
+<!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
+## R16J0 Accepted Quote to Sales Presentation Entrypoint
+
+Status: PASS
+
+Baseline: `22c1d6df21f7d3085b9f0d91a23c495bf0c6372c`
+
+Implemented:
+
+- Converted the existing Nueva Cotización presentation placeholder into
+  the real `Generar presentación de venta` entrypoint.
+- Keeps the action panel hidden and the CTA disabled until accepted quote results exist.
+- Starts review through `ForgeAcceptedQuoteBridge`.
+- Opens the existing editable sales-presentation review UI.
+- Reopens an existing review session without regenerating it.
+- Preserves human approval and export authorization as separate actions.
+- Does not send, mutate CRM, mutate quote values, approve, or export
+  automatically.
+
+Validation:
+
+- No accepted quote: intake results and CTA remain hidden; CTA remains disabled.
+- Accepted quote available: intake results appear and the CTA becomes ready.
+- Review session created: editable preview opened.
+- Existing session: reopened without recreation.
+- Chromium, Firefox, and WebKit: PASS.
+- Three-state visual evidence generated.
+
+Deferred:
+
+- `R16I0N5_COMMAND_BAR_POINTER_OWNERSHIP_FINAL_ACCEPTANCE` remains HOLD.
+  No Command Bar commit was produced.
+
+Next:
+
+- `R16J1_SALES_PRESENTATION_EDITABLE_REVIEW_WORKSPACE`
+<!-- FORGE:R16J0_MASTER_BUILD_TREE:END -->

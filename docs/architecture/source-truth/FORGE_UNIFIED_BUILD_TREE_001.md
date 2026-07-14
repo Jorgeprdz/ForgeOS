@@ -12344,3 +12344,36 @@ ROADMAP_STAGE_6_SEND=DISABLED
 ROADMAP_STAGE_6_CRM_MUTATION=FORBIDDEN
 ROADMAP_NEXT_STEP=R16I_PRESENTATION_VISUAL_RUNTIME_ACCEPTANCE_AND_RELEASE_CLOSE
 <!-- FORGE:R16H3_ADVISOR_REASON_WHY_DOMAIN_ISOLATION:END -->
+
+<!-- FORGE:R16J0_UNIFIED_BUILD_TREE:START -->
+## R16J0 · Quote-to-Sales Presentation System
+
+Status: PASS
+
+Baseline: `22c1d6df21f7d3085b9f0d91a23c495bf0c6372c`
+
+Unified path:
+
+1. Accepted quote review snapshot.
+2. Browser presentation context.
+3. Prompt review packet.
+4. Slide-plan review packet.
+5. Editable review state.
+6. Human approval.
+7. Explicit export authorization.
+
+R16J0 activates steps 1 through 5 from Nueva Cotización through a
+visible CTA. Steps 6 and 7 remain explicit human actions.
+
+Safety:
+
+- No invented quote facts.
+- No automatic approval.
+- No automatic export.
+- No automatic send.
+- No quote or CRM mutation.
+
+Next node:
+
+`R16J1_SALES_PRESENTATION_EDITABLE_REVIEW_WORKSPACE`
+<!-- FORGE:R16J0_UNIFIED_BUILD_TREE:END -->

@@ -101,6 +101,7 @@
       );
     })();
   </script>
+  <link rel="stylesheet" href="forge-sales-presentation-entrypoint-r16j0.css?v=r16j0-accepted-quote-sales-presentation-entrypoint-20260714-1">
 </head>
 <body data-forge-mobile-nav-page-r16c5j="home">
   <main class="phone-shell" aria-label="Forge Alive vista estática">
@@ -883,17 +884,10 @@
 
           <section class="fq-card-105dr" data-forge-actions-panel="true">
             <h2>Acciones seguras</h2>
-            <button
-              class="fq-disabled-105dr fq-presentation-105dr"
-              type="button"
-              disabled
-              aria-disabled="true"
-              data-forge-real-effects-allowed="false"
-              data-forge-presentation-generation-allowed="false"
-              data-forge-prompt-generation-allowed="false"
-            >Generar presentación de ventas</button>
-            <p class="fq-note-105dr fq-note-gap-105dr">Futuro flujo: contexto del cliente + datos extraídos de la cotización + notas del asesor → prompt estructurado → presentación de ventas generada por IA.</p>
-            <p class="fq-note-105dr fq-note-gap-small-105dr">En esta vista no se genera presentación ni escrituras. Los cálculos confirmados usan sólo datos extraídos y motores existentes; MXN queda pendiente si falta UDI verificada.</p>
+            <button class=" fq-presentation-105dr" type="button" disabled aria-disabled="true" data-forge-real-effects-allowed="false" data-forge-presentation-generation-allowed="false" data-forge-prompt-generation-allowed="false"  data-forge-sales-presentation-entrypoint-r16j0="true" aria-describedby="forge-sales-presentation-status-r16j0">Generar presentación de venta</button>
+<p id="forge-sales-presentation-status-r16j0" data-forge-sales-presentation-entrypoint-status-r16j0="true" aria-live="polite">Confirma primero una cotización. La presentación requiere revisión humana.</p>
+            <p class="fq-note-105dr fq-note-gap-105dr">Flujo activo: la cotización aceptada alimenta contexto, prompt y plan de diapositivas para una revisión editable. No aprueba ni exporta automáticamente.</p>
+            <p class="fq-note-105dr fq-note-gap-small-105dr">La presentación se abre en revisión editable y conserva los datos confirmados de la cotización. Aprobar, autorizar la exportación e imprimir requieren acciones humanas separadas.</p>
           </section>
         </aside>
       </div>
@@ -2133,5 +2127,6 @@
 
 </script>
 <!-- FORGEOS:R16E1_NEW_QUOTE_RUNTIME_PARITY_MOUNT:END -->
+  <script src="forge-sales-presentation-entrypoint-r16j0.js?v=r16j0-accepted-quote-sales-presentation-entrypoint-20260714-1" defer></script>
 </body>
 </html>
