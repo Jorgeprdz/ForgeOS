@@ -4,6 +4,7 @@ import {
   isPdfSelection107z15p2R9C
 } from "./forge-accepted-quote-adapter.js?v=r15l_orvi_end_to_end_20260712_1";
 import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1";
+import { createAcceptedQuoteReviewSnapshotBoundary } from "./forge-accepted-quote-review-snapshot.js?v=r16g2b1_review_snapshot_20260713_1";
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -83,6 +84,13 @@ function isDirectPdfSyntheticPacketChange(input, file, event) {
   );
 }
 
+const acceptedQuoteReviewSnapshotBoundary =
+  createAcceptedQuoteReviewSnapshotBoundary();
+
+function getAcceptedQuoteReviewSnapshot() {
+  return acceptedQuoteReviewSnapshotBoundary.getSnapshot();
+}
+
 function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQuoteRuntime) {
   if (!deps || deps.__initialized) return false;
 
@@ -117,6 +125,7 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
   }
 
   deps.__initialized = true;
+  acceptedQuoteReviewSnapshotBoundary.clear();
 
   const intakeState = globalThis.ForgeQuoteIntakeState;
   const setIntakeState = (state, options) =>
@@ -153,6 +162,10 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
       status.setAttribute("data-forge-state", "calculating");
       void calculateAcceptedQuote(packet)
         .then(calculation => {
+          acceptedQuoteReviewSnapshotBoundary.setSnapshot({
+            acceptedQuote: packet,
+            calculation,
+          });
           renderAcceptedQuote(calculation, { writeRuntimeGrid });
           status.textContent = "Cotización calculada y guardada durante esta sesión.";
           status.setAttribute("data-forge-state", "accepted");
@@ -160,6 +173,7 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
           setReadiness?.("Cotización calculada · lista para revisión comercial", "accepted");
         })
         .catch(error => {
+          acceptedQuoteReviewSnapshotBoundary.clear();
           status.textContent = error?.message || String(error);
           status.setAttribute("data-forge-state", "error");
           setIntakeState("ERROR", {
@@ -171,11 +185,13 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
         });
     },
     onEditRequested() {
+      acceptedQuoteReviewSnapshotBoundary.clear();
       status.textContent = "Edición solicitada. No se guardó la cotización.";
       status.setAttribute("data-forge-state", "edit");
       setReadiness?.("Resultado extraído · requiere edición", "edit");
     },
     onError(error) {
+      acceptedQuoteReviewSnapshotBoundary.clear();
       status.textContent = "No se pudo guardar. El pop-up permanece abierto.";
       status.setAttribute("data-forge-state", "error");
       setIntakeState("ERROR", {
@@ -214,6 +230,7 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
   input.addEventListener("change", async event => {
     event.stopImmediatePropagation();
 
+    acceptedQuoteReviewSnapshotBoundary.clear();
     packet = null;
     submit.disabled = true;
     submit.setAttribute("aria-disabled", "true");
@@ -312,6 +329,7 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
 const api = Object.freeze({
   initAcceptedQuoteBridge,
   buildOrviConfirmationPreview,
+  getAcceptedQuoteReviewSnapshot,
   isDirectPdfSyntheticPacketChange,
 });
 
@@ -321,6 +339,7 @@ initAcceptedQuoteBridge();
 
 export {
   buildOrviConfirmationPreview,
+  getAcceptedQuoteReviewSnapshot,
   initAcceptedQuoteBridge,
   isDirectPdfSyntheticPacketChange,
 };
