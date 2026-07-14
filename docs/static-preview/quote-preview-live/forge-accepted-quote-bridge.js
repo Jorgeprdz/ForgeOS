@@ -5,6 +5,10 @@ import {
 } from "./forge-accepted-quote-adapter.js?v=r15l_orvi_end_to_end_20260712_1";
 import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1";
 import { createAcceptedQuoteReviewSnapshotBoundary } from "./forge-accepted-quote-review-snapshot.js?v=r16g2b1_review_snapshot_20260713_1";
+import { buildSalesPresentationBrowserContext } from "./forge-sales-presentation-browser-context-adapter.js?v=r16g2b3f_context_20260714_1";
+import { buildSalesPresentationPromptReviewPacket } from "./forge-sales-presentation-prompt-builder.js?v=r16g2b3f_prompt_20260714_1";
+import { buildSalesPresentationSlidePlanReviewPacket } from "./forge-sales-presentation-slide-plan-generator.js?v=r16g2b3f_slides_20260714_1";
+import { buildSalesPresentationReviewPacket } from "./forge-sales-presentation-review-packet-builder.js?v=r16g2b3f_review_20260714_1";
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -89,6 +93,46 @@ const acceptedQuoteReviewSnapshotBoundary =
 
 function getAcceptedQuoteReviewSnapshot() {
   return acceptedQuoteReviewSnapshotBoundary.getSnapshot();
+}
+
+function getSalesPresentationContextReviewPacket(overrides = {}) {
+  const snapshot = getAcceptedQuoteReviewSnapshot();
+  if (!snapshot) return null;
+
+  return buildSalesPresentationBrowserContext({
+    snapshot,
+    prospectContext: overrides.prospectContext ?? null,
+    advisorNotes: overrides.advisorNotes ?? null,
+    clientObjective: overrides.clientObjective ?? null,
+  });
+}
+
+function buildSalesPresentationCoreReviewBundle(overrides = {}) {
+  const contextPacket = getSalesPresentationContextReviewPacket(overrides);
+  if (!contextPacket) return null;
+
+  const promptPacket =
+    buildSalesPresentationPromptReviewPacket({ contextPacket });
+
+  const slidePlanPacket =
+    buildSalesPresentationSlidePlanReviewPacket({
+      contextPacket,
+      promptPacket,
+    });
+
+  const reviewPacket =
+    buildSalesPresentationReviewPacket({
+      contextPacket,
+      promptPacket,
+      slidePlanPacket,
+    });
+
+  return Object.freeze({
+    contextPacket,
+    promptPacket,
+    slidePlanPacket,
+    reviewPacket,
+  });
 }
 
 function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQuoteRuntime) {
@@ -329,7 +373,9 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
 const api = Object.freeze({
   initAcceptedQuoteBridge,
   buildOrviConfirmationPreview,
+  buildSalesPresentationCoreReviewBundle,
   getAcceptedQuoteReviewSnapshot,
+  getSalesPresentationContextReviewPacket,
   isDirectPdfSyntheticPacketChange,
 });
 
@@ -339,7 +385,9 @@ initAcceptedQuoteBridge();
 
 export {
   buildOrviConfirmationPreview,
+  buildSalesPresentationCoreReviewBundle,
   getAcceptedQuoteReviewSnapshot,
+  getSalesPresentationContextReviewPacket,
   initAcceptedQuoteBridge,
   isDirectPdfSyntheticPacketChange,
 };
