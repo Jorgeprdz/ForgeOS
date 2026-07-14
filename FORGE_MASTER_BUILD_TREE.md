@@ -15163,3 +15163,43 @@ Next:
 
 - `R16J1_SALES_PRESENTATION_EDITABLE_REVIEW_WORKSPACE`
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:END -->
+
+<!-- FORGE:R16J0A_MASTER_BUILD_TREE:START -->
+## R16J0A Quote Review and Acceptance Action
+
+Status: PASS
+
+Baseline: `29bf26d3a8e3c41950d77829027227b74b3c3f53`
+
+Implemented:
+
+- Added an explicit `Confirmar cotización` action inside the real
+  Nueva Cotización result flow.
+- Exposed the validated quote candidate through
+  `getCurrentQuoteCandidate`.
+- Added `confirmCurrentQuoteCandidate` to use the existing calculation
+  engine and create the accepted review snapshot only after a human
+  click.
+- Keeps presentation generation blocked before confirmation.
+- Enables `Generar presentación de venta` after acceptance.
+- Preserves recoverable error handling and session-only persistence.
+
+Safety:
+
+- No automatic quote acceptance.
+- No automatic presentation generation.
+- No automatic approval, export, send, CRM write, or invented values.
+
+Validation:
+
+- No quote: result actions hidden.
+- Extracted quote: confirmation visible and enabled.
+- Human confirmation: accepted snapshot created.
+- Presentation CTA: visible and ready after acceptance.
+- Chromium, Firefox, and WebKit: PASS.
+- Three-state visual evidence generated.
+
+Next:
+
+- `R16J1_SALES_PRESENTATION_EDITABLE_REVIEW_WORKSPACE`
+<!-- FORGE:R16J0A_MASTER_BUILD_TREE:END -->

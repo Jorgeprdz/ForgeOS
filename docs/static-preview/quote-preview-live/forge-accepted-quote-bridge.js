@@ -95,6 +95,118 @@ function isDirectPdfSyntheticPacketChange(input, file, event) {
 
 const acceptedQuoteReviewSnapshotBoundary =
   createAcceptedQuoteReviewSnapshotBoundary();
+let currentQuoteCandidateR16J0A = null;
+let quoteAcceptanceRuntimeR16J0A = null;
+
+function getCurrentQuoteCandidate() {
+  return currentQuoteCandidateR16J0A;
+}
+
+async function confirmCurrentQuoteCandidate() {
+  const candidate = currentQuoteCandidateR16J0A;
+  const runtime = quoteAcceptanceRuntimeR16J0A;
+
+  if (!candidate) {
+    throw new Error(
+      "No hay una cotización extraída pendiente de confirmación.",
+    );
+  }
+
+  if (!runtime?.status) {
+    throw new Error(
+      "El runtime de confirmación de cotización no está disponible.",
+    );
+  }
+
+  runtime.status.textContent =
+    "Calculando cotización confirmada…";
+  runtime.status.setAttribute(
+    "data-forge-state",
+    "calculating",
+  );
+  runtime.setReadiness?.(
+    "Cotización confirmada · calculando resultado",
+    "calculating",
+  );
+
+  try {
+    const calculation =
+      await calculateAcceptedQuote(candidate);
+
+    acceptedQuoteReviewSnapshotBoundary.setSnapshot({
+      acceptedQuote: candidate,
+      calculation,
+    });
+
+    renderAcceptedQuote(calculation, {
+      writeRuntimeGrid: runtime.writeRuntimeGrid,
+    });
+
+    runtime.status.textContent =
+      "Cotización confirmada y guardada durante esta sesión.";
+    runtime.status.setAttribute(
+      "data-forge-state",
+      "accepted",
+    );
+
+    runtime.setIntakeState?.("READY", {
+      message: runtime.status.textContent,
+    });
+
+    runtime.setReadiness?.(
+      "Cotización confirmada · lista para revisión comercial",
+      "accepted",
+    );
+
+    globalThis.dispatchEvent(
+      new CustomEvent("forge:accepted-quote-confirmed", {
+        detail: Object.freeze({
+          version: "R16J0A",
+          accepted: true,
+          automatic: false,
+        }),
+      }),
+    );
+
+    return getAcceptedQuoteReviewSnapshot();
+  } catch (error) {
+    acceptedQuoteReviewSnapshotBoundary.clear();
+
+    runtime.status.textContent =
+      error?.message || String(error);
+    runtime.status.setAttribute(
+      "data-forge-state",
+      "error",
+    );
+
+    runtime.setIntakeState?.("ERROR", {
+      message:
+        "No se pudo confirmar la cotización. Revisa los datos.",
+      resetResults: false,
+    });
+
+    runtime.setReadiness?.(
+      "La cotización requiere revisión antes de presentar",
+      "error",
+    );
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        "forge:accepted-quote-confirmation-error",
+        {
+          detail: Object.freeze({
+            version: "R16J0A",
+            message:
+              error?.message || String(error),
+          }),
+        },
+      ),
+    );
+
+    throw error;
+  }
+}
+
 
 function getAcceptedQuoteReviewSnapshot() {
   return acceptedQuoteReviewSnapshotBoundary.getSnapshot();
@@ -206,7 +318,15 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
   const setIntakeState = (state, options) =>
     intakeState?.setState?.(state, options);
 
-  let packet = null;
+
+quoteAcceptanceRuntimeR16J0A = Object.freeze({
+  status,
+  setReadiness,
+  writeRuntimeGrid,
+  setIntakeState,
+});
+
+let packet = null;
   let sequence = 0;
 
   const backend = api.createMemoryBackend();
@@ -306,6 +426,16 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
     event.stopImmediatePropagation();
 
     acceptedQuoteReviewSnapshotBoundary.clear();
+  currentQuoteCandidateR16J0A = null;
+
+  globalThis.dispatchEvent(
+    new CustomEvent("forge:quote-candidate-cleared", {
+      detail: Object.freeze({
+        version: "R16J0A",
+      }),
+    }),
+  );
+
     packet = null;
     submit.disabled = true;
     submit.setAttribute("aria-disabled", "true");
@@ -330,6 +460,18 @@ function initAcceptedQuoteBridge(deps = globalThis.ForgeNuevaCotizacionAcceptedQ
     try {
       const raw = await file.text();
       packet = validatePacket(JSON.parse(raw));
+    currentQuoteCandidateR16J0A = packet;
+
+    globalThis.dispatchEvent(
+      new CustomEvent("forge:quote-candidate-ready", {
+        detail: Object.freeze({
+          version: "R16J0A",
+          ready: true,
+          automatic: false,
+        }),
+      }),
+    );
+
 
       submit.disabled = false;
       submit.setAttribute("aria-disabled", "false");
@@ -444,7 +586,7 @@ function exportCurrentSalesPresentationToPrintPdf() {
 }
 
 const api = Object.freeze({
-  buildClientRecommendationRationaleReviewBoundary,
+  getCurrentQuoteCandidate, confirmCurrentQuoteCandidate, buildClientRecommendationRationaleReviewBoundary,
   initAcceptedQuoteBridge,
   buildOrviConfirmationPreview,
   buildSalesPresentationCoreReviewBundle,
@@ -474,7 +616,7 @@ bindSalesPresentationReviewUi({
 initAcceptedQuoteBridge();
 
 export {
-  buildClientRecommendationRationaleReviewBoundary,
+  getCurrentQuoteCandidate, confirmCurrentQuoteCandidate, buildClientRecommendationRationaleReviewBoundary,
   approveCurrentSalesPresentationReview,
   authorizeCurrentSalesPresentationExport,
   buildOrviConfirmationPreview,

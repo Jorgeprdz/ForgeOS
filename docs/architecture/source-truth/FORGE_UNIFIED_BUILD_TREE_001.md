@@ -12377,3 +12377,29 @@ Next node:
 
 `R16J1_SALES_PRESENTATION_EDITABLE_REVIEW_WORKSPACE`
 <!-- FORGE:R16J0_UNIFIED_BUILD_TREE:END -->
+
+<!-- FORGE:R16J0A_UNIFIED_BUILD_TREE:START -->
+## R16J0A · Human Quote Acceptance Boundary
+
+Status: PASS
+
+Baseline: `29bf26d3a8e3c41950d77829027227b74b3c3f53`
+
+Unified path:
+
+1. PDF or extracted JSON produces a validated quote candidate.
+2. Forge renders the candidate for human review.
+3. The user presses `Confirmar cotización`.
+4. The existing calculation engine validates the candidate.
+5. The accepted-quote review snapshot is created.
+6. The presentation entrypoint becomes ready.
+7. Presentation approval and export remain separate.
+
+Boundary:
+
+`validated candidate → explicit human confirmation → accepted snapshot`
+
+Next node:
+
+`R16J1_SALES_PRESENTATION_EDITABLE_REVIEW_WORKSPACE`
+<!-- FORGE:R16J0A_UNIFIED_BUILD_TREE:END -->
