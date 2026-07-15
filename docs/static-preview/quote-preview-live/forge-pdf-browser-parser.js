@@ -973,40 +973,55 @@ function setPdfStatus107z15p2R11E(input, message, tone = "info") {
 }
 
 async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
-  setPdfStatus107z15p2R11E(input, "PDF recibido. Extrayendo renglones del estudio…", "info");
-
-  const packet = await enrichPacketWithUdiRuntime107z15p2R11F2(
-    await parsePdfFileToAcceptedQuotePacket(file, { fileName: file.name })
+  setPdfStatus107z15p2R11E(
+    input,
+    "PDF recibido. Extrayendo renglones del estudio…",
+    "info",
   );
 
-  if (packet?.missing_information?.length) {
+  try {
+    const packet = await parsePdfFileToAcceptedQuotePacket(file, {
+      fileName: file.name,
+    });
+
     setPdfStatus107z15p2R11E(
       input,
-      `PDF convertido con datos faltantes: ${packet.missing_information.join(", ")}.`,
-      "error"
+      "PDF extraído localmente. Listo para continuar.",
+      "success",
     );
-  } else {
-    setPdfStatus107z15p2R11E(input, "PDF convertido a cotización aceptada. Abriendo modal…", "success");
+
+    globalThis.dispatchEvent?.(
+      new CustomEvent("forge:accepted-quote-packet-ready", {
+        detail: Object.freeze({
+          version: "R16J1C1_INCREMENTAL_01",
+          packet,
+          source: "SOLUCIONLINE_REAL_PDF",
+          automaticCalculationRequested: false,
+          automaticAcceptance: false,
+          fileName: file.name || null,
+        }),
+      }),
+    );
+
+    return packet;
+  } catch (error) {
+    setPdfStatus107z15p2R11E(
+      input,
+      `No pude procesar el PDF: ${error?.message || error}`,
+      "error",
+    );
+
+    globalThis.dispatchEvent?.(
+      new CustomEvent("forge:accepted-quote-packet-error", {
+        detail: Object.freeze({
+          version: "R16J1C1_INCREMENTAL_01",
+          message: error?.message || String(error),
+        }),
+      }),
+    );
+
+    throw error;
   }
-
-  if (typeof File === "undefined" || typeof DataTransfer === "undefined") {
-    globalThis.dispatchEvent?.(new CustomEvent("forge:accepted-quote-packet-ready", { detail: { packet } }));
-    return;
-  }
-
-  const jsonFileName = `${(file.name || "cotizacion").replace(/\.pdf$/i, "")}.accepted-quote.json`;
-  const jsonFile = new File(
-    [JSON.stringify(packet, null, 2)],
-    jsonFileName,
-    { type: "application/json" }
-  );
-
-  const transfer = new DataTransfer();
-  transfer.items.add(jsonFile);
-  input.files = transfer.files;
-
-  const event = new Event("change", { bubbles: true });
-  input.dispatchEvent(event);
 }
 
 function installPdfInputInterceptor107z15p2R11E() {

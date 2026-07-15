@@ -169,10 +169,15 @@ assert.equal(selectedPacket.family, "ORVI");
 assert.equal(selectedPacket.productIntelligence.schema.id, "forge.product_intelligence.orvi");
 
 assert.match(page, /accept="\.json,application\/json,\.pdf,application\/pdf"/);
-assert.match(page, /forge-pdf-browser-parser\.js\?v=r15m2c_orvi_responsive_copy_20260713_1/);
+assert.match(page, /forge-pdf-browser-parser\.js\?v=[A-Za-z0-9._-]+/);
 assert.match(browserParserSource, /installPdfInputInterceptor107z15p2R11E\(\)/);
 assert.match(browserParserSource, /convertPdfInputToJsonChange107z15p2R11E\(input, file\)/);
-assert.match(browserParserSource, /new File\([\s\S]*application\/json/);
+// FORGE:R16J1C1_INCREMENTAL_01_DIRECT_PACKET_EVENT
+assert.match(browserParserSource, /forge:accepted-quote-packet-ready/);
+assert.match(browserParserSource, /automaticCalculationRequested:\s*false/);
+assert.match(browserParserSource, /automaticAcceptance:\s*false/);
+assert.doesNotMatch(browserParserSource, /transfer\.items\.add\(jsonFile\)/);
+assert.doesNotMatch(browserParserSource, /new File\([\s\S]*application\/json/);
 assert.equal(/filename.*isOrviSolucionlinePdfText/i.test(browserParserSource), false);
 
 console.log("PASS R15M2A ORVI direct PDF browser routing", {

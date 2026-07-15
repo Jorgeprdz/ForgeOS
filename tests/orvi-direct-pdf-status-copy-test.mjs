@@ -1,71 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-globalThis.document = {
-  getElementById() {
-    return null;
-  },
-  createElement() {
-    return {};
-  },
-  head: {
-    appendChild() {},
-  },
-  querySelectorAll() {
-    return [];
-  },
-  body: {
-    setAttribute() {},
-  },
-};
-
-const {
-  isDirectPdfSyntheticPacketChange,
-} = await import(
-  "../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js"
-);
-
-const pdfStatus = {
-  dataset: { tone: "success" },
-  textContent: "PDF convertido a cotización aceptada. Abriendo modal…",
-};
-const input = {
-  closest() {
-    return {
-      querySelector() {
-        return pdfStatus;
-      },
-    };
-  },
-};
-const syntheticPacket = { name: "documento.accepted-quote.json" };
-
-assert.equal(
-  isDirectPdfSyntheticPacketChange(
-    input,
-    syntheticPacket,
-    { isTrusted: false },
+const parser = await readFile(
+  new URL(
+    "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js",
+    import.meta.url,
   ),
-  true,
+  "utf8",
 );
-assert.equal(
-  isDirectPdfSyntheticPacketChange(
-    input,
-    syntheticPacket,
-    { isTrusted: true },
-  ),
-  false,
-  "a real user-selected JSON keeps the JSON-specific status copy",
-);
-assert.equal(
-  isDirectPdfSyntheticPacketChange(
-    input,
-    { name: "cotizacion.json" },
-    { isTrusted: false },
-  ),
-  false,
-);
-
 const bridge = await readFile(
   new URL(
     "../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
@@ -82,30 +24,39 @@ const page = await readFile(
 );
 
 assert.match(
-  bridge,
-  /PDF procesado localmente\. Listo para revisar\./,
+  parser,
+  /PDF recibido\. Extrayendo renglones del estudio…/,
 );
+assert.match(
+  parser,
+  /PDF extraído localmente\. Listo para continuar\./,
+);
+assert.match(parser, /forge:accepted-quote-packet-ready/);
+assert.match(parser, /automaticCalculationRequested:\s*false/);
+assert.match(parser, /automaticAcceptance:\s*false/);
+assert.doesNotMatch(parser, /transfer\.items\.add\(jsonFile\)/);
+assert.doesNotMatch(parser, /new File\([\s\S]*application\/json/);
+
 assert.match(
   bridge,
   /`\$\{file\.name\} cargado\. Listo para revisar\.`/,
-  "manual JSON retains its own filename-based message",
+  "manual JSON remains a separate supported upload path",
 );
+
 assert.match(
   page,
   /Selecciona el PDF de Solución Online\. Se procesa localmente en tu navegador\./,
 );
-assert.match(
-  page,
-  /<p class="fq-help-105dr">No se sube ni se publica\.<\/p>/,
-);
+assert.match(page, /No se sube ni se publica\.<\/p>/);
 assert.doesNotMatch(
   page,
   /No se sube, no se lee y no se procesa el PDF/,
 );
 
-console.log("PASS R15M2C ORVI direct PDF status copy", {
-  directPdfStatus: "PDF_PROCESSED_LOCALLY",
-  internalJsonFilenameVisible: false,
-  manualJsonStatusPreserved: true,
-  staleNoProcessingCopyVisible: false,
+console.log("PASS R16J1C1 incremental direct PDF status contract", {
+  directPdfPacketEvent: true,
+  syntheticJsonHandoff: false,
+  automaticCalculationRequested: false,
+  automaticAcceptance: false,
+  manualJsonUploadPreserved: true,
 });
