@@ -17,6 +17,7 @@
   let observer = null;
   let reconciling = false;
   let queued = false;
+  let desiredKey = null;
 
   function navNode() {
     return document.querySelector(NAV_SELECTOR);
@@ -50,16 +51,25 @@
 
   function requestedKey() {
     const url = new URL(location.href);
+    const moduleKey =
+      url.searchParams.get("module");
+    const bodyModule =
+      document.body.dataset
+        .forgeSaasActiveModuleR16c5l;
+    const urlNav =
+      url.searchParams.get("nav");
+    const durableKey =
+      document.body.dataset
+        .forgeDesiredNavKeyR16j1c1;
 
     if (
-      url.searchParams.get("module") === "cotizaciones" ||
-      document.body.dataset
-        .forgeSaasActiveModuleR16c5l === "cotizaciones"
+      moduleKey === "cotizaciones" ||
+      bodyModule === "cotizaciones"
     ) {
       return "cotizaciones";
     }
 
-    return url.searchParams.get("nav") || "inicio";
+    return urlNav || durableKey || "inicio";
   }
 
   function activeKey(nav) {
@@ -108,10 +118,28 @@
     return true;
   }
 
-  function sync(key = requestedKey()) {
+  function sync(key = null) {
+    const moduleOpen =
+      document.body.dataset
+        .forgeSaasActiveModuleR16c5l ===
+      "cotizaciones";
+
+    /*
+     * Route state outranks legacy visual requests. While the quote
+     * module is open, no observer or bridge may move the nav back to
+     * Inicio.
+     */
+    const resolvedKey = moduleOpen
+      ? "cotizaciones"
+      : key || desiredKey || requestedKey();
+
+    desiredKey = resolvedKey;
+    document.body.dataset.forgeDesiredNavKeyR16j1c1 =
+      resolvedKey;
+
     const nav = navNode();
     const selected =
-      itemByKey(nav, key) ||
+      itemByKey(nav, resolvedKey) ||
       itemByKey(nav, "inicio");
     const selector =
       nav?.querySelector(SELECTOR_SELECTOR);
@@ -263,8 +291,7 @@
 
     queueMicrotask(() => {
       queued = false;
-      const nav = navNode();
-      sync(activeKey(nav));
+      sync(desiredKey || requestedKey());
     });
   }
 
@@ -296,7 +323,7 @@
         .forgeInstantAuthorityBoundR16j1c1 ===
       "true"
     ) {
-      sync(activeKey(nav));
+      sync(desiredKey || requestedKey());
       return true;
     }
 
@@ -354,13 +381,17 @@
 
     globalThis.addEventListener(
       "resize",
-      () => sync(activeKey(navNode())),
+      () => sync(
+        desiredKey || requestedKey(),
+      ),
       { passive: true },
     );
 
     globalThis.addEventListener(
       "orientationchange",
-      () => sync(activeKey(navNode())),
+      () => sync(
+        desiredKey || requestedKey(),
+      ),
       { passive: true },
     );
 

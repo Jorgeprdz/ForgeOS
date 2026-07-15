@@ -15,53 +15,42 @@
     "[data-forge-saas-module-close-r16c5l]";
 
 
-  /* FORGEOS:R16C5N_QUOTE_MODULE_ROUTER_DOM_ISOLATION:START */
-
+  /* FORGEOS:R16J1C1_03A5_CONSTANT_TIME_ROUTER:START */
   const SHELL_SELECTOR = ".phone-shell";
-  const PERSISTENT_SHELL_CHILD_SELECTOR = [
-    HOST_SELECTOR,
-    "[data-command-mobile-slot]",
-    ".forge-home-nav-controller-r16c5k",
-    ".forge-mobile-nav-r16c5k-home-visual",
-  ].join(", ");
+  const FAST_CLASS =
+    "forge-saas-module-active-r16j1c1";
+  const FAST_STYLE_ID =
+    "forge-saas-module-fastpath-style-r16j1c1";
 
-  const suppressedShellChildren = new Map();
-  let shellIsolationObserver = null;
-
-  function isPersistentShellChild(child, moduleHost) {
-    return (
-      child === moduleHost ||
-      child.matches(PERSISTENT_SHELL_CHILD_SELECTOR)
-    );
-  }
-
-  function suppressShellChild(child, moduleHost) {
-    if (
-      !(child instanceof HTMLElement) ||
-      isPersistentShellChild(child, moduleHost) ||
-      suppressedShellChildren.has(child)
-    ) {
-      return;
+  function ensureFastPathStyle() {
+    if (document.getElementById(FAST_STYLE_ID)) {
+      return true;
     }
 
-    suppressedShellChildren.set(child, {
-      display: child.style.getPropertyValue("display"),
-      displayPriority:
-        child.style.getPropertyPriority("display"),
-      ariaHidden: child.getAttribute("aria-hidden"),
-      inert:
-        "inert" in child
-          ? child.inert
-          : null,
-    });
+    const style = document.createElement("style");
+    style.id = FAST_STYLE_ID;
+    style.textContent = `
+      .phone-shell.${FAST_CLASS}
+        > :not(
+          [data-forge-saas-module-host-r16c5l="cotizaciones"]
+        ):not(
+          [data-command-mobile-slot]
+        ):not(
+          .forge-home-nav-controller-r16c5k
+        ):not(
+          .forge-mobile-nav-r16c5k-home-visual
+        ) {
+        display: none !important;
+      }
 
-    child.dataset.forgeSaasSuppressedR16c5n = "true";
-    child.style.setProperty("display", "none", "important");
-    child.setAttribute("aria-hidden", "true");
+      .phone-shell.${FAST_CLASS}
+        > [data-forge-saas-module-host-r16c5l="cotizaciones"] {
+        display: block !important;
+      }
+    `;
 
-    if ("inert" in child) {
-      child.inert = true;
-    }
+    document.head.appendChild(style);
+    return true;
   }
 
   function isolateShellForModule(moduleHost) {
@@ -69,64 +58,20 @@
 
     if (!shell) return false;
 
-    Array.from(shell.children).forEach((child) => {
-      suppressShellChild(child, moduleHost);
-    });
-
-    shellIsolationObserver?.disconnect();
-
-    shellIsolationObserver = new MutationObserver((records) => {
-      records.forEach((record) => {
-        record.addedNodes.forEach((node) => {
-          if (
-            node instanceof HTMLElement &&
-            node.parentElement === shell
-          ) {
-            suppressShellChild(node, moduleHost);
-          }
-        });
-      });
-    });
-
-    shellIsolationObserver.observe(shell, {
-      childList: true,
-    });
-
+    ensureFastPathStyle();
+    shell.classList.add(FAST_CLASS);
     return true;
   }
 
   function restoreShellAfterModule() {
-    shellIsolationObserver?.disconnect();
-    shellIsolationObserver = null;
+    const shell = host()?.closest(SHELL_SELECTOR);
 
-    suppressedShellChildren.forEach((state, child) => {
-      if (state.display) {
-        child.style.setProperty(
-          "display",
-          state.display,
-          state.displayPriority,
-        );
-      } else {
-        child.style.removeProperty("display");
-      }
+    if (!shell) return false;
 
-      if (state.ariaHidden === null) {
-        child.removeAttribute("aria-hidden");
-      } else {
-        child.setAttribute("aria-hidden", state.ariaHidden);
-      }
-
-      if (state.inert !== null && "inert" in child) {
-        child.inert = state.inert;
-      }
-
-      delete child.dataset.forgeSaasSuppressedR16c5n;
-    });
-
-    suppressedShellChildren.clear();
+    shell.classList.remove(FAST_CLASS);
+    return true;
   }
-
-  /* FORGEOS:R16C5N_QUOTE_MODULE_ROUTER_DOM_ISOLATION:END */
+  /* FORGEOS:R16J1C1_03A5_CONSTANT_TIME_ROUTER:END */
 
   function host() {
     return document.querySelector(HOST_SELECTOR);
@@ -181,21 +126,31 @@
 
   function openModule(options = {}) {
     const moduleHost = host();
-
     if (!moduleHost) return false;
 
-    moduleHost.hidden = false;
     document.body.dataset.forgeSaasActiveModuleR16c5l =
       MODULE_KEY;
     document.body.dataset.forgeSaasModuleTransitionR16c5l =
       "enter";
+    document.body.dataset.forgeDesiredNavKeyR16j1c1 =
+      MODULE_KEY;
 
     isolateShellForModule(moduleHost);
-    setVisualActive(MODULE_KEY);
+    moduleHost.hidden = false;
+
+    /*
+     * The router owns route state, but never measures or styles the
+     * selector. It delegates the target key to the single visual
+     * authority. This also covers HTMLElement.click(), keyboard
+     * activation and tests where pointerdown is intentionally absent.
+     */
+    globalThis
+      .ForgeMobileNavInstantAuthorityR16J1C1
+      ?.sync(MODULE_KEY);
 
     const url = new URL(window.location.href);
     url.searchParams.set("module", MODULE_KEY);
-    url.searchParams.set("v", "r16c5l");
+    url.searchParams.set("v", "r16j1c1-fast");
 
     if (options.history !== false) {
       history.pushState(
@@ -207,14 +162,9 @@
 
     document.title = "Nueva cotización · Forge Alive";
 
-    window.scrollTo({
-      top: 0,
-      behavior:
-        window.matchMedia("(prefers-reduced-motion: reduce)")
-          .matches
-          ? "auto"
-          : "smooth",
-    });
+    if (window.scrollY !== 0) {
+      window.scrollTo(0, 0);
+    }
 
     window.dispatchEvent(
       new CustomEvent("forge:saas-module-opened", {
@@ -222,38 +172,42 @@
       }),
     );
 
-    requestAnimationFrame(() => {
-      window.dispatchEvent(new Event("resize"));
-    });
-
     return true;
   }
 
   function closeModule(options = {}) {
     const moduleHost = host();
-
     if (!moduleHost) return false;
 
     moduleHost.hidden = true;
-
-    delete document.body.dataset.forgeSaasActiveModuleR16c5l;
-    delete document.body.dataset.forgeSaasModuleTransitionR16c5l;
-
     restoreShellAfterModule();
 
+    delete document.body.dataset
+      .forgeSaasActiveModuleR16c5l;
+    delete document.body.dataset
+      .forgeSaasModuleTransitionR16c5l;
+
     const targetKey = options.targetKey || "inicio";
-    setVisualActive(targetKey);
+
+    document.body.dataset.forgeDesiredNavKeyR16j1c1 =
+      targetKey;
+
+    globalThis
+      .ForgeMobileNavInstantAuthorityR16J1C1
+      ?.sync(targetKey);
 
     if (options.history !== false) {
       const url = cleanModuleParams(
         new URL(window.location.href),
       );
-
       url.searchParams.set("nav", targetKey);
-      url.searchParams.set("v", "r16c5l");
+      url.searchParams.set("v", "r16j1c1-fast");
 
       history.pushState(
-        { forgeModule: null, forgeSection: targetKey },
+        {
+          forgeModule: null,
+          forgeSection: targetKey,
+        },
         "",
         url,
       );
@@ -263,7 +217,10 @@
 
     window.dispatchEvent(
       new CustomEvent("forge:saas-module-closed", {
-        detail: { module: MODULE_KEY, targetKey },
+        detail: {
+          module: MODULE_KEY,
+          targetKey,
+        },
       }),
     );
 
@@ -357,6 +314,7 @@
   }
 
   function init() {
+    ensureFastPathStyle();
     bindNavigationCapture();
     bindHistory();
 

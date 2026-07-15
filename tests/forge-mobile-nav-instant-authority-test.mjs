@@ -27,7 +27,7 @@ const navCss = await readFile(
 
 assert.match(
   page,
-  /forge-mobile-nav-instant-authority-r16j1c1\.js\?v=r16j1c1-nav-authority-03a4-v5-20260715-1/,
+  /forge-mobile-nav-instant-authority-r16j1c1\.js\?v=r16j1c1-route-fastpath-03a5-20260715-1/,
 );
 
 for (const token of [

@@ -38,24 +38,36 @@
   }
 
   function setVisualActive(key) {
-
-    /* FORGEOS:R16C5M1_ACTIVE_MODULE_GUARD:START */
+    /*
+     * The legacy Home controller remains active underneath the quote
+     * module. Its MutationObserver may continue reporting Inicio.
+     * Preserve the original active-module guard before delegating to
+     * the single visual authority.
+     */
     if (
-      document.body.dataset.forgeSaasActiveModuleR16c5l ===
+      document.body.dataset
+        .forgeSaasActiveModuleR16c5l ===
         "cotizaciones" &&
       key !== "cotizaciones"
     ) {
-      return;
+      return false;
     }
-    /* FORGEOS:R16C5M1_ACTIVE_MODULE_GUARD:END */
+
+    const authority =
+      globalThis
+        .ForgeMobileNavInstantAuthorityR16J1C1;
+
+    if (authority) {
+      return authority.sync(key);
+    }
+
     const nav = visualNav();
     const selected = visualItem(key);
 
-    if (!nav || !selected) return;
+    if (!nav || !selected) return false;
 
     nav.querySelectorAll(ITEM).forEach((item) => {
       const active = item === selected;
-
       item.classList.toggle("active", active);
 
       if (active) {
@@ -66,21 +78,47 @@
     });
 
     nav.dataset.forgeActiveKey = key;
+    return true;
   }
 
-  function activateHomeSection(key, updateUrl = true) {
+  function activateHomeSection(
+    key,
+    updateUrl = true,
+  ) {
     const legacyButton = controllerButton(key);
-
     if (!legacyButton) return false;
 
-    legacyButton.click();
+    const alreadyActive =
+      legacyButton.classList.contains("active") ||
+      legacyButton.getAttribute("aria-current") ===
+        "page" ||
+      legacyButton.dataset.active === "true";
+
+    /*
+     * Returning from Cotizaciones to Inicio must only reveal the
+     * already-rendered Home DOM. Re-clicking the active legacy controller
+     * reruns its entire render pipeline and caused the measured 4s delay.
+     */
+    if (!alreadyActive) {
+      legacyButton.click();
+    }
+
     setVisualActive(key);
 
     if (updateUrl) {
       const url = new URL(window.location.href);
+      const currentNav = url.searchParams.get("nav");
+
+      url.searchParams.delete("module");
       url.searchParams.set("nav", key);
-      url.searchParams.set("v", "r16c5k");
-      history.replaceState(null, "", url);
+      url.searchParams.set("v", "r16j1c1-fast");
+
+      if (
+        currentNav !== key ||
+        window.location.search !== url.search
+      ) {
+        history.replaceState(null, "", url);
+      }
     }
 
     return true;
