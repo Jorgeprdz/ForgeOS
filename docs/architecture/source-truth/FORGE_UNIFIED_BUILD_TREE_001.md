@@ -12485,3 +12485,23 @@ Next node:
 
 `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
 <!-- FORGE:R16J1B_UNIFIED_BUILD_TREE:END -->
+
+<!-- FORGE:R16J1C_ORB_HALO_UNIFIED:START -->
+## R16J1C · Alfred Orb and Halo Removal Closure
+
+Canonical ID: `R16J1C_ALFRED_ORB_AND_HALO_REMOVAL_CLOSURE`
+
+Status: PASS — HUMAN VISUAL CONFIRMATION
+
+Unified runtime result:
+
+1. Known orb mounts are hidden immediately.
+2. Semantic and geometry discovery suppress orb, halo, and wrapper clusters.
+3. Suppressed UI cannot capture pointer or keyboard focus.
+4. Alfred engine remains available for future redesign.
+5. No quote-action or presentation-layout changes are included.
+
+Firefox automation is deferred to native desktop or CI because Playwright Firefox stalls during PRoot runtime boot.
+
+Next node: `R16J1D_SALES_PRESENTATION_REVIEW_CARD_COMPOSITION`
+<!-- FORGE:R16J1C_ORB_HALO_UNIFIED:END -->

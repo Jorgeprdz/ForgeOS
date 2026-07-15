@@ -199,3 +199,31 @@ Next:
 
 `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
 <!-- FORGE:R16J1B_ROADMAP:END -->
+
+<!-- FORGE:R16J1C_ORB_HALO_ROADMAP:START -->
+## R16J1C · Close Alfred Orb and Halo Removal
+
+Canonical ID: `R16J1C_ALFRED_ORB_AND_HALO_REMOVAL_CLOSURE`
+
+Status: PASS — HUMAN VISUAL CONFIRMATION
+
+Delivered:
+
+- Orb removed.
+- Halo removed.
+- Pointer and focus exposure removed.
+- Alfred engine preserved.
+- Guidelines audit recorded.
+
+Not included:
+
+- Review-card composition.
+- Quote-action redesign.
+- Presentation content redesign.
+
+Technical debt:
+
+- Validate Firefox in a native desktop or CI environment.
+
+Next: `R16J1D_SALES_PRESENTATION_REVIEW_CARD_COMPOSITION`
+<!-- FORGE:R16J1C_ORB_HALO_ROADMAP:END -->

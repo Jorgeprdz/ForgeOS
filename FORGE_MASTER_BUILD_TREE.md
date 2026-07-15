@@ -15333,3 +15333,35 @@ Next:
 
 - `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
 <!-- FORGE:R16J1B_MASTER_BUILD_TREE:END -->
+
+<!-- FORGE:R16J1C_ORB_HALO_MASTER:START -->
+## R16J1C Alfred Orb and Halo Removal Closure
+
+Canonical ID: `R16J1C_ALFRED_ORB_AND_HALO_REMOVAL_CLOSURE`
+
+Status: PASS — HUMAN VISUAL CONFIRMATION
+
+Baseline: `7143436088beeb6a9f2b641f4725b296968ac83c`
+
+Closed scope:
+
+- Alfred Orb removed from the quote UI.
+- Halo and glow cluster removed.
+- Pointer capture and keyboard focus removed from the retired UI.
+- Alfred engine preserved.
+- Guidelines audited before the visual change.
+- User visually confirmed that the orb and halo no longer appear.
+
+Validation boundary:
+
+- Static JavaScript and CSS contracts: PASS.
+- Human visual confirmation: PASS.
+- Firefox automation under Termux PRoot: deferred to native desktop or CI; this is not recorded as a product failure.
+- Quote actions and sales-presentation layout are outside this closure.
+
+Deferred issue:
+
+- Review helper and approval controls must be composed inside a canonical review card.
+
+Next: `R16J1D_SALES_PRESENTATION_REVIEW_CARD_COMPOSITION`
+<!-- FORGE:R16J1C_ORB_HALO_MASTER:END -->
