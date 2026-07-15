@@ -1,10 +1,16 @@
 (() => {
   "use strict";
 
-  const VERSION = "R16J1C1_INTAKE_UI_03A1";
+  const VERSION = "R16J1C1_INTAKE_UI_03A2";
+  const ROUTE_EVENT = "forge:route-change";
+  const HISTORY_PATCH_FLAG =
+    "__forgeQuoteIntakeHistoryPatchedR16J1C1";
+
   const BETA_ATTR = "data-forge-beta-pill-r16j1c1";
-  const NOISE_ATTR = "data-forge-intake-noise-card-r16j1c1";
-  const INLINE_ATTR = "data-forge-review-inline-r16j1c1";
+  const NOISE_ATTR =
+    "data-forge-intake-noise-card-r16j1c1";
+  const INLINE_ATTR =
+    "data-forge-review-inline-r16j1c1";
 
   const WRAPPER_SELECTOR =
     '[data-forge-quote-acceptance-r16j0a="true"]';
@@ -14,6 +20,9 @@
     '[data-forge-pdf-status="true"]';
   const INPUT_SELECTOR =
     '[data-forge-local-packet-input="true"]';
+
+  const NAV_LABEL_PATTERN =
+    /^(inicio|pipeline|clientes|cotizaciones|más)$/i;
 
   const LABELS = Object.freeze({
     READY: "Revisar PDF",
@@ -26,7 +35,9 @@
   const refreshedAcceptanceWrappers = new WeakSet();
 
   let framePending = false;
-  let observer = null;
+  let timerShort = 0;
+  let timerMedium = 0;
+  let timerLong = 0;
 
   function normalizeText(value) {
     return String(value || "")
@@ -40,21 +51,8 @@
       .includes(token.toLocaleLowerCase("es"));
   }
 
-  function isQuoteRoutePresent() {
-    const params = new URLSearchParams(location.search);
-
-    if (params.get("module") === "cotizaciones") {
-      return true;
-    }
-
-    return Array.from(
-      document.querySelectorAll("h1, h2, h3"),
-    ).some(
-      (heading) =>
-        textIncludes(heading, "Nueva cotización") ||
-        textIncludes(heading, "Nuevo borrador de cotización") ||
-        textIncludes(heading, "Carga tu cotización"),
-    );
+  function isQuoteDomPresent() {
+    return Boolean(document.querySelector(INPUT_SELECTOR));
   }
 
   function findHeadingByText(token) {
@@ -212,19 +210,20 @@
 
   function refreshAcceptanceRuntimeOnce() {
     const wrapper = document.querySelector(WRAPPER_SELECTOR);
+    const runtime =
+      globalThis.ForgeQuoteAcceptanceEntrypointR16J0A;
 
     if (
       !wrapper ||
-      refreshedAcceptanceWrappers.has(wrapper)
+      refreshedAcceptanceWrappers.has(wrapper) ||
+      typeof runtime?.refresh !== "function"
     ) {
       return;
     }
 
-    refreshedAcceptanceWrappers.add(wrapper);
-
     try {
-      globalThis.ForgeQuoteAcceptanceEntrypointR16J0A
-        ?.refresh?.();
+      runtime.refresh();
+      refreshedAcceptanceWrappers.add(wrapper);
     } catch {}
   }
 
@@ -236,10 +235,9 @@
 
     const state = getReviewState(button, wrapper);
     const visible = VISIBLE_STATES.has(state);
-    const hidden = !visible;
-    const ariaHidden = String(hidden);
+    const ariaHidden = String(!visible);
 
-    if (wrapper.hidden !== hidden) {
+    if (wrapper.hidden !== !visible) {
       wrapper.hidden = !visible;
     }
     if (wrapper.getAttribute("aria-hidden") !== ariaHidden) {
@@ -251,7 +249,7 @@
   }
 
   function syncQuoteUi() {
-    if (!isQuoteRoutePresent()) return;
+    if (!isQuoteDomPresent()) return;
 
     installBetaPill();
     placeReviewAction();
@@ -269,10 +267,85 @@
     });
   }
 
+  function clearBurstTimers() {
+    window.clearTimeout(timerShort);
+    window.clearTimeout(timerMedium);
+    window.clearTimeout(timerLong);
+    timerShort = 0;
+    timerMedium = 0;
+    timerLong = 0;
+  }
+
   function syncBurst() {
+    clearBurstTimers();
     scheduleSync();
-    window.setTimeout(scheduleSync, 80);
-    window.setTimeout(scheduleSync, 320);
+
+    timerShort =
+      window.setTimeout(scheduleSync, 70);
+    timerMedium =
+      window.setTimeout(scheduleSync, 220);
+    timerLong =
+      window.setTimeout(scheduleSync, 650);
+  }
+
+  function isNavigationActivation(event) {
+    const control = event.target?.closest?.(
+      "a, button, [role='button'], [data-nav], " +
+      "[data-route], [data-forge-nav]",
+    );
+
+    if (!control) return false;
+
+    const text = normalizeText(control.textContent);
+    if (NAV_LABEL_PATTERN.test(text)) return true;
+
+    const routeHint = [
+      control.getAttribute("href"),
+      control.getAttribute("data-nav"),
+      control.getAttribute("data-route"),
+      control.getAttribute("data-forge-nav"),
+      control.getAttribute("aria-label"),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLocaleLowerCase("es");
+
+    return [
+      "inicio",
+      "pipeline",
+      "clientes",
+      "cotizaciones",
+      "mas",
+      "más",
+    ].some((token) => routeHint.includes(token));
+  }
+
+  function onDocumentClick(event) {
+    if (!isNavigationActivation(event)) return;
+    syncBurst();
+  }
+
+  function installHistorySignals() {
+    if (history[HISTORY_PATCH_FLAG]) return;
+
+    for (const methodName of ["pushState", "replaceState"]) {
+      const original = history[methodName];
+
+      if (typeof original !== "function") continue;
+
+      history[methodName] = function (...args) {
+        const result = original.apply(this, args);
+        globalThis.dispatchEvent(new Event(ROUTE_EVENT));
+        return result;
+      };
+    }
+
+    Object.defineProperty(history, HISTORY_PATCH_FLAG, {
+      value: true,
+      configurable: false,
+      enumerable: false,
+      writable: false,
+    });
   }
 
   function getPublicState() {
@@ -287,9 +360,31 @@
       reviewVisible: Boolean(wrapper && !wrapper.hidden),
       reviewLabel: normalizeText(button?.textContent),
       navigationSyncPending: framePending,
+      globalMutationObserver: false,
       automaticCalculation: false,
       automaticAcceptance: false,
     });
+  }
+
+  function disconnect() {
+    clearBurstTimers();
+    document.removeEventListener(
+      "click",
+      onDocumentClick,
+      true,
+    );
+    globalThis.removeEventListener(
+      ROUTE_EVENT,
+      syncBurst,
+    );
+    globalThis.removeEventListener(
+      "popstate",
+      syncBurst,
+    );
+    globalThis.removeEventListener(
+      "hashchange",
+      syncBurst,
+    );
   }
 
   function boot() {
@@ -300,40 +395,49 @@
       return;
     }
 
-    globalThis.addEventListener("popstate", syncBurst);
-    globalThis.addEventListener("hashchange", syncBurst);
+    installHistorySignals();
+
+    document.addEventListener(
+      "click",
+      onDocumentClick,
+      true,
+    );
+    globalThis.addEventListener(
+      ROUTE_EVENT,
+      syncBurst,
+    );
+    globalThis.addEventListener(
+      "popstate",
+      syncBurst,
+    );
+    globalThis.addEventListener(
+      "hashchange",
+      syncBurst,
+    );
     globalThis.addEventListener(
       "forge:accepted-quote-packet-ready",
       syncBurst,
     );
     globalThis.addEventListener(
       "forge:quote-acceptance-state",
-      syncBurst,
+      scheduleSync,
     );
     globalThis.addEventListener(
       "forge:accepted-quote-confirmed",
-      syncBurst,
+      scheduleSync,
     );
     globalThis.addEventListener(
       "forge:accepted-quote-confirmation-error",
-      syncBurst,
+      scheduleSync,
     );
 
-    observer = new MutationObserver(scheduleSync);
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-    });
-
-    globalThis.ForgeQuoteIntakeUiR16J1C1 = Object.freeze({
-      version: VERSION,
-      refresh: syncBurst,
-      getState: getPublicState,
-      disconnect() {
-        observer?.disconnect();
-        observer = null;
-      },
-    });
+    globalThis.ForgeQuoteIntakeUiR16J1C1 =
+      Object.freeze({
+        version: VERSION,
+        refresh: syncBurst,
+        getState: getPublicState,
+        disconnect,
+      });
 
     syncBurst();
   }

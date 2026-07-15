@@ -25,11 +25,11 @@ const css = await readFile(
 
 assert.match(
   page,
-  /forge-quote-intake-ui-simplification-r16j1c1\.css\?v=r16j1c1-intake-beta-review-ui-20260715-1/,
+  /forge-quote-intake-ui-simplification-r16j1c1\.css\?v=r16j1c1-intake-ui-03a2-20260715-1/,
 );
 assert.match(
   page,
-  /forge-quote-intake-ui-simplification-r16j1c1\.js\?v=r16j1c1-intake-beta-review-ui-20260715-1/,
+  /forge-quote-intake-ui-simplification-r16j1c1\.js\?v=r16j1c1-intake-ui-03a2-20260715-1/,
 );
 
 for (const token of [

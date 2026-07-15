@@ -10,16 +10,24 @@ const source = await readFile(
 );
 
 for (const token of [
-  "const refreshedAcceptanceWrappers = new WeakSet()",
-  "requestAnimationFrame",
-  "function scheduleSync()",
-  "function refreshAcceptanceRuntimeOnce()",
-  'globalThis.addEventListener("popstate", syncBurst)',
-  'globalThis.addEventListener("hashchange", syncBurst)',
-  "observer = new MutationObserver(scheduleSync)",
-  "childList: true",
-  "subtree: true",
-  "navigationSyncPending: framePending",
+  'const VERSION = "R16J1C1_INTAKE_UI_03A2"',
+  'const ROUTE_EVENT = "forge:route-change"',
+  "function isQuoteDomPresent()",
+  "function isNavigationActivation(event)",
+  "function installHistorySignals()",
+  'for (const methodName of ["pushState", "replaceState"])',
+  'document.addEventListener(',
+  '"click"',
+  "onDocumentClick",
+  "true",
+  'globalThis.addEventListener(',
+  "ROUTE_EVENT",
+  "syncBurst",
+  "function clearBurstTimers()",
+  "window.clearTimeout(timerShort)",
+  "window.clearTimeout(timerMedium)",
+  "window.clearTimeout(timerLong)",
+  "globalMutationObserver: false",
   "automaticCalculation: false",
   "automaticAcceptance: false",
 ]) {
@@ -28,26 +36,34 @@ for (const token of [
 
 assert.doesNotMatch(
   source,
+  /new MutationObserver/,
+  "global MutationObserver must be removed",
+);
+assert.doesNotMatch(
+  source,
+  /observer\.observe/,
+  "no subtree observer may remain",
+);
+assert.doesNotMatch(
+  source,
   /attributes:\s*true/,
-  "attribute observation can create a self-triggering UI loop",
 );
 assert.doesNotMatch(
   source,
-  /attributeFilter/,
-  "the hotfix must not observe attributes changed by its own synchronizer",
+  /childList:\s*true/,
 );
 assert.doesNotMatch(
   source,
-  /new MutationObserver\(\(\)\s*=>\s*\{\s*settle\(\)/,
-  "the observer must not call the mutating synchronizer directly",
+  /params\.get\("module"\)\s*===\s*"cotizaciones"/,
+  "permanent module query param must not activate quote work on Inicio",
 );
 assert.match(
   source,
-  /refreshedAcceptanceWrappers\.has\(wrapper\)/,
+  /return Boolean\(document\.querySelector\(INPUT_SELECTOR\)\)/,
 );
 assert.match(
   source,
-  /refreshedAcceptanceWrappers\.add\(wrapper\)/,
+  /if \(!isNavigationActivation\(event\)\) return;/,
 );
 assert.match(
   source,
@@ -55,19 +71,17 @@ assert.match(
 );
 assert.match(
   source,
-  /if \(wrapper\.hidden !== hidden\)/,
-);
-assert.match(
-  source,
-  /if \(wrapper\.getAttribute\("aria-hidden"\) !== ariaHidden\)/,
+  /wrapper\.hidden = !visible/,
 );
 
-console.log("PASS R16J1C1 navigation freeze hotfix contract", {
-  attributeFeedbackLoop: false,
-  childListRouteWatch: true,
-  observerDebounced: true,
-  runtimeRefreshOncePerWrapper: true,
-  inicioToCotizacionesSupported: true,
+console.log("PASS R16J1C1 interaction latency hotfix contract", {
+  globalMutationObserver: false,
+  eventDrivenRouteSync: true,
+  navigationClicksOnly: true,
+  pdfSelectorClickIgnored: true,
+  cancelableBoundedBurst: true,
+  quoteDomDetectionOnly: true,
+  assetCacheBustRequired: true,
   betaUiPreserved: true,
   reviewPdfUiPreserved: true,
 });
