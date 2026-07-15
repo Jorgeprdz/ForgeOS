@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="./shared/forge-layer-boundary-058a.css?v=r16c_home_restoration_20260713_1">
   <link rel="stylesheet" href="./forge-alive-home-restoration-r16c.css?v=r16c_home_restoration_20260713_1">
   <link rel="stylesheet" href="./forge-alive-home-command-bar-micro-fix-r16c1.css?v=r16d3c-command-state-validator-correction">
-  <link rel="stylesheet" href="assets/forge-quote-preview-confirmation-modal-107q.css" data-forge-107q-confirmation-modal-css>
+
   <link rel="stylesheet" href="./forge-alive-mobile-nav-r16c5j.css?v=r16c5j-clean-nav">
   <link rel="stylesheet" href="./forge-alive-home-nav-bridge-r16c5k.css?v=r16c5k-exact-quote-replica">
   <link rel="stylesheet" href="./forge-alive-new-quote-saas-module-r16c5l.css?v=r16f2-nested-main-layout-reset">
@@ -92,21 +92,29 @@
         markRenderedControls();
       }
 
-      new MutationObserver(markRenderedControls).observe(
-        document.documentElement,
-        {
-          childList: true,
-          subtree: true,
-        }
-      );
+
+  window.addEventListener(
+    "forge:saas-module-opened",
+    markRenderedControls,
+  );
+  window.addEventListener(
+    "forge:quote-runtime-ready",
+    markRenderedControls,
+  );
+  window.addEventListener(
+    "pageshow",
+    markRenderedControls,
+    { passive: true },
+  );
+
     })();
   </script>
-  <link rel="stylesheet" href="forge-sales-presentation-entrypoint-r16j0.css?v=r16j0-accepted-quote-sales-presentation-entrypoint-20260714-1">
-  <link rel="stylesheet" href="forge-quote-acceptance-entrypoint-r16j0a.css?v=r16j0a-quote-human-acceptance-20260714-1">
-  <link rel="stylesheet" href="forge-sales-presentation-workspace-r16j1.css?v=r16j1-workspace-ui-cleanup-20260714-1">
-  <link rel="stylesheet" href="forge-nueva-cotizacion-ui-cleanup-r16j1.css?v=r16j1-workspace-ui-cleanup-20260714-1">
+
+
+
+
   <link rel="stylesheet" href="forge-alfred-orb-ui-removal-r16j1a.css?v=r16j1c-orb-halo-closure-20260715-2">
-  <link rel="stylesheet" href="forge-quote-action-dock-r16j1b.css?v=r16j1b-segubeca-inline-orb-20260714-10">
+
   <link rel="stylesheet" href="../quote-preview-live/forge-quote-intake-ui-simplification-r16j1c1.css?v=r16j1c1-intake-ui-03a2-20260715-1">
 </head>
 <body data-forge-mobile-nav-page-r16c5j="home">
@@ -959,15 +967,15 @@
   </main>
 
   <script src="./sample-data.js"></script>
-  <script src="./alfred-desktop-dashboard.js?v=r16c_home_restoration_20260713_1"></script>
-  <script src="./alfred-desktop-command-workspace-056y.js?v=r16c_home_restoration_20260713_1" defer></script>
-  <script src="./desktop/forge-desktop-command-workspace-upgrade-058e.js?v=060n" defer></script>
+
+
+
   <script src="./shared/forge-static-action-packet-bridge-059b.js?v=059b" defer></script>
   <script src="./shared/forge-static-engine-adapter-dry-run-059e.js?v=059e" defer></script>
   <script src="./shared/forge-report-read-model-dry-run-adapter-060d.js?v=060d" defer></script>
   <script src="./shared/forge-local-read-model-source-adapter-060i.js?v=060i" defer></script>
-  <script src="./desktop/forge-local-read-model-preview-ui-binding-060l.js?v=060n" defer></script>
-  <script src="./desktop/forge-public-preview-interaction-visual-repair-060m.js?v=r16c_home_restoration_20260713_1" defer></script>
+
+
   <script src="./smart-widget-stack.js?v=061g" type="module"></script>
   <script src="./command-bar-orb.js?v=r16d3-command-close-capture" type="module"></script>
   <script src="./alfred-responsive-ui.js?v=r16c1_command_bar_20260713_1" defer></script>
@@ -979,14 +987,15 @@
   <script src="./forge-mobile-widget-grid-057j.js?v=r16c_home_restoration_20260713_1" defer></script>
   <script src="./forge-mobile-widget-grid-polish-057l.js?v=r16c_home_restoration_20260713_1" defer></script>
   <script src="./forge-mobile-widget-grid-dedup-057m.js?v=r16c_home_restoration_20260713_1" defer></script>
-  <script src="assets/forge-quote-preview-confirmation-modal-107q.js" defer data-forge-107q-confirmation-modal-js></script>
-  <script defer src="./forge-alive-mobile-nav-r16c5j.js?v=r16c5j-clean-nav"></script>
+
+  <script defer src="./forge-alive-runtime-lazy-loader-r16j1c1.js?v=r16j1c1-runtime-lazy-nav-sync-20260715-1"></script>
+<script defer src="./forge-alive-mobile-nav-r16c5j.js?v=r16c5j-clean-nav"></script>
   <script defer src="./forge-alive-home-nav-bridge-r16c5k.js?v=r16c5k-exact-quote-replica"></script>
 <!-- FORGEOS:R16C5L_QUOTE_ASSETS:START -->
-<script src="../quote-preview-live/forge-quote-preview-bundle.js" data-forge-saas-module-asset-r16c5l="true"></script>
-<script type="module" src="../quote-preview-live/forge-quote-calculators.js" data-forge-saas-module-asset-r16c5l="true"></script>
-<script type="module" src="../quote-preview-live/forge-udi-mxn-runtime.js" data-forge-saas-module-asset-r16c5l="true"></script>
-<script type="module" src="../quote-preview-live/forge-quote-benefit-summary.js" data-forge-saas-module-asset-r16c5l="true"></script>
+
+
+
+
 <script data-forge-saas-module-inline-r16c5l="true">
 "use strict";
 
@@ -1554,24 +1563,24 @@
   };
 })();
 </script>
-<script type="module" src="../quote-preview-live/forge-accepted-quote-adapter.js?v=r14g_segubeca_renderer_20260712_1" data-forge-saas-module-asset-r16c5l="true"></script>
-<script type="module" src="../quote-preview-live/forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1" data-forge-saas-module-asset-r16c5l="true"></script>
-<script type="module" src="../quote-preview-live/forge-benefit-summary-layout.js?v=r16b_unified_dashboard_20260713_1" data-forge-saas-module-asset-r16c5l="true"></script>
+
+
+
 <script defer src="./forge-alive-saas-router-r16c5l.js?v=r16c5n-dom-isolation"></script>
 <!-- FORGEOS:R16C5L_QUOTE_ASSETS:END -->
 
 <!-- FORGEOS:R16E1_NEW_QUOTE_RUNTIME_PARITY_MOUNT:START -->
 <!-- Runtime funcional extraído del standalone canónico. -->
-<script src="../quote-preview-live/forge-quote-intake-state.js?v=r16a_quote_intake_empty_state_20260713_1"></script>
-<script src="../quote-preview-live/forge-quote-preview-bundle.js"></script>
-<script type="module" src="../quote-preview-live/forge-quote-calculators.js"></script>
-<script type="module" src="../quote-preview-live/forge-udi-mxn-runtime.js"></script>
-<script type="module" src="../quote-preview-live/forge-quote-benefit-summary.js"></script>
-<script type="module" src="../quote-preview-live/forge-accepted-quote-adapter.js?v=r14g_segubeca_renderer_20260712_1"></script>
-<script type="module" src="../quote-preview-live/forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1"></script>
-<script type="module" src="../quote-preview-live/forge-benefit-summary-layout.js?v=r16b_unified_dashboard_20260713_1"></script>
-<script type="module" src="../quote-preview-live/forge-pdf-browser-parser.js?v=r16j1c1-pdf-timeouts-20260715-1"></script>
-<script type="module" src="../quote-preview-live/forge-accepted-quote-bridge.js?v=r16j1b-segubeca-inline-orb-20260714-10"></script>
+
+
+
+
+
+
+
+
+
+
 <script>
 "use strict";
 
@@ -2141,11 +2150,11 @@
 
 </script>
 <!-- FORGEOS:R16E1_NEW_QUOTE_RUNTIME_PARITY_MOUNT:END -->
-  <script src="forge-sales-presentation-entrypoint-r16j0.js?v=r16j0-accepted-quote-sales-presentation-entrypoint-20260714-1" defer></script>
-  <script src="forge-quote-acceptance-entrypoint-r16j0a.js?v=r16j0a-quote-human-acceptance-20260714-1" defer></script>
+
+
   <script src="forge-nueva-cotizacion-ui-cleanup-r16j1.js?v=r16j1-workspace-ui-cleanup-20260714-1" defer></script>
   <script src="forge-alfred-orb-ui-removal-r16j1a.js?v=r16j1c-orb-halo-closure-20260715-2" defer></script>
-  <script src="forge-quote-action-dock-r16j1b.js?v=r16j1b-segubeca-inline-orb-20260714-10" defer></script>
+
   <script defer src="../quote-preview-live/forge-quote-intake-ui-simplification-r16j1c1.js?v=r16j1c1-intake-ui-03a2-20260715-1"></script>
 </body>
 </html>
