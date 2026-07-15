@@ -399,14 +399,71 @@ function buildVidaMujerAcceptedQuotePacketFromText107z15p2R11E(text, options = {
   };
 }
 
+function withPdfTimeoutR16J1C1(promise, timeoutMs, label, onTimeout = null) {
+  let timer = null;
+  let timedOut = false;
+
+  return Promise.race([
+    Promise.resolve(promise),
+    new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        timedOut = true;
+        try {
+          onTimeout?.();
+        } catch {}
+        reject(new Error(`${label} excedió ${timeoutMs} ms.`));
+      }, timeoutMs);
+    }),
+  ]).finally(() => {
+    if (timer !== null) clearTimeout(timer);
+    if (!timedOut) return;
+  });
+}
+
 async function loadPdfJs107z15p2R11E() {
   if (!pdfjsPromise107z15p2R11E) {
-    pdfjsPromise107z15p2R11E = import(PDFJS_MODULE_URL_107Z15P2_R11E).then((pdfjsLib) => {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL_107Z15P2_R11E;
-      return pdfjsLib;
+    pdfjsPromise107z15p2R11E = (async () => {
+      const candidates = [
+        {
+          module: PDFJS_MODULE_URL_107Z15P2_R11E,
+          worker: PDFJS_WORKER_URL_107Z15P2_R11E,
+        },
+        {
+          module: `https://unpkg.com/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.mjs`,
+          worker: `https://unpkg.com/pdfjs-dist@${PDFJS_CDN_VERSION_107Z15P2_R11E}/build/pdf.worker.mjs`,
+        },
+      ];
+
+      let lastError = null;
+      for (const candidate of candidates) {
+        try {
+          const pdfjsLib = await withPdfTimeoutR16J1C1(
+            import(candidate.module),
+            12000,
+            "La carga de PDF.js",
+          );
+          pdfjsLib.GlobalWorkerOptions.workerSrc = candidate.worker;
+          return pdfjsLib;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+
+      throw lastError || new Error("No se pudo cargar PDF.js.");
+    })().catch((error) => {
+      pdfjsPromise107z15p2R11E = null;
+      throw error;
     });
   }
-  return pdfjsPromise107z15p2R11E;
+
+  return withPdfTimeoutR16J1C1(
+    pdfjsPromise107z15p2R11E,
+    15000,
+    "La inicialización de PDF.js",
+    () => {
+      pdfjsPromise107z15p2R11E = null;
+    },
+  );
 }
 
 export function groupPdfItemsIntoRows107z15p2R11E(items) {
@@ -464,21 +521,66 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
   }
 
   const pdfjsLib = await loadPdfJs107z15p2R11E();
-  const arrayBuffer = await file.arrayBuffer();
-  const documentTask = pdfjsLib.getDocument({ data: arrayBuffer });
-  const pdf = await documentTask.promise;
-  const pages = [];
+  const arrayBuffer = await withPdfTimeoutR16J1C1(
+    file.arrayBuffer(),
+    12000,
+    "La lectura del archivo PDF",
+  );
 
-  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-    const page = await pdf.getPage(pageNumber);
-    const textContent = await page.getTextContent();
-    const rows = groupPdfItemsIntoRows107z15p2R11E(textContent.items);
-    pages.push(rows.join("\n"));
+  const documentTask = pdfjsLib.getDocument({
+    data: arrayBuffer,
+    disableWorker: true,
+    useWorkerFetch: false,
+    isEvalSupported: false,
+    stopAtErrors: false,
+  });
+
+  const pdf = await withPdfTimeoutR16J1C1(
+    documentTask.promise,
+    30000,
+    "La apertura del documento PDF",
+    () => {
+      void documentTask.destroy?.();
+    },
+  );
+
+  const pages = [];
+  try {
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      let page = null;
+      try {
+        page = await withPdfTimeoutR16J1C1(
+          pdf.getPage(pageNumber),
+          12000,
+          `La carga de la página ${pageNumber}`,
+        );
+        const textContent = await withPdfTimeoutR16J1C1(
+          page.getTextContent(),
+          12000,
+          `La extracción de texto de la página ${pageNumber}`,
+          () => {
+            page?.cleanup?.();
+          },
+        );
+        const rows = groupPdfItemsIntoRows107z15p2R11E(textContent.items);
+        pages.push(rows.join("\n"));
+      } finally {
+        page?.cleanup?.();
+      }
+    }
+  } finally {
+    try {
+      pdf.cleanup?.();
+    } catch {}
+    try {
+      await documentTask.destroy?.();
+    } catch {}
   }
 
-  return pages.join("\f");
+  const result = pages.join("\n\n").trim();
+  if (!result) throw new Error("El PDF no produjo texto utilizable.");
+  return result;
 }
-
 
 function segubecaLineR14C(id, label, value, unit = undefined) {
   return { id, label, value, unit };
@@ -980,9 +1082,13 @@ async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
   );
 
   try {
-    const packet = await parsePdfFileToAcceptedQuotePacket(file, {
-      fileName: file.name,
-    });
+    const packet = await withPdfTimeoutR16J1C1(
+      parsePdfFileToAcceptedQuotePacket(file, {
+        fileName: file.name,
+      }),
+      60000,
+      "El procesamiento completo del PDF",
+    );
 
     setPdfStatus107z15p2R11E(
       input,
