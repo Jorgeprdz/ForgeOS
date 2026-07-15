@@ -12455,3 +12455,33 @@ Next node:
 
 `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
 <!-- FORGE:R16J1V_UNIFIED_BUILD_TREE:END -->
+
+<!-- FORGE:R16J1B_UNIFIED_BUILD_TREE:START -->
+## R16J1B · Real SeguBeca Human Confirmation
+
+Canonical ID:
+
+`R16J1B_SEGUBECA_ACCEPTANCE_ACTIONS_AND_ORB_REMOVAL`
+
+Status: PASS
+
+Baseline: `78fa1a35bdb39fdddcafcd8470ae1ddb66dbe11a`
+
+UI rule: reuse the canonical upload surface and existing component classes;
+no new visual card or color system.
+
+Unified runtime path:
+
+1. PDF extraction produces a validated candidate.
+2. Product-intelligence evidence identifies SeguBeca.
+3. The rendered result remains visible.
+4. Legacy popup persistence does not calculate or accept automatically.
+5. Stable proxy actions are visible next to the upload section.
+6. A human click delegates to the existing canonical runtime control.
+7. The accepted snapshot enables the presentation proxy.
+8. Alfred Orb remains suppressed without deleting the Alfred engine.
+
+Next node:
+
+`R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+<!-- FORGE:R16J1B_UNIFIED_BUILD_TREE:END -->

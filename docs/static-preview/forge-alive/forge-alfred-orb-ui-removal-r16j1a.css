@@ -1,0 +1,33 @@
+/* FORGEOS:R16J1A_ALFRED_ORB_UI_REMOVAL:START */
+
+[data-forge-alfred-orb-suppressed-r16j1a="true"],
+[data-forge-alfred-orb="true"],
+[data-alfred-orb="true"],
+[data-forge-assistant-orb="true"],
+[data-forge-floating-assistant="true"],
+#alfred-orb,
+.alfred-orb,
+.forge-alfred-orb,
+.alfred-assistant-orb,
+.forge-assistant-orb,
+.forge-voice-assistant-orb {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  animation: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body[data-forge-alfred-orb-removed-r16j1a="true"]
+  [data-forge-alfred-orb-suppressed-r16j1a="true"] {
+  position: fixed !important;
+  inset: auto !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* FORGEOS:R16J1A_ALFRED_ORB_UI_REMOVAL:END */

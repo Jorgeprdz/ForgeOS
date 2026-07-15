@@ -151,10 +151,38 @@ function isVidaMujerAccepted107z15p2R9C(packet, nativeResult) {
 }
 
 function isSegubecaAcceptedR14E(packet, nativeResult) {
-  const family = normalizeAcceptedKey107z15p2R9C(acceptedProductFamily107z15p2R9C(packet, nativeResult));
-  const product = normalizeAcceptedKey107z15p2R9C(acceptedProduct107z15p2R9C(packet, nativeResult));
-  return family.includes("segubeca") || family.includes("segu_beca") ||
-    product.includes("segubeca") || product.includes("segu_beca");
+  const model =
+    packet?.productIntelligence ??
+    packet?.product_intelligence ??
+    nativeResult?.productIntelligence ??
+    nativeResult?.product_intelligence ??
+    null;
+
+  const candidates = [
+    acceptedProductFamily107z15p2R9C(packet, nativeResult),
+    acceptedProduct107z15p2R9C(packet, nativeResult),
+    packet?.context?.detectedProductName,
+    packet?.context?.detected_product_name,
+    packet?.source?.product,
+    packet?.source?.detectedProductName,
+    packet?.source?.detected_product_name,
+    model?.schema?.id,
+    model?.identity?.detected_product_name,
+    model?.identity?.product_name,
+    model?.identity?.name,
+    model?.product,
+    nativeResult?.plan,
+  ]
+    .map(normalizeAcceptedKey107z15p2R9C)
+    .filter(Boolean);
+
+  return candidates.some(
+    (value) =>
+      value.includes("segubeca") ||
+      value.includes("segu_beca") ||
+      value.includes("seguro_educacion") ||
+      value.includes("seguro_educativo"),
+  );
 }
 
 function calculateSegubecaAcceptedR14E(packet, nativeResult) {

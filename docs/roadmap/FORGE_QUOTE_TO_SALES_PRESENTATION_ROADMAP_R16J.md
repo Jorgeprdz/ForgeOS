@@ -166,3 +166,36 @@ Next:
 
 `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
 <!-- FORGE:R16J1V_ROADMAP:END -->
+
+<!-- FORGE:R16J1B_ROADMAP:START -->
+## R16J1B · SeguBeca Acceptance and Product UI Reconciliation
+
+Canonical ID:
+
+`R16J1B_SEGUBECA_ACCEPTANCE_ACTIONS_AND_ORB_REMOVAL`
+
+Status: PASS
+
+Guideline gate: PASS before UI modification.
+
+Delivered:
+
+- SeguBeca detection from canonical parser and product-intelligence fields.
+- No automatic calculation in the legacy modal.
+- Explicit human confirmation.
+- Rendered result preserved while pending.
+- Stable confirm and presentation proxies placed next to upload.
+- Real Alfred Orb removed from quote and presentation surfaces.
+- Alfred engine preserved.
+
+Evidence:
+
+- Chromium: PASS.
+- Firefox: PASS.
+- WebKit: PASS.
+- Three screenshots generated.
+
+Next:
+
+`R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+<!-- FORGE:R16J1B_ROADMAP:END -->

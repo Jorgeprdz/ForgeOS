@@ -15276,3 +15276,60 @@ Next:
 
 - `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
 <!-- FORGE:R16J1V_MASTER_BUILD_TREE:END -->
+
+<!-- FORGE:R16J1B_MASTER_BUILD_TREE:START -->
+## R16J1B SeguBeca Acceptance, Actions and Orb Removal
+
+Canonical ID:
+
+`R16J1B_SEGUBECA_ACCEPTANCE_ACTIONS_AND_ORB_REMOVAL`
+
+Status: PASS
+
+Baseline: `78fa1a35bdb39fdddcafcd8470ae1ddb66dbe11a`
+
+Design sources reviewed before patch:
+
+- `docs/design/forge-ui/FORGE_UI_DESIGN_LINE_001.md`
+- `docs/design/forge-ui/FORGE_UI_TOKENS_001.md`
+- `docs/design/forge-ui/FORGE_INTERACTION_RULES_001.md`
+- `docs/design/FORGE_MOBILE_DESIGN_SYSTEM_001.md`
+- `docs/static-preview/templates/forge-mobile/TEMPLATE_SOURCE_OF_TRUTH.md`
+
+Implemented:
+
+- Expanded SeguBeca classification to use canonical product-intelligence
+  identity and schema evidence.
+- Removed calculation from the legacy popup persistence callback.
+- Preserved the rendered result as a candidate pending explicit human
+  confirmation.
+- Kept the accepted snapshot empty until the user clicks Confirmar
+  cotización.
+- Added stable human-action proxy controls directly after the upload
+  section while preserving canonical runtime ownership.
+- Removed the real Alfred Orb surface by semantic and lower-right floating
+  geometry discovery, including halo, pointer capture, keyboard focus, and
+  accessibility exposure.
+- Preserved the Alfred engine for a future redesign.
+
+Safety:
+
+- No automatic quote acceptance.
+- No automatic presentation generation.
+- No automatic approval, export, or send.
+- No invented quote facts.
+
+Validation:
+
+- Chromium, Firefox, and WebKit: PASS.
+- SeguBeca candidate: READY before confirmation.
+- Accepted snapshot: absent before human click.
+- SeguBeca accepted snapshot: created after human click.
+- Presentation CTA: READY after confirmation.
+- Visible Alfred Orb candidates: zero.
+- Three visual evidence captures generated.
+
+Next:
+
+- `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+<!-- FORGE:R16J1B_MASTER_BUILD_TREE:END -->

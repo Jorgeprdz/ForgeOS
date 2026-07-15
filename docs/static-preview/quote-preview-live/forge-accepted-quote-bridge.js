@@ -2,7 +2,7 @@ import {
   calculateAcceptedQuote,
   validatePacket,
   isPdfSelection107z15p2R9C
-} from "./forge-accepted-quote-adapter.js?v=r15l_orvi_end_to_end_20260712_1";
+} from "./forge-accepted-quote-adapter.js?v=r16j1b_segubeca_acceptance_20260714_9";
 import { renderAcceptedQuote } from "./forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1";
 import { createAcceptedQuoteReviewSnapshotBoundary } from "./forge-accepted-quote-review-snapshot.js?v=r16g2b1_review_snapshot_20260713_1";
 import { buildClientRecommendationRationaleBoundary } from "./forge-client-recommendation-rationale-boundary.js?v=r16h3_client_rationale_20260714_1";
@@ -353,31 +353,36 @@ let packet = null;
     now: () => Date.now(),
     ttlMs: 24 * 60 * 60 * 1000,
     onPersisted() {
-      status.textContent = "Calculando cotización confirmada…";
-      status.setAttribute("data-forge-state", "calculating");
-      void calculateAcceptedQuote(packet)
-        .then(calculation => {
-          acceptedQuoteReviewSnapshotBoundary.setSnapshot({
-            acceptedQuote: packet,
-            calculation,
-          });
-          renderAcceptedQuote(calculation, { writeRuntimeGrid });
-          status.textContent = "Cotización calculada y guardada durante esta sesión.";
-          status.setAttribute("data-forge-state", "accepted");
-          setIntakeState("READY", { message: status.textContent });
-          setReadiness?.("Cotización calculada · lista para revisión comercial", "accepted");
-        })
-        .catch(error => {
-          acceptedQuoteReviewSnapshotBoundary.clear();
-          status.textContent = error?.message || String(error);
-          status.setAttribute("data-forge-state", "error");
-          setIntakeState("ERROR", {
-            message: "No se pudo calcular el resultado. Selecciona otro archivo.",
-            resetResults: true,
-          });
-          setReadiness?.("La cotización fue confirmada, pero el cálculo requiere revisión.", "error");
-          console.error("[107Z15F0_ACCEPT_CALCULATOR]", error);
-        });
+      acceptedQuoteReviewSnapshotBoundary.clear();
+
+      if (packet) {
+        currentQuoteCandidateR16J0A = packet;
+
+        globalThis.dispatchEvent(
+          new CustomEvent("forge:quote-candidate-ready", {
+            detail: Object.freeze({
+              version: "R16J1B",
+              ready: true,
+              automatic: false,
+              source: "LEGACY_MODAL_PERSISTED",
+            }),
+          }),
+        );
+      }
+
+      status.textContent =
+        "Resultado extraído. Confirma la cotización para calcularla.";
+      status.setAttribute("data-forge-state", "ready");
+
+      setIntakeState("READY", {
+        message: status.textContent,
+        resetResults: false,
+      });
+
+      setReadiness?.(
+        "Resultado extraído · pendiente de confirmación humana",
+        "ready",
+      );
     },
     onEditRequested() {
       acceptedQuoteReviewSnapshotBoundary.clear();
