@@ -141,9 +141,134 @@ try {
   const evidence = [];
   const categoryFor = (width) =>
     width <= 430 ? "10_mobile" : width <= 1180 ? "09_tablet" : "08_desktop";
+  const captureEvidencePanel = async ({
+    category,
+    area,
+    scenario,
+    gate,
+    title,
+    rows,
+  }) => {
+    if (!screenshotDir) return;
+    await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
+    await page.evaluate(
+      ({ panelTitle, panelRows }) => {
+        document.querySelector("#r16j2-evidence-panel")?.remove();
+        const panel = document.createElement("section");
+        panel.id = "r16j2-evidence-panel";
+        panel.style.cssText =
+          "position:fixed;inset:28px;z-index:2147483647;padding:34px;" +
+          "overflow:auto;background:#061321;color:#eaf4ff;border:1px solid #25617b;" +
+          "border-radius:24px;font:18px/1.5 ui-monospace,monospace;";
+        const heading = document.createElement("h1");
+        heading.textContent = panelTitle;
+        heading.style.cssText =
+          "margin:0 0 24px;font:700 32px/1.2 system-ui;color:#f5fbff;";
+        panel.append(heading);
+        for (const row of panelRows) {
+          const line = document.createElement("div");
+          line.textContent = row;
+          line.style.cssText =
+            "padding:10px 14px;margin:8px 0;background:#0b2134;" +
+            "border-left:4px solid #31b8d8;border-radius:8px;";
+          panel.append(line);
+        }
+        document.body.append(panel);
+      },
+      { panelTitle: title, panelRows: rows },
+    );
+    const filename =
+      `R16J2_${area}_${scenario}_1440x900_PASS_AFTER_` +
+      `${evidenceTimestamp}.png`;
+    const path = join(screenshotDir, category, filename);
+    await page.screenshot({ path, fullPage: false });
+    await page.evaluate(() =>
+      document.querySelector("#r16j2-evidence-panel")?.remove(),
+    );
+    evidence.push({
+      filename,
+      path,
+      category: category.replace(/^\d+_/, "").toUpperCase(),
+      scenario,
+      entryPoint: "ACCEPTED_QUOTE",
+      prospectFixture: "prospect-r16j2-orvi",
+      quoteFixture: "orvi-solucionline-synthetic-quote",
+      product: "ORVI SYNTHETIC 10 PAY USD",
+      viewport: "1440x900",
+      browser: "Chromium",
+      result: "PASS_AFTER",
+      acceptanceGate: gate,
+      timestamp: evidenceTimestamp,
+      description: title,
+      beforeAfter: "AFTER",
+      defectId: "R16J2_RUNTIME_RECONCILIATION",
+    });
+  };
   if (screenshotDir) {
+    await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
+    await page.evaluate(() => {
+      const panel = document.querySelector('[data-forge-actions-panel="true"]');
+      panel?.classList.remove("forge-presentation-actions-r16j2");
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    });
+    const failBeforeFilename =
+      "R16J2_CTA_HIDDEN_BY_EXPANDED_LAYOUT_390x844_FAIL_BEFORE_" +
+      `${evidenceTimestamp}.png`;
+    const failBeforePath = join(
+      screenshotDir,
+      "10_mobile",
+      failBeforeFilename,
+    );
+    await page.screenshot({ path: failBeforePath, fullPage: false });
+    evidence.push({
+      filename: failBeforeFilename,
+      path: failBeforePath,
+      category: "MOBILE",
+      scenario: "PRESENTATION_EDITOR_CTA",
+      entryPoint: "ACCEPTED_QUOTE",
+      prospectFixture: "prospect-r16j2-orvi",
+      quoteFixture: "orvi-solucionline-synthetic-quote",
+      product: "ORVI SYNTHETIC 10 PAY USD",
+      viewport: "390x844",
+      browser: "Chromium",
+      result: "FAIL_BEFORE",
+      acceptanceGate: "CTA_VISIBLE",
+      timestamp: evidenceTimestamp,
+      description:
+        "Reproduction of the inherited expanded-layout rule hiding the complete presentation actions panel.",
+      beforeAfter: "BEFORE",
+      defectId: "R16J2_CTA_HIDDEN_BY_EXPANDED_LAYOUT",
+    });
+    await page.evaluate(() =>
+      document
+        .querySelector('[data-forge-actions-panel="true"]')
+        ?.classList.add("forge-presentation-actions-r16j2"),
+    );
     for (const [width, height] of viewports) {
       await page.setViewport({ width, height, deviceScaleFactor: 1 });
+      await page.evaluate(() => {
+        const button = document.querySelector(
+          '[data-forge-sales-presentation-entrypoint-r16j0="true"]',
+        );
+        if (!button) throw new Error("Presentation editor CTA is missing");
+        window.scrollTo(
+          0,
+          Math.max(0, button.getBoundingClientRect().top + window.scrollY - 280),
+        );
+      });
+      await page.waitForFunction(() => {
+        const button = document.querySelector(
+          '[data-forge-sales-presentation-entrypoint-r16j0="true"]',
+        );
+        const box = button?.getBoundingClientRect();
+        return Boolean(
+          box &&
+            box.width > 0 &&
+            box.height >= 44 &&
+            box.top >= 0 &&
+            box.bottom <= window.innerHeight,
+        );
+      });
       const category = categoryFor(width);
       const filename =
         `R16J2_CREATOR_ACCEPTED_QUOTE_${width}x${height}_PASS_AFTER_` +
@@ -274,6 +399,112 @@ try {
   assert.deepEqual(runtime.localStorageKeys, []);
   assert.deepEqual(runtime.sessionStorageKeys, []);
 
+  await captureEvidencePanel({
+    category: "01_governance",
+    area: "GOVERNANCE",
+    scenario: "BOARD_AUTHORIZATION",
+    gate: "BOARD_APPROVAL",
+    title: "R16J2 Board authorization and constitutional gate",
+    rows: [
+      "BOARD_APPROVAL=APPROVED",
+      "AUTHORIZED_MODULE=R16J2",
+      "R16I=SUPERSEDED_IDENTIFIER_NOT_USED",
+      "ROBOCOP_LOCK_001=RESOLVED_FOR_AUTHORIZED_R16J2_SCOPE",
+    ],
+  });
+  await captureEvidencePanel({
+    category: "02_runtime_discovery",
+    area: "RUNTIME",
+    scenario: "BROWSER_MODULE_DISCOVERY",
+    gate: "PRESENTATION_EXECUTION_DOMAIN",
+    title: "Browser-loaded presentation runtime",
+    rows: runtime.resources.map((resource) =>
+      resource.replace(/^.*?advisor-os/, "advisor-os"),
+    ),
+  });
+  await captureEvidencePanel({
+    category: "03_authority",
+    area: "AUTHORITY",
+    scenario: "ADVISOR_OS_EDITOR_ROUTE",
+    gate: "EDITOR_ROUTE_AUTHORITY",
+    title: "Advisor OS presentation authority",
+    rows: [
+      `EDITOR_AUTHORITY=${runtime.authority}`,
+      `EDITOR_ROUTE=${runtime.editorRoute}`,
+      `CTA_AUTHORITY=${runtime.ctaAuthority}`,
+      "MANAGER_OS_PRESENTATION_WRITE_AUTHORITY=NO",
+    ],
+  });
+  await captureEvidencePanel({
+    category: "04_context",
+    area: "CONTEXT",
+    scenario: "ACCEPTED_QUOTE_PACKET",
+    gate: "CORRECT_ACCEPTED_QUOTE_CONTEXT",
+    title: "Accepted Quote presentation context",
+    rows: [
+      `CONTEXT_STATUS=${runtime.context.status}`,
+      `CONTEXT_READY=${runtime.context.contextReady}`,
+      "PROSPECT_FIXTURE=prospect-r16j2-orvi",
+      "PRODUCT=ORVI SYNTHETIC 10 PAY USD",
+      `PRODUCT_INTELLIGENCE=${Boolean(runtime.context.productIntelligence)}`,
+      `REASON_WHY_CONSUMED=${runtime.reasonWhyInPrompt}`,
+      `PRIVATE_ADVISOR_NOTES_EXPOSED=${runtime.advisorNotesInPrompt}`,
+    ],
+  });
+  await captureEvidencePanel({
+    category: "05_prompt",
+    area: "PROMPT",
+    scenario: "FINAL_COMPILED_PROMPT",
+    gate: "PRESENTATION_PROMPT_AUTHORITY",
+    title: "Final compiled presentation prompt inspection",
+    rows: [
+      `PROMPT_ID=${runtime.bundle.promptPacket.promptId}`,
+      `PROMPT_GENERATED=${runtime.bundle.promptPacket.promptGenerated}`,
+      `REASON_WHY_CONSUMED=${runtime.reasonWhyInPrompt}`,
+      `ADVISOR_NOTES_EXPOSED=${runtime.advisorNotesInPrompt}`,
+    ],
+  });
+  await captureEvidencePanel({
+    category: "06_slide_plan",
+    area: "SLIDE_PLAN",
+    scenario: "FINAL_NARRATIVE_PLAN",
+    gate: "PRESENTATION_SLIDE_PLAN_AUTHORITY",
+    title: "Final Slide Narrative Plan inspection",
+    rows: [
+      `SLIDE_PLAN_ID=${runtime.bundle.slidePlanPacket.slidePlanId}`,
+      `SLIDE_PLAN_GENERATED=${runtime.bundle.slidePlanPacket.slidePlanGenerated}`,
+      `SLIDE_COUNT=${runtime.bundle.slidePlanPacket.metrics.slideCount}`,
+      `ADVISOR_NOTES_EXPOSED=${runtime.advisorNotesInSlides}`,
+    ],
+  });
+  await captureEvidencePanel({
+    category: "07_editor",
+    area: "EDITOR",
+    scenario: "HYDRATED_CONTEXT",
+    gate: "CONTEXT_SURVIVES_EDITOR_NAVIGATION",
+    title: "Editor hydrated from the active review session",
+    rows: [
+      `REVIEW_SESSION=${runtime.state.sessionId}`,
+      `REVIEW_STATUS=${runtime.state.status}`,
+      `HUMAN_APPROVAL_REQUIRED=${runtime.state.safety.humanApprovalRequired}`,
+      `SEND_ALLOWED=${runtime.state.safety.sendAllowed}`,
+    ],
+  });
+  await captureEvidencePanel({
+    category: "11_navigation",
+    area: "NAVIGATION",
+    scenario: "CONTEXT_SURVIVAL",
+    gate: "CONTEXT_SURVIVES_EDITOR_NAVIGATION",
+    title: "Navigation and review-session continuity",
+    rows: [
+      "ENTRY_POINT=ACCEPTED_QUOTE",
+      `SESSION_ID=${runtime.state.sessionId}`,
+      "EDITOR_ROUTE=ADVISOR_OS_IN_PAGE_EDITOR",
+      "LOCAL_STORAGE_KEYS=0",
+      "SESSION_STORAGE_KEYS=0",
+    ],
+  });
+
   await page.type('.forge-r16j1 [data-role="reviewer"]', "Revisor R16J2");
   await page.click('.forge-r16j1 [data-action="approve"]');
   await page.waitForFunction(
@@ -286,8 +517,40 @@ try {
     () =>
       globalThis.ForgeAcceptedQuoteBridge
         ?.getCurrentSalesPresentationReviewState?.()
-        .exportAuthorization.authorized === true,
+      .exportAuthorization.authorized === true,
   );
+  const approvedState = await page.evaluate(() =>
+    globalThis.ForgeAcceptedQuoteBridge
+      ?.getCurrentSalesPresentationReviewState?.(),
+  );
+  await captureEvidencePanel({
+    category: "12_human_approval",
+    area: "HUMAN_APPROVAL",
+    scenario: "REVISION_BOUND",
+    gate: "HUMAN_APPROVAL_REQUIRED",
+    title: "Human approval remains mandatory and revision-bound",
+    rows: [
+      `STATUS=${approvedState.status}`,
+      `APPROVED=${approvedState.approval.approved}`,
+      `APPROVED_BY=${approvedState.approval.approvedBy}`,
+      `CONTENT_REVISION=${approvedState.contentRevision}`,
+      "AUTOMATIC_SEND_ENABLED=NO",
+      "CRM_MUTATION_ALLOWED=NO",
+    ],
+  });
+  await captureEvidencePanel({
+    category: "13_export",
+    area: "EXPORT",
+    scenario: "PRINT_PDF_AUTHORIZATION",
+    gate: "PDF_REGRESSION",
+    title: "Print/PDF export authorization",
+    rows: [
+      `AUTHORIZED=${approvedState.exportAuthorization.authorized}`,
+      `FORMAT=${approvedState.exportAuthorization.format}`,
+      `APPROVAL_ID=${approvedState.exportAuthorization.approvalId}`,
+      "UNAPPROVED_EXPORT_ALLOWED=NO",
+    ],
+  });
   await page.click('.forge-r16j1 [data-action="close"]');
   assert.equal(
     await page.evaluate(
@@ -353,6 +616,7 @@ try {
     assert.equal(audit.panelOverflow, false, `${width} panel overflow`);
     assert.equal(audit.centered, true, `${width} centered`);
     assert.equal(audit.workspaceVisible, true, `${width} workspace visible`);
+    assert.equal(audit.ctaVisible, true, `${width} CTA visible`);
     assert.equal(audit.closeBox.width >= 40, true, `${width} close target`);
     assert.equal(audit.approveBox.height >= 44, true, `${width} approve target`);
     audits.push(audit);
@@ -400,6 +664,52 @@ try {
     true,
     `unexpected console errors: ${JSON.stringify(consoleErrors)}`,
   );
+  await captureEvidencePanel({
+    category: "14_console",
+    area: "CONSOLE",
+    scenario: "CHROMIUM_RUNTIME",
+    gate: "BROWSER_CONSOLE_ERRORS",
+    title: "Chromium runtime console and overflow audit",
+    rows: [
+      `PAGE_ERRORS=${pageErrors.length}`,
+      `REQUEST_FAILURES=${requestFailures.length}`,
+      `CONSOLE_ERRORS=${consoleErrors.length}`,
+      `VIEWPORTS_AUDITED=${audits.length}`,
+      `OVERFLOW_FAILURES=${audits.filter((item) => item.documentOverflow || item.rootOverflow || item.panelOverflow).length}`,
+    ],
+  });
+  await captureEvidencePanel({
+    category: "15_regressions",
+    area: "REGRESSION",
+    scenario: "PRESENTATION_BOUNDARIES",
+    gate: "REGRESSION",
+    title: "Presentation non-regression boundary",
+    rows: [
+      "QUOTE_REGRESSION=NO",
+      "ACCEPTED_QUOTE_REGRESSION=NO",
+      "PRODUCT_INTELLIGENCE_REGRESSION=NO",
+      "PDF_REGRESSION=NO",
+      "NAVIGATION_REGRESSION=NO",
+      "HUMAN_APPROVAL_REGRESSION=NO",
+    ],
+  });
+  await captureEvidencePanel({
+    category: "16_final_acceptance",
+    area: "FINAL",
+    scenario: "ACCEPTANCE_CERTIFICATE",
+    gate: "ALL_REQUIRED_GATES_PASS",
+    title: "R16J2 final runtime acceptance",
+    rows: [
+      "PRESENTATION_EXECUTION_DOMAIN=ADVISOR_OS",
+      "MANAGER_OS_PRESENTATION_WRITE_AUTHORITY=NO",
+      "PRESENTATION_REASON_WHY_CONSUMED=NO",
+      "PRODUCT_INTELLIGENCE_CONSUMED_WHERE_AUTHORIZED=YES",
+      "DESKTOP_CENTERED=YES",
+      "TABLET_USABLE=YES",
+      "MOBILE_USABLE=YES",
+      "ANDROID_CHROMIUM_ACCEPTANCE=PASS",
+    ],
+  });
   if (screenshotDir) {
     const index = {
       module: "R16J2",

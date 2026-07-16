@@ -90,6 +90,13 @@ button[data-forge-sales-presentation-entrypoint-r16j0="true"]:active:not(:disabl
   line-height: 1.5;
 }
 
+body[data-forge-benefit-layout-expanded="true"]
+  .forge-presentation-actions-r16j2 {
+  display: block !important;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
 [data-forge-sales-presentation-entrypoint-status-r16j0="true"]
 [data-tone="success"] {
   color: rgba(156, 241, 216, 0.86);

@@ -239,6 +239,9 @@
     );
 
     const interactive = isInteractiveState(nextState);
+    button
+      .closest('[data-forge-actions-panel="true"]')
+      ?.classList.add("forge-presentation-actions-r16j2");
 
     button.classList.toggle(
       "fq-disabled-105dr",

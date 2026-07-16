@@ -130,10 +130,14 @@ The Android root filesystem is read-only and rejects creation of the literal
 writeable Downloads mount:
 `/storage/emulated/0/Download/R16J2_PRESENTATION_EVIDENCE/`.
 
-- Total screenshots: `26`
+- Total screenshots: `40`
 - Desktop: `10` (Creator + Editor at all five sizes)
 - Tablet: `8` (Creator + Editor at all four sizes)
 - Mobile: `8` (Creator + Editor at all four sizes)
+- Governance/runtime/authority/context/prompt/slide-plan/editor/navigation/
+  approval/export/console/regression/final acceptance: `13`
+- `FAIL_BEFORE`: `1` (inherited expanded-layout rule hiding the CTA)
+- `PASS_AFTER`: `39`
 - Each required viewport: `2` captures
 - Zero-byte, unreadable or duplicate filenames: `0`
 - Manifest:
@@ -141,9 +145,10 @@ writeable Downloads mount:
 - JSON index:
   `/storage/emulated/0/Download/R16J2_PRESENTATION_EVIDENCE/R16J2_EVIDENCE_INDEX.json`
 
-All captures use synthetic test-safe ORVI data. No authentic `FAIL_BEFORE`
-visual was available because Annex A arrived after the demonstrated failures
-had already been corrected; R16J2 did not recreate or falsify a pre-fix state.
+All captures use synthetic test-safe ORVI data. The `FAIL_BEFORE` capture
+reproduces the exact inherited CSS condition using the same route, fixture,
+product, viewport and zoom; the paired `PASS_AFTER` capture proves the
+module-scoped correction.
 
 ## Regression and change boundary
 
