@@ -19,7 +19,7 @@ const loader = await readFile(
 
 assert.match(
   page,
-  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j1c1-local-pdfjs-03b2-20260716-1/,
+  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j1c1-parser-first-03c1-20260716-2/,
 );
 
 assert.match(
@@ -28,7 +28,7 @@ assert.match(
 );
 
 for (const token of [
-  '"R16J1C1_RUNTIME_LAZY_03B1_LOCAL_PDFJS"',
+  '"R16J1C1_RUNTIME_LAZY_03C1_PARSER_FIRST"',
   "const QUOTE_STYLES",
   "const QUOTE_SCRIPTS",
   "const DESKTOP_SCRIPTS",

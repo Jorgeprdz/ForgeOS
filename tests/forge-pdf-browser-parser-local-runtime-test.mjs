@@ -19,24 +19,24 @@ const page = await read(
 );
 const packageJson = JSON.parse(
   await read(
-    "docs/static-preview/quote-preview-live/assets/" +
-    "pdfjs/4.10.38/package.json",
+    "docs/static-preview/quote-preview-live/" +
+    "forge-pdfjs-4.10.38.package.json",
   ),
 );
 
 const pdfModuleUrl = new URL(
-  "docs/static-preview/quote-preview-live/assets/" +
-  "pdfjs/4.10.38/pdf.mjs",
+  "docs/static-preview/quote-preview-live/" +
+  "forge-pdfjs-4.10.38.js",
   root,
 );
 const workerUrl = new URL(
-  "docs/static-preview/quote-preview-live/assets/" +
-  "pdfjs/4.10.38/pdf.worker.mjs",
+  "docs/static-preview/quote-preview-live/" +
+  "forge-pdfjs-worker-4.10.38.js",
   root,
 );
 const licenseUrl = new URL(
-  "docs/static-preview/quote-preview-live/assets/" +
-  "pdfjs/4.10.38/LICENSE",
+  "docs/static-preview/quote-preview-live/" +
+  "forge-pdfjs-4.10.38.LICENSE",
   root,
 );
 
@@ -77,17 +77,17 @@ for (const forbidden of [
 assert.ok(
   loader.includes(
     "forge-pdf-browser-parser.js" +
-      "?v=r16j1c1-local-pdfjs-03b2-20260716-1",
+      "?v=r16j1c1-parser-first-03c1-20260716-2",
   ),
 );
 assert.ok(
   loader.includes(
-    '"R16J1C1_RUNTIME_LAZY_03B1_LOCAL_PDFJS"',
+    '"R16J1C1_RUNTIME_LAZY_03C1_PARSER_FIRST"',
   ),
 );
 assert.match(
   page,
-  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j1c1-local-pdfjs-03b2-20260716-1/,
+  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j1c1-parser-first-03c1-20260716-2/,
 );
 
 console.log(

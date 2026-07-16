@@ -16,11 +16,11 @@ import {
 
 const PDFJS_VENDOR_VERSION_107Z15P2_R11E = "4.10.38";
 const PDFJS_LOCAL_MODULE_URL_107Z15P2_R11E = new URL(
-  "./assets/pdfjs/4.10.38/pdf.mjs",
+  "./forge-pdfjs-4.10.38.js",
   import.meta.url,
 ).href;
 const PDFJS_LOCAL_WORKER_URL_107Z15P2_R11E = new URL(
-  "./assets/pdfjs/4.10.38/pdf.worker.mjs",
+  "./forge-pdfjs-worker-4.10.38.js",
   import.meta.url,
 ).href;
 let pdfjsPromise107z15p2R11E = null;

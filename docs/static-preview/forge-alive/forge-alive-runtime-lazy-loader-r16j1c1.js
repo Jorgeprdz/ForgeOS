@@ -1,19 +1,18 @@
 (() => {
   "use strict";
 
-  const VERSION = "R16J1C1_RUNTIME_LAZY_03B1_LOCAL_PDFJS";
+  const VERSION = "R16J1C1_RUNTIME_LAZY_03C1_PARSER_FIRST";
   const MODULE_KEY = "cotizaciones";
   const HOST_SELECTOR =
     '[data-forge-saas-module-host-r16c5l="cotizaciones"]';
-  const FILE_INPUT_SELECTOR =
-    "#fq-solution-online-pdf-105dr";
+  const FILE_INPUT_SELECTOR = 'input[type="file"]';
   const NAV_SELECTOR =
     ".forge-mobile-nav-r16c5k-home-visual" +
     "[data-forge-mobile-nav-r16c5j]";
   const NAV_ITEM_SELECTOR = ".forge-mobile-nav-r16c5j__item";
 
   const QUOTE_STYLES = Object.freeze([{"href": "assets/forge-quote-preview-confirmation-modal-107q.css", "media": ""}, {"href": "forge-sales-presentation-entrypoint-r16j0.css?v=r16j0-accepted-quote-sales-presentation-entrypoint-20260714-1", "media": ""}, {"href": "forge-quote-acceptance-entrypoint-r16j0a.css?v=r16j0a-quote-human-acceptance-20260714-1", "media": ""}, {"href": "forge-sales-presentation-workspace-r16j1.css?v=r16j1-workspace-ui-cleanup-20260714-1", "media": ""}, {"href": "forge-nueva-cotizacion-ui-cleanup-r16j1.css?v=r16j1-workspace-ui-cleanup-20260714-1", "media": ""}, {"href": "forge-quote-action-dock-r16j1b.css?v=r16j1b-segubeca-inline-orb-20260714-10", "media": ""}]);
-  const QUOTE_SCRIPTS = Object.freeze([{"src": "assets/forge-quote-preview-confirmation-modal-107q.js", "type": ""}, {"src": "../quote-preview-live/forge-quote-preview-bundle.js", "type": ""}, {"src": "../quote-preview-live/forge-quote-calculators.js", "type": "module"}, {"src": "../quote-preview-live/forge-udi-mxn-runtime.js", "type": "module"}, {"src": "../quote-preview-live/forge-quote-benefit-summary.js", "type": "module"}, {"src": "../quote-preview-live/forge-accepted-quote-adapter.js?v=r14g_segubeca_renderer_20260712_1", "type": "module"}, {"src": "../quote-preview-live/forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1", "type": "module"}, {"src": "../quote-preview-live/forge-benefit-summary-layout.js?v=r16b_unified_dashboard_20260713_1", "type": "module"}, {"src": "../quote-preview-live/forge-quote-intake-state.js?v=r16a_quote_intake_empty_state_20260713_1", "type": ""}, {"src": "../quote-preview-live/forge-quote-preview-bundle.js", "type": ""}, {"src": "../quote-preview-live/forge-quote-calculators.js", "type": "module"}, {"src": "../quote-preview-live/forge-udi-mxn-runtime.js", "type": "module"}, {"src": "../quote-preview-live/forge-quote-benefit-summary.js", "type": "module"}, {"src": "../quote-preview-live/forge-accepted-quote-adapter.js?v=r14g_segubeca_renderer_20260712_1", "type": "module"}, {"src": "../quote-preview-live/forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1", "type": "module"}, {"src": "../quote-preview-live/forge-benefit-summary-layout.js?v=r16b_unified_dashboard_20260713_1", "type": "module"}, {"src": "../quote-preview-live/forge-pdf-browser-parser.js?v=r16j1c1-local-pdfjs-03b2-20260716-1", "type": "module"}, {"src": "../quote-preview-live/forge-accepted-quote-bridge.js?v=r16j1c1-auto-calculation-03b-20260715-1", "type": "module"}, {"src": "forge-sales-presentation-entrypoint-r16j0.js?v=r16j0-accepted-quote-sales-presentation-entrypoint-20260714-1", "type": ""}, {"src": "forge-quote-acceptance-entrypoint-r16j0a.js?v=r16j1c1-auto-calculation-03b-20260715-1", "type": ""}, {"src": "forge-quote-action-dock-r16j1b.js?v=r16j1b-segubeca-inline-orb-20260714-10", "type": ""}]);
+  const QUOTE_SCRIPTS = Object.freeze([{"src": "../quote-preview-live/forge-pdf-browser-parser.js?v=r16j1c1-parser-first-03c1-20260716-2", "type": "module"}, {"src": "assets/forge-quote-preview-confirmation-modal-107q.js", "type": ""}, {"src": "../quote-preview-live/forge-quote-preview-bundle.js", "type": ""}, {"src": "../quote-preview-live/forge-quote-calculators.js", "type": "module"}, {"src": "../quote-preview-live/forge-udi-mxn-runtime.js", "type": "module"}, {"src": "../quote-preview-live/forge-quote-benefit-summary.js", "type": "module"}, {"src": "../quote-preview-live/forge-accepted-quote-adapter.js?v=r14g_segubeca_renderer_20260712_1", "type": "module"}, {"src": "../quote-preview-live/forge-benefit-summary-renderer.js?v=r16b_unified_dashboard_20260713_1", "type": "module"}, {"src": "../quote-preview-live/forge-benefit-summary-layout.js?v=r16b_unified_dashboard_20260713_1", "type": "module"}, {"src": "../quote-preview-live/forge-quote-intake-state.js?v=r16a_quote_intake_empty_state_20260713_1", "type": ""}, {"src": "../quote-preview-live/forge-accepted-quote-bridge.js?v=r16j1c1-auto-calculation-03b-20260715-1", "type": "module"}, {"src": "forge-sales-presentation-entrypoint-r16j0.js?v=r16j0-accepted-quote-sales-presentation-entrypoint-20260714-1", "type": ""}, {"src": "forge-quote-acceptance-entrypoint-r16j0a.js?v=r16j1c1-auto-calculation-03b-20260715-1", "type": ""}, {"src": "forge-quote-action-dock-r16j1b.js?v=r16j1b-segubeca-inline-orb-20260714-10", "type": ""}]);
   const DESKTOP_SCRIPTS = Object.freeze([{"src": "./alfred-desktop-dashboard.js?v=r16c_home_restoration_20260713_1", "type": ""}, {"src": "./alfred-desktop-command-workspace-056y.js?v=r16c_home_restoration_20260713_1", "type": ""}, {"src": "./desktop/forge-desktop-command-workspace-upgrade-058e.js?v=060n", "type": ""}, {"src": "./desktop/forge-local-read-model-preview-ui-binding-060l.js?v=060n", "type": ""}, {"src": "./desktop/forge-public-preview-interaction-visual-repair-060m.js?v=r16c_home_restoration_20260713_1", "type": ""}]);
 
   const loadedStyles = new Map();
@@ -270,7 +269,15 @@
   }
 
   async function onFileChangeCapture(event) {
-    const input = event.target?.closest?.(FILE_INPUT_SELECTOR);
+    const host = document.querySelector(HOST_SELECTOR);
+    const target = event.target;
+    const input =
+      target instanceof HTMLInputElement &&
+      target.matches(FILE_INPUT_SELECTOR) &&
+      host?.contains(target)
+        ? target
+        : null;
+
     if (!input || replayingFileChange) return;
 
     const runtimeState =
@@ -278,12 +285,24 @@
 
     if (runtimeState === "ready") return;
 
-    /*
-     * Existing extraction listeners were registered before this loader.
-     * Pause the first change event at window capture, load the runtime, then
-     * replay the same semantic change against the original FileList.
-     */
+    const visibleStatus =
+      input
+        .closest(
+          ".fq-file-dropzone-105dr, " +
+          ".fq-upload-card-105dr, " +
+          ".fq-upload-panel-105dr",
+        )
+        ?.querySelector(".fq-file-status-105dr") ||
+      host?.querySelector(".fq-file-status-105dr");
+
     event.stopImmediatePropagation();
+
+    if (visibleStatus) {
+      visibleStatus.textContent =
+        `PDF recibido: ${
+          input.files?.[0]?.name || "archivo"
+        }. Preparando extractor local...`;
+    }
 
     try {
       await loadQuoteRuntime();
@@ -292,6 +311,18 @@
         new Event("change", {
           bubbles: true,
         }),
+      );
+    } catch (error) {
+      if (visibleStatus) {
+        visibleStatus.textContent =
+          `No pude preparar el extractor: ${
+            error?.message || error
+          }`;
+      }
+
+      console.error(
+        "[Forge parser-first file handoff]",
+        error,
       );
     } finally {
       replayingFileChange = false;
@@ -306,7 +337,7 @@
     if (!key) return;
 
     if (key === MODULE_KEY) {
-      loadQuoteShell().catch(() => {});
+      loadQuoteRuntime().catch(() => {});
     }
 
     syncSelectorStable(key);
@@ -323,7 +354,7 @@
       "forge:saas-module-opened",
       (event) => {
         if (event.detail?.module !== MODULE_KEY) return;
-        loadQuoteShell().catch(() => {});
+        loadQuoteRuntime().catch(() => {});
       },
     );
 
@@ -331,7 +362,7 @@
       "popstate",
       () => {
         if (requestedKey() === MODULE_KEY) {
-          loadQuoteShell().catch(() => {});
+          loadQuoteRuntime().catch(() => {});
         }
       },
     );
@@ -344,7 +375,7 @@
     });
 
     if (requestedKey() === MODULE_KEY) {
-      loadQuoteShell().catch(() => {});
+      loadQuoteRuntime().catch(() => {});
     }
 
     /*
