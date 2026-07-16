@@ -91,7 +91,7 @@ Machine-readable index:
 
 The evidence includes the required `1440x900` and `390x844` failure-before
 captures and local plus deployed Pages pass-after coverage for every required
-viewport. The final index contains 62 readable PNGs: 2 failure-before and 55
+viewport. The final index contains 65 readable PNGs: 2 failure-before and 58
 pass-after captures. It contains no zero-byte or duplicate-name screenshots.
 
 ## Authority and non-regression
