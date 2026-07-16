@@ -22,6 +22,20 @@ const parser = await readFile(
   ),
   "utf8",
 );
+const cleanup = await readFile(
+  new URL(
+    "../docs/static-preview/forge-alive/forge-nueva-cotizacion-ui-cleanup-r16j1.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
+const orbRemoval = await readFile(
+  new URL(
+    "../docs/static-preview/forge-alive/forge-alfred-orb-ui-removal-r16j1a.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
 
 assert.doesNotMatch(
   loader,
@@ -38,7 +52,16 @@ assert.match(
 assert.match(loader, /if \(quoteRuntimePromise\) return quoteRuntimePromise/);
 assert.match(router, /FORGE_ROUTE_VISUALLY_READY/);
 assert.match(router, /__FORGE_PERF_REPORT__/);
-assert.match(router, /data-forge-perf-copy/);
+assert.match(router, /__FORGE_START_PERF_CAPTURE__/);
+assert.match(router, /__FORGE_STOP_PERF_CAPTURE__/);
+assert.match(router, /EVENT_BUFFER_MAX = 30/);
+assert.match(router, /LONG_TASK_BUFFER_MAX = 50/);
+assert.doesNotMatch(router, /data-forge-perf-copy/);
+assert.doesNotMatch(cleanup, /setInterval/);
+assert.doesNotMatch(cleanup, /new MutationObserver/);
+assert.doesNotMatch(orbRemoval, /new MutationObserver/);
+assert.match(router, /observer\.disconnect\(\)/);
+assert.match(router, /removeEventListener\(type, listener, options\)/);
 assert.match(parser, /Promise\.all\(\[\s*loadPdfJs107z15p2R11E\(\)/);
 assert.match(parser, /preloadPdfJsRuntime107z15p2R11E/);
 assert.doesNotMatch(parser, /disableWorker\s*:\s*true/);

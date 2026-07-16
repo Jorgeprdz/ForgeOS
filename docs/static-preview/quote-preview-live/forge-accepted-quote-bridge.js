@@ -828,6 +828,12 @@ let packet = null;
           "INVOCATION_PRESENT_END_TS",
         );
         finalizePdfTimelineR16J1C1();
+        if (
+          globalThis.__FORGE_PERF_REPORT__?.scenario ===
+          "PDF_TO_POPUP"
+        ) {
+          globalThis.__FORGE_STOP_PERF_CAPTURE__?.();
+        }
         perfMarkR16J1C1("POPUP_OPEN");
         perfMeasureR16J1C1(
           "PDF_SELECTED_TO_POPUP_MS",

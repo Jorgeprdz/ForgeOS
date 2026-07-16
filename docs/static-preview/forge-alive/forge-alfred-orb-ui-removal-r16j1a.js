@@ -21,7 +21,6 @@
     ".forge-voice-assistant-orb",
   ]);
 
-  let observer = null;
   let scheduled = false;
   let scanCount = 0;
   let suppressedCoreCount = 0;
@@ -526,23 +525,16 @@
       pointerEnabledSuppressedCount: suppressed.filter(
         (element) => getComputedStyle(element).pointerEvents !== "none",
       ).length,
-      observerActive: Boolean(observer),
+      observerActive: false,
       lastSuppressedAt,
     });
   }
 
   function boot() {
-    observer = new MutationObserver(schedule);
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: [
-        "class", "id", "style", "hidden", "aria-label", "title", "role",
-      ],
-    });
     addEventListener("resize", schedule, { passive: true });
     addEventListener("load", schedule, { passive: true });
+    addEventListener("forge:quote-runtime-ready", schedule);
+    addEventListener("forge:saas-module-opened", schedule);
 
     // Do not run the geometry-heavy scan synchronously from a defer script.
     // Firefox can otherwise block the remaining runtime scripts before they

@@ -24,7 +24,7 @@ assert.match(
 
 assert.match(
   page,
-  /forge-mobile-nav-instant-authority-r16j1c1\.js\?v=r16j1c1-main-thread-latency-20260716-1/,
+  /forge-mobile-nav-instant-authority-r16j1c1\.js\?v=r16j1c1-diagnostic-hotfix-20260716-1/,
 );
 
 for (const token of [

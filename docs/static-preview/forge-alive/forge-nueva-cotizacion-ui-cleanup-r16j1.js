@@ -18,8 +18,6 @@
   ];
 
   let scheduled = false;
-  let observer = null;
-  let timer = 0;
 
   const normalize = (value) =>
     String(value ?? "")
@@ -291,24 +289,16 @@
 
   function boot() {
     apply();
-
-    observer = new MutationObserver(schedule);
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-      attributes: true,
-      attributeFilter: [
-        "hidden",
-        "class",
-        "disabled",
-        "data-forge-quote-acceptance-state-r16j0a",
-        "data-forge-sales-presentation-state-r16j0",
-      ],
+    [
+      "forge:quote-runtime-ready",
+      "forge:quote-preview-calculated",
+      "forge:accepted-quote-review-snapshot-created",
+      "forge:quote-acceptance-state-changed",
+      "forge:sales-presentation-state-changed",
+      "forge:saas-module-opened",
+    ].forEach((eventName) => {
+      globalThis.addEventListener(eventName, schedule);
     });
-
-    window.clearInterval(timer);
-    timer = window.setInterval(apply, 450);
   }
 
   globalThis.ForgeNuevaCotizacionUiCleanupR16J1 =

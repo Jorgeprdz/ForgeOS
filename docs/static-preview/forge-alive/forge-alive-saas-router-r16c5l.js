@@ -22,14 +22,15 @@
     if (perfEnabled()) performance.mark(name);
   }
 
-  const perfState = {
-    timestamps: {},
-    events: [],
-    longTasks: [],
-  };
+  const EVENT_BUFFER_MAX = 30;
+  const LONG_TASK_BUFFER_MAX = 50;
+  const ALLOWED_EVENT_NAMES = new Set([
+    "pointerdown", "pointerup", "click", "touchstart", "touchend",
+  ]);
+  let perfState = null;
 
   function perfTimestamp(name, value = performance.now()) {
-    if (perfEnabled()) perfState.timestamps[name] = value;
+    if (perfState?.state === "RUNNING") perfState.timestamps[name] = value;
     return value;
   }
 
@@ -43,49 +44,87 @@
     return rounded(Number.isFinite(a) && Number.isFinite(b) ? b - a : NaN);
   }
 
-  function installPerformanceObservers() {
-    if (!perfEnabled() || globalThis.__FORGE_PERF_OBSERVERS_BOUND__) return;
-    globalThis.__FORGE_PERF_OBSERVERS_BOUND__ = true;
+  function pushBounded(buffer, value, max) {
+    if (buffer.length === max) buffer.shift();
+    buffer.push(value);
+  }
+
+  function startPerformanceCapture(scenario) {
+    if (!perfEnabled()) return false;
+    stopPerformanceCapture();
+    perfState = {
+      state: "RUNNING",
+      scenario: String(scenario || "UNSPECIFIED"),
+      timestamps: { CAPTURE_START_TS: performance.now() },
+      events: [],
+      longTasks: [],
+      observers: [],
+      listeners: [],
+      safetyTimer: 0,
+    };
     const observe = (type, callback) => {
       try {
         const observer = new PerformanceObserver((list) => {
           list.getEntries().forEach(callback);
         });
-        observer.observe({ type, buffered: true });
+        observer.observe({ type, buffered: false });
+        perfState.observers.push(observer);
       } catch {}
     };
     observe("event", (entry) => {
-      perfState.events.push({
+      if (!ALLOWED_EVENT_NAMES.has(entry.name)) return;
+      pushBounded(perfState.events, {
         name: entry.name,
         startTime: rounded(entry.startTime),
         duration: rounded(entry.duration),
         interactionId: entry.interactionId || null,
-      });
-    });
-    observe("first-input", (entry) => {
-      perfState.events.push({
-        name: "first-input",
-        startTime: rounded(entry.startTime),
-        duration: rounded(entry.duration),
-        processingStart: rounded(entry.processingStart),
-      });
+      }, EVENT_BUFFER_MAX);
     });
     observe("longtask", (entry) => {
-      perfState.longTasks.push({
+      pushBounded(perfState.longTasks, {
         startTime: rounded(entry.startTime),
         duration: rounded(entry.duration),
         name: entry.name,
-      });
+      }, LONG_TASK_BUFFER_MAX);
     });
+    const captureEvent = (event) => {
+      if (!ALLOWED_EVENT_NAMES.has(event.type)) return;
+      const timestampName = {
+        pointerdown: "POINTER_DOWN_TS",
+        pointerup: "POINTER_UP_TS",
+        touchstart: "TOUCH_START_TS",
+        touchend: "TOUCH_END_TS",
+        click: "CLICK_CAPTURE_TS",
+      }[event.type];
+      perfTimestamp(timestampName, event.timeStamp || performance.now());
+      pushBounded(perfState.events, {
+        name: event.type,
+        startTime: rounded(event.timeStamp),
+        duration: null,
+        source: "capture-listener",
+      }, EVENT_BUFFER_MAX);
+    };
+    ["pointerdown", "pointerup", "click", "touchstart", "touchend"]
+      .forEach((type) => {
+        const options = { capture: true, passive: type !== "click" };
+        globalThis.addEventListener(type, captureEvent, options);
+        perfState.listeners.push({ type, listener: captureEvent, options });
+      });
+    perfState.safetyTimer = setTimeout(stopPerformanceCapture, 15000);
+    globalThis.__FORGE_PERF_REPORT__ = Object.freeze({
+      CAPTURE_STATE: "RUNNING",
+      scenario: perfState.scenario,
+    });
+    return true;
   }
 
-  function updateDetailedReports() {
-    if (!perfEnabled()) return;
+  function buildDetailedReports() {
+    if (!perfState) return null;
     const click = perfState.timestamps.CLICK_EVENT_RECEIVED_TS;
     const eventDurations = perfState.events
       .map((entry) => entry.duration)
       .filter(Number.isFinite);
-    globalThis.__FORGE_LONG_TASK_REPORT__ = Object.freeze({
+    const longTasks = Object.freeze({
       LONG_TASK_COUNT: perfState.longTasks.length,
       LONG_TASK_TOTAL_MS: rounded(
         perfState.longTasks.reduce((sum, entry) => sum + entry.duration, 0),
@@ -102,7 +141,7 @@
       ),
       tasks: [...perfState.longTasks],
     });
-    globalThis.__FORGE_EVENT_TIMING_REPORT__ = Object.freeze({
+    const events = Object.freeze({
       POINTERDOWN_TO_CLICK_MS: delta("POINTER_DOWN_TS", "CLICK_EVENT_RECEIVED_TS"),
       CLICK_DISPATCH_DELAY_MS: delta("POINTER_UP_TS", "CLICK_EVENT_RECEIVED_TS"),
       CLICK_HANDLER_SYNC_MS: delta("CLICK_HANDLER_START_TS", "CLICK_HANDLER_END_TS"),
@@ -118,10 +157,34 @@
       events: [...perfState.events],
       timestamps: { ...perfState.timestamps },
     });
+    return { events, longTasks };
+  }
+
+  function stopPerformanceCapture() {
+    if (perfState?.state !== "RUNNING") return false;
+    perfState.timestamps.CAPTURE_END_TS = performance.now();
+    perfState.observers.forEach((observer) => observer.disconnect());
+    perfState.listeners.forEach(({ type, listener, options }) => {
+      globalThis.removeEventListener(type, listener, options);
+    });
+    clearTimeout(perfState.safetyTimer);
+    const reports = buildDetailedReports();
+    globalThis.__FORGE_LONG_TASK_REPORT__ = reports.longTasks;
+    globalThis.__FORGE_EVENT_TIMING_REPORT__ = reports.events;
+    perfState.state = "COMPLETE";
+    perfState.observers = [];
+    perfState.listeners = [];
+    globalThis.__FORGE_PERF_REPORT__ = Object.freeze({
+      ...(reportPerformance() || {}),
+      CAPTURE_STATE: "COMPLETE",
+      scenario: perfState.scenario,
+      EVENT_BUFFER_SIZE: perfState.events.length,
+      LONG_TASK_BUFFER_SIZE: perfState.longTasks.length,
+    });
+    return true;
   }
 
   function exportPerformanceReport() {
-    updateDetailedReports();
     const text = JSON.stringify({
       performance: reportPerformance(),
       events: globalThis.__FORGE_EVENT_TIMING_REPORT__ || null,
@@ -200,8 +263,10 @@
         perfTimestamp("FIRST_PAINT_AFTER_CLICK_TS");
         const idle = () => {
           perfTimestamp("FIRST_IDLE_AFTER_CLICK_TS");
-          updateDetailedReports();
           reportPerformance();
+          if (perfState?.scenario?.startsWith("NAV_")) {
+            stopPerformanceCapture();
+          }
         };
         if (typeof requestIdleCallback === "function") {
           requestIdleCallback(idle, { timeout: 1000 });
@@ -213,25 +278,7 @@
   }
 
   function installPerfCopyAction() {
-    if (!perfEnabled() || document.querySelector("[data-forge-perf-copy]")) {
-      return;
-    }
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.forgePerfCopy = "true";
-    button.textContent = "Copiar diagnóstico Forge";
-    Object.assign(button.style, {
-      position: "fixed",
-      right: "12px",
-      top: "12px",
-      zIndex: "9999",
-      padding: "8px 12px",
-    });
-    button.addEventListener("click", async () => {
-      const text = exportPerformanceReport();
-      await navigator.clipboard?.writeText?.(text);
-    });
-    document.body.appendChild(button);
+    return;
   }
 
   /* FORGEOS:R16J1C1_03A5_CONSTANT_TIME_ROUTER:START */
@@ -463,24 +510,6 @@
   }
 
   function bindNavigationCapture() {
-    const captureInput = (name) => (event) => {
-      if (!perfEnabled() || !event.target?.closest?.(
-        `${OPEN_SELECTOR}, ${CLOSE_SELECTOR}, ${NAV_ITEM_SELECTOR}`,
-      )) return;
-      perfTimestamp(name, event.timeStamp || performance.now());
-    };
-    window.addEventListener("pointerdown", captureInput("POINTER_DOWN_TS"), {
-      capture: true,
-      passive: true,
-    });
-    window.addEventListener("touchstart", captureInput("TOUCH_START_TS"), {
-      capture: true,
-      passive: true,
-    });
-    window.addEventListener("pointerup", captureInput("POINTER_UP_TS"), {
-      capture: true,
-      passive: true,
-    });
     window.addEventListener(
       "click",
       (event) => {
@@ -578,7 +607,6 @@
 
   function init() {
     ensureFastPathStyle();
-    installPerformanceObservers();
     installPerfCopyAction();
     bindNavigationCapture();
     bindHistory();
@@ -594,6 +622,8 @@
     isNewQuoteOpen: () => moduleIsOpen(),
   });
   globalThis.__FORGE_EXPORT_PERF_REPORT__ = exportPerformanceReport;
+  globalThis.__FORGE_START_PERF_CAPTURE__ = startPerformanceCapture;
+  globalThis.__FORGE_STOP_PERF_CAPTURE__ = stopPerformanceCapture;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init, {
