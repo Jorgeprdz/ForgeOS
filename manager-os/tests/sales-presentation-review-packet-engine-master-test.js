@@ -3,16 +3,16 @@ import { readFileSync } from "node:fs";
 import {
   SNAPSHOT_TYPE,
   buildSalesPresentationBrowserContext,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-browser-context-adapter.js";
 import {
   buildSalesPresentationPromptReviewPacket,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-prompt-builder.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-prompt-builder.js";
 import {
   buildSalesPresentationSlidePlanReviewPacket,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-slide-plan-generator.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-slide-plan-generator.js";
 import {
   buildSalesPresentationReviewPacket,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-review-packet-builder.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-review-packet-builder.js";
 
 function pass(index, label) { console.log(`PASS ${index} - ${label}`); }
 
@@ -71,7 +71,7 @@ assert.match(bridge, /getSalesPresentationContextReviewPacket/);
 pass(6, "bridge exposes the bundle");
 
 const source = readFileSync(
-  new URL("../../docs/static-preview/quote-preview-live/forge-sales-presentation-review-packet-builder.js", import.meta.url),
+  new URL("../../advisor-os/presentation/browser/forge-sales-presentation-review-packet-builder.js", import.meta.url),
   "utf8",
 );
 assert.doesNotMatch(source, /reasonWhy|REASON_WHY|Benven[uù]|NBA_REASON/);

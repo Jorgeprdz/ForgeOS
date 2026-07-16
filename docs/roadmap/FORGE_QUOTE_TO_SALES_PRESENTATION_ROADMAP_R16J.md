@@ -39,9 +39,9 @@ Scope:
 - Make approval revision-aware.
 - Keep export blocked until explicit human approval.
 
-## R16J2 · Approved Presentation Export Experience
+## Historical planned export scope · reconciled into R16J2
 
-Status: PLANNED
+Status: SUPERSEDED_BY_R16J2_BOARD_AUTHORIZATION
 
 Scope:
 
@@ -128,13 +128,13 @@ Evidence:
 - WebKit: PASS.
 - Three screenshots: clean quote UI, editable workspace, and debug mode.
 
-## R16J2 · Sales Presentation Visual Composition and Client Preview
+## Historical planned visual-composition scope · reconciled into R16J2
 
-Canonical ID:
+Retired candidate ID:
 
 `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
 
-Status: NEXT
+Status: SUPERSEDED_BY_R16J2_BOARD_AUTHORIZATION
 
 Scope:
 
@@ -164,7 +164,7 @@ Evidence:
 
 Next:
 
-`R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+`R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_RECONCILIATION`
 <!-- FORGE:R16J1V_ROADMAP:END -->
 
 <!-- FORGE:R16J1B_ROADMAP:START -->
@@ -197,7 +197,7 @@ Evidence:
 
 Next:
 
-`R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+`R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_RECONCILIATION`
 <!-- FORGE:R16J1B_ROADMAP:END -->
 
 <!-- FORGE:R16J1C_ORB_HALO_ROADMAP:START -->
@@ -227,3 +227,19 @@ Technical debt:
 
 Next: `R16J1D_SALES_PRESENTATION_REVIEW_CARD_COMPOSITION`
 <!-- FORGE:R16J1C_ORB_HALO_ROADMAP:END -->
+
+<!-- FORGE:R16J2_RUNTIME_RECONCILIATION_ROADMAP:START -->
+## R16J2 · Advisor OS Presentation Runtime Reconciliation
+
+Status: `PASS`
+
+- `R16J1=PASS`
+- `R16J2=AUTHORIZED_AND_ACCEPTED`
+- `R16I=SUPERSEDED_IDENTIFIER_NOT_USED`
+- `PRESENTATION_EXECUTION_DOMAIN=ADVISOR_OS`
+- `MANAGER_OS_PRESENTATION_WRITE_AUTHORITY=NO`
+- `PRESENTATION_REASON_WHY_REQUIRED=NO`
+- `NBA_REASON_WHY_CONSUMPTION=FORBIDDEN`
+- Evidence:
+  `docs/evidence/R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_ACCEPTANCE.md`
+<!-- FORGE:R16J2_RUNTIME_RECONCILIATION_ROADMAP:END -->

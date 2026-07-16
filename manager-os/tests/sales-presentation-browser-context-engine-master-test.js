@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import {
   SNAPSHOT_TYPE,
   buildSalesPresentationBrowserContext,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-browser-context-adapter.js";
 
 function pass(index, label) {
   console.log(`PASS ${index} - ${label}`);
@@ -110,7 +110,7 @@ pass(6, "raw documents and Advisor Reason Why are rejected");
 
 const source = readFileSync(
   new URL(
-    "../../docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js",
+    "../../advisor-os/presentation/browser/forge-sales-presentation-browser-context-adapter.js",
     import.meta.url,
   ),
   "utf8",

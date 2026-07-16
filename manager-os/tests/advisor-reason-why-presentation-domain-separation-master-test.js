@@ -8,15 +8,15 @@ import {
 
 import {
   buildSalesPresentationBrowserContext,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-browser-context-adapter.js";
 
 import {
   buildSalesPresentationPromptReviewPacket,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-prompt-builder.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-prompt-builder.js";
 
 import {
   buildSalesPresentationSlidePlanReviewPacket,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-slide-plan-generator.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-slide-plan-generator.js";
 
 const pass = (number, message) =>
   console.log(`PASS ${number} - ${message}`);

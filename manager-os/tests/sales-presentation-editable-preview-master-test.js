@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { initializeSalesPresentationReviewState, clearSalesPresentationReviewState } from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-review-state-store.js";
-import { buildSalesPresentationEditablePreviewModel } from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-editable-preview.js";
+import { initializeSalesPresentationReviewState, clearSalesPresentationReviewState } from "../../advisor-os/presentation/browser/forge-sales-presentation-review-state-store.js";
+import { buildSalesPresentationEditablePreviewModel } from "../../advisor-os/presentation/browser/forge-sales-presentation-editable-preview.js";
 const pass=(n,s)=>console.log(`PASS ${n} - ${s}`);
 clearSalesPresentationReviewState();
 const state=initializeSalesPresentationReviewState({packetType:"SALES_PRESENTATION_REVIEW_PACKET",reviewId:"r2",status:"PENDING_HUMAN_REVIEW",artifactsReadyForReview:true,artifacts:{slidePlan:{slides:[{id:"cover",title:"Solución",purpose:"Portada",notes:["N"],facts:[{label:"Prima",value:120000,sourcePath:"pi.premium"}]}]}}});
@@ -10,8 +10,8 @@ assert.equal(model.packetType,"SALES_PRESENTATION_EDITABLE_PREVIEW_MODEL");pass(
 assert.deepEqual(model.slides[0].editableFields,["title","purpose","notes"]);pass(2,"limits editable fields");
 assert.equal(model.slides[0].facts[0].editable,false);pass(3,"facts remain read-only");
 assert.equal(model.slides[0].facts[0].sourcePath,"pi.premium");pass(4,"keeps source paths");
-const source=readFileSync(new URL("../../docs/static-preview/quote-preview-live/forge-sales-presentation-editable-preview.js",import.meta.url),"utf8");
-assert.match(source,/button\[data-forge-presentation-generation-allowed\]/);pass(5,"binds existing CTA");
+const source=readFileSync(new URL("../../advisor-os/presentation/browser/forge-sales-presentation-editable-preview.js",import.meta.url),"utf8");
+assert.match(source,/data-forge-presentation-authority/);assert.match(source,/ADVISOR_OS_IN_PAGE_EDITOR/);pass(5,"declares Advisor OS editor authority");
 assert.match(source,/data-fact-editable=\"false\"/);pass(6,"DOM marks facts read-only");
 assert.match(source,/authorizeExport/);assert.match(source,/exportToPrintPdf/);pass(7,"wires approval and export");
 assert.doesNotMatch(source,/reasonWhy|REASON_WHY|Benven[uù]|NBA_REASON/);pass(8,"excludes unrelated engines");

@@ -352,9 +352,9 @@ for (const testFile of requiredTests) {
 }
 assert.equal(
   PRESENTATION_ENGINE_ASSEMBLY_PLAN.next_verification,
-  "R16I_PRESENTATION_VISUAL_RUNTIME_ACCEPTANCE_AND_RELEASE_CLOSE",
+  "R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_RECONCILIATION",
 );
-pass(17, "all component contracts are present and R16I is next");
+pass(17, "all component contracts are present and R16J2 is authorized");
 
 console.log(
   "STATUS=PASS_R16H2_EXISTING_PRESENTATION_ASSEMBLY_CONTRACT_E2E_TEST",

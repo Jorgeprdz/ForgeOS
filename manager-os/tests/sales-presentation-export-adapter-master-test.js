@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { initializeSalesPresentationReviewState, applySalesPresentationApprovalDecision, applySalesPresentationExportAuthorization, updateSalesPresentationSlide, clearSalesPresentationReviewState } from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-review-state-store.js";
-import { approveSalesPresentationReview } from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-human-approval-gate.js";
-import { authorizeSalesPresentationExport, buildSalesPresentationPrintableHtml, printSalesPresentationToPdf } from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-export-adapter.js";
+import { initializeSalesPresentationReviewState, applySalesPresentationApprovalDecision, applySalesPresentationExportAuthorization, updateSalesPresentationSlide, clearSalesPresentationReviewState } from "../../advisor-os/presentation/browser/forge-sales-presentation-review-state-store.js";
+import { approveSalesPresentationReview } from "../../advisor-os/presentation/browser/forge-sales-presentation-human-approval-gate.js";
+import { authorizeSalesPresentationExport, buildSalesPresentationPrintableHtml, printSalesPresentationToPdf } from "../../advisor-os/presentation/browser/forge-sales-presentation-export-adapter.js";
 const pass=(n,s)=>console.log(`PASS ${n} - ${s}`);
 clearSalesPresentationReviewState();
 let state=initializeSalesPresentationReviewState({packetType:"SALES_PRESENTATION_REVIEW_PACKET",reviewId:"r4",status:"PENDING_HUMAN_REVIEW",artifactsReadyForReview:true,artifacts:{slidePlan:{slides:[{id:"cover",title:"Solución <ORVI>",purpose:"Factual",notes:["Validar"],facts:[{label:"Prima",value:120000,sourcePath:"pi.premium"}]}]}}});

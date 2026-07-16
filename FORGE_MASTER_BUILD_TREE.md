@@ -15247,7 +15247,7 @@ Validation:
 
 Next:
 
-- `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+- `R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_RECONCILIATION`
 <!-- FORGE:R16J1_MASTER_BUILD_TREE:END -->
 
 <!-- FORGE:R16J1V_MASTER_BUILD_TREE:START -->
@@ -15274,7 +15274,7 @@ Runtime mutation in this reconciliation: none.
 
 Next:
 
-- `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+- `R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_RECONCILIATION`
 <!-- FORGE:R16J1V_MASTER_BUILD_TREE:END -->
 
 <!-- FORGE:R16J1B_MASTER_BUILD_TREE:START -->
@@ -15331,7 +15331,7 @@ Validation:
 
 Next:
 
-- `R16J2_SALES_PRESENTATION_VISUAL_COMPOSITION_AND_CLIENT_PREVIEW`
+- `R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_RECONCILIATION`
 <!-- FORGE:R16J1B_MASTER_BUILD_TREE:END -->
 
 <!-- FORGE:R16J1C_ORB_HALO_MASTER:START -->
@@ -15365,6 +15365,22 @@ Deferred issue:
 
 Next: `R16J1D_SALES_PRESENTATION_REVIEW_CARD_COMPOSITION`
 <!-- FORGE:R16J1C_ORB_HALO_MASTER:END -->
+
+<!-- FORGE:R16J2_PRESENTATION_RUNTIME_MASTER:START -->
+## R16J2 Advisor OS Presentation Runtime Reconciliation
+
+Status: `PASS`
+
+- Prospect-specific presentation context, prompt, slide-plan, editor, approval
+  and export execution belong to `advisor-os/presentation/`.
+- Manager OS has no presentation write authority; retained paths are
+  compatibility re-exports only.
+- Reason Why and private-purpose context remain prohibited presentation inputs.
+- The Advisor OS editor CTA and module-scoped desktop, tablet and mobile
+  composition passed Chromium acceptance at all 13 required resolutions.
+- Canonical evidence:
+  `docs/evidence/R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_ACCEPTANCE.md`
+<!-- FORGE:R16J2_PRESENTATION_RUNTIME_MASTER:END -->
 
 ## Forge Alive Route Performance Parking Note 03A6
 

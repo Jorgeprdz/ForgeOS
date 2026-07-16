@@ -200,9 +200,9 @@ assert.equal(
 assert.equal(
   PRESENTATION_ENGINE_ASSEMBLY_PLAN
     .next_verification,
-  "R16I_PRESENTATION_VISUAL_RUNTIME_ACCEPTANCE_AND_RELEASE_CLOSE",
+  "R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_RECONCILIATION",
 );
-pass(14, "R16I is the next authorized verification");
+pass(14, "R16J2 is the authorized reconciliation");
 
 console.log(
   "STATUS=PASS_R16H1_PRESENTATION_ENGINE_OWNERSHIP_REGISTRY_TEST",

@@ -4,15 +4,15 @@ import { readFileSync } from "node:fs";
 import {
   SNAPSHOT_TYPE,
   buildSalesPresentationBrowserContext,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-browser-context-adapter.js";
 
 import {
   buildSalesPresentationPromptReviewPacket,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-prompt-builder.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-prompt-builder.js";
 
 import {
   buildSalesPresentationSlidePlanReviewPacket,
-} from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-slide-plan-generator.js";
+} from "../../advisor-os/presentation/browser/forge-sales-presentation-slide-plan-generator.js";
 
 function pass(index, label) {
   console.log(`PASS ${index} - ${label}`);
@@ -112,7 +112,7 @@ pass(6, "slide plan is immutable");
 
 const source = readFileSync(
   new URL(
-    "../../docs/static-preview/quote-preview-live/forge-sales-presentation-slide-plan-generator.js",
+    "../../advisor-os/presentation/browser/forge-sales-presentation-slide-plan-generator.js",
     import.meta.url,
   ),
   "utf8",

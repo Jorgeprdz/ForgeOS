@@ -31,15 +31,25 @@ button[data-forge-sales-presentation-entrypoint-r16j0="true"] {
     opacity 160ms ease;
 }
 
-button[data-forge-sales-presentation-entrypoint-r16j0="true"]
-[data-forge-sales-presentation-state-r16j0="READY"],
-button[data-forge-sales-presentation-entrypoint-r16j0="true"]
-[data-forge-sales-presentation-state-r16j0="SESSION_READY"],
-button[data-forge-sales-presentation-entrypoint-r16j0="true"]
-[data-forge-sales-presentation-state-r16j0="ERROR"] {
+button[data-forge-sales-presentation-entrypoint-r16j0="true"][data-forge-sales-presentation-state-r16j0="READY"],
+button[data-forge-sales-presentation-entrypoint-r16j0="true"][data-forge-sales-presentation-state-r16j0="SESSION_READY"],
+button[data-forge-sales-presentation-entrypoint-r16j0="true"][data-forge-sales-presentation-state-r16j0="ERROR"] {
   display: inline-flex !important;
   visibility: visible !important;
   pointer-events: auto !important;
+}
+
+button[data-forge-sales-presentation-entrypoint-r16j0="true"]::before {
+  content: "✦";
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  place-items: center;
+  border-radius: 9px;
+  color: rgba(4, 23, 36, 0.9);
+  background: rgba(255, 255, 255, 0.34);
+  font-size: 15px;
 }
 
 button[data-forge-sales-presentation-entrypoint-r16j0="true"]:hover:not(:disabled) {
@@ -63,9 +73,12 @@ button[data-forge-sales-presentation-entrypoint-r16j0="true"]:disabled {
   opacity: 0.74;
 }
 
-button[data-forge-sales-presentation-entrypoint-r16j0="true"]
-[data-forge-sales-presentation-state-r16j0="GENERATING"] {
+button[data-forge-sales-presentation-entrypoint-r16j0="true"][data-forge-sales-presentation-state-r16j0="GENERATING"] {
   cursor: progress;
+}
+
+button[data-forge-sales-presentation-entrypoint-r16j0="true"]:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
 }
 
 [data-forge-sales-presentation-entrypoint-status-r16j0="true"] {

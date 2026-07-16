@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { initializeSalesPresentationReviewState, updateSalesPresentationSlide, applySalesPresentationApprovalDecision, applySalesPresentationExportAuthorization, clearSalesPresentationReviewState } from "../../docs/static-preview/quote-preview-live/forge-sales-presentation-review-state-store.js";
+import { initializeSalesPresentationReviewState, updateSalesPresentationSlide, applySalesPresentationApprovalDecision, applySalesPresentationExportAuthorization, clearSalesPresentationReviewState } from "../../advisor-os/presentation/browser/forge-sales-presentation-review-state-store.js";
 const pass=(n,s)=>console.log(`PASS ${n} - ${s}`);
 const packet={packetType:"SALES_PRESENTATION_REVIEW_PACKET",reviewId:"r1",status:"PENDING_HUMAN_REVIEW",artifactsReadyForReview:true,artifacts:{slidePlan:{slides:[{id:"cover",title:"Solución",purpose:"Portada",notes:["N"],facts:[{label:"Producto",value:"ORVI",sourcePath:"calculation.product"}]}]}}};
 clearSalesPresentationReviewState();

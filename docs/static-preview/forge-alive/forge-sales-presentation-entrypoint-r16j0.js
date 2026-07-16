@@ -9,11 +9,11 @@
 
   const LABELS = Object.freeze({
     BRIDGE_WAIT: "Preparando presentación…",
-    NO_QUOTE: "Generar presentación de venta",
-    READY: "Generar presentación de venta",
-    GENERATING: "Generando presentación…",
-    SESSION_READY: "Abrir presentación de venta",
-    ERROR: "Reintentar presentación de venta",
+    NO_QUOTE: "Abrir editor de presentación",
+    READY: "Abrir editor de presentación",
+    GENERATING: "Preparando editor…",
+    SESSION_READY: "Volver al editor de presentación",
+    ERROR: "Reintentar abrir editor",
   });
 
   const MESSAGES = Object.freeze({
@@ -259,6 +259,9 @@
     button.dataset.forgeSalesPresentationStateR16j0 = nextState;
     button.dataset.forgeSalesPresentationVisibleR16j0 =
       String(interactive);
+    button.dataset.forgePresentationAuthority = "ADVISOR_OS";
+    button.dataset.forgePresentationEditorRoute =
+      "ADVISOR_OS_IN_PAGE_EDITOR";
     button.textContent = LABELS[nextState] || LABELS.NO_QUOTE;
     observeButtonOwnership(button);
     queueButtonReconciliation(button);
