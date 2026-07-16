@@ -48,6 +48,54 @@ function perfMeasureR16J1C1(name, start, end) {
   } catch {}
 }
 
+function pdfTimelineR16J1C1() {
+  if (!perfEnabledR16J1C1()) return null;
+  const timeline = globalThis.__FORGE_PDF_TIMELINE__ || {
+    timestamps: {},
+    intervals: [],
+    worker: {
+      PDF_WORKER_CREATED: false,
+      PDF_FAKE_WORKER_ACTIVE: null,
+      PDF_WORKER_CREATION_COUNT: 0,
+    },
+    resource: {},
+  };
+  globalThis.__FORGE_PDF_TIMELINE__ = timeline;
+  return timeline;
+}
+
+function pdfTimestampR16J1C1(name, value = performance.now()) {
+  const timeline = pdfTimelineR16J1C1();
+  if (timeline) timeline.timestamps[name] = value;
+  return value;
+}
+
+function pdfIntervalR16J1C1(name, start, end) {
+  const timeline = pdfTimelineR16J1C1();
+  if (!timeline) return;
+  const startValue = timeline.timestamps[start];
+  const endValue = timeline.timestamps[end];
+  if (Number.isFinite(startValue) && Number.isFinite(endValue)) {
+    timeline.intervals.push({ name, start: startValue, end: endValue });
+  }
+}
+
+function updatePdfResourceTimingR16J1C1() {
+  const timeline = pdfTimelineR16J1C1();
+  const entry = performance.getEntriesByName(
+    PDFJS_LOCAL_MODULE_URL_107Z15P2_R11E,
+  ).at(-1);
+  if (!timeline || !entry) return;
+  timeline.resource = {
+    PDFJS_RESOURCE_FETCH_MS: entry.duration,
+    PDFJS_RESOURCE_TRANSFER_SIZE: entry.transferSize ?? null,
+    PDFJS_RESOURCE_ENCODED_SIZE: entry.encodedBodySize ?? null,
+    PDFJS_RESOURCE_FROM_CACHE:
+      entry.transferSize === 0 && entry.encodedBodySize > 0,
+    moduleUrl: entry.name,
+  };
+}
+
 function normalizeText107z15p2R11E(value) {
   return String(value || "")
     .normalize("NFKC")
@@ -462,18 +510,33 @@ async function loadPdfJs107z15p2R11E() {
       for (const candidate of candidates) {
         try {
           perfMarkR16J1C1("PDFJS_IMPORT_START");
+          pdfTimestampR16J1C1("PDFJS_IMPORT_START_TS");
           const pdfjsLib = await withPdfTimeoutR16J1C1(
             import(candidate.module),
             12000,
             "La carga de PDF.js",
           );
           perfMarkR16J1C1("PDFJS_IMPORT_END");
+          pdfTimestampR16J1C1("PDFJS_IMPORT_END_TS");
+          pdfIntervalR16J1C1(
+            "PDFJS_IMPORT",
+            "PDFJS_IMPORT_START_TS",
+            "PDFJS_IMPORT_END_TS",
+          );
+          updatePdfResourceTimingR16J1C1();
           perfMeasureR16J1C1(
             "PDFJS_IMPORT_MS",
             "PDFJS_IMPORT_START",
             "PDFJS_IMPORT_END",
           );
+          pdfTimestampR16J1C1("WORKER_CONFIG_START_TS");
           pdfjsLib.GlobalWorkerOptions.workerSrc = candidate.worker;
+          pdfTimestampR16J1C1("WORKER_CONFIG_END_TS");
+          pdfIntervalR16J1C1(
+            "WORKER_CONFIG",
+            "WORKER_CONFIG_START_TS",
+            "WORKER_CONFIG_END_TS",
+          );
           perfMarkR16J1C1("PDF_WORKER_READY");
         globalThis.ForgePdfJsRuntimeR16J1C1 = Object.freeze({
           version: PDFJS_VENDOR_VERSION_107Z15P2_R11E,
@@ -576,6 +639,7 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
   }
 
   perfMarkR16J1C1("ARRAYBUFFER_START");
+  pdfTimestampR16J1C1("ARRAYBUFFER_START_TS");
   const [pdfjsLib, arrayBuffer] = await Promise.all([
     loadPdfJs107z15p2R11E(),
     withPdfTimeoutR16J1C1(
@@ -585,6 +649,12 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
     ),
   ]);
   perfMarkR16J1C1("ARRAYBUFFER_END");
+  pdfTimestampR16J1C1("ARRAYBUFFER_END_TS");
+  pdfIntervalR16J1C1(
+    "ARRAYBUFFER",
+    "ARRAYBUFFER_START_TS",
+    "ARRAYBUFFER_END_TS",
+  );
   perfMarkR16J1C1("PDF_ARRAYBUFFER_READY");
   perfMeasureR16J1C1(
     "ARRAYBUFFER_MS",
@@ -593,6 +663,7 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
   );
 
   perfMarkR16J1C1("PDF_DOCUMENT_OPEN_START");
+  pdfTimestampR16J1C1("GET_DOCUMENT_CALL_TS");
   const documentTask = pdfjsLib.getDocument({
     data: arrayBuffer,
     useWorkerFetch: false,
@@ -608,6 +679,22 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
       void documentTask.destroy?.();
     },
   );
+  pdfTimestampR16J1C1("GET_DOCUMENT_RESOLVED_TS");
+  pdfIntervalR16J1C1(
+    "PDF_OPEN",
+    "GET_DOCUMENT_CALL_TS",
+    "GET_DOCUMENT_RESOLVED_TS",
+  );
+  const worker = documentTask._worker;
+  const timeline = pdfTimelineR16J1C1();
+  if (timeline) {
+    timeline.worker.PDF_WORKER_CREATION_COUNT += 1;
+    timeline.worker.PDF_WORKER_CREATED = Boolean(worker);
+    timeline.worker.PDF_FAKE_WORKER_ACTIVE =
+      worker ? !worker._webWorker : null;
+    timeline.worker.PDF_WORKER_SCRIPT_REQUESTED = performance
+      .getEntriesByName(PDFJS_LOCAL_WORKER_URL_107Z15P2_R11E).length > 0;
+  }
   perfMarkR16J1C1("PDF_DOCUMENT_OPEN_END");
   perfMarkR16J1C1("PDF_DOCUMENT_OPEN");
   perfMeasureR16J1C1(
@@ -617,7 +704,9 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
   );
 
   const pages = [];
+  pdfTimestampR16J1C1("PAGE_FETCH_START_TS");
   perfMarkR16J1C1("PDF_TEXT_EXTRACTION_START");
+  pdfTimestampR16J1C1("TEXT_CONTENT_START_TS");
   try {
     for (
       let pageNumber = 1;
@@ -647,6 +736,18 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
       }
     }
   } finally {
+    pdfTimestampR16J1C1("PAGE_FETCH_END_TS");
+    pdfTimestampR16J1C1("TEXT_CONTENT_END_TS");
+    pdfIntervalR16J1C1(
+      "PAGE_FETCH",
+      "PAGE_FETCH_START_TS",
+      "PAGE_FETCH_END_TS",
+    );
+    pdfIntervalR16J1C1(
+      "TEXT_CONTENT",
+      "TEXT_CONTENT_START_TS",
+      "TEXT_CONTENT_END_TS",
+    );
     perfMarkR16J1C1("PDF_TEXT_EXTRACTION_END");
     perfMarkR16J1C1("PDF_TEXT_READY");
     perfMeasureR16J1C1(
@@ -1112,11 +1213,18 @@ export async function parsePdfFileToAcceptedQuotePacket(file, options = {}) {
   } = options;
   const text = await extractTextFromPdfFile(file);
   perfMarkR16J1C1("PACKET_BUILD_START");
+  pdfTimestampR16J1C1("PACKET_BUILD_START_TS");
   const packet = parsePdfTextToAcceptedQuotePacket(text, {
     ...packetOptions,
     fileName: packetOptions.fileName || file?.name || null
   });
   perfMarkR16J1C1("PACKET_READY");
+  pdfTimestampR16J1C1("PACKET_BUILD_END_TS");
+  pdfIntervalR16J1C1(
+    "PACKET_BUILD",
+    "PACKET_BUILD_START_TS",
+    "PACKET_BUILD_END_TS",
+  );
   perfMeasureR16J1C1(
     "PACKET_BUILD_MS",
     "PACKET_BUILD_START",
@@ -1168,6 +1276,8 @@ function setPdfStatus107z15p2R11E(input, message, tone = "info") {
 }
 
 async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
+  if (perfEnabledR16J1C1()) globalThis.__FORGE_PDF_TIMELINE__ = null;
+  pdfTimestampR16J1C1("PDF_SELECTED_TS");
   perfMarkR16J1C1("PDF_SELECTED");
   setPdfStatus107z15p2R11E(
     input,
@@ -1190,6 +1300,7 @@ async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
       "success",
     );
 
+    pdfTimestampR16J1C1("PACKET_EVENT_DISPATCH_TS");
     globalThis.dispatchEvent?.(
       new CustomEvent("forge:accepted-quote-packet-ready", {
         detail: Object.freeze({
@@ -1202,6 +1313,7 @@ async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
         }),
       }),
     );
+    pdfTimestampR16J1C1("PACKET_EVENT_DISPATCH_END_TS");
     perfMarkR16J1C1("PDF_PACKET_READY");
 
     return packet;

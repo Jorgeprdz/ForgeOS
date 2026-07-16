@@ -14,9 +14,7 @@
   const SELECTOR_SELECTOR =
     ":scope > .forge-mobile-nav-r16c5j__selector";
 
-  let observer = null;
   let reconciling = false;
-  let queued = false;
   let desiredKey = null;
 
   function navNode() {
@@ -284,17 +282,6 @@
     return true;
   }
 
-  function scheduleReconcile() {
-    if (reconciling || queued) return;
-
-    queued = true;
-
-    queueMicrotask(() => {
-      queued = false;
-      sync(desiredKey || requestedKey());
-    });
-  }
-
   function onPointerDown(event) {
     const item = itemFromEvent(event);
     const key = item?.dataset.forgeNavKey;
@@ -394,21 +381,6 @@
       ),
       { passive: true },
     );
-
-    observer = new MutationObserver(
-      scheduleReconcile,
-    );
-
-    observer.observe(nav, {
-      subtree: true,
-      attributes: true,
-      attributeFilter: [
-        "class",
-        "aria-current",
-        "data-forge-active-key",
-        "style",
-      ],
-    });
 
     sync(requestedKey());
     return true;

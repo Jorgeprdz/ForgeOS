@@ -67,7 +67,7 @@ for (const field of [
 
 assert.match(
   loader,
-  /forge-accepted-quote-bridge\.js\?v=r16j1c1-nonblocking-route-20260716-1/,
+  /forge-accepted-quote-bridge\.js\?v=r16j1c1-main-thread-latency-20260716-1/,
 );
 assert.match(
   loader,

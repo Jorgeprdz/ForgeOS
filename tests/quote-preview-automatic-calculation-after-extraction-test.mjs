@@ -274,7 +274,7 @@ assert.ok(
 assert.ok(
   lazy.includes(
       "forge-accepted-quote-bridge.js" +
-      "?v=r16j1c1-nonblocking-route-20260716-1",
+      "?v=r16j1c1-main-thread-latency-20260716-1",
   ),
 );
 assert.ok(

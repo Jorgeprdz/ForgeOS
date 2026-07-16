@@ -22,11 +22,132 @@
     if (perfEnabled()) performance.mark(name);
   }
 
+  const perfState = {
+    timestamps: {},
+    events: [],
+    longTasks: [],
+  };
+
+  function perfTimestamp(name, value = performance.now()) {
+    if (perfEnabled()) perfState.timestamps[name] = value;
+    return value;
+  }
+
+  function rounded(value) {
+    return Number.isFinite(value) ? Math.round(value * 10) / 10 : null;
+  }
+
+  function delta(start, end) {
+    const a = perfState.timestamps[start];
+    const b = perfState.timestamps[end];
+    return rounded(Number.isFinite(a) && Number.isFinite(b) ? b - a : NaN);
+  }
+
+  function installPerformanceObservers() {
+    if (!perfEnabled() || globalThis.__FORGE_PERF_OBSERVERS_BOUND__) return;
+    globalThis.__FORGE_PERF_OBSERVERS_BOUND__ = true;
+    const observe = (type, callback) => {
+      try {
+        const observer = new PerformanceObserver((list) => {
+          list.getEntries().forEach(callback);
+        });
+        observer.observe({ type, buffered: true });
+      } catch {}
+    };
+    observe("event", (entry) => {
+      perfState.events.push({
+        name: entry.name,
+        startTime: rounded(entry.startTime),
+        duration: rounded(entry.duration),
+        interactionId: entry.interactionId || null,
+      });
+    });
+    observe("first-input", (entry) => {
+      perfState.events.push({
+        name: "first-input",
+        startTime: rounded(entry.startTime),
+        duration: rounded(entry.duration),
+        processingStart: rounded(entry.processingStart),
+      });
+    });
+    observe("longtask", (entry) => {
+      perfState.longTasks.push({
+        startTime: rounded(entry.startTime),
+        duration: rounded(entry.duration),
+        name: entry.name,
+      });
+    });
+  }
+
+  function updateDetailedReports() {
+    if (!perfEnabled()) return;
+    const click = perfState.timestamps.CLICK_EVENT_RECEIVED_TS;
+    const eventDurations = perfState.events
+      .map((entry) => entry.duration)
+      .filter(Number.isFinite);
+    globalThis.__FORGE_LONG_TASK_REPORT__ = Object.freeze({
+      LONG_TASK_COUNT: perfState.longTasks.length,
+      LONG_TASK_TOTAL_MS: rounded(
+        perfState.longTasks.reduce((sum, entry) => sum + entry.duration, 0),
+      ),
+      LONGEST_TASK_MS: rounded(Math.max(
+        0,
+        ...perfState.longTasks.map((entry) => entry.duration),
+      )),
+      LONG_TASKS_FIRST_2_SECONDS_AFTER_CLICK: perfState.longTasks.filter(
+        (entry) =>
+          Number.isFinite(click) &&
+          entry.startTime >= click &&
+          entry.startTime <= click + 2000,
+      ),
+      tasks: [...perfState.longTasks],
+    });
+    globalThis.__FORGE_EVENT_TIMING_REPORT__ = Object.freeze({
+      POINTERDOWN_TO_CLICK_MS: delta("POINTER_DOWN_TS", "CLICK_EVENT_RECEIVED_TS"),
+      CLICK_DISPATCH_DELAY_MS: delta("POINTER_UP_TS", "CLICK_EVENT_RECEIVED_TS"),
+      CLICK_HANDLER_SYNC_MS: delta("CLICK_HANDLER_START_TS", "CLICK_HANDLER_END_TS"),
+      CLICK_TO_ROUTE_STATE_MS: delta("CLICK_EVENT_RECEIVED_TS", "ROUTE_STATE_UPDATED_TS"),
+      CLICK_TO_FIRST_RAF_MS: delta("CLICK_EVENT_RECEIVED_TS", "FIRST_RAF_TS"),
+      CLICK_TO_NEXT_PAINT_MS: delta("CLICK_EVENT_RECEIVED_TS", "SECOND_RAF_TS"),
+      CLICK_TO_IDLE_MS: delta("CLICK_EVENT_RECEIVED_TS", "FIRST_IDLE_AFTER_CLICK_TS"),
+      INP_APPROX_MS:
+        eventDurations.length ? rounded(Math.max(...eventDurations)) : null,
+      MAX_EVENT_DURATION_MS:
+        eventDurations.length ? rounded(Math.max(...eventDurations)) : null,
+      HAPTIC_OWNER: "BROWSER_OR_OS",
+      events: [...perfState.events],
+      timestamps: { ...perfState.timestamps },
+    });
+  }
+
+  function exportPerformanceReport() {
+    updateDetailedReports();
+    const text = JSON.stringify({
+      performance: reportPerformance(),
+      events: globalThis.__FORGE_EVENT_TIMING_REPORT__ || null,
+      longTasks: globalThis.__FORGE_LONG_TASK_REPORT__ || null,
+      pdf: globalThis.__FORGE_PDF_TIMELINE__ || null,
+    });
+    navigator.clipboard?.writeText?.(text).catch?.(() => {});
+    return text;
+  }
+
   function reportPerformance() {
     if (!perfEnabled()) return null;
     const duration = (name) =>
       performance.getEntriesByName(name).at(-1)?.duration ?? null;
     const report = Object.freeze({
+      INDEX_SCRIPT_COUNT: 27,
+      INDEX_DUPLICATE_SCRIPT_COUNT: 1,
+      INDEX_BLOCKING_SCRIPT_COUNT: 5,
+      INDEX_MODULEPRELOAD_COUNT: 0,
+      APP_BOOT_SYNC_WORK_MS: null,
+      APP_BOOT_LISTENER_COUNT: null,
+      APP_GLOBAL_RENDER_COUNT: null,
+      APP_ROUTE_HANDLER_COUNT: 1,
+      APP_STORAGE_SYNC_MS: 0,
+      APP_OBSERVER_COUNT: null,
+      APP_TIMER_COUNT: null,
       HOME_TO_QUOTES_VISUAL_MS:
         duration("HOME_TO_QUOTES_VISUAL_MS"),
       HOME_TO_QUOTES_RUNTIME_MS:
@@ -50,6 +171,7 @@
 
   function markVisualReady(route) {
     requestAnimationFrame(() => {
+      perfTimestamp("FIRST_RAF_TS");
       perfMark("FORGE_ROUTE_VISUALLY_READY");
       const opening = route === MODULE_KEY;
       const visualMeasure =
@@ -73,7 +195,20 @@
           detail: { route },
         }),
       );
-      reportPerformance();
+      requestAnimationFrame(() => {
+        perfTimestamp("SECOND_RAF_TS");
+        perfTimestamp("FIRST_PAINT_AFTER_CLICK_TS");
+        const idle = () => {
+          perfTimestamp("FIRST_IDLE_AFTER_CLICK_TS");
+          updateDetailedReports();
+          reportPerformance();
+        };
+        if (typeof requestIdleCallback === "function") {
+          requestIdleCallback(idle, { timeout: 1000 });
+        } else {
+          setTimeout(idle, 0);
+        }
+      });
     });
   }
 
@@ -93,7 +228,7 @@
       padding: "8px 12px",
     });
     button.addEventListener("click", async () => {
-      const text = JSON.stringify(reportPerformance(), null, 2);
+      const text = exportPerformanceReport();
       await navigator.clipboard?.writeText?.(text);
     });
     document.body.appendChild(button);
@@ -219,6 +354,7 @@
       "enter";
     document.body.dataset.forgeDesiredNavKeyR16j1c1 =
       MODULE_KEY;
+    perfTimestamp("ROUTE_STATE_UPDATED_TS");
     perfMark("FORGE_ROUTE_DATASET_UPDATED");
 
     isolateShellForModule(moduleHost);
@@ -275,6 +411,7 @@
       .forgeSaasActiveModuleR16c5l;
     delete document.body.dataset
       .forgeSaasModuleTransitionR16c5l;
+    perfTimestamp("ROUTE_STATE_UPDATED_TS");
     perfMark("FORGE_ROUTE_DATASET_UPDATED");
     perfMark("FORGE_ROUTE_CLASSES_UPDATED");
 
@@ -326,9 +463,34 @@
   }
 
   function bindNavigationCapture() {
+    const captureInput = (name) => (event) => {
+      if (!perfEnabled() || !event.target?.closest?.(
+        `${OPEN_SELECTOR}, ${CLOSE_SELECTOR}, ${NAV_ITEM_SELECTOR}`,
+      )) return;
+      perfTimestamp(name, event.timeStamp || performance.now());
+    };
+    window.addEventListener("pointerdown", captureInput("POINTER_DOWN_TS"), {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("touchstart", captureInput("TOUCH_START_TS"), {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("pointerup", captureInput("POINTER_UP_TS"), {
+      capture: true,
+      passive: true,
+    });
     window.addEventListener(
       "click",
       (event) => {
+        if (event.target.closest?.(
+          `${OPEN_SELECTOR}, ${CLOSE_SELECTOR}, ${NAV_ITEM_SELECTOR}`,
+        )) {
+          perfTimestamp("CLICK_EVENT_RECEIVED_TS", event.timeStamp || performance.now());
+          perfTimestamp("CLICK_HANDLER_START_TS");
+          perfTimestamp("NAVIGATION_REQUEST_TS");
+        }
         const openTarget = event.target.closest(OPEN_SELECTOR);
 
         if (openTarget) {
@@ -336,6 +498,7 @@
           event.preventDefault();
           event.stopImmediatePropagation();
           openModule();
+          perfTimestamp("CLICK_HANDLER_END_TS");
           return;
         }
 
@@ -352,6 +515,7 @@
             event.preventDefault();
             event.stopImmediatePropagation();
             openModule();
+            perfTimestamp("CLICK_HANDLER_END_TS");
             return;
           }
 
@@ -361,6 +525,7 @@
               history: false,
               targetKey: key || "inicio",
             });
+            perfTimestamp("CLICK_HANDLER_END_TS");
           }
 
           return;
@@ -372,6 +537,7 @@
           perfMark("FORGE_CLICK_HOME");
           event.preventDefault();
           closeModule();
+          perfTimestamp("CLICK_HANDLER_END_TS");
           return;
         }
 
@@ -389,6 +555,7 @@
           ) {
             event.preventDefault();
             closeModule();
+            perfTimestamp("CLICK_HANDLER_END_TS");
           }
         }
       },
@@ -411,6 +578,7 @@
 
   function init() {
     ensureFastPathStyle();
+    installPerformanceObservers();
     installPerfCopyAction();
     bindNavigationCapture();
     bindHistory();
@@ -425,6 +593,7 @@
     closeNewQuote: () => closeModule(),
     isNewQuoteOpen: () => moduleIsOpen(),
   });
+  globalThis.__FORGE_EXPORT_PERF_REPORT__ = exportPerformanceReport;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init, {

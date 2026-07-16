@@ -41,6 +41,89 @@ function perfMeasureR16J1C1(name, start, end) {
   } catch {}
 }
 
+function pdfTimestampR16J1C1(name, value = performance.now()) {
+  if (!perfEnabledR16J1C1()) return value;
+  const timeline = globalThis.__FORGE_PDF_TIMELINE__;
+  if (timeline) timeline.timestamps[name] = value;
+  return value;
+}
+
+function pdfIntervalR16J1C1(name, start, end) {
+  const timeline = globalThis.__FORGE_PDF_TIMELINE__;
+  if (!timeline) return;
+  const startValue = timeline.timestamps[start];
+  const endValue = timeline.timestamps[end];
+  if (Number.isFinite(startValue) && Number.isFinite(endValue)) {
+    timeline.intervals.push({ name, start: startValue, end: endValue });
+  }
+}
+
+function finalizePdfTimelineR16J1C1() {
+  const timeline = globalThis.__FORGE_PDF_TIMELINE__;
+  if (!timeline) return;
+  const selected = timeline.timestamps.PDF_SELECTED_TS;
+  const popup = timeline.timestamps.POPUP_HOST_OPEN_TS;
+  const stages = timeline.intervals
+    .filter(({ start, end }) => end >= start)
+    .sort((a, b) => a.start - b.start)
+    .map((interval, index, all) => ({
+      name: interval.name,
+      startRelativeMs:
+        Number.isFinite(selected) ? interval.start - selected : null,
+      endRelativeMs:
+        Number.isFinite(selected) ? interval.end - selected : null,
+      durationMs: interval.end - interval.start,
+      overlaps: all.some(
+        (other, otherIndex) =>
+          otherIndex !== index &&
+          interval.start < other.end &&
+          interval.end > other.start,
+      ),
+    }));
+  const intervals = timeline.intervals
+    .filter(({ start, end }) =>
+      end >= start &&
+      Number.isFinite(selected) &&
+      Number.isFinite(popup) &&
+      end > selected &&
+      start < popup
+    )
+    .map(({ start, end }) => ({
+      start: Math.max(start, selected),
+      end: Math.min(end, popup),
+    }))
+    .sort((a, b) => a.start - b.start);
+  const merged = [];
+  intervals.forEach(({ start, end }) => {
+    const tail = merged.at(-1);
+    if (tail && start <= tail.end) tail.end = Math.max(tail.end, end);
+    else merged.push({ start, end });
+  });
+  const union = merged.reduce((sum, item) => sum + item.end - item.start, 0);
+  const importInterval = timeline.intervals.find(
+    (interval) => interval.name === "PDFJS_IMPORT",
+  );
+  const importDuration = importInterval
+    ? importInterval.end - importInterval.start
+    : null;
+  const fetchDuration = timeline.resource?.PDFJS_RESOURCE_FETCH_MS;
+  timeline.stages = stages;
+  timeline.summary = {
+    PDF_SELECTED_TO_POPUP_MS:
+      Number.isFinite(selected) && Number.isFinite(popup) ? popup - selected : null,
+    PDF_ACCOUNTED_UNION_MS: union,
+    PDF_UNACCOUNTED_MS:
+      Number.isFinite(selected) && Number.isFinite(popup)
+        ? popup - selected - union
+        : null,
+    PDFJS_MODULE_EVALUATION_MS:
+      Number.isFinite(importDuration) && Number.isFinite(fetchDuration)
+        ? Math.max(0, importDuration - fetchDuration)
+        : null,
+    PDFJS_IMPORT_EVENT_LOOP_WAIT_MS: null,
+  };
+}
+
 function perfSummaryR16J1C1() {
   if (!perfEnabledR16J1C1()) return null;
   const duration = name =>
@@ -682,6 +765,12 @@ let packet = null;
     "forge:accepted-quote-packet-ready",
     async event => {
       try {
+        pdfTimestampR16J1C1("PACKET_EVENT_RECEIVED_TS");
+        pdfIntervalR16J1C1(
+          "EVENT_HANDOFF",
+          "PACKET_EVENT_DISPATCH_TS",
+          "PACKET_EVENT_RECEIVED_TS",
+        );
         packet = validatePacket(event?.detail?.packet);
         currentQuoteCandidateR16J0A = packet;
         clearCurrentQuotePreviewCalculation();
@@ -697,11 +786,26 @@ let packet = null;
           }),
         );
 
+        pdfTimestampR16J1C1("RESULT_RENDER_START_TS");
         applyPacketToExistingPage?.(packet);
+        pdfTimestampR16J1C1("RESULT_RENDER_END_TS");
+        pdfIntervalR16J1C1(
+          "RESULT_RENDER",
+          "RESULT_RENDER_START_TS",
+          "RESULT_RENDER_END_TS",
+        );
+        pdfTimestampR16J1C1("CALCULATION_START_TS");
         await calculateCurrentQuoteCandidatePreview();
+        pdfTimestampR16J1C1("CALCULATION_END_TS");
+        pdfIntervalR16J1C1(
+          "CALCULATION",
+          "CALCULATION_START_TS",
+          "CALCULATION_END_TS",
+        );
 
         const confirmationPreview =
           buildOrviConfirmationPreview(packet);
+        pdfTimestampR16J1C1("INVOCATION_PRESENT_START_TS");
         invocation.present({
           nativeResult: confirmationPreview.nativeResult,
           context: confirmationPreview.context,
@@ -716,6 +820,14 @@ let packet = null;
               ? packet.source
               : {}
         });
+        pdfTimestampR16J1C1("INVOCATION_PRESENT_END_TS");
+        pdfTimestampR16J1C1("POPUP_HOST_OPEN_TS");
+        pdfIntervalR16J1C1(
+          "INVOCATION_PRESENT",
+          "INVOCATION_PRESENT_START_TS",
+          "INVOCATION_PRESENT_END_TS",
+        );
+        finalizePdfTimelineR16J1C1();
         perfMarkR16J1C1("POPUP_OPEN");
         perfMeasureR16J1C1(
           "PDF_SELECTED_TO_POPUP_MS",

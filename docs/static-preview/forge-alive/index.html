@@ -65,8 +65,8 @@
       const normalize = (value) =>
         String(value || "").replace(/\s+/g, " ").trim();
 
-      const markRenderedControls = () => {
-        document
+      const markRenderedControls = (root = document) => {
+        root
           .querySelectorAll('a, button, [role="button"]')
           .forEach((element) => {
             const label = normalize(
@@ -95,11 +95,21 @@
 
   window.addEventListener(
     "forge:saas-module-opened",
-    markRenderedControls,
+    () => {
+      const quoteHost = document.querySelector(
+        '[data-forge-saas-module-host-r16c5l="cotizaciones"]'
+      );
+      if (quoteHost) markRenderedControls(quoteHost);
+    },
   );
   window.addEventListener(
     "forge:quote-runtime-ready",
-    markRenderedControls,
+    () => {
+      const quoteHost = document.querySelector(
+        '[data-forge-saas-module-host-r16c5l="cotizaciones"]'
+      );
+      if (quoteHost) markRenderedControls(quoteHost);
+    },
   );
   window.addEventListener(
     "pageshow",
@@ -1566,7 +1576,7 @@
 
 
 
-<script defer src="./forge-alive-saas-router-r16c5l.js?v=r16j1c1-nonblocking-route-20260716-1"></script>
+<script defer src="./forge-alive-saas-router-r16c5l.js?v=r16j1c1-main-thread-latency-20260716-1"></script>
 <!-- FORGEOS:R16C5L_QUOTE_ASSETS:END -->
 
 <!-- FORGEOS:R16E1_NEW_QUOTE_RUNTIME_PARITY_MOUNT:START -->
@@ -1585,6 +1595,10 @@
 "use strict";
 
 (() => {
+  if (window.ForgeNuevaCotizacionAcceptedQuoteRuntime) {
+    return;
+  }
+
   const CONTRACT_ID =
     "QUOTE_PREVIEW_EXISTING_NUEVA_COTIZACION_REAL_PACKET_INTEGRATION_V1";
 
@@ -2156,6 +2170,6 @@
   <script src="forge-alfred-orb-ui-removal-r16j1a.js?v=r16j1c-orb-halo-closure-20260715-2" defer></script>
 
   <script defer src="../quote-preview-live/forge-quote-intake-ui-simplification-r16j1c1.js?v=r16j1c1-auto-calculation-03b-20260715-1"></script>
-  <script src="./forge-mobile-nav-instant-authority-r16j1c1.js?v=r16j1c1-route-fastpath-03a5-20260715-1"></script>
+  <script src="./forge-mobile-nav-instant-authority-r16j1c1.js?v=r16j1c1-main-thread-latency-20260716-1"></script>
 </body>
 </html>
