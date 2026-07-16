@@ -15619,3 +15619,16 @@ Roadmap disposition:
 - `03A6_REAL_DEVICE_ROUTE_PERFORMANCE=PARKED_FOR_CODEX`
 
 <!-- /FORGEOS:R16J1C1_INCREMENTAL_03B1_LOCAL_PDFJS_EXTRACTION_UNBLOCK -->
+
+<!-- FORGE:R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_MASTER:START -->
+## R16J2B Accepted Quote Presentation Stage Alignment
+
+Status: `LOCAL_ACCEPTANCE_PASS_PENDING_PAGES`
+
+- Module-scoped three-zone Accepted Quote action layout.
+- Dedicated status and centered Presentation Editor CTA rows.
+- Deliberate tablet and mobile responsive composition.
+- Advisor OS presentation authority and Accepted Quote truth unchanged.
+- Evidence:
+  `docs/evidence/R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_ACCEPTANCE.md`
+<!-- FORGE:R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_MASTER:END -->

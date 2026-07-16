@@ -7,6 +7,16 @@ const chromiumPath = process.env.FORGE_CHROMIUM_PATH;
 const pageUrl = process.env.FORGE_R16J2A_PAGES_URL;
 const evidenceRoot = process.env.FORGE_R16J2A_EVIDENCE_ROOT;
 const mode = process.env.FORGE_R16J2A_MODE || "after";
+const viewportWidth = Number(process.env.FORGE_VIEWPORT_WIDTH || 1440);
+const viewportHeight = Number(process.env.FORGE_VIEWPORT_HEIGHT || 900);
+const acceptedStageScreenshot =
+  process.env.FORGE_ACCEPTED_STAGE_SCREENSHOT ||
+  "R16J2A_PAGES_ACCEPTED_QUOTE_CTA_PASS_AFTER_1440x900.png";
+const editorScreenshot =
+  process.env.FORGE_EDITOR_SCREENSHOT ||
+  "R16J2A_PAGES_PRESENTATION_EDITOR_PASS_AFTER_1440x900.png";
+const stateEvidenceRoot =
+  process.env.FORGE_R16J2B_STATE_EVIDENCE_ROOT || null;
 assert.ok(puppeteerPath);
 assert.ok(chromiumPath);
 assert.ok(pageUrl);
@@ -41,7 +51,11 @@ try {
   await pdfPage.close();
 
   const page = await browser.newPage();
-  await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
+  await page.setViewport({
+    width: viewportWidth,
+    height: viewportHeight,
+    deviceScaleFactor: 1,
+  });
   const consoleErrors = [];
   const pageErrors = [];
   const failedRequests = [];
@@ -72,6 +86,15 @@ try {
   await page.waitForSelector("#fq-solution-online-pdf-105dr", {
     timeout: 30000,
   });
+  if (stateEvidenceRoot) {
+    await mkdir(stateEvidenceRoot, { recursive: true });
+    await page.screenshot({
+      path: join(
+        stateEvidenceRoot,
+        `R16J2B_STATE_A_BEFORE_PDF_${viewportWidth}x${viewportHeight}_PASS.png`,
+      ),
+    });
+  }
 
   if (mode === "before") {
     await page.screenshot({
@@ -110,12 +133,28 @@ try {
     );
     const input = await page.$("#fq-solution-online-pdf-105dr");
     await input.uploadFile(pdfPath);
+    if (stateEvidenceRoot) {
+      await page.screenshot({
+        path: join(
+          stateEvidenceRoot,
+          `R16J2B_STATE_B_EXTRACTION_${viewportWidth}x${viewportHeight}_PASS.png`,
+        ),
+      });
+    }
     await page.waitForFunction(
       () =>
         globalThis.ForgeAcceptedQuoteBridge
           ?.getCurrentQuotePreviewCalculationState?.().calculation,
       { timeout: 60000 },
     );
+    if (stateEvidenceRoot) {
+      await page.screenshot({
+        path: join(
+          stateEvidenceRoot,
+          `R16J2B_STATE_D_QUOTE_REVIEW_${viewportWidth}x${viewportHeight}_PASS.png`,
+        ),
+      });
+    }
     const accept = await page.$(
       '[data-quote-preview-action="accept"]',
     );
@@ -130,6 +169,20 @@ try {
       () =>
         globalThis.ForgeSalesPresentationEntrypointR16J0?.getState?.() ===
         "READY",
+      { timeout: 30000 },
+    );
+    await page.waitForFunction(
+      () => {
+        const stage = document.querySelector(
+          ".forge-accepted-quote-stage-r16j2b",
+        );
+        const text = stage?.textContent || "";
+        return (
+          text.includes("PDF revisado") &&
+          text.includes("Revisar resultado") &&
+          text.includes("Abrir editor de presentación")
+        );
+      },
       { timeout: 30000 },
     );
     const ctaVisibleBeforeEditor = await page.evaluate(() => {
@@ -150,10 +203,157 @@ try {
           style?.visibility !== "hidden",
       );
     });
+    if (viewportWidth <= 640) {
+      await page.evaluate(() =>
+        document
+          .querySelector(
+            '[data-forge-quote-action-proxy-r16j1b="presentation"]',
+          )
+          ?.scrollIntoView({ block: "center", inline: "nearest" }),
+      );
+    }
+    const stageLayout = await page.evaluate(() => {
+      const stage = document.querySelector(
+        ".forge-accepted-quote-stage-r16j2b",
+      );
+      const select = stage?.querySelector(".fq-file-label-105dr");
+      const reviewed = stage?.querySelector(
+        '[data-forge-confirm-quote-r16j0a="true"]',
+      );
+      const result = Array.from(
+        stage?.querySelectorAll(".fq-send-pdf-105dr") || [],
+      ).find((node) => {
+        const rect = node.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      });
+      const status =
+        stage?.querySelector('[data-forge-pdf-status="true"]') ||
+        stage?.querySelector(".fq-file-status-105dr");
+      const editor = stage?.querySelector(
+        '[data-forge-quote-action-proxy-r16j1b="presentation"]',
+      );
+      const nav = document.querySelector(
+        ".forge-mobile-nav-r16c5k-home-visual",
+      );
+      const box = (node) => {
+        const rect = node?.getBoundingClientRect();
+        return rect
+          ? {
+              left: rect.left,
+              right: rect.right,
+              top: rect.top,
+              bottom: rect.bottom,
+              width: rect.width,
+              height: rect.height,
+            }
+          : null;
+      };
+      const boxes = {
+        stage: box(stage),
+        select: box(select),
+        reviewed: box(reviewed),
+        result: box(result),
+        status: box(status),
+        editor: box(editor),
+        nav: box(nav),
+      };
+      return {
+        boxes,
+        stageClass: stage?.className || "",
+        gridTemplateColumns: stage
+          ? getComputedStyle(stage).gridTemplateColumns
+          : "",
+        dockDisplay: stage
+          ? getComputedStyle(
+              stage.querySelector(
+                '[data-forge-quote-action-dock-r16j1b="true"]',
+              ),
+            ).display
+          : "",
+        stylesheets: Array.from(document.styleSheets).map(
+          (sheet) => sheet.href,
+        ),
+        buttons: Array.from(stage?.querySelectorAll("button") || []).map(
+          (button) => ({
+            text: button.textContent.trim(),
+            className: button.className,
+            hidden: button.hidden,
+            ariaHidden: button.getAttribute("aria-hidden"),
+            proxy: button.getAttribute(
+              "data-forge-quote-action-proxy-r16j1b",
+            ),
+            box: box(button),
+          }),
+        ),
+        documentOverflow:
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth + 1,
+        centerDelta:
+          boxes.stage && boxes.reviewed
+            ? Math.abs(
+                (boxes.reviewed.left + boxes.reviewed.right) / 2 -
+                  (boxes.stage.left + boxes.stage.right) / 2,
+              )
+            : null,
+      };
+    });
+    assert.equal(stageLayout.documentOverflow, false);
+    assert.ok(stageLayout.boxes.select?.height >= 44);
+    assert.ok(
+      stageLayout.boxes.reviewed?.height >= 44,
+      `reviewed control: ${JSON.stringify(stageLayout)}`,
+    );
+    assert.ok(
+      stageLayout.boxes.result?.height >= 44,
+      `result control: ${JSON.stringify(stageLayout)}`,
+    );
+    assert.ok(stageLayout.boxes.editor?.height >= 44);
+    if (viewportWidth > 640) {
+      assert.ok(stageLayout.centerDelta <= 1);
+      assert.ok(
+        stageLayout.boxes.select.left <
+          stageLayout.boxes.reviewed.left,
+      );
+      assert.ok(
+        stageLayout.boxes.reviewed.right <
+          stageLayout.boxes.result.right,
+      );
+      assert.ok(
+        stageLayout.boxes.status.top >=
+          Math.max(
+            stageLayout.boxes.select.bottom,
+            stageLayout.boxes.reviewed.bottom,
+            stageLayout.boxes.result.bottom,
+          ),
+      );
+    } else {
+      assert.ok(
+        stageLayout.boxes.select.top <
+          stageLayout.boxes.reviewed.top,
+      );
+      assert.ok(
+        stageLayout.boxes.reviewed.top <
+          stageLayout.boxes.result.top,
+      );
+      assert.ok(
+        stageLayout.boxes.result.top <
+          stageLayout.boxes.status.top,
+      );
+      assert.ok(
+        stageLayout.boxes.status.top <
+          stageLayout.boxes.editor.top,
+      );
+      if (stageLayout.boxes.nav) {
+        assert.ok(
+          stageLayout.boxes.editor.bottom <=
+            stageLayout.boxes.nav.top,
+        );
+      }
+    }
     await page.screenshot({
       path: join(
         evidenceRoot,
-        "R16J2A_PAGES_ACCEPTED_QUOTE_CTA_PASS_AFTER_1440x900.png",
+        acceptedStageScreenshot,
       ),
     });
     const presentationProxy = await page.$(
@@ -173,11 +373,34 @@ try {
       { timeout: 30000 },
     );
     await page.screenshot({
-      path: join(
-        evidenceRoot,
-        "R16J2A_PAGES_PRESENTATION_EDITOR_PASS_AFTER_1440x900.png",
-      ),
+      path: join(evidenceRoot, editorScreenshot),
     });
+    const sessionBeforeClose = await page.evaluate(
+      () =>
+        globalThis.ForgeAcceptedQuoteBridge
+          ?.getCurrentSalesPresentationReviewState?.()?.sessionId,
+    );
+    await page.click('.forge-r16j1 [data-action="close"]');
+    await page.waitForFunction(
+      () =>
+        globalThis.ForgeSalesPresentationEditablePreview
+          ?.getWorkspaceState?.().open === false,
+    );
+    const reopenProxy = await page.$(
+      '[data-forge-quote-action-proxy-r16j1b="presentation"]',
+    );
+    await reopenProxy.click();
+    await page.waitForFunction(
+      () =>
+        globalThis.ForgeSalesPresentationEditablePreview
+          ?.getWorkspaceState?.().open === true,
+    );
+    const sessionAfterReopen = await page.evaluate(
+      () =>
+        globalThis.ForgeAcceptedQuoteBridge
+          ?.getCurrentSalesPresentationReviewState?.()?.sessionId,
+    );
+    assert.equal(sessionAfterReopen, sessionBeforeClose);
 
     const runtime = await page.evaluate(() => ({
       quote: globalThis.ForgeAcceptedQuoteBridge
@@ -266,6 +489,7 @@ try {
         {
           pageUrl,
           runtime,
+          stageLayout,
           consoleErrors,
           pageErrors,
           failedRequests,

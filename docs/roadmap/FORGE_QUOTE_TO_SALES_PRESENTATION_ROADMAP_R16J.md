@@ -243,3 +243,16 @@ Status: `PASS`
 - Evidence:
   `docs/evidence/R16J2_ADVISOR_OS_PRESENTATION_RUNTIME_ACCEPTANCE.md`
 <!-- FORGE:R16J2_RUNTIME_RECONCILIATION_ROADMAP:END -->
+
+<!-- FORGE:R16J2B_STAGE_ALIGNMENT_ROADMAP:START -->
+## R16J2B · Accepted Quote Presentation Stage Alignment
+
+Status: `LOCAL_ACCEPTANCE_PASS_PENDING_PAGES`
+
+- Desktop controls use left, mathematical center and right zones.
+- Status and Presentation Editor CTA occupy independent full-width rows.
+- Tablet and mobile responsive acceptance is complete locally.
+- Presentation authority remains in Advisor OS.
+- Evidence:
+  `docs/evidence/R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_ACCEPTANCE.md`
+<!-- FORGE:R16J2B_STAGE_ALIGNMENT_ROADMAP:END -->

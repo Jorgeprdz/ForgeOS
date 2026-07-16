@@ -22,7 +22,203 @@
   pointer-events: none !important;
 }
 
-/* No background, border, shadow, radius, typography or color is
-   introduced here. Existing Forge component classes remain canonical. */
+/* R16J2B aligns the existing semantic controls without changing their
+   runtime contracts or creating duplicate actions. */
+.forge-accepted-quote-stage-r16j2b {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+  grid-template-areas:
+    "select reviewed result"
+    "status status status"
+    "editor editor editor";
+  column-gap: clamp(16px, 3vw, 40px);
+  row-gap: 14px;
+  align-items: center;
+}
+
+.forge-accepted-quote-stage-r16j2b > .fq-file-choice-16a {
+  grid-area: select;
+  width: fit-content;
+  min-width: min(100%, 230px);
+  justify-self: start;
+}
+
+.forge-accepted-quote-stage-r16j2b > .fq-file-status-105dr {
+  grid-area: status;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  justify-self: center;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  > [data-forge-pdf-status="true"] {
+  grid-area: status;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto !important;
+  color: rgba(156, 241, 216, 0.9) !important;
+  text-align: center;
+  overflow-wrap: anywhere;
+  justify-self: center;
+}
+
+.forge-accepted-quote-stage-r16j2b:has(
+    > [data-forge-pdf-status="true"]
+  )
+  > .fq-file-status-105dr {
+  display: none;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  > .fq-send-pdf-105dr:not(
+    [data-forge-quote-action-proxy-r16j1b]
+  ) {
+  grid-area: result;
+  width: auto;
+  min-width: 190px;
+  min-height: 52px;
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  > [data-forge-quote-action-dock-r16j1b="true"] {
+  display: contents;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  > [data-forge-quote-acceptance-r16j0a="true"] {
+  grid-area: reviewed;
+  width: auto !important;
+  min-width: 220px;
+  min-height: 52px;
+  justify-self: center;
+  white-space: nowrap;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  > [data-forge-quote-acceptance-r16j0a="true"]
+  button {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 16px;
+  padding: 13px 18px;
+  white-space: nowrap;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  [data-forge-quote-action-proxy-r16j1b="confirm"] {
+  grid-area: result;
+  width: auto;
+  min-width: 190px;
+  min-height: 52px;
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  [data-forge-quote-action-proxy-r16j1b="presentation"] {
+  grid-area: editor;
+  width: min(100%, 520px) !important;
+  min-height: 52px;
+  margin: 0;
+  justify-self: center;
+  white-space: nowrap;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  [data-forge-quote-action-proxy-status-r16j1b="presentation"] {
+  grid-area: status;
+  justify-self: center;
+  text-align: center;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  :is(
+    .fq-file-label-105dr,
+    .fq-send-pdf-105dr,
+    [data-forge-quote-action-proxy-r16j1b]
+  ) {
+  min-height: 52px;
+  border-radius: 16px;
+  padding: 13px 18px;
+  line-height: 1.2;
+}
+
+.forge-accepted-quote-stage-r16j2b
+  [data-forge-quote-action-proxy-r16j1b]:focus-visible {
+  outline: 3px solid rgba(116, 224, 255, 0.9);
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .forge-accepted-quote-stage-r16j2b {
+    column-gap: 14px;
+  }
+
+  .forge-accepted-quote-stage-r16j2b
+    > .fq-file-choice-16a {
+    min-width: 0;
+  }
+
+  .forge-accepted-quote-stage-r16j2b
+    > [data-forge-quote-acceptance-r16j0a="true"] {
+    min-width: 190px;
+  }
+
+  .forge-accepted-quote-stage-r16j2b
+    > .fq-send-pdf-105dr:not(
+      [data-forge-quote-action-proxy-r16j1b]
+    ) {
+    min-width: 170px;
+  }
+}
+
+@media (max-width: 640px) {
+  .forge-accepted-quote-stage-r16j2b {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas:
+      "select"
+      "reviewed"
+      "result"
+      "status"
+      "editor";
+    gap: 12px;
+    padding-bottom: calc(
+      22px + env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  .forge-accepted-quote-stage-r16j2b
+    > .fq-file-choice-16a,
+  .forge-accepted-quote-stage-r16j2b
+    > .fq-send-pdf-105dr:not(
+      [data-forge-quote-action-proxy-r16j1b]
+    ),
+  .forge-accepted-quote-stage-r16j2b
+    > [data-forge-quote-acceptance-r16j0a="true"],
+  .forge-accepted-quote-stage-r16j2b
+    [data-forge-quote-action-proxy-r16j1b="confirm"],
+  .forge-accepted-quote-stage-r16j2b
+    [data-forge-quote-action-proxy-r16j1b="presentation"] {
+    width: 100% !important;
+    min-width: 0;
+    max-width: none;
+    justify-self: stretch;
+    white-space: normal;
+  }
+
+  .forge-accepted-quote-stage-r16j2b
+    > .fq-file-status-105dr {
+    padding: 2px 4px;
+  }
+
+  .forge-accepted-quote-stage-r16j2b
+    > [data-forge-quote-acceptance-r16j0a="true"]
+    button {
+    white-space: normal;
+  }
+}
 
 /* FORGEOS:R16J1B_INLINE_CANONICAL_QUOTE_ACTIONS:END */

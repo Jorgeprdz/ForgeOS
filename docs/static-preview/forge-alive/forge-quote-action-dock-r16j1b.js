@@ -209,6 +209,12 @@
   }
 
   function ensureInline(surface) {
+    const stage =
+      surface.querySelector(".fq-upload-controls-105dr") ||
+      surface;
+    stage.classList.add(
+      "forge-accepted-quote-stage-r16j2b",
+    );
     let inline = document.querySelector(
       `[${INLINE_MARKER}="true"]`,
     );
@@ -234,13 +240,13 @@
       `;
     }
 
-    if (!surface.contains(inline)) {
-      const input = surface.querySelector(INPUT_SELECTOR);
+    if (!stage.contains(inline)) {
+      const input = stage.querySelector(INPUT_SELECTOR);
       const anchor =
-        topLevelChild(surface, input) ||
+        topLevelChild(stage, input) ||
         topLevelChild(
-          surface,
-          [...surface.querySelectorAll("button")].find(
+          stage,
+          [...stage.querySelectorAll("button")].find(
             (element) =>
               normalize(element.textContent).includes(
                 "revisar resultado",
@@ -251,7 +257,7 @@
       if (anchor) {
         anchor.insertAdjacentElement("afterend", inline);
       } else {
-        surface.appendChild(inline);
+        stage.appendChild(inline);
       }
     }
 
@@ -400,6 +406,14 @@
     );
 
     if (!surface || !inline) return false;
+    const stage =
+      surface.querySelector(".forge-accepted-quote-stage-r16j2b");
+    const parserStatus =
+      stage?.querySelector('[data-forge-pdf-status="true"]');
+    if (parserStatus) {
+      parserStatus.setAttribute("role", "status");
+      parserStatus.setAttribute("aria-live", "polite");
+    }
 
     const confirmShown = syncProxy("confirm", surface);
     const presentationShown = syncProxy("presentation", surface);
