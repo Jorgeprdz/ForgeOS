@@ -57,7 +57,7 @@ assert.doesNotMatch(parser, /transfer\.items\.add\(jsonFile\)/);
 
 assert.match(
   loader,
-  /forge-pdf-browser-parser\.js\?v=r16j1c1\-system\-performance\-repair\-20260716\-1/,
+  /forge-pdf-browser-parser\.js\?v=r16j1c1\-nonblocking\-route\-20260716\-1/,
 );
 assert.doesNotMatch(
   loader,
@@ -78,7 +78,7 @@ console.log(
     pageCleaned: true,
     directPacketEventPreserved: true,
     parserReferenceAuthority: "lazy-loader",
-    parserCacheKey: "r16j1c1-performance-repair-03c3-20260716-1",
+    parserCacheKey: "r16j1c1-nonblocking-route-20260716-1",
     automaticCalculationRequested: false,
     automaticAcceptance: false,
   },

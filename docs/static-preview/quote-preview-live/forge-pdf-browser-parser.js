@@ -474,6 +474,7 @@ async function loadPdfJs107z15p2R11E() {
             "PDFJS_IMPORT_END",
           );
           pdfjsLib.GlobalWorkerOptions.workerSrc = candidate.worker;
+          perfMarkR16J1C1("PDF_WORKER_READY");
         globalThis.ForgePdfJsRuntimeR16J1C1 = Object.freeze({
           version: PDFJS_VENDOR_VERSION_107Z15P2_R11E,
           source: candidate.source,
@@ -507,6 +508,17 @@ async function loadPdfJs107z15p2R11E() {
       pdfjsPromise107z15p2R11E = null;
     },
   );
+}
+
+function preloadPdfJsRuntime107z15p2R11E() {
+  const run = () => {
+    void loadPdfJs107z15p2R11E().catch(() => {});
+  };
+  if (typeof requestIdleCallback === "function") {
+    requestIdleCallback(run, { timeout: 2000 });
+  } else {
+    queueMicrotask(run);
+  }
 }
 
 export function groupPdfItemsIntoRows107z15p2R11E(items) {
@@ -563,14 +575,17 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
     throw new Error("Archivo PDF inválido o no compatible con arrayBuffer().");
   }
 
-  const pdfjsLib = await loadPdfJs107z15p2R11E();
   perfMarkR16J1C1("ARRAYBUFFER_START");
-  const arrayBuffer = await withPdfTimeoutR16J1C1(
-    file.arrayBuffer(),
-    12000,
-    "La lectura del archivo PDF",
-  );
+  const [pdfjsLib, arrayBuffer] = await Promise.all([
+    loadPdfJs107z15p2R11E(),
+    withPdfTimeoutR16J1C1(
+      file.arrayBuffer(),
+      12000,
+      "La lectura del archivo PDF",
+    ),
+  ]);
   perfMarkR16J1C1("ARRAYBUFFER_END");
+  perfMarkR16J1C1("PDF_ARRAYBUFFER_READY");
   perfMeasureR16J1C1(
     "ARRAYBUFFER_MS",
     "ARRAYBUFFER_START",
@@ -594,6 +609,7 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
     },
   );
   perfMarkR16J1C1("PDF_DOCUMENT_OPEN_END");
+  perfMarkR16J1C1("PDF_DOCUMENT_OPEN");
   perfMeasureR16J1C1(
     "PDF_OPEN_MS",
     "PDF_DOCUMENT_OPEN_START",
@@ -632,6 +648,7 @@ export async function extractTextFromPdfFile107z15p2R11E(file) {
     }
   } finally {
     perfMarkR16J1C1("PDF_TEXT_EXTRACTION_END");
+    perfMarkR16J1C1("PDF_TEXT_READY");
     perfMeasureR16J1C1(
       "TEXT_EXTRACTION_MS",
       "PDF_TEXT_EXTRACTION_START",
@@ -1185,6 +1202,7 @@ async function convertPdfInputToJsonChange107z15p2R11E(input, file) {
         }),
       }),
     );
+    perfMarkR16J1C1("PDF_PACKET_READY");
 
     return packet;
   } catch (error) {
@@ -1242,7 +1260,8 @@ globalThis.ForgePdfBrowserParser = {
   parseImaginaSerPdfTextToAcceptedQuotePacket,
   parseVidaMujerPdfTextToAcceptedQuotePacket,
   extractTextFromPdfFile107z15p2R11E,
-  groupPdfItemsIntoRows107z15p2R11E
+  groupPdfItemsIntoRows107z15p2R11E,
+  preloadPdfJsRuntime: preloadPdfJsRuntime107z15p2R11E
 };
 
 installPdfInputInterceptor107z15p2R11E();

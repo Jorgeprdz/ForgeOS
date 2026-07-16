@@ -14,6 +14,90 @@
   const CLOSE_SELECTOR =
     "[data-forge-saas-module-close-r16c5l]";
 
+  function perfEnabled() {
+    return new URL(location.href).searchParams.get("forgePerf") === "1";
+  }
+
+  function perfMark(name) {
+    if (perfEnabled()) performance.mark(name);
+  }
+
+  function reportPerformance() {
+    if (!perfEnabled()) return null;
+    const duration = (name) =>
+      performance.getEntriesByName(name).at(-1)?.duration ?? null;
+    const report = Object.freeze({
+      HOME_TO_QUOTES_VISUAL_MS:
+        duration("HOME_TO_QUOTES_VISUAL_MS"),
+      HOME_TO_QUOTES_RUNTIME_MS:
+        duration("HOME_TO_QUOTES_RUNTIME_MS"),
+      QUOTES_TO_HOME_VISUAL_MS:
+        duration("QUOTES_TO_HOME_VISUAL_MS"),
+      SECOND_HOME_TO_QUOTES_VISUAL_MS:
+        duration("SECOND_HOME_TO_QUOTES_VISUAL_MS"),
+      SECOND_HOME_TO_QUOTES_RUNTIME_MS:
+        duration("SECOND_HOME_TO_QUOTES_RUNTIME_MS"),
+      PDF_SELECTED_TO_POPUP_MS:
+        duration("PDF_SELECTED_TO_POPUP_MS"),
+      PDFJS_IMPORT_MS: duration("PDFJS_IMPORT_MS"),
+      PDF_OPEN_MS: duration("PDF_OPEN_MS"),
+      TEXT_EXTRACTION_MS: duration("TEXT_EXTRACTION_MS"),
+      PACKET_TO_POPUP_MS: duration("PACKET_TO_POPUP_MS"),
+    });
+    globalThis.__FORGE_PERF_REPORT__ = report;
+    return report;
+  }
+
+  function markVisualReady(route) {
+    requestAnimationFrame(() => {
+      perfMark("FORGE_ROUTE_VISUALLY_READY");
+      const opening = route === MODULE_KEY;
+      const visualMeasure =
+        opening &&
+        performance.getEntriesByName(
+          "HOME_TO_QUOTES_VISUAL_MS",
+        ).length
+          ? "SECOND_HOME_TO_QUOTES_VISUAL_MS"
+          : opening
+            ? "HOME_TO_QUOTES_VISUAL_MS"
+            : "QUOTES_TO_HOME_VISUAL_MS";
+      try {
+        performance.measure(
+          visualMeasure,
+          opening ? "FORGE_CLICK_QUOTES" : "FORGE_CLICK_HOME",
+          "FORGE_ROUTE_VISUALLY_READY",
+        );
+      } catch {}
+      globalThis.dispatchEvent(
+        new CustomEvent("forge:route-visually-ready", {
+          detail: { route },
+        }),
+      );
+      reportPerformance();
+    });
+  }
+
+  function installPerfCopyAction() {
+    if (!perfEnabled() || document.querySelector("[data-forge-perf-copy]")) {
+      return;
+    }
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.forgePerfCopy = "true";
+    button.textContent = "Copiar diagnóstico Forge";
+    Object.assign(button.style, {
+      position: "fixed",
+      right: "12px",
+      top: "12px",
+      zIndex: "9999",
+      padding: "8px 12px",
+    });
+    button.addEventListener("click", async () => {
+      const text = JSON.stringify(reportPerformance(), null, 2);
+      await navigator.clipboard?.writeText?.(text);
+    });
+    document.body.appendChild(button);
+  }
 
   /* FORGEOS:R16J1C1_03A5_CONSTANT_TIME_ROUTER:START */
   const SHELL_SELECTOR = ".phone-shell";
@@ -128,15 +212,18 @@
     const moduleHost = host();
     if (!moduleHost) return false;
 
+    perfMark("FORGE_ROUTE_AUTHORITY_START");
     document.body.dataset.forgeSaasActiveModuleR16c5l =
       MODULE_KEY;
     document.body.dataset.forgeSaasModuleTransitionR16c5l =
       "enter";
     document.body.dataset.forgeDesiredNavKeyR16j1c1 =
       MODULE_KEY;
+    perfMark("FORGE_ROUTE_DATASET_UPDATED");
 
     isolateShellForModule(moduleHost);
     moduleHost.hidden = false;
+    perfMark("FORGE_ROUTE_CLASSES_UPDATED");
 
     /*
      * The router owns route state, but never measures or styles the
@@ -171,6 +258,7 @@
         detail: { module: MODULE_KEY },
       }),
     );
+    markVisualReady(MODULE_KEY);
 
     return true;
   }
@@ -179,6 +267,7 @@
     const moduleHost = host();
     if (!moduleHost) return false;
 
+    perfMark("FORGE_ROUTE_AUTHORITY_START");
     moduleHost.hidden = true;
     restoreShellAfterModule();
 
@@ -186,6 +275,8 @@
       .forgeSaasActiveModuleR16c5l;
     delete document.body.dataset
       .forgeSaasModuleTransitionR16c5l;
+    perfMark("FORGE_ROUTE_DATASET_UPDATED");
+    perfMark("FORGE_ROUTE_CLASSES_UPDATED");
 
     const targetKey = options.targetKey || "inicio";
 
@@ -223,6 +314,7 @@
         },
       }),
     );
+    markVisualReady(targetKey);
 
     return true;
   }
@@ -240,6 +332,7 @@
         const openTarget = event.target.closest(OPEN_SELECTOR);
 
         if (openTarget) {
+          perfMark("FORGE_CLICK_QUOTES");
           event.preventDefault();
           event.stopImmediatePropagation();
           openModule();
@@ -255,6 +348,7 @@
           const key = navItem.dataset.forgeNavKey;
 
           if (key === MODULE_KEY) {
+            perfMark("FORGE_CLICK_QUOTES");
             event.preventDefault();
             event.stopImmediatePropagation();
             openModule();
@@ -262,6 +356,7 @@
           }
 
           if (moduleIsOpen()) {
+            perfMark("FORGE_CLICK_HOME");
             closeModule({
               history: false,
               targetKey: key || "inicio",
@@ -274,6 +369,7 @@
         const closeTarget = event.target.closest(CLOSE_SELECTOR);
 
         if (closeTarget) {
+          perfMark("FORGE_CLICK_HOME");
           event.preventDefault();
           closeModule();
           return;
@@ -315,6 +411,7 @@
 
   function init() {
     ensureFastPathStyle();
+    installPerfCopyAction();
     bindNavigationCapture();
     bindHistory();
 

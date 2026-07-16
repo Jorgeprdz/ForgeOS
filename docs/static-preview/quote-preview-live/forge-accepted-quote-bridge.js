@@ -265,6 +265,7 @@ async function calculateCurrentQuoteCandidatePreview(
       previewCalculationErrorR16J1C1 = null;
       previewCalculationStateR16J1C1 = "READY";
       perfMarkR16J1C1("CALCULATION_END");
+      perfMarkR16J1C1("QUOTE_CALCULATION_READY");
       perfMeasureR16J1C1(
         "CALCULATION_MS",
         "CALCULATION_START",
@@ -716,6 +717,39 @@ let packet = null;
               : {}
         });
         perfMarkR16J1C1("POPUP_OPEN");
+        perfMeasureR16J1C1(
+          "PDF_SELECTED_TO_POPUP_MS",
+          "PDF_SELECTED",
+          "POPUP_OPEN",
+        );
+        perfMeasureR16J1C1(
+          "PACKET_TO_POPUP_MS",
+          "PDF_PACKET_READY",
+          "POPUP_OPEN",
+        );
+        globalThis.__FORGE_PERF_REPORT__ = Object.freeze({
+          ...(globalThis.__FORGE_PERF_REPORT__ || {}),
+          PDF_SELECTED_TO_POPUP_MS:
+            globalThis.performance
+              ?.getEntriesByName?.("PDF_SELECTED_TO_POPUP_MS")
+              ?.at?.(-1)?.duration ?? null,
+          PDFJS_IMPORT_MS:
+            globalThis.performance
+              ?.getEntriesByName?.("PDFJS_IMPORT_MS")
+              ?.at?.(-1)?.duration ?? null,
+          PDF_OPEN_MS:
+            globalThis.performance
+              ?.getEntriesByName?.("PDF_OPEN_MS")
+              ?.at?.(-1)?.duration ?? null,
+          TEXT_EXTRACTION_MS:
+            globalThis.performance
+              ?.getEntriesByName?.("TEXT_EXTRACTION_MS")
+              ?.at?.(-1)?.duration ?? null,
+          PACKET_TO_POPUP_MS:
+            globalThis.performance
+              ?.getEntriesByName?.("PACKET_TO_POPUP_MS")
+              ?.at?.(-1)?.duration ?? null,
+        });
         perfMeasureR16J1C1(
           "POPUP_OPEN_MS",
           "PACKET_READY",

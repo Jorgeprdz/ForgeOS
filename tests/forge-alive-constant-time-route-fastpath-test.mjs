@@ -35,7 +35,7 @@ const authority = await readFile(
 
 assert.match(
   page,
-  /forge-alive-saas-router-r16c5l\.js\?v=r16j1c1-route-fastpath-03a5-20260715-1/,
+  /forge-alive-saas-router-r16c5l\.js\?v=r16j1c1-nonblocking-route-20260716-1/,
 );
 
 assert.match(
