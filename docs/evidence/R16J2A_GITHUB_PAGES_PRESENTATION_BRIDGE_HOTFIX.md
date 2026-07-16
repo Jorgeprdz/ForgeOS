@@ -74,8 +74,62 @@ A server rooted at `docs/` passed the complete synthetic real-PDF flow:
 
 ## Production acceptance
 
-Final production results and remote commit are recorded after GitHub Pages
-deployment verification.
+GitHub Pages workflow:
+
+`https://github.com/Jorgeprdz/ForgeOS/actions/runs/29535015369`
+
+Hotfix commit:
+
+`789d647b627464a76f4babbc9a7e028b34b92298`
+
+The real public Forge Alive URL passed with a hard R16J2A cache identifier.
+A real PDF generated from the test-safe ORVI fixture was processed by the
+deployed PDF.js runtime. Quote review, human acceptance, the presentation CTA
+and the Advisor OS editor all passed.
+
+The production request log captured 43 relevant JavaScript module responses.
+All returned HTTP 200 with a JavaScript MIME type. Console errors, page errors
+and network failures were zero.
+
+Production evidence:
+
+- `R16J2A_PAGES_ACCEPTED_QUOTE_CTA_PASS_AFTER_1440x900.png`
+- `R16J2A_PAGES_PRESENTATION_EDITOR_PASS_AFTER_1440x900.png`
+- `R16J2A_PAGES_NETWORK_AND_CONSOLE_ZERO_ERRORS_PASS_AFTER_1440x900.png`
+- `R16J2A_AFTER_NETWORK.json`
+- `R16J2A_PRE_CORRECTION_HTTP_DIAGNOSIS.md`
+
+```text
+REAL_PAGES_URL_TESTED=YES
+ACCEPTED_QUOTE_BRIDGE_HTTP_200=YES
+ACCEPTED_QUOTE_BRIDGE_MIME_VALID=YES
+ALL_TRANSITIVE_IMPORTS_HTTP_200=YES
+ALL_TRANSITIVE_IMPORTS_MIME_VALID=YES
+MODULE_EVALUATION_PASS=YES
+PDF_EXTRACTOR_PREPARED=YES
+PDF_EXTRACTION_PASS=YES
+QUOTE_REVIEW_PASS=YES
+ACCEPTED_QUOTE_PASS=YES
+PRESENTATION_CTA_VISIBLE=YES
+PRESENTATION_EDITOR_PASS=YES
+CONSOLE_ERRORS=0
+NETWORK_FAILURES=0
+PAGES_DEPLOYMENT_VERIFIED=YES
+REAL_PDF_FLOW_VERIFIED=YES
+```
+
+Regression:
+
+```text
+QUOTE_REGRESSION=NO
+ACCEPTED_QUOTE_REGRESSION=NO
+PIPELINE_REGRESSION=NO
+PRODUCT_INTELLIGENCE_REGRESSION=NO
+PRESENTATION_REGRESSION=NO
+PDF_EXPORT_REGRESSION=NO
+NAVIGATION_REGRESSION=NO
+ORB_REGRESSION=NO
+```
 
 ## Authority gates
 
