@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://forge-os.local/schemas/advisor-prospect-identity-v1.schema.json",
+  "title":"Advisor OS Prospect Identity V1","type":"object","additionalProperties":false,
+  "required":["contractType","schemaVersion","prospectId","advisorId","displayName","normalizedIdentityFields","ownership","statusReference","sourceClaims","relationshipReferences","context","createdAt","updatedAt","version","privacyClassification"],
+  "properties":{
+    "contractType":{"const":"ADVISOR_OS_PROSPECT_IDENTITY"},"schemaVersion":{"const":"1.0.0"},
+    "prospectId":{"type":"string","minLength":1},"advisorId":{"type":"string","minLength":1},"displayName":{"type":"string","minLength":1},
+    "normalizedIdentityFields":{"type":"object","additionalProperties":false,"properties":{"normalizedName":{"type":"string"},"verifiedPhone":{"type":["string","null"]},"verifiedEmail":{"type":["string","null"]}}},
+    "ownership":{"type":"object","additionalProperties":false,"required":["domain","advisorId","managerWriteAllowed"],"properties":{"domain":{"const":"ADVISOR_OS_SALES"},"advisorId":{"type":"string"},"managerWriteAllowed":{"const":false}}},
+    "statusReference":{"type":["string","null"]},
+    "sourceClaims":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["sourceType","sourceRecordId","sourceDomain","sourceDate","capturedAt","capturedBy","evidenceReferences","confidenceOrVerificationStatus"],"properties":{"sourceType":{"enum":["MANUAL_ENTRY","REFERRAL","PROJECT_200_HANDOFF","AUTHORIZED_IMPORT","EXISTING_CONTACT","RELATIONSHIP_SIGNAL","OTHER_GOVERNED_SOURCE"]},"sourceRecordId":{"type":"string"},"sourceDomain":{"type":"string"},"sourceDate":{"type":"string"},"capturedAt":{"type":"string"},"capturedBy":{"type":"string"},"evidenceReferences":{"type":"array","items":{"type":"string"}},"confidenceOrVerificationStatus":{"enum":["VERIFIED","USER_ASSERTED","UNVERIFIED","REVIEW_REQUIRED"]}}}},
+    "relationshipReferences":{"type":"array"},"context":{"type":"array"},"createdAt":{"type":"string"},"updatedAt":{"type":"string"},"version":{"type":"integer","minimum":1},"privacyClassification":{"const":"FORGE_CONFIDENTIAL_PROSPECT"}
+  }
+}

@@ -1,0 +1,10 @@
+"use strict";
+const assert=require("node:assert/strict"); const fs=require("node:fs");
+const {createProspectIdentity}=require("../advisor-os/sales-pipeline/prospect-identity-contract.js");
+const fixture=JSON.parse(fs.readFileSync("fixtures/advisor-sales-pipeline/prospect-identity-synthetic.json","utf8"));
+const prospect=createProspectIdentity(fixture);
+assert.equal(prospect.ownership.domain,"ADVISOR_OS_SALES"); assert.equal(prospect.ownership.managerWriteAllowed,false); assert.equal(prospect.sourceClaims.length,1);
+assert.throws(()=>createProspectIdentity({...fixture,sourceClaims:[]}),/SOURCE_LINEAGE_REQUIRED/);
+assert.throws(()=>createProspectIdentity({...fixture,salesOpportunityId:"OPP"}),/FOREIGN_IDENTITIES/);
+assert.throws(()=>createProspectIdentity({...fixture,context:[{contextId:"X",contextType:"MODEL_INTERPRETATION",value:"x",sourceLineage:"E",overwritesFact:true}]}),/CANNOT_OVERWRITE/);
+console.log("067G4 PROSPECT IDENTITY AND SOURCE LINEAGE: PASS");
