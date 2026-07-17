@@ -6,7 +6,7 @@ import { extname, join, normalize } from 'node:path';
 
 const puppeteerPath = process.env.FORGE_PUPPETEER_CORE_PATH;
 const chromiumPath = process.env.FORGE_CHROMIUM_PATH;
-const evidenceDir = process.env.FORGE_067G16A_EVIDENCE_DIR || '/data/data/com.termux/files/usr/tmp/067g16a-evidence';
+const evidenceDir = process.env.FORGE_067G16B_EVIDENCE_DIR || '/data/data/com.termux/files/usr/tmp/067g16b-evidence';
 assert.ok(puppeteerPath);
 assert.ok(chromiumPath);
 const puppeteer = (await import(puppeteerPath)).default;
@@ -28,11 +28,33 @@ const server = http.createServer(async (request, response) => {
 });
 
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-const browser = await puppeteer.launch({
-    executablePath:chromiumPath,
-    headless:true,
-    args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--single-process','--no-zygote','--disable-breakpad','--disable-crash-reporter'],
-});
+let browser;
+async function launchBrowser() {
+    return puppeteer.launch({
+        executablePath:chromiumPath,
+        headless:true,
+        args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--single-process','--no-zygote','--disable-breakpad','--disable-crash-reporter'],
+    });
+}
+
+async function closeBrowser() {
+    if (!browser) return;
+    const activeBrowser = browser;
+    browser = undefined;
+    const closed = await Promise.race([
+        activeBrowser.close().then(() => true),
+        new Promise(resolve => setTimeout(() => resolve(false), 3000)),
+    ]);
+    if (!closed) activeBrowser.process()?.kill('SIGKILL');
+}
+
+async function restartBrowser() {
+    await closeBrowser();
+    browser = await launchBrowser();
+    return browser.newPage();
+}
+
+browser = await launchBrowser();
 const baseUrl = `http://127.0.0.1:${server.address().port}/docs/static-preview/forge-alive/`;
 
 async function load(page, width, height, suffix = '') {
@@ -46,7 +68,7 @@ async function audit(page) {
     return page.evaluate(() => {
         const visible = node => Boolean(node?.getClientRects().length) && getComputedStyle(node).visibility !== 'hidden';
         const ids = Array.from(document.querySelectorAll('[id]')).map(node => node.id);
-        const homeNodes = Array.from(document.querySelectorAll('[data-forge-static-home-node-067g16a]'));
+        const homeNodes = Array.from(document.querySelectorAll('[data-forge-static-home-node-067g16a], [data-forge-static-home-node-067g16b]'));
         const host = document.querySelector('[data-forge-alive-primary-outlet-067g16a]');
         const diagnostics = globalThis.ForgeAliveStaticView067G16A.diagnostics();
         return {
@@ -59,7 +81,11 @@ async function audit(page) {
             homeInteractiveWhileInactive:homeNodes.filter(node => !visible(node)).some(node => Array.from(node.querySelectorAll('a,button,input,select,textarea,[tabindex]')).some(control => !control.disabled && control.tabIndex >= 0 && !control.closest('[inert]'))),
             homeInteractiveDetails:homeNodes.filter(node => !visible(node)).flatMap(node => Array.from(node.querySelectorAll('a,button,input,select,textarea,[tabindex]')).filter(control => !control.disabled && control.tabIndex >= 0 && !control.closest('[inert]')).map(control => ({tag:control.tagName,text:(control.textContent || '').trim().slice(0,50),parent:node.className,html:node.outerHTML.slice(0,120)}))).slice(0,10),
             pipelineVisible:visible(host) && Boolean(host.querySelector('#forge-pipeline-title')),
-            pipelineTitleCount:Array.from(document.querySelectorAll('#forge-pipeline-title')).filter(visible).length,
+            pipelineTitleCount:Array.from(document.querySelectorAll('h1')).filter(node => visible(node) && node.textContent.trim() === 'Pipeline de ventas').length,
+            filterRowCount:Array.from(document.querySelectorAll('.forge-pipeline-toolbar[role="search"]')).filter(visible).length,
+            activeOutletCount:Array.from(document.querySelectorAll('[data-forge-alive-primary-outlet-067g16a][data-active-static-view="pipeline"]')).filter(visible).length,
+            identityCopy:['FORGE · ADVISOR OS','INTERVENCIÓN COMERCIAL EXPLICADA','Buscar prospecto','Todos los orígenes','Seguimientos'].every(copy => host?.textContent.includes(copy)),
+            homeMetricVisible:Array.from(document.querySelectorAll('.forge-mobile-context-nav-057d, .forge-mobile-widget-grid-057j')).some(visible),
             outletCount:document.querySelectorAll('[data-forge-alive-primary-outlet-067g16a]').length,
             duplicateIds:ids.filter((id,index) => ids.indexOf(id) !== index),
             overflow:document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -91,7 +117,7 @@ async function clickVisibleDesktop(page, view) {
 }
 
 try {
-    const page = await browser.newPage();
+    let page = await browser.newPage();
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(error.message));
 
@@ -110,6 +136,10 @@ try {
     assert.equal(pipeline390.pipelineVisible, true);
     assert.equal(pipeline390.activeMobile, 'pipeline');
     assert.equal(pipeline390.pipelineTitleCount, 1);
+    assert.equal(pipeline390.filterRowCount, 1);
+    assert.equal(pipeline390.activeOutletCount, 1);
+    assert.equal(pipeline390.identityCopy, true);
+    assert.equal(pipeline390.homeMetricVisible, false);
     assert.equal(pipeline390.outletCount, 1);
     assert.equal(pipeline390.diagnostics.pipelineMountCount, 1);
     assert.equal(pipeline390.diagnostics.navListenerCount, 1);
@@ -147,6 +177,7 @@ try {
     });
     await page.click('[data-forge-static-open-pipeline]');
     await page.waitForFunction(() => globalThis.ForgeAliveStaticView067G16A.current() === 'pipeline');
+    await page.screenshot({path:join(evidenceDir,'dashboard_missing_prospect_pipeline_notice_390x844.png')});
     assert.match((await audit(page)).limitation, /prospecto P-MISSING no puede resolverse/);
 
     await load(page, 390, 844);
@@ -156,8 +187,11 @@ try {
     });
     await page.click('[data-forge-static-open-pipeline]');
     await page.waitForFunction(() => globalThis.ForgeAliveStaticView067G16A.current() === 'pipeline');
+    await page.screenshot({path:join(evidenceDir,'dashboard_missing_opportunity_pipeline_notice_390x844.png')});
     assert.match((await audit(page)).limitation, /oportunidad O-MISSING no puede resolverse/);
 
+    page = await restartBrowser();
+    page.on('pageerror', error => pageErrors.push(error.message));
     await load(page, 360, 800);
     await tapMobile(page, 'pipeline');
     const mobile360 = await audit(page);
@@ -166,6 +200,8 @@ try {
     assert.equal(mobile360.homeVisible, false);
     assert.equal(mobile360.overflow, 0);
 
+    page = await restartBrowser();
+    page.on('pageerror', error => pageErrors.push(error.message));
     await load(page, 768, 1024);
     await page.screenshot({path:join(evidenceDir,'tablet_static_home_before_768x1024.png')});
     await tapMobile(page, 'pipeline');
@@ -175,6 +211,8 @@ try {
     assert.equal(tablet.homeVisible, false);
     assert.equal(tablet.overflow, 0);
 
+    page = await restartBrowser();
+    page.on('pageerror', error => pageErrors.push(error.message));
     await load(page, 1440, 900);
     await page.screenshot({path:join(evidenceDir,'desktop_static_home_before_1440x900.png')});
     await clickVisibleDesktop(page, 'pipeline');
@@ -188,15 +226,16 @@ try {
     await clickVisibleDesktop(page, 'inicio');
     assert.equal((await audit(page)).homeVisible, true);
 
+    page = await restartBrowser();
+    page.on('pageerror', error => pageErrors.push(error.message));
     await load(page, 1366, 768);
     await clickVisibleDesktop(page, 'pipeline');
     const desktop1366 = await audit(page);
+    await page.screenshot({path:join(evidenceDir,'desktop_pipeline_after_click_1366x768.png')});
     assert.equal(desktop1366.pipelineVisible, true);
     assert.equal(desktop1366.homeVisible, false);
-    await page.setViewport({width:768,height:1024,deviceScaleFactor:1,hasTouch:true});
-    await new Promise(resolve => setTimeout(resolve, 150));
-    assert.equal((await audit(page)).pipelineVisible, true);
-
+    assert.equal(desktop1366.filterRowCount, 1);
+    assert.equal(desktop1366.activeOutletCount, 1);
     await load(page, 390, 844, '?nav=pipeline&v=067g16a-1');
     const direct = await audit(page);
     assert.equal(direct.currentView, 'pipeline');
@@ -224,9 +263,9 @@ try {
         desktop1366,
         direct,
         repeatedSwitching:'PASS_3_CYCLES',
-        screenshots:10,
+        screenshots:13,
     }, null, 2));
 } finally {
-    await browser.close();
+    await closeBrowser();
     server.close();
 }

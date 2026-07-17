@@ -15666,3 +15666,18 @@ Status: `PASS`
 - Evidence:
   `docs/evidence/R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_ACCEPTANCE.md`
 <!-- FORGE:R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_MASTER:END -->
+
+<!-- FORGE:067G16B_ADVISOR_SALES_PIPELINE_RENDERER_TARGET_AND_ACCEPTANCE_REPAIR:START -->
+## 067G16B Advisor Sales Pipeline Renderer Target and Acceptance Repair
+
+Status: `PASS`
+
+- The Forge Alive Pipeline route uses the canonical `ForgePipelineUI.renderPipelineUI` renderer on mobile, tablet and desktop.
+- Exactly one active primary view, Pipeline heading, filter row and Pipeline mount are enforced by browser assertions.
+- Home metrics are removed from the active Pipeline body while the Home view remains recoverable.
+- The evidence runner records non-zero exits and assertion errors as `FAIL`, and missing browser dependencies as `BLOCKED`.
+- Targeted contracts, authorized non-regression contracts, real Chromium acceptance and visual review passed.
+- Viewports accepted: `390x844`, `360x800`, `768x1024`, `1366x768`, and `1440x900`.
+- Pipeline data remains an honest read-model/empty state; production persistence and stage writers remain blocked.
+- No schema, database, product, financial, compensation, forecast or Rule Pack truth changed.
+<!-- FORGE:067G16B_ADVISOR_SALES_PIPELINE_RENDERER_TARGET_AND_ACCEPTANCE_REPAIR:END -->

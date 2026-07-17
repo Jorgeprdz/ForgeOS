@@ -25,7 +25,7 @@ const [html, responsive, widget, widgetGrid, dedup, css, architecture, evidence,
   read("docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md"),
 ]);
 
-assert.equal((html.match(/class="bottom-nav"/g) || []).length, 1, "one navigation pill host");
+assert.equal((html.match(/class="[^"]*\bbottom-nav\b[^"]*"/g) || []).length, 1, "one navigation pill host");
 assert.equal((html.match(/class="command-orb-layer"/g) || []).length, 1, "one command orb host");
 assert.equal((html.match(/forge-smart-widget-static-056u/g) || []).length >= 1, true, "approved static Smart Widget remains");
 assert.doesNotMatch(html, /alfred-ux99-hard-mount\.(?:css|js)/, "obsolete UX99 mount is not loaded");

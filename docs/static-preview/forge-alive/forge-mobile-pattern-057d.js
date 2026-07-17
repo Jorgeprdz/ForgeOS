@@ -35,6 +35,7 @@
 
     var nav = document.createElement("nav");
     nav.className = "forge-mobile-context-nav-057d";
+    nav.setAttribute("data-forge-static-home-node-067g16b", "true");
     nav.setAttribute("aria-label", "Navegacion contextual Forge mobile");
 
     var items = [

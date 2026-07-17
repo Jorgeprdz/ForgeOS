@@ -47,6 +47,7 @@
 
   function buildGrid() {
     var grid = el("section", "forge-mobile-widget-grid-057j");
+    grid.setAttribute("data-forge-static-home-node-067g16b", "true");
     grid.setAttribute("aria-label", "Forge mobile widget grid");
 
     var meta = widget("2x2");

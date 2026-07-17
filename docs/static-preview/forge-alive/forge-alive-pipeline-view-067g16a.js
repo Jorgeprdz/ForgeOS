@@ -2,7 +2,7 @@ import '../../../advisor-os/sales-pipeline/sales-stage-registry.js';
 import '../../../advisor-os/sales-pipeline/pipeline-stage-read-model.js';
 import '../../../advisor-os/sales-pipeline/pipeline-ui.js';
 
-const VERSION = '067G16A_FORGE_ALIVE_STATIC_VIEW_V1';
+const VERSION = '067G16B_FORGE_ALIVE_STATIC_VIEW_V2';
 const SUPPORTED_VIEWS = new Set(['inicio', 'pipeline', 'clientes', 'mas', 'alfred', 'reportes']);
 const MOBILE_HOME_SELECTORS = [
   ':scope > .safety-ribbon',
@@ -16,6 +16,8 @@ const MOBILE_HOME_SELECTORS = [
   ':scope > .desktop-nav-drawer',
   ':scope > .desktop-context-toggle',
   ':scope > .desktop-context-rail',
+  ':scope > .forge-mobile-context-nav-057d',
+  ':scope > .forge-mobile-widget-grid-057j',
 ];
 
 let host = null;
@@ -34,6 +36,7 @@ function markHomeNodes() {
   MOBILE_HOME_SELECTORS.forEach(selector => {
     root?.querySelectorAll(selector).forEach(node => {
       node.setAttribute('data-forge-static-home-node-067g16a', 'true');
+      node.setAttribute('data-forge-static-home-node-067g16b', 'true');
     });
   });
   [desktopMain(), alternateDesktop()].forEach(node => {
@@ -64,7 +67,7 @@ function placeHost() {
 }
 
 function setHomeActive(active) {
-  document.querySelectorAll('[data-forge-static-home-node-067g16a]').forEach(node => {
+  document.querySelectorAll('[data-forge-static-home-node-067g16a], [data-forge-static-home-node-067g16b]').forEach(node => {
     node.hidden = !active;
     node.setAttribute('aria-hidden', active ? 'false' : 'true');
     if (active) node.removeAttribute('inert');
@@ -152,6 +155,12 @@ async function open(view, options = {}) {
       host.removeAttribute('inert');
       scrollTo({ top:0, behavior:'instant' });
     }
+    if (requested === 'pipeline') {
+      const heading = host.querySelector('#forge-pipeline-title');
+      if (!heading || heading.textContent.trim() !== 'Pipeline de ventas' || !heading.getClientRects().length) {
+        throw new Error('PIPELINE_CANONICAL_HEADING_NOT_VISIBLE');
+      }
+    }
     currentView = requested;
     document.documentElement.setAttribute('data-forge-alive-static-view-067g16a', requested);
     syncNav(requested);
@@ -160,7 +169,11 @@ async function open(view, options = {}) {
   } catch (error) {
     console.error('[067G16A STATIC VIEW]', error);
     setHomeActive(true);
-    if (host) host.hidden = true;
+    if (host) {
+      host.hidden = true;
+      host.setAttribute('aria-hidden', 'true');
+      host.setAttribute('inert', '');
+    }
     currentView = 'inicio';
     syncNav('inicio');
     return false;

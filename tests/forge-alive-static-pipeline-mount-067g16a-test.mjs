@@ -15,8 +15,8 @@ for (const visible of [
     'Juan necesita revisión antes de que se enfríe.',
 ]) assert.ok(html.includes(visible));
 
-assert.ok(html.includes('forge-alive-pipeline-view-067g16a.js?v=067g16a-1'));
-assert.ok(html.includes('../../../advisor-os/sales-pipeline/pipeline-ui.css?v=067g16a-1'));
+assert.ok(html.includes('forge-alive-pipeline-view-067g16a.js?v=067g16b-1'));
+assert.ok(html.includes('../../../advisor-os/sales-pipeline/pipeline-ui.css?v=067g16b-1'));
 assert.ok(html.includes('data-forge-static-view="pipeline"'));
 assert.ok(html.includes('data-forge-static-open-pipeline="true"'));
 assert.ok(controller.includes("import '../../../advisor-os/sales-pipeline/pipeline-ui.js'"));
@@ -24,12 +24,17 @@ assert.ok(controller.includes('ForgePipelineStageReadModel'));
 assert.ok(controller.includes('ForgePipelineUI.renderPipelineUI'));
 assert.ok(controller.includes("SUPPORTED_VIEWS = new Set(['inicio', 'pipeline', 'clientes', 'mas', 'alfred', 'reportes'])"));
 assert.ok(controller.includes('pipelineMountCount'));
+assert.ok(controller.includes('PIPELINE_CANONICAL_HEADING_NOT_VISIBLE'));
+assert.ok(controller.includes("heading.textContent.trim() !== 'Pipeline de ventas'"));
 assert.ok(controller.includes("navListenerCount = 1"));
 assert.ok(bridge.includes('ForgeAliveStaticView067G16A'));
 assert.ok(!controller.includes('setInterval'));
 assert.ok(!controller.includes('MutationObserver'));
 assert.ok(!controller.includes('localStorage'));
 assert.ok(!controller.includes('location.href ='));
+assert.ok(fs.readFileSync('advisor-os/sales-pipeline/pipeline-ui.js', 'utf8').includes('FORGE · ADVISOR OS'));
+assert.ok(fs.readFileSync('advisor-os/sales-pipeline/pipeline-ui.js', 'utf8').includes('INTERVENCIÓN COMERCIAL EXPLICADA'));
+assert.ok(fs.readFileSync('advisor-os/sales-pipeline/pipeline-ui.js', 'utf8').includes('Todos los orígenes'));
 assert.ok(root.includes('<script type="module" src="app.js"></script>'));
 assert.ok(!root.includes('forge-alive-pipeline-view-067g16a'));
 
