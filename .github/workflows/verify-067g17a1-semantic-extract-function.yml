@@ -1,0 +1,129 @@
+name: 067G17A1 Semantic Extract Targeted Recovery
+
+on:
+  push:
+    branches:
+      - repair/067g17a1-semantic-extract-function
+
+permissions:
+  contents: read
+
+jobs:
+  inventory-deploy-accept:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APPROVED_PROJECT_REF: rmlxigxysujsuwzgoimv
+      STALE_PROJECT_REF: rgcolnioakzrdtsxwscp
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    steps:
+      - name: Checkout recovery branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run function contract tests
+        run: node tests/semantic-extract-edge-contract-test.mjs
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Verify protected inputs without disclosure
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          assert.ok(process.env.SUPABASE_ACCESS_TOKEN, 'SUPABASE_ACCESS_TOKEN_MISSING');
+          assert.ok(process.env.SUPABASE_URL, 'SUPABASE_URL_MISSING');
+          assert.ok(process.env.SUPABASE_ANON_KEY, 'SUPABASE_ANON_KEY_MISSING');
+          assert.equal(new URL(process.env.SUPABASE_URL).hostname, `${process.env.APPROVED_PROJECT_REF}.supabase.co`, 'PROJECT_REF_MISMATCH');
+          console.log('PROTECTED_INPUTS=PASS');
+          NODE
+
+      - name: Inventory function metadata read-only
+        run: |
+          set -eu
+          supabase functions list --project-ref "$APPROVED_PROJECT_REF" --output json > "$RUNNER_TEMP/approved-functions.json"
+          if supabase functions list --project-ref "$STALE_PROJECT_REF" --output json > "$RUNNER_TEMP/stale-functions.json" 2> "$RUNNER_TEMP/stale-functions.err"; then
+            echo 'STALE_PROJECT_ACCESS_AUTHORIZED=YES'
+          else
+            echo 'STALE_PROJECT_ACCESS_AUTHORIZED=NO'
+            printf '[]' > "$RUNNER_TEMP/stale-functions.json"
+          fi
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const load = path => JSON.parse(readFileSync(path, 'utf8'));
+          const select = entries => entries.filter(item => item.slug === 'semantic-extract').map(item => ({
+            slug: item.slug,
+            id: item.id ?? null,
+            status: item.status ?? null,
+            created_at: item.created_at ?? null,
+            updated_at: item.updated_at ?? null,
+            version: item.version ?? null,
+            verify_jwt: item.verify_jwt ?? null,
+          }));
+          const approved = select(load(`${process.env.RUNNER_TEMP}/approved-functions.json`));
+          const stale = select(load(`${process.env.RUNNER_TEMP}/stale-functions.json`));
+          console.log(`APPROVED_PROJECT_SEMANTIC_EXTRACT_FOUND_BEFORE=${approved.length === 1 ? 'YES' : 'NO'}`);
+          console.log(`STALE_PROJECT_SEMANTIC_EXTRACT_FOUND=${stale.length === 1 ? 'YES' : 'NO'}`);
+          console.log(`APPROVED_FUNCTION_METADATA=${JSON.stringify(approved)}`);
+          console.log(`STALE_FUNCTION_METADATA=${JSON.stringify(stale)}`);
+          NODE
+
+      - name: Verify required approved-project secret names
+        run: |
+          set -eu
+          supabase secrets list --project-ref "$APPROVED_PROJECT_REF" --output json > "$RUNNER_TEMP/approved-secrets.json"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+          const entries = JSON.parse(readFileSync(`${process.env.RUNNER_TEMP}/approved-secrets.json`, 'utf8'));
+          const names = entries.map(item => item.name).filter(Boolean).sort();
+          console.log(`APPROVED_PROJECT_SECRET_NAMES=${JSON.stringify(names)}`);
+          assert.ok(names.includes('GEMINI_API_KEY'), 'GEMINI_API_KEY_MISSING');
+          console.log('REQUIRED_SECRET_NAMES_PRESENT=YES');
+          NODE
+
+      - name: Deploy only semantic-extract to approved project
+        run: |
+          supabase functions deploy semantic-extract \
+            --project-ref rmlxigxysujsuwzgoimv
+
+      - name: Verify deployed function metadata
+        run: |
+          set -eu
+          supabase functions list --project-ref "$APPROVED_PROJECT_REF" --output json > "$RUNNER_TEMP/deployed-functions.json"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+          const entries = JSON.parse(readFileSync(`${process.env.RUNNER_TEMP}/deployed-functions.json`, 'utf8'));
+          const found = entries.filter(item => item.slug === 'semantic-extract');
+          assert.equal(found.length, 1, 'DEPLOYED_FUNCTION_METADATA_MISSING');
+          console.log(`DEPLOYED_FUNCTION_METADATA=${JSON.stringify(found.map(item => ({slug:item.slug,id:item.id ?? null,status:item.status ?? null,version:item.version ?? null,verify_jwt:item.verify_jwt ?? null})))}`);
+          NODE
+
+      - name: Verify endpoint is no longer 404
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const response = await fetch(`${process.env.SUPABASE_URL}/functions/v1/semantic-extract`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+              apikey: process.env.SUPABASE_ANON_KEY,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ note: 'Holi' }),
+          });
+          console.log(`FUNCTION_ENDPOINT_HTTP_STATUS=${response.status}`);
+          assert.notEqual(response.status, 404, 'FUNCTION_STILL_NOT_FOUND');
+          NODE
+
+      - name: Run exact protected semantic acceptance
+        run: node semantic-extract-acceptance-test.js
