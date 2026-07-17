@@ -411,6 +411,13 @@ FORGE OS UNIFIED BUILD TREE 001
 │   ├── 🟢 Idempotency and privacy allowlist contract-tested
 │   └── 🔴 Contracts only: no writer, Advisor ID generation or activation
 │
+├── 🟢 Advisor Activation Authority and Evidence Policy 067G3B
+│   ├── 🟢 Policy / provider / evidence / evaluation / human review contracts
+│   ├── 🟢 Immutable activation and effective lifecycle period receipts
+│   ├── 🟢 Conflict fail-closed, idempotency, privacy and append-only correction
+│   ├── 🟢 Access / Sales Pipeline / Project 200 boundaries preserved
+│   └── 🔴 Policy and contracts only: no repository, writer or real lifecycle action
+│
 ├── 🔵 Open Work
 │   ├── 🔵 Advisor Lifecycle truth boundary
 │   ├── 🔵 Career OS Transition Engine

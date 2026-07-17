@@ -1,5 +1,21 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:ADVISOR_ACTIVATION_AUTHORITY_EVIDENCE_POLICY_067G3B:START -->
+## Advisor Activation Authority and Evidence Policy 067G3B
+
+Status: IMPLEMENTED_AND_CLOSED_FOR_POLICY_AND_CONTRACTS_ONLY
+
+- Versioned V2 contracts separate policy, provider, evidence, evaluation, human review, activation receipt, suspension, deactivation, reactivation, correction and events.
+- Activation requires completed conversion plus policy-trusted official evidence and an authoritative effective time; classifiers, Manager confirmation, UI, fixtures and AI are insufficient.
+- Conflicts fail closed; receipts and lifecycle periods are immutable; correction is append-only.
+- Activation does not grant access, create Sales Pipeline truth or import Project 200.
+- No activation writer, Advisor repository or real lifecycle action was created.
+- Source truth: `docs/architecture/source-truth/FORGE_ADVISOR_ACTIVATION_AUTHORITY_AND_EVIDENCE_POLICY_DECISION_067G3B.md`.
+- Bounded recommendation only: `067G3C_ADVISOR_LIFECYCLE_REPOSITORY_AND_RECEIPT_SCOPE`.
+- The unrelated global `NEXT` sequence is unchanged.
+
+<!-- FORGEOS:ADVISOR_ACTIVATION_AUTHORITY_EVIDENCE_POLICY_067G3B:END -->
+
 <!-- FORGEOS:ADVISOR_CONVERSION_CONTRACT_HARDENING_067G3A:START -->
 ## Advisor Conversion Contract Hardening 067G3A
 

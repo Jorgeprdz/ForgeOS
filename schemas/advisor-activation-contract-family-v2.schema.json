@@ -1,0 +1,487 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/advisor-activation-contract-family-v2.schema.json",
+  "title": "Forge Advisor Activation Contract Family V2",
+  "description": "Versioned, closed policy and lifecycle contracts for Advisor activation evidence evaluation. No definition implements a writer, grants access, creates a Sales Pipeline or imports Project 200.",
+  "oneOf": [
+    { "$ref": "#/$defs/advisorActivationPolicy" },
+    { "$ref": "#/$defs/advisorActivationEvidenceProvider" },
+    { "$ref": "#/$defs/advisorActivationEvidence" },
+    { "$ref": "#/$defs/advisorActivationEvaluation" },
+    { "$ref": "#/$defs/advisorActivationReviewDecision" },
+    { "$ref": "#/$defs/advisorActivationReceipt" },
+    { "$ref": "#/$defs/advisorSuspensionReceipt" },
+    { "$ref": "#/$defs/advisorDeactivationReceipt" },
+    { "$ref": "#/$defs/advisorReactivationReceipt" },
+    { "$ref": "#/$defs/advisorLifecycleCorrection" },
+    { "$ref": "#/$defs/advisorLifecycleEvent" }
+  ],
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "schemaVersion": { "const": "2.0.0" },
+    "privacyClassification": { "type": "string", "enum": ["FORGE_INTERNAL_RESTRICTED_IDENTITY", "FORGE_CONFIDENTIAL_LIFECYCLE"] },
+    "authorityDomain": {
+      "type": "string",
+      "enum": [
+        "ADVISOR_LIFECYCLE_GOVERNANCE",
+        "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY",
+        "OFFICIAL_LIFECYCLE_EVIDENCE_PROVIDER",
+        "AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER",
+        "IDENTITY_ACCESS_PLATFORM",
+        "ADVISOR_OS_SALES"
+      ]
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actorId", "actorType", "authorityDomain"],
+      "properties": {
+        "actorId": { "$ref": "#/$defs/nonEmptyString" },
+        "actorType": { "type": "string", "enum": ["HUMAN", "SYSTEM_COMPONENT"] },
+        "authorityDomain": { "$ref": "#/$defs/authorityDomain" },
+        "policyRoleReference": { "type": ["string", "null"] }
+      }
+    },
+    "humanActor": {
+      "allOf": [
+        { "$ref": "#/$defs/actor" },
+        { "properties": { "actorType": { "const": "HUMAN" } } }
+      ]
+    },
+    "evidenceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["activationEvidenceId", "integrityReference"],
+      "properties": {
+        "activationEvidenceId": { "$ref": "#/$defs/nonEmptyString" },
+        "integrityReference": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "evidenceReferences": { "type": "array", "items": { "$ref": "#/$defs/evidenceReference" }, "uniqueItems": true },
+    "providerReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "providerPolicyVersion"],
+      "properties": {
+        "providerId": { "$ref": "#/$defs/nonEmptyString" },
+        "providerPolicyVersion": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "providerReferences": { "type": "array", "items": { "$ref": "#/$defs/providerReference" }, "uniqueItems": true },
+    "stringList": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" }, "uniqueItems": true },
+    "evidenceType": {
+      "type": "string",
+      "enum": [
+        "CARRIER_API_CONFIRMED", "OFFICIAL_CARRIER_ROSTER", "ADVISOR_CODE_ACTIVATION",
+        "OFFICIAL_OFFICE_LIFECYCLE_RECORD", "AUTHORIZED_CONTRACTING_SYSTEM_RECEIPT",
+        "CONTRACT_SIGNED", "PRECONTRACT_COMPLETED", "OFFICE_DOCUMENT_VALIDATED",
+        "MANAGER_READINESS_CONFIRMED", "TRAINING_COMPLETED", "MANAGER_FREE_TEXT_CONFIRMATION",
+        "CANDIDATE_SELF_REPORT", "UI_CHECKBOX", "LOCALSTORAGE_FLAG", "STATIC_FIXTURE",
+        "DEMO_DATA", "AI_INFERENCE", "DASHBOARD_STATUS"
+      ]
+    },
+    "evidenceClass": { "type": "string", "enum": ["OFFICIAL_CONFIRMED", "SUPPORTING", "NON_AUTHORITATIVE"] },
+    "policyEvidenceRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ruleId", "evidenceTypes", "minimumCount", "acceptedClasses"],
+      "properties": {
+        "ruleId": { "$ref": "#/$defs/nonEmptyString" },
+        "evidenceTypes": { "type": "array", "items": { "$ref": "#/$defs/evidenceType" }, "minItems": 1, "uniqueItems": true },
+        "minimumCount": { "type": "integer", "minimum": 1 },
+        "acceptedClasses": { "type": "array", "items": { "$ref": "#/$defs/evidenceClass" }, "minItems": 1, "uniqueItems": true }
+      }
+    },
+    "separationOfDutiesEvaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policyControlled", "requestorActorId", "reviewerActorId", "result"],
+      "properties": {
+        "policyControlled": { "const": true },
+        "requestorActorId": { "$ref": "#/$defs/nonEmptyString" },
+        "reviewerActorId": { "$ref": "#/$defs/nonEmptyString" },
+        "result": { "type": "string", "enum": ["PASS", "ALLOWED_BY_POLICY", "FAIL"] }
+      }
+    },
+    "advisorActivationPolicy": {
+      "$anchor": "AdvisorActivationPolicy",
+      "title": "AdvisorActivationPolicy",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractType", "schemaVersion", "activationPolicyId", "organizationId", "policyVersion",
+        "effectiveFrom", "activationAuthorityDomain", "manualReviewAuthorityDomains",
+        "trustedEvidenceProviders", "requiredEvidenceRules", "alternativeEvidenceRules",
+        "blockingEvidenceRules", "freshnessRules", "conflictRules", "effectiveTimeRules",
+        "automationMode", "humanReviewMode", "separationOfDutiesRules", "salesAccessPrerequisites",
+        "project200HandoffPrerequisites", "createdBy", "approvedBy", "approvedAt", "policyHash",
+        "immutableAfterApproval", "correctionBySupersession", "privacyClassification"
+      ],
+      "properties": {
+        "contractType": { "const": "ADVISOR_ACTIVATION_POLICY" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "activationPolicyId": { "$ref": "#/$defs/nonEmptyString" },
+        "organizationId": { "$ref": "#/$defs/nonEmptyString" },
+        "policyVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "effectiveFrom": { "$ref": "#/$defs/timestamp" },
+        "effectiveUntil": { "type": ["string", "null"], "format": "date-time" },
+        "activationAuthorityDomain": { "const": "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY" },
+        "manualReviewAuthorityDomains": { "type": "array", "items": { "const": "AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER" }, "minItems": 1, "uniqueItems": true },
+        "trustedEvidenceProviders": { "$ref": "#/$defs/providerReferences" },
+        "requiredEvidenceRules": { "type": "array", "items": { "$ref": "#/$defs/policyEvidenceRule" }, "minItems": 1 },
+        "alternativeEvidenceRules": { "type": "array", "items": { "$ref": "#/$defs/policyEvidenceRule" } },
+        "blockingEvidenceRules": { "$ref": "#/$defs/stringList" },
+        "freshnessRules": {
+          "type": "object", "additionalProperties": false,
+          "required": ["maximumAgeDays", "expirationRequiredWhenProviderSuppliesIt", "revokedEvidenceRejected"],
+          "properties": {
+            "maximumAgeDays": { "type": "integer", "minimum": 0 },
+            "expirationRequiredWhenProviderSuppliesIt": { "const": true },
+            "revokedEvidenceRejected": { "const": true }
+          }
+        },
+        "conflictRules": {
+          "type": "object", "additionalProperties": false,
+          "required": ["failClosed", "manualReviewRequired", "latestEventWins", "unverifiedOverridesOfficial"],
+          "properties": {
+            "failClosed": { "const": true },
+            "manualReviewRequired": { "const": true },
+            "latestEventWins": { "const": false },
+            "unverifiedOverridesOfficial": { "const": false }
+          }
+        },
+        "effectiveTimeRules": {
+          "type": "object", "additionalProperties": false,
+          "required": ["sourceEffectiveAtRequired", "timezoneRequired", "backdatingRequiresOfficialEvidence", "futureDateMode", "forbiddenDefaults"],
+          "properties": {
+            "sourceEffectiveAtRequired": { "const": true },
+            "timezoneRequired": { "const": true },
+            "backdatingRequiresOfficialEvidence": { "const": true },
+            "futureDateMode": { "type": "string", "enum": ["FORBIDDEN", "POLICY_CONTROLLED"] },
+            "forbiddenDefaults": { "type": "array", "items": { "type": "string", "enum": ["REQUEST_CREATED_AT", "REVIEWED_AT", "INGESTED_AT", "CONVERSION_COMPLETED_AT", "CURRENT_SYSTEM_TIME"] }, "minItems": 5, "uniqueItems": true }
+          }
+        },
+        "automationMode": { "type": "string", "enum": ["HUMAN_REVIEW_ONLY", "DETERMINISTIC_OFFICIAL_EVIDENCE_ALLOWED"] },
+        "humanReviewMode": { "type": "string", "enum": ["ALWAYS", "REQUIRED_FOR_MANUAL_AMBIGUOUS_OR_CONFLICTING"] },
+        "separationOfDutiesRules": {
+          "type": "object", "additionalProperties": false,
+          "required": ["policyControlled", "aiReviewerForbidden", "dashboardReviewerForbidden"],
+          "properties": {
+            "policyControlled": { "const": true },
+            "aiReviewerForbidden": { "const": true },
+            "dashboardReviewerForbidden": { "const": true }
+          }
+        },
+        "salesAccessPrerequisites": { "$ref": "#/$defs/stringList" },
+        "project200HandoffPrerequisites": { "$ref": "#/$defs/stringList" },
+        "createdBy": { "$ref": "#/$defs/humanActor" },
+        "approvedBy": { "$ref": "#/$defs/humanActor" },
+        "approvedAt": { "$ref": "#/$defs/timestamp" },
+        "policyHash": { "$ref": "#/$defs/nonEmptyString" },
+        "immutableAfterApproval": { "const": true },
+        "correctionBySupersession": { "const": true },
+        "supersedesPolicyId": { "type": ["string", "null"] },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    },
+    "advisorActivationEvidenceProvider": {
+      "$anchor": "AdvisorActivationEvidenceProvider",
+      "title": "AdvisorActivationEvidenceProvider",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "providerId", "providerType", "authorityDomain", "trustLevel", "allowedEvidenceTypes", "verificationMethod", "effectiveFrom", "revocationStatus", "providerPolicyVersion", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_ACTIVATION_EVIDENCE_PROVIDER" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "providerId": { "$ref": "#/$defs/nonEmptyString" },
+        "providerType": { "type": "string", "enum": ["CARRIER_API", "CARRIER_ROSTER", "ADVISOR_CODE_REGISTRY", "OFFICE_LIFECYCLE_SYSTEM", "CONTRACTING_SYSTEM", "MANUAL", "BROWSER", "FIXTURE", "AI"] },
+        "authorityDomain": { "type": "string", "enum": ["OFFICIAL_LIFECYCLE_EVIDENCE_PROVIDER", "AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER"] },
+        "trustLevel": { "type": "string", "enum": ["INSTITUTIONAL_OFFICIAL", "ORGANIZATION_AUTHORIZED", "SUPPORTING_ONLY", "UNTRUSTED", "REVOKED"] },
+        "allowedEvidenceTypes": { "type": "array", "items": { "$ref": "#/$defs/evidenceType" }, "minItems": 1, "uniqueItems": true },
+        "verificationMethod": { "$ref": "#/$defs/nonEmptyString" },
+        "effectiveFrom": { "$ref": "#/$defs/timestamp" },
+        "effectiveUntil": { "type": ["string", "null"], "format": "date-time" },
+        "revocationStatus": { "type": "string", "enum": ["ACTIVE", "SUSPENDED", "REVOKED"] },
+        "providerPolicyVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      },
+      "allOf": [
+        { "if": { "properties": { "providerType": { "enum": ["BROWSER", "FIXTURE", "AI"] } }, "required": ["providerType"] }, "then": { "properties": { "trustLevel": { "enum": ["UNTRUSTED", "REVOKED"] } } } }
+      ]
+    },
+    "advisorActivationEvidence": {
+      "$anchor": "AdvisorActivationEvidence",
+      "title": "AdvisorActivationEvidence",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "activationEvidenceId", "advisorId", "advisorConversionId", "conversionReceiptId", "evidenceType", "evidenceClass", "providerId", "providerAuthorityDomain", "sourceReference", "sourceObservedAt", "sourceEffectiveAt", "ingestedAt", "verificationStatus", "verificationMethod", "policySnapshotId", "integrityReference", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_ACTIVATION_EVIDENCE" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "activationEvidenceId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorConversionId": { "$ref": "#/$defs/nonEmptyString" },
+        "conversionReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "evidenceType": { "$ref": "#/$defs/evidenceType" },
+        "evidenceClass": { "$ref": "#/$defs/evidenceClass" },
+        "providerId": { "$ref": "#/$defs/nonEmptyString" },
+        "providerAuthorityDomain": { "const": "OFFICIAL_LIFECYCLE_EVIDENCE_PROVIDER" },
+        "sourceReference": { "$ref": "#/$defs/nonEmptyString" },
+        "sourceObservedAt": { "$ref": "#/$defs/timestamp" },
+        "sourceEffectiveAt": { "$ref": "#/$defs/timestamp" },
+        "ingestedAt": { "$ref": "#/$defs/timestamp" },
+        "expiresAt": { "type": ["string", "null"], "format": "date-time" },
+        "verificationStatus": { "type": "string", "enum": ["UNVERIFIED", "VERIFIED", "REJECTED", "REVOKED", "EXPIRED"] },
+        "verificationMethod": { "$ref": "#/$defs/nonEmptyString" },
+        "verifiedBy": { "anyOf": [{ "$ref": "#/$defs/actor" }, { "type": "null" }] },
+        "verifiedAt": { "type": ["string", "null"], "format": "date-time" },
+        "policySnapshotId": { "$ref": "#/$defs/nonEmptyString" },
+        "integrityReference": { "$ref": "#/$defs/nonEmptyString" },
+        "supersedesEvidenceId": { "type": ["string", "null"] },
+        "revokedAt": { "type": ["string", "null"], "format": "date-time" },
+        "revocationReason": { "type": ["string", "null"] },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    },
+    "advisorActivationEvaluation": {
+      "$anchor": "AdvisorActivationEvaluation",
+      "title": "AdvisorActivationEvaluation",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "activationEvaluationId", "advisorId", "advisorConversionId", "conversionReceiptId", "activationPolicyId", "evaluatedAt", "evaluationStatus", "evidenceConsidered", "evidenceAccepted", "evidenceRejected", "missingEvidence", "conflictingEvidence", "blockingConditions", "warnings", "humanReviewRequired", "reviewReason", "sourceLineage", "createsActivationTruth", "eligibleEqualsActive", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_ACTIVATION_EVALUATION" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "activationEvaluationId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorConversionId": { "$ref": "#/$defs/nonEmptyString" },
+        "conversionReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "activationPolicyId": { "$ref": "#/$defs/nonEmptyString" },
+        "evaluatedAt": { "$ref": "#/$defs/timestamp" },
+        "evaluationStatus": { "type": "string", "enum": ["ELIGIBLE", "NOT_ELIGIBLE", "MORE_EVIDENCE_REQUIRED", "CONFLICT_REVIEW_REQUIRED", "POLICY_NOT_AVAILABLE", "EVIDENCE_EXPIRED", "EVIDENCE_REVOKED"] },
+        "evidenceConsidered": { "$ref": "#/$defs/evidenceReferences" },
+        "evidenceAccepted": { "$ref": "#/$defs/evidenceReferences" },
+        "evidenceRejected": { "$ref": "#/$defs/evidenceReferences" },
+        "missingEvidence": { "$ref": "#/$defs/stringList" },
+        "conflictingEvidence": { "$ref": "#/$defs/evidenceReferences" },
+        "blockingConditions": { "$ref": "#/$defs/stringList" },
+        "warnings": { "$ref": "#/$defs/stringList" },
+        "proposedActivationEffectiveAt": { "type": ["string", "null"], "format": "date-time" },
+        "humanReviewRequired": { "type": "boolean" },
+        "reviewReason": { "type": ["string", "null"] },
+        "sourceLineage": { "$ref": "#/$defs/stringList" },
+        "createsActivationTruth": { "const": false },
+        "eligibleEqualsActive": { "const": false },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      },
+      "allOf": [
+        { "if": { "properties": { "evaluationStatus": { "const": "CONFLICT_REVIEW_REQUIRED" } }, "required": ["evaluationStatus"] }, "then": { "properties": { "humanReviewRequired": { "const": true }, "conflictingEvidence": { "minItems": 2 } } } }
+      ]
+    },
+    "advisorActivationReviewDecision": {
+      "$anchor": "AdvisorActivationReviewDecision",
+      "title": "AdvisorActivationReviewDecision",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "activationReviewDecisionId", "activationEvaluationId", "advisorId", "reviewerActor", "reviewAuthority", "reviewedAt", "decision", "reasonCode", "reasonSummary", "evidenceReviewed", "policySnapshotId", "conditions", "separationOfDutiesEvaluation", "humanDecisionConfirmed", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_ACTIVATION_REVIEW_DECISION" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "activationReviewDecisionId": { "$ref": "#/$defs/nonEmptyString" },
+        "activationEvaluationId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "reviewerActor": { "$ref": "#/$defs/humanActor" },
+        "reviewAuthority": { "const": "AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER" },
+        "reviewedAt": { "$ref": "#/$defs/timestamp" },
+        "decision": { "type": "string", "enum": ["APPROVED_FOR_ACTIVATION", "REJECTED", "MORE_EVIDENCE_REQUIRED", "RETURNED_FOR_CORRECTION", "CONFLICT_ESCALATED"] },
+        "reasonCode": { "$ref": "#/$defs/nonEmptyString" },
+        "reasonSummary": { "$ref": "#/$defs/nonEmptyString" },
+        "evidenceReviewed": { "$ref": "#/$defs/evidenceReferences" },
+        "policySnapshotId": { "$ref": "#/$defs/nonEmptyString" },
+        "conditions": { "$ref": "#/$defs/stringList" },
+        "separationOfDutiesEvaluation": { "$ref": "#/$defs/separationOfDutiesEvaluation" },
+        "humanDecisionConfirmed": { "type": "boolean" },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      },
+      "allOf": [
+        { "if": { "properties": { "decision": { "const": "APPROVED_FOR_ACTIVATION" } }, "required": ["decision"] }, "then": { "properties": { "humanDecisionConfirmed": { "const": true }, "evidenceReviewed": { "minItems": 1 }, "separationOfDutiesEvaluation": { "properties": { "result": { "enum": ["PASS", "ALLOWED_BY_POLICY"] } } } } } }
+      ]
+    },
+    "advisorActivationReceipt": {
+      "$anchor": "AdvisorActivationReceipt",
+      "title": "AdvisorActivationReceipt",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "activationReceiptId", "advisorId", "advisorConversionId", "conversionReceiptId", "activationPolicyId", "activationEvaluationId", "activationEffectiveAt", "activationRecordedAt", "activationAuthorityDomain", "materializedBy", "acceptedEvidenceReferences", "providerReferences", "idempotencyKey", "activationIntentKey", "receiptVersion", "integrityReference", "createdAt", "immutable", "grantsAdvisorOsAccess", "createsSalesPipeline", "importsProject200", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_ACTIVATION_RECEIPT" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "activationReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorConversionId": { "$ref": "#/$defs/nonEmptyString" },
+        "conversionReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "activationPolicyId": { "$ref": "#/$defs/nonEmptyString" },
+        "activationEvaluationId": { "$ref": "#/$defs/nonEmptyString" },
+        "activationReviewDecisionId": { "type": ["string", "null"] },
+        "activationEffectiveAt": { "$ref": "#/$defs/timestamp" },
+        "activationRecordedAt": { "$ref": "#/$defs/timestamp" },
+        "activationAuthorityDomain": { "const": "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY" },
+        "materializedBy": { "$ref": "#/$defs/actor" },
+        "acceptedEvidenceReferences": { "$ref": "#/$defs/evidenceReferences" },
+        "providerReferences": { "$ref": "#/$defs/providerReferences" },
+        "idempotencyKey": { "$ref": "#/$defs/nonEmptyString" },
+        "activationIntentKey": { "$ref": "#/$defs/nonEmptyString" },
+        "receiptVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "integrityReference": { "$ref": "#/$defs/nonEmptyString" },
+        "createdAt": { "$ref": "#/$defs/timestamp" },
+        "immutable": { "const": true },
+        "grantsAdvisorOsAccess": { "const": false },
+        "createsSalesPipeline": { "const": false },
+        "importsProject200": { "const": false },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    },
+    "advisorSuspensionReceipt": {
+      "$anchor": "AdvisorSuspensionReceipt",
+      "title": "AdvisorSuspensionReceipt",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "suspensionReceiptId", "advisorId", "activationReceiptId", "suspendedAt", "effectiveFrom", "suspensionAuthority", "reasonCode", "reasonSummary", "evidenceReferences", "policySnapshotId", "capabilitiesAffected", "identityPreserved", "pipelineHistoryPreserved", "project200HandoffAllowed", "createdAt", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_SUSPENSION_RECEIPT" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "suspensionReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "activationReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "suspendedAt": { "$ref": "#/$defs/timestamp" },
+        "effectiveFrom": { "$ref": "#/$defs/timestamp" },
+        "effectiveUntil": { "type": ["string", "null"], "format": "date-time" },
+        "suspensionAuthority": { "const": "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY" },
+        "reasonCode": { "$ref": "#/$defs/nonEmptyString" },
+        "reasonSummary": { "$ref": "#/$defs/nonEmptyString" },
+        "evidenceReferences": { "$ref": "#/$defs/evidenceReferences" },
+        "policySnapshotId": { "$ref": "#/$defs/nonEmptyString" },
+        "capabilitiesAffected": { "$ref": "#/$defs/stringList" },
+        "identityPreserved": { "const": true },
+        "pipelineHistoryPreserved": { "const": true },
+        "newClientActionsAllowed": { "type": "boolean", "default": false },
+        "project200HandoffAllowed": { "const": false },
+        "createdAt": { "$ref": "#/$defs/timestamp" },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    },
+    "advisorDeactivationReceipt": {
+      "$anchor": "AdvisorDeactivationReceipt",
+      "title": "AdvisorDeactivationReceipt",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "deactivationReceiptId", "advisorId", "activationReceiptId", "deactivationEffectiveAt", "deactivationRecordedAt", "deactivationAuthority", "reasonCode", "reasonSummary", "evidenceReferences", "policySnapshotId", "accessRevocationRequired", "salesActionBlockRequired", "project200HandoffBlockRequired", "identityPreserved", "conversionReceiptPreserved", "prospectHistoryPreserved", "activityHistoryPreserved", "createdAt", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_DEACTIVATION_RECEIPT" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "deactivationReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "activationReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "deactivationEffectiveAt": { "$ref": "#/$defs/timestamp" },
+        "deactivationRecordedAt": { "$ref": "#/$defs/timestamp" },
+        "deactivationAuthority": { "const": "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY" },
+        "reasonCode": { "$ref": "#/$defs/nonEmptyString" },
+        "reasonSummary": { "$ref": "#/$defs/nonEmptyString" },
+        "evidenceReferences": { "$ref": "#/$defs/evidenceReferences" },
+        "policySnapshotId": { "$ref": "#/$defs/nonEmptyString" },
+        "accessRevocationRequired": { "const": true },
+        "salesActionBlockRequired": { "const": true },
+        "project200HandoffBlockRequired": { "const": true },
+        "identityPreserved": { "const": true },
+        "conversionReceiptPreserved": { "const": true },
+        "prospectHistoryPreserved": { "const": true },
+        "activityHistoryPreserved": { "const": true },
+        "createdAt": { "$ref": "#/$defs/timestamp" },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    },
+    "advisorReactivationReceipt": {
+      "$anchor": "AdvisorReactivationReceipt",
+      "title": "AdvisorReactivationReceipt",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "reactivationReceiptId", "advisorId", "priorDeactivationReceiptId", "reactivationPolicyId", "reactivationEvaluationId", "reactivationEffectiveAt", "reactivationRecordedAt", "acceptedEvidenceReferences", "reactivationAuthority", "idempotencyKey", "integrityReference", "createdAt", "reusesAdvisorId", "createsNewAdvisorId", "priorDeactivationPreserved", "currentEvidenceRequired", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_REACTIVATION_RECEIPT" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "reactivationReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "priorDeactivationReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "reactivationPolicyId": { "$ref": "#/$defs/nonEmptyString" },
+        "reactivationEvaluationId": { "$ref": "#/$defs/nonEmptyString" },
+        "reactivationReviewDecisionId": { "type": ["string", "null"] },
+        "reactivationEffectiveAt": { "$ref": "#/$defs/timestamp" },
+        "reactivationRecordedAt": { "$ref": "#/$defs/timestamp" },
+        "acceptedEvidenceReferences": { "$ref": "#/$defs/evidenceReferences" },
+        "reactivationAuthority": { "const": "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY" },
+        "idempotencyKey": { "$ref": "#/$defs/nonEmptyString" },
+        "integrityReference": { "$ref": "#/$defs/nonEmptyString" },
+        "createdAt": { "$ref": "#/$defs/timestamp" },
+        "reusesAdvisorId": { "const": true },
+        "createsNewAdvisorId": { "const": false },
+        "priorDeactivationPreserved": { "const": true },
+        "currentEvidenceRequired": { "const": true },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    },
+    "advisorLifecycleCorrection": {
+      "$anchor": "AdvisorLifecycleCorrection",
+      "title": "AdvisorLifecycleCorrection",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "lifecycleCorrectionId", "advisorId", "originalReceiptReference", "correctionType", "requestedBy", "approvedBy", "correctedAt", "reasonCode", "reasonSummary", "evidenceReferences", "supersedingReceiptReference", "affectedFields", "appendOnly", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_LIFECYCLE_CORRECTION" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "lifecycleCorrectionId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "originalReceiptReference": { "$ref": "#/$defs/nonEmptyString" },
+        "correctionType": { "type": "string", "enum": ["EFFECTIVE_DATE_CORRECTION", "EVIDENCE_LINK_CORRECTION", "PROVIDER_REFERENCE_CORRECTION", "ACTOR_METADATA_CORRECTION", "POLICY_REFERENCE_CORRECTION", "IDENTITY_LINK_ESCALATION"] },
+        "requestedBy": { "$ref": "#/$defs/humanActor" },
+        "approvedBy": { "$ref": "#/$defs/humanActor" },
+        "correctedAt": { "$ref": "#/$defs/timestamp" },
+        "reasonCode": { "$ref": "#/$defs/nonEmptyString" },
+        "reasonSummary": { "$ref": "#/$defs/nonEmptyString" },
+        "evidenceReferences": { "$ref": "#/$defs/evidenceReferences" },
+        "supersedingReceiptReference": { "$ref": "#/$defs/nonEmptyString" },
+        "affectedFields": { "$ref": "#/$defs/stringList" },
+        "appendOnly": { "const": true },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    },
+    "advisorLifecycleEvent": {
+      "$anchor": "AdvisorLifecycleEvent",
+      "title": "AdvisorLifecycleEvent",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractType", "schemaVersion", "eventId", "eventType", "eventVersion", "occurredAt", "advisorId", "advisorConversionId", "conversionReceiptId", "authorityDomain", "actor", "policySnapshotId", "evidenceReferences", "causationId", "correlationId", "idempotencyKey", "integrityReference", "privacyClassification"],
+      "properties": {
+        "contractType": { "const": "ADVISOR_LIFECYCLE_EVENT" },
+        "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+        "eventId": { "$ref": "#/$defs/nonEmptyString" },
+        "eventType": { "type": "string", "enum": ["ADVISOR_ACTIVATION_EVALUATED", "ADVISOR_ACTIVATION_MORE_EVIDENCE_REQUIRED", "ADVISOR_ACTIVATION_CONFLICT_DETECTED", "ADVISOR_ACTIVATION_APPROVED", "ADVISOR_ACTIVATED", "ADVISOR_SUSPENDED", "ADVISOR_DEACTIVATED", "ADVISOR_REACTIVATION_REQUESTED", "ADVISOR_REACTIVATION_APPROVED", "ADVISOR_REACTIVATED", "ADVISOR_LIFECYCLE_CORRECTED", "ADVISOR_ACTIVATION_EVIDENCE_REVOKED"] },
+        "eventVersion": { "$ref": "#/$defs/nonEmptyString" },
+        "occurredAt": { "$ref": "#/$defs/timestamp" },
+        "effectiveAt": { "type": ["string", "null"], "format": "date-time" },
+        "advisorId": { "$ref": "#/$defs/nonEmptyString" },
+        "advisorConversionId": { "$ref": "#/$defs/nonEmptyString" },
+        "conversionReceiptId": { "$ref": "#/$defs/nonEmptyString" },
+        "authorityDomain": { "const": "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY" },
+        "actor": { "$ref": "#/$defs/actor" },
+        "policySnapshotId": { "$ref": "#/$defs/nonEmptyString" },
+        "evidenceReferences": { "$ref": "#/$defs/evidenceReferences" },
+        "causationId": { "$ref": "#/$defs/nonEmptyString" },
+        "correlationId": { "$ref": "#/$defs/nonEmptyString" },
+        "idempotencyKey": { "$ref": "#/$defs/nonEmptyString" },
+        "integrityReference": { "$ref": "#/$defs/nonEmptyString" },
+        "privacyClassification": { "$ref": "#/$defs/privacyClassification" }
+      }
+    }
+  }
+}

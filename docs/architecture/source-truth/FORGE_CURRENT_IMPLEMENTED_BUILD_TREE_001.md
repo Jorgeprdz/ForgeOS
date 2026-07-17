@@ -36,7 +36,8 @@ FORGE CURRENT IMPLEMENTED BUILD TREE 001
 ├── Advisor-facing execution context: PARTIAL
 ├── Advisor Experience Intelligence: DOCUMENTED_NOT_IMPLEMENTED
 ├── Advisor Lifecycle: PARTIAL / boundary-protected
-└── Advisor Conversion Contract Family V2 067G3A: IMPLEMENTED_AND_CLOSED_FOR_CONTRACTS_ONLY / no writer / no activation
+├── Advisor Conversion Contract Family V2 067G3A: IMPLEMENTED_AND_CLOSED_FOR_CONTRACTS_ONLY / no writer / no activation
+└── Advisor Activation Authority and Evidence Policy V2 067G3B: IMPLEMENTED_AND_CLOSED_FOR_POLICY_AND_CONTRACTS_ONLY / no writer / no real lifecycle action
 
 03 Manager OS
 ├── Recruitment Foundation: IMPLEMENTED_AND_CLOSED

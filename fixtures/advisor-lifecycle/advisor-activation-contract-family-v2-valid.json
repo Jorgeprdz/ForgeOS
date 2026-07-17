@@ -1,0 +1,118 @@
+{
+  "fixtureType": "SYNTHETIC_CONTRACT_VALIDATION_ONLY",
+  "policy": {
+    "contractType": "ADVISOR_ACTIVATION_POLICY", "schemaVersion": "2.0.0",
+    "activationPolicyId": "ACTIVATION_POLICY_DEMO_001", "organizationId": "ORG_DEMO_001", "policyVersion": "1",
+    "effectiveFrom": "2026-07-01T00:00:00-06:00", "effectiveUntil": null,
+    "activationAuthorityDomain": "ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY",
+    "manualReviewAuthorityDomains": ["AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER"],
+    "trustedEvidenceProviders": [{"providerId":"PROVIDER_DEMO_OFFICIAL_001","providerPolicyVersion":"1"}],
+    "requiredEvidenceRules": [{"ruleId":"OFFICIAL_ACTIVATION_REQUIRED","evidenceTypes":["ADVISOR_CODE_ACTIVATION","CARRIER_API_CONFIRMED","OFFICIAL_CARRIER_ROSTER"],"minimumCount":1,"acceptedClasses":["OFFICIAL_CONFIRMED"]}],
+    "alternativeEvidenceRules": [], "blockingEvidenceRules": ["CONVERSION_INCOMPLETE","OFFICIAL_EVIDENCE_CONFLICT","EVIDENCE_REVOKED","EVIDENCE_EXPIRED","ADVISOR_ID_MISMATCH"],
+    "freshnessRules": {"maximumAgeDays":30,"expirationRequiredWhenProviderSuppliesIt":true,"revokedEvidenceRejected":true},
+    "conflictRules": {"failClosed":true,"manualReviewRequired":true,"latestEventWins":false,"unverifiedOverridesOfficial":false},
+    "effectiveTimeRules": {"sourceEffectiveAtRequired":true,"timezoneRequired":true,"backdatingRequiresOfficialEvidence":true,"futureDateMode":"POLICY_CONTROLLED","forbiddenDefaults":["REQUEST_CREATED_AT","REVIEWED_AT","INGESTED_AT","CONVERSION_COMPLETED_AT","CURRENT_SYSTEM_TIME"]},
+    "automationMode": "DETERMINISTIC_OFFICIAL_EVIDENCE_ALLOWED", "humanReviewMode": "REQUIRED_FOR_MANUAL_AMBIGUOUS_OR_CONFLICTING",
+    "separationOfDutiesRules": {"policyControlled":true,"aiReviewerForbidden":true,"dashboardReviewerForbidden":true},
+    "salesAccessPrerequisites": ["ACTIVE_PERIOD_EFFECTIVE","ACCESS_POLICY_PASS"],
+    "project200HandoffPrerequisites": ["SALES_PIPELINE_ELIGIBLE","NO_SUSPENSION_OR_DEACTIVATION","CONSENT_AND_ADVISOR_REVIEW"],
+    "createdBy": {"actorId":"HUMAN_POLICY_AUTHOR_DEMO","actorType":"HUMAN","authorityDomain":"ADVISOR_LIFECYCLE_GOVERNANCE","policyRoleReference":"POLICY_AUTHOR"},
+    "approvedBy": {"actorId":"HUMAN_POLICY_APPROVER_DEMO","actorType":"HUMAN","authorityDomain":"ADVISOR_LIFECYCLE_GOVERNANCE","policyRoleReference":"POLICY_APPROVER"},
+    "approvedAt": "2026-06-30T12:00:00-06:00", "policyHash": "sha256:synthetic-policy-demo",
+    "immutableAfterApproval": true, "correctionBySupersession": true, "supersedesPolicyId": null,
+    "privacyClassification": "FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "provider": {
+    "contractType":"ADVISOR_ACTIVATION_EVIDENCE_PROVIDER","schemaVersion":"2.0.0","providerId":"PROVIDER_DEMO_OFFICIAL_001",
+    "providerType":"ADVISOR_CODE_REGISTRY","authorityDomain":"OFFICIAL_LIFECYCLE_EVIDENCE_PROVIDER","trustLevel":"INSTITUTIONAL_OFFICIAL",
+    "allowedEvidenceTypes":["ADVISOR_CODE_ACTIVATION"],"verificationMethod":"SIGNED_REGISTRY_RESPONSE","effectiveFrom":"2026-07-01T00:00:00-06:00",
+    "effectiveUntil":null,"revocationStatus":"ACTIVE","providerPolicyVersion":"1","privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "evidence": {
+    "contractType":"ADVISOR_ACTIVATION_EVIDENCE","schemaVersion":"2.0.0","activationEvidenceId":"ACTIVATION_EVIDENCE_DEMO_001",
+    "advisorId":"ADVISOR_DEMO_001","advisorConversionId":"ADVISOR_CONVERSION_DEMO_001","conversionReceiptId":"CONVERSION_RECEIPT_DEMO_001",
+    "evidenceType":"ADVISOR_CODE_ACTIVATION","evidenceClass":"OFFICIAL_CONFIRMED","providerId":"PROVIDER_DEMO_OFFICIAL_001",
+    "providerAuthorityDomain":"OFFICIAL_LIFECYCLE_EVIDENCE_PROVIDER","sourceReference":"SYNTHETIC_SOURCE_REFERENCE",
+    "sourceObservedAt":"2026-07-15T09:00:00-06:00","sourceEffectiveAt":"2026-07-15T08:30:00-06:00","ingestedAt":"2026-07-15T09:05:00-06:00",
+    "expiresAt":"2026-08-15T08:30:00-06:00","verificationStatus":"VERIFIED","verificationMethod":"SIGNED_REGISTRY_RESPONSE",
+    "verifiedBy":{"actorId":"SYSTEM_VERIFIER_DEMO","actorType":"SYSTEM_COMPONENT","authorityDomain":"OFFICIAL_LIFECYCLE_EVIDENCE_PROVIDER","policyRoleReference":null},
+    "verifiedAt":"2026-07-15T09:06:00-06:00","policySnapshotId":"ACTIVATION_POLICY_DEMO_001","integrityReference":"sha256:synthetic-evidence-demo",
+    "supersedesEvidenceId":null,"revokedAt":null,"revocationReason":null,"privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "evaluation": {
+    "contractType":"ADVISOR_ACTIVATION_EVALUATION","schemaVersion":"2.0.0","activationEvaluationId":"ACTIVATION_EVALUATION_DEMO_001",
+    "advisorId":"ADVISOR_DEMO_001","advisorConversionId":"ADVISOR_CONVERSION_DEMO_001","conversionReceiptId":"CONVERSION_RECEIPT_DEMO_001",
+    "activationPolicyId":"ACTIVATION_POLICY_DEMO_001","evaluatedAt":"2026-07-15T09:07:00-06:00","evaluationStatus":"ELIGIBLE",
+    "evidenceConsidered":[{"activationEvidenceId":"ACTIVATION_EVIDENCE_DEMO_001","integrityReference":"sha256:synthetic-evidence-demo"}],
+    "evidenceAccepted":[{"activationEvidenceId":"ACTIVATION_EVIDENCE_DEMO_001","integrityReference":"sha256:synthetic-evidence-demo"}],
+    "evidenceRejected":[],"missingEvidence":[],"conflictingEvidence":[],"blockingConditions":[],"warnings":[],
+    "proposedActivationEffectiveAt":"2026-07-15T08:30:00-06:00","humanReviewRequired":false,"reviewReason":null,
+    "sourceLineage":["CONVERSION_RECEIPT_DEMO_001","ACTIVATION_EVIDENCE_DEMO_001","ACTIVATION_POLICY_DEMO_001"],
+    "createsActivationTruth":false,"eligibleEqualsActive":false,"privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "review": {
+    "contractType":"ADVISOR_ACTIVATION_REVIEW_DECISION","schemaVersion":"2.0.0","activationReviewDecisionId":"ACTIVATION_REVIEW_DEMO_001",
+    "activationEvaluationId":"ACTIVATION_EVALUATION_DEMO_001","advisorId":"ADVISOR_DEMO_001",
+    "reviewerActor":{"actorId":"HUMAN_ACTIVATION_REVIEWER_DEMO","actorType":"HUMAN","authorityDomain":"AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER","policyRoleReference":"ACTIVATION_REVIEWER"},
+    "reviewAuthority":"AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER","reviewedAt":"2026-07-15T09:10:00-06:00","decision":"APPROVED_FOR_ACTIVATION",
+    "reasonCode":"OFFICIAL_EVIDENCE_CONFIRMED","reasonSummary":"Synthetic approval for contract validation only.",
+    "evidenceReviewed":[{"activationEvidenceId":"ACTIVATION_EVIDENCE_DEMO_001","integrityReference":"sha256:synthetic-evidence-demo"}],
+    "policySnapshotId":"ACTIVATION_POLICY_DEMO_001","conditions":[],
+    "separationOfDutiesEvaluation":{"policyControlled":true,"requestorActorId":"SYSTEM_EVALUATOR_DEMO","reviewerActorId":"HUMAN_ACTIVATION_REVIEWER_DEMO","result":"PASS"},
+    "humanDecisionConfirmed":true,"privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "receipt": {
+    "contractType":"ADVISOR_ACTIVATION_RECEIPT","schemaVersion":"2.0.0","activationReceiptId":"ACTIVATION_RECEIPT_DEMO_001",
+    "advisorId":"ADVISOR_DEMO_001","advisorConversionId":"ADVISOR_CONVERSION_DEMO_001","conversionReceiptId":"CONVERSION_RECEIPT_DEMO_001",
+    "activationPolicyId":"ACTIVATION_POLICY_DEMO_001","activationEvaluationId":"ACTIVATION_EVALUATION_DEMO_001","activationReviewDecisionId":"ACTIVATION_REVIEW_DEMO_001",
+    "activationEffectiveAt":"2026-07-15T08:30:00-06:00","activationRecordedAt":"2026-07-15T09:11:00-06:00",
+    "activationAuthorityDomain":"ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY",
+    "materializedBy":{"actorId":"SYSTEM_MATERIALIZER_DEMO","actorType":"SYSTEM_COMPONENT","authorityDomain":"ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY","policyRoleReference":null},
+    "acceptedEvidenceReferences":[{"activationEvidenceId":"ACTIVATION_EVIDENCE_DEMO_001","integrityReference":"sha256:synthetic-evidence-demo"}],
+    "providerReferences":[{"providerId":"PROVIDER_DEMO_OFFICIAL_001","providerPolicyVersion":"1"}],
+    "idempotencyKey":"ACTIVATION_IDEMPOTENCY_DEMO_001","activationIntentKey":"ADVISOR_DEMO_001|CONVERSION_RECEIPT_DEMO_001|ACTIVATION_POLICY_DEMO_001|2026-07-15T08:30:00-06:00",
+    "receiptVersion":"1","integrityReference":"sha256:synthetic-activation-receipt","createdAt":"2026-07-15T09:11:00-06:00",
+    "immutable":true,"grantsAdvisorOsAccess":false,"createsSalesPipeline":false,"importsProject200":false,"privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "suspension": {
+    "contractType":"ADVISOR_SUSPENSION_RECEIPT","schemaVersion":"2.0.0","suspensionReceiptId":"SUSPENSION_DEMO_001","advisorId":"ADVISOR_DEMO_001","activationReceiptId":"ACTIVATION_RECEIPT_DEMO_001",
+    "suspendedAt":"2026-08-01T10:00:00-06:00","effectiveFrom":"2026-08-01T10:00:00-06:00","effectiveUntil":null,"suspensionAuthority":"ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY",
+    "reasonCode":"SYNTHETIC_TEMPORARY_HOLD","reasonSummary":"Synthetic suspension.","evidenceReferences":[],"policySnapshotId":"ACTIVATION_POLICY_DEMO_001",
+    "capabilitiesAffected":["NEW_CLIENT_ACTIONS","PROJECT_200_HANDOFF"],"identityPreserved":true,"pipelineHistoryPreserved":true,"newClientActionsAllowed":false,"project200HandoffAllowed":false,
+    "createdAt":"2026-08-01T10:00:00-06:00","privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "deactivation": {
+    "contractType":"ADVISOR_DEACTIVATION_RECEIPT","schemaVersion":"2.0.0","deactivationReceiptId":"DEACTIVATION_DEMO_001","advisorId":"ADVISOR_DEMO_001","activationReceiptId":"ACTIVATION_RECEIPT_DEMO_001",
+    "deactivationEffectiveAt":"2026-09-01T00:00:00-06:00","deactivationRecordedAt":"2026-09-01T08:00:00-06:00","deactivationAuthority":"ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY",
+    "reasonCode":"SYNTHETIC_LIFECYCLE_END","reasonSummary":"Synthetic deactivation.","evidenceReferences":[],"policySnapshotId":"ACTIVATION_POLICY_DEMO_001",
+    "accessRevocationRequired":true,"salesActionBlockRequired":true,"project200HandoffBlockRequired":true,"identityPreserved":true,"conversionReceiptPreserved":true,
+    "prospectHistoryPreserved":true,"activityHistoryPreserved":true,"createdAt":"2026-09-01T08:00:00-06:00","privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "reactivation": {
+    "contractType":"ADVISOR_REACTIVATION_RECEIPT","schemaVersion":"2.0.0","reactivationReceiptId":"REACTIVATION_DEMO_001","advisorId":"ADVISOR_DEMO_001",
+    "priorDeactivationReceiptId":"DEACTIVATION_DEMO_001","reactivationPolicyId":"ACTIVATION_POLICY_DEMO_001","reactivationEvaluationId":"REACTIVATION_EVALUATION_DEMO_001",
+    "reactivationReviewDecisionId":"REACTIVATION_REVIEW_DEMO_001","reactivationEffectiveAt":"2026-10-01T00:00:00-06:00","reactivationRecordedAt":"2026-10-01T08:00:00-06:00",
+    "acceptedEvidenceReferences":[{"activationEvidenceId":"ACTIVATION_EVIDENCE_DEMO_002","integrityReference":"sha256:synthetic-current-evidence"}],
+    "reactivationAuthority":"ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY","idempotencyKey":"REACTIVATION_IDEMPOTENCY_DEMO_001","integrityReference":"sha256:synthetic-reactivation",
+    "createdAt":"2026-10-01T08:00:00-06:00","reusesAdvisorId":true,"createsNewAdvisorId":false,"priorDeactivationPreserved":true,"currentEvidenceRequired":true,
+    "privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "correction": {
+    "contractType":"ADVISOR_LIFECYCLE_CORRECTION","schemaVersion":"2.0.0","lifecycleCorrectionId":"LIFECYCLE_CORRECTION_DEMO_001","advisorId":"ADVISOR_DEMO_001",
+    "originalReceiptReference":"ACTIVATION_RECEIPT_DEMO_001","correctionType":"EFFECTIVE_DATE_CORRECTION",
+    "requestedBy":{"actorId":"HUMAN_CORRECTION_REQUESTOR_DEMO","actorType":"HUMAN","authorityDomain":"AUTHORIZED_LIFECYCLE_OR_CONTRACTING_REVIEWER","policyRoleReference":"CORRECTION_REQUESTOR"},
+    "approvedBy":{"actorId":"HUMAN_CORRECTION_APPROVER_DEMO","actorType":"HUMAN","authorityDomain":"ADVISOR_LIFECYCLE_GOVERNANCE","policyRoleReference":"CORRECTION_APPROVER"},
+    "correctedAt":"2026-07-20T10:00:00-06:00","reasonCode":"OFFICIAL_EFFECTIVE_TIME_CORRECTION","reasonSummary":"Synthetic append-only correction.",
+    "evidenceReferences":[{"activationEvidenceId":"ACTIVATION_EVIDENCE_CORRECTION_DEMO","integrityReference":"sha256:synthetic-correction-evidence"}],
+    "supersedingReceiptReference":"ACTIVATION_RECEIPT_DEMO_002","affectedFields":["activationEffectiveAt"],"appendOnly":true,"privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  },
+  "event": {
+    "contractType":"ADVISOR_LIFECYCLE_EVENT","schemaVersion":"2.0.0","eventId":"LIFECYCLE_EVENT_DEMO_001","eventType":"ADVISOR_ACTIVATED","eventVersion":"1",
+    "occurredAt":"2026-07-15T09:11:00-06:00","effectiveAt":"2026-07-15T08:30:00-06:00","advisorId":"ADVISOR_DEMO_001","advisorConversionId":"ADVISOR_CONVERSION_DEMO_001",
+    "conversionReceiptId":"CONVERSION_RECEIPT_DEMO_001","authorityDomain":"ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY",
+    "actor":{"actorId":"SYSTEM_MATERIALIZER_DEMO","actorType":"SYSTEM_COMPONENT","authorityDomain":"ADVISOR_LIFECYCLE_ACTIVATION_AUTHORITY","policyRoleReference":null},
+    "policySnapshotId":"ACTIVATION_POLICY_DEMO_001","evidenceReferences":[{"activationEvidenceId":"ACTIVATION_EVIDENCE_DEMO_001","integrityReference":"sha256:synthetic-evidence-demo"}],
+    "causationId":"ACTIVATION_EVALUATION_DEMO_001","correlationId":"CONVERSION_RECEIPT_DEMO_001","idempotencyKey":"ACTIVATION_IDEMPOTENCY_DEMO_001",
+    "integrityReference":"sha256:synthetic-event","privacyClassification":"FORGE_CONFIDENTIAL_LIFECYCLE"
+  }
+}
