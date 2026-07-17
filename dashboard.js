@@ -28,6 +28,7 @@ import { Memory }       from './memory-manager.js';
 import { RenderEngine } from './ui-render-engine.js';
 import { Navigation }   from './platform/navigation-runtime.js';
 import { generarWhatsappLink } from './whatsapp-link-engine.js';
+import { renderAdvisorSalesNbaCard } from './advisor-os/dashboard/advisor-sales-nba-consumer.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTES DE NEGOCIO
@@ -1520,6 +1521,11 @@ const DashboardController = {
 export function renderDashboard() {
     return `
         <div id="dashboard-container" style="display:flex;flex-direction:column;gap:14px;">
+
+            <!-- Explained Sales NBA is the primary Advisor OS intervention surface. -->
+            <div id="dash-sales-nba" aria-live="polite">
+                ${renderAdvisorSalesNbaCard(null)}
+            </div>
 
             <!-- Hero Greeting Widget -->
             <div class="card widget-accent" style="padding:24px !important;">

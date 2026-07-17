@@ -1,0 +1,3 @@
+# Advisor Dashboard NBA Consumer Decision 067G15
+
+Status: `UI_CONSUMER_IMPLEMENTED`; production NBA source persistence remains blocked. The main dashboard template now places the explained Sales NBA surface before greeting, metrics and historical context. The card exposes action, prospect, why now, signals, outcome, uncertainty, channel/argument and Advisor controls, plus prospect/Pipeline deep-link intents. Without evidence it explains the limitation rather than inventing an action. It performs no contact, task, stage or storage mutation. Forge tokens and existing dashboard/navigation authority are reused; no parallel shell exists.
