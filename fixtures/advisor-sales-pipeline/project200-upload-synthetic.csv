@@ -1,0 +1,3 @@
+name,phone,email,relationship,relationshipContext,consentStatus
+Contacto Uno,+525500000010,,FRIEND,Contexto sintético,NOT_RECORDED
+, +525500000011,,UNKNOWN,,REVIEW_REQUIRED
