@@ -3,6 +3,7 @@
 
 export function createRouteRegistry({
     dashboardLoader,
+    pipelineLoader,
     renderProspeccion,
     bindProspeccionEvents,
     renderReferidos,
@@ -19,6 +20,17 @@ export function createRouteRegistry({
             load:       dashboardLoader,
             renderName: 'renderDashboard',
             bindName:   'bindDashboardEvents',
+        },
+        'advisor-sales-pipeline': {
+            load: pipelineLoader,
+            renderName: 'renderAdvisorSalesPipeline',
+            bindName: 'bindAdvisorSalesPipeline',
+            routeId: 'advisor-sales-pipeline',
+            domain: 'ADVISOR_OS',
+            moduleId: 'advisor-os.sales-pipeline.live-route.067g16',
+            title: 'Pipeline',
+            navigation: { mobile: true, desktop: true },
+            deepLink: { supported: true, contexts: ['prospect', 'opportunity'] },
         },
         prospeccion: { render: renderProspeccion,  bind: bindProspeccionEvents  },
         referidos:   { render: renderReferidos,    bind: bindReferidosEvents    },

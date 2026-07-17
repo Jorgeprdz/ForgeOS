@@ -20,8 +20,16 @@ export class ForgeAppShell {
         this.router = router;
         this.ui = ui;
 
-        Navigation.setNavigator((route, params) => this.router.navigate(route));
+        Navigation.setNavigator((route, params) => this.router.navigate(route, params));
         Navigation.bindLegacyWindow();
+
+        this._popstateHandler = () => {
+            const route = window.location.hash.replace('#', '').trim() || 'dashboard';
+            if (this.router.routes[route]) {
+                this.router.navigate(route, {}, { history: 'none' });
+            }
+        };
+        window.addEventListener('popstate', this._popstateHandler);
     }
 
     async init() {
@@ -59,7 +67,7 @@ export class ForgeAppShell {
 
                 AppShell.showLoader('Cargando...');
 
-                await this.router.navigate(initialRoute);
+                await this.router.navigate(initialRoute, {}, { history: 'replace' });
 
                 if (typeof SyncEngine?.start === 'function') {
                     SyncEngine.start().catch(err => {

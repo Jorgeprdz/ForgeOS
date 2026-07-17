@@ -1147,6 +1147,15 @@ const DashboardController = {
         if (!root) return;
 
         const clickHandler = event => {
+            const forgeRoute = event.target.closest('[data-forge-route]');
+            if (forgeRoute) {
+                const route = forgeRoute.dataset.forgeRoute;
+                const contextType = forgeRoute.dataset.forgeContextType || null;
+                const contextId = forgeRoute.dataset.forgeContextId || null;
+                if (route) Navigation.navigate(route, { contextType, contextId });
+                return;
+            }
+
             const btnNav = event.target.closest('[data-action="decision-navigate"]');
             if (btnNav) {
                 const route = btnNav.dataset.route;

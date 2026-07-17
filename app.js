@@ -46,6 +46,7 @@ import { ForgeAppShell } from './platform/app/forge-app-shell.js';
 import { AuthService } from './platform/auth/auth-service.js';
 import { EnterpriseRouter } from './platform/routing/enterprise-router.js';
 import { createRouteRegistry } from './platform/routing/route-registry.js';
+import { Navigation } from './platform/navigation-runtime.js';
 import { Logger }       from './logger.js';
 import { bindPlatformRuntimeListeners } from './platform/app/runtime-listeners.js';
 import { bindCrmAddlifeChatShell } from './legacy/crmaddlife/chat-shell.js';
@@ -68,6 +69,7 @@ class AppManager {
         this.router = new EnterpriseRouter({
             routes: createRouteRegistry({
                 dashboardLoader: () => import('./dashboard.js'),
+                pipelineLoader: () => import('./advisor-os/sales-pipeline/pipeline-live-route.js'),
                 renderProspeccion,
                 bindProspeccionEvents,
                 renderReferidos,
@@ -142,7 +144,7 @@ class AppManager {
                 const btn = e.target.closest('.nav-btn[data-target]');
                 if (!btn) return;
                 const target = btn.dataset.target;
-                if (target) this.router.navigate(target);
+                if (target) Navigation.navigate(target);
             });
         }
 

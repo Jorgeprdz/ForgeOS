@@ -48,12 +48,12 @@ export class EnterpriseRouter {
         return { render, bind };
     }
 
-    async navigate(route) {
+    async navigate(route, params = {}, options = {}) {
 
         try {
 
             // Evitar re-navegación a la ruta activa
-            if (this.currentRoute === route) return;
+            if (this.currentRoute === route && !params.contextType && !params.contextId) return true;
 
             const descriptor = this.routes[route];
 
@@ -77,14 +77,17 @@ export class EnterpriseRouter {
 
             // 2. Renderizar template HTML estático del nuevo módulo
             //    Via RAF-scheduled para evitar layout thrashing
-            RenderEngine.schedule(() => {
-                appEl.innerHTML = module.render();
+            await new Promise(resolve => {
+                RenderEngine.schedule(() => {
+                    appEl.innerHTML = module.render(params);
+                    resolve();
+                });
             });
 
             // 3. Montar nuevo módulo — bind events, cargar datos async
             await Lifecycle.mount(route, {
                 mount: async () => {
-                    await module.bind();
+                    await module.bind(params);
                 },
             });
 
@@ -94,16 +97,23 @@ export class EnterpriseRouter {
 
             this.updateNav(route);
 
-            history.replaceState({}, '', '#' + route);
+            if (options.history === 'replace') {
+                history.replaceState({ route }, '', '#' + route);
+            } else if (options.history !== 'none') {
+                history.pushState({ route }, '', '#' + route);
+            }
 
             Analytics.track('route_change', { route });
 
             EventBus.emit('route:changed', { route });
 
+            return true;
+
         } catch (err) {
 
             ErrorHandler.capture(err);
             this._renderError(err);
+            return false;
 
         } finally {
 
