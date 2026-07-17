@@ -116,6 +116,7 @@ export const DIRECT_ADVISOR_ACTIONS = {
   marcar: "marcar",
   contactame: "contactar",
   contactar: "contactar",
+  reunion: "reunión",
 };
 
 export function normalizeText(value) {
@@ -146,10 +147,15 @@ export function extractTemporalRange(text) {
 export function extractRawTemporalReference(text) {
   const patterns = [
     /\b(?:en|dentro de)\s+\d+\s+o\s+\d+\s+(?:días|dias|semanas|meses)\b/i,
+    /\b(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+o\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)(?:\s+de\s+\d{4})?\b/i,
+    /\bfin de mes\s+o\s+(?:el\s+)?(?:mes\s+)?que sigue\b/i,
+    /\bentre\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+y\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)(?:\s+de\s+\d{4})?\b/i,
+    /\bde\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+a\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)(?:\s+de\s+\d{4})?\b/i,
+    /\b(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+y\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)(?:\s+de\s+\d{4})?\b/i,
     /\b(lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo)\b/i,
     /\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/i,
     /\b(hoy|mañana|manana)\b/i,
-    /\b(próxima semana|proxima semana|la próxima semana|la proxima semana|este mes|fin de mes|próximo mes|proximo mes|próximo año|proximo año|el próximo año|el proximo año|año que viene|ano que viene)\b/i,
+    /\b(próxima semana|proxima semana|la próxima semana|la proxima semana|este mes|fin de mes|el mes que sigue|próximo mes|proximo mes|próximo año|proximo año|el próximo año|el proximo año|año que viene|ano que viene)\b/i,
     /\b(en|dentro de)\s+(\d+)\s+(días|dias|semanas|meses|años|anos)\b/i
   ];
 
