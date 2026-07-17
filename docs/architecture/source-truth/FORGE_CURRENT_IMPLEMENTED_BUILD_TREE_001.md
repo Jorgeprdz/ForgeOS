@@ -37,6 +37,7 @@ FORGE CURRENT IMPLEMENTED BUILD TREE 001
 ├── Project 200 Handoff 067G7: CONTRACT_IMPLEMENTED / Advisor-reviewed / no cross-write
 ├── Prospect Duplicate Match Review 067G8: ENGINE_AND_REVIEW_UI_IMPLEMENTED / no destructive merge
 ├── Advisor Prospect Ingestion 067G9: INTERFACE_AND_TEST_ADAPTER_IMPLEMENTED / production writer blocked
+├── Advisor Sales Pipeline UI Foundation 067G10: UI_IMPLEMENTED_READ_MODEL_ONLY / Forge shell and tokens reused
 ├── Advisor OS execution modules: PARTIAL
 ├── Advisor signal surfaces: PARTIAL
 ├── Advisor-facing execution context: PARTIAL
