@@ -1,0 +1,35 @@
+[data-forge-static-home-node-067g16a][hidden],
+[data-forge-alive-pipeline-view-067g16a][hidden] {
+  display: none !important;
+}
+
+html[data-forge-alive-static-view-067g16a]:not([data-forge-alive-static-view-067g16a="inicio"])
+  body
+  .phone-shell
+  [data-forge-static-home-node-067g16a] {
+  display: none !important;
+}
+
+.forge-alive-primary-view-067g16a {
+  min-width: 0;
+  width: 100%;
+  padding-bottom: 104px;
+}
+
+.forge-alive-primary-view-067g16a .forge-pipeline {
+  min-height: calc(100vh - 120px);
+}
+
+.fake-cta[data-forge-static-open-pipeline] {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (min-width: 901px) {
+  .forge-desktop-workspace-056y > .forge-alive-primary-view-067g16a {
+    grid-column: 2;
+    min-height: 100vh;
+    padding-bottom: 24px;
+  }
+}

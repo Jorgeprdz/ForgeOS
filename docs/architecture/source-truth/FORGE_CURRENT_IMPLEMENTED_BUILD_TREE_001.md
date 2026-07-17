@@ -43,7 +43,8 @@ FORGE CURRENT IMPLEMENTED BUILD TREE 001
 ├── Prospect Detail and Commitments 067G13: CONTRACT_AND_UI_IMPLEMENTED / read-model only
 ├── Explained Sales NBA 067G14: RULE_BASED_ENGINE_IMPLEMENTED / evidence-bearing / Advisor-controlled
 ├── Advisor Dashboard NBA Consumer 067G15: UI_CONSUMER_IMPLEMENTED / primary explained action / no client effect
-└── Advisor OS Pipeline Live Mount and Navigation 067G16: CANONICAL_ROUTE_AND_LIVE_MOUNT_IMPLEMENTED / production persistence and stage writer blocked
+├── Advisor OS Pipeline Live Mount and Navigation 067G16: CANONICAL_ROUTE_AND_LIVE_MOUNT_IMPLEMENTED / production persistence and stage writer blocked
+└── Forge Alive Static Entrypoint Pipeline Mount Reconciliation 067G16A: STATIC_VIEW_OUTLET_AND_EXISTING_PIPELINE_MOUNT_IMPLEMENTED / Legacy CRM separate / persistence blocked
 ├── Advisor OS execution modules: PARTIAL
 ├── Advisor signal surfaces: PARTIAL
 ├── Advisor-facing execution context: PARTIAL

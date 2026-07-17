@@ -33,6 +33,8 @@
   <link rel="stylesheet" href="./forge-alive-mobile-nav-r16c5j.css?v=r16c5j-clean-nav">
   <link rel="stylesheet" href="./forge-alive-home-nav-bridge-r16c5k.css?v=r16c5k-exact-quote-replica">
   <link rel="stylesheet" href="./forge-alive-new-quote-saas-module-r16c5l.css?v=r16f2-nested-main-layout-reset">
+  <link rel="stylesheet" href="./forge-alive-pipeline-view-067g16a.css?v=067g16a-1">
+  <link rel="stylesheet" href="../../../advisor-os/sales-pipeline/pipeline-ui.css?v=067g16a-1">
   <style id="forge-r16i0l2-integrated-quote-halo-containment">
     /*
       Cotizaciones activa overflow visible para capas funcionales.
@@ -136,9 +138,9 @@
   <aside class="dw-sidebar-056y" aria-label="Navegación desktop">
     <div class="dw-brand-056y"><span class="dw-bowtie-056y forge-alfred-mark forge-alfred-mark--inline" aria-hidden="true"></span><div><strong>Forge OS</strong><span>Alfred</span></div></div>
     <nav class="dw-nav-056y" aria-label="Navegación principal">
-      <button class="is-active" type="button"><span class="dw-nav-icon-056y">⌂</span>Inicio</button>
-      <button type="button"><span class="dw-nav-icon-056y">▽</span>Pipeline</button>
-      <button type="button"><span class="dw-nav-icon-056y">◎</span>Clientes</button>
+      <button class="is-active" type="button" data-forge-static-view="inicio"><span class="dw-nav-icon-056y">⌂</span>Inicio</button>
+      <button type="button" data-forge-static-view="pipeline"><span class="dw-nav-icon-056y">▽</span>Pipeline</button>
+      <button type="button" data-forge-static-view="clientes"><span class="dw-nav-icon-056y">◎</span>Clientes</button>
       <!-- FORGE:096B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_SOURCE_PATCH_IMPLEMENTATION:START -->
       <a href="#cotizaciones" class="dw-nav-link-056y forge-safe-local-hash-nav-104r4" data-forge-module-entry-096b="quote-preview-safe-entry" data-forge-safe-local-hash-navigation-repair-104r4="quote-preview-safe-entry" data-forge-ui-repair-104r4="native-sidebar-link-and-static-cta" data-forge-local-hash-link-104r4="#cotizaciones" data-forge-local-hash-target-panel-104r4="forge-quote-preview-safe-entry-panel-096b" data-forge-local-hash-target-note-104r4="forge-quote-preview-safe-entry-note-096b" data-forge-preview-only-104r4="true" data-forge-human-review-required-104r4="true" data-forge-static-anchor-only-104r4="true" data-forge-script-creation-allowed-104r4="false" data-forge-inline-event-handler-allowed-104r4="false" data-forge-javascript-listener-allowed-104r4="false" data-forge-javascript-source-edit-allowed-104r4="false" data-forge-css-source-edit-allowed-104r4="false" data-forge-route-binding-execution-allowed-104r4="false" data-forge-navigation-execution-allowed-104r4="false" data-forge-ui-rendering-allowed-104r4="false" data-forge-runtime-execution-allowed-104r4="false" data-forge-real-effects-allowed-104r4="false" data-forge-official-quote-allowed-104r4="false" data-forge-quote-truth-allowed-104r4="false" data-forge-backend-connection-allowed-104r4="false" data-forge-provider-call-allowed-104r4="false" data-forge-parser-execution-allowed-104r4="false" data-forge-calculator-execution-allowed-104r4="false" data-forge-banxico-call-allowed-104r4="false" data-forge-send-allowed-104r4="false" data-forge-crm-write-allowed-104r4="false" data-forge-calendar-create-allowed-104r4="false" data-forge-business-logic-change-allowed-104r4="false" data-forge-data-flow-change-allowed-104r4="false" aria-controls="forge-quote-preview-safe-entry-panel-096b" aria-describedby="forge-quote-preview-safe-entry-note-096b"><span class="dw-nav-icon-056y" aria-hidden="true">▣</span>Cotizaciones</a>
 <!-- FORGE:099B_QUOTE_PREVIEW_SAFE_MODULE_ENTRY_NAVIGATION_BINDING_SOURCE_PATCH_IMPLEMENTATION:START -->
@@ -357,12 +359,12 @@
         <span aria-hidden="true"></span>
       </button>
       <nav class="alfred-nav-056g7 alfred-desktop-nav" aria-label="Navegación principal">
-        <button class="active" type="button" data-section="inicio"><span aria-hidden="true">⌂</span>Inicio</button>
-        <button type="button" data-section="pipeline"><span aria-hidden="true">◇</span>Pipeline</button>
-        <button type="button" data-section="clientes"><span aria-hidden="true">◎</span>Clientes</button>
+        <button class="active" type="button" data-section="inicio" data-forge-static-view="inicio"><span aria-hidden="true">⌂</span>Inicio</button>
+        <button type="button" data-section="pipeline" data-forge-static-view="pipeline"><span aria-hidden="true">◇</span>Pipeline</button>
+        <button type="button" data-section="clientes" data-forge-static-view="clientes"><span aria-hidden="true">◎</span>Clientes</button>
         <button type="button" data-section="alfred"><span aria-hidden="true">⌘</span>Alfred</button>
         <button type="button" data-section="reportes"><span aria-hidden="true">▥</span>Reportes</button>
-        <button type="button" data-section="mas"><span aria-hidden="true">•••</span>Más</button>
+        <button type="button" data-section="mas" data-forge-static-view="mas"><span aria-hidden="true">•••</span>Más</button>
       </nav>
       <div class="alfred-profile-056g7 alfred-desktop-profile">
         <span>J</span>
@@ -561,11 +563,11 @@
     </button>
     <aside class="desktop-nav-drawer glass" aria-label="Navegacion desktop">
       <strong>Forge Alive</strong>
-      <a>Inicio</a>
-      <a>Pipeline</a>
-      <a>Clientes</a>
+      <a href="?nav=inicio" data-forge-static-view="inicio">Inicio</a>
+      <a href="?nav=pipeline" data-forge-static-view="pipeline">Pipeline</a>
+      <a href="?nav=clientes" data-forge-static-view="clientes">Clientes</a>
       <a>Alfred</a>
-      <a>Mas</a>
+      <a href="?nav=mas" data-forge-static-view="mas">Mas</a>
     </aside>
         <button class="desktop-context-toggle" type="button" aria-expanded="false" aria-controls="desktop-context-rail">
       <span>Contexto vivo</span>
@@ -624,7 +626,7 @@
       </div>
       <h2>Plan de hoy</h2>
       <p>Revisa señales, razón clara, advertencias y siguiente acción antes de decidir.</p>
-      <div class="fake-cta">Iniciar revisión del día</div>
+      <button type="button" class="fake-cta" data-forge-static-open-pipeline="true">Iniciar revisión del día</button>
     </section>
 <!-- FORGEOS:ALFRED_STATIC_SMART_WIDGET_056U:START -->
 <section class="forge-smart-widget-static-056u" aria-label="Alfred Smart Widgets">
@@ -999,6 +1001,7 @@
   <script src="./forge-mobile-widget-grid-polish-057l.js?v=r16c_home_restoration_20260713_1" defer></script>
   <script src="./forge-mobile-widget-grid-dedup-057m.js?v=r16c_home_restoration_20260713_1" defer></script>
 
+  <script type="module" src="./forge-alive-pipeline-view-067g16a.js?v=067g16a-1"></script>
   <script defer src="./forge-alive-runtime-lazy-loader-r16j1c1.js?v=r16j2b-stage-alignment-20260716-1"></script>
 <script defer src="./forge-alive-mobile-nav-r16c5j.js?v=r16c5j-clean-nav"></script>
   <script defer src="./forge-alive-home-nav-bridge-r16c5k.js?v=r16j1c1-route-fastpath-03a5-20260715-1"></script>

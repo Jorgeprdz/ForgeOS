@@ -81,10 +81,17 @@
     return true;
   }
 
-  function activateHomeSection(
+  async function activateHomeSection(
     key,
     updateUrl = true,
   ) {
+    const viewAuthority =
+      globalThis.ForgeAliveStaticView067G16A;
+
+    if (viewAuthority) {
+      return viewAuthority.open(key, { updateUrl });
+    }
+
     const legacyButton = controllerButton(key);
     if (!legacyButton) return false;
 
@@ -147,7 +154,7 @@
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        activateHomeSection(key, true);
+        void activateHomeSection(key, true);
       },
       true,
     );
@@ -163,7 +170,7 @@
       requested !== "cotizaciones" &&
       controllerButton(requested)
     ) {
-      activateHomeSection(requested, false);
+      void activateHomeSection(requested, false);
       return;
     }
 
@@ -199,7 +206,6 @@
 
   function init() {
     bindVisualNav();
-    observeController();
     applyRequestedSection();
   }
 
