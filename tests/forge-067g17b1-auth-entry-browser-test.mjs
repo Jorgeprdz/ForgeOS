@@ -103,8 +103,19 @@ async function visibleText(page, selector) {
 async function clickVisible(page, selector) {
   const handles = await page.$$(selector);
   for (const handle of handles) {
-    const box = await handle.boundingBox();
-    if (box && box.width > 0 && box.height > 0) {
+    const clickable = await handle.evaluate(node => {
+      if (node.hidden || !node.getClientRects().length) return false;
+      const style = getComputedStyle(node);
+      if (style.display === 'none' || style.visibility === 'hidden' || style.pointerEvents === 'none') return false;
+      const rect = node.getBoundingClientRect();
+      return rect.width > 0
+        && rect.height > 0
+        && rect.bottom > 0
+        && rect.right > 0
+        && rect.top < innerHeight
+        && rect.left < innerWidth;
+    });
+    if (clickable) {
       await handle.click();
       return;
     }
@@ -189,6 +200,7 @@ try {
   record('SIGNED_IN_PIPELINE_RECOVERY_AND_ADD_PROSPECT', 'PASS');
 
   await clickVisible(page, '[data-forge-auth-avatar="067g17b1"]');
+  await page.waitForSelector('[data-forge-auth-panel]:not([hidden])');
   await page.waitForSelector('[data-forge-auth-profile-view]:not([hidden])');
   assert.match(await visibleText(page, '[data-forge-auth-panel]'), /Advisor A Remote/);
   assert.match(await visibleText(page, '[data-forge-auth-panel]'), /advisor\.a@example\.test/);
