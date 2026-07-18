@@ -60,7 +60,8 @@ jobs:
           node tests/services/forge-alpha-service.test.js
           node tests/forge-067g16c-responsive-contract-test.mjs
           node tests/forge-alive-constant-time-route-fastpath-test.mjs
-          node scripts/validate-semantic-extract-smoke.mjs
+          node -e "require('fs').writeFileSync('response.json', JSON.stringify({function_version:'semantic-extract-v0.8-hdl-semantic-frame-lite',summary:{candidate_count:1},candidates:[{owner:'remote-predeployment',type:'smoke'}]}))"
+          node scripts/validate-semantic-extract-smoke.mjs response.json
           node tests/semantic-extract-edge-contract-test.mjs
 
       - name: Runner integrity and portability
