@@ -92,12 +92,12 @@ async function waitForAuth(page, status) {
 }
 
 async function visibleText(page, selector) {
-  return page.$$eval(selector, nodes => {
+  return page.$$eval(selector, (nodes, selectorText) => {
     const visible = node => Boolean(node.getClientRects().length) && getComputedStyle(node).visibility !== 'hidden';
     const node = nodes.find(visible);
-    if (!node) throw new Error(`VISIBLE_TEXT_TARGET_MISSING:${selector}`);
+    if (!node) throw new Error(`VISIBLE_TEXT_TARGET_MISSING:${selectorText}`);
     return node.textContent.replace(/\s+/g, ' ').trim();
-  });
+  }, selector);
 }
 
 async function clickVisible(page, selector) {
