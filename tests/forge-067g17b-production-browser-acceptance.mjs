@@ -16,6 +16,10 @@ async function submitOpenForm(fields){
  const result=await page.evaluate(values=>{const dialog=document.querySelector('[data-prospect-form-dialog][open]');const form=dialog?.querySelector('[data-prospect-form]');if(!form)return {ok:false,missing:['form']};const missing=[];for(const [name,value] of Object.entries(values)){const field=form.elements.namedItem(name);if(!field){missing.push(name);continue;}field.value=value;field.dispatchEvent(new Event('input',{bubbles:true}));field.dispatchEvent(new Event('change',{bubbles:true}));}if(missing.length)return {ok:false,missing};form.requestSubmit();return {ok:true,missing:[]};},fields);
  assert.deepEqual(result,{ok:true,missing:[]},'PRODUCTIVE_FORM_CONTRACT_MISSING');
 }
+async function archiveOwnedAcceptanceFixtures(){
+ const result=await page.evaluate(async()=>{const client=await globalThis.ForgeProductiveProspectBootstrap067G17B.getClient();const service=globalThis.ForgeProductiveProspectService067G17B.create(client);const prospects=await service.listProspects();const fixtures=prospects.filter(item=>item.fullName?.startsWith('067G17B PROD '));for(const fixture of fixtures)await service.archiveProspect(fixture.id);return fixtures.length;});
+ record('prior_fixture_cleanup',String(result));
+}
 async function login(email,password){
  await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
  await page.waitForFunction(()=>globalThis.ForgeProductiveProspectBootstrap067G17B?.getClient,{timeout:30000});
@@ -25,6 +29,7 @@ async function login(email,password){
 try{
  await page.setViewport({width:390,height:844,deviceScaleFactor:1});
  await login(process.env.ADVISOR_A_EMAIL,process.env.ADVISOR_A_PASSWORD);record('production_login','PASS');
+ await archiveOwnedAcceptanceFixtures();
  const addClicked=await page.evaluate(()=>{const outlet=document.querySelector('[data-forge-alive-primary-outlet-067g16a]:not([hidden])');const pipeline=outlet?.querySelector('[data-productive-prospect-pipeline="067g17b"]');const button=Array.from(pipeline?.querySelectorAll('[data-add-prospect]')||[]).find(node=>node.getClientRects().length&&!node.disabled);if(!button)return false;button.click();return true;});assert.equal(addClicked,true,'VISIBLE_PRODUCTIVE_ADD_PROSPECT_ACTION_MISSING');await page.waitForSelector('[data-prospect-form-dialog][open] [name="fullName"]',{visible:true,timeout:30000});
  await submitOpenForm({fullName,phone:`+52${suffix}21`,source:'Evento',initialContext:'Controlled production acceptance fixture'});
  await page.waitForSelector('[data-prospect-detail-dialog][open]',{timeout:30000});
@@ -37,7 +42,7 @@ try{
  await page.screenshot({path:join(evidenceDir,'mobile-390-productive-pipeline.png'),fullPage:true});
  const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);assert.equal(horizontal,false);record('mobile_horizontal_overflow','NO');
  await page.evaluate(name=>{const card=Array.from(document.querySelectorAll('.forge-pipeline-card')).find(node=>node.querySelector('h3')?.textContent===name);card?.querySelector('[data-open-prospect]')?.click();},fullName);await page.waitForSelector('[data-prospect-detail-dialog][open]');assert.match(await page.$eval('.forge-prospect-detail-list',node=>node.textContent),/Productive acceptance/);record('edit_persistence','PASS');
- const archiveConfirmation=new Promise((resolve,reject)=>page.once('dialog',async dialog=>{try{assert.match(dialog.message(),/retirar este prospecto del Pipeline/i);await dialog.accept();resolve();}catch(error){reject(error);}}));await page.click('[data-prospect-detail-dialog][open] [data-archive-prospect]');await archiveConfirmation;await page.waitForFunction(name=>!Array.from(document.querySelectorAll('.forge-pipeline-card h3')).some(node=>node.textContent===name),{},fullName);record('archive_flow','PASS');record('fixture_cleanup','PASS');
+ const archiveConfirmation=new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(new Error('ARCHIVE_CONFIRMATION_TIMEOUT')),10000);page.once('dialog',async dialog=>{try{assert.match(dialog.message(),/retirar este prospecto del Pipeline/i);await dialog.accept();clearTimeout(timeout);resolve();}catch(error){clearTimeout(timeout);reject(error);}});});const archiveClicked=await page.evaluate(()=>{const button=document.querySelector('[data-prospect-detail-dialog][open] [data-archive-prospect]');if(!button)return false;button.click();return true;});assert.equal(archiveClicked,true,'ACTIVE_ARCHIVE_ACTION_MISSING');await archiveConfirmation;await page.waitForFunction(name=>!Array.from(document.querySelectorAll('.forge-pipeline-card h3')).some(node=>node.textContent===name),{},fullName);record('archive_flow','PASS');record('fixture_cleanup','PASS');
  await login(process.env.ADVISOR_B_EMAIL,process.env.ADVISOR_B_PASSWORD);const disclosed=await page.evaluate(name=>document.body.textContent.includes(name),fullName);assert.equal(disclosed,false);record('advisor_isolation','PASS');
  await page.setViewport({width:1366,height:768,deviceScaleFactor:1});await page.reload({waitUntil:'domcontentloaded'});await page.waitForSelector('#forge-pipeline-title');await page.screenshot({path:join(evidenceDir,'desktop-1366-productive-pipeline.png'),fullPage:true});record('desktop_pipeline','PASS');
  assert.equal(failures.length,0,failures.join('; '));record('production_acceptance','PASS');
