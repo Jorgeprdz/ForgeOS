@@ -9,7 +9,7 @@ const evidenceDir=process.env.FORGE_067G17B_EVIDENCE_DIR;mkdirSync(evidenceDir,{
 const ledger=[];const record=(name,status)=>ledger.push({name,status});
 const browser=await puppeteer.launch({executablePath:process.env.FORGE_CHROMIUM_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu']});
 const page=await browser.newPage();
-const failures=[];page.on('pageerror',error=>failures.push(error.message));page.on('dialog',dialog=>void dialog.accept());
+const failures=[];page.on('pageerror',error=>failures.push(error.message));
 const url=new URL(process.env.FORGE_067G17B_PRODUCTION_URL);url.searchParams.set('nav','pipeline');
 const suffix=String(Date.now()).slice(-8),fullName=`067G17B PROD ${suffix}`;
 async function submitOpenForm(fields){
@@ -37,7 +37,7 @@ try{
  await page.screenshot({path:join(evidenceDir,'mobile-390-productive-pipeline.png'),fullPage:true});
  const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);assert.equal(horizontal,false);record('mobile_horizontal_overflow','NO');
  await page.evaluate(name=>{const card=Array.from(document.querySelectorAll('.forge-pipeline-card')).find(node=>node.querySelector('h3')?.textContent===name);card?.querySelector('[data-open-prospect]')?.click();},fullName);await page.waitForSelector('[data-prospect-detail-dialog][open]');assert.match(await page.$eval('.forge-prospect-detail-list',node=>node.textContent),/Productive acceptance/);record('edit_persistence','PASS');
- await page.click('[data-archive-prospect]');await page.waitForFunction(name=>!Array.from(document.querySelectorAll('.forge-pipeline-card h3')).some(node=>node.textContent===name),{},fullName);record('archive_flow','PASS');record('fixture_cleanup','PASS');
+ const archiveConfirmation=new Promise((resolve,reject)=>page.once('dialog',async dialog=>{try{assert.match(dialog.message(),/retirar este prospecto del Pipeline/i);await dialog.accept();resolve();}catch(error){reject(error);}}));await page.click('[data-prospect-detail-dialog][open] [data-archive-prospect]');await archiveConfirmation;await page.waitForFunction(name=>!Array.from(document.querySelectorAll('.forge-pipeline-card h3')).some(node=>node.textContent===name),{},fullName);record('archive_flow','PASS');record('fixture_cleanup','PASS');
  await login(process.env.ADVISOR_B_EMAIL,process.env.ADVISOR_B_PASSWORD);const disclosed=await page.evaluate(name=>document.body.textContent.includes(name),fullName);assert.equal(disclosed,false);record('advisor_isolation','PASS');
  await page.setViewport({width:1366,height:768,deviceScaleFactor:1});await page.reload({waitUntil:'domcontentloaded'});await page.waitForSelector('#forge-pipeline-title');await page.screenshot({path:join(evidenceDir,'desktop-1366-productive-pipeline.png'),fullPage:true});record('desktop_pipeline','PASS');
  assert.equal(failures.length,0,failures.join('; '));record('production_acceptance','PASS');
