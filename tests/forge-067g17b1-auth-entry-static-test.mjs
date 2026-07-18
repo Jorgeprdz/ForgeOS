@@ -16,6 +16,7 @@ assert.match(html, /forge-alive-auth-entry-067g17b1\.css\?v=067g17b1-1/);
 assert.match(html, /forge-alive-public-config-067g17a1\.js\?v=__FORGE_BUILD_SHA__[\s\S]*forge-alive-auth-entry-067g17b1\.js\?v=067g17b1-1[\s\S]*sample-data\.js/);
 
 assert.match(script, /FORGE_AUTH_ENTRY_067G17B1_V1/);
+assert.match(script, /\.hero \.orb/);
 assert.match(script, /textContent = 'F'/);
 assert.match(script, /type = 'button'/);
 assert.match(script, /aria-label', 'Iniciar sesión o abrir perfil'/);

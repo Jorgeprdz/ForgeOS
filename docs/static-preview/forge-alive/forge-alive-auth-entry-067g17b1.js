@@ -6,6 +6,7 @@
     '.dw-top-actions-056y .dw-avatar-056y',
     '.dw-sidebar-profile-056y .dw-avatar-056y',
     '.alfred-profile-056g7 > span',
+    '.hero .orb',
   ].join(',');
   const state = {
     avatars: [],
