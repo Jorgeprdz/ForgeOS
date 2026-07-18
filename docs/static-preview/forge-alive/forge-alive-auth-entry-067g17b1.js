@@ -24,6 +24,15 @@
     return configApi()?.allowsTestAdvisorLogin?.() === true;
   }
 
+  function testAdvisorAuthAdapter() {
+    const adapter = global.ForgeTestAdvisorAuth067G17B1;
+    return typeof adapter?.signInAsAdvisor === 'function' ? adapter : null;
+  }
+
+  function testAdvisorLoginAvailable() {
+    return testAdvisorLoginEnabled() && Boolean(testAdvisorAuthAdapter());
+  }
+
   function makeAvatarButton(node) {
     if (!node || node.dataset.forgeAuthAvatar === '067g17b1') return node;
     const button = global.document.createElement('button');
@@ -86,6 +95,8 @@
     backdrop.addEventListener('click', (event) => {
       if (event.target === backdrop || event.target.closest('[data-forge-auth-close]')) closeAuthPanel();
       if (event.target.closest('[data-forge-auth-google]')) startGoogleLogin();
+      const testAdvisorButton = event.target.closest('[data-forge-test-advisor]');
+      if (testAdvisorButton) startTestAdvisorLogin(testAdvisorButton.getAttribute('data-forge-test-advisor'));
     });
     global.document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !backdrop.hidden) closeAuthPanel();
@@ -97,7 +108,7 @@
   function refreshPanel() {
     const panel = ensurePanel();
     const testSection = panel.querySelector('[data-forge-test-advisors]');
-    if (testSection) testSection.hidden = !testAdvisorLoginEnabled();
+    if (testSection) testSection.hidden = !testAdvisorLoginAvailable();
   }
 
   function currentNav() {
@@ -148,6 +159,15 @@
     }
   }
 
+  async function startTestAdvisorLogin(advisorKey) {
+    const adapter = testAdvisorAuthAdapter();
+    if (!adapter || !testAdvisorLoginEnabled()) {
+      setPanelError('El acceso de prueba no está disponible en esta publicación.');
+      return;
+    }
+    await adapter.signInAsAdvisor({ advisorKey });
+  }
+
   function openAuthPanel(options = {}) {
     const panel = ensurePanel();
     if (options.nav) state.requestedNav = options.nav;
@@ -190,6 +210,7 @@
       avatarCount: state.avatars.length,
       panelReady: Boolean(state.panel),
       testAdvisorLoginEnabled: testAdvisorLoginEnabled(),
+      testAdvisorLoginAvailable: testAdvisorLoginAvailable(),
       requestedNav: state.requestedNav,
     }),
   });

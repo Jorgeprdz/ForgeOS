@@ -26,6 +26,9 @@ assert.match(script, /Cancelar/);
 assert.match(script, /role="dialog"/);
 assert.match(script, /aria-modal="true"/);
 assert.match(script, /allowsTestAdvisorLogin/);
+assert.match(script, /ForgeTestAdvisorAuth067G17B1/);
+assert.match(script, /testAdvisorLoginAvailable/);
+assert.match(script, /El acceso de prueba no está disponible en esta publicación/);
 assert.match(script, /data-forge-auth-open/);
 assert.match(script, /canonicalRedirectUrl/);
 assert.match(script, /bootstrap\.signInWithGoogle\(\{ redirectTo: canonicalRedirectUrl\(\) \}\)/);
@@ -56,5 +59,6 @@ for (const source of [script, styles, config, workflow, bootstrap]) {
 
 assert.doesNotMatch(script, /localStorage\.setItem/);
 assert.doesNotMatch(script, /advisorId\\s*=\\s*['"]/);
+assert.doesNotMatch(script, /ADVISOR_A_EMAIL|ADVISOR_A_PASSWORD|ADVISOR_B_EMAIL|ADVISOR_B_PASSWORD/);
 
 console.log('067G17B1 AUTH ENTRY STATIC: PASS');
