@@ -88,7 +88,7 @@ jobs:
 
       - name: Secret scan
         run: |
-          if rg -n "(service[_-]?role|client[_-]?secret|refresh[_-]?token|access[_-]?token)\\s*[:=]\\s*['\\\"][A-Za-z0-9._~+/=-]{12,}|ADVISOR_[AB]_PASSWORD\\s*[:=]\\s*['\\\"][^'\\\"]{8,}" .github docs/static-preview advisor-os tests scripts --glob '!**/node_modules/**'; then
+          if grep -R -n -E "(service[_-]?role|client[_-]?secret|refresh[_-]?token|access[_-]?token)[[:space:]]*[:=][[:space:]]*['\\\"][A-Za-z0-9._~+/=-]{12,}|ADVISOR_[AB]_PASSWORD[[:space:]]*[:=][[:space:]]*['\\\"][^'\\\"]{8,}" .github docs/static-preview advisor-os tests scripts --exclude-dir=node_modules; then
             echo "REMOTE_SECRET_SCAN=FAIL"
             exit 1
           fi

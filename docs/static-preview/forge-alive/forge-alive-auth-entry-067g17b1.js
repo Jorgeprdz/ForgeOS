@@ -240,6 +240,15 @@
     return configApi()?.allowsPublicClientInitialization?.() === true;
   }
 
+  async function waitForAuthBootstrap() {
+    for (let attempt = 0; attempt < 80; attempt += 1) {
+      const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+      if (bootstrap?.getSession && bootstrap?.onAuthStateChange) return bootstrap;
+      await new Promise(resolve => global.setTimeout(resolve, 50));
+    }
+    return global.ForgeProductiveProspectBootstrap067G17B || null;
+  }
+
   function emitAuthState(eventName) {
     global.dispatchEvent(new CustomEvent('forge:auth-state-changed', {
       detail: {
@@ -280,7 +289,7 @@
     if (state.listenerPromise) return state.listenerPromise;
     state.listenerPromise = (async () => {
       if (!publicConfigReady()) return null;
-      const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+      const bootstrap = await waitForAuthBootstrap();
       if (typeof bootstrap?.onAuthStateChange !== 'function') return null;
       const result = await bootstrap.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_OUT') {
@@ -307,7 +316,7 @@
         return null;
       }
       try {
-        const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+        const bootstrap = await waitForAuthBootstrap();
         if (typeof bootstrap?.getSession !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
         const result = await bootstrap.getSession();
         applySession(result?.data?.session || null, 'INITIAL_SESSION');
@@ -334,7 +343,7 @@
       button.textContent = 'Abriendo Google…';
     }
     try {
-      const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+      const bootstrap = await waitForAuthBootstrap();
       if (typeof bootstrap?.signInWithGoogle !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
       const { error } = await bootstrap.signInWithGoogle({ redirectTo: canonicalRedirectUrl() });
       if (error) throw error;
@@ -368,7 +377,7 @@
       button.textContent = 'Cerrando sesión…';
     }
     try {
-      const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+      const bootstrap = await waitForAuthBootstrap();
       if (typeof bootstrap?.signOut !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
       const { error } = await bootstrap.signOut();
       if (error) throw error;

@@ -38,6 +38,7 @@ assert.match(script, /bootstrap\.signInWithGoogle\(\{ redirectTo: canonicalRedir
 assert.match(script, /nav', currentNav\(\)/);
 assert.match(script, /CANONICAL_AUTH_CLIENT_UNAVAILABLE/);
 assert.match(script, /bootstrapSession/);
+assert.match(script, /waitForAuthBootstrap/);
 assert.match(script, /getSession/);
 assert.match(script, /onAuthStateChange/);
 assert.match(script, /listenerPromise/);
