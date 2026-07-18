@@ -11,6 +11,7 @@ assert.match(deployer,/20260717000100_067g17a1/);
 assert.match(deployer,/20260718000100_067g17b/);
 assert.match(deployer,/20260619000100_supabase_rls_beta_foundation/);
 assert.match(deployer,/20260619000200_supabase_rls_live_hardening/);
+assert.match(deployer,/20260718000200_067g17b_remove_legacy_prospect_delete/);
 assert.match(deployer,/prospects_rls/);
 assert.match(deployer,/audit_rls/);
 assert.match(deployer,/PARTIAL_067G17A1_FOUNDATION_REQUIRES_RECONCILIATION/);

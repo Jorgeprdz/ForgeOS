@@ -8,6 +8,7 @@ const files=[
  'supabase/migrations/20260619000100_supabase_rls_beta_foundation.sql',
  'supabase/migrations/20260619000200_supabase_rls_live_hardening.sql',
  'supabase/migrations/20260717000100_067g17a1_prospect_opportunity_security_foundation.sql',
+ 'supabase/migrations/20260718000200_067g17b_remove_legacy_prospect_delete.sql',
  'supabase/migrations/20260718000100_067g17b_productive_prospect_crud.sql'
 ];
 const evidence='artifacts/067g17b-migration/ledger.jsonl';
@@ -41,14 +42,14 @@ select
   not exists(select 1 from pg_policies where schemaname='public' and tablename in ('prospects','opportunities','prospect_contact_methods','prospect_provenance','opportunity_status_history') and cmd='DELETE') as no_frontend_delete_policy
 `);
 const foundation=foundationRows[0]||{};
-const foundationChecks=Object.values(foundation);
-const foundationComplete=foundationChecks.length===10&&foundationChecks.every(value=>value===true);
+const structuralFoundation=Object.entries(foundation).filter(([key])=>key!=='no_frontend_delete_policy');
+const foundationComplete=structuralFoundation.length===9&&structuralFoundation.every(([,value])=>value===true);
 const foundationCollision=foundation.opportunities_exists===true;
 if(foundationCollision&&!foundationComplete){
- record('067g17a1_foundation_inventory','FAIL',{checks:Object.keys(foundation).filter(key=>foundation[key]!==true)});
+ record('067g17a1_foundation_inventory','FAIL',{checks:structuralFoundation.filter(([,value])=>value!==true).map(([key])=>key)});
  throw new Error('PARTIAL_067G17A1_FOUNDATION_REQUIRES_RECONCILIATION');
 }
-record('067g17a1_foundation_inventory','PASS',{state:foundationComplete?'COMPLETE':'ABSENT'});
+record('067g17a1_foundation_inventory','PASS',{state:foundationComplete?'COMPLETE':foundationCollision?'PARTIAL':'ABSENT',legacyDeletePolicy:foundation.no_frontend_delete_policy!==true});
 
 for(const file of files){
  if(file.includes('20260717000100_067g17a1')&&foundationComplete){record('migration_already_satisfied','PASS',{file});continue;}
@@ -66,7 +67,9 @@ select
   exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_advisor_phone_active_uidx') as phone_unique,
   exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_advisor_whatsapp_active_uidx') as whatsapp_unique,
   exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_advisor_email_active_uidx') as email_unique,
-  not exists(select 1 from pg_policies where schemaname='public' and (qual='true' or with_check='true')) as no_universal_policy
+  not exists(select 1 from pg_policies where schemaname='public' and (qual='true' or with_check='true')) as no_universal_policy,
+  not exists(select 1 from pg_policies where schemaname='public' and tablename='prospects' and cmd='DELETE') as no_prospect_delete_policy,
+  not has_table_privilege('authenticated','public.prospects','DELETE') as authenticated_delete_revoked
 `);
 const row=rows[0];
 assert.ok(row,'POSTDEPLOYMENT_INVENTORY_EMPTY');

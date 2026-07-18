@@ -9,6 +9,7 @@ on:
       - "supabase/migrations/20260619000200_supabase_rls_live_hardening.sql"
       - "supabase/migrations/20260717000100_067g17a1_prospect_opportunity_security_foundation.sql"
       - "supabase/migrations/20260718000100_067g17b_productive_prospect_crud.sql"
+      - "supabase/migrations/20260718000200_067g17b_remove_legacy_prospect_delete.sql"
       - "scripts/forge-067g17b-deploy-migrations.mjs"
       - ".github/workflows/067g17b-migration-deployment.yml"
   workflow_dispatch:
@@ -37,7 +38,8 @@ jobs:
             supabase/migrations/20260619000100_supabase_rls_beta_foundation.sql \
             supabase/migrations/20260619000200_supabase_rls_live_hardening.sql \
             supabase/migrations/20260717000100_067g17a1_prospect_opportunity_security_foundation.sql \
-            supabase/migrations/20260718000100_067g17b_productive_prospect_crud.sql
+            supabase/migrations/20260718000100_067g17b_productive_prospect_crud.sql \
+            supabase/migrations/20260718000200_067g17b_remove_legacy_prospect_delete.sql
           node --test tests/forge-067g17a1-migration-security-test.mjs
           node --test tests/forge-067g17b-prospect-migration-security-test.mjs
       - name: Apply exactly the approved prospect migrations
