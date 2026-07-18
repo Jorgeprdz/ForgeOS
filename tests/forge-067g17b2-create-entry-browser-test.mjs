@@ -72,8 +72,8 @@ async function clickVisible(page, selector, index = 0) {
 
 async function submitForm(page, suffix) {
   const result = await page.evaluate(suffix => {
-    const dialog = document.querySelector('[data-prospect-form-dialog][open]');
-    const form = dialog?.querySelector('[data-prospect-form]');
+    const modal = document.querySelector('[data-prospect-form-modal]');
+    const form = modal?.querySelector('[data-prospect-form]');
     if (!form) return { ok: false, reason: 'FORM_MISSING' };
     const values = {
       fullName: `067G17B2 Browser ${suffix}`,
@@ -111,15 +111,18 @@ try {
   record('BOTH_ADD_BUTTONS_VISIBLE', 'PASS');
 
   await clickVisible(page, '[data-add-prospect]', 0);
-  await page.waitForSelector('[data-prospect-form-dialog][open] [name="fullName"]');
-  assert.equal(await page.$$eval('[data-prospect-form-dialog][open]', nodes => nodes.length), 1);
+  await page.waitForSelector('[data-prospect-form-modal] [name="fullName"]');
+  assert.equal(await page.$$eval('[data-prospect-form-modal]', nodes => nodes.length), 1);
+  assert.equal(await page.evaluate(() => document.querySelector('[data-harness-root] [data-prospect-form-modal]') === null), true);
+  assert.equal(await page.evaluate(() => document.documentElement.dataset.forgeProspectModalOpen), 'true');
   record('TOP_ADD_PROSPECT_CLICK', 'PASS');
 
   await page.keyboard.press('Escape');
   await page.evaluate(() => document.querySelector('[data-close-prospect-form]')?.click());
-  await page.waitForFunction(() => !document.querySelector('[data-prospect-form-dialog]'));
+  await page.waitForFunction(() => !document.querySelector('[data-prospect-form-modal]'));
+  assert.equal(await page.evaluate(() => document.documentElement.dataset.forgeProspectModalOpen || ''), '');
   await clickVisible(page, '[data-add-prospect]', 1);
-  await page.waitForSelector('[data-prospect-form-dialog][open] [name="fullName"]');
+  await page.waitForSelector('[data-prospect-form-modal] [name="fullName"]');
   record('EMPTY_ADD_PROSPECT_CLICK', 'PASS');
 
   await page.evaluate(() => {
@@ -127,14 +130,15 @@ try {
     document.querySelectorAll('[data-add-prospect]')[0]?.click();
     document.querySelectorAll('[data-add-prospect]')[0]?.click();
   });
-  await page.waitForSelector('[data-prospect-form-dialog][open]');
-  assert.equal(await page.$$eval('[data-prospect-form-dialog][open]', nodes => nodes.length), 1);
+  await page.waitForSelector('[data-prospect-form-modal]');
+  assert.equal(await page.$$eval('[data-prospect-form-modal]', nodes => nodes.length), 1);
   record('DOUBLE_CLICK_DOES_NOT_OPEN_TWO_DIALOGS', 'PASS');
 
   await page.evaluate(() => document.querySelector('[data-close-prospect-form]')?.click());
   await page.focus('[data-add-prospect]');
   await page.keyboard.press('Enter');
-  await page.waitForSelector('[data-prospect-form-dialog][open] [name="fullName"]');
+  await page.waitForSelector('[data-prospect-form-modal] [name="fullName"]');
+  assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('name')), 'fullName');
   record('TOP_ADD_PROSPECT_KEYBOARD', 'PASS');
 
   await submitForm(page, 'A');
@@ -147,7 +151,7 @@ try {
   await page.evaluate(() => window.__FORGE_067G17B2_PIPELINE.load());
   await page.waitForSelector('[data-add-prospect]');
   await clickVisible(page, '[data-add-prospect]', 0);
-  await page.waitForSelector('[data-prospect-form-dialog][open]');
+  await page.waitForSelector('[data-prospect-form-modal]');
   record('RERENDER_PRESERVES_ACTION', 'PASS');
 
   await page.evaluate(() => {
@@ -159,7 +163,7 @@ try {
   });
   await page.waitForSelector('[data-add-prospect]');
   await clickVisible(page, '[data-add-prospect]', 0);
-  await page.waitForSelector('[data-prospect-form-dialog][open]');
+  await page.waitForSelector('[data-prospect-form-modal]');
   const diagnostics = await page.evaluate(() => window.__FORGE_067G17B2_PIPELINE.diagnostics());
   assert.equal(diagnostics.listenerAuthority, 'root-delegated-abort-controller');
   record('REMOUNT_PRESERVES_SINGLE_AUTHORITY', 'PASS', diagnostics);
@@ -182,6 +186,29 @@ try {
   assert.equal(geometry.overlapsCopy, false, 'EMPTY_CTA_OVERLAPS_COPY');
   assert.equal(geometry.overflow, false, 'HORIZONTAL_OVERFLOW_PRESENT');
   record('EMPTY_CTA_GEOMETRY', 'PASS', geometry);
+
+  await clickVisible(page, '[data-add-prospect]', 0);
+  await page.waitForSelector('[data-prospect-form-modal]');
+  const modalGeometry = await page.evaluate(() => {
+    const modal = document.querySelector('[data-prospect-form-modal] .forge-prospect-create-modal');
+    const scroll = document.querySelector('[data-prospect-form-scroll]');
+    const rect = modal.getBoundingClientRect();
+    return {
+      role: modal.getAttribute('role'),
+      ariaModal: modal.getAttribute('aria-modal'),
+      left: rect.left,
+      right: rect.right,
+      top: rect.top,
+      bottom: rect.bottom,
+      overflow: document.documentElement.scrollWidth > innerWidth + 1,
+      scrollInternal: scroll.scrollHeight >= scroll.clientHeight,
+    };
+  });
+  assert.equal(modalGeometry.role, 'dialog');
+  assert.equal(modalGeometry.ariaModal, 'true');
+  assert.ok(modalGeometry.left >= 0 && modalGeometry.right <= 361, 'MOBILE_MODAL_WITHIN_VIEWPORT');
+  assert.equal(modalGeometry.overflow, false, 'MOBILE_MODAL_HORIZONTAL_OVERFLOW');
+  record('CREATE_MODAL_GEOMETRY', 'PASS', modalGeometry);
 
   writeFileSync(join(evidenceDir, '067g17b2-create-entry-browser-report.json'), JSON.stringify(report, null, 2));
   console.log('067G17B2 CREATE ENTRY BROWSER: PASS');

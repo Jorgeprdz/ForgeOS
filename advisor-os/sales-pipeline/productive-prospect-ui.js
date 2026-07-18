@@ -36,7 +36,7 @@
 
   function formTemplate(prospect = {}) {
     const value = name => esc(prospect[name] ?? "");
-    return `<dialog class="forge-prospect-dialog" data-prospect-form-dialog aria-labelledby="prospect-form-title"><form method="dialog" data-prospect-form novalidate><header><div><p class="forge-pipeline-product">PROSPECTO PRODUCTIVO</p><h2 id="prospect-form-title">${prospect.id ? "Editar prospecto" : "Agregar prospecto"}</h2></div><button type="button" data-close-prospect-form aria-label="Cerrar">×</button></header><div class="forge-prospect-form-grid">${field("fullName", "Nombre completo *", "text", `required value="${value("fullName")}"`)}${field("phone", "Teléfono", "tel", `value="${value("phone")}"`)}${field("whatsapp", "WhatsApp", "tel", `value="${value("whatsapp")}"`)}${field("email", "Correo", "email", `value="${value("email")}"`)}<label>Fuente *<select name="source" required><option value="">Selecciona una fuente</option>${SOURCES.map(source => `<option ${prospect.source === source ? "selected" : ""}>${esc(source)}</option>`).join("")}</select></label><div class="forge-prospect-referral" data-referral-fields>${field("referrerName", "Referido por", "text", `value="${value("referrerName")}"`)}${field("referrerRelationship", "Relación con el referente", "text", `value="${value("referrerRelationship")}"`)}</div>${field("dateOfBirth", "Fecha de nacimiento", "date", `value="${value("dateOfBirth")}"`)}${field("age", "Edad", "number", `min="0" max="130" value="${value("age")}"`)}${field("maritalStatus", "Estado civil", "text", `value="${value("maritalStatus")}"`)}${field("dependents", "Dependientes", "number", `min="0" value="${value("dependents")}"`)}${field("occupation", "Ocupación", "text", `value="${value("occupation")}"`)}${field("estimatedIncome", "Ingreso estimado", "number", `min="0" step="0.01" value="${value("estimatedIncome")}"`)}${field("productsOfInterest", "Productos de interés", "text", `value="${value("productsOfInterest")}"`)}<label class="forge-prospect-wide">Contexto inicial *<textarea name="initialContext" required>${value("initialContext")}</textarea></label>${field("nextActionType", "Próxima acción", "text", `value="${value("nextActionType")}"`)}${field("nextActionAt", "Fecha de próxima acción", "datetime-local", `value="${value("nextActionAt")}"`)}</div><p class="forge-prospect-form-error" data-prospect-form-error role="alert" hidden></p><footer><button type="button" data-close-prospect-form>Cancelar</button><button type="submit" class="forge-pipeline-primary" data-save-prospect>${prospect.id ? "Guardar cambios" : "Guardar prospecto"}</button></footer></form></dialog>`;
+    return `<div class="forge-prospect-modal-backdrop" data-prospect-form-modal data-prospect-id="${esc(prospect.id || "")}"><section class="forge-prospect-dialog forge-prospect-create-modal" role="dialog" aria-modal="true" aria-labelledby="prospect-form-title" tabindex="-1"><form data-prospect-form novalidate><header><div><p class="forge-pipeline-product">PROSPECTO PRODUCTIVO</p><h2 id="prospect-form-title">${prospect.id ? "Editar prospecto" : "Agregar prospecto"}</h2></div><button type="button" data-close-prospect-form aria-label="Cerrar">×</button></header><div class="forge-prospect-form-scroll" data-prospect-form-scroll><div class="forge-prospect-form-grid">${field("fullName", "Nombre completo *", "text", `required value="${value("fullName")}"`)}${field("phone", "Teléfono", "tel", `value="${value("phone")}"`)}${field("whatsapp", "WhatsApp", "tel", `value="${value("whatsapp")}"`)}${field("email", "Correo", "email", `value="${value("email")}"`)}<label>Fuente *<select name="source" required><option value="">Selecciona una fuente</option>${SOURCES.map(source => `<option ${prospect.source === source ? "selected" : ""}>${esc(source)}</option>`).join("")}</select></label><div class="forge-prospect-referral" data-referral-fields>${field("referrerName", "Referido por", "text", `value="${value("referrerName")}"`)}${field("referrerRelationship", "Relación con el referente", "text", `value="${value("referrerRelationship")}"`)}</div>${field("dateOfBirth", "Fecha de nacimiento", "date", `value="${value("dateOfBirth")}"`)}${field("age", "Edad", "number", `min="0" max="130" value="${value("age")}"`)}${field("maritalStatus", "Estado civil", "text", `value="${value("maritalStatus")}"`)}${field("dependents", "Dependientes", "number", `min="0" value="${value("dependents")}"`)}${field("occupation", "Ocupación", "text", `value="${value("occupation")}"`)}${field("estimatedIncome", "Ingreso estimado", "number", `min="0" step="0.01" value="${value("estimatedIncome")}"`)}${field("productsOfInterest", "Productos de interés", "text", `value="${value("productsOfInterest")}"`)}<label class="forge-prospect-wide">Contexto inicial *<textarea name="initialContext" required>${value("initialContext")}</textarea></label>${field("nextActionType", "Próxima acción", "text", `value="${value("nextActionType")}"`)}${field("nextActionAt", "Fecha de próxima acción", "datetime-local", `value="${value("nextActionAt")}"`)}</div><p class="forge-prospect-form-error" data-prospect-form-error role="alert" hidden></p></div><footer><button type="button" data-close-prospect-form>Cancelar</button><button type="submit" class="forge-pipeline-primary" data-save-prospect>${prospect.id ? "Guardar cambios" : "Guardar prospecto"}</button></footer></form></section></div>`;
   }
 
   function detailTemplate(prospect) {
@@ -104,6 +104,8 @@
     let selected = null;
     let submitting = false;
     let openCreateCount = 0;
+    let createTrigger = null;
+    let restoreBodyOverflow = "";
 
     function render(model = toModel(prospects)) {
       root.innerHTML = renderPipeline(model);
@@ -134,37 +136,93 @@
       }
     }
 
-    function openProductiveProspectCreate(prospect = {}) {
-      const existing = root.querySelector("[data-prospect-form-dialog]");
+    function focusable(modal) {
+      return [...modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')]
+        .filter(node => !node.disabled && !node.hidden && node.getClientRects().length);
+    }
+
+    function lockBackgroundScroll() {
+      restoreBodyOverflow = global.document.body.style.overflow || "";
+      global.document.documentElement.dataset.forgeProspectModalOpen = "true";
+      global.document.body.style.overflow = "hidden";
+    }
+
+    function unlockBackgroundScroll() {
+      delete global.document.documentElement.dataset.forgeProspectModalOpen;
+      global.document.body.style.overflow = restoreBodyOverflow;
+      restoreBodyOverflow = "";
+    }
+
+    function openProductiveProspectCreateModal(prospect = {}, trigger = global.document.activeElement) {
+      const existing = global.document.querySelector("[data-prospect-form-modal]");
       if (existing) {
-        if (!existing.open && typeof existing.showModal === "function") existing.showModal();
         existing.querySelector("[name=\"fullName\"]")?.focus();
         return existing;
       }
 
-      root.insertAdjacentHTML("beforeend", formTemplate(prospect));
-      const dialog = root.querySelector("[data-prospect-form-dialog]");
-      dialog.dataset.prospectId = prospect.id || "";
-      const source = dialog.querySelector("[name=\"source\"]");
+      createTrigger = global.HTMLElement && trigger instanceof global.HTMLElement ? trigger : null;
+      global.document.body.insertAdjacentHTML("beforeend", formTemplate(prospect));
+      const modal = global.document.querySelector("[data-prospect-form-modal]");
+      const source = modal.querySelector("[name=\"source\"]");
       const syncReferral = () => {
-        dialog.querySelector("[data-referral-fields]").hidden = source.value !== "Referido";
+        modal.querySelector("[data-referral-fields]").hidden = source.value !== "Referido";
       };
       source.addEventListener("change", syncReferral, { signal: controller.signal });
+      modal.addEventListener("click", event => {
+        if (event.target === modal) {
+          event.preventDefault();
+          return;
+        }
+        if (event.target.closest("[data-close-prospect-form]")) {
+          event.preventDefault();
+          closeForm();
+        }
+      }, { signal: controller.signal });
+      modal.addEventListener("input", event => {
+        event.target.closest("[data-prospect-form]")?.setAttribute("data-dirty", "true");
+      }, { signal: controller.signal });
+      modal.addEventListener("submit", event => {
+        if (!event.target.matches("[data-prospect-form]")) return;
+        event.preventDefault();
+        void submit(event.target);
+      }, { signal: controller.signal });
+      modal.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeForm();
+          return;
+        }
+        if (event.key !== "Tab") return;
+        const nodes = focusable(modal);
+        if (!nodes.length) return;
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        if (event.shiftKey && global.document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && global.document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }, { signal: controller.signal });
       syncReferral();
       openCreateCount += 1;
-      if (typeof dialog.showModal === "function") dialog.showModal();
-      else dialog.setAttribute("open", "");
-      dialog.querySelector("[name=\"fullName\"]")?.focus();
-      return dialog;
+      lockBackgroundScroll();
+      global.document.body.dataset.forgeProspectCreateModalOpen = "true";
+      modal.querySelector("[name=\"fullName\"]")?.focus();
+      return modal;
     }
 
     function closeForm() {
-      const dialog = root.querySelector("[data-prospect-form-dialog]");
-      if (!dialog) return;
-      const form = dialog.querySelector("form");
+      const modal = global.document.querySelector("[data-prospect-form-modal]");
+      if (!modal || submitting) return;
+      const form = modal.querySelector("form");
       if (form?.dataset.dirty === "true" && !global.confirm("Hay cambios sin guardar. ¿Quieres cerrar?")) return;
-      dialog.close?.();
-      dialog.remove();
+      modal.remove();
+      delete global.document.body.dataset.forgeProspectCreateModalOpen;
+      unlockBackgroundScroll();
+      createTrigger?.focus?.();
+      createTrigger = null;
     }
 
     function openDetail(prospect) {
@@ -192,11 +250,14 @@
       save.disabled = true;
       save.textContent = "Guardando…";
       try {
-        const id = form.closest("dialog").dataset.prospectId;
+        const modal = form.closest("[data-prospect-form-modal]");
+        const id = modal.dataset.prospectId;
         const prospect = id ? await service.updateProspect(id, input) : await service.createProspect(input);
         prospects = id ? prospects.map(item => item.id === id ? prospect : item) : [prospect, ...prospects];
-        form.closest("dialog").close?.();
-        form.closest("dialog").remove();
+        modal.remove();
+        delete global.document.body.dataset.forgeProspectCreateModalOpen;
+        unlockBackgroundScroll();
+        createTrigger = null;
         render();
         openDetail(prospect);
       } catch (error) {
@@ -212,7 +273,7 @@
         submitting = false;
         if (save.isConnected) {
           save.disabled = false;
-          save.textContent = form.closest("dialog")?.dataset.prospectId ? "Guardar cambios" : "Guardar prospecto";
+          save.textContent = form.closest("[data-prospect-form-modal]")?.dataset.prospectId ? "Guardar cambios" : "Guardar prospecto";
         }
       }
     }
@@ -226,33 +287,18 @@
       render();
     }
 
-    root.addEventListener("input", event => {
-      event.target.closest("[data-prospect-form]")?.setAttribute("data-dirty", "true");
-    }, { signal: controller.signal });
-
-    root.addEventListener("submit", event => {
-      if (!event.target.matches("[data-prospect-form]")) return;
-      event.preventDefault();
-      void submit(event.target);
-    }, { signal: controller.signal });
-
     root.addEventListener("click", event => {
       const add = event.target.closest("[data-add-prospect]");
       const open = event.target.closest("[data-open-prospect]");
       if (add) {
         event.preventDefault();
-        openProductiveProspectCreate();
+        openProductiveProspectCreateModal({}, add);
         return;
       }
       if (open) {
         event.preventDefault();
         const prospect = prospects.find(item => item.id === open.dataset.openProspect);
         if (prospect) openDetail(prospect);
-        return;
-      }
-      if (event.target.closest("[data-close-prospect-form]")) {
-        event.preventDefault();
-        closeForm();
         return;
       }
       if (event.target.closest("[data-close-prospect-detail]")) {
@@ -265,7 +311,7 @@
         event.preventDefault();
         root.querySelector("[data-prospect-detail-dialog]")?.close?.();
         root.querySelector("[data-prospect-detail-dialog]")?.remove();
-        openProductiveProspectCreate(selected);
+        openProductiveProspectCreateModal(selected, event.target.closest("[data-edit-prospect]"));
         return;
       }
       if (event.target.closest("[data-archive-prospect]")) {
@@ -282,8 +328,9 @@
 
     return Object.freeze({
       load,
-      openForm: openProductiveProspectCreate,
-      openProductiveProspectCreate,
+      openForm: openProductiveProspectCreateModal,
+      openProductiveProspectCreate: openProductiveProspectCreateModal,
+      openProductiveProspectCreateModal,
       openDetail,
       diagnostics: () => ({
         prospectCount: prospects.length,
@@ -291,7 +338,7 @@
         submitting,
         openCreateCount,
         listenerAuthority: "root-delegated-abort-controller",
-        createAction: "openProductiveProspectCreate",
+        createAction: "openProductiveProspectCreateModal",
       }),
     });
   }
