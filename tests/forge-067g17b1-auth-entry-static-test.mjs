@@ -8,6 +8,9 @@ const config = readFileSync('docs/static-preview/forge-alive/forge-alive-public-
 const workflow = readFileSync('.github/workflows/pages.yml', 'utf8');
 const validator = readFileSync('scripts/validate-pages-public-config.mjs', 'utf8');
 const bootstrap = readFileSync('advisor-os/sales-pipeline/productive-prospect-bootstrap.js', 'utf8');
+const pipelineUi = readFileSync('advisor-os/sales-pipeline/pipeline-ui.js', 'utf8');
+const productiveUi = readFileSync('advisor-os/sales-pipeline/productive-prospect-ui.js', 'utf8');
+const pipelineView = readFileSync('docs/static-preview/forge-alive/forge-alive-pipeline-view-067g16a.js', 'utf8');
 
 assert.match(html, /forge-alive-auth-entry-067g17b1\.css\?v=067g17b1-1/);
 assert.match(html, /forge-alive-public-config-067g17a1\.js\?v=__FORGE_BUILD_SHA__[\s\S]*forge-alive-auth-entry-067g17b1\.js\?v=067g17b1-1[\s\S]*sample-data\.js/);
@@ -55,6 +58,16 @@ assert.match(bootstrap, /provider:"google"/);
 assert.match(bootstrap, /redirectTo/);
 assert.match(bootstrap, /getSession/);
 assert.match(bootstrap, /onAuthStateChange/);
+assert.match(pipelineUi, /stateActions/);
+assert.match(pipelineUi, /forge-pipeline-state-actions/);
+assert.match(productiveUi, /Inicia sesión para consultar tus prospectos y continuar trabajando\./);
+assert.match(productiveUi, /data-forge-auth-open/);
+assert.match(productiveUi, /data-forge-auth-open-nav/);
+assert.match(productiveUi, /Volver a Inicio/);
+assert.match(productiveUi, /Cargando tu Pipeline/);
+assert.match(pipelineView, /forge:auth-state-changed/);
+assert.match(pipelineView, /productivePipeline = null/);
+assert.doesNotMatch(productiveUi, /Tu sesión expiró\. Inicia sesión nuevamente\./);
 
 assert.match(styles, /focus-visible/);
 assert.match(styles, /min-height: 42px/);

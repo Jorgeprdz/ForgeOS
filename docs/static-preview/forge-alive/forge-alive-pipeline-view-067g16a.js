@@ -35,6 +35,7 @@ let currentView = 'inicio';
 let pipelineMounted = false;
 let navListenerCount = 0;
 let productivePipeline = null;
+let authListenerBound = false;
 
 const shell = () => document.querySelector('.phone-shell');
 const desktopWorkspace = () => document.querySelector('.forge-desktop-workspace-056y');
@@ -245,6 +246,15 @@ function bind() {
   addEventListener('popstate', () => void open(requestedView(), { updateUrl:false }));
   addEventListener('pageshow', () => void open(requestedView(), { updateUrl:false }), { passive:true });
   addEventListener('load', () => void open(requestedView(), { updateUrl:false }), { once:true });
+  if (!authListenerBound) {
+    authListenerBound = true;
+    addEventListener('forge:auth-state-changed', event => {
+      if (currentView !== 'pipeline') return;
+      if (!['authenticated', 'anonymous'].includes(event.detail?.status)) return;
+      productivePipeline = null;
+      void renderPipeline({});
+    });
+  }
 }
 
 function init() {
