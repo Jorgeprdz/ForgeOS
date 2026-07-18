@@ -142,7 +142,7 @@ async function renderPipeline(context) {
   if (config?.state === 'READY' && globalThis.ForgeAlivePublicConfig067G17A1?.allowsProductiveProspectCrud?.()) {
     try {
       if (!productivePipeline) {
-        const client = globalThis.ForgeProductiveProspectBootstrap067G17B.getClient();
+        const client = await globalThis.ForgeProductiveProspectBootstrap067G17B.getClient();
         productivePipeline = globalThis.ForgeProductiveProspectUI067G17B.create({ client, root: outlet });
       }
       await productivePipeline.load();

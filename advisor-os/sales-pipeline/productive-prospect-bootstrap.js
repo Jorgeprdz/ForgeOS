@@ -2,7 +2,22 @@
 (function(global){
 const CONTRACT_ID="FORGE_PRODUCTIVE_PROSPECT_BOOTSTRAP_067G17B_V1";
 let client=null;
-function getClient(){
+let libraryPromise=null;
+function loadBrowserLibrary(){
+ if(typeof global.supabase?.createClient==="function")return Promise.resolve(global.supabase);
+ if(!global.document)return Promise.reject(Object.assign(new Error("SUPABASE_BROWSER_CLIENT_UNAVAILABLE"),{code:"CLIENT_UNAVAILABLE"}));
+ if(libraryPromise)return libraryPromise;
+ libraryPromise=new Promise((resolve,reject)=>{
+  const script=global.document.createElement("script");
+  script.src="https://unpkg.com/@supabase/supabase-js@2.108.2/dist/umd/supabase.js";
+  script.dataset.forgeSupabaseClient="2.108.2";
+  script.onload=()=>typeof global.supabase?.createClient==="function"?resolve(global.supabase):reject(Object.assign(new Error("SUPABASE_BROWSER_CLIENT_INVALID"),{code:"CLIENT_UNAVAILABLE"}));
+  script.onerror=()=>reject(Object.assign(new Error("SUPABASE_BROWSER_CLIENT_LOAD_FAILED"),{code:"NETWORK_ERROR"}));
+  global.document.head.append(script);
+ });
+ return libraryPromise;
+}
+async function getClient(){
  const config=global.ForgeAlivePublicConfig067G17A1;
  const state=config?.current?.();
  if(!config?.allowsProductiveProspectCrud?.()||state?.state!=="READY"){
@@ -11,11 +26,9 @@ function getClient(){
   throw error;
  }
  if(client)return client;
- if(typeof global.supabase?.createClient!=="function"){
-  const error=new Error("SUPABASE_BROWSER_CLIENT_UNAVAILABLE");error.code="CLIENT_UNAVAILABLE";throw error;
- }
+ const library=await loadBrowserLibrary();
  const {SUPABASE_URL,SUPABASE_KEY}=state.publicConfig;
- client=global.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ client=library.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  return client;
 }
 function diagnostics(){const state=global.ForgeAlivePublicConfig067G17A1?.current?.();return Object.freeze({contractId:CONTRACT_ID,configState:state?.state||"UNAVAILABLE",demoMode:state?.demoMode===true,clientInitialized:Boolean(client)});}

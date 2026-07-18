@@ -15,7 +15,7 @@ test("READY public config explicitly authorizes productive CRUD only",()=>{
 
 test("Pipeline consumes Supabase service and never silently falls back to demo",()=>{
  const source=read("docs/static-preview/forge-alive/forge-alive-pipeline-view-067g16a.js");
- assert.match(source,/ForgeProductiveProspectBootstrap067G17B\.getClient\(\)/);
+ assert.match(source,/await globalThis\.ForgeProductiveProspectBootstrap067G17B\.getClient\(\)/);
  assert.match(source,/ForgeProductiveProspectUI067G17B\.create/);
  assert.match(source,/await productivePipeline\.load\(\)/);
  assert.match(source,/config\?\.state === 'DEMO_EXPLICIT'/);
@@ -23,9 +23,8 @@ test("Pipeline consumes Supabase service and never silently falls back to demo",
 });
 
 test("browser client is pinned and initialized from public config authority",()=>{
- const html=read("docs/static-preview/forge-alive/index.html");
  const bootstrap=read("advisor-os/sales-pipeline/productive-prospect-bootstrap.js");
- assert.match(html,/@supabase\/supabase-js@2\.108\.2\/dist\/umd\/supabase\.js/);
+ assert.match(bootstrap,/@supabase\/supabase-js@2\.108\.2\/dist\/umd\/supabase\.js/);
  assert.match(bootstrap,/allowsProductiveProspectCrud/);
  assert.match(bootstrap,/state\.publicConfig/);
  assert.match(bootstrap,/persistSession:true/);
