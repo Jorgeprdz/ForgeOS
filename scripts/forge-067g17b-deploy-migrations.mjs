@@ -64,9 +64,9 @@ select
   to_regclass('public.prospect_audit_events') is not null as audit_exists,
   (select relrowsecurity from pg_class where oid='public.prospects'::regclass) as prospects_rls,
   (select relrowsecurity from pg_class where oid='public.prospect_audit_events'::regclass) as audit_rls,
-  exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_advisor_phone_active_uidx') as phone_unique,
-  exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_advisor_whatsapp_active_uidx') as whatsapp_unique,
-  exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_advisor_email_active_uidx') as email_unique,
+  exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_own_active_phone_uq') as phone_unique,
+  exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_own_active_whatsapp_uq') as whatsapp_unique,
+  exists(select 1 from pg_indexes where schemaname='public' and indexname='prospects_own_active_email_uq') as email_unique,
   not exists(select 1 from pg_policies where schemaname='public' and (qual='true' or with_check='true')) as no_universal_policy,
   not exists(select 1 from pg_policies where schemaname='public' and tablename='prospects' and cmd='DELETE') as no_prospect_delete_policy,
   not has_table_privilege('authenticated','public.prospects','DELETE') as authenticated_delete_revoked
