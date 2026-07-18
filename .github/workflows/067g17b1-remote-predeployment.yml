@@ -103,6 +103,7 @@ jobs:
           export FORGE_CHROMIUM_PATH="$(node --input-type=module -e "import puppeteer from 'puppeteer'; console.log(puppeteer.executablePath())")"
           mkdir -p "$FORGE_PREDEPLOYMENT_EVIDENCE_DIR/browser"
           FORGE_067G17B1_EVIDENCE_DIR="$FORGE_PREDEPLOYMENT_EVIDENCE_DIR/browser/auth" node tests/forge-067g17b1-auth-entry-browser-test.mjs
+          FORGE_067G17B2_EVIDENCE_DIR="$FORGE_PREDEPLOYMENT_EVIDENCE_DIR/browser/create-entry" node tests/forge-067g17b2-create-entry-browser-test.mjs
           FORGE_067G16C_EVIDENCE_DIR="$FORGE_PREDEPLOYMENT_EVIDENCE_DIR/browser/responsive" node tests/forge-067g16c-responsive-browser-test.mjs
           FORGE_067G16E_EVIDENCE_DIR="$FORGE_PREDEPLOYMENT_EVIDENCE_DIR/browser/geometry" node tests/forge-067g16e-geometry-browser-test.mjs
           FORGE_067G16F_EVIDENCE_DIR="$FORGE_PREDEPLOYMENT_EVIDENCE_DIR/browser/cotizaciones" node tests/forge-067g16f-cotizaciones-route-browser-test.mjs

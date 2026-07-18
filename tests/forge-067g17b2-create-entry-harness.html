@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>067G17B2 Create Entry Harness</title>
+  <link rel="stylesheet" href="/advisor-os/sales-pipeline/pipeline-ui.css">
+</head>
+<body>
+  <main data-harness-root></main>
+  <script src="/advisor-os/sales-pipeline/pipeline-ui.js"></script>
+  <script>
+    window.__FORGE_067G17B2_CLIENT = Object.freeze({ auth: {}, from() {} });
+    window.__FORGE_067G17B2_ROWS = [];
+    window.__FORGE_067G17B2_SERVICE_LOG = { createCalls: 0, updateCalls: 0, archiveCalls: 0 };
+    window.ForgeProductiveProspectService067G17B = {
+      create() {
+        return {
+          async listProspects() {
+            return window.__FORGE_067G17B2_ROWS.slice();
+          },
+          async createProspect(input) {
+            window.__FORGE_067G17B2_SERVICE_LOG.createCalls += 1;
+            const row = {
+              id: `067g17b2-${window.__FORGE_067G17B2_SERVICE_LOG.createCalls}`,
+              ...input,
+              status: 'referred_new',
+              createdAt: '2026-07-18T00:00:00.000Z',
+              updatedAt: '2026-07-18T00:00:00.000Z',
+            };
+            window.__FORGE_067G17B2_ROWS.unshift(row);
+            return row;
+          },
+          async updateProspect(id, input) {
+            window.__FORGE_067G17B2_SERVICE_LOG.updateCalls += 1;
+            const row = window.__FORGE_067G17B2_ROWS.find(item => item.id === id);
+            Object.assign(row, input, { updatedAt: '2026-07-18T00:00:01.000Z' });
+            return row;
+          },
+          async archiveProspect(id) {
+            window.__FORGE_067G17B2_SERVICE_LOG.archiveCalls += 1;
+            window.__FORGE_067G17B2_ROWS = window.__FORGE_067G17B2_ROWS.filter(item => item.id !== id);
+          },
+        };
+      },
+    };
+  </script>
+  <script src="/advisor-os/sales-pipeline/productive-prospect-ui.js"></script>
+  <script>
+    window.__FORGE_067G17B2_PIPELINE = window.ForgeProductiveProspectUI067G17B.create({
+      client: window.__FORGE_067G17B2_CLIENT,
+      root: document.querySelector('[data-harness-root]'),
+    });
+    window.__FORGE_067G17B2_PIPELINE.load();
+  </script>
+</body>
+</html>
