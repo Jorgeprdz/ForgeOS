@@ -16,7 +16,7 @@ async function login(email,password){
  await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
  await page.waitForFunction(()=>globalThis.ForgeProductiveProspectBootstrap067G17B?.getClient,{timeout:30000});
  const result=await page.evaluate(async credentials=>{const client=await globalThis.ForgeProductiveProspectBootstrap067G17B.getClient();await client.auth.signOut();const {error}=await client.auth.signInWithPassword(credentials);return error?{error:error.message}:{ok:true};},{email,password});
- assert.equal(result.ok,true,'PRODUCTION_AUTH_FAILED');await page.reload({waitUntil:'domcontentloaded',timeout:60000});await page.waitForSelector('[data-add-prospect]',{timeout:30000});
+ assert.equal(result.ok,true,'PRODUCTION_AUTH_FAILED');await page.reload({waitUntil:'domcontentloaded',timeout:60000});await page.waitForSelector('[data-add-prospect]',{visible:true,timeout:30000});
 }
 try{
  await page.setViewport({width:390,height:844,deviceScaleFactor:1});
