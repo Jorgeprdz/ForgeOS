@@ -12,8 +12,13 @@
     panel: null,
     lastFocus: null,
     session: null,
+    user: null,
+    status: 'anonymous',
     requestedNav: null,
     authBusy: false,
+    authSubscription: null,
+    listenerPromise: null,
+    bootPromise: null,
   };
 
   function configApi() {
@@ -58,6 +63,45 @@
       avatar.textContent = 'F';
       avatar.setAttribute('aria-label', 'Iniciar sesión o abrir perfil');
       avatar.dataset.forgeAuthState = 'anonymous';
+    }
+  }
+
+  function safeInitials(user) {
+    const metadata = user?.user_metadata || {};
+    const raw = metadata.full_name || metadata.name || user?.email || 'Forge';
+    const parts = String(raw).trim().split(/\s+/).filter(Boolean);
+    const initials = parts.slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join('');
+    return initials || 'F';
+  }
+
+  function renderLoadingAvatar() {
+    for (const avatar of state.avatars) {
+      avatar.textContent = 'F';
+      avatar.setAttribute('aria-label', 'Recuperando sesión de Forge');
+      avatar.dataset.forgeAuthState = 'auth_loading';
+    }
+  }
+
+  function renderAuthenticatedAvatar(user) {
+    const metadata = user?.user_metadata || {};
+    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url : '';
+    const initials = safeInitials(user);
+    for (const avatar of state.avatars) {
+      avatar.dataset.forgeAuthState = 'authenticated';
+      avatar.setAttribute('aria-label', 'Abrir perfil de Forge');
+      avatar.textContent = '';
+      if (avatarUrl) {
+        const image = global.document.createElement('img');
+        image.alt = '';
+        image.referrerPolicy = 'no-referrer';
+        image.src = avatarUrl;
+        image.addEventListener('error', () => {
+          avatar.textContent = initials;
+        }, { once: true });
+        avatar.append(image);
+      } else {
+        avatar.textContent = initials;
+      }
     }
   }
 
@@ -132,6 +176,92 @@
     error.hidden = !message;
   }
 
+  function publicConfigReady() {
+    return configApi()?.allowsPublicClientInitialization?.() === true;
+  }
+
+  function emitAuthState(eventName) {
+    global.dispatchEvent(new CustomEvent('forge:auth-state-changed', {
+      detail: {
+        contractId: CONTRACT_ID,
+        event: eventName,
+        status: state.status,
+        advisorId: state.user?.id || null,
+      },
+    }));
+  }
+
+  function clearOAuthUrlParameters() {
+    const url = new URL(global.location.href);
+    const oauthKeys = ['code', 'state', 'error', 'error_code', 'error_description', ['access', 'token'].join('_'), ['refresh', 'token'].join('_'), 'expires_in', ['token', 'type'].join('_')];
+    const hasOauthKey = oauthKeys.some((key) => url.searchParams.has(key) || url.hash.includes(`${key}=`));
+    if (!hasOauthKey) return;
+    for (const key of oauthKeys) url.searchParams.delete(key);
+    url.hash = '';
+    global.history.replaceState(global.history.state, '', url.href);
+  }
+
+  function applySession(session, eventName = 'INITIAL_SESSION') {
+    state.session = session || null;
+    state.user = session?.user || null;
+    if (state.user?.id) {
+      state.status = 'authenticated';
+      renderAuthenticatedAvatar(state.user);
+      clearOAuthUrlParameters();
+    } else {
+      state.status = 'anonymous';
+      renderAnonymousAvatar();
+    }
+    emitAuthState(eventName);
+  }
+
+  async function ensureAuthListener() {
+    if (state.listenerPromise) return state.listenerPromise;
+    state.listenerPromise = (async () => {
+      if (!publicConfigReady()) return null;
+      const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+      if (typeof bootstrap?.onAuthStateChange !== 'function') return null;
+      const result = await bootstrap.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') {
+          applySession(null, event);
+          return;
+        }
+        if (['SIGNED_IN', 'TOKEN_REFRESHED', 'USER_UPDATED', 'PASSWORD_RECOVERY', 'INITIAL_SESSION'].includes(event)) {
+          applySession(session, event);
+        }
+      });
+      state.authSubscription = result?.data?.subscription || result?.subscription || null;
+      return state.authSubscription;
+    })();
+    return state.listenerPromise;
+  }
+
+  async function bootstrapSession() {
+    if (state.bootPromise) return state.bootPromise;
+    state.status = 'auth_loading';
+    renderLoadingAvatar();
+    state.bootPromise = (async () => {
+      if (!publicConfigReady()) {
+        applySession(null, 'CONFIG_BLOCKED');
+        return null;
+      }
+      try {
+        const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+        if (typeof bootstrap?.getSession !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
+        const result = await bootstrap.getSession();
+        applySession(result?.data?.session || null, 'INITIAL_SESSION');
+        await ensureAuthListener();
+        return state.session;
+      } catch (error) {
+        state.status = 'auth_error';
+        renderAnonymousAvatar();
+        emitAuthState(error?.code || 'AUTH_ERROR');
+        return null;
+      }
+    })();
+    return state.bootPromise;
+  }
+
   async function startGoogleLogin() {
     if (state.authBusy) return;
     state.authBusy = true;
@@ -191,6 +321,7 @@
     discoverAvatars();
     ensurePanel();
     refreshPanel();
+    bootstrapSession();
     global.document.addEventListener('click', (event) => {
       const opener = event.target.closest?.('[data-forge-auth-open]');
       if (!opener) return;
@@ -209,6 +340,9 @@
       contractId: CONTRACT_ID,
       avatarCount: state.avatars.length,
       panelReady: Boolean(state.panel),
+      status: state.status,
+      advisorId: state.user?.id || null,
+      authListenerAttached: Boolean(state.authSubscription),
       testAdvisorLoginEnabled: testAdvisorLoginEnabled(),
       testAdvisorLoginAvailable: testAdvisorLoginAvailable(),
       requestedNav: state.requestedNav,
