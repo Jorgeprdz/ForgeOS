@@ -27,7 +27,31 @@ async function query(sql){
  if(body?.error)throw new Error('DATABASE_QUERY_REJECTED');
  return Array.isArray(body?.result)?body.result:(Array.isArray(body)?body:[]);
 }
+const foundationRows=await query(`
+select
+  to_regclass('public.opportunities') is not null as opportunities_exists,
+  to_regclass('public.prospect_contact_methods') is not null as contacts_exists,
+  to_regclass('public.prospect_provenance') is not null as provenance_exists,
+  to_regclass('public.opportunity_status_history') is not null as history_exists,
+  to_regclass('public.active_prospects') is not null as active_prospects_exists,
+  to_regclass('public.active_opportunities') is not null as active_opportunities_exists,
+  (select relrowsecurity from pg_class where oid='public.prospects'::regclass) as prospects_rls,
+  coalesce((select relrowsecurity from pg_class where oid=to_regclass('public.opportunities')),false) as opportunities_rls,
+  exists(select 1 from information_schema.columns where table_schema='public' and table_name='prospects' and column_name='advisor_id' and is_nullable='NO') as prospect_owner_required,
+  not exists(select 1 from pg_policies where schemaname='public' and tablename in ('prospects','opportunities','prospect_contact_methods','prospect_provenance','opportunity_status_history') and cmd='DELETE') as no_frontend_delete_policy
+`);
+const foundation=foundationRows[0]||{};
+const foundationChecks=Object.values(foundation);
+const foundationComplete=foundationChecks.length===10&&foundationChecks.every(value=>value===true);
+const foundationCollision=foundation.opportunities_exists===true;
+if(foundationCollision&&!foundationComplete){
+ record('067g17a1_foundation_inventory','FAIL',{checks:Object.keys(foundation).filter(key=>foundation[key]!==true)});
+ throw new Error('PARTIAL_067G17A1_FOUNDATION_REQUIRES_RECONCILIATION');
+}
+record('067g17a1_foundation_inventory','PASS',{state:foundationComplete?'COMPLETE':'ABSENT'});
+
 for(const file of files){
+ if(file.includes('20260717000100_067g17a1')&&foundationComplete){record('migration_already_satisfied','PASS',{file});continue;}
  const sql=readFileSync(file,'utf8');
  assert.doesNotMatch(sql,/\b(?:drop\s+table|truncate)\b/i,`${file}_DESTRUCTIVE_SQL`);
  await query(sql);

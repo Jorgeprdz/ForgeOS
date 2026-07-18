@@ -13,6 +13,8 @@ assert.match(deployer,/20260619000100_supabase_rls_beta_foundation/);
 assert.match(deployer,/20260619000200_supabase_rls_live_hardening/);
 assert.match(deployer,/prospects_rls/);
 assert.match(deployer,/audit_rls/);
+assert.match(deployer,/PARTIAL_067G17A1_FOUNDATION_REQUIRES_RECONCILIATION/);
+assert.match(deployer,/migration_already_satisfied/);
 assert.doesNotMatch(deployer,/console\.log\([^\n]*(ACCESS_TOKEN|Authorization)/);
 assert.match(remote,/duplicate_constraint/);
 assert.match(remote,/prospect_audit/);

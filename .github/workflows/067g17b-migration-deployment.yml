@@ -9,6 +9,7 @@ on:
       - "supabase/migrations/20260619000200_supabase_rls_live_hardening.sql"
       - "supabase/migrations/20260717000100_067g17a1_prospect_opportunity_security_foundation.sql"
       - "supabase/migrations/20260718000100_067g17b_productive_prospect_crud.sql"
+      - "scripts/forge-067g17b-deploy-migrations.mjs"
       - ".github/workflows/067g17b-migration-deployment.yml"
   workflow_dispatch:
 
