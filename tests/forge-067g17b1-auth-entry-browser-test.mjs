@@ -92,7 +92,24 @@ async function waitForAuth(page, status) {
 }
 
 async function visibleText(page, selector) {
-  return page.$eval(selector, node => node.textContent.replace(/\s+/g, ' ').trim());
+  return page.$$eval(selector, nodes => {
+    const visible = node => Boolean(node.getClientRects().length) && getComputedStyle(node).visibility !== 'hidden';
+    const node = nodes.find(visible);
+    if (!node) throw new Error(`VISIBLE_TEXT_TARGET_MISSING:${selector}`);
+    return node.textContent.replace(/\s+/g, ' ').trim();
+  });
+}
+
+async function clickVisible(page, selector) {
+  const handles = await page.$$(selector);
+  for (const handle of handles) {
+    const box = await handle.boundingBox();
+    if (box && box.width > 0 && box.height > 0) {
+      await handle.click();
+      return;
+    }
+  }
+  throw new Error(`VISIBLE_CLICK_TARGET_MISSING:${selector}`);
 }
 
 async function assertNoHorizontalOverflow(page, name) {
@@ -127,7 +144,7 @@ try {
   assert.equal(avatarText, 'F');
   record('AVATAR_F_VISIBLE_WHEN_ANONYMOUS', 'PASS');
 
-  await page.click('[data-forge-auth-avatar="067g17b1"]');
+  await clickVisible(page, '[data-forge-auth-avatar="067g17b1"]');
   await page.waitForSelector('[data-forge-auth-panel]:not([hidden])');
   assert.match(await visibleText(page, '[data-forge-auth-panel]'), /Continuar con Google/);
   assert.equal(await page.$('[data-forge-test-advisors]:not([hidden])'), null);
@@ -171,7 +188,7 @@ try {
   assert.equal(advisorId, 'advisor-a-auth-uid');
   record('SIGNED_IN_PIPELINE_RECOVERY_AND_ADD_PROSPECT', 'PASS');
 
-  await page.click('[data-forge-auth-avatar="067g17b1"]');
+  await clickVisible(page, '[data-forge-auth-avatar="067g17b1"]');
   await page.waitForSelector('[data-forge-auth-profile-view]:not([hidden])');
   assert.match(await visibleText(page, '[data-forge-auth-panel]'), /Advisor A Remote/);
   assert.match(await visibleText(page, '[data-forge-auth-panel]'), /advisor\.a@example\.test/);
@@ -199,7 +216,7 @@ try {
     await page.setViewport({ width, height, deviceScaleFactor: 1, isMobile: touch, hasTouch: touch });
     await page.goto(`${baseUrl}?nav=inicio&v=067g17b1-${name}`, { waitUntil: 'networkidle0', timeout: 30000 });
     await waitForAuth(page, 'anonymous');
-    await page.click('[data-forge-auth-avatar="067g17b1"]');
+    await clickVisible(page, '[data-forge-auth-avatar="067g17b1"]');
     await page.waitForSelector('[data-forge-auth-panel]:not([hidden])');
     await assertNoHorizontalOverflow(page, `VIEWPORT_${name}`);
   }
@@ -209,7 +226,7 @@ try {
     await page.goto(`${baseUrl}?nav=inicio&v=067g17b1-zoom-${zoom}`, { waitUntil: 'networkidle0', timeout: 30000 });
     await page.evaluate(value => { document.documentElement.style.zoom = String(value / 100); }, zoom);
     await waitForAuth(page, 'anonymous');
-    await page.click('[data-forge-auth-avatar="067g17b1"]');
+    await clickVisible(page, '[data-forge-auth-avatar="067g17b1"]');
     await page.waitForSelector('[data-forge-auth-panel]:not([hidden])');
     await assertNoHorizontalOverflow(page, `ZOOM_${zoom}`);
   }
