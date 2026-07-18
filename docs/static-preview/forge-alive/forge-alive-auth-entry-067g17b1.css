@@ -113,6 +113,45 @@
   text-transform: uppercase;
 }
 
+.forge-auth-profile-067g17b1[hidden],
+.forge-auth-login-067g17b1[hidden] {
+  display: none !important;
+}
+
+.forge-auth-profile-card-067g17b1 {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 64px minmax(0, 1fr);
+  margin-top: 18px;
+}
+
+.forge-auth-profile-mark-067g17b1 {
+  align-items: center;
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 30% 20%, rgba(245, 199, 92, 0.34), rgba(61, 216, 255, 0.18));
+  border: 1px solid rgba(245, 199, 92, 0.34);
+  border-radius: 50%;
+  display: flex;
+  font-size: 1.25rem;
+  font-weight: 900;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.forge-auth-profile-mark-067g17b1 img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.forge-auth-profile-card-067g17b1 strong,
+.forge-auth-profile-card-067g17b1 span {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 640px) {
   .forge-auth-backdrop-067g17b1 {
     align-items: flex-end;

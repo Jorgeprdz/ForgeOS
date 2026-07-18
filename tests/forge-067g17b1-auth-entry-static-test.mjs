@@ -50,6 +50,16 @@ assert.match(script, /Recuperando sesión de Forge/);
 assert.match(script, /renderAuthenticatedAvatar/);
 assert.match(script, /avatar_url/);
 assert.match(script, /safeInitials/);
+assert.match(script, /displayName/);
+assert.match(script, /displayEmail/);
+assert.match(script, /sessionType/);
+assert.match(script, /Perfil de Forge/);
+assert.match(script, /Cuenta de Google/);
+assert.match(script, /Identidad verificada por Supabase Auth/);
+assert.match(script, /Cerrar sesión/);
+assert.match(script, /data-forge-auth-signout/);
+assert.match(script, /bootstrap\.signOut/);
+assert.match(script, /applySession\(null, 'SIGNED_OUT'\)/);
 assert.match(script, /forge:auth-state-changed/);
 assert.match(script, /history\.replaceState/);
 

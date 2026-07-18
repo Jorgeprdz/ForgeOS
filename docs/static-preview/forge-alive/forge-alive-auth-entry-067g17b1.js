@@ -74,6 +74,28 @@
     return initials || 'F';
   }
 
+  function displayName(user) {
+    const metadata = user?.user_metadata || {};
+    return metadata.full_name || metadata.name || user?.email || 'Usuario Forge';
+  }
+
+  function displayEmail(user) {
+    return user?.email || 'Correo no disponible';
+  }
+
+  function sessionType(user) {
+    const provider = user?.app_metadata?.provider;
+    if (provider === 'google') return 'Cuenta de Google';
+    return 'Sesión de Forge';
+  }
+
+  function profileMarkHtml(user) {
+    const metadata = user?.user_metadata || {};
+    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url : '';
+    if (avatarUrl) return `<img src="${avatarUrl.replace(/"/g, '&quot;')}" alt="">`;
+    return safeInitials(user);
+  }
+
   function renderLoadingAvatar() {
     for (const avatar of state.avatars) {
       avatar.textContent = 'F';
@@ -113,24 +135,40 @@
     backdrop.hidden = true;
     backdrop.innerHTML = `
       <section class="forge-auth-panel-067g17b1" role="dialog" aria-modal="true" aria-labelledby="forge-auth-title-067g17b1" tabindex="-1">
-        <header>
+        <header data-forge-auth-panel-header>
           <div>
-            <h2 id="forge-auth-title-067g17b1">Iniciar sesión en Forge</h2>
+            <h2 id="forge-auth-title-067g17b1" data-forge-auth-title>Iniciar sesión en Forge</h2>
             <p>Accede para consultar tu Pipeline y administrar tus prospectos.</p>
           </div>
           <button type="button" class="forge-auth-close-067g17b1" data-forge-auth-close aria-label="Cerrar panel de autenticación">×</button>
         </header>
-        <div class="forge-auth-actions-067g17b1">
-          <button type="button" class="forge-auth-primary-067g17b1" data-forge-auth-google>Continuar con Google</button>
+        <div class="forge-auth-login-067g17b1" data-forge-auth-login-view>
+          <div class="forge-auth-actions-067g17b1">
+            <button type="button" class="forge-auth-primary-067g17b1" data-forge-auth-google>Continuar con Google</button>
+          </div>
+          <section class="forge-auth-test-section-067g17b1" data-forge-test-advisors hidden>
+            <p class="forge-auth-test-label-067g17b1">Acceso de prueba</p>
+            <div class="forge-auth-test-actions-067g17b1">
+              <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="A">Asesor A</button>
+              <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="B">Asesor B</button>
+            </div>
+          </section>
+        </div>
+        <div class="forge-auth-profile-067g17b1" data-forge-auth-profile-view hidden>
+          <div class="forge-auth-profile-card-067g17b1">
+            <div class="forge-auth-profile-mark-067g17b1" data-forge-auth-profile-mark>F</div>
+            <div>
+              <strong data-forge-auth-profile-name>Usuario Forge</strong>
+              <span data-forge-auth-profile-email>Correo no disponible</span>
+              <span data-forge-auth-profile-type>Sesión de Forge</span>
+              <span data-forge-auth-profile-identity>Identidad verificada por Supabase Auth</span>
+            </div>
+          </div>
+          <div class="forge-auth-actions-067g17b1">
+            <button type="button" class="forge-auth-secondary-067g17b1" data-forge-auth-signout>Cerrar sesión</button>
+          </div>
         </div>
         <p class="forge-auth-error-067g17b1" data-forge-auth-error role="alert" hidden></p>
-        <section class="forge-auth-test-section-067g17b1" data-forge-test-advisors hidden>
-          <p class="forge-auth-test-label-067g17b1">Acceso de prueba</p>
-          <div class="forge-auth-test-actions-067g17b1">
-            <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="A">Asesor A</button>
-            <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="B">Asesor B</button>
-          </div>
-        </section>
         <footer>
           <button type="button" class="forge-auth-secondary-067g17b1" data-forge-auth-close>Cancelar</button>
         </footer>
@@ -139,6 +177,7 @@
     backdrop.addEventListener('click', (event) => {
       if (event.target === backdrop || event.target.closest('[data-forge-auth-close]')) closeAuthPanel();
       if (event.target.closest('[data-forge-auth-google]')) startGoogleLogin();
+      if (event.target.closest('[data-forge-auth-signout]')) signOut();
       const testAdvisorButton = event.target.closest('[data-forge-test-advisor]');
       if (testAdvisorButton) startTestAdvisorLogin(testAdvisorButton.getAttribute('data-forge-test-advisor'));
     });
@@ -151,8 +190,29 @@
 
   function refreshPanel() {
     const panel = ensurePanel();
+    const loginView = panel.querySelector('[data-forge-auth-login-view]');
+    const profileView = panel.querySelector('[data-forge-auth-profile-view]');
+    const title = panel.querySelector('[data-forge-auth-title]');
+    const headerText = panel.querySelector('[data-forge-auth-panel-header] p');
     const testSection = panel.querySelector('[data-forge-test-advisors]');
+    const authenticated = state.status === 'authenticated' && Boolean(state.user?.id);
+    if (loginView) loginView.hidden = authenticated;
+    if (profileView) profileView.hidden = !authenticated;
+    if (title) title.textContent = authenticated ? 'Perfil de Forge' : 'Iniciar sesión en Forge';
+    if (headerText) headerText.textContent = authenticated ? 'Administra tu sesión y la identidad activa.' : 'Accede para consultar tu Pipeline y administrar tus prospectos.';
     if (testSection) testSection.hidden = !testAdvisorLoginAvailable();
+    if (authenticated) {
+      const mark = panel.querySelector('[data-forge-auth-profile-mark]');
+      const name = panel.querySelector('[data-forge-auth-profile-name]');
+      const email = panel.querySelector('[data-forge-auth-profile-email]');
+      const type = panel.querySelector('[data-forge-auth-profile-type]');
+      const identity = panel.querySelector('[data-forge-auth-profile-identity]');
+      if (mark) mark.innerHTML = profileMarkHtml(state.user);
+      if (name) name.textContent = displayName(state.user);
+      if (email) email.textContent = displayEmail(state.user);
+      if (type) type.textContent = sessionType(state.user);
+      if (identity) identity.textContent = `advisorId: ${state.user.id}`;
+    }
   }
 
   function currentNav() {
@@ -212,6 +272,7 @@
       state.status = 'anonymous';
       renderAnonymousAvatar();
     }
+    if (state.panel) refreshPanel();
     emitAuthState(eventName);
   }
 
@@ -298,6 +359,31 @@
     await adapter.signInAsAdvisor({ advisorKey });
   }
 
+  async function signOut() {
+    setPanelError('');
+    const button = state.panel?.querySelector('[data-forge-auth-signout]');
+    const previousText = button?.textContent || 'Cerrar sesión';
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Cerrando sesión…';
+    }
+    try {
+      const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+      if (typeof bootstrap?.signOut !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
+      const { error } = await bootstrap.signOut();
+      if (error) throw error;
+      applySession(null, 'SIGNED_OUT');
+      refreshPanel();
+    } catch (error) {
+      setPanelError('No pudimos cerrar la sesión. Intenta nuevamente.');
+    } finally {
+      if (button?.isConnected) {
+        button.disabled = false;
+        button.textContent = previousText;
+      }
+    }
+  }
+
   function openAuthPanel(options = {}) {
     const panel = ensurePanel();
     if (options.nav) state.requestedNav = options.nav;
@@ -336,6 +422,7 @@
     closeAuthPanel,
     refreshPanel,
     canonicalRedirectUrl,
+    signOut,
     diagnostics: () => Object.freeze({
       contractId: CONTRACT_ID,
       avatarCount: state.avatars.length,
