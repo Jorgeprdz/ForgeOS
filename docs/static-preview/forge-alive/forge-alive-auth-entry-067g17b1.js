@@ -56,6 +56,18 @@
     state.avatars = Array.from(global.document.querySelectorAll(AVATAR_SELECTOR))
       .map(makeAvatarButton)
       .filter(Boolean);
+    renderCurrentAvatarState();
+  }
+
+  function renderCurrentAvatarState() {
+    if (state.status === 'authenticated' && state.user?.id) {
+      renderAuthenticatedAvatar(state.user);
+      return;
+    }
+    if (state.status === 'auth_loading') {
+      renderLoadingAvatar();
+      return;
+    }
     renderAnonymousAvatar();
   }
 
@@ -274,6 +286,7 @@
   function applySession(session, eventName = 'INITIAL_SESSION') {
     state.session = session || null;
     state.user = session?.user || null;
+    discoverAvatars();
     if (state.user?.id) {
       state.status = 'authenticated';
       renderAuthenticatedAvatar(state.user);
@@ -418,6 +431,15 @@
     ensurePanel();
     refreshPanel();
     bootstrapSession();
+    global.addEventListener('forge:auth-state-changed', () => {
+      global.setTimeout(discoverAvatars, 0);
+    });
+    global.addEventListener('forge:static-view-changed', () => {
+      global.setTimeout(discoverAvatars, 0);
+    });
+    global.addEventListener('forge:pipeline-rendered', () => {
+      global.setTimeout(discoverAvatars, 0);
+    });
     global.document.addEventListener('click', (event) => {
       const opener = event.target.closest?.('[data-forge-auth-open]');
       if (!opener) return;
