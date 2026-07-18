@@ -5,6 +5,8 @@ const ref='rmlxigxysujsuwzgoimv';
 assert.equal(process.env.SUPABASE_PROJECT_REF,ref,'PROJECT_REF_MISMATCH');
 assert.ok(process.env.SUPABASE_ACCESS_TOKEN,'SUPABASE_ACCESS_TOKEN_MISSING');
 const files=[
+ 'supabase/migrations/20260619000100_supabase_rls_beta_foundation.sql',
+ 'supabase/migrations/20260619000200_supabase_rls_live_hardening.sql',
  'supabase/migrations/20260717000100_067g17a1_prospect_opportunity_security_foundation.sql',
  'supabase/migrations/20260718000100_067g17b_productive_prospect_crud.sql'
 ];
@@ -15,8 +17,13 @@ const record=(name,status,metadata={})=>appendFileSync(evidence,`${JSON.stringif
 const endpoint=`https://api.supabase.com/v1/projects/${ref}/database/query`;
 async function query(sql){
  const response=await fetch(endpoint,{method:'POST',headers:{Authorization:`Bearer ${process.env.SUPABASE_ACCESS_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({query:sql})});
- if(!response.ok)throw new Error(`DATABASE_QUERY_HTTP_${response.status}`);
- const body=await response.json();
+ const text=await response.text();
+ let body;try{body=JSON.parse(text);}catch{body={message:'NON_JSON_RESPONSE'};}
+ if(!response.ok){
+  const detail=String(body?.message||body?.error||'QUERY_REJECTED').replace(/eyJ[A-Za-z0-9._-]+/g,'[REDACTED]').slice(0,400);
+  record('database_query','FAIL',{httpStatus:response.status,detail});
+  throw new Error(`DATABASE_QUERY_HTTP_${response.status}`);
+ }
  if(body?.error)throw new Error('DATABASE_QUERY_REJECTED');
  return Array.isArray(body?.result)?body.result:(Array.isArray(body)?body:[]);
 }

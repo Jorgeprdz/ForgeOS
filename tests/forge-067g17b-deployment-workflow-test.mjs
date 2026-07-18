@@ -9,6 +9,8 @@ assert.match(workflow,/forge-067g17b-deploy-migrations\.mjs/);
 assert.doesNotMatch(workflow,/pages|functions deploy|db reset|--force/i);
 assert.match(deployer,/20260717000100_067g17a1/);
 assert.match(deployer,/20260718000100_067g17b/);
+assert.match(deployer,/20260619000100_supabase_rls_beta_foundation/);
+assert.match(deployer,/20260619000200_supabase_rls_live_hardening/);
 assert.match(deployer,/prospects_rls/);
 assert.match(deployer,/audit_rls/);
 assert.doesNotMatch(deployer,/console\.log\([^\n]*(ACCESS_TOKEN|Authorization)/);
