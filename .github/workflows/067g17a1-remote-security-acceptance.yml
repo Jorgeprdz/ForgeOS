@@ -31,10 +31,14 @@ jobs:
       - run: npm ci
       - name: Run protected two-advisor RLS acceptance
         run: node scripts/forge-067g17a1-remote-two-advisor-rls.mjs
+      - name: Run protected 067G17B productive E2E
+        run: node scripts/forge-067g17b-remote-productive-e2e.mjs
       - name: Upload redacted acceptance ledger
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: 067g17a1-remote-security-ledger
-          path: artifacts/067g17a1-remote/ledger.jsonl
+          path: |
+            artifacts/067g17a1-remote/ledger.jsonl
+            artifacts/067g17b-remote/productive-e2e-ledger.jsonl
           if-no-files-found: error
