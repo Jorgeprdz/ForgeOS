@@ -31,7 +31,20 @@ async function getClient(){
  client=library.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  return client;
 }
+async function getSession(){const c=await getClient();return c.auth.getSession();}
+async function getUser(){const c=await getClient();return c.auth.getUser();}
+async function signInWithGoogle(options={}){
+ const c=await getClient();
+ const redirectTo=typeof options.redirectTo==="string"?options.redirectTo:"";
+ return c.auth.signInWithOAuth({provider:"google",options:{redirectTo,skipBrowserRedirect:false}});
+}
+async function signOut(){const c=await getClient();return c.auth.signOut();}
+async function onAuthStateChange(callback){
+ if(typeof callback!=="function")throw new Error("AUTH_STATE_CALLBACK_REQUIRED");
+ const c=await getClient();
+ return c.auth.onAuthStateChange(callback);
+}
 function diagnostics(){const state=global.ForgeAlivePublicConfig067G17A1?.current?.();return Object.freeze({contractId:CONTRACT_ID,configState:state?.state||"UNAVAILABLE",demoMode:state?.demoMode===true,clientInitialized:Boolean(client)});}
-global.ForgeProductiveProspectBootstrap067G17B=Object.freeze({contractId:CONTRACT_ID,getClient,diagnostics});
-if(typeof module!=="undefined"&&module.exports)module.exports={getClient,diagnostics};
+global.ForgeProductiveProspectBootstrap067G17B=Object.freeze({contractId:CONTRACT_ID,getClient,getSession,getUser,signInWithGoogle,signOut,onAuthStateChange,diagnostics});
+if(typeof module!=="undefined"&&module.exports)module.exports={getClient,getSession,getUser,signInWithGoogle,signOut,onAuthStateChange,diagnostics};
 })(typeof globalThis!=="undefined"?globalThis:window);

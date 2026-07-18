@@ -12,6 +12,8 @@
     panel: null,
     lastFocus: null,
     session: null,
+    requestedNav: null,
+    authBusy: false,
   };
 
   function configApi() {
@@ -68,6 +70,7 @@
         <div class="forge-auth-actions-067g17b1">
           <button type="button" class="forge-auth-primary-067g17b1" data-forge-auth-google>Continuar con Google</button>
         </div>
+        <p class="forge-auth-error-067g17b1" data-forge-auth-error role="alert" hidden></p>
         <section class="forge-auth-test-section-067g17b1" data-forge-test-advisors hidden>
           <p class="forge-auth-test-label-067g17b1">Acceso de prueba</p>
           <div class="forge-auth-test-actions-067g17b1">
@@ -82,6 +85,7 @@
     global.document.body.append(backdrop);
     backdrop.addEventListener('click', (event) => {
       if (event.target === backdrop || event.target.closest('[data-forge-auth-close]')) closeAuthPanel();
+      if (event.target.closest('[data-forge-auth-google]')) startGoogleLogin();
     });
     global.document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !backdrop.hidden) closeAuthPanel();
@@ -96,8 +100,57 @@
     if (testSection) testSection.hidden = !testAdvisorLoginEnabled();
   }
 
-  function openAuthPanel() {
+  function currentNav() {
+    const url = new URL(global.location.href);
+    return state.requestedNav || url.searchParams.get('nav') || global.document?.body?.dataset?.forgeSaasActiveModuleR16c5l || 'inicio';
+  }
+
+  function canonicalRedirectUrl() {
+    const url = new URL(global.location.href);
+    const redirect = new URL(url.pathname || '/ForgeOS/static-preview/forge-alive/', url.origin);
+    redirect.searchParams.set('nav', currentNav());
+    if (url.searchParams.get('v')) redirect.searchParams.set('v', url.searchParams.get('v'));
+    if (url.hash) redirect.hash = url.hash;
+    return redirect.href;
+  }
+
+  function setPanelError(message) {
+    const error = state.panel?.querySelector('[data-forge-auth-error]');
+    if (!error) return;
+    error.textContent = message || '';
+    error.hidden = !message;
+  }
+
+  async function startGoogleLogin() {
+    if (state.authBusy) return;
+    state.authBusy = true;
+    setPanelError('');
+    const button = state.panel?.querySelector('[data-forge-auth-google]');
+    const previousText = button?.textContent || 'Continuar con Google';
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Abriendo Google…';
+    }
+    try {
+      const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
+      if (typeof bootstrap?.signInWithGoogle !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
+      const { error } = await bootstrap.signInWithGoogle({ redirectTo: canonicalRedirectUrl() });
+      if (error) throw error;
+    } catch (error) {
+      setPanelError(error?.code === 'CONFIG_BLOCKED'
+        ? 'Forge no tiene configuración pública productiva para iniciar sesión.'
+        : 'No pudimos abrir Google. Revisa la configuración de autenticación.');
+      state.authBusy = false;
+      if (button) {
+        button.disabled = false;
+        button.textContent = previousText;
+      }
+    }
+  }
+
+  function openAuthPanel(options = {}) {
     const panel = ensurePanel();
+    if (options.nav) state.requestedNav = options.nav;
     refreshPanel();
     state.lastFocus = global.document.activeElement instanceof HTMLElement ? global.document.activeElement : null;
     panel.hidden = false;
@@ -122,7 +175,7 @@
       const opener = event.target.closest?.('[data-forge-auth-open]');
       if (!opener) return;
       event.preventDefault();
-      openAuthPanel();
+      openAuthPanel({ nav: opener.getAttribute('data-forge-auth-open-nav') || opener.getAttribute('data-forge-nav-key') || null });
     });
   }
 
@@ -131,11 +184,13 @@
     openAuthPanel,
     closeAuthPanel,
     refreshPanel,
+    canonicalRedirectUrl,
     diagnostics: () => Object.freeze({
       contractId: CONTRACT_ID,
       avatarCount: state.avatars.length,
       panelReady: Boolean(state.panel),
       testAdvisorLoginEnabled: testAdvisorLoginEnabled(),
+      requestedNav: state.requestedNav,
     }),
   });
 

@@ -7,6 +7,7 @@ const styles = readFileSync('docs/static-preview/forge-alive/forge-alive-auth-en
 const config = readFileSync('docs/static-preview/forge-alive/forge-alive-public-config-067g17a1.js', 'utf8');
 const workflow = readFileSync('.github/workflows/pages.yml', 'utf8');
 const validator = readFileSync('scripts/validate-pages-public-config.mjs', 'utf8');
+const bootstrap = readFileSync('advisor-os/sales-pipeline/productive-prospect-bootstrap.js', 'utf8');
 
 assert.match(html, /forge-alive-auth-entry-067g17b1\.css\?v=067g17b1-1/);
 assert.match(html, /forge-alive-public-config-067g17a1\.js\?v=__FORGE_BUILD_SHA__[\s\S]*forge-alive-auth-entry-067g17b1\.js\?v=067g17b1-1[\s\S]*sample-data\.js/);
@@ -26,6 +27,16 @@ assert.match(script, /role="dialog"/);
 assert.match(script, /aria-modal="true"/);
 assert.match(script, /allowsTestAdvisorLogin/);
 assert.match(script, /data-forge-auth-open/);
+assert.match(script, /canonicalRedirectUrl/);
+assert.match(script, /bootstrap\.signInWithGoogle\(\{ redirectTo: canonicalRedirectUrl\(\) \}\)/);
+assert.match(script, /nav', currentNav\(\)/);
+assert.match(script, /CANONICAL_AUTH_CLIENT_UNAVAILABLE/);
+
+assert.match(bootstrap, /signInWithGoogle/);
+assert.match(bootstrap, /provider:"google"/);
+assert.match(bootstrap, /redirectTo/);
+assert.match(bootstrap, /getSession/);
+assert.match(bootstrap, /onAuthStateChange/);
 
 assert.match(styles, /focus-visible/);
 assert.match(styles, /min-height: 42px/);
@@ -39,7 +50,7 @@ assert.match(config, /allowsTestAdvisorLogin/);
 assert.match(workflow, /ENABLE_TEST_ADVISOR_LOGIN: \$\{\{ vars\.ENABLE_TEST_ADVISOR_LOGIN \|\| 'false' \}\}/);
 assert.match(validator, /ENABLE_TEST_ADVISOR_LOGIN/);
 
-for (const source of [script, styles, config, workflow]) {
+for (const source of [script, styles, config, workflow, bootstrap]) {
   assert.doesNotMatch(source, /SUPABASE_SERVICE_ROLE_KEY|SUPABASE_ACCESS_TOKEN|DATABASE_PASSWORD|ADVISOR_A_PASSWORD|ADVISOR_B_PASSWORD|refresh_token|access_token/i);
 }
 
