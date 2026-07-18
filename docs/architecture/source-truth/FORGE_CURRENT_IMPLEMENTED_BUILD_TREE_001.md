@@ -48,7 +48,8 @@ FORGE CURRENT IMPLEMENTED BUILD TREE 001
 ├── Pipeline Renderer Target and Acceptance Repair 067G16B: CANONICAL_RENDERER_ALL_VIEWPORTS_ACCEPTED / functional renderer milestone preserved / prior visual-layout PASS superseded by 067G16C / persistence and stage writer blocked
 ├── Pipeline Responsive Layout, Canonical Color and Route Hydration Repair 067G16C: RESPONSIVE_AND_DEEPLINK_ACCEPTED / five Chromium viewports / canonical token chains / persistence and stage writer blocked
 ├── Forge Authentication Entry and Session Surface 067G17B1: PRODUCTION_ACCEPTED / Google session restores / advisorId from auth.uid / test advisor public entry disabled
-└── Productive Prospect Create Entry Wiring 067G17B2: PRODUCTION_ACCEPTED / both create CTAs wired / canonical form / Supabase create / Referido nuevo / detail auto-open / reload persistence / fixture cleanup
+├── Productive Prospect Create Entry Wiring 067G17B2: PRODUCTION_ACCEPTED / both create CTAs wired / canonical form / Supabase create / Referido nuevo / detail auto-open / reload persistence / fixture cleanup
+└── Prospect Create Canonical Modal 067G17B3: PRODUCTION_ACCEPTED / create form opens as body-level Cotizaciones-style modal / inline Pipeline extension removed / top CTA modal PASS / empty CTA modal PASS in remote empty-state harness / production populated-account guard verified / create-detail-reload-archive cleanup PASS
 ├── Advisor OS execution modules: PARTIAL
 ├── Advisor signal surfaces: PARTIAL
 ├── Advisor-facing execution context: PARTIAL

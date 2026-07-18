@@ -15731,3 +15731,24 @@ Recorded: `2026-07-18`
 
 Next: `067G17C_CONTACT_CARD_STATUS_CALL_WHATSAPP_AND_GOOGLE_CALENDAR_ACTIONS` requires separate authorization.
 <!-- FORGE:067G17B2_PRODUCTIVE_PROSPECT_CREATE_ENTRY_WIRING_REPAIR:END -->
+
+<!-- FORGE:067G17B3_PROSPECT_CREATE_CANONICAL_MODAL:START -->
+## 067G17B3 Prospect Create Canonical Modal
+
+Status: `PASS`
+
+Recorded: `2026-07-18`
+
+- `067G17B3=ACCEPTED`: prospect creation no longer extends inline inside the Pipeline body; it opens as one body-level modal overlay following the existing Cotizaciones-style interaction pattern.
+- `PROSPECT_CREATE_SURFACE=CANONICAL_MODAL`: both create entry points use `ForgeProductiveProspectUI067G17B.openProductiveProspectCreateModal`; no second form authority was introduced.
+- `INLINE_CREATE_EXTENSION=REMOVED`: the form is inserted into `document.body` with `role="dialog"`, `aria-modal="true"`, overlay, body scroll lock, internal form scroll, Escape close, focus trap, focus restoration and unsaved-changes guard.
+- `COTIZACIONES_MODAL_PATTERN_REUSED=YES`: the modal preserves dark overlay, centered glass surface, fixed header/action zones, mobile safe-area handling and background interaction blocking.
+- `MOBILE_MODAL=PASS` and `DESKTOP_MODAL=PASS`: GitHub Actions Linux browser predeployment validated modal geometry, horizontal overflow absence, mobile viewport containment and existing responsive regressions.
+- `PRODUCTIVE_CREATE=PASS`: public Pages production acceptance at SHA `e5db7f656d1597e9fe87dee1d7502e01f3ffd065` created a controlled prospect fixture through remote Supabase, placed it in `Referido nuevo`, auto-opened detail, survived reload, and archived the fixture for cleanup.
+- `EMPTY_STATE_CTA=PASS_WITH_SCOPE_NOTE`: the empty-state CTA opens the same modal in the remote empty-state harness; production acceptance records `NOT_RENDERED_NON_EMPTY_PIPELINE` when the protected test account already has cards and therefore no empty-state CTA is legitimately rendered.
+- `REMOTE_BROWSER_AUTHORITY=GitHub Actions Linux`: run `29663861782` passed full predeployment at SHA `e5db7f656d1597e9fe87dee1d7502e01f3ffd065`; prior run `29663774830` failed from a transient navigation timeout and was not used as acceptance.
+- `PRODUCTION_ACCEPTANCE=PASS`: run `29664005210` passed public Pages + remote Supabase productive acceptance at SHA `e5db7f656d1597e9fe87dee1d7502e01f3ffd065`.
+- `NO_SCOPE_EXPANSION=YES`: Productive Prospect Service, Supabase, advisorId authority, RLS, migrations, Google OAuth, Alpha, Cotizaciones, Nash, Genesis, Google Calendar, Chrome Notifications and 067G17C behavior were not modified.
+
+Next: `067G17C_CONTACT_CARD_STATUS_CALL_WHATSAPP_AND_GOOGLE_CALENDAR_ACTIONS` requires separate authorization.
+<!-- FORGE:067G17B3_PROSPECT_CREATE_CANONICAL_MODAL:END -->
