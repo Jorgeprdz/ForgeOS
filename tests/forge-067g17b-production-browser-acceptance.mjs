@@ -21,7 +21,7 @@ async function login(email,password){
 try{
  await page.setViewport({width:390,height:844,deviceScaleFactor:1});
  await login(process.env.ADVISOR_A_EMAIL,process.env.ADVISOR_A_PASSWORD);record('production_login','PASS');
- await page.click('[data-add-prospect]');await page.waitForSelector('[data-prospect-form-dialog][open]');
+ const addClicked=await page.evaluate(()=>{const button=Array.from(document.querySelectorAll('[data-add-prospect]')).find(node=>node.getClientRects().length&&!node.disabled);if(!button)return false;button.click();return true;});assert.equal(addClicked,true,'VISIBLE_ADD_PROSPECT_ACTION_MISSING');await page.waitForSelector('[data-prospect-form-dialog][open]');
  await page.type('[name="fullName"]',fullName);await page.type('[name="phone"]',`+52${suffix}21`);await page.select('[name="source"]','Evento');await page.type('[name="initialContext"]','Controlled production acceptance fixture');await page.click('[data-save-prospect]');
  await page.waitForSelector('[data-prospect-detail-dialog][open]',{timeout:30000});
  const created=await page.evaluate(name=>{const card=Array.from(document.querySelectorAll('.forge-pipeline-card')).find(node=>node.querySelector('h3')?.textContent===name);return {id:card?.querySelector('[data-open-prospect]')?.dataset.openProspect||null,diagnostics:document.querySelector('[data-productive-prospect-pipeline]')?.dataset.productiveProspectPipeline||null};},fullName);
