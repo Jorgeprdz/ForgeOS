@@ -3,6 +3,8 @@ const test=require("node:test");
 const assert=require("node:assert/strict");
 const PipelineUI=require("../advisor-os/sales-pipeline/pipeline-ui.js");
 const ProspectUI=require("../advisor-os/sales-pipeline/productive-prospect-ui.js");
+const verifiedField=value=>({value,evidence:["fixture:verified"],verificationStatus:"VERIFIED",freshness:"2026-07-20T00:00:00Z",privacyClassification:"FORGE_CONFIDENTIAL_PROSPECT"});
+const messageContext=name=>({prospectIdentityReference:"prospect:fixture",advisorIdentityReference:"advisor:fixture",contextPurpose:"PROSPECT_INTRODUCTION",projectedAt:"2026-07-20T00:00:00Z",fields:{prospectDisplayName:verifiedField(name),advisorDisplayName:verifiedField("Jorge Palacios")}});
 
 test("productive Pipeline exposes canonical add action and empty state",()=>{
  const html=PipelineUI.renderPipelineUI({state:"empty",message:"Todavía no tienes prospectos.",writerAvailable:true});
@@ -66,7 +68,7 @@ test("create form enforces name source context and phone-or-whatsapp in controll
 });
 
 test("detail exposes edit archive call and WhatsApp without automatic send",()=>{
- const prospect={id:"p-1",fullName:"Marlene Ruiz",status:"referred_new",phoneNormalized:"+525512345678",source:"Referido",initialContext:"Ana nos presentó",createdAt:"2026-07-18T00:00:00Z"};
+ const prospect={id:"p-1",fullName:"Marlene Ruiz",status:"referred_new",phoneNormalized:"+525512345678",source:"Referido",initialContext:"Ana nos presentó",createdAt:"2026-07-18T00:00:00Z",prospectMessageContextInput:messageContext("Marlene Ruiz")};
  const html=ProspectUI.detailTemplate(prospect);
  assert.match(html,/Editar/);
  assert.match(html,/Eliminar/);
@@ -93,6 +95,7 @@ test("WhatsApp templates preserve useful verified context while excluding arbitr
   initialContext:"tu referencia privada sobre salud e ingresos",
   estimatedIncome:90000,
   status:"referred_new",
+  prospectMessageContextInput:messageContext("Marlene"),
  });
  const before=JSON.stringify(prospect);
  const cercanoUrl=ProspectUI.whatsappUrl(prospect,"cercano");
@@ -101,19 +104,16 @@ test("WhatsApp templates preserve useful verified context while excluding arbitr
  const cercanoText=new URL(cercanoUrl).searchParams.get("text");
  const profesionalText=new URL(profesionalUrl).searchParams.get("text");
  assert.match(cercanoText,/^Hola, Marlene\. Soy Jorge Palacios\./);
- assert.match(cercanoText,/Ana me compartió tu contacto y me gustaría presentarme\./);
- assert.match(cercanoText,/Qué gusto saludarte\./);
- assert.match(profesionalText,/Me gustaría conversar contigo\./);
- assert.notEqual(cercanoUrl,profesionalUrl);
+ assert.doesNotMatch(cercanoText,/Ana me compartió tu contacto/);
+ assert.equal(cercanoText,profesionalText);
  assert.equal(cercanoText.includes(prospect.initialContext),false);
  assert.doesNotMatch(cercanoText,/90000|Soy tu asesor/i);
  assert.equal(JSON.stringify(prospect),before);
- const unverifiedText=new URL(ProspectUI.whatsappUrl({
+ assert.equal(ProspectUI.whatsappUrl({
   fullName:"Marlene",
   phoneNormalized:"+525512345678",
   source:"Evento",
   referrerName:"Nombre no verificado",
   initialContext:"texto arbitrario",
- },"profesional")).searchParams.get("text");
- assert.doesNotMatch(unverifiedText,/Nombre no verificado|texto arbitrario|compartió tu contacto/i);
+ },"profesional"),null);
 });

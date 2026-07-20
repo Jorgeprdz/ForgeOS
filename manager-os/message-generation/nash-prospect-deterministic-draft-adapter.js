@@ -1,4 +1,5 @@
 "use strict";
+(function exposeNashProspectDeterministicDraftAdapter(root) {
 
 const EXPECTED_CONTEXT_TYPE = "NASH_PROSPECT_MESSAGE_CONTEXT";
 const EXPECTED_CONTEXT_VERSION = "1.0.0";
@@ -142,9 +143,13 @@ function createDeterministicDraftCandidate(context) {
   });
 }
 
-module.exports = Object.freeze({
+const api = Object.freeze({
   EXPECTED_CONTEXT_TYPE,
   EXPECTED_CONTEXT_VERSION,
   FIELD_CLASSIFICATIONS,
   createDeterministicDraftCandidate,
 });
+
+if (root) root.ForgeNashProspectDeterministicDraftAdapter067G17N7 = api;
+if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(typeof globalThis !== "undefined" ? globalThis : this);

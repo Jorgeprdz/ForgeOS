@@ -9,6 +9,12 @@ const Actions = require('../advisor-os/sales-pipeline/prospect-contact-actions.j
 globalThis.ForgeProspectContactActions067G17C2A = Actions;
 const UI = require('../advisor-os/sales-pipeline/productive-prospect-ui.js');
 const privateFields = ['estimatedIncome', 'initialContext', 'productsOfInterest', 'health', 'financialNeeds', 'privateNotes'];
+const verifiedField = value => ({ value, evidence:['fixture:verified'], verificationStatus:'VERIFIED', freshness:'2026-07-20T00:00:00Z', privacyClassification:'FORGE_CONFIDENTIAL_PROSPECT' });
+const messageContext = (name='Marlene Ruiz') => ({
+  prospectIdentityReference:'prospect:fixture', advisorIdentityReference:'advisor:fixture',
+  contextPurpose:'PROSPECT_INTRODUCTION', projectedAt:'2026-07-20T00:00:00Z',
+  fields:{ prospectDisplayName:verifiedField(name), advisorDisplayName:verifiedField('Jorge Palacios') },
+});
 
 test('phone normalization and tel action use a canonical valid number', () => {
   assert.equal(Actions.normalizePhone('55 1234 5678'), '+525512345678');
@@ -25,19 +31,20 @@ test('WhatsApp destination is digits-only and draft is encoded, reviewable, and 
     fullName: 'Marlene Ruiz', whatsappNormalized: '+525512345678', source: 'Referido',
     referrerName: 'Ana López', estimatedIncome: 90000, initialContext: 'Diagnóstico de salud',
     productsOfInterest: ['GMM'], financialNeeds: 'privado', privateNotes: 'no compartir',
+    prospectMessageContextInput: messageContext(),
   };
   const action = Actions.buildWhatsAppAction(prospect, 'profesional');
   assert.equal(action.digits, '525512345678');
   assert.match(action.href, /^https:\/\/wa\.me\/525512345678\?text=/);
   assert.equal(new URL(action.href).searchParams.get('text'), action.draft);
   assert.match(action.draft, /^Hola, Marlene Ruiz\. Soy Jorge Palacios\./);
-  assert.match(action.draft, /Ana López me compartió tu contacto/);
+  assert.deepEqual(action.draftCandidate.usedFields, ['prospectDisplayName', 'advisorDisplayName']);
   assert.doesNotMatch(action.draft, /Soy tu asesor/i);
   for (const value of privateFields.map(key => prospect[key]).flat()) {
     if (value) assert.doesNotMatch(action.draft, new RegExp(String(value), 'i'));
   }
   const unverified = Actions.buildWhatsAppDraft({ fullName: 'Marlene', source: 'Evento', referrerName: 'Inventado' });
-  assert.doesNotMatch(unverified, /Inventado|compartió tu contacto/);
+  assert.equal(unverified.status, 'NO_DRAFT');
 });
 
 test('Google Calendar composer validates local inputs and minimizes PII', () => {
@@ -57,7 +64,7 @@ test('Google Calendar composer validates local inputs and minimizes PII', () => 
 });
 
 test('detail renders three explicit semantic controls and understandable disabled states', () => {
-  const valid = UI.detailTemplate({ fullName: 'Marlene', status: 'referred_new', phoneNormalized: '+525512345678' });
+  const valid = UI.detailTemplate({ fullName: 'Marlene', status: 'referred_new', phoneNormalized: '+525512345678', prospectMessageContextInput:messageContext('Marlene') });
   assert.match(valid, />Llamar<\/a>/);
   assert.match(valid, />WhatsApp<\/a>/);
   assert.match(valid, />Agendar<\/a>/);
@@ -77,25 +84,34 @@ test('builders are pure and contain no external execution or status mutation', (
   Actions.buildCalendarAction(prospect, { date: '2026-08-12', time: '09:30' });
   assert.equal(JSON.stringify(prospect), before);
   const source = readFileSync('advisor-os/sales-pipeline/prospect-contact-actions.js', 'utf8');
-  assert.doesNotMatch(source, /window\.open|\.click\s*\(|location\.(?:assign|replace)|\bfetch\s*\(|setTimeout|setInterval|MutationObserver|PerformanceObserver|status\s*=|updateProspect|archiveProspect/);
+  assert.doesNotMatch(source, /window\.open|\.click\s*\(|location\.(?:assign|replace)|\bfetch\s*\(|setTimeout|setInterval|MutationObserver|PerformanceObserver|status\s*=(?!=)|updateProspect|archiveProspect/);
 });
 
-test('existing bootstrap chain loads the contact authority beside its own script without route changes', async () => {
+test('existing bootstrap chain loads context, draft, and contact authorities without route changes', async () => {
   const source = readFileSync('advisor-os/sales-pipeline/productive-prospect-bootstrap.js', 'utf8');
-  let appended = null;
+  const appended = [];
   const sandbox = {
     URL, Error, Object, Promise,
     document: {
       currentScript: { src:'https://forge.test/advisor-os/sales-pipeline/productive-prospect-bootstrap.js' },
       baseURI: 'https://forge.test/docs/static-preview/forge-alive/index.html',
       createElement: () => ({ dataset:{} }),
-      head: { append(script) { appended = script; sandbox.ForgeProspectContactActions067G17C2A = {}; script.onload(); } },
+      head: { append(script) {
+        appended.push(script);
+        if (script.src.endsWith('prospect-message-context-adapter.js')) sandbox.ForgeProspectMessageContextAdapter067G17N6 = {};
+        else if (script.src.endsWith('nash-prospect-deterministic-draft-adapter.js')) sandbox.ForgeNashProspectDeterministicDraftAdapter067G17N7 = {};
+        else sandbox.ForgeProspectContactActions067G17C2A = {};
+        script.onload();
+      } },
     },
     ForgeAlivePublicConfig067G17A1: { current:() => ({ state:'BLOCKED' }), allowsProductiveProspectCrud:() => false },
   };
   sandbox.globalThis = sandbox;
   vm.runInNewContext(source, sandbox);
   await assert.rejects(sandbox.ForgeProductiveProspectBootstrap067G17B.getClient(), error => error.code === 'CONFIG_BLOCKED');
-  assert.equal(appended.src, 'https://forge.test/advisor-os/sales-pipeline/prospect-contact-actions.js');
-  assert.equal(appended.dataset.forgeProspectContactActions, '067g17c2a');
+  assert.deepEqual(appended.map(script => script.src), [
+    'https://forge.test/advisor-os/sales-pipeline/prospect-message-context-adapter.js',
+    'https://forge.test/manager-os/message-generation/nash-prospect-deterministic-draft-adapter.js',
+    'https://forge.test/advisor-os/sales-pipeline/prospect-contact-actions.js',
+  ]);
 });

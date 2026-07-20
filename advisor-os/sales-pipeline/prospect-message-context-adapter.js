@@ -1,4 +1,5 @@
 "use strict";
+(function exposeProspectMessageContextAdapter(root) {
 
 const CONTRACT_TYPE = "NASH_PROSPECT_MESSAGE_CONTEXT";
 const CONTRACT_VERSION = "1.0.0";
@@ -94,10 +95,14 @@ function createProspectMessageContext(input = {}) {
   });
 }
 
-module.exports = Object.freeze({
+const api = Object.freeze({
   CONTRACT_TYPE,
   CONTRACT_VERSION,
   FIELD_POLICY,
   VERIFICATION_STATUSES,
   createProspectMessageContext,
 });
+
+if (root) root.ForgeProspectMessageContextAdapter067G17N6 = api;
+if (typeof module !== "undefined" && module.exports) module.exports = api;
+})(typeof globalThis !== "undefined" ? globalThis : this);

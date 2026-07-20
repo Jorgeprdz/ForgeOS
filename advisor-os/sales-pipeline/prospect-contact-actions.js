@@ -7,12 +7,15 @@
 
   const DEFAULT_TIMEZONE = "America/Mexico_City";
   const DEFAULT_DURATION_MINUTES = 45;
-  const TONES = Object.freeze({
-    cercano: "Qué gusto saludarte.",
-    profesional: "Me gustaría conversar contigo.",
-    ejecutivo: "Quisiera coordinar una conversación.",
-  });
   const cleanSingleLine = value => String(value ?? "").replace(/\s+/g, " ").trim();
+
+  function draftAdapters() {
+    const context = globalThis.ForgeProspectMessageContextAdapter067G17N6
+      || (typeof require === "function" ? require("./prospect-message-context-adapter.js") : null);
+    const draft = globalThis.ForgeNashProspectDeterministicDraftAdapter067G17N7
+      || (typeof require === "function" ? require("../../manager-os/message-generation/nash-prospect-deterministic-draft-adapter.js") : null);
+    return context && draft ? { context, draft } : null;
+  }
 
   function normalizePhone(value, defaultCountry = "MX") {
     const raw = cleanSingleLine(value);
@@ -39,25 +42,27 @@
     return Object.freeze({ enabled: Boolean(phone), phone, href: phone ? `tel:${phone}` : null });
   }
 
-  function verifiedReferrer(prospect = {}) {
-    if (cleanSingleLine(prospect.source).toLocaleLowerCase("es-MX") !== "referido") return null;
-    return cleanSingleLine(prospect.referrerName) || null;
+  function buildWhatsAppDraft(prospect = {}, tone = "profesional") {
+    const adapters = draftAdapters();
+    const input = prospect.prospectMessageContextInput;
+    if (!adapters || !input) return Object.freeze({ status: "NO_DRAFT", reason: "VERIFIED_CONTEXT_REQUIRED" });
+    try {
+      const fields = { ...(input.fields || {}) };
+      if (fields.advisorSelectedTone) fields.advisorSelectedTone = { ...fields.advisorSelectedTone, value: tone };
+      const context = adapters.context.createProspectMessageContext({ ...input, fields });
+      return adapters.draft.createDeterministicDraftCandidate(context);
+    } catch {
+      return Object.freeze({ status: "NO_DRAFT", reason: "INVALID_CONTEXT" });
+    }
   }
 
-  function buildWhatsAppDraft(prospect = {}, tone = "profesional", advisorName = "Jorge Palacios") {
-    const name = cleanSingleLine(prospect.fullName);
-    const advisor = cleanSingleLine(advisorName);
-    if (!name || !advisor) return null;
-    const referral = verifiedReferrer(prospect);
-    return `Hola, ${name}. Soy ${advisor}.${referral ? ` ${referral} me compartió tu contacto y me gustaría presentarme.` : ""}\n\n${TONES[tone] || TONES.profesional}`;
-  }
-
-  function buildWhatsAppAction(prospect = {}, tone = "profesional", advisorName = "Jorge Palacios") {
+  function buildWhatsAppAction(prospect = {}, tone = "profesional") {
     const phone = prospectPhone(prospect, "whatsapp");
-    const draft = buildWhatsAppDraft(prospect, tone, advisorName);
+    const candidate = buildWhatsAppDraft(prospect, tone);
+    const draft = candidate.status === "DRAFT_CANDIDATE" ? candidate.draftText : null;
     const digits = phone ? phone.slice(1) : null;
     return Object.freeze({
-      enabled: Boolean(digits && draft), phone, digits, draft,
+      enabled: Boolean(digits && draft), phone, digits, draft, draftCandidate: candidate,
       href: digits && draft ? `https://wa.me/${digits}?text=${encodeURIComponent(draft)}` : null,
     });
   }

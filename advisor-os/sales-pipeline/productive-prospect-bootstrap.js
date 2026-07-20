@@ -5,18 +5,24 @@ const MODULE_BASE_URL=global.document?.currentScript?.src||global.document?.base
 let client=null;
 let libraryPromise=null;
 let contactActionsPromise=null;
+function loadScript(path,globalName,datasetName){
+ if(global[globalName])return Promise.resolve(global[globalName]);
+ return new Promise((resolve,reject)=>{
+  const script=global.document.createElement("script");
+  script.src=new URL(path,MODULE_BASE_URL).href;
+  script.dataset[datasetName]="true";
+  script.onload=()=>global[globalName]?resolve(global[globalName]):reject(Object.assign(new Error(`${globalName}_INVALID`),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
+  script.onerror=()=>reject(Object.assign(new Error(`${globalName}_LOAD_FAILED`),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
+  global.document.head.append(script);
+ });
+}
 function loadContactActions(){
  if(global.ForgeProspectContactActions067G17C2A)return Promise.resolve(global.ForgeProspectContactActions067G17C2A);
  if(!global.document)return Promise.reject(Object.assign(new Error("PROSPECT_CONTACT_ACTIONS_UNAVAILABLE"),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
  if(contactActionsPromise)return contactActionsPromise;
- contactActionsPromise=new Promise((resolve,reject)=>{
-  const script=global.document.createElement("script");
-  script.src=new URL("prospect-contact-actions.js",MODULE_BASE_URL).href;
-  script.dataset.forgeProspectContactActions="067g17c2a";
-  script.onload=()=>global.ForgeProspectContactActions067G17C2A?resolve(global.ForgeProspectContactActions067G17C2A):reject(Object.assign(new Error("PROSPECT_CONTACT_ACTIONS_INVALID"),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
-  script.onerror=()=>reject(Object.assign(new Error("PROSPECT_CONTACT_ACTIONS_LOAD_FAILED"),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
-  global.document.head.append(script);
- });
+ contactActionsPromise=loadScript("prospect-message-context-adapter.js","ForgeProspectMessageContextAdapter067G17N6","forgeProspectMessageContextAdapter")
+  .then(()=>loadScript("../../manager-os/message-generation/nash-prospect-deterministic-draft-adapter.js","ForgeNashProspectDeterministicDraftAdapter067G17N7","forgeNashProspectDraftAdapter"))
+  .then(()=>loadScript("prospect-contact-actions.js","ForgeProspectContactActions067G17C2A","forgeProspectContactActions"));
  return contactActionsPromise;
 }
 function loadBrowserLibrary(){
