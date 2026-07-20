@@ -45,18 +45,27 @@
       : "";
     const phone = prospect.phone || prospect.phoneNormalized || prospect.whatsapp || prospect.whatsappNormalized || "";
     const whatsapp = prospect.whatsapp || prospect.whatsappNormalized || prospect.phone || prospect.phoneNormalized || "";
-    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar">×</button></header><dl class="forge-prospect-detail-list">${row("Teléfono", phone)}${row("WhatsApp", whatsapp)}${row("Correo", prospect.email)}${row("Fuente", prospect.source)}${row("Referido por", prospect.referrerName)}${row("Relación", prospect.referrerRelationship)}${row("Fecha de nacimiento", prospect.dateOfBirth)}${row("Edad", prospect.age)}${row("Estado civil", prospect.maritalStatus)}${row("Dependientes", prospect.dependents)}${row("Ocupación", prospect.occupation)}${row("Ingreso estimado", prospect.estimatedIncome)}${row("Productos de interés", Array.isArray(prospect.productsOfInterest) ? prospect.productsOfInterest.join(", ") : prospect.productsOfInterest)}${row("Contexto inicial", prospect.initialContext)}${row("Próxima acción", prospect.nextActionType)}${row("Fecha de seguimiento", prospect.nextActionAt)}${row("Fecha de creación", prospect.createdAt)}</dl><section class="forge-prospect-contact"><label>Tono de WhatsApp<select data-whatsapp-tone><option value="cercano">Cercano</option><option value="profesional">Profesional</option><option value="ejecutivo">Ejecutivo</option></select></label></section><footer><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Eliminar</button><a class="forge-pipeline-action ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>Llamar</a><a class="forge-pipeline-action ${whatsapp ? "" : "is-disabled"}" data-whatsapp-action ${whatsapp ? `href="${esc(whatsappUrl(prospect, "profesional"))}" target="_blank" rel="noopener noreferrer"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>WhatsApp</a></footer></article></dialog>`;
+    const draft = draftCandidate(prospect, "profesional");
+    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar">×</button></header><dl class="forge-prospect-detail-list">${row("Teléfono", phone)}${row("WhatsApp", whatsapp)}${row("Correo", prospect.email)}${row("Fuente", prospect.source)}${row("Referido por", prospect.referrerName)}${row("Relación", prospect.referrerRelationship)}${row("Fecha de nacimiento", prospect.dateOfBirth)}${row("Edad", prospect.age)}${row("Estado civil", prospect.maritalStatus)}${row("Dependientes", prospect.dependents)}${row("Ocupación", prospect.occupation)}${row("Ingreso estimado", prospect.estimatedIncome)}${row("Productos de interés", Array.isArray(prospect.productsOfInterest) ? prospect.productsOfInterest.join(", ") : prospect.productsOfInterest)}${row("Contexto inicial", prospect.initialContext)}${row("Próxima acción", prospect.nextActionType)}${row("Fecha de seguimiento", prospect.nextActionAt)}${row("Fecha de creación", prospect.createdAt)}</dl><section class="forge-prospect-contact"><label>Tono de WhatsApp<select data-whatsapp-tone><option value="cercano">Cercano</option><option value="profesional" selected>Profesional</option><option value="ejecutivo">Ejecutivo</option></select></label><label>Draft editable<textarea data-whatsapp-draft data-draft-source="DraftCandidate">${esc(draft.rawText)}</textarea></label></section><footer><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Eliminar</button><a class="forge-pipeline-action ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>Llamar</a><a class="forge-pipeline-action ${whatsapp ? "" : "is-disabled"}" data-whatsapp-action ${whatsapp ? `href="${esc(whatsappUrl(prospect, "profesional", draft.rawText))}" target="_blank" rel="noopener noreferrer"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>WhatsApp</a></footer></article></dialog>`;
   }
 
-  function whatsappUrl(prospect, tone) {
-    const number = String(prospect.whatsappNormalized || prospect.phoneNormalized || prospect.whatsapp || prospect.phone || "").replace(/\D/g, "");
+  function draftCandidate(prospect, tone) {
     const introductions = {
       cercano: "Qué gusto saludarte",
       profesional: "Me gustaría conversar contigo",
       ejecutivo: "Quisiera coordinar una conversación",
     };
     const context = prospect.initialContext || prospect.source || "la referencia que recibí";
-    const text = `Hola, ${prospect.fullName}. Soy tu asesor.\n\n${introductions[tone] || introductions.profesional} porque ${context}.\n\nMe gustaría conocer tus objetivos y revisar cómo podría ayudarte.`;
+    return Object.freeze({
+      rawText: `Hola, ${prospect.fullName}. Soy tu asesor.\n\n${introductions[tone] || introductions.profesional} porque ${context}.\n\nMe gustaría conocer tus objetivos y revisar cómo podría ayudarte.`,
+      sendsMessage: false,
+      sourceMutable: false,
+    });
+  }
+
+  function whatsappUrl(prospect, tone, editedText) {
+    const number = String(prospect.whatsappNormalized || prospect.phoneNormalized || prospect.whatsapp || prospect.phone || "").replace(/\D/g, "");
+    const text = editedText ?? draftCandidate(prospect, tone).rawText;
     return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
   }
 
@@ -320,10 +329,26 @@
       }
     }, { signal: controller.signal });
 
+    function refreshWhatsappAction(tone) {
+      const link = root.querySelector("[data-whatsapp-action]");
+      const draft = root.querySelector("[data-whatsapp-draft]");
+      if (link && selected && draft) link.href = whatsappUrl(selected, tone, draft.value);
+    }
+
+    root.addEventListener("input", event => {
+      if (!event.target.matches("[data-whatsapp-draft]")) return;
+      event.target.dataset.draftDirty = "true";
+      const tone = root.querySelector("[data-whatsapp-tone]")?.value || "profesional";
+      refreshWhatsappAction(tone);
+    }, { signal: controller.signal });
+
     root.addEventListener("change", event => {
       if (!event.target.matches("[data-whatsapp-tone]")) return;
-      const link = root.querySelector("[data-whatsapp-action]");
-      if (link && selected) link.href = whatsappUrl(selected, event.target.value);
+      const draft = root.querySelector("[data-whatsapp-draft]");
+      if (draft && selected && draft.dataset.draftDirty !== "true") {
+        draft.value = draftCandidate(selected, event.target.value).rawText;
+      }
+      refreshWhatsappAction(event.target.value);
     }, { signal: controller.signal });
 
     return Object.freeze({
@@ -343,7 +368,7 @@
     });
   }
 
-  const api = Object.freeze({ create, formTemplate, detailTemplate, toModel, whatsappUrl });
+  const api = Object.freeze({ create, formTemplate, detailTemplate, toModel, draftCandidate, whatsappUrl });
   global.ForgeProductiveProspectUI067G17B = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof globalThis !== "undefined" ? globalThis : window);

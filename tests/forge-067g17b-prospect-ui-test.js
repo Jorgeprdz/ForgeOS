@@ -73,6 +73,9 @@ test("detail exposes edit archive call and WhatsApp without automatic send",()=>
  assert.match(html,/href="tel:\+525512345678"/);
  assert.match(html,/https:\/\/wa\.me\/525512345678\?text=/);
  assert.match(html,/target="_blank"/);
+ assert.match(html,/data-whatsapp-draft/);
+ assert.match(html,/data-draft-source="DraftCandidate"/);
+ assert.doesNotMatch(html,/data-whatsapp-draft[^>]*readonly|readonly[^>]*data-whatsapp-draft/);
  assert.doesNotMatch(html,/send\(|auto.?send/i);
 });
 
@@ -90,4 +93,17 @@ test("WhatsApp templates are contextual and never invoke an automatic send",()=>
  const text=decodeURIComponent(url.split("text=")[1]);
  assert.match(text,/Hola, Marlene/);
  assert.match(text,/tu referencia/);
+});
+
+test("editable WhatsApp draft preserves user replacement without mutating DraftCandidate source",()=>{
+ const prospect={fullName:"José 😊",phoneNormalized:"+525512345678",initialContext:"línea uno\nlínea dos"};
+ const source=ProspectUI.draftCandidate(prospect,"profesional");
+ const edited="Reemplazo completo 😊\n\nLínea ñ final";
+ const url=ProspectUI.whatsappUrl(prospect,"profesional",edited);
+ assert.equal(decodeURIComponent(url.split("text=")[1]),edited);
+ assert.equal(decodeURIComponent(ProspectUI.whatsappUrl(prospect,"profesional","").split("text=")[1]),"");
+ assert.match(source.rawText,/José 😊/);
+ assert.match(source.rawText,/línea uno\nlínea dos/);
+ assert.equal(source.sendsMessage,false);
+ assert.equal(source.sourceMutable,false);
 });
