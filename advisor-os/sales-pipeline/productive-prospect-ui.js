@@ -31,6 +31,13 @@
     lost: "Perdido",
   };
 
+  function contactActions() {
+    const actions = global.ForgeProspectContactActions067G17C2A
+      || (typeof require === "function" ? require("./prospect-contact-actions.js") : null);
+    if (!actions) throw new Error("PROSPECT_CONTACT_ACTIONS_067G17C2A_MISSING");
+    return actions;
+  }
+
   const field = (name, label, type = "text", extra = "") =>
     `<label>${esc(label)}<input name="${esc(name)}" type="${type}" ${extra}></label>`;
 
@@ -43,21 +50,18 @@
     const row = (label, value) => value !== null && value !== undefined && value !== ""
       ? `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`
       : "";
-    const phone = prospect.phone || prospect.phoneNormalized || prospect.whatsapp || prospect.whatsappNormalized || "";
-    const whatsapp = prospect.whatsapp || prospect.whatsappNormalized || prospect.phone || prospect.phoneNormalized || "";
-    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar">×</button></header><dl class="forge-prospect-detail-list">${row("Teléfono", phone)}${row("WhatsApp", whatsapp)}${row("Correo", prospect.email)}${row("Fuente", prospect.source)}${row("Referido por", prospect.referrerName)}${row("Relación", prospect.referrerRelationship)}${row("Fecha de nacimiento", prospect.dateOfBirth)}${row("Edad", prospect.age)}${row("Estado civil", prospect.maritalStatus)}${row("Dependientes", prospect.dependents)}${row("Ocupación", prospect.occupation)}${row("Ingreso estimado", prospect.estimatedIncome)}${row("Productos de interés", Array.isArray(prospect.productsOfInterest) ? prospect.productsOfInterest.join(", ") : prospect.productsOfInterest)}${row("Contexto inicial", prospect.initialContext)}${row("Próxima acción", prospect.nextActionType)}${row("Fecha de seguimiento", prospect.nextActionAt)}${row("Fecha de creación", prospect.createdAt)}</dl><section class="forge-prospect-contact"><label>Tono de WhatsApp<select data-whatsapp-tone><option value="cercano">Cercano</option><option value="profesional">Profesional</option><option value="ejecutivo">Ejecutivo</option></select></label></section><footer><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Eliminar</button><a class="forge-pipeline-action ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>Llamar</a><a class="forge-pipeline-action ${whatsapp ? "" : "is-disabled"}" data-whatsapp-action ${whatsapp ? `href="${esc(whatsappUrl(prospect, "profesional"))}" target="_blank" rel="noopener noreferrer"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>WhatsApp</a></footer></article></dialog>`;
+    const phone = prospect.phoneNormalized || prospect.phone || prospect.whatsappNormalized || prospect.whatsapp || "";
+    const whatsapp = prospect.whatsappNormalized || prospect.whatsapp || prospect.phoneNormalized || prospect.phone || "";
+    const call = contactActions().buildCallAction(prospect);
+    const wa = contactActions().buildWhatsAppAction(prospect, "profesional");
+    const disabled = `class="forge-pipeline-action is-disabled" aria-disabled="true" title="No hay un número válido"`;
+    const callControl = call.enabled ? `<a class="forge-pipeline-action" data-call-action href="${esc(call.href)}" aria-label="Llamar a ${esc(prospect.fullName)} al ${esc(call.phone)}">Llamar</a>` : `<span ${disabled} data-call-action>Llamar</span>`;
+    const waControl = wa.enabled ? `<a class="forge-pipeline-action" data-whatsapp-action href="${esc(wa.href)}" target="_blank" rel="noopener noreferrer" aria-describedby="prospect-whatsapp-external-note">WhatsApp</a>` : `<span ${disabled} data-whatsapp-action>WhatsApp</span>`;
+    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar">×</button></header><dl class="forge-prospect-detail-list">${row("Teléfono", phone)}${row("WhatsApp", whatsapp)}${row("Correo", prospect.email)}${row("Fuente", prospect.source)}${row("Referido por", prospect.referrerName)}${row("Relación", prospect.referrerRelationship)}${row("Fecha de nacimiento", prospect.dateOfBirth)}${row("Edad", prospect.age)}${row("Estado civil", prospect.maritalStatus)}${row("Dependientes", prospect.dependents)}${row("Ocupación", prospect.occupation)}${row("Ingreso estimado", prospect.estimatedIncome)}${row("Productos de interés", Array.isArray(prospect.productsOfInterest) ? prospect.productsOfInterest.join(", ") : prospect.productsOfInterest)}${row("Contexto inicial", prospect.initialContext)}${row("Próxima acción", prospect.nextActionType)}${row("Fecha de seguimiento", prospect.nextActionAt)}${row("Fecha de creación", prospect.createdAt)}</dl><section class="forge-prospect-contact" aria-labelledby="prospect-contact-actions-title"><h3 id="prospect-contact-actions-title">Acciones de contacto</h3><div class="forge-prospect-action-row">${callControl}${waControl}<a class="forge-pipeline-action is-disabled" data-calendar-action aria-disabled="true" target="_blank" rel="noopener noreferrer" aria-describedby="prospect-calendar-external-note">Agendar</a></div><div class="forge-prospect-action-drafts"><label>Tono de WhatsApp<select data-whatsapp-tone><option value="cercano">Cercano</option><option value="profesional" selected>Profesional</option><option value="ejecutivo">Ejecutivo</option></select></label><label>Mensaje para revisar<textarea data-whatsapp-preview readonly>${esc(wa.enabled ? wa.draft : "Agrega un número válido para preparar el mensaje.")}</textarea></label><p id="prospect-whatsapp-external-note" class="forge-prospect-external-note">WhatsApp se abrirá en otra ventana. Tú decides si envías el mensaje.</p><fieldset><legend>Evento de Google Calendar</legend><div class="forge-prospect-calendar-fields"><label>Fecha<input type="date" data-calendar-date required></label><label>Hora<input type="time" data-calendar-time required></label><label>Duración<select data-calendar-duration><option value="30">30 minutos</option><option value="45" selected>45 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option></select></label><label>Zona horaria<input value="America/Mexico_City" data-calendar-timezone readonly></label></div><output data-calendar-preview>Selecciona fecha y hora para revisar el evento.</output><p data-calendar-error role="alert" hidden></p><p id="prospect-calendar-external-note" class="forge-prospect-external-note">Google Calendar se abrirá en otra ventana. El evento solo se crea cuando tú lo guardas.</p></fieldset></div></section><footer class="forge-prospect-management-actions"><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Eliminar</button></footer></article></dialog>`;
   }
 
   function whatsappUrl(prospect, tone) {
-    const number = String(prospect.whatsappNormalized || prospect.phoneNormalized || prospect.whatsapp || prospect.phone || "").replace(/\D/g, "");
-    const introductions = {
-      cercano: "Qué gusto saludarte",
-      profesional: "Me gustaría conversar contigo",
-      ejecutivo: "Quisiera coordinar una conversación",
-    };
-    const context = prospect.initialContext || prospect.source || "la referencia que recibí";
-    const text = `Hola, ${prospect.fullName}. Soy tu asesor.\n\n${introductions[tone] || introductions.profesional} porque ${context}.\n\nMe gustaría conocer tus objetivos y revisar cómo podría ayudarte.`;
-    return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+    return contactActions().buildWhatsAppAction(prospect, tone).href;
   }
 
   function toModel(prospects) {
@@ -232,6 +236,46 @@
       const dialog = root.querySelector("[data-prospect-detail-dialog]");
       if (typeof dialog.showModal === "function") dialog.showModal();
       else dialog.setAttribute("open", "");
+      dialog.scrollTop = 0;
+    }
+
+    function syncWhatsAppDraft(tone) {
+      const action = contactActions().buildWhatsAppAction(selected || {}, tone);
+      const link = root.querySelector("[data-whatsapp-action]");
+      const preview = root.querySelector("[data-whatsapp-preview]");
+      if (preview) preview.value = action.draft || "Agrega un número válido para preparar el mensaje.";
+      if (link?.tagName === "A") {
+        if (action.enabled) link.href = action.href;
+        else link.removeAttribute("href");
+      }
+    }
+
+    function syncCalendarDraft() {
+      const dialog = root.querySelector("[data-prospect-detail-dialog]");
+      if (!dialog || !selected) return;
+      const action = contactActions().buildCalendarAction(selected, {
+        date: dialog.querySelector("[data-calendar-date]")?.value,
+        time: dialog.querySelector("[data-calendar-time]")?.value,
+        durationMinutes: dialog.querySelector("[data-calendar-duration]")?.value,
+        timezone: dialog.querySelector("[data-calendar-timezone]")?.value,
+      });
+      const link = dialog.querySelector("[data-calendar-action]");
+      const preview = dialog.querySelector("[data-calendar-preview]");
+      const error = dialog.querySelector("[data-calendar-error]");
+      if (action.enabled) {
+        link.href = action.href;
+        link.classList.remove("is-disabled");
+        link.removeAttribute("aria-disabled");
+        preview.textContent = `${action.draft.title} · ${action.draft.date} ${action.draft.time} · ${action.draft.durationMinutes} min · ${action.draft.timezone}`;
+        error.hidden = true;
+      } else {
+        link.removeAttribute("href");
+        link.classList.add("is-disabled");
+        link.setAttribute("aria-disabled", "true");
+        preview.textContent = "Selecciona fecha y hora para revisar el evento.";
+        error.textContent = action.error;
+        error.hidden = !(dialog.querySelector("[data-calendar-date]")?.value || dialog.querySelector("[data-calendar-time]")?.value);
+      }
     }
 
     async function submit(form) {
@@ -321,9 +365,8 @@
     }, { signal: controller.signal });
 
     root.addEventListener("change", event => {
-      if (!event.target.matches("[data-whatsapp-tone]")) return;
-      const link = root.querySelector("[data-whatsapp-action]");
-      if (link && selected) link.href = whatsappUrl(selected, event.target.value);
+      if (event.target.matches("[data-whatsapp-tone]")) syncWhatsAppDraft(event.target.value);
+      if (event.target.matches("[data-calendar-date],[data-calendar-time],[data-calendar-duration],[data-calendar-timezone]")) syncCalendarDraft();
     }, { signal: controller.signal });
 
     return Object.freeze({

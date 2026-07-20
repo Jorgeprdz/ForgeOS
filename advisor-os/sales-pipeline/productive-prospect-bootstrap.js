@@ -1,8 +1,24 @@
 "use strict";
 (function(global){
 const CONTRACT_ID="FORGE_PRODUCTIVE_PROSPECT_BOOTSTRAP_067G17B_V1";
+const MODULE_BASE_URL=global.document?.currentScript?.src||global.document?.baseURI||"";
 let client=null;
 let libraryPromise=null;
+let contactActionsPromise=null;
+function loadContactActions(){
+ if(global.ForgeProspectContactActions067G17C2A)return Promise.resolve(global.ForgeProspectContactActions067G17C2A);
+ if(!global.document)return Promise.reject(Object.assign(new Error("PROSPECT_CONTACT_ACTIONS_UNAVAILABLE"),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
+ if(contactActionsPromise)return contactActionsPromise;
+ contactActionsPromise=new Promise((resolve,reject)=>{
+  const script=global.document.createElement("script");
+  script.src=new URL("prospect-contact-actions.js",MODULE_BASE_URL).href;
+  script.dataset.forgeProspectContactActions="067g17c2a";
+  script.onload=()=>global.ForgeProspectContactActions067G17C2A?resolve(global.ForgeProspectContactActions067G17C2A):reject(Object.assign(new Error("PROSPECT_CONTACT_ACTIONS_INVALID"),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
+  script.onerror=()=>reject(Object.assign(new Error("PROSPECT_CONTACT_ACTIONS_LOAD_FAILED"),{code:"CONTACT_ACTIONS_UNAVAILABLE"}));
+  global.document.head.append(script);
+ });
+ return contactActionsPromise;
+}
 function loadBrowserLibrary(){
  if(typeof global.supabase?.createClient==="function")return Promise.resolve(global.supabase);
  if(!global.document)return Promise.reject(Object.assign(new Error("SUPABASE_BROWSER_CLIENT_UNAVAILABLE"),{code:"CLIENT_UNAVAILABLE"}));
@@ -18,6 +34,7 @@ function loadBrowserLibrary(){
  return libraryPromise;
 }
 async function getClient(){
+ await loadContactActions();
  const config=global.ForgeAlivePublicConfig067G17A1;
  const state=config?.current?.();
  if(!config?.allowsProductiveProspectCrud?.()||state?.state!=="READY"){
@@ -46,5 +63,5 @@ async function onAuthStateChange(callback){
 }
 function diagnostics(){const state=global.ForgeAlivePublicConfig067G17A1?.current?.();return Object.freeze({contractId:CONTRACT_ID,configState:state?.state||"UNAVAILABLE",demoMode:state?.demoMode===true,clientInitialized:Boolean(client)});}
 global.ForgeProductiveProspectBootstrap067G17B=Object.freeze({contractId:CONTRACT_ID,getClient,getSession,getUser,signInWithGoogle,signOut,onAuthStateChange,diagnostics});
-if(typeof module!=="undefined"&&module.exports)module.exports={getClient,getSession,getUser,signInWithGoogle,signOut,onAuthStateChange,diagnostics};
+if(typeof module!=="undefined"&&module.exports)module.exports={getClient,getSession,getUser,signInWithGoogle,signOut,onAuthStateChange,diagnostics,loadContactActions};
 })(typeof globalThis!=="undefined"?globalThis:window);
