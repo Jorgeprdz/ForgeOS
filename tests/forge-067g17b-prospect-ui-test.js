@@ -84,10 +84,36 @@ test("canonical model places a new prospect in Referido nuevo",()=>{
  assert.equal(model.columns[0].items[0].prospectId,"p-1");
 });
 
-test("WhatsApp templates are contextual and never invoke an automatic send",()=>{
- const url=ProspectUI.whatsappUrl({fullName:"Marlene",phoneNormalized:"+525512345678",initialContext:"tu referencia"},"cercano");
- assert.match(url,/^https:\/\/wa\.me\/525512345678\?text=/);
- const text=decodeURIComponent(url.split("text=")[1]);
- assert.match(text,/Hola, Marlene/);
- assert.match(text,/tu referencia/);
+test("WhatsApp templates preserve useful verified context while excluding arbitrary or sensitive text",()=>{
+ const prospect=Object.freeze({
+  fullName:"Marlene",
+  phoneNormalized:"+525512345678",
+  source:"Referido",
+  referrerName:"Ana",
+  initialContext:"tu referencia privada sobre salud e ingresos",
+  estimatedIncome:90000,
+  status:"referred_new",
+ });
+ const before=JSON.stringify(prospect);
+ const cercanoUrl=ProspectUI.whatsappUrl(prospect,"cercano");
+ const profesionalUrl=ProspectUI.whatsappUrl(prospect,"profesional");
+ assert.match(cercanoUrl,/^https:\/\/wa\.me\/525512345678\?text=/);
+ const cercanoText=new URL(cercanoUrl).searchParams.get("text");
+ const profesionalText=new URL(profesionalUrl).searchParams.get("text");
+ assert.match(cercanoText,/^Hola, Marlene\. Soy Jorge Palacios\./);
+ assert.match(cercanoText,/Ana me compartió tu contacto y me gustaría presentarme\./);
+ assert.match(cercanoText,/Qué gusto saludarte\./);
+ assert.match(profesionalText,/Me gustaría conversar contigo\./);
+ assert.notEqual(cercanoUrl,profesionalUrl);
+ assert.equal(cercanoText.includes(prospect.initialContext),false);
+ assert.doesNotMatch(cercanoText,/90000|Soy tu asesor/i);
+ assert.equal(JSON.stringify(prospect),before);
+ const unverifiedText=new URL(ProspectUI.whatsappUrl({
+  fullName:"Marlene",
+  phoneNormalized:"+525512345678",
+  source:"Evento",
+  referrerName:"Nombre no verificado",
+  initialContext:"texto arbitrario",
+ },"profesional")).searchParams.get("text");
+ assert.doesNotMatch(unverifiedText,/Nombre no verificado|texto arbitrario|compartió tu contacto/i);
 });
