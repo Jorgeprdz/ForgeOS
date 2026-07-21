@@ -2,7 +2,7 @@ export const GEMINI_PROVIDER_ID = "gemini";
 export const GEMINI_FLASH_MODEL_ID = "gemini-3.5-flash";
 export const GEMINI_PROVIDER_ENABLED_ENV = "NASH_GEMINI_DRAFT_PROVIDER_ENABLED";
 export const GEMINI_API_KEY_ENV = "GEMINI_API_KEY";
-export const GEMINI_TIMEOUT_MS = 8000;
+export const GEMINI_TIMEOUT_MS = 30000;
 
 const RESULT_STATES = Object.freeze({
   SUCCESS: "SUCCESS",
@@ -188,6 +188,7 @@ export async function buildGeminiDraftProviderResponse({
   const prompt = buildTemporaryDraftPrompt(prospectMessageContext);
   let providerResult = null;
   try {
+    console.time("gemini.generateContent");
     providerResult = await withTimeout(
       model.generateContent({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -198,6 +199,7 @@ export async function buildGeminiDraftProviderResponse({
       }),
       timeoutMs,
     );
+    console.timeEnd("gemini.generateContent");
   } catch (error) {
     console.error("Gemini generateContent failed:", error);
     return errorEnvelope(
