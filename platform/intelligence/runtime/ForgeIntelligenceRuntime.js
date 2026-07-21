@@ -18,7 +18,7 @@ export class ForgeIntelligenceRuntime {
   }
 
   async execute(request) {
-    const context = await this.contextBuilder?.build?.(request) ?? {};
+    const context = await this.contextBuilder.build(request);
 
     const intelligence = await this.router?.resolve?.({
       request,
