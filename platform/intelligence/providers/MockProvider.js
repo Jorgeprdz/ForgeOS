@@ -6,12 +6,12 @@ export class MockProvider extends BaseProvider {
     super("mock");
   }
 
-  async generate({ request, context }) {
+  async generate(providerRequest) {
 
     return {
       provider: this.name,
-      output: `Mock response: ${request.message}`,
-      contextReceived: !!context
+      output: `Mock response: ${providerRequest.prompt}`,
+      contextReceived: !!providerRequest.context
     };
 
   }
