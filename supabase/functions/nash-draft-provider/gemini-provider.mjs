@@ -198,10 +198,11 @@ export async function buildGeminiDraftProviderResponse({
       }),
       timeoutMs,
     );
-  } catch (_error) {
+  } catch (error) {
+    console.error("Gemini generateContent failed:", error);
     return errorEnvelope(
       "PROVIDER_UNAVAILABLE",
-      "Experimental Gemini draft provider transport is unavailable.",
+      error instanceof Error ? error.message : String(error),
       true,
       "transport_unavailable",
       startedAt,
