@@ -1,5 +1,20 @@
 # FORGE OS Master Build Tree
 
+<!-- FORGEOS:NASH_FAST_TRACK_NFAST_04_DETERMINISTIC_CONVERSATION_BRIEF:START -->
+## NASH Fast Track NFAST-04 Deterministic Conversation Brief
+
+Status: IMPLEMENTED_AND_CLOSED_FOR_DETERMINISTIC_PROVIDER_SAFE_BRIEF_ONLY
+
+- NFAST-04 deterministic Conversation Brief boundary implemented under `nash/conversation-brief/`.
+- Canonical output is provider-safe context only: no provider call, no final draft, no send, no persistence, no Quote/Product/Presenter business logic.
+- Brief builder consumes only governed `CONVERSATION_CONTEXT`, governed intake, optional official NBA reference, governed objection context, candidate interpretations and explicit request metadata.
+- Failure envelope supports `NO_BRIEF`, `BLOCKED_CONTEXT` and `INVALID_INPUT` with reason codes, missing requirements, blocked fields, stale evidence, invalid authorities and remediation hints.
+- Deterministic strategy categories are explicit and versioned.
+- Source truth: `docs/architecture/source-truth/NASH_FAST_TRACK_NFAST_04_DETERMINISTIC_CONVERSATION_BRIEF_CLOSURE.md`.
+- Next stage readiness: `NFAST_05_READINESS_STATUS=READY_FOR_SEPARATE_STAGE_AUTHORIZATION`; `NFAST_05_AUTHORIZED=NO`.
+
+<!-- FORGEOS:NASH_FAST_TRACK_NFAST_04_DETERMINISTIC_CONVERSATION_BRIEF:END -->
+
 <!-- FORGEOS:ADVISOR_ACTIVATION_AUTHORITY_EVIDENCE_POLICY_067G3B:START -->
 ## Advisor Activation Authority and Evidence Policy 067G3B
 
