@@ -69,30 +69,45 @@ test("detail exposes edit archive call and WhatsApp without automatic send",()=>
  const prospect={id:"p-1",fullName:"Marlene Ruiz",status:"referred_new",phoneNormalized:"+525512345678",source:"Referido",initialContext:"Ana nos presentó",createdAt:"2026-07-18T00:00:00Z"};
  const html=ProspectUI.detailTemplate(prospect);
  assert.match(html,/Editar/);
- assert.match(html,/Eliminar/);
+ assert.match(html,/Retirar/);
  assert.match(html,/href="tel:\+525512345678"/);
- assert.match(html,/https:\/\/wa\.me\/525512345678\?text=/);
- assert.match(html,/target="_blank"/);
- assert.match(html,/data-whatsapp-draft/);
- assert.match(html,/data-draft-source="DraftCandidate"/);
- assert.doesNotMatch(html,/data-whatsapp-draft[^>]*readonly|readonly[^>]*data-whatsapp-draft/);
+ assert.match(html,/data-detail-whatsapp/);
+ assert.match(html,/data-detail-calendar/);
+ assert.doesNotMatch(html,/data-whatsapp-draft|<textarea/);
  assert.doesNotMatch(html,/send\(|auto.?send/i);
 });
 
-test("canonical model places a new prospect in Referido nuevo",()=>{
+test("canonical model places a new prospect in Referido",()=>{
  const model=ProspectUI.toModel([{id:"p-1",fullName:"Marlene Ruiz",status:"referred_new",source:"Referido"}]);
  assert.equal(model.state,"ready");
  assert.equal(model.columns[0].columnId,"referred_new");
- assert.equal(model.columns[0].label,"Referido nuevo");
+ assert.equal(model.columns[0].label,"Referido");
  assert.equal(model.columns[0].items[0].prospectId,"p-1");
+ assert.deepEqual(model.columns[0].items[0].statusOptions.map(option=>option.value),["referred_new","contacted","appointment_scheduled","proposal","decision","client"]);
+ const card=PipelineUI.card(model.columns[0].items[0]);
+ assert.match(card,/data-prospect-status="p-1"/);
+ assert.match(card,/data-card-whatsapp="p-1"/);
+ assert.match(card,/data-card-calendar="p-1"/);
+ assert.match(card,/forge-card-status-bar/);
 });
 
-test("WhatsApp templates are contextual and never invoke an automatic send",()=>{
+test("WhatsApp workspace starts as chat preview and exposes governed variants",()=>{
+ const html=ProspectUI.messageWorkspaceTemplate({fullName:"Marlene",status:"contacted",nextActionAt:"2026-07-22T10:00:00Z"});
+ assert.match(html,/data-message-loading/);
+ assert.match(html,/data-message-preview hidden/);
+ assert.match(html,/data-message-editor[^>]*hidden/);
+ assert.match(html,/Primer contacto|Seguimiento|Reactivación|Confirmar cita|Reagendar|Después de llamada/);
+ assert.match(html,/Amigable|Profesional|Ejecutivo|Breve|Redes sociales/);
+ assert.match(html,/Otra sugerencia/);
+ assert.match(html,/Sin envío automático/);
+});
+
+test("WhatsApp deterministic fallback excludes arbitrary context and never sends",()=>{
  const url=ProspectUI.whatsappUrl({fullName:"Marlene",phoneNormalized:"+525512345678",initialContext:"tu referencia"},"cercano");
  assert.match(url,/^https:\/\/wa\.me\/525512345678\?text=/);
  const text=decodeURIComponent(url.split("text=")[1]);
  assert.match(text,/Hola, Marlene/);
- assert.match(text,/tu referencia/);
+ assert.doesNotMatch(text,/tu referencia|Soy tu asesor/);
 });
 
 test("editable WhatsApp draft preserves user replacement without mutating DraftCandidate source",()=>{
@@ -101,9 +116,9 @@ test("editable WhatsApp draft preserves user replacement without mutating DraftC
  const edited="Reemplazo completo 😊\n\nLínea ñ final";
  const url=ProspectUI.whatsappUrl(prospect,"profesional",edited);
  assert.equal(decodeURIComponent(url.split("text=")[1]),edited);
- assert.equal(decodeURIComponent(ProspectUI.whatsappUrl(prospect,"profesional","").split("text=")[1]),"");
+ assert.equal(ProspectUI.whatsappUrl(prospect,"professional",""),null);
  assert.match(source.rawText,/José 😊/);
- assert.match(source.rawText,/línea uno\nlínea dos/);
+ assert.doesNotMatch(source.rawText,/línea uno|línea dos/);
  assert.equal(source.sendsMessage,false);
  assert.equal(source.sourceMutable,false);
 });

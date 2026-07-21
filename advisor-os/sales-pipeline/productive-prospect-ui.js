@@ -21,15 +21,30 @@
   ];
 
   const LABELS = {
-    referred_new: "Referido nuevo",
+    referred_new: "Referido",
     contacted: "Contactado",
-    appointment_scheduled: "Cita agendada",
-    needs_analysis: "Análisis",
-    proposal_presented: "Propuesta",
-    decision_pending: "Decisión",
-    won: "Ganado",
-    lost: "Perdido",
+    appointment_scheduled: "Cita",
+    proposal: "Solicitud",
+    decision: "Firma",
+    client: "Cerrado",
   };
+
+  const STATUS_OPTIONS = Object.freeze(Object.entries(LABELS).map(([value, label]) => Object.freeze({ value, label })));
+  const MESSAGE_GOALS = Object.freeze([
+    ["first_contact", "Primer contacto"],
+    ["follow_up", "Seguimiento"],
+    ["reactivation", "Reactivación"],
+    ["appointment_confirmation", "Confirmar cita"],
+    ["reschedule", "Reagendar"],
+    ["after_call", "Después de llamada"],
+  ]);
+  const MESSAGE_STYLES = Object.freeze([
+    ["friendly", "Amigable"],
+    ["professional", "Profesional"],
+    ["executive", "Ejecutivo"],
+    ["brief", "Breve"],
+    ["social", "Redes sociales"],
+  ]);
 
   const DRAFT_VALIDATION_DECISIONS = Object.freeze({
     ALLOW_WHATSAPP: "ALLOW_WHATSAPP",
@@ -66,6 +81,10 @@
       code: "PROHIBITED_REFERRAL_WORDING_PRESENT",
       patterns: [/\bme dieron tus datos\b/i, /\bte paso conmigo\b/i, /\bme dijo que necesitas\b/i, /\bme pidio que te vendiera\b/i],
     },
+    {
+      code: "UNVERIFIED_RELATIONSHIP_CLAIM_PRESENT",
+      patterns: [/\bsoy tu asesor\b/i],
+    },
   ]);
 
   const field = (name, label, type = "text", extra = "") =>
@@ -80,30 +99,60 @@
     const row = (label, value) => value !== null && value !== undefined && value !== ""
       ? `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`
       : "";
-    const phone = prospect.phone || prospect.phoneNormalized || prospect.whatsapp || prospect.whatsappNormalized || "";
-    const whatsapp = prospect.whatsapp || prospect.whatsappNormalized || prospect.phone || prospect.phoneNormalized || "";
-    const draft = draftCandidate(prospect, "profesional");
-    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar">×</button></header><dl class="forge-prospect-detail-list">${row("Teléfono", phone)}${row("WhatsApp", whatsapp)}${row("Correo", prospect.email)}${row("Fuente", prospect.source)}${row("Referido por", prospect.referrerName)}${row("Relación", prospect.referrerRelationship)}${row("Fecha de nacimiento", prospect.dateOfBirth)}${row("Edad", prospect.age)}${row("Estado civil", prospect.maritalStatus)}${row("Dependientes", prospect.dependents)}${row("Ocupación", prospect.occupation)}${row("Ingreso estimado", prospect.estimatedIncome)}${row("Productos de interés", Array.isArray(prospect.productsOfInterest) ? prospect.productsOfInterest.join(", ") : prospect.productsOfInterest)}${row("Contexto inicial", prospect.initialContext)}${row("Próxima acción", prospect.nextActionType)}${row("Fecha de seguimiento", prospect.nextActionAt)}${row("Fecha de creación", prospect.createdAt)}</dl><section class="forge-prospect-contact"><label>Tono de WhatsApp<select data-whatsapp-tone><option value="cercano">Cercano</option><option value="profesional" selected>Profesional</option><option value="ejecutivo">Ejecutivo</option></select></label><label>Draft editable<textarea data-whatsapp-draft data-draft-source="DraftCandidate">${esc(draft.rawText)}</textarea></label><button type="button" data-approve-whatsapp-draft>Aprobar draft exacto</button></section><footer><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Eliminar</button><a class="forge-pipeline-action ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>Llamar</a><a class="forge-pipeline-action ${whatsapp ? "" : "is-disabled"}" data-whatsapp-action ${whatsapp ? `href="${esc(whatsappUrl(prospect, "profesional", draft.rawText))}" target="_blank" rel="noopener noreferrer"` : "aria-disabled=\"true\" title=\"No hay un número válido\""}>WhatsApp</a></footer></article></dialog>`;
+    const phone = contactPhone(prospect, "call");
+    const whatsapp = contactPhone(prospect, "whatsapp");
+    const primary = `${row("Teléfono", phone)}${row("WhatsApp", whatsapp)}${row("Referido por", prospect.referrerName || "Sin referente")}${row("Etapa", LABELS[prospect.status] || prospect.status)}`;
+    const secondary = `${row("Correo", prospect.email)}${row("Fuente", prospect.source)}${row("Relación", prospect.referrerRelationship)}${row("Fecha de nacimiento", prospect.dateOfBirth)}${row("Edad", prospect.age)}${row("Estado civil", prospect.maritalStatus)}${row("Dependientes", prospect.dependents)}${row("Ocupación", prospect.occupation)}${row("Ingreso estimado", prospect.estimatedIncome)}${row("Productos de interés", Array.isArray(prospect.productsOfInterest) ? prospect.productsOfInterest.join(", ") : prospect.productsOfInterest)}${row("Contexto inicial", prospect.initialContext)}${row("Próxima acción", prospect.nextActionType)}${row("Seguimiento", humanDate(prospect.nextActionAt))}${row("Creado", humanDate(prospect.createdAt))}`;
+    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar detalle">×</button></header><dl class="forge-prospect-detail-list forge-prospect-detail-list--primary">${primary}</dl><div class="forge-prospect-detail-actions"><a class="forge-card-action forge-card-action--call ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\""}>Llamar</a><button type="button" class="forge-card-action forge-card-action--whatsapp" data-detail-whatsapp ${whatsapp ? "" : "disabled"}>WhatsApp</button><button type="button" class="forge-card-action forge-card-action--calendar" data-detail-calendar>Agendar</button></div><details class="forge-prospect-secondary"><summary>Más información</summary><dl class="forge-prospect-detail-list">${secondary}</dl></details><footer><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Retirar</button></footer></article></dialog>`;
   }
 
-  function draftCandidate(prospect, tone) {
-    const introductions = {
-      cercano: "Qué gusto saludarte",
-      profesional: "Me gustaría conversar contigo",
-      ejecutivo: "Quisiera coordinar una conversación",
+  function contactPhone(prospect = {}, channel = "call") {
+    const values = channel === "whatsapp"
+      ? [prospect.whatsapp, prospect.whatsappNormalized, prospect.phone, prospect.phoneNormalized]
+      : [prospect.phone, prospect.phoneNormalized, prospect.whatsapp, prospect.whatsappNormalized];
+    for (const value of values) {
+      const raw = String(value || "").trim();
+      const digits = raw.replace(/\D/g, "");
+      if (raw.startsWith("+") && digits.length >= 8 && digits.length <= 15) return `+${digits}`;
+    }
+    return null;
+  }
+
+  function humanDate(value, now = Date.now()) {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    const difference = now - date.getTime();
+    if (difference >= 0 && difference < 60 * 60 * 1000) return `Hace ${Math.max(1, Math.floor(difference / 60000))} min`;
+    if (difference >= 0 && difference < 24 * 60 * 60 * 1000) return `Hace ${Math.floor(difference / 3600000)} h`;
+    if (difference >= 0 && difference < 7 * 24 * 60 * 60 * 1000) return `Hace ${Math.floor(difference / 86400000)} días`;
+    return new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "short", year: "numeric" }).format(date).replace(" de ", " ").replace(" de ", " ");
+  }
+
+  function draftCandidate(prospect, style = "professional", goal = "first_contact", variation = 0) {
+    const name = String(prospect?.fullName || "").trim();
+    const goalCopy = {
+      first_contact: "Me gustaría presentarme y conversar contigo.",
+      follow_up: "Quisiera retomar nuestra conversación cuando te resulte conveniente.",
+      reactivation: "Espero que estés muy bien. ¿Te gustaría retomar la conversación?",
+      appointment_confirmation: "¿Te gustaría confirmar nuestra próxima conversación?",
+      reschedule: "¿Te gustaría que coordinemos otro momento para conversar?",
+      after_call: "Gracias por la conversación. Quedo atento a cómo prefieras continuar.",
     };
-    const context = prospect.initialContext || prospect.source || "la referencia que recibí";
+    const suffix = style === "brief" ? "" : style === "friendly" ? " Será un gusto saludarte." : style === "social" ? " Cuando puedas, escríbeme por aquí." : style === "executive" ? " Quedo atento para coordinar el siguiente paso." : " Quedo atento a tu respuesta.";
     return Object.freeze({
-      rawText: `Hola, ${prospect.fullName}. Soy tu asesor.\n\n${introductions[tone] || introductions.profesional} porque ${context}.\n\nMe gustaría conocer tus objetivos y revisar cómo podría ayudarte.`,
+      rawText: name ? `Hola, ${name}. ${goalCopy[goal] || goalCopy.first_contact}${suffix}` : "",
       sendsMessage: false,
       sourceMutable: false,
+      generationMode: "deterministic_fallback",
+      variation,
     });
   }
 
-  function whatsappUrl(prospect, tone, editedText) {
-    const number = String(prospect.whatsappNormalized || prospect.phoneNormalized || prospect.whatsapp || prospect.phone || "").replace(/\D/g, "");
-    const text = editedText ?? draftCandidate(prospect, tone).rawText;
-    return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+  function whatsappUrl(prospect, style, editedText, goal = "first_contact") {
+    const phone = contactPhone(prospect, "whatsapp");
+    const text = editedText ?? draftCandidate(prospect, style, goal).rawText;
+    return phone && text ? `https://wa.me/${phone.slice(1)}?text=${encodeURIComponent(text)}` : null;
   }
 
   function draftSafetyValidator({ draftText = "", draftCandidateSnapshot = null, humanApproval = null } = {}) {
@@ -178,20 +227,31 @@
     for (const prospect of prospects) {
       const status = prospect.status || "referred_new";
       if (!groups.has(status)) groups.set(status, []);
+      const phone = contactPhone(prospect, "call");
+      const whatsapp = contactPhone(prospect, "whatsapp");
+      const appointmentLabel = prospect.nextActionAt
+        ? `${prospect.status === "appointment_scheduled" ? "Cita" : "Seguimiento"} · ${humanDate(prospect.nextActionAt)}`
+        : "Sin cita";
       groups.get(status).push({
         prospectId: prospect.id,
         name: prospect.fullName,
         sourceLabel: prospect.source || "Fuente verificada",
         stageLabel: LABELS[status] || status,
-        lastVerifiedActivity: prospect.updatedAt || prospect.createdAt,
-        nextCommitment: prospect.nextActionType || "Sin compromiso",
+        status,
+        statusOptions: STATUS_OPTIONS,
+        phoneHref: phone ? `tel:${phone}` : null,
+        phoneLabel: phone || "Sin teléfono",
+        whatsappAvailable: Boolean(whatsapp),
+        referrerLabel: prospect.referrerName ? `Referido por ${prospect.referrerName}` : "Sin referente",
+        appointmentLabel,
       });
     }
     return {
       state: prospects.length ? "ready" : "empty",
       message: "Todavía no tienes prospectos. Agrega el primero para comenzar tu Pipeline.",
       writerAvailable: true,
-      columns: [...groups].map(([columnId, items]) => ({ columnId, label: LABELS[columnId] || columnId, items })),
+      columns: STATUS_OPTIONS.map(option => ({ columnId: option.value, label: option.label, items: groups.get(option.value) || [] }))
+        .filter(column => column.items.length),
     };
   }
 
@@ -203,6 +263,21 @@
     }
     for (const [key, value] of Object.entries(data)) if (value === "") delete data[key];
     return data;
+  }
+
+  function messageWorkspaceTemplate(prospect) {
+    const hasAppointment = prospect.status === "appointment_scheduled" || Boolean(prospect.nextActionAt);
+    const afterCallAvailable = ["contacted", "appointment_scheduled", "proposal", "decision", "client"].includes(prospect.status);
+    const goalOptions = MESSAGE_GOALS.map(([value, label]) => {
+      const disabled = (["appointment_confirmation", "reschedule"].includes(value) && !hasAppointment) || (value === "after_call" && !afterCallAvailable);
+      return `<option value="${value}" ${disabled ? "disabled" : ""}>${esc(label)}${disabled ? " · requiere evidencia" : ""}</option>`;
+    }).join("");
+    const styleOptions = MESSAGE_STYLES.map(([value, label]) => `<option value="${value}" ${value === "professional" ? "selected" : ""}>${esc(label)}</option>`).join("");
+    return `<aside class="forge-action-workspace forge-message-workspace" data-action-workspace data-workspace-type="whatsapp" aria-labelledby="forge-message-workspace-title"><header><div><p class="forge-pipeline-product">NASH · BORRADOR</p><h2 id="forge-message-workspace-title">Mensaje para ${esc(prospect.fullName)}</h2><p>Forge prepara. Tú revisas y decides si abres WhatsApp.</p></div><button type="button" data-close-action-workspace aria-label="Cerrar preparación">×</button></header><div class="forge-message-controls"><label>Objetivo<select data-message-goal>${goalOptions}</select></label><label>Estilo<select data-message-style>${styleOptions}</select></label></div><div class="forge-message-chat" aria-live="polite"><div class="forge-message-avatar" aria-hidden="true">F</div><div class="forge-message-bubble"><div class="forge-message-loading" data-message-loading><span></span><span></span><span></span><em>Preparando sugerencia…</em></div><p data-message-preview hidden></p><textarea data-message-editor aria-label="Editar mensaje" hidden></textarea><p class="forge-message-error" data-message-error role="status" hidden></p></div></div><div class="forge-message-meta"><span data-message-source>Generando con NASH</span><span>Sin envío automático</span></div><footer><button type="button" class="forge-workspace-secondary" data-edit-message disabled>✏️ Editar</button><button type="button" class="forge-workspace-secondary" data-regenerate-message disabled>↻ Otra sugerencia</button><a class="forge-workspace-primary is-disabled" data-open-whatsapp aria-disabled="true" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></footer></aside>`;
+  }
+
+  function calendarWorkspaceTemplate(prospect) {
+    return `<aside class="forge-action-workspace forge-calendar-workspace" data-action-workspace data-workspace-type="calendar" aria-labelledby="forge-calendar-workspace-title"><header><div><p class="forge-pipeline-product">AGENDA</p><h2 id="forge-calendar-workspace-title">Cita con ${esc(prospect.fullName)}</h2><p>Define fecha y hora antes de abrir Google Calendar.</p></div><button type="button" data-close-action-workspace aria-label="Cerrar agenda">×</button></header><div class="forge-calendar-fields"><label>Fecha<input type="date" data-calendar-date required></label><label>Hora<input type="time" data-calendar-time required></label><label>Duración<select data-calendar-duration><option value="30">30 min</option><option value="45" selected>45 min</option><option value="60">60 min</option></select></label><label>Zona horaria<input value="America/Mexico_City" data-calendar-timezone readonly></label></div><p class="forge-calendar-preview" data-calendar-preview>Selecciona fecha y hora.</p><footer><a class="forge-workspace-primary is-disabled" data-open-calendar aria-disabled="true" target="_blank" rel="noopener noreferrer">Abrir Google Calendar</a></footer></aside>`;
   }
 
   function create({ client, root, renderPipeline = global.ForgePipelineUI?.renderPipelineUI }) {
@@ -219,7 +294,11 @@
     let openCreateCount = 0;
     let createTrigger = null;
     let restoreBodyOverflow = "";
-    let exactDraftApproval = null;
+    let actionProspect = null;
+    let actionTrigger = null;
+    let draftRequestId = 0;
+    let draftVariation = 0;
+    let currentDraftCandidate = null;
 
     function render(model = toModel(prospects)) {
       root.innerHTML = renderPipeline(model);
@@ -341,12 +420,187 @@
 
     function openDetail(prospect) {
       selected = prospect;
-      exactDraftApproval = null;
       root.querySelector("[data-prospect-detail-dialog]")?.remove();
       root.insertAdjacentHTML("beforeend", detailTemplate(prospect));
       const dialog = root.querySelector("[data-prospect-detail-dialog]");
       if (typeof dialog.showModal === "function") dialog.showModal();
       else dialog.setAttribute("open", "");
+    }
+
+    function closeActionWorkspace() {
+      root.querySelector("[data-action-workspace]")?.remove();
+      actionProspect = null;
+      currentDraftCandidate = null;
+      actionTrigger?.focus?.();
+      actionTrigger = null;
+    }
+
+    function setMessageState({ loading = false, text = "", source = "", error = "" } = {}) {
+      const workspace = root.querySelector('[data-workspace-type="whatsapp"]');
+      if (!workspace) return;
+      const loadingNode = workspace.querySelector("[data-message-loading]");
+      const preview = workspace.querySelector("[data-message-preview]");
+      const editor = workspace.querySelector("[data-message-editor]");
+      const errorNode = workspace.querySelector("[data-message-error]");
+      const edit = workspace.querySelector("[data-edit-message]");
+      const regenerate = workspace.querySelector("[data-regenerate-message]");
+      loadingNode.hidden = !loading;
+      preview.hidden = loading || !text;
+      preview.textContent = text;
+      editor.hidden = true;
+      editor.value = text;
+      errorNode.hidden = !error;
+      errorNode.textContent = error;
+      workspace.querySelector("[data-message-source]").textContent = source || "NASH";
+      edit.disabled = loading || !text;
+      edit.textContent = "✏️ Editar";
+      regenerate.disabled = loading;
+      syncWhatsAppLink(text);
+    }
+
+    function syncWhatsAppLink(text) {
+      const link = root.querySelector("[data-open-whatsapp]");
+      if (!link || !actionProspect) return;
+      const href = whatsappUrl(actionProspect, "professional", text || "");
+      if (href && text) {
+        link.href = href;
+        link.classList.remove("is-disabled");
+        link.removeAttribute("aria-disabled");
+      } else {
+        link.removeAttribute("href");
+        link.classList.add("is-disabled");
+        link.setAttribute("aria-disabled", "true");
+      }
+    }
+
+    function messageContext(prospect, goal, style, variation) {
+      const context = {
+        contractType: "PROSPECT_MESSAGE_CONTEXT_UI_V1",
+        displayName: prospect.fullName,
+        allowedFields: ["displayName", "messageGoal", "communicationStyle"],
+        messageGoal: goal,
+        communicationStyle: style,
+        variationRequest: variation,
+      };
+      if (prospect.nextActionAt && ["appointment_confirmation", "reschedule"].includes(goal)) {
+        context.allowedFields.push("appointmentAt");
+        context.appointmentAt = prospect.nextActionAt;
+      }
+      return context;
+    }
+
+    async function generateMessageDraft() {
+      const workspace = root.querySelector('[data-workspace-type="whatsapp"]');
+      if (!workspace || !actionProspect) return;
+      const goal = workspace.querySelector("[data-message-goal]").value;
+      const style = workspace.querySelector("[data-message-style]").value;
+      const requestId = ++draftRequestId;
+      currentDraftCandidate = null;
+      setMessageState({ loading: true, source: "Generando con Gemini" });
+      try {
+        const invocation = client.functions?.invoke
+          ? await client.functions.invoke("nash-draft-provider", {
+              body: {
+                providerId: "gemini",
+                experimentalFeatureEnabled: true,
+                prospectMessageContext: messageContext(actionProspect, goal, style, draftVariation),
+              },
+            })
+          : { data: null, error: new Error("PROVIDER_CLIENT_UNAVAILABLE") };
+        if (requestId !== draftRequestId || !workspace.isConnected) return;
+        const envelope = invocation?.data;
+        if (!invocation?.error && envelope?.resultState === "SUCCESS" && envelope.draftCandidate?.rawText) {
+          currentDraftCandidate = envelope.draftCandidate;
+          setMessageState({ text: envelope.draftCandidate.rawText, source: "Sugerencia experimental de Gemini" });
+          return;
+        }
+        if (!invocation?.error && envelope?.resultState === "NO_DRAFT") {
+          setMessageState({ error: "NASH no encontró contexto suficiente para preparar un mensaje.", source: "Sin sugerencia segura" });
+          return;
+        }
+        currentDraftCandidate = draftCandidate(actionProspect, style, goal, draftVariation);
+        setMessageState({ text: currentDraftCandidate.rawText, source: "Sugerencia determinística segura" });
+      } catch (_error) {
+        if (requestId !== draftRequestId || !workspace.isConnected) return;
+        currentDraftCandidate = draftCandidate(actionProspect, style, goal, draftVariation);
+        setMessageState({ text: currentDraftCandidate.rawText, source: "Sugerencia determinística segura" });
+      }
+    }
+
+    function openActionWorkspace(prospect, type, trigger) {
+      closeActionWorkspace();
+      actionProspect = prospect;
+      actionTrigger = trigger || null;
+      draftVariation = 0;
+      root.insertAdjacentHTML("beforeend", type === "calendar" ? calendarWorkspaceTemplate(prospect) : messageWorkspaceTemplate(prospect));
+      const workspace = root.querySelector("[data-action-workspace]");
+      workspace.querySelector("[data-close-action-workspace]")?.focus();
+      if (type === "whatsapp") void generateMessageDraft();
+    }
+
+    function syncCalendarWorkspace() {
+      const workspace = root.querySelector('[data-workspace-type="calendar"]');
+      if (!workspace || !actionProspect) return;
+      const date = workspace.querySelector("[data-calendar-date]").value;
+      const time = workspace.querySelector("[data-calendar-time]").value;
+      const duration = Number(workspace.querySelector("[data-calendar-duration]").value);
+      const link = workspace.querySelector("[data-open-calendar]");
+      const preview = workspace.querySelector("[data-calendar-preview]");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
+        link.removeAttribute("href");
+        link.classList.add("is-disabled");
+        link.setAttribute("aria-disabled", "true");
+        preview.textContent = "Selecciona fecha y hora.";
+        return;
+      }
+      const start = new Date(`${date}T${time}:00`);
+      if (Number.isNaN(start.getTime())) return;
+      const end = new Date(start.getTime() + duration * 60000);
+      const compact = value => `${value.getFullYear()}${String(value.getMonth() + 1).padStart(2, "0")}${String(value.getDate()).padStart(2, "0")}T${String(value.getHours()).padStart(2, "0")}${String(value.getMinutes()).padStart(2, "0")}00`;
+      const params = new URLSearchParams({ action: "TEMPLATE", text: `Cita con ${actionProspect.fullName}`, dates: `${compact(start)}/${compact(end)}`, ctz: "America/Mexico_City", details: "Confirma los detalles antes de guardar." });
+      link.href = `https://calendar.google.com/calendar/render?${params.toString()}`;
+      link.classList.remove("is-disabled");
+      link.removeAttribute("aria-disabled");
+      preview.textContent = `${humanDate(start.toISOString(), 0)} · ${time} · ${duration} min`;
+    }
+
+    async function updateStatus(select) {
+      const prospect = prospects.find(item => item.id === select.dataset.prospectStatus);
+      if (!prospect || prospect.status === select.value) return;
+      const previous = prospect.status;
+      const scrollTop = global.scrollY;
+      select.disabled = true;
+      try {
+        const updated = await service.updateProspect(prospect.id, { status: select.value });
+        prospects = prospects.map(item => item.id === prospect.id ? updated : item);
+        render();
+        (global.requestAnimationFrame || (callback => callback()))(() => global.scrollTo?.({ top: scrollTop, behavior: "instant" }));
+      } catch (_error) {
+        select.value = previous;
+        select.disabled = false;
+        select.setAttribute("aria-invalid", "true");
+        select.title = "No pudimos actualizar la etapa.";
+      }
+    }
+
+    function filterPipelineCards() {
+      const pipeline = root.querySelector(".forge-pipeline");
+      if (!pipeline) return;
+      const search = pipeline.querySelector('[name="pipeline-search"]')?.value.trim().toLocaleLowerCase("es-MX") || "";
+      const source = pipeline.querySelector('[name="source"]')?.value || "";
+      const followup = pipeline.querySelector('[name="followup"]')?.value || "";
+      pipeline.querySelectorAll(".forge-pipeline-card").forEach(card => {
+        const prospect = prospects.find(item => item.id === card.dataset.prospectId);
+        const searchable = `${prospect?.fullName || ""} ${contactPhone(prospect, "call") || ""}`.toLocaleLowerCase("es-MX");
+        const matchesSearch = !search || searchable.includes(search);
+        const matchesSource = !source || prospect?.source === source;
+        const due = prospect?.nextActionAt ? new Date(prospect.nextActionAt).getTime() : null;
+        const matchesFollowup = !followup || (followup === "Vencido" ? due && due < Date.now() : due && due >= Date.now());
+        card.hidden = !(matchesSearch && matchesSource && matchesFollowup);
+      });
+      pipeline.querySelectorAll(".forge-pipeline-column").forEach(column => {
+        column.hidden = !column.querySelector(".forge-pipeline-card:not([hidden])");
+      });
     }
 
     async function submit(form) {
@@ -405,6 +659,8 @@
     root.addEventListener("click", event => {
       const add = event.target.closest("[data-add-prospect]");
       const open = event.target.closest("[data-open-prospect]");
+      const cardWhatsApp = event.target.closest("[data-card-whatsapp]");
+      const cardCalendar = event.target.closest("[data-card-calendar]");
       if (add) {
         event.preventDefault();
         openProductiveProspectCreateModal({}, add);
@@ -414,6 +670,77 @@
         event.preventDefault();
         const prospect = prospects.find(item => item.id === open.dataset.openProspect);
         if (prospect) openDetail(prospect);
+        return;
+      }
+      if (cardWhatsApp) {
+        event.preventDefault();
+        const prospect = prospects.find(item => item.id === cardWhatsApp.dataset.cardWhatsapp);
+        if (prospect) openActionWorkspace(prospect, "whatsapp", cardWhatsApp);
+        return;
+      }
+      if (cardCalendar) {
+        event.preventDefault();
+        const prospect = prospects.find(item => item.id === cardCalendar.dataset.cardCalendar);
+        if (prospect) openActionWorkspace(prospect, "calendar", cardCalendar);
+        return;
+      }
+      if (event.target.closest("[data-detail-whatsapp]") && selected) {
+        event.preventDefault();
+        root.querySelector("[data-prospect-detail-dialog]")?.close?.();
+        root.querySelector("[data-prospect-detail-dialog]")?.remove();
+        openActionWorkspace(selected, "whatsapp", event.target.closest("[data-detail-whatsapp]"));
+        return;
+      }
+      if (event.target.closest("[data-detail-calendar]") && selected) {
+        event.preventDefault();
+        root.querySelector("[data-prospect-detail-dialog]")?.close?.();
+        root.querySelector("[data-prospect-detail-dialog]")?.remove();
+        openActionWorkspace(selected, "calendar", event.target.closest("[data-detail-calendar]"));
+        return;
+      }
+      if (event.target.closest("[data-close-action-workspace]")) {
+        event.preventDefault();
+        closeActionWorkspace();
+        return;
+      }
+      const edit = event.target.closest("[data-edit-message]");
+      if (edit) {
+        event.preventDefault();
+        const workspace = edit.closest("[data-action-workspace]");
+        const preview = workspace.querySelector("[data-message-preview]");
+        const editor = workspace.querySelector("[data-message-editor]");
+        const editing = editor.hidden;
+        editor.hidden = !editing;
+        preview.hidden = editing;
+        edit.textContent = editing ? "Listo" : "✏️ Editar";
+        if (editing) editor.focus();
+        else {
+          preview.textContent = editor.value;
+          syncWhatsAppLink(editor.value);
+        }
+        return;
+      }
+      if (event.target.closest("[data-regenerate-message]")) {
+        event.preventDefault();
+        draftVariation += 1;
+        void generateMessageDraft();
+        return;
+      }
+      const whatsapp = event.target.closest("[data-open-whatsapp]");
+      if (whatsapp) {
+        const workspace = whatsapp.closest("[data-action-workspace]");
+        const editor = workspace.querySelector("[data-message-editor]");
+        const preview = workspace.querySelector("[data-message-preview]");
+        const text = editor.hidden ? preview.textContent : editor.value;
+        const validation = draftSafetyValidator({ draftText: text, draftCandidateSnapshot: currentDraftCandidate, humanApproval: { required: true, finalAuthority: "HUMAN" } });
+        const approval = approveExactDraft({ draftText: text, validationResult: validation });
+        const gate = exactDraftHumanApprovalGate({ draftText: text, validationResult: validation, approvalSnapshot: approval });
+        whatsapp.dataset.draftSafetyDecision = validation.decision;
+        whatsapp.dataset.exactDraftApproved = gate.exactDraftApproved ? "YES" : "NO";
+        if (gate.decision === DRAFT_VALIDATION_DECISIONS.ALLOW_WHATSAPP) return;
+        event.preventDefault();
+        workspace.querySelector("[data-message-error]").textContent = "Revisa el mensaje antes de abrir WhatsApp.";
+        workspace.querySelector("[data-message-error]").hidden = false;
         return;
       }
       if (event.target.closest("[data-close-prospect-detail]")) {
@@ -435,82 +762,32 @@
       }
     }, { signal: controller.signal });
 
-    function refreshWhatsappAction(tone) {
-      const link = root.querySelector("[data-whatsapp-action]");
-      const draft = root.querySelector("[data-whatsapp-draft]");
-      if (link && selected && draft) link.href = whatsappUrl(selected, tone, draft.value);
-    }
-
-    function currentDraftSafetyResult() {
-      const draft = root.querySelector("[data-whatsapp-draft]");
-      const tone = root.querySelector("[data-whatsapp-tone]")?.value || "profesional";
-      return draftSafetyValidator({
-        draftText: draft?.value ?? "",
-        draftCandidateSnapshot: selected ? draftCandidate(selected, tone) : null,
-        humanApproval: { required: true, finalAuthority: "HUMAN" },
-      });
-    }
-
-    function markDraftApprovalInvalid() {
-      exactDraftApproval = null;
-      const action = root.querySelector("[data-whatsapp-action]");
-      const approve = root.querySelector("[data-approve-whatsapp-draft]");
-      if (action) {
-        delete action.dataset.exactDraftApproved;
-        delete action.dataset.whatsappBlocked;
-      }
-      if (approve) {
-        approve.dataset.exactDraftApproved = "NO";
-        approve.title = "Draft pendiente de aprobacion exacta.";
-      }
-    }
-
     root.addEventListener("input", event => {
-      if (!event.target.matches("[data-whatsapp-draft]")) return;
-      event.target.dataset.draftDirty = "true";
-      markDraftApprovalInvalid();
-      const tone = root.querySelector("[data-whatsapp-tone]")?.value || "profesional";
-      refreshWhatsappAction(tone);
+      if (event.target.matches('[name="pipeline-search"]')) {
+        filterPipelineCards();
+        return;
+      }
+      if (event.target.matches("[data-message-editor]")) {
+        currentDraftCandidate = Object.freeze({ rawText: event.target.value, sendsMessage: false, sourceMutable: true });
+        syncWhatsAppLink(event.target.value);
+      }
     }, { signal: controller.signal });
 
     root.addEventListener("change", event => {
-      if (!event.target.matches("[data-whatsapp-tone]")) return;
-      const draft = root.querySelector("[data-whatsapp-draft]");
-      if (draft && selected && draft.dataset.draftDirty !== "true") {
-        draft.value = draftCandidate(selected, event.target.value).rawText;
-      }
-      markDraftApprovalInvalid();
-      refreshWhatsappAction(event.target.value);
-    }, { signal: controller.signal });
-
-    root.addEventListener("click", event => {
-      const approve = event.target.closest("[data-approve-whatsapp-draft]");
-      if (approve) {
-        event.preventDefault();
-        const draft = root.querySelector("[data-whatsapp-draft]");
-        const validation = currentDraftSafetyResult();
-        const approval = approveExactDraft({ draftText: draft?.value ?? "", validationResult: validation });
-        approve.dataset.exactDraftApproved = approval.exactDraftApproved ? "YES" : "NO";
-        approve.dataset.draftApprovalDecision = approval.decision;
-        approve.title = approval.errors.map(error => error.code).join(", ");
-        exactDraftApproval = approval.exactDraftApproved ? approval : null;
+      if (event.target.matches("[data-prospect-status]")) {
+        void updateStatus(event.target);
         return;
       }
-      const action = event.target.closest("[data-whatsapp-action]");
-      if (!action) return;
-      const validation = currentDraftSafetyResult();
-      const approvalGate = exactDraftHumanApprovalGate({
-        draftText: root.querySelector("[data-whatsapp-draft]")?.value ?? "",
-        validationResult: validation,
-        approvalSnapshot: exactDraftApproval,
-      });
-      action.dataset.draftSafetyDecision = validation.decision;
-      action.dataset.exactDraftApproved = approvalGate.exactDraftApproved ? "YES" : "NO";
-      if (approvalGate.decision === DRAFT_VALIDATION_DECISIONS.ALLOW_WHATSAPP) return;
-      event.preventDefault();
-      action.dataset.whatsappBlocked = "true";
-      action.title = [...validation.errors, ...approvalGate.errors].map(error => error.code).join(", ");
-      root.dispatchEvent(new global.CustomEvent("forge:draft-human-approval-gate:blocked", { detail: approvalGate }));
+      if (event.target.matches('[name="source"],[name="followup"]')) {
+        filterPipelineCards();
+        return;
+      }
+      if (event.target.matches("[data-message-goal],[data-message-style]")) {
+        draftVariation = 0;
+        void generateMessageDraft();
+        return;
+      }
+      if (event.target.matches("[data-calendar-date],[data-calendar-time],[data-calendar-duration]")) syncCalendarWorkspace();
     }, { signal: controller.signal });
 
     return Object.freeze({
@@ -537,6 +814,10 @@
     toModel,
     draftCandidate,
     whatsappUrl,
+    contactPhone,
+    humanDate,
+    messageWorkspaceTemplate,
+    calendarWorkspaceTemplate,
     draftSafetyValidator,
     approveExactDraft,
     exactDraftHumanApprovalGate,
