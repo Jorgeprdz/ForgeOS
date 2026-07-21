@@ -11,7 +11,7 @@ assert.ok(chromiumPath && evidenceDir, "BROWSER_PATHS_REQUIRED");
 mkdirSync(evidenceDir, { recursive: true });
 const root = process.cwd();
 const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css" };
-  const harness = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/advisor-os/sales-pipeline/pipeline-ui.css"><style>body{margin:0;background:#050b16}</style></head><body><section data-root></section><script>window.__external=[];window.__invocations=0;window.__statusWrites=0;document.addEventListener('click',event=>{const link=event.target.closest?.('a[href]');const href=link?.href||'';if(href.startsWith('tel:')||href.startsWith('https://wa.me/')||href.startsWith('https://calendar.google.com/')){window.__external.push({href,trusted:event.isTrusted});event.preventDefault()}},true);</script><script src="/advisor-os/sales-pipeline/pipeline-ui.js"></script><script>window.__rows=[{id:'p1',fullName:'Prospecto Demo',phone:'+525500000001',whatsapp:'+525500000001',source:'Referido',referrerName:'Referente Demo',status:'referred_new',nextActionAt:'2026-07-24T10:00:00Z',createdAt:'2026-07-18T00:00:00Z'},{id:'p2',fullName:'Prospecto Norte',phone:'+525500000002',source:'Evento',status:'referred_new',createdAt:'2026-07-19T00:00:00Z'},{id:'p3',fullName:'Prospecto Cita',phone:'+525500000003',whatsapp:'+525500000003',source:'Proyecto 200',status:'appointment_scheduled',nextActionAt:'2026-07-25T09:00:00Z'}];window.ForgeProductiveProspectService067G17B={create(){return{async listProspects(){return window.__rows.slice()},async updateProspect(id,changes){window.__statusWrites=Number(window.__statusWrites||0)+1;const row=window.__rows.find(item=>item.id===id);Object.assign(row,changes);return {...row}},async createProspect(){throw new Error('OUT_OF_SCOPE')},async archiveProspect(){throw new Error('OUT_OF_SCOPE')}}}};</script><script src="/advisor-os/sales-pipeline/productive-prospect-ui.js"></script><script>const client={functions:{async invoke(_name,{body}){window.__invocations=Number(window.__invocations||0)+1;return{data:{resultState:'SUCCESS',draftCandidate:{rawText:'Hola, '+body.prospectMessageContext.displayName+'. Borrador '+window.__invocations+'.',sendsMessage:false,sourceMutable:false},metadata:{providerId:'gemini'},error:null},error:null}}}};window.__pipeline=ForgeProductiveProspectUI067G17B.create({client,root:document.querySelector('[data-root]')});window.__pipeline.load();</script></body></html>`;
+  const harness = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/advisor-os/sales-pipeline/pipeline-ui.css"><style>body{margin:0;background:#050b16}</style></head><body><section data-root></section><script>window.__external=[];window.__invocations=0;window.__statusWrites=0;window.__archiveWrites=0;document.addEventListener('click',event=>{const link=event.target.closest?.('a[href]');const href=link?.href||'';if(href.startsWith('tel:')||href.startsWith('https://wa.me/')||href.startsWith('https://calendar.google.com/')){window.__external.push({href,trusted:event.isTrusted});event.preventDefault()}},true);</script><script src="/advisor-os/sales-pipeline/pipeline-ui.js"></script><script>window.__rows=[{id:'p1',fullName:'Prospecto Demo',phone:'+525500000001',whatsapp:'+525500000001',source:'Referido',referrerName:'Referente Demo',status:'referred_new',nextActionAt:'2026-07-24T10:00:00Z',createdAt:'2026-07-18T00:00:00Z'},{id:'p2',fullName:'Prospecto Norte',phone:'+525500000002',source:'Evento',status:'referred_new',createdAt:'2026-07-19T00:00:00Z'},{id:'p3',fullName:'Prospecto Cita',phone:'+525500000003',whatsapp:'+525500000003',source:'Proyecto 200',status:'appointment_scheduled',nextActionAt:'2026-07-25T09:00:00Z'}];window.ForgeProductiveProspectService067G17B={create(){return{async listProspects(){return window.__rows.slice()},async updateProspect(id,changes){window.__statusWrites=Number(window.__statusWrites||0)+1;const row=window.__rows.find(item=>item.id===id);Object.assign(row,changes);return {...row}},async createProspect(){throw new Error('OUT_OF_SCOPE')},async archiveProspect(id){window.__archiveWrites+=1;window.__rows=window.__rows.filter(item=>item.id!==id);return{id}}}}};</script><script src="/advisor-os/sales-pipeline/productive-prospect-ui.js"></script><script>const client={functions:{async invoke(_name,{body}){window.__invocations=Number(window.__invocations||0)+1;return{data:{resultState:'SUCCESS',draftCandidate:{rawText:'Hola, '+body.prospectMessageContext.displayName+'. Borrador '+window.__invocations+'.',sendsMessage:false,sourceMutable:false},metadata:{providerId:'gemini'},error:null},error:null}}}};window.__pipeline=ForgeProductiveProspectUI067G17B.create({client,root:document.querySelector('[data-root]')});window.__pipeline.load();</script></body></html>`;
 const server = http.createServer(async (request, response) => {
   const pathname = decodeURIComponent(new URL(request.url, "http://127.0.0.1").pathname);
   if (pathname === "/harness") return response.writeHead(200, { "Content-Type": "text/html" }).end(harness);
@@ -31,7 +31,19 @@ try {
     const geometry = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth + 1, cards: [...document.querySelectorAll(".forge-pipeline-card")].map(card => ({ width: card.getBoundingClientRect().width, actions: [...card.querySelectorAll(".forge-card-action")].every(action => action.getBoundingClientRect().height >= 44) })) }));
     assert.equal(geometry.overflow, false, `${label}_overflow`);
     assert.equal(geometry.cards.every(card => card.width > 0 && card.actions), true, `${label}_card_geometry`);
+    assert.equal(await page.$$(".forge-pipeline-chip").then(nodes => nodes.length), 0, `${label}_duplicate_badge_removed`);
     await page.screenshot({ path: join(evidenceDir, `${label}-pipeline.png`), fullPage: true });
+    if (label !== "tablet") {
+      await page.click('[data-card-menu="p1"]');
+      await page.waitForSelector('[data-card-menu-panel="p1"]:not([hidden])');
+      await page.screenshot({ path: join(evidenceDir, `${label}-context-menu.png`), fullPage: true });
+      await page.keyboard.press("Escape");
+      assert.equal(await page.$eval('[data-card-menu="p1"]', node => node === document.activeElement && node.getAttribute("aria-expanded") === "false"), true);
+      await page.click('[data-card-menu="p1"]');
+      await page.click('[data-card-edit="p1"]');
+      assert.equal(await page.$eval("[data-prospect-form-modal]", node => node.dataset.prospectId), "p1");
+      await page.click("[data-close-prospect-form]");
+    }
     await page.click('[data-card-whatsapp="p1"]');
     await page.waitForSelector("[data-message-preview]:not([hidden])");
     await page.evaluate(() => Promise.all(document.querySelector("[data-action-workspace]").getAnimations().map(animation => animation.finished)));
@@ -41,6 +53,19 @@ try {
     await page.waitForSelector("[data-prospect-detail-dialog][open]");
     await page.screenshot({ path: join(evidenceDir, `${label}-prospect-detail.png`), fullPage: true });
     await page.click("[data-close-prospect-detail]");
+    if (label === "mobile") {
+      await page.click('[data-card-menu="p1"]');
+      await page.click('[data-card-delete="p1"]');
+      await page.waitForSelector("[data-delete-confirmation][open]");
+      assert.equal(await page.evaluate(() => window.__archiveWrites), 0);
+      await page.screenshot({ path: join(evidenceDir, "mobile-delete-confirmation.png"), fullPage: true });
+      await page.click("[data-cancel-delete]");
+      assert.equal(await page.evaluate(() => window.__archiveWrites), 0);
+      await page.click("[data-add-prospect]");
+      await page.waitForSelector("[data-prospect-form-modal]");
+      await page.screenshot({ path: join(evidenceDir, "mobile-add-prospect.png"), fullPage: true });
+      await page.click("[data-close-prospect-form]");
+    }
   }
   await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
   await page.goto(`http://127.0.0.1:${server.address().port}/harness`, { waitUntil: "networkidle0" });
@@ -76,6 +101,13 @@ try {
   await page.waitForSelector("[data-prospect-detail-dialog][open]");
   assert.match(await page.$eval(".forge-prospect-detail-list--primary", node => node.textContent), /Teléfono|WhatsApp|Referido por|Etapa/);
   await page.screenshot({ path: join(evidenceDir, "desktop-prospect-detail.png"), fullPage: true });
+  await page.click("[data-close-prospect-detail]");
+  await page.click('[data-card-menu="p2"]');
+  await page.click('[data-card-delete="p2"]');
+  assert.equal(await page.evaluate(() => window.__archiveWrites), 0);
+  await page.click("[data-confirm-delete]");
+  await page.waitForFunction(() => !document.querySelector('[data-prospect-id="p2"]'));
+  assert.equal(await page.evaluate(() => window.__archiveWrites), 1);
   console.log("067G17N PIPELINE COCKPIT BROWSER: PASS");
 } finally {
   await browser.close();

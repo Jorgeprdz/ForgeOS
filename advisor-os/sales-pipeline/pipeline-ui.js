@@ -24,7 +24,11 @@ function stateBlock(state, message, actions = []) {
 
 function statusControl(item) {
   if (!item.statusOptions?.length) return "";
-  return `<label class="forge-card-stage-control"><span>Etapa</span><select data-prospect-status="${esc(item.prospectId)}" aria-label="Cambiar etapa de ${esc(item.name)}">${item.statusOptions.map(option => `<option value="${esc(option.value)}" ${option.value === item.status ? "selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>`;
+  return `<label class="forge-card-stage-control"><span class="forge-visually-hidden">Etapa de ${esc(item.name)}</span><select data-prospect-status="${esc(item.prospectId)}" aria-label="Etapa de ${esc(item.name)}">${item.statusOptions.map(option => `<option value="${esc(option.value)}" ${option.value === item.status ? "selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>`;
+}
+
+function contextualMenu(item) {
+  return `<div class="forge-card-context"><button type="button" class="forge-card-menu-trigger" data-card-menu="${esc(item.prospectId)}" aria-label="Más acciones para ${esc(item.name)}" aria-haspopup="menu" aria-expanded="false">⋮</button><div class="forge-card-menu" data-card-menu-panel="${esc(item.prospectId)}" role="menu" hidden><button type="button" role="menuitem" data-card-edit="${esc(item.prospectId)}">Editar prospecto</button><button type="button" role="menuitem" class="forge-card-menu-danger" data-card-delete="${esc(item.prospectId)}">Eliminar prospecto</button></div></div>`;
 }
 
 function quickActions(item) {
@@ -40,7 +44,7 @@ function card(item) {
   const transition = item.transitionControl
     ? `<label class="forge-pipeline-transition">Mover oportunidad<select data-transition-opportunity="${esc(item.opportunityId)}" ${item.transitionControl.writerAvailable ? "" : "disabled"}>${item.transitionControl.allowedTargets.map(target => `<option value="${esc(target.code)}">${esc(target.label)}</option>`).join("")}</select></label>${item.transitionControl.blockedReason ? `<p class="forge-pipeline-blocked">${esc(item.transitionControl.blockedReason)}</p>` : ""}`
     : "";
-  return `<article class="forge-pipeline-card" data-stage="${esc(item.status || item.stageCode || "unknown")}" data-prospect-id="${esc(item.prospectId)}"><span class="forge-card-status-bar" aria-hidden="true"></span><header><div><p class="forge-card-stage-label">${esc(item.stageLabel || "Pendiente")}</p><button type="button" class="forge-card-name" data-open-prospect="${esc(item.prospectId)}">${esc(item.name)}</button></div><span class="forge-pipeline-chip">${esc(item.sourceLabel || "Fuente verificada")}</span></header><ul class="forge-card-summary"><li>${ICONS.phone}<span>${esc(item.phoneLabel || "Sin teléfono")}</span></li><li>${ICONS.person}<span>${esc(item.referrerLabel || "Sin referente")}</span></li><li>${ICONS.calendar}<span>${esc(item.appointmentLabel || "Sin cita")}</span></li></ul>${statusControl(item)}${transition}${quickActions(item)}</article>`;
+  return `<article class="forge-pipeline-card" data-stage="${esc(item.status || item.stageCode || "unknown")}" data-prospect-id="${esc(item.prospectId)}"><span class="forge-card-status-bar" aria-hidden="true"></span><header><div><p class="forge-card-stage-label">${esc(item.stageLabel || "Pendiente")}</p><button type="button" class="forge-card-name" data-open-prospect="${esc(item.prospectId)}">${esc(item.name)}</button></div>${contextualMenu(item)}</header><ul class="forge-card-summary"><li>${ICONS.phone}<span>${esc(item.phoneLabel || "Sin teléfono")}</span></li><li>${ICONS.person}<span>${esc(item.referrerLabel || "Sin referente")}</span></li><li>${ICONS.calendar}<span>${esc(item.appointmentLabel || "Sin cita")}</span></li></ul>${statusControl(item)}${transition}${quickActions(item)}</article>`;
 }
 
 function renderPipelineUI(model = {}) {
@@ -53,6 +57,6 @@ function renderPipelineUI(model = {}) {
   return `<main class="forge-pipeline" aria-labelledby="forge-pipeline-title"><header class="forge-pipeline-header"><div><p class="forge-pipeline-product">FORGE · ADVISOR OS</p><p class="forge-pipeline-kicker">INTERVENCIÓN COMERCIAL EXPLICADA</p><h1 id="forge-pipeline-title">Pipeline de ventas</h1><p>Decide y actúa sin salir de tu operación diaria.</p></div>${model.writerAvailable ? '<button type="button" class="forge-pipeline-primary" data-add-prospect>+ Agregar prospecto</button>' : ""}</header><form class="forge-pipeline-toolbar" role="search" aria-label="Filtros del Pipeline"><label><span>Buscar</span><input name="pipeline-search" type="search" autocomplete="off" placeholder="Nombre o teléfono"></label><label><span>Origen</span><select name="source"><option value="">Todos los orígenes</option><option>Referido</option><option>Proyecto 200</option><option>Mercado natural</option><option>Redes sociales</option><option>Cliente existente</option><option>Evento</option><option>Otro</option></select></label><label><span>Seguimiento</span><select name="followup"><option value="">Todos</option><option>Vencido</option><option>Próximo</option></select></label></form>${content}</main>`;
 }
 
-const PipelineUI = { renderPipelineUI, stateBlock, card, ICONS };
+const PipelineUI = { renderPipelineUI, stateBlock, card, contextualMenu, ICONS };
 if (typeof globalThis !== "undefined") globalThis.ForgePipelineUI = PipelineUI;
 if (typeof module !== "undefined" && module.exports) module.exports = PipelineUI;

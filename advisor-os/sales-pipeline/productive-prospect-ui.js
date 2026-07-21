@@ -280,6 +280,10 @@
     return `<aside class="forge-action-workspace forge-calendar-workspace" data-action-workspace data-workspace-type="calendar" aria-labelledby="forge-calendar-workspace-title"><header><div><p class="forge-pipeline-product">AGENDA</p><h2 id="forge-calendar-workspace-title">Cita con ${esc(prospect.fullName)}</h2><p>Define fecha y hora antes de abrir Google Calendar.</p></div><button type="button" data-close-action-workspace aria-label="Cerrar agenda">×</button></header><div class="forge-calendar-fields"><label>Fecha<input type="date" data-calendar-date required></label><label>Hora<input type="time" data-calendar-time required></label><label>Duración<select data-calendar-duration><option value="30">30 min</option><option value="45" selected>45 min</option><option value="60">60 min</option></select></label><label>Zona horaria<input value="America/Mexico_City" data-calendar-timezone readonly></label></div><p class="forge-calendar-preview" data-calendar-preview>Selecciona fecha y hora.</p><footer><a class="forge-workspace-primary is-disabled" data-open-calendar aria-disabled="true" target="_blank" rel="noopener noreferrer">Abrir Google Calendar</a></footer></aside>`;
   }
 
+  function deleteConfirmationTemplate(prospect) {
+    return `<dialog class="forge-prospect-dialog forge-delete-confirmation" data-delete-confirmation aria-labelledby="delete-confirmation-title" aria-describedby="delete-confirmation-body"><article><header><div><p class="forge-pipeline-product">ACCIÓN DESTRUCTIVA</p><h2 id="delete-confirmation-title">¿Eliminar este prospecto?</h2></div><button type="button" data-cancel-delete aria-label="Cerrar confirmación">×</button></header><p id="delete-confirmation-body">Se retirará a ${esc(prospect.fullName)} del Pipeline. Su historial se conservará.</p><footer><button type="button" data-cancel-delete>Cancelar</button><button type="button" class="forge-delete-confirm" data-confirm-delete>Eliminar</button></footer></article></dialog>`;
+  }
+
   function create({ client, root, renderPipeline = global.ForgePipelineUI?.renderPipelineUI }) {
     if (!client || !root || typeof renderPipeline !== "function") throw new Error("PRODUCTIVE_PIPELINE_DEPENDENCY_MISSING");
 
@@ -299,6 +303,9 @@
     let draftRequestId = 0;
     let draftVariation = 0;
     let currentDraftCandidate = null;
+    let menuTrigger = null;
+    let deleteProspect = null;
+    let deleteTrigger = null;
 
     function render(model = toModel(prospects)) {
       root.innerHTML = renderPipeline(model);
@@ -433,6 +440,49 @@
       currentDraftCandidate = null;
       actionTrigger?.focus?.();
       actionTrigger = null;
+    }
+
+    function closeCardMenu({ restoreFocus = false } = {}) {
+      const panel = root.querySelector("[data-card-menu-panel]:not([hidden])");
+      if (!panel) return;
+      panel.hidden = true;
+      const trigger = root.querySelector(`[data-card-menu="${panel.dataset.cardMenuPanel}"]`);
+      trigger?.setAttribute("aria-expanded", "false");
+      if (restoreFocus) trigger?.focus();
+      menuTrigger = null;
+    }
+
+    function toggleCardMenu(trigger) {
+      const wasOpen = trigger.getAttribute("aria-expanded") === "true";
+      closeCardMenu();
+      if (wasOpen) return;
+      const panel = root.querySelector(`[data-card-menu-panel="${trigger.dataset.cardMenu}"]`);
+      if (!panel) return;
+      panel.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      menuTrigger = trigger;
+      panel.querySelector('[role="menuitem"]')?.focus();
+    }
+
+    function closeDeleteConfirmation({ restoreFocus = true } = {}) {
+      const dialog = root.querySelector("[data-delete-confirmation]");
+      dialog?.close?.();
+      dialog?.remove();
+      deleteProspect = null;
+      if (restoreFocus) deleteTrigger?.focus?.();
+      deleteTrigger = null;
+    }
+
+    function openDeleteConfirmation(prospect, trigger) {
+      closeCardMenu();
+      root.querySelector("[data-delete-confirmation]")?.remove();
+      deleteProspect = prospect;
+      deleteTrigger = trigger || null;
+      root.insertAdjacentHTML("beforeend", deleteConfirmationTemplate(prospect));
+      const dialog = root.querySelector("[data-delete-confirmation]");
+      if (typeof dialog.showModal === "function") dialog.showModal();
+      else dialog.setAttribute("open", "");
+      dialog.querySelector("[data-cancel-delete]")?.focus();
     }
 
     function setMessageState({ loading = false, text = "", source = "", error = "" } = {}) {
@@ -647,12 +697,13 @@
       }
     }
 
-    async function archive() {
-      if (!selected || !global.confirm("¿Quieres retirar este prospecto del Pipeline?\n\nSu historial se conservará y no se eliminará físicamente.")) return;
-      await service.archiveProspect(selected.id);
-      prospects = prospects.filter(item => item.id !== selected.id);
+    async function archive(prospect = deleteProspect || selected) {
+      if (!prospect) return;
+      await service.archiveProspect(prospect.id);
+      prospects = prospects.filter(item => item.id !== prospect.id);
       root.querySelector("[data-prospect-detail-dialog]")?.remove();
-      selected = null;
+      if (selected?.id === prospect.id) selected = null;
+      closeDeleteConfirmation({ restoreFocus: false });
       render();
     }
 
@@ -661,6 +712,40 @@
       const open = event.target.closest("[data-open-prospect]");
       const cardWhatsApp = event.target.closest("[data-card-whatsapp]");
       const cardCalendar = event.target.closest("[data-card-calendar]");
+      const cardMenu = event.target.closest("[data-card-menu]");
+      const cardEdit = event.target.closest("[data-card-edit]");
+      const cardDelete = event.target.closest("[data-card-delete]");
+      if (cardMenu) {
+        event.preventDefault();
+        toggleCardMenu(cardMenu);
+        return;
+      }
+      if (cardEdit) {
+        event.preventDefault();
+        const prospect = prospects.find(item => item.id === cardEdit.dataset.cardEdit);
+        if (prospect) {
+          const trigger = menuTrigger;
+          closeCardMenu();
+          openProductiveProspectCreateModal(prospect, trigger);
+        }
+        return;
+      }
+      if (cardDelete) {
+        event.preventDefault();
+        const prospect = prospects.find(item => item.id === cardDelete.dataset.cardDelete);
+        if (prospect) openDeleteConfirmation(prospect, menuTrigger);
+        return;
+      }
+      if (event.target.closest("[data-cancel-delete]")) {
+        event.preventDefault();
+        closeDeleteConfirmation();
+        return;
+      }
+      if (event.target.closest("[data-confirm-delete]")) {
+        event.preventDefault();
+        void archive();
+        return;
+      }
       if (add) {
         event.preventDefault();
         openProductiveProspectCreateModal({}, add);
@@ -758,7 +843,35 @@
       }
       if (event.target.closest("[data-archive-prospect]")) {
         event.preventDefault();
-        void archive();
+        openDeleteConfirmation(selected, event.target.closest("[data-archive-prospect]"));
+      }
+      if (!event.target.closest("[data-card-context]")) closeCardMenu();
+    }, { signal: controller.signal });
+
+    global.document.addEventListener("click", event => {
+      if (!event.target.closest?.("[data-card-context]")) closeCardMenu();
+    }, { capture: true, signal: controller.signal });
+
+    root.addEventListener("keydown", event => {
+      const deleteDialog = root.querySelector("[data-delete-confirmation]");
+      if (deleteDialog?.hasAttribute("open")) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeDeleteConfirmation();
+          return;
+        }
+        if (event.key === "Tab") {
+          const nodes = focusable(deleteDialog);
+          const first = nodes[0];
+          const last = nodes[nodes.length - 1];
+          if (event.shiftKey && global.document.activeElement === first) { event.preventDefault(); last.focus(); }
+          else if (!event.shiftKey && global.document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+        return;
+      }
+      if (event.key === "Escape" && root.querySelector("[data-card-menu-panel]:not([hidden])")) {
+        event.preventDefault();
+        closeCardMenu({ restoreFocus: true });
       }
     }, { signal: controller.signal });
 
@@ -818,6 +931,7 @@
     humanDate,
     messageWorkspaceTemplate,
     calendarWorkspaceTemplate,
+    deleteConfirmationTemplate,
     draftSafetyValidator,
     approveExactDraft,
     exactDraftHumanApprovalGate,
