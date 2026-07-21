@@ -15783,3 +15783,18 @@ Recorded: `2026-07-20`
 - Does not wire Pipeline, generate language, invoke a provider, persist context, change schema/RLS, or alter legacy NASH.
 - NFAST-03 is `READY_FOR_SEPARATE_STAGE_AUTHORIZATION`; it is not authorized by NFAST-02.
 <!-- FORGE:NFAST_02_PROSPECT_CONTEXT_INTAKE_CONTRACT:END -->
+
+<!-- FORGE:NFAST_03_UNIVERSAL_GOVERNED_PROSPECT_CONTEXT_ADAPTER:START -->
+## NFAST-03 Universal Governed Prospect Context Adapter
+
+Status: `PASS`
+
+Recorded: `2026-07-20`
+
+- Adds a deterministic, read-only Pipeline-adjacent adapter that produces consumer-neutral governed context without transferring source authority.
+- Provides isolated `CONVERSATION_CONTEXT`, `QUOTE_CONTEXT`, `PRODUCT_CONTEXT`, and `PRESENTATION_CONTEXT_REFERENCE` projections; no future consumer receives the full universal context by default.
+- NASH compatibility is layered through the actual NFAST-02 intake. Quote, Product Intelligence, and Sales Presenter remain unwired and perform no business logic.
+- Raw free text is quarantined without value retention; sensitive/routing data, placeholders, zero defaults, unsupported fields, stale facts, and invalid ownership cannot become trusted projection facts.
+- No productive import graph, persistence, provider, schema/RLS, legacy module, Quote/Product/Presenter runtime, or deployment behavior changes.
+- NFAST-04 requires separate Miranda and Board approval for deterministic Conversation Brief authority.
+<!-- FORGE:NFAST_03_UNIVERSAL_GOVERNED_PROSPECT_CONTEXT_ADAPTER:END -->
