@@ -1,0 +1,30 @@
+name: Forge 2.1 Bootstrap
+
+on:
+  push:
+    branches:
+      - rewrite/forge-2.1
+    paths:
+      - '.github/workflows/forge-2.1-bootstrap.yml'
+      - 'tools/bootstrap-forge-2.1.sh'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forge-2.1-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: rewrite/forge-2.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild Forge OS 2.1
+        run: bash tools/bootstrap-forge-2.1.sh
