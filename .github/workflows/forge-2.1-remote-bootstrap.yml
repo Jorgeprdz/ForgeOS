@@ -1,0 +1,36 @@
+name: Forge 2.1 Remote Bootstrap
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: forge-2.1-remote-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'rewrite/forge-2.1'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild Forge OS 2.1 on the head branch
+        run: bash tools/bootstrap-forge-2.1.sh
