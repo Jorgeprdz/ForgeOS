@@ -1,0 +1,32 @@
+name: Forge 2.1 Manual Bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type REBUILD to execute the Forge OS 2.1 clean rebuild'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forge-2.1-manual-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    if: github.event.inputs.confirm == 'REBUILD'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: rewrite/forge-2.1
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild Forge OS 2.1
+        run: bash tools/bootstrap-forge-2.1.sh
