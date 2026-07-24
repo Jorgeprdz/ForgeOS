@@ -1,10 +1,21 @@
 "use strict";
 
+const universalContextContract = typeof module !== "undefined" && module.exports
+  ? require("../../advisor-os/sales-pipeline/prospect-context/universal-governed-prospect-context-contract")
+  : globalThis.ForgeUniversalGovernedProspectContextContract;
+const nashProspectContextIntake = typeof module !== "undefined" && module.exports
+  ? require("./nash-prospect-context-intake")
+  : globalThis.ForgeNashProspectContextIntake;
+
+if (!universalContextContract || !nashProspectContextIntake) {
+  throw new Error("NASH_UNIVERSAL_CONTEXT_CONSUMER_DEPENDENCY_MISSING");
+}
+
 const {
   PROSPECT_CONTEXT_CONSUMERS,
   projectUniversalProspectContext
-} = require("../../advisor-os/sales-pipeline/prospect-context/universal-governed-prospect-context-contract");
-const { buildNashProspectContextIntake } = require("./nash-prospect-context-intake");
+} = universalContextContract;
+const { buildNashProspectContextIntake } = nashProspectContextIntake;
 
 const NASH_FIELD_MAP = Object.freeze({
   "identity.prospect_reference": "prospectIdentityReference",
@@ -86,8 +97,15 @@ function consumeUniversalProspectContextForNash(universalContext) {
   });
 }
 
-module.exports = {
+const api = Object.freeze({
   NASH_FIELD_MAP,
   buildNashContextInputFromUniversal,
   consumeUniversalProspectContextForNash
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgeNashUniversalProspectContextConsumer = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}

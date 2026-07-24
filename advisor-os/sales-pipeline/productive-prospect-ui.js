@@ -484,8 +484,16 @@
     return `<dialog class="forge-prospect-dialog forge-delete-confirmation" data-delete-confirmation aria-labelledby="delete-confirmation-title" aria-describedby="delete-confirmation-body"><article><header><div><p class="forge-pipeline-product">ACCIÓN DESTRUCTIVA</p><h2 id="delete-confirmation-title">¿Eliminar este prospecto?</h2></div><button type="button" data-cancel-delete aria-label="Cerrar confirmación">×</button></header><p id="delete-confirmation-body">Se retirará a ${esc(prospect.fullName)} del Pipeline. Su historial se conservará.</p><footer><button type="button" data-cancel-delete>Cancelar</button><button type="button" class="forge-delete-confirm" data-confirm-delete>Eliminar</button></footer></article></dialog>`;
   }
 
-  function create({ client, root, renderPipeline = global.ForgePipelineUI?.renderPipelineUI }) {
+  function create({
+    client,
+    root,
+    draftOrchestrator = null,
+    renderPipeline = global.ForgePipelineUI?.renderPipelineUI,
+  }) {
     if (!client || !root || typeof renderPipeline !== "function") throw new Error("PRODUCTIVE_PIPELINE_DEPENDENCY_MISSING");
+    const governedDraftOrchestrator = draftOrchestrator && typeof draftOrchestrator.requestDraft === "function"
+      ? draftOrchestrator
+      : null;
 
     root.__forgeProductiveProspectCreateAbort067G17B?.abort();
     const controller = new AbortController();
@@ -796,35 +804,45 @@
       currentDraftApproval = null;
       setMessageState({ loading: true, source: "Generando con Gemini" });
       try {
-        const invocation = client.functions?.invoke
-          ? await client.functions.invoke("nash-draft-provider", {
-              body: {
-                providerId: "gemini",
-                experimentalFeatureEnabled: true,
-                prospectMessageContext: messageContext(actionProspect, goal, style, draftVariation),
-              },
+        const orchestration = governedDraftOrchestrator
+          ? await governedDraftOrchestrator.requestDraft({
+              pipelineRecord: actionProspect,
+              goal,
+              style,
+              variation: draftVariation,
+              providerId: "gemini",
+              locale: "es-MX",
+              approvedDisplayName: true,
+              requestId: `pipeline-${actionProspect.id}-${requestId}`,
+              correlationId: `pipeline-${actionProspect.id}`,
             })
-          : { data: null, error: new Error("PROVIDER_CLIENT_UNAVAILABLE") };
+          : {
+              providerEnvelope: {
+                resultState: "ERROR",
+                draftCandidate: null,
+                metadata: {
+                  providerId: "gemini",
+                  modelId: "pipeline-ui",
+                  generationMode: "orchestrator_unavailable",
+                  generatedAt: new Date().toISOString(),
+                },
+                error: {
+                  code: "NFAST_07_ORCHESTRATOR_UNAVAILABLE",
+                  message: "Governed NASH draft orchestration is unavailable.",
+                  retryable: false,
+                },
+              },
+            };
+
         if (requestId !== draftRequestId || !workspace.isConnected) return;
-        const envelope = invocation?.data;
-        const intake = invocation?.error
-          ? intakeDraftProviderEnvelope({
-              resultState: "ERROR",
-              draftCandidate: null,
-              metadata: { providerId: "gemini" },
-              error: {
-                code: "PROVIDER_INVOCATION_ERROR",
-                message: "Provider invocation returned an error.",
-                retryable: true,
-              },
-            })
-          : intakeDraftProviderEnvelope(envelope);
+        const envelope = orchestration?.providerEnvelope;
+        const intake = intakeDraftProviderEnvelope(envelope);
 
         if (intake.state === DRAFT_INTAKE_STATES.READY_FOR_HUMAN_REVIEW) {
           currentDraftCandidate = intake.draftCandidateSnapshot;
           setMessageState({
             text: intake.draftCandidateSnapshot.rawText,
-            source: "Sugerencia experimental de Gemini",
+            source: "Sugerencia gobernada de Gemini",
           });
           return;
         }
@@ -1223,6 +1241,8 @@
         openCreateCount,
         listenerAuthority: "root-delegated-abort-controller",
         createAction: "openProductiveProspectCreateModal",
+        draftOrchestratorAvailable: Boolean(governedDraftOrchestrator),
+        providerRequestContract: governedDraftOrchestrator ? "NFAST-05.1" : null,
       }),
     });
   }

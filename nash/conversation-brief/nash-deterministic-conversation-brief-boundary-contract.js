@@ -442,7 +442,7 @@ function buildDeterministicBrief(input = {}) {
   return deepFreeze(brief);
 }
 
-module.exports = {
+const api = Object.freeze({
   NASH_DETERMINISTIC_CONVERSATION_BRIEF_BUILDER_VERSION,
   NASH_CONVERSATION_BRIEF_STATUSES,
   NASH_CONVERSATION_BRIEF_STRATEGY_CATEGORIES,
@@ -455,4 +455,11 @@ module.exports = {
     falseSafetyFlags,
     noBriefEnvelope
   }
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgeNashDeterministicConversationBriefContract = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}

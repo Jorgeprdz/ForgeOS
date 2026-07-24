@@ -1,9 +1,17 @@
 "use strict";
 
+const providerRequestContract = typeof module !== "undefined" && module.exports
+  ? require("./conversation-brief/nash-provider-request-contract")
+  : globalThis.ForgeNashProviderRequestContract;
+
+if (!providerRequestContract) {
+  throw new Error("NASH_PROVIDER_REQUEST_CONTRACT_REQUIRED");
+}
+
 const {
   PROVIDER_REQUEST_VERSION,
   validateProviderDraftRequest
-} = require("./conversation-brief/nash-provider-request-contract");
+} = providerRequestContract;
 
 const FUNCTION_NAME = "nash-draft-provider";
 const DEFAULT_PROVIDER = "deterministic";
@@ -225,9 +233,16 @@ function createRemoteDraftProviderClient({
   });
 }
 
-module.exports = {
+const api = Object.freeze({
   createRemoteDraftProviderClient,
   FUNCTION_NAME,
   DEFAULT_PROVIDER,
   RESULT_STATES,
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgeNashRemoteDraftProviderClientBoundary = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}

@@ -1,10 +1,18 @@
 "use strict";
 
+const intakeBoundaryContract = typeof module !== "undefined" && module.exports
+  ? require("./nash-prospect-context-intake-boundary-contract")
+  : globalThis.ForgeNashProspectContextIntakeBoundaryContract;
+
+if (!intakeBoundaryContract) {
+  throw new Error("NASH_PROSPECT_CONTEXT_INTAKE_BOUNDARY_REQUIRED");
+}
+
 const {
   buildNashProspectContextIntakeBoundary,
   NASH_PROSPECT_CONTEXT_INTAKE_STATUS,
   _private
-} = require("./nash-prospect-context-intake-boundary-contract");
+} = intakeBoundaryContract;
 
 const { clone, deepFreeze, noSideEffectFlags } = _private;
 
@@ -47,6 +55,13 @@ function buildNashProspectContextIntake(input = {}, options = {}) {
   });
 }
 
-module.exports = {
+const api = Object.freeze({
   buildNashProspectContextIntake
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgeNashProspectContextIntake = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}

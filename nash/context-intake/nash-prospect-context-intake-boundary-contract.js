@@ -334,7 +334,7 @@ function buildNashProspectContextIntakeBoundary(input = {}, options = {}) {
   });
 }
 
-module.exports = {
+const api = Object.freeze({
   NASH_PROSPECT_CONTEXT_INTAKE_STATUS,
   NASH_PROSPECT_CONTEXT_INTAKE_ALLOWED_USES,
   NASH_PROSPECT_CONTEXT_INTAKE_FORBIDDEN_USES,
@@ -344,4 +344,11 @@ module.exports = {
   DEFAULT_SAFE_LANGUAGE_GUARDRAILS,
   buildNashProspectContextIntakeBoundary,
   _private: { clone, asArray, uniqueStrings, deepFreeze, noSideEffectFlags }
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgeNashProspectContextIntakeBoundaryContract = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}

@@ -1,9 +1,17 @@
 "use strict";
 
+const universalContextContract = typeof module !== "undefined" && module.exports
+  ? require("./universal-governed-prospect-context-contract")
+  : globalThis.ForgeUniversalGovernedProspectContextContract;
+
+if (!universalContextContract) {
+  throw new Error("UNIVERSAL_GOVERNED_PROSPECT_CONTEXT_CONTRACT_REQUIRED");
+}
+
 const {
   buildUniversalGovernedProspectContext,
   _private
-} = require("./universal-governed-prospect-context-contract");
+} = universalContextContract;
 
 const { clone, deepFreeze, isPlaceholder } = _private;
 
@@ -185,10 +193,17 @@ function buildPipelineUniversalProspectContext(input = {}) {
   });
 }
 
-module.exports = {
+const api = Object.freeze({
   PIPELINE_FIELD_MAP,
   RAW_FREE_TEXT_FIELDS,
   SENSITIVE_FIELDS,
   GOVERNED_REFERENCE_FIELDS,
   buildPipelineUniversalProspectContext
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgePipelineUniversalProspectContextAdapter = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}
