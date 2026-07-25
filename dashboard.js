@@ -28,7 +28,9 @@ import { Memory }       from './memory-manager.js';
 import { RenderEngine } from './ui-render-engine.js';
 import { Navigation }   from './platform/navigation-runtime.js';
 import { generarWhatsappLink } from './whatsapp-link-engine.js';
-import { renderAdvisorSalesNbaCard } from './advisor-os/dashboard/advisor-sales-nba-consumer.js';
+import { renderAdvisorSalesNbaCard, hydrateAdvisorSalesNba } from './advisor-os/dashboard/advisor-sales-nba-consumer.js';
+import { createMiDiaDueActionRuntime } from './advisor-os/home/mi-dia-due-action-runtime.js';
+import { createMiDiaDueActionSurfaceModel } from './advisor-os/home/mi-dia-due-action-surface-adapter.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTES DE NEGOCIO
@@ -741,6 +743,22 @@ const DashboardView = {
     },
 
     /**
+     * Hidrata la próxima acción NFAST-09 en la superficie NBA existente.
+     * @param {Object} surfaceModel
+     */
+    renderDueActionPrimarySurface(surfaceModel = {}) {
+        const el = document.getElementById('dash-sales-nba');
+        if (!el) return;
+
+        hydrateAdvisorSalesNba(
+            el,
+            surfaceModel.primaryRecommendation || {
+                recommendationAvailable: false,
+            }
+        );
+    },
+
+    /**
      * Renderiza el resumen ejecutivo diario.
      * @param {string} text
      */
@@ -1139,6 +1157,9 @@ const DashboardController = {
     /** Registro de decisiones votadas en esta sesión para evitar duplicados */
     _votedDecisions: new Set(),
 
+    /** Runtime NFAST-09 montado para Mi Día. */
+    _dueActionRuntime: null,
+
     /**
      * Registra acciones del Decision Cockpit usando navegación existente.
      */
@@ -1382,6 +1403,82 @@ const DashboardController = {
         }
     },
 
+    async _mountDueActionRuntime({ userRaw }) {
+        const advisorPartitionKey = String(userRaw?.id || '').trim();
+
+        if (!advisorPartitionKey) {
+            DashboardView.renderDueActionPrimarySurface({
+                primaryRecommendation: {
+                    recommendationAvailable: false,
+                    limitations: [
+                        'Inicia sesión para consultar tus próximas acciones.',
+                    ],
+                },
+            });
+            return null;
+        }
+
+        try {
+            const runtime = createMiDiaDueActionRuntime({
+                remoteEnabled: userRaw?.app_metadata?.demo !== true,
+            });
+
+            this._dueActionRuntime = runtime;
+
+            const mounted = await runtime.mount({
+                advisorPartitionKey,
+                timeZone:
+                    Intl.DateTimeFormat().resolvedOptions().timeZone ||
+                    'America/Mexico_City',
+                render: viewModel => {
+                    const surfaceModel =
+                        createMiDiaDueActionSurfaceModel(viewModel);
+
+                    AppState.set('miDiaDueActions', surfaceModel);
+
+                    RenderEngine.schedule(() => {
+                        DashboardView.renderDueActionPrimarySurface(
+                            surfaceModel
+                        );
+                    });
+
+                    EventBus.emit('mi-dia:due-actions-updated', {
+                        fingerprint: surfaceModel.sourceFingerprint,
+                        supportingQueue:
+                            surfaceModel.supportingQueue.length,
+                    });
+                },
+                onStatus: status => {
+                    EventBus.emit('mi-dia:sync-status', status);
+                },
+            });
+
+            Memory.add(() => mounted.destroy());
+            return mounted;
+        } catch (error) {
+            Logger.warn(
+                '[Dashboard] Mi Día local-first unavailable:',
+                error?.message || error
+            );
+
+            const unavailable = createMiDiaDueActionSurfaceModel({
+                items: [],
+                summary:
+                    'Tus próximas acciones locales no están disponibles en este momento.',
+            });
+
+            AppState.set('miDiaDueActions', unavailable);
+
+            RenderEngine.schedule(() => {
+                DashboardView.renderDueActionPrimarySurface(
+                    unavailable
+                );
+            });
+
+            return null;
+        }
+    },
+
     /**
      * Punto de entrada. Llamado por bindDashboardEvents() desde el router.
      * Lee usuario de AppState (puesto por AuthService), carga datos de DB,
@@ -1410,6 +1507,9 @@ const DashboardController = {
             const nombre    = Sanitizer.escape(
                 userRaw?.user_metadata?.full_name?.split(' ')[0] || 'Asesor'
             );
+
+            // — Mi Día local-first hidrata la superficie primaria existente
+            await this._mountDueActionRuntime({ userRaw });
 
             // — Cargar datos en paralelo con soporte de cancelación
             const [historial, cartera, referidos] = await Promise.all([
