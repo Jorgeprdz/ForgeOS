@@ -10568,3 +10568,153 @@ Roadmap disposition:
 - `03A6_REAL_DEVICE_ROUTE_PERFORMANCE=PARKED_FOR_CODEX`
 
 <!-- /FORGEOS:R16J1C1_INCREMENTAL_03B1_LOCAL_PDFJS_EXTRACTION_UNBLOCK -->
+
+<!-- BEGIN FORGEOS:FORGE_INTELLIGENCE_SYSTEM_ROADMAP_SYNC_20260725 -->
+## Forge Intelligence System Roadmap Sync — 2026-07-25
+
+Status: `ROADMAP_SYNCED_TO_FULL_SYSTEM_SCOPE`
+
+This block supersedes older `NEXT` tokens only for current planning. Historical roadmap entries remain valid evidence of the sequence that produced the present repository.
+
+### Current checkpoint
+
+```text
+CURRENT=NFAST_09_STAGE_3F_PIPELINE_DUE_ACTION_WRITE_BINDING_COMPLETE_AND_PUSHED
+CURRENT_COMMIT=dbb2b4d55272fa505284970e15270e8e1f97fb41
+NEXT=NFAST_09_STAGE_3G_END_TO_END_BROWSER_ACCEPTANCE
+FORGE_INTELLIGENCE_SYSTEM_PLANNING_ESTIMATE=40_PERCENT_COMPLETE
+FORGE_INTELLIGENCE_SYSTEM_REMAINING_PLANNING_ESTIMATE=60_PERCENT
+```
+
+The completion estimate is directional planning only. It is not a contractual deadline, production metric, acceptance result, or substitute for source evidence.
+
+### Critical roadmap
+
+```text
+PHASE 1 — CLOSE NFAST-09
+├── NFAST-09 Stage 3G end-to-end browser acceptance
+├── Pipeline → local record → outbox → Mi Día
+├── reload and persistence
+├── offline operation
+├── reconnect and governed synchronization
+├── conflict preservation
+└── zero duplicates and regression closure
+
+PHASE 2 — COMPLETE THE CONVERSATION VERTICAL
+├── NFAST-10 Product Intelligence bridge
+├── NFAST-10 Quote authority bridge
+├── NFAST-10 Sales Presenter bridge
+├── exact evidence and Reason Why propagation
+├── provider and draft safety reconciliation
+├── exact-artifact human approval
+├── explicit WhatsApp preview/open
+├── NFAST-11 legacy quarantine and runtime locks
+└── no parallel NASH or NBA authority
+
+PHASE 3 — COMPLETE CORE COMMERCIAL SYSTEMS
+├── canonical prospect and Pipeline authority
+├── Revenue Generation Intelligence
+├── Sales Conversion Intelligence
+├── Relationship Intelligence
+├── Product Intelligence
+├── Policy & Sales Operations Intelligence
+├── notes, renewals and service Timeline
+└── authorized task and calendar boundaries
+
+PHASE 4 — COMPLETE PEOPLE, CAREER AND MANAGEMENT SYSTEMS
+├── Manager Intelligence
+├── Team Intelligence
+├── Recruitment and Candidate Intelligence
+├── Career / Advisor Lifecycle Intelligence
+├── Advisor Development Intelligence
+├── Productivity and Mick Behavior Intelligence
+├── Forecast Intelligence
+└── Conservation Intelligence
+
+PHASE 5 — MATERIALIZE THE MESA DE CONSEJO WHERE APPLICABLE
+├── NASH — governed conversation composition
+├── MICK — bounded Behavior Intelligence
+├── ALFRED — command cockpit and contextual navigation
+├── GREEN OWL — momentum and governed streak continuity
+├── ROCKY — evidence-backed operational recovery
+├── CANDY CRUSH — adaptive complexity and anti-abandonment experience
+└── SMART WIDGETS — contextual intelligence presentation and authorized action
+
+PHASE 6 — SYSTEMIC PRODUCTION ACCEPTANCE
+├── NFAST-12 production acceptance
+├── cross-system authority verification
+├── RLS, privacy and security acceptance
+├── offline and synchronization acceptance
+├── desktop, tablet and mobile browser acceptance
+├── performance and observability
+├── deployment and rollback evidence
+└── governed merge and release
+```
+
+### Mesa de Consejo delivery gates
+
+No Mesa de Consejo component is considered delivered until the applicable gate is closed:
+
+```text
+authority ratified
+→ source systems accepted
+→ deterministic contract tested
+→ runtime adapter implemented
+→ visible surface bound
+→ human checkpoint preserved
+→ browser acceptance passed
+→ production evidence recorded
+```
+
+Member-specific boundaries:
+
+- **NASH:** compose and explain; never own product, quote, NBA, approval or send truth.
+- **MICK:** interpret observable behavior; never diagnose personality, punish, rank or surveil.
+- **ALFRED:** present and navigate the official next action; never silently decide or execute.
+- **GREEN OWL:** protect momentum; never manufacture activity, performance, compensation or promotion truth.
+- **ROCKY:** support recovery; never invent emotional causes or use guilt and coercion.
+- **CANDY CRUSH:** adapt experience complexity; never create hidden goals or manipulative loops.
+- **SMART WIDGETS:** render governed output; never recalculate or create parallel truth.
+
+### Completion definition
+
+Forge Intelligence System MVP is complete only when:
+
+```text
+advisor daily operating loop works end to end
+AND manager development loop works end to end
+AND applicable intelligence systems use canonical authorities
+AND Mesa de Consejo components are materialized where they add governed value
+AND offline, synchronization, privacy, RLS and security pass
+AND desktop, tablet and mobile browser acceptance pass
+AND deployment and rollback evidence exist
+```
+
+### Planning horizon
+
+```text
+FOCUSED_WORK_ESTIMATE=20_TO_30_FOCUSED_WORKDAYS
+CALENDAR_ESTIMATE=5_TO_8_WEEKS
+```
+
+The estimate assumes no structural authority reset, no major unexpected schema migration, and no new mandatory product scope. It must be revised from evidence after each accepted milestone.
+
+### Current operating register
+
+```text
+CURRENT=NFAST_09_STAGE_3F_COMPLETE
+NEXT=NFAST_09_STAGE_3G_END_TO_END_BROWSER_ACCEPTANCE
+HOLD=NFAST_10_UNTIL_STAGE_3G_ACCEPTANCE
+PARKED=AUTOMATIC_SEND,BACKGROUND_PUSH,UNGOVERNED_LEGACY_RUNTIME
+PENDING=FULL_SYSTEM_COMPLETION_AND_MESA_DE_CONSEJO_RUNTIME_GATES
+DO_NOT_FORGET=FORGE_IS_MORE_THAN_NFAST
+```
+
+### Explicit non-authorizations
+
+- This roadmap sync changes no runtime, UI, route, schema, migration, RLS, provider, send, task, calendar, or Supabase behavior.
+- No Mesa de Consejo runtime is authorized by this document.
+- No historical `NEXT` record is deleted.
+- `NFAST_10_AUTHORIZED=NO`
+- `MAIN_MERGE_AUTHORIZED=NO`
+<!-- END FORGEOS:FORGE_INTELLIGENCE_SYSTEM_ROADMAP_SYNC_20260725 -->

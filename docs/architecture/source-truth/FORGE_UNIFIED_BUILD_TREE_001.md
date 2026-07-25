@@ -12797,3 +12797,203 @@ acceptance passed at all 13 required viewports.
 Evidence:
 `docs/evidence/R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_ACCEPTANCE.md`
 <!-- FORGE:R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_UNIFIED:END -->
+
+<!-- BEGIN FORGEOS:FORGE_INTELLIGENCE_SYSTEM_COMPLETION_SYNC_20260725 -->
+## Forge Intelligence System Completion Sync — 2026-07-25
+
+Status: `ACTIVE_SYSTEM_COMPLETION_PLAN`
+
+Source checkpoint:
+
+- `SOURCE_COMMIT=dbb2b4d55272fa505284970e15270e8e1f97fb41`
+- `NFAST_09_STAGE_3F=COMPLETE_AND_PUSHED`
+- `NEXT=NFAST_09_STAGE_3G_END_TO_END_BROWSER_ACCEPTANCE`
+- `MAIN_MUTATION=NO`
+
+### Planning completion estimate
+
+```text
+FORGE_INTELLIGENCE_SYSTEM_TOTAL_PLANNING_ESTIMATE=40_PERCENT_COMPLETE
+FORGE_INTELLIGENCE_SYSTEM_REMAINING_PLANNING_ESTIMATE=60_PERCENT
+NFAST_CONVERSATION_VERTICAL_PLANNING_ESTIMATE=75_TO_80_PERCENT_COMPLETE
+```
+
+These percentages are planning estimates, not production metrics, acceptance evidence, delivery promises, or completion proof. Implementation truth continues to require accepted contracts, tests, closure evidence, browser acceptance, security validation, and deployment authorization.
+
+### NFAST materialized chain
+
+```text
+governed Context Intake
+→ evidence and privacy validation
+→ deterministic Conversation Brief
+→ governed provider and draft boundaries
+→ Prospect Timeline governance and persistence
+→ Timeline-to-Brief projection
+→ local-first IndexedDB replica
+→ durable outbox
+→ governed incremental synchronization
+→ existing Mi Día surface
+→ Pipeline due-action local-first writes
+```
+
+Stage 3F establishes typed due-action commands, deterministic mutation identity, atomic local record plus outbox persistence, immediate local UI state, Mi Día mutation events, and secondary governed remote synchronization. It does not authorize a general prospect writer, opportunity-stage writer, message generation, message send, background push, NFAST-10, or merge to `main`.
+
+### Completion rule for every applicable intelligence system
+
+An intelligence system is not complete merely because files, engines, ADRs, discovery documents, static previews, or legacy modules exist.
+
+Each applicable system must close:
+
+```text
+authority and source ownership
+→ governed inputs and evidence
+→ deterministic contract
+→ canonical runtime integration
+→ persistence and synchronization where applicable
+→ visible advisor or manager surface
+→ authorized next action
+→ regression and security tests
+→ end-to-end browser acceptance
+→ production and rollback evidence
+```
+
+### System completion branches
+
+```text
+🟡 Revenue Generation Intelligence
+├── official revenue source ownership
+├── commercial event ledger
+├── prospecting, referral and reactivation integration
+└── revenue truth acceptance
+
+🟡 Sales Conversion Intelligence
+├── governed objections, scripts and adaptive guidance
+├── Pipeline and Conversation Intelligence integration
+├── source, freshness and evidence contracts
+└── conversion outcome acceptance
+
+🟡 NASH Conversation Intelligence
+├── NFAST-09 Stage 3G browser acceptance
+├── NFAST-10 Product, Quote and Presenter bridges
+├── NFAST-11 legacy quarantine and runtime locks
+└── NFAST-12 production acceptance and deployment
+
+🟡 Product Intelligence
+├── official product-version truth
+├── evidence packets and freshness
+├── quote and presentation consumption bridges
+└── browser and production acceptance
+
+🟡 Relationship Intelligence
+├── canonical relationship facts and consent
+├── Timeline, referral and life-event integration
+├── advisor and manager consumption boundaries
+└── evidence-backed next actions
+
+🟡 Policy & Sales Operations Intelligence
+├── policy and client source truth
+├── renewals, service events, tasks and notes
+├── task and calendar execution boundaries
+└── policy operations browser acceptance
+
+🟡 Manager & Team Intelligence
+├── official team signals and metric ownership
+├── coaching, review and organization-health boundaries
+├── manager action surfaces
+└── no ranking, punishment or invented people truth
+
+🟡 Career / Advisor Development Intelligence
+├── lifecycle authority and transition engine
+├── activation and stage truth
+├── development evidence and coaching consumption
+└── candidate-to-director continuity
+
+🟡 Recruitment / Candidate Intelligence
+├── existing foundation reconciliation
+├── runtime and persistence acceptance
+├── precontract and lifecycle handoff
+└── end-to-end manager browser acceptance
+
+🟡 Productivity / Forecast / Conservation Intelligence
+├── Mick behavior signals
+├── scenario and forecast labeling
+├── conservation evidence
+└── no punishment, payout or revenue truth duplication
+
+🟡 Platform, Evidence and Source Truth
+├── unified evidence registry
+├── RuleSnapshot and period ownership
+├── complete offline and synchronization boundaries
+└── runtime integrity, observability and rollback
+```
+
+### Mesa de Consejo — required system materialization where applicable
+
+The Mesa de Consejo is not complete as naming, personality, static presentation, or conceptual governance alone. Each member must be materialized only where its authority applies and must consume official system outputs rather than create parallel truth.
+
+```text
+NASH
+└── owns governed conversation composition and deterministic Conversation Brief;
+    must finish Product, Quote, Presenter, approval and browser-production integration.
+
+MICK
+└── owns observable Behavior Intelligence within its boundary;
+    must distinguish activity, consistency and execution friction without personality diagnosis,
+    punishment truth, surveillance or manipulation.
+
+ALFRED
+└── owns the command-cockpit experience and contextual navigation;
+    must explain the official priority, preserve Reason Why, and route authorized actions
+    without becoming a decision or execution authority.
+
+GREEN OWL
+└── protects momentum, continuity and governed streaks;
+    must consume official activity and progress outputs without changing priority,
+    compensation, promotion or performance truth.
+
+ROCKY
+└── supports evidence-backed recovery after operational decline;
+    must avoid invented psychological causes, guilt, pressure or priority mutation.
+
+CANDY CRUSH EXPERIENCE
+└── governs adaptive complexity, challenge pacing and anti-abandonment experience;
+    must not create parallel goals, manipulate the advisor or redefine commercial truth.
+
+SMART WIDGETS
+└── present contextual intelligence and the authorized next action;
+    must preserve source, freshness, confidence and Reason Why without recalculation.
+```
+
+For every Mesa de Consejo member that reaches runtime, completion requires:
+
+```text
+ratified authority
+→ accepted source systems
+→ bounded deterministic contract
+→ runtime adapter
+→ visible surface
+→ human checkpoint
+→ regression and browser acceptance
+```
+
+### Critical path
+
+```text
+CURRENT=NFAST_09_STAGE_3F_COMPLETE_AND_PUSHED
+NEXT=NFAST_09_STAGE_3G_END_TO_END_BROWSER_ACCEPTANCE
+THEN=NFAST_10_PRODUCT_QUOTE_PRESENTER_BRIDGES
+THEN=NFAST_11_LEGACY_QUARANTINE_AND_RUNTIME_LOCKS
+THEN=APPLICABLE_INTELLIGENCE_SYSTEM_COMPLETION
+THEN=MESA_DE_CONSEJO_RUNTIME_MATERIALIZATION_WHERE_APPLICABLE
+THEN=NFAST_12_SYSTEMIC_PRODUCTION_ACCEPTANCE_AND_DEPLOYMENT
+```
+
+### Explicit locks
+
+- No percentage in this block may be presented as a verified production KPI.
+- No legacy engine becomes canonical by file existence.
+- No Mesa de Consejo member may create source truth, silent execution, manipulation, surveillance, ranking, punishment, compensation, revenue, payout, promotion, product, quote, or lifecycle truth outside its authority.
+- No automatic message send, task creation, calendar creation, provider dispatch, or background action is authorized by this synchronization.
+- `NFAST_10_AUTHORIZED=NO`
+- `MAIN_MERGE_AUTHORIZED=NO`
+<!-- END FORGEOS:FORGE_INTELLIGENCE_SYSTEM_COMPLETION_SYNC_20260725 -->
