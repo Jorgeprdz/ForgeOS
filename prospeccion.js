@@ -1,5 +1,5 @@
 // /modules/prospeccion.js - Embudo y Autogenerador IA
-import { DB } from './db.js';
+import { DB } from './legacy/quarantine/crmaddlife-indexeddb/db.js';
 import { callGemini } from './ai-service.js';
 import { showToast, showConfirm } from './utils.js';
 

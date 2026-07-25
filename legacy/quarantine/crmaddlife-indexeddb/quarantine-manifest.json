@@ -1,0 +1,27 @@
+{
+  "quarantineId": "NFAST-09-LEGACY-INDEXEDDB-QUARANTINE",
+  "status": "QUARANTINED_COMPATIBILITY_ONLY",
+  "sourceCommit": "8ed6091dc10adddad2be05a6b12f900c8494fc36",
+  "quarantinedFiles": [
+    "db.js",
+    "storage-engine.js",
+    "storage-validator.js",
+    "storage-queue.js"
+  ],
+  "allowedLegacyImporters": [
+    "actividad.js",
+    "cartera-repository.js",
+    "cartera-service.js",
+    "cartera.js",
+    "comisiones.js",
+    "dashboard.js",
+    "platform/app/forge-app-shell.js",
+    "platform/sync/offline-sync.js",
+    "prospeccion.js",
+    "referidos.js",
+    "rule-packs/smnyl/db.js"
+  ],
+  "newCodeImportsAllowed": false,
+  "nfast09ImportsAllowed": false,
+  "behaviorRemovalPerformed": false
+}

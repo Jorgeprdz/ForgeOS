@@ -1,7 +1,7 @@
 // platform/app/forge-app-shell.js
 // Forge runtime shell coordinator.
 
-import { DB } from '../../db.js';
+import { DB } from '../../legacy/quarantine/crmaddlife-indexeddb/db.js';
 import { Core } from '../../core-app-engine.js';
 import { Navigation } from '../navigation-runtime.js';
 import { SyncEngine } from '../sync/sync-orchestrator.js';

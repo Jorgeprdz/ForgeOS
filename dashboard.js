@@ -20,7 +20,7 @@
 //   - RenderEngine.schedule() para todas las mutaciones DOM
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { DB }           from './db.js';
+import { DB }           from './legacy/quarantine/crmaddlife-indexeddb/db.js';
 import { AppState }     from './state-manager.js';
 import { EventBus }     from './event-system.js';
 import { Logger }       from './logger.js';
