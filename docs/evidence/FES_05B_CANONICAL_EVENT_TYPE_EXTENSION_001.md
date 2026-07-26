@@ -37,3 +37,16 @@ external evidence.
 Pipeline stage change events remain source-truth gated. No raw message,
 transcript, objection, script, quote or question content enters canonical
 payloads.
+
+<!-- BEGIN FORGEOS:FES_05B_REMOTE_CI_ACCEPTANCE -->
+## Remote native-Linux acceptance
+
+```text
+INDEXEDDB_FIX_COMMIT=ddc9daa63da2349b4390e6cf1dd05251aab230e7
+REMOTE_CI_RUN_ID=30224361367
+REMOTE_CI_URL=https://github.com/Jorgeprdz/ForgeOS/actions/runs/30224361367
+REMOTE_NODE_REGRESSION=PASS
+REMOTE_PLAYWRIGHT_PREFLIGHT=PASS
+REMOTE_EVIDENCE_UPLOAD=PASS
+```
+<!-- END FORGEOS:FES_05B_REMOTE_CI_ACCEPTANCE -->
