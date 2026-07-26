@@ -70,13 +70,23 @@ const isPublicFile = (file) => {
   );
 };
 
-const trackedFiles = execFileSync(
-  "git",
-  ["ls-files", "-z"],
-  {
-    cwd: root,
-    encoding: "utf8",
-  },
+const gitOutput = (...args) =>
+  execFileSync(
+    "git",
+    [
+      "-c",
+      `safe.directory=${root}`,
+      ...args,
+    ],
+    {
+      cwd: root,
+      encoding: "utf8",
+    },
+  );
+
+const trackedFiles = gitOutput(
+  "ls-files",
+  "-z",
 )
   .split("\0")
   .filter(Boolean);
@@ -119,13 +129,9 @@ for (const file of trackedFiles.filter(isPublicFile)) {
 
 const buildSha =
   process.env.GITHUB_SHA
-  || execFileSync(
-    "git",
-    ["rev-parse", "HEAD"],
-    {
-      cwd: root,
-      encoding: "utf8",
-    },
+  || gitOutput(
+    "rev-parse",
+    "HEAD",
   ).trim();
 
 for (

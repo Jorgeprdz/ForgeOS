@@ -299,3 +299,25 @@ test(
     );
   },
 );
+
+test(
+  "acceptance builder is safe inside GitHub job containers",
+  () => {
+    const source = read(acceptanceBuildPath);
+
+    assert.match(
+      source,
+      /safe\.directory=\$\{root\}/,
+    );
+
+    assert.match(
+      source,
+      /gitOutput\([\s\S]*"ls-files"/,
+    );
+
+    assert.match(
+      source,
+      /gitOutput\([\s\S]*"rev-parse"/,
+    );
+  },
+);

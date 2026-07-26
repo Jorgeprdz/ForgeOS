@@ -53,3 +53,10 @@ the real browser gate. The artifact showed a source-tree Vite path
 mismatch, visible legacy navigation on touch layouts and rail-width
 overflow on landscape/desktop. Acceptance now uses a Pages-shaped
 static tree and explicit shell geometry containment.
+
+## Third Actions attempt
+
+Run `30224177480` passed installation and unit contracts but the browser
+process did not start. The Pages-shaped builder was blocked by Git's
+dubious-ownership protection inside the job container. Git operations
+are now executed with a process-scoped `safe.directory` configuration.
