@@ -1,0 +1,190 @@
+TAP version 13
+# Subtest: FES 03G exposes locked runtime contracts
+ok 1 - FES 03G exposes locked runtime contracts
+  ---
+  duration_ms: 0.910938
+  type: 'test'
+  ...
+# Subtest: FES 03G requires explicit plan reference
+ok 2 - FES 03G requires explicit plan reference
+  ---
+  duration_ms: 27.688906
+  type: 'test'
+  ...
+# Subtest: FES 03G requires at least one timeline
+ok 3 - FES 03G requires at least one timeline
+  ---
+  duration_ms: 0.260885
+  type: 'test'
+  ...
+# Subtest: FES 03G builds the complete lineage from one timeline
+ok 4 - FES 03G builds the complete lineage from one timeline
+  ---
+  duration_ms: 16.419427
+  type: 'test'
+  ...
+# Subtest: FES 03G orders bundles by prospect identity
+ok 5 - FES 03G orders bundles by prospect identity
+  ---
+  duration_ms: 15.869792
+  type: 'test'
+  ...
+# Subtest: FES 03G is independent from input order
+ok 6 - FES 03G is independent from input order
+  ---
+  duration_ms: 23.921719
+  type: 'test'
+  ...
+# Subtest: FES 03G deduplicates exact timeline replay
+ok 7 - FES 03G deduplicates exact timeline replay
+  ---
+  duration_ms: 4.59677
+  type: 'test'
+  ...
+# Subtest: FES 03G rejects incompatible timelines for the same prospect
+ok 8 - FES 03G rejects incompatible timelines for the same prospect
+  ---
+  duration_ms: 2.0975
+  type: 'test'
+  ...
+# Subtest: FES 03G rejects mixed tenants
+ok 9 - FES 03G rejects mixed tenants
+  ---
+  duration_ms: 2.19625
+  type: 'test'
+  ...
+# Subtest: FES 03G preserves unknown profile state
+ok 10 - FES 03G preserves unknown profile state
+  ---
+  duration_ms: 4.629219
+  type: 'test'
+  ...
+# Subtest: FES 03G carries reported context through every applicable read model
+ok 11 - FES 03G carries reported context through every applicable read model
+  ---
+  duration_ms: 5.995157
+  type: 'test'
+  ...
+# Subtest: FES 03G carries appointment outcome work into Mi Día
+ok 12 - FES 03G carries appointment outcome work into Mi Día
+  ---
+  duration_ms: 6.132812
+  type: 'test'
+  ...
+# Subtest: FES 03G carries optional context after held appointment
+ok 13 - FES 03G carries optional context after held appointment
+  ---
+  duration_ms: 6.483906
+  type: 'test'
+  ...
+# Subtest: FES 03G carries open due follow-up into card and Mi Día
+ok 14 - FES 03G carries open due follow-up into card and Mi Día
+  ---
+  duration_ms: 4.604479
+  type: 'test'
+  ...
+# Subtest: FES 03G removes completed due work from card and Mi Día
+ok 15 - FES 03G removes completed due work from card and Mi Día
+  ---
+  duration_ms: 6.182344
+  type: 'test'
+  ...
+# Subtest: FES 03G propagates an effective correction without deleting history
+ok 16 - FES 03G propagates an effective correction without deleting history
+  ---
+  duration_ms: 7.19
+  type: 'test'
+  ...
+# Subtest: FES 03G promotes a correction fork to reviewable blocking work
+ok 17 - FES 03G promotes a correction fork to reviewable blocking work
+  ---
+  duration_ms: 9.499011
+  type: 'test'
+  ...
+# Subtest: FES 03G binds Mi Día source cards to runtime bundles
+ok 18 - FES 03G binds Mi Día source cards to runtime bundles
+  ---
+  duration_ms: 7.016562
+  type: 'test'
+  ...
+# Subtest: FES 03G exposes all acceptance invariants
+ok 19 - FES 03G exposes all acceptance invariants
+  ---
+  duration_ms: 3.705573
+  type: 'test'
+  ...
+# Subtest: FES 03G preserves explicit unsupported Mi Día intelligence
+ok 20 - FES 03G preserves explicit unsupported Mi Día intelligence
+  ---
+  duration_ms: 3.852761
+  type: 'test'
+  ...
+# Subtest: FES 03G derives stable snapshot identity
+ok 21 - FES 03G derives stable snapshot identity
+  ---
+  duration_ms: 3.381146
+  type: 'test'
+  ...
+# Subtest: FES 03G is deterministic for equivalent source
+ok 22 - FES 03G is deterministic for equivalent source
+  ---
+  duration_ms: 12.251094
+  type: 'test'
+  ...
+# Subtest: FES 03G rebuilds byte-equivalent output
+ok 23 - FES 03G rebuilds byte-equivalent output
+  ---
+  duration_ms: 10.2875
+  type: 'test'
+  ...
+# Subtest: FES 03G rejects validation against different source
+ok 24 - FES 03G rejects validation against different source
+  ---
+  duration_ms: 6.461718
+  type: 'test'
+  ...
+# Subtest: FES 03G detects a tampered nested projection
+ok 25 - FES 03G detects a tampered nested projection
+  ---
+  duration_ms: 7.173907
+  type: 'test'
+  ...
+# Subtest: FES 03G rejects unsupported snapshot fields
+ok 26 - FES 03G rejects unsupported snapshot fields
+  ---
+  duration_ms: 3.751198
+  type: 'test'
+  ...
+# Subtest: FES 03G rejects unsupported bundle fields
+ok 27 - FES 03G rejects unsupported bundle fields
+  ---
+  duration_ms: 2.971562
+  type: 'test'
+  ...
+# Subtest: FES 03G output is deeply immutable
+ok 28 - FES 03G output is deeply immutable
+  ---
+  duration_ms: 3.609844
+  type: 'test'
+  ...
+# Subtest: FES 03G does not mutate source timelines
+ok 29 - FES 03G does not mutate source timelines
+  ---
+  duration_ms: 6.956666
+  type: 'test'
+  ...
+# Subtest: FES 03G keeps identity stable while digest follows source state
+ok 30 - FES 03G keeps identity stable while digest follows source state
+  ---
+  duration_ms: 8.211094
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 326.148177
