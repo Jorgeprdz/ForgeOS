@@ -1,0 +1,317 @@
+TAP version 13
+# Subtest: FES 05B exposes the extension version without erasing FES 01
+ok 1 - FES 05B exposes the extension version without erasing FES 01
+  ---
+  duration_ms: 1.163281
+  type: 'test'
+  ...
+# Subtest: FES 05B preserves the original thirteen-event vertical
+ok 2 - FES 05B preserves the original thirteen-event vertical
+  ---
+  duration_ms: 0.735521
+  type: 'test'
+  ...
+# Subtest: FES 05B adds exactly twenty-one passive-capture events
+ok 3 - FES 05B adds exactly twenty-one passive-capture events
+  ---
+  duration_ms: 0.283386
+  type: 'test'
+  ...
+# Subtest: FES 05B keeps handoff-only observations outside canonical event types
+ok 4 - FES 05B keeps handoff-only observations outside canonical event types
+  ---
+  duration_ms: 0.168802
+  type: 'test'
+  ...
+# Subtest: FES 05B keeps pipeline stage events outside this extension
+ok 5 - FES 05B keeps pipeline stage events outside this extension
+  ---
+  duration_ms: 0.188437
+  type: 'test'
+  ...
+# Subtest: FES 05B exposes all new subject types
+ok 6 - FES 05B exposes all new subject types
+  ---
+  duration_ms: 0.245625
+  type: 'test'
+  ...
+# Subtest: FES 05B validates every extension event
+    # Subtest: MESSAGE_DRAFT_GENERATED
+    ok 1 - MESSAGE_DRAFT_GENERATED
+      ---
+      duration_ms: 6.017656
+      type: 'test'
+      ...
+    # Subtest: MESSAGE_DRAFT_EDITED
+    ok 2 - MESSAGE_DRAFT_EDITED
+      ---
+      duration_ms: 0.813438
+      type: 'test'
+      ...
+    # Subtest: MESSAGE_DRAFT_APPROVED
+    ok 3 - MESSAGE_DRAFT_APPROVED
+      ---
+      duration_ms: 0.515365
+      type: 'test'
+      ...
+    # Subtest: MESSAGE_SENT_CONFIRMED
+    ok 4 - MESSAGE_SENT_CONFIRMED
+      ---
+      duration_ms: 0.436042
+      type: 'test'
+      ...
+    # Subtest: PROSPECT_REPLIED_CONFIRMED
+    ok 5 - PROSPECT_REPLIED_CONFIRMED
+      ---
+      duration_ms: 0.543281
+      type: 'test'
+      ...
+    # Subtest: OBJECTION_CAPTURED
+    ok 6 - OBJECTION_CAPTURED
+      ---
+      duration_ms: 0.322291
+      type: 'test'
+      ...
+    # Subtest: OBJECTION_ANALYSIS_GENERATED
+    ok 7 - OBJECTION_ANALYSIS_GENERATED
+      ---
+      duration_ms: 0.513333
+      type: 'test'
+      ...
+    # Subtest: OBJECTION_RESPONSE_GENERATED
+    ok 8 - OBJECTION_RESPONSE_GENERATED
+      ---
+      duration_ms: 0.737656
+      type: 'test'
+      ...
+    # Subtest: OBJECTION_RESPONSE_EDITED
+    ok 9 - OBJECTION_RESPONSE_EDITED
+      ---
+      duration_ms: 0.479531
+      type: 'test'
+      ...
+    # Subtest: OBJECTION_RESPONSE_APPROVED
+    ok 10 - OBJECTION_RESPONSE_APPROVED
+      ---
+      duration_ms: 0.393906
+      type: 'test'
+      ...
+    # Subtest: OBJECTION_RESPONSE_USED
+    ok 11 - OBJECTION_RESPONSE_USED
+      ---
+      duration_ms: 0.276354
+      type: 'test'
+      ...
+    # Subtest: OBJECTION_OUTCOME_CONFIRMED
+    ok 12 - OBJECTION_OUTCOME_CONFIRMED
+      ---
+      duration_ms: 0.25
+      type: 'test'
+      ...
+    # Subtest: CALL_CONNECTED_CONFIRMED
+    ok 13 - CALL_CONNECTED_CONFIRMED
+      ---
+      duration_ms: 0.236302
+      type: 'test'
+      ...
+    # Subtest: CALL_NOT_ANSWERED_CONFIRMED
+    ok 14 - CALL_NOT_ANSWERED_CONFIRMED
+      ---
+      duration_ms: 0.188907
+      type: 'test'
+      ...
+    # Subtest: CALL_CONTEXT_ADDED
+    ok 15 - CALL_CONTEXT_ADDED
+      ---
+      duration_ms: 0.185
+      type: 'test'
+      ...
+    # Subtest: QUOTE_STARTED
+    ok 16 - QUOTE_STARTED
+      ---
+      duration_ms: 0.209114
+      type: 'test'
+      ...
+    # Subtest: QUOTE_PREPARED
+    ok 17 - QUOTE_PREPARED
+      ---
+      duration_ms: 0.174479
+      type: 'test'
+      ...
+    # Subtest: QUOTE_REVIEWED
+    ok 18 - QUOTE_REVIEWED
+      ---
+      duration_ms: 0.244844
+      type: 'test'
+      ...
+    # Subtest: PRESENTATION_HELD_CONFIRMED
+    ok 19 - PRESENTATION_HELD_CONFIRMED
+      ---
+      duration_ms: 0.755521
+      type: 'test'
+      ...
+    # Subtest: PRODUCT_QUESTION_CAPTURED
+    ok 20 - PRODUCT_QUESTION_CAPTURED
+      ---
+      duration_ms: 0.154011
+      type: 'test'
+      ...
+    # Subtest: PROPOSAL_REQUESTED_CONFIRMED
+    ok 21 - PROPOSAL_REQUESTED_CONFIRMED
+      ---
+      duration_ms: 0.155156
+      type: 'test'
+      ...
+    1..21
+ok 7 - FES 05B validates every extension event
+  ---
+  duration_ms: 15.545157
+  type: 'test'
+  ...
+# Subtest: FES 05B generated artifacts remain unconfirmed
+ok 8 - FES 05B generated artifacts remain unconfirmed
+  ---
+  duration_ms: 0.20198
+  type: 'test'
+  ...
+# Subtest: FES 05B human approvals require human-confirmed source
+ok 9 - FES 05B human approvals require human-confirmed source
+  ---
+  duration_ms: 0.164844
+  type: 'test'
+  ...
+# Subtest: FES 05B rejects advisor-confirmed generation
+ok 10 - FES 05B rejects advisor-confirmed generation
+  ---
+  duration_ms: 0.500989
+  type: 'test'
+  ...
+# Subtest: FES 05B rejects system-generated approval
+ok 11 - FES 05B rejects system-generated approval
+  ---
+  duration_ms: 0.134219
+  type: 'test'
+  ...
+# Subtest: FES 05B accepts advisor-confirmed sent evidence
+ok 12 - FES 05B accepts advisor-confirmed sent evidence
+  ---
+  duration_ms: 0.187968
+  type: 'test'
+  ...
+# Subtest: FES 05B accepts provider-confirmed sent evidence
+ok 13 - FES 05B accepts provider-confirmed sent evidence
+  ---
+  duration_ms: 0.262188
+  type: 'test'
+  ...
+# Subtest: FES 05B rejects weak evidence for a confirmed result
+ok 14 - FES 05B rejects weak evidence for a confirmed result
+  ---
+  duration_ms: 0.169323
+  type: 'test'
+  ...
+# Subtest: FES 05B allows reported objection capture
+ok 15 - FES 05B allows reported objection capture
+  ---
+  duration_ms: 0.184063
+  type: 'test'
+  ...
+# Subtest: FES 05B allows confirmed objection capture
+ok 16 - FES 05B allows confirmed objection capture
+  ---
+  duration_ms: 0.107709
+  type: 'test'
+  ...
+# Subtest: FES 05B keeps raw message content forbidden
+ok 17 - FES 05B keeps raw message content forbidden
+  ---
+  duration_ms: 0.175938
+  type: 'test'
+  ...
+# Subtest: FES 05B keeps raw objection content forbidden
+ok 18 - FES 05B keeps raw objection content forbidden
+  ---
+  duration_ms: 0.162812
+  type: 'test'
+  ...
+# Subtest: FES 05B requires event-specific payload references
+ok 19 - FES 05B requires event-specific payload references
+  ---
+  duration_ms: 0.191667
+  type: 'test'
+  ...
+# Subtest: FES 05B canonicalizes absent optional references to null
+ok 20 - FES 05B canonicalizes absent optional references to null
+  ---
+  duration_ms: 0.424323
+  type: 'test'
+  ...
+# Subtest: FES 05B rejects subject mismatch
+ok 21 - FES 05B rejects subject mismatch
+  ---
+  duration_ms: 0.23224
+  type: 'test'
+  ...
+# Subtest: FES 05B keeps event creation side-effect free
+ok 22 - FES 05B keeps event creation side-effect free
+  ---
+  duration_ms: 0.186979
+  type: 'test'
+  ...
+# Subtest: FES 05B derives deterministic event identity
+ok 23 - FES 05B derives deterministic event identity
+  ---
+  duration_ms: 0.415782
+  type: 'test'
+  ...
+# Subtest: FES 05B detects tampered canonical identity
+ok 24 - FES 05B detects tampered canonical identity
+  ---
+  duration_ms: 0.255417
+  type: 'test'
+  ...
+# Subtest: FES 05B outputs deeply immutable events
+ok 25 - FES 05B outputs deeply immutable events
+  ---
+  duration_ms: 0.153333
+  type: 'test'
+  ...
+# Subtest: FES 05B does not mutate input
+ok 26 - FES 05B does not mutate input
+  ---
+  duration_ms: 0.123125
+  type: 'test'
+  ...
+# Subtest: FES 05B bridge recognizes generated draft as canonically supported
+ok 27 - FES 05B bridge recognizes generated draft as canonically supported
+  ---
+  duration_ms: 2.005937
+  type: 'test'
+  ...
+# Subtest: FES 05B bridge keeps WhatsApp handoff outside canon
+ok 28 - FES 05B bridge keeps WhatsApp handoff outside canon
+  ---
+  duration_ms: 0.503593
+  type: 'test'
+  ...
+# Subtest: FES 05B bridge keeps Calendar template as bridge evidence only
+ok 29 - FES 05B bridge keeps Calendar template as bridge evidence only
+  ---
+  duration_ms: 0.415885
+  type: 'test'
+  ...
+# Subtest: FES 05B bridge keeps pipeline movement source-truth-gated
+ok 30 - FES 05B bridge keeps pipeline movement source-truth-gated
+  ---
+  duration_ms: 0.420886
+  type: 'test'
+  ...
+1..30
+# tests 51
+# suites 0
+# pass 51
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 171.865

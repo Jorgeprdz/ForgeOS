@@ -1143,14 +1143,22 @@ test("FES 05A pipeline confirmation requires request", () => {
   );
 });
 
-test("FES 05A marks unsupported canonical event types for FES 05B", () => {
-  const item =
+test("FES 05A recognizes the FES 05B canonical extension", () => {
+  const generated =
     createPassiveCaptureObservation(
       whatsappFlow()[0],
     );
+  const handoff =
+    createPassiveCaptureObservation(
+      whatsappFlow()[3],
+    );
 
   assert.equal(
-    item.canonical_candidate.state,
+    generated.canonical_candidate.state,
+    "SUPPORTED_BY_FES01",
+  );
+  assert.equal(
+    handoff.canonical_candidate.state,
     "REQUIRES_FES05B_EVENT_EXTENSION",
   );
 });
@@ -1203,7 +1211,7 @@ test("FES 05A sequence counts candidate states", () => {
     result
       .canonical_candidate_counts
       .SUPPORTED_BY_FES01,
-    1,
+    6,
   );
   assert.equal(
     result
@@ -1215,7 +1223,7 @@ test("FES 05A sequence counts candidate states", () => {
     result
       .canonical_candidate_counts
       .REQUIRES_FES05B_EVENT_EXTENSION,
-    6,
+    1,
   );
 });
 

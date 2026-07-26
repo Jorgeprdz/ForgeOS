@@ -11,7 +11,7 @@ const projectionContract = require("../platform/event-evidence/activity-projecti
 const { DEFAULT_SAFETY_FLAGS, EVENT_TYPES, createCanonicalActivityEvent, createCanonicalActivityCorrection } = canonical;
 const { createLedgerRecord } = ledger;
 const { createCanonicalActivityTimeline } = timelineContract;
-const { PROJECTION_CONTRACT_VERSION, PROJECTION_VERSION, ITEM_VERSION, ORDERING, EVENT_PRESENTATION, deriveActivityProjectionId, createActivityProjection, assertActivityProjection, validateActivityProjection, rebuildActivityProjection, findActivityItem } = projectionContract;
+const { PROJECTION_CONTRACT_VERSION, PROJECTION_VERSION, ITEM_VERSION, ORDERING, CATEGORIES, EVENT_PRESENTATION, deriveActivityProjectionId, createActivityProjection, assertActivityProjection, validateActivityProjection, rebuildActivityProjection, findActivityItem } = projectionContract;
 
 const TENANT = "tenant-advisor-001";
 const CORRELATION = "corr-first-vertical-001";
@@ -90,7 +90,10 @@ test("FES 03C locks versions and display ordering", () => {
 
 test("FES 03C presents every canonical event type", () => {
   assert.deepEqual(Object.keys(EVENT_PRESENTATION).sort(), [...EVENT_TYPES].sort());
-  EVENT_TYPES.forEach(type => assert.ok(EVENT_PRESENTATION[type].title));
+  EVENT_TYPES.forEach(type => {
+    assert.ok(EVENT_PRESENTATION[type].title);
+    assert.ok(CATEGORIES.includes(EVENT_PRESENTATION[type].category));
+  });
 });
 
 test("FES 03C creates one item per timeline entry", () => {
@@ -167,7 +170,7 @@ test("FES 03C preserves original and correction as visible items", () => {
 
 test("FES 03C computes deterministic summary counts", () => {
   const projection = createActivityProjection({ timeline: fullTimeline() });
-  assert.deepEqual(projection.counts_by_category, { SYSTEM: 1, PROSPECT: 2, CONTEXT: 2, APPOINTMENT: 5, DUE_ACTION: 3 });
+  assert.deepEqual(projection.counts_by_category, { SYSTEM: 1, PROSPECT: 2, CONTEXT: 2, APPOINTMENT: 5, DUE_ACTION: 3, MESSAGE: 0, OBJECTION: 0, CALL: 0, QUOTE: 0, PRESENTATION: 0 });
   assert.deepEqual(projection.counts_by_confirmation, { UNCONFIRMED: 0, REPORTED: 2, CONFIRMED: 11, DISPUTED: 0 });
   assert.deepEqual(projection.counts_by_pending_state, { NONE: 11, PENDING_CONFIRMATION: 0, REVIEWABLE_REPORTED: 2, CONFLICT_REVIEW_REQUIRED: 0 });
   assert.equal(projection.pending_count, 2);

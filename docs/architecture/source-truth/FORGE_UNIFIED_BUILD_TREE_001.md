@@ -13303,3 +13303,19 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔵 Productive adapters and persistence acceptance
 - 🔴 Handoff promoted to result
 <!-- END FORGEOS:FES_05A_PASSIVE_CAPTURE_BRIDGE_CONTRACT -->
+
+<!-- BEGIN FORGEOS:FES_05B_CANONICAL_EVENT_TYPE_EXTENSION -->
+## FES 05B Canonical Event Type Extension
+
+- 🟢 Original 13-event first vertical preserved
+- 🟢 21 passive-capture canonical event types
+- 🟢 Message generation, edit, approval, send and reply
+- 🟢 Objection capture, analysis, response, use and outcome
+- 🟢 Confirmed call results and call context
+- 🟢 Quote preparation, review, presentation and proposal request
+- 🟢 Event-specific source and confirmation gates
+- 🔴 WhatsApp, call and Calendar handoff promoted to result
+- 🔴 Pipeline stage events without source truth
+- 🔴 Raw private content in canonical payloads
+- 🔵 FES 05C bridge-to-canonical event adapter
+<!-- END FORGEOS:FES_05B_CANONICAL_EVENT_TYPE_EXTENSION -->

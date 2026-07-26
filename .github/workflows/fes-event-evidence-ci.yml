@@ -1,0 +1,72 @@
+name: FES Event Evidence CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/nfast-09-timeline-to-conversation-brief-projection
+    paths:
+      - ".github/workflows/fes-event-evidence-ci.yml"
+      - "platform/event-evidence/**"
+      - "tests/fes-*-test.mjs"
+      - "tests/e2e/**"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  event-evidence:
+    name: Native Linux Event Evidence acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+    env:
+      CI: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Run Event Evidence regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/event-evidence
+          test_files="$(
+            find tests -maxdepth 1 -type f \
+              -name 'fes-*-test.mjs' \
+              ! -name '*-browser-test.mjs' \
+              | sort
+          )"
+          test -n "$test_files"
+          node --test --test-reporter=tap $test_files \
+            | tee artifacts/event-evidence/regression.tap
+
+      - name: Run Playwright preflight
+        run: npm run test:e2e:preflight
+
+      - name: Upload acceptance evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: fes-event-evidence-ci
+          path: |
+            artifacts/event-evidence
+            artifacts/playwright-report
+            artifacts/playwright-test-results
+            artifacts/fes03-playwright-results.json
+          if-no-files-found: error
+          retention-days: 30

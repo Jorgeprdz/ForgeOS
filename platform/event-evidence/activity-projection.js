@@ -15,7 +15,7 @@
   const PROJECTION_VERSION = "forge.activity_projection.v1";
   const ITEM_VERSION = "forge.activity_projection_item.v1";
   const ORDERING = Object.freeze({ display: "occurred_at:DESC", canonical_reference: "canonical_position:ASC" });
-  const CATEGORIES = Object.freeze(["SYSTEM", "PROSPECT", "CONTEXT", "APPOINTMENT", "DUE_ACTION"]);
+  const CATEGORIES = Object.freeze(["SYSTEM", "PROSPECT", "CONTEXT", "APPOINTMENT", "DUE_ACTION", "MESSAGE", "OBJECTION", "CALL", "QUOTE", "PRESENTATION"]);
   const CONFIRMATION_STATES = Object.freeze(["UNCONFIRMED", "REPORTED", "CONFIRMED", "DISPUTED"]);
   const PENDING_STATES = Object.freeze(["NONE", "PENDING_CONFIRMATION", "REVIEWABLE_REPORTED", "CONFLICT_REVIEW_REQUIRED"]);
   const EVENT_PRESENTATION = Object.freeze({
@@ -32,6 +32,27 @@
     DUE_ACTION_CREATED: Object.freeze({ category: "DUE_ACTION", title: "Seguimiento creado" }),
     DUE_ACTION_RESCHEDULED: Object.freeze({ category: "DUE_ACTION", title: "Seguimiento reagendado" }),
     DUE_ACTION_COMPLETED: Object.freeze({ category: "DUE_ACTION", title: "Seguimiento completado" }),
+    MESSAGE_DRAFT_GENERATED: Object.freeze({ category: "MESSAGE", title: "Borrador de mensaje generado" }),
+    MESSAGE_DRAFT_EDITED: Object.freeze({ category: "MESSAGE", title: "Borrador de mensaje editado" }),
+    MESSAGE_DRAFT_APPROVED: Object.freeze({ category: "MESSAGE", title: "Borrador de mensaje aprobado" }),
+    MESSAGE_SENT_CONFIRMED: Object.freeze({ category: "MESSAGE", title: "Envío de mensaje confirmado" }),
+    PROSPECT_REPLIED_CONFIRMED: Object.freeze({ category: "MESSAGE", title: "Respuesta del prospecto confirmada" }),
+    OBJECTION_CAPTURED: Object.freeze({ category: "OBJECTION", title: "Objeción capturada" }),
+    OBJECTION_ANALYSIS_GENERATED: Object.freeze({ category: "OBJECTION", title: "Análisis de objeción generado" }),
+    OBJECTION_RESPONSE_GENERATED: Object.freeze({ category: "OBJECTION", title: "Respuesta a objeción generada" }),
+    OBJECTION_RESPONSE_EDITED: Object.freeze({ category: "OBJECTION", title: "Respuesta a objeción editada" }),
+    OBJECTION_RESPONSE_APPROVED: Object.freeze({ category: "OBJECTION", title: "Respuesta a objeción aprobada" }),
+    OBJECTION_RESPONSE_USED: Object.freeze({ category: "OBJECTION", title: "Uso de respuesta a objeción confirmado" }),
+    OBJECTION_OUTCOME_CONFIRMED: Object.freeze({ category: "OBJECTION", title: "Resultado de objeción confirmado" }),
+    CALL_CONNECTED_CONFIRMED: Object.freeze({ category: "CALL", title: "Llamada conectada confirmada" }),
+    CALL_NOT_ANSWERED_CONFIRMED: Object.freeze({ category: "CALL", title: "Llamada no contestada confirmada" }),
+    CALL_CONTEXT_ADDED: Object.freeze({ category: "CALL", title: "Contexto de llamada añadido" }),
+    QUOTE_STARTED: Object.freeze({ category: "QUOTE", title: "Cotización iniciada" }),
+    QUOTE_PREPARED: Object.freeze({ category: "QUOTE", title: "Cotización preparada" }),
+    QUOTE_REVIEWED: Object.freeze({ category: "QUOTE", title: "Cotización revisada" }),
+    PRESENTATION_HELD_CONFIRMED: Object.freeze({ category: "PRESENTATION", title: "Presentación realizada confirmada" }),
+    PRODUCT_QUESTION_CAPTURED: Object.freeze({ category: "PRESENTATION", title: "Pregunta de producto capturada" }),
+    PROPOSAL_REQUESTED_CONFIRMED: Object.freeze({ category: "QUOTE", title: "Solicitud de propuesta confirmada" }),
   });
   const PROJECTION_KEYS = Object.freeze(["projection_version", "projection_id", "source_timeline_version", "source_timeline_id", "source_timeline_reference", "source_timeline_digest", "tenant_id", "correlation_id", "ordering", "item_count", "pending_count", "correction_count", "corrected_original_count", "oldest_activity_at", "newest_activity_at", "counts_by_category", "counts_by_confirmation", "counts_by_pending_state", "projection_digest", "items"]);
   const ITEM_KEYS = Object.freeze(["item_version", "activity_id", "display_position", "canonical_position", "projection_id", "tenant_id", "correlation_id", "event_id", "event_type", "category", "title", "occurred_at", "recorded_at", "appended_at", "effective_period", "actor", "subject", "source", "evidence_strength", "confirmation_state", "pending_state", "is_pending", "is_correction", "is_corrected", "correction_of", "correction_root_event_id", "correction_depth", "corrected_by_event_ids", "facts", "provenance_summary", "evidence_reference_ids"]);

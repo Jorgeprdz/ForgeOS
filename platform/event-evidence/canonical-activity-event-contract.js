@@ -15,8 +15,9 @@
   function canonicalActivityEventContractFactory() {
     const CONTRACT_VERSION = "FES-01.1";
     const SCHEMA_VERSION = "forge.activity_event.v1";
+    const EVENT_TYPE_EXTENSION_VERSION = "FES-05B.1";
 
-    const EVENT_TYPES = Object.freeze([
+    const FIRST_VERTICAL_EVENT_TYPES = Object.freeze([
       "PROSPECT_PROFILE_CREATED",
       "PROSPECT_CREATED",
       "INITIAL_CONTEXT_CAPTURED",
@@ -32,6 +33,35 @@
       "DUE_ACTION_COMPLETED",
     ]);
 
+    const PASSIVE_CAPTURE_EVENT_TYPES = Object.freeze([
+      "MESSAGE_DRAFT_GENERATED",
+      "MESSAGE_DRAFT_EDITED",
+      "MESSAGE_DRAFT_APPROVED",
+      "MESSAGE_SENT_CONFIRMED",
+      "PROSPECT_REPLIED_CONFIRMED",
+      "OBJECTION_CAPTURED",
+      "OBJECTION_ANALYSIS_GENERATED",
+      "OBJECTION_RESPONSE_GENERATED",
+      "OBJECTION_RESPONSE_EDITED",
+      "OBJECTION_RESPONSE_APPROVED",
+      "OBJECTION_RESPONSE_USED",
+      "OBJECTION_OUTCOME_CONFIRMED",
+      "CALL_CONNECTED_CONFIRMED",
+      "CALL_NOT_ANSWERED_CONFIRMED",
+      "CALL_CONTEXT_ADDED",
+      "QUOTE_STARTED",
+      "QUOTE_PREPARED",
+      "QUOTE_REVIEWED",
+      "PRESENTATION_HELD_CONFIRMED",
+      "PRODUCT_QUESTION_CAPTURED",
+      "PROPOSAL_REQUESTED_CONFIRMED",
+    ]);
+
+    const EVENT_TYPES = Object.freeze([
+      ...FIRST_VERTICAL_EVENT_TYPES,
+      ...PASSIVE_CAPTURE_EVENT_TYPES,
+    ]);
+
     const ACTOR_TYPES = Object.freeze([
       "ADVISOR",
       "PROSPECT",
@@ -44,6 +74,13 @@
       "APPOINTMENT",
       "ACTIVITY",
       "DUE_ACTION",
+      "MESSAGE",
+      "OBJECTION",
+      "CALL",
+      "QUOTE",
+      "PRESENTATION",
+      "PRODUCT_QUESTION",
+      "PROPOSAL",
     ]);
 
     const SOURCE_TYPES = Object.freeze([
@@ -183,7 +220,81 @@
       DUE_ACTION_CREATED: "DUE_ACTION",
       DUE_ACTION_RESCHEDULED: "DUE_ACTION",
       DUE_ACTION_COMPLETED: "DUE_ACTION",
+      MESSAGE_DRAFT_GENERATED: "MESSAGE",
+      MESSAGE_DRAFT_EDITED: "MESSAGE",
+      MESSAGE_DRAFT_APPROVED: "MESSAGE",
+      MESSAGE_SENT_CONFIRMED: "MESSAGE",
+      PROSPECT_REPLIED_CONFIRMED: "MESSAGE",
+      OBJECTION_CAPTURED: "OBJECTION",
+      OBJECTION_ANALYSIS_GENERATED: "OBJECTION",
+      OBJECTION_RESPONSE_GENERATED: "OBJECTION",
+      OBJECTION_RESPONSE_EDITED: "OBJECTION",
+      OBJECTION_RESPONSE_APPROVED: "OBJECTION",
+      OBJECTION_RESPONSE_USED: "OBJECTION",
+      OBJECTION_OUTCOME_CONFIRMED: "OBJECTION",
+      CALL_CONNECTED_CONFIRMED: "CALL",
+      CALL_NOT_ANSWERED_CONFIRMED: "CALL",
+      CALL_CONTEXT_ADDED: "CALL",
+      QUOTE_STARTED: "QUOTE",
+      QUOTE_PREPARED: "QUOTE",
+      QUOTE_REVIEWED: "QUOTE",
+      PRESENTATION_HELD_CONFIRMED: "PRESENTATION",
+      PRODUCT_QUESTION_CAPTURED: "PRODUCT_QUESTION",
+      PROPOSAL_REQUESTED_CONFIRMED: "PROPOSAL",
     });
+
+    const EVENT_SOURCE_RULES = Object.freeze({
+      MESSAGE_DRAFT_GENERATED: Object.freeze(["SYSTEM_GENERATED"]),
+      MESSAGE_DRAFT_EDITED: Object.freeze(["SYSTEM_OBSERVED"]),
+      MESSAGE_DRAFT_APPROVED: Object.freeze(["ADVISOR_CONFIRMED"]),
+      MESSAGE_SENT_CONFIRMED: Object.freeze([
+        "ADVISOR_CONFIRMED",
+        "EXTERNAL_PROVIDER_CONFIRMED",
+      ]),
+      PROSPECT_REPLIED_CONFIRMED: Object.freeze([
+        "ADVISOR_CONFIRMED",
+        "EXTERNAL_PROVIDER_CONFIRMED",
+      ]),
+      OBJECTION_CAPTURED: Object.freeze([
+        "ADVISOR_REPORTED",
+        "ADVISOR_CONFIRMED",
+      ]),
+      OBJECTION_ANALYSIS_GENERATED: Object.freeze(["SYSTEM_GENERATED"]),
+      OBJECTION_RESPONSE_GENERATED: Object.freeze(["SYSTEM_GENERATED"]),
+      OBJECTION_RESPONSE_EDITED: Object.freeze(["SYSTEM_OBSERVED"]),
+      OBJECTION_RESPONSE_APPROVED: Object.freeze(["ADVISOR_CONFIRMED"]),
+      OBJECTION_RESPONSE_USED: Object.freeze(["ADVISOR_CONFIRMED"]),
+      OBJECTION_OUTCOME_CONFIRMED: Object.freeze(["ADVISOR_CONFIRMED"]),
+      CALL_CONNECTED_CONFIRMED: Object.freeze([
+        "ADVISOR_CONFIRMED",
+        "EXTERNAL_PROVIDER_CONFIRMED",
+      ]),
+      CALL_NOT_ANSWERED_CONFIRMED: Object.freeze([
+        "ADVISOR_CONFIRMED",
+        "EXTERNAL_PROVIDER_CONFIRMED",
+      ]),
+      CALL_CONTEXT_ADDED: Object.freeze(["ADVISOR_REPORTED"]),
+      QUOTE_STARTED: Object.freeze(["SYSTEM_OBSERVED"]),
+      QUOTE_PREPARED: Object.freeze(["SYSTEM_OBSERVED"]),
+      QUOTE_REVIEWED: Object.freeze(["ADVISOR_CONFIRMED"]),
+      PRESENTATION_HELD_CONFIRMED: Object.freeze(["ADVISOR_CONFIRMED"]),
+      PRODUCT_QUESTION_CAPTURED: Object.freeze([
+        "ADVISOR_REPORTED",
+        "ADVISOR_CONFIRMED",
+      ]),
+      PROPOSAL_REQUESTED_CONFIRMED: Object.freeze(["ADVISOR_CONFIRMED"]),
+    });
+
+    const CONFIRMED_RESULT_EVENTS = Object.freeze([
+      "MESSAGE_SENT_CONFIRMED",
+      "PROSPECT_REPLIED_CONFIRMED",
+      "OBJECTION_RESPONSE_USED",
+      "OBJECTION_OUTCOME_CONFIRMED",
+      "CALL_CONNECTED_CONFIRMED",
+      "CALL_NOT_ANSWERED_CONFIRMED",
+      "PRESENTATION_HELD_CONFIRMED",
+      "PROPOSAL_REQUESTED_CONFIRMED",
+    ]);
 
     const CONFIRMED_OUTCOME_EVENTS = Object.freeze([
       "APPOINTMENT_HELD",
@@ -313,6 +424,181 @@
           "completed_at",
         ]),
         optional: Object.freeze([]),
+      }),
+      MESSAGE_DRAFT_GENERATED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "artifact_reference",
+          "generation_mode",
+        ]),
+        optional: Object.freeze(["provider_reference"]),
+      }),
+      MESSAGE_DRAFT_EDITED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "artifact_reference",
+          "previous_artifact_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      MESSAGE_DRAFT_APPROVED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "artifact_reference",
+          "approval_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      MESSAGE_SENT_CONFIRMED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "artifact_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze(["provider_reference"]),
+      }),
+      PROSPECT_REPLIED_CONFIRMED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "result_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze(["provider_reference"]),
+      }),
+      OBJECTION_CAPTURED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "objection_reference",
+        ]),
+        optional: Object.freeze(["context_reference"]),
+      }),
+      OBJECTION_ANALYSIS_GENERATED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "objection_reference",
+          "analysis_reference",
+        ]),
+        optional: Object.freeze(["provider_reference"]),
+      }),
+      OBJECTION_RESPONSE_GENERATED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "objection_reference",
+          "response_reference",
+        ]),
+        optional: Object.freeze([
+          "analysis_reference",
+          "provider_reference",
+        ]),
+      }),
+      OBJECTION_RESPONSE_EDITED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "response_reference",
+          "previous_artifact_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      OBJECTION_RESPONSE_APPROVED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "response_reference",
+          "approval_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      OBJECTION_RESPONSE_USED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "response_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      OBJECTION_OUTCOME_CONFIRMED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "outcome_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze(["reason_code"]),
+      }),
+      CALL_CONNECTED_CONFIRMED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "call_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze(["provider_reference"]),
+      }),
+      CALL_NOT_ANSWERED_CONFIRMED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "call_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze(["provider_reference"]),
+      }),
+      CALL_CONTEXT_ADDED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "call_reference",
+          "context_reference",
+        ]),
+        optional: Object.freeze(["capture_mode"]),
+      }),
+      QUOTE_STARTED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "quote_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      QUOTE_PREPARED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "quote_reference",
+          "artifact_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      QUOTE_REVIEWED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "quote_reference",
+          "artifact_reference",
+          "approval_reference",
+        ]),
+        optional: Object.freeze([]),
+      }),
+      PRESENTATION_HELD_CONFIRMED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "presentation_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze(["quote_reference"]),
+      }),
+      PRODUCT_QUESTION_CAPTURED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "question_reference",
+        ]),
+        optional: Object.freeze([
+          "presentation_reference",
+          "quote_reference",
+        ]),
+      }),
+      PROPOSAL_REQUESTED_CONFIRMED: Object.freeze({
+        required: Object.freeze([
+          "flow_reference",
+          "proposal_reference",
+          "confirmation_reference",
+        ]),
+        optional: Object.freeze([
+          "presentation_reference",
+          "quote_reference",
+        ]),
       }),
     });
 
@@ -788,6 +1074,23 @@
         "activity_reference",
         "due_action_reference",
         "action_type",
+        "flow_reference",
+        "artifact_reference",
+        "generation_mode",
+        "provider_reference",
+        "previous_artifact_reference",
+        "approval_reference",
+        "confirmation_reference",
+        "result_reference",
+        "objection_reference",
+        "analysis_reference",
+        "response_reference",
+        "outcome_reference",
+        "call_reference",
+        "quote_reference",
+        "presentation_reference",
+        "question_reference",
+        "proposal_reference",
       ]);
 
       const isoFields = new Set([
@@ -800,6 +1103,20 @@
         "completed_at",
       ]);
 
+      const optionalFields =
+        PAYLOAD_SCHEMAS[eventType].optional;
+
+      if (
+        optionalFields.includes(key) &&
+        (
+          value === undefined ||
+          value === null ||
+          value === ""
+        )
+      ) {
+        return null;
+      }
+
       if (key === "capture_mode") {
         return requireEnum(
           value,
@@ -810,13 +1127,6 @@
       }
 
       if (opaqueFields.has(key)) {
-        if (
-          key === "provider_event_reference" &&
-          (value === undefined || value === null || value === "")
-        ) {
-          return null;
-        }
-
         return requireOpaque(
           value,
           "PAYLOAD_FIELD_INVALID",
@@ -1089,6 +1399,41 @@
             actualConfirmationState: confirmationState,
           },
         );
+      }
+
+      const allowedEventSources =
+        EVENT_SOURCE_RULES[eventType];
+
+      if (
+        allowedEventSources &&
+        !allowedEventSources.includes(source.type)
+      ) {
+        error(
+          "EVENT_SOURCE_TYPE_MISMATCH",
+          `${eventType} no admite la fuente ${source.type}.`,
+          {
+            eventType,
+            sourceType: source.type,
+            allowedSourceTypes: [
+              ...allowedEventSources,
+            ],
+          },
+        );
+      }
+
+      if (CONFIRMED_RESULT_EVENTS.includes(eventType)) {
+        if (
+          confirmationState !== "CONFIRMED" ||
+          ![
+            "HUMAN_CONFIRMED",
+            "EXTERNAL_CONFIRMED",
+          ].includes(evidenceStrength)
+        ) {
+          error(
+            "CONFIRMED_RESULT_EVIDENCE_REQUIRED",
+            "El resultado requiere confirmación humana o externa.",
+          );
+        }
       }
 
       if (CONFIRMED_OUTCOME_EVENTS.includes(eventType)) {
@@ -1364,6 +1709,9 @@
     return deepFreeze({
       CONTRACT_VERSION,
       SCHEMA_VERSION,
+      EVENT_TYPE_EXTENSION_VERSION,
+      FIRST_VERTICAL_EVENT_TYPES,
+      PASSIVE_CAPTURE_EVENT_TYPES,
       EVENT_TYPES,
       ACTOR_TYPES,
       SUBJECT_TYPES,
@@ -1386,6 +1734,8 @@
         deepFreeze,
         normalizeEvent,
         findProhibitedKeys,
+        EVENT_SOURCE_RULES,
+        CONFIRMED_RESULT_EVENTS,
       }),
     });
   },

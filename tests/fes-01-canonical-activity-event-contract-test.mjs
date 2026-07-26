@@ -8,6 +8,7 @@ const contract = require(
 );
 
 const {
+  FIRST_VERTICAL_EVENT_TYPES,
   EVENT_TYPES,
   DEFAULT_SAFETY_FLAGS,
   createCanonicalActivityEvent,
@@ -268,9 +269,9 @@ function fixtureFor(eventType, index) {
   };
 }
 
-test("FES 01 exposes the thirteen first-vertical event types", () => {
-  assert.equal(EVENT_TYPES.length, 13);
-  assert.deepEqual(EVENT_TYPES, [
+test("FES 01 preserves the thirteen first-vertical event types", () => {
+  assert.equal(FIRST_VERTICAL_EVENT_TYPES.length, 13);
+  assert.deepEqual(FIRST_VERTICAL_EVENT_TYPES, [
     "PROSPECT_PROFILE_CREATED",
     "PROSPECT_CREATED",
     "INITIAL_CONTEXT_CAPTURED",
@@ -325,7 +326,10 @@ test("FES 01 binds identity to the tenant", () => {
 });
 
 test("FES 01 validates every event in the first vertical", async t => {
-  for (const [index, eventType] of EVENT_TYPES.entries()) {
+  for (
+    const [index, eventType]
+    of FIRST_VERTICAL_EVENT_TYPES.entries()
+  ) {
     await t.test(eventType, () => {
       const event = createCanonicalActivityEvent(
         fixtureFor(eventType, index + 1),
