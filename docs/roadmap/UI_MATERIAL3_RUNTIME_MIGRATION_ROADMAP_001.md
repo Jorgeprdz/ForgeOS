@@ -28,10 +28,10 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
 
 ### UI-M02 — Responsive app shell
 
-- Status: **NEXT**
-- Header and responsive surface.
-- Floating navigation pill.
-- Alfred global launcher and panel.
+- Status: **IN ACCEPTANCE**
+- Responsive shell candidate materialized behind the feature flag.
+- Real UI acceptance delegated to GitHub Actions Playwright.
+- Closure remains blocked until the exact candidate commit is green.
 
 ### UI-M03 — Productive Home bindings
 
