@@ -13110,3 +13110,29 @@ Sources:
 └── 🔴 MAIN_MERGE_AUTHORIZED=NO
 ```
 <!-- END FORGEOS:FES_01_BUILD_TREE_STATUS -->
+
+<!-- BEGIN FORGEOS:FES_02A_BUILD_TREE -->
+## FES 02A — Activity Ledger Local Foundation
+
+```text
+platform/event-evidence/canonical-activity-event-contract.js
+  └── platform/event-evidence/activity-ledger-contract.js
+      ├── platform/event-evidence/activity-ledger-local-store.js
+      ├── platform/event-evidence/activity-ledger-sync-service.js
+      └── supabase/migrations/20260726000100_fes02_activity_event_ledger.sql
+```
+
+Status:
+
+```text
+CANONICAL_EVENT_CONTRACT=IMPLEMENTED_FES01
+LOCAL_LEDGER_CONTRACT=IMPLEMENTED_FES02A
+LOCAL_MEMORY_DRIVER=IMPLEMENTED_FES02A
+LOCAL_INDEXEDDB_DRIVER=IMPLEMENTED_FES02A
+LOCAL_OUTBOX=IMPLEMENTED_FES02A
+SYNC_SERVICE=IMPLEMENTED_NO_BACKGROUND_RUNTIME
+REMOTE_LEDGER_MIGRATION=CANDIDATE_NOT_DEPLOYED
+PRODUCTIVE_BROWSER_BINDING=NO
+NEXT=FES_02B_REMOTE_LEDGER_AUTHORITY
+```
+<!-- END FORGEOS:FES_02A_BUILD_TREE -->
