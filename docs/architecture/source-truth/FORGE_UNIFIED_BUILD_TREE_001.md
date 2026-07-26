@@ -13239,3 +13239,18 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Legacy Pipeline status as event truth
 - 🔵 FES 03F Mi Día projection
 <!-- END FORGEOS:FES_03E_PIPELINE_CARD_PROJECTION -->
+
+<!-- BEGIN FORGEOS:FES_03F_MI_DIA_PROJECTION -->
+## FES 03F Mi Día projection
+
+- 🟢 Conflict resolution work
+- 🟢 Appointment outcome confirmation
+- 🟢 Due follow-up work
+- 🟢 Pending evidence review
+- 🟢 Optional post-appointment context
+- 🟢 Deterministic cross-prospect ordering
+- 🟢 Required and optional work boundary
+- 🔴 Wall-clock overdue inference
+- 🔴 Alfred-generated recommendation
+- 🔵 FES 03G projection runtime acceptance
+<!-- END FORGEOS:FES_03F_MI_DIA_PROJECTION -->
