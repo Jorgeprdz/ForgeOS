@@ -1,0 +1,7 @@
+SOURCE_COMMIT=4681061c
+PLAYWRIGHT_VERSION=1.62.0
+NODE_VERSION=v26.5.0
+BROWSER=Chromium 150.0.7871.46 Arch Linux ARM
+BROWSER_EXECUTABLE=/usr/sbin/chromium
+URL=http://127.0.0.1:43407/examples/home-mobile-md3-alfred.html?v=4681061c
+AUDIT_RC=0

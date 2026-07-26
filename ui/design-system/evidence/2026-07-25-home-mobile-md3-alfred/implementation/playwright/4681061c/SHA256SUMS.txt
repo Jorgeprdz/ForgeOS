@@ -1,0 +1,3 @@
+59fc76d1459cea35a9caa33713b48b98ab9411f99cbf73c29378b8a2ac838d40  ./capture-responsive.cjs
+92a47571c00251e6ede9825814410415223781e15eaa60a1393cbb7252a90f65  ./README.md
+85a5f795ffab527fcd3c52c24ebe405af0db6974fd4af2cffc7c8fd7a6f18690  ./runtime-metadata.txt
