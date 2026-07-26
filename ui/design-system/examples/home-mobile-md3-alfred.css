@@ -2204,3 +2204,78 @@ body.keyboard-open .sheet-note {
     text-align: left;
   }
 }
+
+
+/* FORGE STAGE 3C — TABLET OPPORTUNITIES FIX */
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .opportunities {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .opportunity-list {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .opportunity {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "avatar copy score"
+      "avatar bar bar";
+    column-gap: 12px;
+    row-gap: 8px;
+    align-content: center;
+    align-items: center;
+    padding: 14px 4px;
+    border-bottom: 1px solid rgba(170, 199, 255, .09);
+  }
+
+  .opportunity:last-child {
+    border-bottom: 0;
+  }
+
+  .opportunity .avatar {
+    grid-area: avatar;
+    align-self: center;
+  }
+
+  .opportunity-copy {
+    grid-area: copy;
+    min-width: 0;
+  }
+
+  .opportunity-copy strong {
+    margin-bottom: 4px;
+    font-size: 15px;
+  }
+
+  .opportunity-copy small {
+    display: block;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .score {
+    grid-area: score;
+    justify-self: end;
+    align-self: center;
+    font-size: 14px;
+  }
+
+  .score-bar {
+    grid-area: bar;
+    width: 100%;
+    min-width: 0;
+    height: 8px;
+  }
+}
