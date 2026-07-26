@@ -13224,3 +13224,18 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Detached Prospect Detail authority
 - 🔵 FES 03E Pipeline card projection
 <!-- END FORGEOS:FES_03D_PROSPECT_DETAIL_PROJECTION -->
+
+<!-- BEGIN FORGEOS:FES_03E_PIPELINE_CARD_PROJECTION -->
+## FES 03E Pipeline card projection
+
+- 🟢 Canonical milestone stage
+- 🟢 Latest Activity summary
+- 🟢 Latest appointment summary
+- 🟢 Explicit pending appointment outcome
+- 🟢 Earliest open due follow-up
+- 🟢 Blocking conflict review
+- 🟢 Deterministic attention priority
+- 🔴 Wall-clock overdue inference
+- 🔴 Legacy Pipeline status as event truth
+- 🔵 FES 03F Mi Día projection
+<!-- END FORGEOS:FES_03E_PIPELINE_CARD_PROJECTION -->

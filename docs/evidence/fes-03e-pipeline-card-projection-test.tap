@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: FES 03E exposes locked card contracts
+ok 1 - FES 03E exposes locked card contracts
+  ---
+  duration_ms: 2.037969
+  type: 'test'
+  ...
+# Subtest: FES 03E projects new prospect stage
+ok 2 - FES 03E projects new prospect stage
+  ---
+  duration_ms: 38.464063
+  type: 'test'
+  ...
+# Subtest: FES 03E projects initial context without letting later notes regress stage
+ok 3 - FES 03E projects initial context without letting later notes regress stage
+  ---
+  duration_ms: 9.413906
+  type: 'test'
+  ...
+# Subtest: FES 03E projects scheduled appointment and pending outcome
+ok 4 - FES 03E projects scheduled appointment and pending outcome
+  ---
+  duration_ms: 6.174531
+  type: 'test'
+  ...
+# Subtest: FES 03E projects appointment held and clears pending outcome
+ok 5 - FES 03E projects appointment held and clears pending outcome
+  ---
+  duration_ms: 6.905885
+  type: 'test'
+  ...
+# Subtest: FES 03E projects not-held, rescheduled and no-show stages
+ok 6 - FES 03E projects not-held, rescheduled and no-show stages
+  ---
+  duration_ms: 13.614688
+  type: 'test'
+  ...
+# Subtest: FES 03E keeps due-action events from changing milestone stage
+ok 7 - FES 03E keeps due-action events from changing milestone stage
+  ---
+  duration_ms: 5.654531
+  type: 'test'
+  ...
+# Subtest: FES 03E projects latest Activity item with source and confirmation
+ok 8 - FES 03E projects latest Activity item with source and confirmation
+  ---
+  duration_ms: 4.671927
+  type: 'test'
+  ...
+# Subtest: FES 03E selects the latest appointment by canonical event position
+ok 9 - FES 03E selects the latest appointment by canonical event position
+  ---
+  duration_ms: 6.03349
+  type: 'test'
+  ...
+# Subtest: FES 03E projects earliest open due follow-up
+ok 10 - FES 03E projects earliest open due follow-up
+  ---
+  duration_ms: 5.753334
+  type: 'test'
+  ...
+# Subtest: FES 03E removes completed due action from compact follow-up
+ok 11 - FES 03E removes completed due action from compact follow-up
+  ---
+  duration_ms: 5.542709
+  type: 'test'
+  ...
+# Subtest: FES 03E preserves all attention reasons with deterministic priority
+ok 12 - FES 03E preserves all attention reasons with deterministic priority
+  ---
+  duration_ms: 6.907188
+  type: 'test'
+  ...
+# Subtest: FES 03E promotes correction forks to blocking conflict
+ok 13 - FES 03E promotes correction forks to blocking conflict
+  ---
+  duration_ms: 8.070729
+  type: 'test'
+  ...
+# Subtest: FES 03E does not invent name, phone, income, product or recommendation
+ok 14 - FES 03E does not invent name, phone, income, product or recommendation
+  ---
+  duration_ms: 4.356458
+  type: 'test'
+  ...
+# Subtest: FES 03E derives stable card identity from tenant and prospect
+ok 15 - FES 03E derives stable card identity from tenant and prospect
+  ---
+  duration_ms: 2.035469
+  type: 'test'
+  ...
+# Subtest: FES 03E keeps source authority explicit
+ok 16 - FES 03E keeps source authority explicit
+  ---
+  duration_ms: 2.209114
+  type: 'test'
+  ...
+# Subtest: FES 03E is deterministic for the same timeline
+ok 17 - FES 03E is deterministic for the same timeline
+  ---
+  duration_ms: 4.744896
+  type: 'test'
+  ...
+# Subtest: FES 03E rebuilds byte-equivalent output
+ok 18 - FES 03E rebuilds byte-equivalent output
+  ---
+  duration_ms: 8.163282
+  type: 'test'
+  ...
+# Subtest: FES 03E rejects validation against a different timeline
+ok 19 - FES 03E rejects validation against a different timeline
+  ---
+  duration_ms: 4.087969
+  type: 'test'
+  ...
+# Subtest: FES 03E detects tampered stage
+ok 20 - FES 03E detects tampered stage
+  ---
+  duration_ms: 3.715417
+  type: 'test'
+  ...
+# Subtest: FES 03E rejects unsupported card fields
+ok 21 - FES 03E rejects unsupported card fields
+  ---
+  duration_ms: 1.987552
+  type: 'test'
+  ...
+# Subtest: FES 03E output is deeply immutable
+ok 22 - FES 03E output is deeply immutable
+  ---
+  duration_ms: 3.755625
+  type: 'test'
+  ...
+# Subtest: FES 03E does not mutate its source timeline
+ok 23 - FES 03E does not mutate its source timeline
+  ---
+  duration_ms: 2.863177
+  type: 'test'
+  ...
+# Subtest: FES 03E keeps stable identity while digest changes with operational state
+ok 24 - FES 03E keeps stable identity while digest changes with operational state
+  ---
+  duration_ms: 5.159687
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 290.07776
