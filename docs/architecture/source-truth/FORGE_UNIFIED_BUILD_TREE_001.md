@@ -13068,3 +13068,45 @@ Sources:
 └── 🔴 MAIN_MERGE_AUTHORIZED=NO
 ```
 <!-- END FORGEOS:FES_00_BUILD_TREE_STATUS -->
+
+<!-- BEGIN FORGEOS:FES_01_BUILD_TREE_STATUS -->
+## FES 01 Canonical Activity Event Contract
+
+```text
+🟢 FES_01_CANONICAL_ACTIVITY_EVENT_CONTRACT
+│
+├── 🟢 forge.activity_event.v1 canonical envelope
+├── 🟢 13 first-vertical event types
+├── 🟢 deterministic tenant-bound event identity
+├── 🟢 explicit actor, subject, source and evidence strength
+├── 🟢 explicit occurrence, record, effective, causation and correlation time
+├── 🟢 event-specific safe payload allowlists
+├── 🟢 privacy class and provenance
+├── 🟢 external handoff separated from provider confirmation
+├── 🟢 appointment outcomes require confirmed evidence
+├── 🟢 learning eligibility locked false
+├── 🟢 corrections append new immutable events
+├── 🟢 all action and cross-tenant safety flags locked false
+├── 🟢 dedicated deterministic test closed
+└── 🟢 NFAST Stage 3F regression preserved
+
+🔵 FES_02_ACTIVITY_LEDGER_PERSISTENCE
+│
+├── 🔵 append-only local ledger
+├── 🔵 evidence-reference persistence
+├── 🔵 idempotent append
+├── 🔵 correction linkage
+├── 🔵 local replica and outbox
+├── 🔵 synchronization and conflict review
+├── 🔵 governed Supabase persistence
+└── 🔴 no productive projection ownership
+
+🔴 LOCKS
+├── 🔴 FES 01 is contract only
+├── 🔴 no database migration in FES 01
+├── 🔴 no productive UI mutation in FES 01
+├── 🔴 no provider execution
+├── 🔴 no automatic business action
+└── 🔴 MAIN_MERGE_AUTHORIZED=NO
+```
+<!-- END FORGEOS:FES_01_BUILD_TREE_STATUS -->

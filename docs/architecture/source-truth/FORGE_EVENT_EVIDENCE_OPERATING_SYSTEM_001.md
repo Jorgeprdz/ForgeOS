@@ -558,3 +558,28 @@ FES 00 changes implementation authority, not Git history. Stages 3A through 3F
 remain reviewable assets. Stage 3G remains an invalid acceptance attempt until the
 real productive vertical is implemented and accepted through Forge Alive.
 <!-- END FORGEOS:FES_00_SYSTEM_REALIGNMENT_AND_CLEANUP -->
+
+<!-- BEGIN FORGEOS:FES_01_CANONICAL_ACTIVITY_EVENT_CONTRACT -->
+## 18. FES 01 canonical Activity Event contract closure
+
+- `STATUS=CANONICAL_ACTIVITY_EVENT_CONTRACT_IMPLEMENTED`
+- `IMPLEMENTATION_BASE_COMMIT=17b68f839d63ebb8d8f4831b59c9fd590077fcc1`
+- `CONTRACT_VERSION=FES-01.1`
+- `SCHEMA_VERSION=forge.activity_event.v1`
+- `FIRST_VERTICAL_EVENT_TYPES=13`
+- `DETERMINISTIC_IDENTITY=YES`
+- `TENANT_BOUND_IDENTITY=YES`
+- `SOURCE_EVIDENCE_CONFIRMATION_EXPLICIT=YES`
+- `EXTERNAL_HANDOFF_NOT_CONFIRMATION=YES`
+- `PAYLOAD_ALLOWLISTS=YES`
+- `LEARNING_ELIGIBILITY_DEFAULT_FALSE=YES`
+- `CORRECTIONS_APPEND_ONLY=YES`
+- `IMMUTABLE_OUTPUT=YES`
+- `RUNTIME_PERSISTENCE=NO`
+- `SUPABASE_REMOTE_MUTATION=NO`
+- `PRODUCTIVE_UI_MUTATION=NO`
+- `NEXT=FES_02_ACTIVITY_LEDGER_PERSISTENCE`
+
+FES 01 defines the canonical fact envelope. It does not persist, synchronize,
+project, notify or execute. Those capabilities remain downstream phases.
+<!-- END FORGEOS:FES_01_CANONICAL_ACTIVITY_EVENT_CONTRACT -->

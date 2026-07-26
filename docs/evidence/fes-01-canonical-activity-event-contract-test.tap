@@ -1,0 +1,197 @@
+TAP version 13
+# Subtest: FES 01 exposes the thirteen first-vertical event types
+ok 1 - FES 01 exposes the thirteen first-vertical event types
+  ---
+  duration_ms: 14.175625
+  type: 'test'
+  ...
+# Subtest: FES 01 creates a canonical deterministic prospect event
+ok 2 - FES 01 creates a canonical deterministic prospect event
+  ---
+  duration_ms: 4.919883
+  type: 'test'
+  ...
+# Subtest: FES 01 creates identical IDs for idempotent replay
+ok 3 - FES 01 creates identical IDs for idempotent replay
+  ---
+  duration_ms: 1.407618
+  type: 'test'
+  ...
+# Subtest: FES 01 binds identity to the tenant
+ok 4 - FES 01 binds identity to the tenant
+  ---
+  duration_ms: 1.268359
+  type: 'test'
+  ...
+# Subtest: FES 01 validates every event in the first vertical
+    # Subtest: PROSPECT_PROFILE_CREATED
+    ok 1 - PROSPECT_PROFILE_CREATED
+      ---
+      duration_ms: 2.345039
+      type: 'test'
+      ...
+    # Subtest: PROSPECT_CREATED
+    ok 2 - PROSPECT_CREATED
+      ---
+      duration_ms: 1.424258
+      type: 'test'
+      ...
+    # Subtest: INITIAL_CONTEXT_CAPTURED
+    ok 3 - INITIAL_CONTEXT_CAPTURED
+      ---
+      duration_ms: 1.428008
+      type: 'test'
+      ...
+    # Subtest: TIMELINE_INITIALIZED
+    ok 4 - TIMELINE_INITIALIZED
+      ---
+      duration_ms: 1.013632
+      type: 'test'
+      ...
+    # Subtest: APPOINTMENT_SCHEDULED
+    ok 5 - APPOINTMENT_SCHEDULED
+      ---
+      duration_ms: 1.4125
+      type: 'test'
+      ...
+    # Subtest: APPOINTMENT_HELD
+    ok 6 - APPOINTMENT_HELD
+      ---
+      duration_ms: 1.364727
+      type: 'test'
+      ...
+    # Subtest: APPOINTMENT_NOT_HELD
+    ok 7 - APPOINTMENT_NOT_HELD
+      ---
+      duration_ms: 1.006758
+      type: 'test'
+      ...
+    # Subtest: APPOINTMENT_RESCHEDULED
+    ok 8 - APPOINTMENT_RESCHEDULED
+      ---
+      duration_ms: 1.020273
+      type: 'test'
+      ...
+    # Subtest: APPOINTMENT_NO_SHOW
+    ok 9 - APPOINTMENT_NO_SHOW
+      ---
+      duration_ms: 0.990625
+      type: 'test'
+      ...
+    # Subtest: ACTIVITY_CONTEXT_ADDED
+    ok 10 - ACTIVITY_CONTEXT_ADDED
+      ---
+      duration_ms: 0.953906
+      type: 'test'
+      ...
+    # Subtest: DUE_ACTION_CREATED
+    ok 11 - DUE_ACTION_CREATED
+      ---
+      duration_ms: 1.044102
+      type: 'test'
+      ...
+    # Subtest: DUE_ACTION_RESCHEDULED
+    ok 12 - DUE_ACTION_RESCHEDULED
+      ---
+      duration_ms: 0.726954
+      type: 'test'
+      ...
+    # Subtest: DUE_ACTION_COMPLETED
+    ok 13 - DUE_ACTION_COMPLETED
+      ---
+      duration_ms: 0.515703
+      type: 'test'
+      ...
+    1..13
+ok 5 - FES 01 validates every event in the first vertical
+  ---
+  duration_ms: 24.290664
+  type: 'test'
+  ...
+# Subtest: FES 01 rejects unsupported event fields
+ok 6 - FES 01 rejects unsupported event fields
+  ---
+  duration_ms: 1.320938
+  type: 'test'
+  ...
+# Subtest: FES 01 requires explicit source and evidence strength
+ok 7 - FES 01 requires explicit source and evidence strength
+  ---
+  duration_ms: 0.926563
+  type: 'test'
+  ...
+# Subtest: FES 01 rejects source and evidence mismatch
+ok 8 - FES 01 rejects source and evidence mismatch
+  ---
+  duration_ms: 0.544727
+  type: 'test'
+  ...
+# Subtest: FES 01 distinguishes external handoff from provider confirmation
+ok 9 - FES 01 distinguishes external handoff from provider confirmation
+  ---
+  duration_ms: 0.549102
+  type: 'test'
+  ...
+# Subtest: FES 01 rejects recorded time before occurrence
+ok 10 - FES 01 rejects recorded time before occurrence
+  ---
+  duration_ms: 0.45668
+  type: 'test'
+  ...
+# Subtest: FES 01 rejects invalid effective periods
+ok 11 - FES 01 rejects invalid effective periods
+  ---
+  duration_ms: 0.450429
+  type: 'test'
+  ...
+# Subtest: FES 01 enforces event-specific payload allowlists
+ok 12 - FES 01 enforces event-specific payload allowlists
+  ---
+  duration_ms: 0.716836
+  type: 'test'
+  ...
+# Subtest: FES 01 defaults learning eligibility to false and blocks promotion
+ok 13 - FES 01 defaults learning eligibility to false and blocks promotion
+  ---
+  duration_ms: 0.636992
+  type: 'test'
+  ...
+# Subtest: FES 01 blocks all execution and cross-tenant safety flags
+ok 14 - FES 01 blocks all execution and cross-tenant safety flags
+  ---
+  duration_ms: 0.908594
+  type: 'test'
+  ...
+# Subtest: FES 01 requires human or provider confirmation for appointment outcomes
+ok 15 - FES 01 requires human or provider confirmation for appointment outcomes
+  ---
+  duration_ms: 0.479804
+  type: 'test'
+  ...
+# Subtest: FES 01 appends corrections without rewriting the original event
+ok 16 - FES 01 appends corrections without rewriting the original event
+  ---
+  duration_ms: 1.298242
+  type: 'test'
+  ...
+# Subtest: FES 01 output is deeply immutable
+ok 17 - FES 01 output is deeply immutable
+  ---
+  duration_ms: 0.693398
+  type: 'test'
+  ...
+# Subtest: FES 01 validation detects non-canonical or tampered records
+ok 18 - FES 01 validation detects non-canonical or tampered records
+  ---
+  duration_ms: 1.064648
+  type: 'test'
+  ...
+1..18
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 435.389258
