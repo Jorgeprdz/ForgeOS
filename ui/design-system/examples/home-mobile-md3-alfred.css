@@ -1228,3 +1228,191 @@ h1 {
     transition-duration: 1ms !important;
   }
 }
+
+
+/* FORGE STAGE 2B — MOBILE LAYOUT + KEYBOARD */
+body.sheet-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.next-layout {
+  position: relative;
+  display: block;
+}
+
+.prospect-copy {
+  min-width: 0;
+  padding-right: 74px;
+}
+
+.prospect h3 {
+  max-width: 100%;
+  font-size: 19px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.prospect p {
+  max-width: 190px;
+}
+
+.alfred-orbit--contextual {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: 2px;
+  width: 72px;
+  height: 72px;
+  margin: 0;
+  transform: translateY(-43%);
+}
+
+.alfred-orbit--contextual .alfred-core {
+  inset: 23%;
+}
+
+.alfred-orbit--contextual .halo-c {
+  inset: -7px;
+}
+
+.urgency {
+  margin-left: 72px;
+  padding-right: 68px;
+}
+
+.bottom-shell {
+  bottom: max(16px, calc(env(safe-area-inset-bottom) + 8px));
+  grid-template-columns: minmax(0, 1fr) 82px;
+  gap: 8px;
+}
+
+.alfred-launcher {
+  width: 82px;
+  height: 82px;
+}
+
+.alfred-launcher .alfred-core {
+  inset: 18px;
+}
+
+.alfred-label {
+  bottom: 1px;
+}
+
+.sheet-panel {
+  bottom: var(--forge-keyboard-inset, 0px);
+  max-height: calc(var(--forge-visual-viewport-height, 100dvh) - 10px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.sheet-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.suggestions {
+  gap: 10px;
+  padding: 22px 6px 14px 2px;
+  scroll-padding-inline: 2px 32px;
+  scroll-snap-type: inline proximity;
+}
+
+.suggestions button {
+  scroll-snap-align: start;
+}
+
+.alfred-input input {
+  text-overflow: ellipsis;
+}
+
+body.keyboard-open .sheet-panel {
+  padding-top: 7px;
+  padding-bottom: 16px;
+}
+
+body.keyboard-open .sheet-handle {
+  margin-bottom: 13px;
+}
+
+body.keyboard-open .alfred-sheet-header {
+  grid-template-columns: 44px minmax(0, 1fr) 38px;
+  gap: 10px;
+}
+
+body.keyboard-open .alfred-mini {
+  width: 43px;
+  height: 43px;
+}
+
+body.keyboard-open .alfred-sheet-header h2 {
+  font-size: 22px;
+  line-height: 1.02;
+}
+
+body.keyboard-open .suggestions {
+  padding-top: 16px;
+  padding-bottom: 11px;
+}
+
+body.keyboard-open .sheet-note {
+  margin-top: 10px;
+  font-size: 10px;
+}
+
+.plan-art {
+  opacity: 1;
+}
+
+.route {
+  border-top-width: 5px;
+  filter: drop-shadow(0 0 10px rgba(255, 201, 95, .9));
+}
+
+@media (max-width: 390px) {
+  .next-layout {
+    display: block;
+  }
+
+  .prospect-copy {
+    padding-right: 68px;
+  }
+
+  .prospect h3 {
+    font-size: 18px;
+  }
+
+  .prospect p {
+    max-width: 165px;
+  }
+
+  .alfred-orbit--contextual {
+    width: 68px;
+    height: 68px;
+    right: -2px;
+  }
+
+  .urgency {
+    margin-left: 0;
+    padding-right: 64px;
+  }
+
+  .bottom-shell {
+    grid-template-columns: minmax(0, 1fr) 76px;
+    gap: 6px;
+  }
+
+  .alfred-launcher {
+    width: 76px;
+    height: 76px;
+  }
+
+  .alfred-launcher .alfred-core {
+    inset: 17px;
+  }
+
+  .sheet-panel {
+    border-radius: 34px 44px 0 0 / 30px 38px 0 0;
+  }
+}

@@ -252,6 +252,7 @@
     const sheet = document.querySelector('.alfred-sheet');
     const toast = document.querySelector('.toast');
     const input = document.querySelector('.alfred-input input');
+    const suggestions = document.querySelector('.suggestions');
     const globalAlfred = document.querySelector('[data-alfred-scope="global"]');
     const contextualAlfred = document.querySelector('[data-alfred-scope="contextual"]');
 
@@ -267,8 +268,44 @@
       sheet.setAttribute('aria-hidden', String(!open));
       document.body.classList.toggle('sheet-open', open);
       setAlfredState(open ? 'action' : 'idle', open ? 'action' : 'thinking');
-      if (open) setTimeout(() => input.focus(), 180);
+
+      if (open) {
+        if (suggestions) suggestions.scrollTo({ left: 0, behavior: 'instant' });
+        syncVisualViewport();
+      } else {
+        input.blur();
+        document.body.classList.remove('keyboard-open');
+      }
     }
+
+    function syncVisualViewport() {
+      const viewport = window.visualViewport;
+      const viewportHeight = viewport ? viewport.height : window.innerHeight;
+      const viewportTop = viewport ? viewport.offsetTop : 0;
+      const keyboardInset = Math.max(
+        0,
+        window.innerHeight - viewportHeight - viewportTop
+      );
+
+      document.documentElement.style.setProperty(
+        '--forge-visual-viewport-height',
+        `${viewportHeight}px`
+      );
+      document.documentElement.style.setProperty(
+        '--forge-keyboard-inset',
+        `${keyboardInset}px`
+      );
+      document.body.classList.toggle('keyboard-open', keyboardInset > 120);
+    }
+
+    syncVisualViewport();
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', syncVisualViewport);
+      window.visualViewport.addEventListener('scroll', syncVisualViewport);
+    }
+
+    window.addEventListener('resize', syncVisualViewport);
 
     document.querySelectorAll('[data-open-alfred]').forEach((button) => {
       button.addEventListener('click', () => setAlfred(true));
@@ -295,9 +332,15 @@
     document.querySelectorAll('.suggestions button').forEach((button) => {
       button.addEventListener('click', () => {
         input.value = button.textContent;
-        input.focus();
+        input.focus({ preventScroll: true });
         setAlfredState('action', 'action');
+        syncVisualViewport();
       });
+    });
+
+    input.addEventListener('focus', syncVisualViewport);
+    input.addEventListener('blur', () => {
+      setTimeout(syncVisualViewport, 120);
     });
 
     document.addEventListener('keydown', (event) => {
