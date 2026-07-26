@@ -13136,3 +13136,21 @@ PRODUCTIVE_BROWSER_BINDING=NO
 NEXT=FES_02B_REMOTE_LEDGER_AUTHORITY
 ```
 <!-- END FORGEOS:FES_02A_BUILD_TREE -->
+
+<!-- BEGIN FORGEOS:FES_02B_REMOTE_AUTHORITY -->
+## FES 02B remote ledger authority
+
+```text
+AREA=platform/event-evidence
+REMOTE_LEDGER_TABLE=public.activity_event_ledger
+REMOTE_EVIDENCE_TABLE=public.activity_event_evidence_references
+REMOTE_MUTATION_TABLE=public.activity_event_mutations
+REMOTE_CONFLICT_TABLE=public.activity_event_conflicts
+APPEND_RPC=public.forge_fes02_append_activity_event(jsonb)
+PULL_RPC=public.forge_fes02_pull_activity_events(text,integer)
+RLS=ENABLED_AND_FORCED
+DIRECT_BROWSER_TABLE_ACCESS=DENIED
+REMOTE_ACCEPTANCE=PASS
+PRODUCTIVE_GATEWAY=FES_02C_PENDING
+```
+<!-- END FORGEOS:FES_02B_REMOTE_AUTHORITY -->

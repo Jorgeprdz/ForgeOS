@@ -76,3 +76,19 @@ Supabase project and prove:
 FES 02C will bind the local store and synchronization gateway in a controlled
 browser harness against the real Forge Alive deployment boundary. It will not
 change productive UI until the acceptance harness passes.
+
+<!-- BEGIN FORGEOS:FES_02B_COMPLETION -->
+## FES 02B remote authority completion
+
+```text
+FES_02B_REMOTE_LEDGER_AUTHORITY=CLOSED
+REMOTE_MIGRATION_APPLICATION=PASS
+REMOTE_RLS_RPC_ACCEPTANCE=PASS
+REMOTE_TRANSACTION_ROLLBACK=PASS
+REMOTE_TEMPORARY_DATA_RESIDUE=ZERO
+NFAST_REMOTE_AUTHORITY=PRESERVED
+PRODUCTIVE_UI_MUTATION=NO
+MAIN_MUTATION=NO
+NEXT=FES_02C_LEDGER_GATEWAY_SYNC_ACCEPTANCE
+```
+<!-- END FORGEOS:FES_02B_COMPLETION -->
