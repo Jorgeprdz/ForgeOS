@@ -1,0 +1,7 @@
+a35dc69d56048129682fa49754e2cd8d1134dd2f06177f04b0fd30b4747676cd  ./approved-home-mobile-md3-alfred.png
+c5f7930c72fd0cb39bc5a28947e70bf3204e74d0fa305414e676348faf2333e6  ./current-forge-alive-home.jpg
+a4b870220637942969f69eaae1e6f70f15b0fe4196cbd202485c0a15b174bf61  ./README.md
+ae2b5d81ffb6e2de56cd5b7e8cbf885fbdb8bae070084d316d0b12fc0fd3165e  ./references/reference-01-material-design-kit.png
+429cff402c9850c07c37ec88753511dbdda2ec4bf23c3c4c7d6dde8f90935c97  ./references/reference-02-material-components-kit.png
+0e7c9c545b44646402ad07dc39f6046d548a300158562221078a82eb47dce55c  ./references/reference-03-md3-expressive-controls.webp
+8b70c4ea380669d5098953987bae4b15c372148357d19c9e333f8cfbd4e79585  ./references/reference-04-md3-flex-shapes.png
