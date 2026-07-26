@@ -1,0 +1,151 @@
+name: NFAST-09 Stage 3G Browser Acceptance
+
+on:
+  push:
+    branches:
+      - feature/nfast-09-timeline-to-conversation-brief-projection
+    paths:
+      - .github/workflows/nfast09-stage3g-browser-acceptance.yml
+      - tests/nfast-09-stage3g-end-to-end-browser-acceptance-test.mjs
+      - scripts/ci/nfast09-stage3g-finalize.sh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfast09-stage3g-browser-acceptance
+  cancel-in-progress: false
+
+jobs:
+  browser-acceptance:
+    if: github.actor == 'Jorgeprdz'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    env:
+      RUNTIME_SOURCE_COMMIT: 2adc0f6217bd9358192b1ec2607de6838036822f
+      BROWSER_EVIDENCE_ROOT: artifacts/nfast09-stage3g
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Validate runtime scope
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          git diff \
+            --name-only \
+            "$RUNTIME_SOURCE_COMMIT" \
+            "$GITHUB_SHA" |
+            sort > /tmp/nfast09-stage3g-harness-files.txt
+
+          printf '%s\n' \
+            ".github/workflows/nfast09-stage3g-browser-acceptance.yml" \
+            "scripts/ci/nfast09-stage3g-finalize.sh" \
+            "tests/nfast-09-stage3g-end-to-end-browser-acceptance-test.mjs" |
+            sort > /tmp/nfast09-stage3g-expected-files.txt
+
+          cmp -s \
+            /tmp/nfast09-stage3g-expected-files.txt \
+            /tmp/nfast09-stage3g-harness-files.txt
+
+          echo "RUNTIME_MUTATION=NO"
+          echo "HARNESS_SCOPE=PASS"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          npm ci
+          npm install \
+            --no-save \
+            --package-lock=false \
+            puppeteer@24.16.0
+
+      - name: Run Stage 3A–3F regressions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          node --test \
+            tests/nfast-09-stage3f-pipeline-due-action-writer-test.mjs \
+            tests/nfast-09-stage3f-pipeline-due-action-runtime-test.mjs \
+            tests/nfast-09-stage3f-pipeline-binding-test.mjs \
+            tests/nfast-09-stage3e-priority-read-model-test.mjs \
+            tests/nfast-09-stage3e-local-first-runtime-test.mjs \
+            tests/nfast-09-stage3e-existing-surface-adapter-test.mjs \
+            tests/nfast-09-stage3e-dashboard-binding-test.mjs \
+            tests/nfast-09-stage3c-supabase-gateway-test.mjs \
+            tests/nfast-09-stage3b-incremental-sync-test.mjs \
+            tests/nfast-09-stage3a-offline-core-test.mjs \
+            tests/advisor-pipeline-live-navigation-067g16-test.mjs
+
+          echo "REGRESSION_TESTS=PASS"
+
+      - name: Run browser acceptance
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          mkdir -p \
+            "$BROWSER_EVIDENCE_ROOT/legacy" \
+            "$BROWSER_EVIDENCE_ROOT/stage3g"
+
+          PUPPETEER_PATH="$(
+            node -p \
+              "require.resolve('puppeteer-core')"
+          )"
+
+          CHROMIUM_PATH="$(
+            node --input-type=module -e \
+              "import puppeteer from 'puppeteer'; console.log(puppeteer.executablePath())"
+          )"
+
+          echo "PUPPETEER_PATH=$PUPPETEER_PATH"
+          echo "CHROMIUM_PATH=$CHROMIUM_PATH"
+
+          FORGE_PUPPETEER_CORE_PATH="$PUPPETEER_PATH" \
+          FORGE_CHROMIUM_PATH="$CHROMIUM_PATH" \
+          FORGE_067G16_EVIDENCE_DIR="$BROWSER_EVIDENCE_ROOT/legacy" \
+            node \
+              tests/advisor-pipeline-live-navigation-067g16-browser-test.mjs
+
+          echo "LEGACY_PIPELINE_BROWSER_REGRESSION=PASS"
+
+          FORGE_PUPPETEER_CORE_PATH="$PUPPETEER_PATH" \
+          FORGE_CHROMIUM_PATH="$CHROMIUM_PATH" \
+          FORGE_NFAST09_STAGE3G_EVIDENCE_DIR="$BROWSER_EVIDENCE_ROOT/stage3g" \
+            node \
+              tests/nfast-09-stage3g-end-to-end-browser-acceptance-test.mjs
+
+          echo "NFAST_09_STAGE_3G_BROWSER_ACCEPTANCE=PASS"
+
+      - name: Finalize Stage 3G
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          bash \
+            scripts/ci/nfast09-stage3g-finalize.sh \
+            "$RUNTIME_SOURCE_COMMIT" \
+            "$GITHUB_SHA" \
+            "$BROWSER_EVIDENCE_ROOT/stage3g/result.json"
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfast09-stage3g-browser-evidence
+          path: artifacts/nfast09-stage3g
+          if-no-files-found: warn
