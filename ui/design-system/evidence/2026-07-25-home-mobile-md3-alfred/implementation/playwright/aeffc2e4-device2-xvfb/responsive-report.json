@@ -1,0 +1,1270 @@
+{
+  "sourceCommit": "aeffc2e4",
+  "url": "http://127.0.0.1:52821/examples/home-mobile-md3-alfred.html?v=aeffc2e4",
+  "generatedAt": "2026-07-26T18:13:29.416Z",
+  "browserExecutable": "/usr/sbin/chromium",
+  "screenshots": [
+    {
+      "id": "mobile-390x844",
+      "label": "Mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "hasTouch": true,
+      "files": {
+        "viewport": "mobile-390x844-viewport.png",
+        "fullPage": "mobile-390x844-full.png",
+        "alfredOpen": "mobile-390x844-alfred-open.png"
+      },
+      "haloMotion": {
+        "before": "matrix(0.481423, 0.872153, -0.872153, 0.481423, 0, 0)",
+        "after": "matrix(-0.936677, 0.388044, -0.388044, -0.936677, 0, 0)",
+        "moved": true
+      },
+      "layout": {
+        "profileId": "mobile-390x844",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "document": {
+          "scrollWidth": 390,
+          "scrollHeight": 1520
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 7,
+          "top": 752,
+          "right": 301,
+          "bottom": 828,
+          "width": 294,
+          "height": 76
+        },
+        "alfredRect": {
+          "left": 307,
+          "top": 752,
+          "right": 383,
+          "bottom": 828,
+          "width": 76,
+          "height": 76
+        },
+        "contextualAlfredRect": {
+          "left": 290,
+          "top": 605.744384765625,
+          "right": 358,
+          "bottom": 673.744384765625,
+          "width": 68,
+          "height": 68
+        },
+        "nextCardRect": {
+          "left": 11,
+          "top": 467.78125,
+          "right": 379,
+          "bottom": 799.96875,
+          "width": 368,
+          "height": 332.1875
+        },
+        "media": {
+          "mobile": true,
+          "tabletPortrait": false,
+          "tabletLandscape": false,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "tablet-portrait-800x1280",
+      "label": "Tablet portrait",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "hasTouch": true,
+      "files": {
+        "viewport": "tablet-portrait-800x1280-viewport.png",
+        "fullPage": "tablet-portrait-800x1280-full.png",
+        "alfredOpen": "tablet-portrait-800x1280-alfred-open.png"
+      },
+      "haloMotion": {
+        "before": "matrix(0.371897, 0.925566, -0.925566, 0.371897, 0, 0)",
+        "after": "matrix(-0.963563, 0.317908, -0.317908, -0.963563, 0, 0)",
+        "moved": true
+      },
+      "layout": {
+        "profileId": "tablet-portrait-800x1280",
+        "viewport": {
+          "width": 800,
+          "height": 1280
+        },
+        "document": {
+          "scrollWidth": 800,
+          "scrollHeight": 1965
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 90,
+          "top": 1176,
+          "right": 612,
+          "bottom": 1264,
+          "width": 522,
+          "height": 88
+        },
+        "alfredRect": {
+          "left": 622,
+          "top": 1176,
+          "right": 710,
+          "bottom": 1264,
+          "width": 88,
+          "height": 88
+        },
+        "contextualAlfredRect": {
+          "left": 655,
+          "top": 680.7068481445312,
+          "right": 743,
+          "bottom": 768.7069091796875,
+          "width": 88,
+          "height": 88.00006103515625
+        },
+        "nextCardRect": {
+          "left": 14,
+          "top": 551.875,
+          "right": 786,
+          "bottom": 876.71875,
+          "width": 772,
+          "height": 324.84375
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": true,
+          "tabletLandscape": false,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "tablet-landscape-1100x800",
+      "label": "Tablet landscape",
+      "viewport": {
+        "width": 1100,
+        "height": 800
+      },
+      "hasTouch": true,
+      "files": {
+        "viewport": "tablet-landscape-1100x800-viewport.png",
+        "fullPage": "tablet-landscape-1100x800-full.png",
+        "alfredOpen": "tablet-landscape-1100x800-alfred-open.png"
+      },
+      "haloMotion": {
+        "before": "matrix(0.762914, 0.634505, -0.634505, 0.762914, 0, 0)",
+        "after": "matrix(-0.753956, 0.672573, -0.672573, -0.753956, 0, 0)",
+        "moved": true
+      },
+      "layout": {
+        "profileId": "tablet-landscape-1100x800",
+        "viewport": {
+          "width": 1100,
+          "height": 800
+        },
+        "document": {
+          "scrollWidth": 1100,
+          "scrollHeight": 1120
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 18,
+          "top": 222,
+          "right": 111.421875,
+          "bottom": 478,
+          "width": 93.421875,
+          "height": 256
+        },
+        "alfredRect": {
+          "left": 20.703125,
+          "top": 490,
+          "right": 108.703125,
+          "bottom": 578,
+          "width": 88,
+          "height": 88
+        },
+        "contextualAlfredRect": {
+          "left": 941,
+          "top": 379.90875244140625,
+          "right": 1033,
+          "bottom": 471.90875244140625,
+          "width": 92,
+          "height": 92
+        },
+        "nextCardRect": {
+          "left": 527.328125,
+          "top": 213.75,
+          "right": 1074,
+          "bottom": 583.75,
+          "width": 546.671875,
+          "height": 370
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": false,
+          "tabletLandscape": true,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "desktop-1440x900",
+      "label": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "hasTouch": false,
+      "files": {
+        "viewport": "desktop-1440x900-viewport.png",
+        "fullPage": "desktop-1440x900-full.png",
+        "alfredOpen": "desktop-1440x900-alfred-open.png"
+      },
+      "haloMotion": {
+        "before": "matrix(0.666636, 0.737013, -0.737013, 0.666636, 0, 0)",
+        "after": "matrix(-0.855442, 0.540852, -0.540852, -0.855442, 0, 0)",
+        "moved": true
+      },
+      "layout": {
+        "profileId": "desktop-1440x900",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "document": {
+          "scrollWidth": 1440,
+          "scrollHeight": 1298
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 24,
+          "top": 247.5,
+          "right": 128,
+          "bottom": 537.5,
+          "width": 104,
+          "height": 290
+        },
+        "alfredRect": {
+          "left": 26,
+          "top": 552.5,
+          "right": 126,
+          "bottom": 652.5,
+          "width": 100,
+          "height": 100
+        },
+        "contextualAlfredRect": {
+          "left": 1253,
+          "top": 376.32562255859375,
+          "right": 1361,
+          "bottom": 484.32562255859375,
+          "width": 108,
+          "height": 108
+        },
+        "nextCardRect": {
+          "left": 682.5,
+          "top": 248.546875,
+          "right": 1408,
+          "bottom": 678.546875,
+          "width": 725.5,
+          "height": 430
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": false,
+          "tabletLandscape": false,
+          "desktop": true
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "desktop-wide-1920x1080",
+      "label": "Desktop wide",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "hasTouch": false,
+      "files": {
+        "viewport": "desktop-wide-1920x1080-viewport.png",
+        "fullPage": "desktop-wide-1920x1080-full.png",
+        "alfredOpen": "desktop-wide-1920x1080-alfred-open.png"
+      },
+      "haloMotion": {
+        "before": "matrix(0.802879, 0.58192, -0.58192, 0.802879, 0, 0)",
+        "after": "matrix(-0.704094, 0.723573, -0.723573, -0.704094, 0, 0)",
+        "moved": true
+      },
+      "layout": {
+        "profileId": "desktop-wide-1920x1080",
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "document": {
+          "scrollWidth": 1920,
+          "scrollHeight": 1120
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 24,
+          "top": 337.5,
+          "right": 128,
+          "bottom": 627.5,
+          "width": 104,
+          "height": 290
+        },
+        "alfredRect": {
+          "left": 26,
+          "top": 642.5,
+          "right": 126,
+          "bottom": 742.5,
+          "width": 100,
+          "height": 100
+        },
+        "contextualAlfredRect": {
+          "left": 1717,
+          "top": 384.24749755859375,
+          "right": 1825,
+          "bottom": 492.24749755859375,
+          "width": 108,
+          "height": 108
+        },
+        "nextCardRect": {
+          "left": 885.65625,
+          "top": 256.46875,
+          "right": 1872,
+          "bottom": 716.46875,
+          "width": 986.34375,
+          "height": 460
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": false,
+          "tabletLandscape": false,
+          "desktop": true
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "boundary-759x900",
+      "viewport": {
+        "width": 759,
+        "height": 900
+      },
+      "layout": {
+        "profileId": "boundary-759x900",
+        "viewport": {
+          "width": 759,
+          "height": 900
+        },
+        "document": {
+          "scrollWidth": 759,
+          "scrollHeight": 1599
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 150.5,
+          "top": 802,
+          "right": 518.5,
+          "bottom": 884,
+          "width": 368,
+          "height": 82
+        },
+        "alfredRect": {
+          "left": 526.5,
+          "top": 802,
+          "right": 608.5,
+          "bottom": 884,
+          "width": 82,
+          "height": 82
+        },
+        "contextualAlfredRect": {
+          "left": 501.5,
+          "top": 693.7743530273438,
+          "right": 573.5,
+          "bottom": 765.7743530273438,
+          "width": 72,
+          "height": 72
+        },
+        "nextCardRect": {
+          "left": 160.5,
+          "top": 568.34375,
+          "right": 598.5,
+          "bottom": 878.90625,
+          "width": 438,
+          "height": 310.5625
+        },
+        "media": {
+          "mobile": true,
+          "tabletPortrait": false,
+          "tabletLandscape": false,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "boundary-760x900",
+      "viewport": {
+        "width": 760,
+        "height": 900
+      },
+      "layout": {
+        "profileId": "boundary-760x900",
+        "viewport": {
+          "width": 760,
+          "height": 900
+        },
+        "document": {
+          "scrollWidth": 760,
+          "scrollHeight": 1953
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 70,
+          "top": 796,
+          "right": 592,
+          "bottom": 884,
+          "width": 522,
+          "height": 88
+        },
+        "alfredRect": {
+          "left": 602,
+          "top": 796,
+          "right": 690,
+          "bottom": 884,
+          "width": 88,
+          "height": 88
+        },
+        "contextualAlfredRect": {
+          "left": 615,
+          "top": 677.9568481445312,
+          "right": 703,
+          "bottom": 765.9569091796875,
+          "width": 88,
+          "height": 88.00006103515625
+        },
+        "nextCardRect": {
+          "left": 14,
+          "top": 549.125,
+          "right": 746,
+          "bottom": 873.96875,
+          "width": 732,
+          "height": 324.84375
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": true,
+          "tabletLandscape": false,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "boundary-899x900",
+      "viewport": {
+        "width": 899,
+        "height": 900
+      },
+      "layout": {
+        "profileId": "boundary-899x900",
+        "viewport": {
+          "width": 899,
+          "height": 900
+        },
+        "document": {
+          "scrollWidth": 899,
+          "scrollHeight": 1980
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 139.5,
+          "top": 796,
+          "right": 661.5,
+          "bottom": 884,
+          "width": 522,
+          "height": 88
+        },
+        "alfredRect": {
+          "left": 671.5,
+          "top": 796,
+          "right": 759.5,
+          "bottom": 884,
+          "width": 88,
+          "height": 88
+        },
+        "contextualAlfredRect": {
+          "left": 728.5,
+          "top": 684.6287231445312,
+          "right": 816.5,
+          "bottom": 772.6287841796875,
+          "width": 88,
+          "height": 88.00006103515625
+        },
+        "nextCardRect": {
+          "left": 39.5,
+          "top": 555.796875,
+          "right": 859.5,
+          "bottom": 880.640625,
+          "width": 820,
+          "height": 324.84375
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": true,
+          "tabletLandscape": false,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "boundary-900x800",
+      "viewport": {
+        "width": 900,
+        "height": 800
+      },
+      "layout": {
+        "profileId": "boundary-900x800",
+        "viewport": {
+          "width": 900,
+          "height": 800
+        },
+        "document": {
+          "scrollWidth": 900,
+          "scrollHeight": 1120
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 18,
+          "top": 222,
+          "right": 111.421875,
+          "bottom": 478,
+          "width": 93.421875,
+          "height": 256
+        },
+        "alfredRect": {
+          "left": 20.703125,
+          "top": 490,
+          "right": 108.703125,
+          "bottom": 578,
+          "width": 88,
+          "height": 88
+        },
+        "contextualAlfredRect": {
+          "left": 741,
+          "top": 378.00250244140625,
+          "right": 833,
+          "bottom": 470.00250244140625,
+          "width": 92,
+          "height": 92
+        },
+        "nextCardRect": {
+          "left": 444,
+          "top": 204.15625,
+          "right": 874,
+          "bottom": 587.8125,
+          "width": 430,
+          "height": 383.65625
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": false,
+          "tabletLandscape": true,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "boundary-1199x800",
+      "viewport": {
+        "width": 1199,
+        "height": 800
+      },
+      "layout": {
+        "profileId": "boundary-1199x800",
+        "viewport": {
+          "width": 1199,
+          "height": 800
+        },
+        "document": {
+          "scrollWidth": 1199,
+          "scrollHeight": 1136
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 18,
+          "top": 222,
+          "right": 111.421875,
+          "bottom": 478,
+          "width": 93.421875,
+          "height": 256
+        },
+        "alfredRect": {
+          "left": 20.703125,
+          "top": 490,
+          "right": 108.703125,
+          "bottom": 578,
+          "width": 88,
+          "height": 88
+        },
+        "contextualAlfredRect": {
+          "left": 1039.984375,
+          "top": 340.39312744140625,
+          "right": 1131.984375,
+          "bottom": 432.39312744140625,
+          "width": 92,
+          "height": 92
+        },
+        "nextCardRect": {
+          "left": 568.578125,
+          "top": 213.75,
+          "right": 1172.984375,
+          "bottom": 583.75,
+          "width": 604.40625,
+          "height": 370
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": false,
+          "tabletLandscape": true,
+          "desktop": false
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    },
+    {
+      "id": "boundary-1200x800",
+      "viewport": {
+        "width": 1200,
+        "height": 800
+      },
+      "layout": {
+        "profileId": "boundary-1200x800",
+        "viewport": {
+          "width": 1200,
+          "height": 800
+        },
+        "document": {
+          "scrollWidth": 1200,
+          "scrollHeight": 1249
+        },
+        "horizontalBounds": [
+          {
+            "selector": ".plan-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".next-card",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".summary-section",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".opportunities",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".nav-pill",
+            "exists": true,
+            "withinViewport": true
+          },
+          {
+            "selector": ".alfred-launcher",
+            "exists": true,
+            "withinViewport": true
+          }
+        ],
+        "opportunityCollisions": [
+          {
+            "index": 0,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 1,
+            "overlap": false,
+            "area": 0
+          },
+          {
+            "index": 2,
+            "overlap": false,
+            "area": 0
+          }
+        ],
+        "navRect": {
+          "left": 24,
+          "top": 197.5,
+          "right": 128,
+          "bottom": 487.5,
+          "width": 104,
+          "height": 290
+        },
+        "alfredRect": {
+          "left": 26,
+          "top": 502.5,
+          "right": 126,
+          "bottom": 602.5,
+          "width": 100,
+          "height": 100
+        },
+        "contextualAlfredRect": {
+          "left": 1013,
+          "top": 364.57562255859375,
+          "right": 1121,
+          "bottom": 472.57562255859375,
+          "width": 108,
+          "height": 108
+        },
+        "nextCardRect": {
+          "left": 582.5,
+          "top": 236.796875,
+          "right": 1168,
+          "bottom": 666.796875,
+          "width": 585.5,
+          "height": 430
+        },
+        "media": {
+          "mobile": false,
+          "tabletPortrait": false,
+          "tabletLandscape": false,
+          "desktop": true
+        }
+      },
+      "checks": {
+        "pass": true,
+        "failures": []
+      }
+    }
+  ],
+  "pass": true
+}
