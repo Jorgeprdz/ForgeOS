@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: FES 03D exposes locked projection contracts
+ok 1 - FES 03D exposes locked projection contracts
+  ---
+  duration_ms: 2.773854
+  type: 'test'
+  ...
+# Subtest: FES 03D requires exactly one prospect-created root
+ok 2 - FES 03D requires exactly one prospect-created root
+  ---
+  duration_ms: 40.035572
+  type: 'test'
+  ...
+# Subtest: FES 03D rejects mixed prospect subject identities
+ok 3 - FES 03D rejects mixed prospect subject identities
+  ---
+  duration_ms: 5.13875
+  type: 'test'
+  ...
+# Subtest: FES 03D projects confirmed prospect identity
+ok 4 - FES 03D projects confirmed prospect identity
+  ---
+  duration_ms: 4.35224
+  type: 'test'
+  ...
+# Subtest: FES 03D keeps absent profile explicitly unknown
+ok 5 - FES 03D keeps absent profile explicitly unknown
+  ---
+  duration_ms: 3.344011
+  type: 'test'
+  ...
+# Subtest: FES 03D projects profile reference when observed
+ok 6 - FES 03D projects profile reference when observed
+  ---
+  duration_ms: 16.065573
+  type: 'test'
+  ...
+# Subtest: FES 03D separates initial and activity contexts
+ok 7 - FES 03D separates initial and activity contexts
+  ---
+  duration_ms: 14.832187
+  type: 'test'
+  ...
+# Subtest: FES 03D aggregates appointment history by reference
+ok 8 - FES 03D aggregates appointment history by reference
+  ---
+  duration_ms: 14.144219
+  type: 'test'
+  ...
+# Subtest: FES 03D aggregates due-action lifecycle
+ok 9 - FES 03D aggregates due-action lifecycle
+  ---
+  duration_ms: 14.411562
+  type: 'test'
+  ...
+# Subtest: FES 03D keeps unsupported sections explicit and empty
+ok 10 - FES 03D keeps unsupported sections explicit and empty
+  ---
+  duration_ms: 14.494063
+  type: 'test'
+  ...
+# Subtest: FES 03D reuses deterministic Activity history from the same timeline
+ok 11 - FES 03D reuses deterministic Activity history from the same timeline
+  ---
+  duration_ms: 15.561302
+  type: 'test'
+  ...
+# Subtest: FES 03D applies a single correction as effective state while preserving history
+ok 12 - FES 03D applies a single correction as effective state while preserving history
+  ---
+  duration_ms: 4.251667
+  type: 'test'
+  ...
+# Subtest: FES 03D exposes correction forks for review instead of silently choosing
+ok 13 - FES 03D exposes correction forks for review instead of silently choosing
+  ---
+  duration_ms: 4.543541
+  type: 'test'
+  ...
+# Subtest: FES 03D derives stable identity from tenant and timeline
+ok 14 - FES 03D derives stable identity from tenant and timeline
+  ---
+  duration_ms: 10.739531
+  type: 'test'
+  ...
+# Subtest: FES 03D computes deterministic counters
+ok 15 - FES 03D computes deterministic counters
+  ---
+  duration_ms: 9.811719
+  type: 'test'
+  ...
+# Subtest: FES 03D is deterministic for the same timeline
+ok 16 - FES 03D is deterministic for the same timeline
+  ---
+  duration_ms: 14.565677
+  type: 'test'
+  ...
+# Subtest: FES 03D rebuilds byte-equivalent output
+ok 17 - FES 03D rebuilds byte-equivalent output
+  ---
+  duration_ms: 23.553594
+  type: 'test'
+  ...
+# Subtest: FES 03D rejects validation against a different timeline
+ok 18 - FES 03D rejects validation against a different timeline
+  ---
+  duration_ms: 12.18625
+  type: 'test'
+  ...
+# Subtest: FES 03D detects tampered derived state
+ok 19 - FES 03D detects tampered derived state
+  ---
+  duration_ms: 16.170313
+  type: 'test'
+  ...
+# Subtest: FES 03D rejects unsupported top-level fields
+ok 20 - FES 03D rejects unsupported top-level fields
+  ---
+  duration_ms: 9.393593
+  type: 'test'
+  ...
+# Subtest: FES 03D output is deeply immutable
+ok 21 - FES 03D output is deeply immutable
+  ---
+  duration_ms: 10.171406
+  type: 'test'
+  ...
+# Subtest: FES 03D does not mutate its source timeline
+ok 22 - FES 03D does not mutate its source timeline
+  ---
+  duration_ms: 8.922084
+  type: 'test'
+  ...
+# Subtest: FES 03D keeps stable projection identity while digest changes with content
+ok 23 - FES 03D keeps stable projection identity while digest changes with content
+  ---
+  duration_ms: 3.830937
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 388.256146

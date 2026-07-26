@@ -13209,3 +13209,18 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Legacy manual activity points as event authority
 - 🔵 FES 03D prospect detail projection
 <!-- END FORGEOS:FES_03C_ACTIVITY_PROJECTION -->
+
+<!-- BEGIN FORGEOS:FES_03D_PROSPECT_DETAIL_PROJECTION -->
+## FES 03D Prospect Detail projection
+
+- 🟢 Single-prospect canonical scope
+- 🟢 Profile and context projection
+- 🟢 Appointment lifecycle projection
+- 🟢 Due-action lifecycle projection
+- 🟢 Canonical Activity history
+- 🟢 Reviewable correction forks
+- 🟢 Explicit unknown and unsupported sections
+- 🔴 Legacy prospect fields promoted to event truth
+- 🔴 Detached Prospect Detail authority
+- 🔵 FES 03E Pipeline card projection
+<!-- END FORGEOS:FES_03D_PROSPECT_DETAIL_PROJECTION -->
