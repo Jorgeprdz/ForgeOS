@@ -81,7 +81,7 @@
           </div>
         </div>
 
-        <button class="alfred-orbit alfred-orbit--inline" type="button" data-open-alfred aria-label="Consultar esta acción con Alfred">
+        <button class="alfred-orbit alfred-orbit--contextual" type="button" data-open-alfred data-alfred-state="thinking" data-alfred-scope="contextual" aria-label="Consultar esta acción con Alfred">
           <span class="halo halo-a" aria-hidden="true"></span>
           <span class="halo halo-b" aria-hidden="true"></span>
           <span class="halo halo-c" aria-hidden="true"></span>
@@ -199,7 +199,7 @@
       </button>
     </nav>
 
-    <button class="alfred-launcher alfred-orbit" type="button" data-open-alfred aria-label="Abrir Alfred">
+    <button class="alfred-launcher alfred-orbit" type="button" data-open-alfred data-alfred-state="idle" data-alfred-scope="global" aria-label="Abrir Alfred">
       <span class="halo halo-a" aria-hidden="true"></span>
       <span class="halo halo-b" aria-hidden="true"></span>
       <span class="halo halo-c" aria-hidden="true"></span>
@@ -252,11 +252,21 @@
     const sheet = document.querySelector('.alfred-sheet');
     const toast = document.querySelector('.toast');
     const input = document.querySelector('.alfred-input input');
+    const globalAlfred = document.querySelector('[data-alfred-scope="global"]');
+    const contextualAlfred = document.querySelector('[data-alfred-scope="contextual"]');
+
+    function setAlfredState(globalState, contextualState = globalState) {
+      if (globalAlfred) globalAlfred.dataset.alfredState = globalState;
+      if (contextualAlfred) contextualAlfred.dataset.alfredState = contextualState;
+    }
+
+    setAlfredState('idle', 'thinking');
 
     function setAlfred(open) {
       sheet.classList.toggle('open', open);
       sheet.setAttribute('aria-hidden', String(!open));
       document.body.classList.toggle('sheet-open', open);
+      setAlfredState(open ? 'action' : 'idle', open ? 'action' : 'thinking');
       if (open) setTimeout(() => input.focus(), 180);
     }
 
@@ -286,6 +296,7 @@
       button.addEventListener('click', () => {
         input.value = button.textContent;
         input.focus();
+        setAlfredState('action', 'action');
       });
     });
 
