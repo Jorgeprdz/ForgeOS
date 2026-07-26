@@ -13029,3 +13029,42 @@ Sources:
 - `docs/architecture/source-truth/FORGE_EVENT_EVIDENCE_OPERATING_SYSTEM_001.md`
 - `docs/roadmap/FORGE_SYSTEM_REALIGNMENT_ROADMAP_001.md`
 <!-- END FORGEOS:FES_PHASE_MINUS_1_SYSTEM_SOURCE_TRUTH -->
+
+<!-- BEGIN FORGEOS:FES_00_BUILD_TREE_STATUS -->
+## FES 00 Event & Evidence System Realignment
+
+```text
+🟢 FES_PHASE_MINUS_1_SYSTEM_SOURCE_TRUTH
+│
+├── 🟢 Event & Evidence Operating System documented
+├── 🟢 System realignment roadmap documented
+├── 🟢 Premature Stage 3G acceptance invalidated
+└── 🟢 Build Tree and Roadmap Lock synchronized
+
+🟢 FES_00_SYSTEM_REALIGNMENT_AND_CLEANUP
+│
+├── 🟢 incorrect Stage 3G workflow retired
+├── 🟢 incorrect Stage 3G finalizer retired
+├── 🟢 incorrect legacy-shell browser test retired
+├── 🟢 failed workflow run preserved as historical evidence
+├── 🟢 productive Forge Alive source surface mapped
+├── 🟢 reusable NFAST assets mapped without runtime authorization
+├── 🟢 legacy-shell acceptance prohibited
+└── 🟢 FES 01 implementation scope prepared
+
+🔵 FES_01_CANONICAL_ACTIVITY_EVENT_CONTRACT
+│
+├── 🔵 canonical identity and event type
+├── 🔵 subject, source, evidence strength and provenance
+├── 🔵 occurrence, recording, causation and idempotency
+├── 🔵 privacy and learning eligibility
+├── 🔵 safe payload and correction semantics
+└── 🔴 no persistence, runtime, provider, Supabase or productive UI mutation
+
+🔴 LOCKS
+├── 🔴 NFAST_09_STAGE_3G_ACCEPTED=NO
+├── 🔴 NFAST_10_AUTHORIZED=NO
+├── 🔴 LEGACY_BROWSER_HARNESS_AS_ACCEPTANCE=FORBIDDEN
+└── 🔴 MAIN_MERGE_AUTHORIZED=NO
+```
+<!-- END FORGEOS:FES_00_BUILD_TREE_STATUS -->

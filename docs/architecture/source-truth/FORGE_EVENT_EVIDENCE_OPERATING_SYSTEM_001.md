@@ -537,3 +537,24 @@ Forbidden:
 > the right moment, and converts confirmed answers into evidence, context,
 > recommendations and learning while preserving human authority and tenant
 > privacy.
+
+<!-- BEGIN FORGEOS:FES_00_SYSTEM_REALIGNMENT_AND_CLEANUP -->
+## 17. FES 00 realignment closure
+
+- `STATUS=SYSTEM_REALIGNED_AND_LEGACY_ACCEPTANCE_RETIRED`
+- `SOURCE_COMMIT=5e7974152aee9bbe7256a6396ece42cabe934df9`
+- `LEGACY_STAGE_3G_ACTIVE_HARNESS=RETIRED`
+- `FAILED_RUN=30180606799_PRESERVED_AS_HISTORICAL_EVIDENCE`
+- `FORGE_ALIVE_PRODUCTIVE_SURFACE=MAPPED`
+- `NFAST_REUSABLE_ASSETS=MAPPED_NOT_AUTHORIZED`
+- `LEGACY_SHELL_ACCEPTANCE=FORBIDDEN`
+- `FES_01_SCOPE=PREPARED`
+- `RUNTIME_IMPLEMENTATION_AUTHORIZED=NO`
+- `NFAST_09_STAGE_3G_ACCEPTED=NO`
+- `NFAST_10_AUTHORIZED=NO`
+- `NEXT=FES_01_CANONICAL_ACTIVITY_EVENT_CONTRACT`
+
+FES 00 changes implementation authority, not Git history. Stages 3A through 3F
+remain reviewable assets. Stage 3G remains an invalid acceptance attempt until the
+real productive vertical is implemented and accepted through Forge Alive.
+<!-- END FORGEOS:FES_00_SYSTEM_REALIGNMENT_AND_CLEANUP -->
