@@ -28,6 +28,10 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.61.1-noble
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - name: Checkout candidate
         uses: actions/checkout@v4
@@ -43,21 +47,21 @@ jobs:
 
       - name: Unit preflight
         run: |
+          set -Eeuo pipefail
           mkdir -p artifacts/ui-m02
           NO_COLOR=1 FORCE_COLOR=0 \
             node --test \
             tests/ui-m02-responsive-app-shell-test.mjs \
             2>&1 \
             | tee artifacts/ui-m02/unit-test.tap
-          test "${PIPESTATUS[0]}" -eq 0
 
       - name: Authoritative browser acceptance
         run: |
+          set -Eeuo pipefail
           npx playwright test \
             --config=playwright.ui-m02.config.mjs \
             2>&1 \
             | tee artifacts/ui-m02/browser-test.tap
-          test "${PIPESTATUS[0]}" -eq 0
 
       - name: Validate acceptance artifacts
         run: |

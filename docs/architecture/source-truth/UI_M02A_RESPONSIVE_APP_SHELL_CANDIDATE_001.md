@@ -38,3 +38,10 @@ The workflow executes:
 UI-M02 may be marked complete only after the exact candidate commit
 has a successful `UI-M02 · Playwright` GitHub Actions check and its
 artifact has been inspected and recorded.
+
+## First Actions attempt
+
+Run `30217658448` reached the authoritative container but failed in the
+unit-preflight shell wrapper after all eight Node assertions passed.
+The browser stage did not run. The workflow now declares Bash
+explicitly and uses `set -Eeuo pipefail`.

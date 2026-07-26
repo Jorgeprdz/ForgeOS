@@ -1,11 +1,11 @@
-✔ real product entrypoint loads UI-M02 exactly once (2.249531ms)
-✔ shell runtime is gated by the UI-M01 feature flag (0.543334ms)
-✔ shell preserves the productive Home surface (0.538958ms)
-✔ shell exposes the approved responsive modes (0.393281ms)
-✔ shell contains navigation and Alfred surfaces (0.418021ms)
-✔ UI-M02 does not introduce productive side effects (0.622812ms)
-✔ all shell CSS is activated by material3 mode (1.004531ms)
-✔ manifest preserves runtime boundaries (1.505ms)
+✔ real product entrypoint loads UI-M02 exactly once (1.509062ms)
+✔ shell runtime is gated by the UI-M01 feature flag (0.463906ms)
+✔ shell preserves the productive Home surface (0.45302ms)
+✔ shell exposes the approved responsive modes (0.321718ms)
+✔ shell contains navigation and Alfred surfaces (0.35677ms)
+✔ UI-M02 does not introduce productive side effects (0.474948ms)
+✔ all shell CSS is activated by material3 mode (0.46875ms)
+✔ manifest preserves runtime boundaries (0.993489ms)
 ℹ tests 8
 ℹ suites 0
 ℹ pass 8
@@ -13,4 +13,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 121.305313
+ℹ duration_ms 94.79151
