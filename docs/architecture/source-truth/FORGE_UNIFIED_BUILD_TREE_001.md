@@ -13173,3 +13173,14 @@ PHASE_STATUS=CLOSED
 NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 ```
 <!-- END FORGEOS:FES_02_CLOSURE -->
+
+<!-- BEGIN FORGEOS:FES_03A_PLAYWRIGHT_E2E_BASELINE -->
+## FES 03A Playwright E2E baseline
+
+- 🟢 Playwright Test baseline
+- 🟢 Vite repository-root module authority
+- 🟢 Native Linux browser acceptance
+- 🟢 IndexedDB, network, offline and context-isolation preflight
+- 🔴 PRoot browser acceptance authority
+- 🔵 FES 03B canonical timeline contract
+<!-- END FORGEOS:FES_03A_PLAYWRIGHT_E2E_BASELINE -->
