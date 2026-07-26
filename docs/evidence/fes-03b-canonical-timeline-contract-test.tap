@@ -1,0 +1,142 @@
+TAP version 13
+# Subtest: FES 03B exposes the locked timeline contract versions
+ok 1 - FES 03B exposes the locked timeline contract versions
+  ---
+  duration_ms: 4.641445
+  type: 'test'
+  ...
+# Subtest: FES 03B builds one deterministic timeline from unordered ledger records
+ok 2 - FES 03B builds one deterministic timeline from unordered ledger records
+  ---
+  duration_ms: 68.8425
+  type: 'test'
+  ...
+# Subtest: FES 03B derives timeline identity from tenant correlation and reference
+ok 3 - FES 03B derives timeline identity from tenant correlation and reference
+  ---
+  duration_ms: 11.079023
+  type: 'test'
+  ...
+# Subtest: FES 03B is independent from input order
+ok 4 - FES 03B is independent from input order
+  ---
+  duration_ms: 9.453828
+  type: 'test'
+  ...
+# Subtest: FES 03B deduplicates exact idempotent ledger replay
+ok 5 - FES 03B deduplicates exact idempotent ledger replay
+  ---
+  duration_ms: 7.255234
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects conflicting records for the same event
+ok 6 - FES 03B rejects conflicting records for the same event
+  ---
+  duration_ms: 5.288046
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects cross-tenant records
+ok 7 - FES 03B rejects cross-tenant records
+  ---
+  duration_ms: 8.936758
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects mixed correlations
+ok 8 - FES 03B rejects mixed correlations
+  ---
+  duration_ms: 6.273164
+  type: 'test'
+  ...
+# Subtest: FES 03B requires correlation on every event
+ok 9 - FES 03B requires correlation on every event
+  ---
+  duration_ms: 8.318985
+  type: 'test'
+  ...
+# Subtest: FES 03B requires exactly one initialization root
+ok 10 - FES 03B requires exactly one initialization root
+  ---
+  duration_ms: 8.573008
+  type: 'test'
+  ...
+# Subtest: FES 03B preserves originals and exposes append-only correction metadata
+ok 11 - FES 03B preserves originals and exposes append-only correction metadata
+  ---
+  duration_ms: 14.202305
+  type: 'test'
+  ...
+# Subtest: FES 03B resolves deterministic correction chains
+ok 12 - FES 03B resolves deterministic correction chains
+  ---
+  duration_ms: 10.143672
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects a correction whose target is absent
+ok 13 - FES 03B rejects a correction whose target is absent
+  ---
+  duration_ms: 4.689335
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects correction cycles
+ok 14 - FES 03B rejects correction cycles
+  ---
+  duration_ms: 3.732188
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects corrections recorded before their target
+ok 15 - FES 03B rejects corrections recorded before their target
+  ---
+  duration_ms: 5.195352
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects corrections appended before their target
+ok 16 - FES 03B rejects corrections appended before their target
+  ---
+  duration_ms: 6.789258
+  type: 'test'
+  ...
+# Subtest: FES 03B rebuilds byte-equivalent canonical output
+ok 17 - FES 03B rebuilds byte-equivalent canonical output
+  ---
+  duration_ms: 11.236132
+  type: 'test'
+  ...
+# Subtest: FES 03B validation detects tampered derived metadata
+ok 18 - FES 03B validation detects tampered derived metadata
+  ---
+  duration_ms: 7.21918
+  type: 'test'
+  ...
+# Subtest: FES 03B rejects unsupported timeline fields
+ok 19 - FES 03B rejects unsupported timeline fields
+  ---
+  duration_ms: 4.620312
+  type: 'test'
+  ...
+# Subtest: FES 03B output is deeply immutable
+ok 20 - FES 03B output is deeply immutable
+  ---
+  duration_ms: 3.387812
+  type: 'test'
+  ...
+# Subtest: FES 03B does not mutate the ledger input
+ok 21 - FES 03B does not mutate the ledger input
+  ---
+  duration_ms: 4.228438
+  type: 'test'
+  ...
+# Subtest: FES 03B uses event identity as the final deterministic tie breaker
+ok 22 - FES 03B uses event identity as the final deterministic tie breaker
+  ---
+  duration_ms: 4.606797
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 485.49

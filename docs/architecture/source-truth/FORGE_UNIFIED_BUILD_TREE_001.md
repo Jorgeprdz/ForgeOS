@@ -13184,3 +13184,15 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 PRoot browser acceptance authority
 - 🔵 FES 03B canonical timeline contract
 <!-- END FORGEOS:FES_03A_PLAYWRIGHT_E2E_BASELINE -->
+
+<!-- BEGIN FORGEOS:FES_03B_CANONICAL_TIMELINE_CONTRACT -->
+## FES 03B canonical timeline contract
+
+- 🟢 Canonical timeline identity
+- 🟢 Deterministic event ordering
+- 🟢 Tenant and correlation isolation
+- 🟢 Append-only correction lineage
+- 🟢 Exact ledger rebuild
+- 🔴 Projection-owned event truth
+- 🔵 FES 03C Activity projection
+<!-- END FORGEOS:FES_03B_CANONICAL_TIMELINE_CONTRACT -->
