@@ -17,3 +17,8 @@ forge-full-inventory.txt
 .DS_Store
 Thumbs.db
 .env
+
+# FES 03 Playwright E2E transient artifacts
+artifacts/playwright-report/
+artifacts/playwright-test-results/
+artifacts/fes03-playwright-results.json
