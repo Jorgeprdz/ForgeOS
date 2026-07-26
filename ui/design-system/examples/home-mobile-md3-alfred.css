@@ -1416,3 +1416,457 @@ body.keyboard-open .sheet-note {
     border-radius: 34px 44px 0 0 / 30px 38px 0 0;
   }
 }
+
+
+/* FORGE STAGE 3 — TABLET + DESKTOP */
+
+/* TABLET
+   Dos superficies principales, métricas visibles de una sola mirada
+   y navegación inferior todavía táctil. */
+@media (min-width: 760px) and (max-width: 1199px) {
+  .app {
+    width: min(calc(100% - 32px), 1080px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 18px;
+    padding:
+      max(28px, env(safe-area-inset-top))
+      4px
+      148px;
+  }
+
+  .hero,
+  .summary-section,
+  .opportunities {
+    grid-column: 1 / -1;
+  }
+
+  .hero {
+    padding: 8px 10px 14px;
+  }
+
+  .hero-row {
+    align-items: center;
+    padding-top: 24px;
+  }
+
+  h1 {
+    font-size: clamp(42px, 6vw, 60px);
+  }
+
+  .profile {
+    width: 82px;
+    height: 82px;
+  }
+
+  .plan-card,
+  .next-card {
+    min-height: 390px;
+    margin-top: 0;
+  }
+
+  .plan-card {
+    grid-column: 1;
+    grid-template-columns: 1fr;
+    padding: 30px 26px;
+  }
+
+  .plan-copy {
+    max-width: 76%;
+  }
+
+  .plan-art {
+    inset: 0 0 0 32%;
+  }
+
+  .next-card {
+    grid-column: 2;
+    padding: 31px 27px 24px;
+  }
+
+  .next-card > h2 {
+    max-width: 82%;
+    font-size: 34px;
+  }
+
+  .prospect-copy {
+    padding-right: 96px;
+  }
+
+  .prospect p {
+    max-width: 240px;
+  }
+
+  .alfred-orbit--contextual {
+    width: 88px;
+    height: 88px;
+    right: 4px;
+  }
+
+  .urgency {
+    padding-right: 82px;
+  }
+
+  .summary-section {
+    margin-top: 4px;
+  }
+
+  .metrics {
+    grid-auto-flow: initial;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-columns: initial;
+    overflow: visible;
+  }
+
+  .metric {
+    min-height: 205px;
+  }
+
+  .pager-dots {
+    display: none;
+  }
+
+  .opportunities {
+    margin-top: 0;
+  }
+
+  .opportunity-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .opportunity {
+    min-height: 104px;
+    grid-template-columns: 43px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "avatar copy score"
+      "avatar bar bar";
+    align-content: center;
+    border: 1px solid rgba(170, 199, 255, .10);
+    border-radius: 24px 31px 23px 34px;
+    padding: 15px;
+  }
+
+  .opportunity .avatar {
+    grid-area: avatar;
+  }
+
+  .opportunity-copy {
+    grid-area: copy;
+  }
+
+  .score {
+    grid-area: score;
+  }
+
+  .score-bar {
+    grid-area: bar;
+  }
+
+  .bottom-shell {
+    width: min(calc(100% - 48px), 660px);
+    grid-template-columns: minmax(0, 1fr) 92px;
+    gap: 12px;
+  }
+
+  .nav-pill {
+    min-height: 82px;
+  }
+
+  .nav-item span {
+    font-size: 12px;
+  }
+
+  .alfred-launcher {
+    width: 92px;
+    height: 92px;
+  }
+
+  .sheet-panel {
+    width: min(92vw, 640px);
+  }
+}
+
+/* DESKTOP
+   Rail lateral, composición editorial y Alfred como panel lateral. */
+@media (min-width: 1200px) {
+  body {
+    background:
+      radial-gradient(circle at 78% -10%, rgba(83, 83, 190, .18), transparent 34rem),
+      radial-gradient(circle at 10% 52%, rgba(0, 182, 204, .08), transparent 32rem),
+      linear-gradient(180deg, #050d1b 0%, #06101f 58%, #071122 100%);
+  }
+
+  .app {
+    width: auto;
+    max-width: none;
+    min-height: 100vh;
+    margin: 0 32px 0 150px;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    gap: 20px;
+    padding: 38px 0 54px;
+  }
+
+  .hero {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    padding: 0 8px 8px;
+  }
+
+  .safe-pill {
+    grid-column: 1 / -1;
+  }
+
+  .hero-row {
+    grid-column: 1 / -1;
+    padding-top: 26px;
+  }
+
+  h1 {
+    font-size: clamp(50px, 5vw, 76px);
+  }
+
+  .subtitle {
+    font-size: 17px;
+  }
+
+  .profile {
+    width: 92px;
+    height: 92px;
+  }
+
+  .plan-card {
+    grid-column: 1 / 6;
+    min-height: 430px;
+    margin: 0;
+    padding: 34px 30px;
+  }
+
+  .plan-copy {
+    max-width: 72%;
+  }
+
+  .plan-card h2 {
+    font-size: 31px;
+  }
+
+  .plan-card p:not(.section-kicker) {
+    max-width: 360px;
+    font-size: 15px;
+  }
+
+  .plan-art {
+    inset: 0 0 0 34%;
+  }
+
+  .next-card {
+    grid-column: 6 / 13;
+    min-height: 430px;
+    margin: 0;
+    padding: 35px 34px 28px;
+  }
+
+  .next-card > h2 {
+    font-size: 43px;
+  }
+
+  .prospect-avatar {
+    width: 66px;
+    height: 66px;
+  }
+
+  .prospect h3 {
+    font-size: 24px;
+  }
+
+  .prospect p {
+    max-width: 360px;
+    font-size: 16px;
+  }
+
+  .prospect-copy {
+    padding-right: 126px;
+  }
+
+  .alfred-orbit--contextual {
+    width: 108px;
+    height: 108px;
+    right: 12px;
+  }
+
+  .urgency {
+    margin-left: 80px;
+    padding-right: 110px;
+    font-size: 14px;
+  }
+
+  .action-row {
+    grid-template-columns: minmax(0, 1fr) 62px;
+  }
+
+  .primary-action {
+    min-height: 64px;
+    font-size: 17px;
+  }
+
+  .summary-section {
+    grid-column: 1 / 9;
+    margin-top: 0;
+  }
+
+  .metrics {
+    grid-auto-flow: initial;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-columns: initial;
+    overflow: visible;
+    gap: 14px;
+  }
+
+  .metric {
+    min-height: 215px;
+    padding: 21px 19px;
+  }
+
+  .metric p {
+    font-size: 14px;
+  }
+
+  .metric strong {
+    font-size: 32px;
+  }
+
+  .pager-dots {
+    display: none;
+  }
+
+  .opportunities {
+    grid-column: 9 / 13;
+    align-self: stretch;
+    min-height: 100%;
+    margin-top: 0;
+    padding: 22px 18px 16px;
+  }
+
+  .opportunity {
+    min-height: 82px;
+  }
+
+  .bottom-shell {
+    left: 24px;
+    top: 50%;
+    bottom: auto;
+    width: 104px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    transform: translateY(-50%);
+  }
+
+  .nav-pill {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding: 8px;
+    border-radius: 34px 45px 31px 43px / 41px 33px 47px 35px;
+  }
+
+  .nav-item {
+    min-height: 86px;
+    padding: 10px 6px;
+  }
+
+  .nav-item svg {
+    width: 28px;
+  }
+
+  .nav-item span {
+    font-size: 12px;
+  }
+
+  .alfred-launcher {
+    width: 100px;
+    height: 100px;
+    justify-self: center;
+  }
+
+  .alfred-launcher .alfred-core {
+    inset: 22px;
+  }
+
+  .alfred-label {
+    bottom: 2px;
+  }
+
+  .sheet-panel {
+    left: auto;
+    right: 24px;
+    top: 24px;
+    bottom: 24px;
+    width: min(430px, 38vw);
+    max-height: none;
+    border: 1px solid var(--outline-strong);
+    border-radius: 40px 55px 44px 34px / 36px 46px 40px 45px;
+    transform: translateX(calc(100% + 48px));
+  }
+
+  .alfred-sheet.open .sheet-panel {
+    transform: translateX(0);
+  }
+
+  .sheet-scrim {
+    background: rgba(0, 5, 14, .42);
+  }
+
+  .sheet-handle {
+    display: none;
+  }
+
+  .alfred-sheet-header {
+    margin-top: 10px;
+  }
+
+  .suggestions {
+    display: grid;
+    overflow: visible;
+  }
+
+  .suggestions button {
+    width: 100%;
+    text-align: left;
+  }
+
+  .toast {
+    bottom: 28px;
+  }
+}
+
+/* DESKTOP AMPLIO */
+@media (min-width: 1540px) {
+  .app {
+    margin-left: 164px;
+    margin-right: 48px;
+    gap: 24px;
+  }
+
+  .plan-card,
+  .next-card {
+    min-height: 460px;
+  }
+
+  .summary-section {
+    grid-column: 1 / 10;
+  }
+
+  .opportunities {
+    grid-column: 10 / 13;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
