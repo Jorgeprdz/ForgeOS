@@ -1,0 +1,226 @@
+TAP version 13
+# Subtest: FES 04 exposes locked intake contracts
+ok 1 - FES 04 exposes locked intake contracts
+  ---
+  duration_ms: 1.624844
+  type: 'test'
+  ...
+# Subtest: FES 04 requires a stable submission reference
+ok 2 - FES 04 requires a stable submission reference
+  ---
+  duration_ms: 1.021042
+  type: 'test'
+  ...
+# Subtest: FES 04 requires full name
+ok 3 - FES 04 requires full name
+  ---
+  duration_ms: 0.318333
+  type: 'test'
+  ...
+# Subtest: FES 04 requires phone or WhatsApp
+ok 4 - FES 04 requires phone or WhatsApp
+  ---
+  duration_ms: 4.097604
+  type: 'test'
+  ...
+# Subtest: FES 04 normalizes contact without inventing a second channel
+ok 5 - FES 04 normalizes contact without inventing a second channel
+  ---
+  duration_ms: 2.921562
+  type: 'test'
+  ...
+# Subtest: FES 04 accepts text and voice only
+ok 6 - FES 04 accepts text and voice only
+  ---
+  duration_ms: 4.2425
+  type: 'test'
+  ...
+# Subtest: FES 04 requires referral details for referral source
+ok 7 - FES 04 requires referral details for referral source
+  ---
+  duration_ms: 0.219166
+  type: 'test'
+  ...
+# Subtest: FES 04 accepts explicit referral details
+ok 8 - FES 04 accepts explicit referral details
+  ---
+  duration_ms: 1.454219
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects referral data on non-referral source
+ok 9 - FES 04 rejects referral data on non-referral source
+  ---
+  duration_ms: 0.234479
+  type: 'test'
+  ...
+# Subtest: FES 04 keeps optional details collapsed and nullable
+ok 10 - FES 04 keeps optional details collapsed and nullable
+  ---
+  duration_ms: 0.830468
+  type: 'test'
+  ...
+# Subtest: FES 04 normalizes explicit optional details
+ok 11 - FES 04 normalizes explicit optional details
+  ---
+  duration_ms: 0.681303
+  type: 'test'
+  ...
+# Subtest: FES 04 leaves undecided candidates pending
+ok 12 - FES 04 leaves undecided candidates pending
+  ---
+  duration_ms: 0.953437
+  type: 'test'
+  ...
+# Subtest: FES 04 promotes only accepted candidates
+ok 13 - FES 04 promotes only accepted candidates
+  ---
+  duration_ms: 15.54625
+  type: 'test'
+  ...
+# Subtest: FES 04 can satisfy referral details through accepted candidates
+ok 14 - FES 04 can satisfy referral details through accepted candidates
+  ---
+  duration_ms: 1.447865
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects accepted candidate against explicit value
+ok 15 - FES 04 rejects accepted candidate against explicit value
+  ---
+  duration_ms: 0.243438
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects incompatible accepted candidates
+ok 16 - FES 04 rejects incompatible accepted candidates
+  ---
+  duration_ms: 0.147187
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects unsupported candidate fields
+ok 17 - FES 04 rejects unsupported candidate fields
+  ---
+  duration_ms: 0.148281
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects orphan candidate decisions
+ok 18 - FES 04 rejects orphan candidate decisions
+  ---
+  duration_ms: 0.150938
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects duplicate candidate decisions
+ok 19 - FES 04 rejects duplicate candidate decisions
+  ---
+  duration_ms: 0.154219
+  type: 'test'
+  ...
+# Subtest: FES 04 does not promote confidence without a human decision
+ok 20 - FES 04 does not promote confidence without a human decision
+  ---
+  duration_ms: 0.402343
+  type: 'test'
+  ...
+# Subtest: FES 04 removes legacy mandatory fields from intake
+ok 21 - FES 04 removes legacy mandatory fields from intake
+  ---
+  duration_ms: 0.140937
+  type: 'test'
+  ...
+# Subtest: FES 04 creates exactly four canonical event-zero members
+ok 22 - FES 04 creates exactly four canonical event-zero members
+  ---
+  duration_ms: 0.655468
+  type: 'test'
+  ...
+# Subtest: FES 04 preserves source and evidence distinctions
+ok 23 - FES 04 preserves source and evidence distinctions
+  ---
+  duration_ms: 0.624219
+  type: 'test'
+  ...
+# Subtest: FES 04 keeps raw private intake data outside canonical events
+ok 24 - FES 04 keeps raw private intake data outside canonical events
+  ---
+  duration_ms: 0.590833
+  type: 'test'
+  ...
+# Subtest: FES 04 creates deterministic references and event identities
+ok 25 - FES 04 creates deterministic references and event identities
+  ---
+  duration_ms: 1.058594
+  type: 'test'
+  ...
+# Subtest: FES 04 creates unique event idempotency keys
+ok 26 - FES 04 creates unique event idempotency keys
+  ---
+  duration_ms: 0.389739
+  type: 'test'
+  ...
+# Subtest: FES 04 preserves event-zero causation chain
+ok 27 - FES 04 preserves event-zero causation chain
+  ---
+  duration_ms: 0.362813
+  type: 'test'
+  ...
+# Subtest: FES 04 event zero feeds the accepted projection runtime
+ok 28 - FES 04 event zero feeds the accepted projection runtime
+  ---
+  duration_ms: 20.533542
+  type: 'test'
+  ...
+# Subtest: FES 04 validates and rebuilds byte-equivalent output
+ok 29 - FES 04 validates and rebuilds byte-equivalent output
+  ---
+  duration_ms: 1.703386
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects validation against different source
+ok 30 - FES 04 rejects validation against different source
+  ---
+  duration_ms: 0.671198
+  type: 'test'
+  ...
+# Subtest: FES 04 detects tampered candidate promotion
+ok 31 - FES 04 detects tampered candidate promotion
+  ---
+  duration_ms: 1.368281
+  type: 'test'
+  ...
+# Subtest: FES 04 rejects unsupported output fields
+ok 32 - FES 04 rejects unsupported output fields
+  ---
+  duration_ms: 0.411197
+  type: 'test'
+  ...
+# Subtest: FES 04 output is deeply immutable
+ok 33 - FES 04 output is deeply immutable
+  ---
+  duration_ms: 0.295365
+  type: 'test'
+  ...
+# Subtest: FES 04 does not mutate source input
+ok 34 - FES 04 does not mutate source input
+  ---
+  duration_ms: 0.365313
+  type: 'test'
+  ...
+# Subtest: FES 04 keeps intake identity stable while digest follows content
+ok 35 - FES 04 keeps intake identity stable while digest follows content
+  ---
+  duration_ms: 2.915469
+  type: 'test'
+  ...
+# Subtest: FES 04 requires explicit timestamps and never reads wall-clock time
+ok 36 - FES 04 requires explicit timestamps and never reads wall-clock time
+  ---
+  duration_ms: 0.715677
+  type: 'test'
+  ...
+1..36
+# tests 36
+# suites 0
+# pass 36
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 180.044166

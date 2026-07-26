@@ -13270,3 +13270,20 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - ⚫ Productive Forge Alive binding deferred to FES 08
 - 🔵 FES 04 Light Prospect Intake
 <!-- END FORGEOS:FES_03_PROJECTION_RUNTIME_CLOSURE -->
+
+<!-- BEGIN FORGEOS:FES_04_LIGHT_PROSPECT_INTAKE -->
+## FES 04 Light Prospect Intake
+
+- 🟢 Full name + one contact channel
+- 🟢 Source + short voice/text context
+- 🟢 Conditional referral fields
+- 🟢 Optional email, date of birth and occupation
+- 🟢 Candidate extraction review boundary
+- 🟢 Human confirmation before promotion
+- 🟢 Atomic-ready four-event zero bundle
+- 🟢 FES 03 projection runtime compatibility
+- 🔴 Heavy legacy intake fields
+- 🔴 Raw private data in canonical events
+- ⚫ Productive Forge Alive binding deferred to FES 08
+- 🔵 FES 05 Passive Activity Capture Bridges
+<!-- END FORGEOS:FES_04_LIGHT_PROSPECT_INTAKE -->
