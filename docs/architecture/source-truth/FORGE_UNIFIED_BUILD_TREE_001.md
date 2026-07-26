@@ -13319,3 +13319,19 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Raw private content in canonical payloads
 - 🔵 FES 05C bridge-to-canonical event adapter
 <!-- END FORGEOS:FES_05B_CANONICAL_EVENT_TYPE_EXTENSION -->
+
+<!-- BEGIN FORGEOS:FES_05C_BRIDGE_TO_CANONICAL_EVENT_ADAPTER -->
+## FES 05C Bridge to Canonical Event Adapter
+
+- 🟢 Revalidation against FES 05A source observation
+- 🟢 Conversion into FES 01 / FES 05B canonical events
+- 🟢 Twenty-one passive-capture event mappings
+- 🟢 Deterministic idempotency and bundle identity
+- 🟢 Explicit blocked-observation ledger
+- 🟢 Native Linux Node acceptance
+- 🟢 Chromium Playwright acceptance
+- 🔴 Handoff promoted to canonical result
+- 🔴 Pipeline stage movement without source truth
+- 🔴 Silent bridge observation drop
+- 🔵 FES 05D passive-capture runtime acceptance
+<!-- END FORGEOS:FES_05C_BRIDGE_TO_CANONICAL_EVENT_ADAPTER -->
