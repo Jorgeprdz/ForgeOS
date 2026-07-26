@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="es-MX" data-forge-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forge OS — Prospect Conversation Loop</title>
+  <link rel="stylesheet" href="../forge-material3-tokens.css">
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: var(--forge-sys-color-background);
+      color: var(--forge-sys-color-on-background);
+      font-size: var(--forge-sys-type-body-medium-size);
+      line-height: var(--forge-sys-type-body-medium-line-height);
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--forge-sys-layout-rail-width) minmax(0, 1fr);
+    }
+
+    .nav-rail {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--forge-sys-space-3);
+      padding: var(--forge-sys-space-4) var(--forge-sys-space-2);
+      background: var(--forge-sys-color-surface-container);
+      border-right: 1px solid var(--forge-sys-color-outline-variant);
+    }
+
+    .brand-mark,
+    .nav-button,
+    .icon-button {
+      width: 3rem;
+      height: 3rem;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: var(--forge-sys-shape-large);
+    }
+
+    .brand-mark {
+      background: var(--forge-sys-color-primary);
+      color: var(--forge-sys-color-on-primary);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .nav-button,
+    .icon-button {
+      background: transparent;
+      color: var(--forge-sys-color-on-surface-variant);
+    }
+
+    .nav-button[aria-current="page"] {
+      background: var(--forge-sys-color-secondary-container);
+      color: var(--forge-sys-color-on-secondary-container);
+    }
+
+    .nav-spacer {
+      flex: 1;
+    }
+
+    .workspace {
+      min-width: 0;
+    }
+
+    .topbar {
+      min-height: var(--forge-sys-layout-topbar-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--forge-sys-space-4);
+      padding: 0 var(--forge-sys-space-6);
+      background: color-mix(in srgb, var(--forge-sys-color-surface) 92%, transparent);
+      border-bottom: 1px solid var(--forge-sys-color-outline-variant);
+      backdrop-filter: blur(16px);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--forge-sys-space-2);
+      color: var(--forge-sys-color-on-surface-variant);
+    }
+
+    .breadcrumb strong {
+      color: var(--forge-sys-color-on-surface);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--forge-sys-space-2);
+    }
+
+    .content {
+      width: min(100%, var(--forge-sys-layout-content-max-width));
+      margin: 0 auto;
+      padding: var(--forge-sys-space-6);
+    }
+
+    .prospect-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--forge-sys-space-5);
+      align-items: start;
+      margin-bottom: var(--forge-sys-space-5);
+    }
+
+    .identity {
+      display: flex;
+      align-items: center;
+      gap: var(--forge-sys-space-4);
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 4rem;
+      height: 4rem;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: var(--forge-sys-shape-extra-large);
+      background: var(--forge-sys-color-primary-container);
+      color: var(--forge-sys-color-on-primary-container);
+      font-size: 1.25rem;
+      font-weight: 750;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: var(--forge-sys-space-1);
+      font-size: var(--forge-sys-type-headline-medium-size);
+      line-height: var(--forge-sys-type-headline-medium-line-height);
+      font-weight: var(--forge-sys-type-headline-medium-weight);
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      margin-bottom: var(--forge-sys-space-3);
+      font-size: var(--forge-sys-type-title-large-size);
+      line-height: var(--forge-sys-type-title-large-line-height);
+      font-weight: var(--forge-sys-type-title-large-weight);
+    }
+
+    h3 {
+      margin-bottom: var(--forge-sys-space-2);
+      font-size: var(--forge-sys-type-title-medium-size);
+      line-height: var(--forge-sys-type-title-medium-line-height);
+      font-weight: var(--forge-sys-type-title-medium-weight);
+    }
+
+    .muted {
+      color: var(--forge-sys-color-on-surface-variant);
+    }
+
+    .chips,
+    .header-actions,
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--forge-sys-space-2);
+    }
+
+    .chip {
+      min-height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--forge-sys-space-1);
+      padding: 0 var(--forge-sys-space-3);
+      border: 1px solid var(--forge-sys-color-outline-variant);
+      border-radius: var(--forge-sys-shape-small);
+      color: var(--forge-sys-color-on-surface-variant);
+      font-size: var(--forge-sys-type-label-medium-size);
+      line-height: var(--forge-sys-type-label-medium-line-height);
+      font-weight: var(--forge-sys-type-label-medium-weight);
+    }
+
+    .chip--priority {
+      border-color: transparent;
+      background: var(--forge-sys-color-warning-container);
+      color: var(--forge-sys-color-on-warning-container);
+    }
+
+    .button {
+      min-height: 2.75rem;
+      padding: 0 var(--forge-sys-space-5);
+      border: 0;
+      border-radius: var(--forge-sys-shape-full);
+      font-size: var(--forge-sys-type-label-large-size);
+      font-weight: var(--forge-sys-type-label-large-weight);
+      transition:
+        transform var(--forge-sys-motion-duration-short-2) var(--forge-sys-motion-easing-standard),
+        box-shadow var(--forge-sys-motion-duration-short-2) var(--forge-sys-motion-easing-standard);
+    }
+
+    .button:active {
+      transform: translateY(1px);
+    }
+
+    .button--filled {
+      background: var(--forge-sys-color-primary);
+      color: var(--forge-sys-color-on-primary);
+      box-shadow: var(--forge-sys-elevation-1);
+    }
+
+    .button--tonal {
+      background: var(--forge-sys-color-secondary-container);
+      color: var(--forge-sys-color-on-secondary-container);
+    }
+
+    .button--outlined {
+      background: transparent;
+      color: var(--forge-sys-color-primary);
+      border: 1px solid var(--forge-sys-color-outline);
+    }
+
+    .button--text {
+      background: transparent;
+      color: var(--forge-sys-color-primary);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(15rem, 0.78fr) minmax(24rem, 1.55fr) minmax(17rem, 0.9fr);
+      gap: var(--forge-sys-space-4);
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--forge-sys-space-4);
+    }
+
+    .card {
+      min-width: 0;
+      padding: var(--forge-sys-space-5);
+      border: 1px solid var(--forge-sys-color-outline-variant);
+      border-radius: var(--forge-sys-shape-large);
+      background: var(--forge-sys-color-surface-container-lowest);
+      box-shadow: var(--forge-sys-elevation-1);
+    }
+
+    .card--quiet {
+      background: var(--forge-sys-color-surface-container-low);
+      box-shadow: none;
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--forge-sys-space-3);
+      padding: var(--forge-sys-space-3) 0;
+      border-bottom: 1px solid var(--forge-sys-color-outline-variant);
+    }
+
+    .metric:last-child {
+      border-bottom: 0;
+    }
+
+    .metric strong {
+      text-align: right;
+    }
+
+    .timeline {
+      display: grid;
+      gap: var(--forge-sys-space-4);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 1.5rem minmax(0, 1fr);
+      gap: var(--forge-sys-space-3);
+    }
+
+    .timeline-marker {
+      position: relative;
+      width: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .timeline-marker::before {
+      content: "";
+      width: 0.75rem;
+      height: 0.75rem;
+      margin-top: 0.25rem;
+      border: 3px solid var(--forge-sys-color-surface-container-lowest);
+      border-radius: var(--forge-sys-shape-full);
+      background: var(--forge-sys-color-primary);
+      box-shadow: 0 0 0 1px var(--forge-sys-color-primary);
+      z-index: 1;
+    }
+
+    .timeline-item:not(:last-child) .timeline-marker::after {
+      content: "";
+      position: absolute;
+      top: 1rem;
+      bottom: -1.25rem;
+      width: 1px;
+      background: var(--forge-sys-color-outline-variant);
+    }
+
+    .timeline-copy p {
+      margin-bottom: var(--forge-sys-space-1);
+    }
+
+    .conversation-card {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .conversation-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--forge-sys-space-3);
+      padding: var(--forge-sys-space-5);
+      border-bottom: 1px solid var(--forge-sys-color-outline-variant);
+    }
+
+    .conversation-body {
+      min-height: 24rem;
+      display: flex;
+      flex-direction: column;
+      gap: var(--forge-sys-space-3);
+      padding: var(--forge-sys-space-5);
+      background:
+        linear-gradient(var(--forge-sys-color-surface-container-low), var(--forge-sys-color-surface-container-low)),
+        radial-gradient(circle at 20% 10%, color-mix(in srgb, var(--forge-sys-color-primary) 8%, transparent), transparent 42%);
+    }
+
+    .message {
+      max-width: 82%;
+      padding: var(--forge-sys-space-3) var(--forge-sys-space-4);
+      border-radius: var(--forge-sys-shape-large);
+      box-shadow: var(--forge-sys-elevation-1);
+    }
+
+    .message p {
+      margin-bottom: var(--forge-sys-space-2);
+    }
+
+    .message small {
+      display: block;
+      color: var(--forge-sys-color-on-surface-variant);
+      text-align: right;
+    }
+
+    .message--outgoing {
+      align-self: flex-end;
+      border-bottom-right-radius: var(--forge-sys-shape-extra-small);
+      background: var(--forge-sys-color-primary-container);
+      color: var(--forge-sys-color-on-primary-container);
+    }
+
+    .message--incoming {
+      align-self: flex-start;
+      border-bottom-left-radius: var(--forge-sys-shape-extra-small);
+      background: var(--forge-sys-color-surface-container-lowest);
+      color: var(--forge-sys-color-on-surface);
+    }
+
+    .composer {
+      display: grid;
+      gap: var(--forge-sys-space-3);
+      padding: var(--forge-sys-space-5);
+      border-top: 1px solid var(--forge-sys-color-outline-variant);
+      background: var(--forge-sys-color-surface-container-lowest);
+    }
+
+    .field-label {
+      font-size: var(--forge-sys-type-label-medium-size);
+      line-height: var(--forge-sys-type-label-medium-line-height);
+      font-weight: var(--forge-sys-type-label-medium-weight);
+      color: var(--forge-sys-color-on-surface-variant);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 7.5rem;
+      resize: vertical;
+      padding: var(--forge-sys-space-4);
+      border: 1px solid var(--forge-sys-color-outline);
+      border-radius: var(--forge-sys-shape-medium);
+      background: var(--forge-sys-color-surface);
+      color: var(--forge-sys-color-on-surface);
+    }
+
+    textarea:focus-visible {
+      border-color: var(--forge-sys-color-primary);
+    }
+
+    .composer-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--forge-sys-space-3);
+      align-items: center;
+    }
+
+    .approval-state {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--forge-sys-space-2);
+      color: var(--forge-sys-color-on-surface-variant);
+      font-size: var(--forge-sys-type-label-medium-size);
+      font-weight: var(--forge-sys-type-label-medium-weight);
+    }
+
+    .approval-dot {
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: var(--forge-sys-shape-full);
+      background: var(--forge-sys-color-warning);
+    }
+
+    .nash-hero {
+      padding: var(--forge-sys-space-5);
+      border-radius: var(--forge-sys-shape-large);
+      background: var(--forge-sys-color-tertiary-container);
+      color: var(--forge-sys-color-on-tertiary-container);
+    }
+
+    .nash-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--forge-sys-space-2);
+      margin-bottom: var(--forge-sys-space-3);
+      font-size: var(--forge-sys-type-label-medium-size);
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: var(--forge-sys-space-3);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .signal {
+      padding: var(--forge-sys-space-3);
+      border-radius: var(--forge-sys-shape-medium);
+      background: var(--forge-sys-color-surface-container-low);
+    }
+
+    .signal span {
+      display: block;
+      margin-bottom: var(--forge-sys-space-1);
+      color: var(--forge-sys-color-on-surface-variant);
+      font-size: var(--forge-sys-type-label-medium-size);
+      font-weight: var(--forge-sys-type-label-medium-weight);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .bottom-nav {
+      display: none;
+    }
+
+    @media (max-width: 74rem) {
+      .dashboard-grid {
+        grid-template-columns: minmax(14rem, 0.72fr) minmax(24rem, 1.45fr);
+      }
+
+      .dashboard-grid > .stack:last-child {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 56rem) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        padding-bottom: var(--forge-sys-layout-bottom-nav-height);
+      }
+
+      .nav-rail {
+        display: none;
+      }
+
+      .topbar {
+        padding: 0 var(--forge-sys-space-4);
+      }
+
+      .content {
+        padding: var(--forge-sys-space-4);
+      }
+
+      .prospect-header,
+      .dashboard-grid,
+      .dashboard-grid > .stack:last-child {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-grid > .stack:last-child {
+        grid-column: auto;
+      }
+
+      .header-actions {
+        justify-content: flex-start;
+      }
+
+      .bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+        height: var(--forge-sys-layout-bottom-nav-height);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        align-items: center;
+        padding: var(--forge-sys-space-2);
+        background: var(--forge-sys-color-surface-container);
+        border-top: 1px solid var(--forge-sys-color-outline-variant);
+      }
+
+      .bottom-nav button {
+        min-height: 3.5rem;
+        border: 0;
+        border-radius: var(--forge-sys-shape-large);
+        background: transparent;
+        color: var(--forge-sys-color-on-surface-variant);
+        font-size: var(--forge-sys-type-label-medium-size);
+        font-weight: var(--forge-sys-type-label-medium-weight);
+      }
+
+      .bottom-nav button[aria-current="page"] {
+        background: var(--forge-sys-color-secondary-container);
+        color: var(--forge-sys-color-on-secondary-container);
+      }
+    }
+
+    @media (max-width: 38rem) {
+      .topbar .breadcrumb span,
+      .topbar-actions .button--text {
+        display: none;
+      }
+
+      .prospect-header {
+        gap: var(--forge-sys-space-4);
+      }
+
+      .identity {
+        align-items: flex-start;
+      }
+
+      .avatar {
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: var(--forge-sys-shape-large);
+      }
+
+      .card,
+      .conversation-header,
+      .conversation-body,
+      .composer {
+        padding: var(--forge-sys-space-4);
+      }
+
+      .message {
+        max-width: 92%;
+      }
+
+      .composer-footer {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .button-row .button {
+        flex: 1 1 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="nav-rail" aria-label="Navegación principal">
+      <div class="brand-mark" aria-label="Forge OS">F</div>
+      <button class="nav-button" aria-label="Inicio">⌂</button>
+      <button class="nav-button" aria-current="page" aria-label="Prospectos">◎</button>
+      <button class="nav-button" aria-label="Agenda">▣</button>
+      <button class="nav-button" aria-label="Inteligencia">✦</button>
+      <div class="nav-spacer"></div>
+      <button class="nav-button" aria-label="Configuración">⚙</button>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <span>Prospectos</span>
+          <span aria-hidden="true">›</span>
+          <strong>María González</strong>
+        </div>
+        <div class="topbar-actions">
+          <button class="button button--text" type="button">Agregar nota</button>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Cambiar tema">◐</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="prospect-header" aria-labelledby="prospect-name">
+          <div class="identity">
+            <div class="avatar" aria-hidden="true">MG</div>
+            <div>
+              <h1 id="prospect-name">María González</h1>
+              <p class="muted">Arquitecta · Referida por Gabriel · Último contacto hoy</p>
+              <div class="chips" aria-label="Estado del prospecto">
+                <span class="chip chip--priority">Seguimiento prioritario</span>
+                <span class="chip">Vida</span>
+                <span class="chip">Confianza media</span>
+              </div>
+            </div>
+          </div>
+          <div class="header-actions">
+            <button class="button button--outlined" type="button">Registrar actividad</button>
+            <button class="button button--filled" type="button">Nueva conversación</button>
+          </div>
+        </section>
+
+        <section class="dashboard-grid">
+          <div class="stack">
+            <article class="card" aria-labelledby="context-title">
+              <h2 id="context-title">Contexto comercial</h2>
+              <div class="metric"><span>Etapa</span><strong>Seguimiento</strong></div>
+              <div class="metric"><span>Probabilidad</span><strong>62%</strong></div>
+              <div class="metric"><span>Próxima acción</span><strong>Responder objeción</strong></div>
+              <div class="metric"><span>Producto probable</span><strong>Vida</strong></div>
+            </article>
+
+            <article class="card card--quiet" aria-labelledby="timeline-title">
+              <h2 id="timeline-title">Timeline</h2>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <div class="timeline-marker" aria-hidden="true"></div>
+                  <div class="timeline-copy">
+                    <p><strong>Objeción recibida</strong></p>
+                    <p class="muted">“Ahorita no tengo dinero y ya tengo seguro.”</p>
+                    <small class="muted">Hoy · 18:42</small>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker" aria-hidden="true"></div>
+                  <div class="timeline-copy">
+                    <p><strong>Mensaje enviado</strong></p>
+                    <p class="muted">Apertura breve para revisar protección actual.</p>
+                    <small class="muted">Hoy · 17:58</small>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-marker" aria-hidden="true"></div>
+                  <div class="timeline-copy">
+                    <p><strong>Prospecto creado</strong></p>
+                    <p class="muted">Referida por Gabriel.</p>
+                    <small class="muted">Ayer · 11:20</small>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <article class="card conversation-card" aria-labelledby="conversation-title">
+            <div class="conversation-header">
+              <div>
+                <h2 id="conversation-title">Conversación por WhatsApp</h2>
+                <span class="muted">Borradores gobernados · envío manual</span>
+              </div>
+              <span class="chip">Vista previa</span>
+            </div>
+
+            <div class="conversation-body" aria-label="Historial de conversación">
+              <div class="message message--outgoing">
+                <p>Hola María. Gabriel me comentó un poco de ti y pensé que podía hacerte sentido revisar si lo que hoy tienes protege bien lo que estás construyendo. ¿Te late que lo platiquemos 10 minutos?</p>
+                <small>Enviado · 17:58</small>
+              </div>
+              <div class="message message--incoming">
+                <p>Gracias, pero ahorita no tengo dinero y además ya tengo seguro por la empresa.</p>
+                <small>Recibido · 18:42</small>
+              </div>
+            </div>
+
+            <div class="composer">
+              <label class="field-label" for="draft">Respuesta sugerida por Forge</label>
+              <textarea id="draft">Te entiendo, María, y qué bueno que ya cuentas con una cobertura. Para no asumir: ¿lo que hoy te detiene es principalmente que no cabe en tu presupuesto o que sientes que con lo que ya tienes estás suficientemente cubierta?</textarea>
+              <div class="composer-footer">
+                <span class="approval-state"><span class="approval-dot" aria-hidden="true"></span>Borrador · requiere aprobación</span>
+                <div class="button-row">
+                  <button class="button button--text" type="button">Regenerar</button>
+                  <button class="button button--tonal" type="button">Aprobar</button>
+                  <button class="button button--filled" type="button" disabled title="Disponible después de aprobar">Abrir WhatsApp</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="stack">
+            <section class="nash-hero" aria-labelledby="nash-title">
+              <div class="nash-label">✦ Nash Combat</div>
+              <h2 id="nash-title">Validar y aclarar</h2>
+              <p>La objeción mezcla presupuesto con percepción de cobertura existente. No conviene responder con producto o precio.</p>
+              <button class="button button--tonal" type="button">Ver razonamiento</button>
+            </section>
+
+            <article class="card" aria-labelledby="signals-title">
+              <h2 id="signals-title">Lectura estratégica</h2>
+              <ul class="signal-list">
+                <li class="signal"><span>Objeción visible</span><strong>Presupuesto + ya cubierta</strong></li>
+                <li class="signal"><span>Interpretación candidata</span><strong>Restricción real de flujo</strong></li>
+                <li class="signal"><span>Riesgo</span><strong>Desacreditar su seguro actual</strong></li>
+                <li class="signal"><span>Siguiente movimiento</span><strong>Una pregunta de claridad</strong></li>
+              </ul>
+            </article>
+
+            <article class="card card--quiet" aria-labelledby="guardrails-title">
+              <h2 id="guardrails-title">Guardrails</h2>
+              <div class="chips">
+                <span class="chip">Sin presión</span>
+                <span class="chip">Sin miedo</span>
+                <span class="chip">Sin urgencia falsa</span>
+                <span class="chip">Sin envío automático</span>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navegación móvil">
+    <button type="button">Inicio</button>
+    <button type="button" aria-current="page">Prospectos</button>
+    <button type="button">Agenda</button>
+    <button type="button">Nash</button>
+  </nav>
+
+  <script>
+    const root = document.documentElement;
+    const themeButton = document.querySelector('#theme-toggle');
+
+    themeButton.addEventListener('click', () => {
+      const nextTheme = root.dataset.forgeTheme === 'dark' ? 'light' : 'dark';
+      root.dataset.forgeTheme = nextTheme;
+      themeButton.setAttribute('aria-label', nextTheme === 'dark' ? 'Usar tema claro' : 'Usar tema oscuro');
+    });
+  </script>
+</body>
+</html>
