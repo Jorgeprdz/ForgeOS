@@ -13287,3 +13287,19 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - ⚫ Productive Forge Alive binding deferred to FES 08
 - 🔵 FES 05 Passive Activity Capture Bridges
 <!-- END FORGEOS:FES_04_LIGHT_PROSPECT_INTAKE -->
+
+<!-- BEGIN FORGEOS:FES_05A_PASSIVE_CAPTURE_BRIDGE_CONTRACT -->
+## FES 05 Passive Activity Capture Bridges
+
+- 🟢 05A passive capture observation contract
+- 🟢 05A deterministic bridge sequence
+- 🟢 WhatsApp exact-draft approval boundary
+- 🟢 Nash Combat response approval boundary
+- 🟢 Call and Calendar handoff distinction
+- 🟢 Quote preparation, review and result distinction
+- 🟢 Pipeline stage request and confirmation distinction
+- 🟢 Raw private content excluded from bridge records
+- 🔵 05B canonical event type extension
+- 🔵 Productive adapters and persistence acceptance
+- 🔴 Handoff promoted to result
+<!-- END FORGEOS:FES_05A_PASSIVE_CAPTURE_BRIDGE_CONTRACT -->

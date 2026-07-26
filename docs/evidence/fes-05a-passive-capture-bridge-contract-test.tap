@@ -1,0 +1,268 @@
+TAP version 13
+# Subtest: FES 05A exposes locked bridge contracts
+ok 1 - FES 05A exposes locked bridge contracts
+  ---
+  duration_ms: 2.744375
+  type: 'test'
+  ...
+# Subtest: FES 05A catalog contains every locked source-truth action
+ok 2 - FES 05A catalog contains every locked source-truth action
+  ---
+  duration_ms: 0.166718
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects unknown actions
+ok 3 - FES 05A rejects unknown actions
+  ---
+  duration_ms: 5.576198
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects source evidence mismatch
+ok 4 - FES 05A rejects source evidence mismatch
+  ---
+  duration_ms: 0.3025
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects raw message content
+ok 5 - FES 05A rejects raw message content
+  ---
+  duration_ms: 0.220364
+  type: 'test'
+  ...
+# Subtest: FES 05A generation is not approval or send
+ok 6 - FES 05A generation is not approval or send
+  ---
+  duration_ms: 1.685
+  type: 'test'
+  ...
+# Subtest: FES 05A edit is not approval
+ok 7 - FES 05A edit is not approval
+  ---
+  duration_ms: 0.399167
+  type: 'test'
+  ...
+# Subtest: FES 05A approval is not external action
+ok 8 - FES 05A approval is not external action
+  ---
+  duration_ms: 0.34073
+  type: 'test'
+  ...
+# Subtest: FES 05A WhatsApp opening is handoff only
+ok 9 - FES 05A WhatsApp opening is handoff only
+  ---
+  duration_ms: 0.314375
+  type: 'test'
+  ...
+# Subtest: FES 05A confirmed send is external action but not reply
+ok 10 - FES 05A confirmed send is external action but not reply
+  ---
+  duration_ms: 0.5025
+  type: 'test'
+  ...
+# Subtest: FES 05A confirmed reply is a result
+ok 11 - FES 05A confirmed reply is a result
+  ---
+  duration_ms: 0.265781
+  type: 'test'
+  ...
+# Subtest: FES 05A requires exact approval before WhatsApp handoff
+ok 12 - FES 05A requires exact approval before WhatsApp handoff
+  ---
+  duration_ms: 21.40677
+  type: 'test'
+  ...
+# Subtest: FES 05A requires reapproval after edit
+ok 13 - FES 05A requires reapproval after edit
+  ---
+  duration_ms: 1.403281
+  type: 'test'
+  ...
+# Subtest: FES 05A accepts complete WhatsApp lifecycle
+ok 14 - FES 05A accepts complete WhatsApp lifecycle
+  ---
+  duration_ms: 1.92375
+  type: 'test'
+  ...
+# Subtest: FES 05A detects unresolved WhatsApp handoff
+ok 15 - FES 05A detects unresolved WhatsApp handoff
+  ---
+  duration_ms: 1.44375
+  type: 'test'
+  ...
+# Subtest: FES 05A requires sent confirmation before reply
+ok 16 - FES 05A requires sent confirmation before reply
+  ---
+  duration_ms: 0.676145
+  type: 'test'
+  ...
+# Subtest: FES 05A protects Nash Combat response lifecycle
+ok 17 - FES 05A protects Nash Combat response lifecycle
+  ---
+  duration_ms: 1.493958
+  type: 'test'
+  ...
+# Subtest: FES 05A blocks use after Nash Combat edit without reapproval
+ok 18 - FES 05A blocks use after Nash Combat edit without reapproval
+  ---
+  duration_ms: 2.2725
+  type: 'test'
+  ...
+# Subtest: FES 05A call initiation does not prove connection
+ok 19 - FES 05A call initiation does not prove connection
+  ---
+  duration_ms: 0.188386
+  type: 'test'
+  ...
+# Subtest: FES 05A detects unresolved call handoff
+ok 20 - FES 05A detects unresolved call handoff
+  ---
+  duration_ms: 0.491875
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects call result without initiation
+ok 21 - FES 05A rejects call result without initiation
+  ---
+  duration_ms: 0.306667
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects mutually exclusive call outcomes
+ok 22 - FES 05A rejects mutually exclusive call outcomes
+  ---
+  duration_ms: 0.461041
+  type: 'test'
+  ...
+# Subtest: FES 05A calendar template opening does not prove appointment
+ok 23 - FES 05A calendar template opening does not prove appointment
+  ---
+  duration_ms: 0.221562
+  type: 'test'
+  ...
+# Subtest: FES 05A externally confirmed appointment is FES 01 compatible
+ok 24 - FES 05A externally confirmed appointment is FES 01 compatible
+  ---
+  duration_ms: 0.169844
+  type: 'test'
+  ...
+# Subtest: FES 05A detects unresolved calendar handoff
+ok 25 - FES 05A detects unresolved calendar handoff
+  ---
+  duration_ms: 0.385677
+  type: 'test'
+  ...
+# Subtest: FES 05A requires appointment before outcome
+ok 26 - FES 05A requires appointment before outcome
+  ---
+  duration_ms: 0.230729
+  type: 'test'
+  ...
+# Subtest: FES 05A preserves quote preparation and review distinction
+ok 27 - FES 05A preserves quote preparation and review distinction
+  ---
+  duration_ms: 0.620938
+  type: 'test'
+  ...
+# Subtest: FES 05A proposal request requires review or presentation
+ok 28 - FES 05A proposal request requires review or presentation
+  ---
+  duration_ms: 0.348177
+  type: 'test'
+  ...
+# Subtest: FES 05A pipeline request does not equal confirmed movement
+ok 29 - FES 05A pipeline request does not equal confirmed movement
+  ---
+  duration_ms: 0.190989
+  type: 'test'
+  ...
+# Subtest: FES 05A pipeline confirmation requires request
+ok 30 - FES 05A pipeline confirmation requires request
+  ---
+  duration_ms: 0.266927
+  type: 'test'
+  ...
+# Subtest: FES 05A marks unsupported canonical event types for FES 05B
+ok 31 - FES 05A marks unsupported canonical event types for FES 05B
+  ---
+  duration_ms: 0.162969
+  type: 'test'
+  ...
+# Subtest: FES 05A sequence counts candidate states
+ok 32 - FES 05A sequence counts candidate states
+  ---
+  duration_ms: 1.237188
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects mixed tenants
+ok 33 - FES 05A rejects mixed tenants
+  ---
+  duration_ms: 0.456094
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects duplicate observations
+ok 34 - FES 05A rejects duplicate observations
+  ---
+  duration_ms: 0.379375
+  type: 'test'
+  ...
+# Subtest: FES 05A ordering is deterministic
+ok 35 - FES 05A ordering is deterministic
+  ---
+  duration_ms: 2.604427
+  type: 'test'
+  ...
+# Subtest: FES 05A validates and rebuilds byte-equivalent sequence
+ok 36 - FES 05A validates and rebuilds byte-equivalent sequence
+  ---
+  duration_ms: 3.106198
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects validation against different source
+ok 37 - FES 05A rejects validation against different source
+  ---
+  duration_ms: 2.056094
+  type: 'test'
+  ...
+# Subtest: FES 05A detects tampered observation boundary
+ok 38 - FES 05A detects tampered observation boundary
+  ---
+  duration_ms: 0.396718
+  type: 'test'
+  ...
+# Subtest: FES 05A rejects unsupported output fields
+ok 39 - FES 05A rejects unsupported output fields
+  ---
+  duration_ms: 0.35625
+  type: 'test'
+  ...
+# Subtest: FES 05A output is deeply immutable
+ok 40 - FES 05A output is deeply immutable
+  ---
+  duration_ms: 0.6475
+  type: 'test'
+  ...
+# Subtest: FES 05A does not mutate source
+ok 41 - FES 05A does not mutate source
+  ---
+  duration_ms: 0.630312
+  type: 'test'
+  ...
+# Subtest: FES 05A keeps identity stable while digest follows observations
+ok 42 - FES 05A keeps identity stable while digest follows observations
+  ---
+  duration_ms: 0.901979
+  type: 'test'
+  ...
+# Subtest: FES 05A catalog remains deeply immutable
+ok 43 - FES 05A catalog remains deeply immutable
+  ---
+  duration_ms: 0.102656
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 181.643854
