@@ -45,3 +45,11 @@ Run `30217658448` reached the authoritative container but failed in the
 unit-preflight shell wrapper after all eight Node assertions passed.
 The browser stage did not run. The workflow now declares Bash
 explicitly and uses `set -Eeuo pipefail`.
+
+## Second Actions attempt
+
+Run `30223453235` passed installation and all unit contracts, then reached
+the real browser gate. The artifact showed a source-tree Vite path
+mismatch, visible legacy navigation on touch layouts and rail-width
+overflow on landscape/desktop. Acceptance now uses a Pages-shaped
+static tree and explicit shell geometry containment.

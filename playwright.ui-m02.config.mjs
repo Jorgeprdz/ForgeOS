@@ -78,7 +78,7 @@ export default defineConfig({
   use: {
     baseURL:
       "http://127.0.0.1:4173/"
-      + "docs/static-preview/forge-alive/"
+      + "static-preview/forge-alive/"
       + "index.html",
     browserName: "chromium",
     colorScheme: "dark",
@@ -100,11 +100,13 @@ export default defineConfig({
   })),
   webServer: {
     command:
-      "npx vite --host 127.0.0.1 "
+      "node scripts/build-ui-m02-acceptance-site.mjs "
+      + "&& npx vite _ui_m02_site "
+      + "--host 127.0.0.1 "
       + "--port 4173 --strictPort",
     url:
       "http://127.0.0.1:4173/"
-      + "docs/static-preview/forge-alive/"
+      + "static-preview/forge-alive/"
       + "index.html",
     reuseExistingServer: false,
     timeout: 120_000,

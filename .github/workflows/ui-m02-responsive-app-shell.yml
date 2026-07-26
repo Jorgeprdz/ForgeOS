@@ -11,6 +11,7 @@ on:
       - "tests/ui-m02-responsive-app-shell-test.mjs"
       - "tests/e2e/ui-m02-responsive-app-shell.spec.mjs"
       - "playwright.ui-m02.config.mjs"
+      - "scripts/build-ui-m02-acceptance-site.mjs"
   workflow_dispatch:
 
 permissions:

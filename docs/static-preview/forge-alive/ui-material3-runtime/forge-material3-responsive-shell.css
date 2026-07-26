@@ -52,9 +52,15 @@ html[data-forge-ui-runtime="material3"]
 }
 
 html[data-forge-ui-runtime="material3"]
+  body[data-forge-mobile-nav-page-r16c5j]
   .forge-mobile-nav-r16c5j {
   display: none !important;
   visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
   pointer-events: none !important;
 }
 
@@ -67,6 +73,7 @@ html[data-forge-ui-runtime="material3"]
   grid-template-rows: auto minmax(0, 1fr);
   position: relative;
   isolation: isolate;
+  overflow-x: clip;
 }
 
 html[data-forge-ui-runtime="material3"]
@@ -761,6 +768,9 @@ html[data-forge-ui-runtime="material3"]
 
   html[data-forge-ui-runtime="material3"]
     .forge-m3-shell__header {
+    box-sizing: border-box;
+    width: calc(100% - 112px);
+    max-width: calc(100% - 112px);
     min-height: 78px;
     margin-left: 112px;
     padding-inline: 22px;
@@ -768,6 +778,9 @@ html[data-forge-ui-runtime="material3"]
 
   html[data-forge-ui-runtime="material3"]
     .forge-m3-shell__content {
+    box-sizing: border-box;
+    width: calc(100% - 112px);
+    max-width: calc(100% - 112px);
     height: calc(100vh - 78px);
     margin-left: 112px;
     overflow: hidden;
@@ -901,12 +914,16 @@ html[data-forge-ui-runtime="material3"]
 @media (min-width: 1200px) {
   html[data-forge-ui-runtime="material3"]
     .forge-m3-shell__header {
+    width: calc(100% - 128px);
+    max-width: calc(100% - 128px);
     margin-left: 128px;
     padding-inline: 28px;
   }
 
   html[data-forge-ui-runtime="material3"]
     .forge-m3-shell__content {
+    width: calc(100% - 128px);
+    max-width: calc(100% - 128px);
     margin-left: 128px;
   }
 

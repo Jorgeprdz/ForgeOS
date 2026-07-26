@@ -4,8 +4,9 @@
 
 - Implementation candidate: **PASS**
 - Unit preflight in ArchForge: **PASS**
-- Real UI acceptance: **RETRY PENDING**
+- Real UI acceptance: **SECOND RETRY PENDING**
 - First Actions run: **30217658448 — WRAPPER FAILURE**
+- Second Actions run: **30223453235 — BROWSER FAILURE**
 - Acceptance authority: **GITHUB ACTIONS**
 - UI-M02 complete: **NO**
 

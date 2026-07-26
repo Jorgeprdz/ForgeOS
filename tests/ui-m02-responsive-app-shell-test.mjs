@@ -32,6 +32,11 @@ const manifestPath = path.join(
   "forge-material3-responsive-shell-manifest.json",
 );
 
+const acceptanceBuildPath = path.join(
+  root,
+  "scripts/build-ui-m02-acceptance-site.mjs",
+);
+
 const read = (target) =>
   fs.readFileSync(target, "utf8");
 
@@ -226,6 +231,71 @@ test(
         "pipeline",
         "cotizaciones",
       ],
+    );
+  },
+);
+
+test(
+  "acceptance site mirrors the Pages public layout",
+  () => {
+    const source = read(acceptanceBuildPath);
+
+    assert.match(source, /_ui_m02_site/);
+    assert.match(
+      source,
+      /advisor-os\/sales-pipeline\//,
+    );
+    assert.match(
+      source,
+      /file\.startsWith\("docs\/"\)/,
+    );
+    assert.match(
+      source,
+      /UI_M02_ACCEPTANCE_SITE=PASS/,
+    );
+  },
+);
+
+test(
+  "legacy navigation is strongly disabled in Material 3 mode",
+  () => {
+    const css = read(cssPath);
+
+    assert.match(
+      css,
+      /body\[data-forge-mobile-nav-page-r16c5j\][\s\S]*\.forge-mobile-nav-r16c5j/,
+    );
+
+    assert.match(
+      css,
+      /width:\s*0 !important/,
+    );
+
+    assert.match(
+      css,
+      /height:\s*0 !important/,
+    );
+  },
+);
+
+test(
+  "rail layouts reserve width instead of overflowing",
+  () => {
+    const css = read(cssPath);
+
+    assert.match(
+      css,
+      /width:\s*calc\(100% - 112px\)/,
+    );
+
+    assert.match(
+      css,
+      /width:\s*calc\(100% - 128px\)/,
+    );
+
+    assert.match(
+      css,
+      /overflow-x:\s*clip/,
     );
   },
 );

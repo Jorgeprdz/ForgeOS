@@ -110,9 +110,23 @@ const shellState = async (page) =>
         && product
         && content.contains(product),
       ),
-      legacyMobileNavDisplay: legacyMobileNav
-        ? getComputedStyle(legacyMobileNav).display
-        : null,
+      legacyMobileNavVisibleCount: [
+        ...document.querySelectorAll(
+          ".forge-mobile-nav-r16c5j",
+        ),
+      ].filter((element) => {
+        const style = getComputedStyle(element);
+
+        return (
+          style.display !== "none"
+          && style.visibility !== "hidden"
+          && Number(style.opacity) > 0
+        );
+      }).length,
+      viteOverlayCount:
+        document.querySelectorAll(
+          "vite-error-overlay",
+        ).length,
       legacySidebarDisplay: legacySidebar
         ? getComputedStyle(legacySidebar).display
         : null,
@@ -188,12 +202,17 @@ test(
       productExists: Boolean(
         document.querySelector(".phone-shell"),
       ),
+      viteOverlayCount:
+        document.querySelectorAll(
+          "vite-error-overlay",
+        ).length,
     }));
 
     expect(state.shellCount).toBe(0);
     expect(state.runtime).toBeNull();
     expect(state.flagEnabled).toBe(false);
     expect(state.productExists).toBe(true);
+    expect(state.viteOverlayCount).toBe(0);
   },
 );
 
@@ -232,9 +251,8 @@ test(
       state.scrollWidth - state.viewport.width,
     ).toBeLessThanOrEqual(1);
 
-    if (state.legacyMobileNavDisplay !== null) {
-      expect(state.legacyMobileNavDisplay).toBe("none");
-    }
+    expect(state.viteOverlayCount).toBe(0);
+    expect(state.legacyMobileNavVisibleCount).toBe(0);
 
     if (
       testInfo.project.use.viewport.width >= 901
