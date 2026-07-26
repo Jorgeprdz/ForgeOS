@@ -483,18 +483,35 @@ h1 {
 
 .halo-a {
   inset: 3px;
-  background: conic-gradient(from 90deg, transparent 0 8%, var(--aqua) 14%, transparent 29%, var(--blue) 42%, transparent 57%, var(--pink) 71%, transparent 84%, var(--gold) 96%);
-  mask: radial-gradient(circle, transparent 59%, black 62%);
-  opacity: .48;
+  background: conic-gradient(
+    from 210deg,
+    rgba(82,230,223,.92) 0%,
+    rgba(94,162,255,.88) 24%,
+    rgba(159,130,255,.84) 50%,
+    rgba(255,127,212,.78) 72%,
+    rgba(255,201,95,.88) 88%,
+    rgba(82,230,223,.92) 100%
+  );
+  mask: radial-gradient(circle, transparent 58%, black 63%);
+  filter: blur(1px);
+  opacity: .34;
 }
 
 .halo-b {
   inset: 10px;
-  background: conic-gradient(from -40deg, var(--violet), transparent 20%, var(--aqua), transparent 58%, var(--gold), transparent 85%);
-  mask: radial-gradient(circle, transparent 62%, black 64%);
-  animation-duration: 5.5s;
+  background: conic-gradient(
+    from 180deg,
+    rgba(82,230,223,.42) 0%,
+    rgba(94,162,255,.40) 28%,
+    rgba(159,130,255,.38) 56%,
+    rgba(255,201,95,.40) 82%,
+    rgba(82,230,223,.42) 100%
+  );
+  mask: radial-gradient(circle, transparent 63%, black 66%);
+  filter: blur(4px);
+  animation-duration: 6s;
   animation-direction: reverse;
-  opacity: .30;
+  opacity: .18;
 }
 
 .halo-c {
