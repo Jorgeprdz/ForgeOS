@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: FES 02C gateway exposes a locked RPC-only diagnostic contract
+ok 1 - FES 02C gateway exposes a locked RPC-only diagnostic contract
+  ---
+  duration_ms: 3.759063
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway requires authenticated Supabase client methods
+ok 2 - FES 02C gateway requires authenticated Supabase client methods
+  ---
+  duration_ms: 3.564492
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway pushes only the canonical append mutation RPC
+ok 3 - FES 02C gateway pushes only the canonical append mutation RPC
+  ---
+  duration_ms: 21.99039
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway accepts deterministic idempotent replay receipts
+ok 4 - FES 02C gateway accepts deterministic idempotent replay receipts
+  ---
+  duration_ms: 3.938203
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway rejects session and mutation tenant mismatch before RPC
+ok 5 - FES 02C gateway rejects session and mutation tenant mismatch before RPC
+  ---
+  duration_ms: 5.3
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway rejects mismatched remote receipts
+ok 6 - FES 02C gateway rejects mismatched remote receipts
+  ---
+  duration_ms: 2.951446
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway normalizes server conflict review
+ok 7 - FES 02C gateway normalizes server conflict review
+  ---
+  duration_ms: 4.466328
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway rejects cross-tenant remote conflict records
+ok 8 - FES 02C gateway rejects cross-tenant remote conflict records
+  ---
+  duration_ms: 4.628867
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway pulls bounded tenant-partitioned changes
+ok 9 - FES 02C gateway pulls bounded tenant-partitioned changes
+  ---
+  duration_ms: 3.722148
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway rejects cross-tenant pull changes
+ok 10 - FES 02C gateway rejects cross-tenant pull changes
+  ---
+  duration_ms: 3.684218
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway maps expired authentication
+ok 11 - FES 02C gateway maps expired authentication
+  ---
+  duration_ms: 2.647656
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway preserves governed remote rejection codes
+ok 12 - FES 02C gateway preserves governed remote rejection codes
+  ---
+  duration_ms: 2.181406
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway maps transport failures to retry-safe network error
+ok 13 - FES 02C gateway maps transport failures to retry-safe network error
+  ---
+  duration_ms: 2.721406
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway rejects invalid pull limits before remote access
+ok 14 - FES 02C gateway rejects invalid pull limits before remote access
+  ---
+  duration_ms: 0.596055
+  type: 'test'
+  ...
+# Subtest: FES 02C gateway output is deeply immutable
+ok 15 - FES 02C gateway output is deeply immutable
+  ---
+  duration_ms: 2.339609
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 293.420118

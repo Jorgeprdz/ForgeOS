@@ -1,0 +1,77 @@
+TAP version 13
+# Subtest: FES 02C controlled Forge Alive ledger synchronization acceptance
+    # Subtest: FORGE_ALIVE_PIPELINE_BOUNDARY
+    ok 1 - FORGE_ALIVE_PIPELINE_BOUNDARY
+      ---
+      duration_ms: 1.68668
+      type: 'test'
+      ...
+    # Subtest: ATOMIC_LOCAL_EVENT_AND_OUTBOX
+    ok 2 - ATOMIC_LOCAL_EVENT_AND_OUTBOX
+      ---
+      duration_ms: 0.220039
+      type: 'test'
+      ...
+    # Subtest: AUTHENTICATED_GATEWAY_PUSH_ACKNOWLEDGED
+    ok 3 - AUTHENTICATED_GATEWAY_PUSH_ACKNOWLEDGED
+      ---
+      duration_ms: 0.198789
+      type: 'test'
+      ...
+    # Subtest: SECOND_REPLICA_INCREMENTAL_PULL
+    ok 4 - SECOND_REPLICA_INCREMENTAL_PULL
+      ---
+      duration_ms: 0.234219
+      type: 'test'
+      ...
+    # Subtest: OFFLINE_RETRY_PRESERVED
+    ok 5 - OFFLINE_RETRY_PRESERVED
+      ---
+      duration_ms: 0.224687
+      type: 'test'
+      ...
+    # Subtest: RECONNECT_RECOVERY
+    ok 6 - RECONNECT_RECOVERY
+      ---
+      duration_ms: 0.341328
+      type: 'test'
+      ...
+    # Subtest: NO_PRODUCTIVE_UI_MUTATION
+    ok 7 - NO_PRODUCTIVE_UI_MUTATION
+      ---
+      duration_ms: 0.295507
+      type: 'test'
+      ...
+    # Subtest: INDEXEDDB_RELOAD_PERSISTENCE
+    ok 8 - INDEXEDDB_RELOAD_PERSISTENCE
+      ---
+      duration_ms: 0.276328
+      type: 'test'
+      ...
+    # Subtest: LOCAL_ACCEPTANCE_DATABASE_CLEANUP
+    ok 9 - LOCAL_ACCEPTANCE_DATABASE_CLEANUP
+      ---
+      duration_ms: 0.325469
+      type: 'test'
+      ...
+    # Subtest: FES02C_RUNTIME_CONSOLE_ERRORS_ABSENT
+    ok 10 - FES02C_RUNTIME_CONSOLE_ERRORS_ABSENT
+      ---
+      duration_ms: 0.316171
+      type: 'test'
+      ...
+    1..10
+ok 1 - FES 02C controlled Forge Alive ledger synchronization acceptance
+  ---
+  duration_ms: 15552.76875
+  type: 'test'
+  ...
+1..1
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16450.588047

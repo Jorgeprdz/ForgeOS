@@ -13154,3 +13154,22 @@ REMOTE_ACCEPTANCE=PASS
 PRODUCTIVE_GATEWAY=FES_02C_PENDING
 ```
 <!-- END FORGEOS:FES_02B_REMOTE_AUTHORITY -->
+
+<!-- BEGIN FORGEOS:FES_02_CLOSURE -->
+## FES 02 Activity Ledger Persistence closed
+
+```text
+AREA=platform/event-evidence
+CANONICAL_CONTRACT=canonical-activity-event-contract.js
+LEDGER_CONTRACT=activity-ledger-contract.js
+LOCAL_STORE=activity-ledger-local-store.js
+SYNC_SERVICE=activity-ledger-sync-service.js
+SUPABASE_GATEWAY=activity-ledger-supabase-gateway.js
+CONTROLLED_BROWSER_RUNTIME=activity-ledger-browser-runtime.js
+REMOTE_MIGRATION=20260726000100_fes02_activity_event_ledger.sql
+REMOTE_ACCEPTANCE=PASS
+CONTROLLED_BROWSER_ACCEPTANCE=PASS
+PHASE_STATUS=CLOSED
+NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
+```
+<!-- END FORGEOS:FES_02_CLOSURE -->

@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: FES 02C runtime exposes local-first controlled diagnostics
+ok 1 - FES 02C runtime exposes local-first controlled diagnostics
+  ---
+  duration_ms: 4.070195
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime appends canonical event and outbox atomically
+ok 2 - FES 02C runtime appends canonical event and outbox atomically
+  ---
+  duration_ms: 17.035859
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime synchronizes outbox before incremental pull
+ok 3 - FES 02C runtime synchronizes outbox before incremental pull
+  ---
+  duration_ms: 10.724102
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime preserves idempotent local append
+ok 4 - FES 02C runtime preserves idempotent local append
+  ---
+  duration_ms: 8.163907
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime rejects cross-tenant canonical append
+ok 5 - FES 02C runtime rejects cross-tenant canonical append
+  ---
+  duration_ms: 1.800899
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime retains transport failure for explicit retry
+ok 6 - FES 02C runtime retains transport failure for explicit retry
+  ---
+  duration_ms: 8.259609
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime routes remote conflict to human review
+ok 7 - FES 02C runtime routes remote conflict to human review
+  ---
+  duration_ms: 10.23629
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime applies a remote event to a second local replica
+ok 8 - FES 02C runtime applies a remote event to a second local replica
+  ---
+  duration_ms: 5.958281
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime can resolve authenticated Forge Alive bootstrap
+ok 9 - FES 02C runtime can resolve authenticated Forge Alive bootstrap
+  ---
+  duration_ms: 0.880235
+  type: 'test'
+  ...
+# Subtest: FES 02C runtime close is idempotent and blocks later work
+ok 10 - FES 02C runtime close is idempotent and blocks later work
+  ---
+  duration_ms: 0.636015
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 303.964375
