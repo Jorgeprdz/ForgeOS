@@ -13196,3 +13196,16 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Projection-owned event truth
 - 🔵 FES 03C Activity projection
 <!-- END FORGEOS:FES_03B_CANONICAL_TIMELINE_CONTRACT -->
+
+<!-- BEGIN FORGEOS:FES_03C_ACTIVITY_PROJECTION -->
+## FES 03C Activity projection
+
+- 🟢 Deterministic Activity read model
+- 🟢 Source, evidence and confirmation visible
+- 🟢 Pending state explicit
+- 🟢 Original and correction visible
+- 🟢 Exact rebuild against source timeline
+- 🔴 Detached Activity truth
+- 🔴 Legacy manual activity points as event authority
+- 🔵 FES 03D prospect detail projection
+<!-- END FORGEOS:FES_03C_ACTIVITY_PROJECTION -->
