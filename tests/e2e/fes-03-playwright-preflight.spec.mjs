@@ -162,6 +162,9 @@ test(
         const database =
           await openDatabase();
 
+        database.onversionchange =
+          () => database.close();
+
         const write =
           database.transaction(
             storeName,
@@ -172,19 +175,22 @@ test(
           .put(value, key);
         await transactionDone(write);
 
+        // FES05B_INDEXEDDB_CLEANUP_FIX=READ_TRANSACTION_COMPLETION
+        const read =
+          database.transaction(
+            storeName,
+            "readonly",
+          );
+        const readDone =
+          transactionDone(read);
+        const request =
+          read
+            .objectStore(storeName)
+            .get(key);
+
         const readValue =
           await new Promise(
             (resolve, reject) => {
-              const read =
-                database.transaction(
-                  storeName,
-                  "readonly",
-                );
-              const request =
-                read
-                  .objectStore(storeName)
-                  .get(key);
-
               request.onsuccess =
                 () => resolve(
                   request.result,
@@ -196,6 +202,7 @@ test(
             },
           );
 
+        await readDone;
         database.close();
 
         await new Promise(
