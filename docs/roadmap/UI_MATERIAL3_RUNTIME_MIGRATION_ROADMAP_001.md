@@ -21,14 +21,14 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
 
 ### UI-M01 — Tokens, primitives and feature flag
 
-- Status: **NEXT**
-- Integrate approved tokens without replacing productive screens.
-- Create reusable primitives.
-- Add an explicit runtime feature flag.
+- Status: **COMPLETE**
+- Approved tokens integrated behind an explicit feature flag.
+- Reusable primitives added without replacing productive screens.
+- Default runtime remains legacy.
 
 ### UI-M02 — Responsive app shell
 
-- Status: **LOCKED**
+- Status: **NEXT**
 - Header and responsive surface.
 - Floating navigation pill.
 - Alfred global launcher and panel.

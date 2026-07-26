@@ -1,0 +1,26 @@
+{
+  "schema": "forge.ui.material3.runtime-foundation.v1",
+  "phase": "UI_M01_TOKENS_PRIMITIVES_AND_FEATURE_FLAG",
+  "status": "foundation",
+  "defaultMode": "legacy",
+  "enabledMode": "material3",
+  "query": {
+    "key": "forgeUi",
+    "enabledValue": "material3",
+    "example": "?nav=inicio&forgeUi=material3"
+  },
+  "entrypoint": "docs/static-preview/forge-alive/index.html",
+  "authorities": {
+    "functionalSourceCommit": "7faf7ce20470fa076afdef1b75f909333686425b",
+    "visualAuthorityCommit": "93f1ed317acad257ecd63879a37c977858d7eea2",
+    "approvedPrototypeCommit": "aeffc2e493ff9b5b3cf3cdb90e1f3c22d026b365",
+    "authorityTokenBlob": "fc14c2c78b1ebeafbe0775c90986861218426432"
+  },
+  "contracts": {
+    "productiveHomeReplacement": false,
+    "backendMutation": false,
+    "dataBindingMutation": false,
+    "defaultVisualMutation": false,
+    "featureFlagRequired": true
+  }
+}
