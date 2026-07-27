@@ -1,33 +1,33 @@
 {
-  "schema": "forge.ui.material3.productive-home-surface.v1",
+  "schema": "forge.ui.material3.productive-home-surface.v2",
   "phase": "UI_M03_PRODUCTIVE_HOME_SURFACE_MIGRATION",
-  "status": "corrected_pending_owner_visual_acceptance",
+  "status": "structurally_projected_pending_owner_visual_acceptance",
   "entrypoint": "docs/static-preview/forge-alive/index.html",
-  "sourceCandidate": "632b5861d37f8251d206adfdba78238e56fa8de8",
-  "ownerVisualReview": {
-    "candidateAccepted": false,
-    "mobileFinding": "new shell header above unreconciled legacy page and overlapping navigation",
-    "tabletFinding": "productive workspace compressed into the right column with excessive empty canvas",
-    "correction": "single canonical productive layout per responsive mode"
-  },
-  "surface": {
-    "route": "inicio",
-    "selector": "[data-forge-m3-product-surface]",
-    "existingMarkupPreserved": true,
-    "presentationMigrated": true,
-    "touchNavigationAuthority": "existing productive bottom navigation",
-    "touchAlfredAuthority": "material3 global launcher",
-    "workspaceNavigationAuthority": "existing productive desktop sidebar",
-    "workspaceContentAuthority": "forge-desktop-workspace-056y"
+  "sourceCandidate": "cb0ffea2f45ebfae476bea52a0336a22bc9d01a8",
+  "projection": {
+    "strategy": "move_existing_productive_nodes_into_material3_stage",
+    "cloneNodes": false,
+    "replaceMarkup": false,
+    "legacyTreeVisibleOnHome": false,
+    "restoreLegacyTreeOutsideHome": true,
+    "touchAuthority": [
+      "assistant-card",
+      "primary-card",
+      "forge-smart-widget-static-056u",
+      "grid",
+      "panel",
+      "canonical-bottom-nav"
+    ],
+    "workspaceAuthority": "forge-desktop-workspace-056y"
   },
   "contracts": {
-    "productiveMarkupReplacement": false,
+    "productiveHandlersPreserved": true,
     "businessLogicMutation": false,
     "backendMutation": false,
     "dataBindingMutation": false,
-    "duplicateHeaderAllowed": false,
-    "duplicateNavigationAllowed": false,
-    "inactiveHistoricalLayoutsInteractive": false,
+    "duplicateInterfaceAllowed": false,
+    "dynamicLegacyContextNavigationVisible": false,
+    "routeRestorationRequired": true,
     "featureFlagRequired": true,
     "humanVisualAcceptanceRequired": true
   }

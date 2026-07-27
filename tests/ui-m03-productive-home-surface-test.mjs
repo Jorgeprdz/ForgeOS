@@ -31,7 +31,7 @@ const manifest = JSON.parse(
   ),
 );
 
-test("UI-M03 R1 assets load exactly once", () => {
+test("UI-M03 R2 assets load exactly once", () => {
   assert.equal(
     index.split(
       "FORGE:UI_M03_PRODUCTIVE_HOME_SURFACE:START",
@@ -40,142 +40,137 @@ test("UI-M03 R1 assets load exactly once", () => {
   );
   assert.match(
     index,
-    /forge-material3-home-surface\.css\?v=ui-m03-r1/,
+    /forge-material3-home-surface\.css\?v=ui-m03-r2/,
   );
   assert.match(
     index,
-    /forge-material3-home-surface\.js\?v=ui-m03-r1/,
+    /forge-material3-home-surface\.js\?v=ui-m03-r2/,
   );
 });
 
-test("productive Home markup and handlers remain intact", () => {
-  assert.match(source, /existingProductSurfacePreserved:\s*true/);
+test("R2 creates a dedicated Material 3 Home stage", () => {
+  assert.match(source, /data-forge-m3-home-stage/);
+  assert.match(source, /document\.createElement\("main"\)/);
+  assert.match(source, /content\.insertBefore\(stage, product\)/);
+});
+
+test("productive nodes are moved, never cloned or replaced", () => {
+  assert.match(source, /stage\.appendChild\(node\)/);
+  assert.match(source, /productiveNodesMoved:\s*true/);
+  assert.match(source, /productiveNodesCloned:\s*false/);
   assert.match(source, /productiveMarkupReplaced:\s*false/);
-  assert.doesNotMatch(source, /\.remove\s*\(/);
-  assert.doesNotMatch(source, /\.replaceWith\s*\(/);
+  assert.doesNotMatch(source, /cloneNode/);
   assert.doesNotMatch(source, /\.innerHTML\s*=/);
+  assert.doesNotMatch(source, /\.replaceWith\s*\(/);
 });
 
-test("runtime selects one responsive product authority", () => {
-  assert.match(source, /window\.innerWidth >= 900/);
-  assert.match(source, /"workspace"/);
-  assert.match(source, /"touch"/);
-  assert.match(source, /data-forge-m3-home-layout/);
-  assert.match(source, /setInactive/);
-});
-
-test("mobile blocks duplicate header and navigation", () => {
-  assert.match(css, /max-width:\s*899px/);
+test("legacy product tree is structurally hidden on Home", () => {
+  assert.match(source, /product\.hidden = hidden/);
   assert.match(
-    css,
-    /> \.hero[\s\S]*display:\s*none !important/,
+    source,
+    /data-forge-m3-legacy-tree-hidden/,
   );
   assert.match(
     css,
-    /\.forge-m3-shell__nav-pill[\s\S]*display:\s*none !important/,
-  );
-  assert.match(
-    css,
-    /\.bottom-nav\[data-forge-home-navigation-r16c="canonical"\]/,
-  );
-  assert.match(
-    css,
-    /grid-template-columns:\s*repeat\(4/,
+    /\[data-forge-m3-legacy-tree-hidden\][\s\S]*display:\s*none !important/,
   );
 });
 
-test("touch layouts keep the new Alfred launcher only", () => {
+test("moved nodes restore to exact original anchors", () => {
+  assert.match(source, /document\.createComment/);
+  assert.match(source, /records\.set/);
+  assert.match(source, /anchor\.parentNode\.insertBefore/);
+  assert.match(source, /restoreAll/);
+});
+
+test("non-Home routes restore the productive tree", () => {
+  assert.match(source, /isHomeRoute/);
+  assert.match(source, /route-not-home/);
+  assert.match(source, /setProductHidden\(product, false\)/);
+  assert.match(source, /forge:material3-navigation/);
   assert.match(
-    css,
-    /\.forge-m3-shell__alfred-launcher[\s\S]*width:\s*76px/,
-  );
-  assert.match(
-    css,
-    /\[data-command-orb-layer\][\s\S]*display:\s*none !important/,
+    source,
+    /data-forge-m3-active-route/,
   );
 });
 
-test("tablet and desktop use the full productive workspace", () => {
-  assert.match(css, /min-width:\s*900px/);
+test("touch projection excludes historical desktop layouts", () => {
   assert.match(
-    css,
-    /\.forge-desktop-workspace-056y[\s\S]*grid-template-columns:[\s\S]*clamp\(210px/,
+    source,
+    /!node\.closest\(workspaceSelector\)/,
   );
   assert.match(
-    css,
-    /\.dw-sidebar-056y[\s\S]*display:\s*flex !important/,
+    source,
+    /!node\.closest\("\.alfred-desktop-app-056g7"\)/,
   );
   assert.match(
-    css,
-    /\.dw-main-056y[\s\S]*grid-column:\s*2 !important/,
+    source,
+    /canonical"\]/,
   );
 });
 
-test("workspace no longer reserves the isolated shell rail", () => {
+test("dynamic old mobile context navigation is suppressed", () => {
+  assert.match(css, /\.forge-mobile-context-nav-057d/);
   assert.match(
     css,
-    /\.forge-m3-shell__header[\s\S]*width:\s*100% !important/,
-  );
-  assert.match(
-    css,
-    /\.forge-m3-shell__content[\s\S]*margin-left:\s*0 !important/,
-  );
-  assert.match(
-    css,
-    /\.forge-m3-shell__nav-region[\s\S]*display:\s*none !important/,
-  );
-  assert.match(
-    css,
-    /overflow-y:\s*auto !important/,
+    /\.forge-mobile-context-nav-057d[\s\S]*display:\s*none !important/,
   );
 });
 
-test("inactive historical layouts cannot remain interactive", () => {
-  assert.match(source, /toggleAttribute\("inert", inactive\)/);
-  assert.match(source, /aria-hidden/);
-  assert.equal(
-    manifest.contracts.inactiveHistoricalLayoutsInteractive,
-    false,
+test("workspace projects only the productive desktop authority", () => {
+  assert.match(
+    source,
+    /const workspaceSelector =[\s\S]*forge-desktop-workspace-056y/,
+  );
+  assert.match(
+    source,
+    /collectWorkspaceNodes/,
+  );
+  assert.match(
+    css,
+    /\.forge-m3-home-stage[\s\S]*> \.forge-desktop-workspace-056y/,
   );
 });
 
-test("UI-M03 R1 introduces no productive side effects", () => {
+test("workspace duplicate brand and profile are hidden", () => {
+  assert.match(css, /\.dw-brand-056y/);
+  assert.match(css, /\.dw-sidebar-profile-056y/);
+  assert.match(
+    css,
+    /\.dw-sidebar-profile-056y[\s\S]*display:\s*none !important/,
+  );
+});
+
+test("R2 introduces no productive side effects", () => {
   assert.equal(/\bfetch\s*\(/.test(source), false);
   assert.equal(/\bsupabase\b/i.test(source), false);
   assert.equal(/\blocalStorage\b/.test(source), false);
   assert.equal(/\bsessionStorage\b/.test(source), false);
 });
 
-test("fail-closed public configuration remains visible", () => {
-  assert.match(
-    css,
-    /data-forge-public-config-state="067g17a1"/,
-  );
-  assert.doesNotMatch(
-    css,
-    /data-forge-public-config-state="067g17a1"[\s\S]{0,400}display:\s*none/,
-  );
-});
-
-test("manifest records owner rejection and correction", () => {
+test("manifest locks structural projection boundaries", () => {
   assert.equal(
-    manifest.status,
-    "corrected_pending_owner_visual_acceptance",
+    manifest.schema,
+    "forge.ui.material3.productive-home-surface.v2",
   );
   assert.equal(
-    manifest.ownerVisualReview.candidateAccepted,
+    manifest.projection.cloneNodes,
     false,
   );
   assert.equal(
-    manifest.surface.existingMarkupPreserved,
+    manifest.projection.replaceMarkup,
+    false,
+  );
+  assert.equal(
+    manifest.projection.legacyTreeVisibleOnHome,
+    false,
+  );
+  assert.equal(
+    manifest.projection.restoreLegacyTreeOutsideHome,
     true,
   );
   assert.equal(
-    manifest.contracts.duplicateHeaderAllowed,
-    false,
-  );
-  assert.equal(
-    manifest.contracts.duplicateNavigationAllowed,
+    manifest.contracts.duplicateInterfaceAllowed,
     false,
   );
 });

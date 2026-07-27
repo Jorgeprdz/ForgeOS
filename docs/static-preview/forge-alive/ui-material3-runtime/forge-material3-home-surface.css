@@ -1,89 +1,82 @@
 /*
- * UI-M03 R1 — full productive Home reconciliation.
- * Existing productive nodes and handlers remain authoritative.
+ * UI-M03 R2 — structural productive Home projection.
+ * Only projected productive nodes are visible in Material 3 Home.
  */
 
-/* Compact the fail-closed notice without hiding its meaning. */
 html[data-forge-ui-runtime="material3"]
   [data-forge-public-config-state="067g17a1"] {
   box-sizing: border-box !important;
-  width: calc(100% - 20px) !important;
-  max-width: 980px !important;
-  margin: 8px auto 0 !important;
+  width: min(calc(100% - 20px), 980px) !important;
+  margin: 8px auto !important;
   padding: 8px 14px !important;
   border: 1px solid rgb(255 201 95 / 28%) !important;
   border-radius: 14px !important;
-  background: rgb(11 22 39 / 94%) !important;
+  background: rgb(11 22 39 / 95%) !important;
   color: #d7deec !important;
   font-size: 11px !important;
-  line-height: 1.35 !important;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 18%) !important;
+  line-height: 1.3 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
 }
 
-/* The real product surface must fill the shell instead of behaving
- * like the old phone preview canvas. */
 html[data-forge-ui-runtime="material3"]
-  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
-  [data-forge-m3-home-surface="true"] {
+  [data-forge-m3-legacy-tree-hidden] {
+  display: none !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-home-stage {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-home-stage[hidden] {
+  display: none !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  :is(
+    .forge-mobile-context-nav-057d,
+    [data-command-orb-layer],
+    .command-orb-layer
+  ) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  [data-forge-m3-projected-node="true"] {
   box-sizing: border-box !important;
-  width: 100% !important;
   max-width: none !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  overflow-x: hidden !important;
 }
 
-/* Shared Material 3 surfaces. */
-html[data-forge-ui-runtime="material3"]
-  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
-  [data-forge-m3-home-role] {
-  box-sizing: border-box !important;
-  border-color: rgb(147 178 226 / 22%) !important;
-  background:
-    radial-gradient(
-      circle at 88% 4%,
-      rgb(82 230 223 / 7%),
-      transparent 34%
-    ),
-    linear-gradient(
-      145deg,
-      rgb(17 29 48 / 96%),
-      rgb(6 15 28 / 97%)
-    )
-    !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 6%),
-    0 18px 46px rgb(0 0 0 / 19%)
-    !important;
-}
-
-html[data-forge-ui-runtime="material3"]
-  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
-  [data-forge-m3-home-role]
-  :is(h1, h2, h3, strong) {
-  color: #f4f7ff !important;
-}
-
-html[data-forge-ui-runtime="material3"]
-  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
-  [data-forge-m3-home-role]
-  :is(p, small, li, span) {
-  text-wrap: pretty;
-}
-
-/* MOBILE + TABLET PORTRAIT
- * One shell header, one productive mobile surface, one canonical
- * product navigation, and the new Alfred launcher. */
+/* TOUCH HOME */
 @media (max-width: 899px) {
   html[data-forge-ui-runtime="material3"]
     .forge-m3-shell__content {
-    padding-bottom:
-      calc(112px + env(safe-area-inset-bottom, 0px)) !important;
     overflow: visible !important;
+    padding-bottom:
+      calc(112px + env(safe-area-inset-bottom, 0px))
+      !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-home-stage[
+      data-forge-m3-home-mode="touch"
+    ] {
+    display: grid;
+    gap: 16px;
+    width: min(100%, 760px);
+    margin-inline: auto;
+    padding:
+      16px
+      16px
+      calc(126px + env(safe-area-inset-bottom, 0px));
   }
 
   html[data-forge-ui-runtime="material3"]
@@ -93,7 +86,10 @@ html[data-forge-ui-runtime="material3"]
     left: auto !important;
     right: 10px !important;
     bottom:
-      max(86px, calc(env(safe-area-inset-bottom, 0px) + 82px))
+      max(
+        84px,
+        calc(env(safe-area-inset-bottom, 0px) + 80px)
+      )
       !important;
     transform: none !important;
   }
@@ -110,138 +106,132 @@ html[data-forge-ui-runtime="material3"]
   }
 
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"] {
-    padding:
-      12px
-      14px
-      calc(122px + env(safe-area-inset-bottom, 0px))
-      !important;
-  }
-
-  /* Desktop duplicates never participate in touch layouts. */
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
+    .forge-m3-home-stage
     > :is(
-      .forge-desktop-workspace-056y,
-      .alfred-desktop-app-056g7,
-      .desktop-menu-toggle,
-      .desktop-nav-drawer,
-      .desktop-context-toggle,
-      .desktop-context-rail
+      .assistant-card,
+      .primary-card,
+      .forge-smart-widget-static-056u,
+      .grid,
+      .panel
     ) {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-
-  /* Shell header replaces the old greeting header. */
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
-    > .hero {
-    display: none !important;
-  }
-
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
-    > .safety-ribbon {
-    width: fit-content !important;
-    max-width: 100% !important;
-    min-height: 0 !important;
-    margin: 2px 0 14px !important;
-    padding: 7px 12px !important;
-    border: 1px solid rgb(255 201 95 / 24%) !important;
-    border-radius: 999px !important;
-    background: rgb(255 201 95 / 6%) !important;
-    color: #d8c58f !important;
-    font-size: 10px !important;
-    letter-spacing: .1em !important;
-  }
-
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
-    > :is(.assistant-card, .primary-card) {
     width: 100% !important;
-    margin: 0 0 14px !important;
-    padding: 20px !important;
+    margin: 0 !important;
     border: 1px solid rgb(147 178 226 / 22%) !important;
-    border-radius: 24px !important;
-  }
-
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
-    > .assistant-card {
-    min-height: 0 !important;
-    display: grid !important;
-    grid-template-columns: 48px minmax(0, 1fr) !important;
-    gap: 14px !important;
+    border-radius: 26px !important;
     background:
       radial-gradient(
-        circle at 90% 5%,
-        rgb(82 230 223 / 16%),
-        transparent 38%
+        circle at 88% 4%,
+        rgb(82 230 223 / 8%),
+        transparent 34%
       ),
       linear-gradient(
         145deg,
-        rgb(18 34 55 / 98%),
-        rgb(7 17 31 / 98%)
+        rgb(17 29 48 / 97%),
+        rgb(6 15 28 / 98%)
       )
+      !important;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 6%),
+      0 18px 46px rgb(0 0 0 / 20%)
       !important;
   }
 
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
+    .forge-m3-home-stage
+    > .assistant-card {
+    min-height: 0 !important;
+    display: grid !important;
+    grid-template-columns: 50px minmax(0, 1fr) !important;
+    gap: 14px !important;
+    padding: 22px !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-home-stage
     > .assistant-card
     .assistant-avatar {
-    width: 48px !important;
-    height: 48px !important;
     position: static !important;
-    display: grid !important;
-    place-items: center !important;
-    border-radius: 50% !important;
+    width: 50px !important;
+    height: 50px !important;
   }
 
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
-    > .assistant-card
-    .assistant-card-content {
-    min-width: 0 !important;
-  }
-
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
+    .forge-m3-home-stage
     > .assistant-card
     h2 {
-    margin: 2px 0 8px !important;
-    font-size: clamp(24px, 7vw, 32px) !important;
+    margin: 3px 0 8px !important;
+    font-size: clamp(25px, 7vw, 33px) !important;
     line-height: 1.02 !important;
   }
 
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
+    .forge-m3-home-stage
+    > .primary-card {
+    padding: 22px !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-home-stage
     > .primary-card
     h2 {
-    margin: 8px 0 6px !important;
-    font-size: clamp(25px, 7vw, 34px) !important;
+    margin: 8px 0 7px !important;
+    font-size: clamp(27px, 8vw, 38px) !important;
     line-height: 1 !important;
   }
 
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
+    .forge-m3-home-stage
     .fake-cta {
     width: 100% !important;
-    min-height: 52px !important;
+    min-height: 54px !important;
     margin-top: 16px !important;
-    border: 1px solid rgb(82 230 223 / 25%) !important;
-    border-radius: 18px !important;
-    background: rgb(30 78 105 / 26%) !important;
+    border: 1px solid rgb(82 230 223 / 27%) !important;
+    border-radius: 19px !important;
+    background: rgb(30 78 105 / 28%) !important;
     color: #d8f5ff !important;
     font-size: 16px !important;
   }
 
-  /* The canonical mobile navigation retains Clientes and Más.
-   * It is visually integrated instead of duplicated. */
   html[data-forge-ui-runtime="material3"]
-    .bottom-nav[data-forge-home-navigation-r16c="canonical"] {
+    .forge-m3-home-stage
+    > .forge-smart-widget-static-056u {
+    padding: 22px !important;
+    overflow: hidden !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-home-stage
+    > .grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-home-stage
+    > .grid
+    > .mini-card {
+    min-width: 0 !important;
+    padding: 18px !important;
+    border: 1px solid rgb(147 178 226 / 22%) !important;
+    border-radius: 22px !important;
+    background: rgb(12 25 43 / 96%) !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-home-stage
+    > .panel {
+    padding: 20px !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .bottom-nav[
+      data-forge-home-navigation-r16c="canonical"
+    ] {
     z-index: 270 !important;
     width: min(calc(100% - 104px), 390px) !important;
     height: 72px !important;
@@ -249,55 +239,41 @@ html[data-forge-ui-runtime="material3"]
     left: 10px !important;
     right: auto !important;
     bottom:
-      max(10px, calc(env(safe-area-inset-bottom, 0px) + 4px))
+      max(
+        10px,
+        calc(env(safe-area-inset-bottom, 0px) + 4px)
+      )
       !important;
     margin: 0 !important;
     padding: 6px !important;
     transform: none !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr))
+      !important;
     border: 1px solid rgb(147 178 226 / 30%) !important;
     border-radius: 28px !important;
     background:
       linear-gradient(
         150deg,
-        rgb(37 54 87 / 94%),
-        rgb(10 23 43 / 97%)
+        rgb(37 54 87 / 96%),
+        rgb(10 23 43 / 98%)
       )
       !important;
     box-shadow: 0 18px 50px rgb(0 0 0 / 45%) !important;
   }
 
   html[data-forge-ui-runtime="material3"]
-    .bottom-nav[data-forge-home-navigation-r16c="canonical"]
+    .bottom-nav[
+      data-forge-home-navigation-r16c="canonical"
+    ]
     > button {
     min-height: 58px !important;
     border-radius: 20px !important;
     font-size: 10px !important;
   }
-
-  html[data-forge-ui-runtime="material3"]
-    .bottom-nav[data-forge-home-navigation-r16c="canonical"]
-    > button:is(.active, [aria-current="page"]) {
-    background: rgb(255 255 255 / 8%) !important;
-    color: #ffe09c !important;
-  }
-
-  /* The new Alfred launcher is authoritative on touch layouts. */
-  html[data-forge-ui-runtime="material3"]
-    :is(
-      [data-command-orb-layer],
-      .command-orb-layer
-    ) {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
 }
 
-/* TABLET LANDSCAPE + DESKTOP
- * Keep the full productive sidebar because it contains the complete
- * route set. Remove the shell rail reservation and let the workspace
- * consume the entire remaining width. */
+/* WORKSPACE HOME */
 @media (min-width: 900px) {
   html[data-forge-ui-runtime="material3"]
     .forge-m3-shell__header {
@@ -312,6 +288,7 @@ html[data-forge-ui-runtime="material3"]
     max-width: 100% !important;
     height: calc(100vh - 78px) !important;
     margin-left: 0 !important;
+    padding: 0 !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
   }
@@ -322,15 +299,15 @@ html[data-forge-ui-runtime="material3"]
   }
 
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"] {
-    height: auto !important;
-    min-height: 100% !important;
-    padding: 0 !important;
-    overflow: visible !important;
+    .forge-m3-home-stage[
+      data-forge-m3-home-mode="workspace"
+    ] {
+    min-height: 100%;
+    display: block;
   }
 
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
+    .forge-m3-home-stage
     > .forge-desktop-workspace-056y {
     box-sizing: border-box !important;
     width: 100% !important;
@@ -339,11 +316,10 @@ html[data-forge-ui-runtime="material3"]
     height: auto !important;
     display: grid !important;
     grid-template-columns:
-      clamp(210px, 18vw, 250px)
+      clamp(240px, 19vw, 292px)
       minmax(0, 1fr)
       !important;
     grid-template-rows: minmax(0, 1fr) !important;
-    align-items: stretch !important;
     margin: 0 !important;
     overflow: visible !important;
   }
@@ -352,23 +328,63 @@ html[data-forge-ui-runtime="material3"]
     .forge-desktop-workspace-056y
     > .dw-sidebar-056y {
     grid-column: 1 !important;
-    display: flex !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
+    grid-row: 1 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
     min-width: 0 !important;
-    width: auto !important;
-    height: auto !important;
+    min-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
     position: sticky !important;
     top: 0 !important;
-    align-self: start !important;
+    padding: 22px 16px !important;
+    overflow: hidden !important;
     border-right: 1px solid rgb(147 178 226 / 18%) !important;
     background:
       linear-gradient(
         180deg,
-        rgb(16 31 53 / 96%),
-        rgb(7 16 30 / 97%)
+        rgb(16 31 53 / 98%),
+        rgb(7 16 30 / 99%)
       )
       !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .dw-sidebar-056y
+    > :is(
+      .dw-brand-056y,
+      .dw-sidebar-profile-056y
+    ) {
+    display: none !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .dw-sidebar-056y
+    .dw-nav-056y {
+    width: 100% !important;
+    display: grid !important;
+    gap: 8px !important;
+    margin: 0 !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .dw-sidebar-056y
+    .dw-nav-056y
+    > :is(button, a) {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 52px !important;
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 12px !important;
+    overflow: hidden !important;
+    border-radius: 17px !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
   }
 
   html[data-forge-ui-runtime="material3"]
@@ -380,16 +396,18 @@ html[data-forge-ui-runtime="material3"]
     width: 100% !important;
     max-width: none !important;
     min-width: 0 !important;
-    height: auto !important;
     min-height: 100% !important;
-    padding: clamp(18px, 2.5vw, 34px) !important;
+    height: auto !important;
+    padding: clamp(22px, 2.6vw, 40px) !important;
     overflow: visible !important;
   }
 
-  /* Shell header is now the only global top header. */
   html[data-forge-ui-runtime="material3"]
     .dw-main-056y
-    > :is(.dw-topbar-056y, .dw-heading-056y) {
+    > :is(
+      .dw-topbar-056y,
+      .dw-heading-056y
+    ) {
     display: none !important;
   }
 
@@ -401,6 +419,7 @@ html[data-forge-ui-runtime="material3"]
       .dw-kpi-strip-056y,
       .dw-grid-056y
     ) {
+    box-sizing: border-box !important;
     width: 100% !important;
     max-width: none !important;
     min-width: 0 !important;
@@ -419,7 +438,7 @@ html[data-forge-ui-runtime="material3"]
     .dw-grid-056y {
     grid-template-columns:
       minmax(0, 1.45fr)
-      minmax(260px, .75fr)
+      minmax(270px, .75fr)
       !important;
   }
 
@@ -436,41 +455,20 @@ html[data-forge-ui-runtime="material3"]
     background:
       linear-gradient(
         145deg,
-        rgb(17 29 48 / 96%),
-        rgb(6 15 28 / 97%)
+        rgb(17 29 48 / 97%),
+        rgb(6 15 28 / 98%)
       )
       !important;
-  }
-
-  /* Every other historical product layout is inactive here. */
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
-    > :is(
-      .alfred-desktop-app-056g7,
-      .desktop-menu-toggle,
-      .desktop-nav-drawer,
-      .desktop-context-toggle,
-      .desktop-context-rail,
-      .safety-ribbon,
-      .hero,
-      .assistant-card,
-      .primary-card,
-      .forge-smart-widget-static-056u,
-      .bottom-nav,
-      [data-command-orb-layer],
-      .command-orb-layer
-    ) {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
   }
 }
 
 @media (min-width: 900px) and (max-width: 1120px) {
   html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-surface="true"]
+    .forge-m3-home-stage
     > .forge-desktop-workspace-056y {
-    grid-template-columns: 200px minmax(0, 1fr) !important;
+    grid-template-columns:
+      228px minmax(0, 1fr)
+      !important;
   }
 
   html[data-forge-ui-runtime="material3"]
@@ -489,8 +487,7 @@ html[data-forge-ui-runtime="material3"]
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-forge-ui-runtime="material3"]
-    [data-forge-m3-home-role] {
-    transition: none !important;
+  html[data-forge-ui-runtime="material3"] * {
+    scroll-behavior: auto !important;
   }
 }
