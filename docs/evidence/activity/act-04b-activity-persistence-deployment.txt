@@ -1,0 +1,111 @@
+ACT-04B REMOTE PERSISTENCE DEPLOYMENT
+HARDENING_COMMIT=ae11a94ae89a59249eac193ae1e77c30ee9174bc
+HISTORY_SYNC_COMMIT=c91df9e081034a412321db9937adc56aac5bb5a3
+MIGRATION_HISTORY_SYNC=COMMITTED_AND_PUBLISHED
+FES_SOURCE_COMMIT=bd00daffc779082ea548c74f2392dac72d5b8c8c
+FES_MIGRATION_SOURCE_POLICY=LOCAL_COMMITTED_HEAD_READ_ONLY
+PROJECT_REF=rmlxigxysujsuwzgoimv
+MIGRATION_VERSION=20260726000200
+MIGRATION_SHA256=304d3d292ba0f984bf02bf788452d8b499c7136b8c4a63aa79c1ee8b558853cf
+REMOTE_DEPLOYMENT_MODE=ALREADY_APPLIED_RECOVERY
+REMOTE_ACCEPTANCE_SOURCE=EXISTING_ROLLBACK_ACCEPTANCE
+
+MIGRATION_HISTORY_BEFORE
+Initialising login role...
+Connecting to remote database...
+
+
+   Local            | Remote           | Time (UTC)
+  ------------------|------------------|-----------------------
+   `20260619000100` | `20260619000100` | `2026-06-19 00:01:00`
+   `20260619000200` | `20260619000200` | `2026-06-19 00:02:00`
+   `20260717000100` | `20260717000100` | `2026-07-17 00:01:00`
+   `20260718000100` | `20260718000100` | `2026-07-18 00:01:00`
+   `20260718000200` | `20260718000200` | `2026-07-18 00:02:00`
+   `20260718000300` | `20260718000300` | `2026-07-18 00:03:00`
+   ` `              | `20260724000100` | `2026-07-24 00:01:00`
+   ` `              | `20260725000100` | `2026-07-25 00:01:00`
+   ` `              | `20260726000100` | `2026-07-26 00:01:00`
+   `20260726000200` | ` `              | `2026-07-26 00:02:00`
+
+
+MIGRATION_DRY_RUN
+Initialising login role...
+DRY RUN: migrations will *not* be pushed to the database.
+Connecting to remote database...
+Would push these migrations:
+ • 20260726000200_act04_activity_records.sql
+Finished supabase db push.
+
+MIGRATION_PUSH
+Initialising login role...
+Connecting to remote database...
+Do you want to push these migrations to the remote database?
+ • 20260726000200_act04_activity_records.sql
+
+ [Y/n] y
+Applying migration 20260726000200_act04_activity_records.sql...
+NOTICE (42710): extension "pgcrypto" already exists, skipping
+NOTICE (00000): trigger "forge_activity_records_append_only_guard" for relation "public.activity_records" does not exist, skipping
+NOTICE (00000): policy "activity_records_select_own" for relation "public.activity_records" does not exist, skipping
+NOTICE (00000): policy "activity_records_insert_own" for relation "public.activity_records" does not exist, skipping
+Finished supabase db push.
+
+MIGRATION_HISTORY_AFTER
+Initialising login role...
+Connecting to remote database...
+
+
+   Local            | Remote           | Time (UTC)
+  ------------------|------------------|-----------------------
+   `20260619000100` | `20260619000100` | `2026-06-19 00:01:00`
+   `20260619000200` | `20260619000200` | `2026-06-19 00:02:00`
+   `20260717000100` | `20260717000100` | `2026-07-17 00:01:00`
+   `20260718000100` | `20260718000100` | `2026-07-18 00:01:00`
+   `20260718000200` | `20260718000200` | `2026-07-18 00:02:00`
+   `20260718000300` | `20260718000300` | `2026-07-18 00:03:00`
+   `20260724000100` | `20260724000100` | `2026-07-24 00:01:00`
+   `20260725000100` | `20260725000100` | `2026-07-25 00:01:00`
+   `20260726000100` | `20260726000100` | `2026-07-26 00:01:00`
+   `20260726000200` | `20260726000200` | `2026-07-26 00:02:00`
+
+
+MIGRATION_HISTORY_FINAL
+Initialising login role...
+Connecting to remote database...
+
+
+   Local            | Remote           | Time (UTC)
+  ------------------|------------------|-----------------------
+   `20260619000100` | `20260619000100` | `2026-06-19 00:01:00`
+   `20260619000200` | `20260619000200` | `2026-06-19 00:02:00`
+   `20260717000100` | `20260717000100` | `2026-07-17 00:01:00`
+   `20260718000100` | `20260718000100` | `2026-07-18 00:01:00`
+   `20260718000200` | `20260718000200` | `2026-07-18 00:02:00`
+   `20260718000300` | `20260718000300` | `2026-07-18 00:03:00`
+   `20260724000100` | `20260724000100` | `2026-07-24 00:01:00`
+   `20260725000100` | `20260725000100` | `2026-07-25 00:01:00`
+   `20260726000100` | `20260726000100` | `2026-07-26 00:01:00`
+   `20260726000200` | `20260726000200` | `2026-07-26 00:02:00`
+
+
+REMOTE_ACCEPTANCE
+Initialising login role...
+[31munexpected status 400: {"message":"Failed to run sql query: ERROR:  P0001: ACT04B_REMOTE_ACCEPTANCE_PASS\nCONTEXT:  PL/pgSQL function inline_code_block line 410 at RAISE\n"}[39m
+Try rerunning the command with --debug to troubleshoot the error.
+
+REMOTE_VERIFY_PREVIOUS
+Initialising login role...
+┌───────────────────────────┐
+│ result                    │
+├───────────────────────────┤
+│ ACT04B_REMOTE_VERIFY_PASS │
+└───────────────────────────┘
+
+REMOTE_VERIFY_FINAL
+Initialising login role...
+┌───────────────────────────┐
+│ result                    │
+├───────────────────────────┤
+│ ACT04B_REMOTE_VERIFY_PASS │
+└───────────────────────────┘

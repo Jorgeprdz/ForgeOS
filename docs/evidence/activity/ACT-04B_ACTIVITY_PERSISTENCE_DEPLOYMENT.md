@@ -1,0 +1,36 @@
+# ACT-04B — Activity Persistence Deployment Evidence
+
+```text
+STATUS=REMOTE_DEPLOYED_ACCEPTED_ZERO_RESIDUE
+HARDENING_COMMIT=ae11a94ae89a59249eac193ae1e77c30ee9174bc
+HISTORY_SYNC_COMMIT=c91df9e081034a412321db9937adc56aac5bb5a3
+MIGRATION_HISTORY_SYNC=COMMITTED_AND_PUBLISHED
+FES_SOURCE_COMMIT=bd00daffc779082ea548c74f2392dac72d5b8c8c
+FES_MIGRATION_SOURCE_POLICY=LOCAL_COMMITTED_HEAD_READ_ONLY
+SUPABASE_PROJECT_REF=rmlxigxysujsuwzgoimv
+MIGRATION_VERSION=20260726000200
+MIGRATION_SHA256=304d3d292ba0f984bf02bf788452d8b499c7136b8c4a63aa79c1ee8b558853cf
+REMOTE_DEPLOYMENT_MODE=ALREADY_APPLIED_RECOVERY
+REMOTE_ACCEPTANCE_SOURCE=EXISTING_ROLLBACK_ACCEPTANCE
+REMOTE_MIGRATION_HISTORY=PASS
+REMOTE_RLS_ACCEPTANCE=PASS
+REMOTE_RPC_ACCEPTANCE=PASS
+REMOTE_DIRECT_TABLE_DENIAL=PASS
+REMOTE_APPEND_ONLY_ACCEPTANCE=PASS
+REMOTE_TENANT_ISOLATION=PASS
+REMOTE_IDEMPOTENCY=PASS
+REMOTE_JSON_NULL_QUERY_ACCEPTANCE=PASS
+REMOTE_TEMPORARY_DATA_RESIDUE=ZERO
+FES_MUTATION=NO
+MUI_MUTATION=NO
+MAIN_MUTATION=NO
+```
+
+The Activity persistence migration is present in the linked remote project.
+The transactional acceptance proves deterministic truth-key enforcement,
+idempotent replay, advisor isolation, governed reads, canonical JSON-null query
+handling, RPC-only authority and append-only protection.
+
+The acceptance transaction rolled back its temporary identities and Activity
+record. A fresh independent verification confirmed zero residue. Raw Supabase
+CLI output is preserved in normalized form without trailing whitespace.
