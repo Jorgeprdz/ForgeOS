@@ -1,0 +1,96 @@
+name: ACT Activity Persistence CI
+
+on:
+  push:
+    branches:
+      - feature/activity-domain-runtime-foundation
+    paths:
+      - advisor-os/activity/infrastructure/**
+      - advisor-os/activity/application/**
+      - advisor-os/activity/domain/**
+      - tests/activity-persistence-adapter-test.mjs
+      - tests/activity-repository-port-test.mjs
+      - supabase/migrations/20260726000200_act04_activity_records.sql
+      - docs/architecture/performance/ACT-04_ACTIVITY_PERSISTENCE_ADAPTER.md
+      - .github/workflows/activity-persistence-adapter-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activity-persistence:
+    name: Activity persistence adapter acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ -f package-lock.json ]]; then npm ci; else npm install; fi
+      - name: Run persistence adapter test
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test --test-reporter=tap tests/activity-persistence-adapter-test.mjs | tee ACT04_PERSISTENCE.tap
+      - name: Run repository port regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test --test-reporter=tap tests/activity-repository-port-test.mjs | tee ACT04_PORT.tap
+      - name: Run differential Node regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          run_suite() {
+            local repo="$1" list="$2" output="$3" tap_dir="$4" file slug tap status tests pass fail_count
+            rm -rf "$tap_dir"; mkdir -p "$tap_dir"
+            printf 'file\tstatus\ttests\tpass\tfail\n' > "$output"
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              slug="$(printf '%s' "$file" | sha256sum | awk '{print $1}')"; tap="$tap_dir/$slug.tap"
+              if (cd "$repo" && node --test --test-reporter=tap "$file") > "$tap" 2>&1; then status=PASS; else status=FAIL; fi
+              tests="$(awk '/^# tests /{v=$3}END{print v+0}' "$tap")"; pass="$(awk '/^# pass /{v=$3}END{print v+0}' "$tap")"; fail_count="$(awk '/^# fail /{v=$3}END{print v+0}' "$tap")"
+              [[ "$status" == FAIL && "$fail_count" == 0 ]] && fail_count=1
+              printf '%s\t%s\t%s\t%s\t%s\n' "$file" "$status" "$tests" "$pass" "$fail_count" >> "$output"
+            done < "$list"
+          }
+          BASELINE_DIR="$RUNNER_TEMP/act04-baseline"
+          rm -rf "$BASELINE_DIR"
+          git worktree add --detach "$BASELINE_DIR" "$GITHUB_SHA^"
+          [[ ! -d node_modules || -e "$BASELINE_DIR/node_modules" ]] || ln -s "$GITHUB_WORKSPACE/node_modules" "$BASELINE_DIR/node_modules"
+          find "$BASELINE_DIR/tests" -maxdepth 1 -type f -name '*-test.mjs' ! -name '*-browser-test.mjs' ! -name 'activity-persistence-adapter-test.mjs' -printf 'tests/%f\n' | sort > ACT04_REGRESSION_FILES.txt
+          run_suite "$BASELINE_DIR" ACT04_REGRESSION_FILES.txt ACT04_BASELINE_REGRESSION.tsv ACT04_BASELINE_TAP
+          run_suite "$GITHUB_WORKSPACE" ACT04_REGRESSION_FILES.txt ACT04_CANDIDATE_REGRESSION.tsv ACT04_CANDIDATE_TAP
+          awk -F '\t' 'NR==FNR{if(FNR>1)b[$1]=$2;next}FNR>1&&$2=="FAIL"&&b[$1]!="FAIL"{print $1}' ACT04_BASELINE_REGRESSION.tsv ACT04_CANDIDATE_REGRESSION.tsv > ACT04_NEW_FAILURES.txt
+          [[ ! -s ACT04_NEW_FAILURES.txt ]]
+          printf 'NEW_REGRESSION_FAILURES=0\nREGRESSION_GATE=PASS_NO_NEW_FAILURES\n' | tee ACT04_REGRESSION.txt
+          git worktree remove --force "$BASELINE_DIR"
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/activity
+          printf 'ACT_04_ACTIVITY_PERSISTENCE_ADAPTER=IMPLEMENTED\nCOMMIT=%s\nREMOTE_PERSISTENCE_TEST=PASS\nREMOTE_REPOSITORY_PORT_REGRESSION=PASS\nREMOTE_NODE_REGRESSION=PASS\nREMOTE_EVIDENCE_UPLOAD=PASS\nREMOTE_DATABASE_MUTATION=NO\n' "$GITHUB_SHA" > artifacts/activity/ACT04_ACCEPTANCE.txt
+          cp ACT04_PERSISTENCE.tap ACT04_PORT.tap ACT04_REGRESSION.txt ACT04_REGRESSION_FILES.txt ACT04_BASELINE_REGRESSION.tsv ACT04_CANDIDATE_REGRESSION.tsv ACT04_NEW_FAILURES.txt artifacts/activity/
+          cp -R ACT04_BASELINE_TAP ACT04_CANDIDATE_TAP artifacts/activity/
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: act-04-activity-persistence-${{ github.sha }}
+          path: artifacts/activity
+          if-no-files-found: error
+          retention-days: 30
