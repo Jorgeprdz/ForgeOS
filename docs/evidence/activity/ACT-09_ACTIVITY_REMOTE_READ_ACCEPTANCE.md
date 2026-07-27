@@ -1,0 +1,43 @@
+# ACT-09 — Activity Remote Read Acceptance Evidence
+
+```text
+STATUS=REMOTE_ACCEPTED
+SOURCE_COMMIT=7703d88dd7dc0933b04f53df4b9b429cf70c9821
+SUPABASE_PROJECT_REF=rmlxigxysujsuwzgoimv
+SUPABASE_CLI_VERSION=2.109.1
+MIGRATION_VERSION=20260726000200
+REMOTE_MIGRATION_HISTORY=PASS
+API_KEY_SOURCE=SUPABASE_CLI
+RUNTIME_SCHEMA=activity-read-runtime.v1
+REMOTE_AUTH_MODE=PASSWORD_JWT
+REMOTE_AUTH_USER_CREATE=PASS
+REMOTE_PASSWORD_SESSION=PASS
+REMOTE_RUNTIME_FEED=PASS
+REMOTE_RUNTIME_AGGREGATION=PASS
+REMOTE_ANON_DENIAL=PASS
+REMOTE_AUTHORITY_OVERRIDE_BLOCKED=PASS
+REMOTE_AUTHENTICATED_RPC_CALLS=2
+REMOTE_APPEND_RPC_CALLS=0
+REMOTE_TEMP_ACTIVITY_ROWS=0
+REMOTE_TEMP_AUTH_RESIDUE=ZERO
+REMOTE_SCHEMA_MUTATION=NO
+PRODUCTIVE_UI_MUTATION=NO
+MUI_TOKEN_AUTHORITY=NO
+FES_MUTATION=NO
+MUI_MUTATION=NO
+MAIN_MUTATION=NO
+```
+
+A temporary confirmed Supabase user obtained a real password JWT and exercised
+the deployed Activity read runtime through ACT09_AUTH_ADMIN_CLEANUP_PASS
+ACT09_AUTH_MATCHED_BEFORE=0
+ACT09_AUTH_HARD_DELETED=0
+ACT09_AUTH_MATCHED_AFTER=0
+✓ Auth Admin cleanup verificado.
+
+The authority-bound runtime returned valid empty feed and period projections,
+blocked organization and advisor overrides before RPC, and made no append call.
+Anonymous access was denied.
+
+No Activity row was inserted. The temporary auth user and identity were removed
+and verified absent.
