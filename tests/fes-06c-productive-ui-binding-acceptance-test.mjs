@@ -45,6 +45,13 @@ const view =
     "utf8",
   );
 
+const bindingSource =
+  readFileSync(
+    "advisor-os/event-evidence/" +
+    "productive-ui-projection-binding.js",
+    "utf8",
+  );
+
 test("FES 06C package command exists", () => {
   assert.equal(
     packageJson.scripts[
@@ -212,6 +219,24 @@ test("FES 06C browser test checks idempotent replay", () => {
   assert.match(
     spec,
     /ready replay is idempotent/,
+  );
+});
+
+test("FES 06C detail observer uses an idempotent render key", () => {
+  assert.match(
+    bindingSource,
+    /fes06bRenderKey/,
+  );
+  assert.match(
+    bindingSource,
+    /host\.dataset\s*\.fes06bRenderKey\s*===\s*renderKey/,
+  );
+});
+
+test("FES 06C detail observer stores the render key before mutation", () => {
+  assert.match(
+    bindingSource,
+    /host\.dataset\s*\.fes06bRenderKey\s*=\s*renderKey;\s*host\.innerHTML/s,
   );
 });
 

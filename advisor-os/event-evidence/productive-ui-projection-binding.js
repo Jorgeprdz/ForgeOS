@@ -1174,10 +1174,31 @@
               article.append(host);
             }
 
+            const prospectId =
+              detailProspectId(dialog);
+            const renderKey = [
+              model.state,
+              model.snapshot_digest ||
+                "NO_DIGEST",
+              prospectId ||
+                "NO_PROSPECT",
+            ].join(":");
+
+            if (
+              host.dataset
+                .fes06bRenderKey ===
+              renderKey
+            ) {
+              return;
+            }
+
+            host.dataset
+              .fes06bRenderKey =
+              renderKey;
             host.innerHTML =
               renderProspectDetailMarkup(
                 model,
-                detailProspectId(dialog),
+                prospectId,
               );
           });
       }
