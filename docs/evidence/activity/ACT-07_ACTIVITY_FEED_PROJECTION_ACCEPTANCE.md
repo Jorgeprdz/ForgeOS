@@ -1,0 +1,36 @@
+# ACT-07 — Activity Feed Projection Acceptance
+
+```text
+STATUS=ACCEPTED
+IMPLEMENTATION_COMMIT=ba459bd3a6e772fd4a10427a65015a18a5c8f5f4
+FEED_SCHEMA=activity-feed.v1
+FEED_ITEM_SCHEMA=activity-feed-item.v1
+LOCAL_FEED_TESTS=34
+LOCAL_FEED_PASS=34
+LOCAL_ACTIVITY_RECORD_PASS=32
+LOCAL_PORT_PASS=32
+LOCAL_PERSISTENCE_PASS=30
+LOCAL_REGRESSION_NEW_FAILURES=0
+REMOTE_CI_RUN_ID=30298212561
+REMOTE_CI_URL=https://github.com/Jorgeprdz/ForgeOS/actions/runs/30298212561
+REMOTE_CI_CONCLUSION=success
+REMOTE_FEED_TEST=PASS
+REMOTE_ACTIVITY_RECORD_REGRESSION=PASS
+REMOTE_REPOSITORY_PORT_REGRESSION=PASS
+REMOTE_PERSISTENCE_REGRESSION=PASS
+REMOTE_NODE_REGRESSION=PASS
+REMOTE_EVIDENCE_UPLOAD=PASS
+REMOTE_ARTIFACT_NAME=act-07-activity-feed-ba459bd3a6e772fd4a10427a65015a18a5c8f5f4
+PRODUCTIVE_UI_MUTATION=NO
+MUI_TOKEN_AUTHORITY=NO
+POINT_AUTHORITY=PERFORMANCE_ONLY
+PIPELINE_WRITER_MUTATION=NO
+REMOTE_DATABASE_MUTATION=NO
+FES_MUTATION=NO
+MUI_MUTATION=NO
+MAIN_MUTATION=NO
+```
+
+ACT-07 proves an immutable, filtered and cursor-paginated Activity feed read model over the complete advisor snapshot as of a governed instant.
+
+Correction and reversal controls remain visible and also determine the effective state of their target. Raw metadata, scoring authority and visual implementation details are not projected.
