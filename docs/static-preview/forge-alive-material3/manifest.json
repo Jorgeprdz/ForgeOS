@@ -1,0 +1,25 @@
+{
+  "schema": "forge.ui.material3.clean-home.v1",
+  "phase": "UI_M03_CLEAN_HOME_REWRITE",
+  "status": "implemented_pending_playwright_visual_acceptance",
+  "entrypoint": "docs/static-preview/forge-alive-material3/index.html",
+  "legacy": {
+    "entrypoint": "docs/static-preview/forge-alive/index.html",
+    "status": "frozen_functional_reference",
+    "assetsLoadedByCleanEntrypoint": false
+  },
+  "responsive": {
+    "mobile": "390x844",
+    "tablet": "1280x800",
+    "desktop": "1440x960"
+  },
+  "contracts": {
+    "cleanDom": true,
+    "singleHeader": true,
+    "singlePrimaryNavigation": true,
+    "singleAlfredLauncher": true,
+    "businessLogicConnected": false,
+    "backendConnected": false,
+    "humanVisualAcceptanceRequired": true
+  }
+}

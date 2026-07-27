@@ -1,0 +1,66 @@
+name: UI-M03 Clean Rewrite Playwright
+
+on:
+  push:
+    branches:
+      - feature/ui-material3-runtime-migration
+    paths:
+      - "docs/static-preview/forge-alive-material3/**"
+      - "docs/architecture/source-truth/UI_M03_*"
+      - "docs/evidence/UI_M03_CLEAN_HOME_*"
+      - "docs/evidence/ui-m03-clean-home-*"
+      - "tests/ui-m03-clean-home-rewrite-test.mjs"
+      - "tests/e2e/ui-m03-clean-home-rewrite.spec.mjs"
+      - "scripts/serve-ui-m03-clean-home.mjs"
+      - "playwright.ui-m03-clean.config.mjs"
+      - ".github/workflows/ui-m03-clean-home-rewrite.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install repository dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run clean Home contracts
+        run: |
+          node --test tests/ui-m03-clean-home-rewrite-test.mjs \
+            2>&1 | tee docs/evidence/ui-m03-clean-home-rewrite-actions.tap
+
+      - name: Capture mobile tablet desktop
+        run: |
+          npx playwright test \
+            --config=playwright.ui-m03-clean.config.mjs
+
+      - name: Verify screenshots
+        run: |
+          test -f artifacts/ui-m03-clean/screenshots/mobile-390x844-home.png
+          test -f artifacts/ui-m03-clean/screenshots/tablet-1280x800-home.png
+          test -f artifacts/ui-m03-clean/screenshots/desktop-1440x960-home.png
+          test "$(find artifacts/ui-m03-clean/screenshots -type f -name '*.png' | wc -l)" -eq 3
+
+      - name: Upload visual review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-m03-clean-home-${{ github.sha }}
+          path: artifacts/ui-m03-clean
+          if-no-files-found: error
+          retention-days: 14

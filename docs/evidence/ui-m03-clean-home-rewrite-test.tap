@@ -1,0 +1,13 @@
+✔ clean entrypoint loads only clean assets (8.66707ms)
+✔ clean Home has one structural shell (0.962227ms)
+✔ responsive contracts cover three viewports (1.157539ms)
+✔ visual-only runtime has no productive effects (1.043008ms)
+✔ manifest freezes legacy and isolates clean root (0.454062ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 706.515391
