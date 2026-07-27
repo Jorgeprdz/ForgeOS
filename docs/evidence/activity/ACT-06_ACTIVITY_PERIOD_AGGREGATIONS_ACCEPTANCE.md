@@ -1,0 +1,38 @@
+# ACT-06 — Activity Period Aggregations Acceptance
+
+```text
+STATUS=ACCEPTED
+IMPLEMENTATION_COMMIT=788c51ace7c4ecaaef4c7420ea3d06f021d37cbd
+AGGREGATION_SCHEMA=activity-period-aggregation.v1
+LOCAL_AGGREGATION_TESTS=33
+LOCAL_AGGREGATION_PASS=33
+LOCAL_ACTIVITY_RECORD_PASS=32
+LOCAL_PORT_PASS=32
+LOCAL_PERSISTENCE_PASS=30
+LOCAL_REGRESSION_NEW_FAILURES=0
+REMOTE_CI_RUN_ID=30294960631
+REMOTE_CI_URL=https://github.com/Jorgeprdz/ForgeOS/actions/runs/30294960631
+REMOTE_CI_CONCLUSION=success
+REMOTE_AGGREGATION_TEST=PASS
+REMOTE_ACTIVITY_RECORD_REGRESSION=PASS
+REMOTE_REPOSITORY_PORT_REGRESSION=PASS
+REMOTE_PERSISTENCE_REGRESSION=PASS
+REMOTE_NODE_REGRESSION=PASS
+REMOTE_EVIDENCE_UPLOAD=PASS
+REMOTE_ARTIFACT_NAME=act-06-activity-period-788c51ace7c4ecaaef4c7420ea3d06f021d37cbd
+POINT_AUTHORITY=PERFORMANCE_ONLY
+WORK_CALENDAR_AUTHORITY=NOT_ASSUMED
+PIPELINE_WRITER_MUTATION=NO
+PIPELINE_UI_MUTATION=NO
+REMOTE_DATABASE_MUTATION=NO
+FES_MUTATION=NO
+MUI_MUTATION=NO
+MAIN_MUTATION=NO
+```
+
+ACT-06 proves an immutable, tenant-scoped and advisor-scoped period aggregation
+over the complete Activity repository snapshot as of a governed instant.
+
+Corrections and reversals suppress eligible target activities. Future-recorded
+controls do not alter an earlier snapshot. Relation targets must be present,
+pagination is bounded and no scoring authority is embedded.

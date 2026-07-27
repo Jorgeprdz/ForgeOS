@@ -1,7 +1,7 @@
 # ACT-06 — Activity Period Aggregations
 
 ```text
-ACT_06_ACTIVITY_PERIOD_AGGREGATIONS=IMPLEMENTED_PENDING_ACCEPTANCE
+ACT_06_ACTIVITY_PERIOD_AGGREGATIONS=IMPLEMENTED_ACCEPTED
 SOURCE_COMMIT=f3d4ec4feb7231b2e7631decfbff13c4d7c71b79
 ACTIVITY_BRANCH=feature/activity-domain-runtime-foundation
 AGGREGATION_SCHEMA=activity-period-aggregation.v1
@@ -93,4 +93,4 @@ does not create a new table, RPC, migration or remote database mutation.
 
 ## Next
 
-`ACT-07_ACTIVITY_FEED_AGGREGATION`
+`ACT-07_ACTIVITY_FEED_PROJECTION`
