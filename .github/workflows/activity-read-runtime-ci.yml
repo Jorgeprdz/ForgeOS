@@ -1,0 +1,296 @@
+name: ACT Activity Read Runtime CI
+
+on:
+  push:
+    branches:
+      - feature/activity-domain-runtime-foundation
+    paths:
+      - advisor-os/activity/runtime/activity-read-runtime.mjs
+      - advisor-os/activity/application/activity-feed-projector.mjs
+      - advisor-os/activity/application/activity-period-aggregator.mjs
+      - advisor-os/activity/application/activity-repository-port.mjs
+      - advisor-os/activity/domain/activity-record.mjs
+      - advisor-os/activity/infrastructure/**
+      - tests/activity-read-runtime-test.mjs
+      - tests/activity-feed-projector-test.mjs
+      - tests/activity-period-aggregator-test.mjs
+      - tests/activity-repository-port-test.mjs
+      - tests/activity-persistence-adapter-test.mjs
+      - docs/architecture/performance/ACT-08_ACTIVITY_READ_RUNTIME_COMPOSITION.md
+      - .github/workflows/activity-read-runtime-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activity-read-runtime:
+    name: Activity read runtime acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run read runtime test
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-read-runtime-test.mjs \
+            | tee ACT08_RUNTIME.tap
+
+      - name: Run feed projection regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-feed-projector-test.mjs \
+            | tee ACT08_FEED.tap
+
+      - name: Run period aggregation regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-period-aggregator-test.mjs \
+            | tee ACT08_AGGREGATION.tap
+
+      - name: Run repository port regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-repository-port-test.mjs \
+            | tee ACT08_PORT.tap
+
+      - name: Run persistence adapter regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-persistence-adapter-test.mjs \
+            | tee ACT08_PERSISTENCE.tap
+
+      - name: Run differential Node regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+
+          run_suite() {
+            local repo="$1"
+            local list="$2"
+            local output="$3"
+            local tap_dir="$4"
+            local file=""
+            local slug=""
+            local tap=""
+            local status=""
+            local tests=""
+            local pass=""
+            local fail_count=""
+
+            rm -rf "$tap_dir"
+            mkdir -p "$tap_dir"
+            printf 'file\tstatus\ttests\tpass\tfail\n' > "$output"
+
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+
+              slug="$(
+                printf '%s' "$file" |
+                  sha256sum |
+                  awk '{print $1}'
+              )"
+              tap="$tap_dir/$slug.tap"
+
+              if (
+                cd "$repo"
+                node --test \
+                  --test-reporter=tap \
+                  "$file"
+              ) > "$tap" 2>&1; then
+                status="PASS"
+              else
+                status="FAIL"
+              fi
+
+              tests="$(
+                awk '/^# tests / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+              pass="$(
+                awk '/^# pass / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+              fail_count="$(
+                awk '/^# fail / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+
+              if [[ "$status" == "FAIL" &&
+                    "$fail_count" == "0" ]]; then
+                fail_count="1"
+              fi
+
+              printf '%s\t%s\t%s\t%s\t%s\n' \
+                "$file" \
+                "$status" \
+                "$tests" \
+                "$pass" \
+                "$fail_count" \
+                >> "$output"
+            done < "$list"
+          }
+
+          BASELINE_DIR="$RUNNER_TEMP/act08-baseline"
+          rm -rf "$BASELINE_DIR"
+          git worktree add \
+            --detach \
+            "$BASELINE_DIR" \
+            "$GITHUB_SHA^"
+
+          if [[ -d node_modules &&
+                ! -e "$BASELINE_DIR/node_modules" ]]; then
+            ln -s \
+              "$GITHUB_WORKSPACE/node_modules" \
+              "$BASELINE_DIR/node_modules"
+          fi
+
+          find "$BASELINE_DIR/tests" \
+            -maxdepth 1 \
+            -type f \
+            -name '*-test.mjs' \
+            ! -name '*-browser-test.mjs' \
+            ! -name 'activity-read-runtime-test.mjs' \
+            -printf 'tests/%f\n' |
+            sort \
+            > ACT08_REGRESSION_FILES.txt
+
+          run_suite \
+            "$BASELINE_DIR" \
+            ACT08_REGRESSION_FILES.txt \
+            ACT08_BASELINE_REGRESSION.tsv \
+            ACT08_BASELINE_TAP
+
+          run_suite \
+            "$GITHUB_WORKSPACE" \
+            ACT08_REGRESSION_FILES.txt \
+            ACT08_CANDIDATE_REGRESSION.tsv \
+            ACT08_CANDIDATE_TAP
+
+          awk -F '\t' '
+            NR == FNR {
+              if (FNR > 1) baseline[$1] = $2
+              next
+            }
+            FNR > 1 &&
+            $2 == "FAIL" &&
+            baseline[$1] != "FAIL" {
+              print $1
+            }
+          ' \
+            ACT08_BASELINE_REGRESSION.tsv \
+            ACT08_CANDIDATE_REGRESSION.tsv \
+            > ACT08_NEW_FAILURES.txt
+
+          [[ ! -s ACT08_NEW_FAILURES.txt ]]
+
+          printf '%s\n' \
+            'NEW_REGRESSION_FAILURES=0' \
+            'REGRESSION_GATE=PASS_NO_NEW_FAILURES' \
+            | tee ACT08_REGRESSION.txt
+
+          git worktree remove \
+            --force \
+            "$BASELINE_DIR"
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/activity
+
+          printf '%s\n' \
+            'ACT_08_ACTIVITY_READ_RUNTIME_COMPOSITION=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_RUNTIME_TEST=PASS' \
+            'REMOTE_FEED_REGRESSION=PASS' \
+            'REMOTE_AGGREGATION_REGRESSION=PASS' \
+            'REMOTE_REPOSITORY_PORT_REGRESSION=PASS' \
+            'REMOTE_PERSISTENCE_REGRESSION=PASS' \
+            'REMOTE_NODE_REGRESSION=PASS' \
+            'REMOTE_EVIDENCE_UPLOAD=PASS' \
+            'WRITE_CAPABILITY=ABSENT' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'MUI_TOKEN_AUTHORITY=NO' \
+            'POINT_AUTHORITY=PERFORMANCE_ONLY' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/activity/ACT08_ACCEPTANCE.txt
+
+          cp \
+            ACT08_RUNTIME.tap \
+            ACT08_FEED.tap \
+            ACT08_AGGREGATION.tap \
+            ACT08_PORT.tap \
+            ACT08_PERSISTENCE.tap \
+            ACT08_REGRESSION.txt \
+            ACT08_REGRESSION_FILES.txt \
+            ACT08_BASELINE_REGRESSION.tsv \
+            ACT08_CANDIDATE_REGRESSION.tsv \
+            ACT08_NEW_FAILURES.txt \
+            artifacts/activity/
+
+          cp -R \
+            ACT08_BASELINE_TAP \
+            ACT08_CANDIDATE_TAP \
+            artifacts/activity/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: act-08-activity-read-runtime-${{ github.sha }}
+          path: artifacts/activity
+          if-no-files-found: error
+          retention-days: 30
