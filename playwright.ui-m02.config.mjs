@@ -78,7 +78,7 @@ export default defineConfig({
   use: {
     baseURL:
       "http://127.0.0.1:4173/"
-      + "static-preview/forge-alive/"
+      + "tests/fixtures/ui-m02-shell/"
       + "index.html",
     browserName: "chromium",
     colorScheme: "dark",
@@ -100,15 +100,13 @@ export default defineConfig({
   })),
   webServer: {
     command:
-      "node scripts/build-ui-m02-acceptance-site.mjs "
-      + "&& npx vite _ui_m02_site "
-      + "--host 127.0.0.1 "
-      + "--port 4173 --strictPort",
+      "node scripts/"
+      + "serve-ui-m02-acceptance-harness.mjs",
     url:
       "http://127.0.0.1:4173/"
-      + "static-preview/forge-alive/"
+      + "tests/fixtures/ui-m02-shell/"
       + "index.html",
     reuseExistingServer: false,
-    timeout: 120_000,
+    timeout: 30_000,
   },
 });

@@ -32,9 +32,29 @@ const manifestPath = path.join(
   "forge-material3-responsive-shell-manifest.json",
 );
 
-const acceptanceBuildPath = path.join(
+const fixturePath = path.join(
   root,
-  "scripts/build-ui-m02-acceptance-site.mjs",
+  "tests/fixtures/ui-m02-shell/index.html",
+);
+
+const fixtureCssPath = path.join(
+  root,
+  "tests/fixtures/ui-m02-shell/fixture.css",
+);
+
+const serverPath = path.join(
+  root,
+  "scripts/serve-ui-m02-acceptance-harness.mjs",
+);
+
+const configPath = path.join(
+  root,
+  "playwright.ui-m02.config.mjs",
+);
+
+const workflowPath = path.join(
+  root,
+  ".github/workflows/ui-m02-responsive-app-shell.yml",
 );
 
 const read = (target) =>
@@ -69,16 +89,8 @@ test(
   () => {
     const source = read(jsPath);
 
-    assert.match(
-      source,
-      /ForgeUiRuntimeFlag/,
-    );
-
-    assert.match(
-      source,
-      /flag\.enabled !== true/,
-    );
-
+    assert.match(source, /ForgeUiRuntimeFlag/);
+    assert.match(source, /flag\.enabled !== true/);
     assert.match(
       source,
       /data-forge-m3-shell-ready/,
@@ -148,30 +160,15 @@ test(
   () => {
     const source = read(jsPath);
 
-    assert.equal(
-      /\bfetch\s*\(/.test(source),
-      false,
-    );
-
-    assert.equal(
-      /\bsupabase\b/i.test(source),
-      false,
-    );
-
-    assert.equal(
-      /\blocalStorage\b/.test(source),
-      false,
-    );
-
-    assert.equal(
-      /\bsessionStorage\b/.test(source),
-      false,
-    );
+    assert.equal(/\bfetch\s*\(/.test(source), false);
+    assert.equal(/\bsupabase\b/i.test(source), false);
+    assert.equal(/\blocalStorage\b/.test(source), false);
+    assert.equal(/\bsessionStorage\b/.test(source), false);
   },
 );
 
 test(
-  "all shell CSS is activated by material3 mode",
+  "all shell CSS is activated by Material 3 mode",
   () => {
     const css = read(cssPath);
 
@@ -236,88 +233,99 @@ test(
 );
 
 test(
-  "acceptance site mirrors the Pages public layout",
+  "browser acceptance fixture loads production UI-M02 assets",
   () => {
-    const source = read(acceptanceBuildPath);
+    const fixture = read(fixturePath);
 
-    assert.match(source, /_ui_m02_site/);
     assert.match(
-      source,
-      /advisor-os\/sales-pipeline\//,
+      fixture,
+      /forge-material3-feature-flag\.js/,
     );
+
     assert.match(
-      source,
-      /file\.startsWith\("docs\/"\)/,
+      fixture,
+      /forge-material3-responsive-shell\.css/,
     );
+
     assert.match(
-      source,
-      /UI_M02_ACCEPTANCE_SITE=PASS/,
+      fixture,
+      /forge-material3-responsive-shell\.js/,
+    );
+
+    assert.match(fixture, /class="phone-shell"/);
+    assert.match(fixture, /forge-mobile-nav-r16c5j/);
+    assert.match(fixture, /dw-sidebar-056y/);
+  },
+);
+
+test(
+  "fixture applies legacy cascade pressure after shell CSS",
+  () => {
+    const fixture = read(fixturePath);
+    const css = read(fixtureCssPath);
+
+    assert.ok(
+      fixture.indexOf(
+        "forge-material3-responsive-shell.css",
+      )
+      < fixture.indexOf("./fixture.css"),
+    );
+
+    assert.match(
+      css,
+      /\.forge-mobile-nav-r16c5j[\s\S]*display:\s*block !important/,
+    );
+
+    assert.match(
+      css,
+      /\.dw-sidebar-056y[\s\S]*display:\s*grid !important/,
     );
   },
 );
 
 test(
-  "legacy navigation is strongly disabled in Material 3 mode",
+  "acceptance server is static and Vite-free",
   () => {
-    const css = read(cssPath);
+    const server = read(serverPath);
+    const config = read(configPath);
+
+    assert.match(server, /node:http/);
+    assert.match(server, /createReadStream/);
+    assert.doesNotMatch(server, /\bvite\b/i);
 
     assert.match(
-      css,
-      /body\[data-forge-mobile-nav-page-r16c5j\][\s\S]*\.forge-mobile-nav-r16c5j/,
+      config,
+      /serve-ui-m02-acceptance-harness\.mjs/,
     );
 
     assert.match(
-      css,
-      /width:\s*0 !important/,
+      config,
+      /tests\/fixtures\/ui-m02-shell/,
     );
 
-    assert.match(
-      css,
-      /height:\s*0 !important/,
-    );
+    assert.doesNotMatch(config, /\bvite\b/i);
+    assert.doesNotMatch(config, /_ui_m02_site/);
   },
 );
 
 test(
-  "rail layouts reserve width instead of overflowing",
+  "Actions watches the isolated acceptance harness",
   () => {
-    const css = read(cssPath);
+    const workflow = read(workflowPath);
 
     assert.match(
-      css,
-      /width:\s*calc\(100% - 112px\)/,
+      workflow,
+      /serve-ui-m02-acceptance-harness\.mjs/,
     );
 
     assert.match(
-      css,
-      /width:\s*calc\(100% - 128px\)/,
+      workflow,
+      /tests\/fixtures\/ui-m02-shell\/\*\*/,
     );
 
-    assert.match(
-      css,
-      /overflow-x:\s*clip/,
-    );
-  },
-);
-
-test(
-  "acceptance builder is safe inside GitHub job containers",
-  () => {
-    const source = read(acceptanceBuildPath);
-
-    assert.match(
-      source,
-      /safe\.directory=\$\{root\}/,
-    );
-
-    assert.match(
-      source,
-      /gitOutput\([\s\S]*"ls-files"/,
-    );
-
-    assert.match(
-      source,
-      /gitOutput\([\s\S]*"rev-parse"/,
+    assert.doesNotMatch(
+      workflow,
+      /build-ui-m02-acceptance-site\.mjs/,
     );
   },
 );

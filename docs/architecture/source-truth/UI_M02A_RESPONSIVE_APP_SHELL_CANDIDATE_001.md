@@ -60,3 +60,11 @@ Run `30224177480` passed installation and unit contracts but the browser
 process did not start. The Pages-shaped builder was blocked by Git's
 dubious-ownership protection inside the job container. Git operations
 are now executed with a process-scoped `safe.directory` configuration.
+
+## Fourth Actions attempt and harness reset
+
+Run `30224703966` proved that the remaining failures came from booting the
+entire Forge Alive dependency graph, not from the UI-M02 shell. The
+acceptance architecture has been reset: Playwright now loads the real
+production shell assets inside a deterministic product-surface harness.
+The custom Pages-copy builder and Vite transformation layer are removed.

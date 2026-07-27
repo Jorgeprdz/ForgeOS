@@ -34,106 +34,21 @@ const intersectionArea = (left, right) => {
   return width * height;
 };
 
-const shellState = async (page) =>
-  page.evaluate(() => {
-    const rect = (selector) => {
-      const element = document.querySelector(selector);
-
-      if (!element) {
-        return null;
-      }
-
-      const value = element.getBoundingClientRect();
-      const style = getComputedStyle(element);
-
-      return {
-        left: value.left,
-        top: value.top,
-        right: value.right,
-        bottom: value.bottom,
-        width: value.width,
-        height: value.height,
-        display: style.display,
-        visibility: style.visibility,
-        opacity: Number(style.opacity),
-      };
-    };
-
-    const shell = document.querySelector(
-      "[data-forge-m3-shell]",
-    );
-
-    const content = document.querySelector(
-      "[data-forge-m3-content]",
-    );
-
-    const product = document.querySelector(
-      '[data-forge-m3-product-surface="true"]',
-    );
-
-    const legacyMobileNav = document.querySelector(
-      ".forge-mobile-nav-r16c5j",
-    );
-
-    const legacySidebar = document.querySelector(
-      ".dw-sidebar-056y",
-    );
+const rectState = async (page, selector) =>
+  page.locator(selector).evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
 
     return {
-      viewport: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      },
-      scrollWidth: Math.max(
-        document.documentElement.scrollWidth,
-        document.body.scrollWidth,
-      ),
-      shellCount: document.querySelectorAll(
-        "[data-forge-m3-shell]",
-      ).length,
-      ready: shell?.getAttribute(
-        "data-forge-m3-shell-ready",
-      ),
-      layout: shell?.getAttribute(
-        "data-forge-m3-layout",
-      ),
-      activeRoute: shell?.getAttribute(
-        "data-forge-m3-active-route",
-      ),
-      runtime:
-        document.documentElement.getAttribute(
-          "data-forge-ui-runtime",
-        ),
-      productExists: Boolean(product),
-      productInsideContent: Boolean(
-        content
-        && product
-        && content.contains(product),
-      ),
-      legacyMobileNavVisibleCount: [
-        ...document.querySelectorAll(
-          ".forge-mobile-nav-r16c5j",
-        ),
-      ].filter((element) => {
-        const style = getComputedStyle(element);
-
-        return (
-          style.display !== "none"
-          && style.visibility !== "hidden"
-          && Number(style.opacity) > 0
-        );
-      }).length,
-      viteOverlayCount:
-        document.querySelectorAll(
-          "vite-error-overlay",
-        ).length,
-      legacySidebarDisplay: legacySidebar
-        ? getComputedStyle(legacySidebar).display
-        : null,
-      header: rect("[data-forge-m3-header]"),
-      navRegion: rect("[data-forge-m3-nav-region]"),
-      navPill: rect(".forge-m3-shell__nav-pill"),
-      launcher: rect("[data-forge-m3-open-alfred]"),
+      left: bounds.left,
+      top: bounds.top,
+      right: bounds.right,
+      bottom: bounds.bottom,
+      width: bounds.width,
+      height: bounds.height,
+      display: style.display,
+      visibility: style.visibility,
+      opacity: Number(style.opacity),
     };
   });
 
@@ -181,15 +96,22 @@ const expectInsideViewport = (
 };
 
 test(
-  "legacy route remains the default",
+  "legacy mode remains the default",
   async ({ page }) => {
-    await page.goto("?nav=inicio");
+    const pageErrors = [];
 
-    await page.waitForLoadState(
-      "domcontentloaded",
-    );
+    page.on("pageerror", (error) => {
+      pageErrors.push(error.message);
+    });
+
+    await page.goto("?nav=inicio");
+    await page.waitForLoadState("domcontentloaded");
 
     const state = await page.evaluate(() => ({
+      fixtureReady:
+        document.documentElement.getAttribute(
+          "data-ui-m02-fixture-ready",
+        ),
       shellCount: document.querySelectorAll(
         "[data-forge-m3-shell]",
       ).length,
@@ -202,23 +124,32 @@ test(
       productExists: Boolean(
         document.querySelector(".phone-shell"),
       ),
-      viteOverlayCount:
-        document.querySelectorAll(
-          "vite-error-overlay",
-        ).length,
+      productMarked: Boolean(
+        document.querySelector(
+          '[data-forge-m3-product-surface="true"]',
+        ),
+      ),
     }));
 
+    expect(state.fixtureReady).toBe("true");
     expect(state.shellCount).toBe(0);
     expect(state.runtime).toBeNull();
     expect(state.flagEnabled).toBe(false);
     expect(state.productExists).toBe(true);
-    expect(state.viteOverlayCount).toBe(0);
+    expect(state.productMarked).toBe(false);
+    expect(pageErrors).toEqual([]);
   },
 );
 
 test(
-  "Material 3 shell is responsive and Alfred is actionable",
+  "Material 3 shell is responsive and actionable",
   async ({ page }, testInfo) => {
+    const pageErrors = [];
+
+    page.on("pageerror", (error) => {
+      pageErrors.push(error.message);
+    });
+
     await page.goto(
       "?nav=inicio&forgeUi=material3",
     );
@@ -237,22 +168,94 @@ test(
       `,
     });
 
-    const state = await shellState(page);
+    const state = await page.evaluate(() => {
+      const shell = document.querySelector(
+        "[data-forge-m3-shell]",
+      );
 
+      const content = document.querySelector(
+        "[data-forge-m3-content]",
+      );
+
+      const product = document.querySelector(
+        '[data-forge-m3-product-surface="true"]',
+      );
+
+      const legacyMobileVisible = [
+        ...document.querySelectorAll(
+          ".forge-mobile-nav-r16c5j",
+        ),
+      ].filter((element) => {
+        const style = getComputedStyle(element);
+
+        return (
+          style.display !== "none"
+          && style.visibility !== "hidden"
+          && Number(style.opacity) > 0
+          && element.getBoundingClientRect().width > 0
+          && element.getBoundingClientRect().height > 0
+        );
+      }).length;
+
+      const legacySidebar =
+        document.querySelector(".dw-sidebar-056y");
+
+      return {
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        },
+        scrollWidth: Math.max(
+          document.documentElement.scrollWidth,
+          document.body.scrollWidth,
+        ),
+        fixtureReady:
+          document.documentElement.getAttribute(
+            "data-ui-m02-fixture-ready",
+          ),
+        shellCount: document.querySelectorAll(
+          "[data-forge-m3-shell]",
+        ).length,
+        ready: shell?.getAttribute(
+          "data-forge-m3-shell-ready",
+        ),
+        layout: shell?.getAttribute(
+          "data-forge-m3-layout",
+        ),
+        activeRoute: shell?.getAttribute(
+          "data-forge-m3-active-route",
+        ),
+        runtime:
+          document.documentElement.getAttribute(
+            "data-forge-ui-runtime",
+          ),
+        productInsideContent: Boolean(
+          content
+          && product
+          && content.contains(product),
+        ),
+        legacyMobileVisible,
+        legacySidebarDisplay: legacySidebar
+          ? getComputedStyle(legacySidebar).display
+          : null,
+      };
+    });
+
+    expect(state.fixtureReady).toBe("true");
     expect(state.shellCount).toBe(1);
     expect(state.ready).toBe("true");
-    expect(state.layout).toBe(testInfo.project.metadata.layout);
+    expect(state.layout).toBe(
+      testInfo.project.metadata.layout,
+    );
     expect(state.activeRoute).toBe("inicio");
     expect(state.runtime).toBe("material3");
-    expect(state.productExists).toBe(true);
     expect(state.productInsideContent).toBe(true);
 
     expect(
       state.scrollWidth - state.viewport.width,
     ).toBeLessThanOrEqual(1);
 
-    expect(state.viteOverlayCount).toBe(0);
-    expect(state.legacyMobileNavVisibleCount).toBe(0);
+    expect(state.legacyMobileVisible).toBe(0);
 
     if (
       testInfo.project.use.viewport.width >= 901
@@ -261,35 +264,52 @@ test(
       expect(state.legacySidebarDisplay).toBe("none");
     }
 
+    const header = await rectState(
+      page,
+      "[data-forge-m3-header]",
+    );
+
+    const navRegion = await rectState(
+      page,
+      "[data-forge-m3-nav-region]",
+    );
+
+    const navPill = await rectState(
+      page,
+      ".forge-m3-shell__nav-pill",
+    );
+
+    const launcher = await rectState(
+      page,
+      "[data-forge-m3-open-alfred]",
+    );
+
     expectInsideViewport(
-      state.header,
+      header,
       state.viewport,
       "header",
     );
 
     expectInsideViewport(
-      state.navRegion,
+      navRegion,
       state.viewport,
       "navigation region",
     );
 
     expectInsideViewport(
-      state.navPill,
+      navPill,
       state.viewport,
       "navigation pill",
     );
 
     expectInsideViewport(
-      state.launcher,
+      launcher,
       state.viewport,
       "Alfred launcher",
     );
 
     expect(
-      intersectionArea(
-        state.navPill,
-        state.launcher,
-      ),
+      intersectionArea(navPill, launcher),
     ).toBeLessThanOrEqual(1);
 
     const shellScreenshot = path.join(
@@ -307,12 +327,12 @@ test(
       fullPage: false,
     });
 
-    const launcher = page.locator(
+    const alfredLauncher = page.locator(
       "[data-forge-m3-open-alfred]",
     );
 
-    await expect(launcher).toBeVisible();
-    await launcher.click();
+    await expect(alfredLauncher).toBeVisible();
+    await alfredLauncher.click();
 
     const sheet = page.locator(
       "[data-forge-m3-alfred-sheet]",
@@ -341,5 +361,36 @@ test(
       "aria-hidden",
       "true",
     );
+
+    await page
+      .locator('[data-forge-m3-nav="pipeline"]')
+      .click();
+
+    await expect(
+      page.locator("[data-forge-m3-shell]"),
+    ).toHaveAttribute(
+      "data-forge-m3-active-route",
+      "pipeline",
+    );
+
+    const navigationState = await page.evaluate(() => ({
+      nav: new URL(location.href).searchParams.get("nav"),
+      events:
+        window.UiM02AcceptanceFixture
+          ?.navigationEvents
+          ?.map((event) => event.key)
+          ?? [],
+      alfred:
+        window.UiM02AcceptanceFixture
+          ?.alfredEvents
+          ?.map((event) => event.open)
+          ?? [],
+    }));
+
+    expect(navigationState.nav).toBe("pipeline");
+    expect(navigationState.events).toContain("pipeline");
+    expect(navigationState.alfred).toContain(true);
+    expect(navigationState.alfred).toContain(false);
+    expect(pageErrors).toEqual([]);
   },
 );

@@ -4,10 +4,12 @@
 
 - Implementation candidate: **PASS**
 - Unit preflight in ArchForge: **PASS**
-- Real UI acceptance: **THIRD RETRY PENDING**
+- Real UI acceptance: **HARNESS RESET PENDING**
 - First Actions run: **30217658448 — WRAPPER FAILURE**
-- Second Actions run: **30223453235 — BROWSER FAILURE**
+- Second Actions run: **30223453235 — FULL-RUNTIME BROWSER FAILURE**
 - Third Actions run: **30224177480 — BUILDER OWNERSHIP FAILURE**
+- Fourth Actions run: **30224703966 — FULL-RUNTIME DEPENDENCY FAILURE**
+- Acceptance model: **ISOLATED REAL-ASSET SHELL HARNESS**
 - Acceptance authority: **GITHUB ACTIONS**
 - UI-M02 complete: **NO**
 

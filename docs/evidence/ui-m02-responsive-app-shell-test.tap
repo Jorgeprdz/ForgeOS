@@ -1,15 +1,15 @@
-✔ real product entrypoint loads UI-M02 exactly once (5.207865ms)
-✔ shell runtime is gated by the UI-M01 feature flag (0.846562ms)
-✔ shell preserves the productive Home surface (0.721771ms)
-✔ shell exposes the approved responsive modes (0.711094ms)
-✔ shell contains navigation and Alfred surfaces (0.794062ms)
-✔ UI-M02 does not introduce productive side effects (0.970625ms)
-✔ all shell CSS is activated by material3 mode (0.889115ms)
-✔ manifest preserves runtime boundaries (1.908386ms)
-✔ acceptance site mirrors the Pages public layout (0.727968ms)
-✔ legacy navigation is strongly disabled in Material 3 mode (2.736823ms)
-✔ rail layouts reserve width instead of overflowing (0.832344ms)
-✔ acceptance builder is safe inside GitHub job containers (0.647083ms)
+✔ real product entrypoint loads UI-M02 exactly once (7.250078ms)
+✔ shell runtime is gated by the UI-M01 feature flag (1.280547ms)
+✔ shell preserves the productive Home surface (2.438828ms)
+✔ shell exposes the approved responsive modes (1.388516ms)
+✔ shell contains navigation and Alfred surfaces (1.241992ms)
+✔ UI-M02 does not introduce productive side effects (1.480469ms)
+✔ all shell CSS is activated by Material 3 mode (1.498984ms)
+✔ manifest preserves runtime boundaries (3.088438ms)
+✔ browser acceptance fixture loads production UI-M02 assets (2.499062ms)
+✔ fixture applies legacy cascade pressure after shell CSS (4.151328ms)
+✔ acceptance server is static and Vite-free (2.153906ms)
+✔ Actions watches the isolated acceptance harness (1.062187ms)
 ℹ tests 12
 ℹ suites 0
 ℹ pass 12
@@ -17,4 +17,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 188.41375
+ℹ duration_ms 278.224336
