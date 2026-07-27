@@ -1,0 +1,22 @@
+# ACT-05 — Pipeline to Activity Projection Closure
+
+```text
+ACT_05_PIPELINE_TO_ACTIVITY_PROJECTION=CLOSED
+IMPLEMENTATION_COMMIT=337c3b5738d95872e45f97a0203b94c2d8c46338
+PIPELINE_TRANSITION_SCHEMA=pipeline-transition.v1
+PROJECTION_VERSION=pipeline-activity-projection.v1
+SUPPORTED_PROJECTIONS=5
+LOCAL_PROJECTION_PASS=23
+REMOTE_CI_CONCLUSION=success
+REMOTE_ARTIFACT_NAME=act-05-pipeline-activity-337c3b5738d95872e45f97a0203b94c2d8c46338
+PIPELINE_WRITER_MUTATION=NO
+PIPELINE_UI_MUTATION=NO
+REMOTE_DATABASE_MUTATION=NO
+FES_MUTATION=NO
+MUI_MUTATION=NO
+MAIN_MUTATION=NO
+NEXT=ACT-06_ACTIVITY_PERIOD_AGGREGATIONS
+```
+
+The first vertical Pipeline-to-Activity application boundary is closed. Activity
+now receives a validated transition without owning or mutating opportunity stage.
