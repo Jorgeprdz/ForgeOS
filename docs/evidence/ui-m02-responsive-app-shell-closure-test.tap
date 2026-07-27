@@ -1,0 +1,20 @@
+✔ real product entrypoint loads UI-M02 exactly once (11.744492ms)
+✔ shell runtime is gated by the UI-M01 feature flag (3.278125ms)
+✔ shell preserves the productive Home surface (1.728868ms)
+✔ shell exposes the approved responsive modes (1.941172ms)
+✔ shell contains navigation and Alfred surfaces (1.538829ms)
+✔ UI-M02 does not introduce productive side effects (1.978632ms)
+✔ all shell CSS is activated by Material 3 mode (2.829843ms)
+✔ manifest preserves runtime boundaries (7.133945ms)
+✔ browser acceptance fixture loads production UI-M02 assets (2.027851ms)
+✔ fixture applies legacy cascade pressure after shell CSS (9.203672ms)
+✔ acceptance server is static and Vite-free (2.428672ms)
+✔ Actions watches the isolated acceptance harness (1.012969ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 327.044805
