@@ -1,0 +1,189 @@
+/* FORGE:UI_M03_PRODUCTIVE_HOME_SURFACE:START */
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 1480px !important;
+  margin-inline: auto !important;
+  padding: clamp(16px, 2.4vw, 34px) !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  :is(.assistant-card, .primary-card, .glass) {
+  box-sizing: border-box !important;
+  border: 1px solid rgba(130, 146, 173, 0.22) !important;
+  border-radius: clamp(22px, 2.2vw, 32px) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(17, 27, 43, 0.94),
+      rgba(8, 17, 31, 0.97)
+    )
+    !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 18px 48px rgba(0, 0, 0, 0.2)
+    !important;
+  backdrop-filter: blur(20px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(125%) !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  .assistant-card {
+  position: relative !important;
+  min-height: clamp(230px, 27vw, 360px) !important;
+  padding: clamp(22px, 3vw, 42px) !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(
+      circle at 84% 16%,
+      rgba(111, 213, 255, 0.18),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 14% 92%,
+      rgba(247, 205, 111, 0.14),
+      transparent 32%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(18, 31, 49, 0.98),
+      rgba(7, 16, 29, 0.96)
+    )
+    !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  :is(h1, h2, h3) {
+  color: var(--forge-m3-on-surface, #f4f7ff) !important;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+  letter-spacing: -0.035em !important;
+  text-wrap: balance !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  :is(.eyebrow, [data-forge-eyebrow]) {
+  color: var(--forge-m3-primary, #80d7ff) !important;
+  font-size: 12px !important;
+  font-weight: 780 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  :is(p, li) {
+  color: var(--forge-m3-on-surface-variant, #bac5d8) !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  :is(.fake-cta, .quick-action, button, a[role="button"]) {
+  min-height: 44px;
+  border-radius: 999px !important;
+  font-weight: 720 !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  :is(.fake-cta, .quick-action) {
+  border: 1px solid rgba(128, 215, 255, 0.22) !important;
+  color: var(--forge-m3-on-primary-container, #d9f3ff) !important;
+  background: rgba(54, 127, 162, 0.18) !important;
+  box-shadow: none !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-surface="true"]
+  :is(.cards-grid, .widget-grid, .metrics-grid, .quick-actions) {
+  gap: clamp(12px, 1.7vw, 22px) !important;
+}
+
+html[data-forge-ui-runtime="material3"]
+  .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+  [data-forge-m3-home-role] {
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+    [data-forge-m3-home-role]:hover {
+    transform: translateY(-2px);
+    border-color: rgba(128, 215, 255, 0.3) !important;
+  }
+}
+
+@media (max-width: 759px) {
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+    [data-forge-m3-home-surface="true"] {
+    padding:
+      14px
+      14px
+      calc(108px + env(safe-area-inset-bottom, 0px))
+      !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+    [data-forge-m3-home-surface="true"]
+    .assistant-card {
+    min-height: 230px !important;
+    padding: 22px !important;
+    border-radius: 26px !important;
+  }
+
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+    [data-forge-m3-home-surface="true"]
+    :is(.primary-card, .glass) {
+    border-radius: 22px !important;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 1199px) {
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+    [data-forge-m3-home-surface="true"] {
+    padding: clamp(20px, 3vw, 32px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-forge-ui-runtime="material3"]
+    .forge-m3-app-shell[data-forge-m3-active-route="inicio"]
+    [data-forge-m3-home-role] {
+    transition: none !important;
+  }
+}
+
+/* FORGE:UI_M03_PRODUCTIVE_HOME_SURFACE:END */

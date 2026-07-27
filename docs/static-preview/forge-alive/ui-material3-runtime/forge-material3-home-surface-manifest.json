@@ -1,0 +1,26 @@
+{
+  "schema": "forge.ui.material3.productive-home-surface.v1",
+  "phase": "UI_M03_PRODUCTIVE_HOME_SURFACE_MIGRATION",
+  "status": "implemented_pending_visual_acceptance",
+  "entrypoint": "docs/static-preview/forge-alive/index.html",
+  "featureFlag": {
+    "queryKey": "forgeUi",
+    "enabledValue": "material3"
+  },
+  "surface": {
+    "route": "inicio",
+    "selector": "[data-forge-m3-product-surface]",
+    "existingMarkupPreserved": true,
+    "presentationMigrated": true
+  },
+  "contracts": {
+    "productiveMarkupReplacement": false,
+    "businessLogicMutation": false,
+    "backendMutation": false,
+    "dataBindingMutation": false,
+    "navigationMutation": false,
+    "defaultLegacyMutation": false,
+    "featureFlagRequired": true,
+    "humanVisualAcceptanceRequired": true
+  }
+}
