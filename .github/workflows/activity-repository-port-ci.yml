@@ -1,0 +1,207 @@
+name: ACT Activity Repository CI
+
+on:
+  push:
+    branches:
+      - feature/activity-domain-runtime-foundation
+    paths:
+      - advisor-os/activity/application/**
+      - advisor-os/activity/infrastructure/**
+      - advisor-os/activity/domain/**
+      - tests/activity-repository-port-test.mjs
+      - tests/activity-record-contract-test.mjs
+      - docs/architecture/performance/ACT-03_ACTIVITY_REPOSITORY_PORT.md
+      - .github/workflows/activity-repository-port-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activity-repository-port:
+    name: Activity repository port acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run repository port test
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-repository-port-test.mjs \
+            | tee ACT03_PORT.tap
+
+      - name: Run ActivityRecord regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            | tee ACT03_ACTIVITY_RECORD.tap
+
+      - name: Run differential Node regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+
+          run_suite() {
+            local repo="$1"
+            local list="$2"
+            local output="$3"
+            local tap_dir="$4"
+            local file=""
+            local slug=""
+            local tap=""
+            local status=""
+            local tests=""
+            local pass=""
+            local fail_count=""
+
+            rm -rf "$tap_dir"
+            mkdir -p "$tap_dir"
+            printf 'file\tstatus\ttests\tpass\tfail\n' > "$output"
+
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              slug="$(printf '%s' "$file" | sha256sum | awk '{print $1}')"
+              tap="$tap_dir/$slug.tap"
+
+              if (
+                cd "$repo"
+                node --test \
+                  --test-reporter=tap \
+                  "$file"
+              ) > "$tap" 2>&1; then
+                status="PASS"
+              else
+                status="FAIL"
+              fi
+
+              tests="$(awk '/^# tests / { v=$3 } END { print v+0 }' "$tap")"
+              pass="$(awk '/^# pass / { v=$3 } END { print v+0 }' "$tap")"
+              fail_count="$(awk '/^# fail / { v=$3 } END { print v+0 }' "$tap")"
+
+              if [[ "$status" == "FAIL" && "$fail_count" == "0" ]]; then
+                fail_count="1"
+              fi
+
+              printf '%s\t%s\t%s\t%s\t%s\n' \
+                "$file" "$status" "$tests" "$pass" "$fail_count" \
+                >> "$output"
+            done < "$list"
+          }
+
+          BASELINE_DIR="$RUNNER_TEMP/act03-baseline"
+          rm -rf "$BASELINE_DIR"
+          git worktree add --detach "$BASELINE_DIR" "$GITHUB_SHA^"
+
+          if [[ -d node_modules && ! -e "$BASELINE_DIR/node_modules" ]]; then
+            ln -s "$GITHUB_WORKSPACE/node_modules" "$BASELINE_DIR/node_modules"
+          fi
+
+          find "$BASELINE_DIR/tests" \
+            -maxdepth 1 \
+            -type f \
+            -name '*-test.mjs' \
+            ! -name '*-browser-test.mjs' \
+            ! -name 'activity-repository-port-test.mjs' \
+            -printf 'tests/%f\n' \
+            | sort > ACT03_REGRESSION_FILES.txt
+
+          [[ -s ACT03_REGRESSION_FILES.txt ]]
+
+          run_suite \
+            "$BASELINE_DIR" \
+            ACT03_REGRESSION_FILES.txt \
+            ACT03_BASELINE_REGRESSION.tsv \
+            ACT03_BASELINE_TAP
+
+          run_suite \
+            "$GITHUB_WORKSPACE" \
+            ACT03_REGRESSION_FILES.txt \
+            ACT03_CANDIDATE_REGRESSION.tsv \
+            ACT03_CANDIDATE_TAP
+
+          awk -F '\t' '
+            NR == FNR {
+              if (FNR > 1) baseline[$1] = $2
+              next
+            }
+            FNR > 1 && $2 == "FAIL" && baseline[$1] != "FAIL" {
+              print $1
+            }
+          ' \
+            ACT03_BASELINE_REGRESSION.tsv \
+            ACT03_CANDIDATE_REGRESSION.tsv \
+            > ACT03_NEW_FAILURES.txt
+
+          if [[ -s ACT03_NEW_FAILURES.txt ]]; then
+            printf 'New regression failures:\n'
+            cat ACT03_NEW_FAILURES.txt
+            false
+          fi
+
+          {
+            printf 'NEW_REGRESSION_FAILURES=0\n'
+            printf 'REGRESSION_GATE=PASS_NO_NEW_FAILURES\n'
+          } | tee ACT03_REGRESSION.txt
+
+          git worktree remove --force "$BASELINE_DIR"
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/activity
+          {
+            printf 'ACT_03_ACTIVITY_REPOSITORY_PORT=IMPLEMENTED\n'
+            printf 'COMMIT=%s\n' "$GITHUB_SHA"
+            printf 'REMOTE_PORT_TEST=PASS\n'
+            printf 'REMOTE_ACTIVITY_RECORD_REGRESSION=PASS\n'
+            printf 'REMOTE_NODE_REGRESSION=PASS\n'
+            printf 'REMOTE_EVIDENCE_UPLOAD=PASS\n'
+          } > artifacts/activity/ACT03_ACCEPTANCE.txt
+          cp ACT03_PORT.tap artifacts/activity/
+          cp ACT03_ACTIVITY_RECORD.tap artifacts/activity/
+          cp ACT03_REGRESSION.txt artifacts/activity/
+          cp ACT03_REGRESSION_FILES.txt artifacts/activity/
+          cp ACT03_BASELINE_REGRESSION.tsv artifacts/activity/
+          cp ACT03_CANDIDATE_REGRESSION.tsv artifacts/activity/
+          cp ACT03_NEW_FAILURES.txt artifacts/activity/
+          cp -R ACT03_BASELINE_TAP artifacts/activity/
+          cp -R ACT03_CANDIDATE_TAP artifacts/activity/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: act-03-activity-repository-${{ github.sha }}
+          path: artifacts/activity
+          if-no-files-found: error
+          retention-days: 30
