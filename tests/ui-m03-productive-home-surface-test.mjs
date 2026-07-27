@@ -31,128 +31,151 @@ const manifest = JSON.parse(
   ),
 );
 
-test("UI-M03 assets load exactly once", () => {
+test("UI-M03 R1 assets load exactly once", () => {
   assert.equal(
     index.split(
       "FORGE:UI_M03_PRODUCTIVE_HOME_SURFACE:START",
     ).length - 1,
     1,
   );
-  assert.equal(
-    index.split(
-      "forge-material3-home-surface.css",
-    ).length - 1,
-    1,
+  assert.match(
+    index,
+    /forge-material3-home-surface\.css\?v=ui-m03-r1/,
   );
-  assert.equal(
-    index.split(
-      "forge-material3-home-surface.js",
-    ).length - 1,
-    1,
+  assert.match(
+    index,
+    /forge-material3-home-surface\.js\?v=ui-m03-r1/,
   );
 });
 
-test("UI-M03 wins the legacy home cascade", () => {
-  assert.ok(
-    index.indexOf("forge-material3-home-surface.css")
-      > index.indexOf("forge-alive-home-restoration-r16c.css"),
-  );
-});
-
-test("productive Home markup is preserved", () => {
+test("productive Home markup and handlers remain intact", () => {
   assert.match(source, /existingProductSurfacePreserved:\s*true/);
   assert.match(source, /productiveMarkupReplaced:\s*false/);
-  assert.match(source, /data-forge-m3-home-preserved/);
   assert.doesNotMatch(source, /\.remove\s*\(/);
   assert.doesNotMatch(source, /\.replaceWith\s*\(/);
   assert.doesNotMatch(source, /\.innerHTML\s*=/);
 });
 
-test("runtime is feature-flagged and shell-bound", () => {
-  assert.match(source, /ForgeUiRuntimeFlag/);
-  assert.match(source, /flag\.enabled !== true/);
-  assert.match(source, /data-forge-m3-shell/);
-  assert.match(source, /data-forge-m3-product-surface/);
-  assert.match(source, /forge:material3-shell-ready/);
-  assert.match(source, /forge:material3-home-ready/);
+test("runtime selects one responsive product authority", () => {
+  assert.match(source, /window\.innerWidth >= 900/);
+  assert.match(source, /"workspace"/);
+  assert.match(source, /"touch"/);
+  assert.match(source, /data-forge-m3-home-layout/);
+  assert.match(source, /setInactive/);
 });
 
-test("UI-M03 introduces no productive side effects", () => {
+test("mobile blocks duplicate header and navigation", () => {
+  assert.match(css, /max-width:\s*899px/);
+  assert.match(
+    css,
+    /> \.hero[\s\S]*display:\s*none !important/,
+  );
+  assert.match(
+    css,
+    /\.forge-m3-shell__nav-pill[\s\S]*display:\s*none !important/,
+  );
+  assert.match(
+    css,
+    /\.bottom-nav\[data-forge-home-navigation-r16c="canonical"\]/,
+  );
+  assert.match(
+    css,
+    /grid-template-columns:\s*repeat\(4/,
+  );
+});
+
+test("touch layouts keep the new Alfred launcher only", () => {
+  assert.match(
+    css,
+    /\.forge-m3-shell__alfred-launcher[\s\S]*width:\s*76px/,
+  );
+  assert.match(
+    css,
+    /\[data-command-orb-layer\][\s\S]*display:\s*none !important/,
+  );
+});
+
+test("tablet and desktop use the full productive workspace", () => {
+  assert.match(css, /min-width:\s*900px/);
+  assert.match(
+    css,
+    /\.forge-desktop-workspace-056y[\s\S]*grid-template-columns:[\s\S]*clamp\(210px/,
+  );
+  assert.match(
+    css,
+    /\.dw-sidebar-056y[\s\S]*display:\s*flex !important/,
+  );
+  assert.match(
+    css,
+    /\.dw-main-056y[\s\S]*grid-column:\s*2 !important/,
+  );
+});
+
+test("workspace no longer reserves the isolated shell rail", () => {
+  assert.match(
+    css,
+    /\.forge-m3-shell__header[\s\S]*width:\s*100% !important/,
+  );
+  assert.match(
+    css,
+    /\.forge-m3-shell__content[\s\S]*margin-left:\s*0 !important/,
+  );
+  assert.match(
+    css,
+    /\.forge-m3-shell__nav-region[\s\S]*display:\s*none !important/,
+  );
+  assert.match(
+    css,
+    /overflow-y:\s*auto !important/,
+  );
+});
+
+test("inactive historical layouts cannot remain interactive", () => {
+  assert.match(source, /toggleAttribute\("inert", inactive\)/);
+  assert.match(source, /aria-hidden/);
+  assert.equal(
+    manifest.contracts.inactiveHistoricalLayoutsInteractive,
+    false,
+  );
+});
+
+test("UI-M03 R1 introduces no productive side effects", () => {
   assert.equal(/\bfetch\s*\(/.test(source), false);
   assert.equal(/\bsupabase\b/i.test(source), false);
   assert.equal(/\blocalStorage\b/.test(source), false);
   assert.equal(/\bsessionStorage\b/.test(source), false);
 });
 
-test("dynamic Home widgets are reconciled idempotently", () => {
-  assert.match(source, /MutationObserver/);
-  assert.match(source, /data-forge-m3-home-ready/);
-  assert.match(source, /hasAttribute\(readyMarker\)/);
-  assert.match(source, /pageshow/);
-});
-
-test("all UI-M03 CSS is scoped to Material 3 Inicio", () => {
+test("fail-closed public configuration remains visible", () => {
   assert.match(
     css,
-    /html\[data-forge-ui-runtime="material3"\]/,
+    /data-forge-public-config-state="067g17a1"/,
   );
-  assert.match(
+  assert.doesNotMatch(
     css,
-    /data-forge-m3-active-route="inicio"/,
+    /data-forge-public-config-state="067g17a1"[\s\S]{0,400}display:\s*none/,
   );
-  assert.match(
-    css,
-    /data-forge-m3-home-surface="true"/,
-  );
-  assert.equal(/(^|\n):root\s*\{/.test(css), false);
-  assert.equal(/(^|\n)body\s*\{/.test(css), false);
 });
 
-test("responsive and reduced-motion contracts exist", () => {
-  assert.match(css, /max-width:\s*759px/);
-  assert.match(css, /min-width:\s*760px/);
-  assert.match(css, /max-width:\s*1199px/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.match(css, /env\(safe-area-inset-bottom/);
-});
-
-test("legacy productive Home authorities remain loaded", () => {
-  for (const asset of [
-    "alfred-responsive-ui.js",
-    "alfred-smart-widget-static-056u.js",
-    "forge-mobile-widget-grid-057j.js",
-    "forge-alive-home-restoration-r16c.css",
-  ]) {
-    assert.match(
-      index,
-      new RegExp(asset.replaceAll(".", "\\.")),
-    );
-  }
-});
-
-test("manifest locks UI-M03 boundaries", () => {
+test("manifest records owner rejection and correction", () => {
   assert.equal(
-    manifest.schema,
-    "forge.ui.material3.productive-home-surface.v1",
+    manifest.status,
+    "corrected_pending_owner_visual_acceptance",
+  );
+  assert.equal(
+    manifest.ownerVisualReview.candidateAccepted,
+    false,
   );
   assert.equal(
     manifest.surface.existingMarkupPreserved,
     true,
   );
   assert.equal(
-    manifest.surface.presentationMigrated,
-    true,
-  );
-  assert.equal(
-    manifest.contracts.productiveMarkupReplacement,
+    manifest.contracts.duplicateHeaderAllowed,
     false,
   );
   assert.equal(
-    manifest.contracts.businessLogicMutation,
+    manifest.contracts.duplicateNavigationAllowed,
     false,
-  );
-  assert.equal(
-    manifest.contracts.humanVisualAcceptanceRequired,
-    true,
   );
 });

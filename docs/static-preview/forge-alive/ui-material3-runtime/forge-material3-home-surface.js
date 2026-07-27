@@ -9,7 +9,12 @@
 
   const shellSelector = "[data-forge-m3-shell]";
   const productSelector = "[data-forge-m3-product-surface]";
-  const readyMarker = "data-forge-m3-home-ready";
+  const readyMarker = "data-forge-m3-home-ready-r1";
+
+  const layoutMode = () =>
+    window.innerWidth >= 900
+      ? "workspace"
+      : "touch";
 
   const dispatch = (type, detail) => {
     if (
@@ -24,33 +29,40 @@
     );
   };
 
+  const setInactive = (element, inactive) => {
+    if (!element) {
+      return;
+    }
+
+    element.toggleAttribute("inert", inactive);
+    element.setAttribute(
+      "aria-hidden",
+      String(inactive),
+    );
+  };
+
   const classify = (product) => {
     const roles = [
-      [".assistant-card", "alfred-brief"],
-      [".primary-card", "priority"],
-      [".glass", "card"],
-      [".quick-action", "quick-action"],
-      [".fake-cta", "action"],
+      [".assistant-card", "mobile-alfred-brief"],
+      [".primary-card", "mobile-priority"],
+      [".forge-smart-widget-static-056u", "mobile-context"],
+      [".dw-command-shell-056y", "workspace-command"],
+      [".dw-decision-strip-058e", "workspace-decision"],
+      [".dw-kpi-056y", "workspace-kpi"],
+      [".dw-table-shell-056y", "workspace-table"],
     ];
-
-    let marked = 0;
 
     for (const [selector, role] of roles) {
       product.querySelectorAll(selector).forEach((element) => {
-        if (!element.hasAttribute("data-forge-m3-home-role")) {
-          element.setAttribute(
-            "data-forge-m3-home-role",
-            role,
-          );
-          marked += 1;
-        }
+        element.setAttribute(
+          "data-forge-m3-home-role",
+          role,
+        );
       });
     }
-
-    return marked;
   };
 
-  const mount = () => {
+  const reconcile = () => {
     const shell = document.querySelector(shellSelector);
     const product = document.querySelector(productSelector);
 
@@ -58,10 +70,16 @@
       return false;
     }
 
-    if (product.hasAttribute(readyMarker)) {
-      classify(product);
-      return true;
-    }
+    const mode = layoutMode();
+    const workspace = product.querySelector(
+      ".forge-desktop-workspace-056y",
+    );
+    const alternateDesktop = product.querySelector(
+      ".alfred-desktop-app-056g7",
+    );
+    const legacyOrb = product.querySelector(
+      "[data-command-orb-layer], .command-orb-layer",
+    );
 
     product.setAttribute(
       "data-forge-m3-home-surface",
@@ -71,38 +89,44 @@
       "data-forge-m3-home-preserved",
       "true",
     );
+    product.setAttribute(
+      "data-forge-m3-home-layout",
+      mode,
+    );
     product.setAttribute(readyMarker, "true");
 
-    const initiallyMarked = classify(product);
+    setInactive(workspace, mode !== "workspace");
+    setInactive(alternateDesktop, true);
+    setInactive(legacyOrb, true);
 
-    const observer = new MutationObserver(() => {
-      classify(product);
-    });
-
-    observer.observe(product, {
-      childList: true,
-      subtree: true,
-    });
+    classify(product);
 
     dispatch(
-      "forge:material3-home-ready",
+      "forge:material3-home-reconciled",
       Object.freeze({
-        source: "ui-m03-productive-home-surface",
+        source: "ui-m03-full-product-reconciliation-r1",
+        mode,
         existingProductSurfacePreserved: true,
         productiveMarkupReplaced: false,
-        initiallyMarked,
+        duplicateNavigationVisible: false,
+        duplicateHeaderVisible: false,
       }),
     );
 
     return true;
   };
 
-  const reconcile = () => {
-    if (mount()) {
-      return;
+  let resizeFrame = null;
+
+  const schedule = () => {
+    if (resizeFrame !== null) {
+      window.cancelAnimationFrame(resizeFrame);
     }
 
-    window.setTimeout(mount, 0);
+    resizeFrame = window.requestAnimationFrame(() => {
+      resizeFrame = null;
+      reconcile();
+    });
   };
 
   if (document.readyState === "loading") {
@@ -119,10 +143,14 @@
     "forge:material3-shell-ready",
     reconcile,
   );
-
   window.addEventListener(
     "pageshow",
     reconcile,
+    { passive: true },
+  );
+  window.addEventListener(
+    "resize",
+    schedule,
     { passive: true },
   );
 })();
