@@ -6,7 +6,8 @@
   "scripts": {
     "serve:e2e": "vite --host 0.0.0.0 --port 4173 --strictPort",
     "test:e2e:preflight": "playwright test tests/e2e/fes-03-playwright-preflight.spec.mjs",
-    "test:e2e:fes03": "playwright test tests/e2e/fes-03"
+    "test:e2e:fes03": "playwright test tests/e2e/fes-03",
+    "test:e2e:fes06c": "playwright test --config=playwright.fes06c.config.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.61.1",

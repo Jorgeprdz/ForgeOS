@@ -8,6 +8,8 @@ on:
     paths:
       - ".github/workflows/fes-event-evidence-ci.yml"
       - "platform/event-evidence/**"
+      - "advisor-os/event-evidence/**"
+      - "docs/static-preview/forge-alive/forge-alive-pipeline-view-067g16a.js"
       - "tests/fes-*-test.mjs"
       - "tests/e2e/**"
       - "package.json"
@@ -58,6 +60,9 @@ jobs:
       - name: Run Playwright preflight
         run: npm run test:e2e:preflight
 
+      - name: Run Productive UI browser acceptance
+        run: npm run test:e2e:fes06c
+
       - name: Upload acceptance evidence
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v5
@@ -68,5 +73,8 @@ jobs:
             artifacts/playwright-report
             artifacts/playwright-test-results
             artifacts/fes03-playwright-results.json
+            artifacts/fes06c-playwright-report
+            artifacts/fes06c-playwright-test-results
+            artifacts/fes06c-playwright-results.json
           if-no-files-found: error
           retention-days: 30
