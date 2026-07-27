@@ -188,3 +188,77 @@ test("migration checks payload indexes", () => {
   assert.match(sql, /payload ->> 'organizationId'/i);
   assert.match(sql, /payload ->> 'advisorId'/i);
 });
+
+/* ACT04B_SECURITY_HARDENING_TESTS */
+
+test("migration forces row level security", () => {
+  const sql =
+    fs.readFileSync(MIGRATION, "utf8");
+
+  assert.match(
+    sql,
+    /force row level security/i,
+  );
+});
+
+test("migration revokes direct table access", () => {
+  const sql =
+    fs.readFileSync(MIGRATION, "utf8");
+
+  assert.match(
+    sql,
+    /revoke all\s+on table public\.activity_records\s+from anon, authenticated/is,
+  );
+});
+
+test("migration uses authenticated security definer RPCs", () => {
+  const sql =
+    fs.readFileSync(MIGRATION, "utf8");
+
+  assert.match(
+    sql,
+    /activity_records_append_v1[\s\S]*security definer[\s\S]*auth\.uid\(\)/i,
+  );
+  assert.match(
+    sql,
+    /advisor identity injection denied/i,
+  );
+});
+
+test("migration validates deterministic truth key", () => {
+  const sql =
+    fs.readFileSync(MIGRATION, "utf8");
+
+  assert.match(
+    sql,
+    /extensions\.digest/i,
+  );
+  assert.match(
+    sql,
+    /activity truth key mismatch/i,
+  );
+});
+
+test("migration handles canonical JSON null filters", () => {
+  const sql =
+    fs.readFileSync(MIGRATION, "utf8");
+
+  assert.match(
+    sql,
+    /jsonb_typeof\(\s*p_query -> 'types'\s*\) = 'array'/i,
+  );
+  assert.match(
+    sql,
+    /jsonb_typeof\(\s*p_query -> 'cursor'\s*\) = 'object'/i,
+  );
+});
+
+test("migration denies anonymous RPC execution", () => {
+  const sql =
+    fs.readFileSync(MIGRATION, "utf8");
+
+  assert.match(
+    sql,
+    /revoke all[\s\S]*activity_records_append_v1[\s\S]*from public, anon/is,
+  );
+});
