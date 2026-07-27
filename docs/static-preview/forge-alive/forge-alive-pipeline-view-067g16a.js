@@ -13,6 +13,7 @@ import '../../nash/remote-draft-provider-client-boundary.js';
 import '../../nash/pipeline-nash-draft-orchestrator.js';
 import '../../advisor-os/sales-pipeline/productive-prospect-ui.js';
 import '../../advisor-os/sales-pipeline/productive-prospect-bootstrap.js';
+import '../../advisor-os/event-evidence/productive-ui-projection-binding.js';
 
 const VERSION = '067G16D_FORGE_ALIVE_PUBLIC_VIEW_V1';
 const SUPPORTED_VIEWS = new Set(['inicio', 'pipeline', 'clientes', 'mas', 'alfred', 'reportes']);
@@ -46,6 +47,20 @@ let navListenerCount = 0;
 let productivePipeline = null;
 let productiveDraftOrchestrator = null;
 let authListenerBound = false;
+let productiveProjectionBinding = null;
+
+function ensureProductiveProjectionBinding() {
+  if (productiveProjectionBinding) return productiveProjectionBinding;
+  const factory = globalThis.ForgeProductiveUIProjectionBindingFES06B;
+  if (!factory?.create) return null;
+  productiveProjectionBinding = factory.create({
+    root: document,
+    initialSnapshot:
+      globalThis.__FORGE_EVENT_EVIDENCE_PROJECTION_SNAPSHOT__ || null,
+  });
+  productiveProjectionBinding.mountHome(shell());
+  return productiveProjectionBinding;
+}
 
 function emitPipelineRendered() {
   window.dispatchEvent(new CustomEvent('forge:pipeline-rendered', {
@@ -174,6 +189,7 @@ async function renderPipeline(context) {
         });
       }
       await productivePipeline.load();
+      ensureProductiveProjectionBinding()?.mountPipeline(outlet);
     } catch (error) {
       console.error('[067G17B PRODUCTIVE PIPELINE]', error?.code || 'BOOTSTRAP_FAILED');
       outlet.innerHTML = globalThis.ForgePipelineUI.renderPipelineUI({
@@ -289,6 +305,7 @@ function bind() {
 function init() {
   markHomeNodes();
   ensureHost();
+  ensureProductiveProjectionBinding();
   bind();
   void open(requestedView(), { updateUrl:false });
 }
@@ -303,6 +320,7 @@ globalThis.ForgeAliveStaticView067G16A = Object.freeze({
     pipelineMountCount:Number(host?.dataset.pipelineMountCount || 0),
     navListenerCount,
     productiveDraftOrchestratorAvailable:Boolean(productiveDraftOrchestrator),
+    productiveProjectionBinding:productiveProjectionBinding?.diagnostics?.() || null,
   }),
 });
 
