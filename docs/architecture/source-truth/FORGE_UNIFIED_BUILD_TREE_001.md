@@ -13353,3 +13353,21 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Productive UI binding in FES 05
 - 🔵 FES 06 productive UI binding scope
 <!-- END FORGEOS:FES_05D_PASSIVE_CAPTURE_RUNTIME_ACCEPTANCE -->
+
+<!-- BEGIN FORGEOS:FES_06A_PRODUCTIVE_UI_BINDING_SCOPE -->
+## FES 06A Productive UI Binding Scope
+
+- 🟢 Productive UI candidate inventory
+- 🟢 Activity binding boundary
+- 🟢 Prospect Detail binding boundary
+- 🟢 Pipeline Card binding boundary
+- 🟢 Mi Día binding boundary
+- 🟢 Explicit loading / ready / empty / unavailable / invalid states
+- 🟢 Native Linux Node acceptance
+- 🟢 Chromium Playwright acceptance
+- 🔴 UI creates canonical events
+- 🔴 UI mutates ledger, timeline or projections
+- 🔴 UI promotes handoff or inference to business truth
+- 🔴 Broad candidate-file rewrite without approved manifest
+- 🔵 FES 06B read-only productive binding implementation
+<!-- END FORGEOS:FES_06A_PRODUCTIVE_UI_BINDING_SCOPE -->
