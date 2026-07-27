@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "activity-foundation-freeze.v1",
+  "freezeId": "activity-foundation-v1",
+  "sourceCommit": "97f7884080d6e687065e3be60cb5cd6d51c032c9",
+  "branch": "feature/activity-domain-runtime-foundation",
+  "tag": "activity-foundation-v1",
+  "contracts": {
+    "activityRecord": "activity-record.v1",
+    "pipelineEvent": "pipeline-transition.v1",
+    "pipelineProjection": "pipeline-activity-projection.v1",
+    "periodAggregation": "activity-period-aggregation.v1",
+    "feed": "activity-feed.v1",
+    "feedItem": "activity-feed-item.v1",
+    "readRuntime": "activity-read-runtime.v1",
+    "persistenceMigration": "20260726000200"
+  },
+  "remoteAcceptance": {
+    "phase": "ACT-09",
+    "status": "REMOTE_ACCEPTED",
+    "appendRpcCalls": 0,
+    "temporaryActivityRows": 0,
+    "temporaryAuthResidue": "ZERO",
+    "schemaMutation": false
+  },
+  "boundaries": {
+    "writeAuthority": "ACTIVITY_REPOSITORY_APPEND_ONLY",
+    "readAuthority": "ACTIVITY_READ_RUNTIME",
+    "productiveUiMutation": false,
+    "muiTokenAuthority": false,
+    "scoringAuthority": false,
+    "pipelineWriterMutation": false,
+    "remoteSchemaMutation": false
+  },
+  "frozenFiles": [
+    {
+      "path": "advisor-os/activity/application/activity-feed-projector.mjs",
+      "sha256": "9a213e971e830210c34c02f7ff9c5c4916fb96d1938aa3f481c71e2c8e8e4fd1",
+      "bytes": 15437,
+      "lines": 834
+    },
+    {
+      "path": "advisor-os/activity/application/activity-period-aggregator.mjs",
+      "sha256": "74805096625adf734d2d23bad69f3f41caeb16c28d0fe2a856102f603cc8e272",
+      "bytes": 12662,
+      "lines": 648
+    },
+    {
+      "path": "advisor-os/activity/application/activity-repository-port.mjs",
+      "sha256": "68fc465141c14baf6fc6832102addefcc3bfab0bc5288b6238505e1047517880",
+      "bytes": 7711,
+      "lines": 458
+    },
+    {
+      "path": "advisor-os/activity/application/pipeline-to-activity-projector.mjs",
+      "sha256": "312b59d89f7b7adb5046eca12605863e48a0f59774be34e278cce667558f57cf",
+      "bytes": 14620,
+      "lines": 760
+    },
+    {
+      "path": "advisor-os/activity/domain/activity-record.mjs",
+      "sha256": "0677adff2bc0120fdb235eee6789d46d1ee24b45d6ae126265df81986d114595",
+      "bytes": 12025,
+      "lines": 685
+    },
+    {
+      "path": "advisor-os/activity/infrastructure/activity-persistence-codec.mjs",
+      "sha256": "2be5195182957524f07ffff16f8365e9093ff049280652457a4f9d6d0dc67664",
+      "bytes": 4632,
+      "lines": 104
+    },
+    {
+      "path": "advisor-os/activity/infrastructure/in-memory-activity-repository.mjs",
+      "sha256": "2c93ac333c108a60a75d173aee0fe11ab7fd130e45848491213954d3049c1d8c",
+      "bytes": 7322,
+      "lines": 397
+    },
+    {
+      "path": "advisor-os/activity/infrastructure/supabase-activity-repository.mjs",
+      "sha256": "c74f2c87cbad72aadbec4597836ab1708d3436fb0c9bd6ec25be4f791f3b4840",
+      "bytes": 3873,
+      "lines": 123
+    },
+    {
+      "path": "advisor-os/activity/runtime/activity-read-runtime.mjs",
+      "sha256": "8e6bcbc0acb026477815c16fc5cdcf7450690ca32fb75191e4525168c214ca36",
+      "bytes": 5993,
+      "lines": 338
+    },
+    {
+      "path": "docs/architecture/performance/ACT-09_ACTIVITY_REMOTE_READ_ACCEPTANCE_CLOSURE.md",
+      "sha256": "cae3b0e4112fd79e3644d9c35140749f27d59f7e40ea0a6cc0ff9860ec83d79f",
+      "bytes": 791,
+      "lines": 27
+    },
+    {
+      "path": "docs/evidence/activity/ACT-09_ACTIVITY_REMOTE_READ_ACCEPTANCE.md",
+      "sha256": "ca675ee70e621903cb283bc60cb97fd62fe36c65b50563a7f80d37bfe1417223",
+      "bytes": 1355,
+      "lines": 43
+    },
+    {
+      "path": "scripts/ci/act-09-activity-remote-read-acceptance.mjs",
+      "sha256": "769b98968a9dc49953b57303d771ba5c8d932e90695bbb8fc9b0d34c90c9424c",
+      "bytes": 9439,
+      "lines": 502
+    },
+    {
+      "path": "supabase/migrations/20260726000200_act04_activity_records.sql",
+      "sha256": "304d3d292ba0f984bf02bf788452d8b499c7136b8c4a63aa79c1ee8b558853cf",
+      "bytes": 16033,
+      "lines": 779
+    },
+    {
+      "path": "tests/activity-feed-projector-test.mjs",
+      "sha256": "966c580ecd0e43a6616e02362ad42d36c0f256ab3d74546cc36c0e8792536b31",
+      "bytes": 17945,
+      "lines": 936
+    },
+    {
+      "path": "tests/activity-period-aggregator-test.mjs",
+      "sha256": "e751674f1055972ff4749fcdfccf5a745f94e652048783e5aa78008cda33f001",
+      "bytes": 16772,
+      "lines": 864
+    },
+    {
+      "path": "tests/activity-persistence-adapter-test.mjs",
+      "sha256": "7c2043a6c45455feecd16e930b7fc3a5ccd707bb72459f836dd0a819575d2860",
+      "bytes": 10292,
+      "lines": 264
+    },
+    {
+      "path": "tests/activity-read-runtime-test.mjs",
+      "sha256": "19bf735fa7bac2e3f11568f3989550d4ab5d01ad55641d146a5782b28f121317",
+      "bytes": 12508,
+      "lines": 651
+    },
+    {
+      "path": "tests/activity-record-contract-test.mjs",
+      "sha256": "fdb9fe4ce41f5cb271337060a0cacda97f180d10072a38e82c79e7e052845106",
+      "bytes": 9393,
+      "lines": 475
+    },
+    {
+      "path": "tests/activity-repository-port-test.mjs",
+      "sha256": "573e35158ce8459e704f604cc129474538bf65fe509cd57627ff2a2af43af637",
+      "bytes": 15546,
+      "lines": 752
+    },
+    {
+      "path": "tests/pipeline-to-activity-projector-test.mjs",
+      "sha256": "f7c45859f35bf4f936a525df45748df1aece60570572afa11bdd92013e0b22b6",
+      "bytes": 10139,
+      "lines": 462
+    }
+  ],
+  "next": "PERF-01_PERFORMANCE_SCORING_CONTRACT_DISCOVERY"
+}

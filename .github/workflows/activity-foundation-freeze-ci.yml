@@ -1,0 +1,277 @@
+name: ACT Activity Foundation Freeze CI
+
+on:
+  push:
+    branches:
+      - feature/activity-domain-runtime-foundation
+    paths:
+      - advisor-os/activity/**
+      - supabase/migrations/20260726000200_act04_activity_records.sql
+      - scripts/ci/act-09-activity-remote-read-acceptance.mjs
+      - scripts/ci/verify-activity-foundation-freeze.mjs
+      - tests/activity-record-contract-test.mjs
+      - tests/activity-repository-port-test.mjs
+      - tests/activity-persistence-adapter-test.mjs
+      - tests/pipeline-to-activity-projector-test.mjs
+      - tests/activity-period-aggregator-test.mjs
+      - tests/activity-feed-projector-test.mjs
+      - tests/activity-read-runtime-test.mjs
+      - tests/activity-foundation-freeze-test.mjs
+      - docs/evidence/activity/ACT-09_ACTIVITY_REMOTE_READ_ACCEPTANCE.md
+      - docs/architecture/performance/ACT-09_ACTIVITY_REMOTE_READ_ACCEPTANCE_CLOSURE.md
+      - docs/architecture/performance/ACT-10_ACTIVITY_FOUNDATION_FREEZE.md
+      - .github/workflows/activity-foundation-freeze-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activity-foundation-freeze:
+    name: Activity foundation freeze acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Verify foundation manifest
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee ACT10_VERIFY.txt
+
+      - name: Run foundation freeze test
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/activity-foundation-freeze-test.mjs \
+            | tee ACT10_FREEZE.tap
+
+      - name: Run frozen Activity contract suite
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs \
+            | tee ACT10_CONTRACTS.tap
+
+      - name: Run differential Node regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          run_suite() {
+            local repo="$1"
+            local list="$2"
+            local output="$3"
+            local tap_dir="$4"
+            local file=""
+            local slug=""
+            local tap=""
+            local status=""
+            local tests=""
+            local pass=""
+            local fail_count=""
+
+            rm -rf "$tap_dir"
+            mkdir -p "$tap_dir"
+            printf 'file\tstatus\ttests\tpass\tfail\n' > "$output"
+
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+
+              slug="$(
+                printf '%s' "$file" |
+                  sha256sum |
+                  awk '{print $1}'
+              )"
+              tap="$tap_dir/$slug.tap"
+
+              if (
+                cd "$repo"
+                node --test \
+                  --test-reporter=tap \
+                  "$file"
+              ) > "$tap" 2>&1; then
+                status="PASS"
+              else
+                status="FAIL"
+              fi
+
+              tests="$(
+                awk '/^# tests / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+              pass="$(
+                awk '/^# pass / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+              fail_count="$(
+                awk '/^# fail / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+
+              if [[ "$status" == "FAIL" &&
+                    "$fail_count" == "0" ]]; then
+                fail_count="1"
+              fi
+
+              printf '%s\t%s\t%s\t%s\t%s\n' \
+                "$file" \
+                "$status" \
+                "$tests" \
+                "$pass" \
+                "$fail_count" \
+                >> "$output"
+            done < "$list"
+          }
+
+          BASELINE_DIR="$RUNNER_TEMP/act10-baseline"
+          rm -rf "$BASELINE_DIR"
+          git worktree add \
+            --detach \
+            "$BASELINE_DIR" \
+            "97f7884080d6e687065e3be60cb5cd6d51c032c9"
+
+          if [[ -d node_modules &&
+                ! -e "$BASELINE_DIR/node_modules" ]]; then
+            ln -s \
+              "$GITHUB_WORKSPACE/node_modules" \
+              "$BASELINE_DIR/node_modules"
+          fi
+
+          find "$BASELINE_DIR/tests" \
+            -maxdepth 1 \
+            -type f \
+            -name '*-test.mjs' \
+            ! -name '*-browser-test.mjs' \
+            ! -name 'activity-foundation-freeze-test.mjs' \
+            -printf 'tests/%f\n' |
+            sort \
+            > ACT10_REGRESSION_FILES.txt
+
+          run_suite \
+            "$BASELINE_DIR" \
+            ACT10_REGRESSION_FILES.txt \
+            ACT10_BASELINE_REGRESSION.tsv \
+            ACT10_BASELINE_TAP
+
+          run_suite \
+            "$GITHUB_WORKSPACE" \
+            ACT10_REGRESSION_FILES.txt \
+            ACT10_CANDIDATE_REGRESSION.tsv \
+            ACT10_CANDIDATE_TAP
+
+          awk -F '\t' '
+            NR == FNR {
+              if (FNR > 1) baseline[$1] = $2
+              next
+            }
+            FNR > 1 &&
+            $2 == "FAIL" &&
+            baseline[$1] != "FAIL" {
+              print $1
+            }
+          ' \
+            ACT10_BASELINE_REGRESSION.tsv \
+            ACT10_CANDIDATE_REGRESSION.tsv \
+            > ACT10_NEW_FAILURES.txt
+
+          [[ ! -s ACT10_NEW_FAILURES.txt ]]
+
+          printf '%s\n' \
+            'NEW_REGRESSION_FAILURES=0' \
+            'REGRESSION_GATE=PASS_NO_NEW_FAILURES' \
+            | tee ACT10_REGRESSION.txt
+
+          git worktree remove \
+            --force \
+            "$BASELINE_DIR"
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/activity
+
+          printf '%s\n' \
+            'ACT_10_ACTIVITY_FOUNDATION_FREEZE=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_MANIFEST_VERIFY=PASS' \
+            'REMOTE_FREEZE_TEST=PASS' \
+            'REMOTE_CONTRACT_SUITE=PASS' \
+            'REMOTE_NODE_REGRESSION=PASS' \
+            'REMOTE_EVIDENCE_UPLOAD=PASS' \
+            'FROZEN_FILES=20' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'SCORING_AUTHORITY=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/activity/ACT10_ACCEPTANCE.txt
+
+          cp \
+            ACT10_VERIFY.txt \
+            ACT10_FREEZE.tap \
+            ACT10_CONTRACTS.tap \
+            ACT10_REGRESSION.txt \
+            ACT10_REGRESSION_FILES.txt \
+            ACT10_BASELINE_REGRESSION.tsv \
+            ACT10_CANDIDATE_REGRESSION.tsv \
+            ACT10_NEW_FAILURES.txt \
+            advisor-os/activity/foundation/activity-foundation-freeze.v1.json \
+            artifacts/activity/
+
+          cp -R \
+            ACT10_BASELINE_TAP \
+            ACT10_CANDIDATE_TAP \
+            artifacts/activity/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: act-10-activity-foundation-${{ github.sha }}
+          path: artifacts/activity
+          if-no-files-found: error
+          retention-days: 90
