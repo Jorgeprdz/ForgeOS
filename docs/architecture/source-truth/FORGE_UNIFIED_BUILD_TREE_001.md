@@ -13335,3 +13335,21 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Silent bridge observation drop
 - 🔵 FES 05D passive-capture runtime acceptance
 <!-- END FORGEOS:FES_05C_BRIDGE_TO_CANONICAL_EVENT_ADAPTER -->
+
+<!-- BEGIN FORGEOS:FES_05D_PASSIVE_CAPTURE_RUNTIME_ACCEPTANCE -->
+## FES 05D Passive Capture Runtime Acceptance
+
+- 🟢 FES 05 passive activity capture bridges closed
+- 🟢 Observation → canonical event → ledger → timeline
+- 🟢 Timeline → Activity → Prospect Detail → Pipeline Card → Mi Día
+- 🟢 Twenty-one passive canonical event types covered
+- 🟢 Blocked observations preserved explicitly
+- 🟢 Deterministic replay and rebuild
+- 🟢 Native Linux Node acceptance
+- 🟢 Chromium Playwright acceptance
+- 🔴 Handoff promoted to result
+- 🔴 Pipeline movement promoted without source truth
+- 🔴 Multiple flows silently merged
+- 🔴 Productive UI binding in FES 05
+- 🔵 FES 06 productive UI binding scope
+<!-- END FORGEOS:FES_05D_PASSIVE_CAPTURE_RUNTIME_ACCEPTANCE -->
