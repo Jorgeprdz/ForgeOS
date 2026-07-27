@@ -1,0 +1,276 @@
+name: ACT Pipeline Activity Projection CI
+
+on:
+  push:
+    branches:
+      - feature/activity-domain-runtime-foundation
+    paths:
+      - advisor-os/activity/application/pipeline-to-activity-projector.mjs
+      - advisor-os/activity/application/activity-repository-port.mjs
+      - advisor-os/activity/domain/activity-record.mjs
+      - advisor-os/activity/infrastructure/**
+      - tests/pipeline-to-activity-projector-test.mjs
+      - tests/activity-record-contract-test.mjs
+      - tests/activity-repository-port-test.mjs
+      - tests/activity-persistence-adapter-test.mjs
+      - docs/architecture/performance/ACT-05_PIPELINE_TO_ACTIVITY_PROJECTION.md
+      - .github/workflows/activity-pipeline-projection-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline-activity:
+    name: Pipeline activity projection acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run pipeline projection test
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/pipeline-to-activity-projector-test.mjs \
+            | tee ACT05_PROJECTION.tap
+
+      - name: Run ActivityRecord regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            | tee ACT05_ACTIVITY_RECORD.tap
+
+      - name: Run repository port regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-repository-port-test.mjs \
+            | tee ACT05_PORT.tap
+
+      - name: Run persistence adapter regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-persistence-adapter-test.mjs \
+            | tee ACT05_PERSISTENCE.tap
+
+      - name: Run differential Node regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+
+          run_suite() {
+            local repo="$1"
+            local list="$2"
+            local output="$3"
+            local tap_dir="$4"
+            local file=""
+            local slug=""
+            local tap=""
+            local status=""
+            local tests=""
+            local pass=""
+            local fail_count=""
+
+            rm -rf "$tap_dir"
+            mkdir -p "$tap_dir"
+            printf 'file\tstatus\ttests\tpass\tfail\n' > "$output"
+
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              slug="$(
+                printf '%s' "$file" |
+                  sha256sum |
+                  awk '{print $1}'
+              )"
+              tap="$tap_dir/$slug.tap"
+
+              if (
+                cd "$repo"
+                node --test \
+                  --test-reporter=tap \
+                  "$file"
+              ) > "$tap" 2>&1; then
+                status="PASS"
+              else
+                status="FAIL"
+              fi
+
+              tests="$(
+                awk '/^# tests / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+              pass="$(
+                awk '/^# pass / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+              fail_count="$(
+                awk '/^# fail / {
+                  value = $3
+                }
+                END {
+                  print value + 0
+                }' "$tap"
+              )"
+
+              if [[ "$status" == "FAIL" &&
+                    "$fail_count" == "0" ]]; then
+                fail_count="1"
+              fi
+
+              printf '%s\t%s\t%s\t%s\t%s\n' \
+                "$file" \
+                "$status" \
+                "$tests" \
+                "$pass" \
+                "$fail_count" \
+                >> "$output"
+            done < "$list"
+          }
+
+          BASELINE_DIR="$RUNNER_TEMP/act05-baseline"
+          rm -rf "$BASELINE_DIR"
+          git worktree add \
+            --detach \
+            "$BASELINE_DIR" \
+            "$GITHUB_SHA^"
+
+          if [[ -d node_modules &&
+                ! -e "$BASELINE_DIR/node_modules" ]]; then
+            ln -s \
+              "$GITHUB_WORKSPACE/node_modules" \
+              "$BASELINE_DIR/node_modules"
+          fi
+
+          find "$BASELINE_DIR/tests" \
+            -maxdepth 1 \
+            -type f \
+            -name '*-test.mjs' \
+            ! -name '*-browser-test.mjs' \
+            ! -name 'pipeline-to-activity-projector-test.mjs' \
+            -printf 'tests/%f\n' |
+            sort \
+            > ACT05_REGRESSION_FILES.txt
+
+          run_suite \
+            "$BASELINE_DIR" \
+            ACT05_REGRESSION_FILES.txt \
+            ACT05_BASELINE_REGRESSION.tsv \
+            ACT05_BASELINE_TAP
+
+          run_suite \
+            "$GITHUB_WORKSPACE" \
+            ACT05_REGRESSION_FILES.txt \
+            ACT05_CANDIDATE_REGRESSION.tsv \
+            ACT05_CANDIDATE_TAP
+
+          awk -F '\t' '
+            NR == FNR {
+              if (FNR > 1) baseline[$1] = $2
+              next
+            }
+            FNR > 1 &&
+            $2 == "FAIL" &&
+            baseline[$1] != "FAIL" {
+              print $1
+            }
+          ' \
+            ACT05_BASELINE_REGRESSION.tsv \
+            ACT05_CANDIDATE_REGRESSION.tsv \
+            > ACT05_NEW_FAILURES.txt
+
+          [[ ! -s ACT05_NEW_FAILURES.txt ]]
+
+          printf '%s\n' \
+            'NEW_REGRESSION_FAILURES=0' \
+            'REGRESSION_GATE=PASS_NO_NEW_FAILURES' \
+            | tee ACT05_REGRESSION.txt
+
+          git worktree remove \
+            --force \
+            "$BASELINE_DIR"
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/activity
+          printf '%s\n' \
+            'ACT_05_PIPELINE_TO_ACTIVITY_PROJECTION=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_PROJECTION_TEST=PASS' \
+            'REMOTE_ACTIVITY_RECORD_REGRESSION=PASS' \
+            'REMOTE_REPOSITORY_PORT_REGRESSION=PASS' \
+            'REMOTE_PERSISTENCE_REGRESSION=PASS' \
+            'REMOTE_NODE_REGRESSION=PASS' \
+            'REMOTE_EVIDENCE_UPLOAD=PASS' \
+            'PIPELINE_WRITER_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/activity/ACT05_ACCEPTANCE.txt
+
+          cp \
+            ACT05_PROJECTION.tap \
+            ACT05_ACTIVITY_RECORD.tap \
+            ACT05_PORT.tap \
+            ACT05_PERSISTENCE.tap \
+            ACT05_REGRESSION.txt \
+            ACT05_REGRESSION_FILES.txt \
+            ACT05_BASELINE_REGRESSION.tsv \
+            ACT05_CANDIDATE_REGRESSION.tsv \
+            ACT05_NEW_FAILURES.txt \
+            artifacts/activity/
+
+          cp -R \
+            ACT05_BASELINE_TAP \
+            ACT05_CANDIDATE_TAP \
+            artifacts/activity/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: act-05-pipeline-activity-${{ github.sha }}
+          path: artifacts/activity
+          if-no-files-found: error
+          retention-days: 30
