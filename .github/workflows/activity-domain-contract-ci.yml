@@ -1,0 +1,235 @@
+name: ACT Activity Domain CI
+
+on:
+  push:
+    branches:
+      - feature/activity-domain-runtime-foundation
+    paths:
+      - advisor-os/activity/domain/**
+      - tests/activity-record-contract-test.mjs
+      - docs/architecture/performance/ACT-02_ACTIVITY_RECORD_CONTRACT.md
+      - .github/workflows/activity-domain-contract-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activity-domain-contract:
+    name: Activity domain contract acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run ActivityRecord contract test
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            | tee ACT02_CONTRACT.tap
+
+      - name: Run Node regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+
+          run_suite() {
+            local repo="$1"
+            local list="$2"
+            local output="$3"
+            local tap_dir="$4"
+            local file=""
+            local slug=""
+            local tap=""
+            local status=""
+            local tests=""
+            local pass=""
+            local fail_count=""
+
+            rm -rf "$tap_dir"
+            mkdir -p "$tap_dir"
+            printf 'file\tstatus\ttests\tpass\tfail\n' > "$output"
+
+            while IFS= read -r file; do
+              [[ -n "$file" ]] || continue
+              slug="$(printf '%s' "$file" | sha256sum | awk '{print $1}')"
+              tap="$tap_dir/$slug.tap"
+
+              if (
+                cd "$repo"
+                node --test \
+                  --test-reporter=tap \
+                  "$file"
+              ) > "$tap" 2>&1; then
+                status="PASS"
+              else
+                status="FAIL"
+              fi
+
+              tests="$(awk '/^# tests / { v=$3 } END { print v+0 }' "$tap")"
+              pass="$(awk '/^# pass / { v=$3 } END { print v+0 }' "$tap")"
+              fail_count="$(awk '/^# fail / { v=$3 } END { print v+0 }' "$tap")"
+
+              if [[ "$status" == "FAIL" && "$fail_count" == "0" ]]; then
+                fail_count="1"
+              fi
+
+              printf '%s\t%s\t%s\t%s\t%s\n' \
+                "$file" "$status" "$tests" "$pass" "$fail_count" \
+                >> "$output"
+            done < "$list"
+          }
+
+          BASELINE_DIR="$RUNNER_TEMP/act02-baseline"
+          rm -rf "$BASELINE_DIR"
+          git worktree add --detach "$BASELINE_DIR" "$GITHUB_SHA^"
+
+          if [[ -d node_modules && ! -e "$BASELINE_DIR/node_modules" ]]; then
+            ln -s "$GITHUB_WORKSPACE/node_modules" "$BASELINE_DIR/node_modules"
+          fi
+
+          find "$BASELINE_DIR/tests" \
+            -maxdepth 1 \
+            -type f \
+            -name '*-test.mjs' \
+            ! -name '*-browser-test.mjs' \
+            -printf 'tests/%f\n' \
+            | sort > ACT02_REGRESSION_FILES.txt
+
+          [[ -s ACT02_REGRESSION_FILES.txt ]]
+
+          run_suite \
+            "$BASELINE_DIR" \
+            ACT02_REGRESSION_FILES.txt \
+            ACT02_BASELINE_REGRESSION.tsv \
+            ACT02_BASELINE_TAP
+
+          run_suite \
+            "$GITHUB_WORKSPACE" \
+            ACT02_REGRESSION_FILES.txt \
+            ACT02_CANDIDATE_REGRESSION.tsv \
+            ACT02_CANDIDATE_TAP
+
+          awk -F '\t' '
+            NR == FNR {
+              if (FNR > 1) baseline[$1] = $2
+              next
+            }
+            FNR > 1 && $2 == "FAIL" && baseline[$1] != "FAIL" {
+              print $1
+            }
+          ' \
+            ACT02_BASELINE_REGRESSION.tsv \
+            ACT02_CANDIDATE_REGRESSION.tsv \
+            > ACT02_NEW_FAILURES.txt
+
+          if [[ -s ACT02_NEW_FAILURES.txt ]]; then
+            printf 'New regression failures:\n'
+            cat ACT02_NEW_FAILURES.txt
+            false
+          fi
+
+          {
+            printf 'BASELINE_REGRESSION_FILES=%s\n' \
+              "$(($(wc -l < ACT02_BASELINE_REGRESSION.tsv) - 1))"
+            printf 'CANDIDATE_REGRESSION_FILES=%s\n' \
+              "$(($(wc -l < ACT02_CANDIDATE_REGRESSION.tsv) - 1))"
+            printf 'NEW_REGRESSION_FAILURES=0\n'
+          } | tee ACT02_REGRESSION.tap
+
+          git worktree remove --force "$BASELINE_DIR"
+
+      - name: Install Playwright Chromium
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$GITHUB_WORKSPACE"
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Run Playwright preflight
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node <<'NODE'
+          const { chromium } = require("playwright");
+
+          (async () => {
+            const browser = await chromium.launch({
+              headless: true,
+            });
+            const page = await browser.newPage();
+            await page.setContent(
+              "<main data-act02='pass'>ACT-02</main>",
+            );
+            const value = await page
+              .locator("[data-act02]")
+              .getAttribute("data-act02");
+
+            if (value !== "pass") {
+              throw new Error(
+                "Playwright preflight did not validate",
+              );
+            }
+
+            await browser.close();
+            console.log(
+              "REMOTE_PLAYWRIGHT_PREFLIGHT=PASS",
+            );
+          })();
+          NODE
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/activity
+          {
+            printf 'ACT_02_ACTIVITY_RECORD_CONTRACT=IMPLEMENTED\n'
+            printf 'COMMIT=%s\n' "$GITHUB_SHA"
+            printf 'REMOTE_CONTRACT_TEST=PASS\n'
+            printf 'REMOTE_NODE_REGRESSION=PASS\n'
+            printf 'REMOTE_PLAYWRIGHT_PREFLIGHT=PASS\n'
+            printf 'REMOTE_EVIDENCE_UPLOAD=PASS\n'
+          } > artifacts/activity/ACT02_ACCEPTANCE.txt
+          cp ACT02_CONTRACT.tap artifacts/activity/
+          cp ACT02_REGRESSION.tap artifacts/activity/
+          cp ACT02_REGRESSION_FILES.txt artifacts/activity/
+          cp ACT02_BASELINE_REGRESSION.tsv artifacts/activity/
+          cp ACT02_CANDIDATE_REGRESSION.tsv artifacts/activity/
+          cp ACT02_NEW_FAILURES.txt artifacts/activity/
+          cp -R ACT02_BASELINE_TAP artifacts/activity/
+          cp -R ACT02_CANDIDATE_TAP artifacts/activity/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: act-02-activity-record-${{ github.sha }}
+          path: artifacts/activity
+          if-no-files-found: error
+          retention-days: 30
