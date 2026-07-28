@@ -14,6 +14,9 @@ const candidateRoot = process.env.FORGE_UI_M03_CANDIDATE_ROOT;
 const outputRoot = process.env.FORGE_UI_M03_OUTPUT;
 const sourceCommit = process.env.FORGE_UI_M03_AUTHORITY_COMMIT;
 const candidateCommit = process.env.GITHUB_SHA || "local-diagnostic";
+const externalCandidateUrl =
+  process.env.FORGE_UI_M03_CANDIDATE_URL || "";
+const pagesMode = externalCandidateUrl.length > 0;
 
 if (!authorityRoot || !candidateRoot || !outputRoot || !sourceCommit) {
   throw new Error("Missing UI-M03 same-environment gate configuration");
@@ -170,10 +173,14 @@ function sourceAudit() {
   return audit;
 }
 
-async function stablePage(context, url) {
+async function stablePage(context, url, responseAudit) {
   const page = await context.newPage();
   const failedRequests = [];
   page.on("response", (response) => {
+    responseAudit.push({
+      url: response.url(),
+      status: response.status(),
+    });
     if (response.status() >= 400) {
       failedRequests.push({
         url: response.url(),
@@ -316,9 +323,15 @@ const candidateServer = serverFor(candidateRoot, "index.html");
 const authorityBaseUrl = await listen(authorityServer.server);
 const authorityUrl =
   `${authorityBaseUrl}examples/home-mobile-md3-alfred.html`;
-const candidateUrl = await listen(candidateServer.server);
+const candidateUrl = pagesMode
+  ? externalCandidateUrl
+  : await listen(candidateServer.server);
 const source = sourceAudit();
 let browser;
+const browserRequests = {
+  authority: [],
+  candidate: [],
+};
 
 try {
   browser = await chromium.launch({
@@ -345,10 +358,12 @@ try {
       const authorityPage = await stablePage(
         authorityContext,
         authorityUrl,
+        browserRequests.authority,
       );
       const candidatePage = await stablePage(
         candidateContext,
         candidateUrl,
+        browserRequests.candidate,
       );
       const authorityAudit = await auditPage(authorityPage);
       const candidateAudit = await auditPage(candidatePage);
@@ -357,15 +372,28 @@ try {
         candidateAudit,
       );
 
-      for (const state of ["viewport", "full", "alfred-open"]) {
+      const states = pagesMode
+        ? (
+          profile.id === "mobile-390x844"
+          || profile.id === "desktop-1440x900"
+          || profile.id === "desktop-wide-1920x1080"
+            ? ["viewport", "alfred-open"]
+            : ["viewport"]
+        )
+        : ["viewport", "full", "alfred-open"];
+      for (const state of states) {
         if (state === "alfred-open") {
           await openAlfred(authorityPage);
           await openAlfred(candidatePage);
         }
         const authorityName =
           `authority-${profile.id}-${state}.png`;
-        const candidateName =
-          `candidate-${profile.id}-${state}.png`;
+        const candidateState = pagesMode && state === "viewport"
+          ? "home"
+          : state;
+        const candidateName = pagesMode
+          ? `pages-${profile.id}-${candidateState}.png`
+          : `candidate-${profile.id}-${state}.png`;
         const diffName = `${profile.id}-${state}.png`;
         const authorityFile = path.join(
           authorityDirectory,
@@ -440,18 +468,21 @@ try {
     deviceScaleFactor: 1,
   };
   const requestAudit = {
-    authority: authorityServer.requests,
-    candidate: candidateServer.requests,
-    authority404: authorityServer.requests.filter(
+    authority: browserRequests.authority,
+    candidate: browserRequests.candidate,
+    authority404: browserRequests.authority.filter(
       (entry) => entry.status === 404,
     ).length,
-    candidate404: candidateServer.requests.filter(
+    candidate404: browserRequests.candidate.filter(
       (entry) => entry.status === 404,
     ).length,
   };
+  const expectedScreenshotCount = pagesMode ? 8 : 15;
   const report = {
     generatedAt: new Date().toISOString(),
-    gateModel: "SAME_ENVIRONMENT_SOURCE_AUTHORITY",
+    gateModel: pagesMode
+      ? "PAGES_SAME_ENVIRONMENT_SOURCE_AUTHORITY"
+      : "SAME_ENVIRONMENT_SOURCE_AUTHORITY",
     authoritySourceCommit: sourceCommit,
     candidateCommit,
     authorityUrl,
@@ -478,6 +509,7 @@ try {
       fs.readdirSync(candidateDirectory).filter(
         (name) => name.endsWith(".png"),
       ).length,
+    pagesMode,
     comparisons,
   };
   report.visualFailures = comparisons.filter(
@@ -490,8 +522,8 @@ try {
     source.pass
     && requestAudit.authority404 === 0
     && requestAudit.candidate404 === 0
-    && report.authorityScreenshotCount === 15
-    && report.candidateScreenshotCount === 15
+    && report.authorityScreenshotCount === expectedScreenshotCount
+    && report.candidateScreenshotCount === expectedScreenshotCount
     && report.visualFailures === 0;
 
   fs.writeFileSync(
@@ -521,6 +553,6 @@ try {
 } finally {
   if (browser) await browser.close();
   await close(authorityServer.server);
-  await close(candidateServer.server);
+  if (!pagesMode) await close(candidateServer.server);
   fs.rmSync(scratchDirectory, { recursive: true, force: true });
 }

@@ -21,6 +21,11 @@ on:
       - "playwright.ui-m03-clean.config.mjs"
       - ".github/workflows/ui-m03-clean-home-rewrite.yml"
   workflow_dispatch:
+    inputs:
+      candidate_url:
+        description: Optional deployed Pages URL for the eight-state remote gate
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -85,6 +90,7 @@ jobs:
           FORGE_UI_M03_AUTHORITY_COMMIT: aeffc2e493ff9b5b3cf3cdb90e1f3c22d026b365
           FORGE_UI_M03_AUTHORITY_ROOT: ${{ runner.temp }}/forge-ui-authority/ui/design-system
           FORGE_UI_M03_CANDIDATE_ROOT: ${{ github.workspace }}/docs/static-preview/forge-alive-material3
+          FORGE_UI_M03_CANDIDATE_URL: ${{ inputs.candidate_url }}
           FORGE_UI_M03_OUTPUT: ${{ github.workspace }}/artifacts/ui-m03-same-environment
         run: |
           node tools/ui-m03-same-environment-gate.mjs
@@ -108,7 +114,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ui-m03-same-environment-authority-${{ github.sha }}
+          name: ui-m03-${{ inputs.candidate_url && 'pages-' || '' }}same-environment-authority-${{ github.sha }}
           path: artifacts/ui-m03-same-environment
           if-no-files-found: error
           retention-days: 14

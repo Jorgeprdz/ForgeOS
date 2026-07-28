@@ -47,16 +47,15 @@ test("gate uses identical deterministic browser context settings", () => {
   assert.match(gate, /browser\.newContext\(contextOptions\)/g);
 });
 
-test("gate captures all five profiles and three required states", () => {
+test("gate captures 15 local states and eight deployed Pages states", () => {
   for (const profile of profiles) {
     assert.match(gate, new RegExp(profile));
   }
-  assert.match(
-    gate,
-    /for \(const state of \["viewport", "full", "alfred-open"\]\)/,
-  );
-  assert.match(gate, /authorityScreenshotCount === 15/);
-  assert.match(gate, /candidateScreenshotCount === 15/);
+  assert.match(gate, /: \["viewport", "full", "alfred-open"\]/);
+  assert.match(gate, /const expectedScreenshotCount = pagesMode \? 8 : 15/);
+  assert.match(gate, /FORGE_UI_M03_CANDIDATE_URL/);
+  assert.match(workflow, /candidate_url:/);
+  assert.match(workflow, /FORGE_UI_M03_CANDIDATE_URL:/);
 });
 
 test("workflow uploads evidence even when the visual comparison fails", () => {
