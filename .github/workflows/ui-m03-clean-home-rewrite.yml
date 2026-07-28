@@ -48,8 +48,9 @@ jobs:
         run: |
           mkdir -p "$HOME/.local/share/fonts"
           curl --fail --location --silent --show-error \
-            --output "$HOME/.local/share/fonts/Roboto-Regular.ttf" \
-            "https://fonts.gstatic.com/s/roboto/v51/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2"
+            "https://android.googlesource.com/platform/external/roboto-fonts/+/refs/heads/android12-release/Roboto-Regular.ttf?format=TEXT" \
+            | base64 --decode \
+            > "$HOME/.local/share/fonts/Roboto-Regular.ttf"
           fc-cache -f "$HOME/.local/share/fonts"
           fc-match Roboto
 
