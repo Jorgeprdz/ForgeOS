@@ -15828,3 +15828,64 @@ Recorded: `2026-07-20`
 - No productive import graph, persistence, provider, schema/RLS, legacy module, Quote/Product/Presenter runtime, or deployment behavior changes.
 - NFAST-04 requires separate Miranda and Board approval for deterministic Conversation Brief authority.
 <!-- FORGE:NFAST_03_UNIVERSAL_GOVERNED_PROSPECT_CONTEXT_ADAPTER:END -->
+
+<!-- FORGEOS:PERF_FOUNDATION_AND_UNIVERSAL_REPORTING_ROADMAP_001:START -->
+## Performance Foundation Checkpoint and Universal Reporting Roadmap
+
+Status: `REP_00_BUILD_TREE_UNIFIED_TREE_ROADMAP_SYNC=IMPLEMENTED_PENDING_ACCEPTANCE`
+
+### Performance checkpoint
+
+- `PERF-01` — scoring contract discovery: CLOSED.
+- `PERF-02` — versioned 25-point scoring policy: CLOSED.
+- `PERF-03` — daily and period runtime: CLOSED.
+- `PERF-04` — daily and period read models: CLOSED.
+- `PERF-05` — Supabase read composition over governed Activity RPCs: CLOSED.
+- `PERF-06` — framework-neutral surface adapter: CLOSED.
+- Current Performance boundary: `PERFORMANCE_FOUNDATION_STATUS=CLOSED_THROUGH_PERF_06`.
+- UI readiness: `PERFORMANCE_UI_INTEGRATION_READY=YES`.
+- Held UI next: `UI-PERF-01_PERFORMANCE_SURFACE_INTEGRATION`.
+- UI migration freeze remains respected.
+- Performance is not the universal reporting authority.
+- Performance becomes a planned reporting provider in `REP-06`.
+
+### Universal Reporting System
+
+- Reporting authority: `UNIVERSAL_REPORTING_KERNEL`.
+- Kernel owns period resolution, report definitions, orchestration, aggregation,
+  comparison semantics and universal output contracts.
+- Domain providers own measures, dimensions, evidence, provenance and domain
+  authority.
+- Planned providers: Performance, Commissions, Portfolio, Activity and Pipeline.
+- UI and export adapters are downstream consumers; they do not own reporting
+  calculations or domain truth.
+
+### Universal period families
+
+- To-date: `TODAY`, `WTD`, `MTD`, `QTD`, `YTD`, `FYTD`.
+- Calendar: week, month, two-month period, quarter, half-year, year, two-year.
+- Rolling: 7, 30, 90 and 365 days; rolling 12 months.
+- Custom: explicit date range.
+- `SEMIANNUAL` means six months.
+- `BIENNIAL` means two years.
+- Ambiguous `BIANNUAL` is not a canonical identifier.
+
+### Roadmap
+
+- `REP-00` — Build Tree, Unified Tree and roadmap registration.
+- `REP-01` — Universal Reporting Kernel Foundation.
+- `REP-02` — Universal Period Resolver and Calendar Policy.
+- `REP-03` — Report Definition and Provider Port.
+- `REP-04` — Universal Report Model and Aggregation Runtime.
+- `REP-05` — Comparison and Baseline Engine.
+- `REP-06` — Performance Report Provider.
+- `REP-07` — Commissions Report Provider.
+- `REP-08` — Portfolio Report Provider.
+- `REP-09` — Activity Report Provider.
+- `REP-10` — Pipeline Report Provider.
+- `REP-11` — Export and Delivery Adapters.
+- `REP-12` — Reporting Surface Adapter Contract.
+- `UI-REP-01` — Reporting Surface Integration.
+
+`NEXT=REP-01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION`
+<!-- FORGEOS:PERF_FOUNDATION_AND_UNIVERSAL_REPORTING_ROADMAP_001:END -->

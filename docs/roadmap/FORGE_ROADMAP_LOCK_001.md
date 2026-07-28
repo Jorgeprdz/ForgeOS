@@ -10568,3 +10568,65 @@ Roadmap disposition:
 - `03A6_REAL_DEVICE_ROUTE_PERFORMANCE=PARKED_FOR_CODEX`
 
 <!-- /FORGEOS:R16J1C1_INCREMENTAL_03B1_LOCAL_PDFJS_EXTRACTION_UNBLOCK -->
+
+<!-- FORGE:PERF_FOUNDATION_AND_UNIVERSAL_REPORTING_ROADMAP_001:START -->
+## Universal Reporting Roadmap Registration
+
+Status: `REP_00_BUILD_TREE_UNIFIED_TREE_ROADMAP_SYNC=IMPLEMENTED_PENDING_ACCEPTANCE`
+
+### Current checkpoint
+
+```text
+PERFORMANCE_FOUNDATION_STATUS=CLOSED_THROUGH_PERF_06
+PERFORMANCE_LAST_CLOSED_PHASE=PERF-06_PERFORMANCE_SURFACE_ADAPTER_CONTRACT
+PERFORMANCE_UI_INTEGRATION_READY=YES
+PERFORMANCE_NEXT=UI-PERF-01_PERFORMANCE_SURFACE_INTEGRATION
+UI_MIGRATION_FREEZE_RESPECTED=YES
+```
+
+### Authority decision
+
+```text
+REPORTING_AUTHORITY=UNIVERSAL_REPORTING_KERNEL
+PERFORMANCE_REPORTING_AUTHORITY=NO
+PERFORMANCE_REPORT_PROVIDER=PLANNED_REP_06
+COMMISSIONS_REPORT_PROVIDER=PLANNED_REP_07
+PORTFOLIO_REPORT_PROVIDER=PLANNED_REP_08
+ACTIVITY_REPORT_PROVIDER=PLANNED_REP_09
+PIPELINE_REPORT_PROVIDER=PLANNED_REP_10
+```
+
+### Locked sequence
+
+```text
+REP-00  Build Tree / Unified Tree / roadmap registration
+REP-01  Universal Reporting Kernel Foundation
+REP-02  Universal Period Resolver and Calendar Policy
+REP-03  Report Definition and Provider Port
+REP-04  Universal Report Model and Aggregation Runtime
+REP-05  Comparison and Baseline Engine
+REP-06  Performance Report Provider
+REP-07  Commissions Report Provider
+REP-08  Portfolio Report Provider
+REP-09  Activity Report Provider
+REP-10  Pipeline Report Provider
+REP-11  Export and Delivery Adapters
+REP-12  Reporting Surface Adapter Contract
+UI-REP-01 Reporting Surface Integration
+```
+
+### Period resolver lock
+
+The universal resolver must support:
+
+- `TODAY`, `WTD`, `MTD`, `QTD`, `YTD`, `FYTD`;
+- calendar week, month, two-month period, quarter, half-year, year and two-year;
+- rolling 7, 30, 90 and 365 days;
+- rolling 12 months;
+- explicit custom range;
+- one canonical timezone and one `asOf` snapshot per report;
+- fiscal-year start policy for `FYTD`;
+- unambiguous identifiers: `SEMIANNUAL` and `BIENNIAL`.
+
+`NEXT=REP-01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION`
+<!-- FORGE:PERF_FOUNDATION_AND_UNIVERSAL_REPORTING_ROADMAP_001:END -->

@@ -1,0 +1,47 @@
+{
+  "phase": "REP-00_BUILD_TREE_UNIFIED_TREE_ROADMAP_SYNC",
+  "status": "IMPLEMENTED_PENDING_ACCEPTANCE",
+  "sourcePerformanceCommit": "ba5dfc21c7d23325b49f16a453939c85ba5ca41b",
+  "performance": {
+    "foundationStatus": "CLOSED_THROUGH_PERF_06",
+    "lastClosedPhase": "PERF-06_PERFORMANCE_SURFACE_ADAPTER_CONTRACT",
+    "uiIntegrationReady": true,
+    "next": "UI-PERF-01_PERFORMANCE_SURFACE_INTEGRATION",
+    "reportingAuthority": false,
+    "plannedReportProviderPhase": "REP-06"
+  },
+  "reporting": {
+    "authority": "UNIVERSAL_REPORTING_KERNEL",
+    "roadmapRegistered": true,
+    "roadmapPhaseCount": 13,
+    "next": "REP-01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION",
+    "nextBranch": "feature/universal-reporting-kernel-foundation",
+    "providersPlanned": [
+      "PERFORMANCE",
+      "COMMISSIONS",
+      "PORTFOLIO",
+      "ACTIVITY",
+      "PIPELINE"
+    ],
+    "toDatePeriods": [
+      "TODAY",
+      "WEEK_TO_DATE",
+      "MONTH_TO_DATE",
+      "QUARTER_TO_DATE",
+      "YEAR_TO_DATE",
+      "FISCAL_YEAR_TO_DATE"
+    ],
+    "ambiguousBianualIdentifierAllowed": false
+  },
+  "sync": {
+    "masterBuildTree": true,
+    "unifiedBuildTree": true,
+    "roadmapLock": true
+  },
+  "boundaries": {
+    "documentationOnly": true,
+    "productiveUiMutation": false,
+    "remoteDatabaseMutation": false,
+    "mainMutation": false
+  }
+}

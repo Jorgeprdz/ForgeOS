@@ -12797,3 +12797,65 @@ acceptance passed at all 13 required viewports.
 Evidence:
 `docs/evidence/R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_ACCEPTANCE.md`
 <!-- FORGE:R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_UNIFIED:END -->
+
+<!-- FORGE:PERF_FOUNDATION_AND_UNIVERSAL_REPORTING_ROADMAP_001:START -->
+## 🟢 Performance Foundation / 🔵 Universal Reporting System
+
+```text
+🟢 PERFORMANCE FOUNDATION
+│
+├── 🟢 PERF-01 Scoring Contract Discovery
+├── 🟢 PERF-02 Scoring Policy Contract
+│   └── 🟢 Official daily target: 25 points
+├── 🟢 PERF-03 Performance Period Runtime
+├── 🟢 PERF-04 Performance Read Model Contract
+├── 🟢 PERF-05 Supabase Read Composition
+├── 🟢 PERF-06 Performance Surface Adapter Contract
+│   ├── 🟢 UI_INTEGRATION_READY=YES
+│   ├── 🟢 loadDay / loadPeriod / loadDashboard
+│   └── 🟢 no ranking, human-worth or enforcement authority
+│
+├── ⚫ UI-PERF-01 Performance Surface Integration
+│   └── ⚫ held by UI migration freeze
+│
+└── 🔵 Performance reporting relationship
+    ├── 🔵 Performance is a provider, not reporting authority
+    └── 🔵 provider implementation planned at REP-06
+
+🔵 UNIVERSAL REPORTING SYSTEM
+│
+├── 🟢 REP-00 Tree and Roadmap Registration
+├── 🔵 REP-01 Universal Reporting Kernel Foundation
+├── 🔵 REP-02 Universal Period Resolver and Calendar Policy
+│   ├── 🔵 TODAY / WTD / MTD / QTD / YTD / FYTD
+│   ├── 🔵 calendar week / month / two-month / quarter
+│   ├── 🔵 half-year / year / two-year
+│   ├── 🔵 rolling 7 / 30 / 90 / 365 days
+│   ├── 🔵 rolling 12 months
+│   └── 🔵 custom range
+├── 🔵 REP-03 Report Definition and Provider Port
+├── 🔵 REP-04 Universal Report Model and Aggregation Runtime
+├── 🔵 REP-05 Comparison and Baseline Engine
+│   ├── 🔵 previous period
+│   ├── 🔵 previous year same period
+│   ├── 🔵 year over year
+│   ├── 🔵 target / budget
+│   └── 🔵 custom baseline
+├── 🔵 REP-06 Performance Report Provider
+├── 🔵 REP-07 Commissions Report Provider
+├── 🔵 REP-08 Portfolio Report Provider
+├── 🔵 REP-09 Activity Report Provider
+├── 🔵 REP-10 Pipeline Report Provider
+├── 🔵 REP-11 Export and Delivery Adapters
+├── 🔵 REP-12 Reporting Surface Adapter Contract
+└── ⚫ UI-REP-01 Reporting Surface Integration
+    └── ⚫ begins only after kernel and adapters are accepted
+```
+
+```text
+REPORTING_AUTHORITY=UNIVERSAL_REPORTING_KERNEL
+PERFORMANCE_REPORTING_AUTHORITY=NO
+PERFORMANCE_REPORT_PROVIDER=PLANNED_REP_06
+NEXT=REP-01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION
+```
+<!-- FORGE:PERF_FOUNDATION_AND_UNIVERSAL_REPORTING_ROADMAP_001:END -->
