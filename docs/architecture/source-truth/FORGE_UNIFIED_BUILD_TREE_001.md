@@ -13426,3 +13426,24 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Deep-link mutation of canonical truth
 - 🔵 FES 07B implementation with approved manifest
 <!-- END FORGEOS:FES_07A_PUSH_AND_DEEP_LINK_RUNTIME_SCOPE -->
+
+<!-- BEGIN FORGEOS:FES_07B_PUSH_AND_DEEP_LINK_RUNTIME_IMPLEMENTATION -->
+## FES 07B Push and Deep Link Runtime Implementation
+
+- 🟢 Pure local notification-intent contract
+- 🟢 Permission explanation model without prompt execution
+- 🟢 Allowlisted internal target descriptors
+- 🟢 Reference-only notification payload
+- 🟢 Deterministic scheduling identity
+- 🟢 Exact replay deduplication
+- 🟢 Conflicting identity rejection
+- 🟢 Bounded local retry model
+- 🟢 Explicit internal fallback
+- 🟢 Cancellation by exact governed key
+- 🔴 Permission prompt execution
+- 🔴 Subscription or service-worker mutation
+- 🔴 External provider calls
+- 🔴 Delivery claims
+- 🔴 Productive UI or nav pill mutation
+- 🔵 FES 07C browser and runtime acceptance
+<!-- END FORGEOS:FES_07B_PUSH_AND_DEEP_LINK_RUNTIME_IMPLEMENTATION -->
