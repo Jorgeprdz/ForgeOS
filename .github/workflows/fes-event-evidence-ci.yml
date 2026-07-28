@@ -70,15 +70,15 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          npm run serve:e2e > artifacts/event-evidence/fes08-vite.log 2>&1 &
+          npx vite --host 0.0.0.0 --port 4174 --strictPort > artifacts/event-evidence/fes08-vite.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           for attempt in {1..30}; do
-            curl --fail --silent http://127.0.0.1:4173/tests/fixtures/fes-08-productive-pipeline-browser.html >/dev/null && break
+            curl --fail --silent http://127.0.0.1:4174/tests/fixtures/fes-08-productive-pipeline-browser.html >/dev/null && break
             sleep 1
           done
-          curl --fail --silent http://127.0.0.1:4173/tests/fixtures/fes-08-productive-pipeline-browser.html >/dev/null
-          FORGE_E2E_BASE_URL=http://127.0.0.1:4173 \
+          curl --fail --silent http://127.0.0.1:4174/tests/fixtures/fes-08-productive-pipeline-browser.html >/dev/null
+          FORGE_E2E_BASE_URL=http://127.0.0.1:4174 \
             node --test tests/fes-08-productive-pipeline-browser-test.mjs
 
       - name: Run FES 07C isolated browser acceptance
