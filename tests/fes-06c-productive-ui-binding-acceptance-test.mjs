@@ -240,6 +240,20 @@ test("FES 06C detail observer stores the render key before mutation", () => {
   );
 });
 
+test("FES 06C audit guards absent READY-only detail geometry", () => {
+  assert.match(
+    spec,
+    /detailList\s+instanceof Element/,
+  );
+});
+
+test("FES 06C non-ready audit uses a zero-column fallback", () => {
+  assert.match(
+    spec,
+    /detailList[\s\S]*\? getComputedStyle\([\s\S]*: 0;/,
+  );
+});
+
 test("FES 06B productive view imports the binding", () => {
   assert.match(
     view,

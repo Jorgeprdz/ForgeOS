@@ -290,14 +290,22 @@ async function audit(page) {
               .includes(value),
         ),
       detailColumns:
-        getComputedStyle(
-          document.querySelector(
-            ".forge-fes06b-detail dl",
-          ),
-        ).gridTemplateColumns
-          .split(" ")
-          .filter(Boolean)
-          .length,
+        (() => {
+          const detailList =
+            document.querySelector(
+              ".forge-fes06b-detail dl",
+            );
+
+          return detailList
+            instanceof Element
+            ? getComputedStyle(
+                detailList,
+              ).gridTemplateColumns
+                .split(" ")
+                .filter(Boolean)
+                .length
+            : 0;
+        })(),
     };
   });
 }
