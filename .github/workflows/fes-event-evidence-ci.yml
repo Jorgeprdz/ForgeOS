@@ -120,6 +120,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Trust container checkout for read-only build inventory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
