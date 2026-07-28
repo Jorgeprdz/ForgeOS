@@ -22,6 +22,7 @@ The following files are the complete authorized mutation set for FES 08:
 
 - `docs/evidence/FES_08_ROBOCOP_CONSTITUTIONAL_GATE_001.md`
 - `docs/evidence/FES_08A_FES_ACTIVITY_LINEAGE_ROBOCOP_GATE_001.md`
+- `docs/evidence/FES_08B_NASH_COMBAT_BROWSER_ADAPTER_ROBOCOP_GATE_001.md`
 - `docs/architecture/source-truth/FES_08_FORGE_ALIVE_PRODUCTIVE_INTEGRATION_DISCOVERY_001.md`
 - `docs/architecture/source-truth/FES_08_FORGE_ALIVE_PRODUCTIVE_INTEGRATION_MANIFEST_001.md`
 - `docs/architecture/source-truth/FORGE_EVENT_EVIDENCE_OPERATING_SYSTEM_001.md`
