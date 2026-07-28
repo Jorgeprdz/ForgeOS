@@ -14,6 +14,7 @@ on:
       - "tests/e2e/ui-m03-clean-home-rewrite.spec.mjs"
       - "tools/ui-m03-image-comparator.cjs"
       - "tools/ui-m03-capture-and-compare.cjs"
+      - "tools/ui-m03-compare-screenshot-set.cjs"
       - "scripts/serve-ui-m03-clean-home.mjs"
       - "playwright.ui-m03-clean.config.mjs"
       - ".github/workflows/ui-m03-clean-home-rewrite.yml"
@@ -42,6 +43,15 @@ jobs:
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
+
+      - name: Install the golden-reference Roboto fallback
+        run: |
+          mkdir -p "$HOME/.local/share/fonts"
+          curl --fail --location --silent --show-error \
+            --output "$HOME/.local/share/fonts/Roboto-Regular.ttf" \
+            "https://fonts.gstatic.com/s/roboto/v51/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2"
+          fc-cache -f "$HOME/.local/share/fonts"
+          fc-match Roboto
 
       - name: Run clean Home contracts
         run: |

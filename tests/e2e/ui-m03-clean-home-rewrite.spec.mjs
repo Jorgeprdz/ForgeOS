@@ -74,6 +74,10 @@ test("capture the authoritative 15-profile UI-M03 evidence", async ({
           document.body.scrollWidth,
         );
         return {
+          fonts: {
+            inter: document.fonts.check("16px Inter"),
+            roboto: document.fonts.check("16px Roboto"),
+          },
           overflow: Math.max(0, scrollWidth - viewportWidth),
           trees: count("main.app"),
           headers: count("header.hero"),
@@ -88,7 +92,10 @@ test("capture the authoritative 15-profile UI-M03 evidence", async ({
         };
       });
 
-      expect(layout).toEqual({
+      expect(layout).toMatchObject({
+        fonts: {
+          roboto: true,
+        },
         overflow: 0,
         trees: 1,
         headers: 1,
