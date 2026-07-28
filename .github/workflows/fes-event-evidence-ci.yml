@@ -8,7 +8,9 @@ on:
     paths:
       - ".github/workflows/fes-event-evidence-ci.yml"
       - "platform/event-evidence/**"
+      - "advisor-os/activity/**"
       - "advisor-os/event-evidence/**"
+      - "advisor-os/performance/**"
       - "docs/static-preview/forge-alive/forge-alive-pipeline-view-067g16a.js"
       - "tests/fes-*-test.mjs"
       - "tests/e2e/**"

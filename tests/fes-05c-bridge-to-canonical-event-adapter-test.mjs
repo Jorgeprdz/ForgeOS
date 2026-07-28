@@ -339,7 +339,7 @@ test("FES 05C exposes locked adapter contracts", () => {
     Object.keys(
       EVENT_SUBJECT_TYPES,
     ).length,
-    21,
+    26,
   );
 });
 

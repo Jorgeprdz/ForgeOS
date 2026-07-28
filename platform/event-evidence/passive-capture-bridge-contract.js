@@ -83,6 +83,29 @@
       }),
     });
 
+    const PROSPECT_LINEAGE_ACTIONS = Object.freeze([
+      "CALL_CONNECTED_CONFIRMED",
+      "CALL_NOT_ANSWERED_CONFIRMED",
+      "CALL_CONTEXT_ADDED",
+      "MESSAGE_DRAFT_GENERATED",
+      "MESSAGE_DRAFT_EDITED",
+      "MESSAGE_DRAFT_APPROVED",
+      "MESSAGE_SENT_CONFIRMED",
+      "PROSPECT_REPLIED_CONFIRMED",
+      "OBJECTION_CAPTURED",
+      "OBJECTION_ANALYSIS_GENERATED",
+      "OBJECTION_RESPONSE_GENERATED",
+      "OBJECTION_RESPONSE_EDITED",
+      "OBJECTION_RESPONSE_APPROVED",
+      "OBJECTION_RESPONSE_USED",
+      "OBJECTION_OUTCOME_CONFIRMED",
+      "APPOINTMENT_SCHEDULED",
+      "APPOINTMENT_HELD",
+      "APPOINTMENT_NOT_HELD",
+      "APPOINTMENT_RESCHEDULED",
+      "APPOINTMENT_NO_SHOW",
+    ]);
+
     const ACTION_CATALOG = deepFreeze({
       MESSAGE_DRAFT_GENERATED: {
         domain: "WHATSAPP_NASH",
@@ -1019,6 +1042,9 @@
         [
           ...definition.required_payload,
           ...definition.optional_payload,
+          ...(PROSPECT_LINEAGE_ACTIONS.includes(actionCode)
+            ? ["prospect_reference"]
+            : []),
         ],
         "PASSIVE_CAPTURE_PAYLOAD_FIELDS_INVALID",
         "El payload del bridge",
@@ -1039,6 +1065,9 @@
         const key of [
           ...definition.required_payload,
           ...definition.optional_payload,
+          ...(PROSPECT_LINEAGE_ACTIONS.includes(actionCode)
+            ? ["prospect_reference"]
+            : []),
         ]
       ) {
         if (
@@ -1251,6 +1280,20 @@
         actionCode,
         input.payload,
       );
+      if (
+        payload.prospect_reference &&
+        payload.prospect_reference !== prospectId
+      ) {
+        error(
+          "PASSIVE_CAPTURE_PROSPECT_LINEAGE_MISMATCH",
+          "La referencia de linaje no coincide con el prospecto validado.",
+          {
+            prospect_id: prospectId,
+            prospect_reference:
+              payload.prospect_reference,
+          },
+        );
+      }
       const evidenceReferences =
         normalizeEvidenceReferences(
           input.evidence_references,
@@ -2343,6 +2386,7 @@
       SOURCE_EVIDENCE,
       ACTION_CATALOG,
       ACTION_CODES,
+      PROSPECT_LINEAGE_ACTIONS,
       FORBIDDEN_RAW_KEYS,
       PassiveCaptureBridgeError,
       deriveObservationId,

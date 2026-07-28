@@ -602,6 +602,29 @@
       }),
     });
 
+    const PROSPECT_LINEAGE_EVENT_TYPES = Object.freeze([
+      "CALL_CONNECTED_CONFIRMED",
+      "CALL_NOT_ANSWERED_CONFIRMED",
+      "CALL_CONTEXT_ADDED",
+      "MESSAGE_DRAFT_GENERATED",
+      "MESSAGE_DRAFT_EDITED",
+      "MESSAGE_DRAFT_APPROVED",
+      "MESSAGE_SENT_CONFIRMED",
+      "PROSPECT_REPLIED_CONFIRMED",
+      "OBJECTION_CAPTURED",
+      "OBJECTION_ANALYSIS_GENERATED",
+      "OBJECTION_RESPONSE_GENERATED",
+      "OBJECTION_RESPONSE_EDITED",
+      "OBJECTION_RESPONSE_APPROVED",
+      "OBJECTION_RESPONSE_USED",
+      "OBJECTION_OUTCOME_CONFIRMED",
+      "APPOINTMENT_SCHEDULED",
+      "APPOINTMENT_HELD",
+      "APPOINTMENT_NOT_HELD",
+      "APPOINTMENT_RESCHEDULED",
+      "APPOINTMENT_NO_SHOW",
+    ]);
+
     class CanonicalActivityEventError extends TypeError {
       constructor(code, message, details = null) {
         super(message);
@@ -1104,7 +1127,12 @@
       ]);
 
       const optionalFields =
-        PAYLOAD_SCHEMAS[eventType].optional;
+        [
+          ...PAYLOAD_SCHEMAS[eventType].optional,
+          ...(PROSPECT_LINEAGE_EVENT_TYPES.includes(eventType)
+            ? ["prospect_reference"]
+            : []),
+        ];
 
       if (
         optionalFields.includes(key) &&
@@ -1161,7 +1189,13 @@
       }
 
       const schema = PAYLOAD_SCHEMAS[eventType];
-      const allowed = [...schema.required, ...schema.optional];
+      const optional = [
+        ...schema.optional,
+        ...(PROSPECT_LINEAGE_EVENT_TYPES.includes(eventType)
+          ? ["prospect_reference"]
+          : []),
+      ];
+      const allowed = [...schema.required, ...optional];
 
       assertAllowedKeys(
         value,
@@ -1185,7 +1219,7 @@
         );
       }
 
-      for (const key of schema.optional) {
+      for (const key of optional) {
         normalized[key] = normalizePayloadField(
           eventType,
           key,
@@ -1712,6 +1746,7 @@
       EVENT_TYPE_EXTENSION_VERSION,
       FIRST_VERTICAL_EVENT_TYPES,
       PASSIVE_CAPTURE_EVENT_TYPES,
+      PROSPECT_LINEAGE_EVENT_TYPES,
       EVENT_TYPES,
       ACTOR_TYPES,
       SUBJECT_TYPES,

@@ -69,6 +69,11 @@
       CALL_CONNECTED_CONFIRMED: "CALL",
       CALL_NOT_ANSWERED_CONFIRMED: "CALL",
       CALL_CONTEXT_ADDED: "CALL",
+      APPOINTMENT_SCHEDULED: "APPOINTMENT",
+      APPOINTMENT_NOT_HELD: "APPOINTMENT",
+      APPOINTMENT_RESCHEDULED: "APPOINTMENT",
+      APPOINTMENT_NO_SHOW: "APPOINTMENT",
+      APPOINTMENT_HELD: "APPOINTMENT",
       QUOTE_STARTED: "QUOTE",
       QUOTE_PREPARED: "QUOTE",
       QUOTE_REVIEWED: "QUOTE",
@@ -304,6 +309,12 @@
       }
 
       if (
+        eventType.startsWith("APPOINTMENT_")
+      ) {
+        return payload.appointment_reference;
+      }
+
+      if (
         eventType.startsWith("QUOTE_")
       ) {
         return payload.quote_reference;
@@ -337,6 +348,85 @@
       );
     }
 
+    function canonicalPayloadFromObservation(
+      eventType,
+      observation,
+    ) {
+      const payload = observation.payload;
+      const lineage = canonicalContract
+        .PROSPECT_LINEAGE_EVENT_TYPES
+        .includes(eventType)
+        ? {
+            prospect_reference:
+              observation.prospect_id,
+          }
+        : {};
+
+      if (eventType === "APPOINTMENT_SCHEDULED") {
+        return {
+          appointment_reference:
+            payload.appointment_reference,
+          starts_at: payload.starts_at,
+          ends_at: payload.ends_at,
+          provider_event_reference:
+            payload.provider_reference,
+          ...lineage,
+        };
+      }
+
+      if (eventType === "APPOINTMENT_HELD") {
+        return {
+          appointment_reference:
+            payload.appointment_reference,
+          outcome_confirmed_at:
+            payload.outcome_confirmed_at ||
+            observation.occurred_at,
+          ...lineage,
+        };
+      }
+
+      if (eventType === "APPOINTMENT_NOT_HELD") {
+        return {
+          appointment_reference:
+            payload.appointment_reference,
+          reason_code: payload.reason_code,
+          outcome_confirmed_at:
+            payload.outcome_confirmed_at ||
+            observation.occurred_at,
+          ...lineage,
+        };
+      }
+
+      if (eventType === "APPOINTMENT_RESCHEDULED") {
+        return {
+          appointment_reference:
+            payload.appointment_reference,
+          previous_starts_at:
+            payload.previous_starts_at,
+          starts_at: payload.starts_at,
+          ends_at: payload.ends_at,
+          ...lineage,
+        };
+      }
+
+      if (eventType === "APPOINTMENT_NO_SHOW") {
+        return {
+          appointment_reference:
+            payload.appointment_reference,
+          party: payload.party,
+          outcome_confirmed_at:
+            payload.outcome_confirmed_at ||
+            observation.occurred_at,
+          ...lineage,
+        };
+      }
+
+      return {
+        ...clone(payload),
+        ...lineage,
+      };
+    }
+
     function canonicalInputFromObservation(
       observation,
     ) {
@@ -368,12 +458,12 @@
 
       if (
         !canonicalContract
-          .PASSIVE_CAPTURE_EVENT_TYPES
+          .EVENT_TYPES
           .includes(eventType)
       ) {
         error(
-          "BRIDGE_CANONICAL_EVENT_TYPE_NOT_PASSIVE",
-          "El evento candidato no pertenece a la extensión pasiva.",
+          "BRIDGE_CANONICAL_EVENT_TYPE_NOT_AUTHORIZED",
+          "El evento candidato no pertenece al contrato canónico.",
           {
             event_type: eventType,
           },
@@ -435,9 +525,11 @@
           `bridge:${observation.observation_id}`,
         privacy_class: "PRIVATE",
         learning_eligibility: false,
-        payload: clone(
-          observation.payload,
-        ),
+        payload:
+          canonicalPayloadFromObservation(
+            eventType,
+            observation,
+          ),
         provenance: {
           source_system:
             "FES_05A_PASSIVE_CAPTURE_BRIDGE",
