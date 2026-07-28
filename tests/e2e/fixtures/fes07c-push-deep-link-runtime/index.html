@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>FES 07C Runtime Acceptance</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        background: #071426;
+        color: #f4f8ff;
+        font: 16px/1.5 system-ui, sans-serif;
+      }
+      main {
+        width: min(100% - 32px, 720px);
+        margin: 0 auto;
+        padding: 32px 0;
+      }
+      [data-fes07c-host] {
+        overflow-wrap: anywhere;
+        border: 1px solid #4dd6aa;
+        border-radius: 24px;
+        padding: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section data-fes07c-host aria-labelledby="fes07c-heading">
+        <h1 id="fes07c-heading">FES 07C Runtime Acceptance</h1>
+        <p data-fes07c-status>Validando runtime local.</p>
+      </section>
+    </main>
+    <script src="/platform/event-evidence/push-deep-link-runtime.js"></script>
+    <script>
+      (() => {
+        "use strict";
+        const runtime = globalThis.ForgePushDeepLinkRuntimeFES07B;
+        const target = {
+          target_id: "target-browser-07c",
+          tenant_id: "tenant-browser-07c",
+          target_type: "MI_DIA",
+          resource_reference: "due-action-ref-07c",
+        };
+        const explanation = runtime.createPermissionExplanation({
+          capability_reference: "push-reminders",
+        });
+        const intent = runtime.createNotificationIntent({
+          intent_id: "intent-browser-07c",
+          tenant_id: "tenant-browser-07c",
+          actor_id: "advisor-browser-07c",
+          created_at: "2026-07-28T15:00:00.000Z",
+          scheduled_for: "2026-07-28T16:00:00.000Z",
+          timezone: "America/Mexico_City",
+          deduplication_key: "dedupe-browser-07c",
+          cancellation_key: "cancel-browser-07c",
+          target,
+          payload_references: ["due-action-ref-07c"],
+          permission_state: "GRANTED",
+          subscription_state: "REGISTERED",
+          max_attempts: 2,
+        });
+        const resolved = runtime.resolveInternalTarget(target);
+        globalThis.__FORGE_FES07C_ACCEPTANCE__ = Object.freeze({
+          runtimeVersion: runtime.RUNTIME_VERSION,
+          explanation,
+          intent,
+          resolved,
+          hostCount: document.querySelectorAll("[data-fes07c-host]").length,
+        });
+        const status = document.querySelector("[data-fes07c-status]");
+        status.textContent = "Runtime local validado.";
+        status.dataset.fes07cReady = "true";
+      })();
+    </script>
+  </body>
+</html>

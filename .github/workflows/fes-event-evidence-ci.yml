@@ -63,6 +63,9 @@ jobs:
       - name: Run Productive UI browser acceptance
         run: npm run test:e2e:fes06c
 
+      - name: Run FES 07C isolated browser acceptance
+        run: npm run test:e2e:fes07c
+
       - name: Upload acceptance evidence
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v5
@@ -76,5 +79,8 @@ jobs:
             artifacts/fes06c-playwright-report
             artifacts/fes06c-playwright-test-results
             artifacts/fes06c-playwright-results.json
+            artifacts/fes07c-playwright-report
+            artifacts/fes07c-playwright-test-results
+            artifacts/fes07c-playwright-results.json
           if-no-files-found: error
           retention-days: 30
