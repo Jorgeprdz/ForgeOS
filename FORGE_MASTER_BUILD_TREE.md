@@ -15257,6 +15257,26 @@ Status: `EXECUTION_AUTHORIZED`
 NEXT: `UI_M05B_IMPLEMENTATION_AND_OWNER_VISUAL_ACCEPTANCE`
 <!-- FORGE:UI_M05B_QUOTES_TRUE_MATERIAL3:END -->
 
+<!-- FORGE:UI_M05C_QUOTES_PRODUCT_INTELLIGENCE_PARITY:START -->
+## UI-M05C Quotes Product Intelligence Presentation Parity
+
+PHASE: `UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-024 — UI-M05C Product Intelligence Presentation Parity Authority`.
+- Source: `ba96e2c5c2fc4a4149af6f6a5561dd13cf1895e5`.
+- Runtime branch: `feature/ui-m05c-quotes-product-intelligence-parity`.
+- Preserve the native Material 3 workspace while restoring complete,
+  structured calculation, benefit-summary and Product Intelligence results.
+- Quote calculations, Product Intelligence authority, product rules, parsers,
+  mappers, rate cache, Supabase, Nash, Home and direct main mutation remain
+  protected.
+- Owner functional acceptance remains pending.
+
+NEXT: `UI_M05C_IMPLEMENTATION_AND_OWNER_FUNCTIONAL_ACCEPTANCE`
+<!-- FORGE:UI_M05C_QUOTES_PRODUCT_INTELLIGENCE_PARITY:END -->
+
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
 ## R16J0 Accepted Quote to Sales Presentation Entrypoint
 

@@ -282,6 +282,30 @@ Material 3 quotation components, a narrow adapter to existing runtime
 authorities and deterministic public `env.js` resolution. It does not authorize
 domain, Supabase, Nash, main or deployment mutation.
 
+## UI-M05C Quotes Product Intelligence Presentation Parity Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-024 — UI-M05C Product Intelligence Presentation Parity Authority.txt` |
+| Phase | `UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY` |
+| Status | `EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Implementation readiness | `READY` |
+| Source commit | `ba96e2c5c2fc4a4149af6f6a5561dd13cf1895e5` |
+| Runtime branch | `feature/ui-m05c-quotes-product-intelligence-parity` |
+| Material 3 identity | `PROTECTED` |
+| Legacy DOM import | `FORBIDDEN` |
+| Quote domain boundaries | `PROTECTED` |
+| Owner functional acceptance | `PENDING` |
+
+UI-M05C restores complete calculation and Product Intelligence presentation
+parity within native Material 3 result surfaces. It may change presentation
+adapters and tests only; authoritative calculation, Product Intelligence,
+product-rule, parser, mapper, rate-cache, Supabase and Home behavior remains
+protected.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

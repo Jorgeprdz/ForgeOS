@@ -1,0 +1,36 @@
+ADR-024 — UI-M05C Product Intelligence Presentation Parity Authority
+
+Status: RATIFIED
+
+PHASE=UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY
+PHASE_STATUS=EXECUTION_AUTHORIZED
+PHASE_TYPE=FUNCTIONAL_PRESENTATION_PARITY_REPAIR
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+IMPLEMENTATION_READINESS=READY
+SOURCE_COMMIT=ba96e2c5c2fc4a4149af6f6a5561dd13cf1895e5
+RUNTIME_BRANCH=feature/ui-m05c-quotes-product-intelligence-parity
+PARENT_PHASE=UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION
+VISUAL_REDESIGN=LIMITED_TO_REQUIRED_RESULT_SURFACES
+MATERIAL3_IDENTITY=PROTECTED
+LEGACY_DOM_IMPORT=FORBIDDEN
+LEGACY_PAGE_FETCH_AS_UI=FORBIDDEN
+QUOTE_DOMAIN_BOUNDARIES=PROTECTED
+OWNER_FUNCTIONAL_ACCEPTANCE=PENDING
+MAIN_DIRECT_MUTATION=FORBIDDEN
+
+Decision
+
+UI-M05C restores presentation parity for authoritative quotation calculation,
+benefit-summary and Product Intelligence packets inside the native Material 3
+Cotizaciones workspace. The repair may expose immutable presentation
+snapshots and add product-specific Material 3 dashboard adapters.
+
+Boundaries
+
+Quote calculations, Product Truth, Product Intelligence, product rules,
+parsers, mappers, rate cache, accepted-quote contracts, PDF extraction,
+Supabase, Nash, ForgeShell and Home remain protected. Legacy DOM import,
+legacy page fetches, iframes, invented values and silent rate fallbacks remain
+forbidden.

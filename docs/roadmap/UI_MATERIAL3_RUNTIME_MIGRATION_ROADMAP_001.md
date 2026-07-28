@@ -93,6 +93,19 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
   remain protected.
 - Owner visual acceptance is required before any promotion.
 
+### UI-M05C — Quotes Product Intelligence presentation parity
+
+- Phase: `UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY`
+- Status: **EXECUTION_AUTHORIZED**
+- Authority: `ADR-024 — UI-M05C Product Intelligence Presentation Parity Authority`.
+- Source commit: `ba96e2c5c2fc4a4149af6f6a5561dd13cf1895e5`.
+- Runtime branch: `feature/ui-m05c-quotes-product-intelligence-parity`.
+- Restores rich calculation, benefit-summary and Product Intelligence output
+  inside the approved native Material 3 Cotizaciones workspace.
+- Calculation semantics, Product Intelligence authority, product rules,
+  parsers, mappers, rate cache, Supabase and Home remain protected.
+- Owner functional acceptance remains pending.
+
 ## Parallelism rule
 
 - Maximum active lanes: **2**.

@@ -1,0 +1,30 @@
+{
+  "phase": "UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY",
+  "sourceCommit": "ba96e2c5c2fc4a4149af6f6a5561dd13cf1895e5",
+  "policy": "PRESENTATION_BRIDGE_ONLY_NO_AUTHORITY_MUTATION",
+  "protectedTrees": {
+    "docs/static-preview/quote-preview-live": {
+      "sourceTree": "8274e49f96b5f834f88ca3adca35d39299452f5f",
+      "currentTree": "8274e49f96b5f834f88ca3adca35d39299452f5f"
+    },
+    "product-intelligence": {
+      "sourceTree": "5ec0943b0d5410ca496c8aa6bdc1471499fe6aa6",
+      "currentTree": "5ec0943b0d5410ca496c8aa6bdc1471499fe6aa6"
+    },
+    "supabase": {
+      "sourceTree": "97b73b4f8a6d2e2af0affaea5f8da007fe22cce6",
+      "currentTree": "97b73b4f8a6d2e2af0affaea5f8da007fe22cce6"
+    }
+  },
+  "protectedMutationCount": 0,
+  "allowedRuntimePaths": [
+    ".github/workflows/pages.yml",
+    "docs/static-preview/forge-alive-material3/app.js",
+    "docs/static-preview/forge-alive-material3/index.html",
+    "docs/static-preview/forge-alive-material3/quote-runtime-adapter.js",
+    "docs/static-preview/forge-alive-material3/quotes-module.js",
+    "docs/static-preview/forge-alive-material3/quotes-module.css",
+    "docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js",
+    "docs/static-preview/forge-alive-material3/manifest.json"
+  ]
+}

@@ -1,4 +1,4 @@
-import { createQuoteRuntimeAdapter } from "./quote-runtime-adapter.js";
+import { createQuoteRuntimeAdapter } from "./quote-runtime-adapter.js?v=ui-m05c-001";
 
 const quotesStateKey = Symbol.for("forge.ui-m05b.quotes.state");
 let stylePromise;
@@ -10,7 +10,7 @@ function ensureQuotesStyles() {
     if (existing?.sheet) return resolve();
     const stylesheet = existing || document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL("./quotes-module.css?v=ui-m05b-001", import.meta.url);
+    stylesheet.href = new URL("./quotes-module.css?v=ui-m05c-001", import.meta.url);
     stylesheet.dataset.forgeQuotesStyles = "true";
     stylesheet.addEventListener("load", resolve, { once: true });
     stylesheet.addEventListener("error", reject, { once: true });
@@ -140,7 +140,7 @@ function quotesWorkspaceMarkup() {
             </article>
           </div>
           <div class="quotes-runtime-sections">
-            <section aria-labelledby="quotes-benefits-title">
+            <section data-quote-generic-results aria-labelledby="quotes-benefits-title">
               <h3 id="quotes-benefits-title">Valores, beneficios o escenarios relevantes</h3>
               <div data-quote-runtime-grid="benefits">
                 <p class="quotes-empty">El resultado aparecerá después del cálculo.</p>
@@ -153,6 +153,8 @@ function quotesWorkspaceMarkup() {
               </div>
             </section>
           </div>
+          <section class="quotes-intelligence" data-quote-product-dashboard
+            aria-label="Inteligencia completa del producto"></section>
         </section>
 
         <aside class="quotes-decision" aria-label="Estado y acciones">

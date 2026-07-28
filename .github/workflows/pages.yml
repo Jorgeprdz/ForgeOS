@@ -187,6 +187,7 @@ jobs:
             'app.js',
             'forge-public-config.js',
             'manifest.json',
+            'quote-product-intelligence-presenter.js',
             'quote-runtime-adapter.js',
             'quotes-module.css',
             'quotes-module.js',
@@ -212,7 +213,7 @@ jobs:
             'clean Forge Alive entrypoint does not load generated env.js',
           );
           assert.match(index, /forge-public-config\.js\?v=ui-m05b-001/);
-          assert.match(index, /app\.js\?v=ui-m05b-001/);
+          assert.match(index, /app\.js\?v=ui-m05c-001/);
           assert.doesNotMatch(
             index,
             /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,

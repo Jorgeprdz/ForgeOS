@@ -12022,6 +12022,26 @@ Status: `EXECUTION_AUTHORIZED`
 NEXT: `UI_M05B_IMPLEMENTATION_AND_OWNER_VISUAL_ACCEPTANCE`
 <!-- FORGE:UI_M05B_QUOTES_TRUE_MATERIAL3:END -->
 
+<!-- FORGE:UI_M05C_QUOTES_PRODUCT_INTELLIGENCE_PARITY:START -->
+## UI-M05C Quotes Product Intelligence Presentation Parity
+
+PHASE: `UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-024 — UI-M05C Product Intelligence Presentation Parity Authority`.
+- Source: `ba96e2c5c2fc4a4149af6f6a5561dd13cf1895e5`.
+- Runtime branch: `feature/ui-m05c-quotes-product-intelligence-parity`.
+- Scope: immutable complete-packet projection and native Material 3
+  product-dashboard result rendering.
+- Legacy DOM import is forbidden.
+- Quote calculations, Product Intelligence authority, product rules, parsers,
+  mappers, rate cache, Supabase, Nash and Home remain protected.
+- Owner functional acceptance remains pending.
+
+NEXT: `UI_M05C_IMPLEMENTATION_AND_OWNER_FUNCTIONAL_ACCEPTANCE`
+<!-- FORGE:UI_M05C_QUOTES_PRODUCT_INTELLIGENCE_PARITY:END -->
+
 <!-- FORGEOS:R16E2C_UNIFIED_BUILD_TREE_SYNC_37107CA:START -->
 ## R16E2C Unified Build Tree Sync
 

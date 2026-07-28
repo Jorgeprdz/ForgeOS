@@ -17,6 +17,11 @@ cpSync(
   join(artifact, "static-preview", "quote-preview-live"),
   { recursive: true },
 );
+cpSync(
+  "docs/static-preview/advisor-presentation-runtime",
+  join(artifact, "static-preview", "advisor-presentation-runtime"),
+  { recursive: true },
+);
 writeFileSync(
   join(artifact, "env.js"),
   'window.__ENV__=Object.freeze({"SUPABASE_URL":"https://rmlxigxysujsuwzgoimv.supabase.co","SUPABASE_KEY":"public-test-value","DEMO_MODE":"false"});',
@@ -56,14 +61,27 @@ const browser = await puppeteer.launch({
 });
 try {
   const page = await browser.newPage();
+  const browserErrors = [];
+  page.on("pageerror", (error) => browserErrors.push(error.message));
   const validUrl = `http://127.0.0.1:${validServer.address().port}/static-preview/forge-alive/?nav=cotizaciones`;
   await page.goto(validUrl, { waitUntil: "networkidle0" });
-  await page.waitForSelector('[data-forge-quotes-module][data-runtime-mounted="true"]');
+  await page.waitForSelector('[data-forge-quotes-module][data-runtime-mounted="true"]')
+    .catch((error) => {
+      return page.evaluate(() => ({
+        ready: document.documentElement.dataset.forgeCleanHomeReady,
+        config: globalThis.__FORGE_PUBLIC_CONFIG_STATE__,
+        moduleError: document.querySelector("[data-forge-quotes-module]")?.dataset.runtimeError,
+        moduleHtml: document.querySelector("[data-forge-quotes-module]")?.innerHTML,
+      })).then((state) => {
+        throw new Error(`${error.message}\nBrowser errors: ${browserErrors.join(" | ")}\nState: ${JSON.stringify(state)}`);
+      });
+    });
   assert.deepEqual(await page.evaluate(() => ({
     valid: globalThis.__FORGE_PUBLIC_CONFIG_STATE__?.valid,
     ref: globalThis.__FORGE_PUBLIC_CONFIG_STATE__?.projectRef,
     banner: document.querySelectorAll("[data-forge-public-config-notice]").length,
   })), { valid: true, ref: "rmlxigxysujsuwzgoimv", banner: 0 });
+  assert.deepEqual(browserErrors, []);
 
   const missingUrl = `http://127.0.0.1:${missingServer.address().port}/static-preview/forge-alive/?nav=inicio`;
   await page.goto(missingUrl, { waitUntil: "networkidle0" });

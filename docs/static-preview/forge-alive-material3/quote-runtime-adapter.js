@@ -1,3 +1,8 @@
+import {
+  createQuoteResultSnapshot,
+  renderQuoteResultSnapshot,
+} from "./quote-product-intelligence-presenter.js?v=ui-m05c-001";
+
 const adapterKey=Symbol.for("forge.ui-m05b.quote-runtime-adapter");
 const moduleUrl=name=>new URL(`../quote-preview-live/${name}`,import.meta.url).href;
 
@@ -72,6 +77,9 @@ export function createQuoteRuntimeAdapter({root}){
   let initialized=false;
   let destroyed=false;
   let latestPacket=null;
+  let latestCalculation=null;
+  let latestResultSnapshot=null;
+  let benefitSummaryModule=null;
   const input=root.querySelector("#fq-solution-online-pdf-105dr");
   const submit=root.querySelector(".fq-send-pdf-105dr");
   const status=root.querySelector(".fq-file-status-105dr");
@@ -162,6 +170,25 @@ export function createQuoteRuntimeAdapter({root}){
     notify("packet",{packet,model});
     return model;
   }
+  function updateStructuredResults(calculation){
+    latestCalculation=calculation
+      ??globalThis.ForgeAcceptedQuoteBridge
+        ?.getCurrentQuotePreviewCalculationState?.()?.calculation
+      ??null;
+    if(!latestCalculation)return null;
+    latestResultSnapshot=createQuoteResultSnapshot({
+      packet:latestPacket,
+      calculation:latestCalculation,
+      buildBenefitSummary:benefitSummaryModule?.buildDynamicBenefitSummary,
+    });
+    renderQuoteResultSnapshot(latestResultSnapshot,{
+      host:root.querySelector("[data-quote-product-dashboard]"),
+    });
+    const generic=root.querySelector("[data-quote-generic-results]");
+    if(generic)generic.hidden=latestResultSnapshot.dashboard.model.sections.length>0;
+    notify("structured-results",{snapshot:latestResultSnapshot});
+    return latestResultSnapshot;
+  }
   async function initialize(){
     if(initialized)return api;
     if(destroyed)throw new Error("QuoteRuntimeAdapter was destroyed");
@@ -171,7 +198,7 @@ export function createQuoteRuntimeAdapter({root}){
     await import(moduleUrl("forge-quote-benefit-summary.js"));
     await loadClassicScript("forge-quote-intake-state.js");
     await import(moduleUrl("forge-accepted-quote-adapter.js"));
-    await import(moduleUrl("forge-benefit-summary-renderer.js"));
+    benefitSummaryModule=await import(moduleUrl("forge-benefit-summary-renderer.js"));
     await import(moduleUrl("forge-benefit-summary-layout.js"));
     await import(moduleUrl("forge-pdf-browser-parser.js"));
     globalThis.ForgeNuevaCotizacionAcceptedQuoteRuntime={
@@ -189,6 +216,7 @@ export function createQuoteRuntimeAdapter({root}){
       }catch(error){setReadiness(error.message,"error");}
     });
     globalThis.addEventListener("forge:quote-preview-calculated",()=>{
+      updateStructuredResults();
       setReadiness("Resultado calculado · pendiente de revisión humana","ready");
     });
     initialized=true;
@@ -204,7 +232,16 @@ export function createQuoteRuntimeAdapter({root}){
       preview:globalThis.ForgeAcceptedQuoteBridge
         ?.getCurrentQuotePreviewCalculationState?.()||null,
       packet:latestPacket,
+      calculation:latestCalculation,
+      resultSnapshot:latestResultSnapshot,
     });},
+    getCalculation(){return latestResultSnapshot?.calculation??null;},
+    getProductIntelligence(){return latestResultSnapshot?.productIntelligence??null;},
+    getBenefitSummary(){return latestResultSnapshot?.benefitSummary??null;},
+    getProductDashboardModel(){return latestResultSnapshot?.dashboard??null;},
+    getRateMetadata(){return latestResultSnapshot?.rateMetadata??null;},
+    getMissingInformation(){return latestResultSnapshot?.missingInformation??Object.freeze([]);},
+    getTruthState(){return latestResultSnapshot?.truthState??null;},
     subscribe(listener){subscribers.add(listener);return()=>subscribers.delete(listener);},
     setInput,
     selectFile:()=>input?.click(),
@@ -214,6 +251,8 @@ export function createQuoteRuntimeAdapter({root}){
       ?.calculateCurrentQuoteCandidatePreview?.(),
     acceptQuote:()=>globalThis.ForgeAcceptedQuoteBridge?.confirmCurrentQuoteCandidate?.(),
     reset(){globalThis.ForgeQuoteIntakeState?.reset?.();latestPacket=null;
+      latestCalculation=null;latestResultSnapshot=null;
+      root.querySelector("[data-quote-product-dashboard]")?.replaceChildren();
       setReadiness("Revisa el archivo para continuar","pending");},
     destroy(){destroyed=true;subscribers.clear();},
     elements:Object.freeze({input,submit,status,label}),

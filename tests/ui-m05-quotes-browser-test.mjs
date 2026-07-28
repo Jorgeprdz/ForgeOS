@@ -127,14 +127,46 @@ try {
     const packet = {
       nativeResult: {
         prospect: "Fixture pública",
-        product: "Producto sintético",
-        sumInsured: "100 UDI",
+        product: "Imagina Ser 65",
+        productFamily: "Imagina Ser",
+        sumInsured: "75,000 UDI",
         premiumTable: { annual: 10 },
         paymentTerm: "1 año",
         policyTerm: "1 año",
         currency: "UDI",
+        benefitSummary: {
+          blocks: [
+            {
+              type: "contribution_summary",
+              lines: [
+                { id: "premium_paying_years", value: 15, unit: "years" },
+                { id: "total_contributed_udi", label: "Total aportado", value: 50000, unit: "UDI" },
+              ],
+            },
+            {
+              type: "protection_summary",
+              lines: [{ id: "sum_assured_udi", label: "Suma asegurada", value: 75000, unit: "UDI" }],
+            },
+            {
+              type: "retirement_scenarios",
+              scenarios: [{
+                id: "base",
+                label: "Base",
+                singlePayment: { udi: 90000, mxn: 4000000, targetAge: 65 },
+                monthlyIncome: { udi: 600, mxn: 27000, targetAge: 65 },
+                accumulatedIncome: [{ toAge: 75, udi: 120000, mxn: 5400000 }],
+              }],
+            },
+          ],
+        },
       },
-      context: { productFamily: "fixture" },
+      context: { productFamily: "Imagina Ser" },
+      productIntelligence: {
+        schema: { id: "forge.product_intelligence.imagina_ser", version: "R13" },
+        identity: { detected_product_name: "Imagina Ser 65", product_version: "2026" },
+        ownership: { canonical_owner: "product-intelligence" },
+        truth_status: "verified",
+      },
     };
     const input = document.querySelector("#fq-solution-online-pdf-105dr");
     const transfer = new DataTransfer();
@@ -149,6 +181,47 @@ try {
   await page.waitForFunction(() =>
     globalThis.ForgeQuoteIntakeState.getState() === "READY"
   );
+  await page.waitForSelector('[data-quote-product-dashboard][data-product-dashboard="imagina_ser"]');
+  const richResult = await page.evaluate(() => ({
+    dashboard: document.querySelector("[data-quote-product-dashboard]")?.dataset.productDashboard,
+    sections: [...document.querySelectorAll("[data-product-section]")]
+      .map((node) => node.dataset.productSection),
+    owner: document.querySelector("[data-quote-truth-state]")?.textContent,
+    scenarioLabels: [...document.querySelectorAll(".quotes-intelligence-scenario dt")]
+      .map((node) => node.textContent),
+  }));
+  assert.equal(richResult.dashboard, "imagina_ser");
+  assert.ok(richResult.sections.includes("contribution"));
+  assert.ok(richResult.sections.includes("construction"));
+  assert.match(richResult.owner, /product-intelligence/);
+  assert.ok(richResult.scenarioLabels.includes("Pago único"));
+  assert.ok(richResult.scenarioLabels.includes("Ingreso mensual"));
+  assert.ok(richResult.scenarioLabels.some((label) => label.includes("edad 75")));
+  for (const [width, height] of [
+    [320, 568], [360, 800], [375, 667], [390, 844], [430, 932],
+    [768, 1024], [1024, 768], [1440, 900], [844, 390],
+  ]) {
+    await page.setViewport({ width, height, deviceScaleFactor: 1 });
+    const resultLayout = await page.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth
+        > document.documentElement.clientWidth,
+      dashboardVisible: Boolean(
+        document.querySelector("[data-quote-product-dashboard]")?.getClientRects().length,
+      ),
+      visibleSections: [...document.querySelectorAll("[data-product-section]")]
+        .filter((node) => node.getClientRects().length).length,
+      unlabeledControls: [...document.querySelectorAll("button,input,textarea")]
+        .filter((node) => !node.disabled && !node.hidden)
+        .filter((node) => !node.getAttribute("aria-label")
+          && !node.closest("label")
+          && !node.labels?.length
+          && !node.textContent.trim()).length,
+    }));
+    assert.equal(resultLayout.overflow, false, `${width}x${height} overflow`);
+    assert.equal(resultLayout.dashboardVisible, true);
+    assert.ok(resultLayout.visibleSections >= 2);
+    assert.equal(resultLayout.unlabeledControls, 0);
+  }
   assert.equal(
     await page.$eval(".fq-send-pdf-105dr", (button) => button.disabled),
     false,

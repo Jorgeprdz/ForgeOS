@@ -37,7 +37,7 @@ test("entrypoint loads only its clean approved assets", () => {
   assert.match(index, /app\.css\?v=ui-m03-approved-001/);
   assert.match(index, /\.\.\/\.\.\/env\.js\?v=__FORGE_BUILD_SHA__/);
   assert.match(index, /forge-public-config\.js\?v=ui-m05b-001/);
-  assert.match(index, /app\.js\?v=ui-m05b-001/);
+  assert.match(index, /app\.js\?v=ui-m05c-001/);
   assert.match(index, /manifest\.json/);
   assert.doesNotMatch(
     index,

@@ -1,6 +1,6 @@
 {
   "schema": "forge.ui.material3.canonical-shell.v1",
-  "phase": "UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION",
+  "phase": "UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY",
   "status": "execution_authorized",
   "entrypoint": "docs/static-preview/forge-alive-material3/index.html",
   "legacy": {
@@ -25,6 +25,9 @@
     "homeModuleSeparated": true,
     "quotesModuleIntegrated": true,
     "quotesRuntimeAdapter": "./quote-runtime-adapter.js",
+    "quotesProductIntelligencePresenter": "./quote-product-intelligence-presenter.js",
+    "completeCalculationPacketPreserved": true,
+    "productSpecificDashboards": ["imagina_ser", "segubeca", "orvi", "generic"],
     "legacyDomTransplant": false,
     "material3NativeMarkup": true,
     "quotesRoute": "?nav=cotizaciones",
