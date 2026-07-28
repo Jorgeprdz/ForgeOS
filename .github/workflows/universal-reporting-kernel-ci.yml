@@ -1,0 +1,129 @@
+name: REP Universal Reporting Kernel CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/reporting/domain/reporting-kernel-contract.mjs
+      - advisor-os/reporting/runtime/universal-reporting-kernel.mjs
+      - tests/universal-reporting-kernel-test.mjs
+      - docs/architecture/reporting/REP-01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION.md
+      - .github/workflows/universal-reporting-kernel-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kernel:
+    name: Universal reporting kernel acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-00 closure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'REP_00_BUILD_TREE_UNIFIED_TREE_ROADMAP_SYNC=CLOSED' \
+            docs/architecture/reporting/REP_00_BUILD_TREE_UNIFIED_TREE_ROADMAP_SYNC_CLOSURE.md
+
+      - name: Verify universal reporting decision
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'REPORTING_AUTHORITY=UNIVERSAL_REPORTING_KERNEL' \
+            docs/architecture/reporting/REP_UNIVERSAL_REPORTING_SYSTEM_DECISION_001.md
+          grep -Fq \
+            'DOMAIN_REPORTING_AUTHORITY=NO' \
+            docs/architecture/reporting/REP_UNIVERSAL_REPORTING_SYSTEM_DECISION_001.md
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee REP01_ACTIVITY_FREEZE.txt
+
+      - name: Run kernel tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-reporting-kernel-test.mjs \
+            | tee REP01_KERNEL.tap
+
+          grep -Fq '# tests 25' REP01_KERNEL.tap
+          grep -Fq '# pass 25' REP01_KERNEL.tap
+          grep -Fq '# fail 0' REP01_KERNEL.tap
+
+      - name: Run Performance surface regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-surface-adapter-test.mjs \
+            | tee REP01_PERFORMANCE_SURFACE.tap
+
+          grep -Fq '# tests 20' REP01_PERFORMANCE_SURFACE.tap
+          grep -Fq '# pass 20' REP01_PERFORMANCE_SURFACE.tap
+          grep -Fq '# fail 0' REP01_PERFORMANCE_SURFACE.tap
+
+      - name: Verify repository hygiene
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git diff --check
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/reporting
+
+          printf '%s\n' \
+            'REP_01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP00_CLOSURE=PASS' \
+            'REMOTE_REPORTING_DECISION=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_KERNEL_TEST=PASS' \
+            'REMOTE_PERFORMANCE_REGRESSION=PASS' \
+            'KERNEL_SCHEMA=universal-reporting-kernel.v1' \
+            'REQUEST_SCHEMA=universal-report-request.v1' \
+            'REPORTING_AUTHORITY=UNIVERSAL_REPORTING_KERNEL' \
+            'PROVIDER_EXECUTION_AUTHORIZED=NO' \
+            'PERIOD_RESOLUTION_COMPLETE=NO' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/reporting/REP01_ACCEPTANCE.txt
+
+          cp \
+            REP01_ACTIVITY_FREEZE.txt \
+            REP01_KERNEL.tap \
+            REP01_PERFORMANCE_SURFACE.tap \
+            artifacts/reporting/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-01-universal-reporting-kernel-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
+          retention-days: 60
