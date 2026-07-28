@@ -1,0 +1,47 @@
+ADR-019 — UI-M03 Home and Alfred Material 3 Execution Authority
+
+Status
+
+RATIFIED
+
+Decision
+
+UI_M03_STATUS=EXECUTION_AUTHORIZED
+BOARD_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+IMPLEMENTATION_READINESS=READY
+DISCOVERY_STATUS=COMPLETE_FOR_AUTHORIZED_SCOPE
+DESIGN_AUTHORITY=LOCKED_BUNDLE_93f1ed31
+AUTHORITY_COMMIT=93f1ed317acad257ecd63879a37c977858d7eea2
+APPROVED_PROTOTYPE_COMMIT=aeffc2e493ff9b5b3cf3cdb90e1f3c22d026b365
+RUNTIME_BRANCH=feature/ui-material3-runtime-migration
+CLEAN_ENTRYPOINT=docs/static-preview/forge-alive-material3/
+LEGACY_ENTRYPOINT_STATUS=FROZEN
+FUNCTIONAL_REPLACEMENT_ALLOWED=SCOPED_YES
+BACKEND_MUTATION=FORBIDDEN
+MAIN_MUTATION=FORBIDDEN
+UI_M04_STATUS=LOCKED
+HUMAN_VISUAL_ACCEPTANCE=PENDING
+
+Scope
+
+This ADR authorizes the UI-M03 clean Forge Alive Home and Alfred Material 3
+implementation, its structural and visual validation, candidate commits on the
+runtime branch, and a conditional GitHub Pages artifact overlay after all
+fifteen authoritative Linux Playwright comparisons satisfy the visual gate.
+
+The visual authority is the immutable ForgeUI Material 3 Design Lock identified
+above. GitHub Actions Linux Playwright Chromium is the authoritative capture
+environment. Local browser captures are diagnostic only.
+
+Boundaries
+
+The legacy source at docs/static-preview/forge-alive/ remains frozen and must
+not be modified, reconciled, projected, or reused by the clean entrypoint.
+
+This ADR does not authorize backend, Supabase, persistence, model, commercial
+rule, event, engine, authentication, migration, Edge Function, Nash, FES,
+Activity, Performance Scoring, main, Design Lock, or golden-reference changes.
+
+UI-M04 remains locked. Candidate commits and pushes do not constitute visual
+acceptance or UI-M03 closure. Human visual acceptance remains pending.

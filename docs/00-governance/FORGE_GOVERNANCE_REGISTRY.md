@@ -182,6 +182,27 @@ The following surfaces must be declared explicitly before work may touch them:
 
 Touching a protected surface requires explicit scope and approval.
 
+## UI-M03 Execution Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-019 — UI-M03 Home and Alfred Material 3 Execution Authority.txt` |
+| UI-M03 status | `EXECUTION_AUTHORIZED` |
+| Board approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Implementation readiness | `READY` |
+| Design authority | `LOCKED_BUNDLE_93f1ed31` |
+| Runtime branch | `feature/ui-material3-runtime-migration` |
+| Clean entrypoint | `docs/static-preview/forge-alive-material3/` |
+| Functional replacement | `SCOPED_YES` |
+| Legacy entrypoint | `FROZEN` |
+| UI-M04 status | `LOCKED` |
+| Human visual acceptance | `PENDING` |
+
+This authority is limited to the UI-M03 Home and Alfred visual runtime,
+validation tooling, authoritative Linux capture workflow and conditional Pages
+artifact overlay. It does not change authority for any other Forge work.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

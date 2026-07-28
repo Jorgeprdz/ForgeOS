@@ -35,9 +35,12 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
 
 ### UI-M03 — Productive Home bindings
 
-- Status: **LOCKED**
-- Bind real next action, activity, follow-up and opportunity data.
-- Preserve current functional contracts.
+- Status: **EXECUTION_AUTHORIZED**
+- Authority: `ADR-019 — UI-M03 Home and Alfred Material 3 Execution Authority`.
+- Restore the approved clean Home and Alfred visual behavior without connecting
+  productive backend actions, persistence or business rules.
+- Preserve the frozen legacy source and publish the clean entrypoint only through
+  the authorized Pages artifact overlay after the visual gate passes.
 
 ### UI-M04 — Home acceptance
 
