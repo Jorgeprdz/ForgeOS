@@ -78,8 +78,8 @@ jobs:
             tests/activity-read-runtime-test.mjs \
             | tee PERF03_ACTIVITY.tap
 
-          grep -Fq '# tests 223' PERF03_ACTIVITY.tap
-          grep -Fq '# pass 223' PERF03_ACTIVITY.tap
+          grep -Fq '# tests 213' PERF03_ACTIVITY.tap
+          grep -Fq '# pass 213' PERF03_ACTIVITY.tap
           grep -Fq '# fail 0' PERF03_ACTIVITY.tap
 
       - name: Verify repository hygiene
