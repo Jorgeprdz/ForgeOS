@@ -29,13 +29,13 @@ export const FORGE_NAVIGATION_ITEMS = Object.freeze([
   }),
   Object.freeze({
     id: "quotes",
-    routeId: "cotizaciones",
+    routeId: "quotes",
     target: "?nav=cotizaciones",
     label: "Cotizaciones",
     icon: "quotes",
     iconPath: iconPaths.quotes,
-    accessibilityLabel: "Ir a Cotizaciones",
-    availability: "future",
+    accessibilityLabel: "Abrir Cotizaciones",
+    availability: "available",
     order: 30,
   }),
 ]);
@@ -43,8 +43,9 @@ export const FORGE_NAVIGATION_ITEMS = Object.freeze([
 export function resolveForgeRoute(location = window.location) {
   const url = new URL(location.href);
   const requested = url.searchParams.get("nav")?.toLowerCase();
+  const normalized = requested === "cotizaciones" ? "quotes" : requested;
   const matched = FORGE_NAVIGATION_ITEMS.find(
-    (item) => item.routeId === requested,
+    (item) => item.routeId === normalized,
   );
   return matched?.availability === "available"
     ? matched.routeId

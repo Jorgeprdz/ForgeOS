@@ -11984,6 +11984,23 @@ Status: `EXECUTION_AUTHORIZED`
 - Corrective prerequisite for UI-M05; visual redesign and domain mutation are
   forbidden.
 <!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:END -->
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:START -->
+## UI-M05 Quotes Visual Migration and Canonical Nav Pill Integration
+
+PHASE: `UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-021 — UI-M05 Quotes Visual Migration Execution Authority`.
+- Source authority: successful UI-M04 commit
+  `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Scope: functional Cotizaciones discovery and baseline, ForgeShell mounting,
+  canonical route/Nav Pill integration, and Material 3 presentation migration.
+- Quote engines, calculations, projections, persistence, Product Intelligence,
+  Supabase, Nash and deployment remain protected.
+
+NEXT: `UI_M05_DISCOVERY_AND_FUNCTIONAL_BASELINE`
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:END -->
 
 <!-- FORGEOS:R16E2C_UNIFIED_BUILD_TREE_SYNC_37107CA:START -->
 ## R16E2C Unified Build Tree Sync

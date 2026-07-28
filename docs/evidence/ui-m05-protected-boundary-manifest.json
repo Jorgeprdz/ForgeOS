@@ -1,0 +1,30 @@
+{
+  "phase": "UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION",
+  "sourceCommit": "242bc9860df811b05c85296aca36d26e866f7d52",
+  "policy": "NO_AUTHORITATIVE_DOMAIN_MUTATION",
+  "protectedPaths": [
+    "docs/static-preview/quote-preview-live/",
+    "product-intelligence/",
+    "supabase/",
+    "platform/conversation-intelligence/",
+    "forge-quote-calculators.js",
+    "forge-accepted-quote-bridge.js",
+    "forge-quote-acceptance-entrypoint-r16j0a.js",
+    "parser",
+    "mapper",
+    "rate-cache",
+    "financial",
+    "orvi",
+    "docs/architecture/source-truth/NASH_",
+    "tests/nash-"
+  ],
+  "allowedRuntimePaths": [
+    "docs/static-preview/forge-alive-material3/"
+  ],
+  "baseline": {
+    "quoteIntake": "PASS",
+    "quoteCalculation": "PASS",
+    "quotePreview": "PASS",
+    "persistence": "NOT_APPLICABLE_BY_EXISTING_CONTRACT"
+  }
+}

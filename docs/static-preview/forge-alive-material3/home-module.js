@@ -30,11 +30,11 @@ export function createHomeModule({ root, shell }) {
     root,
     mount,
     reconcile() {
+      root.hidden = false;
       root.dataset.moduleActive = "true";
     },
     unmount() {
-      abortController.abort();
-      mounted = false;
+      root.hidden = true;
       root.dataset.moduleActive = "false";
     },
   });

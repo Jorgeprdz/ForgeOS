@@ -47,6 +47,7 @@ export function createForgeShell({ root, moduleViewport }) {
   const abortController = new AbortController();
   const { signal } = abortController;
   let currentModule = null;
+  const routeModules = new Map();
   let initialized = false;
 
   function setAlfredState(globalState, contextualState = globalState) {
@@ -97,6 +98,15 @@ export function createForgeShell({ root, moduleViewport }) {
 
   function reconcile() {
     const routeId = resolveForgeRoute();
+    const routeModule = routeModules.get(routeId);
+    routeModules.forEach((module, registeredRoute) => {
+      if (registeredRoute !== routeId) module.unmount?.();
+    });
+    if (routeModule && currentModule !== routeModule) {
+      currentModule?.unmount?.();
+      currentModule = routeModule;
+      currentModule.mount?.();
+    }
     root.dataset.forgeRoute = routeId;
     moduleViewport.dataset.activeRoute = routeId;
     renderNavigation(nav, routeId);
@@ -175,6 +185,10 @@ export function createForgeShell({ root, moduleViewport }) {
     initialize,
     reconcile,
     mountModule,
+    registerRouteModule(routeId, module) {
+      routeModules.set(routeId, module);
+      return api;
+    },
     setAlfred,
     setAlfredState,
     syncVisualViewport,

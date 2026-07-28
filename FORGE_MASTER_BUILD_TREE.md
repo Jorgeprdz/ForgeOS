@@ -15217,6 +15217,24 @@ Status: `EXECUTION_AUTHORIZED`
 - Corrective prerequisite for UI-M05; visual redesign and domain mutation are
   forbidden.
 <!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:END -->
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:START -->
+## UI-M05 Quotes Visual Migration and Canonical Nav Pill Integration
+
+PHASE: `UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-021 — UI-M05 Quotes Visual Migration Execution Authority`.
+- Source authority: successful UI-M04 commit
+  `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Scope: discover and baseline the real functional Cotizaciones runtime,
+  mount it in ForgeShell, register its canonical route, and migrate only its
+  presentation to the approved Material 3 language.
+- Quote engines, calculations, projections, persistence, Product Intelligence,
+  Supabase, Nash and deployment remain protected.
+
+NEXT: `UI_M05_DISCOVERY_AND_FUNCTIONAL_BASELINE`
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:END -->
 
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
 ## R16J0 Accepted Quote to Sales Presentation Entrypoint

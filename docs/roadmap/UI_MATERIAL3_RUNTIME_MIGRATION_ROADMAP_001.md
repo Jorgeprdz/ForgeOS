@@ -54,12 +54,24 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
 - Quote, Product Intelligence, financial, Supabase and legacy boundaries remain
   protected.
 
-### UI-M05+ — Incremental surfaces
+### UI-M05 — Cotizaciones visual migration and canonical Nav Pill integration
+
+- Status: **EXECUTION_AUTHORIZED**
+- Phase: `UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION`
+- Authority: `ADR-021 — UI-M05 Quotes Visual Migration Execution Authority`.
+- Source authority: successful UI-M04 commit
+  `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Mount the discovered functional Cotizaciones runtime in ForgeShell and
+  migrate presentation to the approved Material 3 visual language.
+- Quote functionality, engines, calculations, projections, persistence,
+  Product Intelligence and Supabase remain protected.
+- Runtime branch: `feature/ui-m05-quotes-visual-migration`.
+
+### UI-M06+ — Incremental surfaces
 
 - Status: **LOCKED**
 - Prospects.
 - Conversation and timeline.
-- Quotes.
 - Agenda and secondary surfaces.
 
 ### UI-M05A — Quotes functional baseline repair

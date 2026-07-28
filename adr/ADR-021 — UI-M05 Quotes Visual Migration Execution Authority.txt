@@ -1,0 +1,44 @@
+ADR-021 — UI-M05 Quotes Visual Migration Execution Authority
+
+Status
+
+RATIFIED
+
+Decision
+
+PHASE=UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION
+PHASE_STATUS=EXECUTION_AUTHORIZED
+PHASE_TYPE=FUNCTION_PRESERVING_UI_MIGRATION
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+BOARD_SCOPE_SELECTION=QUOTES_VISUAL_MIGRATION_AND_SHELL_INTEGRATION
+IMPLEMENTATION_READINESS=READY
+SOURCE_AUTHORITY=UI_M04_SUCCESSFUL_COMMIT
+SOURCE_COMMIT=979b134231e5ffaf18652cef82e47ff3332cf6fc
+RUNTIME_BRANCH=feature/ui-m05-quotes-visual-migration
+VISUAL_REDESIGN=AUTHORIZED
+VISUAL_LANGUAGE_AUTHORITY=APPROVED_MATERIAL3_FORGE_SHELL
+QUOTE_FUNCTIONALITY_REDESIGN=FORBIDDEN
+QUOTE_ENGINE_MUTATION=FORBIDDEN
+QUOTE_CALCULATION_MUTATION=FORBIDDEN
+QUOTE_PERSISTENCE_MUTATION=FORBIDDEN
+PRODUCT_INTELLIGENCE_MUTATION=FORBIDDEN
+QUOTE_AND_PRODUCT_BOUNDARIES=PROTECTED
+SUPABASE_REMOTE_MUTATION=FORBIDDEN
+DEPLOYMENT=FORBIDDEN
+MAIN_DIRECT_MUTATION=FORBIDDEN
+
+Scope
+
+UI-M05 is the explicit Board scope selected after successful UI-M04. It
+authorizes mounting the existing functional Cotizaciones runtime inside the
+canonical ForgeShell, registering its real route in ForgeNavPill, and migrating
+presentation to the approved Material 3 Forge visual language.
+
+Boundaries
+
+UI-M05 does not authorize a replacement quotation runtime, calculation,
+projection, product-rule, persistence, accepted-quote, PDF, authentication,
+Supabase, Nash, ORVI, R16A or R16B behavior change. Deployment and direct main
+mutation remain forbidden.

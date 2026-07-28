@@ -1,6 +1,6 @@
 {
   "schema": "forge.ui.material3.canonical-shell.v1",
-  "phase": "UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT",
+  "phase": "UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION",
   "status": "execution_authorized",
   "entrypoint": "docs/static-preview/forge-alive-material3/index.html",
   "legacy": {
@@ -23,10 +23,15 @@
     "singleContextualAlfred": true,
     "canonicalForgeShell": true,
     "homeModuleSeparated": true,
+    "quotesModuleIntegrated": true,
+    "quotesRuntimeAuthority": "../forge-alive/nueva-cotizacion/index.html",
+    "quotesRoute": "?nav=cotizaciones",
+    "quotesPersistence": "not_applicable_by_existing_contract",
     "canonicalNavigationContract": true,
     "idempotentLifecycle": true,
     "visualViewportKeyboardInset": true,
-    "businessLogicConnected": false,
+    "businessLogicConnected": true,
+    "businessLogicDuplicated": false,
     "backendConnected": false,
     "humanVisualAcceptanceRequired": true
   }

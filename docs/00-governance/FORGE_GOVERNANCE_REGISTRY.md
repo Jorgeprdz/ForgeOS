@@ -234,6 +234,29 @@ shell lifecycle and their validation.
 `feature/ui-m05a-quotes-baseline-repair`. Owner, Miranda and Board approval are
 `GRANTED`; visual redesign is `FORBIDDEN`, quote domain boundaries are
 `PROTECTED`, and `RESUME_UI_M05_AFTER_PASS=YES`.
+## UI-M05 Quotes Visual Migration Execution Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-021 — UI-M05 Quotes Visual Migration Execution Authority.txt` |
+| Phase | `UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION` |
+| Status | `EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Board scope selection | `QUOTES_VISUAL_MIGRATION_AND_SHELL_INTEGRATION` |
+| Implementation readiness | `READY` |
+| Source authority | `UI_M04_SUCCESSFUL_COMMIT` |
+| Source commit | `979b134231e5ffaf18652cef82e47ff3332cf6fc` |
+| Runtime branch | `feature/ui-m05-quotes-visual-migration` |
+| Visual redesign | `AUTHORIZED` |
+| Quote functionality redesign | `FORBIDDEN` |
+| Quote and Product boundaries | `PROTECTED` |
+| Deployment | `FORBIDDEN` |
+
+UI-M05 is limited to the discovered functional Cotizaciones surface,
+canonical ForgeShell mounting, route/Nav Pill integration, visual migration
+and function-preserving validation.
 
 ## Work Start Rule
 

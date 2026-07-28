@@ -7,7 +7,8 @@ import { extname, join, normalize } from "node:path";
 import { readFile, stat } from "node:fs/promises";
 import { webkit } from "playwright";
 
-const sourceCommit = "f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673";
+const sourceCommit = process.env.FORGE_HOME_VISUAL_SOURCE_COMMIT
+  || "f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673";
 const repositoryRoot = process.cwd();
 const authorityRoot = mkdtempSync(join(os.tmpdir(), "forge-ui-m04-authority-"));
 const authorityEntrypoint = join(
@@ -16,13 +17,26 @@ const authorityEntrypoint = join(
 );
 mkdirSync(authorityEntrypoint, { recursive: true });
 
-for (const name of [
-  "index.html",
-  "app.css",
-  "app.js",
-  "tokens.css",
-  "manifest.json",
-]) {
+const authorityFiles = execFileSync(
+  "git",
+  [
+    "-c",
+    `safe.directory=${repositoryRoot}`,
+    "ls-tree",
+    "-r",
+    "--name-only",
+    sourceCommit,
+    "--",
+    "docs/static-preview/forge-alive-material3/",
+  ],
+  { encoding: "utf8" },
+).trim().split("\n").filter(Boolean);
+for (const path of authorityFiles) {
+  const name = path.replace(
+    "docs/static-preview/forge-alive-material3/",
+    "",
+  );
+  mkdirSync(join(authorityEntrypoint, name, ".."), { recursive: true });
   writeFileSync(
     join(authorityEntrypoint, name),
     execFileSync(
@@ -31,7 +45,7 @@ for (const name of [
         "-c",
         `safe.directory=${repositoryRoot}`,
         "show",
-        `${sourceCommit}:docs/static-preview/forge-alive-material3/${name}`,
+        `${sourceCommit}:${path}`,
       ],
     ),
   );
