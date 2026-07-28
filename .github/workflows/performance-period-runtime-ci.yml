@@ -1,0 +1,119 @@
+name: PERF Period Runtime CI
+
+on:
+  push:
+    branches:
+      - feature/performance-scoring-contract-foundation
+    paths:
+      - advisor-os/performance/runtime/**
+      - tests/performance-period-runtime-test.mjs
+      - docs/architecture/performance/PERF-03_PERFORMANCE_PERIOD_RUNTIME.md
+      - .github/workflows/performance-period-runtime-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    name: Performance period runtime acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify PERF-02 closure
+        run: |
+          grep -Fq \
+            'PERF_02_PERFORMANCE_SCORING_POLICY_CONTRACT=CLOSED' \
+            docs/architecture/performance/PERF-02_PERFORMANCE_SCORING_POLICY_CONTRACT_CLOSURE.md
+
+      - name: Verify Activity foundation
+        run: |
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee PERF03_ACTIVITY_FREEZE.txt
+
+      - name: Run period runtime tests
+        run: |
+          node --test \
+            --test-reporter=tap \
+            tests/performance-period-runtime-test.mjs \
+            | tee PERF03_RUNTIME.tap
+
+          grep -Fq '# tests 22' PERF03_RUNTIME.tap
+          grep -Fq '# pass 22' PERF03_RUNTIME.tap
+          grep -Fq '# fail 0' PERF03_RUNTIME.tap
+
+      - name: Run scoring policy regression
+        run: |
+          node --test \
+            --test-reporter=tap \
+            tests/performance-scoring-policy-test.mjs \
+            | tee PERF03_POLICY.tap
+
+          grep -Fq '# tests 17' PERF03_POLICY.tap
+          grep -Fq '# pass 17' PERF03_POLICY.tap
+          grep -Fq '# fail 0' PERF03_POLICY.tap
+
+      - name: Run frozen Activity contracts
+        run: |
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs \
+            | tee PERF03_ACTIVITY.tap
+
+          grep -Fq '# tests 223' PERF03_ACTIVITY.tap
+          grep -Fq '# pass 223' PERF03_ACTIVITY.tap
+          grep -Fq '# fail 0' PERF03_ACTIVITY.tap
+
+      - name: Verify repository hygiene
+        run: git diff --check
+
+      - name: Build acceptance evidence
+        run: |
+          mkdir -p artifacts/performance
+          printf '%s\n' \
+            'PERF_03_PERFORMANCE_PERIOD_RUNTIME=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_PERF02_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_RUNTIME_TEST=PASS' \
+            'REMOTE_POLICY_REGRESSION=PASS' \
+            'REMOTE_ACTIVITY_CONTRACTS=PASS' \
+            'RUNTIME_SCHEMA=performance-period-runtime.v1' \
+            'PERIOD_RESULT_SCHEMA=performance-period-result.v1' \
+            'MAX_PERIOD_DAYS=31' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/performance/PERF03_ACCEPTANCE.txt
+
+          cp \
+            PERF03_ACTIVITY_FREEZE.txt \
+            PERF03_RUNTIME.tap \
+            PERF03_POLICY.tap \
+            PERF03_ACTIVITY.tap \
+            artifacts/performance/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-03-period-runtime-${{ github.sha }}
+          path: artifacts/performance
+          if-no-files-found: error
+          retention-days: 60
