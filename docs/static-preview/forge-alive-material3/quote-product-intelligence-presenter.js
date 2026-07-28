@@ -211,8 +211,8 @@ function appendValue(target, value) {
   if (value && typeof value === "object") {
     const parts = [
       hasValue(value.udi) ? `${number(value.udi)} UDI` : null,
-      hasValue(value.mxn) ? `$${number(value.mxn)} MXN` : null,
-      hasValue(value.usd) ? `$${number(value.usd)} USD` : null,
+      hasValue(value.mxn) ? `≈ $${number(value.mxn)} MXN` : null,
+      hasValue(value.usd) ? `≈ $${number(value.usd)} USD` : null,
     ].filter(Boolean);
     if (parts.length) {
       parts.forEach((part, index) => {
@@ -277,6 +277,18 @@ function metric(documentRef, item) {
   return row;
 }
 
+function semanticTone(value) {
+  const key = String(value || "").toLowerCase();
+  if (/protection|health|coverage|women/.test(key)) return "protection";
+  if (/contribution|premium|plan|participant/.test(key)) return "contribution";
+  if (/recovery|future|construction|retirement|endowment|education|payout|schedule/.test(key)) {
+    return "future";
+  }
+  if (/recommended|recommendation/.test(key)) return "recommended";
+  if (/scenario|projection/.test(key)) return "projection";
+  return "product";
+}
+
 export function renderQuoteResultSnapshot(snapshot, { host, documentRef = document } = {}) {
   if (!snapshot || !host) return null;
   host.replaceChildren();
@@ -339,6 +351,7 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     const card = documentRef.createElement("section");
     card.className = "quotes-intelligence-section";
     card.dataset.productSection = section.kind || section.key;
+    card.dataset.semanticTone = semanticTone(section.kind || section.key);
     card.style.setProperty("--section-span", String(section.desktopSpan || 6));
     const heading = documentRef.createElement("h4");
     heading.textContent = section.title;
@@ -355,7 +368,9 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     rate.className = "quotes-intelligence-meta";
     rate.dataset.quoteRateMetadata = "true";
     const heading = documentRef.createElement("h4");
-    heading.textContent = "Tasa verificada";
+    heading.textContent = snapshot.rateMetadata.stale
+      ? "⚠ Tasa pendiente de actualización"
+      : "✓ Tasa verificada";
     const text = documentRef.createElement("p");
     text.textContent = [
       snapshot.rateMetadata.key,
@@ -375,7 +390,11 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     truth.className = "quotes-intelligence-meta";
     truth.dataset.quoteTruthState = "true";
     const heading = documentRef.createElement("h4");
-    heading.textContent = "Verdad y preparación";
+    heading.textContent = snapshot.truthState.status === "conflicted"
+      ? "⚠ Evidencia en conflicto"
+      : snapshot.truthState.status === "verified"
+        ? "✓ Verdad y preparación"
+        : "◐ Verdad y preparación";
     const text = documentRef.createElement("p");
     const humanTruth = {
       verified_with_missing_information: "Verificado con información pendiente",
@@ -413,7 +432,7 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     missing.className = "quotes-intelligence-missing";
     missing.dataset.quoteMissingInformation = "true";
     const heading = documentRef.createElement("h4");
-    heading.textContent = "Información pendiente";
+    heading.textContent = "⚠ Información pendiente";
     const list = documentRef.createElement("ul");
     snapshot.missingInformation.forEach((value) => {
       const item = documentRef.createElement("li");

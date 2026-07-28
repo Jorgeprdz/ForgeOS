@@ -164,7 +164,7 @@ try {
     }
     if (type === "orvi") {
       await page.evaluate(async (value) => {
-        const presenter = await import("./quote-product-intelligence-presenter.js?v=ui-m05d-001");
+        const presenter = await import("./quote-product-intelligence-presenter.js?v=ui-m05d-002");
         const calculation = {
           ...value.nativeResult,
           ...value,

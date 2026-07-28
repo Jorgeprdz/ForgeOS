@@ -1,4 +1,4 @@
-import { createQuoteRuntimeAdapter } from "./quote-runtime-adapter.js?v=ui-m05d-001";
+import { createQuoteRuntimeAdapter } from "./quote-runtime-adapter.js?v=ui-m05d-002";
 
 const quotesStateKey = Symbol.for("forge.ui-m05b.quotes.state");
 let stylePromise;
@@ -10,7 +10,7 @@ function ensureQuotesStyles() {
     if (existing?.sheet) return resolve();
     const stylesheet = existing || document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL("./quotes-module.css?v=ui-m05d-001", import.meta.url);
+    stylesheet.href = new URL("./quotes-module.css?v=ui-m05d-002", import.meta.url);
     stylesheet.dataset.forgeQuotesStyles = "true";
     stylesheet.addEventListener("load", resolve, { once: true });
     stylesheet.addEventListener("error", reject, { once: true });

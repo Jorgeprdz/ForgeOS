@@ -128,5 +128,27 @@ assert.match(css, /\[data-product-dashboard=vida_mujer\]/);
 assert.match(css, /\[data-product-dashboard=segubeca\]/);
 assert.match(css, /\[data-product-dashboard=orvi\]/);
 assert.match(css, /\[data-product-dashboard=imagina_ser\]/);
+assert.match(css, /--product-support:/);
+assert.match(css, /\[data-semantic-tone=protection\]/);
+assert.match(css, /\[data-semantic-tone=future\]/);
+assert.match(css, /\[data-semantic-tone=recommended\]/);
+assert.match(css, /\[data-raw-truth-status=conflicted\]/);
+assert.match(css, /quotes-intelligence-missing h4\{color:#ffd58a\}/);
+assert.match(css, /quotes-intelligence-hero strong\{color:var\(--product-accent\)/);
+assert.match(presenter, /semanticTone/);
+assert.match(presenter, /⚠ Evidencia en conflicto/);
+assert.match(presenter, /✓ Tasa verificada/);
+
+const rgb = (hex) => hex.match(/[a-f\d]{2}/gi).map((value) => parseInt(value, 16) / 255);
+const luminance = (hex) => rgb(hex)
+  .map((value) => value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4)
+  .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0);
+const contrast = (foreground, background) => {
+  const values = [luminance(foreground), luminance(background)].sort((a, b) => b - a);
+  return (values[0] + 0.05) / (values[1] + 0.05);
+};
+for (const color of ["#53ded5", "#ffc95f", "#ff789b", "#f3c879", "#77aaff", "#ffbd59", "#4dd6aa", "#5de7f0"]) {
+  assert.ok(contrast(color, "#071426") >= 4.5, `${color} keeps readable contrast`);
+}
 
 console.log("UI-M05D multi-product presentation parity: PASS");

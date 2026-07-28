@@ -18,3 +18,18 @@ QUOTE_DOMAIN_BOUNDARIES=PROTECTED
 UI-M05D owns only multi-product presentation adapters, deterministic
 formatting, advisor-safe truth labels, responsive result composition, tests
 and evidence. It does not own calculation or Product Intelligence authority.
+
+## Product color depth owner rework
+
+CURRENT_COLOR_ACCEPTANCE=REJECTED
+ROOT_VISUAL_PROBLEM=NEARLY_ALL_SURFACES_REMAIN_NAVY_ON_NAVY
+PRODUCT_COLOR_REWORK=AUTHORIZED_WITHIN_UI_M05D
+LAYOUT_REDESIGN=FORBIDDEN
+DATA_BEHAVIOR_MUTATION=FORBIDDEN
+PRODUCT_COLOR_DEPTH=REQUIRED
+SEMANTIC_COLOR_HIERARCHY=REQUIRED
+ACCESSIBLE_CONTRAST=REQUIRED
+OWNER_VISUAL_ACCEPTANCE=PENDING_AFTER_REWORK
+
+The rework may deepen scoped product and semantic tones while preserving the
+approved information architecture, responsive composition and domain output.
