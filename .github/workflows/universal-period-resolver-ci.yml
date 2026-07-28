@@ -1,0 +1,133 @@
+name: REP Universal Period Resolver CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/reporting/domain/reporting-calendar-policy.mjs
+      - advisor-os/reporting/runtime/universal-period-resolver.mjs
+      - tests/universal-period-resolver-test.mjs
+      - docs/architecture/reporting/REP-02_UNIVERSAL_PERIOD_RESOLVER_AND_CALENDAR_POLICY.md
+      - .github/workflows/universal-period-resolver-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resolver:
+    name: Universal period resolver acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-01 closure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'REP_01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION=CLOSED' \
+            docs/architecture/reporting/REP-01_UNIVERSAL_REPORTING_KERNEL_FOUNDATION_CLOSURE.md
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee REP02_ACTIVITY_FREEZE.txt
+
+      - name: Run period resolver tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-period-resolver-test.mjs \
+            | tee REP02_RESOLVER.tap
+
+          grep -Fq '# tests 46' REP02_RESOLVER.tap
+          grep -Fq '# pass 46' REP02_RESOLVER.tap
+          grep -Fq '# fail 0' REP02_RESOLVER.tap
+
+      - name: Run kernel regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-reporting-kernel-test.mjs \
+            | tee REP02_KERNEL.tap
+
+          grep -Fq '# tests 25' REP02_KERNEL.tap
+          grep -Fq '# pass 25' REP02_KERNEL.tap
+          grep -Fq '# fail 0' REP02_KERNEL.tap
+
+      - name: Run Performance surface regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-surface-adapter-test.mjs \
+            | tee REP02_PERFORMANCE.tap
+
+          grep -Fq '# tests 20' REP02_PERFORMANCE.tap
+          grep -Fq '# pass 20' REP02_PERFORMANCE.tap
+          grep -Fq '# fail 0' REP02_PERFORMANCE.tap
+
+      - name: Verify repository hygiene
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git diff --check
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/reporting
+
+          printf '%s\n' \
+            'REP_02_UNIVERSAL_PERIOD_RESOLVER_AND_CALENDAR_POLICY=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP01_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_RESOLVER_TEST=PASS' \
+            'REMOTE_KERNEL_REGRESSION=PASS' \
+            'REMOTE_PERFORMANCE_REGRESSION=PASS' \
+            'RESOLVER_SCHEMA=universal-period-resolver.v1' \
+            'CALENDAR_POLICY_SCHEMA=reporting-calendar-policy.v1' \
+            'YTD_SUPPORTED=YES' \
+            'FYTD_SUPPORTED=YES' \
+            'AMBIGUOUS_BIANNUAL_REJECTED=YES' \
+            'PROVIDER_EXECUTION_AUTHORIZED=NO' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/reporting/REP02_ACCEPTANCE.txt
+
+          cp \
+            REP02_ACTIVITY_FREEZE.txt \
+            REP02_RESOLVER.tap \
+            REP02_KERNEL.tap \
+            REP02_PERFORMANCE.tap \
+            artifacts/reporting/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-02-universal-period-resolver-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
+          retention-days: 60
