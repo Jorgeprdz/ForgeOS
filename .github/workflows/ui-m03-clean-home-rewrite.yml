@@ -10,7 +10,10 @@ on:
       - "docs/evidence/UI_M03_CLEAN_HOME_*"
       - "docs/evidence/ui-m03-clean-home-*"
       - "tests/ui-m03-clean-home-rewrite-test.mjs"
+      - "tests/ui-m03-image-comparator-test.mjs"
       - "tests/e2e/ui-m03-clean-home-rewrite.spec.mjs"
+      - "tools/ui-m03-image-comparator.cjs"
+      - "tools/ui-m03-capture-and-compare.cjs"
       - "scripts/serve-ui-m03-clean-home.mjs"
       - "playwright.ui-m03-clean.config.mjs"
       - ".github/workflows/ui-m03-clean-home-rewrite.yml"
@@ -42,20 +45,45 @@ jobs:
 
       - name: Run clean Home contracts
         run: |
-          node --test tests/ui-m03-clean-home-rewrite-test.mjs \
+          node --test \
+            tests/ui-m03-governance-ratification-test.mjs \
+            tests/ui-m03-clean-home-rewrite-test.mjs \
+            tests/ui-m03-image-comparator-test.mjs \
             2>&1 | tee docs/evidence/ui-m03-clean-home-rewrite-actions.tap
 
-      - name: Capture mobile tablet desktop
+      - name: Capture five authoritative profiles
         run: |
           npx playwright test \
             --config=playwright.ui-m03-clean.config.mjs
 
       - name: Verify screenshots
         run: |
-          test -f artifacts/ui-m03-clean/screenshots/mobile-390x844-home.png
-          test -f artifacts/ui-m03-clean/screenshots/tablet-1280x800-home.png
-          test -f artifacts/ui-m03-clean/screenshots/desktop-1440x960-home.png
-          test "$(find artifacts/ui-m03-clean/screenshots -type f -name '*.png' | wc -l)" -eq 3
+          node - <<'EOF'
+          const fs = require('fs');
+          const root = 'artifacts/ui-m03-clean/screenshots';
+          const profiles = [
+            'mobile-390x844',
+            'tablet-portrait-800x1280',
+            'tablet-landscape-1100x800',
+            'desktop-1440x900',
+            'desktop-wide-1920x1080',
+          ];
+          const expected = profiles.flatMap(id => [
+            `${id}-viewport.png`,
+            `${id}-full.png`,
+            `${id}-alfred-open.png`,
+          ]);
+          for (const name of expected) {
+            if (!fs.existsSync(`${root}/${name}`)) {
+              throw new Error(`MISSING_SCREENSHOT=${name}`);
+            }
+          }
+          const actual = fs.readdirSync(root).filter(name => name.endsWith('.png'));
+          if (actual.length !== 15) {
+            throw new Error(`SCREENSHOT_COUNT=${actual.length}`);
+          }
+          console.log('AUTHORITATIVE_SCREENSHOT_COUNT=15');
+          EOF
 
       - name: Upload visual review artifact
         uses: actions/upload-artifact@v4

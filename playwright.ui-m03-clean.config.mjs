@@ -5,7 +5,7 @@ const baseURL = "http://127.0.0.1:4175";
 export default defineConfig({
   testDir: "./tests/e2e",
   testMatch: "ui-m03-clean-home-rewrite.spec.mjs",
-  timeout: 45_000,
+  timeout: 300_000,
   expect: {
     timeout: 8_000,
   },
@@ -25,39 +25,11 @@ export default defineConfig({
     browserName: "chromium",
     colorScheme: "dark",
     locale: "es-MX",
-    reducedMotion: "reduce",
+    reducedMotion: "no-preference",
     screenshot: "off",
     trace: "retain-on-failure",
   },
-  projects: [
-    {
-      name: "mobile-390x844",
-      use: {
-        viewport: { width: 390, height: 844 },
-        deviceScaleFactor: 1,
-        isMobile: true,
-        hasTouch: true,
-      },
-    },
-    {
-      name: "tablet-1280x800",
-      use: {
-        viewport: { width: 1280, height: 800 },
-        deviceScaleFactor: 1,
-        isMobile: false,
-        hasTouch: true,
-      },
-    },
-    {
-      name: "desktop-1440x960",
-      use: {
-        viewport: { width: 1440, height: 960 },
-        deviceScaleFactor: 1,
-        isMobile: false,
-        hasTouch: false,
-      },
-    },
-  ],
+  projects: [{ name: "authoritative-linux-chromium" }],
   outputDir: "artifacts/ui-m03-clean/test-results",
   webServer: {
     command:

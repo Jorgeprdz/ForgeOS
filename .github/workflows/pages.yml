@@ -126,6 +126,29 @@ jobs:
             fs.copyFileSync(file, target);
           }
 
+          const cleanForgeAliveSource = path.join(
+            'docs',
+            'static-preview',
+            'forge-alive-material3',
+          );
+          const canonicalForgeAliveTarget = path.join(
+            siteDir,
+            'static-preview',
+            'forge-alive',
+          );
+          fs.rmSync(canonicalForgeAliveTarget, {
+            recursive: true,
+            force: true,
+          });
+          fs.mkdirSync(canonicalForgeAliveTarget, {
+            recursive: true,
+          });
+          fs.cpSync(
+            cleanForgeAliveSource,
+            canonicalForgeAliveTarget,
+            { recursive: true },
+          );
+
           for (const file of trackedFiles.filter(file => file.startsWith('docs/') && file.endsWith('.html'))) {
             const target = path.join(siteDir, file.slice('docs/'.length));
             if (!fs.existsSync(target)) continue;
@@ -149,9 +172,79 @@ jobs:
       - name: Validate Pages public configuration artifact
         env:
           EXPECTED_DEMO_MODE: ${{ vars.DEMO_MODE || 'false' }}
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
         run: |
           node scripts/validate-pages-public-config.mjs _site/env.js
-          node -e "const assert=require('assert');const fs=require('fs');const forgeAlive=fs.readFileSync('_site/static-preview/forge-alive/index.html','utf8');const mobileDaily=fs.readFileSync('_site/10-gui/mobile-daily/index.html','utf8');assert.match(forgeAlive,/env\.js\?v=[0-9a-f]{40}[\s\S]*forge-alive-public-config-067g17a1\.js\?v=[0-9a-f]{40}/);assert.match(mobileDaily,/env\.js\?v=[0-9a-f]{40}[\s\S]*forge-alive-public-config-067g17a1\.js\?v=[0-9a-f]{40}[\s\S]*app\.js/);assert.ok(fs.existsSync('_site/static-preview/forge-alive/forge-alive-public-config-067g17a1.js'))"
+          node - <<'EOF'
+          const assert = require('assert');
+          const fs = require('fs');
+          const path = require('path');
+
+          const canonical = '_site/static-preview/forge-alive';
+          const required = [
+            'index.html',
+            'app.css',
+            'app.js',
+            'manifest.json',
+            'tokens.css',
+          ];
+          for (const file of required) {
+            assert.ok(
+              fs.existsSync(path.join(canonical, file)),
+              `missing clean Forge Alive artifact: ${file}`,
+            );
+          }
+
+          const index = fs.readFileSync(
+            path.join(canonical, 'index.html'),
+            'utf8',
+          );
+          assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
+          assert.match(index, /app\.css\?v=ui-m03-approved-001/);
+          assert.match(index, /app\.js\?v=ui-m03-approved-001/);
+          assert.doesNotMatch(
+            index,
+            /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,
+          );
+
+          const buildInfo = JSON.parse(
+            fs.readFileSync('_site/build-info.json', 'utf8'),
+          );
+          assert.equal(
+            buildInfo.commitSha,
+            process.env.EXPECTED_COMMIT_SHA,
+          );
+          assert.ok(fs.existsSync('_site/env.js'));
+
+          const forbidden = [];
+          function walk(directory) {
+            for (const entry of fs.readdirSync(directory, {
+              withFileTypes: true,
+            })) {
+              const absolute = path.join(directory, entry.name);
+              if (entry.isDirectory()) {
+                walk(absolute);
+                continue;
+              }
+              const relative = path.relative('_site', absolute);
+              if (
+                /\.(pdf|zip|xlsx)$/i.test(relative)
+                || /(^|\/)(golden|goldens)(\/|$)/i.test(relative)
+                || /ForgeGemini|Design-Lock/i.test(relative)
+              ) {
+                forbidden.push(relative);
+              }
+            }
+          }
+          walk('_site');
+          assert.deepEqual(
+            forbidden,
+            [],
+            `private evidence published: ${forbidden.join(', ')}`,
+          );
+
+          console.log('PAGES_CLEAN_FORGE_ALIVE_ARTIFACT=PASS');
+          EOF
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

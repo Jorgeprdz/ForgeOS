@@ -1,6 +1,6 @@
 {
-  "schema": "forge.ui.material3.clean-home.v1",
-  "phase": "UI_M03_CLEAN_HOME_REWRITE",
+  "schema": "forge.ui.material3.approved-home.v1",
+  "phase": "UI_M03_APPROVED_HOME_AND_ALFRED_RESTORE",
   "status": "implemented_pending_playwright_visual_acceptance",
   "entrypoint": "docs/static-preview/forge-alive-material3/index.html",
   "legacy": {
@@ -10,14 +10,18 @@
   },
   "responsive": {
     "mobile": "390x844",
-    "tablet": "1280x800",
-    "desktop": "1440x960"
+    "tabletPortrait": "800x1280",
+    "tabletLandscape": "1100x800",
+    "desktop": "1440x900",
+    "desktopWide": "1920x1080"
   },
   "contracts": {
     "cleanDom": true,
     "singleHeader": true,
     "singlePrimaryNavigation": true,
-    "singleAlfredLauncher": true,
+    "singleGlobalAlfred": true,
+    "singleContextualAlfred": true,
+    "visualViewportKeyboardInset": true,
     "businessLogicConnected": false,
     "backendConnected": false,
     "humanVisualAcceptanceRequired": true
