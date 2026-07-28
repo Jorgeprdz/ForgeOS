@@ -13389,3 +13389,20 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 UI external execution
 - 🔵 FES 06C browser geometry and visual acceptance
 <!-- END FORGEOS:FES_06B_PRODUCTIVE_UI_BINDING_IMPLEMENTATION -->
+
+<!-- BEGIN FORGEOS:FES_06C_PRODUCTIVE_UI_BINDING_ACCEPTANCE -->
+## FES 06C Productive UI Binding Acceptance
+
+- 🟢 Activity read-only projection binding accepted
+- 🟢 Prospect Detail read-only projection binding accepted
+- 🟢 Pipeline Card read-only projection binding accepted
+- 🟢 Mi Día read-only projection binding accepted
+- 🟢 Explicit loading / ready / empty / unavailable / invalid states
+- 🟢 Idempotent replay and null-safe non-ready audit
+- 🟢 Native Linux regression and Chromium Playwright acceptance
+- 🔴 UI canonical event construction
+- 🔴 UI ledger, timeline or projection mutation
+- 🔴 Raw private content rendering
+- 🔴 External execution
+- 🔵 FES_07_PUSH_AND_DEEP_LINK_RUNTIME
+<!-- END FORGEOS:FES_06C_PRODUCTIVE_UI_BINDING_ACCEPTANCE -->
