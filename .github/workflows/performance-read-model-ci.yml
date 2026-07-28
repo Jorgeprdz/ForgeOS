@@ -1,0 +1,151 @@
+name: PERF Read Model CI
+
+on:
+  push:
+    branches:
+      - feature/performance-scoring-contract-foundation
+    paths:
+      - advisor-os/performance/application/performance-read-model-projector.mjs
+      - advisor-os/performance/runtime/performance-read-runtime.mjs
+      - tests/performance-read-model-test.mjs
+      - docs/architecture/performance/PERF-04_PERFORMANCE_READ_MODEL_CONTRACT.md
+      - .github/workflows/performance-read-model-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  read-model:
+    name: Performance read model acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify PERF-03 closure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'PERF_03_PERFORMANCE_PERIOD_RUNTIME=CLOSED' \
+            docs/architecture/performance/PERF-03_PERFORMANCE_PERIOD_RUNTIME_CLOSURE.md
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee PERF04_ACTIVITY_FREEZE.txt
+
+      - name: Run read model tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-read-model-test.mjs \
+            | tee PERF04_READ_MODEL.tap
+
+          grep -Fq '# tests 18' PERF04_READ_MODEL.tap
+          grep -Fq '# pass 18' PERF04_READ_MODEL.tap
+          grep -Fq '# fail 0' PERF04_READ_MODEL.tap
+
+      - name: Run period runtime regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-period-runtime-test.mjs \
+            | tee PERF04_PERIOD_RUNTIME.tap
+
+          grep -Fq '# tests 22' PERF04_PERIOD_RUNTIME.tap
+          grep -Fq '# pass 22' PERF04_PERIOD_RUNTIME.tap
+          grep -Fq '# fail 0' PERF04_PERIOD_RUNTIME.tap
+
+      - name: Run scoring policy regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-scoring-policy-test.mjs \
+            | tee PERF04_POLICY.tap
+
+          grep -Fq '# tests 17' PERF04_POLICY.tap
+          grep -Fq '# pass 17' PERF04_POLICY.tap
+          grep -Fq '# fail 0' PERF04_POLICY.tap
+
+      - name: Run frozen Activity contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs \
+            | tee PERF04_ACTIVITY.tap
+
+          grep -Fq '# tests 213' PERF04_ACTIVITY.tap
+          grep -Fq '# pass 213' PERF04_ACTIVITY.tap
+          grep -Fq '# fail 0' PERF04_ACTIVITY.tap
+
+      - name: Verify repository hygiene
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git diff --check
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/performance
+
+          printf '%s\n' \
+            'PERF_04_PERFORMANCE_READ_MODEL_CONTRACT=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_PERF03_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_READ_MODEL_TEST=PASS' \
+            'REMOTE_PERIOD_RUNTIME_REGRESSION=PASS' \
+            'REMOTE_POLICY_REGRESSION=PASS' \
+            'REMOTE_ACTIVITY_CONTRACTS=PASS' \
+            'DAILY_READ_MODEL_SCHEMA=performance-daily-read-model.v1' \
+            'PERIOD_READ_MODEL_SCHEMA=performance-period-read-model.v1' \
+            'READ_RUNTIME_SCHEMA=performance-read-runtime.v1' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/performance/PERF04_ACCEPTANCE.txt
+
+          cp \
+            PERF04_ACTIVITY_FREEZE.txt \
+            PERF04_READ_MODEL.tap \
+            PERF04_PERIOD_RUNTIME.tap \
+            PERF04_POLICY.tap \
+            PERF04_ACTIVITY.tap \
+            artifacts/performance/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-04-read-model-${{ github.sha }}
+          path: artifacts/performance
+          if-no-files-found: error
+          retention-days: 60
