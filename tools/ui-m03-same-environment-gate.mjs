@@ -313,7 +313,9 @@ const authorityServer = serverFor(
   "examples/home-mobile-md3-alfred.html",
 );
 const candidateServer = serverFor(candidateRoot, "index.html");
-const authorityUrl = await listen(authorityServer.server);
+const authorityBaseUrl = await listen(authorityServer.server);
+const authorityUrl =
+  `${authorityBaseUrl}examples/home-mobile-md3-alfred.html`;
 const candidateUrl = await listen(candidateServer.server);
 const source = sourceAudit();
 let browser;
