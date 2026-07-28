@@ -4,6 +4,15 @@ const fs = require("fs");
 const path = require("path");
 const { execFileSync, spawnSync } = require("child_process");
 
+function imageMagickCommand() {
+  const result = spawnSync("magick", ["-version"], {
+    encoding: "utf8",
+  });
+  return result.error ? "convert" : "magick";
+}
+
+const imageCommand = imageMagickCommand();
+
 function dimensions(file) {
   return execFileSync(
     "identify",
@@ -29,7 +38,7 @@ function imageMetric(argumentsList, normalized = false) {
 }
 
 function placeOnCommonCanvas(source, destination, width, height) {
-  execFileSync("magick", [
+  execFileSync(imageCommand, [
     "-size", `${width}x${height}`,
     "xc:#ff00ff",
     source,
@@ -77,7 +86,7 @@ function comparePair({
 
   try {
     const differingRatio = Number(execFileSync(
-      "magick",
+      imageCommand,
       [
         commonGolden,
         commonActual,
@@ -157,5 +166,6 @@ function comparePair({
 module.exports = {
   comparePair,
   dimensions,
+  imageMagickCommand,
   placeOnCommonCanvas,
 };

@@ -48,6 +48,13 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Install deterministic image comparison tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes imagemagick
+          magick -version || convert -version
+          identify -version
+
       - name: Run clean Home contracts
         run: |
           node --test \

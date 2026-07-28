@@ -7,6 +7,7 @@ import test from "node:test";
 import comparator from "../tools/ui-m03-image-comparator.cjs";
 
 const { comparePair } = comparator;
+const imageCommand = comparator.imageMagickCommand();
 
 const directory = fs.mkdtempSync(
   path.join(os.tmpdir(), "ui-m03-comparator-"),
@@ -14,7 +15,7 @@ const directory = fs.mkdtempSync(
 
 function image(name, width, height, color = "#06101f") {
   const file = path.join(directory, name);
-  execFileSync("magick", [
+  execFileSync(imageCommand, [
     "-size",
     `${width}x${height}`,
     `xc:${color}`,
@@ -33,7 +34,7 @@ function dimensions(file) {
 
 function commonCanvas(source, width, height, name) {
   const destination = path.join(directory, name);
-  execFileSync("magick", [
+  execFileSync(imageCommand, [
     "-size",
     `${width}x${height}`,
     "xc:#ff00ff",
@@ -56,7 +57,7 @@ test("identical images retain identical dimensions", () => {
 test("one-pixel difference remains measurable", () => {
   const first = image("pixel-a.png", 8, 6);
   const second = image("pixel-b.png", 8, 6);
-  execFileSync("magick", [
+  execFileSync(imageCommand, [
     second,
     "-fill",
     "white",
@@ -65,7 +66,7 @@ test("one-pixel difference remains measurable", () => {
     second,
   ]);
   const metric = execFileSync(
-    "magick",
+    imageCommand,
     [
       first,
       second,
@@ -99,7 +100,7 @@ test("common canvas preserves top-left source pixels", () => {
   const source = image("source.png", 4, 3, "#52e6df");
   const canvas = commonCanvas(source, 7, 6, "source-common.png");
   const pixel = execFileSync(
-    "magick",
+    imageCommand,
     [canvas, "-format", "%[pixel:p{0,0}]", "info:"],
     { encoding: "utf8" },
   );
