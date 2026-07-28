@@ -36,6 +36,10 @@
 
     const EVENT_NAME =
       "forge:event-evidence-projection-snapshot";
+    const ACCEPTED_ACTIVITY_EVENT_NAME =
+      "forge:accepted-activity-mi-dia-projected";
+    const ACCEPTED_ACTIVITY_PROJECTION_VERSION =
+      "forge.mi_dia_accepted_activity_projection.v1";
 
     const STATUS_COPY = Object.freeze({
       LOADING: Object.freeze({
@@ -1071,10 +1075,13 @@
           ? new AbortController()
           : null;
 
-      let model =
+      let baseModel =
         createSurfaceModel(
           initialSnapshot,
         );
+      let model = baseModel;
+      const acceptedActivityItems =
+        new Map();
       let homeHost = null;
       let pipelineHost = null;
       let pipelineOutlet = null;
@@ -1311,11 +1318,122 @@
       }
 
       function setSnapshot(snapshot) {
-        model =
+        baseModel =
           createSurfaceModel(snapshot);
+        reconcileAcceptedActivity();
         refreshHome();
         refreshPipeline();
         return model;
+      }
+
+      function acceptedActivityItem(projection) {
+        return {
+          work_item_id:
+            safeText(projection.projectionId),
+          prospect_id:
+            safeText(projection.prospectId),
+          action_code:
+            safeText(projection.activityType),
+          label:
+            safeText(projection.label),
+          required: false,
+          priority:
+            safeText(projection.priority),
+          reason_code:
+            "ACCEPTED_ACTIVITY",
+          reference:
+            safeText(projection.sourceActivityId),
+          due_at:
+            safeText(projection.dueAt),
+          source_event_id:
+            safeText(projection.sourceEventId),
+          activity_state:
+            safeText(projection.activityState),
+        };
+      }
+
+      function reconcileAcceptedActivity() {
+        if (acceptedActivityItems.size === 0) {
+          model = baseModel;
+          return model;
+        }
+        const copy = clone(baseModel);
+        if (
+          copy.state !== "READY" &&
+          copy.state !== "EMPTY"
+        ) {
+          copy.state = "READY";
+          copy.title =
+            "Actividad comercial gobernada";
+          copy.message =
+            "Actividad aceptada proyectada en Mi Día.";
+          copy.surfaces = {
+            ACTIVITY: [],
+            PROSPECT_DETAIL: [],
+            PIPELINE_CARD: [],
+            MI_DIA: [],
+          };
+        }
+        copy.state = "READY";
+        copy.surfaces =
+          copy.surfaces || {
+            ACTIVITY: [],
+            PROSPECT_DETAIL: [],
+            PIPELINE_CARD: [],
+            MI_DIA: [],
+          };
+        const canonicalItems =
+          Array.isArray(copy.surfaces.MI_DIA)
+            ? copy.surfaces.MI_DIA
+            : [];
+        const accepted =
+          [...acceptedActivityItems.values()]
+            .sort((left, right) =>
+              left.sourceActivityId.localeCompare(
+                right.sourceActivityId,
+              ),
+            )
+            .map(acceptedActivityItem);
+        const acceptedIds =
+          new Set(
+            accepted.map(item =>
+              item.work_item_id,
+            ),
+          );
+        copy.surfaces.MI_DIA = [
+          ...canonicalItems.filter(item =>
+            !acceptedIds.has(
+              item.work_item_id,
+            ),
+          ),
+          ...accepted,
+        ];
+        model = deepFreeze(copy);
+        return model;
+      }
+
+      function acceptedActivityHandler(event) {
+        const projection =
+          event?.detail?.projection;
+        if (
+          !isPlainObject(projection) ||
+          projection.schemaVersion !==
+            ACCEPTED_ACTIVITY_PROJECTION_VERSION ||
+          projection.status !==
+            "PROJECTED" ||
+          !safeText(
+            projection.sourceActivityId,
+          )
+        ) {
+          return;
+        }
+        acceptedActivityItems.set(
+          projection.sourceActivityId,
+          clone(projection),
+        );
+        reconcileAcceptedActivity();
+        refreshHome();
+        refreshPipeline();
       }
 
       function eventHandler(event) {
@@ -1342,6 +1460,16 @@
               }
             : undefined,
         );
+        windowRoot.addEventListener(
+          ACCEPTED_ACTIVITY_EVENT_NAME,
+          acceptedActivityHandler,
+          controller
+            ? {
+                signal:
+                  controller.signal,
+              }
+            : undefined,
+        );
       }
 
       function destroy() {
@@ -1359,6 +1487,8 @@
         bindingVersion:
           BINDING_VERSION,
         eventName: EVENT_NAME,
+        acceptedActivityEventName:
+          ACCEPTED_ACTIVITY_EVENT_NAME,
         mountHome,
         mountPipeline,
         setSnapshot,
@@ -1376,6 +1506,8 @@
             detail_observer:
               Boolean(detailObserver),
             read_only: true,
+            accepted_activity_count:
+              acceptedActivityItems.size,
             external_execution:
               false,
           }),

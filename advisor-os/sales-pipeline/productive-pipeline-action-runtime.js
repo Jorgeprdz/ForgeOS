@@ -148,6 +148,11 @@
       });
       const ledgerSync = await ledger.syncOnce();
       const activityResult = await activity.appendEvent({ event: canonicalEvent, timeZone: "America/Mexico_City" });
+      const miDiaProjection =
+        global.ForgeAcceptedActivityMiDiaProjectionFES08C
+          ?.publishAcceptedActivity(activityResult, {
+            eventTarget: global,
+          }) ?? null;
       const activityRecords = await activity.list();
       const performanceRead = await refreshPerformance();
       const detail = Object.freeze({
@@ -158,6 +163,7 @@
         ledgerResult,
         ledgerSync,
         activityResult,
+        miDiaProjection,
         activityRecords,
         performanceRead,
       });
@@ -184,6 +190,7 @@
         version: VERSION,
         canonicalFes: true,
         activityRpcOnly: true,
+        miDiaPostAcceptanceProjection: true,
         performanceWrite: false,
         pipelineTransitionMutation: false,
       }),

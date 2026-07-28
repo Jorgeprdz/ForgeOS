@@ -18,6 +18,7 @@ on:
       - "package.json"
       - "package-lock.json"
       - "playwright.config.mjs"
+      - "playwright.fes08c.config.mjs"
 
 permissions:
   contents: read
@@ -102,3 +103,157 @@ jobs:
             artifacts/fes07c-playwright-results.json
           if-no-files-found: error
           retention-days: 30
+
+  fes08c-governed-preview:
+    name: FES 08C governed branch preview
+    needs: event-evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+    env:
+      CI: "true"
+      PREVIEW_BUNDLE_ARTIFACT: fes08c-deploy-ready-static-preview
+      PREVIEW_EVIDENCE_ARTIFACT: fes08c-browser-evidence
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Generate production-equivalent static preview bundle
+        shell: bash
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set -Eeuo pipefail
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node - <<'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const { execFileSync } = require('child_process');
+          const siteDir = '_site';
+          fs.rmSync(siteDir, { recursive: true, force: true });
+          fs.mkdirSync(siteDir, { recursive: true });
+          const tracked = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
+            .split('\0').filter(Boolean);
+          const extensions = new Set([
+            '.css', '.html', '.ico', '.jpeg', '.jpg', '.js', '.json',
+            '.map', '.png', '.svg', '.txt', '.webmanifest', '.webp',
+          ]);
+          const rootFiles = new Set(['.nojekyll', '_redirects', 'manifest.json']);
+          const isPublic = file => {
+            if (file.startsWith('.github/') || file.startsWith('docs/evidence/')) return false;
+            if (file.startsWith('advisor-os/sales-pipeline/') ||
+                file.startsWith('advisor-os/event-evidence/') ||
+                file.startsWith('advisor-os/activity/') ||
+                file.startsWith('advisor-os/performance/') ||
+                file.startsWith('platform/event-evidence/') ||
+                file.startsWith('nash/context-intake/') ||
+                file.startsWith('nash/conversation-brief/')) {
+              return extensions.has(path.extname(file).toLowerCase());
+            }
+            if (['nash-combat-orchestrator.js', 'supabase-runtime.js'].includes(file)) return true;
+            if (!file.startsWith('docs/')) return rootFiles.has(file);
+            if (file.includes('/tests/')) return false;
+            if (/(^|\\/)([^/]*-)?(master-)?test(s)?\\.(js|json)$/i.test(file)) return false;
+            if (/\\.(pdf|xlsx|zip)$/i.test(file)) return false;
+            return rootFiles.has(file) || extensions.has(path.extname(file).toLowerCase());
+          };
+          for (const file of tracked.filter(isPublic)) {
+            const publicPath = file.startsWith('docs/') ? file.slice(5) : file;
+            const target = path.join(siteDir, publicPath);
+            fs.mkdirSync(path.dirname(target), { recursive: true });
+            fs.copyFileSync(file, target);
+          }
+          for (const file of tracked.filter(file => file.startsWith('docs/') && file.endsWith('.html'))) {
+            const target = path.join(siteDir, file.slice(5));
+            if (!fs.existsSync(target)) continue;
+            fs.writeFileSync(
+              target,
+              fs.readFileSync(target, 'utf8')
+                .replaceAll('__FORGE_BUILD_SHA__', process.env.GITHUB_SHA),
+            );
+          }
+          fs.writeFileSync(
+            path.join(siteDir, 'env.js'),
+            'window.__ENV__ = Object.freeze({"SUPABASE_URL":"","SUPABASE_KEY":"","DEMO_MODE":"true","ENABLE_TEST_ADVISOR_LOGIN":"false"});\\n',
+          );
+          fs.writeFileSync(
+            path.join(siteDir, 'build-info.json'),
+            JSON.stringify({
+              commitSha: process.env.GITHUB_SHA,
+              artifact: 'fes08c-governed-preview',
+              deployment: false,
+            }, null, 2) + '\\n',
+          );
+          EOF
+          test -f _site/static-preview/forge-alive/index.html
+          test -f _site/advisor-os/event-evidence/accepted-activity-mi-dia-projection.js
+          test -f _site/env.js
+
+      - name: Run browser acceptance against preview bundle
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/fes08c-preview-screenshots
+          ln -s _site ForgeOS
+          npx vite --host 0.0.0.0 --port 4175 --strictPort > artifacts/fes08c-preview-vite.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true; rm -f ForgeOS' EXIT
+          for attempt in {1..30}; do
+            curl --fail --silent \
+              http://127.0.0.1:4175/ForgeOS/static-preview/forge-alive/?nav=pipeline \
+              >/dev/null && break
+            sleep 1
+          done
+          curl --fail --silent \
+            http://127.0.0.1:4175/ForgeOS/static-preview/forge-alive/?nav=pipeline \
+            >/dev/null
+          FORGE_E2E_BASE_URL=http://127.0.0.1:4175 \
+            npx playwright test --config=playwright.fes08c.config.mjs
+
+      - name: Upload deploy-ready branch preview bundle
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ env.PREVIEW_BUNDLE_ARTIFACT }}
+          path: _site
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload FES 08C browser evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ env.PREVIEW_EVIDENCE_ARTIFACT }}
+          path: |
+            artifacts/fes08c-preview-screenshots
+            artifacts/fes08c-preview-html-report
+            artifacts/fes08c-preview-results.json
+            artifacts/fes08c-preview-test-results
+            artifacts/fes08c-preview-vite.log
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish governed preview summary
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          {
+            echo "## FES 08C governed feature-branch preview"
+            echo
+            echo "- Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- Static bundle artifact: \`${PREVIEW_BUNDLE_ARTIFACT}\`"
+            echo "- Screenshots and HTML report: \`${PREVIEW_EVIDENCE_ARTIFACT}\`"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- GitHub Pages environment used: **no**"
+            echo "- Deployment performed: **no**"
+          } >> "$GITHUB_STEP_SUMMARY"

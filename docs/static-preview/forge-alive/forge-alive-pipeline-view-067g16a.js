@@ -11,6 +11,7 @@ import '../../platform/event-evidence/activity-ledger-sync-service.js';
 import '../../platform/event-evidence/activity-ledger-supabase-gateway.js';
 import '../../platform/event-evidence/activity-ledger-browser-runtime.js';
 import '../../advisor-os/activity/runtime/browser-activity-composition.js';
+import '../../advisor-os/event-evidence/accepted-activity-mi-dia-projection.js';
 import '../../advisor-os/sales-pipeline/prospect-context/universal-governed-prospect-context-contract.js';
 import '../../advisor-os/sales-pipeline/prospect-context/pipeline-universal-prospect-context-adapter.js';
 import '../../nash/context-intake/nash-prospect-context-intake-boundary-contract.js';

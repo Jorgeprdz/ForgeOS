@@ -23,6 +23,7 @@ The following files are the complete authorized mutation set for FES 08:
 - `docs/evidence/FES_08_ROBOCOP_CONSTITUTIONAL_GATE_001.md`
 - `docs/evidence/FES_08A_FES_ACTIVITY_LINEAGE_ROBOCOP_GATE_001.md`
 - `docs/evidence/FES_08B_NASH_COMBAT_BROWSER_ADAPTER_ROBOCOP_GATE_001.md`
+- `docs/evidence/FES_08C_ACTIVITY_MI_DIA_PROJECTION_AND_PREVIEW_ROBOCOP_GATE_001.md`
 - `docs/architecture/source-truth/FES_08_FORGE_ALIVE_PRODUCTIVE_INTEGRATION_DISCOVERY_001.md`
 - `docs/architecture/source-truth/FES_08_FORGE_ALIVE_PRODUCTIVE_INTEGRATION_MANIFEST_001.md`
 - `docs/architecture/source-truth/FORGE_EVENT_EVIDENCE_OPERATING_SYSTEM_001.md`
@@ -43,6 +44,7 @@ The following files are the complete authorized mutation set for FES 08:
 - `advisor-os/sales-pipeline/pipeline-nash-combat-adapter.js`
 - `advisor-os/sales-pipeline/pipeline-csv-export.js`
 - `advisor-os/event-evidence/productive-ui-projection-binding.js`
+- `advisor-os/event-evidence/accepted-activity-mi-dia-projection.js`
 - `platform/event-evidence/bridge-to-canonical-event-adapter.js`
 - `platform/event-evidence/passive-capture-bridge-contract.js`
 - `platform/event-evidence/canonical-activity-event-contract.js`
@@ -71,6 +73,9 @@ The following files are the complete authorized mutation set for FES 08:
 - `tests/pipeline-csv-export-test.mjs`
 - `tests/fixtures/fes-08-productive-pipeline-browser.html`
 - `tests/fes-08-productive-pipeline-browser-test.mjs`
+- `tests/fes-08c-accepted-activity-mi-dia-projection-test.mjs`
+- `tests/e2e/fes-08c-governed-preview.spec.mjs`
+- `playwright.fes08c.config.mjs`
 - `.github/workflows/fes-event-evidence-ci.yml`
 
 Mutation of any other path requires a new Constitutional Gate declaration and
