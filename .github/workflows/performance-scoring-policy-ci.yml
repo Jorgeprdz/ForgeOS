@@ -1,0 +1,79 @@
+name: PERF Scoring Policy CI
+
+on:
+  push:
+    branches:
+      - feature/performance-scoring-contract-foundation
+    paths:
+      - advisor-os/performance/**
+      - tests/performance-scoring-policy-test.mjs
+      - docs/architecture/performance/PERF-02_PERFORMANCE_SCORING_POLICY_CONTRACT.md
+      - .github/workflows/performance-scoring-policy-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  policy:
+    name: Performance scoring policy acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify PERF-01 closure
+        run: grep -Fq 'PERF_01_PERFORMANCE_SCORING_CONTRACT_DISCOVERY=CLOSED' docs/architecture/performance/PERF-01_PERFORMANCE_SCORING_CONTRACT_DISCOVERY_CLOSURE.md
+      - name: Verify Activity foundation
+        run: node scripts/ci/verify-activity-foundation-freeze.mjs | tee PERF02_ACTIVITY_FREEZE.txt
+      - name: Run scoring policy tests
+        run: |
+          node --test --test-reporter=tap tests/performance-scoring-policy-test.mjs | tee PERF02_POLICY.tap
+          grep -Fq '# tests 17' PERF02_POLICY.tap
+          grep -Fq '# pass 17' PERF02_POLICY.tap
+          grep -Fq '# fail 0' PERF02_POLICY.tap
+      - name: Run frozen Activity contracts
+        run: |
+          node --test --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs | tee PERF02_ACTIVITY.tap
+          grep -Fq '# tests 213' PERF02_ACTIVITY.tap
+          grep -Fq '# pass 213' PERF02_ACTIVITY.tap
+          grep -Fq '# fail 0' PERF02_ACTIVITY.tap
+      - name: Verify repository hygiene
+        run: git diff --check
+      - name: Build acceptance evidence
+        run: |
+          mkdir -p artifacts/performance
+          printf '%s\n' \
+            'PERF_02_PERFORMANCE_SCORING_POLICY_CONTRACT=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_PERF01_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_POLICY_TEST=PASS' \
+            'REMOTE_ACTIVITY_CONTRACTS=PASS' \
+            'POLICY_ID=smnyl-advisor-daily-25.v1' \
+            'DAILY_TARGET_POINTS=25' \
+            'RANKING_AUTHORITY=NO' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/performance/PERF02_ACCEPTANCE.txt
+          cp PERF02_ACTIVITY_FREEZE.txt PERF02_POLICY.tap PERF02_ACTIVITY.tap artifacts/performance/
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-02-scoring-policy-${{ github.sha }}
+          path: artifacts/performance
+          if-no-files-found: error
+          retention-days: 60
