@@ -13406,3 +13406,22 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 External execution
 - 🔵 FES_07_PUSH_AND_DEEP_LINK_RUNTIME
 <!-- END FORGEOS:FES_06C_PRODUCTIVE_UI_BINDING_ACCEPTANCE -->
+
+<!-- BEGIN FORGEOS:FES_07A_PUSH_AND_DEEP_LINK_RUNTIME_SCOPE -->
+## FES 07A Push and Deep Link Runtime Scope
+
+- 🟢 Permission UX boundary
+- 🟢 Subscription authority boundary
+- 🟢 Scheduler intent boundary
+- 🟢 Reference-only push payload boundary
+- 🟢 Internal deep-link target boundary
+- 🟢 Bounded retry and deterministic deduplication boundary
+- 🟢 Explicit internal fallback boundary
+- 🔴 Automatic permission prompts
+- 🔴 Push execution or provider calls in scope phase
+- 🔴 Service-worker or subscription mutation
+- 🔴 Arbitrary external URLs
+- 🔴 Raw private content in push payloads
+- 🔴 Deep-link mutation of canonical truth
+- 🔵 FES 07B implementation with approved manifest
+<!-- END FORGEOS:FES_07A_PUSH_AND_DEEP_LINK_RUNTIME_SCOPE -->
