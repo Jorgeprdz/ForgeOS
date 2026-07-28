@@ -21,20 +21,64 @@ function dimensions(file) {
   ).trim().split(/\s+/).map(Number);
 }
 
-function imageMetric(argumentsList, normalized = false) {
-  const result = spawnSync("compare", argumentsList, {
-    encoding: "utf8",
-  });
-  const output = `${result.stderr || ""}${result.stdout || ""}`.trim();
-  if (!output) {
+function rgbaPixels(file, width, height) {
+  const pixels = execFileSync(
+    imageCommand,
+    [file, "-alpha", "on", "-depth", "8", "rgba:-"],
+    { maxBuffer: Math.max(128 * 1024 * 1024, width * height * 4 + 1024) },
+  );
+  const expectedLength = width * height * 4;
+  if (pixels.length !== expectedLength) {
     throw new Error(
-      `ImageMagick emitted no metric: ${argumentsList.join(" ")}`,
+      `Unexpected RGBA byte count for ${file}: ${pixels.length} != ${expectedLength}`,
     );
   }
-  const match = normalized
-    ? output.match(/\(([0-9.]+(?:e[+-]?\d+)?)\)/i)
-    : output.match(/[0-9.]+(?:e[+-]?\d+)?/i);
-  return Number(match?.[1] ?? match?.[0]);
+  return pixels;
+}
+
+function structuralSimilarity(firstFile, secondFile, width, height) {
+  const first = rgbaPixels(firstFile, width, height);
+  const second = rgbaPixels(secondFile, width, height);
+  if (first.equals(second)) return 1;
+
+  const pixelCount = width * height;
+  const channelScores = [];
+  const c1 = (0.01 * 255) ** 2;
+  const c2 = (0.03 * 255) ** 2;
+
+  for (let channel = 0; channel < 3; channel += 1) {
+    let firstSum = 0;
+    let secondSum = 0;
+    for (let offset = channel; offset < first.length; offset += 4) {
+      firstSum += first[offset];
+      secondSum += second[offset];
+    }
+    const firstMean = firstSum / pixelCount;
+    const secondMean = secondSum / pixelCount;
+    let firstVariance = 0;
+    let secondVariance = 0;
+    let covariance = 0;
+    for (let offset = channel; offset < first.length; offset += 4) {
+      const firstDelta = first[offset] - firstMean;
+      const secondDelta = second[offset] - secondMean;
+      firstVariance += firstDelta * firstDelta;
+      secondVariance += secondDelta * secondDelta;
+      covariance += firstDelta * secondDelta;
+    }
+    firstVariance /= pixelCount;
+    secondVariance /= pixelCount;
+    covariance /= pixelCount;
+    channelScores.push(
+      ((2 * firstMean * secondMean + c1) * (2 * covariance + c2))
+      / (
+        (firstMean ** 2 + secondMean ** 2 + c1)
+        * (firstVariance + secondVariance + c2)
+      ),
+    );
+  }
+
+  return channelScores.reduce((sum, score) => sum + score, 0)
+    / channelScores.length;
 }
 
 function placeOnCommonCanvas(source, destination, width, height) {
@@ -100,13 +144,12 @@ function comparePair({
     ));
     const differingPixels = Math.round(differingRatio * commonArea);
     const differingPercent = differingRatio * 100;
-    const ssimDistortion = imageMetric([
-      "-metric", "SSIM",
+    const ssim = structuralSimilarity(
       commonGolden,
       commonActual,
-      "null:",
-    ], true);
-    const ssim = 1 - ssimDistortion;
+      commonWidth,
+      commonHeight,
+    );
 
     spawnSync("compare", [
       "-metric", "AE",
@@ -168,4 +211,5 @@ module.exports = {
   dimensions,
   imageMagickCommand,
   placeOnCommonCanvas,
+  structuralSimilarity,
 };
