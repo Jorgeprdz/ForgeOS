@@ -2,6 +2,15 @@ import '../../advisor-os/sales-pipeline/sales-stage-registry.js';
 import '../../advisor-os/sales-pipeline/pipeline-stage-read-model.js';
 import '../../advisor-os/sales-pipeline/pipeline-ui.js';
 import '../../advisor-os/sales-pipeline/productive-prospect-service.js';
+import '../../platform/event-evidence/canonical-activity-event-contract.js';
+import '../../platform/event-evidence/passive-capture-bridge-contract.js';
+import '../../platform/event-evidence/bridge-to-canonical-event-adapter.js';
+import '../../platform/event-evidence/activity-ledger-contract.js';
+import '../../platform/event-evidence/activity-ledger-local-store.js';
+import '../../platform/event-evidence/activity-ledger-sync-service.js';
+import '../../platform/event-evidence/activity-ledger-supabase-gateway.js';
+import '../../platform/event-evidence/activity-ledger-browser-runtime.js';
+import '../../advisor-os/activity/runtime/browser-activity-composition.js';
 import '../../advisor-os/sales-pipeline/prospect-context/universal-governed-prospect-context-contract.js';
 import '../../advisor-os/sales-pipeline/prospect-context/pipeline-universal-prospect-context-adapter.js';
 import '../../nash/context-intake/nash-prospect-context-intake-boundary-contract.js';
@@ -11,6 +20,9 @@ import '../../nash/conversation-brief/nash-deterministic-conversation-brief-boun
 import '../../nash/conversation-brief/nash-provider-request-contract.js';
 import '../../nash/remote-draft-provider-client-boundary.js';
 import '../../nash/pipeline-nash-draft-orchestrator.js';
+import '../../advisor-os/sales-pipeline/pipeline-csv-export.js';
+import '../../advisor-os/sales-pipeline/pipeline-nash-combat-adapter.js';
+import '../../advisor-os/sales-pipeline/productive-pipeline-action-runtime.js';
 import '../../advisor-os/sales-pipeline/productive-prospect-ui.js';
 import '../../advisor-os/sales-pipeline/productive-prospect-bootstrap.js';
 import '../../advisor-os/event-evidence/productive-ui-projection-binding.js';
@@ -46,6 +58,8 @@ let pipelineMounted = false;
 let navListenerCount = 0;
 let productivePipeline = null;
 let productiveDraftOrchestrator = null;
+let productiveActionRuntime = null;
+let productiveNashCombatAdapter = null;
 let authListenerBound = false;
 let productiveProjectionBinding = null;
 
@@ -182,10 +196,14 @@ async function renderPipeline(context) {
         productiveDraftOrchestrator = globalThis.ForgePipelineNashDraftOrchestrator.createPipelineNashDraftOrchestrator({
           invokeFunction: (functionName, options) => client.functions.invoke(functionName, options),
         });
+        productiveActionRuntime = await globalThis.ForgeProductivePipelineActionRuntimeFES08.create({ client });
+        productiveNashCombatAdapter = globalThis.ForgePipelineNashCombatAdapterFES08B.createPipelineNashCombatAdapter();
         productivePipeline = globalThis.ForgeProductiveProspectUI067G17B.create({
           client,
           root: outlet,
           draftOrchestrator: productiveDraftOrchestrator,
+          actionRuntime: productiveActionRuntime,
+          nashCombatAdapter: productiveNashCombatAdapter,
         });
       }
       await productivePipeline.load();
@@ -297,6 +315,8 @@ function bind() {
       if (!['authenticated', 'anonymous'].includes(event.detail?.status)) return;
       productivePipeline = null;
       productiveDraftOrchestrator = null;
+      productiveActionRuntime = null;
+      productiveNashCombatAdapter = null;
       void renderPipeline({});
     });
   }
@@ -320,6 +340,8 @@ globalThis.ForgeAliveStaticView067G16A = Object.freeze({
     pipelineMountCount:Number(host?.dataset.pipelineMountCount || 0),
     navListenerCount,
     productiveDraftOrchestratorAvailable:Boolean(productiveDraftOrchestrator),
+    productiveActionRuntimeAvailable:Boolean(productiveActionRuntime),
+    productiveNashCombatAdapterAvailable:Boolean(productiveNashCombatAdapter),
     productiveProjectionBinding:productiveProjectionBinding?.diagnostics?.() || null,
   }),
 });

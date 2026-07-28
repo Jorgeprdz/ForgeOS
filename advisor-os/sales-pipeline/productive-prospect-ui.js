@@ -112,7 +112,10 @@
     const whatsapp = contactPhone(prospect, "whatsapp");
     const primary = `${row("Teléfono", phone)}${row("WhatsApp", whatsapp)}${row("Referido por", prospect.referrerName || "Sin referente")}${row("Etapa", LABELS[prospect.status] || prospect.status)}`;
     const secondary = `${row("Correo", prospect.email)}${row("Fuente", prospect.source)}${row("Relación", prospect.referrerRelationship)}${row("Fecha de nacimiento", prospect.dateOfBirth)}${row("Edad", prospect.age)}${row("Estado civil", prospect.maritalStatus)}${row("Dependientes", prospect.dependents)}${row("Ocupación", prospect.occupation)}${row("Ingreso estimado", prospect.estimatedIncome)}${row("Productos de interés", Array.isArray(prospect.productsOfInterest) ? prospect.productsOfInterest.join(", ") : prospect.productsOfInterest)}${row("Contexto inicial", prospect.initialContext)}${row("Próxima acción", prospect.nextActionType)}${row("Seguimiento", humanDate(prospect.nextActionAt))}${row("Creado", humanDate(prospect.createdAt))}`;
-    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar detalle">×</button></header><dl class="forge-prospect-detail-list forge-prospect-detail-list--primary">${primary}</dl><div class="forge-prospect-detail-actions"><a class="forge-card-action forge-card-action--call ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\""}>Llamar</a><button type="button" class="forge-card-action forge-card-action--whatsapp" data-detail-whatsapp ${whatsapp ? "" : "disabled"}>WhatsApp</button><button type="button" class="forge-card-action forge-card-action--calendar" data-detail-calendar>Agendar</button></div><details class="forge-prospect-secondary"><summary>Más información</summary><dl class="forge-prospect-detail-list">${secondary}</dl></details><footer><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Retirar</button></footer></article></dialog>`;
+    const appointmentAction = prospect.status === "appointment_scheduled"
+      ? '<button type="button" data-confirm-appointment-outcome>Confirmar resultado de cita</button>'
+      : "";
+    return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar detalle">×</button></header><dl class="forge-prospect-detail-list forge-prospect-detail-list--primary">${primary}</dl><div class="forge-prospect-detail-actions"><a class="forge-card-action forge-card-action--call ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\""}>Llamar</a><button type="button" class="forge-card-action forge-card-action--whatsapp" data-detail-whatsapp ${whatsapp ? "" : "disabled"}>WhatsApp</button><button type="button" class="forge-card-action forge-card-action--calendar" data-detail-calendar>Agendar</button></div><details class="forge-prospect-secondary"><summary>Más información</summary><dl class="forge-prospect-detail-list">${secondary}</dl></details><footer>${appointmentAction}<button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Retirar</button></footer></article></dialog>`;
   }
 
   function contactPhone(prospect = {}, channel = "call") {
@@ -484,10 +487,21 @@
     return `<dialog class="forge-prospect-dialog forge-delete-confirmation" data-delete-confirmation aria-labelledby="delete-confirmation-title" aria-describedby="delete-confirmation-body"><article><header><div><p class="forge-pipeline-product">ACCIÓN DESTRUCTIVA</p><h2 id="delete-confirmation-title">¿Eliminar este prospecto?</h2></div><button type="button" data-cancel-delete aria-label="Cerrar confirmación">×</button></header><p id="delete-confirmation-body">Se retirará a ${esc(prospect.fullName)} del Pipeline. Su historial se conservará.</p><footer><button type="button" data-cancel-delete>Cancelar</button><button type="button" class="forge-delete-confirm" data-confirm-delete>Eliminar</button></footer></article></dialog>`;
   }
 
+  function actionConfirmationTemplate({ kind, prospect }) {
+    const call = kind === "call";
+    const title = call ? "¿Pudiste hablar con el prospecto?" : "¿Guardaste la cita en Google Calendar?";
+    const options = call
+      ? '<button type="button" data-confirm-handoff="CALL_CONNECTED_CONFIRMED">Sí, conversación realizada</button><button type="button" data-confirm-handoff="CALL_NOT_ANSWERED_CONFIRMED">No contestó</button><button type="button" data-confirm-handoff="DISMISS">Número incorrecto</button><button type="button" data-confirm-handoff="RESCHEDULE">Reagendar seguimiento</button>'
+      : '<button type="button" data-confirm-handoff="APPOINTMENT_SCHEDULED">Sí, registrar cita</button><button type="button" data-confirm-handoff="DISMISS">No todavía</button>';
+    return `<dialog class="forge-prospect-dialog forge-action-confirmation" data-action-confirmation data-confirmation-kind="${esc(kind)}" aria-labelledby="forge-action-confirmation-title"><article><header><div><p class="forge-pipeline-product">CONFIRMACIÓN HUMANA</p><h2 id="forge-action-confirmation-title">${esc(title)}</h2><p>${esc(prospect.fullName)} · abrir una app externa no confirma el resultado.</p></div></header><div class="forge-action-confirmation-options">${options}<button type="button" data-confirm-handoff="CANCEL">Cancelar registro</button></div><p data-action-confirmation-status role="status"></p></article></dialog>`;
+  }
+
   function create({
     client,
     root,
     draftOrchestrator = null,
+    actionRuntime = null,
+    nashCombatAdapter = null,
     renderPipeline = global.ForgePipelineUI?.renderPipelineUI,
   }) {
     if (!client || !root || typeof renderPipeline !== "function") throw new Error("PRODUCTIVE_PIPELINE_DEPENDENCY_MISSING");
@@ -515,6 +529,10 @@
     let menuTrigger = null;
     let deleteProspect = null;
     let deleteTrigger = null;
+    let pendingHandoff = null;
+    let combatCandidate = null;
+    let combatApproval = null;
+    let combatFlowReference = null;
 
     function render(model = toModel(prospects)) {
       root.innerHTML = renderPipeline(model);
@@ -522,6 +540,10 @@
       if (pipeline) {
         pipeline.setAttribute("data-productive-prospect-pipeline", "067g17b");
         pipeline.setAttribute("data-productive-prospect-create-bound", "true");
+        const toolbar = pipeline.querySelector(".forge-pipeline-toolbar");
+        if (toolbar && !toolbar.querySelector("[data-export-pipeline-csv]")) {
+          toolbar.insertAdjacentHTML("beforeend", '<button type="button" class="forge-pipeline-export" data-export-pipeline-csv>Exportar CSV</button>');
+        }
       }
     }
 
@@ -871,8 +893,91 @@
       draftVariation = 0;
       root.insertAdjacentHTML("beforeend", type === "calendar" ? calendarWorkspaceTemplate(prospect) : messageWorkspaceTemplate(prospect));
       const workspace = root.querySelector("[data-action-workspace]");
+      if (type === "whatsapp") {
+        workspace.querySelector("footer")?.insertAdjacentHTML("beforebegin", `<section class="forge-nash-combat" data-nash-combat><label>¿Te puso una objeción?<textarea data-objection-private placeholder="Pega aquí exactamente lo que te dijo."></textarea></label><button type="button" class="forge-workspace-secondary" data-analyze-objection>Analizar con Nash Combat</button><div data-nash-combat-result hidden><p class="forge-nash-combat-notice">Sugerencia de Nash Combat. Revísala antes de usarla.</p><dl><div><dt>Categoría candidata</dt><dd data-combat-type></dd></div><div><dt>Esto podría significar</dt><dd data-combat-diagnosis></dd></div><div><dt>Riesgo de respuesta</dt><dd data-combat-risk></dd></div><div><dt>Dirección sugerida</dt><dd data-combat-next-move></dd></div></dl><label>Respuesta final editable<textarea data-combat-response></textarea></label><div class="forge-nash-combat-actions"><button type="button" class="forge-workspace-secondary" data-approve-combat-response>Revisé y apruebo</button><button type="button" class="forge-workspace-secondary" data-use-combat-response disabled>Usar en el mensaje</button></div><p data-combat-status role="status"></p></div></section>`);
+      }
       workspace.querySelector("[data-close-action-workspace]")?.focus();
       if (type === "whatsapp") void generateMessageDraft();
+    }
+
+    async function analyzeObjection(workspace) {
+      const objection = workspace.querySelector("[data-objection-private]")?.value.trim();
+      const status = workspace.querySelector("[data-combat-status]");
+      if (!objection || !nashCombatAdapter || !actionProspect) return;
+      combatFlowReference = `flow-objection-${actionProspect.id}-${Date.now()}`;
+      const objectionReference = `objection-${actionProspect.id}-${Date.now()}`;
+      status.textContent = "Analizando en el motor gobernado…";
+      combatApproval = null;
+      try {
+        await actionRuntime?.record({
+          actionCode: "OBJECTION_CAPTURED",
+          prospectId: actionProspect.id,
+          payload: { flow_reference: combatFlowReference, objection_reference: objectionReference },
+        });
+        combatCandidate = await nashCombatAdapter.analyzeObjectionForHumanReview({
+          objection,
+          approvedDisplayName: actionProspect.fullName,
+          prospectReference: actionProspect.id,
+          flowReference: combatFlowReference,
+          requestId: `combat-${actionProspect.id}-${Date.now()}`,
+        });
+        if (combatCandidate.state === "UNAVAILABLE") throw new Error(combatCandidate.code);
+        const analysisReference = `analysis-${actionProspect.id}-${Date.now()}`;
+        const responseReference = `response-${actionProspect.id}-${Date.now()}`;
+        workspace.dataset.combatObjectionReference = objectionReference;
+        workspace.dataset.combatAnalysisReference = analysisReference;
+        workspace.dataset.combatResponseReference = responseReference;
+        await actionRuntime?.record({
+          actionCode: "OBJECTION_ANALYSIS_GENERATED",
+          prospectId: actionProspect.id,
+          payload: { flow_reference: combatFlowReference, objection_reference: objectionReference, analysis_reference: analysisReference },
+        });
+        await actionRuntime?.record({
+          actionCode: "OBJECTION_RESPONSE_GENERATED",
+          prospectId: actionProspect.id,
+          payload: { flow_reference: combatFlowReference, objection_reference: objectionReference, analysis_reference: analysisReference, response_reference: responseReference },
+        });
+        const result = workspace.querySelector("[data-nash-combat-result]");
+        result.hidden = false;
+        result.querySelector("[data-combat-type]").textContent = combatCandidate.candidate.objectionTypeCandidate;
+        result.querySelector("[data-combat-diagnosis]").textContent = combatCandidate.candidate.diagnosisCandidate;
+        result.querySelector("[data-combat-risk]").textContent = combatCandidate.candidate.riskContext;
+        result.querySelector("[data-combat-next-move]").textContent = combatCandidate.candidate.nextMoveContext;
+        result.querySelector("[data-combat-response]").value = combatCandidate.candidate.responseDraft;
+        status.textContent = "Puede estar protegiendo algo que conviene validar antes de asumir.";
+      } catch (_error) {
+        status.textContent = "Nash Combat no está disponible. No se generó una respuesta sustituta.";
+      }
+    }
+
+    async function approveCombatResponse(workspace) {
+      const text = workspace.querySelector("[data-combat-response]")?.value || "";
+      const validation = draftSafetyValidator({
+        draftText: text,
+        draftCandidateSnapshot: { rawText: text, sendsMessage: false, sourceMutable: true },
+        humanApproval: { required: true, finalAuthority: "HUMAN" },
+      });
+      combatApproval = approveExactDraft({
+        draftText: text,
+        validationResult: validation,
+        humanDecision: EXPLICIT_DRAFT_APPROVAL,
+      });
+      const use = workspace.querySelector("[data-use-combat-response]");
+      use.disabled = !combatApproval.exactDraftApproved;
+      workspace.querySelector("[data-combat-status]").textContent = combatApproval.exactDraftApproved
+        ? "Respuesta exacta aprobada para revisión en WhatsApp."
+        : "La respuesta no pasó la validación de seguridad.";
+      if (combatApproval.exactDraftApproved) {
+        await actionRuntime?.record({
+          actionCode: "OBJECTION_RESPONSE_APPROVED",
+          prospectId: actionProspect.id,
+          payload: {
+            flow_reference: combatFlowReference,
+            response_reference: workspace.dataset.combatResponseReference,
+            approval_reference: `approval-${actionProspect.id}-${Date.now()}`,
+          },
+        });
+      }
     }
 
     function syncCalendarWorkspace() {
@@ -896,9 +1001,114 @@
       const compact = value => `${value.getFullYear()}${String(value.getMonth() + 1).padStart(2, "0")}${String(value.getDate()).padStart(2, "0")}T${String(value.getHours()).padStart(2, "0")}${String(value.getMinutes()).padStart(2, "0")}00`;
       const params = new URLSearchParams({ action: "TEMPLATE", text: `Cita con ${actionProspect.fullName}`, dates: `${compact(start)}/${compact(end)}`, ctz: "America/Mexico_City", details: "Confirma los detalles antes de guardar." });
       link.href = `https://calendar.google.com/calendar/render?${params.toString()}`;
+      link.dataset.appointmentStart = start.toISOString();
+      link.dataset.appointmentEnd = end.toISOString();
       link.classList.remove("is-disabled");
       link.removeAttribute("aria-disabled");
       preview.textContent = `${humanDate(start.toISOString(), 0)} · ${time} · ${duration} min`;
+    }
+
+    function beginExternalHandoff(kind, prospect, details = {}) {
+      pendingHandoff = {
+        kind,
+        prospect,
+        details,
+        handoffReference: `handoff-${kind}-${prospect.id}-${Date.now()}`,
+      };
+    }
+
+    function showHandoffConfirmation() {
+      if (!pendingHandoff || root.querySelector("[data-action-confirmation]")) return;
+      root.insertAdjacentHTML("beforeend", actionConfirmationTemplate({
+        kind: pendingHandoff.kind,
+        prospect: pendingHandoff.prospect,
+      }));
+      const dialog = root.querySelector("[data-action-confirmation]");
+      if (typeof dialog.showModal === "function") dialog.showModal();
+      else dialog.setAttribute("open", "");
+      dialog.querySelector("[data-confirm-handoff]")?.focus();
+    }
+
+    function closeHandoffConfirmation() {
+      const dialog = root.querySelector("[data-action-confirmation]");
+      dialog?.close?.();
+      dialog?.remove();
+      pendingHandoff = null;
+    }
+
+    async function confirmHandoff(decision, statusNode) {
+      if (!pendingHandoff || !actionRuntime) return;
+      if (["CANCEL", "DISMISS", "RESCHEDULE"].includes(decision)) {
+        closeHandoffConfirmation();
+        return;
+      }
+      const { prospect, kind, details, handoffReference } = pendingHandoff;
+      statusNode.textContent = "Registrando evidencia confirmada…";
+      try {
+        if (kind === "call") {
+          const callReference = `call-${prospect.id}-${Date.now()}`;
+          await actionRuntime.confirm({
+            actionCode: decision,
+            prospectId: prospect.id,
+            payload: {
+              flow_reference: `flow-call-${prospect.id}`,
+              call_reference: callReference,
+              confirmation_reference: `confirmation-${callReference}`,
+            },
+            evidenceReferences: [handoffReference],
+          });
+        } else if (kind === "calendar" && decision === "APPOINTMENT_SCHEDULED") {
+          const appointmentReference = `appointment-${prospect.id}-${Date.now()}`;
+          await actionRuntime.confirm({
+            actionCode: "APPOINTMENT_SCHEDULED",
+            prospectId: prospect.id,
+            occurredAt: details.startsAt,
+            payload: {
+              flow_reference: `flow-appointment-${prospect.id}`,
+              appointment_reference: appointmentReference,
+              starts_at: details.startsAt,
+              ends_at: details.endsAt,
+              provider_reference: handoffReference,
+            },
+            evidenceReferences: [handoffReference],
+          });
+        }
+        statusNode.textContent = "Actividad confirmada y proyecciones actualizadas.";
+        await load();
+        closeHandoffConfirmation();
+      } catch (_error) {
+        statusNode.textContent = "No pudimos registrar la confirmación. La evidencia permanece pendiente.";
+      }
+    }
+
+    async function confirmAppointmentOutcome(decision, prospect, statusNode) {
+      if (!actionRuntime || !prospect) return;
+      const actionCode = decision === "HELD" ? "APPOINTMENT_HELD" : "APPOINTMENT_NOT_HELD";
+      const appointmentReference = `appointment-${prospect.id}-${String(prospect.nextActionAt || "unknown").replace(/\W/g, "")}`;
+      statusNode.textContent = "Registrando resultado confirmado…";
+      try {
+        await actionRuntime.confirm({
+          actionCode,
+          prospectId: prospect.id,
+          payload: actionCode === "APPOINTMENT_HELD"
+            ? {
+                flow_reference: `flow-appointment-${prospect.id}`,
+                appointment_reference: appointmentReference,
+                confirmation_reference: `confirmation-${appointmentReference}`,
+                outcome_confirmed_at: new Date().toISOString(),
+              }
+            : {
+                flow_reference: `flow-appointment-${prospect.id}`,
+                appointment_reference: appointmentReference,
+                confirmation_reference: `confirmation-${appointmentReference}`,
+                reason_code: "ADVISOR_CONFIRMED_NOT_HELD",
+                outcome_confirmed_at: new Date().toISOString(),
+              },
+        });
+        statusNode.textContent = "Resultado registrado.";
+      } catch (_error) {
+        statusNode.textContent = "No pudimos registrar el resultado.";
+      }
     }
 
     async function updateStatus(select) {
@@ -995,6 +1205,12 @@
     }
 
     root.addEventListener("click", event => {
+      const exportCsv = event.target.closest("[data-export-pipeline-csv]");
+      if (exportCsv) {
+        event.preventDefault();
+        global.ForgePipelineCsvExportFES08?.download(prospects);
+        return;
+      }
       const add = event.target.closest("[data-add-prospect]");
       const open = event.target.closest("[data-open-prospect]");
       const cardWhatsApp = event.target.closest("[data-card-whatsapp]");
@@ -1073,6 +1289,82 @@
       if (event.target.closest("[data-close-action-workspace]")) {
         event.preventDefault();
         closeActionWorkspace();
+        return;
+      }
+      const callHandoff = event.target.closest('a[href^="tel:"]');
+      if (callHandoff) {
+        const callProspect = selected || prospects.find(item => item.id === callHandoff.closest("[data-prospect-id]")?.dataset.prospectId);
+        if (callProspect) beginExternalHandoff("call", callProspect);
+        return;
+      }
+      const calendarHandoff = event.target.closest("[data-open-calendar]");
+      if (calendarHandoff?.href && actionProspect) {
+        beginExternalHandoff("calendar", actionProspect, {
+          startsAt: calendarHandoff.dataset.appointmentStart,
+          endsAt: calendarHandoff.dataset.appointmentEnd,
+        });
+        return;
+      }
+      const confirmation = event.target.closest("[data-confirm-handoff]");
+      if (confirmation) {
+        event.preventDefault();
+        void confirmHandoff(
+          confirmation.dataset.confirmHandoff,
+          confirmation.closest("[data-action-confirmation]").querySelector("[data-action-confirmation-status]"),
+        );
+        return;
+      }
+      if (event.target.closest("[data-confirm-appointment-outcome]") && selected) {
+        event.preventDefault();
+        const detail = event.target.closest("dialog");
+        detail.insertAdjacentHTML("beforeend", '<section class="forge-appointment-outcome"><p>¿La cita se realizó?</p><button type="button" data-appointment-outcome="HELD">Sí, cita realizada</button><button type="button" data-appointment-outcome="NOT_HELD">No se realizó</button><button type="button" data-appointment-outcome="DISMISS">Aún no confirmar</button><p data-appointment-outcome-status role="status"></p></section>');
+        return;
+      }
+      const appointmentOutcome = event.target.closest("[data-appointment-outcome]");
+      if (appointmentOutcome) {
+        event.preventDefault();
+        if (appointmentOutcome.dataset.appointmentOutcome === "DISMISS") {
+          appointmentOutcome.closest(".forge-appointment-outcome").remove();
+        } else {
+          void confirmAppointmentOutcome(
+            appointmentOutcome.dataset.appointmentOutcome,
+            selected,
+            appointmentOutcome.closest(".forge-appointment-outcome").querySelector("[data-appointment-outcome-status]"),
+          );
+        }
+        return;
+      }
+      if (event.target.closest("[data-analyze-objection]")) {
+        event.preventDefault();
+        void analyzeObjection(event.target.closest("[data-action-workspace]"));
+        return;
+      }
+      if (event.target.closest("[data-approve-combat-response]")) {
+        event.preventDefault();
+        void approveCombatResponse(event.target.closest("[data-action-workspace]"));
+        return;
+      }
+      if (event.target.closest("[data-use-combat-response]")) {
+        event.preventDefault();
+        const workspace = event.target.closest("[data-action-workspace]");
+        const text = workspace.querySelector("[data-combat-response]").value;
+        const editor = workspace.querySelector("[data-message-editor]");
+        const preview = workspace.querySelector("[data-message-preview]");
+        currentDraftCandidate = Object.freeze({ rawText: text, sendsMessage: false, sourceMutable: true });
+        currentDraftApproval = null;
+        editor.value = text;
+        editor.hidden = false;
+        preview.hidden = true;
+        syncWhatsAppLink(text);
+        void actionRuntime?.record({
+          actionCode: "OBJECTION_RESPONSE_USED",
+          prospectId: actionProspect.id,
+          payload: {
+            flow_reference: combatFlowReference,
+            response_reference: workspace.dataset.combatResponseReference,
+            confirmation_reference: `used-${actionProspect.id}-${Date.now()}`,
+          },
+        });
         return;
       }
       const edit = event.target.closest("[data-edit-message]");
@@ -1208,7 +1500,21 @@
         });
         invalidateCurrentDraftApproval(event.target.closest("[data-action-workspace]"));
         syncWhatsAppLink(event.target.value);
+        return;
       }
+      if (event.target.matches("[data-combat-response]")) {
+        combatApproval = null;
+        const workspace = event.target.closest("[data-action-workspace]");
+        workspace.querySelector("[data-use-combat-response]").disabled = true;
+        workspace.querySelector("[data-combat-status]").textContent = "La edición requiere una nueva aprobación exacta.";
+      }
+    }, { signal: controller.signal });
+
+    global.addEventListener("focus", () => {
+      if (pendingHandoff) showHandoffConfirmation();
+    }, { signal: controller.signal });
+    global.addEventListener("pageshow", () => {
+      if (pendingHandoff) showHandoffConfirmation();
     }, { signal: controller.signal });
 
     root.addEventListener("change", event => {
