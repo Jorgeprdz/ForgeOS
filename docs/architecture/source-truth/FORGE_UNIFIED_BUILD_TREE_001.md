@@ -13417,6 +13417,7 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🟢 Internal deep-link target boundary
 - 🟢 Bounded retry and deterministic deduplication boundary
 - 🟢 Explicit internal fallback boundary
+- 🟢 Native Linux Node acceptance
 - 🔴 Automatic permission prompts
 - 🔴 Push execution or provider calls in scope phase
 - 🔴 Service-worker or subscription mutation
