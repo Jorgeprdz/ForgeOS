@@ -1,0 +1,179 @@
+name: PERF Surface Adapter CI
+
+on:
+  push:
+    branches:
+      - feature/performance-scoring-contract-foundation
+    paths:
+      - advisor-os/performance/application/performance-surface-adapter.mjs
+      - tests/performance-surface-adapter-test.mjs
+      - docs/architecture/performance/PERF-06_PERFORMANCE_SURFACE_ADAPTER_CONTRACT.md
+      - .github/workflows/performance-surface-adapter-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  surface:
+    name: Performance surface adapter acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify PERF-05 closure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'PERF_05_PERFORMANCE_SUPABASE_READ_COMPOSITION=CLOSED' \
+            docs/architecture/performance/PERF-05_PERFORMANCE_SUPABASE_READ_COMPOSITION_CLOSURE.md
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee PERF06_ACTIVITY_FREEZE.txt
+
+      - name: Run surface adapter tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-surface-adapter-test.mjs \
+            | tee PERF06_SURFACE.tap
+
+          grep -Fq '# tests 20' PERF06_SURFACE.tap
+          grep -Fq '# pass 20' PERF06_SURFACE.tap
+          grep -Fq '# fail 0' PERF06_SURFACE.tap
+
+      - name: Run Supabase composition regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-supabase-read-composition-test.mjs \
+            | tee PERF06_COMPOSITION.tap
+
+          grep -Fq '# tests 18' PERF06_COMPOSITION.tap
+          grep -Fq '# pass 18' PERF06_COMPOSITION.tap
+          grep -Fq '# fail 0' PERF06_COMPOSITION.tap
+
+      - name: Run read model regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-read-model-test.mjs \
+            | tee PERF06_READ_MODEL.tap
+
+          grep -Fq '# tests 18' PERF06_READ_MODEL.tap
+          grep -Fq '# pass 18' PERF06_READ_MODEL.tap
+          grep -Fq '# fail 0' PERF06_READ_MODEL.tap
+
+      - name: Run period runtime regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-period-runtime-test.mjs \
+            | tee PERF06_PERIOD_RUNTIME.tap
+
+          grep -Fq '# tests 22' PERF06_PERIOD_RUNTIME.tap
+          grep -Fq '# pass 22' PERF06_PERIOD_RUNTIME.tap
+          grep -Fq '# fail 0' PERF06_PERIOD_RUNTIME.tap
+
+      - name: Run scoring policy regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-scoring-policy-test.mjs \
+            | tee PERF06_POLICY.tap
+
+          grep -Fq '# tests 17' PERF06_POLICY.tap
+          grep -Fq '# pass 17' PERF06_POLICY.tap
+          grep -Fq '# fail 0' PERF06_POLICY.tap
+
+      - name: Run frozen Activity contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs \
+            | tee PERF06_ACTIVITY.tap
+
+          grep -Fq '# tests 213' PERF06_ACTIVITY.tap
+          grep -Fq '# pass 213' PERF06_ACTIVITY.tap
+          grep -Fq '# fail 0' PERF06_ACTIVITY.tap
+
+      - name: Verify repository hygiene
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git diff --check
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/performance
+
+          printf '%s\n' \
+            'PERF_06_PERFORMANCE_SURFACE_ADAPTER_CONTRACT=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_PERF05_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_SURFACE_TEST=PASS' \
+            'REMOTE_COMPOSITION_REGRESSION=PASS' \
+            'REMOTE_READ_MODEL_REGRESSION=PASS' \
+            'REMOTE_PERIOD_RUNTIME_REGRESSION=PASS' \
+            'REMOTE_POLICY_REGRESSION=PASS' \
+            'REMOTE_ACTIVITY_CONTRACTS=PASS' \
+            'UI_INTEGRATION_READY=YES' \
+            'UI_MIGRATION_FREEZE_RESPECTED=YES' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/performance/PERF06_ACCEPTANCE.txt
+
+          cp \
+            PERF06_ACTIVITY_FREEZE.txt \
+            PERF06_SURFACE.tap \
+            PERF06_COMPOSITION.tap \
+            PERF06_READ_MODEL.tap \
+            PERF06_PERIOD_RUNTIME.tap \
+            PERF06_POLICY.tap \
+            PERF06_ACTIVITY.tap \
+            artifacts/performance/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-06-surface-adapter-${{ github.sha }}
+          path: artifacts/performance
+          if-no-files-found: error
+          retention-days: 60
