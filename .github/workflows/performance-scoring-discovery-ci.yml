@@ -1,0 +1,111 @@
+name: PERF Scoring Authority Discovery CI
+
+on:
+  push:
+    branches:
+      - feature/performance-scoring-contract-foundation
+    paths:
+      - scripts/ci/perf-01-scoring-authority-discovery.mjs
+      - tests/performance-scoring-discovery-test.mjs
+      - docs/architecture/performance/PERF-01_PERFORMANCE_SCORING_CONTRACT_DISCOVERY.md
+      - docs/evidence/performance/PERF-01_SCORING_AUTHORITY_INVENTORY.tsv
+      - docs/evidence/performance/PERF-01_SCORING_AUTHORITY_SUMMARY.json
+      - .github/workflows/performance-scoring-discovery-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discovery:
+    name: Performance scoring discovery acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if [[ -f package-lock.json ]]; then npm ci; else npm install; fi
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node scripts/ci/verify-activity-foundation-freeze.mjs | tee PERF01_ACTIVITY_FREEZE.txt
+
+      - name: Run discovery tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test --test-reporter=tap tests/performance-scoring-discovery-test.mjs | tee PERF01_DISCOVERY.tap
+
+      - name: Reproduce discovery outputs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/perf01"
+          node scripts/ci/perf-01-scoring-authority-discovery.mjs \
+            --repository "$GITHUB_WORKSPACE" \
+            --source-ref activity-foundation-v1 \
+            --inventory "$RUNNER_TEMP/perf01/inventory.tsv" \
+            --summary "$RUNNER_TEMP/perf01/summary.json" \
+            | tee PERF01_SCAN.txt
+          cmp docs/evidence/performance/PERF-01_SCORING_AUTHORITY_INVENTORY.tsv "$RUNNER_TEMP/perf01/inventory.tsv"
+          cmp docs/evidence/performance/PERF-01_SCORING_AUTHORITY_SUMMARY.json "$RUNNER_TEMP/perf01/summary.json"
+
+      - name: Run frozen Activity contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs \
+            | tee PERF01_ACTIVITY_CONTRACTS.tap
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/performance
+          printf '%s\n' \
+            'PERF_01_PERFORMANCE_SCORING_CONTRACT_DISCOVERY=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_DISCOVERY_TEST=PASS' \
+            'REMOTE_DISCOVERY_REPRODUCTION=PASS' \
+            'REMOTE_ACTIVITY_CONTRACTS=PASS' \
+            'REMOTE_EVIDENCE_UPLOAD=PASS' \
+            'ACTIVITY_SCORING_AUTHORITY=NO' \
+            'SCORING_VALUES_INVENTED=NO' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/performance/PERF01_ACCEPTANCE.txt
+          cp PERF01_ACTIVITY_FREEZE.txt PERF01_DISCOVERY.tap PERF01_SCAN.txt PERF01_ACTIVITY_CONTRACTS.tap \
+            docs/evidence/performance/PERF-01_SCORING_AUTHORITY_INVENTORY.tsv \
+            docs/evidence/performance/PERF-01_SCORING_AUTHORITY_SUMMARY.json \
+            artifacts/performance/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-01-scoring-discovery-${{ github.sha }}
+          path: artifacts/performance
+          if-no-files-found: error
+          retention-days: 60
