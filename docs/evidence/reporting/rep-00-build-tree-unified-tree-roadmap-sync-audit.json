@@ -1,6 +1,6 @@
 {
   "phase": "REP-00_BUILD_TREE_UNIFIED_TREE_ROADMAP_SYNC",
-  "status": "IMPLEMENTED_PENDING_ACCEPTANCE",
+  "status": "ACCEPTED",
   "sourcePerformanceCommit": "ba5dfc21c7d23325b49f16a453939c85ba5ca41b",
   "performance": {
     "foundationStatus": "CLOSED_THROUGH_PERF_06",
@@ -43,5 +43,6 @@
     "productiveUiMutation": false,
     "remoteDatabaseMutation": false,
     "mainMutation": false
-  }
+  },
+  "implementationCommit": "59eab48fb53ec8623550f316c7314160a5416617"
 }
