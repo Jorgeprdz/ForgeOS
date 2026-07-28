@@ -226,6 +226,15 @@ or historical R16D records. Its authority is limited to extraction of the
 approved Material 3 shell, Home module boundary, canonical navigation contract,
 shell lifecycle and their validation.
 
+## UI-M05A Quotes Functional Baseline Repair Authority
+
+`UI-M05A_QUOTES_FUNCTIONAL_BASELINE_REPAIR_AND_RUNTIME_ALIGNMENT` is
+`EXECUTION_AUTHORIZED` from
+`979b134231e5ffaf18652cef82e47ff3332cf6fc` on
+`feature/ui-m05a-quotes-baseline-repair`. Owner, Miranda and Board approval are
+`GRANTED`; visual redesign is `FORBIDDEN`, quote domain boundaries are
+`PROTECTED`, and `RESUME_UI_M05_AFTER_PASS=YES`.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

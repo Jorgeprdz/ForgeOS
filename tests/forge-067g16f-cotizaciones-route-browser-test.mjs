@@ -21,7 +21,8 @@ const server = http.createServer(async (request, response) => {
     return;
   }
   const publicPath = pathname === '/' ? 'static-preview/forge-alive/index.html' : pathname.replace(/^\/+/, '');
-  const relative = publicPath.startsWith('advisor-os/') ? publicPath : join('docs', publicPath);
+  const rootRuntime = /^(advisor-os|nash|platform)\//.test(publicPath);
+  const relative = rootRuntime ? publicPath : join('docs', publicPath);
   const candidate = normalize(join(root, relative));
   if (!candidate.startsWith(root)) return response.writeHead(403).end();
   try {

@@ -62,6 +62,12 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
 - Quotes.
 - Agenda and secondary surfaces.
 
+### UI-M05A — Quotes functional baseline repair
+
+- Phase: `UI-M05A_QUOTES_FUNCTIONAL_BASELINE_REPAIR_AND_RUNTIME_ALIGNMENT`
+- Status: **EXECUTION_AUTHORIZED**
+- Corrective prerequisite for resuming UI-M05.
+
 ## Parallelism rule
 
 - Maximum active lanes: **2**.

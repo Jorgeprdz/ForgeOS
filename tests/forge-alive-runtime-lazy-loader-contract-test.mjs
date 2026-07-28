@@ -19,7 +19,7 @@ const loader = await readFile(
 
 assert.match(
   page,
-  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j1c1-nonblocking-route-20260716-1/,
+  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j2b-stage-alignment-20260716-1/,
 );
 
 assert.match(
@@ -28,7 +28,7 @@ assert.match(
 );
 
 for (const token of [
-  '"R16J1C1_RUNTIME_LAZY_03C1_PARSER_FIRST"',
+  '"R16J2A_PAGES_RUNTIME_HOTFIX_20260716_1"',
   "const QUOTE_STYLES",
   "const QUOTE_SCRIPTS",
   "const DESKTOP_SCRIPTS",

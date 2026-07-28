@@ -61,10 +61,9 @@
 
     submit.hidden = !ready;
     submit.setAttribute("aria-hidden", ready ? "false" : "true");
-    if (!ready) {
-      submit.disabled = true;
-      submit.setAttribute("aria-disabled", "true");
-    }
+    const calculatorReady = Boolean(globalThis.ForgeQuoteCalculators);
+    submit.disabled = !(ready && calculatorReady);
+    submit.setAttribute("aria-disabled", String(submit.disabled));
 
     label.setAttribute("aria-disabled", loading ? "true" : "false");
     input.setAttribute("aria-busy", loading ? "true" : "false");

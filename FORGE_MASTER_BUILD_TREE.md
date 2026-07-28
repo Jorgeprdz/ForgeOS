@@ -15208,6 +15208,16 @@ Status: `EXECUTION_AUTHORIZED`
 NEXT: `UI_M04_IMPLEMENTATION_AND_VALIDATION`
 <!-- FORGE:UI_M04_CANONICAL_SHELL:END -->
 
+<!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:START -->
+## UI-M05A Quotes Functional Baseline Repair
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Source: `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Corrective prerequisite for UI-M05; visual redesign and domain mutation are
+  forbidden.
+<!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:END -->
+
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
 ## R16J0 Accepted Quote to Sales Presentation Entrypoint
 

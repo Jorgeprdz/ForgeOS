@@ -274,18 +274,18 @@ assert.ok(
 assert.ok(
   lazy.includes(
       "forge-accepted-quote-bridge.js" +
-      "?v=r16j1c1-diagnostic-hotfix-20260716-1",
+      "?v=r16j2a-pages-runtime-hotfix-20260716-1",
   ),
 );
 assert.ok(
   lazy.includes(
       "forge-quote-acceptance-entrypoint-r16j0a.js" +
-      "?v=r16j1c1-system-performance-repair-20260716-1",
+      "?v=r16j2a-pages-runtime-hotfix-20260716-1",
   ),
 );
 assert.match(
   page,
-  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j1c1-nonblocking-route-20260716-1/,
+  /forge-alive-runtime-lazy-loader-r16j1c1\.js\?v=r16j2b-stage-alignment-20260716-1/,
 );
 assert.match(
   [page, lazy].join("\n"),
