@@ -11,6 +11,7 @@ on:
       - "advisor-os/activity/**"
       - "advisor-os/event-evidence/**"
       - "advisor-os/performance/**"
+      - "advisor-os/sales-pipeline/**"
       - "docs/static-preview/forge-alive/forge-alive-pipeline-view-067g16a.js"
       - "tests/fes-*-test.mjs"
       - "tests/e2e/**"
@@ -64,6 +65,21 @@ jobs:
 
       - name: Run Productive UI browser acceptance
         run: npm run test:e2e:fes06c
+
+      - name: Run FES 08 productive browser acceptance
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          npm run serve:e2e > artifacts/event-evidence/fes08-vite.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            curl --fail --silent http://127.0.0.1:4173/tests/fixtures/fes-08-productive-pipeline-browser.html >/dev/null && break
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/tests/fixtures/fes-08-productive-pipeline-browser.html >/dev/null
+          FORGE_E2E_BASE_URL=http://127.0.0.1:4173 \
+            node --test tests/fes-08-productive-pipeline-browser-test.mjs
 
       - name: Run FES 07C isolated browser acceptance
         run: npm run test:e2e:fes07c

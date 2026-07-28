@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>FES 08 Productive Pipeline Acceptance</title>
+  </head>
+  <body>
+    <main data-fes08-host>
+      <h1>Pipeline productivo</h1>
+      <p data-fes08-status>Validando Nash Combat aislado.</p>
+    </main>
+    <script src="/advisor-os/sales-pipeline/pipeline-nash-combat-adapter.js"></script>
+    <script>
+      addEventListener("load", async () => {
+        const api = globalThis.ForgePipelineNashCombatAdapterFES08B;
+        const result = await api.analyzeObjectionForHumanReview({
+          objection: "Necesito pensarlo",
+          approvedDisplayName: "Prospecto de prueba",
+          prospectReference: "prospect-browser-001",
+          flowReference: "flow-browser-001",
+          requestId: "request-browser-001",
+        });
+        globalThis.__FORGE_FES08_BROWSER_ACCEPTANCE__ = Object.freeze({
+          result,
+          loaderCount: document.querySelectorAll("[data-forge-nash-combat-loader]").length,
+          parentPolluted: typeof globalThis.runNashCombat === "function",
+        });
+        const status = document.querySelector("[data-fes08-status]");
+        status.dataset.ready = "true";
+        status.textContent = "Nash Combat aislado validado.";
+      });
+    </script>
+  </body>
+</html>
