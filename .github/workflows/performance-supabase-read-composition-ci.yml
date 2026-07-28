@@ -1,0 +1,166 @@
+name: PERF Supabase Read Composition CI
+
+on:
+  push:
+    branches:
+      - feature/performance-scoring-contract-foundation
+    paths:
+      - advisor-os/performance/runtime/supabase-performance-read-runtime.mjs
+      - tests/performance-supabase-read-composition-test.mjs
+      - docs/architecture/performance/PERF-05_PERFORMANCE_SUPABASE_READ_COMPOSITION.md
+      - .github/workflows/performance-supabase-read-composition-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  composition:
+    name: Performance Supabase read composition acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify PERF-04 closure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'PERF_04_PERFORMANCE_READ_MODEL_CONTRACT=CLOSED' \
+            docs/architecture/performance/PERF-04_PERFORMANCE_READ_MODEL_CONTRACT_CLOSURE.md
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee PERF05_ACTIVITY_FREEZE.txt
+
+      - name: Run Supabase composition tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-supabase-read-composition-test.mjs \
+            | tee PERF05_COMPOSITION.tap
+
+          grep -Fq '# tests 18' PERF05_COMPOSITION.tap
+          grep -Fq '# pass 18' PERF05_COMPOSITION.tap
+          grep -Fq '# fail 0' PERF05_COMPOSITION.tap
+
+      - name: Run read model regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-read-model-test.mjs \
+            | tee PERF05_READ_MODEL.tap
+
+          grep -Fq '# tests 18' PERF05_READ_MODEL.tap
+          grep -Fq '# pass 18' PERF05_READ_MODEL.tap
+          grep -Fq '# fail 0' PERF05_READ_MODEL.tap
+
+      - name: Run period runtime regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-period-runtime-test.mjs \
+            | tee PERF05_PERIOD_RUNTIME.tap
+
+          grep -Fq '# tests 22' PERF05_PERIOD_RUNTIME.tap
+          grep -Fq '# pass 22' PERF05_PERIOD_RUNTIME.tap
+          grep -Fq '# fail 0' PERF05_PERIOD_RUNTIME.tap
+
+      - name: Run scoring policy regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-scoring-policy-test.mjs \
+            | tee PERF05_POLICY.tap
+
+          grep -Fq '# tests 17' PERF05_POLICY.tap
+          grep -Fq '# pass 17' PERF05_POLICY.tap
+          grep -Fq '# fail 0' PERF05_POLICY.tap
+
+      - name: Run frozen Activity contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs \
+            | tee PERF05_ACTIVITY.tap
+
+          grep -Fq '# tests 213' PERF05_ACTIVITY.tap
+          grep -Fq '# pass 213' PERF05_ACTIVITY.tap
+          grep -Fq '# fail 0' PERF05_ACTIVITY.tap
+
+      - name: Verify repository hygiene
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git diff --check
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/performance
+
+          printf '%s\n' \
+            'PERF_05_PERFORMANCE_SUPABASE_READ_COMPOSITION=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_PERF04_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_COMPOSITION_TEST=PASS' \
+            'REMOTE_READ_MODEL_REGRESSION=PASS' \
+            'REMOTE_PERIOD_RUNTIME_REGRESSION=PASS' \
+            'REMOTE_POLICY_REGRESSION=PASS' \
+            'REMOTE_ACTIVITY_CONTRACTS=PASS' \
+            'COMPOSITION_SCHEMA=performance-supabase-read-composition.v1' \
+            'ACTIVITY_LIST_RPC=activity_records_list_v1' \
+            'PERSISTENCE_MODE=READ_ONLY' \
+            'DIRECT_TABLE_ACCESS=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            > artifacts/performance/PERF05_ACCEPTANCE.txt
+
+          cp \
+            PERF05_ACTIVITY_FREEZE.txt \
+            PERF05_COMPOSITION.tap \
+            PERF05_READ_MODEL.tap \
+            PERF05_PERIOD_RUNTIME.tap \
+            PERF05_POLICY.tap \
+            PERF05_ACTIVITY.tap \
+            artifacts/performance/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-05-supabase-read-composition-${{ github.sha }}
+          path: artifacts/performance
+          if-no-files-found: error
+          retention-days: 60
