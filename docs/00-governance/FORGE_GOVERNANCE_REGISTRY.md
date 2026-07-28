@@ -306,6 +306,29 @@ adapters and tests only; authoritative calculation, Product Intelligence,
 product-rule, parser, mapper, rate-cache, Supabase and Home behavior remains
 protected.
 
+## UI-M05D Quotes Multi-Product Visual System Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-025 — UI-M05D Multi-Product Quote Experience Authority.txt` |
+| Phase | `UI-M05D_QUOTES_MULTI_PRODUCT_VISUAL_SYSTEM_AND_COMPLETE_RESULT_PARITY` |
+| Status | `EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Implementation readiness | `READY` |
+| Source commit | `832b33d5f840d853c7fc337755e8349b0702b62d` |
+| Runtime branch | `feature/ui-m05d-quotes-multiproduct-complete-parity` |
+| Owner visual acceptance | `REJECTED` |
+| Owner functional acceptance | `REJECTED` |
+| Material 3 identity | `PROTECTED` |
+| Multi-product presentation | `AUTHORIZED` |
+| Quote domain boundaries | `PROTECTED` |
+
+UI-M05D is the owner-rejection repair for complete native presentation of
+Imagina Ser, Vida Mujer, SeguBeca and ORVI. Floating controls remain canonical
+and must provide full scroll recovery.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

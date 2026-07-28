@@ -1,0 +1,36 @@
+ADR-025 — UI-M05D Multi-Product Quote Experience Authority
+
+Status: RATIFIED
+
+PHASE=UI-M05D_QUOTES_MULTI_PRODUCT_VISUAL_SYSTEM_AND_COMPLETE_RESULT_PARITY
+PHASE_STATUS=EXECUTION_AUTHORIZED
+PHASE_TYPE=OWNER_REJECTED_PRODUCT_EXPERIENCE_REPAIR
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+IMPLEMENTATION_READINESS=READY
+SOURCE_COMMIT=832b33d5f840d853c7fc337755e8349b0702b62d
+RUNTIME_BRANCH=feature/ui-m05d-quotes-multiproduct-complete-parity
+PARENT_PHASE=UI-M05C_QUOTES_PRODUCT_INTELLIGENCE_PRESENTATION_PARITY
+OWNER_VISUAL_ACCEPTANCE=REJECTED
+OWNER_FUNCTIONAL_ACCEPTANCE=REJECTED
+MATERIAL3_IDENTITY=PROTECTED
+TRUE_VISUAL_RECOMPOSITION=AUTHORIZED
+MULTI_PRODUCT_PRESENTATION_IMPLEMENTATION=AUTHORIZED
+LEGACY_DOM_IMPORT=FORBIDDEN
+QUOTE_DOMAIN_BOUNDARIES=PROTECTED
+MAIN_DIRECT_MUTATION=FORBIDDEN
+
+Decision
+
+UI-M05D replaces the rejected single-product-biased result composition with a
+coherent Material 3 multi-product decision workspace for Imagina Ser, Vida
+Mujer, SeguBeca and ORVI. Product accents are presentation-only. Floating
+ForgeShell navigation remains canonical; temporary overlap is accepted only
+when every result and action remains recoverable through normal scrolling.
+
+Boundaries
+
+Calculations, Product Truth, Product Intelligence, product rules, parsers,
+mappers, rate cache, accepted-quote contracts, PDF extraction, Supabase, Nash,
+ForgeShell and Home remain protected.

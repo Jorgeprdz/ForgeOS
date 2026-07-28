@@ -1,7 +1,7 @@
 import {
   createQuoteResultSnapshot,
   renderQuoteResultSnapshot,
-} from "./quote-product-intelligence-presenter.js?v=ui-m05c-001";
+} from "./quote-product-intelligence-presenter.js?v=ui-m05d-001";
 
 const adapterKey=Symbol.for("forge.ui-m05b.quote-runtime-adapter");
 const moduleUrl=name=>new URL(`../quote-preview-live/${name}`,import.meta.url).href;

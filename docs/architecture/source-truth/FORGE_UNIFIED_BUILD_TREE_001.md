@@ -12042,6 +12042,24 @@ Status: `EXECUTION_AUTHORIZED`
 NEXT: `UI_M05C_IMPLEMENTATION_AND_OWNER_FUNCTIONAL_ACCEPTANCE`
 <!-- FORGE:UI_M05C_QUOTES_PRODUCT_INTELLIGENCE_PARITY:END -->
 
+<!-- FORGE:UI_M05D_QUOTES_MULTIPRODUCT_PARITY:START -->
+## UI-M05D Quotes Multi-Product Visual System and Complete Result Parity
+
+PHASE: `UI-M05D_QUOTES_MULTI_PRODUCT_VISUAL_SYSTEM_AND_COMPLETE_RESULT_PARITY`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-025 — UI-M05D Multi-Product Quote Experience Authority`.
+- Source: `832b33d5f840d853c7fc337755e8349b0702b62d`.
+- Runtime branch: `feature/ui-m05d-quotes-multiproduct-complete-parity`.
+- Scope: multi-product Material 3 adapters, formatting, advisor-safe truth
+  labels, responsive composition and scroll recovery.
+- Calculation, Product Intelligence, parser, mapper, rate-cache, Supabase,
+  Nash, Home and main surfaces remain protected.
+
+NEXT: `UI_M05D_IMPLEMENTATION_AND_OWNER_MULTIPRODUCT_ACCEPTANCE`
+<!-- FORGE:UI_M05D_QUOTES_MULTIPRODUCT_PARITY:END -->
+
 <!-- FORGEOS:R16E2C_UNIFIED_BUILD_TREE_SYNC_37107CA:START -->
 ## R16E2C Unified Build Tree Sync
 

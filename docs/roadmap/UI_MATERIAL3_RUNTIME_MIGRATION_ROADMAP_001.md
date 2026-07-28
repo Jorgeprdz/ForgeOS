@@ -106,6 +106,18 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
   parsers, mappers, rate cache, Supabase and Home remain protected.
 - Owner functional acceptance remains pending.
 
+### UI-M05D — Multi-product result experience and complete parity
+
+- Phase: `UI-M05D_QUOTES_MULTI_PRODUCT_VISUAL_SYSTEM_AND_COMPLETE_RESULT_PARITY`
+- Status: **EXECUTION_AUTHORIZED**
+- Authority: `ADR-025 — UI-M05D Multi-Product Quote Experience Authority`.
+- Source commit: `832b33d5f840d853c7fc337755e8349b0702b62d`.
+- Runtime branch: `feature/ui-m05d-quotes-multiproduct-complete-parity`.
+- Owner visual and functional acceptance of UI-M05C: **REJECTED**.
+- Scope: complete Material 3 presentation for Imagina Ser, Vida Mujer,
+  SeguBeca and ORVI with full scroll recovery around floating controls.
+- Domain authorities, Supabase, Nash, Home and main remain protected.
+
 ## Parallelism rule
 
 - Maximum active lanes: **2**.

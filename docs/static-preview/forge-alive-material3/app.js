@@ -1,6 +1,6 @@
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
-import { createQuotesModule } from "./quotes-module.js?v=ui-m05c-001";
+import { createQuotesModule } from "./quotes-module.js?v=ui-m05d-001";
 
 const application = document.querySelector("[data-forge-application]");
 const moduleViewport = document.querySelector(

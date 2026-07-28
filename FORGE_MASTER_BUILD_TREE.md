@@ -15277,6 +15277,24 @@ Status: `EXECUTION_AUTHORIZED`
 NEXT: `UI_M05C_IMPLEMENTATION_AND_OWNER_FUNCTIONAL_ACCEPTANCE`
 <!-- FORGE:UI_M05C_QUOTES_PRODUCT_INTELLIGENCE_PARITY:END -->
 
+<!-- FORGE:UI_M05D_QUOTES_MULTIPRODUCT_PARITY:START -->
+## UI-M05D Quotes Multi-Product Visual System and Complete Result Parity
+
+PHASE: `UI-M05D_QUOTES_MULTI_PRODUCT_VISUAL_SYSTEM_AND_COMPLETE_RESULT_PARITY`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-025 — UI-M05D Multi-Product Quote Experience Authority`.
+- Source: `832b33d5f840d853c7fc337755e8349b0702b62d`.
+- Runtime branch: `feature/ui-m05d-quotes-multiproduct-complete-parity`.
+- UI-M05C owner visual and functional acceptance are rejected.
+- Build a coherent Material 3 result system for Imagina Ser, Vida Mujer,
+  SeguBeca and ORVI without changing their domain authorities.
+- Floating Nav Pill and Alfred remain canonical with full scroll recovery.
+
+NEXT: `UI_M05D_IMPLEMENTATION_AND_OWNER_MULTIPRODUCT_ACCEPTANCE`
+<!-- FORGE:UI_M05D_QUOTES_MULTIPRODUCT_PARITY:END -->
+
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
 ## R16J0 Accepted Quote to Sales Presentation Entrypoint
 

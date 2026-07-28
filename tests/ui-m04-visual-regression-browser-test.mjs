@@ -50,6 +50,20 @@ for (const path of authorityFiles) {
     ),
   );
 }
+for (const path of [
+  "docs/static-preview/quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js",
+  "docs/static-preview/quote-preview-live/forge-segubeca-product-dashboard-adapter.js",
+  "docs/static-preview/quote-preview-live/forge-orvi-product-dashboard-adapter.js",
+  "docs/static-preview/quote-preview-live/forge-product-dashboard-template.js",
+]) {
+  mkdirSync(join(authorityRoot, path, ".."), { recursive: true });
+  writeFileSync(
+    join(authorityRoot, path),
+    execFileSync("git", [
+      "-c", `safe.directory=${repositoryRoot}`, "show", `${sourceCommit}:${path}`,
+    ]),
+  );
+}
 
 function staticServer(root) {
   return http.createServer(async (request, response) => {
@@ -101,7 +115,12 @@ const authorityUrl =
 const candidateUrl =
   `http://127.0.0.1:${candidateServer.address().port}`
   + "/docs/static-preview/forge-alive-material3/?nav=inicio";
-const browser = await webkit.launch({ headless: true });
+const browser = await webkit.launch({
+  headless: true,
+  ...(process.env.FORGE_WEBKIT_PATH
+    ? { executablePath: process.env.FORGE_WEBKIT_PATH }
+    : {}),
+});
 const contextOptions = {
   locale: "es-MX",
   colorScheme: "dark",

@@ -1,0 +1,11 @@
+{
+  "phase": "UI-M05D_QUOTES_MULTI_PRODUCT_VISUAL_SYSTEM_AND_COMPLETE_RESULT_PARITY",
+  "sourceCommit": "832b33d5f840d853c7fc337755e8349b0702b62d",
+  "policy": "MULTIPRODUCT_PRESENTATION_ONLY_NO_AUTHORITY_MUTATION",
+  "protectedTrees": {
+    "docs/static-preview/quote-preview-live": "8274e49f96b5f834f88ca3adca35d39299452f5f",
+    "product-intelligence": "5ec0943b0d5410ca496c8aa6bdc1471499fe6aa6",
+    "supabase": "97b73b4f8a6d2e2af0affaea5f8da007fe22cce6"
+  },
+  "protectedMutationCount": 0
+}

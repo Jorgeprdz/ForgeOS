@@ -193,7 +193,7 @@ try {
   assert.equal(richResult.dashboard, "imagina_ser");
   assert.ok(richResult.sections.includes("contribution"));
   assert.ok(richResult.sections.includes("construction"));
-  assert.match(richResult.owner, /product-intelligence/);
+  assert.match(richResult.owner, /Fuente de validación: Product Intelligence/);
   assert.ok(richResult.scenarioLabels.includes("Pago único"));
   assert.ok(richResult.scenarioLabels.includes("Ingreso mensual"));
   assert.ok(richResult.scenarioLabels.some((label) => label.includes("edad 75")));
@@ -216,11 +216,16 @@ try {
           && !node.closest("label")
           && !node.labels?.length
           && !node.textContent.trim()).length,
+      widthUtilization: document.querySelector("[data-quote-product-dashboard]")
+        ?.getBoundingClientRect().width / innerWidth,
     }));
     assert.equal(resultLayout.overflow, false, `${width}x${height} overflow`);
     assert.equal(resultLayout.dashboardVisible, true);
     assert.ok(resultLayout.visibleSections >= 2);
     assert.equal(resultLayout.unlabeledControls, 0);
+    if (width >= 1024) {
+      assert.ok(resultLayout.widthUtilization >= 0.72, `${width} desktop width utilization`);
+    }
   }
   assert.equal(
     await page.$eval(".fq-send-pdf-105dr", (button) => button.disabled),
@@ -235,6 +240,33 @@ try {
     await page.$eval("#fq-client-105dr", (input) => input.value),
     beforeAlfred,
   );
+  const scrollRecovery = await page.evaluate(async () => {
+    const module = document.querySelector("[data-forge-quotes-module]");
+    const lastAction = [...module.querySelectorAll("button:not([hidden]):not(:disabled)")].at(-1);
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const actionRect = lastAction.getBoundingClientRect();
+    const navRect = document.querySelector("[data-forge-nav-pill]").getBoundingClientRect();
+    const reachedEnd = Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 1;
+    lastAction.focus({ preventScroll: false });
+    return {
+      documentScrolls: document.documentElement.scrollHeight > innerHeight,
+      reachedEnd,
+      actionFullyAboveNav: actionRect.bottom <= navRect.top,
+      actionFocused: document.activeElement === lastAction,
+      nestedTrap: [...module.querySelectorAll("*")].some((node) => {
+        const style = getComputedStyle(node);
+        return /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 2;
+      }),
+    };
+  });
+  assert.deepEqual(scrollRecovery, {
+    documentScrolls: true,
+    reachedEnd: true,
+    actionFullyAboveNav: true,
+    actionFocused: true,
+    nestedTrap: false,
+  });
   await page.goto(`${url}?nav=inicio`, { waitUntil: "networkidle0" });
   await page.click('[data-route-id="quotes"]');
   await page.waitForFunction(() => document.body.dataset.forgeRoute === "quotes");

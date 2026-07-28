@@ -36,7 +36,12 @@ const server = http.createServer(async (request, response) => {
 });
 await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
 const url = `http://127.0.0.1:${server.address().port}/docs/static-preview/forge-alive-material3/?nav=cotizaciones`;
-const browser = await webkit.launch({ headless: true });
+const browser = await webkit.launch({
+  headless: true,
+  ...(process.env.FORGE_WEBKIT_PATH
+    ? { executablePath: process.env.FORGE_WEBKIT_PATH }
+    : {}),
+});
 try {
   const context = await browser.newContext({
     locale: "es-MX",
@@ -81,7 +86,7 @@ try {
     });
   }
   await context.close();
-  console.log("PASS UI-M05 Playwright WebKit simulation");
+  console.log("PASS UI-M05D Playwright WebKit simulation");
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));

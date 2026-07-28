@@ -10,6 +10,10 @@ import {
   buildOrviDashboardModel,
   isOrviProduct,
 } from "../quote-preview-live/forge-orvi-product-dashboard-adapter.js";
+import {
+  buildVidaMujerDashboardModel,
+  isVidaMujerProduct,
+} from "./forge-vida-mujer-product-dashboard-adapter.js?v=ui-m05d";
 
 const hasValue = (value) => value !== null && value !== undefined && value !== "";
 
@@ -134,6 +138,9 @@ function selectDashboard(calculation, benefitSummary) {
     const model = buildOrviDashboardModel(input);
     if (model) return { type: "orvi", model };
   }
+  if (isVidaMujerProduct(input)) {
+    return { type: "vida_mujer", model: buildVidaMujerDashboardModel(benefitSummary) };
+  }
   if (isSegubecaProduct(input)) {
     return { type: "segubeca", model: buildSegubecaDashboardModel(benefitSummary) };
   }
@@ -207,7 +214,26 @@ function appendValue(target, value) {
       hasValue(value.mxn) ? `$${number(value.mxn)} MXN` : null,
       hasValue(value.usd) ? `$${number(value.usd)} USD` : null,
     ].filter(Boolean);
-    target.textContent = parts.join(" · ") || JSON.stringify(value);
+    if (parts.length) {
+      parts.forEach((part, index) => {
+        const line = target.ownerDocument.createElement("span");
+        line.className = index ? "quotes-value-line quotes-value-line--conversion" : "quotes-value-line";
+        line.textContent = part;
+        target.append(line);
+      });
+    } else {
+      target.textContent = value.text || value.description || value.label || "Información estructurada disponible";
+    }
+    return;
+  }
+  const parts = String(value).split(/\s*·\s*/).filter(Boolean);
+  if (parts.length > 1 && parts.some((part) => /\b(UDI|MXN|USD)\b/.test(part))) {
+    parts.forEach((part, index) => {
+      const line = target.ownerDocument.createElement("span");
+      line.className = index ? "quotes-value-line quotes-value-line--conversion" : "quotes-value-line";
+      line.textContent = part;
+      target.append(line);
+    });
     return;
   }
   target.textContent = String(value);
@@ -255,6 +281,7 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
   if (!snapshot || !host) return null;
   host.replaceChildren();
   host.dataset.productDashboard = snapshot.dashboard.type;
+  host.dataset.quoteResultWorkspace = "true";
 
   const identity = documentRef.createElement("header");
   identity.className = "quotes-intelligence-identity";
@@ -267,6 +294,27 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
   plan.textContent = snapshot.identity.plan || "Información calculada con evidencia disponible.";
   identity.append(eyebrow, title, plan);
   host.append(identity);
+
+  const glanceItems = [
+    ["Plazo de aportación", ["premium_paying_years", "payment_term", "contribution_term"]],
+    ["Plazo de cobertura", ["coverage_years", "coverage_term"]],
+    ["Aportación anual", ["annual_premium", "annual_contribution"]],
+    ["Total aportado", ["total_contributed", "total_contributed_udi"]],
+  ].map(([label, keys]) => {
+    for (const section of snapshot.dashboard.model.sections || []) {
+      const found = (section.items || []).find((item) =>
+        keys.some((key) => String(item.id || "").toLowerCase().includes(key)));
+      if (found) return { label, value: found.value };
+    }
+    return null;
+  }).filter(Boolean);
+  let glance = null;
+  if (glanceItems.length) {
+    glance = documentRef.createElement("section");
+    glance.className = "quotes-plan-glance";
+    glance.dataset.quotePlanGlance = "true";
+    glanceItems.forEach((item) => glance.append(metric(documentRef, item)));
+  }
 
   if (snapshot.dashboard.model.hero) {
     const hero = documentRef.createElement("article");
@@ -283,6 +331,7 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     }
     host.append(hero);
   }
+  if (glance) host.append(glance);
 
   const grid = documentRef.createElement("div");
   grid.className = "quotes-intelligence-grid";
@@ -290,6 +339,7 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     const card = documentRef.createElement("section");
     card.className = "quotes-intelligence-section";
     card.dataset.productSection = section.kind || section.key;
+    card.style.setProperty("--section-span", String(section.desktopSpan || 6));
     const heading = documentRef.createElement("h4");
     heading.textContent = section.title;
     const values = documentRef.createElement("div");
@@ -309,10 +359,12 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     const text = documentRef.createElement("p");
     text.textContent = [
       snapshot.rateMetadata.key,
-      hasValue(snapshot.rateMetadata.value) ? `Valor ${snapshot.rateMetadata.value}` : null,
+      hasValue(snapshot.rateMetadata.value)
+        ? `Valor ${new Intl.NumberFormat("es-MX", { maximumFractionDigits: 6 }).format(Number(snapshot.rateMetadata.value))}`
+        : null,
       snapshot.rateMetadata.source,
       snapshot.rateMetadata.date,
-      snapshot.rateMetadata.stale ? "Información desactualizada" : null,
+      snapshot.rateMetadata.stale ? "Tasa desactualizada; no se muestran conversiones" : "Tasa vigente verificada",
     ].filter(Boolean).join(" · ");
     rate.append(heading, text);
     host.append(rate);
@@ -325,14 +377,28 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
     const heading = documentRef.createElement("h4");
     heading.textContent = "Verdad y preparación";
     const text = documentRef.createElement("p");
+    const humanTruth = {
+      verified_with_missing_information: "Verificado con información pendiente",
+      verified: "Información verificada",
+      conflicted: "Hay evidencia en conflicto; requiere revisión",
+      unknown: "Información no disponible en la evidencia",
+    };
+    const humanActionability = {
+      actionable: "Listo para orientar la decisión",
+      review_required: "Requiere revisión humana",
+      blocked: "No está listo para una decisión",
+    };
+    truth.dataset.rawTruthStatus = snapshot.truthState.status || "";
+    truth.dataset.rawCanonicalOwner = snapshot.truthState.canonicalOwner || "";
     text.textContent = [
-      snapshot.truthState.status,
-      snapshot.truthState.actionability,
+      humanTruth[snapshot.truthState.status] || "Estado de evidencia disponible",
+      humanActionability[snapshot.truthState.actionability] || null,
       snapshot.truthState.effectivePeriod
         ? `Vigencia: ${snapshot.truthState.effectivePeriod}`
         : null,
       snapshot.truthState.canonicalOwner
-        ? `Autoridad: ${snapshot.truthState.canonicalOwner}`
+        ? `Fuente de validación: ${snapshot.truthState.canonicalOwner === "product-intelligence"
+          ? "Product Intelligence" : snapshot.truthState.canonicalOwner}`
         : null,
       snapshot.truthState.humanDecisionRequired === true
         ? "Requiere decisión humana"

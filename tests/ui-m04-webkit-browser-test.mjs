@@ -31,7 +31,12 @@ const server = http.createServer(async (request, response) => {
 });
 
 await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-const browser = await webkit.launch({ headless: true });
+const browser = await webkit.launch({
+  headless: true,
+  ...(process.env.FORGE_WEBKIT_PATH
+    ? { executablePath: process.env.FORGE_WEBKIT_PATH }
+    : {}),
+});
 try {
   const context = await browser.newContext({
     locale: "es-MX",
@@ -111,8 +116,27 @@ try {
   await page.locator("[data-forge-alfred-sheet].open").waitFor();
   await page.keyboard.press("Escape");
   await page.locator("[data-forge-alfred-sheet]:not(.open)").waitFor();
+  const quotes = home.replace("nav=inicio", "nav=cotizaciones");
+  for (const [width, height] of [[390, 844], [768, 1024], [1440, 900], [844, 390]]) {
+    await page.setViewportSize({ width, height });
+    await page.goto(quotes, { waitUntil: "networkidle" });
+    await page.waitForFunction(
+      () => document.querySelector("[data-forge-quotes-module]")?.dataset.runtimeMounted === "true",
+    );
+    const audit = await page.evaluate(() => ({
+      route: document.body.dataset.forgeRoute,
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      nav: document.querySelectorAll("[data-forge-nav-pill]").length,
+      orb: document.querySelectorAll("[data-forge-command-orb]").length,
+      sheet: document.querySelectorAll("[data-forge-alfred-sheet]").length,
+      legacy: document.querySelectorAll(".dw-sidebar-056y,[data-forge-legacy-sidebar]").length,
+    }));
+    assert.deepEqual(audit, {
+      route: "quotes", overflow: false, nav: 1, orb: 1, sheet: 1, legacy: 0,
+    }, `${width}x${height} Quotes WebKit audit`);
+  }
   assert.deepEqual(errors, []);
-  console.log("PASS UI-M04 Playwright WebKit simulation");
+  console.log("PASS UI-M05D ForgeShell and Quotes Playwright WebKit simulation");
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));

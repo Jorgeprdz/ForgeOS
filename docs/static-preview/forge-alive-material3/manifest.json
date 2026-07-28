@@ -26,6 +26,7 @@
     "quotesModuleIntegrated": true,
     "quotesRuntimeAdapter": "./quote-runtime-adapter.js",
     "quotesProductIntelligencePresenter": "./quote-product-intelligence-presenter.js",
+    "vidaMujerProductDashboardAdapter": "./forge-vida-mujer-product-dashboard-adapter.js",
     "completeCalculationPacketPreserved": true,
     "productSpecificDashboards": ["imagina_ser", "segubeca", "orvi", "generic"],
     "legacyDomTransplant": false,
