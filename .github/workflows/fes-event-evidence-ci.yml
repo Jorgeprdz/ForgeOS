@@ -164,8 +164,8 @@ jobs:
             if (['nash-combat-orchestrator.js', 'supabase-runtime.js'].includes(file)) return true;
             if (!file.startsWith('docs/')) return rootFiles.has(file);
             if (file.includes('/tests/')) return false;
-            if (/(^|\\/)([^/]*-)?(master-)?test(s)?\\.(js|json)$/i.test(file)) return false;
-            if (/\\.(pdf|xlsx|zip)$/i.test(file)) return false;
+            if (/(^|\/)([^/]*-)?(master-)?test(s)?\.(js|json)$/i.test(file)) return false;
+            if (/\.(pdf|xlsx|zip)$/i.test(file)) return false;
             return rootFiles.has(file) || extensions.has(path.extname(file).toLowerCase());
           };
           for (const file of tracked.filter(isPublic)) {
