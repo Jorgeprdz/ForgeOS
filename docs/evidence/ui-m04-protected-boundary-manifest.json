@@ -1,0 +1,24 @@
+{
+  "phase": "UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT",
+  "sourceCommit": "f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673",
+  "policy": "NO_MUTATION",
+  "protectedPaths": [
+    "docs/static-preview/forge-alive/",
+    "docs/static-preview/quote-preview-live/",
+    "product-intelligence/",
+    "supabase/",
+    "quote-",
+    "accepted-quote",
+    "parser",
+    "mapper",
+    "rate-cache",
+    "financial",
+    "orvi",
+    "platform/conversation-intelligence/",
+    "docs/architecture/source-truth/NASH_",
+    "tests/nash-"
+  ],
+  "allowedRuntimePaths": [
+    "docs/static-preview/forge-alive-material3/"
+  ]
+}

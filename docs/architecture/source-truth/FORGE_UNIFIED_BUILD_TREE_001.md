@@ -11956,6 +11956,25 @@ Status: `PASS_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUC
 
 <!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:END -->
 
+<!-- FORGE:UI_M04_CANONICAL_SHELL:START -->
+## UI-M04 Canonical Forge Shell Extraction and Navigation Contract
+
+PHASE: `UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Explicitly resolves `NEXT=BOARD_SCOPE_SELECTION_AFTER_R16C`.
+- Owner, Miranda and Board approval: `GRANTED`.
+- Source commit: `f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673`.
+- Runtime branch: `feature/ui-m04-canonical-forge-shell`.
+- Scope: extract the approved Material 3 application shell and route-aware
+  navigation while preserving Home appearance and behavior.
+- Legacy Forge Alive, Cotizaciones runtime, Product Intelligence, calculations,
+  persistence, Supabase and historical R16C/R16D remain protected.
+
+NEXT: `UI_M04_IMPLEMENTATION_AND_VALIDATION`
+<!-- FORGE:UI_M04_CANONICAL_SHELL:END -->
+
 <!-- FORGEOS:R16E2C_UNIFIED_BUILD_TREE_SYNC_37107CA:START -->
 ## R16E2C Unified Build Tree Sync
 

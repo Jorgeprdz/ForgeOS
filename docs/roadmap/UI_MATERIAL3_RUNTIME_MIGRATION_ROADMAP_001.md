@@ -42,12 +42,17 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
 - Preserve the frozen legacy source and publish the clean entrypoint only through
   the authorized Pages artifact overlay after the visual gate passes.
 
-### UI-M04 — Home acceptance
+### UI-M04 — Canonical Forge Shell extraction and navigation contract
 
-- Status: **LOCKED**
-- Functional tests.
-- Mobile, tablet and desktop Playwright evidence.
-- Feature flag promotion decision.
+- Status: **EXECUTION_AUTHORIZED**
+- Authority: `ADR-020 — UI-M04 Canonical Forge Shell Execution Authority`.
+- Board scope selected after R16C: canonical Forge Shell extraction.
+- Extract the approved Material 3 Home shell, navigation contract and lifecycle
+  without redesigning Home or migrating Cotizaciones.
+- Runtime branch: `feature/ui-m04-canonical-forge-shell`.
+- Source commit: `f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673`.
+- Quote, Product Intelligence, financial, Supabase and legacy boundaries remain
+  protected.
 
 ### UI-M05+ — Incremental surfaces
 

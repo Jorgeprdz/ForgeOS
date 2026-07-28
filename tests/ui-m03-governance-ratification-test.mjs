@@ -30,21 +30,24 @@ test("ADR-019 records the complete scoped UI-M03 execution authority", () => {
   }
 });
 
-test("roadmap authorizes UI-M03 while UI-M04 remains locked", () => {
+test("roadmap preserves UI-M03 and records the later UI-M04 authority", () => {
   assert.match(
     roadmap,
     /### UI-M03 — Productive Home bindings[\s\S]*?Status: \*\*EXECUTION_AUTHORIZED\*\*/,
   );
   assert.match(
     roadmap,
-    /### UI-M04 — Home acceptance[\s\S]*?Status: \*\*LOCKED\*\*/,
+    /### UI-M04 — Canonical Forge Shell extraction and navigation contract[\s\S]*?Status: \*\*EXECUTION_AUTHORIZED\*\*/,
   );
 });
 
 test("registry and source truth point to the ratified scoped authority", () => {
   assert.match(registry, /## UI-M03 Execution Authority/);
   assert.match(registry, /UI-M03 status \| `EXECUTION_AUTHORIZED`/);
-  assert.match(registry, /UI-M04 status \| `LOCKED`/);
+  assert.match(
+    registry,
+    /UI-M04 status \| `SUPERSEDED_BY_ADR_020_EXECUTION_AUTHORIZED`/,
+  );
   assert.match(sourceTruth, /UI_M03_STATUS=EXECUTION_AUTHORIZED/);
   assert.match(sourceTruth, /FUNCTIONAL_REPLACEMENT_ALLOWED=SCOPED_YES/);
   assert.match(sourceTruth, /UI_M04_STATUS=LOCKED/);

@@ -19,6 +19,15 @@ const css = read(
 const source = read(
   "docs/static-preview/forge-alive-material3/app.js",
 );
+const shell = read(
+  "docs/static-preview/forge-alive-material3/forge-shell.js",
+);
+const home = read(
+  "docs/static-preview/forge-alive-material3/home-module.js",
+);
+const navigation = read(
+  "docs/static-preview/forge-alive-material3/forge-navigation-contract.js",
+);
 const manifest = JSON.parse(
   read("docs/static-preview/forge-alive-material3/manifest.json"),
 );
@@ -26,7 +35,7 @@ const manifest = JSON.parse(
 test("entrypoint loads only its clean approved assets", () => {
   assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
   assert.match(index, /app\.css\?v=ui-m03-approved-001/);
-  assert.match(index, /app\.js\?v=ui-m03-approved-001/);
+  assert.match(index, /app\.js\?v=ui-m04-shell-001/);
   assert.match(index, /manifest\.json/);
   assert.doesNotMatch(
     index,
@@ -35,9 +44,9 @@ test("entrypoint loads only its clean approved assets", () => {
 });
 
 test("approved Home has one visual tree and one header", () => {
-  assert.equal((index.match(/<main class="app"/g) || []).length, 1);
+  assert.equal((index.match(/<main class="app /g) || []).length, 1);
   assert.equal((index.match(/<header class="hero"/g) || []).length, 1);
-  assert.equal((index.match(/class="bottom-shell"/g) || []).length, 1);
+  assert.equal((index.match(/class="bottom-shell /g) || []).length, 1);
   assert.equal((index.match(/class="nav-pill"/g) || []).length, 1);
   assert.equal(
     (index.match(/data-alfred-scope="global"/g) || []).length,
@@ -65,7 +74,8 @@ test("approved copy and accessible dialog are preserved", () => {
   }
   assert.match(index, /role="dialog"/);
   assert.match(index, /aria-modal="true"/);
-  assert.match(index, /aria-current="page"/);
+  assert.match(navigation, /routeId:\s*"inicio"/);
+  assert.match(shell, /aria-current="page"/);
 });
 
 test("responsive contracts cover mobile, both tablets, and desktop", () => {
@@ -82,21 +92,21 @@ test("responsive contracts cover mobile, both tablets, and desktop", () => {
   ]) {
     assert.match(css, rule);
   }
-  assert.match(source, /window\.visualViewport/);
-  assert.match(source, /keyboardInset/);
+  assert.match(shell, /window\.visualViewport/);
+  assert.match(shell, /keyboardInset/);
 });
 
 test("Alfred owns idle, thinking, action, close, and suggestions", () => {
-  assert.match(source, /setAlfredState\("idle", "thinking"\)/);
-  assert.match(source, /open \? "action" : "idle"/);
-  assert.match(source, /open \? "action" : "thinking"/);
-  assert.match(source, /event\.key === "Escape"/);
-  assert.match(source, /input\.value = button\.textContent/);
-  assert.match(source, /sheet-open/);
+  assert.match(shell, /setAlfredState\("idle", "thinking"\)/);
+  assert.match(shell, /open \? "action" : "idle"/);
+  assert.match(shell, /open \? "action" : "thinking"/);
+  assert.match(shell, /event\.key === "Escape"/);
+  assert.match(home, /input\.value = button\.textContent/);
+  assert.match(shell, /sheet-open/);
 });
 
-test("visual runtime has no data, backend, persistence, or reconciliation", () => {
-  const combined = `${index}\n${source}`;
+test("visual runtime has no data, backend, persistence, or DOM reconciliation", () => {
+  const combined = `${index}\n${source}\n${shell}\n${home}\n${navigation}`;
   for (const forbidden of [
     /\bfetch\s*\(/,
     /\bMutationObserver\b/,
@@ -112,7 +122,7 @@ test("visual runtime has no data, backend, persistence, or reconciliation", () =
 test("manifest records the approved isolated contract", () => {
   assert.equal(
     manifest.schema,
-    "forge.ui.material3.approved-home.v1",
+    "forge.ui.material3.canonical-shell.v1",
   );
   assert.equal(manifest.legacy.assetsLoadedByCleanEntrypoint, false);
   assert.equal(manifest.contracts.cleanDom, true);
@@ -120,4 +130,6 @@ test("manifest records the approved isolated contract", () => {
   assert.equal(manifest.contracts.singleGlobalAlfred, true);
   assert.equal(manifest.contracts.singleContextualAlfred, true);
   assert.equal(manifest.contracts.backendConnected, false);
+  assert.equal(manifest.contracts.canonicalForgeShell, true);
+  assert.equal(manifest.contracts.homeModuleSeparated, true);
 });

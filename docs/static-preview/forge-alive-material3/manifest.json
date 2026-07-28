@@ -1,7 +1,7 @@
 {
-  "schema": "forge.ui.material3.approved-home.v1",
-  "phase": "UI_M03_APPROVED_HOME_AND_ALFRED_RESTORE",
-  "status": "implemented_pending_playwright_visual_acceptance",
+  "schema": "forge.ui.material3.canonical-shell.v1",
+  "phase": "UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT",
+  "status": "execution_authorized",
   "entrypoint": "docs/static-preview/forge-alive-material3/index.html",
   "legacy": {
     "entrypoint": "docs/static-preview/forge-alive/index.html",
@@ -21,6 +21,10 @@
     "singlePrimaryNavigation": true,
     "singleGlobalAlfred": true,
     "singleContextualAlfred": true,
+    "canonicalForgeShell": true,
+    "homeModuleSeparated": true,
+    "canonicalNavigationContract": true,
+    "idempotentLifecycle": true,
     "visualViewportKeyboardInset": true,
     "businessLogicConnected": false,
     "backendConnected": false,

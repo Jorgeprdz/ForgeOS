@@ -196,12 +196,35 @@ Touching a protected surface requires explicit scope and approval.
 | Clean entrypoint | `docs/static-preview/forge-alive-material3/` |
 | Functional replacement | `SCOPED_YES` |
 | Legacy entrypoint | `FROZEN` |
-| UI-M04 status | `LOCKED` |
+| UI-M04 status | `SUPERSEDED_BY_ADR_020_EXECUTION_AUTHORIZED` |
 | Human visual acceptance | `PENDING` |
 
 This authority is limited to the UI-M03 Home and Alfred visual runtime,
 validation tooling, authoritative Linux capture workflow and conditional Pages
 artifact overlay. It does not change authority for any other Forge work.
+
+## UI-M04 Canonical Forge Shell Execution Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-020 — UI-M04 Canonical Forge Shell Execution Authority.txt` |
+| Phase | `UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT` |
+| Status | `EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Board scope selection | `CANONICAL_FORGE_SHELL_EXTRACTION` |
+| Implementation readiness | `READY` |
+| Source commit | `f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673` |
+| Runtime branch | `feature/ui-m04-canonical-forge-shell` |
+| Visual redesign | `FORBIDDEN` |
+| Quote and Product boundaries | `PROTECTED` |
+| Deployment | `FORBIDDEN` |
+
+UI-M04 resolves `NEXT=BOARD_SCOPE_SELECTION_AFTER_R16C` without rewriting R16C
+or historical R16D records. Its authority is limited to extraction of the
+approved Material 3 shell, Home module boundary, canonical navigation contract,
+shell lifecycle and their validation.
 
 ## Work Start Rule
 

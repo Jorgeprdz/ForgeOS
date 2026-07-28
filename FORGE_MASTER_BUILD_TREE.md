@@ -15189,6 +15189,25 @@ Status: `PASS_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUC
 NEXT: `BOARD_SCOPE_SELECTION_AFTER_R16C`
 <!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:END -->
 
+<!-- FORGE:UI_M04_CANONICAL_SHELL:START -->
+## UI-M04 Canonical Forge Shell Extraction and Navigation Contract
+
+PHASE: `UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Board selection after R16C: `CANONICAL_FORGE_SHELL_EXTRACTION`.
+- Authority: `ADR-020 — UI-M04 Canonical Forge Shell Execution Authority`.
+- Source: Material 3 Inicio at commit
+  `f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673`.
+- Scope: shared ForgeShell, HomeModule boundary, canonical navigation contract
+  and idempotent responsive lifecycle.
+- Visual redesign, Cotizaciones migration, quote/product mutation, Supabase and
+  deployment remain forbidden.
+
+NEXT: `UI_M04_IMPLEMENTATION_AND_VALIDATION`
+<!-- FORGE:UI_M04_CANONICAL_SHELL:END -->
+
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
 ## R16J0 Accepted Quote to Sales Presentation Entrypoint
 
