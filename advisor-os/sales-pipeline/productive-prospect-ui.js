@@ -56,6 +56,15 @@
     BLOCK_WHATSAPP: "BLOCK_WHATSAPP",
   });
 
+  const DRAFT_INTAKE_STATES = Object.freeze({
+    READY_FOR_HUMAN_REVIEW: "READY_FOR_HUMAN_REVIEW",
+    NO_DRAFT: "NO_DRAFT",
+    FALLBACK_REQUIRED: "FALLBACK_REQUIRED",
+    BLOCKED: "BLOCKED",
+  });
+
+  const EXPLICIT_DRAFT_APPROVAL = "APPROVE_EXACT_DRAFT";
+
   const DRAFT_VALIDATION_RULES = Object.freeze([
     {
       code: "EXCLUDED_FIELD_PRESENT",
@@ -155,6 +164,169 @@
     return phone && text ? `https://wa.me/${phone.slice(1)}?text=${encodeURIComponent(text)}` : null;
   }
 
+  function deepFreeze(value) {
+    if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
+    Object.freeze(value);
+    Object.values(value).forEach(deepFreeze);
+    return value;
+  }
+
+  function intakeDraftProviderEnvelope(envelope = null) {
+    const blocked = (code, message) => deepFreeze({
+      intakeVersion: "NFAST-06.1",
+      state: DRAFT_INTAKE_STATES.BLOCKED,
+      draftCandidateSnapshot: null,
+      deterministicFallbackRequired: true,
+      errors: [{ code, message, severity: "BLOCKING" }],
+      approved: false,
+      sent: false,
+      externalActionPerformed: false,
+    });
+
+    if (!envelope || typeof envelope !== "object" || Array.isArray(envelope)) {
+      return blocked("INVALID_PROVIDER_ENVELOPE", "Provider response must be an object.");
+    }
+
+    if (envelope.resultState === "NO_DRAFT") {
+      return deepFreeze({
+        intakeVersion: "NFAST-06.1",
+        state: DRAFT_INTAKE_STATES.NO_DRAFT,
+        draftCandidateSnapshot: null,
+        deterministicFallbackRequired: true,
+        errors: [],
+        approved: false,
+        sent: false,
+        externalActionPerformed: false,
+      });
+    }
+
+    if (envelope.resultState === "ERROR") {
+      return deepFreeze({
+        intakeVersion: "NFAST-06.1",
+        state: DRAFT_INTAKE_STATES.FALLBACK_REQUIRED,
+        draftCandidateSnapshot: null,
+        deterministicFallbackRequired: true,
+        errors: envelope.error ? [envelope.error] : [],
+        approved: false,
+        sent: false,
+        externalActionPerformed: false,
+      });
+    }
+
+    if (envelope.resultState !== "SUCCESS") {
+      return blocked("UNKNOWN_PROVIDER_RESULT_STATE", "Provider resultState is unsupported.");
+    }
+
+    const candidate = envelope.draftCandidate;
+    const text = String(candidate?.rawText ?? candidate?.text ?? "").trim();
+    const errors = [];
+
+    if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
+      errors.push({
+        code: "INVALID_DRAFT_CANDIDATE",
+        message: "SUCCESS requires a DraftCandidate object.",
+        severity: "BLOCKING",
+      });
+    }
+
+    if (!text) {
+      errors.push({
+        code: "EMPTY_DRAFT_CANDIDATE",
+        message: "DraftCandidate text is required.",
+        severity: "BLOCKING",
+      });
+    }
+
+    if (candidate?.sendsMessage !== false) {
+      errors.push({
+        code: "DRAFT_CANDIDATE_SEND_AUTHORITY_PRESENT",
+        message: "DraftCandidate must preserve sendsMessage=false.",
+        severity: "BLOCKING",
+      });
+    }
+
+    if (candidate?.humanApprovalRequired !== true) {
+      errors.push({
+        code: "HUMAN_APPROVAL_REQUIREMENT_MISSING",
+        message: "DraftCandidate must require human approval.",
+        severity: "BLOCKING",
+      });
+    }
+
+    if (candidate?.reviewRequired !== true) {
+      errors.push({
+        code: "HUMAN_REVIEW_REQUIREMENT_MISSING",
+        message: "DraftCandidate must require human review.",
+        severity: "BLOCKING",
+      });
+    }
+
+    if (candidate?.approved !== false || candidate?.sent !== false) {
+      errors.push({
+        code: "PROVIDER_CANNOT_APPROVE_OR_SEND",
+        message: "Provider output cannot arrive approved or sent.",
+        severity: "BLOCKING",
+      });
+    }
+
+    const forbiddenTrueFlags = [
+      "externalActionPerformed",
+      "messageSent",
+      "whatsappOpened",
+      "persistencePerformed",
+      "pipelineMutationPerformed",
+      "timelineEventCreated",
+      "nbaExecuted",
+      "taskCreated",
+      "calendarEventCreated",
+    ];
+
+    for (const flag of forbiddenTrueFlags) {
+      if (envelope[flag] === true) {
+        errors.push({
+          code: "PROVIDER_SIDE_EFFECT_REPORTED",
+          message: `Provider envelope cannot report ${flag}=true.`,
+          severity: "BLOCKING",
+        });
+      }
+    }
+
+    if (errors.length) {
+      return deepFreeze({
+        intakeVersion: "NFAST-06.1",
+        state: DRAFT_INTAKE_STATES.BLOCKED,
+        draftCandidateSnapshot: null,
+        deterministicFallbackRequired: true,
+        errors,
+        approved: false,
+        sent: false,
+        externalActionPerformed: false,
+      });
+    }
+
+    return deepFreeze({
+      intakeVersion: "NFAST-06.1",
+      state: DRAFT_INTAKE_STATES.READY_FOR_HUMAN_REVIEW,
+      draftCandidateSnapshot: {
+        ...candidate,
+        text,
+        rawText: text,
+        sendsMessage: false,
+        humanApprovalRequired: true,
+        reviewRequired: true,
+        approved: false,
+        sent: false,
+        sourceMutable: false,
+      },
+      providerMetadata: envelope.metadata || null,
+      deterministicFallbackRequired: false,
+      errors: [],
+      approved: false,
+      sent: false,
+      externalActionPerformed: false,
+    });
+  }
+
   function draftSafetyValidator({ draftText = "", draftCandidateSnapshot = null, humanApproval = null } = {}) {
     const text = String(draftText ?? "");
     const errors = [];
@@ -183,17 +355,45 @@
     });
   }
 
-  function approveExactDraft({ draftText = "", validationResult = null } = {}) {
+  function approveExactDraft({
+    draftText = "",
+    validationResult = null,
+    humanDecision = null,
+  } = {}) {
     const text = String(draftText ?? "");
     const errors = [];
-    if (text.length === 0) errors.push({ code: "EMPTY_DRAFT_CANNOT_BE_APPROVED", severity: "BLOCKING", action: DRAFT_APPROVAL_DECISIONS.BLOCK_WHATSAPP });
-    if (!validationResult || validationResult.decision !== DRAFT_VALIDATION_DECISIONS.ALLOW_WHATSAPP) {
-      errors.push({ code: "VALIDATION_REQUIRED_BEFORE_APPROVAL", severity: "BLOCKING", action: DRAFT_APPROVAL_DECISIONS.BLOCK_WHATSAPP });
+
+    if (humanDecision !== EXPLICIT_DRAFT_APPROVAL) {
+      errors.push({
+        code: "EXPLICIT_HUMAN_APPROVAL_REQUIRED",
+        severity: "BLOCKING",
+        action: DRAFT_APPROVAL_DECISIONS.BLOCK_WHATSAPP,
+      });
     }
+
+    if (text.length === 0) {
+      errors.push({
+        code: "EMPTY_DRAFT_CANNOT_BE_APPROVED",
+        severity: "BLOCKING",
+        action: DRAFT_APPROVAL_DECISIONS.BLOCK_WHATSAPP,
+      });
+    }
+
+    if (!validationResult || validationResult.decision !== DRAFT_VALIDATION_DECISIONS.ALLOW_WHATSAPP) {
+      errors.push({
+        code: "VALIDATION_REQUIRED_BEFORE_APPROVAL",
+        severity: "BLOCKING",
+        action: DRAFT_APPROVAL_DECISIONS.BLOCK_WHATSAPP,
+      });
+    }
+
     return Object.freeze({
-      decision: errors.length ? DRAFT_APPROVAL_DECISIONS.BLOCK_WHATSAPP : DRAFT_APPROVAL_DECISIONS.EXACT_DRAFT_APPROVED,
+      decision: errors.length
+        ? DRAFT_APPROVAL_DECISIONS.BLOCK_WHATSAPP
+        : DRAFT_APPROVAL_DECISIONS.EXACT_DRAFT_APPROVED,
       exactDraftApproved: errors.length === 0,
       approvedDraftText: errors.length === 0 ? text : null,
+      humanDecision: errors.length === 0 ? humanDecision : null,
       errors: Object.freeze(errors),
       persistsApproval: false,
       mutatesPipeline: false,
@@ -273,7 +473,7 @@
       return `<option value="${value}" ${disabled ? "disabled" : ""}>${esc(label)}${disabled ? " · requiere evidencia" : ""}</option>`;
     }).join("");
     const styleOptions = MESSAGE_STYLES.map(([value, label]) => `<option value="${value}" ${value === "professional" ? "selected" : ""}>${esc(label)}</option>`).join("");
-    return `<aside class="forge-action-workspace forge-message-workspace" data-action-workspace data-workspace-type="whatsapp" aria-labelledby="forge-message-workspace-title"><header><div><p class="forge-pipeline-product">NASH · BORRADOR</p><h2 id="forge-message-workspace-title">Mensaje para ${esc(prospect.fullName)}</h2><p>Forge prepara. Tú revisas y decides si abres WhatsApp.</p></div><button type="button" data-close-action-workspace aria-label="Cerrar preparación">×</button></header><div class="forge-message-controls"><label>Objetivo<select data-message-goal>${goalOptions}</select></label><label>Estilo<select data-message-style>${styleOptions}</select></label></div><div class="forge-message-chat" aria-live="polite"><div class="forge-message-avatar" aria-hidden="true">F</div><div class="forge-message-bubble"><div class="forge-message-loading" data-message-loading><span></span><span></span><span></span><em>Preparando sugerencia…</em></div><p data-message-preview hidden></p><textarea data-message-editor aria-label="Editar mensaje" hidden></textarea><p class="forge-message-error" data-message-error role="status" hidden></p></div></div><div class="forge-message-meta"><span data-message-source>Generando con NASH</span><span>Sin envío automático</span></div><footer><button type="button" class="forge-workspace-secondary" data-edit-message disabled>✏️ Editar</button><button type="button" class="forge-workspace-secondary" data-regenerate-message disabled>↻ Otra sugerencia</button><a class="forge-workspace-primary is-disabled" data-open-whatsapp aria-disabled="true" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></footer></aside>`;
+    return `<aside class="forge-action-workspace forge-message-workspace" data-action-workspace data-workspace-type="whatsapp" aria-labelledby="forge-message-workspace-title"><header><div><p class="forge-pipeline-product">NASH · BORRADOR</p><h2 id="forge-message-workspace-title">Mensaje para ${esc(prospect.fullName)}</h2><p>Forge prepara. Tú revisas y decides si abres WhatsApp.</p></div><button type="button" data-close-action-workspace aria-label="Cerrar preparación">×</button></header><div class="forge-message-controls"><label>Objetivo<select data-message-goal>${goalOptions}</select></label><label>Estilo<select data-message-style>${styleOptions}</select></label></div><div class="forge-message-chat" aria-live="polite"><div class="forge-message-avatar" aria-hidden="true">F</div><div class="forge-message-bubble"><div class="forge-message-loading" data-message-loading><span></span><span></span><span></span><em>Preparando sugerencia…</em></div><p data-message-preview hidden></p><textarea data-message-editor aria-label="Editar mensaje" hidden></textarea><p class="forge-message-error" data-message-error role="status" hidden></p></div></div><div class="forge-message-meta"><span data-message-source>Generando con NASH</span><span>Sin envío automático</span></div><footer><button type="button" class="forge-workspace-secondary" data-edit-message disabled>✏️ Editar</button><button type="button" class="forge-workspace-secondary" data-regenerate-message disabled>↻ Otra sugerencia</button><button type="button" class="forge-workspace-secondary" data-approve-whatsapp-draft disabled>Revisé y apruebo</button><a class="forge-workspace-primary is-disabled" data-open-whatsapp aria-disabled="true" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></footer></aside>`;
   }
 
   function calendarWorkspaceTemplate(prospect) {
@@ -284,8 +484,16 @@
     return `<dialog class="forge-prospect-dialog forge-delete-confirmation" data-delete-confirmation aria-labelledby="delete-confirmation-title" aria-describedby="delete-confirmation-body"><article><header><div><p class="forge-pipeline-product">ACCIÓN DESTRUCTIVA</p><h2 id="delete-confirmation-title">¿Eliminar este prospecto?</h2></div><button type="button" data-cancel-delete aria-label="Cerrar confirmación">×</button></header><p id="delete-confirmation-body">Se retirará a ${esc(prospect.fullName)} del Pipeline. Su historial se conservará.</p><footer><button type="button" data-cancel-delete>Cancelar</button><button type="button" class="forge-delete-confirm" data-confirm-delete>Eliminar</button></footer></article></dialog>`;
   }
 
-  function create({ client, root, renderPipeline = global.ForgePipelineUI?.renderPipelineUI }) {
+  function create({
+    client,
+    root,
+    draftOrchestrator = null,
+    renderPipeline = global.ForgePipelineUI?.renderPipelineUI,
+  }) {
     if (!client || !root || typeof renderPipeline !== "function") throw new Error("PRODUCTIVE_PIPELINE_DEPENDENCY_MISSING");
+    const governedDraftOrchestrator = draftOrchestrator && typeof draftOrchestrator.requestDraft === "function"
+      ? draftOrchestrator
+      : null;
 
     root.__forgeProductiveProspectCreateAbort067G17B?.abort();
     const controller = new AbortController();
@@ -303,6 +511,7 @@
     let draftRequestId = 0;
     let draftVariation = 0;
     let currentDraftCandidate = null;
+    let currentDraftApproval = null;
     let menuTrigger = null;
     let deleteProspect = null;
     let deleteTrigger = null;
@@ -438,6 +647,7 @@
       root.querySelector("[data-action-workspace]")?.remove();
       actionProspect = null;
       currentDraftCandidate = null;
+      currentDraftApproval = null;
       actionTrigger?.focus?.();
       actionTrigger = null;
     }
@@ -505,14 +715,59 @@
       edit.disabled = loading || !text;
       edit.textContent = "✏️ Editar";
       regenerate.disabled = loading;
+      const approve = workspace.querySelector("[data-approve-whatsapp-draft]");
+      currentDraftApproval = null;
+      if (approve) {
+        approve.disabled = loading || !text;
+        approve.textContent = "Revisé y apruebo";
+        approve.dataset.approvalState = "PENDING";
+      }
       syncWhatsAppLink(text);
     }
 
+    function messageDraftText(workspace = root.querySelector('[data-workspace-type="whatsapp"]')) {
+      if (!workspace) return "";
+      const editor = workspace.querySelector("[data-message-editor]");
+      const preview = workspace.querySelector("[data-message-preview]");
+      return String(editor && !editor.hidden ? editor.value : preview?.textContent || "");
+    }
+
+    function currentDraftSafetyResult(workspace = root.querySelector('[data-workspace-type="whatsapp"]')) {
+      return draftSafetyValidator({
+        draftText: messageDraftText(workspace),
+        draftCandidateSnapshot: currentDraftCandidate,
+        humanApproval: {
+          required: true,
+          finalAuthority: "HUMAN",
+        },
+      });
+    }
+
+    function invalidateCurrentDraftApproval(workspace = root.querySelector('[data-workspace-type="whatsapp"]')) {
+      currentDraftApproval = null;
+      const approve = workspace?.querySelector("[data-approve-whatsapp-draft]");
+      if (approve) {
+        approve.disabled = !messageDraftText(workspace);
+        approve.textContent = "Revisé y apruebo";
+        approve.dataset.approvalState = "PENDING";
+      }
+    }
+
     function syncWhatsAppLink(text) {
-      const link = root.querySelector("[data-open-whatsapp]");
+      const workspace = root.querySelector('[data-workspace-type="whatsapp"]');
+      const link = workspace?.querySelector("[data-open-whatsapp]");
       if (!link || !actionProspect) return;
-      const href = whatsappUrl(actionProspect, "professional", text || "");
-      if (href && text) {
+
+      const currentText = String(text ?? messageDraftText(workspace));
+      const href = whatsappUrl(actionProspect, "professional", currentText);
+      const validation = currentDraftSafetyResult(workspace);
+      const gate = exactDraftHumanApprovalGate({
+        draftText: currentText,
+        validationResult: validation,
+        approvalSnapshot: currentDraftApproval,
+      });
+
+      if (href && currentText && gate.decision === DRAFT_VALIDATION_DECISIONS.ALLOW_WHATSAPP) {
         link.href = href;
         link.classList.remove("is-disabled");
         link.removeAttribute("aria-disabled");
@@ -546,28 +801,60 @@
       const style = workspace.querySelector("[data-message-style]").value;
       const requestId = ++draftRequestId;
       currentDraftCandidate = null;
+      currentDraftApproval = null;
       setMessageState({ loading: true, source: "Generando con Gemini" });
       try {
-        const invocation = client.functions?.invoke
-          ? await client.functions.invoke("nash-draft-provider", {
-              body: {
-                providerId: "gemini",
-                experimentalFeatureEnabled: true,
-                prospectMessageContext: messageContext(actionProspect, goal, style, draftVariation),
-              },
+        const orchestration = governedDraftOrchestrator
+          ? await governedDraftOrchestrator.requestDraft({
+              pipelineRecord: actionProspect,
+              goal,
+              style,
+              variation: draftVariation,
+              providerId: "gemini",
+              locale: "es-MX",
+              approvedDisplayName: true,
+              requestId: `pipeline-${actionProspect.id}-${requestId}`,
+              correlationId: `pipeline-${actionProspect.id}`,
             })
-          : { data: null, error: new Error("PROVIDER_CLIENT_UNAVAILABLE") };
+          : {
+              providerEnvelope: {
+                resultState: "ERROR",
+                draftCandidate: null,
+                metadata: {
+                  providerId: "gemini",
+                  modelId: "pipeline-ui",
+                  generationMode: "orchestrator_unavailable",
+                  generatedAt: new Date().toISOString(),
+                },
+                error: {
+                  code: "NFAST_07_ORCHESTRATOR_UNAVAILABLE",
+                  message: "Governed NASH draft orchestration is unavailable.",
+                  retryable: false,
+                },
+              },
+            };
+
         if (requestId !== draftRequestId || !workspace.isConnected) return;
-        const envelope = invocation?.data;
-        if (!invocation?.error && envelope?.resultState === "SUCCESS" && envelope.draftCandidate?.rawText) {
-          currentDraftCandidate = envelope.draftCandidate;
-          setMessageState({ text: envelope.draftCandidate.rawText, source: "Sugerencia experimental de Gemini" });
+        const envelope = orchestration?.providerEnvelope;
+        const intake = intakeDraftProviderEnvelope(envelope);
+
+        if (intake.state === DRAFT_INTAKE_STATES.READY_FOR_HUMAN_REVIEW) {
+          currentDraftCandidate = intake.draftCandidateSnapshot;
+          setMessageState({
+            text: intake.draftCandidateSnapshot.rawText,
+            source: "Sugerencia gobernada de Gemini",
+          });
           return;
         }
-        if (!invocation?.error && envelope?.resultState === "NO_DRAFT") {
-          setMessageState({ error: "NASH no encontró contexto suficiente para preparar un mensaje.", source: "Sin sugerencia segura" });
+
+        if (intake.state === DRAFT_INTAKE_STATES.NO_DRAFT) {
+          setMessageState({
+            error: "NASH no encontró contexto suficiente para preparar un mensaje.",
+            source: "Sin sugerencia segura",
+          });
           return;
         }
+
         currentDraftCandidate = draftCandidate(actionProspect, style, goal, draftVariation);
         setMessageState({ text: currentDraftCandidate.rawText, source: "Sugerencia determinística segura" });
       } catch (_error) {
@@ -805,21 +1092,54 @@
         }
         return;
       }
+      const approveDraft = event.target.closest("[data-approve-whatsapp-draft]");
+      if (approveDraft) {
+        event.preventDefault();
+        const workspace = approveDraft.closest("[data-action-workspace]");
+        const text = messageDraftText(workspace);
+        const validation = currentDraftSafetyResult(workspace);
+        const approval = approveExactDraft({
+          draftText: text,
+          validationResult: validation,
+          humanDecision: EXPLICIT_DRAFT_APPROVAL,
+        });
+
+        currentDraftApproval = approval;
+        approveDraft.dataset.approvalState = approval.exactDraftApproved ? "APPROVED" : "BLOCKED";
+        approveDraft.textContent = approval.exactDraftApproved ? "✓ Draft aprobado" : "Revisar mensaje";
+
+        const errorNode = workspace.querySelector("[data-message-error]");
+        if (approval.exactDraftApproved) {
+          errorNode.hidden = true;
+        } else {
+          errorNode.textContent = "El mensaje no puede aprobarse hasta pasar la validación.";
+          errorNode.hidden = false;
+        }
+
+        syncWhatsAppLink(text);
+        return;
+      }
+
       if (event.target.closest("[data-regenerate-message]")) {
         event.preventDefault();
+        currentDraftApproval = null;
         draftVariation += 1;
         void generateMessageDraft();
         return;
       }
+
       const whatsapp = event.target.closest("[data-open-whatsapp]");
       if (whatsapp) {
         const workspace = whatsapp.closest("[data-action-workspace]");
         const editor = workspace.querySelector("[data-message-editor]");
         const preview = workspace.querySelector("[data-message-preview]");
         const text = editor.hidden ? preview.textContent : editor.value;
-        const validation = draftSafetyValidator({ draftText: text, draftCandidateSnapshot: currentDraftCandidate, humanApproval: { required: true, finalAuthority: "HUMAN" } });
-        const approval = approveExactDraft({ draftText: text, validationResult: validation });
-        const gate = exactDraftHumanApprovalGate({ draftText: text, validationResult: validation, approvalSnapshot: approval });
+        const validation = currentDraftSafetyResult(workspace);
+        const gate = exactDraftHumanApprovalGate({
+          draftText: text,
+          validationResult: validation,
+          approvalSnapshot: currentDraftApproval,
+        });
         whatsapp.dataset.draftSafetyDecision = validation.decision;
         whatsapp.dataset.exactDraftApproved = gate.exactDraftApproved ? "YES" : "NO";
         if (gate.decision === DRAFT_VALIDATION_DECISIONS.ALLOW_WHATSAPP) return;
@@ -881,7 +1201,12 @@
         return;
       }
       if (event.target.matches("[data-message-editor]")) {
-        currentDraftCandidate = Object.freeze({ rawText: event.target.value, sendsMessage: false, sourceMutable: true });
+        currentDraftCandidate = Object.freeze({
+          rawText: event.target.value,
+          sendsMessage: false,
+          sourceMutable: true,
+        });
+        invalidateCurrentDraftApproval(event.target.closest("[data-action-workspace]"));
         syncWhatsAppLink(event.target.value);
       }
     }, { signal: controller.signal });
@@ -916,6 +1241,8 @@
         openCreateCount,
         listenerAuthority: "root-delegated-abort-controller",
         createAction: "openProductiveProspectCreateModal",
+        draftOrchestratorAvailable: Boolean(governedDraftOrchestrator),
+        providerRequestContract: governedDraftOrchestrator ? "NFAST-05.1" : null,
       }),
     });
   }
@@ -932,11 +1259,14 @@
     messageWorkspaceTemplate,
     calendarWorkspaceTemplate,
     deleteConfirmationTemplate,
+    intakeDraftProviderEnvelope,
     draftSafetyValidator,
     approveExactDraft,
     exactDraftHumanApprovalGate,
+    DRAFT_INTAKE_STATES,
     DRAFT_VALIDATION_DECISIONS,
     DRAFT_APPROVAL_DECISIONS,
+    EXPLICIT_DRAFT_APPROVAL,
   });
   global.ForgeProductiveProspectUI067G17B = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;

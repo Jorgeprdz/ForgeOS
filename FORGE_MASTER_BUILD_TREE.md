@@ -15189,6 +15189,53 @@ Status: `PASS_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUC
 NEXT: `BOARD_SCOPE_SELECTION_AFTER_R16C`
 <!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:END -->
 
+<!-- FORGE:UI_M04_CANONICAL_SHELL:START -->
+## UI-M04 Canonical Forge Shell Extraction and Navigation Contract
+
+PHASE: `UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Board selection after R16C: `CANONICAL_FORGE_SHELL_EXTRACTION`.
+- Authority: `ADR-020 — UI-M04 Canonical Forge Shell Execution Authority`.
+- Source: Material 3 Inicio at commit
+  `f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673`.
+- Scope: shared ForgeShell, HomeModule boundary, canonical navigation contract
+  and idempotent responsive lifecycle.
+- Visual redesign, Cotizaciones migration, quote/product mutation, Supabase and
+  deployment remain forbidden.
+
+NEXT: `UI_M04_IMPLEMENTATION_AND_VALIDATION`
+<!-- FORGE:UI_M04_CANONICAL_SHELL:END -->
+
+<!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:START -->
+## UI-M05A Quotes Functional Baseline Repair
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Source: `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Corrective prerequisite for UI-M05; visual redesign and domain mutation are
+  forbidden.
+<!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:END -->
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:START -->
+## UI-M05 Quotes Visual Migration and Canonical Nav Pill Integration
+
+PHASE: `UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-021 — UI-M05 Quotes Visual Migration Execution Authority`.
+- Source authority: successful UI-M04 commit
+  `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Scope: discover and baseline the real functional Cotizaciones runtime,
+  mount it in ForgeShell, register its canonical route, and migrate only its
+  presentation to the approved Material 3 language.
+- Quote engines, calculations, projections, persistence, Product Intelligence,
+  Supabase, Nash and deployment remain protected.
+
+NEXT: `UI_M05_DISCOVERY_AND_FUNCTIONAL_BASELINE`
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:END -->
+
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
 ## R16J0 Accepted Quote to Sales Presentation Entrypoint
 

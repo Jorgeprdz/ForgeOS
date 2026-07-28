@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: FES 02A creates an append-only ledger record from a canonical event
+ok 1 - FES 02A creates an append-only ledger record from a canonical event
+  ---
+  duration_ms: 30.065859
+  type: 'test'
+  ...
+# Subtest: FES 02A creates stable records regardless of evidence input order
+ok 2 - FES 02A creates stable records regardless of evidence input order
+  ---
+  duration_ms: 31.583555
+  type: 'test'
+  ...
+# Subtest: FES 02A rejects duplicate evidence references
+ok 3 - FES 02A rejects duplicate evidence references
+  ---
+  duration_ms: 2.621016
+  type: 'test'
+  ...
+# Subtest: FES 02A rejects raw private evidence fields
+ok 4 - FES 02A rejects raw private evidence fields
+  ---
+  duration_ms: 7.022031
+  type: 'test'
+  ...
+# Subtest: FES 02A refuses ledger append before canonical record time
+ok 5 - FES 02A refuses ledger append before canonical record time
+  ---
+  duration_ms: 2.142656
+  type: 'test'
+  ...
+# Subtest: FES 02A creates deterministic append mutation identities
+ok 6 - FES 02A creates deterministic append mutation identities
+  ---
+  duration_ms: 5.827735
+  type: 'test'
+  ...
+# Subtest: FES 02A supports only append event mutations
+ok 7 - FES 02A supports only append event mutations
+  ---
+  duration_ms: 3.84668
+  type: 'test'
+  ...
+# Subtest: FES 02A creates canonical retry mutations without changing identity
+ok 8 - FES 02A creates canonical retry mutations without changing identity
+  ---
+  duration_ms: 6.965742
+  type: 'test'
+  ...
+# Subtest: FES 02A creates immutable remote receipts
+ok 9 - FES 02A creates immutable remote receipts
+  ---
+  duration_ms: 2.241524
+  type: 'test'
+  ...
+# Subtest: FES 02A creates append-only conflict records
+ok 10 - FES 02A creates append-only conflict records
+  ---
+  duration_ms: 10.029727
+  type: 'test'
+  ...
+# Subtest: FES 02A local append atomically stores the event and outbox mutation
+ok 11 - FES 02A local append atomically stores the event and outbox mutation
+  ---
+  duration_ms: 9.182266
+  type: 'test'
+  ...
+# Subtest: FES 02A local append is idempotent
+ok 12 - FES 02A local append is idempotent
+  ---
+  duration_ms: 7.306953
+  type: 'test'
+  ...
+# Subtest: FES 02A local store isolates tenants
+ok 13 - FES 02A local store isolates tenants
+  ---
+  duration_ms: 5.561562
+  type: 'test'
+  ...
+# Subtest: FES 02A orders the local ledger by occurrence and event identity
+ok 14 - FES 02A orders the local ledger by occurrence and event identity
+  ---
+  duration_ms: 8.596446
+  type: 'test'
+  ...
+# Subtest: FES 02A acknowledges outbox mutations and stores remote receipts
+ok 15 - FES 02A acknowledges outbox mutations and stores remote receipts
+  ---
+  duration_ms: 6.434844
+  type: 'test'
+  ...
+# Subtest: FES 02A retains failed mutations for explicit retry
+ok 16 - FES 02A retains failed mutations for explicit retry
+  ---
+  duration_ms: 5.567929
+  type: 'test'
+  ...
+# Subtest: FES 02A records remote conflicts without overwriting ledger truth
+ok 17 - FES 02A records remote conflicts without overwriting ledger truth
+  ---
+  duration_ms: 10.81586
+  type: 'test'
+  ...
+# Subtest: FES 02A applies remote entries idempotently
+ok 18 - FES 02A applies remote entries idempotently
+  ---
+  duration_ms: 2.895859
+  type: 'test'
+  ...
+# Subtest: FES 02A sync pushes outbox before pulling remote changes
+ok 19 - FES 02A sync pushes outbox before pulling remote changes
+  ---
+  duration_ms: 7.134063
+  type: 'test'
+  ...
+# Subtest: FES 02A sync keeps transport failures in retry state
+ok 20 - FES 02A sync keeps transport failures in retry state
+  ---
+  duration_ms: 5.222266
+  type: 'test'
+  ...
+# Subtest: FES 02A sync routes server conflicts to human review
+ok 21 - FES 02A sync routes server conflicts to human review
+  ---
+  duration_ms: 6.443398
+  type: 'test'
+  ...
+# Subtest: FES 02A sync applies pulled remote events and advances cursor
+ok 22 - FES 02A sync applies pulled remote events and advances cursor
+  ---
+  duration_ms: 5.779218
+  type: 'test'
+  ...
+# Subtest: FES 02A sync coalesces concurrent calls
+ok 23 - FES 02A sync coalesces concurrent calls
+  ---
+  duration_ms: 1.778789
+  type: 'test'
+  ...
+# Subtest: FES 02A sync rejects cross-tenant pull changes
+ok 24 - FES 02A sync rejects cross-tenant pull changes
+  ---
+  duration_ms: 3.049922
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 538.147344

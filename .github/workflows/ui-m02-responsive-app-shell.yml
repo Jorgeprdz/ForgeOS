@@ -1,0 +1,132 @@
+name: UI-M02 Responsive App Shell Acceptance
+
+on:
+  push:
+    branches:
+      - feature/ui-material3-runtime-migration
+    paths:
+      - ".github/workflows/ui-m02-responsive-app-shell.yml"
+      - "docs/static-preview/forge-alive/index.html"
+      - "docs/static-preview/forge-alive/ui-material3-runtime/**"
+      - "tests/ui-m02-responsive-app-shell-test.mjs"
+      - "tests/e2e/ui-m02-responsive-app-shell.spec.mjs"
+      - "playwright.ui-m02.config.mjs"
+      - "scripts/serve-ui-m02-acceptance-harness.mjs"
+      - "tests/fixtures/ui-m02-shell/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-m02-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui-m02-acceptance:
+    name: UI-M02 · Playwright
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+
+      - name: Runtime versions
+        run: |
+          node --version
+          npm --version
+          npx playwright --version
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Unit preflight
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/ui-m02
+          NO_COLOR=1 FORCE_COLOR=0 \
+            node --test \
+            tests/ui-m02-responsive-app-shell-test.mjs \
+            2>&1 \
+            | tee artifacts/ui-m02/unit-test.tap
+
+      - name: Authoritative browser acceptance
+        run: |
+          set -Eeuo pipefail
+          npx playwright test \
+            --config=playwright.ui-m02.config.mjs \
+            2>&1 \
+            | tee artifacts/ui-m02/browser-test.tap
+
+      - name: Validate acceptance artifacts
+        run: |
+          node - <<'NODE'
+          const fs = require("fs");
+          const path = require("path");
+
+          const root = path.resolve("artifacts/ui-m02");
+          const screenshots = path.join(root, "screenshots");
+          const report = path.join(root, "playwright-report.json");
+
+          if (!fs.existsSync(report)) {
+            throw new Error("PLAYWRIGHT_REPORT_MISSING");
+          }
+
+          const pngs = fs
+            .readdirSync(screenshots)
+            .filter((name) => name.endsWith(".png"))
+            .sort();
+
+          if (pngs.length !== 10) {
+            throw new Error(
+              `SCREENSHOT_COUNT_INVALID:${pngs.length}`,
+            );
+          }
+
+          for (const name of pngs) {
+            const target = path.join(screenshots, name);
+            const data = fs.readFileSync(target);
+
+            if (
+              data.length < 5000
+              || data.subarray(0, 8).toString("hex")
+                !== "89504e470d0a1a0a"
+            ) {
+              throw new Error(
+                `INVALID_SCREENSHOT:${name}`,
+              );
+            }
+          }
+
+          fs.writeFileSync(
+            path.join(root, "acceptance-summary.json"),
+            `${JSON.stringify({
+              schema:
+                "forge.ui.m02.github-actions-acceptance.v1",
+              commit: process.env.GITHUB_SHA,
+              runId: process.env.GITHUB_RUN_ID,
+              screenshotCount: pngs.length,
+              screenshots: pngs,
+              status: "PASS",
+            }, null, 2)}\n`,
+          );
+
+          console.log("UI_M02_GITHUB_ACTIONS=PASS");
+          console.log(`SCREENSHOT_COUNT=${pngs.length}`);
+          NODE
+
+      - name: Upload UI-M02 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-m02-responsive-app-shell-${{ github.sha }}
+          path: artifacts/ui-m02
+          if-no-files-found: error
+          retention-days: 30

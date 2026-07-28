@@ -1,7 +1,7 @@
 // actividad.js
 // Enterprise Activity Module
 
-import { DB } from './db.js';
+import { DB } from './legacy/quarantine/crmaddlife-indexeddb/db.js';
 
 import { AI } from './ai-service.js';
 

@@ -1,0 +1,136 @@
+name: UI-M03 Clean Rewrite Playwright
+
+on:
+  push:
+    branches:
+      - feature/ui-material3-runtime-migration
+    paths:
+      - "docs/static-preview/forge-alive-material3/**"
+      - "docs/architecture/source-truth/UI_M03_*"
+      - "docs/evidence/UI_M03_CLEAN_HOME_*"
+      - "docs/evidence/ui-m03-clean-home-*"
+      - "tests/ui-m03-clean-home-rewrite-test.mjs"
+      - "tests/ui-m03-image-comparator-test.mjs"
+      - "tests/ui-m03-same-environment-gate-test.mjs"
+      - "tests/e2e/ui-m03-clean-home-rewrite.spec.mjs"
+      - "tools/ui-m03-image-comparator.cjs"
+      - "tools/ui-m03-capture-and-compare.cjs"
+      - "tools/ui-m03-compare-screenshot-set.cjs"
+      - "tools/ui-m03-same-environment-gate.mjs"
+      - "scripts/serve-ui-m03-clean-home.mjs"
+      - "playwright.ui-m03-clean.config.mjs"
+      - ".github/workflows/ui-m03-clean-home-rewrite.yml"
+  workflow_dispatch:
+    inputs:
+      candidate_url:
+        description: Optional deployed Pages URL for the eight-state remote gate
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install repository dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Install deterministic image comparison tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes imagemagick
+          magick -version || convert -version
+          identify -version
+
+      - name: Run clean Home contracts
+        run: |
+          node --test \
+            tests/ui-m03-governance-ratification-test.mjs \
+            tests/ui-m03-clean-home-rewrite-test.mjs \
+            tests/ui-m03-image-comparator-test.mjs \
+            tests/ui-m03-same-environment-gate-test.mjs \
+            2>&1 | tee docs/evidence/ui-m03-clean-home-rewrite-actions.tap
+
+      - name: Materialize approved source authority
+        env:
+          AUTHORITY_COMMIT: aeffc2e493ff9b5b3cf3cdb90e1f3c22d026b365
+        run: |
+          mkdir -p "$RUNNER_TEMP/forge-ui-authority"
+          git cat-file -e "$AUTHORITY_COMMIT^{commit}"
+          git archive "$AUTHORITY_COMMIT" \
+            ui/design-system/examples \
+            ui/design-system/forge-material3-tokens.css \
+            | tar -x -C "$RUNNER_TEMP/forge-ui-authority"
+          test -f "$RUNNER_TEMP/forge-ui-authority/ui/design-system/examples/home-mobile-md3-alfred.html"
+          test -f "$RUNNER_TEMP/forge-ui-authority/ui/design-system/examples/home-mobile-md3-alfred.css"
+          test -f "$RUNNER_TEMP/forge-ui-authority/ui/design-system/forge-material3-tokens.css"
+
+      - name: Capture and compare authority versus candidate
+        id: same_environment_gate
+        continue-on-error: true
+        env:
+          FORGE_UI_M03_AUTHORITY_COMMIT: aeffc2e493ff9b5b3cf3cdb90e1f3c22d026b365
+          FORGE_UI_M03_AUTHORITY_ROOT: ${{ runner.temp }}/forge-ui-authority/ui/design-system
+          FORGE_UI_M03_CANDIDATE_ROOT: ${{ github.workspace }}/docs/static-preview/forge-alive-material3
+          FORGE_UI_M03_CANDIDATE_URL: ${{ inputs.candidate_url }}
+          FORGE_UI_M03_OUTPUT: ${{ github.workspace }}/artifacts/ui-m03-same-environment
+        run: |
+          node tools/ui-m03-same-environment-gate.mjs
+
+      - name: Record environment metadata
+        if: always()
+        run: |
+          {
+            echo "RUNNER_OS=$RUNNER_OS"
+            echo "RUNNER_ARCH=$RUNNER_ARCH"
+            echo "NODE=$(node --version)"
+            echo "PLAYWRIGHT=$(npx playwright --version)"
+            echo "FONT_INVENTORY_START"
+            fc-list
+            echo "FONT_INVENTORY_END"
+          } > artifacts/ui-m03-same-environment/environment/runtime-metadata.txt
+          node -e "const { chromium }=require('playwright'); chromium.launch({headless:true}).then(async b=>{console.log('CHROMIUM='+b.version());await b.close()})" \
+            >> artifacts/ui-m03-same-environment/environment/runtime-metadata.txt
+
+      - name: Upload visual review artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-m03-${{ inputs.candidate_url && 'pages-' || '' }}same-environment-authority-${{ github.sha }}
+          path: artifacts/ui-m03-same-environment
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce same-environment visual gate
+        if: always()
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const reportPath = 'artifacts/ui-m03-same-environment/reports/visual-comparison.json';
+          if (!fs.existsSync(reportPath)) {
+            throw new Error('SAME_ENVIRONMENT_REPORT_MISSING');
+          }
+          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+          if (!report.pass) {
+            throw new Error(`SAME_ENV_VISUAL_FAILURES=${report.visualFailures}`);
+          }
+          console.log('SAME_ENV_VISUAL_COMPARISON=PASS');
+          EOF

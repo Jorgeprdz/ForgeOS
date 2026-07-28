@@ -1,0 +1,47 @@
+ADR-020 — UI-M04 Canonical Forge Shell Execution Authority
+
+Status
+
+RATIFIED
+
+Decision
+
+PHASE=UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT
+PHASE_STATUS=EXECUTION_AUTHORIZED
+PHASE_TYPE=ARCHITECTURAL_UI_EXTRACTION
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+BOARD_SCOPE_SELECTION=CANONICAL_FORGE_SHELL_EXTRACTION
+IMPLEMENTATION_READINESS=READY
+SOURCE_COMMIT=f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673
+RUNTIME_BRANCH=feature/ui-m04-canonical-forge-shell
+VISUAL_REDESIGN=FORBIDDEN
+NEW_VISUAL_LANGUAGE=FORBIDDEN
+BUSINESS_LOGIC_MUTATION=FORBIDDEN
+QUOTE_AND_PRODUCT_BOUNDARIES=PROTECTED
+SUPABASE_REMOTE_MUTATION=FORBIDDEN
+DEPLOYMENT=FORBIDDEN
+MAIN_DIRECT_MUTATION=FORBIDDEN
+
+Scope
+
+UI-M04 is the explicit Board scope selected after
+NEXT=BOARD_SCOPE_SELECTION_AFTER_R16C. It authorizes extraction of the approved
+Material 3 Inicio implementation into a reusable Forge application shell,
+canonical navigation contract, Home module boundary and idempotent shell
+lifecycle.
+
+The approved source is docs/static-preview/forge-alive-material3/. Its rendered
+identity, safe areas, responsive behavior, floating Nav Pill, global Alfred
+command orb and Alfred sheet must remain visually equivalent.
+
+Boundaries
+
+UI-M04 does not authorize a visual redesign, a new visual language, a legacy
+tree merge, a Cotizaciones migration, quote or product behavior changes,
+backend or persistence work, Supabase changes, deployment, or direct mutation
+of main.
+
+Historical R16C and R16D records remain unchanged. The withdrawn local branch
+feature/r16d-canonical-forge-shell carries no UI-M04 authority.

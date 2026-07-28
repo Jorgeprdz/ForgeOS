@@ -11956,6 +11956,52 @@ Status: `PASS_FORGE_ALIVE_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION_AND_PRODUC
 
 <!-- FORGE:R16C_HOME_RESTORATION_SMART_WIDGET_DEDUPLICATION:END -->
 
+<!-- FORGE:UI_M04_CANONICAL_SHELL:START -->
+## UI-M04 Canonical Forge Shell Extraction and Navigation Contract
+
+PHASE: `UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Explicitly resolves `NEXT=BOARD_SCOPE_SELECTION_AFTER_R16C`.
+- Owner, Miranda and Board approval: `GRANTED`.
+- Source commit: `f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673`.
+- Runtime branch: `feature/ui-m04-canonical-forge-shell`.
+- Scope: extract the approved Material 3 application shell and route-aware
+  navigation while preserving Home appearance and behavior.
+- Legacy Forge Alive, Cotizaciones runtime, Product Intelligence, calculations,
+  persistence, Supabase and historical R16C/R16D remain protected.
+
+NEXT: `UI_M04_IMPLEMENTATION_AND_VALIDATION`
+<!-- FORGE:UI_M04_CANONICAL_SHELL:END -->
+
+<!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:START -->
+## UI-M05A Quotes Functional Baseline Repair
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Source: `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Corrective prerequisite for UI-M05; visual redesign and domain mutation are
+  forbidden.
+<!-- FORGE:UI_M05A_QUOTES_BASELINE_REPAIR:END -->
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:START -->
+## UI-M05 Quotes Visual Migration and Canonical Nav Pill Integration
+
+PHASE: `UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-021 — UI-M05 Quotes Visual Migration Execution Authority`.
+- Source authority: successful UI-M04 commit
+  `979b134231e5ffaf18652cef82e47ff3332cf6fc`.
+- Scope: functional Cotizaciones discovery and baseline, ForgeShell mounting,
+  canonical route/Nav Pill integration, and Material 3 presentation migration.
+- Quote engines, calculations, projections, persistence, Product Intelligence,
+  Supabase, Nash and deployment remain protected.
+
+NEXT: `UI_M05_DISCOVERY_AND_FUNCTIONAL_BASELINE`
+<!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:END -->
+
 <!-- FORGEOS:R16E2C_UNIFIED_BUILD_TREE_SYNC_37107CA:START -->
 ## R16E2C Unified Build Tree Sync
 
@@ -12797,3 +12843,460 @@ acceptance passed at all 13 required viewports.
 Evidence:
 `docs/evidence/R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_ACCEPTANCE.md`
 <!-- FORGE:R16J2B_ACCEPTED_QUOTE_STAGE_ALIGNMENT_UNIFIED:END -->
+
+<!-- BEGIN FORGEOS:FORGE_INTELLIGENCE_SYSTEM_COMPLETION_SYNC_20260725 -->
+## Forge Intelligence System Completion Sync — 2026-07-25
+
+Status: `ACTIVE_SYSTEM_COMPLETION_PLAN`
+
+Source checkpoint:
+
+- `SOURCE_COMMIT=dbb2b4d55272fa505284970e15270e8e1f97fb41`
+- `NFAST_09_STAGE_3F=COMPLETE_AND_PUSHED`
+- `NEXT=NFAST_09_STAGE_3G_END_TO_END_BROWSER_ACCEPTANCE`
+- `MAIN_MUTATION=NO`
+
+### Planning completion estimate
+
+```text
+FORGE_INTELLIGENCE_SYSTEM_TOTAL_PLANNING_ESTIMATE=40_PERCENT_COMPLETE
+FORGE_INTELLIGENCE_SYSTEM_REMAINING_PLANNING_ESTIMATE=60_PERCENT
+NFAST_CONVERSATION_VERTICAL_PLANNING_ESTIMATE=75_TO_80_PERCENT_COMPLETE
+```
+
+These percentages are planning estimates, not production metrics, acceptance evidence, delivery promises, or completion proof. Implementation truth continues to require accepted contracts, tests, closure evidence, browser acceptance, security validation, and deployment authorization.
+
+### NFAST materialized chain
+
+```text
+governed Context Intake
+→ evidence and privacy validation
+→ deterministic Conversation Brief
+→ governed provider and draft boundaries
+→ Prospect Timeline governance and persistence
+→ Timeline-to-Brief projection
+→ local-first IndexedDB replica
+→ durable outbox
+→ governed incremental synchronization
+→ existing Mi Día surface
+→ Pipeline due-action local-first writes
+```
+
+Stage 3F establishes typed due-action commands, deterministic mutation identity, atomic local record plus outbox persistence, immediate local UI state, Mi Día mutation events, and secondary governed remote synchronization. It does not authorize a general prospect writer, opportunity-stage writer, message generation, message send, background push, NFAST-10, or merge to `main`.
+
+### Completion rule for every applicable intelligence system
+
+An intelligence system is not complete merely because files, engines, ADRs, discovery documents, static previews, or legacy modules exist.
+
+Each applicable system must close:
+
+```text
+authority and source ownership
+→ governed inputs and evidence
+→ deterministic contract
+→ canonical runtime integration
+→ persistence and synchronization where applicable
+→ visible advisor or manager surface
+→ authorized next action
+→ regression and security tests
+→ end-to-end browser acceptance
+→ production and rollback evidence
+```
+
+### System completion branches
+
+```text
+🟡 Revenue Generation Intelligence
+├── official revenue source ownership
+├── commercial event ledger
+├── prospecting, referral and reactivation integration
+└── revenue truth acceptance
+
+🟡 Sales Conversion Intelligence
+├── governed objections, scripts and adaptive guidance
+├── Pipeline and Conversation Intelligence integration
+├── source, freshness and evidence contracts
+└── conversion outcome acceptance
+
+🟡 NASH Conversation Intelligence
+├── NFAST-09 Stage 3G browser acceptance
+├── NFAST-10 Product, Quote and Presenter bridges
+├── NFAST-11 legacy quarantine and runtime locks
+└── NFAST-12 production acceptance and deployment
+
+🟡 Product Intelligence
+├── official product-version truth
+├── evidence packets and freshness
+├── quote and presentation consumption bridges
+└── browser and production acceptance
+
+🟡 Relationship Intelligence
+├── canonical relationship facts and consent
+├── Timeline, referral and life-event integration
+├── advisor and manager consumption boundaries
+└── evidence-backed next actions
+
+🟡 Policy & Sales Operations Intelligence
+├── policy and client source truth
+├── renewals, service events, tasks and notes
+├── task and calendar execution boundaries
+└── policy operations browser acceptance
+
+🟡 Manager & Team Intelligence
+├── official team signals and metric ownership
+├── coaching, review and organization-health boundaries
+├── manager action surfaces
+└── no ranking, punishment or invented people truth
+
+🟡 Career / Advisor Development Intelligence
+├── lifecycle authority and transition engine
+├── activation and stage truth
+├── development evidence and coaching consumption
+└── candidate-to-director continuity
+
+🟡 Recruitment / Candidate Intelligence
+├── existing foundation reconciliation
+├── runtime and persistence acceptance
+├── precontract and lifecycle handoff
+└── end-to-end manager browser acceptance
+
+🟡 Productivity / Forecast / Conservation Intelligence
+├── Mick behavior signals
+├── scenario and forecast labeling
+├── conservation evidence
+└── no punishment, payout or revenue truth duplication
+
+🟡 Platform, Evidence and Source Truth
+├── unified evidence registry
+├── RuleSnapshot and period ownership
+├── complete offline and synchronization boundaries
+└── runtime integrity, observability and rollback
+```
+
+### Mesa de Consejo — required system materialization where applicable
+
+The Mesa de Consejo is not complete as naming, personality, static presentation, or conceptual governance alone. Each member must be materialized only where its authority applies and must consume official system outputs rather than create parallel truth.
+
+```text
+NASH
+└── owns governed conversation composition and deterministic Conversation Brief;
+    must finish Product, Quote, Presenter, approval and browser-production integration.
+
+MICK
+└── owns observable Behavior Intelligence within its boundary;
+    must distinguish activity, consistency and execution friction without personality diagnosis,
+    punishment truth, surveillance or manipulation.
+
+ALFRED
+└── owns the command-cockpit experience and contextual navigation;
+    must explain the official priority, preserve Reason Why, and route authorized actions
+    without becoming a decision or execution authority.
+
+GREEN OWL
+└── protects momentum, continuity and governed streaks;
+    must consume official activity and progress outputs without changing priority,
+    compensation, promotion or performance truth.
+
+ROCKY
+└── supports evidence-backed recovery after operational decline;
+    must avoid invented psychological causes, guilt, pressure or priority mutation.
+
+CANDY CRUSH EXPERIENCE
+└── governs adaptive complexity, challenge pacing and anti-abandonment experience;
+    must not create parallel goals, manipulate the advisor or redefine commercial truth.
+
+SMART WIDGETS
+└── present contextual intelligence and the authorized next action;
+    must preserve source, freshness, confidence and Reason Why without recalculation.
+```
+
+For every Mesa de Consejo member that reaches runtime, completion requires:
+
+```text
+ratified authority
+→ accepted source systems
+→ bounded deterministic contract
+→ runtime adapter
+→ visible surface
+→ human checkpoint
+→ regression and browser acceptance
+```
+
+### Critical path
+
+```text
+CURRENT=NFAST_09_STAGE_3F_COMPLETE_AND_PUSHED
+NEXT=NFAST_09_STAGE_3G_END_TO_END_BROWSER_ACCEPTANCE
+THEN=NFAST_10_PRODUCT_QUOTE_PRESENTER_BRIDGES
+THEN=NFAST_11_LEGACY_QUARANTINE_AND_RUNTIME_LOCKS
+THEN=APPLICABLE_INTELLIGENCE_SYSTEM_COMPLETION
+THEN=MESA_DE_CONSEJO_RUNTIME_MATERIALIZATION_WHERE_APPLICABLE
+THEN=NFAST_12_SYSTEMIC_PRODUCTION_ACCEPTANCE_AND_DEPLOYMENT
+```
+
+### Explicit locks
+
+- No percentage in this block may be presented as a verified production KPI.
+- No legacy engine becomes canonical by file existence.
+- No Mesa de Consejo member may create source truth, silent execution, manipulation, surveillance, ranking, punishment, compensation, revenue, payout, promotion, product, quote, or lifecycle truth outside its authority.
+- No automatic message send, task creation, calendar creation, provider dispatch, or background action is authorized by this synchronization.
+- `NFAST_10_AUTHORIZED=NO`
+- `MAIN_MERGE_AUTHORIZED=NO`
+<!-- END FORGEOS:FORGE_INTELLIGENCE_SYSTEM_COMPLETION_SYNC_20260725 -->
+
+<!-- BEGIN FORGEOS:FES_PHASE_MINUS_1_SYSTEM_SOURCE_TRUTH -->
+## Forge Event & Evidence System — Phase −1
+
+Status: `CLOSED_AND_PUSHED_PENDING_COMMIT`
+
+```text
+SYSTEM_MODEL=FORGE_EVENT_EVIDENCE_OPERATING_SYSTEM_001
+PRODUCTIVE_UI_AUTHORITY=docs/static-preview/forge-alive/
+USER_EXPERIENCE=LIGHT
+INTERNAL_EVIDENCE_MODEL=COMPLETE
+CANONICAL_LOOP=ACTION_TO_EVENT_TO_EVIDENCE_TO_TIMELINE_TO_INTELLIGENCE_TO_HUMAN_DECISION_TO_RESULT
+INITIAL_PROSPECT_CONTEXT=EVENT_ZERO
+CALENDAR_APPOINTMENT=SEPARATE_FROM_DUE_ACTION
+ACTIVITY_LEDGER=APPEND_ONLY_REQUIRED
+OUTCOME_PROBES=REQUIRED
+PASSIVE_CAPTURE=WHATSAPP_NASH_COMBAT_CALLS_QUOTES_CALENDAR
+CROSS_TENANT_DATA_MIXING=FORBIDDEN
+NFAST_09_STAGE_3G_ACCEPTED=NO
+LEGACY_HARNESS_COMMIT=bfec223546c42b56fa75f08427ab49aadee0cb46
+LEGACY_HARNESS_RUN=30180606799
+LEGACY_HARNESS_DISPOSITION=INVALID_AS_ACCEPTANCE_EVIDENCE
+NFAST_10_AUTHORIZED=NO
+NEXT=FES_00_SYSTEM_REALIGNMENT_AND_CLEANUP
+MAIN_MERGE_AUTHORIZED=NO
+```
+
+Sources:
+
+- `docs/architecture/source-truth/FORGE_EVENT_EVIDENCE_OPERATING_SYSTEM_001.md`
+- `docs/roadmap/FORGE_SYSTEM_REALIGNMENT_ROADMAP_001.md`
+<!-- END FORGEOS:FES_PHASE_MINUS_1_SYSTEM_SOURCE_TRUTH -->
+
+<!-- BEGIN FORGEOS:FES_00_BUILD_TREE_STATUS -->
+## FES 00 Event & Evidence System Realignment
+
+```text
+🟢 FES_PHASE_MINUS_1_SYSTEM_SOURCE_TRUTH
+│
+├── 🟢 Event & Evidence Operating System documented
+├── 🟢 System realignment roadmap documented
+├── 🟢 Premature Stage 3G acceptance invalidated
+└── 🟢 Build Tree and Roadmap Lock synchronized
+
+🟢 FES_00_SYSTEM_REALIGNMENT_AND_CLEANUP
+│
+├── 🟢 incorrect Stage 3G workflow retired
+├── 🟢 incorrect Stage 3G finalizer retired
+├── 🟢 incorrect legacy-shell browser test retired
+├── 🟢 failed workflow run preserved as historical evidence
+├── 🟢 productive Forge Alive source surface mapped
+├── 🟢 reusable NFAST assets mapped without runtime authorization
+├── 🟢 legacy-shell acceptance prohibited
+└── 🟢 FES 01 implementation scope prepared
+
+🔵 FES_01_CANONICAL_ACTIVITY_EVENT_CONTRACT
+│
+├── 🔵 canonical identity and event type
+├── 🔵 subject, source, evidence strength and provenance
+├── 🔵 occurrence, recording, causation and idempotency
+├── 🔵 privacy and learning eligibility
+├── 🔵 safe payload and correction semantics
+└── 🔴 no persistence, runtime, provider, Supabase or productive UI mutation
+
+🔴 LOCKS
+├── 🔴 NFAST_09_STAGE_3G_ACCEPTED=NO
+├── 🔴 NFAST_10_AUTHORIZED=NO
+├── 🔴 LEGACY_BROWSER_HARNESS_AS_ACCEPTANCE=FORBIDDEN
+└── 🔴 MAIN_MERGE_AUTHORIZED=NO
+```
+<!-- END FORGEOS:FES_00_BUILD_TREE_STATUS -->
+
+<!-- BEGIN FORGEOS:FES_01_BUILD_TREE_STATUS -->
+## FES 01 Canonical Activity Event Contract
+
+```text
+🟢 FES_01_CANONICAL_ACTIVITY_EVENT_CONTRACT
+│
+├── 🟢 forge.activity_event.v1 canonical envelope
+├── 🟢 13 first-vertical event types
+├── 🟢 deterministic tenant-bound event identity
+├── 🟢 explicit actor, subject, source and evidence strength
+├── 🟢 explicit occurrence, record, effective, causation and correlation time
+├── 🟢 event-specific safe payload allowlists
+├── 🟢 privacy class and provenance
+├── 🟢 external handoff separated from provider confirmation
+├── 🟢 appointment outcomes require confirmed evidence
+├── 🟢 learning eligibility locked false
+├── 🟢 corrections append new immutable events
+├── 🟢 all action and cross-tenant safety flags locked false
+├── 🟢 dedicated deterministic test closed
+└── 🟢 NFAST Stage 3F regression preserved
+
+🔵 FES_02_ACTIVITY_LEDGER_PERSISTENCE
+│
+├── 🔵 append-only local ledger
+├── 🔵 evidence-reference persistence
+├── 🔵 idempotent append
+├── 🔵 correction linkage
+├── 🔵 local replica and outbox
+├── 🔵 synchronization and conflict review
+├── 🔵 governed Supabase persistence
+└── 🔴 no productive projection ownership
+
+🔴 LOCKS
+├── 🔴 FES 01 is contract only
+├── 🔴 no database migration in FES 01
+├── 🔴 no productive UI mutation in FES 01
+├── 🔴 no provider execution
+├── 🔴 no automatic business action
+└── 🔴 MAIN_MERGE_AUTHORIZED=NO
+```
+<!-- END FORGEOS:FES_01_BUILD_TREE_STATUS -->
+
+<!-- BEGIN FORGEOS:FES_02A_BUILD_TREE -->
+## FES 02A — Activity Ledger Local Foundation
+
+```text
+platform/event-evidence/canonical-activity-event-contract.js
+  └── platform/event-evidence/activity-ledger-contract.js
+      ├── platform/event-evidence/activity-ledger-local-store.js
+      ├── platform/event-evidence/activity-ledger-sync-service.js
+      └── supabase/migrations/20260726000100_fes02_activity_event_ledger.sql
+```
+
+Status:
+
+```text
+CANONICAL_EVENT_CONTRACT=IMPLEMENTED_FES01
+LOCAL_LEDGER_CONTRACT=IMPLEMENTED_FES02A
+LOCAL_MEMORY_DRIVER=IMPLEMENTED_FES02A
+LOCAL_INDEXEDDB_DRIVER=IMPLEMENTED_FES02A
+LOCAL_OUTBOX=IMPLEMENTED_FES02A
+SYNC_SERVICE=IMPLEMENTED_NO_BACKGROUND_RUNTIME
+REMOTE_LEDGER_MIGRATION=CANDIDATE_NOT_DEPLOYED
+PRODUCTIVE_BROWSER_BINDING=NO
+NEXT=FES_02B_REMOTE_LEDGER_AUTHORITY
+```
+<!-- END FORGEOS:FES_02A_BUILD_TREE -->
+
+<!-- BEGIN FORGEOS:FES_02B_REMOTE_AUTHORITY -->
+## FES 02B remote ledger authority
+
+```text
+AREA=platform/event-evidence
+REMOTE_LEDGER_TABLE=public.activity_event_ledger
+REMOTE_EVIDENCE_TABLE=public.activity_event_evidence_references
+REMOTE_MUTATION_TABLE=public.activity_event_mutations
+REMOTE_CONFLICT_TABLE=public.activity_event_conflicts
+APPEND_RPC=public.forge_fes02_append_activity_event(jsonb)
+PULL_RPC=public.forge_fes02_pull_activity_events(text,integer)
+RLS=ENABLED_AND_FORCED
+DIRECT_BROWSER_TABLE_ACCESS=DENIED
+REMOTE_ACCEPTANCE=PASS
+PRODUCTIVE_GATEWAY=FES_02C_PENDING
+```
+<!-- END FORGEOS:FES_02B_REMOTE_AUTHORITY -->
+
+<!-- BEGIN FORGEOS:FES_02_CLOSURE -->
+## FES 02 Activity Ledger Persistence closed
+
+```text
+AREA=platform/event-evidence
+CANONICAL_CONTRACT=canonical-activity-event-contract.js
+LEDGER_CONTRACT=activity-ledger-contract.js
+LOCAL_STORE=activity-ledger-local-store.js
+SYNC_SERVICE=activity-ledger-sync-service.js
+SUPABASE_GATEWAY=activity-ledger-supabase-gateway.js
+CONTROLLED_BROWSER_RUNTIME=activity-ledger-browser-runtime.js
+REMOTE_MIGRATION=20260726000100_fes02_activity_event_ledger.sql
+REMOTE_ACCEPTANCE=PASS
+CONTROLLED_BROWSER_ACCEPTANCE=PASS
+PHASE_STATUS=CLOSED
+NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
+```
+<!-- END FORGEOS:FES_02_CLOSURE -->
+
+<!-- BEGIN FORGEOS:FES_03A_PLAYWRIGHT_E2E_BASELINE -->
+## FES 03A Playwright E2E baseline
+
+- 🟢 Playwright Test baseline
+- 🟢 Vite repository-root module authority
+- 🟢 Native Linux browser acceptance
+- 🟢 IndexedDB, network, offline and context-isolation preflight
+- 🔴 PRoot browser acceptance authority
+- 🔵 FES 03B canonical timeline contract
+<!-- END FORGEOS:FES_03A_PLAYWRIGHT_E2E_BASELINE -->
+
+<!-- BEGIN FORGEOS:FES_03B_CANONICAL_TIMELINE_CONTRACT -->
+## FES 03B canonical timeline contract
+
+- 🟢 Canonical timeline identity
+- 🟢 Deterministic event ordering
+- 🟢 Tenant and correlation isolation
+- 🟢 Append-only correction lineage
+- 🟢 Exact ledger rebuild
+- 🔴 Projection-owned event truth
+- 🔵 FES 03C Activity projection
+<!-- END FORGEOS:FES_03B_CANONICAL_TIMELINE_CONTRACT -->
+
+<!-- BEGIN FORGEOS:FES_03C_ACTIVITY_PROJECTION -->
+## FES 03C Activity projection
+
+- 🟢 Deterministic Activity read model
+- 🟢 Source, evidence and confirmation visible
+- 🟢 Pending state explicit
+- 🟢 Original and correction visible
+- 🟢 Exact rebuild against source timeline
+- 🔴 Detached Activity truth
+- 🔴 Legacy manual activity points as event authority
+- 🔵 FES 03D prospect detail projection
+<!-- END FORGEOS:FES_03C_ACTIVITY_PROJECTION -->
+
+<!-- BEGIN FORGEOS:FES_03D_PROSPECT_DETAIL_PROJECTION -->
+## FES 03D Prospect Detail projection
+
+- 🟢 Single-prospect canonical scope
+- 🟢 Profile and context projection
+- 🟢 Appointment lifecycle projection
+- 🟢 Due-action lifecycle projection
+- 🟢 Canonical Activity history
+- 🟢 Reviewable correction forks
+- 🟢 Explicit unknown and unsupported sections
+- 🔴 Legacy prospect fields promoted to event truth
+- 🔴 Detached Prospect Detail authority
+- 🔵 FES 03E Pipeline card projection
+<!-- END FORGEOS:FES_03D_PROSPECT_DETAIL_PROJECTION -->
+
+<!-- BEGIN FORGEOS:FES_03E_PIPELINE_CARD_PROJECTION -->
+## FES 03E Pipeline card projection
+
+- 🟢 Canonical milestone stage
+- 🟢 Latest Activity summary
+- 🟢 Latest appointment summary
+- 🟢 Explicit pending appointment outcome
+- 🟢 Earliest open due follow-up
+- 🟢 Blocking conflict review
+- 🟢 Deterministic attention priority
+- 🔴 Wall-clock overdue inference
+- 🔴 Legacy Pipeline status as event truth
+- 🔵 FES 03F Mi Día projection
+<!-- END FORGEOS:FES_03E_PIPELINE_CARD_PROJECTION -->
+
+<!-- BEGIN FORGEOS:FES_03F_MI_DIA_PROJECTION -->
+## FES 03F Mi Día projection
+
+- 🟢 Conflict resolution work
+- 🟢 Appointment outcome confirmation
+- 🟢 Due follow-up work
+- 🟢 Pending evidence review
+- 🟢 Optional post-appointment context
+- 🟢 Deterministic cross-prospect ordering
+- 🟢 Required and optional work boundary
+- 🔴 Wall-clock overdue inference
+- 🔴 Alfred-generated recommendation
+- 🔵 FES 03G projection runtime acceptance
+<!-- END FORGEOS:FES_03F_MI_DIA_PROJECTION -->

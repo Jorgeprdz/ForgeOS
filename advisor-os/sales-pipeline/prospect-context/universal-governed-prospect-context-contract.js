@@ -361,7 +361,7 @@ function projectUniversalProspectContext(universalContext, consumer) {
   });
 }
 
-module.exports = {
+const api = Object.freeze({
   UNIVERSAL_PROSPECT_CONTEXT_STATUS,
   PROSPECT_CONTEXT_CONSUMERS,
   TRUSTED_SOURCE_OWNERS,
@@ -370,4 +370,11 @@ module.exports = {
   buildUniversalGovernedProspectContext,
   projectUniversalProspectContext,
   _private: { clone, deepFreeze, unique, safeFieldIdentifiers, normalizeDescriptor, isApprovedScalar, isOpaqueReference, isPlaceholder, noSideEffects }
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgeUniversalGovernedProspectContextContract = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}

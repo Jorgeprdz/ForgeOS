@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es-MX" data-forge-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06101f">
+  <meta name="description" content="Prototipo móvil de Inicio para Forge Alive con Material 3 Expressive y Alfred.">
+  <title>Forge Alive — Inicio MD3 + Alfred</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./tokens.css?v=ui-m03-approved-001">
+  <link rel="stylesheet" href="./app.css?v=ui-m03-approved-001">
+  <script type="module" src="./app.js?v=ui-m04-shell-001"></script>
+</head>
+<body data-forge-application>
+  <div class="forge-background" aria-hidden="true"></div>
+  <main class="app forge-module-viewport" data-forge-module-viewport aria-label="Inicio de Forge Alive">
+    <div class="home-module" data-forge-home-module data-route-module="inicio">
+    <header class="hero">
+      <div class="safe-pill" aria-label="Vista segura">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 5.5 5.8v5.3c0 4.1 2.7 7.8 6.5 9.1 3.8-1.3 6.5-5 6.5-9.1V5.8L12 3Zm0 2.2 4.5 1.9v4c0 3.1-1.9 5.9-4.5 7.1-2.6-1.2-4.5-4-4.5-7.1v-4L12 5.2Zm-1 9.2-2-2 1.1-1.1.9.9 2.9-2.9 1.1 1.1-4 4Z"/></svg>
+        <span>Vista estática segura</span>
+        <span aria-hidden="true">•</span>
+        <span>Solo lectura</span>
+      </div>
+
+      <div class="hero-row">
+        <div>
+          <p class="eyebrow">FORGE ALIVE</p>
+          <h1>Buenos días, Jorge</h1>
+          <p class="subtitle">Mi día · inteligencia comercial activa</p>
+        </div>
+        <button class="profile" type="button" aria-label="Abrir perfil">
+          <span>JP</span>
+          <i aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <section class="plan-card organic-card" aria-labelledby="plan-title">
+      <div class="plan-copy">
+        <span class="icon-disc" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h1a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V2Zm11 8H6v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-8ZM7 6a1 1 0 0 0-1 1v1h12V7a1 1 0 0 0-1-1H7Z"/></svg>
+        </span>
+        <div>
+          <p class="section-kicker">PLAN DE HOY</p>
+          <h2 id="plan-title">Miércoles, 26 de julio</h2>
+          <p>Prioriza revisiones clave, advertencias y seguimiento antes del mediodía.</p>
+          <button class="mini-action" type="button">
+            <span class="dot dot-gold" aria-hidden="true"></span>
+            3 pendientes
+            <span aria-hidden="true">›</span>
+          </button>
+        </div>
+      </div>
+      <div class="plan-art" aria-hidden="true">
+        <span class="sun"></span>
+        <span class="ridge ridge-a"></span>
+        <span class="ridge ridge-b"></span>
+        <span class="route route-a"></span>
+        <span class="route route-b"></span>
+      </div>
+    </section>
+
+    <section class="next-card organic-card" aria-labelledby="next-title">
+      <div class="next-glow" aria-hidden="true"></div>
+      <p class="section-kicker accent">✦ SIGUIENTE MEJOR ACCIÓN</p>
+      <h2 id="next-title">Seguimiento prioritario</h2>
+
+      <div class="next-layout">
+        <div class="prospect-copy">
+          <div class="prospect">
+            <span class="prospect-avatar">JM</span>
+            <div>
+              <h3>Juan Martínez</h3>
+              <p>Necesita revisión antes de que se enfríe.</p>
+            </div>
+          </div>
+
+          <div class="urgency">
+            <span aria-hidden="true">♨</span>
+            <strong>Alta urgencia</strong>
+            <span class="urgency-dots" aria-label="Urgencia 4 de 5">
+              <i></i><i></i><i></i><i></i><i class="off"></i>
+            </span>
+          </div>
+        </div>
+
+        <button class="alfred-orbit alfred-orbit--contextual" type="button" data-open-alfred data-alfred-state="thinking" data-alfred-scope="contextual" aria-label="Consultar esta acción con Alfred">
+          <span class="halo halo-a" aria-hidden="true"></span>
+          <span class="halo halo-b" aria-hidden="true"></span>
+          <span class="halo halo-c" aria-hidden="true"></span>
+          <span class="alfred-core">
+            <svg class="bow-tie" viewBox="0 0 64 40" aria-hidden="true">
+              <path d="M27 14 9 5C5 3 2 6 2 10v20c0 4 3 7 7 5l18-9V14Zm10 0 18-9c4-2 7 1 7 5v20c0 4-3 7-7 5l-18-9V14Z"/>
+              <rect x="26" y="12" width="12" height="16" rx="4"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+
+      <div class="action-row">
+        <button class="primary-action" type="button">
+          <span>Abrir conversación</span>
+          <span class="arrow-disc" aria-hidden="true">→</span>
+        </button>
+        <button class="save-action" type="button" aria-label="Guardar para después">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a2 2 0 0 1 2 2v16l-8-4-8 4V5a2 2 0 0 1 2-2Zm0 2v12.8l6-3 6 3V5H6Z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="summary-section" aria-labelledby="summary-title">
+      <div class="section-heading">
+        <p class="section-kicker accent" id="summary-title">RESUMEN DEL DÍA</p>
+        <button type="button">Ver todo</button>
+      </div>
+
+      <div class="metrics" role="list">
+        <article class="metric metric-a" role="listitem">
+          <p>Cumplimiento mensual</p>
+          <strong>64%</strong>
+          <span>6 / 10 familias protegidas</span>
+          <svg viewBox="0 0 120 28" aria-hidden="true"><path d="M3 22c16-1 17-8 32-7 13 1 18 9 31 4 12-5 18-13 29-8 8 4 12 6 22-3"/></svg>
+        </article>
+
+        <article class="metric metric-b" role="listitem">
+          <p>Actividad</p>
+          <strong>18 / 25</strong>
+          <span>Faltan 7 puntos hoy</span>
+          <div class="beads" aria-label="Progreso de actividad"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div>
+        </article>
+
+        <article class="metric metric-c" role="listitem">
+          <p>Cotizaciones</p>
+          <strong>$142k</strong>
+          <span>Proyección mensual · Gap: $58k</span>
+          <svg viewBox="0 0 120 28" aria-hidden="true"><path d="M3 21c15-11 26-2 38-7 13-5 22 8 35 2 13-6 22-13 41-4"/></svg>
+        </article>
+
+        <article class="metric metric-d" role="listitem">
+          <p>Seguimiento</p>
+          <strong>78%</strong>
+          <span>7 relaciones en riesgo</span>
+          <div class="progress"><span></span></div>
+        </article>
+      </div>
+      <div class="pager-dots" aria-hidden="true"><i class="active"></i><i></i><i></i><i></i></div>
+    </section>
+
+    <section class="opportunities organic-card" aria-labelledby="opportunities-title">
+      <div class="section-heading">
+        <p class="section-kicker accent" id="opportunities-title">✦ OPORTUNIDADES</p>
+        <button type="button">Ver todas ›</button>
+      </div>
+
+      <div class="opportunity-list">
+        <button type="button" class="opportunity">
+          <span class="avatar avatar-teal">L</span>
+          <span class="opportunity-copy">
+            <strong>Lariza</strong>
+            <small>Pidió revisar opciones · 2 días</small>
+          </span>
+          <span class="score score-high">72%</span>
+          <span class="score-bar"><i style="--score:72%"></i></span>
+        </button>
+
+        <button type="button" class="opportunity">
+          <span class="avatar avatar-gold">O</span>
+          <span class="opportunity-copy">
+            <strong>Octavio</strong>
+            <small>Falta confirmar cita · 5 días</small>
+          </span>
+          <span class="score score-mid">65%</span>
+          <span class="score-bar"><i style="--score:65%"></i></span>
+        </button>
+
+        <button type="button" class="opportunity">
+          <span class="avatar avatar-violet">M</span>
+          <span class="opportunity-copy">
+            <strong>María</strong>
+            <small>Necesita razón clara · 8 días</small>
+          </span>
+          <span class="score score-low">40%</span>
+          <span class="score-bar"><i style="--score:40%"></i></span>
+        </button>
+      </div>
+    </section>
+    </div>
+    <section class="quotes-module" data-forge-quotes-module data-route-module="quotes" hidden aria-label="Cotizaciones"></section>
+  </main>
+
+  <div class="bottom-shell forge-shell-controls" data-forge-shell-controls aria-label="Navegación principal">
+    <nav class="nav-pill" data-forge-nav-pill aria-label="Navegación principal"></nav>
+
+    <button class="alfred-launcher alfred-orbit" type="button" data-forge-command-orb data-open-alfred data-alfred-state="idle" data-alfred-scope="global" aria-label="Abrir Alfred">
+      <span class="halo halo-a" aria-hidden="true"></span>
+      <span class="halo halo-b" aria-hidden="true"></span>
+      <span class="halo halo-c" aria-hidden="true"></span>
+      <span class="alfred-core">
+        <svg class="bow-tie" viewBox="0 0 64 40" aria-hidden="true">
+          <path d="M27 14 9 5C5 3 2 6 2 10v20c0 4 3 7 7 5l18-9V14Zm10 0 18-9c4-2 7 1 7 5v20c0 4-3 7-7 5l-18-9V14Z"/>
+          <rect x="26" y="12" width="12" height="16" rx="4"/>
+        </svg>
+      </span>
+      <span class="alfred-label">Alfred</span>
+    </button>
+  </div>
+
+  <section class="alfred-sheet" data-forge-alfred-sheet aria-hidden="true" aria-label="Alfred">
+    <button class="sheet-scrim" type="button" data-close-alfred aria-label="Cerrar Alfred"></button>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="alfred-title">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="alfred-sheet-header">
+        <span class="alfred-mini">
+          <svg class="bow-tie" viewBox="0 0 64 40" aria-hidden="true">
+            <path d="M27 14 9 5C5 3 2 6 2 10v20c0 4 3 7 7 5l18-9V14Zm10 0 18-9c4-2 7 1 7 5v20c0 4-3 7-7 5l-18-9V14Z"/>
+            <rect x="26" y="12" width="12" height="16" rx="4"/>
+          </svg>
+        </span>
+        <div>
+          <p class="section-kicker accent">ALFRED</p>
+          <h2 id="alfred-title">¿Qué necesitas resolver?</h2>
+        </div>
+        <button class="close-sheet" type="button" data-close-alfred aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="suggestions">
+        <button type="button">Prioriza mis seguimientos</button>
+        <button type="button">Prepara el mensaje para Juan</button>
+        <button type="button">Explícame el riesgo de hoy</button>
+      </div>
+
+      <label class="alfred-input">
+        <span class="sr-only">Escribe una instrucción para Alfred</span>
+        <input type="text" placeholder="Pregúntale o pídele que haga algo…">
+        <button type="button" aria-label="Enviar a Alfred">↑</button>
+      </label>
+      <p class="sheet-note">Alfred puede razonar, buscar contexto y preparar acciones; tú conservas la aprobación final.</p>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+</body>
+</html>

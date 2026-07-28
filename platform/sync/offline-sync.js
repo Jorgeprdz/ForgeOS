@@ -1,7 +1,7 @@
 // offline-sync.js
 // Enterprise Offline Sync Engine
 
-import { DB } from '../../db.js';
+import { DB } from '../../legacy/quarantine/crmaddlife-indexeddb/db.js';
 import { Network } from '../../network-manager.js';
 
 const ALLOWED_REMOTE_TABLES =

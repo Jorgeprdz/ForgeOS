@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: FES 02A migration is transaction bounded
+ok 1 - FES 02A migration is transaction bounded
+  ---
+  duration_ms: 3.987812
+  type: 'test'
+  ...
+# Subtest: FES 02A migration declares the canonical ledger authority tables
+ok 2 - FES 02A migration declares the canonical ledger authority tables
+  ---
+  duration_ms: 0.485976
+  type: 'test'
+  ...
+# Subtest: FES 02A migration creates incremental tenant cursors
+ok 3 - FES 02A migration creates incremental tenant cursors
+  ---
+  duration_ms: 0.284218
+  type: 'test'
+  ...
+# Subtest: FES 02A migration preserves the canonical event envelope
+ok 4 - FES 02A migration preserves the canonical event envelope
+  ---
+  duration_ms: 0.484531
+  type: 'test'
+  ...
+# Subtest: FES 02A migration blocks learning and execution safety promotion
+ok 5 - FES 02A migration blocks learning and execution safety promotion
+  ---
+  duration_ms: 0.345
+  type: 'test'
+  ...
+# Subtest: FES 02A migration enforces append-only ledger history
+ok 6 - FES 02A migration enforces append-only ledger history
+  ---
+  duration_ms: 0.269805
+  type: 'test'
+  ...
+# Subtest: FES 02A migration enables and forces RLS on every authority table
+ok 7 - FES 02A migration enables and forces RLS on every authority table
+  ---
+  duration_ms: 1.083165
+  type: 'test'
+  ...
+# Subtest: FES 02A migration denies direct authenticated and anonymous table access
+ok 8 - FES 02A migration denies direct authenticated and anonymous table access
+  ---
+  duration_ms: 0.360742
+  type: 'test'
+  ...
+# Subtest: FES 02A append RPC is authenticated and tenant-bound
+ok 9 - FES 02A append RPC is authenticated and tenant-bound
+  ---
+  duration_ms: 0.328516
+  type: 'test'
+  ...
+# Subtest: FES 02A append RPC allowlists mutation and record fields
+ok 10 - FES 02A append RPC allowlists mutation and record fields
+  ---
+  duration_ms: 0.476328
+  type: 'test'
+  ...
+# Subtest: FES 02A append RPC accepts only append event operations
+ok 11 - FES 02A append RPC accepts only append event operations
+  ---
+  duration_ms: 0.623672
+  type: 'test'
+  ...
+# Subtest: FES 02A append RPC implements deterministic replay
+ok 12 - FES 02A append RPC implements deterministic replay
+  ---
+  duration_ms: 0.476367
+  type: 'test'
+  ...
+# Subtest: FES 02A append RPC routes digest disagreement to conflict review
+ok 13 - FES 02A append RPC routes digest disagreement to conflict review
+  ---
+  duration_ms: 0.907578
+  type: 'test'
+  ...
+# Subtest: FES 02A corrections require an existing same-tenant original event
+ok 14 - FES 02A corrections require an existing same-tenant original event
+  ---
+  duration_ms: 0.444765
+  type: 'test'
+  ...
+# Subtest: FES 02A pull RPC is incremental and tenant-partitioned
+ok 15 - FES 02A pull RPC is incremental and tenant-partitioned
+  ---
+  duration_ms: 0.315078
+  type: 'test'
+  ...
+# Subtest: FES 02A exposes only authenticated RPC execution
+ok 16 - FES 02A exposes only authenticated RPC execution
+  ---
+  duration_ms: 6.489804
+  type: 'test'
+  ...
+# Subtest: FES 02A does not mutate the NFAST due-action authority
+ok 17 - FES 02A does not mutate the NFAST due-action authority
+  ---
+  duration_ms: 0.400625
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 313.61043

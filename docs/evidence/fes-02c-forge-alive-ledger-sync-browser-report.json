@@ -1,0 +1,73 @@
+{
+  "status": "PASS",
+  "sourceCommit": "a116f7a7891a743e2b627ce3f0d1155ae5073e9a",
+  "deployedEntry": "docs/static-preview/forge-alive/?nav=pipeline",
+  "browser": "/usr/sbin/firefox",
+  "browserEngine": "firefox",
+  "browserLauncher": "puppeteer",
+  "puppeteerPath": "/home/jorge/.local/share/forge-browser-tools/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "authenticatedIdentityState": "controlled-authenticated-stub",
+  "productiveUiMutation": false,
+  "checks": [
+    {
+      "name": "FORGE_ALIVE_PIPELINE_BOUNDARY",
+      "status": "PASS",
+      "title": "Forge Alive Vista Estática",
+      "href": "http://127.0.0.1:37263/static-preview/forge-alive/?nav=pipeline&v=fes02c-puppeteer",
+      "pipelineSelector": true,
+      "authBootstrap": true
+    },
+    {
+      "name": "ATOMIC_LOCAL_EVENT_AND_OUTBOX",
+      "status": "PASS",
+      "eventId": "evt_2d0e54cd35e97ba2f61a99b8432fa466",
+      "outboxBefore": 1
+    },
+    {
+      "name": "AUTHENTICATED_GATEWAY_PUSH_ACKNOWLEDGED",
+      "status": "PASS",
+      "receiptStatus": "ACKNOWLEDGED",
+      "cursor": "1"
+    },
+    {
+      "name": "SECOND_REPLICA_INCREMENTAL_PULL",
+      "status": "PASS",
+      "pullApplied": 1
+    },
+    {
+      "name": "OFFLINE_RETRY_PRESERVED",
+      "status": "PASS",
+      "retryState": "RETRY"
+    },
+    {
+      "name": "RECONNECT_RECOVERY",
+      "status": "PASS",
+      "reconnectAcknowledged": 1
+    },
+    {
+      "name": "NO_PRODUCTIVE_UI_MUTATION",
+      "status": "PASS"
+    },
+    {
+      "name": "INDEXEDDB_RELOAD_PERSISTENCE",
+      "status": "PASS",
+      "entries": 1,
+      "eventId": "evt_2d0e54cd35e97ba2f61a99b8432fa466",
+      "cursor": "1",
+      "pipelineSelector": true
+    },
+    {
+      "name": "LOCAL_ACCEPTANCE_DATABASE_CLEANUP",
+      "status": "PASS"
+    },
+    {
+      "name": "FES02C_RUNTIME_CONSOLE_ERRORS_ABSENT",
+      "status": "PASS"
+    }
+  ],
+  "consoleErrors": []
+}

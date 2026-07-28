@@ -1,5 +1,5 @@
 // comisiones.js — FULL SAFE RECOVERY BUILD v16 (RLS Safe)
-import { DB } from './db.js';
+import { DB } from './legacy/quarantine/crmaddlife-indexeddb/db.js';
 import { getSupabase } from './supabase-runtime.js';
 import { callGemini } from './ai-service.js';
 import { Navigation } from './platform/navigation-runtime.js';

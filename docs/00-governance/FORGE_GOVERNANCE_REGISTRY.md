@@ -182,6 +182,82 @@ The following surfaces must be declared explicitly before work may touch them:
 
 Touching a protected surface requires explicit scope and approval.
 
+## UI-M03 Execution Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-019 — UI-M03 Home and Alfred Material 3 Execution Authority.txt` |
+| UI-M03 status | `EXECUTION_AUTHORIZED` |
+| Board approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Implementation readiness | `READY` |
+| Design authority | `LOCKED_BUNDLE_93f1ed31` |
+| Runtime branch | `feature/ui-material3-runtime-migration` |
+| Clean entrypoint | `docs/static-preview/forge-alive-material3/` |
+| Functional replacement | `SCOPED_YES` |
+| Legacy entrypoint | `FROZEN` |
+| UI-M04 status | `SUPERSEDED_BY_ADR_020_EXECUTION_AUTHORIZED` |
+| Human visual acceptance | `PENDING` |
+
+This authority is limited to the UI-M03 Home and Alfred visual runtime,
+validation tooling, authoritative Linux capture workflow and conditional Pages
+artifact overlay. It does not change authority for any other Forge work.
+
+## UI-M04 Canonical Forge Shell Execution Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-020 — UI-M04 Canonical Forge Shell Execution Authority.txt` |
+| Phase | `UI-M04_CANONICAL_FORGE_SHELL_EXTRACTION_AND_NAVIGATION_CONTRACT` |
+| Status | `EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Board scope selection | `CANONICAL_FORGE_SHELL_EXTRACTION` |
+| Implementation readiness | `READY` |
+| Source commit | `f3c3d1dc6c65b6927c0ca7290d1ac90e138d4673` |
+| Runtime branch | `feature/ui-m04-canonical-forge-shell` |
+| Visual redesign | `FORBIDDEN` |
+| Quote and Product boundaries | `PROTECTED` |
+| Deployment | `FORBIDDEN` |
+
+UI-M04 resolves `NEXT=BOARD_SCOPE_SELECTION_AFTER_R16C` without rewriting R16C
+or historical R16D records. Its authority is limited to extraction of the
+approved Material 3 shell, Home module boundary, canonical navigation contract,
+shell lifecycle and their validation.
+
+## UI-M05A Quotes Functional Baseline Repair Authority
+
+`UI-M05A_QUOTES_FUNCTIONAL_BASELINE_REPAIR_AND_RUNTIME_ALIGNMENT` is
+`EXECUTION_AUTHORIZED` from
+`979b134231e5ffaf18652cef82e47ff3332cf6fc` on
+`feature/ui-m05a-quotes-baseline-repair`. Owner, Miranda and Board approval are
+`GRANTED`; visual redesign is `FORBIDDEN`, quote domain boundaries are
+`PROTECTED`, and `RESUME_UI_M05_AFTER_PASS=YES`.
+## UI-M05 Quotes Visual Migration Execution Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-021 — UI-M05 Quotes Visual Migration Execution Authority.txt` |
+| Phase | `UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION` |
+| Status | `EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Board scope selection | `QUOTES_VISUAL_MIGRATION_AND_SHELL_INTEGRATION` |
+| Implementation readiness | `READY` |
+| Source authority | `UI_M04_SUCCESSFUL_COMMIT` |
+| Source commit | `979b134231e5ffaf18652cef82e47ff3332cf6fc` |
+| Runtime branch | `feature/ui-m05-quotes-visual-migration` |
+| Visual redesign | `AUTHORIZED` |
+| Quote functionality redesign | `FORBIDDEN` |
+| Quote and Product boundaries | `PROTECTED` |
+| Deployment | `FORBIDDEN` |
+
+UI-M05 is limited to the discovered functional Cotizaciones surface,
+canonical ForgeShell mounting, route/Nav Pill integration, visual migration
+and function-preserving validation.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

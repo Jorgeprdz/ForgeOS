@@ -1,0 +1,49 @@
+============================================================
+FES 02B REMOTE LEDGER AUTHORITY — ACCEPTANCE OUTPUT
+============================================================
+SOURCE_COMMIT=0e5063b27d555d14a51b56d5fe1aafac70afb73e
+PROJECT_REF=rmlxigxysujsuwzgoimv
+MIGRATION_VERSION=20260726000100
+DEPLOYMENT_MODE=ALREADY_APPLIED_RECOVERY
+
+========== MIGRATION HISTORY AFTER ==========
+Initialising login role...
+Connecting to remote database...
+
+  
+   Local            | Remote           | Time (UTC)            
+  ------------------|------------------|-----------------------
+   `20260619000100` | `20260619000100` | `2026-06-19 00:01:00` 
+   `20260619000200` | `20260619000200` | `2026-06-19 00:02:00` 
+   `20260717000100` | `20260717000100` | `2026-07-17 00:01:00` 
+   `20260718000100` | `20260718000100` | `2026-07-18 00:01:00` 
+   `20260718000200` | `20260718000200` | `2026-07-18 00:02:00` 
+   `20260718000300` | `20260718000300` | `2026-07-18 00:03:00` 
+   `20260724000100` | `20260724000100` | `2026-07-24 00:01:00` 
+   `20260725000100` | `20260725000100` | `2026-07-25 00:01:00` 
+   `20260726000100` | `20260726000100` | `2026-07-26 00:01:00` 
+
+
+========== ACCEPTANCE TRANSACTION ==========
+Initialising login role...
+[31munexpected status 400: {"message":"Failed to run sql query: ERROR:  P0001: FES02_REMOTE_ACCEPTANCE_PASS\nCONTEXT:  PL/pgSQL function inline_code_block line 511 at RAISE\n"}[39m
+Try rerunning the command with --debug to troubleshoot the error.
+
+========== RESIDUE VERIFICATION ==========
+Initialising login role...
+┌──────────────────────────────────────┐
+│ verification                         │
+├──────────────────────────────────────┤
+│ FES02B_MIGRATION_APPLIED=YES         │
+│ FES02B_OBJECTS_PRESENT=YES           │
+│ FES02B_RLS_FORCED=YES                │
+│ FES02B_DIRECT_TABLE_GRANTS=DENIED    │
+│ FES02B_RPC_AUTHENTICATED_EXECUTE=YES │
+│ FES02B_RPC_ANON_EXECUTE=NO           │
+│ FES02B_TEMP_AUTH_USERS=0             │
+│ FES02B_TEMP_LEDGER_ROWS=0            │
+│ FES02B_TEMP_EVIDENCE_ROWS=0          │
+│ FES02B_TEMP_MUTATIONS=0              │
+│ FES02B_TEMP_CONFLICTS=0              │
+│ FES02B_NFAST_AUTHORITY_PRESENT=YES   │
+└──────────────────────────────────────┘

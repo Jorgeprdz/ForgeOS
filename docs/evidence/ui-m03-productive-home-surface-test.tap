@@ -1,0 +1,32 @@
+✔ real product entrypoint loads UI-M02 exactly once (8.486875ms)
+✔ shell runtime is gated by the UI-M01 feature flag (3.120625ms)
+✔ shell preserves the productive Home surface (1.947852ms)
+✔ shell exposes the approved responsive modes (1.338125ms)
+✔ shell contains navigation and Alfred surfaces (3.024649ms)
+✔ UI-M02 does not introduce productive side effects (1.780664ms)
+✔ all shell CSS is activated by Material 3 mode (3.419843ms)
+✔ manifest preserves runtime boundaries (4.02789ms)
+✔ browser acceptance fixture loads production UI-M02 assets (7.570664ms)
+✔ fixture applies legacy cascade pressure after shell CSS (2.894492ms)
+✔ acceptance server is static and Vite-free (6.832617ms)
+✔ Actions watches the isolated acceptance harness (1.374687ms)
+✔ UI-M03 R2 assets load exactly once (3.601601ms)
+✔ R2 creates a dedicated Material 3 Home stage (0.421914ms)
+✔ productive nodes are moved, never cloned or replaced (0.864883ms)
+✔ legacy product tree is structurally hidden on Home (0.829453ms)
+✔ moved nodes restore to exact original anchors (0.345664ms)
+✔ non-Home routes restore the productive tree (0.302696ms)
+✔ touch projection excludes historical desktop layouts (0.479101ms)
+✔ dynamic old mobile context navigation is suppressed (0.455352ms)
+✔ workspace projects only the productive desktop authority (2.990664ms)
+✔ workspace duplicate brand and profile are hidden (1.045859ms)
+✔ R2 introduces no productive side effects (0.7675ms)
+✔ manifest locks structural projection boundaries (0.30707ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 342.896562

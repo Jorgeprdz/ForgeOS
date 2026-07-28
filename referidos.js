@@ -1,5 +1,5 @@
 // /modules/referidos.js - Directorio Premium y Ruteador de Ventas
-import { DB } from './db.js';
+import { DB } from './legacy/quarantine/crmaddlife-indexeddb/db.js';
 import { Navigation } from './platform/navigation-runtime.js';
 import { showToast, showConfirm } from './utils.js';
 

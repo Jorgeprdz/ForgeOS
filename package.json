@@ -2,5 +2,17 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
     "dotenv": "^17.4.2"
+  },
+  "scripts": {
+    "serve:e2e": "vite --host 0.0.0.0 --port 4173 --strictPort",
+    "test:e2e:preflight": "playwright test tests/e2e/fes-03-playwright-preflight.spec.mjs",
+    "test:e2e:fes03": "playwright test tests/e2e/fes-03"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "vite": "8.1.5"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

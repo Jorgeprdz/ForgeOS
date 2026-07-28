@@ -2,7 +2,7 @@
 // ENTERPRISE POLICY MANAGEMENT ENGINE
 // Production Ready Module
 
-import { DB } from './db.js';
+import { DB } from './legacy/quarantine/crmaddlife-indexeddb/db.js';
 
 import {
     showToast,

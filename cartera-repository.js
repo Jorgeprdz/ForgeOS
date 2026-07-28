@@ -7,7 +7,7 @@ import {
 
 import {
     DB
-} from './db.js';
+} from './legacy/quarantine/crmaddlife-indexeddb/db.js';
 
 class CarteraRepository extends BaseRepository {
 

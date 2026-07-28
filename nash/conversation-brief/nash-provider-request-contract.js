@@ -249,7 +249,7 @@ function validateProviderDraftRequest(request) {
   });
 }
 
-module.exports = {
+const api = Object.freeze({
   PROVIDER_REQUEST_VERSION,
   SUPPORTED_PROVIDERS,
   SUPPORTED_BRIEF_BUILDER_VERSIONS,
@@ -261,4 +261,11 @@ module.exports = {
     collectInjectionIndicators,
     normalizeProvider
   }
-};
+});
+
+if (typeof globalThis !== "undefined") {
+  globalThis.ForgeNashProviderRequestContract = api;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = api;
+}

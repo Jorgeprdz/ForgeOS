@@ -1,9 +1,18 @@
-import '../../advisor-os/sales-pipeline/sales-stage-registry.js';
-import '../../advisor-os/sales-pipeline/pipeline-stage-read-model.js';
-import '../../advisor-os/sales-pipeline/pipeline-ui.js';
-import '../../advisor-os/sales-pipeline/productive-prospect-service.js';
-import '../../advisor-os/sales-pipeline/productive-prospect-ui.js';
-import '../../advisor-os/sales-pipeline/productive-prospect-bootstrap.js';
+import '../../../advisor-os/sales-pipeline/sales-stage-registry.js';
+import '../../../advisor-os/sales-pipeline/pipeline-stage-read-model.js';
+import '../../../advisor-os/sales-pipeline/pipeline-ui.js';
+import '../../../advisor-os/sales-pipeline/productive-prospect-service.js';
+import '../../../advisor-os/sales-pipeline/prospect-context/universal-governed-prospect-context-contract.js';
+import '../../../advisor-os/sales-pipeline/prospect-context/pipeline-universal-prospect-context-adapter.js';
+import '../../../nash/context-intake/nash-prospect-context-intake-boundary-contract.js';
+import '../../../nash/context-intake/nash-prospect-context-intake.js';
+import '../../../nash/context-intake/nash-universal-prospect-context-consumer.js';
+import '../../../nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js';
+import '../../../nash/conversation-brief/nash-provider-request-contract.js';
+import '../../../nash/remote-draft-provider-client-boundary.js';
+import '../../../nash/pipeline-nash-draft-orchestrator.js';
+import '../../../advisor-os/sales-pipeline/productive-prospect-ui.js';
+import '../../../advisor-os/sales-pipeline/productive-prospect-bootstrap.js';
 
 const VERSION = '067G16D_FORGE_ALIVE_PUBLIC_VIEW_V1';
 const SUPPORTED_VIEWS = new Set(['inicio', 'pipeline', 'clientes', 'mas', 'alfred', 'reportes']);
@@ -35,6 +44,7 @@ let currentView = 'inicio';
 let pipelineMounted = false;
 let navListenerCount = 0;
 let productivePipeline = null;
+let productiveDraftOrchestrator = null;
 let authListenerBound = false;
 
 function emitPipelineRendered() {
@@ -154,7 +164,14 @@ async function renderPipeline(context) {
     try {
       if (!productivePipeline) {
         const client = await globalThis.ForgeProductiveProspectBootstrap067G17B.getClient();
-        productivePipeline = globalThis.ForgeProductiveProspectUI067G17B.create({ client, root: outlet });
+        productiveDraftOrchestrator = globalThis.ForgePipelineNashDraftOrchestrator.createPipelineNashDraftOrchestrator({
+          invokeFunction: (functionName, options) => client.functions.invoke(functionName, options),
+        });
+        productivePipeline = globalThis.ForgeProductiveProspectUI067G17B.create({
+          client,
+          root: outlet,
+          draftOrchestrator: productiveDraftOrchestrator,
+        });
       }
       await productivePipeline.load();
     } catch (error) {
@@ -263,6 +280,7 @@ function bind() {
       if (currentView !== 'pipeline') return;
       if (!['authenticated', 'anonymous'].includes(event.detail?.status)) return;
       productivePipeline = null;
+      productiveDraftOrchestrator = null;
       void renderPipeline({});
     });
   }
@@ -279,7 +297,13 @@ globalThis.ForgeAliveStaticView067G16A = Object.freeze({
   version:VERSION,
   open,
   current:() => currentView,
-  diagnostics:() => ({ currentView, pipelineMounted, pipelineMountCount:Number(host?.dataset.pipelineMountCount || 0), navListenerCount }),
+  diagnostics:() => ({
+    currentView,
+    pipelineMounted,
+    pipelineMountCount:Number(host?.dataset.pipelineMountCount || 0),
+    navListenerCount,
+    productiveDraftOrchestratorAvailable:Boolean(productiveDraftOrchestrator),
+  }),
 });
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once:true });

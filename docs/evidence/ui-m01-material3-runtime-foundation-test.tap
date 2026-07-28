@@ -1,0 +1,15 @@
+✔ default mode stays legacy and does not mark the DOM (7.838333ms)
+✔ material3 query enables the scoped runtime foundation (2.060052ms)
+✔ unknown values remain in legacy mode (1.779219ms)
+✔ approved tokens are fully scoped behind the flag (5.09099ms)
+✔ primitive selectors are inert outside material3 mode (1.435625ms)
+✔ real Forge Alive entrypoint loads the foundation once (1.081771ms)
+✔ manifest preserves functional and visual boundaries (0.654948ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 187.462552
