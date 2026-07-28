@@ -1,0 +1,25 @@
+{
+  "phase": "UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION",
+  "sourceCommit": "b13986224ec091f32ad309bb7af5765e1db78122",
+  "policy": "NO_AUTHORITATIVE_DOMAIN_MUTATION",
+  "protectedPaths": [
+    "docs/static-preview/quote-preview-live/",
+    "product-intelligence/",
+    "supabase/",
+    "platform/conversation-intelligence/",
+    "forge-quote-calculators.js",
+    "forge-accepted-quote-bridge.js",
+    "forge-quote-acceptance-entrypoint-r16j0a.js",
+    "parser",
+    "mapper",
+    "rate-cache",
+    "financial",
+    "orvi",
+    "docs/architecture/source-truth/NASH_",
+    "tests/nash-"
+  ],
+  "allowedRuntimePaths": [
+    "docs/static-preview/forge-alive-material3/",
+    ".github/workflows/pages.yml"
+  ]
+}

@@ -12002,6 +12002,26 @@ Status: `EXECUTION_AUTHORIZED`
 NEXT: `UI_M05_DISCOVERY_AND_FUNCTIONAL_BASELINE`
 <!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:END -->
 
+<!-- FORGE:UI_M05B_QUOTES_TRUE_MATERIAL3:START -->
+## UI-M05B Quotes True Material 3 Redesign and Public Runtime Correction
+
+PHASE: `UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-023 — UI-M05B Quotes True Material 3 Redesign Authority`.
+- Source: `b13986224ec091f32ad309bb7af5765e1db78122`.
+- Runtime branch: `feature/ui-m05b-quotes-true-material3-redesign`.
+- Scope: native Material 3 quote components, narrow runtime adapter and public
+  `env.js` artifact-path correction.
+- Legacy DOM transplant is forbidden.
+- Quote domain, Product Intelligence, Supabase, Nash, main and deployment
+  remain protected.
+- Owner visual acceptance is required before promotion.
+
+NEXT: `UI_M05B_IMPLEMENTATION_AND_OWNER_VISUAL_ACCEPTANCE`
+<!-- FORGE:UI_M05B_QUOTES_TRUE_MATERIAL3:END -->
+
 <!-- FORGEOS:R16E2C_UNIFIED_BUILD_TREE_SYNC_37107CA:START -->
 ## R16E2C Unified Build Tree Sync
 

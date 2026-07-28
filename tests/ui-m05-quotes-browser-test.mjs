@@ -17,6 +17,13 @@ const server = http.createServer(async (request, response) => {
   const pathname = decodeURIComponent(
     new URL(request.url, "http://127.0.0.1").pathname,
   );
+  if (pathname.endsWith("/env.js")) {
+    response.writeHead(200, { "Content-Type": "text/javascript" });
+    response.end(
+      'window.__ENV__=Object.freeze({"SUPABASE_URL":"https://rmlxigxysujsuwzgoimv.supabase.co","SUPABASE_KEY":"public-test-value"});',
+    );
+    return;
+  }
   const candidate = normalize(join(root, pathname.replace(/^\/+/, "")));
   if (!candidate.startsWith(root)) return response.writeHead(403).end();
   try {
@@ -43,7 +50,13 @@ const browser = await puppeteer.launch({
 try {
   const page = await browser.newPage();
   const errors = [];
+  let legacyDocumentFetches = 0;
   page.on("pageerror", (error) => errors.push(error.message));
+  page.on("request", (request) => {
+    if (request.url().includes("nueva-cotizacion/index.html")) {
+      legacyDocumentFetches += 1;
+    }
+  });
   for (const [width, height] of [
     [320, 568], [390, 844], [768, 1024], [1024, 768], [1440, 900], [844, 390],
   ]) {
@@ -57,6 +70,7 @@ try {
       return {
         route: document.body.dataset.forgeRoute,
         homeHidden: document.querySelector("[data-forge-home-module]").hidden,
+        homeVisible: visible(document.querySelector("[data-forge-home-module]")),
         navs: [...document.querySelectorAll("[data-forge-nav-pill]")]
           .filter(visible).length,
         orbs: [...document.querySelectorAll("[data-forge-command-orb]")]
@@ -67,6 +81,21 @@ try {
         legacyVisible: [...document.querySelectorAll(
           ".bottom-nav,.forge-mobile-nav-r16c5j,.fq-top-105dr",
         )].some(visible),
+        legacySidebarDom: document.querySelectorAll(
+          ".dw-sidebar-056y,.sidebar,[data-forge-legacy-sidebar]",
+        ).length,
+        legacyBack: [...document.querySelectorAll("a,button")].filter(
+          (node) => /volver a (inicio|cotizaciones)/i.test(node.textContent),
+        ).length,
+        legacyLabels: ["Clientes", "Pólizas", "Reportes"].filter((label) =>
+          [...document.querySelectorAll("nav a,nav button")].some(
+            (node) => node.textContent.trim() === label,
+          )
+        ).length,
+        publicConfigValid: globalThis.__FORGE_PUBLIC_CONFIG_STATE__?.valid,
+        publicBanner: document.querySelectorAll(
+          "[data-forge-public-config-notice]",
+        ).length,
         overflow: document.documentElement.scrollWidth
           > document.documentElement.clientWidth,
       };
@@ -74,11 +103,17 @@ try {
     assert.deepEqual(state, {
       route: "quotes",
       homeHidden: true,
+      homeVisible: false,
       navs: 1,
       orbs: 1,
       sheets: 1,
       active: "quotes",
       legacyVisible: false,
+      legacySidebarDom: 0,
+      legacyBack: 0,
+      legacyLabels: 0,
+      publicConfigValid: true,
+      publicBanner: 0,
       overflow: false,
     });
   }
@@ -135,6 +170,7 @@ try {
   await page.goForward();
   await page.waitForFunction(() => document.body.dataset.forgeRoute === "quotes");
   assert.deepEqual(errors, []);
+  assert.equal(legacyDocumentFetches, 0);
   console.log("PASS UI-M05 Chromium quotes shell integration");
 } finally {
   await browser.close();

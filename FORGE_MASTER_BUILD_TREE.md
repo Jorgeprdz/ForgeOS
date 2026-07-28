@@ -15236,6 +15236,27 @@ Status: `EXECUTION_AUTHORIZED`
 NEXT: `UI_M05_DISCOVERY_AND_FUNCTIONAL_BASELINE`
 <!-- FORGE:UI_M05_QUOTES_VISUAL_MIGRATION:END -->
 
+<!-- FORGE:UI_M05B_QUOTES_TRUE_MATERIAL3:START -->
+## UI-M05B Quotes True Material 3 Redesign and Public Runtime Correction
+
+PHASE: `UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION`
+
+Status: `EXECUTION_AUTHORIZED`
+
+- Authority: `ADR-023 — UI-M05B Quotes True Material 3 Redesign Authority`.
+- Source: `b13986224ec091f32ad309bb7af5765e1db78122`.
+- Runtime branch: `feature/ui-m05b-quotes-true-material3-redesign`.
+- UI-M05 technical integration remains historical; product acceptance failed.
+- Build native Material 3 quote components and connect them through a narrow
+  adapter to unchanged quotation authorities.
+- Correct public generated `env.js` resolution without committing secrets.
+- Legacy DOM transplant, domain mutation, Supabase mutation, Nash mutation,
+  direct main mutation and deployment are forbidden.
+- Owner visual acceptance remains required.
+
+NEXT: `UI_M05B_IMPLEMENTATION_AND_OWNER_VISUAL_ACCEPTANCE`
+<!-- FORGE:UI_M05B_QUOTES_TRUE_MATERIAL3:END -->
+
 <!-- FORGE:R16J0_MASTER_BUILD_TREE:START -->
 ## R16J0 Accepted Quote to Sales Presentation Entrypoint
 

@@ -80,6 +80,19 @@ The migration runs as a secondary lane while NFAST/FES remains the primary funct
 - Status: **EXECUTION_AUTHORIZED**
 - Corrective prerequisite for resuming UI-M05.
 
+### UI-M05B — Quotes true Material 3 redesign and public runtime correction
+
+- Phase: `UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION`
+- Status: **EXECUTION_AUTHORIZED**
+- Authority: `ADR-023 — UI-M05B Quotes True Material 3 Redesign Authority`.
+- Source commit: `b13986224ec091f32ad309bb7af5765e1db78122`.
+- Runtime branch: `feature/ui-m05b-quotes-true-material3-redesign`.
+- Corrects UI-M05 product acceptance by replacing the legacy DOM transplant
+  with native Material 3 components and a narrow functional runtime adapter.
+- Quote domain, Product Intelligence, Supabase, Nash, main and deployment
+  remain protected.
+- Owner visual acceptance is required before any promotion.
+
 ## Parallelism rule
 
 - Maximum active lanes: **2**.

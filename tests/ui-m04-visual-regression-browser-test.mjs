@@ -56,6 +56,13 @@ function staticServer(root) {
     const pathname = decodeURIComponent(
       new URL(request.url, "http://127.0.0.1").pathname,
     );
+    if (pathname.endsWith("/env.js")) {
+      response.writeHead(200, { "Content-Type": "text/javascript" });
+      response.end(
+        'window.__ENV__=Object.freeze({"SUPABASE_URL":"https://rmlxigxysujsuwzgoimv.supabase.co","SUPABASE_KEY":"public-test-value"});',
+      );
+      return;
+    }
     const candidate = normalize(join(root, pathname.replace(/^\/+/, "")));
     if (!candidate.startsWith(root)) return response.writeHead(403).end();
     try {

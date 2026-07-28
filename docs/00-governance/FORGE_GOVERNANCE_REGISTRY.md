@@ -258,6 +258,30 @@ UI-M05 is limited to the discovered functional Cotizaciones surface,
 canonical ForgeShell mounting, route/Nav Pill integration, visual migration
 and function-preserving validation.
 
+## UI-M05B Quotes True Material 3 Redesign Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-023 — UI-M05B Quotes True Material 3 Redesign Authority.txt` |
+| Phase | `UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION` |
+| Status | `EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Implementation readiness | `READY` |
+| Source commit | `b13986224ec091f32ad309bb7af5765e1db78122` |
+| Runtime branch | `feature/ui-m05b-quotes-true-material3-redesign` |
+| True component rebuild | `REQUIRED` |
+| Legacy DOM transplant | `FORBIDDEN` |
+| Quote domain boundaries | `PROTECTED` |
+| Owner visual acceptance | `REQUIRED` |
+| Deployment | `FORBIDDEN` |
+
+UI-M05B corrects the UI-M05 product-acceptance failure. It authorizes native
+Material 3 quotation components, a narrow adapter to existing runtime
+authorities and deterministic public `env.js` resolution. It does not authorize
+domain, Supabase, Nash, main or deployment mutation.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

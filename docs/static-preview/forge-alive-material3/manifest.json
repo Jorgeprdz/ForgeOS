@@ -1,6 +1,6 @@
 {
   "schema": "forge.ui.material3.canonical-shell.v1",
-  "phase": "UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION",
+  "phase": "UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION",
   "status": "execution_authorized",
   "entrypoint": "docs/static-preview/forge-alive-material3/index.html",
   "legacy": {
@@ -24,7 +24,9 @@
     "canonicalForgeShell": true,
     "homeModuleSeparated": true,
     "quotesModuleIntegrated": true,
-    "quotesRuntimeAuthority": "../forge-alive/nueva-cotizacion/index.html",
+    "quotesRuntimeAdapter": "./quote-runtime-adapter.js",
+    "legacyDomTransplant": false,
+    "material3NativeMarkup": true,
     "quotesRoute": "?nav=cotizaciones",
     "quotesPersistence": "not_applicable_by_existing_contract",
     "canonicalNavigationContract": true,
@@ -33,6 +35,7 @@
     "businessLogicConnected": true,
     "businessLogicDuplicated": false,
     "backendConnected": false,
+    "publicConfigSource": "../../env.js",
     "humanVisualAcceptanceRequired": true
   }
 }

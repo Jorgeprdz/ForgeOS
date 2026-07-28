@@ -13,6 +13,13 @@ const server = http.createServer(async (request, response) => {
   const pathname = decodeURIComponent(
     new URL(request.url, "http://127.0.0.1").pathname,
   );
+  if (pathname.endsWith("/env.js")) {
+    response.writeHead(200, { "Content-Type": "text/javascript" });
+    response.end(
+      'window.__ENV__=Object.freeze({"SUPABASE_URL":"https://rmlxigxysujsuwzgoimv.supabase.co","SUPABASE_KEY":"public-test-value"});',
+    );
+    return;
+  }
   let file = normalize(join(root, pathname.replace(/^\/+/, "")));
   if (!file.startsWith(root)) return response.writeHead(403).end();
   try {
@@ -46,6 +53,9 @@ try {
     await page.locator('[data-forge-quotes-module][data-runtime-mounted="true"]')
       .waitFor();
     const state = await page.evaluate(() => ({
+      homeVisible: Boolean(
+        document.querySelector("[data-forge-home-module]")?.getClientRects().length,
+      ),
       route: document.body.dataset.forgeRoute,
       active: document.querySelector("[data-forge-nav-pill] [aria-current=page]")
         ?.dataset.routeId,
@@ -54,10 +64,20 @@ try {
       sheets: document.querySelectorAll("[data-forge-alfred-sheet]").length,
       overflow: document.documentElement.scrollWidth
         > document.documentElement.clientWidth,
+      legacySidebar: document.querySelectorAll(
+        ".dw-sidebar-056y,.sidebar,[data-forge-legacy-sidebar]",
+      ).length,
+      legacyBack: [...document.querySelectorAll("a,button")].filter(
+        (node) => /volver a (inicio|cotizaciones)/i.test(node.textContent),
+      ).length,
+      publicBanner: document.querySelectorAll(
+        "[data-forge-public-config-notice]",
+      ).length,
     }));
     assert.deepEqual(state, {
-      route: "quotes", active: "quotes", navs: 1, orbs: 1,
-      sheets: 1, overflow: false,
+      homeVisible: false, route: "quotes", active: "quotes", navs: 1, orbs: 1,
+      sheets: 1, overflow: false, legacySidebar: 0, legacyBack: 0,
+      publicBanner: 0,
     });
   }
   await context.close();

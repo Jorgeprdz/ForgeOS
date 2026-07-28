@@ -5,13 +5,20 @@ import test from "node:test";
 
 const read = (path) => readFileSync(path, "utf8");
 
-test("QuotesModule uses the functional source without domain duplication", () => {
+test("QuotesModule uses native Material 3 markup without legacy transplant", () => {
   const module = read(
     "docs/static-preview/forge-alive-material3/quotes-module.js",
   );
-  assert.match(module, /forge-alive\/nueva-cotizacion\/index\.html/);
+  const adapter = read(
+    "docs/static-preview/forge-alive-material3/quote-runtime-adapter.js",
+  );
   assert.match(module, /dedicated-new-quote-static-route/);
-  assert.doesNotMatch(module, /iframe|calculateQuote|localStorage|supabase/i);
+  assert.match(module, /quotesWorkspaceMarkup/);
+  assert.match(adapter, /forge-accepted-quote-bridge\.js/);
+  assert.doesNotMatch(
+    module + adapter,
+    /nueva-cotizacion\/index\.html|DOMParser|document\.importNode|iframe/i,
+  );
 });
 
 test("canonical navigation registers the real quotes route", () => {
@@ -25,12 +32,13 @@ test("canonical navigation registers the real quotes route", () => {
   assert.match(contract, /requested === "cotizaciones" \? "quotes"/);
 });
 
-test("only scoped Material 3 quote presentation suppresses legacy global nav", () => {
+test("scoped Material 3 quote presentation does not hide a mounted legacy UI", () => {
   const css = read(
     "docs/static-preview/forge-alive-material3/quotes-module.css",
   );
-  assert.match(css, /\.bottom-nav,[\s\S]*\.forge-mobile-nav-r16c5j/);
-  assert.match(css, /\.fq-top-105dr/);
+  assert.match(css, /\.quotes-workspace/);
+  assert.match(css, /\.quotes-result-grid/);
+  assert.doesNotMatch(css, /\.bottom-nav|\.forge-mobile-nav-r16c5j|\.fq-top-105dr/);
   assert.doesNotMatch(css, /\.nav-pill\s*\{[^}]*display:\s*none/s);
 });
 
@@ -44,7 +52,7 @@ test("shell owns route module reconciliation", () => {
 
 test("UI-M05 preserves authoritative quote and product boundaries", () => {
   const manifest = JSON.parse(read(
-    "docs/evidence/ui-m05-protected-boundary-manifest.json",
+    "docs/evidence/ui-m05b-protected-boundary-manifest.json",
   ));
   assert.equal(manifest.policy, "NO_AUTHORITATIVE_DOMAIN_MUTATION");
   const changed = execFileSync(

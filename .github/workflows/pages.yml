@@ -185,7 +185,11 @@ jobs:
             'index.html',
             'app.css',
             'app.js',
+            'forge-public-config.js',
             'manifest.json',
+            'quote-runtime-adapter.js',
+            'quotes-module.css',
+            'quotes-module.js',
             'tokens.css',
           ];
           for (const file of required) {
@@ -201,7 +205,14 @@ jobs:
           );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
           assert.match(index, /app\.css\?v=ui-m03-approved-001/);
-          assert.match(index, /app\.js\?v=ui-m03-approved-001/);
+          assert.ok(
+            index.includes(
+              `../../env.js?v=${process.env.EXPECTED_COMMIT_SHA}`,
+            ),
+            'clean Forge Alive entrypoint does not load generated env.js',
+          );
+          assert.match(index, /forge-public-config\.js\?v=ui-m05b-001/);
+          assert.match(index, /app\.js\?v=ui-m05b-001/);
           assert.doesNotMatch(
             index,
             /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,

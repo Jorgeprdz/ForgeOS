@@ -1,0 +1,39 @@
+ADR-023 — UI-M05B Quotes True Material 3 Redesign Authority
+
+Status: RATIFIED
+
+PHASE=UI-M05B_QUOTES_TRUE_MATERIAL3_REDESIGN_AND_PUBLIC_RUNTIME_CORRECTION
+PHASE_STATUS=EXECUTION_AUTHORIZED
+PHASE_TYPE=CORRECTIVE_PRODUCT_UI_REBUILD
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+IMPLEMENTATION_READINESS=READY
+SOURCE_COMMIT=b13986224ec091f32ad309bb7af5765e1db78122
+RUNTIME_BRANCH=feature/ui-m05b-quotes-true-material3-redesign
+PARENT_PHASE=UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION
+UI_M05_PRODUCT_ACCEPTANCE=FAIL
+TRUE_COMPONENT_REBUILD=REQUIRED
+LEGACY_DOM_TRANSPLANT=FORBIDDEN
+VISUAL_REDESIGN=AUTHORIZED
+QUOTE_DOMAIN_BOUNDARIES=PROTECTED
+OWNER_VISUAL_ACCEPTANCE_REQUIRED=YES
+SUPABASE_REMOTE_MUTATION=FORBIDDEN
+DEPLOYMENT=FORBIDDEN
+MAIN_DIRECT_MUTATION=FORBIDDEN
+
+Decision
+
+UI-M05B corrects the product-acceptance failure of UI-M05. It authorizes a
+native Material 3 Cotizaciones workspace and a narrow adapter to existing
+quotation runtime authorities. It forbids fetching, parsing, importing or
+hiding the legacy page as the new UI.
+
+Boundaries
+
+Quote formulas, calculations, projections, Product Truth, Product
+Intelligence, product rules, parsers, mappers, rate cache, accepted-quote
+contracts, PDF generation, Supabase, ORVI, Nash and UI-M04 Home remain
+protected. Public configuration repair may consume the generated Pages
+`env.js` without committing credentials. Deployment remains forbidden until
+owner visual acceptance.
