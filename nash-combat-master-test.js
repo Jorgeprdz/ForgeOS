@@ -19,6 +19,22 @@ const fixtures = [
     expected: "STALL"
   },
   {
+    objection: "Lo voy a pensar",
+    expected: "STALL"
+  },
+  {
+    objection: "LO VOY A PENSAR",
+    expected: "STALL"
+  },
+  {
+    objection: "Lo   voy   a   pensar",
+    expected: "STALL"
+  },
+  {
+    objection: "Necesito revisar unas cosas diferentes",
+    expected: "UNKNOWN"
+  },
+  {
     objection: "Ya tengo seguro",
     expected: "ALREADY_COVERED"
   },
@@ -99,4 +115,5 @@ if (fail === 0) {
   console.log("\n✅ NASH COMBAT SYSTEM v0.1 PASS");
 } else {
   console.log("\n❌ NASH COMBAT SYSTEM NEEDS REVIEW");
+  process.exitCode = 1;
 }

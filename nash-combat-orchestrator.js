@@ -9,7 +9,7 @@ function classifyObjection(text = "") {
     return "TIME";
   }
 
-  if (/pensarlo|lo veo|lo reviso|déjame|dejame/.test(objection)) {
+  if (/pensarlo|\blo\s+voy\s+a\s+pensar\b|lo veo|lo reviso|déjame|dejame/.test(objection)) {
     return "STALL";
   }
 
