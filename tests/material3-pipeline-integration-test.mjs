@@ -159,6 +159,14 @@ test("Material 3 Pipeline owns a light referral sheet independent from Alfred", 
   assert.match(source, /status:\s*"referred_new"/);
   assert.doesNotMatch(source, /shell\.setAlfred/);
   assert.match(productiveAdapter, /service\.listProspects\(\)/);
+  assert.match(
+    productiveAdapter,
+    /globalThis\.__FORGE_NASH_PROVIDER_ID__ \|\| "gemini"/,
+  );
+  assert.doesNotMatch(
+    productiveAdapter,
+    /globalThis\.__FORGE_NASH_PROVIDER_ID__ \|\| "deterministic"/,
+  );
   assert.match(source, /referralStatus = "Referido guardado\."/);
   assert.doesNotMatch(source, /data-saved-referral-card|savedReferralProspect/);
   assert.match(source, /data-productive-prospect-card/);
@@ -213,6 +221,20 @@ test("visual diagnostic distinguishes referral, Alfred and legacy modal state", 
   assert.match(diagnostic, /data-save-referral/);
   assert.match(diagnostic, /pipelineSavedReferral/);
   assert.match(diagnostic, /data-saved-referral-card/);
-  assert.match(diagnostic, /!after\.alfredVisible/);
-  assert.match(diagnostic, /!after\.legacyCenteredProspectModalVisible/);
+  assert.match(diagnostic, /nashProviderAttempted/);
+  assert.match(diagnostic, /deterministicFallbackUsed/);
+  assert.match(diagnostic, /editedDraftInvalidatedApproval/);
+  assert.match(diagnostic, /https:\/\/wa\.me\//);
+  assert.match(diagnostic, /assertVisualAcceptance\(results\)/);
+  assert.match(diagnostic, /FORGE_UI_VISUAL_ACCEPTANCE_FAILED/);
+  for (const gate of [
+    "FORGE_UI_VISUAL_ACCEPTANCE=PASS",
+    "PIPELINE_PRODUCTIVE_ACCEPTANCE=PASS",
+    "NASH_PROVIDER_ATTEMPT=PASS",
+    "NASH_DETERMINISTIC_FALLBACK=PASS",
+    "NFAST06_EXACT_APPROVAL=PASS",
+    "MANUAL_WHATSAPP_BOUNDARY=PASS",
+    "QUOTE_SUBSTANTIVE_RESULT=PASS",
+    "ALFRED_INDEPENDENCE=PASS",
+  ]) assert.match(diagnostic, new RegExp(gate));
 });

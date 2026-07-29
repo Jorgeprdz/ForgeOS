@@ -200,6 +200,23 @@ async function capture(page, directory, label, options = {}) {
         document.querySelector("[data-timeline-activity]")?.dataset.activitySource || null,
       nashWorkspaceVisible:
         visibleCount("[data-nash-prospect-workspace]") > 0,
+      nashProviderAttempted:
+        globalThis.__FORGE_DIAGNOSTIC_NASH_PROVIDER_ATTEMPTED__ === true,
+      deterministicFallbackUsed:
+        document.querySelector("[data-nash-source-mode]")?.textContent.includes(
+          "determinística",
+        ) || false,
+      draftVisible:
+        visibleCount("[data-nash-draft]") > 0 &&
+        Boolean(document.querySelector("[data-nash-draft]")?.value.trim()),
+      exactApprovalPassed:
+        visibleCount("[data-manual-whatsapp]") > 0,
+      manualWhatsAppHrefAvailable:
+        document.querySelector("[data-manual-whatsapp]")?.getAttribute("href")
+          ?.startsWith("https://wa.me/") || false,
+      automaticWhatsAppOpen: false,
+      editedDraftInvalidatedApproval:
+        globalThis.__FORGE_DIAGNOSTIC_EDIT_INVALIDATED__ === true,
       conversationBriefProduced:
         document.querySelector("[data-nash-prospect-workspace]")?.textContent.includes("Conversation Brief: Disponible") || false,
       humanApprovalRequired:
@@ -303,6 +320,8 @@ async function captureViewport(browser, viewport, fixture) {
             id: "diagnostic-mariana-torres",
             ...row,
             archived_at: null,
+            created_at: "2026-07-29T12:00:00.000Z",
+            updated_at: "2026-07-29T12:00:00.000Z",
           };
           records.push(state.inserted);
           timeline.push({
@@ -358,6 +377,12 @@ async function captureViewport(browser, viewport, fixture) {
         },
         from: (table) => query(table),
         rpc: async () => ({ data: null, error: null }),
+        functions: {
+          invoke: async () => {
+            globalThis.__FORGE_DIAGNOSTIC_NASH_PROVIDER_ATTEMPTED__ = true;
+            return { error: new Error("DIAGNOSTIC_PROVIDER_UNAVAILABLE") };
+          },
+        },
       }),
     };
     globalThis.__FORGE_DIAGNOSTIC_SAMPLE_REFERRAL__ = sample;
@@ -443,10 +468,42 @@ async function captureViewport(browser, viewport, fixture) {
         state: "visible",
         timeout: 15_000,
       });
+      const draft = page.locator("[data-nash-draft]");
+      const sourceMode = page.locator("[data-nash-source-mode]");
+      const approval = page.locator("[data-approve-nash-draft]");
+      const whatsapp = page.locator("[data-manual-whatsapp]");
+      const originalDraft = await draft.inputValue();
+      if (!originalDraft.trim()) throw new Error("NASH_DRAFT_EMPTY");
+      if (!(await sourceMode.isVisible())) throw new Error("NASH_SOURCE_MODE_HIDDEN");
+      const urlBeforeApproval = page.url();
+      await approval.click();
+      await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
+      const approvedHref = await whatsapp.getAttribute("href");
+      if (!approvedHref?.startsWith("https://wa.me/")) {
+        throw new Error("MANUAL_WHATSAPP_HREF_UNAVAILABLE");
+      }
+      if (page.url() !== urlBeforeApproval) {
+        throw new Error("AUTOMATIC_WHATSAPP_NAVIGATION_DETECTED");
+      }
       result.routes.pipelineNashWorkspace = await capture(
         page,
         directory,
         "03c-pipeline-nash-workspace",
+      );
+      await draft.fill(`${originalDraft} Editado`);
+      if (await whatsapp.isVisible() || await whatsapp.getAttribute("href")) {
+        throw new Error("EDITED_DRAFT_APPROVAL_NOT_INVALIDATED");
+      }
+      await page.evaluate(() => {
+        globalThis.__FORGE_DIAGNOSTIC_EDIT_INVALIDATED__ = true;
+      });
+      await draft.fill(originalDraft);
+      await approval.click();
+      await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
+      result.routes.pipelineNashAccepted = await capture(
+        page,
+        directory,
+        "03d-pipeline-nash-accepted",
       );
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");
@@ -469,14 +526,10 @@ async function captureViewport(browser, viewport, fixture) {
       .locator("#fq-solution-online-pdf-105dr")
       .setInputFiles(fixture.path);
 
-    await Promise.race([
-      page.waitForSelector(
-        '[data-forge-intake-results]:not([hidden]), [data-forge-state="preview-calculated"], [data-forge-state="pending"]',
-        { timeout: 40_000 },
-      ),
-      page.waitForTimeout(8_000),
-    ]).catch(() => {});
-    await page.waitForTimeout(1_200);
+    await page.waitForSelector(
+      '[data-material3-quote-result-ready], .quote-result__state--error',
+      { state: "visible", timeout: 40_000 },
+    );
 
     result.routes.quotesAfterUpload = await capture(
       page,
@@ -497,6 +550,11 @@ async function captureViewport(browser, viewport, fixture) {
       () => {},
     );
   } finally {
+    result.telemetrySummary = {
+      pageErrors: telemetry.pageErrors.length,
+      failedRequests: telemetry.failedRequests.length,
+      consoleErrors: telemetry.console.filter(entry => entry.type === "error").length,
+    };
     await writeFile(
       path.join(directory, "telemetry.json"),
       JSON.stringify(telemetry, null, 2),
@@ -548,6 +606,68 @@ ${rows.join("\n")}
 `;
 }
 
+function assertVisualAcceptance(results) {
+  const failures = [];
+  const requireFlag = (viewport, label, condition) => {
+    if (!condition) failures.push(`${viewport}:${label}`);
+  };
+
+  for (const result of results) {
+    const viewport = result.viewport.name;
+    const referral = result.routes.pipelineAfter || {};
+    const card = result.routes.pipelineSavedReferral || {};
+    const nash = result.routes.pipelineNashAccepted || {};
+    const quote = result.routes.quotesAfterUpload || {};
+    const telemetry = result.telemetrySummary || {};
+
+    requireFlag(viewport, "referralSheetVisible", referral.referralSheetVisible === true);
+    requireFlag(viewport, "alfredVisible=false", referral.alfredVisible === false);
+    requireFlag(viewport, "productiveProspectCardVisible", card.productiveProspectCardVisible === true);
+    requireFlag(viewport, "productiveProspectCardContainsName", card.productiveProspectCardContainsName === true);
+    requireFlag(viewport, "productiveCardUsesNormalRenderer", card.productiveCardUsesNormalRenderer === true);
+    requireFlag(viewport, "specialSavedReferralCardPathPresent=false", card.specialSavedReferralCardPathPresent === false);
+    requireFlag(viewport, "timelineCreatedEventVisible", card.timelineCreatedEventVisible === true);
+    requireFlag(viewport, "lastVerifiedActivitySource=TIMELINE", card.lastVerifiedActivitySource === "TIMELINE");
+    for (const flag of [
+      "nashWorkspaceVisible",
+      "nashProviderAttempted",
+      "deterministicFallbackUsed",
+      "draftVisible",
+      "exactApprovalPassed",
+      "manualWhatsAppHrefAvailable",
+      "editedDraftInvalidatedApproval",
+      "conversationBriefProduced",
+      "humanApprovalRequired",
+    ]) requireFlag(viewport, flag, nash[flag] === true);
+    requireFlag(viewport, "automaticWhatsAppOpen=false", nash.automaticWhatsAppOpen === false);
+    requireFlag(viewport, "automaticSendPerformed=false", nash.automaticSendPerformed === false);
+    requireFlag(viewport, "legacyCenteredReferralModalVisible=false", referral.legacyCenteredReferralModalVisible === false);
+
+    for (const flag of [
+      "quoteResultsVisible",
+      "quoteReadyState",
+      "quoteLoadedSubstantive",
+      "quoteProductIdentityVisible",
+      "quoteNumericResultVisible",
+      "quoteWarningsOrEvidenceVisible",
+    ]) requireFlag(viewport, flag, quote[flag] === true);
+    requireFlag(viewport, "quoteProjectionTextLength>=120", quote.quoteProjectionTextLength >= 120);
+    requireFlag(viewport, "quoteProjectionSectionCount>=3", quote.quoteProjectionSectionCount >= 3);
+    requireFlag(viewport, "quoteProgressOnly=false", quote.quoteProgressOnly === false);
+    requireFlag(viewport, "quoteLegacyRuntimeVisible=false", quote.quoteLegacyRuntimeVisible === false);
+    requireFlag(viewport, "quoteLegacyShellVisible=false", quote.quoteLegacyShellVisible === false);
+    requireFlag(viewport, "pageErrors=0", telemetry.pageErrors === 0);
+    requireFlag(viewport, "failedRequests=0", telemetry.failedRequests === 0);
+    requireFlag(viewport, "consoleErrors=0", telemetry.consoleErrors === 0);
+    requireFlag(viewport, "runErrors=0", result.errors.length === 0);
+    requireFlag(viewport, "alfredIndependent", result.routes.alfredIndependent?.alfredVisible === true);
+  }
+
+  if (failures.length) {
+    throw new Error(`FORGE_UI_VISUAL_ACCEPTANCE_FAILED=${failures.join(",")}`);
+  }
+}
+
 async function main() {
   await rm(OUTPUT_ROOT, { recursive: true, force: true });
   await mkdir(OUTPUT_ROOT, { recursive: true });
@@ -593,7 +713,16 @@ async function main() {
     sourceFixture,
   );
 
+  assertVisualAcceptance(results);
   console.log("FORGE_UI_VISUAL_DIAGNOSTIC=COMPLETE");
+  console.log("FORGE_UI_VISUAL_ACCEPTANCE=PASS");
+  console.log("PIPELINE_PRODUCTIVE_ACCEPTANCE=PASS");
+  console.log("NASH_PROVIDER_ATTEMPT=PASS");
+  console.log("NASH_DETERMINISTIC_FALLBACK=PASS");
+  console.log("NFAST06_EXACT_APPROVAL=PASS");
+  console.log("MANUAL_WHATSAPP_BOUNDARY=PASS");
+  console.log("QUOTE_SUBSTANTIVE_RESULT=PASS");
+  console.log("ALFRED_INDEPENDENCE=PASS");
   console.log(`OUTPUT=${OUTPUT_ROOT}`);
   console.log(`TARGET=${TARGET_URL}`);
   console.log(`CACHE_BUST=${CACHE_BUST}`);

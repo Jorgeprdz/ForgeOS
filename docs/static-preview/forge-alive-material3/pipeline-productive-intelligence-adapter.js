@@ -111,7 +111,7 @@ export async function createProductiveIntelligenceAdapter() {
     const result = await orchestrator.requestDraft({
       pipelineRecord: prospect,
       approvedDisplayName: true,
-      providerId: globalThis.__FORGE_NASH_PROVIDER_ID__ || "deterministic",
+      providerId: globalThis.__FORGE_NASH_PROVIDER_ID__ || "gemini",
     });
     const providerCandidate = result.providerEnvelope?.draftCandidate || null;
     const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
