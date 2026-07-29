@@ -1,12 +1,26 @@
 name: Forge UI Visual Diagnostic
 
 on:
+  push:
+    branches:
+      - fix/material3-productive-intelligence-and-quote-results
+    paths:
+      - .github/workflows/forge-ui-visual-diagnostic.yml
+      - docs/static-preview/forge-alive-material3/**
+      - docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.*
+      - advisor-os/sales-pipeline/**
+      - nash/**
+      - nash-*.js
+      - manager-os/nba/**
+      - tools/forge-ui-visual-diagnostic.mjs
+      - package.json
+      - package-lock.json
   workflow_dispatch:
     inputs:
       target_url:
         description: URL base de Forge Alive que se va a navegar
         required: false
-        default: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
+        default: http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/
         type: string
       quote_fixture_path:
         description: Ruta opcional dentro del repositorio a un PDF o JSON de cotización
@@ -29,25 +43,40 @@ concurrency:
 jobs:
   capture:
     if: >-
+      github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
       github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     env:
-      FORGE_DIAGNOSTIC_URL: >-
-        ${{ github.event.inputs.target_url || 'https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/' }}
-      FORGE_DIAGNOSTIC_SHA: >-
-        ${{ github.event.workflow_run.head_sha || github.sha }}
       FORGE_DIAGNOSTIC_FIXTURE: ${{ github.event.inputs.quote_fixture_path || '' }}
       FORGE_DIAGNOSTIC_OUTPUT: artifacts/forge-ui-diagnostic
 
     steps:
-      - name: Checkout deployed source
+      - name: Checkout accepted source
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 1
+
+      - name: Resolve diagnostic target
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "FORGE_DIAGNOSTIC_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/" >> "$GITHUB_ENV"
+            echo "FORGE_DIAGNOSTIC_SHA=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_ENV"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            echo "FORGE_DIAGNOSTIC_URL=http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/" >> "$GITHUB_ENV"
+            echo "FORGE_DIAGNOSTIC_SHA=${{ github.sha }}" >> "$GITHUB_ENV"
+          else
+            target="${{ github.event.inputs.target_url }}"
+            if [ -z "$target" ]; then
+              target="http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/"
+            fi
+            echo "FORGE_DIAGNOSTIC_URL=$target" >> "$GITHUB_ENV"
+            echo "FORGE_DIAGNOSTIC_SHA=${{ github.sha }}" >> "$GITHUB_ENV"
+          fi
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -58,17 +87,51 @@ jobs:
       - name: Install repository dependencies
         run: npm ci
 
+      - name: Generate browser diagnostic public configuration
+        run: |
+          cat > env.js <<'EOF'
+          window.__ENV__ = Object.freeze({
+            "SUPABASE_URL": "https://rmlxigxysujsuwzgoimv.supabase.co",
+            "SUPABASE_KEY": "forge-browser-diagnostic-public-anon-placeholder",
+            "DEMO_MODE": "false",
+            "ENABLE_TEST_ADVISOR_LOGIN": "false"
+          });
+          EOF
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
+
+      - name: Start repository Vite server
+        shell: bash
+        run: |
+          nohup npm run serve:e2e > /tmp/forge-vite.log 2>&1 &
+          echo $! > /tmp/forge-vite.pid
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --show-error \
+              http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/ \
+              > /dev/null; then
+              echo "FORGE_LOCAL_SERVER=READY"
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/forge-vite.log
+          echo "FORGE_LOCAL_SERVER=FAILED"
+          false
 
       - name: Wait for Pages propagation
         if: github.event_name == 'workflow_run'
         run: sleep 20
 
-      - name: Capture visual diagnostic
-        id: diagnostic
-        continue-on-error: true
-        run: node tools/forge-ui-visual-diagnostic.mjs
+      - name: Capture and enforce browser diagnostic
+        shell: bash
+        run: |
+          set +e
+          node tools/forge-ui-visual-diagnostic.mjs 2>&1 | tee /tmp/forge-ui-visual-diagnostic.log
+          diagnostic_status=${PIPESTATUS[0]}
+          mkdir -p artifacts/forge-ui-diagnostic
+          cp /tmp/forge-ui-visual-diagnostic.log artifacts/forge-ui-diagnostic/diagnostic.log
+          exit "$diagnostic_status"
 
       - name: Publish diagnostic summary
         if: always()
@@ -77,10 +140,10 @@ jobs:
             cat artifacts/forge-ui-diagnostic/summary.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "# Forge UI visual diagnostic" >> "$GITHUB_STEP_SUMMARY"
-            echo "No se pudo generar summary.md. Revisa fatal-error.txt en el artifact." >> "$GITHUB_STEP_SUMMARY"
+            echo "No se pudo generar summary.md. Revisa fatal-error.txt y diagnostic.log en el artifact." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Upload screenshot ZIP artifact
+      - name: Upload diagnostic artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -89,9 +152,16 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Enforce diagnostic execution
+      - name: Enforce acceptance evidence
         if: always()
+        shell: bash
         run: |
           test -f artifacts/forge-ui-diagnostic/manifest.json
           test -f artifacts/forge-ui-diagnostic/summary.md
+          test -f artifacts/forge-ui-diagnostic/diagnostic.log
+          test ! -f artifacts/forge-ui-diagnostic/fatal-error.txt
+          grep -F "FORGE_UI_VISUAL_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "GOOGLE_AUTH_RECONNECTION_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "NASH_COMBAT_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "NBA_REASON_WHY_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
           echo "FORGE_UI_VISUAL_DIAGNOSTIC=PASS"
