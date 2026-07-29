@@ -1,6 +1,12 @@
-const { runNashCombat } = require("./nash-combat-orchestrator");
-const { detectNashIntent } = require("./nash-intent-engine");
-const { buildNextBestAction } = require("./nash-next-best-action-engine");
+const { runNashCombat } = typeof module !== "undefined" && module.exports
+  ? require("./nash-combat-orchestrator")
+  : globalThis.ForgeNashCombatOrchestrator;
+const { detectNashIntent } = typeof module !== "undefined" && module.exports
+  ? require("./nash-intent-engine")
+  : globalThis.ForgeNashIntentEngine;
+const { buildNextBestAction } = typeof module !== "undefined" && module.exports
+  ? require("./nash-next-best-action-engine")
+  : globalThis.ForgeNashNextBestActionEngine;
 
 function buildPsychologyReport({ objection, intent, combat, personality = "UNKNOWN" }) {
   const psychologyByIntent = {
@@ -127,7 +133,9 @@ function buildCombatIntelligenceReport(input = {}) {
   };
 }
 
-module.exports = {
+const ForgeNashCombatIntelligenceReportEngine = {
   buildCombatIntelligenceReport,
   buildPsychologyReport
 };
+if (typeof globalThis !== "undefined") globalThis.ForgeNashCombatIntelligenceReportEngine = ForgeNashCombatIntelligenceReportEngine;
+if (typeof module !== "undefined" && module.exports) module.exports = ForgeNashCombatIntelligenceReportEngine;

@@ -113,6 +113,8 @@ function buildNextBestAction(input = {}) {
   };
 }
 
-module.exports = {
+const ForgeNashNextBestActionEngine = {
   buildNextBestAction
 };
+if (typeof globalThis !== "undefined") globalThis.ForgeNashNextBestActionEngine = ForgeNashNextBestActionEngine;
+if (typeof module !== "undefined" && module.exports) module.exports = ForgeNashNextBestActionEngine;

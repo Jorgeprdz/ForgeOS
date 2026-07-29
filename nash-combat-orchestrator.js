@@ -101,10 +101,12 @@ function runNashCombat({ objection, context = {}, personality = {} }) {
   };
 }
 
-module.exports = {
+const ForgeNashCombatOrchestrator = {
   classifyObjection,
   diagnoseObjection,
   buildObjectionResponse,
   buildNextMove,
   runNashCombat
 };
+if (typeof globalThis !== "undefined") globalThis.ForgeNashCombatOrchestrator = ForgeNashCombatOrchestrator;
+if (typeof module !== "undefined" && module.exports) module.exports = ForgeNashCombatOrchestrator;

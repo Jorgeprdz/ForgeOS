@@ -235,7 +235,9 @@ function detectNashIntent(input = {}) {
   };
 }
 
-module.exports = {
+const ForgeNashIntentEngine = {
   detectNashIntent,
   INTENT_DEFINITIONS
 };
+if (typeof globalThis !== "undefined") globalThis.ForgeNashIntentEngine = ForgeNashIntentEngine;
+if (typeof module !== "undefined" && module.exports) module.exports = ForgeNashIntentEngine;

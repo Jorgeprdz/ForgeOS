@@ -5,7 +5,9 @@ const {
   NBA_REASON_WHY_STATUSES,
   NBA_REASON_WHY_ALLOWED_USES,
   NBA_REASON_WHY_FORBIDDEN_USES
-} = require("./nba-reason-why-boundary-contract");
+} = typeof module !== "undefined" && module.exports
+  ? require("./nba-reason-why-boundary-contract")
+  : globalThis.ForgeNbaReasonWhyBoundary006B;
 
 const NASH_MICK_NBA_RECONNECTION_STATUSES = Object.freeze({
   READY_FOR_HUMAN_REVIEW: "READY_FOR_HUMAN_REVIEW",
@@ -323,10 +325,12 @@ function buildNashMickNbaReconnection(input = {}) {
   };
 }
 
-module.exports = {
+const ForgeNashMickNbaReconnection006C = {
   buildNashMickNbaReconnection,
   NASH_MICK_NBA_RECONNECTION_STATUSES,
   NASH_MICK_NBA_RECONNECTION_DECISIONS,
   NBA_REASON_WHY_ALLOWED_USES,
   NBA_REASON_WHY_FORBIDDEN_USES
 };
+if (typeof globalThis !== "undefined") globalThis.ForgeNashMickNbaReconnection006C = ForgeNashMickNbaReconnection006C;
+if (typeof module !== "undefined" && module.exports) module.exports = ForgeNashMickNbaReconnection006C;

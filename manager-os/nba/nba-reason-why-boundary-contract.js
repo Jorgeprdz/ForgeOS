@@ -390,10 +390,12 @@ function buildNbaReasonWhyBoundary(input = {}) {
   };
 }
 
-module.exports = {
+const ForgeNbaReasonWhyBoundary006B = {
   buildNbaReasonWhyBoundary,
   NBA_REASON_WHY_STATUSES,
   NBA_REASON_WHY_DECISIONS,
   NBA_REASON_WHY_ALLOWED_USES,
   NBA_REASON_WHY_FORBIDDEN_USES
 };
+if (typeof globalThis !== "undefined") globalThis.ForgeNbaReasonWhyBoundary006B = ForgeNbaReasonWhyBoundary006B;
+if (typeof module !== "undefined" && module.exports) module.exports = ForgeNbaReasonWhyBoundary006B;
