@@ -1,5 +1,7 @@
-const pipelineBase = new URL("../../../advisor-os/sales-pipeline/", import.meta.url);
-const nashBase = new URL("../../../nash/", import.meta.url);
+const sourceLayout = import.meta.url.includes("/docs/static-preview/");
+const pipelineBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
+const nashBase = new URL(sourceLayout ? "../../../nash/" : "../../nash/", import.meta.url);
+const managerNbaBase = new URL(sourceLayout ? "../../../manager-os/nba/" : "../../manager-os/nba/", import.meta.url);
 
 async function load(url) {
   await import(`${url.href}?v=material3-productive-001`);
@@ -28,6 +30,12 @@ async function loadNashAuthorities() {
     [nashBase, "draft-intake/nfast06-draft-safety-boundary.js"],
     [nashBase, "draft-intake/nfast06-deterministic-draft-renderer.js"],
     [pipelineBase, "contact-navigation/productive-contact-navigation-boundary.js"],
+    [nashBase, "../nash-intent-engine.js"],
+    [nashBase, "../nash-combat-orchestrator.js"],
+    [nashBase, "../nash-next-best-action-engine.js"],
+    [nashBase, "../nash-combat-intelligence-report-engine.js"],
+    [managerNbaBase, "nba-reason-why-boundary-contract.js"],
+    [managerNbaBase, "nash-mick-nba-reconnection-engine.js"],
   ]) await load(new URL(path, base));
 }
 
@@ -140,8 +148,97 @@ export async function createProductiveIntelligenceAdapter() {
     });
   }
 
+  async function analyzeCombat(prospect, objection) {
+    await loadNashAuthorities();
+    const text = String(objection || "").trim();
+    if (!text) throw new Error("COMBAT_OBJECTION_REQUIRED");
+    return globalThis.ForgeNashCombatIntelligenceReportEngine
+      .buildCombatIntelligenceReport({
+        objection: text,
+        context: { name: prospect.fullName, prospectId: prospect.id, stage: prospect.status },
+        personality: {},
+      });
+  }
+
+  async function registerObjectionClassification(card, combat) {
+    const objectionCode = combat?.classification?.type;
+    if (!objectionCode) throw new Error("REVIEWED_OBJECTION_CLASSIFICATION_REQUIRED");
+    const occurredAt = new Date().toISOString();
+    await timelineService.appendProspectTimelineEvent(card.id, {
+      eventType: "OBJECTION_RECORDED",
+      occurredAt,
+      sourceRecordReference: `PROSPECT:${card.id}`,
+      payload: { objectionCode, resolutionStatus: "OPEN" },
+      evidenceReferences: [`PROSPECT:${card.id}`],
+      idempotencyKey: `OBJECTION:${card.id}:${objectionCode}:${occurredAt}`,
+    });
+    return reload();
+  }
+
+  async function buildNba(card, reviewedCombat = null) {
+    await loadNashAuthorities();
+    const latest = latestTimelineEvent(card.timeline || []);
+    const persistedObjection = [...(card.timeline || [])].reverse().find(
+      event => event.eventType === "OBJECTION_RECORDED" && event.payload?.objectionCode,
+    );
+    const objectionType = reviewedCombat?.classification?.type || persistedObjection?.payload?.objectionCode;
+    const action = globalThis.ForgeNashNextBestActionEngine.buildNextBestAction(
+      objectionType
+        ? { objectionType, objectionIntent: reviewedCombat?.classification?.intent }
+        : card.status === "referred_new" ? { responseStatus: "NEW" } : {},
+    );
+    const prospectRef = `PROSPECT:${card.id}`;
+    const timelineRef = latest?.id ? `TIMELINE:${latest.id}` : null;
+    const evidenceRefs = [prospectRef, timelineRef].filter(Boolean);
+    const freshness = latest?.occurredAt || latest?.recordedAt
+      ? { status: "CURRENT", capturedAt: latest.occurredAt || latest.recordedAt }
+      : { status: "UNKNOWN" };
+    const evidence = {
+      evidenceRefs,
+      sourceEvidenceIds: evidenceRefs,
+      sourceOwners: timelineRef ? ["PIPELINE", "NFAST08_TIMELINE", "NBA_AUTHORITY"] : ["PIPELINE", "NBA_AUTHORITY"],
+      freshness,
+    };
+    return globalThis.ForgeNashMickNbaReconnection006C.buildNashMickNbaReconnection({
+      personId: card.id,
+      personType: "prospect",
+      relationshipContext: {
+        targetPerson: { personId: card.id, name: card.fullName, personType: "prospect" },
+        whyThisPerson: `${card.fullName} es el prospecto productivo seleccionado para revisión.`,
+        ...evidence,
+      },
+      activityContext: latest ? { whyNow: `Último evento persistido: ${latest.eventType}.`, ...evidence } : null,
+      followupContext: {
+        recommendedAction: action.action,
+        whyThisAction: objectionType
+          ? "Una clasificación de objeción revisada requiere soporte conversacional."
+          : action.reason,
+        ...evidence,
+      },
+      nashConversationContext: {
+        conversationAngle: reviewedCombat?.psychology?.recommendedStrategy || action.recommendedStyle,
+        whyThisMessage: "Cualquier mensaje requiere validación y aprobación humana exacta.",
+        suggestedMessageInstruction: "Preparar un borrador gobernado para revisión humana.",
+        ...evidence,
+      },
+      nashCombatContext: objectionType ? {
+        objectionSupport: `Clasificación revisada: ${objectionType}.`,
+        ...evidence,
+      } : null,
+      mickBehaviorContext: latest ? {
+        reasonWhy: "La recomendación usa únicamente la secuencia persistida.",
+        whyNow: `Último evento persistido: ${latest.eventType}.`,
+        whyThisAction: "Revisar el movimiento sin ejecución automática.",
+        ...evidence,
+      } : null,
+      sourceEvidence: evidence,
+      requestedUse: "ADVISOR_NEXT_BEST_ACTION_CONTEXT",
+    });
+  }
+
   return Object.freeze({
-    service, timelineService, reload, prepareMessage,
+    service, timelineService, reload, prepareMessage, analyzeCombat,
+    registerObjectionClassification, buildNba,
     createProspect: payload => service.createProspect(payload),
     get cards() { return cards; },
     get records() { return records; },

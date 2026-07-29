@@ -300,6 +300,125 @@ async function openNashWorkspace({ card, adapter, trigger }) {
   textarea.focus();
 }
 
+const displayValue = value => Array.isArray(value)
+  ? (value.join(", ") || "No disponible")
+  : value && typeof value === "object"
+    ? Object.entries(value).map(([key, item]) => `${key}: ${item}`).join(" · ")
+    : value || "No disponible";
+
+async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
+  const layer = document.createElement("div");
+  layer.className = "referral-sheet-layer";
+  layer.dataset.nashCombatWorkspace = "true";
+  layer.innerHTML = `
+    <button class="referral-sheet__scrim" type="button" data-close-combat></button>
+    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="combat-title">
+      <div class="referral-sheet__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" type="button" data-close-combat>×</button></div>
+      <div class="referral-sheet__body">
+        <label><span>Objeción escuchada (no se guarda)</span><textarea data-combat-objection></textarea></label>
+        <button type="button" data-analyze-combat>Analizar objeción</button>
+        <div data-combat-results hidden></div>
+      </div>
+      <div class="referral-sheet__footer" data-combat-actions hidden>
+        <button type="button" data-approve-combat>Revisar y aprobar texto exacto</button>
+        <button type="button" data-register-combat>Registrar clasificación en Timeline</button>
+        <a data-combat-whatsapp hidden>Continuar manualmente a WhatsApp</a>
+      </div>
+    </section>`;
+  let combat;
+  const close = () => { layer.remove(); trigger.focus(); };
+  layer.querySelectorAll("[data-close-combat]").forEach(node => node.addEventListener("click", close));
+  const results = layer.querySelector("[data-combat-results]");
+  const actions = layer.querySelector("[data-combat-actions]");
+  layer.querySelector("[data-analyze-combat]").addEventListener("click", async () => {
+    combat = await adapter.analyzeCombat(card.prospect, layer.querySelector("[data-combat-objection]").value);
+    results.hidden = false;
+    actions.hidden = false;
+    results.innerHTML = `
+      <p>Tipo candidato: <strong data-combat-type>${escapeHtml(combat.classification.type)}</strong></p>
+      <p>Intención candidata: <strong data-combat-intent>${escapeHtml(combat.classification.intent)}</strong></p>
+      <p>Confianza: ${escapeHtml(combat.classification.confidence)}</p>
+      <p>Intenciones posibles: ${escapeHtml(displayValue(combat.classification.possibleIntents))}</p>
+      <p>Interpretación posible: ${escapeHtml(combat.psychology.psychology)}</p>
+      <p>Estrategia recomendada: ${escapeHtml(combat.psychology.recommendedStrategy)}</p>
+      <p>Riesgo: ${escapeHtml(combat.psychology.risk)}</p>
+      <p>Siguiente movimiento candidato: ${escapeHtml(displayValue(combat.nextBestAction))}</p>
+      <p>Soporte: ${escapeHtml(displayValue(combat.advisorGuidance))}</p>
+      <label><span>Respuesta candidata editable</span><textarea data-combat-response>${escapeHtml(combat.objectionKillerMessage)}</textarea></label>
+      <p data-combat-approval>Revisión y aprobación humana requeridas.</p>`;
+    const response = results.querySelector("[data-combat-response]");
+    response.addEventListener("input", () => {
+      const link = layer.querySelector("[data-combat-whatsapp]");
+      link.hidden = true;
+      link.removeAttribute("href");
+      results.querySelector("[data-combat-approval]").textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
+    });
+  });
+  layer.querySelector("[data-approve-combat]").addEventListener("click", () => {
+    const text = results.querySelector("[data-combat-response]")?.value || "";
+    const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
+    const snapshot = { rawText: text, sendsMessage: false, sourceMutable: true };
+    const validation = safety.draftSafetyValidator({ draftText: text, draftCandidateSnapshot: snapshot, humanApproval: { required: true, finalAuthority: "HUMAN" } });
+    const approval = safety.approveExactDraft({ draftText: text, validationResult: validation, humanDecision: safety.EXPLICIT_DRAFT_APPROVAL });
+    const gate = safety.exactDraftHumanApprovalGate({ draftText: text, validationResult: validation, approvalSnapshot: approval });
+    const url = gate.exactDraftApproved
+      ? globalThis.ForgeProductiveContactNavigationBoundary067G17B.whatsappUrl(card.prospect, "professional", text)
+      : null;
+    const link = layer.querySelector("[data-combat-whatsapp]");
+    link.hidden = !url;
+    if (url) link.href = url;
+    results.querySelector("[data-combat-approval]").textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El texto no pasó la validación.";
+  });
+  layer.querySelector("[data-register-combat]").addEventListener("click", async () => {
+    if (!combat) return;
+    await onReconciled(await adapter.registerObjectionClassification(card, combat));
+    layer.querySelector("[data-register-combat]").disabled = true;
+    results.insertAdjacentHTML("beforeend", "<p data-combat-timeline>Clasificación registrada sin texto crudo.</p>");
+  });
+  document.body.append(layer);
+  layer.querySelector("[data-combat-objection]").focus();
+}
+
+async function openNbaWorkspace({ card, adapter, trigger }) {
+  const nba = await adapter.buildNba(card);
+  const layer = document.createElement("div");
+  layer.className = "referral-sheet-layer";
+  layer.dataset.nbaWorkspace = "true";
+  const field = (label, value) => `<p>${label}: ${escapeHtml(displayValue(value))}</p>`;
+  layer.innerHTML = `
+    <button class="referral-sheet__scrim" type="button" data-close-nba></button>
+    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="nba-title">
+      <div class="referral-sheet__header"><div><p>NBA · REASON WHY</p><h2 id="nba-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-nba>×</button></div>
+      <div class="referral-sheet__body">
+        ${field("Estado", nba.reconnectionStatus)}
+        ${field("Acción candidata", nba.recommendedAction)}
+        ${field("Reason Why", nba.reasonWhy)}
+        ${field("Por qué ahora", nba.whyNow)}
+        ${field("Por qué esta persona", nba.whyThisPerson)}
+        ${field("Por qué esta acción", nba.whyThisAction)}
+        ${field("Por qué este mensaje", nba.whyThisMessage)}
+        ${field("Ángulo", nba.conversationAngle)}
+        ${field("Soporte de objeción", nba.objectionSupport)}
+        ${field("Evidencia", nba.evidenceRefs)}
+        ${field("Fuentes", nba.sourceOwners)}
+        ${field("Frescura", nba.freshness)}
+        ${field("Confianza", nba.confidence)}
+        ${field("Limitaciones", nba.confidenceLimitations)}
+        ${field("Advertencias", nba.warnings)}
+        ${field("Contexto faltante", nba.missingContext)}
+        <p data-nba-human-review>Revisión humana requerida · ejecución automática deshabilitada.</p>
+      </div>
+      <div class="referral-sheet__footer"><button type="button" data-nba-prepare-message>Preparar mensaje con este contexto</button></div>
+    </section>`;
+  const close = () => { layer.remove(); trigger.focus(); };
+  layer.querySelectorAll("[data-close-nba]").forEach(node => node.addEventListener("click", close));
+  layer.querySelector("[data-nba-prepare-message]").addEventListener("click", () => {
+    layer.remove();
+    void openNashWorkspace({ card, adapter, trigger });
+  });
+  document.body.append(layer);
+}
+
 async function openReferralForm({ trigger, errorNode, onCreated }) {
   errorNode.hidden = true;
   errorNode.textContent = "";
@@ -423,8 +542,63 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
   let productiveError = "";
   let productiveHydrated = false;
   const usesProductiveRuntime = dataProvider === connectedData;
+  let authStatus = usesProductiveRuntime ? "AUTH_LOADING" : "AUTHENTICATED";
+
+  function clearPrivateState() {
+    productiveCards = [];
+    productiveAdapter = undefined;
+    productiveHydrated = false;
+    referralRuntimePromise = undefined;
+    document.querySelectorAll?.(
+      "[data-nash-prospect-workspace], [data-productive-context-workspace], [data-nash-combat-workspace], [data-nba-workspace]",
+    ).forEach(node => node.remove());
+    document.querySelectorAll?.("[data-manual-whatsapp], [data-combat-whatsapp]").forEach(link => {
+      link.hidden = true;
+      link.removeAttribute("href");
+    });
+  }
+
+  async function reconcileAuthenticatedSession() {
+    authStatus = "AUTH_LOADING";
+    render();
+    try {
+      const session = await globalThis.ForgeProductiveProspectBootstrap067G17B?.getSession?.();
+      if (!session?.data?.session?.user?.id) {
+        clearPrivateState();
+        authStatus = "ANONYMOUS";
+        render();
+        return;
+      }
+      productiveHydrated = true;
+      productiveAdapter = await ensureReferralRuntime();
+      productiveCards = await productiveAdapter.reload();
+      productiveError = "";
+      authStatus = "AUTHENTICATED";
+      render();
+    } catch {
+      clearPrivateState();
+      authStatus = "AUTH_ERROR";
+      render();
+    }
+  }
 
   function render() {
+    if (usesProductiveRuntime && authStatus !== "AUTHENTICATED") {
+      const loading = authStatus === "AUTH_LOADING";
+      root.innerHTML = `
+        <header class="pipeline-module__header"><p>PIPELINE</p><h1>Relaciones en movimiento</h1><span>${loading ? "Recuperando sesión" : "Datos privados protegidos"}</span></header>
+        <section class="pipeline-module__empty" data-pipeline-auth-state="${authStatus}">
+          <div class="pipeline-module__empty-copy">
+            <h2>${loading ? "Recuperando tu sesión" : authStatus === "AUTH_ERROR" ? "No pudimos recuperar tu sesión" : "Inicia sesión para abrir tu Pipeline"}</h2>
+            <p>${loading ? "Estamos verificando tu cuenta de Forge." : "Tus prospectos y Timeline sólo aparecen con tu cuenta autenticada."}</p>
+          </div>
+          ${loading ? "" : '<button type="button" class="pipeline-module__create" data-forge-auth-open>Continuar con Google</button>'}
+        </section>`;
+      root.querySelector?.("[data-forge-auth-open]")?.addEventListener("click", () => {
+        globalThis.ForgeAliveAuthEntry067G17B1?.openAuthPanel?.({ nav: "pipeline" });
+      });
+      return;
+    }
     const data = dataProvider?.() || {};
     const model = globalThis.ForgePipelineStageReadModel.buildPipelineStageReadModel({
       opportunities: Array.isArray(data.opportunities) ? data.opportunities : [],
@@ -486,6 +660,8 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
                   <div class="pipeline-module__card-actions">
                     <button type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
                     <button type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
+                    <button type="button" data-open-combat="${escapeHtml(card.id)}">NASH Combat</button>
+                    <button type="button" data-open-nba="${escapeHtml(card.id)}">Revisar NBA</button>
                     ${card.phone ? `<a href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}
                     <button type="button" disabled title="NOT_CONNECTED">Agendar</button>
                   </div>
@@ -522,6 +698,21 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         if (card && productiveAdapter) void openNashWorkspace({ card, adapter: productiveAdapter, trigger });
       });
     });
+    root.querySelectorAll?.("[data-open-combat]").forEach(trigger => {
+      trigger.addEventListener("click", () => {
+        const card = productiveCards.find(item => item.id === trigger.dataset.openCombat);
+        if (card && productiveAdapter) void openCombatWorkspace({
+          card, adapter: productiveAdapter, trigger,
+          onReconciled: async cards => { productiveCards = cards; render(); },
+        });
+      });
+    });
+    root.querySelectorAll?.("[data-open-nba]").forEach(trigger => {
+      trigger.addEventListener("click", () => {
+        const card = productiveCards.find(item => item.id === trigger.dataset.openNba);
+        if (card && productiveAdapter) void openNbaWorkspace({ card, adapter: productiveAdapter, trigger });
+      });
+    });
     root.querySelectorAll?.("[data-view-productive-context]").forEach(trigger => {
       trigger.addEventListener("click", () => {
         const card = productiveCards.find(item => item.id === trigger.dataset.viewProductiveContext);
@@ -529,7 +720,9 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         const layer = document.createElement("div");
         layer.className = "referral-sheet-layer";
         layer.dataset.productiveContextWorkspace = "true";
-        layer.innerHTML = `<button class="referral-sheet__scrim" data-close-context></button><section class="referral-sheet" role="dialog" aria-modal="true"><div class="referral-sheet__header"><div><p>CONTEXTO PRODUCTIVO</p><h2>${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-context>×</button></div><div class="referral-sheet__body"><p>${escapeHtml(card.stageLabel)}</p><p>${escapeHtml(card.sourceSummary)}</p><p data-context-timeline>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p><p>NBA: NOT_CONNECTED</p><p>Mi Día: NOT_CONNECTED</p><p>Objeciones: NOT_CONNECTED</p></div></section>`;
+        const objectionState = card.timeline.some(event => event.eventType === "OBJECTION_RECORDED")
+          ? "clasificación persistida disponible" : "sin clasificación persistida";
+        layer.innerHTML = `<button class="referral-sheet__scrim" data-close-context></button><section class="referral-sheet" role="dialog" aria-modal="true"><div class="referral-sheet__header"><div><p>CONTEXTO PRODUCTIVO</p><h2>${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-context>×</button></div><div class="referral-sheet__body"><p>${escapeHtml(card.stageLabel)}</p><p>${escapeHtml(card.sourceSummary)}</p><p data-context-timeline>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p><p>NBA: disponible para revisión</p><p>Objeciones: ${objectionState}</p><p>Mi Día: NOT_CONNECTED</p><p>Calendar: NOT_CONNECTED</p></div></section>`;
         layer.querySelectorAll("[data-close-context]").forEach(node => node.addEventListener("click", () => { layer.remove(); trigger.focus(); }));
         document.body.append(layer);
       });
@@ -562,6 +755,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
       if (!mounted) {
         mounted = true;
         render();
+        if (usesProductiveRuntime) void reconcileAuthenticatedSession();
       }
       shell.syncVisualViewport();
     },
@@ -575,5 +769,19 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
     },
   });
   root[pipelineStateKey] = api;
+  if (usesProductiveRuntime) {
+    globalThis.addEventListener("forge:auth-state-changed", event => {
+      const status = String(event.detail?.status || "").toLowerCase();
+      if (status === "authenticated") void reconcileAuthenticatedSession();
+      else if (["anonymous", "auth_error"].includes(status)) {
+        clearPrivateState();
+        authStatus = status === "auth_error" ? "AUTH_ERROR" : "ANONYMOUS";
+        render();
+      } else {
+        authStatus = "AUTH_LOADING";
+        render();
+      }
+    });
+  }
   return api;
 }
