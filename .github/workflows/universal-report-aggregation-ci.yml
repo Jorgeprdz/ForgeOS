@@ -1,0 +1,162 @@
+name: REP Universal Report Aggregation CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/reporting/domain/universal-report-model.mjs
+      - advisor-os/reporting/runtime/universal-report-aggregation-runtime.mjs
+      - tests/universal-report-aggregation-runtime-test.mjs
+      - docs/architecture/reporting/REP-04_UNIVERSAL_REPORT_MODEL_AND_AGGREGATION_RUNTIME.md
+      - .github/workflows/universal-report-aggregation-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  aggregation:
+    name: Universal report aggregation acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-03 closure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'REP_03_REPORT_DEFINITION_AND_PROVIDER_PORT=CLOSED' \
+            docs/architecture/reporting/REP-03_REPORT_DEFINITION_AND_PROVIDER_PORT_CLOSURE.md
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee REP04_ACTIVITY_FREEZE.txt
+
+      - name: Run aggregation tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-report-aggregation-runtime-test.mjs \
+            | tee REP04_AGGREGATION.tap
+
+          grep -Fq '# tests 41' REP04_AGGREGATION.tap
+          grep -Fq '# pass 41' REP04_AGGREGATION.tap
+          grep -Fq '# fail 0' REP04_AGGREGATION.tap
+
+      - name: Run provider port regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/report-provider-runtime-test.mjs \
+            | tee REP04_PROVIDER.tap
+
+          grep -Fq '# tests 39' REP04_PROVIDER.tap
+          grep -Fq '# pass 39' REP04_PROVIDER.tap
+          grep -Fq '# fail 0' REP04_PROVIDER.tap
+
+      - name: Run period resolver regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-period-resolver-test.mjs \
+            | tee REP04_RESOLVER.tap
+
+          grep -Fq '# tests 46' REP04_RESOLVER.tap
+          grep -Fq '# pass 46' REP04_RESOLVER.tap
+          grep -Fq '# fail 0' REP04_RESOLVER.tap
+
+      - name: Run kernel regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-reporting-kernel-test.mjs \
+            | tee REP04_KERNEL.tap
+
+          grep -Fq '# tests 25' REP04_KERNEL.tap
+          grep -Fq '# pass 25' REP04_KERNEL.tap
+          grep -Fq '# fail 0' REP04_KERNEL.tap
+
+      - name: Run Performance surface regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-surface-adapter-test.mjs \
+            | tee REP04_PERFORMANCE.tap
+
+          grep -Fq '# tests 20' REP04_PERFORMANCE.tap
+          grep -Fq '# pass 20' REP04_PERFORMANCE.tap
+          grep -Fq '# fail 0' REP04_PERFORMANCE.tap
+
+      - name: Verify repository hygiene
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git diff --check
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/reporting
+
+          printf '%s\n' \
+            'REP_04_UNIVERSAL_REPORT_MODEL_AND_AGGREGATION_RUNTIME=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP03_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_AGGREGATION_TEST=PASS' \
+            'REMOTE_PROVIDER_REGRESSION=PASS' \
+            'REMOTE_RESOLVER_REGRESSION=PASS' \
+            'REMOTE_KERNEL_REGRESSION=PASS' \
+            'REMOTE_PERFORMANCE_REGRESSION=PASS' \
+            'REPORT_MODEL_SCHEMA=universal-report-model.v1' \
+            'AGGREGATION_RUNTIME_SCHEMA=universal-report-aggregation-runtime.v1' \
+            'UNIVERSAL_AGGREGATION_AUTHORITY=YES' \
+            'DETERMINISTIC_BATCHING=YES' \
+            'COMPARISON_AUTHORITY=NO' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/reporting/REP04_ACCEPTANCE.txt
+
+          cp \
+            REP04_ACTIVITY_FREEZE.txt \
+            REP04_AGGREGATION.tap \
+            REP04_PROVIDER.tap \
+            REP04_RESOLVER.tap \
+            REP04_KERNEL.tap \
+            REP04_PERFORMANCE.tap \
+            artifacts/reporting/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-04-universal-report-aggregation-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
+          retention-days: 60
