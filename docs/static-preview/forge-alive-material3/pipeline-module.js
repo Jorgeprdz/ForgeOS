@@ -101,7 +101,7 @@ async function ensureReferralStyles() {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
     stylesheet.href = new URL(
-      "./pipeline-referral-modal.css?v=ui-m06-referral-002",
+      "./pipeline-referral-modal.css?v=ui-m06-referral-003",
       import.meta.url,
     );
     stylesheet.dataset.material3ReferralStyles = "true";
@@ -385,6 +385,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
   if (root[pipelineStateKey]) return root[pipelineStateKey];
   let mounted = false;
   let referralStatus = "";
+  let savedReferralProspect;
 
   function render() {
     const data = dataProvider() || {};
@@ -406,6 +407,21 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         role="status"
         ${referralStatus ? "" : "hidden"}
       >${escapeHtml(referralStatus)}</p>
+      ${savedReferralProspect
+        ? `<article
+            class="pipeline-module__prospect pipeline-module__saved-referral"
+            data-saved-referral-card
+          >
+            <div>
+              <strong>${escapeHtml(
+                savedReferralProspect.fullName ||
+                savedReferralProspect.displayName,
+              )}</strong>
+              <span>Nuevo referido</span>
+            </div>
+            <p>${escapeHtml(savedReferralProspect.phone || "Contacto guardado")}</p>
+          </article>`
+        : ""}
       ${count === 0
         ? `<section
             class="pipeline-module__empty"
@@ -462,6 +478,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
             ...current,
             prospects,
           };
+          savedReferralProspect = prospect;
           referralStatus = "Referido guardado.";
           render();
         },

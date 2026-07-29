@@ -17,6 +17,14 @@ const CACHE_BUST =
   process.env.FORGE_DIAGNOSTIC_SHA || String(Date.now());
 const FIXTURE_OVERRIDE =
   process.env.FORGE_DIAGNOSTIC_FIXTURE || "";
+const SAMPLE_REFERRAL = Object.freeze({
+  fullName: "Mariana Torres",
+  phone: "5512345678",
+  referrerName: "Ana López",
+  referrerRelationship: "Amiga",
+  initialContext:
+    "Le interesa proteger a su hija y revisar opciones de ahorro.",
+});
 
 const VIEWPORTS = Object.freeze([
   Object.freeze({ name: "tablet-landscape", width: 1600, height: 960 }),
@@ -174,6 +182,13 @@ async function capture(page, directory, label, options = {}) {
         visibleCount("[data-referral-sheet], [data-prospect-form-modal]") > 0,
       legacyCenteredProspectModalVisible:
         visibleCount("[data-prospect-form-modal]") > 0,
+      legacyCenteredReferralModalVisible:
+        visibleCount("[data-prospect-form-modal]") > 0,
+      savedReferralCardVisible:
+        visibleCount("[data-saved-referral-card]") > 0,
+      savedReferralCardContainsName:
+        [...document.querySelectorAll("[data-saved-referral-card]")]
+          .some((card) => visible(card) && card.textContent.includes("Mariana Torres")),
       globalAlfredLauncherVisible:
         visibleCount("[data-forge-command-orb][data-open-alfred]") > 0,
       quoteLegacyRuntimeVisible:
@@ -225,6 +240,78 @@ async function captureViewport(browser, viewport, fixture) {
     locale: "es-MX",
     reducedMotion: "reduce",
   });
+  await context.addInitScript((sample) => {
+    if (new URL(location.href).searchParams.get("nav") !== "pipeline") return;
+
+    const records = [];
+    const filtered = (filters) => records.filter(
+      (record) => filters.every(
+        ({ column, value }) => record[column] === value,
+      ),
+    );
+    const query = () => {
+      const state = { filters: [], inserted: null };
+      const builder = {
+        select() {
+          return builder;
+        },
+        eq(column, value) {
+          state.filters.push({ column, value });
+          return builder;
+        },
+        is(column, value) {
+          state.filters.push({ column, value });
+          return builder;
+        },
+        insert(row) {
+          state.inserted = {
+            id: "diagnostic-mariana-torres",
+            ...row,
+            archived_at: null,
+          };
+          records.push(state.inserted);
+          return builder;
+        },
+        async single() {
+          return { data: state.inserted || filtered(state.filters)[0], error: null };
+        },
+        async order() {
+          return { data: filtered(state.filters), error: null };
+        },
+        then(resolve) {
+          return Promise.resolve({
+            data: filtered(state.filters),
+            error: null,
+          }).then(resolve);
+        },
+      };
+      return builder;
+    };
+
+    globalThis.__ENV__ = { diagnostic: true };
+    globalThis.ForgeAlivePublicConfig067G17A1 = {
+      current: () => ({
+        state: "READY",
+        publicConfig: {
+          SUPABASE_URL: "https://diagnostic.invalid",
+          SUPABASE_KEY: "diagnostic-only",
+        },
+      }),
+      allowsProductiveProspectCrud: () => true,
+    };
+    globalThis.supabase = {
+      createClient: () => ({
+        auth: {
+          getUser: async () => ({
+            data: { user: { id: "diagnostic-advisor" } },
+            error: null,
+          }),
+        },
+        from: () => query(),
+      }),
+    };
+    globalThis.__FORGE_DIAGNOSTIC_SAMPLE_REFERRAL__ = sample;
+  }, SAMPLE_REFERRAL);
   const page = await context.newPage();
   const telemetry = telemetryFor(page);
   const result = {
@@ -276,8 +363,30 @@ async function captureViewport(browser, viewport, fixture) {
         directory,
         "03-pipeline-after-cta",
       );
-      await page.keyboard.press("Escape").catch(() => {});
-      await page.waitForTimeout(250);
+      await page.locator('[name="fullName"]').fill(SAMPLE_REFERRAL.fullName);
+      await page.locator('[name="phone"]').fill(SAMPLE_REFERRAL.phone);
+      await page.locator('[name="referrerName"]').fill(
+        SAMPLE_REFERRAL.referrerName,
+      );
+      await page.locator('[name="referrerRelationship"]').fill(
+        SAMPLE_REFERRAL.referrerRelationship,
+      );
+      await page.locator('[name="initialContext"]').fill(
+        SAMPLE_REFERRAL.initialContext,
+      );
+      await page.locator("[data-save-referral]").click();
+      await page.locator("[data-referral-sheet]").waitFor({
+        state: "detached",
+        timeout: 15_000,
+      });
+      await page.locator("[data-saved-referral-card]").filter({
+        hasText: SAMPLE_REFERRAL.fullName,
+      }).waitFor({ state: "visible", timeout: 15_000 });
+      result.routes.pipelineSavedReferral = await capture(
+        page,
+        directory,
+        "03b-pipeline-saved-referral-card",
+      );
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");
     }

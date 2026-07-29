@@ -156,12 +156,22 @@ test("Material 3 Pipeline owns a light referral sheet independent from Alfred", 
   assert.doesNotMatch(source, /shell\.setAlfred/);
   assert.match(source, /service\.listProspects\(\)/);
   assert.match(source, /referralStatus = "Referido guardado\."/);
+  assert.match(source, /data-saved-referral-card/);
+  assert.match(source, /savedReferralProspect = prospect/);
 
   assert.match(referralCss, /justify-content:\s*flex-end/);
-  assert.match(referralCss, /width:\s*min\(520px/);
+  assert.match(referralCss, /width:\s*min\(470px/);
+  assert.match(referralCss, /height:\s*min\(760px/);
+  assert.match(
+    referralCss,
+    /border-radius:\s*34px 46px 31px 42px\s*\/\s*38px 34px 45px 32px/,
+  );
   assert.match(referralCss, /@media \(max-width:\s*900px\)/);
   assert.match(referralCss, /align-items:\s*flex-end/);
-  assert.match(referralCss, /border-radius:\s*30px 30px 0 0/);
+  assert.match(
+    referralCss,
+    /border-radius:\s*40px 55px 0 0\s*\/\s*36px 46px 0 0/,
+  );
   assert.doesNotMatch(referralCss, /place-items:\s*center/);
   assert.match(
     html,
@@ -176,8 +186,22 @@ test("visual diagnostic distinguishes referral, Alfred and legacy modal state", 
   );
   assert.match(diagnostic, /referralSheetVisible/);
   assert.match(diagnostic, /legacyCenteredProspectModalVisible/);
+  assert.match(diagnostic, /legacyCenteredReferralModalVisible/);
   assert.match(diagnostic, /globalAlfredLauncherVisible/);
   assert.match(diagnostic, /alfredIndependent/);
+  assert.match(diagnostic, /savedReferralCardVisible/);
+  assert.match(diagnostic, /savedReferralCardContainsName/);
+  assert.match(diagnostic, /Mariana Torres/);
+  assert.match(diagnostic, /5512345678/);
+  assert.match(diagnostic, /Ana López/);
+  assert.match(diagnostic, /Amiga/);
+  assert.match(
+    diagnostic,
+    /Le interesa proteger a su hija y revisar opciones de ahorro\./,
+  );
+  assert.match(diagnostic, /data-save-referral/);
+  assert.match(diagnostic, /pipelineSavedReferral/);
+  assert.match(diagnostic, /data-saved-referral-card/);
   assert.match(diagnostic, /!after\.alfredVisible/);
   assert.match(diagnostic, /!after\.legacyCenteredProspectModalVisible/);
 });
