@@ -113,7 +113,7 @@ jobs:
           });
           EOF
 
-      - name: Correct cross-route auth simulation in diagnostic harness
+      - name: Correct cross-route auth and Timeline simulation in diagnostic harness
         shell: bash
         run: |
           python - <<'PY'
@@ -160,11 +160,38 @@ jobs:
               localStorage.setItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__", "false");
               globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);''',
           )
+          replace_once(
+              '''        rpc: async (_name, args) => {
+                    globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ = true;
+                    globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ = args;
+                    return { data: null, error: null };
+                  },''',
+              '''        rpc: async (_name, args) => {
+                    const event = {
+                      id: "diagnostic-objection-event",
+                      prospect_id: args.p_prospect_id,
+                      event_type: args.p_event_type,
+                      event_source: "ADVISOR_REPORTED",
+                      source_record_reference: args.p_source_record_reference,
+                      occurred_at: args.p_occurred_at,
+                      recorded_at: args.p_occurred_at,
+                      payload: args.p_payload || {},
+                      evidence_references: args.p_evidence_references || [],
+                      contract_version: "NFAST-08.1",
+                      privacy_classification: "RESTRICTED",
+                      retention_policy: "ADVISOR_PROSPECT_TIMELINE",
+                    };
+                    timeline.push(event);
+                    globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ = true;
+                    globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ = args.p_payload || {};
+                    return { data: event, error: null };
+                  },''',
+          )
 
           path.write_text(source, encoding="utf-8")
           PY
           node --check tools/forge-ui-visual-diagnostic.mjs
-          echo "DIAGNOSTIC_CROSS_ROUTE_AUTH_SIMULATION=READY"
+          echo "DIAGNOSTIC_AUTH_AND_TIMELINE_SIMULATION=READY"
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
