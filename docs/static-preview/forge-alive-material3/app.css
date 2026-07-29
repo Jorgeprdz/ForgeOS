@@ -61,7 +61,11 @@ body::before {
   pointer-events: none;
 }
 
-.home-module {
+[data-route-module][hidden] {
+  display: none !important;
+}
+
+.home-module:not([hidden]) {
   display: contents;
 }
 

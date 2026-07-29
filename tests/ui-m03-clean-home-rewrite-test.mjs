@@ -34,9 +34,13 @@ const manifest = JSON.parse(
 
 test("entrypoint loads only its clean approved assets", () => {
   assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
-  assert.match(index, /app\.css\?v=ui-m03-approved-001/);
-  assert.match(index, /app\.js\?v=ui-m04-shell-001/);
+  assert.match(index, /app\.css\?v=ui-m03-approved-002/);
+  assert.match(index, /app\.js\?v=ui-m04-shell-002/);
   assert.match(index, /manifest\.json/);
+  assert.match(
+    css,
+    /\[data-route-module\]\[hidden\][^{]*\{[^}]*display:\s*none\s*!important/s,
+  );
   assert.doesNotMatch(
     index,
     /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,
