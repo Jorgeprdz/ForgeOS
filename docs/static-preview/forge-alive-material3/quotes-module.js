@@ -20,7 +20,10 @@ function ensureQuotesStyles() {
     }
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL("./quotes-module.css?v=ui-m05-004", import.meta.url);
+    stylesheet.href = new URL(
+      "./quotes-module.css?v=ui-m05-007",
+      import.meta.url,
+    );
     stylesheet.dataset.forgeQuotesStyles = "true";
     stylesheet.addEventListener("load", resolve, { once: true });
     stylesheet.addEventListener("error", reject, { once: true });
@@ -29,7 +32,55 @@ function ensureQuotesStyles() {
   return stylePromise;
 }
 
-async function materializeRuntime(root, host) {
+function sanitizeProjection(source) {
+  const clone = source.cloneNode(true);
+  clone.removeAttribute("hidden");
+  clone.removeAttribute("id");
+
+  clone.querySelectorAll("script, style, form").forEach((node) => {
+    node.remove();
+  });
+
+  clone.querySelectorAll(
+    "button, input, select, textarea, label, [contenteditable]",
+  ).forEach((node) => {
+    node.remove();
+  });
+
+  clone.querySelectorAll("*").forEach((node) => {
+    node.removeAttribute("id");
+    node.removeAttribute("for");
+    node.removeAttribute("name");
+    node.removeAttribute("tabindex");
+    node.removeAttribute("aria-controls");
+    node.removeAttribute("aria-describedby");
+
+    for (const attribute of [...node.attributes]) {
+      if (attribute.name.startsWith("data-forge-")) {
+        node.removeAttribute(attribute.name);
+      }
+    }
+  });
+
+  return clone;
+}
+
+function renderProjection({ importedRuntime, projection, root }) {
+  const sourceResults = importedRuntime.querySelector(
+    "[data-forge-intake-results]",
+  );
+
+  if (!sourceResults || sourceResults.hidden) return false;
+
+  const clone = sanitizeProjection(sourceResults);
+  projection.replaceChildren(...clone.childNodes);
+  projection.hidden = false;
+  projection.dataset.material3QuoteProjectionReady = "true";
+  root.dataset.quoteProjectionReady = "true";
+  return true;
+}
+
+async function materializeRuntime(root, engineHost, surface) {
   if (runtimePromise) return runtimePromise;
   runtimePromise = (async () => {
     const sourceUrl = new URL(
@@ -39,13 +90,21 @@ async function materializeRuntime(root, host) {
       import.meta.url,
     );
     const response = await fetch(sourceUrl);
-    if (!response.ok) throw new Error(`Quotes source unavailable: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Quotes source unavailable: ${response.status}`);
+    }
+
     const source = await response.text();
-    const documentSource = new DOMParser().parseFromString(source, "text/html");
+    const documentSource = new DOMParser().parseFromString(
+      source,
+      "text/html",
+    );
     const functionalModule = documentSource.querySelector(
       '[data-forge-module="dedicated-new-quote-static-route"]',
     );
-    if (!functionalModule) throw new Error("Functional Quotes runtime boundary missing");
+    if (!functionalModule) {
+      throw new Error("Functional Quotes runtime boundary missing");
+    }
 
     functionalModule.querySelector(".fq-top-105dr")?.remove();
 
@@ -53,8 +112,36 @@ async function materializeRuntime(root, host) {
       functionalModule,
       true,
     );
+    importedRuntime.dataset.material3QuotesEngine = "true";
+    engineHost.replaceChildren(importedRuntime);
 
-    host.replaceChildren(importedRuntime);
+    const input = importedRuntime.querySelector(
+      "#fq-solution-online-pdf-105dr",
+    );
+    const sourceStatus = importedRuntime.querySelector(
+      ".fq-file-status-105dr",
+    );
+    const projection = surface.querySelector(
+      "[data-material3-quotes-projection]",
+    );
+    const selectButton = surface.querySelector(
+      "[data-material3-select-quote]",
+    );
+    const selectedFile = surface.querySelector(
+      "[data-material3-selected-file]",
+    );
+    const visibleStatus = surface.querySelector(
+      "[data-material3-quotes-status]",
+    );
+
+    if (!input || !projection || !selectButton || !visibleStatus) {
+      throw new Error("Material 3 Quotes bridge boundary missing");
+    }
+
+    const syncStatus = () => {
+      const message = sourceStatus?.textContent?.trim();
+      if (message) visibleStatus.textContent = message;
+    };
 
     const syncIntakeState = (state) => {
       const normalized = String(state || "empty")
@@ -62,11 +149,20 @@ async function materializeRuntime(root, host) {
         .toLowerCase();
 
       root.dataset.intakeState = normalized;
+      syncStatus();
+
+      if (normalized === "ready") {
+        queueMicrotask(() => {
+          renderProjection({
+            importedRuntime,
+            projection,
+            root,
+          });
+        });
+      }
     };
 
-    syncIntakeState(
-      importedRuntime.dataset.forgeIntakeState,
-    );
+    syncIntakeState(importedRuntime.dataset.forgeIntakeState);
 
     importedRuntime.addEventListener(
       "forge:quote-intake-state-change",
@@ -75,24 +171,93 @@ async function materializeRuntime(root, host) {
       },
     );
 
+    selectButton.addEventListener("click", () => {
+      input.click();
+    });
+
+    input.addEventListener("change", () => {
+      const file = input.files?.[0];
+      selectedFile.textContent =
+        file?.name || "Sin archivo seleccionado";
+      projection.hidden = true;
+      projection.replaceChildren();
+      delete projection.dataset.material3QuoteProjectionReady;
+      delete root.dataset.quoteProjectionReady;
+    });
+
+    const refreshProjection = () => {
+      syncStatus();
+      renderProjection({
+        importedRuntime,
+        projection,
+        root,
+      });
+    };
+
+    const observer = new MutationObserver(() => {
+      window.clearTimeout(observer.refreshTimer);
+      observer.refreshTimer = window.setTimeout(
+        refreshProjection,
+        80,
+      );
+    });
+
+    observer.observe(importedRuntime, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ["hidden", "data-forge-state"],
+    });
+
+    for (const eventName of [
+      "forge:quote-preview-calculated",
+      "forge:accepted-quote-confirmed",
+      "forge:quote-candidate-ready",
+    ]) {
+      window.addEventListener(eventName, () => {
+        window.setTimeout(refreshProjection, 120);
+      });
+    }
+
     for (const script of documentSource.querySelectorAll("script")) {
-      if (script.src.includes("forge-alive-mobile-nav-r16c5j")) continue;
+      if (
+        script.src.includes("forge-alive-mobile-nav-r16c5j")
+      ) {
+        continue;
+      }
+
       const executable = document.createElement("script");
-      if (script.src) executable.src = resolveUrl(script.getAttribute("src"), sourceUrl);
-      else executable.textContent = script.textContent;
+      if (script.src) {
+        executable.src = resolveUrl(
+          script.getAttribute("src"),
+          sourceUrl,
+        );
+      } else {
+        executable.textContent = script.textContent;
+      }
       if (script.type) executable.type = script.type;
       executable.dataset.forgeQuotesRuntime = "true";
       document.body.append(executable);
+
       if (script.src && script.type !== "module") {
         await new Promise((resolve, reject) => {
-          executable.addEventListener("load", resolve, { once: true });
-          executable.addEventListener("error", reject, { once: true });
+          executable.addEventListener("load", resolve, {
+            once: true,
+          });
+          executable.addEventListener("error", reject, {
+            once: true,
+          });
         });
       }
     }
+
     root.dataset.runtimeMounted = "true";
-    window.dispatchEvent(new CustomEvent("forge:quotes-module-ready"));
+    window.dispatchEvent(
+      new CustomEvent("forge:quotes-module-ready"),
+    );
   })();
+
   return runtimePromise;
 }
 
@@ -106,6 +271,7 @@ export function createQuotesModule({ root, shell }) {
     async mount() {
       root.hidden = false;
       root.dataset.moduleActive = "true";
+
       if (!mounted) {
         mounted = true;
         root.dataset.intakeState = "empty";
@@ -115,22 +281,72 @@ export function createQuotesModule({ root, shell }) {
             <h1>Prepara una cotización clara</h1>
             <span>Procesamiento local · revisión humana</span>
           </header>
-          <div data-forge-quotes-runtime-host>
-            <div class="quotes-module__loading" role="status">Preparando el workspace funcional…</div>
-          </div>
+
+          <section
+            class="quotes-module__upload"
+            aria-labelledby="material3-quotes-upload-title"
+          >
+            <p class="quotes-module__kicker">CARGA LOCAL</p>
+            <h2 id="material3-quotes-upload-title">
+              Carga tu cotización
+            </h2>
+            <p>
+              Selecciona el PDF de Solución Online. Se procesa
+              localmente en tu navegador.
+            </p>
+
+            <div class="quotes-module__upload-controls">
+              <button
+                type="button"
+                data-material3-select-quote
+              >
+                Seleccionar PDF
+              </button>
+              <span data-material3-selected-file>
+                Sin archivo seleccionado
+              </span>
+            </div>
+
+            <p
+              class="quotes-module__status"
+              data-material3-quotes-status
+              role="status"
+            >
+              Selecciona un archivo para comenzar.
+            </p>
+          </section>
+
+          <section
+            class="quotes-module__projection"
+            data-forge-intake-results
+            data-material3-quotes-projection
+            aria-label="Resultado de la cotización"
+            hidden
+          ></section>
+
+          <div
+            class="quotes-module__engine"
+            data-forge-quotes-engine
+            aria-hidden="true"
+          ></div>
         `;
+
         try {
           await ensureQuotesStyles();
           await materializeRuntime(
             root,
-            root.querySelector("[data-forge-quotes-runtime-host]"),
+            root.querySelector("[data-forge-quotes-engine]"),
+            root,
           );
         } catch (error) {
-          root.innerHTML = `<div class="quotes-module__error" role="alert">
-            No pudimos preparar Cotizaciones. ${error.message}
-          </div>`;
+          root.innerHTML = `
+            <div class="quotes-module__error" role="alert">
+              No pudimos preparar Cotizaciones. ${error.message}
+            </div>
+          `;
         }
       }
+
       shell.syncVisualViewport();
     },
     reconcile() {
@@ -142,6 +358,7 @@ export function createQuotesModule({ root, shell }) {
       root.dataset.moduleActive = "false";
     },
   });
+
   root[quotesStateKey] = api;
   return api;
 }
