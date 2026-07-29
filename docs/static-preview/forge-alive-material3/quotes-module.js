@@ -33,8 +33,10 @@ async function materializeRuntime(root, host) {
   if (runtimePromise) return runtimePromise;
   runtimePromise = (async () => {
     const sourceUrl = new URL(
-      "../forge-alive/nueva-cotizacion/index.html",
-      location.href,
+      import.meta.url.includes("/docs/static-preview/")
+        ? "../forge-alive/nueva-cotizacion/index.html"
+        : "../forge-alive-runtime/nueva-cotizacion/index.html",
+      import.meta.url,
     );
     const response = await fetch(sourceUrl);
     if (!response.ok) throw new Error(`Quotes source unavailable: ${response.status}`);

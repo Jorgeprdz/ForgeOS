@@ -66,6 +66,10 @@ test("Material 3 Pipeline uses the canonical route, viewport and lifecycle", asy
   assert.equal((html.match(/data-forge-pipeline-module/g) || []).length, 1);
   assert.match(html, /data-forge-module-viewport/);
   assert.match(css, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(
+    css,
+    /\.pipeline-module,\s*\.quotes-module\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s,
+  );
   assert.match(css, /overflow-wrap:\s*anywhere/);
   assert.match(css, /body[\s\S]*overflow-x:\s*hidden/);
 });

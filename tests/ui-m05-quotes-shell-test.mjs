@@ -10,6 +10,11 @@ test("QuotesModule uses the functional source without domain duplication", () =>
     "docs/static-preview/forge-alive-material3/quotes-module.js",
   );
   assert.match(module, /forge-alive\/nueva-cotizacion\/index\.html/);
+  assert.match(
+    module,
+    /forge-alive-runtime\/nueva-cotizacion\/index\.html/,
+  );
+  assert.match(module, /import\.meta\.url/);
   assert.match(module, /dedicated-new-quote-static-route/);
   assert.doesNotMatch(module, /iframe|calculateQuote|localStorage|supabase/i);
 });

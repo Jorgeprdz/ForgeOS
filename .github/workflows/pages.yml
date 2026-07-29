@@ -126,6 +126,33 @@ jobs:
             fs.copyFileSync(file, target);
           }
 
+          const legacyForgeAlivePublished = path.join(
+            siteDir,
+            'static-preview',
+            'forge-alive',
+          );
+          const legacyForgeAliveRuntimeTarget = path.join(
+            siteDir,
+            'static-preview',
+            'forge-alive-runtime',
+          );
+
+          if (!fs.existsSync(legacyForgeAlivePublished)) {
+            throw new Error(
+              'legacy Forge Alive public runtime was not prepared',
+            );
+          }
+
+          fs.rmSync(legacyForgeAliveRuntimeTarget, {
+            recursive: true,
+            force: true,
+          });
+          fs.cpSync(
+            legacyForgeAlivePublished,
+            legacyForgeAliveRuntimeTarget,
+            { recursive: true },
+          );
+
           const cleanForgeAliveSource = path.join(
             'docs',
             'static-preview',
@@ -181,10 +208,20 @@ jobs:
           const path = require('path');
 
           const canonical = '_site/static-preview/forge-alive';
+          const quotesRuntime =
+            '_site/static-preview/forge-alive-runtime/nueva-cotizacion/index.html';
+
+          assert.ok(
+            fs.existsSync(quotesRuntime),
+            'missing published Quotes functional runtime',
+          );
+
           const required = [
             'index.html',
             'app.css',
             'app.js',
+            'pipeline-module.js',
+            'quotes-module.js',
             'manifest.json',
             'tokens.css',
           ];
@@ -199,9 +236,18 @@ jobs:
             path.join(canonical, 'index.html'),
             'utf8',
           );
+          const quotesModule = fs.readFileSync(
+            path.join(canonical, 'quotes-module.js'),
+            'utf8',
+          );
+
+          assert.match(
+            quotesModule,
+            /forge-alive-runtime\/nueva-cotizacion\/index\.html/,
+          );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
-          assert.match(index, /app\.css\?v=ui-m03-approved-002/);
-          assert.match(index, /app\.js\?v=ui-m04-shell-002/);
+          assert.match(index, /app\.css\?v=ui-m03-approved-003/);
+          assert.match(index, /app\.js\?v=ui-m04-shell-003/);
           assert.doesNotMatch(
             index,
             /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,

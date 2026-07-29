@@ -69,8 +69,11 @@ body::before {
   display: contents;
 }
 
-.pipeline-module {
+.pipeline-module,
+.quotes-module {
+  grid-column: 1 / -1;
   width: 100%;
+  min-width: 0;
 }
 
 .pipeline-module__header {
