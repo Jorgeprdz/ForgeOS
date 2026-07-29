@@ -1,7 +1,7 @@
 # REP-06 — Performance Report Provider
 
 ```text
-REP_06_PERFORMANCE_REPORT_PROVIDER=IMPLEMENTED_PENDING_ACCEPTANCE
+REP_06_PERFORMANCE_REPORT_PROVIDER=IMPLEMENTED_ACCEPTED
 REPORTING_BRANCH=feature/universal-reporting-kernel-foundation
 SOURCE_COMMIT=8d72ae385a7cb953c6259c0fee827e678b545269
 PERFORMANCE_REPORT_PROVIDER_SCHEMA=performance-report-provider.v1
@@ -40,4 +40,3 @@ Measures:
 All measures are additive and declare `SUM` semantics.
 
 Next: `REP-07_COMMISSIONS_REPORT_PROVIDER`.
-
