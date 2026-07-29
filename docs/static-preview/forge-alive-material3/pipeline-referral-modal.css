@@ -1,79 +1,91 @@
-.forge-prospect-modal-backdrop[data-prospect-form-modal] {
+.referral-sheet-layer {
   position: fixed;
   inset: 0;
   z-index: 1200;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: rgba(2, 8, 18, 0.78);
-  backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: flex-end;
 }
 
-.forge-prospect-modal-backdrop .forge-prospect-dialog {
+.referral-sheet__scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: rgba(2, 8, 18, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+.referral-sheet {
+  position: relative;
   box-sizing: border-box;
-  width: min(760px, 100%);
-  max-height: min(88dvh, 900px);
-  overflow: auto;
-  border: 1px solid rgba(184, 211, 255, 0.24);
-  border-radius: 34px;
+  width: min(520px, calc(100vw - 48px));
+  height: 100%;
+  border-left: 1px solid rgba(184, 211, 255, 0.22);
   color: var(--ink);
   background:
-    radial-gradient(circle at 88% 0%, rgba(118, 219, 255, 0.13), transparent 34%),
+    radial-gradient(circle at 88% 0%, rgba(118, 219, 255, 0.12), transparent 34%),
     linear-gradient(155deg, rgba(21, 42, 74, 0.99), rgba(5, 17, 34, 0.99));
-  box-shadow: 0 34px 96px rgba(0, 0, 0, 0.62);
+  box-shadow: -24px 0 72px rgba(0, 0, 0, 0.48);
+  overflow: hidden;
 }
 
-.forge-prospect-modal-backdrop form {
+.referral-sheet form {
   display: grid;
-  gap: 20px;
-  padding: clamp(20px, 4vw, 34px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
 }
 
-.forge-prospect-modal-backdrop header,
-.forge-prospect-modal-backdrop footer {
+.referral-sheet__header,
+.referral-sheet__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 16px;
+  padding: 22px 24px;
 }
 
-.forge-prospect-modal-backdrop header p {
-  margin: 0 0 6px;
+.referral-sheet__header {
+  border-bottom: 1px solid var(--outline);
+}
+
+.referral-sheet__header p {
+  margin: 0 0 5px;
   color: var(--aqua);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
 }
 
-.forge-prospect-modal-backdrop h2 {
+.referral-sheet__header h2 {
   margin: 0;
-  font-size: clamp(28px, 4vw, 42px);
-  line-height: 1.02;
+  font-size: clamp(25px, 3vw, 34px);
+  line-height: 1.05;
 }
 
-.forge-prospect-modal-backdrop header button {
-  width: 48px;
-  min-width: 48px;
-  height: 48px;
+.referral-sheet__close {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--outline);
   border-radius: 50%;
+  padding: 0;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.06);
-  font-size: 28px;
+  font-size: 27px;
 }
 
-.forge-prospect-form-scroll {
-  min-height: 0;
-}
-
-.forge-prospect-form-grid {
+.referral-sheet__body {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  align-content: start;
+  gap: 15px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 24px;
 }
 
-.forge-prospect-form-grid label,
-.forge-prospect-referral {
+.referral-sheet label {
   display: grid;
   gap: 7px;
   min-width: 0;
@@ -82,61 +94,70 @@
   font-weight: 720;
 }
 
-.forge-prospect-referral {
-  grid-column: 1 / -1;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.forge-prospect-referral[hidden] {
-  display: none !important;
-}
-
-.forge-prospect-wide {
-  grid-column: 1 / -1;
-}
-
-.forge-prospect-modal-backdrop input,
-.forge-prospect-modal-backdrop select,
-.forge-prospect-modal-backdrop textarea,
-.forge-prospect-modal-backdrop footer button {
+.referral-sheet input,
+.referral-sheet textarea {
   box-sizing: border-box;
   width: 100%;
-  min-height: 48px;
+  min-height: 50px;
   border: 1px solid var(--outline-strong);
-  border-radius: 18px;
+  border-radius: 17px;
   padding: 12px 14px;
   color: var(--ink);
-  background: rgba(3, 12, 25, 0.78);
+  background: rgba(3, 12, 25, 0.74);
   font: inherit;
 }
 
-.forge-prospect-modal-backdrop textarea {
-  min-height: 110px;
+.referral-sheet textarea {
+  min-height: 92px;
   resize: vertical;
 }
 
-.forge-prospect-modal-backdrop :focus-visible {
+.referral-sheet :focus-visible {
   outline: 3px solid var(--aqua);
   outline-offset: 3px;
 }
 
-.forge-prospect-modal-backdrop footer {
-  flex-wrap: wrap;
+.referral-sheet__optional {
+  border: 1px solid var(--outline);
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.035);
 }
 
-.forge-prospect-modal-backdrop footer button {
-  width: auto;
-  min-width: 170px;
+.referral-sheet__optional summary {
+  cursor: pointer;
+  padding: 15px 16px;
+  color: var(--ink);
+  font-weight: 760;
 }
 
-.forge-prospect-modal-backdrop .forge-pipeline-primary {
-  border-color: transparent;
+.referral-sheet__optional > div {
+  display: grid;
+  gap: 15px;
+  padding: 0 16px 16px;
+}
+
+.referral-sheet__footer {
+  justify-content: flex-end;
+  border-top: 1px solid var(--outline);
+}
+
+.referral-sheet__footer button {
+  min-height: 50px;
+  border: 0;
+  border-radius: 18px;
+  padding: 12px 22px;
   color: #201300;
   background: linear-gradient(105deg, #ffe09c, #e9a93b);
+  font: inherit;
   font-weight: 800;
 }
 
-.forge-prospect-form-error {
+.referral-sheet__footer button[disabled] {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.referral-sheet__error {
   margin: 0;
   border: 1px solid rgba(255, 132, 132, 0.38);
   border-radius: 16px;
@@ -145,29 +166,50 @@
   background: rgba(116, 25, 32, 0.26);
 }
 
-.pipeline-module__create-error {
+.pipeline-module__create-error,
+.pipeline-module__referral-status {
   margin: 10px 0 0;
+}
+
+.pipeline-module__create-error {
   color: #ffd0d0;
 }
 
-@media (max-width: 720px) {
-  .forge-prospect-modal-backdrop {
-    align-items: end;
-    padding: 0;
+.pipeline-module__referral-status {
+  color: var(--aqua);
+}
+
+@media (max-width: 900px) {
+  .referral-sheet-layer {
+    align-items: flex-end;
   }
 
-  .forge-prospect-modal-backdrop .forge-prospect-dialog {
+  .referral-sheet {
     width: 100%;
-    max-height: 92dvh;
+    height: auto;
+    max-height: min(92dvh, 820px);
+    border-top: 1px solid rgba(184, 211, 255, 0.22);
+    border-left: 0;
     border-radius: 30px 30px 0 0;
+    box-shadow: 0 -24px 72px rgba(0, 0, 0, 0.48);
   }
 
-  .forge-prospect-form-grid,
-  .forge-prospect-referral {
-    grid-template-columns: 1fr;
+  .referral-sheet form {
+    max-height: min(92dvh, 820px);
   }
 
-  .forge-prospect-modal-backdrop footer button {
+  .referral-sheet__header,
+  .referral-sheet__body,
+  .referral-sheet__footer {
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-left: max(20px, env(safe-area-inset-left));
+  }
+
+  .referral-sheet__footer {
+    padding-bottom: max(18px, env(safe-area-inset-bottom));
+  }
+
+  .referral-sheet__footer button {
     width: 100%;
   }
 }

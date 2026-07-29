@@ -168,8 +168,14 @@ async function capture(page, directory, label, options = {}) {
       alfredVisible: visibleCount(
         '.alfred-sheet[aria-hidden="false"], [data-forge-alfred-sheet][aria-hidden="false"]',
       ) > 0,
+      referralSheetVisible:
+        visibleCount("[data-referral-sheet]") > 0,
       prospectModalVisible:
+        visibleCount("[data-referral-sheet], [data-prospect-form-modal]") > 0,
+      legacyCenteredProspectModalVisible:
         visibleCount("[data-prospect-form-modal]") > 0,
+      globalAlfredLauncherVisible:
+        visibleCount("[data-forge-command-orb][data-open-alfred]") > 0,
       quoteLegacyRuntimeVisible:
         visibleCount(
           '[data-forge-module="dedicated-new-quote-static-route"]',
@@ -234,6 +240,20 @@ async function captureViewport(browser, viewport, fixture) {
       directory,
       "01-home-full",
     );
+    const alfredLauncher = page.locator(
+      "[data-forge-command-orb][data-open-alfred]",
+    ).first();
+    if (await alfredLauncher.count()) {
+      await alfredLauncher.click({ timeout: 10_000 });
+      await page.waitForTimeout(250);
+      result.routes.alfredIndependent = await capture(
+        page,
+        directory,
+        "01b-alfred-independent",
+      );
+      await page.keyboard.press("Escape").catch(() => {});
+      await page.waitForTimeout(250);
+    }
 
     await gotoRoute(page, "pipeline");
     await page
@@ -326,8 +346,10 @@ function markdownSummary(results, fixture, browserVersion) {
     const after = result.routes.pipelineAfter || {};
     const quote = result.routes.quotesLoadedUnderlay ||
       result.routes.quotesAfterUpload || {};
-    const pipelineOutcome = after.prospectModalVisible
-      ? "Formulario productivo"
+    const pipelineOutcome = after.referralSheetVisible &&
+      !after.alfredVisible &&
+      !after.legacyCenteredProspectModalVisible
+      ? "Referral sheet Material 3"
       : after.alfredVisible
         ? "Alfred"
         : "Sin superficie visible";
