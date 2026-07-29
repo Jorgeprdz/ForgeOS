@@ -258,9 +258,13 @@ jobs:
             quotesCss,
             /\[data-forge-quotes-runtime-host\]\s*\[hidden\][^{]*\{[^}]*display:\s*none\s*!important/s,
           );
+          assert.match(
+            quotesCss,
+            /\.fq-file-native-105dr\s*\{[^}]*inline-size:\s*1px\s*!important[^}]*opacity:\s*0\s*!important[^}]*clip-path:\s*inset\(50%\)\s*!important/s,
+          );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
           assert.match(index, /app\.css\?v=ui-m03-approved-004/);
-          assert.match(index, /app\.js\?v=ui-m04-shell-004/);
+          assert.match(index, /app\.js\?v=ui-m04-shell-005/);
           assert.doesNotMatch(
             index,
             /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,

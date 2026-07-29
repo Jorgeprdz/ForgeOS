@@ -20,7 +20,7 @@ function ensureQuotesStyles() {
     }
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL("./quotes-module.css?v=ui-m05-002", import.meta.url);
+    stylesheet.href = new URL("./quotes-module.css?v=ui-m05-003", import.meta.url);
     stylesheet.dataset.forgeQuotesStyles = "true";
     stylesheet.addEventListener("load", resolve, { once: true });
     stylesheet.addEventListener("error", reject, { once: true });
