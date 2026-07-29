@@ -5,7 +5,7 @@ import test from "node:test";
 
 const read = (path) => readFileSync(path, "utf8");
 
-test("QuotesModule uses the functional source without domain duplication", () => {
+test("QuotesModule keeps the functional source as a hidden engine", () => {
   const module = read(
     "docs/static-preview/forge-alive-material3/quotes-module.js",
   );
@@ -16,6 +16,10 @@ test("QuotesModule uses the functional source without domain duplication", () =>
   );
   assert.match(module, /import\.meta\.url/);
   assert.match(module, /dedicated-new-quote-static-route/);
+  assert.match(module, /data-forge-quotes-engine/);
+  assert.match(module, /data-material3-quotes-projection/);
+  assert.match(module, /sanitizeProjection/);
+  assert.match(module, /renderProjection/);
   assert.match(module, /forge:quote-intake-state-change/);
   assert.match(module, /dataset\.intakeState/);
   assert.doesNotMatch(module, /iframe|calculateQuote|localStorage|supabase/i);
@@ -32,7 +36,7 @@ test("canonical navigation registers the real quotes route", () => {
   assert.match(contract, /requested === "cotizaciones" \? "quotes"/);
 });
 
-test("only scoped Material 3 quote presentation suppresses legacy global nav", () => {
+test("Material 3 owns visible quote presentation", () => {
   const css = read(
     "docs/static-preview/forge-alive-material3/quotes-module.css",
   );
@@ -40,20 +44,18 @@ test("only scoped Material 3 quote presentation suppresses legacy global nav", (
   assert.match(css, /\.fq-top-105dr/);
   assert.match(
     css,
-    /\[data-forge-quotes-runtime-host\]\s*\[hidden\][^{]*\{[^}]*display:\s*none\s*!important/s,
+    /\.quotes-module__engine[\s\S]*opacity:\s*0\s*!important/,
+  );
+  assert.match(
+    css,
+    /data-forge-module="dedicated-new-quote-static-route"[\s\S]*opacity:\s*0\s*!important/,
   );
   assert.match(
     css,
     /\.fq-file-native-105dr\s*\{[^}]*inline-size:\s*1px\s*!important[^}]*opacity:\s*0\s*!important[^}]*clip-path:\s*inset\(50%\)\s*!important/s,
   );
-  assert.match(
-    css,
-    /data-intake-state="empty"[\s\S]*\.fq-hero-105dr/,
-  );
-  assert.match(
-    css,
-    /data-intake-state="empty"[\s\S]*\.fq-upload-controls-105dr[\s\S]*margin-top:\s*14px/,
-  );
+  assert.match(css, /\.quotes-module__projection/);
+  assert.match(css, /\.quotes-module__upload-controls/);
   assert.doesNotMatch(css, /\.nav-pill\s*\{[^}]*display:\s*none/s);
 });
 
