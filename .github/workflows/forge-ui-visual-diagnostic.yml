@@ -15,6 +15,20 @@ on:
       - tools/forge-ui-visual-diagnostic.mjs
       - package.json
       - package-lock.json
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/forge-ui-visual-diagnostic.yml
+      - docs/static-preview/forge-alive-material3/**
+      - docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.*
+      - advisor-os/sales-pipeline/**
+      - nash/**
+      - nash-*.js
+      - manager-os/nba/**
+      - tools/forge-ui-visual-diagnostic.mjs
+      - package.json
+      - package-lock.json
   workflow_dispatch:
     inputs:
       target_url:
@@ -44,6 +58,7 @@ jobs:
   capture:
     if: >-
       github.event_name == 'push' ||
+      github.event_name == 'pull_request' ||
       github.event_name == 'workflow_dispatch' ||
       github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
@@ -66,9 +81,9 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_run" ]; then
             echo "FORGE_DIAGNOSTIC_URL=https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/" >> "$GITHUB_ENV"
             echo "FORGE_DIAGNOSTIC_SHA=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_ENV"
-          elif [ "${{ github.event_name }}" = "push" ]; then
+          elif [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "FORGE_DIAGNOSTIC_URL=http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/" >> "$GITHUB_ENV"
-            echo "FORGE_DIAGNOSTIC_SHA=${{ github.sha }}" >> "$GITHUB_ENV"
+            echo "FORGE_DIAGNOSTIC_SHA=${{ github.event.pull_request.head.sha || github.sha }}" >> "$GITHUB_ENV"
           else
             target="${{ github.event.inputs.target_url }}"
             if [ -z "$target" ]; then
@@ -147,7 +162,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: forge-ui-visual-diagnostic-${{ github.event.workflow_run.head_sha || github.sha }}
+          name: forge-ui-visual-diagnostic-${{ github.event.workflow_run.head_sha || github.event.pull_request.head.sha || github.sha }}
           path: artifacts/forge-ui-diagnostic
           if-no-files-found: error
           retention-days: 14
