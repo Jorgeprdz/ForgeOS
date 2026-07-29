@@ -1,0 +1,70 @@
+name: REP Performance Report Provider CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/performance/reporting/performance-report-provider.mjs
+      - tests/performance-report-provider-test.mjs
+      - docs/architecture/reporting/REP-06_PERFORMANCE_REPORT_PROVIDER.md
+      - .github/workflows/performance-report-provider-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provider:
+    name: Performance report provider acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify REP-05 closure
+        run: grep -Fq 'REP_05_COMPARISON_AND_BASELINE_ENGINE=CLOSED' docs/architecture/reporting/REP-05_COMPARISON_AND_BASELINE_ENGINE_CLOSURE.md
+      - name: Verify Activity foundation
+        run: node scripts/ci/verify-activity-foundation-freeze.mjs
+      - name: Run Performance provider tests
+        run: |
+          node --test --test-reporter=tap tests/performance-report-provider-test.mjs | tee REP06_PROVIDER.tap
+          grep -Fq '# tests 32' REP06_PROVIDER.tap
+          grep -Fq '# pass 32' REP06_PROVIDER.tap
+          grep -Fq '# fail 0' REP06_PROVIDER.tap
+      - name: Run reporting regressions
+        run: |
+          node --test tests/report-comparison-engine-test.mjs
+          node --test tests/universal-report-aggregation-runtime-test.mjs
+          node --test tests/report-provider-runtime-test.mjs
+          node --test tests/universal-period-resolver-test.mjs
+          node --test tests/universal-reporting-kernel-test.mjs
+      - name: Run Performance regressions
+        run: |
+          node --test tests/performance-surface-adapter-test.mjs
+      - name: Verify hygiene
+        run: git diff --check
+      - name: Build evidence
+        run: |
+          mkdir -p artifacts/reporting
+          printf '%s\n' \
+            'REP_06_PERFORMANCE_REPORT_PROVIDER=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP05_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_PROVIDER_TEST=PASS' \
+            'REMOTE_REPORTING_REGRESSION=PASS' \
+            'REMOTE_PERFORMANCE_REGRESSION=PASS' \
+            'PERFORMANCE_READ_AUTHORITY=YES' \
+            'PERFORMANCE_SCORING_AUTHORITY=NO' \
+            > artifacts/reporting/REP06_ACCEPTANCE.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rep-06-performance-report-provider-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
+
