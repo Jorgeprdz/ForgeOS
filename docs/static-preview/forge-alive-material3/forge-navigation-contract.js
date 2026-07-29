@@ -24,7 +24,7 @@ export const FORGE_NAVIGATION_ITEMS = Object.freeze([
     icon: "pipeline",
     iconPath: iconPaths.pipeline,
     accessibilityLabel: "Ir a Pipeline",
-    availability: "future",
+    availability: "available",
     order: 20,
   }),
   Object.freeze({

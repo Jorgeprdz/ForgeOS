@@ -1,6 +1,7 @@
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js";
+import { createPipelineModule } from "./pipeline-module.js";
 
 const application = document.querySelector("[data-forge-application]");
 const moduleViewport = document.querySelector(
@@ -8,8 +9,9 @@ const moduleViewport = document.querySelector(
 );
 const homeRoot = document.querySelector("[data-forge-home-module]");
 const quotesRoot = document.querySelector("[data-forge-quotes-module]");
+const pipelineRoot = document.querySelector("[data-forge-pipeline-module]");
 
-if (!application || !moduleViewport || !homeRoot || !quotesRoot) {
+if (!application || !moduleViewport || !homeRoot || !quotesRoot || !pipelineRoot) {
   throw new Error("UI-M04 canonical shell boundary is incomplete");
 }
 
@@ -25,9 +27,14 @@ const quotes = createQuotesModule({
   root: quotesRoot,
   shell,
 });
+const pipeline = createPipelineModule({
+  root: pipelineRoot,
+  shell,
+});
 
 shell
   .registerRouteModule("inicio", home)
+  .registerRouteModule("pipeline", pipeline)
   .registerRouteModule("quotes", quotes);
 shell.initialize();
 
