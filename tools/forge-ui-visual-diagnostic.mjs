@@ -222,6 +222,28 @@ async function capture(page, directory, label, options = {}) {
       humanApprovalRequired:
         document.querySelector("[data-nash-approval-status]") !== null,
       automaticSendPerformed: false,
+      authJpVisible: visibleCount(".hero .profile[data-forge-auth-avatar]") > 0,
+      authPanelVisible: visibleCount("[data-forge-auth-panel]") > 0,
+      googleAvatarVisible: visibleCount('.hero .profile[data-forge-auth-avatar] img') > 0,
+      privateDataPurged:
+        document.querySelector('[data-pipeline-auth-state="ANONYMOUS"]') !== null
+        && document.querySelector("[data-productive-prospect-card]") === null,
+      combatWorkspaceVisible: visibleCount("[data-nash-combat-workspace]") > 0,
+      combatTypeStall: document.querySelector("[data-combat-type]")?.textContent.trim() === "STALL",
+      combatIntentAvoidingDecision:
+        document.querySelector("[data-combat-intent]")?.textContent.trim() === "AVOIDING_DECISION",
+      combatExactApprovalPassed: visibleCount("[data-combat-whatsapp]") > 0,
+      combatEditedInvalidatedApproval:
+        globalThis.__FORGE_DIAGNOSTIC_COMBAT_EDIT_INVALIDATED__ === true,
+      objectionTimelineRecorded:
+        globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ === true,
+      rawObjectionPersisted:
+        JSON.stringify(globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ || {}).includes("Lo voy a pensar"),
+      nbaWorkspaceVisible: visibleCount("[data-nba-workspace]") > 0,
+      nbaHandleObjection:
+        document.querySelector("[data-nba-workspace]")?.textContent.includes("HANDLE_OBJECTION") || false,
+      nbaReasonWhyVisible:
+        document.querySelector("[data-nba-workspace]")?.textContent.includes("Reason Why") || false,
       globalAlfredLauncherVisible:
         visibleCount("[data-forge-command-orb][data-open-alfred]") > 0,
       quoteLegacyRuntimeVisible:
@@ -370,13 +392,45 @@ async function captureViewport(browser, viewport, fixture) {
     globalThis.supabase = {
       createClient: () => ({
         auth: {
-          getUser: async () => ({
-            data: { user: { id: "diagnostic-advisor" } },
+          getSession: async () => ({
+            data: {
+              session: globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__
+                ? { user: {
+                  id: "diagnostic-advisor",
+                  email: "jorge@example.com",
+                  app_metadata: { provider: "google" },
+                  user_metadata: {
+                    full_name: "Jorge Palacios",
+                    avatar_url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%230b57d0'/%3E%3C/svg%3E",
+                  },
+                } } : null,
+            },
             error: null,
           }),
+          getUser: async () => ({
+            data: { user: globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ ? { id: "diagnostic-advisor" } : null },
+            error: null,
+          }),
+          signInWithOAuth: async options => {
+            globalThis.__FORGE_DIAGNOSTIC_GOOGLE_OAUTH__ = options;
+            return { data: {}, error: null };
+          },
+          signOut: async () => {
+            globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
+            globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);
+            return { error: null };
+          },
+          onAuthStateChange: callback => {
+            globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__ = callback;
+            return { data: { subscription: { unsubscribe() {} } } };
+          },
         },
         from: (table) => query(table),
-        rpc: async () => ({ data: null, error: null }),
+        rpc: async (_name, args) => {
+          globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ = true;
+          globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ = args;
+          return { data: null, error: null };
+        },
         functions: {
           invoke: async () => {
             globalThis.__FORGE_DIAGNOSTIC_NASH_PROVIDER_ATTEMPTED__ = true;
@@ -386,6 +440,7 @@ async function captureViewport(browser, viewport, fixture) {
       }),
     };
     globalThis.__FORGE_DIAGNOSTIC_SAMPLE_REFERRAL__ = sample;
+    globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
   }, SAMPLE_REFERRAL);
   const page = await context.newPage();
   const telemetry = telemetryFor(page);
@@ -402,6 +457,31 @@ async function captureViewport(browser, viewport, fixture) {
       directory,
       "01-home-full",
     );
+    const jp = page.locator(".hero .profile[data-forge-auth-avatar]").first();
+    await jp.waitFor({ state: "visible", timeout: 10_000 });
+    await jp.click();
+    await page.locator("[data-forge-auth-google]").waitFor({ state: "visible", timeout: 10_000 });
+    result.routes.authAnonymous = await capture(page, directory, "01a-auth-anonymous");
+    await page.locator("[data-forge-auth-google]").click();
+    await page.waitForFunction(() =>
+      globalThis.__FORGE_DIAGNOSTIC_GOOGLE_OAUTH__?.provider === "google"
+    );
+    await page.evaluate(() => {
+      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = true;
+      const user = {
+        id: "diagnostic-advisor",
+        email: "jorge@example.com",
+        app_metadata: { provider: "google" },
+        user_metadata: {
+          full_name: "Jorge Palacios",
+          avatar_url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%230b57d0'/%3E%3C/svg%3E",
+        },
+      };
+      globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_IN", { user });
+    });
+    await page.locator("[data-forge-auth-close]").first().click().catch(() => {});
+    await page.waitForTimeout(300);
+    result.routes.authAuthenticated = await capture(page, directory, "01aa-auth-authenticated");
     const alfredLauncher = page.locator(
       "[data-forge-command-orb][data-open-alfred]",
     ).first();
@@ -505,6 +585,30 @@ async function captureViewport(browser, viewport, fixture) {
         directory,
         "03d-pipeline-nash-accepted",
       );
+      await page.locator("[data-close-nash]").first().click();
+      await page.locator("[data-open-combat]").first().click();
+      await page.locator("[data-combat-objection]").fill("Lo voy a pensar");
+      await page.locator("[data-analyze-combat]").click();
+      await page.locator("[data-combat-type]").waitFor({ state: "visible" });
+      const combatDraft = page.locator("[data-combat-response]");
+      const combatOriginal = await combatDraft.inputValue();
+      await page.locator("[data-approve-combat]").click();
+      await page.locator("[data-combat-whatsapp]").waitFor({ state: "visible" });
+      await combatDraft.fill(`${combatOriginal} Editado`);
+      if (await page.locator("[data-combat-whatsapp]").isVisible()) {
+        throw new Error("COMBAT_EDIT_DID_NOT_INVALIDATE_APPROVAL");
+      }
+      await page.evaluate(() => { globalThis.__FORGE_DIAGNOSTIC_COMBAT_EDIT_INVALIDATED__ = true; });
+      await combatDraft.fill(combatOriginal);
+      await page.locator("[data-approve-combat]").click();
+      await page.locator("[data-register-combat]").click();
+      await page.locator("[data-combat-timeline]").waitFor({ state: "visible" });
+      result.routes.pipelineCombat = await capture(page, directory, "03e-pipeline-combat");
+      await page.locator("[data-close-combat]").first().click();
+      await page.locator("[data-open-nba]").first().click();
+      await page.locator("[data-nba-workspace]").waitFor({ state: "visible" });
+      result.routes.pipelineNba = await capture(page, directory, "03f-pipeline-nba");
+      await page.locator("[data-close-nba]").first().click();
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");
     }
@@ -544,6 +648,13 @@ async function captureViewport(browser, viewport, fixture) {
       directory,
       "06-quotes-loaded-underlay",
     );
+    await page.evaluate(() => {
+      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
+      globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);
+    });
+    await gotoRoute(page, "pipeline");
+    await page.locator('[data-pipeline-auth-state="ANONYMOUS"]').waitFor({ state: "visible", timeout: 10_000 });
+    result.routes.authSignedOut = await capture(page, directory, "07-auth-signed-out");
   } catch (error) {
     result.errors.push(error instanceof Error ? error.stack || error.message : String(error));
     await capture(page, directory, "99-failure", { fullPage: true }).catch(
@@ -617,6 +728,11 @@ function assertVisualAcceptance(results) {
     const referral = result.routes.pipelineAfter || {};
     const card = result.routes.pipelineSavedReferral || {};
     const nash = result.routes.pipelineNashAccepted || {};
+    const authAnonymous = result.routes.authAnonymous || {};
+    const authAuthenticated = result.routes.authAuthenticated || {};
+    const authSignedOut = result.routes.authSignedOut || {};
+    const combat = result.routes.pipelineCombat || {};
+    const nba = result.routes.pipelineNba || {};
     const quote = result.routes.quotesAfterUpload || {};
     const telemetry = result.telemetrySummary || {};
 
@@ -661,6 +777,20 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "consoleErrors=0", telemetry.consoleErrors === 0);
     requireFlag(viewport, "runErrors=0", result.errors.length === 0);
     requireFlag(viewport, "alfredIndependent", result.routes.alfredIndependent?.alfredVisible === true);
+    requireFlag(viewport, "authJpVisible", authAnonymous.authJpVisible === true);
+    requireFlag(viewport, "authPanelVisible", authAnonymous.authPanelVisible === true);
+    requireFlag(viewport, "googleAvatarVisible", authAuthenticated.googleAvatarVisible === true);
+    requireFlag(viewport, "privateDataPurged", authSignedOut.privateDataPurged === true);
+    requireFlag(viewport, "combatWorkspaceVisible", combat.combatWorkspaceVisible === true);
+    requireFlag(viewport, "combatTypeStall", combat.combatTypeStall === true);
+    requireFlag(viewport, "combatIntentAvoidingDecision", combat.combatIntentAvoidingDecision === true);
+    requireFlag(viewport, "combatExactApprovalPassed", combat.combatExactApprovalPassed === true);
+    requireFlag(viewport, "combatEditedInvalidatedApproval", combat.combatEditedInvalidatedApproval === true);
+    requireFlag(viewport, "objectionTimelineRecorded", combat.objectionTimelineRecorded === true);
+    requireFlag(viewport, "rawObjectionPersisted=false", combat.rawObjectionPersisted === false);
+    requireFlag(viewport, "nbaWorkspaceVisible", nba.nbaWorkspaceVisible === true);
+    requireFlag(viewport, "nbaHandleObjection", nba.nbaHandleObjection === true);
+    requireFlag(viewport, "nbaReasonWhyVisible", nba.nbaReasonWhyVisible === true);
   }
 
   if (failures.length) {
@@ -723,6 +853,11 @@ async function main() {
   console.log("MANUAL_WHATSAPP_BOUNDARY=PASS");
   console.log("QUOTE_SUBSTANTIVE_RESULT=PASS");
   console.log("ALFRED_INDEPENDENCE=PASS");
+  console.log("GOOGLE_AUTH_RECONNECTION_ACCEPTANCE=PASS");
+  console.log("PRIVATE_DATA_SESSION_ACCEPTANCE=PASS");
+  console.log("NASH_COMBAT_ACCEPTANCE=PASS");
+  console.log("OBJECTION_TIMELINE_ACCEPTANCE=PASS");
+  console.log("NBA_REASON_WHY_ACCEPTANCE=PASS");
   console.log(`OUTPUT=${OUTPUT_ROOT}`);
   console.log(`TARGET=${TARGET_URL}`);
   console.log(`CACHE_BUST=${CACHE_BUST}`);

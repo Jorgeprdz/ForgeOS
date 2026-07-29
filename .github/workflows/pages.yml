@@ -104,6 +104,23 @@ jobs:
             '_redirects',
             'manifest.json'
           ]);
+          const publicConversationRuntimeFiles = new Set([
+            'nash-intent-engine.js',
+            'nash-combat-orchestrator.js',
+            'nash-next-best-action-engine.js',
+            'nash-combat-intelligence-report-engine.js',
+            'nash/context-intake/nash-prospect-context-intake-boundary-contract.js',
+            'nash/context-intake/nash-prospect-context-intake.js',
+            'nash/context-intake/nash-universal-prospect-context-consumer.js',
+            'nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js',
+            'nash/conversation-brief/nash-provider-request-contract.js',
+            'nash/remote-draft-provider-client-boundary.js',
+            'nash/pipeline-nash-draft-orchestrator.js',
+            'nash/draft-intake/nfast06-draft-safety-boundary.js',
+            'nash/draft-intake/nfast06-deterministic-draft-renderer.js',
+            'manager-os/nba/nba-reason-why-boundary-contract.js',
+            'manager-os/nba/nash-mick-nba-reconnection-engine.js'
+          ]);
 
           function isPublicFile(file) {
             if (file.startsWith('.github/')) return false;
@@ -111,6 +128,7 @@ jobs:
             if (file.startsWith('advisor-os/sales-pipeline/')) {
               return publicExtensions.has(path.extname(file).toLowerCase());
             }
+            if (publicConversationRuntimeFiles.has(file)) return true;
             if (!file.startsWith('docs/')) return publicRootFiles.has(file);
             if (file.includes('/tests/')) return false;
             if (/(^|\/)([^/]*-)?(master-)?test(s)?\.(js|json)$/i.test(file)) return false;
@@ -231,6 +249,26 @@ jobs:
               fs.existsSync(path.join(canonical, file)),
               `missing clean Forge Alive artifact: ${file}`,
             );
+          }
+          const requiredConversationRuntime = [
+            'nash-intent-engine.js',
+            'nash-combat-orchestrator.js',
+            'nash-next-best-action-engine.js',
+            'nash-combat-intelligence-report-engine.js',
+            'nash/context-intake/nash-prospect-context-intake-boundary-contract.js',
+            'nash/context-intake/nash-prospect-context-intake.js',
+            'nash/context-intake/nash-universal-prospect-context-consumer.js',
+            'nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js',
+            'nash/conversation-brief/nash-provider-request-contract.js',
+            'nash/remote-draft-provider-client-boundary.js',
+            'nash/pipeline-nash-draft-orchestrator.js',
+            'nash/draft-intake/nfast06-draft-safety-boundary.js',
+            'nash/draft-intake/nfast06-deterministic-draft-renderer.js',
+            'manager-os/nba/nba-reason-why-boundary-contract.js',
+            'manager-os/nba/nash-mick-nba-reconnection-engine.js',
+          ];
+          for (const file of requiredConversationRuntime) {
+            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
           }
 
           const index = fs.readFileSync(
