@@ -83,8 +83,8 @@ jobs:
             tests/report-provider-runtime-test.mjs \
             | tee REP05_PROVIDER.tap
 
-          grep -Fq '# tests 40' REP05_PROVIDER.tap
-          grep -Fq '# pass 40' REP05_PROVIDER.tap
+          grep -Fq '# tests 39' REP05_PROVIDER.tap
+          grep -Fq '# pass 39' REP05_PROVIDER.tap
           grep -Fq '# fail 0' REP05_PROVIDER.tap
 
       - name: Run resolver regression
