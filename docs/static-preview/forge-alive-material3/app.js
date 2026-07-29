@@ -3,6 +3,33 @@ import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=ui-m05-008";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-008";
 
+const sourceLayout = import.meta.url.includes("/docs/static-preview/");
+const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
+const legacyBase = new URL(sourceLayout ? "../forge-alive/" : "../forge-alive-runtime/", import.meta.url);
+const advisorBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
+const loadAuthority = async (base, path) => import(new URL(path, base));
+
+await loadAuthority(envBase, "env.js");
+await loadAuthority(legacyBase, "forge-alive-public-config-067g17a1.js");
+await loadAuthority(advisorBase, "productive-prospect-bootstrap.js");
+if (!document.querySelector("[data-forge-auth-entry-styles]")) {
+  const authStyles = document.createElement("link");
+  authStyles.rel = "stylesheet";
+  authStyles.href = new URL("forge-alive-auth-entry-067g17b1.css", legacyBase);
+  authStyles.dataset.forgeAuthEntryStyles = "true";
+  document.head.append(authStyles);
+}
+await loadAuthority(legacyBase, "forge-alive-auth-entry-067g17b1.js");
+
+if (
+  !globalThis.ForgeAlivePublicConfig067G17A1
+  || !globalThis.ForgeProductiveProspectBootstrap067G17B
+  || !globalThis.ForgeAliveAuthEntry067G17B1
+) {
+  document.body.insertAdjacentHTML("afterbegin", '<p role="alert" data-auth-runtime-error>No se pudo iniciar la autenticación de Forge.</p>');
+  throw new Error("MATERIAL3_AUTH_AUTHORITIES_REQUIRED");
+}
+
 const application = document.querySelector("[data-forge-application]");
 const moduleViewport = document.querySelector(
   "[data-forge-module-viewport]",

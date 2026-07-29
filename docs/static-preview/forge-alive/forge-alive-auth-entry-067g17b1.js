@@ -7,6 +7,7 @@
     '.dw-sidebar-profile-056y .dw-avatar-056y',
     '.alfred-profile-056g7 > span',
     '.hero .orb',
+    '.hero .profile',
   ].join(',');
   const state = {
     avatars: [],
@@ -42,13 +43,15 @@
 
   function makeAvatarButton(node) {
     if (!node || node.dataset.forgeAuthAvatar === '067g17b1') return node;
-    const button = global.document.createElement('button');
+    const button = node.tagName === 'BUTTON'
+      ? node
+      : global.document.createElement('button');
     button.type = 'button';
     button.className = `${node.className || ''} forge-auth-avatar-067g17b1`.trim();
     button.dataset.forgeAuthAvatar = '067g17b1';
     button.setAttribute('aria-label', 'Iniciar sesión o abrir perfil');
-    button.textContent = 'F';
-    node.replaceWith(button);
+    button.textContent = node.matches?.('.hero .profile') ? 'JP' : 'F';
+    if (button !== node) node.replaceWith(button);
     button.addEventListener('click', () => openAuthPanel());
     return button;
   }
@@ -87,10 +90,6 @@
 
   function syncFallbackAvatarVisibility() {
     if (!state.fallbackAvatar) return;
-    if (currentNav() === 'pipeline') {
-      state.fallbackAvatar.hidden = false;
-      return;
-    }
     const canonicalVisible = state.avatars
       .filter((avatar) => avatar !== state.fallbackAvatar)
       .some(isVisibleAvatar);
@@ -121,7 +120,7 @@
 
   function renderAnonymousAvatar() {
     for (const avatar of state.avatars) {
-      avatar.textContent = 'F';
+      avatar.textContent = avatar.matches?.('.hero .profile') ? 'JP' : 'F';
       avatar.setAttribute('aria-label', 'Iniciar sesión o abrir perfil');
       avatar.dataset.forgeAuthState = 'anonymous';
     }
@@ -152,14 +151,15 @@
 
   function profileMarkHtml(user) {
     const metadata = user?.user_metadata || {};
-    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url : '';
+    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url
+      : typeof metadata.picture === 'string' ? metadata.picture : '';
     if (avatarUrl) return `<img src="${avatarUrl.replace(/"/g, '&quot;')}" alt="">`;
     return safeInitials(user);
   }
 
   function renderLoadingAvatar() {
     for (const avatar of state.avatars) {
-      avatar.textContent = 'F';
+      avatar.textContent = avatar.matches?.('.hero .profile') ? 'JP' : 'F';
       avatar.setAttribute('aria-label', 'Recuperando sesión de Forge');
       avatar.dataset.forgeAuthState = 'auth_loading';
     }
@@ -167,7 +167,8 @@
 
   function renderAuthenticatedAvatar(user) {
     const metadata = user?.user_metadata || {};
-    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url : '';
+    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url
+      : typeof metadata.picture === 'string' ? metadata.picture : '';
     const initials = safeInitials(user);
     for (const avatar of state.avatars) {
       avatar.dataset.forgeAuthState = 'authenticated';
