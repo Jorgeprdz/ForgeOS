@@ -1,5 +1,16 @@
-import "../../../advisor-os/sales-pipeline/sales-stage-registry.js";
-import "../../../advisor-os/sales-pipeline/pipeline-stage-read-model.js";
+const pipelineRuntimeBase = new URL(
+  import.meta.url.includes("/docs/static-preview/")
+    ? "../../../advisor-os/sales-pipeline/"
+    : "../../advisor-os/sales-pipeline/",
+  import.meta.url,
+);
+
+await import(
+  new URL("sales-stage-registry.js", pipelineRuntimeBase)
+);
+await import(
+  new URL("pipeline-stage-read-model.js", pipelineRuntimeBase)
+);
 
 const pipelineStateKey = Symbol.for("forge.material3.pipeline.state");
 

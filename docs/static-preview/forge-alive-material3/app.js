@@ -1,7 +1,7 @@
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js";
-import { createPipelineModule } from "./pipeline-module.js";
+import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-002";
 
 const application = document.querySelector("[data-forge-application]");
 const moduleViewport = document.querySelector(
