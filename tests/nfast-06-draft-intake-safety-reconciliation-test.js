@@ -3,7 +3,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const ProspectUI = require(
-  "../advisor-os/sales-pipeline/productive-prospect-ui.js",
+  "../nash/draft-intake/nfast06-draft-safety-boundary.js",
 );
 
 function safeEnvelope(text = "Hola. Me gustaría conversar contigo.") {

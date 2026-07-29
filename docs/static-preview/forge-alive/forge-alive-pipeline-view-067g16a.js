@@ -11,6 +11,7 @@ import '../../../nash/conversation-brief/nash-deterministic-conversation-brief-b
 import '../../../nash/conversation-brief/nash-provider-request-contract.js';
 import '../../../nash/remote-draft-provider-client-boundary.js';
 import '../../../nash/pipeline-nash-draft-orchestrator.js';
+import '../../../nash/draft-intake/nfast06-draft-safety-boundary.js';
 import '../../../advisor-os/sales-pipeline/productive-prospect-ui.js';
 import '../../../advisor-os/sales-pipeline/productive-prospect-bootstrap.js';
 
