@@ -113,6 +113,59 @@ jobs:
           });
           EOF
 
+      - name: Correct cross-route auth simulation in diagnostic harness
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("tools/forge-ui-visual-diagnostic.mjs")
+          source = path.read_text(encoding="utf-8")
+
+          def replace_once(old, new):
+              global source
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f"DIAGNOSTIC_PATCH_MATCH_COUNT={count}:{old[:80]!r}")
+              source = source.replace(old, new, 1)
+
+          replace_once(
+              '    if (new URL(location.href).searchParams.get("nav") !== "pipeline") return;\n\n',
+              '',
+          )
+          replace_once(
+              '    globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;\n  }, SAMPLE_REFERRAL);',
+              '''    let initialDiagnosticAuth = false;
+              try {
+                initialDiagnosticAuth = localStorage.getItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__") === "true";
+              } catch {}
+              globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = initialDiagnosticAuth;
+            }, SAMPLE_REFERRAL);''',
+          )
+          replace_once(
+              '      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = true;\n      const user = {',
+              '''      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = true;
+              localStorage.setItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__", "true");
+              const user = {''',
+          )
+          replace_once(
+              '            globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;\n            globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);',
+              '''            globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
+              localStorage.setItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__", "false");
+              globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);''',
+          )
+          replace_once(
+              '      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;\n      globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);',
+              '''      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
+              localStorage.setItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__", "false");
+              globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);''',
+          )
+
+          path.write_text(source, encoding="utf-8")
+          PY
+          node --check tools/forge-ui-visual-diagnostic.mjs
+          echo "DIAGNOSTIC_CROSS_ROUTE_AUTH_SIMULATION=READY"
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
