@@ -1,0 +1,173 @@
+.forge-prospect-modal-backdrop[data-prospect-form-modal] {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(2, 8, 18, 0.78);
+  backdrop-filter: blur(14px);
+}
+
+.forge-prospect-modal-backdrop .forge-prospect-dialog {
+  box-sizing: border-box;
+  width: min(760px, 100%);
+  max-height: min(88dvh, 900px);
+  overflow: auto;
+  border: 1px solid rgba(184, 211, 255, 0.24);
+  border-radius: 34px;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 88% 0%, rgba(118, 219, 255, 0.13), transparent 34%),
+    linear-gradient(155deg, rgba(21, 42, 74, 0.99), rgba(5, 17, 34, 0.99));
+  box-shadow: 0 34px 96px rgba(0, 0, 0, 0.62);
+}
+
+.forge-prospect-modal-backdrop form {
+  display: grid;
+  gap: 20px;
+  padding: clamp(20px, 4vw, 34px);
+}
+
+.forge-prospect-modal-backdrop header,
+.forge-prospect-modal-backdrop footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.forge-prospect-modal-backdrop header p {
+  margin: 0 0 6px;
+  color: var(--aqua);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.forge-prospect-modal-backdrop h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.02;
+}
+
+.forge-prospect-modal-backdrop header button {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  border: 1px solid var(--outline);
+  border-radius: 50%;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 28px;
+}
+
+.forge-prospect-form-scroll {
+  min-height: 0;
+}
+
+.forge-prospect-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.forge-prospect-form-grid label,
+.forge-prospect-referral {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 720;
+}
+
+.forge-prospect-referral {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.forge-prospect-referral[hidden] {
+  display: none !important;
+}
+
+.forge-prospect-wide {
+  grid-column: 1 / -1;
+}
+
+.forge-prospect-modal-backdrop input,
+.forge-prospect-modal-backdrop select,
+.forge-prospect-modal-backdrop textarea,
+.forge-prospect-modal-backdrop footer button {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--outline-strong);
+  border-radius: 18px;
+  padding: 12px 14px;
+  color: var(--ink);
+  background: rgba(3, 12, 25, 0.78);
+  font: inherit;
+}
+
+.forge-prospect-modal-backdrop textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.forge-prospect-modal-backdrop :focus-visible {
+  outline: 3px solid var(--aqua);
+  outline-offset: 3px;
+}
+
+.forge-prospect-modal-backdrop footer {
+  flex-wrap: wrap;
+}
+
+.forge-prospect-modal-backdrop footer button {
+  width: auto;
+  min-width: 170px;
+}
+
+.forge-prospect-modal-backdrop .forge-pipeline-primary {
+  border-color: transparent;
+  color: #201300;
+  background: linear-gradient(105deg, #ffe09c, #e9a93b);
+  font-weight: 800;
+}
+
+.forge-prospect-form-error {
+  margin: 0;
+  border: 1px solid rgba(255, 132, 132, 0.38);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: #ffd0d0;
+  background: rgba(116, 25, 32, 0.26);
+}
+
+.pipeline-module__create-error {
+  margin: 10px 0 0;
+  color: #ffd0d0;
+}
+
+@media (max-width: 720px) {
+  .forge-prospect-modal-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .forge-prospect-modal-backdrop .forge-prospect-dialog {
+    width: 100%;
+    max-height: 92dvh;
+    border-radius: 30px 30px 0 0;
+  }
+
+  .forge-prospect-form-grid,
+  .forge-prospect-referral {
+    grid-template-columns: 1fr;
+  }
+
+  .forge-prospect-modal-backdrop footer button {
+    width: 100%;
+  }
+}
