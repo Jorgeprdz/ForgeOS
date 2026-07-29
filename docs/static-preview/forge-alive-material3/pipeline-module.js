@@ -90,16 +90,35 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
             <button
               class="pipeline-module__create"
               type="button"
-              data-pipeline-create-prospect
+              data-pipeline-create-referral
               data-open-alfred
-              aria-label="Agregar nuevo prospecto con Alfred"
+              aria-label="Agregar nuevo referido con Alfred"
             >
               <span aria-hidden="true">＋</span>
-              <span>Agregar nuevo prospecto</span>
+              <span>Agregar nuevo referido</span>
             </button>
           </section>`
         : `<div class="pipeline-module__stages">${model.columns.map(renderColumn).join("")}</div>`}
     `;
+
+    const createReferral = root.querySelector?.(
+      "[data-pipeline-create-referral]",
+    );
+
+    createReferral?.addEventListener("click", () => {
+      const alfredInput = document.querySelector(
+        ".alfred-input input",
+      );
+
+      if (!alfredInput) {
+        return;
+      }
+
+      alfredInput.value = "Agregar nuevo referido";
+      alfredInput.dispatchEvent(
+        new Event("input", { bubbles: true }),
+      );
+    });
   }
 
   const api = Object.freeze({

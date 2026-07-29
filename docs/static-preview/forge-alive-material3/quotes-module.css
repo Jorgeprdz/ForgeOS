@@ -37,6 +37,15 @@
   margin: 0 auto;
 }
 
+.quotes-module[data-intake-state="empty"]
+.fq-upload-controls-105dr,
+.quotes-module[data-intake-state="loading"]
+.fq-upload-controls-105dr,
+.quotes-module[data-intake-state="error"]
+.fq-upload-controls-105dr {
+  margin-top: 14px;
+}
+
 .quotes-module__header {
   margin: 4px 4px 20px;
 }

@@ -84,7 +84,7 @@ test("Material 3 Pipeline renders an honest empty state", () => {
   module.mount();
   assert.match(root.innerHTML, /0 prospectos/);
   assert.match(root.innerHTML, /No hay prospectos conectados/);
-  assert.match(root.innerHTML, /Agregar nuevo prospecto/);
-  assert.match(root.innerHTML, /data-pipeline-create-prospect/);
+  assert.match(root.innerHTML, /Agregar nuevo referido/);
+  assert.match(root.innerHTML, /data-pipeline-create-referral/);
   assert.match(root.innerHTML, /data-open-alfred/);
 });

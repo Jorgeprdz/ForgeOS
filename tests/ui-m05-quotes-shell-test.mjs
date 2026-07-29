@@ -50,6 +50,10 @@ test("only scoped Material 3 quote presentation suppresses legacy global nav", (
     css,
     /data-intake-state="empty"[\s\S]*\.fq-hero-105dr/,
   );
+  assert.match(
+    css,
+    /data-intake-state="empty"[\s\S]*\.fq-upload-controls-105dr[\s\S]*margin-top:\s*14px/,
+  );
   assert.doesNotMatch(css, /\.nav-pill\s*\{[^}]*display:\s*none/s);
 });
 
