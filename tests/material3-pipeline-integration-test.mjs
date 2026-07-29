@@ -35,7 +35,7 @@ test("Material 3 Pipeline uses the canonical route, viewport and lifecycle", asy
     opportunities: [{
       opportunityId: "opportunity-1",
       prospectId: "prospect-1",
-          stageCode: "NEW",
+      stageCode: "NEW",
       lastVerifiedActivity: { title: "Contacto verificado" },
     }],
   });
@@ -74,17 +74,39 @@ test("Material 3 Pipeline uses the canonical route, viewport and lifecycle", asy
   assert.match(css, /body[\s\S]*overflow-x:\s*hidden/);
 });
 
-test("Material 3 Pipeline renders an honest empty state", () => {
+test("Material 3 Pipeline opens the productive referral form, not Alfred", async () => {
   const root = { hidden: true, dataset: {}, innerHTML: "" };
   const module = createPipelineModule({
     root,
-    shell: { syncVisualViewport() {} },
+    shell: {
+      syncVisualViewport() {},
+      setAlfred() {},
+    },
     dataProvider: () => ({ opportunities: [], prospects: [] }),
   });
   module.mount();
+
   assert.match(root.innerHTML, /0 prospectos/);
   assert.match(root.innerHTML, /No hay prospectos conectados/);
   assert.match(root.innerHTML, /Agregar nuevo referido/);
   assert.match(root.innerHTML, /data-pipeline-create-referral/);
-  assert.match(root.innerHTML, /data-open-alfred/);
+  assert.doesNotMatch(root.innerHTML, /data-open-alfred/);
+
+  const source = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-module.js",
+    "utf8",
+  );
+  const html = await readFile(
+    "docs/static-preview/forge-alive-material3/index.html",
+    "utf8",
+  );
+
+  assert.match(source, /openProductiveProspectCreateModal/);
+  assert.match(source, /source:\s*"Referido"/);
+  assert.match(source, /status:\s*"referred_new"/);
+  assert.match(source, /shell\.setAlfred\(false\)/);
+  assert.match(
+    html,
+    /data-forge-command-orb[^>]*data-open-alfred/,
+  );
 });
