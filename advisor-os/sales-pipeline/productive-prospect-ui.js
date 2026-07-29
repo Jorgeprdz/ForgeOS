@@ -17,6 +17,20 @@
     approveExactDraft,
     exactDraftHumanApprovalGate,
   } = draftSafetyBoundary;
+  const deterministicRenderer = typeof module !== "undefined" && module.exports
+    ? require("../../nash/draft-intake/nfast06-deterministic-draft-renderer.js")
+    : global.ForgeDeterministicDraftRendererNFAST06;
+  if (!deterministicRenderer) {
+    throw new Error("NFAST_06_DETERMINISTIC_DRAFT_RENDERER_REQUIRED");
+  }
+  const contactNavigationBoundary = typeof module !== "undefined" && module.exports
+    ? require("./contact-navigation/productive-contact-navigation-boundary.js")
+    : global.ForgeProductiveContactNavigationBoundary067G17B;
+  if (!contactNavigationBoundary) {
+    throw new Error("PRODUCTIVE_CONTACT_NAVIGATION_BOUNDARY_REQUIRED");
+  }
+  const { draftCandidate } = deterministicRenderer;
+  const { contactPhone, whatsappUrl } = contactNavigationBoundary;
   const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
     "&": "&amp;",
     "<": "&lt;",
@@ -81,18 +95,6 @@
     return `<dialog class="forge-prospect-dialog forge-prospect-detail-dialog" data-prospect-detail-dialog aria-labelledby="prospect-detail-title"><article><header><div><p class="forge-pipeline-product">${esc(LABELS[prospect.status] || prospect.status)}</p><h2 id="prospect-detail-title">${esc(prospect.fullName)}</h2></div><button type="button" data-close-prospect-detail aria-label="Cerrar detalle">×</button></header><dl class="forge-prospect-detail-list forge-prospect-detail-list--primary">${primary}</dl><div class="forge-prospect-detail-actions"><a class="forge-card-action forge-card-action--call ${phone ? "" : "is-disabled"}" ${phone ? `href="tel:${esc(phone)}"` : "aria-disabled=\"true\""}>Llamar</a><button type="button" class="forge-card-action forge-card-action--whatsapp" data-detail-whatsapp ${whatsapp ? "" : "disabled"}>WhatsApp</button><button type="button" class="forge-card-action forge-card-action--calendar" data-detail-calendar>Agendar</button></div><details class="forge-prospect-secondary"><summary>Más información</summary><dl class="forge-prospect-detail-list">${secondary}</dl></details><footer><button type="button" data-edit-prospect>Editar</button><button type="button" data-archive-prospect>Retirar</button></footer></article></dialog>`;
   }
 
-  function contactPhone(prospect = {}, channel = "call") {
-    const values = channel === "whatsapp"
-      ? [prospect.whatsapp, prospect.whatsappNormalized, prospect.phone, prospect.phoneNormalized]
-      : [prospect.phone, prospect.phoneNormalized, prospect.whatsapp, prospect.whatsappNormalized];
-    for (const value of values) {
-      const raw = String(value || "").trim();
-      const digits = raw.replace(/\D/g, "");
-      if (raw.startsWith("+") && digits.length >= 8 && digits.length <= 15) return `+${digits}`;
-    }
-    return null;
-  }
-
   function humanDate(value, now = Date.now()) {
     if (!value) return "";
     const date = new Date(value);
@@ -102,32 +104,6 @@
     if (difference >= 0 && difference < 24 * 60 * 60 * 1000) return `Hace ${Math.floor(difference / 3600000)} h`;
     if (difference >= 0 && difference < 7 * 24 * 60 * 60 * 1000) return `Hace ${Math.floor(difference / 86400000)} días`;
     return new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "short", year: "numeric" }).format(date).replace(" de ", " ").replace(" de ", " ");
-  }
-
-  function draftCandidate(prospect, style = "professional", goal = "first_contact", variation = 0) {
-    const name = String(prospect?.fullName || "").trim();
-    const goalCopy = {
-      first_contact: "Me gustaría presentarme y conversar contigo.",
-      follow_up: "Quisiera retomar nuestra conversación cuando te resulte conveniente.",
-      reactivation: "Espero que estés muy bien. ¿Te gustaría retomar la conversación?",
-      appointment_confirmation: "¿Te gustaría confirmar nuestra próxima conversación?",
-      reschedule: "¿Te gustaría que coordinemos otro momento para conversar?",
-      after_call: "Gracias por la conversación. Quedo atento a cómo prefieras continuar.",
-    };
-    const suffix = style === "brief" ? "" : style === "friendly" ? " Será un gusto saludarte." : style === "social" ? " Cuando puedas, escríbeme por aquí." : style === "executive" ? " Quedo atento para coordinar el siguiente paso." : " Quedo atento a tu respuesta.";
-    return Object.freeze({
-      rawText: name ? `Hola, ${name}. ${goalCopy[goal] || goalCopy.first_contact}${suffix}` : "",
-      sendsMessage: false,
-      sourceMutable: false,
-      generationMode: "deterministic_fallback",
-      variation,
-    });
-  }
-
-  function whatsappUrl(prospect, style, editedText, goal = "first_contact") {
-    const phone = contactPhone(prospect, "whatsapp");
-    const text = editedText ?? draftCandidate(prospect, style, goal).rawText;
-    return phone && text ? `https://wa.me/${phone.slice(1)}?text=${encodeURIComponent(text)}` : null;
   }
 
   function toModel(prospects) {
