@@ -1,0 +1,110 @@
+name: REP Activity Report Provider CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/activity/reporting/activity-report-provider.mjs
+      - tests/activity-report-provider-test.mjs
+      - docs/architecture/reporting/REP-09_ACTIVITY_REPORT_PROVIDER.md
+      - .github/workflows/activity-report-provider-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activity-provider:
+    name: Activity report provider acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-08 closure
+        run: |
+          grep -Fq \
+            'REP_08_PORTFOLIO_REPORT_PROVIDER=CLOSED' \
+            docs/architecture/reporting/REP-08_PORTFOLIO_REPORT_PROVIDER_CLOSURE.md
+
+      - name: Verify Activity foundation
+        run: node scripts/ci/verify-activity-foundation-freeze.mjs
+
+      - name: Run Activity provider tests
+        run: |
+          node --test \
+            --test-reporter=tap \
+            tests/activity-report-provider-test.mjs \
+            | tee REP09_ACTIVITY.tap
+
+          grep -Fq '# tests 51' REP09_ACTIVITY.tap
+          grep -Fq '# pass 51' REP09_ACTIVITY.tap
+          grep -Fq '# fail 0' REP09_ACTIVITY.tap
+
+      - name: Run Activity frozen contract suite
+        run: |
+          node --test \
+            tests/activity-record-contract-test.mjs \
+            tests/activity-repository-port-test.mjs \
+            tests/activity-persistence-adapter-test.mjs \
+            tests/pipeline-to-activity-projector-test.mjs \
+            tests/activity-period-aggregator-test.mjs \
+            tests/activity-feed-projector-test.mjs \
+            tests/activity-read-runtime-test.mjs
+
+      - name: Run domain provider regressions
+        run: |
+          node --test tests/portfolio-report-provider-test.mjs
+          node --test tests/commissions-report-provider-test.mjs
+          node --test tests/performance-report-provider-test.mjs
+
+      - name: Run reporting regressions
+        run: |
+          node --test tests/report-comparison-engine-test.mjs
+          node --test tests/universal-report-aggregation-runtime-test.mjs
+          node --test tests/report-provider-runtime-test.mjs
+          node --test tests/universal-period-resolver-test.mjs
+          node --test tests/universal-reporting-kernel-test.mjs
+
+      - name: Run Performance surface regression
+        run: node --test tests/performance-surface-adapter-test.mjs
+
+      - name: Verify repository hygiene
+        run: git diff --check
+
+      - name: Build acceptance evidence
+        run: |
+          mkdir -p artifacts/reporting
+
+          printf '%s
+' \
+            'REP_09_ACTIVITY_REPORT_PROVIDER=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP08_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_ACTIVITY_PROVIDER_TEST=PASS' \
+            'REMOTE_ACTIVITY_CONTRACT_REGRESSION=PASS' \
+            'REMOTE_DOMAIN_PROVIDER_REGRESSION=PASS' \
+            'REMOTE_REPORTING_REGRESSION=PASS' \
+            'REMOTE_PERFORMANCE_SURFACE_REGRESSION=PASS' \
+            'ACTIVITY_READ_AUTHORITY=YES' \
+            'ACTIVITY_WRITE_AUTHORITY=NO' \
+            'SCORING_AUTHORITY=NO' \
+            > artifacts/reporting/REP09_ACCEPTANCE.txt
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-09-activity-report-provider-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
