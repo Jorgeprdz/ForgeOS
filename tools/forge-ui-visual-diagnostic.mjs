@@ -250,7 +250,7 @@ async function captureViewport(browser, viewport, fixture) {
     ).first();
     if (await referralCta.count()) {
       await referralCta.click({ timeout: 10_000 });
-      await page.waitForTimeout(700);
+      await page.waitForTimeout(4_000);
       result.routes.pipelineAfter = await capture(
         page,
         directory,

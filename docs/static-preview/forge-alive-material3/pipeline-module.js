@@ -278,6 +278,11 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         errorNode,
       });
     });
+
+    void Promise.all([
+      ensureReferralStyles(),
+      ensureReferralRuntime(),
+    ]).catch(() => {});
   }
 
   const api = Object.freeze({
