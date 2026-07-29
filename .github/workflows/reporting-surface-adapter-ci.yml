@@ -1,0 +1,101 @@
+name: REP Reporting Surface Adapter CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/reporting/application/reporting-surface-contract.mjs
+      - advisor-os/reporting/application/reporting-surface-adapter.mjs
+      - tests/reporting-surface-adapter-test.mjs
+      - docs/architecture/reporting/REP-12_REPORTING_SURFACE_ADAPTER_CONTRACT.md
+      - .github/workflows/reporting-surface-adapter-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reporting-surface:
+    name: Reporting surface adapter acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-11 closure
+        run: |
+          grep -Fq             'REP_11_EXPORT_AND_DELIVERY_ADAPTERS=CLOSED'             docs/architecture/reporting/REP-11_EXPORT_AND_DELIVERY_ADAPTERS_CLOSURE.md
+
+      - name: Verify Activity foundation
+        run: node scripts/ci/verify-activity-foundation-freeze.mjs
+
+      - name: Run reporting surface tests
+        run: |
+          node --test             --test-reporter=tap             tests/reporting-surface-adapter-test.mjs             | tee REP12_REPORTING_SURFACE.tap
+
+          grep -Fq '# tests 58' REP12_REPORTING_SURFACE.tap
+          grep -Fq '# pass 58' REP12_REPORTING_SURFACE.tap
+          grep -Fq '# fail 0' REP12_REPORTING_SURFACE.tap
+
+      - name: Run export delivery regression
+        run: node --test tests/report-export-delivery-adapters-test.mjs
+
+      - name: Run domain provider regressions
+        run: |
+          node --test tests/pipeline-report-provider-test.mjs
+          node --test tests/activity-report-provider-test.mjs
+          node --test tests/portfolio-report-provider-test.mjs
+          node --test tests/commissions-report-provider-test.mjs
+          node --test tests/performance-report-provider-test.mjs
+
+      - name: Run reporting regressions
+        run: |
+          node --test tests/report-comparison-engine-test.mjs
+          node --test tests/universal-report-aggregation-runtime-test.mjs
+          node --test tests/report-provider-runtime-test.mjs
+          node --test tests/universal-period-resolver-test.mjs
+          node --test tests/universal-reporting-kernel-test.mjs
+
+      - name: Run Performance surface regression
+        run: node --test tests/performance-surface-adapter-test.mjs
+
+      - name: Verify repository hygiene
+        run: git diff --check
+
+      - name: Build acceptance evidence
+        run: |
+          mkdir -p artifacts/reporting
+
+          cat > artifacts/reporting/REP12_ACCEPTANCE.txt <<EOF
+          REP_12_REPORTING_SURFACE_ADAPTER_CONTRACT=IMPLEMENTED
+          COMMIT=$GITHUB_SHA
+          REMOTE_REP11_CLOSURE=PASS
+          REMOTE_ACTIVITY_FREEZE=PASS
+          REMOTE_REPORTING_SURFACE_TEST=PASS
+          REMOTE_EXPORT_DELIVERY_REGRESSION=PASS
+          REMOTE_DOMAIN_PROVIDER_REGRESSION=PASS
+          REMOTE_REPORTING_REGRESSION=PASS
+          REMOTE_PERFORMANCE_SURFACE_REGRESSION=PASS
+          REPORT_EXECUTION_AUTHORITY=NO
+          AGGREGATION_AUTHORITY=NO
+          COMPARISON_AUTHORITY=NO
+          UI_RENDERING_AUTHORITY=NO
+          DELIVERY_DELEGATION_AUTHORITY=YES
+          EOF
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-12-reporting-surface-adapter-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
