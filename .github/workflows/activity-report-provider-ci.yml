@@ -86,8 +86,7 @@ jobs:
         run: |
           mkdir -p artifacts/reporting
 
-          printf '%s
-' \
+          printf '%s\n' \
             'REP_09_ACTIVITY_REPORT_PROVIDER=IMPLEMENTED' \
             "COMMIT=$GITHUB_SHA" \
             'REMOTE_REP08_CLOSURE=PASS' \
@@ -108,5 +107,3 @@ jobs:
           name: rep-09-activity-report-provider-${{ github.sha }}
           path: artifacts/reporting
           if-no-files-found: error
-
-# REP_09_CI_TRANSPORT_RETRY=1
