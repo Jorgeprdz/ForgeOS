@@ -79,9 +79,24 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         <span>${count} prospecto${count === 1 ? "" : "s"}</span>
       </header>
       ${count === 0
-        ? `<section class="pipeline-module__empty" role="status">
-            <h2>Tu Pipeline está listo</h2>
-            <p>No hay prospectos conectados en este momento.</p>
+        ? `<section
+            class="pipeline-module__empty"
+            aria-labelledby="pipeline-empty-title"
+          >
+            <div class="pipeline-module__empty-copy">
+              <h2 id="pipeline-empty-title">Tu Pipeline está listo</h2>
+              <p>No hay prospectos conectados en este momento.</p>
+            </div>
+            <button
+              class="pipeline-module__create"
+              type="button"
+              data-pipeline-create-prospect
+              data-open-alfred
+              aria-label="Agregar nuevo prospecto con Alfred"
+            >
+              <span aria-hidden="true">＋</span>
+              <span>Agregar nuevo prospecto</span>
+            </button>
           </section>`
         : `<div class="pipeline-module__stages">${model.columns.map(renderColumn).join("")}</div>`}
     `;

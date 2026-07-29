@@ -20,7 +20,7 @@ function ensureQuotesStyles() {
     }
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL("./quotes-module.css?v=ui-m05-001", import.meta.url);
+    stylesheet.href = new URL("./quotes-module.css?v=ui-m05-002", import.meta.url);
     stylesheet.dataset.forgeQuotesStyles = "true";
     stylesheet.addEventListener("load", resolve, { once: true });
     stylesheet.addEventListener("error", reject, { once: true });
@@ -48,7 +48,32 @@ async function materializeRuntime(root, host) {
     if (!functionalModule) throw new Error("Functional Quotes runtime boundary missing");
 
     functionalModule.querySelector(".fq-top-105dr")?.remove();
-    host.replaceChildren(document.importNode(functionalModule, true));
+
+    const importedRuntime = document.importNode(
+      functionalModule,
+      true,
+    );
+
+    host.replaceChildren(importedRuntime);
+
+    const syncIntakeState = (state) => {
+      const normalized = String(state || "empty")
+        .trim()
+        .toLowerCase();
+
+      root.dataset.intakeState = normalized;
+    };
+
+    syncIntakeState(
+      importedRuntime.dataset.forgeIntakeState,
+    );
+
+    importedRuntime.addEventListener(
+      "forge:quote-intake-state-change",
+      (event) => {
+        syncIntakeState(event.detail?.state);
+      },
+    );
 
     for (const script of documentSource.querySelectorAll("script")) {
       if (script.src.includes("forge-alive-mobile-nav-r16c5j")) continue;
@@ -83,6 +108,7 @@ export function createQuotesModule({ root, shell }) {
       root.dataset.moduleActive = "true";
       if (!mounted) {
         mounted = true;
+        root.dataset.intakeState = "empty";
         root.innerHTML = `
           <header class="quotes-module__header">
             <p>COTIZACIONES</p>

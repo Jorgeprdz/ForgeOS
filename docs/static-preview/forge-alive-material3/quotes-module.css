@@ -6,6 +6,37 @@
   padding-bottom: 110px;
 }
 
+.quotes-module
+[data-forge-quotes-runtime-host]
+[hidden] {
+  display: none !important;
+}
+
+.quotes-module[data-intake-state="empty"]
+.quotes-module__header,
+.quotes-module[data-intake-state="loading"]
+.quotes-module__header,
+.quotes-module[data-intake-state="error"]
+.quotes-module__header,
+.quotes-module[data-intake-state="empty"]
+.fq-hero-105dr,
+.quotes-module[data-intake-state="loading"]
+.fq-hero-105dr,
+.quotes-module[data-intake-state="error"]
+.fq-hero-105dr {
+  display: none !important;
+}
+
+.quotes-module[data-intake-state="empty"]
+.fq-upload-105dr,
+.quotes-module[data-intake-state="loading"]
+.fq-upload-105dr,
+.quotes-module[data-intake-state="error"]
+.fq-upload-105dr {
+  width: min(100%, 920px);
+  margin: 0 auto;
+}
+
 .quotes-module__header {
   margin: 4px 4px 20px;
 }

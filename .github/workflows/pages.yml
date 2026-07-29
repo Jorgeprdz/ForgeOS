@@ -222,6 +222,7 @@ jobs:
             'app.js',
             'pipeline-module.js',
             'quotes-module.js',
+            'quotes-module.css',
             'manifest.json',
             'tokens.css',
           ];
@@ -240,14 +241,26 @@ jobs:
             path.join(canonical, 'quotes-module.js'),
             'utf8',
           );
+          const quotesCss = fs.readFileSync(
+            path.join(canonical, 'quotes-module.css'),
+            'utf8',
+          );
 
           assert.match(
             quotesModule,
             /forge-alive-runtime\/nueva-cotizacion\/index\.html/,
           );
+          assert.match(
+            quotesModule,
+            /forge:quote-intake-state-change/,
+          );
+          assert.match(
+            quotesCss,
+            /\[data-forge-quotes-runtime-host\]\s*\[hidden\][^{]*\{[^}]*display:\s*none\s*!important/s,
+          );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
-          assert.match(index, /app\.css\?v=ui-m03-approved-003/);
-          assert.match(index, /app\.js\?v=ui-m04-shell-003/);
+          assert.match(index, /app\.css\?v=ui-m03-approved-004/);
+          assert.match(index, /app\.js\?v=ui-m04-shell-004/);
           assert.doesNotMatch(
             index,
             /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,

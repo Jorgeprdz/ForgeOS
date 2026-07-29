@@ -34,8 +34,8 @@ const manifest = JSON.parse(
 
 test("entrypoint loads only its clean approved assets", () => {
   assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
-  assert.match(index, /app\.css\?v=ui-m03-approved-003/);
-  assert.match(index, /app\.js\?v=ui-m04-shell-003/);
+  assert.match(index, /app\.css\?v=ui-m03-approved-004/);
+  assert.match(index, /app\.js\?v=ui-m04-shell-004/);
   assert.match(index, /manifest\.json/);
   assert.match(
     css,

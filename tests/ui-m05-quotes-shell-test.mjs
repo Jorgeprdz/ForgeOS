@@ -16,6 +16,8 @@ test("QuotesModule uses the functional source without domain duplication", () =>
   );
   assert.match(module, /import\.meta\.url/);
   assert.match(module, /dedicated-new-quote-static-route/);
+  assert.match(module, /forge:quote-intake-state-change/);
+  assert.match(module, /dataset\.intakeState/);
   assert.doesNotMatch(module, /iframe|calculateQuote|localStorage|supabase/i);
 });
 
@@ -36,6 +38,14 @@ test("only scoped Material 3 quote presentation suppresses legacy global nav", (
   );
   assert.match(css, /\.bottom-nav,[\s\S]*\.forge-mobile-nav-r16c5j/);
   assert.match(css, /\.fq-top-105dr/);
+  assert.match(
+    css,
+    /\[data-forge-quotes-runtime-host\]\s*\[hidden\][^{]*\{[^}]*display:\s*none\s*!important/s,
+  );
+  assert.match(
+    css,
+    /data-intake-state="empty"[\s\S]*\.fq-hero-105dr/,
+  );
   assert.doesNotMatch(css, /\.nav-pill\s*\{[^}]*display:\s*none/s);
 });
 
