@@ -1,0 +1,95 @@
+name: REP Commissions Report Provider CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/commissions/domain/commission-report-read-model.mjs
+      - advisor-os/commissions/reporting/commissions-report-provider.mjs
+      - tests/commissions-report-provider-test.mjs
+      - docs/architecture/reporting/REP-07_COMMISSIONS_REPORT_PROVIDER.md
+      - .github/workflows/commissions-report-provider-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  commissions-provider:
+    name: Commissions report provider acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-06 closure
+        run: |
+          grep -Fq \
+            'REP_06_PERFORMANCE_REPORT_PROVIDER=CLOSED' \
+            docs/architecture/reporting/REP-06_PERFORMANCE_REPORT_PROVIDER_CLOSURE.md
+
+      - name: Verify Activity foundation
+        run: node scripts/ci/verify-activity-foundation-freeze.mjs
+
+      - name: Run Commissions provider tests
+        run: |
+          node --test \
+            --test-reporter=tap \
+            tests/commissions-report-provider-test.mjs \
+            | tee REP07_COMMISSIONS.tap
+
+          grep -Fq '# tests 50' REP07_COMMISSIONS.tap
+          grep -Fq '# pass 50' REP07_COMMISSIONS.tap
+          grep -Fq '# fail 0' REP07_COMMISSIONS.tap
+
+      - name: Run Performance provider regression
+        run: node --test tests/performance-report-provider-test.mjs
+
+      - name: Run reporting regressions
+        run: |
+          node --test tests/report-comparison-engine-test.mjs
+          node --test tests/universal-report-aggregation-runtime-test.mjs
+          node --test tests/report-provider-runtime-test.mjs
+          node --test tests/universal-period-resolver-test.mjs
+          node --test tests/universal-reporting-kernel-test.mjs
+
+      - name: Run Performance surface regression
+        run: node --test tests/performance-surface-adapter-test.mjs
+
+      - name: Verify repository hygiene
+        run: git diff --check
+
+      - name: Build acceptance evidence
+        run: |
+          mkdir -p artifacts/reporting
+
+          printf '%s\n' \
+            'REP_07_COMMISSIONS_REPORT_PROVIDER=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP06_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_COMMISSIONS_TEST=PASS' \
+            'REMOTE_PERFORMANCE_PROVIDER_REGRESSION=PASS' \
+            'REMOTE_REPORTING_REGRESSION=PASS' \
+            'REMOTE_PERFORMANCE_SURFACE_REGRESSION=PASS' \
+            'COMMISSION_READ_AUTHORITY=YES' \
+            'COMMISSION_CALCULATION_AUTHORITY=NO' \
+            'LEGACY_COMMISSION_ENGINE_AUTHORITY=NO' \
+            > artifacts/reporting/REP07_ACCEPTANCE.txt
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-07-commissions-report-provider-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
