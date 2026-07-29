@@ -201,7 +201,7 @@ jobs:
           );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
           assert.match(index, /app\.css\?v=ui-m03-approved-001/);
-          assert.match(index, /app\.js\?v=ui-m03-approved-001/);
+          assert.match(index, /app\.js\?v=ui-m04-shell-001/);
           assert.doesNotMatch(
             index,
             /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,
