@@ -1,0 +1,49 @@
+{
+  "schema": "forge.nash_legacy_engine_freeze.v1",
+  "status": "FROZEN_DO_NOT_IMPORT_DO_NOT_EXECUTE",
+  "source_commit": "bd00daffc779082ea548c74f2392dac72d5b8c8c",
+  "files": [
+    {
+      "path": "nash-core-engine.js",
+      "sha256": "87caf0635314df290833a8226f9ded521a4667f90118facc6e106a864dbdeaab",
+      "classification": "LEGACY_MIXED_ORCHESTRATOR",
+      "replacement": "Conversation Desk separated orchestrator"
+    },
+    {
+      "path": "nash-master-intelligence-engine.js",
+      "sha256": "2ee8f1c5b49b819967af63c8aa9e2a617c3cdacbd036adf2e6aa14a7c7a04c8a",
+      "classification": "LEGACY_MIXED_ORCHESTRATOR",
+      "replacement": "Conversation Desk separated orchestrator"
+    },
+    {
+      "path": "nash-memory-engine.js",
+      "sha256": "ef000f6861de21aa528e569894e3ca9754e43acf4b2f188b9b3ae47f0707b305",
+      "classification": "LEGACY_UNGOVERNED_MEMORY",
+      "replacement": "Governed evidence plus future privacy-safe storage"
+    },
+    {
+      "path": "nash-learning-engine.js",
+      "sha256": "20965fb26e5339d1bf39c13d079c2ae6ebb9969709532832c6ed79be657c12ac",
+      "classification": "LEGACY_UNGOVERNED_LEARNING",
+      "replacement": "Evidence-backed outcome learning"
+    },
+    {
+      "path": "nash-advisor-performance-engine.js",
+      "sha256": "6e8defc3b9659cd9517ed30318160439a2d371970d007975a35f3e7ac378cc60",
+      "classification": "LEGACY_SCORING",
+      "replacement": "Protected Advisor/Manager snapshots"
+    },
+    {
+      "path": "nash-manager-alert-engine.js",
+      "sha256": "afa82aafcb2087d7846b1c2d84aeebeb017ad3d6811769797b3e361f903ac97e",
+      "classification": "LEGACY_ESCALATION",
+      "replacement": "Protected coaching context"
+    },
+    {
+      "path": "nash-team-intelligence-engine.js",
+      "sha256": "2b5f8c8513eeda184f3f167fc821f88776a23f55d71d0c6c0c0812137853dbe9",
+      "classification": "LEGACY_TEAM_RANKING",
+      "replacement": "Not reusable in Conversation Desk"
+    }
+  ]
+}

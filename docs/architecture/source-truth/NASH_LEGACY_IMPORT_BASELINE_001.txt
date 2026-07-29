@@ -1,0 +1,48 @@
+### nash-core-engine.js
+manager-os/tests/llm-draft-intake-boundary-contract-master-test.js:152:    "nash-core-engine",
+manager-os/tests/manager-message-prompt-builder-boundary-contract-master-test.js:149:      "nash-core-engine",
+manager-os/tests/manager-message-prompt-builder-master-test.js:179:      "nash-core-engine",
+manager-os/tests/message-safety-validator-master-test.js:181:    "nash-core-engine",
+manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js:320:    "nash-core-engine",
+nash-integration-master-test.js:1:const { runNash } = require("./nash-core-engine");
+nash-master-test.js:1:const { runNash } = require("./nash-core-engine");
+nash-v03-master-test.js:1:const { runNash } = require("./nash-core-engine");
+nash-v04-master-test.js:1:const { runNash } = require("./nash-core-engine");
+nash/tests/nash-manager-context-intake-orchestrator-master-test.js:141:  assert(!source.includes("nash-core-engine"));
+nash/tests/nash-manager-conversation-prep-packet-intake-master-test.js:114:  assert(!source.includes("nash-core-engine"));
+nash/tests/nash-manager-safe-language-guardrail-intake-master-test.js:124:  assert(!source.includes("nash-core-engine"));
+nash/tests/nash-prospect-context-intake-master-test.js:57:  "nash-core-engine",
+
+### nash-master-intelligence-engine.js
+nash-master-acceptance-test.js:19:const { runNashMasterIntelligence } = require("./nash-master-intelligence-engine");
+nash-master-intelligence-master-test.js:4:} = require("./nash-master-intelligence-engine");
+nash/tests/nash-manager-context-intake-orchestrator-master-test.js:142:  assert(!source.includes("nash-master-intelligence-engine"));
+nash/tests/nash-manager-conversation-prep-packet-intake-master-test.js:115:  assert(!source.includes("nash-master-intelligence-engine"));
+nash/tests/nash-prospect-context-intake-master-test.js:58:  "nash-master-intelligence-engine",
+
+### nash-memory-engine.js
+life-event-engine.js:1:const { loadMemory } = require("./nash-memory-engine");
+nash-master-acceptance-test.js:12:} = require("./nash-memory-engine");
+nash-master-intelligence-engine.js:4:const { loadMemory } = require("./nash-memory-engine");
+nash-memory-master-test.js:10:} = require("./nash-memory-engine");
+
+### nash-learning-engine.js
+nash-advisor-performance-engine.js:6:} = require("./nash-learning-engine");
+nash-learning-master-test.js:3:} = require("./nash-learning-engine");
+nash-master-acceptance-test.js:13:const { buildLearningReport } = require("./nash-learning-engine");
+nash-master-intelligence-engine.js:5:const { buildLearningReport } = require("./nash-learning-engine");
+
+### nash-advisor-performance-engine.js
+nash-advisor-performance-master-test.js:7:} = require("./nash-advisor-performance-engine");
+nash-master-acceptance-test.js:15:const { buildAdvisorPerformanceReport } = require("./nash-advisor-performance-engine");
+nash-master-intelligence-engine.js:7:const { buildAdvisorPerformanceReport } = require("./nash-advisor-performance-engine");
+
+### nash-manager-alert-engine.js
+nash-manager-alert-master-test.js:5:} = require("./nash-manager-alert-engine");
+nash-master-acceptance-test.js:17:const { buildManagerAlert } = require("./nash-manager-alert-engine");
+nash-master-intelligence-engine.js:9:const { buildManagerAlert } = require("./nash-manager-alert-engine");
+
+### nash-team-intelligence-engine.js
+nash-master-acceptance-test.js:18:const { buildTeamIntelligenceReport } = require("./nash-team-intelligence-engine");
+nash-master-intelligence-engine.js:10:const { buildTeamIntelligenceReport } = require("./nash-team-intelligence-engine");
+nash-team-intelligence-master-test.js:4:} = require("./nash-team-intelligence-engine");
