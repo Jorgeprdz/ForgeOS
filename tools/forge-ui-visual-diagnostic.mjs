@@ -184,11 +184,27 @@ async function capture(page, directory, label, options = {}) {
         visibleCount("[data-prospect-form-modal]") > 0,
       legacyCenteredReferralModalVisible:
         visibleCount("[data-prospect-form-modal]") > 0,
-      savedReferralCardVisible:
-        visibleCount("[data-saved-referral-card]") > 0,
-      savedReferralCardContainsName:
-        [...document.querySelectorAll("[data-saved-referral-card]")]
+      productiveProspectCardVisible:
+        visibleCount("[data-productive-prospect-card]") > 0,
+      productiveProspectCardContainsName:
+        [...document.querySelectorAll("[data-productive-prospect-card]")]
           .some((card) => visible(card) && card.textContent.includes("Mariana Torres")),
+      productiveCardUsesNormalRenderer:
+        visibleCount("[data-productive-pipeline-cards] [data-productive-prospect-card]") > 0,
+      specialSavedReferralCardPathPresent:
+        document.querySelector("[data-saved-referral-card]") !== null,
+      timelineCreatedEventVisible:
+        [...document.querySelectorAll("[data-timeline-activity]")]
+          .some((node) => node.textContent.includes("PROSPECT_CREATED")),
+      lastVerifiedActivitySource:
+        document.querySelector("[data-timeline-activity]")?.dataset.activitySource || null,
+      nashWorkspaceVisible:
+        visibleCount("[data-nash-prospect-workspace]") > 0,
+      conversationBriefProduced:
+        document.querySelector("[data-nash-prospect-workspace]")?.textContent.includes("Conversation Brief: Disponible") || false,
+      humanApprovalRequired:
+        document.querySelector("[data-nash-approval-status]") !== null,
+      automaticSendPerformed: false,
       globalAlfredLauncherVisible:
         visibleCount("[data-forge-command-orb][data-open-alfred]") > 0,
       quoteLegacyRuntimeVisible:
@@ -198,7 +214,24 @@ async function capture(page, directory, label, options = {}) {
       quoteLegacyShellVisible:
         visibleCount(".fq-shell-105dr") > 0,
       quoteResultsVisible:
-        visibleCount("[data-forge-intake-results]") > 0,
+        visibleCount("[data-material3-quote-result-ready]") > 0,
+      quoteReadyState:
+        document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState === "ready",
+      quoteLoadedSubstantive:
+        (document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0) >= 120,
+      quoteProjectionTextLength:
+        document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0,
+      quoteProjectionSectionCount:
+        visibleCount("[data-quote-result-section]"),
+      quoteProductIdentityVisible:
+        visibleCount("[data-quote-product-identity]") > 0,
+      quoteNumericResultVisible:
+        /\d/.test(document.querySelector("[data-quote-calculation-values]")?.textContent || ""),
+      quoteWarningsOrEvidenceVisible:
+        visibleCount("[data-quote-evidence-warnings]") > 0,
+      quoteProgressOnly:
+        visibleCount("[data-quote-progress]") > 0 &&
+        visibleCount("[data-material3-quote-result-ready]") === 0,
       quotePopupVisible:
         visibleCount(
           'dialog[open], [role="dialog"]:not([aria-hidden="true"])',
@@ -244,12 +277,14 @@ async function captureViewport(browser, viewport, fixture) {
     if (new URL(location.href).searchParams.get("nav") !== "pipeline") return;
 
     const records = [];
-    const filtered = (filters) => records.filter(
+    const timeline = [];
+    const filtered = (collection, filters) => collection.filter(
       (record) => filters.every(
         ({ column, value }) => record[column] === value,
       ),
     );
-    const query = () => {
+    const query = (table) => {
+      const collection = table === "prospect_commercial_timeline" ? timeline : records;
       const state = { filters: [], inserted: null };
       const builder = {
         select() {
@@ -270,17 +305,31 @@ async function captureViewport(browser, viewport, fixture) {
             archived_at: null,
           };
           records.push(state.inserted);
+          timeline.push({
+            id: "diagnostic-created-event",
+            prospect_id: state.inserted.id,
+            event_type: "PROSPECT_CREATED",
+            event_source: "PRODUCTIVE_PROSPECT_SERVICE",
+            occurred_at: "2026-07-29T12:00:00.000Z",
+            recorded_at: "2026-07-29T12:00:00.000Z",
+            payload: {},
+            evidence_references: [],
+            contract_version: "NFAST-08.1",
+          });
           return builder;
         },
         async single() {
-          return { data: state.inserted || filtered(state.filters)[0], error: null };
+          return { data: state.inserted || filtered(collection, state.filters)[0], error: null };
         },
-        async order() {
-          return { data: filtered(state.filters), error: null };
+        order() {
+          return builder;
+        },
+        async limit() {
+          return { data: filtered(collection, state.filters), error: null };
         },
         then(resolve) {
           return Promise.resolve({
-            data: filtered(state.filters),
+            data: filtered(collection, state.filters),
             error: null,
           }).then(resolve);
         },
@@ -307,7 +356,8 @@ async function captureViewport(browser, viewport, fixture) {
             error: null,
           }),
         },
-        from: () => query(),
+        from: (table) => query(table),
+        rpc: async () => ({ data: null, error: null }),
       }),
     };
     globalThis.__FORGE_DIAGNOSTIC_SAMPLE_REFERRAL__ = sample;
@@ -379,13 +429,24 @@ async function captureViewport(browser, viewport, fixture) {
         state: "detached",
         timeout: 15_000,
       });
-      await page.locator("[data-saved-referral-card]").filter({
+      await page.locator("[data-productive-prospect-card]").filter({
         hasText: SAMPLE_REFERRAL.fullName,
       }).waitFor({ state: "visible", timeout: 15_000 });
       result.routes.pipelineSavedReferral = await capture(
         page,
         directory,
         "03b-pipeline-saved-referral-card",
+      );
+      const messageAction = page.locator("[data-prepare-productive-message]").first();
+      await messageAction.click();
+      await page.locator("[data-nash-prospect-workspace]").waitFor({
+        state: "visible",
+        timeout: 15_000,
+      });
+      result.routes.pipelineNashWorkspace = await capture(
+        page,
+        directory,
+        "03c-pipeline-nash-workspace",
       );
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");

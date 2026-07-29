@@ -1,3 +1,7 @@
+import {
+  createProductiveIntelligenceAdapter,
+} from "./pipeline-productive-intelligence-adapter.js?v=material3-productive-001";
+
 const pipelineRuntimeBase = new URL(
   import.meta.url.includes("/docs/static-preview/")
     ? "../../../advisor-os/sales-pipeline/"
@@ -45,10 +49,7 @@ function escapeHtml(value) {
 }
 
 function connectedData() {
-  const value = globalThis.__FORGE_MATERIAL3_PIPELINE_DATA__;
-  return value && typeof value === "object"
-    ? value
-    : { opportunities: [], prospects: [] };
+  return null;
 }
 
 function renderColumn(column) {
@@ -117,40 +118,11 @@ async function ensureReferralRuntime() {
   if (referralRuntimePromise) return referralRuntimePromise;
 
   referralRuntimePromise = (async () => {
-    if (!globalThis.__ENV__) {
-      await importRuntimeAsset(envUrl);
-    }
-
+    if (!globalThis.__ENV__) await importRuntimeAsset(envUrl);
     if (!globalThis.ForgeAlivePublicConfig067G17A1) {
-      await importRuntimeAsset(
-        new URL(
-          "forge-alive-public-config-067g17a1.js",
-          legacyRuntimeBase,
-        ),
-      );
+      await importRuntimeAsset(new URL("forge-alive-public-config-067g17a1.js", legacyRuntimeBase));
     }
-
-    for (const asset of [
-      "productive-prospect-service.js",
-      "productive-prospect-bootstrap.js",
-    ]) {
-      await importRuntimeAsset(new URL(asset, pipelineRuntimeBase));
-    }
-
-    const bootstrap =
-      globalThis.ForgeProductiveProspectBootstrap067G17B;
-    const productiveService =
-      globalThis.ForgeProductiveProspectService067G17B;
-
-    if (
-      typeof bootstrap?.getClient !== "function" ||
-      typeof productiveService?.create !== "function"
-    ) {
-      throw new Error("PRODUCTIVE_REFERRAL_RUNTIME_UNAVAILABLE");
-    }
-
-    const client = await bootstrap.getClient();
-    return productiveService.create(client);
+    return createProductiveIntelligenceAdapter();
   })().catch((error) => {
     referralRuntimePromise = undefined;
     throw error;
@@ -265,6 +237,67 @@ function referralErrorMessage(error) {
     return error.message || "Revisa los datos del referido.";
   }
   return "No pudimos guardar el referido. Revisa tu conexión e intenta nuevamente.";
+}
+
+async function openNashWorkspace({ card, adapter, trigger }) {
+  const prepared = await adapter.prepareMessage(card.prospect);
+  const layer = document.createElement("div");
+  layer.className = "referral-sheet-layer";
+  layer.dataset.nashProspectWorkspace = "true";
+  layer.innerHTML = `
+    <button class="referral-sheet__scrim" type="button" data-close-nash></button>
+    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="nash-workspace-title">
+      <div class="referral-sheet__header">
+        <div><p>NASH · REVISIÓN HUMANA</p><h2 id="nash-workspace-title">Preparar mensaje</h2></div>
+        <button class="referral-sheet__close" type="button" data-close-nash aria-label="Cerrar">×</button>
+      </div>
+      <div class="referral-sheet__body">
+        <p data-nash-source-mode>${escapeHtml(prepared.sourceMode)}</p>
+        <p>Conversation Brief: ${prepared.conversationBriefProduced ? "Disponible" : "Contexto gobernado bloqueado"}</p>
+        <label><span>Mensaje editable</span><textarea data-nash-draft>${escapeHtml(prepared.candidate.rawText || prepared.candidate.text || "")}</textarea></label>
+        <p data-nash-approval-status>Revisión y aprobación humana requeridas.</p>
+      </div>
+      <div class="referral-sheet__footer">
+        <button type="button" data-approve-nash-draft>Revisar y aprobar texto exacto</button>
+        <a data-manual-whatsapp hidden>Continuar manualmente a WhatsApp</a>
+      </div>
+    </section>`;
+  const close = () => { layer.remove(); trigger.focus(); };
+  layer.querySelectorAll("[data-close-nash]").forEach(node => node.addEventListener("click", close));
+  const textarea = layer.querySelector("[data-nash-draft]");
+  const link = layer.querySelector("[data-manual-whatsapp]");
+  const status = layer.querySelector("[data-nash-approval-status]");
+  textarea.addEventListener("input", () => {
+    link.hidden = true;
+    link.removeAttribute("href");
+    status.textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
+  });
+  layer.querySelector("[data-approve-nash-draft]").addEventListener("click", () => {
+    const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
+    const text = textarea.value;
+    const validation = safety.draftSafetyValidator({
+      draftText: text,
+      draftCandidateSnapshot: { ...prepared.candidate, sendsMessage: false },
+      humanApproval: { required: true, finalAuthority: "HUMAN" },
+    });
+    const approval = safety.approveExactDraft({
+      draftText: text,
+      validationResult: validation,
+      humanDecision: safety.EXPLICIT_DRAFT_APPROVAL,
+    });
+    const gate = safety.exactDraftHumanApprovalGate({
+      draftText: text, validationResult: validation, approvalSnapshot: approval,
+    });
+    const url = gate.exactDraftApproved
+      ? globalThis.ForgeProductiveContactNavigationBoundary067G17B
+        .whatsappUrl(card.prospect, "professional", text)
+      : null;
+    link.hidden = !url;
+    if (url) link.href = url;
+    status.textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El mensaje no pasó la validación.";
+  });
+  document.body.append(layer);
+  textarea.focus();
 }
 
 async function openReferralForm({ trigger, errorNode, onCreated }) {
@@ -385,16 +418,23 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
   if (root[pipelineStateKey]) return root[pipelineStateKey];
   let mounted = false;
   let referralStatus = "";
-  let savedReferralProspect;
+  let productiveAdapter;
+  let productiveCards = [];
+  let productiveError = "";
+  let productiveHydrated = false;
+  const usesProductiveRuntime = dataProvider === connectedData;
 
   function render() {
-    const data = dataProvider() || {};
+    const data = dataProvider?.() || {};
     const model = globalThis.ForgePipelineStageReadModel.buildPipelineStageReadModel({
       opportunities: Array.isArray(data.opportunities) ? data.opportunities : [],
       prospects: Array.isArray(data.prospects) ? data.prospects : [],
       writerAvailable: false,
     });
-    const count = model.columns.reduce((total, column) => total + column.count, 0);
+    const productive = productiveCards.length > 0;
+    const count = productive
+      ? productiveCards.length
+      : model.columns.reduce((total, column) => total + column.count, 0);
     root.innerHTML = `
       <header class="pipeline-module__header">
         <p>PIPELINE</p>
@@ -407,21 +447,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         role="status"
         ${referralStatus ? "" : "hidden"}
       >${escapeHtml(referralStatus)}</p>
-      ${savedReferralProspect
-        ? `<article
-            class="pipeline-module__prospect pipeline-module__saved-referral"
-            data-saved-referral-card
-          >
-            <div>
-              <strong>${escapeHtml(
-                savedReferralProspect.fullName ||
-                savedReferralProspect.displayName,
-              )}</strong>
-              <span>Nuevo referido</span>
-            </div>
-            <p>${escapeHtml(savedReferralProspect.phone || "Contacto guardado")}</p>
-          </article>`
-        : ""}
+      ${productiveError ? `<p class="pipeline-module__create-error" role="alert">${escapeHtml(productiveError)}</p>` : ""}
       ${count === 0
         ? `<section
             class="pipeline-module__empty"
@@ -448,7 +474,24 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
               hidden
             ></p>
           </section>`
-        : `<div class="pipeline-module__stages">${model.columns.map(renderColumn).join("")}</div>`}
+        : productive
+          ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
+              ${productiveCards.map(card => `
+                <article class="pipeline-module__prospect" data-productive-prospect-card="${escapeHtml(card.id)}">
+                  <div><strong>${escapeHtml(card.fullName)}</strong><span>${escapeHtml(card.stageLabel)}</span></div>
+                  <p>${escapeHtml(card.sourceSummary)}</p>
+                  <p data-timeline-activity data-activity-source="${card.latestActivity ? "TIMELINE" : "UNKNOWN"}">${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p>
+                  ${card.nextCommitment ? `<p>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</p>` : ""}
+                  <p>${escapeHtml(card.intelligenceState)}</p>
+                  <div class="pipeline-module__card-actions">
+                    <button type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
+                    <button type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
+                    ${card.phone ? `<a href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}
+                    <button type="button" disabled title="NOT_CONNECTED">Agendar</button>
+                  </div>
+                </article>`).join("")}
+            </div>`
+          : `<div class="pipeline-module__stages">${model.columns.map(renderColumn).join("")}</div>`}
     `;
 
     const createReferral = root.querySelector?.(
@@ -465,30 +508,49 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         trigger: createReferral,
         errorNode,
         onCreated: async (prospect, service) => {
-          const current = dataProvider() || {};
-          let prospects = Array.isArray(current.prospects)
-            ? [...current.prospects, prospect]
-            : [prospect];
-          try {
-            prospects = await service.listProspects();
-          } catch {
-            // The successful create remains authoritative if refresh is unavailable.
-          }
-          globalThis.__FORGE_MATERIAL3_PIPELINE_DATA__ = {
-            ...current,
-            prospects,
-          };
-          savedReferralProspect = prospect;
+          void prospect;
+          productiveCards = await service.reload();
           referralStatus = "Referido guardado.";
           render();
         },
       });
     });
 
-    void Promise.all([
-      ensureReferralStyles(),
-      ensureReferralRuntime(),
-    ]).catch(() => {});
+    root.querySelectorAll?.("[data-prepare-productive-message]").forEach(trigger => {
+      trigger.addEventListener("click", () => {
+        const card = productiveCards.find(item => item.id === trigger.dataset.prepareProductiveMessage);
+        if (card && productiveAdapter) void openNashWorkspace({ card, adapter: productiveAdapter, trigger });
+      });
+    });
+    root.querySelectorAll?.("[data-view-productive-context]").forEach(trigger => {
+      trigger.addEventListener("click", () => {
+        const card = productiveCards.find(item => item.id === trigger.dataset.viewProductiveContext);
+        if (!card) return;
+        const layer = document.createElement("div");
+        layer.className = "referral-sheet-layer";
+        layer.dataset.productiveContextWorkspace = "true";
+        layer.innerHTML = `<button class="referral-sheet__scrim" data-close-context></button><section class="referral-sheet" role="dialog" aria-modal="true"><div class="referral-sheet__header"><div><p>CONTEXTO PRODUCTIVO</p><h2>${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-context>×</button></div><div class="referral-sheet__body"><p>${escapeHtml(card.stageLabel)}</p><p>${escapeHtml(card.sourceSummary)}</p><p data-context-timeline>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p><p>NBA: NOT_CONNECTED</p><p>Mi Día: NOT_CONNECTED</p><p>Objeciones: NOT_CONNECTED</p></div></section>`;
+        layer.querySelectorAll("[data-close-context]").forEach(node => node.addEventListener("click", () => { layer.remove(); trigger.focus(); }));
+        document.body.append(layer);
+      });
+    });
+
+    if (usesProductiveRuntime && !productiveHydrated) {
+      productiveHydrated = true;
+      void Promise.all([
+        ensureReferralStyles(),
+        ensureReferralRuntime(),
+      ]).then(async ([, adapter]) => {
+        productiveAdapter = adapter;
+        productiveCards = await adapter.reload();
+        render();
+      }).catch((error) => {
+        productiveError = error?.code === "AUTH_REQUIRED"
+          ? "Inicia sesión para cargar tu Pipeline."
+          : "No pudimos cargar el Pipeline productivo.";
+        render();
+      });
+    }
   }
 
   const api = Object.freeze({

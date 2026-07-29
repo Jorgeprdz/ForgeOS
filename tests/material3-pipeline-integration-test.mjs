@@ -105,6 +105,10 @@ test("Material 3 Pipeline owns a light referral sheet independent from Alfred", 
     "docs/static-preview/forge-alive-material3/pipeline-referral-modal.css",
     "utf8",
   );
+  const productiveAdapter = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js",
+    "utf8",
+  );
 
   assert.doesNotMatch(source, /openProductiveProspectCreateModal/);
   assert.doesNotMatch(source, /productive-prospect-ui\.js/);
@@ -147,17 +151,24 @@ test("Material 3 Pipeline owns a light referral sheet independent from Alfred", 
   assert.doesNotMatch(source, /name="source"/);
   assert.doesNotMatch(source, /name="status"/);
 
-  assert.match(source, /ForgeProductiveProspectBootstrap067G17B/);
-  assert.match(source, /ForgeProductiveProspectService067G17B/);
-  assert.match(source, /productiveService\.create\(client\)/);
+  assert.match(productiveAdapter, /ForgeProductiveProspectBootstrap067G17B/);
+  assert.match(productiveAdapter, /ForgeProductiveProspectService067G17B/);
+  assert.match(productiveAdapter, /serviceAuthority\.create\(client\)/);
   assert.match(source, /service\.createProspect\(referralPayload\(form\)\)/);
   assert.match(source, /source:\s*"Referido"/);
   assert.match(source, /status:\s*"referred_new"/);
   assert.doesNotMatch(source, /shell\.setAlfred/);
-  assert.match(source, /service\.listProspects\(\)/);
+  assert.match(productiveAdapter, /service\.listProspects\(\)/);
   assert.match(source, /referralStatus = "Referido guardado\."/);
-  assert.match(source, /data-saved-referral-card/);
-  assert.match(source, /savedReferralProspect = prospect/);
+  assert.doesNotMatch(source, /data-saved-referral-card|savedReferralProspect/);
+  assert.match(source, /data-productive-prospect-card/);
+  assert.match(source, /createProductiveIntelligenceAdapter/);
+  assert.match(source, /productiveCards = await service\.reload\(\)/);
+  assert.match(source, /data-timeline-activity/);
+  assert.match(source, /data-prepare-productive-message/);
+  assert.match(source, /dataset\.nashProspectWorkspace/);
+  assert.match(source, /exactDraftHumanApprovalGate/);
+  assert.match(source, /data-manual-whatsapp/);
 
   assert.match(referralCss, /justify-content:\s*flex-end/);
   assert.match(referralCss, /width:\s*min\(470px/);
@@ -189,8 +200,8 @@ test("visual diagnostic distinguishes referral, Alfred and legacy modal state", 
   assert.match(diagnostic, /legacyCenteredReferralModalVisible/);
   assert.match(diagnostic, /globalAlfredLauncherVisible/);
   assert.match(diagnostic, /alfredIndependent/);
-  assert.match(diagnostic, /savedReferralCardVisible/);
-  assert.match(diagnostic, /savedReferralCardContainsName/);
+  assert.match(diagnostic, /productiveProspectCardVisible/);
+  assert.match(diagnostic, /productiveProspectCardContainsName/);
   assert.match(diagnostic, /Mariana Torres/);
   assert.match(diagnostic, /5512345678/);
   assert.match(diagnostic, /Ana López/);

@@ -18,8 +18,9 @@ test("QuotesModule keeps the functional source as a hidden engine", () => {
   assert.match(module, /dedicated-new-quote-static-route/);
   assert.match(module, /data-forge-quotes-engine/);
   assert.match(module, /data-material3-quotes-projection/);
-  assert.match(module, /sanitizeProjection/);
-  assert.match(module, /renderProjection/);
+  assert.doesNotMatch(module, /sanitizeProjection|cloneNode/);
+  assert.match(module, /reconcileQuoteResult/);
+  assert.match(module, /ForgeAcceptedQuoteBridge/);
   assert.match(module, /forge:quote-intake-state-change/);
   assert.match(module, /dataset\.intakeState/);
   assert.doesNotMatch(module, /iframe|calculateQuote|localStorage|supabase/i);

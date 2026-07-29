@@ -215,6 +215,53 @@
   color: inherit !important;
 }
 
+.quote-result {
+  display: grid;
+  gap: 18px;
+}
+
+.quote-result > section,
+.quote-result__state {
+  border: 1px solid var(--outline);
+  border-radius: 26px 34px 24px 31px / 28px 24px 35px 26px;
+  padding: clamp(18px, 3vw, 26px);
+  background: rgba(10, 29, 52, 0.68);
+}
+
+.quote-result h2,
+.quote-result__state h2 {
+  margin: 4px 0 18px;
+}
+
+.quote-result dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.quote-result dl > div {
+  display: grid;
+  grid-template-columns: minmax(120px, .45fr) minmax(0, 1fr);
+  gap: 12px;
+  border-bottom: 1px solid var(--outline);
+  padding: 9px 0;
+}
+
+.quote-result dt {
+  color: var(--muted);
+}
+
+.quote-result dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.quote-result__unknown {
+  color: var(--muted);
+  font-style: italic;
+}
+
 /*
  * The authoritative legacy Quotes DOM remains mounted only as an engine.
  * It keeps file input, parser, calculation and bridge ownership, but it is

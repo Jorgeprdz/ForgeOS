@@ -1,3 +1,5 @@
+import { reconcileQuoteResult } from "./quotes-result-adapter.js?v=ui-m05-008";
+
 const quotesStateKey = Symbol.for("forge.ui-m05.quotes.state");
 let runtimePromise;
 let stylePromise;
@@ -21,7 +23,7 @@ function ensureQuotesStyles() {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
     stylesheet.href = new URL(
-      "./quotes-module.css?v=ui-m05-007",
+      "./quotes-module.css?v=ui-m05-008",
       import.meta.url,
     );
     stylesheet.dataset.forgeQuotesStyles = "true";
@@ -30,54 +32,6 @@ function ensureQuotesStyles() {
     document.head.append(stylesheet);
   });
   return stylePromise;
-}
-
-function sanitizeProjection(source) {
-  const clone = source.cloneNode(true);
-  clone.removeAttribute("hidden");
-  clone.removeAttribute("id");
-
-  clone.querySelectorAll("script, style, form").forEach((node) => {
-    node.remove();
-  });
-
-  clone.querySelectorAll(
-    "button, input, select, textarea, label, [contenteditable]",
-  ).forEach((node) => {
-    node.remove();
-  });
-
-  clone.querySelectorAll("*").forEach((node) => {
-    node.removeAttribute("id");
-    node.removeAttribute("for");
-    node.removeAttribute("name");
-    node.removeAttribute("tabindex");
-    node.removeAttribute("aria-controls");
-    node.removeAttribute("aria-describedby");
-
-    for (const attribute of [...node.attributes]) {
-      if (attribute.name.startsWith("data-forge-")) {
-        node.removeAttribute(attribute.name);
-      }
-    }
-  });
-
-  return clone;
-}
-
-function renderProjection({ importedRuntime, projection, root }) {
-  const sourceResults = importedRuntime.querySelector(
-    "[data-forge-intake-results]",
-  );
-
-  if (!sourceResults || sourceResults.hidden) return false;
-
-  const clone = sanitizeProjection(sourceResults);
-  projection.replaceChildren(...clone.childNodes);
-  projection.hidden = false;
-  projection.dataset.material3QuoteProjectionReady = "true";
-  root.dataset.quoteProjectionReady = "true";
-  return true;
 }
 
 async function materializeRuntime(root, engineHost, surface) {
@@ -151,14 +105,12 @@ async function materializeRuntime(root, engineHost, surface) {
       root.dataset.intakeState = normalized;
       syncStatus();
 
-      if (normalized === "ready") {
-        queueMicrotask(() => {
-          renderProjection({
-            importedRuntime,
-            projection,
-            root,
-          });
-        });
+      if (["candidate_ready", "calculating", "ready"].includes(normalized)) {
+        queueMicrotask(() => reconcileQuoteResult({
+          bridge: globalThis.ForgeAcceptedQuoteBridge,
+          projection,
+          root,
+        }));
       }
     };
 
@@ -187,8 +139,8 @@ async function materializeRuntime(root, engineHost, surface) {
 
     const refreshProjection = () => {
       syncStatus();
-      renderProjection({
-        importedRuntime,
+      return reconcileQuoteResult({
+        bridge: globalThis.ForgeAcceptedQuoteBridge,
         projection,
         root,
       });
@@ -216,7 +168,7 @@ async function materializeRuntime(root, engineHost, surface) {
       "forge:quote-candidate-ready",
     ]) {
       window.addEventListener(eventName, () => {
-        window.setTimeout(refreshProjection, 120);
+        window.setTimeout(() => void refreshProjection(), 120);
       });
     }
 
@@ -252,6 +204,7 @@ async function materializeRuntime(root, engineHost, surface) {
       }
     }
 
+    await refreshProjection();
     root.dataset.runtimeMounted = "true";
     window.dispatchEvent(
       new CustomEvent("forge:quotes-module-ready"),
