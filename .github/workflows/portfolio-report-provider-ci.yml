@@ -1,0 +1,97 @@
+name: REP Portfolio Report Provider CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/portfolio/domain/portfolio-policy-read-model.mjs
+      - advisor-os/portfolio/reporting/portfolio-report-provider.mjs
+      - tests/portfolio-report-provider-test.mjs
+      - docs/architecture/reporting/REP-08_PORTFOLIO_REPORT_PROVIDER.md
+      - .github/workflows/portfolio-report-provider-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portfolio-provider:
+    name: Portfolio report provider acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-07 closure
+        run: |
+          grep -Fq \
+            'REP_07_COMMISSIONS_REPORT_PROVIDER=CLOSED' \
+            docs/architecture/reporting/REP-07_COMMISSIONS_REPORT_PROVIDER_CLOSURE.md
+
+      - name: Verify Activity foundation
+        run: node scripts/ci/verify-activity-foundation-freeze.mjs
+
+      - name: Run Portfolio provider tests
+        run: |
+          node --test \
+            --test-reporter=tap \
+            tests/portfolio-report-provider-test.mjs \
+            | tee REP08_PORTFOLIO.tap
+
+          grep -Fq '# tests 59' REP08_PORTFOLIO.tap
+          grep -Fq '# pass 59' REP08_PORTFOLIO.tap
+          grep -Fq '# fail 0' REP08_PORTFOLIO.tap
+
+      - name: Run domain provider regressions
+        run: |
+          node --test tests/commissions-report-provider-test.mjs
+          node --test tests/performance-report-provider-test.mjs
+
+      - name: Run reporting regressions
+        run: |
+          node --test tests/report-comparison-engine-test.mjs
+          node --test tests/universal-report-aggregation-runtime-test.mjs
+          node --test tests/report-provider-runtime-test.mjs
+          node --test tests/universal-period-resolver-test.mjs
+          node --test tests/universal-reporting-kernel-test.mjs
+
+      - name: Run Performance surface regression
+        run: node --test tests/performance-surface-adapter-test.mjs
+
+      - name: Verify repository hygiene
+        run: git diff --check
+
+      - name: Build acceptance evidence
+        run: |
+          mkdir -p artifacts/reporting
+
+          printf '%s\n' \
+            'REP_08_PORTFOLIO_REPORT_PROVIDER=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP07_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_PORTFOLIO_TEST=PASS' \
+            'REMOTE_DOMAIN_PROVIDER_REGRESSION=PASS' \
+            'REMOTE_REPORTING_REGRESSION=PASS' \
+            'REMOTE_PERFORMANCE_SURFACE_REGRESSION=PASS' \
+            'PORTFOLIO_READ_AUTHORITY=YES' \
+            'PORTFOLIO_MUTATION_AUTHORITY=NO' \
+            'FOREIGN_EXCHANGE_AUTHORITY=NO' \
+            > artifacts/reporting/REP08_ACCEPTANCE.txt
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-08-portfolio-report-provider-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
