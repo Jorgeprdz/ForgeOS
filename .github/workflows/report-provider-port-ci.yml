@@ -1,0 +1,148 @@
+name: REP Report Provider Port CI
+
+on:
+  push:
+    branches:
+      - feature/universal-reporting-kernel-foundation
+    paths:
+      - advisor-os/reporting/domain/report-definition.mjs
+      - advisor-os/reporting/application/report-provider-port.mjs
+      - advisor-os/reporting/runtime/report-provider-runtime.mjs
+      - tests/report-provider-runtime-test.mjs
+      - docs/architecture/reporting/REP-03_REPORT_DEFINITION_AND_PROVIDER_PORT.md
+      - .github/workflows/report-provider-port-ci.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provider:
+    name: Report definition and provider port acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify REP-02 closure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq \
+            'REP_02_UNIVERSAL_PERIOD_RESOLVER_AND_CALENDAR_POLICY=CLOSED' \
+            docs/architecture/reporting/REP-02_UNIVERSAL_PERIOD_RESOLVER_AND_CALENDAR_POLICY_CLOSURE.md
+
+      - name: Verify Activity foundation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node \
+            scripts/ci/verify-activity-foundation-freeze.mjs \
+            | tee REP03_ACTIVITY_FREEZE.txt
+
+      - name: Run provider port tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/report-provider-runtime-test.mjs \
+            | tee REP03_PROVIDER.tap
+
+          grep -Fq '# tests 39' REP03_PROVIDER.tap
+          grep -Fq '# pass 39' REP03_PROVIDER.tap
+          grep -Fq '# fail 0' REP03_PROVIDER.tap
+
+      - name: Run period resolver regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-period-resolver-test.mjs \
+            | tee REP03_RESOLVER.tap
+
+          grep -Fq '# tests 46' REP03_RESOLVER.tap
+          grep -Fq '# pass 46' REP03_RESOLVER.tap
+          grep -Fq '# fail 0' REP03_RESOLVER.tap
+
+      - name: Run kernel regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/universal-reporting-kernel-test.mjs \
+            | tee REP03_KERNEL.tap
+
+          grep -Fq '# tests 25' REP03_KERNEL.tap
+          grep -Fq '# pass 25' REP03_KERNEL.tap
+          grep -Fq '# fail 0' REP03_KERNEL.tap
+
+      - name: Run Performance surface regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            --test-reporter=tap \
+            tests/performance-surface-adapter-test.mjs \
+            | tee REP03_PERFORMANCE.tap
+
+          grep -Fq '# tests 20' REP03_PERFORMANCE.tap
+          grep -Fq '# pass 20' REP03_PERFORMANCE.tap
+          grep -Fq '# fail 0' REP03_PERFORMANCE.tap
+
+      - name: Verify repository hygiene
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git diff --check
+
+      - name: Build acceptance evidence
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts/reporting
+
+          printf '%s\n' \
+            'REP_03_REPORT_DEFINITION_AND_PROVIDER_PORT=IMPLEMENTED' \
+            "COMMIT=$GITHUB_SHA" \
+            'REMOTE_REP02_CLOSURE=PASS' \
+            'REMOTE_ACTIVITY_FREEZE=PASS' \
+            'REMOTE_PROVIDER_TEST=PASS' \
+            'REMOTE_RESOLVER_REGRESSION=PASS' \
+            'REMOTE_KERNEL_REGRESSION=PASS' \
+            'REMOTE_PERFORMANCE_REGRESSION=PASS' \
+            'PROVIDER_PORT_SCHEMA=report-provider-port.v1' \
+            'PROVIDER_RUNTIME_SCHEMA=report-provider-runtime.v1' \
+            'PROVIDER_EXECUTION_AUTHORIZED=YES' \
+            'UNIVERSAL_AGGREGATION_AUTHORITY=NO' \
+            'COMPARISON_AUTHORITY=NO' \
+            'PRODUCTIVE_UI_MUTATION=NO' \
+            'REMOTE_DATABASE_MUTATION=NO' \
+            > artifacts/reporting/REP03_ACCEPTANCE.txt
+
+          cp \
+            REP03_ACTIVITY_FREEZE.txt \
+            REP03_PROVIDER.tap \
+            REP03_RESOLVER.tap \
+            REP03_KERNEL.tap \
+            REP03_PERFORMANCE.tap \
+            artifacts/reporting/
+
+      - name: Upload acceptance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-03-report-provider-port-${{ github.sha }}
+          path: artifacts/reporting
+          if-no-files-found: error
+          retention-days: 60
