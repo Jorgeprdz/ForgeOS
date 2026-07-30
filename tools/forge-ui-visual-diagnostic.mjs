@@ -132,6 +132,42 @@ async function settle(page, milliseconds = 1200) {
   await page.waitForTimeout(milliseconds);
 }
 
+async function verifyProductiveCardsClearFixedControls(page) {
+  const cards = page.locator("[data-productive-prospect-card]");
+  let clearsFixedControls = true;
+
+  for (let index = 0; index < await cards.count(); index += 1) {
+    const card = cards.nth(index);
+    await card.evaluate((element) => {
+      element.scrollIntoView({ block: "start", inline: "nearest" });
+    });
+    await page.waitForTimeout(80);
+    clearsFixedControls = clearsFixedControls && await card.evaluate((element) => {
+      const cardBounds = element.getBoundingClientRect();
+      const protectedNodes = [
+        document.querySelector(".bottom-shell"),
+        document.querySelector("[data-forge-command-orb]"),
+      ].filter((node) => {
+        if (!(node instanceof Element)) return false;
+        const style = getComputedStyle(node);
+        const bounds = node.getBoundingClientRect();
+        return style.display !== "none" && style.visibility !== "hidden"
+          && bounds.width > 0 && bounds.height > 0;
+      });
+      return protectedNodes.every((node) => {
+        const bounds = node.getBoundingClientRect();
+        return cardBounds.right <= bounds.left || bounds.right <= cardBounds.left
+          || cardBounds.bottom <= bounds.top || bounds.bottom <= cardBounds.top;
+      });
+    });
+  }
+
+  await page.evaluate((value) => {
+    globalThis.__FORGE_DIAGNOSTIC_NO_SHELL_OVERLAP__ = value;
+    scrollTo({ top: 0, behavior: "instant" });
+  }, clearsFixedControls);
+}
+
 async function capture(page, directory, label, options = {}) {
   const fullPage = options.fullPage !== false;
   const pngPath = path.join(directory, `${label}.png`);
@@ -330,18 +366,7 @@ async function capture(page, directory, label, options = {}) {
           && getComputedStyle(name).wordBreak === "normal";
       }),
       productiveNoShellOverlap: (() => {
-        const cards = [...document.querySelectorAll("[data-productive-prospect-card]")]
-          .filter(visible);
-        const protectedNodes = [
-          document.querySelector(".bottom-shell"),
-          document.querySelector("[data-forge-command-orb]"),
-        ].filter(visible);
-        return cards.every(card => protectedNodes.every(node => {
-          const a = card.getBoundingClientRect();
-          const b = node.getBoundingClientRect();
-          return a.right <= b.left || b.right <= a.left
-            || a.bottom <= b.top || b.bottom <= a.top;
-        }));
+        return globalThis.__FORGE_DIAGNOSTIC_NO_SHELL_OVERLAP__ === true;
       })(),
       specialSavedReferralCardPathPresent:
         document.querySelector("[data-saved-referral-card]") !== null,
@@ -781,6 +806,7 @@ async function captureViewport(browser, viewport, fixture) {
       await page.evaluate(() => {
         globalThis.__FORGE_DIAGNOSTIC_SOURCE_UNCHANGED__ = true;
       });
+      await verifyProductiveCardsClearFixedControls(page);
       result.routes.pipelineSavedReferral = await capture(
         page,
         directory,
@@ -829,7 +855,7 @@ async function captureViewport(browser, viewport, fixture) {
         directory,
         "03d-pipeline-nash-accepted",
       );
-      await page.locator("[data-close-nash]").first().click();
+      await page.locator(".referral-sheet__close[data-close-nash]").click();
       await page.locator("[data-open-combat]").first().click();
       await page.locator("[data-combat-objection]").fill("Lo voy a pensar");
       await page.locator("[data-analyze-combat]").click();
@@ -848,11 +874,11 @@ async function captureViewport(browser, viewport, fixture) {
       await page.locator("[data-register-combat]").click();
       await page.locator("[data-combat-timeline]").waitFor({ state: "visible" });
       result.routes.pipelineCombat = await capture(page, directory, "03e-pipeline-combat");
-      await page.locator("[data-close-combat]").first().click();
+      await page.locator(".referral-sheet__close[data-close-combat]").click();
       await page.locator("[data-open-nba]").first().click();
       await page.locator("[data-nba-workspace]").waitFor({ state: "visible" });
       result.routes.pipelineNba = await capture(page, directory, "03f-pipeline-nba");
-      await page.locator("[data-close-nba]").first().click();
+      await page.locator(".referral-sheet__close[data-close-nba]").click();
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");
     }
