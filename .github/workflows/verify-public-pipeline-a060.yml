@@ -1,0 +1,132 @@
+name: Verify Public Pipeline Repair
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/verify-public-pipeline-a060.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      EXPECTED_SHA: a060fde0b5b2f38e0912f54f47dc4f141c21e45c
+      PUBLIC_ROOT: https://jorgeprdz.github.io/ForgeOS
+      PUBLIC_APP: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
+      FORGE_DIAGNOSTIC_OUTPUT: artifacts/public-pipeline-a060
+
+    steps:
+      - name: Checkout deployed source
+        uses: actions/checkout@v4
+        with:
+          ref: a060fde0b5b2f38e0912f54f47dc4f141c21e45c
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for exact Pages build
+        shell: bash
+        run: |
+          matched=0
+          for attempt in $(seq 1 60); do
+            probe="${PUBLIC_ROOT}/build-info.json?run=${GITHUB_RUN_ID}&attempt=${attempt}"
+            if curl --fail --silent --show-error -H 'Cache-Control: no-cache' "$probe" -o /tmp/forge-build-info.json; then
+              cat /tmp/forge-build-info.json
+              deployed_sha="$(node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('/tmp/forge-build-info.json','utf8'));process.stdout.write(x.commitSha||'')")"
+              if [ "$deployed_sha" = "$EXPECTED_SHA" ]; then
+                matched=1
+                break
+              fi
+            fi
+            sleep 10
+          done
+          if [ "$matched" -ne 1 ]; then
+            echo "PUBLIC_BUILD_SHA_MISMATCH"
+            cat /tmp/forge-build-info.json 2>/dev/null || true
+            false
+          fi
+          echo "PUBLIC_BUILD_SHA=$EXPECTED_SHA"
+
+      - name: Audit deployed Pipeline assets
+        shell: bash
+        run: |
+          mkdir -p "$FORGE_DIAGNOSTIC_OUTPUT/public-assets"
+          curl --fail --silent --show-error -H 'Cache-Control: no-cache' "${PUBLIC_APP}?verify=${GITHUB_RUN_ID}" -o "$FORGE_DIAGNOSTIC_OUTPUT/public-assets/index.html"
+          curl --fail --silent --show-error -H 'Cache-Control: no-cache' "${PUBLIC_APP}pipeline-module.js?verify=${GITHUB_RUN_ID}" -o "$FORGE_DIAGNOSTIC_OUTPUT/public-assets/pipeline-module.js"
+          curl --fail --silent --show-error -H 'Cache-Control: no-cache' "${PUBLIC_APP}pipeline-productive-intelligence-adapter.js?verify=${GITHUB_RUN_ID}" -o "$FORGE_DIAGNOSTIC_OUTPUT/public-assets/pipeline-productive-intelligence-adapter.js"
+          curl --fail --silent --show-error -H 'Cache-Control: no-cache' "${PUBLIC_APP}pipeline-referral-modal.css?verify=${GITHUB_RUN_ID}" -o "$FORGE_DIAGNOSTIC_OUTPUT/public-assets/pipeline-referral-modal.css"
+
+          node - <<'NODE'
+          const assert = require('assert');
+          const fs = require('fs');
+          const base = 'artifacts/public-pipeline-a060/public-assets';
+          const index = fs.readFileSync(`${base}/index.html`, 'utf8');
+          const pipeline = fs.readFileSync(`${base}/pipeline-module.js`, 'utf8');
+          const adapter = fs.readFileSync(`${base}/pipeline-productive-intelligence-adapter.js`, 'utf8');
+          const modalCss = fs.readFileSync(`${base}/pipeline-referral-modal.css`, 'utf8');
+          assert.ok(index.includes('app.js?v=ui-m04-shell-007&fix=pipeline-mobile-interaction-001'));
+          assert.ok(pipeline.includes('pipeline-referral-modal.css?v=ui-m06-referral-004&fix=005'));
+          assert.ok(pipeline.includes('pipeline-productive-intelligence-adapter.js?v=material3-productive-002'));
+          assert.ok(adapter.includes('reconcileUpdatedProspectState'));
+          assert.ok(adapter.includes('PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH'));
+          assert.ok(!/\.pipeline-module__card-actions\s*\{[^}]*display:\s*flex/s.test(modalCss));
+          assert.ok(!/\.pipeline-module__card-actions button,\s*\.pipeline-module__card-actions a\s*\{/s.test(modalCss));
+          console.log('PUBLIC_PIPELINE_ASSETS=PASS');
+          console.log('PUBLIC_LATE_MODAL_GRID_OVERRIDE=ABSENT');
+          console.log('PUBLIC_STAGE_MUTATION_AUTHORITY=PASS');
+          NODE
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local support server
+        shell: bash
+        run: |
+          nohup npm run serve:e2e > /tmp/forge-public-verify-vite.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/ >/dev/null; then
+              echo "LOCAL_SUPPORT_SERVER=READY"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Run full diagnostic against public Pages
+        shell: bash
+        env:
+          FORGE_DIAGNOSTIC_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
+          FORGE_DIAGNOSTIC_SHA: a060fde0b5b2f38e0912f54f47dc4f141c21e45c
+        run: |
+          node tools/forge-ui-visual-diagnostic.mjs 2>&1 | tee "$FORGE_DIAGNOSTIC_OUTPUT/public-diagnostic.log"
+
+      - name: Enforce public interaction evidence
+        shell: bash
+        run: |
+          grep -F 'FORGE_UI_VISUAL_ACCEPTANCE=PASS' "$FORGE_DIAGNOSTIC_OUTPUT/public-diagnostic.log"
+          grep -F 'PIPELINE_PRODUCTIVE_ACCEPTANCE=PASS' "$FORGE_DIAGNOSTIC_OUTPUT/public-diagnostic.log"
+          grep -F 'NASH_COMBAT_BUTTON_CLICKED=PASS' "$FORGE_DIAGNOSTIC_OUTPUT/public-diagnostic.log"
+          grep -F 'COMBAT_WHATSAPP_CLICKED=PASS' "$FORGE_DIAGNOSTIC_OUTPUT/public-diagnostic.log"
+          grep -F 'PREPARE_MESSAGE_CLICKED=PASS' "$FORGE_DIAGNOSTIC_OUTPUT/public-diagnostic.log"
+          grep -F 'MAX_SIMULTANEOUS_WORKSPACES=1' "$FORGE_DIAGNOSTIC_OUTPUT/public-diagnostic.log"
+          echo 'PUBLIC_PAGES_INTERACTION_SMOKE=PASS'
+
+      - name: Upload public verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-pipeline-a060-${{ github.run_id }}
+          path: artifacts/public-pipeline-a060
+          if-no-files-found: error
+          retention-days: 14
