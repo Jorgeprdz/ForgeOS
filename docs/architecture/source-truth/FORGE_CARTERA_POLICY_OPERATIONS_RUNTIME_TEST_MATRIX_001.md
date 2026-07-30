@@ -6,7 +6,7 @@ Track A / Runtime and Test Matrix
 
 ## Status
 
-`ACTIVE / PASSES_1_2_3_4_RECONCILED / POLICY_DETAIL_TIMELINE_RENEWALS_TASKS_AUDIT_NEXT / NO_RUNTIME_MUTATION`
+`ACTIVE / PASSES_1_2_3_4_5_RECONCILED / FINAL_BUILD_QUEUE_LOCK_NEXT / NO_RUNTIME_MUTATION`
 
 ## Date
 
@@ -18,6 +18,7 @@ Track A / Runtime and Test Matrix
 - `FORGE_CARTERA_LEGACY_RUNTIME_RECONCILIATION_002.md`
 - `FORGE_CARTERA_POLICY_DOCUMENT_INTAKE_RECONCILIATION_003.md`
 - `FORGE_CARTERA_POLICY_PERSISTENCE_IDENTITY_PARTY_RECONCILIATION_004.md`
+- `FORGE_CARTERA_POLICY_DETAIL_TIMELINE_RENEWALS_TASKS_RECONCILIATION_005.md`
 
 This matrix records verified runtime position, tests, authority and reuse disposition. File existence alone is not productive-runtime proof.
 
@@ -67,15 +68,15 @@ This matrix records verified runtime position, tests, authority and reuse dispos
 
 | Asset | Runtime | Tests | Disposition | Required work |
 |---|---|---|---|---|
-| `relationship-timeline-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REUSE_WITH_ADAPTER` | Future projection only; never replace Event & Evidence; separate facts, schedules and recommendations. |
-| `relationship-next-action-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Candidate actions only; Alfred owns final priority; replace automatic referral requests. |
-| `relationship-opportunity-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `DO_NOT_ACTIVATE` | Output review candidates, preserve unknown/external coverage, require advisor-confirmed Pipeline write. |
-| `life-event-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Distinguish profile state from a new event; add date, source, freshness and sensitivity. |
-| `referral-opportunity-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Reframe as relationship-strengthening candidate; never infer consent. |
-| `relationship-health-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Split operational attention from actual relationship health. |
-| `client-engagement-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Relationship-specific cadence; no history is not critical deterioration. |
-| `relationship-review-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REUSE_WITH_ADAPTER` | Produce governed Review Brief with evidence and sensitive-topic sections. |
-| `relationship-master-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REUSE_WITH_ADAPTER` | Orchestrate reconciled engines; remove meaningless aggregate confidence. |
+| `relationship-timeline-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REUSE_WITH_ADAPTER` | Future projection only; never replace Event & Evidence; separate facts, schedules and recommendations. |
+| `relationship-next-action-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REFACTOR_FOUNDATION` | Candidate actions only; NBA owns final priority; replace automatic referral requests. |
+| `relationship-opportunity-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `DO_NOT_ACTIVATE` | Output review candidates, preserve unknown/external coverage, require advisor-confirmed Pipeline write. |
+| `life-event-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REFACTOR_FOUNDATION` | Distinguish profile state from a new event; add date, source, freshness and sensitivity. |
+| `referral-opportunity-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REFACTOR_FOUNDATION` | Reframe as relationship-strengthening candidate; never infer consent. |
+| `relationship-health-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REFACTOR_FOUNDATION` | Split operational attention from actual relationship health. |
+| `client-engagement-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REFACTOR_FOUNDATION` | Relationship-specific cadence; no history is not critical deterioration. |
+| `relationship-review-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REUSE_WITH_ADAPTER` | Produce governed Review Brief with evidence and sensitive-topic sections. |
+| `relationship-master-engine.js` | `FOUNDATION_ISOLATED` | legacy test reported | `REUSE_WITH_ADAPTER` | Orchestrate reconciled engines; remove meaningless aggregate confidence. |
 
 ---
 
@@ -191,9 +192,7 @@ Minimum Policy roles include Policy Owner, Insured, Additional Insured, Payor, B
 | FES Activity Event Ledger | persistent append-only ledger and sync runtime | migration/gateway/browser/sync tests present | `REUSE_CANONICAL` pattern | Extend or specialize FES contracts for Policy subjects and events. |
 | Policy event contract/ledger | not found | none | `REBUILD_CANONICAL_GAP` | Add FES-compatible Policy events, evidence, correction, idempotency, RLS and projection adapters. |
 
-Current FES database subject types are limited to Prospect, Appointment, Activity and Due Action. Policy support is not already implemented.
-
-No new generic event infrastructure may be created.
+Current FES database subject types are limited to Prospect, Appointment, Activity and Due Action. Policy support is not already implemented. No new generic event infrastructure may be created.
 
 ---
 
@@ -207,43 +206,133 @@ The current adapter explicitly claims no canonical Policy Truth, uses one `clien
 
 ---
 
-# 10. Confirmed construction gaps
+# 10. Policy Detail, Timeline, renewals, risk, alerts and actions
+
+## 10.1 Policy Detail
+
+| Asset group | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| detail/workspace/view/summary composition | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Consume canonical read models; support PolicyRole, evidence, freshness, conflicts and unknown. |
+| search/filter/sort/indexing/side-by-side | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Immutable operations over productive read projections. |
+| detail/core/status/metadata/validation | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Remove `clientId`, default zero/MXN/ACTIVE/manual and weak readiness validation. |
+| `policy-detail-alert-engine.js` | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Project sourced alerts with fact/prediction distinction, confidence and required action. |
+| `policy-storage-engine.js` | module-memory array | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Never Policy persistence. |
+| `policy-auto-save-engine.js` | arbitrary localStorage | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Never evidence or Policy persistence. |
+| `policy-auto-approval-engine.js` | isolated confidence average | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | Human confirmation remains required. |
+| `policy-ai-insights-engine.js` | deterministic labels | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | Use governed Conservation signals, not AI-labelled assertions. |
+
+## 10.2 Policy Timeline
+
+| Asset group | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| timeline group/query/view/activity helpers | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Read immutable FES-compatible Policy projections; fix in-place sorting and missing dependency import. |
+| timeline engine/event factory/repository/types | mutable local arrays | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Replace with append-only Policy event contract, evidence, idempotency and corrections. |
+
+The legacy repository permits event deletion and the type catalog mixes facts, communications, tasks, renewal, payment and commission. It is not Policy Timeline authority.
+
+## 10.3 Renewals and payments
+
+| Asset | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| `initial-renewal-classifier.js` | executable canonical foundation | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Preserve blocked/unknown and Rule Pack-required classifications. |
+| `policy-renewal-engine.js` | date-window filter | `NO_TEST_PROVED` | `REUSE_PRIMITIVE_ONLY` | Inject clock/timezone, validate dates and consume canonical scheduled events. |
+| `policy-renewal-status-engine.js` | fixed date thresholds | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Negative dates must become overdue/unconfirmed, not generic CRITICAL. |
+| `renewal-intelligence-engine.js` | unvalidated fixed score | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Split Policy dates, relationship cadence and Conservation interpretation. |
+| Payment Evidence + Payment Event | executable evidence/economic foundation | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Feed confirmed payments and future obligation reconciliation. |
+| Payment Obligation Ledger | not found | none | `REBUILD_CANONICAL_GAP` | Build expected/actual period-aware obligations and confirmation states. |
+
+## 10.4 Conservation risk and alerts
+
+| Asset / authority | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| Conservation Intelligence Architecture Lock | `ARCHITECTURE_LOCKED` | n/a | `REUSE_CANONICAL` | Own local predictive Policy Quality and Conservation Risk. |
+| `policy-risk-engine.js` | unvalidated fixed score | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Candidate features only; produce evidence-aware local predictive signal under Conservation. |
+| `policy-relationship-score-engine.js` | activity-count score | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | Contact volume is not relationship health or conservation truth. |
+| `policy-last-contact-engine.js` | legacy event filter | `NO_TEST_PROVED` | `REUSE_PRIMITIVE_ONLY` | Consume canonical communication/outcome events and relationship cadence. |
+
+## 10.5 Review
+
+| Asset | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| `policy-review-priority-engine.js` | low-confidence field selector | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` under Evidence Inbox | Use packet field states, source location, identity/party conflicts and sensitivity. |
+| `policy-review-ui-engine.js` | editable import preview | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Drive from Policy Evidence Packet, not free-form parsed object. |
+| Policy Review Brief | not found | none | `REBUILD_CANONICAL_GAP` | Combine Policy Truth, obligations, service, relationship context and sensitive-topic boundaries. |
+
+## 10.6 Due Actions and task foundations
+
+| Asset / group | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| NFAST-09 Due Action contract/store/sync/gateway | productive prospect-scoped runtime | writer/runtime/offline/sync/RLS tests and closures | `REUSE_CANONICAL` operating model | Generalize subject authority without breaking Pipeline adapter. |
+| Pipeline Due Action writer/runtime | `PRODUCTIVE_CONNECTED` | `TEST_VERIFIED + DOCUMENTED_PASS` | `REUSE_WITH_CANONICAL_BRIDGE` | Map legacy `prospectReference` to generic `subjectType=PROSPECT`. |
+| Policy/task factories and realtime object merge | isolated mutable records | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Use governed Due Action commands. |
+| task feed/overdue/quick-action helpers | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Read Due Action projections; do not own writes. |
+| task priority/follow-up foundations | fixed thresholds | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Candidate features only; NBA Reason Why owns final explained priority. |
+| auto-task and AI task suggestion engines | automatic/generic suggestions | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | No automatic task creation or line-of-business cross-sell. |
+| Google Calendar builder/link helper | local payload/link builder | `NO_TEST_PROVED` | `REUSE_PRIMITIVE_ONLY` | Link/payload is not external event creation; require Calendar Intent and approval. |
+
+### Due Action decision
+
+```text
+CURRENT_RUNTIME=PROSPECT_SCOPED
+TARGET_CORE=SUBJECT_TYPE_PLUS_SUBJECT_REFERENCE
+PIPELINE_COMPATIBILITY=REQUIRED
+FAKE_PROSPECT_FOR_IMPORTED_POLICY=FORBIDDEN
+AUTOMATIC_TASK_CREATION=BLOCKED
+```
+
+Candidate subject types are Prospect, CommercialPerson, CommercialAccount and Policy. Exact schema and migration names require an authorized implementation scope.
+
+---
+
+# 11. Confirmed construction gaps
 
 1. CommercialPerson schema, contract and persistence.
 2. Prospect-to-CommercialPerson source identity link.
-3. identity match, conflict and decision persistence.
+3. Identity match, conflict and decision persistence.
 4. CommercialAccount and membership persistence.
-5. canonical Policy schema v2.
+5. Canonical Policy schema v2.
 6. PolicyRole / Policy Party schema and contract.
 7. Policy and Policy Party persistence.
 8. Policy evidence and field-provenance links.
 9. Policy status/version/conflict model.
-10. identity-aware confirmed Policy command.
+10. Identity-aware confirmed Policy command.
 11. Policy-specific RLS and privacy rules.
 12. FES-compatible Policy event contract and persistence.
-13. person/account projections from Policy events.
-14. productive Policy repository and read-model adapter.
-15. productive file-admission adapter and persistent Evidence Inbox worker.
-16. existing-policy conflict/deduplication stage.
-17. Cartera intake review UI.
-18. vertical file-to-confirmed-Policy tests.
+13. Immutable Policy Timeline and person/account projections.
+14. Productive Policy repository and read-model adapter.
+15. Productive file-admission adapter and persistent Evidence Inbox worker.
+16. Existing-policy conflict/deduplication stage.
+17. Cartera intake and Policy Detail review UI.
+18. Renewal Schedule projection with injected clock/timezone.
 19. Payment Obligation Ledger and payment confirmation.
-20. local predictive Conservation runtime.
-21. Relationship Graph runtime.
-22. Cartera signals and Alfred/Candy Crush orchestration.
+20. Local predictive Conservation signal contract/runtime.
+21. Evidence-aware Policy alert contract.
+22. Policy Review Brief projection.
+23. Relationship Graph runtime.
+24. Cartera Signal envelope.
+25. NBA Reason Why consumption of Cartera signals.
+26. Generic Due Action subject contract and migration path.
+27. Backward-compatible Pipeline Due Action adapter.
+28. Cartera Due Action writer/adapter.
+29. Mi Día and Candy Crush projections for Cartera actions.
+30. Calendar Intent and approved provider bridge.
+31. Vertical file-to-confirmed-Policy tests.
+32. Vertical Policy-signal-to-confirmed-Due-Action tests.
+33. Negative tests blocking automatic task/calendar/message/cross-sell effects.
+34. Tests proving unknown, stale or conflicted Policy data cannot create a strong action.
 
 ---
 
-# 11. Track A status
+# 12. Track A status
 
 - Pass 1 — Relationship and inventory classification: `COMPLETE`
 - Pass 2 — Legacy Cartera runtime reconciliation: `COMPLETE`
 - Pass 3 — Policy document intake reconciliation: `COMPLETE`
 - Pass 4 — Policy persistence, identity and Policy Party authority: `COMPLETE`
-- Pass 5 — Policy Detail, Timeline, renewals, risk, alerts and tasks: `NEXT`
-- Pass 6 — Final reconciliation and build-only queue lock: `PLANNED`
+- Pass 5 — Policy Detail, Timeline, renewals, risk, alerts and tasks: `COMPLETE`
+- Pass 6 — Final reconciliation and build-only queue lock: `NEXT`
 
-## Pass 4 decision
+## Current locked decisions
 
 `CANONICAL_IDENTITY=COMMERCIAL_PERSON`
 
@@ -253,8 +342,20 @@ The current adapter explicitly claims no canonical Policy Truth, uses one `clien
 
 `POLICY_TRUTH_OWNER=POLICY_INTELLIGENCE`
 
-`EVENT_INFRASTRUCTURE=FES_COMPATIBLE_NO_NEW_GENERIC_LEDGER`
+`POLICY_DETAIL_SOURCE=CANONICAL_POLICY_READ_MODEL`
 
-`NEXT_AUDIT=POLICY_DETAIL_TIMELINE_RENEWALS_TASKS_RECONCILIATION`
+`POLICY_TIMELINE_SOURCE=FES_COMPATIBLE_POLICY_EVENTS`
+
+`RENEWAL_CLASSIFICATION=TESTED_INITIAL_RENEWAL_CLASSIFIER`
+
+`CONSERVATION_RISK_OWNER=CONSERVATION_INTELLIGENCE`
+
+`FINAL_PRIORITY_OWNER=NBA_REASON_WHY`
+
+`INTERNAL_ACTION_RUNTIME=DUE_ACTION_GENERALIZATION`
+
+`AUTOMATIC_TASK_CREATION=BLOCKED`
+
+`NEXT_AUDIT=FINAL_RECONCILIATION_AND_BUILD_ONLY_QUEUE_LOCK`
 
 No runtime implementation is authorized by this matrix. The registered implementation target remains `CARTERA_001_PIPELINE_QUOTE_PERSON_TIMELINE_CONTINUITY`.
