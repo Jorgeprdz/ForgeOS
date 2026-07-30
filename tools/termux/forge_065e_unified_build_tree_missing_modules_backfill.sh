@@ -101,13 +101,16 @@ Held next:
 
 Add `Bitacora / Notes System`:
 
-- notes by client
-- notes by policy
-- notes by appointment
-- quick notes by voice/text
-- automatic tags
-- AI context
-- integrated timeline
+Status: RETAINED / PARTIALLY ABSORBED / REMAINDER DISTRIBUTED
+
+- prospect initial context -> absorbed by `ADVISOR_OS_SALES_PIPELINE`
+- governed prospect context adapter -> absorbed by `ADVISOR_OS_SALES_PIPELINE`
+- timeline and chronological notes -> `ACTIVITY / FES`
+- notes by policy -> `CARTERA`
+- notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`
+- quick notes by voice/text -> future capture adapter
+- automatic tags and AI context -> future governed intelligence scope
+- standalone parallel Notes module -> forbidden
 
 ### 05 AI & Predictive Intelligence
 
@@ -128,7 +131,7 @@ Lock: requires explicit permission, recording consent, retention rules, privacy 
 Add `Lead Generation Boost`:
 
 - prospect generation
-- intelligent referrals
+- intelligent referral generation only; operational referral intake and lifecycle are absorbed by `ADVISOR_OS_SALES_PIPELINE`
 - dormant contact reactivation
 - outreach scripts
 - prospecting campaigns
@@ -180,7 +183,8 @@ Status: PASS
 
 Backfilled:
 
-- Bitacora / Notes System
+- Referral Engine / Referidos — retained; operational capability absorbed by `ADVISOR_OS_SALES_PIPELINE`
+- Bitacora / Notes System — retained; prospect context absorbed by `ADVISOR_OS_SALES_PIPELINE`; remainder distributed
 - Real-Time Conversation Copilot
 - Lead Generation Boost
 - Sales Presentation System
@@ -213,7 +217,7 @@ DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
 NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 
 Certificate:
-Missing modules were registered as future scoped branches. Implementation remains blocked until each branch receives scope, boundary, approval, audit, and safety contracts.
+Capabilities remain registered in the build tree. Referral operations and prospect context are annotated as absorbed by Advisor OS Sales Pipeline; Notes remainder is distributed to Activity / FES, Cartera, appointment lifecycle, and future governed intelligence. No capability is deleted.
 MD
 
 cat > docs/evidence/forge-unified-tree-missing-modules-backfill-audit-065e.json <<'JSON'
@@ -264,13 +268,16 @@ Backfilled modules:
 
 Add `Bitacora / Notes System`:
 
-- notes by client
-- notes by policy
-- notes by appointment
-- quick notes by voice/text
-- automatic tags
-- AI context
-- integrated timeline
+Status: RETAINED / PARTIALLY ABSORBED / REMAINDER DISTRIBUTED
+
+- prospect initial context -> absorbed by `ADVISOR_OS_SALES_PIPELINE`
+- governed prospect context adapter -> absorbed by `ADVISOR_OS_SALES_PIPELINE`
+- timeline and chronological notes -> `ACTIVITY / FES`
+- notes by policy -> `CARTERA`
+- notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`
+- quick notes by voice/text -> future capture adapter
+- automatic tags and AI context -> future governed intelligence scope
+- standalone parallel Notes module -> forbidden
 
 ### 05 AI & Predictive Intelligence
 
@@ -291,7 +298,7 @@ Lock: requires explicit permission, recording consent, retention rules, privacy 
 Add `Lead Generation Boost`:
 
 - prospect generation
-- intelligent referrals
+- intelligent referral generation only; operational referral intake and lifecycle are absorbed by `ADVISOR_OS_SALES_PIPELINE`
 - dormant contact reactivation
 - outreach scripts
 - prospecting campaigns
