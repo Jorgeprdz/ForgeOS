@@ -1,0 +1,45 @@
+name: Pipeline Real Interaction Regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/**
+      - advisor-os/sales-pipeline/**
+      - tests/pipeline-real-interaction-regression.mjs
+      - .github/workflows/pipeline-real-interaction.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Start Vite
+        shell: bash
+        run: |
+          nohup npm run serve:e2e > /tmp/forge-pipeline-vite.log 2>&1 &
+          ready=0
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/ >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/forge-pipeline-vite.log
+            false
+          fi
+      - name: Interact with buttons and change prospect stage
+        run: node tests/pipeline-real-interaction-regression.mjs
