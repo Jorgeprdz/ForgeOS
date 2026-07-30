@@ -26,6 +26,18 @@ The registered immediate implementation target is:
 
 Later phases remain planned and require their own bounded authorization, discovery, implementation evidence, tests and closure.
 
+## Codex Execution Gate
+
+A Codex implementation task is in scope only when all of the following are true:
+
+1. The requested phase exists in the Roadmap Lock, Master Build Tree and Unified Build Tree.
+2. The phase is explicitly marked `NEXT` or otherwise separately execution-authorized.
+3. The task begins with repository discovery and reusable-asset mapping.
+4. The implementation preserves the domain ownership and human-confirmation boundaries in this document.
+5. Completion is supported by tests, evidence and a closure or decision lock.
+
+Roadmap presence authorizes planning visibility; it does not by itself prove implementation or authorize every later phase.
+
 ## Architectural Objective
 
 > Help the advisor sell 30% more without working 30% more.
