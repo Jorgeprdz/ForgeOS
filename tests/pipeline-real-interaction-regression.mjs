@@ -4,6 +4,7 @@ import { chromium } from "@playwright/test";
 const baseUrl = process.env.FORGE_PIPELINE_TEST_BASE_URL || "http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/";
 const appCss = new URL("app.css?v=pipeline-real-interaction", baseUrl).href;
 const modalCss = new URL("pipeline-referral-modal.css?v=pipeline-real-interaction", baseUrl).href;
+const authorityUrl = new URL("pipeline-interaction-authority.js?v=pipeline-real-interaction", baseUrl).href;
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 412, height: 915 }, deviceScaleFactor: 2.625, isMobile: true, hasTouch: true });
 const page = await context.newPage();
@@ -22,7 +23,9 @@ try {
   select.addEventListener('change',async()=>{const requested=select.value;card.dataset.productiveStage=requested;label.textContent=select.selectedOptions[0].textContent;await new Promise(r=>setTimeout(r,100));card.dataset.productiveStage='appointment_scheduled';label.textContent='Cita agendada';select.value='appointment_scheduled';});
   document.addEventListener('click',e=>{if(!e.target.closest('[data-productive-card-actions] button,[data-productive-card-actions] a'))return;if(document.querySelector('[data-material3-referral-styles]'))return;const link=document.createElement('link');link.rel='stylesheet';link.href=${JSON.stringify(modalCss)};link.dataset.material3ReferralStyles='true';document.head.append(link);});
   </script></body></html>`);
-  await page.waitForFunction(() => document.styleSheets.length >= 1);
+  await page.addScriptTag({ type: "module", url: authorityUrl });
+  await page.waitForFunction(() => document.documentElement.dataset.pipelineInteractionAuthority === "ready");
+  await page.waitForFunction(() => document.styleSheets.length >= 2);
   const actions = page.locator("[data-productive-card-actions] > *");
   const before = await actions.evaluateAll(nodes => nodes.map(node => { const b=node.getBoundingClientRect(); return {x:b.x,y:b.y,width:b.width,height:b.height}; }));
   await page.getByRole("button", { name: "Ver contexto" }).click();
