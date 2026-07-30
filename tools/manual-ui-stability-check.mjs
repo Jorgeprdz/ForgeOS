@@ -98,7 +98,8 @@ try {
       </body>
     </html>`);
 
-  await page.addScriptTag({ type: "module", url: moduleUrl });
+  const fixtureModuleUrl = `${moduleUrl}&fixture=${Date.now()}`;
+  await page.addScriptTag({ type: "module", url: fixtureModuleUrl });
   await page.waitForFunction(() => document.documentElement.dataset.forgePipelineUiStability === "ready");
 
   await page.locator('[data-productive-prospect-card="prospect-1"]').scrollIntoViewIfNeeded();
