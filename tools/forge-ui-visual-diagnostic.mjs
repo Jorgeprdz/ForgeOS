@@ -226,6 +226,36 @@ async function capture(page, directory, label, options = {}) {
       productiveProspectCardContainsName:
         [...document.querySelectorAll("[data-productive-prospect-card]")]
           .some((card) => visible(card) && card.textContent.includes("Jorge Ignacio Palacios Rodríguez")),
+      productiveFilterBarVisible:
+        visibleCount("[data-productive-filter-bar]") > 0,
+      productiveFilterGeometryValid: (() => {
+        const bar = document.querySelector("[data-productive-filter-bar]");
+        const pipeline = document.querySelector("[data-forge-pipeline-module]");
+        if (!visible(bar) || !visible(pipeline)) return false;
+        const barBounds = bar.getBoundingClientRect();
+        const pipelineBounds = pipeline.getBoundingClientRect();
+        return barBounds.left >= pipelineBounds.left - 1
+          && barBounds.right <= pipelineBounds.right + 1
+          && [...bar.querySelectorAll("select, button")].every(control => {
+            const bounds = control.getBoundingClientRect();
+            return bounds.left >= barBounds.left - 1
+              && bounds.right <= barBounds.right + 1;
+          });
+      })(),
+      productiveFilterCount:
+        document.querySelector("[data-productive-filter-count]")?.textContent.trim() || "",
+      productiveFilterEmptyVisible:
+        visibleCount("[data-productive-filter-empty]") > 0,
+      productiveSourceFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.source === true,
+      productiveStatusFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.status === true,
+      productiveCombinedFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.combined === true,
+      productiveClearFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.clear === true,
+      productiveEmptyFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.empty === true,
       productiveCardUsesNormalRenderer:
         visibleCount("[data-productive-pipeline-cards] [data-productive-prospect-card]") > 0,
       productiveCardStructured:
@@ -559,6 +589,20 @@ async function captureViewport(browser, viewport, fixture) {
                 source: "Centro de influencia",
                 status: "proposal",
               },
+              {
+                id: "diagnostic-daniel",
+                full_name: "Daniel Ortega Ruiz",
+                phone_normalized: null,
+                source: "Mercado frío",
+                status: "client",
+              },
+              {
+                id: "diagnostic-elena",
+                full_name: "Elena Álvarez",
+                phone_normalized: "+525555556666",
+                source: "Referido",
+                status: "contacted",
+              },
             ];
             for (const [index, extra] of extras.entries()) {
               records.push({
@@ -812,6 +856,73 @@ async function captureViewport(browser, viewport, fixture) {
         directory,
         "03bb-pipeline-responsive-card-grid",
       );
+      const totalCards = await page.locator("[data-productive-prospect-card]").count();
+      const initialTruth = await page.locator("[data-productive-prospect-card]")
+        .evaluateAll(cards => cards.map(card => ({
+          id: card.dataset.productiveProspectCard,
+          source: card.dataset.productiveSource,
+          status: card.dataset.productiveStage,
+        })));
+      const sourceFilter = page.locator("[data-productive-filter-source]");
+      const statusFilter = page.locator("[data-productive-filter-status]");
+      await sourceFilter.selectOption("Referido");
+      const sourceFilteredCards = page.locator("[data-productive-prospect-card]");
+      const sourceFilterAccepted = await sourceFilteredCards.count() > 0
+        && await sourceFilteredCards.evaluateAll(cards =>
+          cards.every(card => card.dataset.productiveSource === "Referido")
+        );
+      await page.locator("[data-productive-filter-source]").selectOption("");
+      await page.locator("[data-productive-filter-status]").selectOption("contacted");
+      const statusFilteredCards = page.locator("[data-productive-prospect-card]");
+      const statusFilterAccepted = await statusFilteredCards.count() > 0
+        && await statusFilteredCards.evaluateAll(cards =>
+          cards.every(card => card.dataset.productiveStage === "contacted")
+        );
+      await page.locator("[data-productive-filter-source]").selectOption("Referido");
+      const combinedCards = page.locator("[data-productive-prospect-card]");
+      const combinedFilterAccepted = await combinedCards.count() === 1
+        && await combinedCards.first().getAttribute("data-productive-source") === "Referido"
+        && await combinedCards.first().getAttribute("data-productive-stage") === "contacted";
+      result.routes.pipelineFiltered = await capture(
+        page,
+        directory,
+        "03bc-pipeline-filtered-referido-contactado",
+      );
+      await page.locator("[data-clear-productive-filters]").click();
+      const clearFilterAccepted = await page.locator("[data-productive-prospect-card]").count() === totalCards
+        && await page.locator("[data-productive-filter-count]").textContent() === `${totalCards} de ${totalCards} prospectos`;
+      await page.locator("[data-productive-filter-source]").selectOption("Mercado frío");
+      await page.locator("[data-productive-filter-status]").selectOption("proposal");
+      const emptyFilterAccepted = await page.locator("[data-productive-prospect-card]").count() === 0
+        && await page.locator("[data-productive-filter-empty]").isVisible();
+      result.routes.pipelineFilterEmpty = await capture(
+        page,
+        directory,
+        "03bd-pipeline-filter-no-results",
+      );
+      await page.locator("[data-clear-productive-filters]").click();
+      const finalTruth = await page.locator("[data-productive-prospect-card]")
+        .evaluateAll(cards => cards.map(card => ({
+          id: card.dataset.productiveProspectCard,
+          source: card.dataset.productiveSource,
+          status: card.dataset.productiveStage,
+        })));
+      const productiveTruthUnchanged =
+        JSON.stringify(finalTruth) === JSON.stringify(initialTruth);
+      await page.evaluate((acceptance) => {
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__ = acceptance;
+      }, {
+        source: sourceFilterAccepted && productiveTruthUnchanged,
+        status: statusFilterAccepted && productiveTruthUnchanged,
+        combined: combinedFilterAccepted,
+        clear: clearFilterAccepted,
+        empty: emptyFilterAccepted,
+      });
+      result.routes.pipelineFiltersAccepted = await capture(
+        page,
+        directory,
+        "03be-pipeline-filters-cleared",
+      );
       const messageAction = page.locator("[data-prepare-productive-message]").first();
       await messageAction.click();
       await page.locator("[data-nash-prospect-workspace]").waitFor({
@@ -997,6 +1108,9 @@ function assertVisualAcceptance(results) {
     const viewport = result.viewport.name;
     const referral = result.routes.pipelineAfter || {};
     const card = result.routes.pipelineSavedReferral || {};
+    const filters = result.routes.pipelineFiltersAccepted || {};
+    const filtered = result.routes.pipelineFiltered || {};
+    const filterEmpty = result.routes.pipelineFilterEmpty || {};
     const nash = result.routes.pipelineNashAccepted || {};
     const authAnonymous = result.routes.authAnonymous || {};
     const authAuthenticated = result.routes.authAuthenticated || {};
@@ -1042,6 +1156,16 @@ function assertVisualAcceptance(results) {
       "pageHorizontalOverflow=false",
       card.scrollWidth <= card.viewportWidth + 1,
     );
+    requireFlag(viewport, "productiveFilterBarVisible", filters.productiveFilterBarVisible === true);
+    requireFlag(viewport, "productiveFilterGeometryValid", filters.productiveFilterGeometryValid === true);
+    requireFlag(viewport, "productiveSourceFilterAccepted", filters.productiveSourceFilterAccepted === true);
+    requireFlag(viewport, "productiveStatusFilterAccepted", filters.productiveStatusFilterAccepted === true);
+    requireFlag(viewport, "productiveCombinedFilterAccepted", filters.productiveCombinedFilterAccepted === true);
+    requireFlag(viewport, "productiveClearFilterAccepted", filters.productiveClearFilterAccepted === true);
+    requireFlag(viewport, "productiveEmptyFilterAccepted", filters.productiveEmptyFilterAccepted === true);
+    requireFlag(viewport, "combinedFilterOneCard", filtered.productiveFilterCount === "1 de 6 prospectos");
+    requireFlag(viewport, "filterEmptyVisible", filterEmpty.productiveFilterEmptyVisible === true);
+    requireFlag(viewport, "filterEmptyCount", filterEmpty.productiveFilterCount === "0 de 6 prospectos");
     requireFlag(viewport, "specialSavedReferralCardPathPresent=false", card.specialSavedReferralCardPathPresent === false);
     requireFlag(viewport, "timelineCreatedEventVisible", card.timelineCreatedEventVisible === true);
     requireFlag(viewport, "lastVerifiedActivitySource=TIMELINE", card.lastVerifiedActivitySource === "TIMELINE");

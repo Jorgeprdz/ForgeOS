@@ -31,6 +31,21 @@ await import(
 );
 
 const pipelineStateKey = Symbol.for("forge.material3.pipeline.state");
+const productiveSourceFilters = Object.freeze([
+  "Referido",
+  "Mercado cálido",
+  "Mercado frío",
+  "Redes sociales",
+  "Centro de influencia",
+]);
+const productiveStatusFilters = Object.freeze([
+  Object.freeze({ value: "referred_new", label: "Nuevo" }),
+  Object.freeze({ value: "contacted", label: "Contactado" }),
+  Object.freeze({ value: "appointment_scheduled", label: "Cita agendada" }),
+  Object.freeze({ value: "proposal", label: "Propuesta" }),
+  Object.freeze({ value: "decision", label: "En decisión" }),
+  Object.freeze({ value: "client", label: "Cliente" }),
+]);
 let referralRuntimePromise;
 let referralStylePromise;
 let activeReferralSheet;
@@ -568,6 +583,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
   let referralStatus = "";
   let productiveAdapter;
   let productiveCards = [];
+  let productiveFilters = { source: "", status: "" };
   let productiveError = "";
   let productiveHydrated = false;
   const usesProductiveRuntime = dataProvider === connectedData;
@@ -575,6 +591,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
 
   function clearPrivateState() {
     productiveCards = [];
+    productiveFilters = { source: "", status: "" };
     productiveAdapter = undefined;
     productiveHydrated = false;
     referralRuntimePromise = undefined;
@@ -635,6 +652,10 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
       writerAvailable: false,
     });
     const productive = productiveCards.length > 0;
+    const filteredProductiveCards = productiveCards.filter(card =>
+      (!productiveFilters.source || card.sourceValue === productiveFilters.source)
+      && (!productiveFilters.status || card.status === productiveFilters.status)
+    );
     const count = productive
       ? productiveCards.length
       : model.columns.reduce((total, column) => total + column.count, 0);
@@ -678,9 +699,28 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
             ></p>
           </section>`
         : productive
-          ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
-              ${productiveCards.map(card => `
-                <article class="pipeline-module__prospect pipeline-module__productive-card" data-productive-prospect-card="${escapeHtml(card.id)}" data-productive-stage="${escapeHtml(card.status)}">
+          ? `<section class="pipeline-module__filters" data-productive-filter-bar aria-label="Filtros del Pipeline">
+              <label>
+                <span>Fuente</span>
+                <select data-productive-filter-source>
+                  <option value="">Todas las fuentes</option>
+                  ${productiveSourceFilters.map(source => `<option value="${escapeHtml(source)}" ${productiveFilters.source === source ? "selected" : ""}>${escapeHtml(source)}</option>`).join("")}
+                </select>
+              </label>
+              <label>
+                <span>Estado</span>
+                <select data-productive-filter-status>
+                  <option value="">Todos los estados</option>
+                  ${productiveStatusFilters.map(option => `<option value="${escapeHtml(option.value)}" ${productiveFilters.status === option.value ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}
+                </select>
+              </label>
+              <p data-productive-filter-count aria-live="polite">${filteredProductiveCards.length} de ${productiveCards.length} prospectos</p>
+              <button type="button" data-clear-productive-filters ${productiveFilters.source || productiveFilters.status ? "" : "disabled"}>Limpiar filtros</button>
+            </section>
+            ${filteredProductiveCards.length
+              ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
+              ${filteredProductiveCards.map(card => `
+                <article class="pipeline-module__prospect pipeline-module__productive-card" data-productive-prospect-card="${escapeHtml(card.id)}" data-productive-source="${escapeHtml(card.sourceValue)}" data-productive-stage="${escapeHtml(card.status)}">
                   <header class="pipeline-module__productive-identity" data-productive-card-identity>
                     <strong>${escapeHtml(card.fullName)}</strong>
                     <span class="pipeline-module__productive-stage" data-productive-stage-label>${escapeHtml(card.stageLabel)}</span>
@@ -713,6 +753,9 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
                   </div>
                 </article>`).join("")}
             </div>`
+              : `<section class="pipeline-module__filter-empty" data-productive-filter-empty>
+                  <p>No hay prospectos que coincidan con estos filtros.</p>
+                </section>`}`
           : `<div class="pipeline-module__stages">${model.columns.map(renderColumn).join("")}</div>`}
     `;
 
@@ -722,6 +765,19 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
     const errorNode = root.querySelector?.(
       "[data-pipeline-create-error]",
     );
+
+    root.querySelector?.("[data-productive-filter-source]")?.addEventListener("change", event => {
+      productiveFilters = { ...productiveFilters, source: event.currentTarget.value };
+      render();
+    });
+    root.querySelector?.("[data-productive-filter-status]")?.addEventListener("change", event => {
+      productiveFilters = { ...productiveFilters, status: event.currentTarget.value };
+      render();
+    });
+    root.querySelector?.("[data-clear-productive-filters]")?.addEventListener("click", () => {
+      productiveFilters = { source: "", status: "" };
+      render();
+    });
 
     createReferral?.addEventListener("click", (event) => {
       event.preventDefault();

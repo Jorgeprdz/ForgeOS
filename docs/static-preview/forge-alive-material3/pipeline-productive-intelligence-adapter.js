@@ -112,6 +112,7 @@ export async function createProductiveIntelligenceAdapter() {
         status: prospect.status || "referred_new",
         stageLabel: stageLabel(prospect.status),
         stageOptions: STAGE_OPTIONS,
+        sourceValue: prospect.source || "",
         sourceSummary: [prospect.source, prospect.referrerName, prospect.referrerRelationship].filter(Boolean).join(" · ") || "Fuente no disponible",
         phone: prospect.phone || prospect.whatsapp || null,
         latestActivity: latest ? {

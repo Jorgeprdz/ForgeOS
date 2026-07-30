@@ -340,3 +340,74 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.match(css, /\[data-manual-whatsapp\][\s\S]*rgba\(78,\s*196,\s*119/);
   assert.doesNotMatch(source, /data-productive-card-actions[\s\S]{0,120}data-manual-whatsapp/);
 });
+
+test("productive Pipeline filters loaded cards without mutating productive truth", async () => {
+  const source = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-module.js",
+    "utf8",
+  );
+  const css = await readFile(
+    "docs/static-preview/forge-alive-material3/app.css",
+    "utf8",
+  );
+  const diagnostic = await readFile(
+    "tools/forge-ui-visual-diagnostic.mjs",
+    "utf8",
+  );
+
+  assert.match(source, /data-productive-filter-bar/);
+  assert.match(source, /data-productive-filter-source/);
+  assert.match(source, /data-productive-filter-status/);
+  assert.match(source, /data-clear-productive-filters/);
+  assert.match(source, /data-productive-filter-count aria-live="polite"/);
+  assert.match(source, /No hay prospectos que coincidan con estos filtros\./);
+  for (const option of [
+    "Todas las fuentes",
+    "Referido",
+    "Mercado cálido",
+    "Mercado frío",
+    "Redes sociales",
+    "Centro de influencia",
+  ]) assert.match(source, new RegExp(option));
+  for (const [value, label] of [
+    ["", "Todos los estados"],
+    ["referred_new", "Nuevo"],
+    ["contacted", "Contactado"],
+    ["appointment_scheduled", "Cita agendada"],
+    ["proposal", "Propuesta"],
+    ["decision", "En decisión"],
+    ["client", "Cliente"],
+  ]) {
+    if (value) assert.match(source, new RegExp(`value: "${value}", label: "${label}"`));
+    else assert.match(source, new RegExp(label));
+  }
+  assert.match(
+    source,
+    /productiveCards\.filter\(card =>\s*\(!productiveFilters\.source \|\| card\.sourceValue === productiveFilters\.source\)\s*&&\s*\(!productiveFilters\.status \|\| card\.status === productiveFilters\.status\)/s,
+  );
+  const filterListeners = source.slice(
+    source.indexOf('root.querySelector?.("[data-productive-filter-source]")'),
+    source.indexOf('createReferral?.addEventListener("click"'),
+  );
+  assert.doesNotMatch(filterListeners, /updateProspect|updateStage|reload\(|sourceValue\s*=|\.status\s*=/);
+  assert.match(filterListeners, /productiveFilters = \{ \.\.\.productiveFilters, source: event\.currentTarget\.value \}/);
+  assert.match(filterListeners, /productiveFilters = \{ \.\.\.productiveFilters, status: event\.currentTarget\.value \}/);
+  assert.match(filterListeners, /productiveFilters = \{ source: "", status: "" \}/);
+  assert.match(source, /\$\{filteredProductiveCards\.length\} de \$\{productiveCards\.length\} prospectos/);
+
+  assert.match(css, /\.pipeline-module__filters\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+  assert.match(css, /\.pipeline-module__filters select\s*\{[^}]*min-width:\s*0[^}]*min-height:\s*36px/s);
+  assert.match(css, /@media \(min-width:\s*768px\) and \(max-width:\s*1199px\)[\s\S]*\.pipeline-module__filters\s*\{[^}]*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s);
+  assert.match(css, /@media \(min-width:\s*1200px\)[\s\S]*\.pipeline-module__filters\s*\{[^}]*minmax\(180px,\s*1fr\)/s);
+
+  for (const gate of [
+    "productiveSourceFilterAccepted",
+    "productiveStatusFilterAccepted",
+    "productiveCombinedFilterAccepted",
+    "productiveClearFilterAccepted",
+    "productiveEmptyFilterAccepted",
+    "productiveFilterGeometryValid",
+  ]) assert.match(diagnostic, new RegExp(gate));
+  assert.match(diagnostic, /03bc-pipeline-filtered-referido-contactado/);
+  assert.match(diagnostic, /03bd-pipeline-filter-no-results/);
+});

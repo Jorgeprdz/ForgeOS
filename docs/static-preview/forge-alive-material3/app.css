@@ -101,6 +101,93 @@ body::before {
   gap: 14px;
 }
 
+.pipeline-module__filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px;
+  border: 1px solid rgba(184, 211, 255, .14);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(17, 34, 59, .9), rgba(8, 21, 39, .94));
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .16);
+}
+
+.pipeline-module__filters label {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.pipeline-module__filters label > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.pipeline-module__filters select {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 7px 32px 7px 11px;
+  border: 1px solid rgba(184, 211, 255, .2);
+  border-radius: 12px;
+  background: rgba(5, 18, 35, .86);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 680;
+  color-scheme: dark;
+}
+
+.pipeline-module__filters select:focus-visible,
+.pipeline-module__filters button:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 2px;
+}
+
+.pipeline-module__filters p {
+  max-width: none;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: left;
+}
+
+.pipeline-module__filters button {
+  min-height: 36px;
+  padding: 7px 13px;
+  border: 1px solid rgba(82, 230, 223, .24);
+  border-radius: 999px;
+  background: rgba(82, 230, 223, .08);
+  color: var(--aqua-soft);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 720;
+  cursor: pointer;
+}
+
+.pipeline-module__filters button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.pipeline-module__filter-empty {
+  padding: 24px 18px;
+  border: 1px dashed rgba(184, 211, 255, .2);
+  border-radius: 20px;
+  background: rgba(7, 20, 38, .64);
+  color: var(--muted);
+  text-align: center;
+}
+
+.pipeline-module__filter-empty p {
+  margin: 0;
+}
+
 [data-productive-pipeline-cards] {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -482,12 +569,24 @@ body::before {
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
+  .pipeline-module__filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   [data-productive-pipeline-cards] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1200px) {
+  .pipeline-module__filters {
+    grid-template-columns:
+      minmax(180px, 1fr)
+      minmax(180px, 1fr)
+      auto
+      auto;
+  }
+
   [data-productive-pipeline-cards] {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
