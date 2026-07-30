@@ -141,7 +141,7 @@ async function ensureReferralStyles() {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
     stylesheet.href = new URL(
-      "./pipeline-referral-modal.css?v=ui-m06-referral-005",
+      "./pipeline-referral-modal.css?v=ui-m06-referral-004&fix=005",
       import.meta.url,
     );
     stylesheet.dataset.material3ReferralStyles = "true";
