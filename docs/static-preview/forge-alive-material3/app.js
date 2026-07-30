@@ -3,6 +3,7 @@ import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module-complete.js?v=manual-quotes-complete-001";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-009";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
+import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
