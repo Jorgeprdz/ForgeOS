@@ -74,7 +74,12 @@ const intelligenceLabels = Object.freeze({
 });
 
 function humanIntelligenceLabel(value) {
-  return intelligenceLabels[String(value)] || value;
+  const text = String(value ?? "");
+  return Object.entries(intelligenceLabels).reduce(
+    (human, [technical, label]) =>
+      human.replace(new RegExp(`\\b${technical}\\b`, "g"), label),
+    text,
+  );
 }
 
 function connectedData() {

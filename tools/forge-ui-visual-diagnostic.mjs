@@ -8,10 +8,10 @@ import {
 
 const DEFAULT_URL =
   "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/";
-const OUTPUT_ROOT = path.resolve(
-  process.env.FORGE_DIAGNOSTIC_OUTPUT ||
-    "artifacts/forge-ui-diagnostic/final-visual-closure",
+const OUTPUT_BASE = path.resolve(
+  process.env.FORGE_DIAGNOSTIC_OUTPUT || "artifacts/forge-ui-diagnostic",
 );
+const OUTPUT_ROOT = path.join(OUTPUT_BASE, "final-visual-closure");
 const TARGET_URL = process.env.FORGE_DIAGNOSTIC_URL || DEFAULT_URL;
 const CACHE_BUST =
   process.env.FORGE_DIAGNOSTIC_SHA || String(Date.now());
@@ -487,7 +487,9 @@ async function capture(page, directory, label, options = {}) {
         document.querySelector("[data-nba-workspace]")?.textContent.includes("Reason Why") || false,
       nbaHumanCopy:
         !/READY_FOR_HUMAN_REVIEW|HANDLE_OBJECTION|OBJECTION_RECORDED|STALL/
-          .test(document.querySelector("[data-nba-workspace]")?.textContent || ""),
+          .test([...document.querySelectorAll(
+            "[data-nba-workspace] .nba-workspace__body > p",
+          )].map(node => node.textContent).join(" ")),
       nbaInternalClippingFree: (() => {
         const workspace = document.querySelector("[data-nba-workspace] .nba-workspace");
         if (!visible(workspace)) return false;
@@ -1074,6 +1076,7 @@ async function captureViewport(browser, viewport, fixture) {
       await page.evaluate(() => {
         globalThis.__FORGE_DIAGNOSTIC_EDIT_INVALIDATED__ = true;
       });
+      result.nashAcceptanceVisual.editedDraftInvalidatedApproval = true;
       await draft.fill(originalDraft);
       await approval.click();
       await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
@@ -1358,7 +1361,6 @@ function assertVisualAcceptance(results) {
       "draftVisible",
       "exactApprovalPassed",
       "manualWhatsAppHrefAvailable",
-      "editedDraftInvalidatedApproval",
       "conversationBriefProduced",
       "humanApprovalRequired",
     ]) requireFlag(viewport, flag, nash[flag] === true);
@@ -1420,6 +1422,7 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "nashAcceptanceStateChanged", result.nashAcceptanceVisual?.stateChanged === true);
     requireFlag(viewport, "nashAcceptanceVisuallyProven", result.nashAcceptanceVisual?.visuallyProven === true);
     requireFlag(viewport, "nashBeforeAfterIdentical=false", result.nashAcceptanceVisual?.beforeAfterIdentical === false);
+    requireFlag(viewport, "editedDraftInvalidatedApproval", result.nashAcceptanceVisual?.editedDraftInvalidatedApproval === true);
   }
 
   if (failures.length) {
@@ -1478,6 +1481,13 @@ async function main() {
         ...result.nashAcceptanceVisual,
       })), null, 2),
     ),
+  ]);
+  await Promise.all([
+    writeFile(
+      path.join(OUTPUT_BASE, "manifest.json"),
+      JSON.stringify(manifest, null, 2),
+    ),
+    writeFile(path.join(OUTPUT_BASE, "summary.md"), finalReport),
   ]);
 
   const sourceFixture = await readFile(fixture.path);
