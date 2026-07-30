@@ -18,7 +18,7 @@ const CACHE_BUST =
 const FIXTURE_OVERRIDE =
   process.env.FORGE_DIAGNOSTIC_FIXTURE || "";
 const SAMPLE_REFERRAL = Object.freeze({
-  fullName: "Mariana Torres",
+  fullName: "Jorge Ignacio Palacios Rodríguez",
   phone: "5512345678",
   referrerName: "Ana López",
   referrerRelationship: "Amiga",
@@ -188,7 +188,7 @@ async function capture(page, directory, label, options = {}) {
         visibleCount("[data-productive-prospect-card]") > 0,
       productiveProspectCardContainsName:
         [...document.querySelectorAll("[data-productive-prospect-card]")]
-          .some((card) => visible(card) && card.textContent.includes("Mariana Torres")),
+          .some((card) => visible(card) && card.textContent.includes("Jorge Ignacio Palacios Rodríguez")),
       productiveCardUsesNormalRenderer:
         visibleCount("[data-productive-pipeline-cards] [data-productive-prospect-card]") > 0,
       productiveCardStructured:
@@ -202,6 +202,55 @@ async function capture(page, directory, label, options = {}) {
           .some(card => visible(card) && card.textContent.includes(
             "CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST",
           )),
+      productiveGeometryValid: (() => {
+        const card = document.querySelector("[data-productive-prospect-card]");
+        if (!visible(card)) return false;
+        const bounds = card.getBoundingClientRect();
+        const inside = element => {
+          const rect = element.getBoundingClientRect();
+          return rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1
+            && rect.top >= bounds.top - 1 && rect.bottom <= bounds.bottom + 1;
+        };
+        const regions = [
+          card.querySelector("[data-productive-card-identity]"),
+          card.querySelector("[data-productive-card-metadata]"),
+          card.querySelector("[data-productive-card-status]"),
+          card.querySelector("[data-productive-card-actions]"),
+        ].filter(Boolean);
+        return card.scrollWidth <= card.clientWidth + 1
+          && regions.length === 4
+          && regions.every(inside)
+          && [...card.querySelectorAll("[data-productive-card-actions] > *")].every(inside);
+      })(),
+      productiveNameReadable: (() => {
+        const name = document.querySelector("[data-productive-card-identity] strong");
+        if (!visible(name)) return false;
+        const rect = name.getBoundingClientRect();
+        return rect.width >= 180 && rect.height <= 80
+          && getComputedStyle(name).wordBreak === "normal";
+      })(),
+      productiveStageLabelVisible:
+        visibleCount("[data-productive-stage-label]") > 0,
+      productiveSourceLabelVisible:
+        visibleCount("[data-productive-source-label]") > 0,
+      productiveStageControlVisible:
+        visibleCount("[data-productive-stage-control]") > 0,
+      productiveStageAccentVisible: (() => {
+        const card = document.querySelector("[data-productive-prospect-card]");
+        if (!visible(card)) return false;
+        const style = getComputedStyle(card);
+        return parseFloat(style.borderLeftWidth) >= 3
+          && style.borderLeftColor !== "rgba(0, 0, 0, 0)";
+      })(),
+      productiveActionsDifferentiated: (() => {
+        const actions = [...document.querySelectorAll(
+          "[data-productive-card-actions] > *",
+        )].filter(visible);
+        return new Set(actions.map(action => getComputedStyle(action).backgroundColor)).size >= 4;
+      })(),
+      productiveTimelineHumanReadable:
+        ![...document.querySelectorAll("[data-timeline-activity]")]
+          .some(node => node.textContent.includes("PROSPECT_CREATED")),
       specialSavedReferralCardPathPresent:
         document.querySelector("[data-saved-referral-card]") !== null,
       timelineCreatedEventVisible:
@@ -755,6 +804,16 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "productiveCardStructured", card.productiveCardStructured === true);
     requireFlag(viewport, "productiveActionsGrouped", card.productiveActionsGrouped === true);
     requireFlag(viewport, "productiveInternalEnumVisible=false", card.productiveInternalEnumVisible === false);
+    for (const flag of [
+      "productiveGeometryValid",
+      "productiveNameReadable",
+      "productiveStageLabelVisible",
+      "productiveSourceLabelVisible",
+      "productiveStageControlVisible",
+      "productiveStageAccentVisible",
+      "productiveActionsDifferentiated",
+      "productiveTimelineHumanReadable",
+    ]) requireFlag(viewport, flag, card[flag] === true);
     requireFlag(viewport, "specialSavedReferralCardPathPresent=false", card.specialSavedReferralCardPathPresent === false);
     requireFlag(viewport, "timelineCreatedEventVisible", card.timelineCreatedEventVisible === true);
     requireFlag(viewport, "lastVerifiedActivitySource=TIMELINE", card.lastVerifiedActivitySource === "TIMELINE");

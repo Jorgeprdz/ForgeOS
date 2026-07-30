@@ -57,6 +57,15 @@ function stageLabel(status) {
   })[status] || status || "Etapa no disponible";
 }
 
+const STAGE_OPTIONS = Object.freeze([
+  Object.freeze({ value: "referred_new", label: "Referido" }),
+  Object.freeze({ value: "contacted", label: "Contactado" }),
+  Object.freeze({ value: "appointment_scheduled", label: "Cita" }),
+  Object.freeze({ value: "proposal", label: "Solicitud" }),
+  Object.freeze({ value: "decision", label: "Firma" }),
+  Object.freeze({ value: "client", label: "Cerrado" }),
+]);
+
 function timelineEventLabel(eventType) {
   return ({
     PROSPECT_CREATED: "Prospecto creado",
@@ -102,6 +111,7 @@ export async function createProductiveIntelligenceAdapter() {
         fullName: prospect.fullName || "Nombre no disponible",
         status: prospect.status || "referred_new",
         stageLabel: stageLabel(prospect.status),
+        stageOptions: STAGE_OPTIONS,
         sourceSummary: [prospect.source, prospect.referrerName, prospect.referrerRelationship].filter(Boolean).join(" · ") || "Fuente no disponible",
         phone: prospect.phone || prospect.whatsapp || null,
         latestActivity: latest ? {
@@ -251,9 +261,17 @@ export async function createProductiveIntelligenceAdapter() {
     });
   }
 
+  async function updateStage(prospectId, status) {
+    if (!STAGE_OPTIONS.some(option => option.value === status)) {
+      throw new Error("PRODUCTIVE_STAGE_NOT_ALLOWED");
+    }
+    await service.updateProspect(prospectId, { status });
+    return reload();
+  }
+
   return Object.freeze({
     service, timelineService, reload, prepareMessage, analyzeCombat,
-    registerObjectionClassification, buildNba,
+    registerObjectionClassification, buildNba, updateStage,
     createProspect: payload => service.createProspect(payload),
     get cards() { return cards; },
     get records() { return records; },

@@ -651,15 +651,21 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         : productive
           ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
               ${productiveCards.map(card => `
-                <article class="pipeline-module__prospect pipeline-module__productive-card" data-productive-prospect-card="${escapeHtml(card.id)}">
+                <article class="pipeline-module__prospect pipeline-module__productive-card" data-productive-prospect-card="${escapeHtml(card.id)}" data-productive-stage="${escapeHtml(card.status)}">
                   <header class="pipeline-module__productive-identity" data-productive-card-identity>
                     <strong>${escapeHtml(card.fullName)}</strong>
-                    <span class="pipeline-module__productive-stage">${escapeHtml(card.stageLabel)}</span>
+                    <span class="pipeline-module__productive-stage" data-productive-stage-label>${escapeHtml(card.stageLabel)}</span>
                   </header>
                   <div class="pipeline-module__productive-meta" data-productive-card-metadata>
-                    <span>Origen</span>
-                    <p>${escapeHtml(card.sourceSummary)}</p>
+                    <span>Fuente</span>
+                    <p data-productive-source-label>${escapeHtml(card.sourceSummary)}</p>
                   </div>
+                  <label class="pipeline-module__stage-control">
+                    <span>Etapa del prospecto</span>
+                    <select data-productive-stage-control="${escapeHtml(card.id)}" aria-label="Cambiar etapa de ${escapeHtml(card.fullName)}">
+                      ${card.stageOptions.map(option => `<option value="${escapeHtml(option.value)}" ${option.value === card.status ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}
+                    </select>
+                  </label>
                   <div class="pipeline-module__productive-status" data-productive-card-status>
                     <p data-timeline-activity data-activity-source="${card.latestActivity ? "TIMELINE" : "UNKNOWN"}">
                       <span>Última actividad</span>
@@ -669,12 +675,12 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
                     <p><span>Asistencia</span><strong>${escapeHtml(card.intelligenceLabel || "Disponible al solicitarla")}</strong></p>
                   </div>
                   <div class="pipeline-module__card-actions" data-productive-card-actions aria-label="Acciones del prospecto">
-                    <button type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
+                    <button class="pipeline-module__action--context" type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
                     <button class="pipeline-module__action--primary" type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
-                    <button type="button" data-open-combat="${escapeHtml(card.id)}">NASH Combat</button>
-                    <button type="button" data-open-nba="${escapeHtml(card.id)}">Revisar NBA</button>
-                    ${card.phone ? `<a href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}
-                    <button type="button" disabled title="NOT_CONNECTED">Agendar</button>
+                    <button class="pipeline-module__action--combat" type="button" data-open-combat="${escapeHtml(card.id)}">NASH Combat</button>
+                    <button class="pipeline-module__action--nba" type="button" data-open-nba="${escapeHtml(card.id)}">Revisar NBA</button>
+                    ${card.phone ? `<a class="pipeline-module__action--call" href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}
+                    <button class="pipeline-module__action--calendar" type="button" disabled title="NOT_CONNECTED">Agendar</button>
                   </div>
                 </article>`).join("")}
             </div>`
@@ -707,6 +713,25 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
       trigger.addEventListener("click", () => {
         const card = productiveCards.find(item => item.id === trigger.dataset.prepareProductiveMessage);
         if (card && productiveAdapter) void openNashWorkspace({ card, adapter: productiveAdapter, trigger });
+      });
+    });
+    root.querySelectorAll?.("[data-productive-stage-control]").forEach(select => {
+      select.addEventListener("change", async () => {
+        const card = productiveCards.find(item => item.id === select.dataset.productiveStageControl);
+        if (!card || !productiveAdapter || select.value === card.status) return;
+        const previous = card.status;
+        select.disabled = true;
+        select.removeAttribute("aria-invalid");
+        try {
+          productiveCards = await productiveAdapter.updateStage(card.id, select.value);
+          referralStatus = "Etapa actualizada.";
+          render();
+        } catch {
+          select.value = previous;
+          select.disabled = false;
+          select.setAttribute("aria-invalid", "true");
+          productiveError = "No pudimos actualizar la etapa.";
+        }
       });
     });
     root.querySelectorAll?.("[data-open-combat]").forEach(trigger => {

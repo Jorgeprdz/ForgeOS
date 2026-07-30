@@ -210,7 +210,7 @@ test("visual diagnostic distinguishes referral, Alfred and legacy modal state", 
   assert.match(diagnostic, /alfredIndependent/);
   assert.match(diagnostic, /productiveProspectCardVisible/);
   assert.match(diagnostic, /productiveProspectCardContainsName/);
-  assert.match(diagnostic, /Mariana Torres/);
+  assert.match(diagnostic, /Jorge Ignacio Palacios Rodríguez/);
   assert.match(diagnostic, /5512345678/);
   assert.match(diagnostic, /Ana López/);
   assert.match(diagnostic, /Amiga/);
@@ -258,6 +258,9 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.match(source, /data-productive-card-metadata/);
   assert.match(source, /data-productive-card-status/);
   assert.match(source, /data-productive-card-actions/);
+  assert.match(source, /data-productive-stage-control/);
+  assert.match(source, /data-productive-source-label/);
+  assert.match(source, /productiveAdapter\.updateStage\(card\.id,\s*select\.value\)/);
   assert.match(
     source,
     /data-productive-card-actions[^>]*aria-label="Acciones del prospecto"[\s\S]*Ver contexto[\s\S]*Preparar mensaje[\s\S]*NASH Combat[\s\S]*Revisar NBA[\s\S]*Llamar[\s\S]*Agendar/,
@@ -269,9 +272,26 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.match(adapter, /PROSPECT_CREATED:\s*"Prospecto creado"/);
   assert.match(adapter, /OBJECTION_RECORDED:\s*"Objeción clasificada"/);
   assert.match(adapter, /label:\s*timelineEventLabel\(latest\.eventType\)/);
+  assert.match(adapter, /service\.updateProspect\(prospectId,\s*\{\s*status\s*\}\)/);
+  for (const status of [
+    "referred_new",
+    "contacted",
+    "appointment_scheduled",
+    "proposal",
+    "decision",
+    "client",
+  ]) assert.match(adapter, new RegExp(`value: "${status}"`));
   assert.match(css, /\.pipeline-module__productive-card\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
   assert.match(css, /\.pipeline-module__productive-identity\s*\{[^}]*justify-content:\s*space-between/s);
   assert.match(css, /\.pipeline-module__productive-status\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/s);
   assert.match(css, /\.pipeline-module__card-actions\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap/s);
   assert.match(css, /word-break:\s*normal/);
+  assert.match(css, /border-left:\s*4px solid var\(--pipeline-stage-accent\)/);
+  assert.match(css, /data-productive-stage="referred_new"/);
+  assert.match(css, /data-productive-stage="client"/);
+  assert.match(css, /\.pipeline-module__action--combat/);
+  assert.match(css, /\.pipeline-module__action--nba/);
+  assert.match(css, /\.pipeline-module__action--call/);
+  assert.match(css, /\.pipeline-module__action--calendar/);
+  assert.match(css, /\.pipeline-module__stage-control select/);
 });

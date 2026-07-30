@@ -159,6 +159,8 @@ body::before {
 }
 
 .pipeline-module__productive-card {
+  --pipeline-stage-accent: #79a9ff;
+  --pipeline-stage-soft: rgba(121, 169, 255, .12);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
@@ -166,10 +168,41 @@ body::before {
   margin-top: 0;
   padding: 20px;
   border: 1px solid rgba(184, 211, 255, .14);
+  border-left: 4px solid var(--pipeline-stage-accent);
   background:
     radial-gradient(circle at 92% 0%, rgba(82, 230, 223, .08), transparent 38%),
     linear-gradient(145deg, rgba(16, 34, 61, .96), rgba(7, 20, 38, .98));
   box-shadow: 0 18px 44px rgba(0, 0, 0, .22);
+}
+
+.pipeline-module__productive-card[data-productive-stage="referred_new"] {
+  --pipeline-stage-accent: #68d8d1;
+  --pipeline-stage-soft: rgba(104, 216, 209, .12);
+}
+
+.pipeline-module__productive-card[data-productive-stage="contacted"] {
+  --pipeline-stage-accent: #69a7ff;
+  --pipeline-stage-soft: rgba(105, 167, 255, .13);
+}
+
+.pipeline-module__productive-card[data-productive-stage="appointment_scheduled"] {
+  --pipeline-stage-accent: #f1bd68;
+  --pipeline-stage-soft: rgba(241, 189, 104, .13);
+}
+
+.pipeline-module__productive-card[data-productive-stage="proposal"] {
+  --pipeline-stage-accent: #b696ff;
+  --pipeline-stage-soft: rgba(182, 150, 255, .13);
+}
+
+.pipeline-module__productive-card[data-productive-stage="decision"] {
+  --pipeline-stage-accent: #f08da9;
+  --pipeline-stage-soft: rgba(240, 141, 169, .13);
+}
+
+.pipeline-module__productive-card[data-productive-stage="client"] {
+  --pipeline-stage-accent: #7ed69b;
+  --pipeline-stage-soft: rgba(126, 214, 155, .13);
 }
 
 .pipeline-module__productive-identity {
@@ -191,12 +224,46 @@ body::before {
 .pipeline-module__productive-stage {
   flex: 0 0 auto;
   padding: 7px 11px;
-  border: 1px solid rgba(82, 230, 223, .2);
+  border: 1px solid var(--pipeline-stage-accent);
   border-radius: 999px;
-  background: rgba(82, 230, 223, .1);
-  color: var(--aqua-soft) !important;
+  background: var(--pipeline-stage-soft);
+  color: var(--pipeline-stage-accent) !important;
   font-size: 12px;
   font-weight: 750;
+}
+
+.pipeline-module__stage-control {
+  display: grid;
+  grid-template-columns: auto minmax(180px, 280px);
+  align-items: center;
+  justify-content: start;
+  gap: 10px 14px;
+}
+
+.pipeline-module__stage-control > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.pipeline-module__stage-control select {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 34px 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--pipeline-stage-accent) 52%, transparent);
+  border-radius: 14px;
+  background: var(--pipeline-stage-soft);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  color-scheme: dark;
+}
+
+.pipeline-module__stage-control select:focus-visible {
+  outline: 2px solid var(--pipeline-stage-accent);
+  outline-offset: 2px;
 }
 
 .pipeline-module__productive-meta {
@@ -266,18 +333,50 @@ body::before {
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, .14);
+  transition: border-color .16s ease, background-color .16s ease, transform .16s ease;
 }
 
 .pipeline-module__card-actions button:hover,
 .pipeline-module__card-actions a:hover {
   border-color: rgba(82, 230, 223, .45);
   background: rgba(82, 230, 223, .1);
+  transform: translateY(-1px);
 }
 
 .pipeline-module__card-actions .pipeline-module__action--primary {
-  border-color: transparent;
-  background: var(--aqua);
-  color: #041823;
+  border-color: rgba(241, 189, 104, .48);
+  background: rgba(241, 189, 104, .16);
+  color: #ffe1a8;
+}
+
+.pipeline-module__card-actions .pipeline-module__action--context {
+  border-color: rgba(167, 185, 211, .24);
+  background: rgba(167, 185, 211, .08);
+}
+
+.pipeline-module__card-actions .pipeline-module__action--combat {
+  border-color: rgba(223, 116, 193, .42);
+  background: rgba(223, 116, 193, .12);
+  color: #ffc4eb;
+}
+
+.pipeline-module__card-actions .pipeline-module__action--nba {
+  border-color: rgba(150, 129, 255, .44);
+  background: rgba(150, 129, 255, .13);
+  color: #d6ccff;
+}
+
+.pipeline-module__card-actions .pipeline-module__action--call {
+  border-color: rgba(91, 158, 255, .46);
+  background: rgba(91, 158, 255, .13);
+  color: #c3dcff;
+}
+
+.pipeline-module__card-actions .pipeline-module__action--calendar {
+  border-color: rgba(255, 135, 135, .35);
+  background: rgba(255, 255, 255, .08);
+  color: #ffd1d1;
 }
 
 .pipeline-module__card-actions button:disabled {
@@ -292,6 +391,10 @@ body::before {
 
   .pipeline-module__productive-identity {
     align-items: flex-start;
+  }
+
+  .pipeline-module__stage-control {
+    grid-template-columns: 1fr;
   }
 
   .pipeline-module__card-actions > * {
