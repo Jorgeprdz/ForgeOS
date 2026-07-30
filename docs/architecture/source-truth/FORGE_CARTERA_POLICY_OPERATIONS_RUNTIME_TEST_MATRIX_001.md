@@ -6,52 +6,42 @@ Track A / Runtime and Test Matrix
 
 ## Status
 
-`ACTIVE / LEGACY_RUNTIME_RECONCILED / POLICY_INTAKE_AUDIT_NEXT / NO_RUNTIME_MUTATION`
+`ACTIVE / PASSES_1_2_3_RECONCILED / PERSISTENCE_IDENTITY_PARTY_AUDIT_NEXT / NO_RUNTIME_MUTATION`
 
 ## Date
 
 2026-07-30
 
-## Purpose
+## Canonical audit documents
 
-This matrix converts filename inventory into actionable reuse evidence.
+- `FORGE_CARTERA_EXISTING_ASSET_AUDIT_AND_RECONCILIATION_001.md`
+- `FORGE_CARTERA_LEGACY_RUNTIME_RECONCILIATION_002.md`
+- `FORGE_CARTERA_POLICY_DOCUMENT_INTAKE_RECONCILIATION_003.md`
 
-An asset is not approved for productive Cartera use merely because it exists. Each asset must be inspected for:
-
-- exported API;
-- inputs and outputs;
-- current consumers;
-- persistence dependency;
-- test evidence;
-- source ownership compatibility;
-- human-confirmation and effect boundaries;
-- required adapter, refactor or replacement.
-
-Canonical audit:
-
-- `docs/architecture/source-truth/FORGE_CARTERA_EXISTING_ASSET_AUDIT_AND_RECONCILIATION_001.md`
-- `docs/architecture/source-truth/FORGE_CARTERA_LEGACY_RUNTIME_RECONCILIATION_002.md`
+This matrix records verified runtime position, tests, authority and reuse disposition. File existence alone is not productive-runtime proof.
 
 ---
 
 # 1. Status vocabulary
 
-## Runtime status
+## Runtime
 
-- `PRODUCTIVE_CONNECTED`: verified current production/runtime consumer.
-- `LEGACY_CONNECTED`: connected through a legacy route or service.
-- `LOCAL_STATIC_READ_ONLY`: executable but fixture/static and effect-blocked.
-- `FOUNDATION_ISOLATED`: executable foundation with no productive integration proved.
-- `FOUNDATION_ORPHANED`: internally coherent stack with no productive application entrypoint proved.
-- `ARCHITECTURE_ONLY`: no productive runtime verified.
-- `UNVERIFIED`: direct behavior or consumers not yet inspected.
+- `PRODUCTIVE_CONNECTED`: current application consumer proved.
+- `LEGACY_CONNECTED`: live through legacy route or persistence.
+- `LOCAL_STATIC_READ_ONLY`: executable fixture/reference adapter with effects blocked.
+- `FOUNDATION_ISOLATED`: executable foundation without productive integration.
+- `FOUNDATION_ORPHANED`: internally coherent stack without productive entrypoint.
+- `CONTRACT_TESTED`: canonical contract with source tests inspected.
+- `ARCHITECTURE_ONLY`: authority documented; productive runtime not proved.
+- `UNVERIFIED`: direct behavior remains to inspect.
 
-## Test status
+## Tests
 
-- `TEST_VERIFIED`: test file and intended boundary confirmed.
-- `TEST_REPORTED`: repository inventory or implementation evidence reports a test; execution not yet rerun in this audit.
-- `NO_TEST_PROVED`: no test verified during this audit.
-- `TEST_REQUIRED`: must receive bounded tests before reuse.
+- `TEST_VERIFIED`: source test and intended assertions inspected.
+- `SUITE_REGISTERED`: included in `tests/run-all-tests.js`.
+- `DOCUMENTED_PASS`: implementation evidence records bounded PASS; not rerun in this audit.
+- `CONDITIONAL_REAL_FIXTURE`: runs only when a local fixture exists.
+- `NO_TEST_PROVED`: no test proved in this audit.
 
 ## Disposition
 
@@ -61,176 +51,217 @@ Canonical audit:
 - `REBUILD_CANONICAL_GAP`
 - `LEGACY_SURFACE_MIGRATE`
 - `REUSE_UI_PATTERN_ONLY`
+- `REUSE_PRIMITIVE_ONLY`
 - `DO_NOT_ACTIVATE`
 - `DO_NOT_PROMOTE`
 
 ---
 
-# 2. Relationship Intelligence matrix
+# 2. Relationship Intelligence
 
-| Asset | Export / API | Current output | Runtime status | Test status | Canonical owner | Disposition | Required work |
-|---|---|---|---|---|---|---|---|
-| `relationship-timeline-engine.js` | `buildRelationshipTimeline`, `calculateRelationshipHealth`, `sortTimeline`, `daysUntil` | projected relationship events, next event, simple health, opportunities | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence + Event & Evidence boundary | `REUSE_WITH_ADAPTER` | Treat as future-event projection; separate fact, schedule, inference and recommendation; remove automatic referral truth. |
-| `relationship-next-action-engine.js` | `buildRelationshipNextAction`, `selectRelationshipEvent`, `mapEventToAction` | one next action, reason, priority, timing and channel | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Alfred / NBA owns final priority | `REFACTOR_FOUNDATION` | Convert to candidate-action provider; replace automatic referral request; add evidence envelope and human gate. |
-| `relationship-opportunity-engine.js` | `detectRelationshipOpportunities`, `calculateRelationshipScore`, `rankOpportunities` | gap, review, cross-sell, life-event and referral candidates | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence; Pipeline owns opportunity lifecycle | `DO_NOT_ACTIVATE` | Preserve unknown and external coverage states; output review candidates only; advisor confirmation before Pipeline write. |
-| `life-event-engine.js` | `detectLifeEvents`, `detectEventsFromData`, `buildReviewAreas` | detected event candidates, confidence, review areas and impact | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence | `REFACTOR_FOUNDATION` | Separate profile state from new event; require date, freshness, source and sensitivity boundary. |
-| `referral-opportunity-engine.js` | `detectReferralOpportunity`, `detectarMomentoReferido`, score helpers | referral score, likelihood, timing and approach | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence + Advisor execution boundary | `REFACTOR_FOUNDATION` | Reframe as relationship-strengthening or introduction-conversation candidate; consent remains unknown until confirmed. |
-| `relationship-health-engine.js` | `buildRelationshipHealth`, `determineRelationshipHealth` | color, risks, strengths, recommendation | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence | `REFACTOR_FOUNDATION` | Split operational attention from actual relationship health; resolve stale events and evidence dates. |
-| `client-engagement-engine.js` | `buildClientEngagement`, score and inactivity helpers | engagement score, last interaction, inactivity risk, action | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence | `REFACTOR_FOUNDATION` | Relationship-specific cadence; missing history is not critical deterioration; no direct mandatory contact. |
-| `relationship-review-engine.js` | `buildRelationshipReview` | review need, reason, urgency, suggested topics | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence | `REUSE_WITH_ADAPTER` | Produce governed Review Brief with required, suggested, hypothesis and sensitive-topic sections. |
-| `relationship-master-engine.js` | `buildRelationshipMaster`, `average` | orchestration bundle over all relationship engines | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | Relationship Intelligence | `REUSE_WITH_ADAPTER` | Remove ambiguous aggregate confidence; consume only reconciled engines; return explicit evidence classes. |
-
-Relationship test note:
-
-The repository inventory previously reported corresponding master-test assets for the relationship foundation. Their exact paths, current assertions and executable status still require direct Track A verification.
+| Asset | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| `relationship-timeline-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REUSE_WITH_ADAPTER` | Treat as future projection; never replace Event & Evidence; separate facts, schedules and recommendations. |
+| `relationship-next-action-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Candidate actions only; Alfred owns final priority; replace automatic referral requests. |
+| `relationship-opportunity-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `DO_NOT_ACTIVATE` | Output review candidates, preserve unknown/external coverage, require advisor-confirmed Pipeline write. |
+| `life-event-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Distinguish profile state from a new event; add date, source, freshness and sensitivity. |
+| `referral-opportunity-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Reframe as relationship-strengthening candidate; never infer consent. |
+| `relationship-health-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Split operational attention from actual relationship health. |
+| `client-engagement-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REFACTOR_FOUNDATION` | Relationship-specific cadence; no history is not critical deterioration. |
+| `relationship-review-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REUSE_WITH_ADAPTER` | Produce governed Review Brief with evidence and sensitive-topic sections. |
+| `relationship-master-engine.js` | `FOUNDATION_ISOLATED` | `TEST_REPORTED` | `REUSE_WITH_ADAPTER` | Orchestrate reconciled engines; remove meaningless aggregate confidence. |
 
 ---
 
-# 3. Legacy Cartera runtime matrix — reconciled
+# 3. Legacy Cartera runtime
 
-## 3.1 Productive entrypoint proof
+## Productive call graph
 
 ```text
 app.js
-→ createRouteRegistry
+→ platform/routing/route-registry.js
 → cartera route
-→ renderCartera / bindCarteraEvents
 → cartera.js
-→ quarantined IndexedDB store `cartera`
+→ legacy/quarantine/crmaddlife-indexeddb
 ```
 
-The productive route is `cartera.js`. `cartera-view.js` is not the application route.
+| Asset | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| `app.js` | `PRODUCTIVE_CONNECTED` | no Cartera-specific test proved | `REUSE_CANONICAL` entrypoint evidence | Preserve route wiring during migration. |
+| `route-registry.js` | `PRODUCTIVE_CONNECTED` | no Cartera-specific test proved | `REUSE_CANONICAL` route contract | Preserve route ID `cartera`. |
+| `cartera.js` | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `LEGACY_SURFACE_MIGRATE` | Preserve list/search/KPI/import behavior; replace direct storage, delete and writes. |
+| `cartera-view.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Reuse form/empty/loading patterns; do not activate beside live route. |
+| `cartera-service.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve workflow semantics, replace persistence and effects. |
+| `cartera-import-engine.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve Excel header aliases; output staged evidence candidates. |
+| `cartera-normalizer.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Keep sanitation only; remove default truth and free-text ownership. |
+| `cartera-validator.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_PRIMITIVE_ONLY` | UI validation only, never Policy Truth validation. |
+| `cartera-events.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Map legacy names to canonical append-only events after successful commands. |
+| `cartera-state.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Local UI state only. |
+| `cartera-repository.js` | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Reuse repository/cache ideas only after canonical persistence is selected. |
+| quarantined IndexedDB | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Compatibility fallback only; never Person, Policy or Event truth. |
 
-| Asset | Export / API | Consumers / dependencies | Persistence | Runtime status | Test status | Disposition | Required work |
-|---|---|---|---|---|---|---|---|
-| `app.js` | application bootstrap | imports `renderCartera` and `bindCarteraEvents` from `cartera.js`; passes both into route registry | global bootstrap initializes browser runtime | `PRODUCTIVE_CONNECTED` | navigation tests are pipeline-focused; no Cartera test proved | `REUSE_CANONICAL` entrypoint evidence | Preserve route wiring while migrating implementation behind it. |
-| `platform/routing/route-registry.js` | `createRouteRegistry` | registers `cartera: { render, bind }` | none | `PRODUCTIVE_CONNECTED` | no Cartera-specific test proved | `REUSE_CANONICAL` route contract | Keep route ID `cartera`; later move to governed loader only with explicit route authorization. |
-| `cartera.js` | `renderCartera`, `bindCarteraEvents` | imported by `app.js`; uses DB, AppState, EventBus, RenderEngine, Analytics, Logger, Memory | quarantined IndexedDB `cartera` store | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `LEGACY_SURFACE_MIGRATE` | Preserve route/search/KPI/list/import behavior until parity; replace direct persistence, direct delete, direct import and parallel business logic. |
-| `cartera-view.js` | `CarteraView.render`, KPI/form/import/list methods | search proves no productive consumer outside file | DOM only | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Reuse form, loading, empty and rendering patterns; do not activate beside `cartera.js` because DOM IDs collide. |
-| `cartera-service.js` | CRUD and `importarMasivo` | consumed by `cartera-import-engine.js`; no productive application entrypoint proved | quarantined IndexedDB via DB facade | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve workflow semantics; replace persistence and effects with canonical commands/adapters. |
-| `cartera-import-engine.js` | `importExcelRows(rows)` | calls isolated `carteraService.importarMasivo` | delegated to legacy service | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve robust header aliases; output staged evidence candidates with row provenance and identity review. |
-| `cartera-normalizer.js` | `sanitizeText`, `normalizePoliza` | consumed by isolated service | none directly; result later stored | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Keep sanitation primitives; replace default `vigente`, empty-string unknowns, single client field and premature ID creation. |
-| `cartera-validator.js` | `validatePoliza` | consumed by isolated service | none | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Use as UI/form validation only; never Policy Truth validation. |
-| `cartera-events.js` | `CARTERA_EVENTS`, browser event bus | consumed by isolated service | ephemeral window events | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Map useful event names to governed commands and append-only Event & Evidence; browser event only after canonical result. |
-| `cartera-state.js` | `CarteraStore` setters | consumed by isolated service | in-memory | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Preserve local loading/editing state pattern only; no canonical data ownership. |
-| `cartera-repository.js` | `getAll`, `save`, `update` | repository search proves no consumer outside definition | quarantined IndexedDB plus local cache | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Reuse repository/cache pattern only after canonical persistence owner exists. |
-| `legacy/quarantine/crmaddlife-indexeddb/db.js` | generic DB facade | used directly by productive route and isolated service/repository | IndexedDB | `LEGACY_CONNECTED` | `NO_TEST_PROVED` in this audit | `DO_NOT_PROMOTE` | Compatibility fallback only; never canonical Person, Policy or Event truth. |
-| `legacy/quarantine/crmaddlife-indexeddb/storage-engine.js` | generic store transaction/save/get/delete/clear | DB facade | `ADDLIFE_CRM_ENTERPRISE`, generic stores keyed by `id` | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Preserve migration access only; lacks advisor scope, RLS, parties, evidence and canonical ownership. |
+---
 
-## 3.2 Connected route behavior findings
+# 4. Canonical Evidence Inbox and confirmation backbone
 
-- Search only covers `cliente` and `poliza`.
-- KPI premium is a direct sum over local records.
-- Alert KPI counts any `fechaPago` with day difference `<= 30`, including arbitrarily old overdue dates.
-- `Nueva` is not implemented.
-- `Editar` only records an ID and shows a toast.
-- `Eliminar` performs a hard delete after confirmation.
-- Excel import loads XLSX from a public CDN, reads the first sheet, skips bad rows silently and writes directly to IndexedDB.
-- Duplicate prevention is exact policy-number equality against the currently loaded array.
-- No identity resolution, evidence packet, party model, staging review or canonical event is present.
+| Asset | Key contract | Runtime | Tests | Disposition | Required Cartera use |
+|---|---|---|---|---|---|
+| `evidence-source.js` | upload/email/manual/integration source, advisor/org ownership, `createsTruth=false` | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Every admitted file begins here. |
+| `evidence-inbox-item.js` | scope, status, warnings, blocked reason; forbids truth fields | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Productive queue projects Inbox items. |
+| `evidence-processing-status.js` | received → classified → candidate → packet → confirmation → terminal state | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Only `confirmed` may create operational truth. |
+| `evidence-extraction-candidate.js` | typed candidate, confidence, warnings, missing fields; never truth | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | OCR/parser output becomes candidate, never Policy row. |
+| `evidence-inbox-router-contract.js` | policy/payment/statement route separation; unknown blocked | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Policy candidate routes to Policy Evidence Packet. |
+| `policy-evidence-packet.js` | field state, confidence, source location, extraction method, confirmation | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Extend with identity, parties, document provenance and conflicts. |
+| `evidence-confirmation-task.js` | actor, task type, status, no payout truth | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Drive advisor/operator review. |
+| `evidence-inbox-scope-gate.js` | advisor/operator/scoped-manager access | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_CANONICAL` | Apply to every view/confirm/route/archive action. |
+| `policy-advisor-confirmation-gate.js` | low-confidence checks, edits, reject/confirm, evidence refs | `CONTRACT_TESTED` | `TEST_VERIFIED + SUITE_REGISTERED` | `REUSE_WITH_ADAPTER` | Identity-aware confirmation before canonical Policy command. |
 
-## 3.3 Legacy migration decision
+## Locked intake backbone
 
 ```text
-preserve user behavior
-→ replace data authority
-→ introduce governed adapters
-→ prove parity
-→ retire duplicate/orphan surfaces
+EvidenceSource
+→ EvidenceInboxItem
+→ EvidenceExtractionCandidate
+→ EvidenceInboxRouterContract
+→ PolicyEvidencePacket
+→ identity and Policy Party review
+→ EvidenceConfirmationTask
+→ AdvisorConfirmationGate
+→ confirmed Policy command
 ```
 
 ---
 
-# 4. Policy document intake matrix
+# 5. Legacy Policy Operations extraction foundations
 
-| Asset | Export / API | Current behavior | Persistence | Runtime status | Test status | Disposition | Required work |
-|---|---|---|---|---|---|---|---|
-| `policy-operations/evidence/policy-ingestion-orchestrator.js` | `procesarDocumento({ file, ocrEngine, parser, validator, normalizer })` | OCR → parse → validate → normalize; returns all intermediate outputs | none | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Add governed evidence packet, identity stage, policy-party stage, conflict state and durable staging. |
-| `policy-operations/evidence/policy-import-queue.js` | add, update status, list queue | in-memory queue with UUID and status | module array only | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Persistent, resumable, advisor-scoped queue; retries; failures; review and confirmation states. |
-| `policy-operations/evidence/policy-human-review-engine.js` | `requiereRevisionHumana({ validation, reviewFields })` | returns true on validation errors or doubtful fields | none | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve rule; add identity conflicts, sensitive fields, provenance gaps and explicit review reasons. |
-| `policy-operations/policy-detail/policy-duplicate-engine.js` | `detectarDuplicados({ polizas })` | duplicate key from client + product + premium | none | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REBUILD_CANONICAL_GAP` | Match carrier + policy number + parties + issue/effective dates + document fingerprint; preserve conflicts. |
-| `policy-operations/evidence/policy-ocr-engine.js` | pending direct inspection | OCR foundation reported | pending | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Inspect provider/runtime dependency and output evidence coordinates. |
-| `policy-operations/evidence/policy-ai-parser.js` | pending direct inspection | parser foundation reported | none expected | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` pending audit | Generative parser cannot invent fields; must preserve raw evidence and unknown values. |
-| `policy-operations/evidence/policy-document-classifier.js` | pending direct inspection | document classification reported | none expected | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Confirm supported document classes and confidence behavior. |
-| `policy-operations/evidence/policy-schema-validator-engine.js` | pending direct inspection | schema validation reported | none expected | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Reconcile with canonical Policy schema and party roles. |
-| `policy-operations/evidence/policy-normalization-engine.js` | pending direct inspection | normalization reported | none expected | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Preserve original and normalized values plus provenance. |
-| `policy-operations/evidence/policy-staging-cache.js` | pending direct inspection | staging cache reported | unknown | `UNVERIFIED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` candidate | Confirm durability, isolation, expiration and evidence references. |
-| `policy-operations/evidence/policy-batch-processing-engine.js` | pending direct inspection | batch processing reported | unknown | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Batch admission allowed; human review remains item-by-item. |
-
----
-
-# 5. Policy Read Model matrix
-
-| Asset | Export / API | Current behavior | Persistence/effects | Runtime status | Test status | Disposition | Required work |
-|---|---|---|---|---|---|---|---|
-| `platform/adapters/policy-read-model/policy-read-model-adapter-068b.js` | `getPolicyReadModelManifest`, `listPolicies`, `getPolicyDetail` | local fixture policies in read-only envelopes; freshness, blocked effects and safety flags | no backend; no browser persistence; all real effects blocked | `LOCAL_STATIC_READ_ONLY` | `TEST_VERIFIED` by implementation record: `tests/policy-read-model-adapter-068b-test.js` | `REUSE_WITH_ADAPTER` | Preserve envelope and safety contract; replace fixture source with canonical Policy source adapter; retain `canonicalPolicyTruthClaimed=false` until proven. |
-| `docs/architecture/source-truth/FORGE_POLICY_READ_MODEL_IMPLEMENTATION_068B.md` | implementation decision record | explicitly states local/static/read-only implementation and no canonical Policy Truth claim | n/a | `ARCHITECTURE_ONLY` evidence | `TEST_REPORTED` | `REUSE_CANONICAL` documentation | Use as boundary evidence, not productive-source proof. |
-
-Critical read-model finding:
-
-The Policy Read Model has one of the strongest safety envelopes found in this audit. Its structure is reusable. Its current data source is not.
-
----
-
-# 6. Renewal, policy risk and alert matrix
-
-| Asset | Export / API | Current behavior | Runtime status | Test status | Disposition | Required work |
-|---|---|---|---|---|---|---|
-| `policy-operations/renewals/renewal-intelligence-engine.js` | `analizarRenovacion` | risk from renewal proximity, last-contact days and pending-payment count | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Treat weights as unvalidated; consume confirmed obligations and relationship cadence; output local predictive signal only. |
-| `policy-operations/policy-detail/policy-risk-engine.js` | `calcularRiesgoPoliza` | score/level from inactivity, pending payments and renewal proximity | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Merge with Conservation local predictive model; avoid duplicate risk authority. |
-| `policy-operations/policy-detail/policy-detail-alert-engine.js` | `generarAlertasDetallePoliza` | alerts for pending payment, near renewal, commission docs and cancellation | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Require canonical source and evidence per alert; distinguish confirmed cancellation from candidate source. |
-| `policy-operations/policy-detail/policy-review-priority-engine.js` | pending direct inspection | priority foundation reported | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Final priority remains Alfred/NBA. |
-| `policy-operations/policy-detail/policy-last-contact-engine.js` | pending direct inspection | contact-recency foundation reported | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Consume Event & Evidence interaction projection; relationship-specific cadence required. |
-
----
-
-# 7. Task and action matrix
-
-| Asset | Current role | Runtime status | Test status | Disposition | Required work |
+| Asset | Current behavior | Runtime | Tests | Disposition | Required work |
 |---|---|---|---|---|---|
-| `policy-operations/tasks/policy-task-priority-engine.js` | maps high risk/pending payment to HIGH and renewal to MEDIUM | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Candidate priority only; final priority by Alfred/NBA. |
-| `policy-operations/tasks/policy-task-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Map tasks to Event & Evidence and human approval. |
-| `policy-operations/tasks/task-feed-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Candidate feed only; Advisor Experience owns presentation. |
-| `policy-operations/tasks/auto-task-generator-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` pending audit | Must not create tasks without advisor approval and final NBA ownership. |
-| `policy-operations/tasks/google-calendar-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` pending audit | Calendar write requires explicit user action and connector boundary. |
+| `policy-ocr-engine.js` | synchronous local `pdftotext`; complete/empty/failed | `FOUNDATION_ISOLATED` | `CONDITIONAL_REAL_FIXTURE + SUITE_REGISTERED` | `REUSE_WITH_ADAPTER` | Provider-neutral extraction envelope, hash, provenance, scope, timeout; local adapter only. |
+| `policy-ai-parser.js` | regex extracts insured, broad product, first money value and policy number | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | Parser registry and evidence-aware carrier/document parsers; retain regexes only as candidate fixtures. |
+| `policy-document-classifier.js` | policy/receipt/endorsement/unknown keyword checks | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Confidence, matched evidence and ambiguity; current policy-first ordering may misclassify receipts/endorsements. |
+| `policy-schema-validator-engine.js` | required key is not `undefined` | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_PRIMITIVE_ONLY` | Canonical types, empties, dates, enums, parties, evidence, conflict and completeness validation. |
+| `policy-normalization-engine.js` | creates UUID, free-text client, missing premium zero, status active | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Raw normalization helpers only; never confirmed Policy shape. |
+| `policy-staging-cache.js` | module-memory upload/parsed/OCR/error array | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REBUILD_CANONICAL_GAP` | Persistent projection behind Evidence Inbox, scoped and resumable. |
+| `policy-import-queue.js` | module-memory queue and arbitrary status | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REBUILD_CANONICAL_GAP` | Durable worker state, retry, lease, idempotency, ownership and evidence refs. |
+| `policy-batch-processing-engine.js` | sequential files, per-file success/error | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve sequential behavior; persist each file as an Inbox item. |
+| `policy-ingestion-orchestrator.js` | OCR → parser → validator → normalizer | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Replace with governed orchestrator; existing validator invocation does not match inspected validator API. |
+| `policy-human-review-engine.js` | validation errors or review fields trigger review | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_PRIMITIVE_ONLY` | Add identity, parties, confidence, provenance, sensitivity and duplicate conflict reasons. |
 
 ---
 
-# 8. Canonical gaps requiring construction
+# 6. Quote Preview PDF and parser boundary
 
-| Gap | Why existing assets do not satisfy it | Required owner / boundary |
-|---|---|---|
-| Canonical Person Resolution Engine | current entity resolver is name-substring search; legacy Cartera uses free-text client | Shared Identity / Relationship Graph with Cartera review surface |
-| Confirmed Policy persistence | current productive writes go to quarantined IndexedDB; read model uses static fixtures | Policy Truth authority |
-| Policy Party model | legacy shape has one client string | Policy Truth + canonical Person references |
-| Persistent intake queue | current queue is an in-memory array | Cartera intake workflow with advisor scope |
-| Payment Obligation Ledger | dates/frequency/alerts exist, but no obligation-level persistent state | Policy/Payment boundary; Cartera confirmation surface |
-| Local predictive Conservation runtime | architecture and primitive scores exist, but no canonical productive runtime proved | Conservation Intelligence |
-| Relationship Graph runtime | ADR exists; runtime not proved | Shared Relationship Graph authority |
-| Cartera Signal Envelope | engines emit incompatible scores/actions without common evidence classes | Cartera adapter boundary; Alfred final priority |
-| Cartera → Pipeline bridge | opportunity engine can suggest, but no advisor-confirmed lifecycle write is proved | Pipeline owns opportunity lifecycle |
-| Cartera → Alfred → Candy Crush orchestration | primitives exist; productive governed vertical is not proved | NBA + Advisor Experience |
+## Documented and tested capabilities
+
+- product-aware browser PDF text routing;
+- canonical Solucionline retirement parser reuse;
+- Vida Mujer regression preservation;
+- neutral unknown-product behavior;
+- parser ownership and source-trace locks;
+- real/smoke test patterns;
+- file-hash/provenance governance;
+- preview-versus-truth boundary.
+
+Relevant evidence records R13E bounded validation as PASS. This Track A audit did not rerun those tests.
+
+Disposition: `REUSE_WITH_ADAPTER`
+
+## Allowed reuse
+
+- extraction ownership decisions;
+- parser registry patterns;
+- product-specific parsers;
+- source trace, file hash and provenance patterns;
+- missing-information and unknown-product handling;
+- regression-test patterns.
+
+## Prohibited promotion
+
+- accepted-quote packet as a Policy;
+- preview registry as productive Policy source;
+- projected values as issued-policy facts;
+- parser fallback zeros;
+- filename-only product identity.
+
+Required bridge:
+
+```text
+Quote/PDF parser output
+→ EvidenceExtractionCandidate
+→ PolicyEvidencePacket
+→ identity and party review
+→ advisor confirmation
+→ confirmed Policy command
+```
 
 ---
 
-# 9. Next Track A inspection batch
+# 7. Policy Read Model
 
-Directly inspect and classify:
+| Asset | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| `policy-read-model-adapter-068b.js` | `LOCAL_STATIC_READ_ONLY` | `TEST_VERIFIED` by implementation record | `REUSE_WITH_ADAPTER` | Preserve safety envelope; replace fixture source after canonical persistence exists. |
+| `FORGE_POLICY_READ_MODEL_IMPLEMENTATION_068B.md` | `ARCHITECTURE_ONLY` evidence | `TEST_REPORTED` | `REUSE_CANONICAL` document | Boundary evidence, not productive-source proof. |
 
-1. `policy-ocr-engine.js`;
-2. `policy-ai-parser.js`;
-3. `policy-document-classifier.js`;
-4. `policy-schema-validator-engine.js`;
-5. `policy-normalization-engine.js`;
-6. `policy-staging-cache.js`;
-7. `policy-batch-processing-engine.js`;
-8. tests and current consumers for each.
+---
 
-Exit condition:
+# 8. Renewal, risk, alerts and tasks
 
-- productive entrypoint or isolation proved;
-- API and output contract documented;
-- persistence and effects identified;
-- test status proved;
-- reuse disposition locked;
-- exact canonical adapter or rebuild gap identified.
+| Asset | Runtime | Tests | Disposition | Required work |
+|---|---|---|---|---|
+| `renewal-intelligence-engine.js` | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Unvalidated weights; consume confirmed obligations and relationship cadence. |
+| `policy-risk-engine.js` | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Reconcile under Conservation authority. |
+| `policy-detail-alert-engine.js` | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Evidence and canonical source per alert. |
+| `policy-task-priority-engine.js` | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Candidate priority only; Alfred owns final priority. |
+| automatic task/calendar engines | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | Explicit approval and effect boundary required. |
+
+---
+
+# 9. Confirmed construction gaps
+
+1. Productive file-admission adapter.
+2. Persistent Evidence Inbox storage and resumable worker.
+3. File hash and policy-document provenance bridge.
+4. Confidence-based policy-document classifier.
+5. Carrier/document/product parser registry.
+6. Policy Evidence Packet extensions for identity and parties.
+7. Canonical Person Resolution Engine and review UI.
+8. Policy Party candidates, review and persistence.
+9. Existing-policy conflict/deduplication stage.
+10. Confirmed Policy command and persistence.
+11. Append-only policy intake events.
+12. Productive Policy/Cartera read-model adapter.
+13. Cartera intake review UI.
+14. Vertical file-to-confirmed-read-model tests.
+15. Payment Obligation Ledger and payment confirmation.
+16. Local predictive Conservation runtime.
+17. Relationship Graph runtime.
+18. Cartera signals and Alfred/Candy Crush orchestration.
+
+---
+
+# 10. Track A status
+
+- Pass 1 — Relationship and inventory classification: `COMPLETE`
+- Pass 2 — Legacy Cartera runtime reconciliation: `COMPLETE`
+- Pass 3 — Policy document intake reconciliation: `FIRST_PASS_COMPLETE`
+- Next — Policy persistence, identity and Policy Party authority: `NEXT`
+
+## Next inspection targets
+
+- Person and Policy schemas;
+- Policy Party contracts;
+- migrations and RLS;
+- repositories and adapters;
+- Event & Evidence write contracts;
+- persistence and identity tests.
+
+## Final Pass 3 decision
+
+`NO_NEW_GENERIC_INTAKE_FRAMEWORK=YES`
+
+`CANONICAL_BACKBONE=EVIDENCE_INBOX_PLUS_POLICY_EVIDENCE_PACKET_PLUS_ADVISOR_CONFIRMATION_GATE`
+
+`NEXT_AUDIT=POLICY_PERSISTENCE_IDENTITY_AND_PARTY_AUTHORITY`
+
+No runtime implementation is authorized by this matrix. The registered implementation target remains `CARTERA_001_PIPELINE_QUOTE_PERSON_TIMELINE_CONTINUITY`.
