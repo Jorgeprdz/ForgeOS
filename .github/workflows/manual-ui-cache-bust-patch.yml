@@ -1,0 +1,52 @@
+name: Apply Manual UI Cache Bust
+
+on:
+  push:
+    branches:
+      - fix/manual-ui-cache-bust
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/manual-ui-cache-bust
+          fetch-depth: 0
+
+      - name: Apply deterministic cache bust
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('docs/static-preview/forge-alive-material3/index.html'): (
+                  'app.js?v=ui-m04-shell-007',
+                  'app.js?v=manual-ui-stability-001',
+              ),
+              Path('.github/workflows/pages.yml'): (
+                  r'app\.js\?v=ui-m04-shell-007',
+                  r'app\.js\?v=manual-ui-stability-001',
+              ),
+          }
+
+          for path, (before, after) in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              if before not in text:
+                  raise SystemExit(f'CACHE_BUST_SOURCE_NOT_FOUND:{path}:{before}')
+              path.write_text(text.replace(before, after, 1), encoding='utf-8')
+
+          Path('.github/workflows/manual-ui-cache-bust-patch.yml').unlink()
+          PY
+
+          git config user.name "Forge UI Manual Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/static-preview/forge-alive-material3/index.html .github/workflows/pages.yml .github/workflows/manual-ui-cache-bust-patch.yml
+          git commit -m "fix(ui): bust cached Material 3 bootstrap"
+          git push origin HEAD:fix/manual-ui-cache-bust
