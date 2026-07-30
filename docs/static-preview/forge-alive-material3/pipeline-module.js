@@ -651,15 +651,26 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
         : productive
           ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
               ${productiveCards.map(card => `
-                <article class="pipeline-module__prospect" data-productive-prospect-card="${escapeHtml(card.id)}">
-                  <div><strong>${escapeHtml(card.fullName)}</strong><span>${escapeHtml(card.stageLabel)}</span></div>
-                  <p>${escapeHtml(card.sourceSummary)}</p>
-                  <p data-timeline-activity data-activity-source="${card.latestActivity ? "TIMELINE" : "UNKNOWN"}">${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p>
-                  ${card.nextCommitment ? `<p>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</p>` : ""}
-                  <p>${escapeHtml(card.intelligenceState)}</p>
-                  <div class="pipeline-module__card-actions">
+                <article class="pipeline-module__prospect pipeline-module__productive-card" data-productive-prospect-card="${escapeHtml(card.id)}">
+                  <header class="pipeline-module__productive-identity" data-productive-card-identity>
+                    <strong>${escapeHtml(card.fullName)}</strong>
+                    <span class="pipeline-module__productive-stage">${escapeHtml(card.stageLabel)}</span>
+                  </header>
+                  <div class="pipeline-module__productive-meta" data-productive-card-metadata>
+                    <span>Origen</span>
+                    <p>${escapeHtml(card.sourceSummary)}</p>
+                  </div>
+                  <div class="pipeline-module__productive-status" data-productive-card-status>
+                    <p data-timeline-activity data-activity-source="${card.latestActivity ? "TIMELINE" : "UNKNOWN"}">
+                      <span>Última actividad</span>
+                      <strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong>
+                    </p>
+                    ${card.nextCommitment ? `<p><span>Próximo compromiso</span><strong>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</strong></p>` : ""}
+                    <p><span>Asistencia</span><strong>${escapeHtml(card.intelligenceLabel || "Disponible al solicitarla")}</strong></p>
+                  </div>
+                  <div class="pipeline-module__card-actions" data-productive-card-actions aria-label="Acciones del prospecto">
                     <button type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
-                    <button type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
+                    <button class="pipeline-module__action--primary" type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
                     <button type="button" data-open-combat="${escapeHtml(card.id)}">NASH Combat</button>
                     <button type="button" data-open-nba="${escapeHtml(card.id)}">Revisar NBA</button>
                     ${card.phone ? `<a href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}

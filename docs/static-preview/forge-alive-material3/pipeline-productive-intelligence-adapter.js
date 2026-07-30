@@ -57,6 +57,21 @@ function stageLabel(status) {
   })[status] || status || "Etapa no disponible";
 }
 
+function timelineEventLabel(eventType) {
+  return ({
+    PROSPECT_CREATED: "Prospecto creado",
+    CONTACT_ATTEMPTED: "Contacto intentado",
+    CONVERSATION_RECORDED: "Conversación registrada",
+    APPOINTMENT_SCHEDULED: "Cita agendada",
+    APPOINTMENT_RESCHEDULED: "Cita reprogramada",
+    APPOINTMENT_COMPLETED: "Cita completada",
+    OBJECTION_RECORDED: "Objeción clasificada",
+    FOLLOW_UP_PLANNED: "Seguimiento planeado",
+    PROPOSAL_PRESENTED: "Propuesta presentada",
+    DECISION_RECORDED: "Decisión registrada",
+  })[eventType] || "Actividad registrada";
+}
+
 export async function createProductiveIntelligenceAdapter() {
   await loadAuthorities();
   const bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B;
@@ -90,7 +105,7 @@ export async function createProductiveIntelligenceAdapter() {
         sourceSummary: [prospect.source, prospect.referrerName, prospect.referrerRelationship].filter(Boolean).join(" · ") || "Fuente no disponible",
         phone: prospect.phone || prospect.whatsapp || null,
         latestActivity: latest ? {
-          label: latest.eventType || "Actividad registrada",
+          label: timelineEventLabel(latest.eventType),
           occurredAt: latest.occurredAt || latest.recordedAt || null,
           source: "TIMELINE",
         } : null,
@@ -101,7 +116,7 @@ export async function createProductiveIntelligenceAdapter() {
         } : null,
         timeline,
         timelineState,
-        intelligenceState: "CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST",
+        intelligenceLabel: "Asistencia de conversación disponible",
         prospect,
       });
     }));

@@ -238,3 +238,40 @@ test("visual diagnostic distinguishes referral, Alfred and legacy modal state", 
     "ALFRED_INDEPENDENCE=PASS",
   ]) assert.match(diagnostic, new RegExp(gate));
 });
+
+test("productive prospect uses a structured Material 3 card layout", async () => {
+  const source = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-module.js",
+    "utf8",
+  );
+  const adapter = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js",
+    "utf8",
+  );
+  const css = await readFile(
+    "docs/static-preview/forge-alive-material3/app.css",
+    "utf8",
+  );
+
+  assert.match(source, /pipeline-module__productive-card/);
+  assert.match(source, /data-productive-card-identity/);
+  assert.match(source, /data-productive-card-metadata/);
+  assert.match(source, /data-productive-card-status/);
+  assert.match(source, /data-productive-card-actions/);
+  assert.match(
+    source,
+    /data-productive-card-actions[^>]*aria-label="Acciones del prospecto"[\s\S]*Ver contexto[\s\S]*Preparar mensaje[\s\S]*NASH Combat[\s\S]*Revisar NBA[\s\S]*Llamar[\s\S]*Agendar/,
+  );
+  assert.doesNotMatch(source, /card\.intelligenceState/);
+  assert.doesNotMatch(source, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
+  assert.doesNotMatch(adapter, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
+  assert.match(adapter, /intelligenceLabel:\s*"Asistencia de conversación disponible"/);
+  assert.match(adapter, /PROSPECT_CREATED:\s*"Prospecto creado"/);
+  assert.match(adapter, /OBJECTION_RECORDED:\s*"Objeción clasificada"/);
+  assert.match(adapter, /label:\s*timelineEventLabel\(latest\.eventType\)/);
+  assert.match(css, /\.pipeline-module__productive-card\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+  assert.match(css, /\.pipeline-module__productive-identity\s*\{[^}]*justify-content:\s*space-between/s);
+  assert.match(css, /\.pipeline-module__productive-status\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/s);
+  assert.match(css, /\.pipeline-module__card-actions\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap/s);
+  assert.match(css, /word-break:\s*normal/);
+});

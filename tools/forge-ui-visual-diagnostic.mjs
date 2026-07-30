@@ -191,6 +191,17 @@ async function capture(page, directory, label, options = {}) {
           .some((card) => visible(card) && card.textContent.includes("Mariana Torres")),
       productiveCardUsesNormalRenderer:
         visibleCount("[data-productive-pipeline-cards] [data-productive-prospect-card]") > 0,
+      productiveCardStructured:
+        visibleCount("[data-productive-prospect-card] [data-productive-card-identity]") > 0 &&
+        visibleCount("[data-productive-prospect-card] [data-productive-card-metadata]") > 0 &&
+        visibleCount("[data-productive-prospect-card] [data-productive-card-status]") > 0,
+      productiveActionsGrouped:
+        visibleCount("[data-productive-prospect-card] [data-productive-card-actions]") > 0,
+      productiveInternalEnumVisible:
+        [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .some(card => visible(card) && card.textContent.includes(
+            "CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST",
+          )),
       specialSavedReferralCardPathPresent:
         document.querySelector("[data-saved-referral-card]") !== null,
       timelineCreatedEventVisible:
@@ -741,6 +752,9 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "productiveProspectCardVisible", card.productiveProspectCardVisible === true);
     requireFlag(viewport, "productiveProspectCardContainsName", card.productiveProspectCardContainsName === true);
     requireFlag(viewport, "productiveCardUsesNormalRenderer", card.productiveCardUsesNormalRenderer === true);
+    requireFlag(viewport, "productiveCardStructured", card.productiveCardStructured === true);
+    requireFlag(viewport, "productiveActionsGrouped", card.productiveActionsGrouped === true);
+    requireFlag(viewport, "productiveInternalEnumVisible=false", card.productiveInternalEnumVisible === false);
     requireFlag(viewport, "specialSavedReferralCardPathPresent=false", card.specialSavedReferralCardPathPresent === false);
     requireFlag(viewport, "timelineCreatedEventVisible", card.timelineCreatedEventVisible === true);
     requireFlag(viewport, "lastVerifiedActivitySource=TIMELINE", card.lastVerifiedActivitySource === "TIMELINE");
