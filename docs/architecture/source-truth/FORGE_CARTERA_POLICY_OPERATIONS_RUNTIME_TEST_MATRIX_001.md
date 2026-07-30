@@ -6,7 +6,7 @@ Track A / Runtime and Test Matrix
 
 ## Status
 
-`ACTIVE / INITIAL_MATRIX_CREATED / NOT_EXHAUSTIVE / NO_RUNTIME_MUTATION`
+`ACTIVE / LEGACY_RUNTIME_RECONCILED / POLICY_INTAKE_AUDIT_NEXT / NO_RUNTIME_MUTATION`
 
 ## Date
 
@@ -30,6 +30,7 @@ An asset is not approved for productive Cartera use merely because it exists. Ea
 Canonical audit:
 
 - `docs/architecture/source-truth/FORGE_CARTERA_EXISTING_ASSET_AUDIT_AND_RECONCILIATION_001.md`
+- `docs/architecture/source-truth/FORGE_CARTERA_LEGACY_RUNTIME_RECONCILIATION_002.md`
 
 ---
 
@@ -41,6 +42,7 @@ Canonical audit:
 - `LEGACY_CONNECTED`: connected through a legacy route or service.
 - `LOCAL_STATIC_READ_ONLY`: executable but fixture/static and effect-blocked.
 - `FOUNDATION_ISOLATED`: executable foundation with no productive integration proved.
+- `FOUNDATION_ORPHANED`: internally coherent stack with no productive application entrypoint proved.
 - `ARCHITECTURE_ONLY`: no productive runtime verified.
 - `UNVERIFIED`: direct behavior or consumers not yet inspected.
 
@@ -58,7 +60,9 @@ Canonical audit:
 - `REFACTOR_FOUNDATION`
 - `REBUILD_CANONICAL_GAP`
 - `LEGACY_SURFACE_MIGRATE`
+- `REUSE_UI_PATTERN_ONLY`
 - `DO_NOT_ACTIVATE`
+- `DO_NOT_PROMOTE`
 
 ---
 
@@ -82,21 +86,58 @@ The repository inventory previously reported corresponding master-test assets fo
 
 ---
 
-# 3. Legacy Cartera runtime matrix
+# 3. Legacy Cartera runtime matrix — reconciled
 
-| Asset | Export / API | Current consumers / dependencies | Persistence | Runtime status | Test status | Disposition | Required work |
+## 3.1 Productive entrypoint proof
+
+```text
+app.js
+→ createRouteRegistry
+→ cartera route
+→ renderCartera / bindCarteraEvents
+→ cartera.js
+→ quarantined IndexedDB store `cartera`
+```
+
+The productive route is `cartera.js`. `cartera-view.js` is not the application route.
+
+| Asset | Export / API | Consumers / dependencies | Persistence | Runtime status | Test status | Disposition | Required work |
 |---|---|---|---|---|---|---|---|
-| `cartera-view.js` | `CarteraView.render`, KPI and form/import/list render methods | route/controller integration requires call-graph confirmation | DOM UI | `LEGACY_CONNECTED` candidate | `NO_TEST_PROVED` | `LEGACY_SURFACE_MIGRATE` | Preserve working behaviors; migrate to ForgeShell/M3; replace database-first landing with Future Radar. |
-| `cartera-import-engine.js` | `importExcelRows(rows)` | calls `carteraService.importarMasivo` | delegated to Cartera service | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Keep header normalization and row mapping; add staging, provenance, identity review and sequential confirmation. |
-| `cartera-service.js` | `obtenerTodas`, `obtenerPorId`, `existePoliza`, `crear`, `actualizar`, `eliminar`, `importarMasivo` | `cartera-normalizer`, `cartera-validator`, `cartera-events`, `cartera-state`, quarantined IndexedDB DB | legacy IndexedDB store `cartera` | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `LEGACY_SURFACE_MIGRATE` | Do not promote legacy IndexedDB to canonical truth; preserve service behavior knowledge; replace writes with canonical policy/person/event boundaries. |
-| `cartera-normalizer.js` | pending direct inspection | consumed by `cartera-service.js` | none expected | `UNVERIFIED` | `NO_TEST_PROVED` | `UNVERIFIED` | Inspect normalization fields and collision with Policy schema. |
-| `cartera-validator.js` | pending direct inspection | consumed by `cartera-service.js` | none expected | `UNVERIFIED` | `NO_TEST_PROVED` | `UNVERIFIED` | Inspect validation authority; distinguish form validation from Policy Truth validation. |
-| `cartera-events.js` | event constants and emitter pending inspection | consumed by `cartera-service.js` | in-process event bus likely | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Map legacy events to Event & Evidence; do not create parallel event truth. |
-| `cartera-state.js` | Cartera store pending inspection | consumed by `cartera-service.js` and UI | browser/in-memory state likely | `UNVERIFIED` | `NO_TEST_PROVED` | `LEGACY_SURFACE_MIGRATE` candidate | Preserve UI state patterns only; canonical data belongs to governed persistence. |
+| `app.js` | application bootstrap | imports `renderCartera` and `bindCarteraEvents` from `cartera.js`; passes both into route registry | global bootstrap initializes browser runtime | `PRODUCTIVE_CONNECTED` | navigation tests are pipeline-focused; no Cartera test proved | `REUSE_CANONICAL` entrypoint evidence | Preserve route wiring while migrating implementation behind it. |
+| `platform/routing/route-registry.js` | `createRouteRegistry` | registers `cartera: { render, bind }` | none | `PRODUCTIVE_CONNECTED` | no Cartera-specific test proved | `REUSE_CANONICAL` route contract | Keep route ID `cartera`; later move to governed loader only with explicit route authorization. |
+| `cartera.js` | `renderCartera`, `bindCarteraEvents` | imported by `app.js`; uses DB, AppState, EventBus, RenderEngine, Analytics, Logger, Memory | quarantined IndexedDB `cartera` store | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `LEGACY_SURFACE_MIGRATE` | Preserve route/search/KPI/list/import behavior until parity; replace direct persistence, direct delete, direct import and parallel business logic. |
+| `cartera-view.js` | `CarteraView.render`, KPI/form/import/list methods | search proves no productive consumer outside file | DOM only | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Reuse form, loading, empty and rendering patterns; do not activate beside `cartera.js` because DOM IDs collide. |
+| `cartera-service.js` | CRUD and `importarMasivo` | consumed by `cartera-import-engine.js`; no productive application entrypoint proved | quarantined IndexedDB via DB facade | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve workflow semantics; replace persistence and effects with canonical commands/adapters. |
+| `cartera-import-engine.js` | `importExcelRows(rows)` | calls isolated `carteraService.importarMasivo` | delegated to legacy service | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Preserve robust header aliases; output staged evidence candidates with row provenance and identity review. |
+| `cartera-normalizer.js` | `sanitizeText`, `normalizePoliza` | consumed by isolated service | none directly; result later stored | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Keep sanitation primitives; replace default `vigente`, empty-string unknowns, single client field and premature ID creation. |
+| `cartera-validator.js` | `validatePoliza` | consumed by isolated service | none | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Use as UI/form validation only; never Policy Truth validation. |
+| `cartera-events.js` | `CARTERA_EVENTS`, browser event bus | consumed by isolated service | ephemeral window events | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Map useful event names to governed commands and append-only Event & Evidence; browser event only after canonical result. |
+| `cartera-state.js` | `CarteraStore` setters | consumed by isolated service | in-memory | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `REUSE_UI_PATTERN_ONLY` | Preserve local loading/editing state pattern only; no canonical data ownership. |
+| `cartera-repository.js` | `getAll`, `save`, `update` | repository search proves no consumer outside definition | quarantined IndexedDB plus local cache | `FOUNDATION_ORPHANED` | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Reuse repository/cache pattern only after canonical persistence owner exists. |
+| `legacy/quarantine/crmaddlife-indexeddb/db.js` | generic DB facade | used directly by productive route and isolated service/repository | IndexedDB | `LEGACY_CONNECTED` | `NO_TEST_PROVED` in this audit | `DO_NOT_PROMOTE` | Compatibility fallback only; never canonical Person, Policy or Event truth. |
+| `legacy/quarantine/crmaddlife-indexeddb/storage-engine.js` | generic store transaction/save/get/delete/clear | DB facade | `ADDLIFE_CRM_ENTERPRISE`, generic stores keyed by `id` | `LEGACY_CONNECTED` | `NO_TEST_PROVED` | `DO_NOT_PROMOTE` | Preserve migration access only; lacks advisor scope, RLS, parties, evidence and canonical ownership. |
 
-Critical legacy finding:
+## 3.2 Connected route behavior findings
 
-`cartera-service.js` currently writes to `legacy/quarantine/crmaddlife-indexeddb/db.js`. That is useful proof of working legacy CRUD, but it is not an acceptable canonical Policy or Person source for the new Cartera architecture.
+- Search only covers `cliente` and `poliza`.
+- KPI premium is a direct sum over local records.
+- Alert KPI counts any `fechaPago` with day difference `<= 30`, including arbitrarily old overdue dates.
+- `Nueva` is not implemented.
+- `Editar` only records an ID and shows a toast.
+- `Eliminar` performs a hard delete after confirmation.
+- Excel import loads XLSX from a public CDN, reads the first sheet, skips bad rows silently and writes directly to IndexedDB.
+- Duplicate prevention is exact policy-number equality against the currently loaded array.
+- No identity resolution, evidence packet, party model, staging review or canonical event is present.
+
+## 3.3 Legacy migration decision
+
+```text
+preserve user behavior
+→ replace data authority
+→ introduce governed adapters
+→ prove parity
+→ retire duplicate/orphan surfaces
+```
 
 ---
 
@@ -149,75 +190,47 @@ The Policy Read Model has one of the strongest safety envelopes found in this au
 |---|---|---|---|---|---|
 | `policy-operations/tasks/policy-task-priority-engine.js` | maps high risk/pending payment to HIGH and renewal to MEDIUM | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Candidate priority only; final priority by Alfred/NBA. |
 | `policy-operations/tasks/policy-task-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Map tasks to Event & Evidence and human approval. |
-| `policy-operations/tasks/task-feed-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Candidate feed for Mi Día/Candy Crush, not separate work authority. |
-| `policy-operations/tasks/task-quick-action-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Use smallest useful action contract. |
-| `policy-operations/tasks/ai-task-suggestion-engine.js` | AI suggestion foundation reported | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` pending audit | AI may phrase or explain; it may not invent the recommendation. |
-| `policy-operations/tasks/auto-task-generator-engine.js` | automatic task generation foundation reported | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | No task creation without explicit human approval and execution gate. |
-| `policy-operations/tasks/google-calendar-engine.js` | calendar integration foundation reported | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` | Calendar writes remain blocked until separately authorized and confirmed. |
+| `policy-operations/tasks/task-feed-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Candidate feed only; Advisor Experience owns presentation. |
+| `policy-operations/tasks/auto-task-generator-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` pending audit | Must not create tasks without advisor approval and final NBA ownership. |
+| `policy-operations/tasks/google-calendar-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `DO_NOT_ACTIVATE` pending audit | Calendar write requires explicit user action and connector boundary. |
 
 ---
 
-# 8. Identity, payment and compensation matrix
+# 8. Canonical gaps requiring construction
 
-| Asset | Current behavior | Runtime status | Test status | Disposition | Required work |
-|---|---|---|---|---|---|
-| `entity-resolver-engine.js` | returns first entity whose lowercased name includes query | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REBUILD_CANONICAL_GAP` | Canonical multi-attribute person resolution, ranked candidates, conflicts, evidence and auditable human decision. |
-| `payment-frequency-engine.js` | maps monthly/quarterly/semiannual/annual to 12/4/2/1 | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` | Normalize official frequency terms and produce schedules only with effective dates and policy rules. |
-| `commission-projection-engine.js` | multiplies commissionable amount by rate | `FOUNDATION_ISOLATED` | `NO_TEST_PROVED` | `REFACTOR_FOUNDATION` | Rate must come from validated Rule Pack/RuleSnapshot; separate expected, calculated, reported and paid. |
-| `commissionable-amount-engine.js` | pending direct inspection | `UNVERIFIED` | `NO_TEST_PROVED` | `REUSE_WITH_ADAPTER` candidate | Confirm amount authority and period/policy-year context. |
-| Payment Obligation Ledger | not verified as productive asset | `ARCHITECTURE_ONLY` / missing | `TEST_REQUIRED` | `REBUILD_CANONICAL_GAP` | Build durable obligation and payment state model with evidence and confirmation. |
-
----
-
-# 9. Conservation and Relationship Graph matrix
-
-| Authority / asset | Current state | Runtime status | Test status | Disposition | Required work |
-|---|---|---|---|---|---|
-| `PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md` | defines policy durability, local predictive versus institutional truth, and no invented formulas | `ARCHITECTURE_ONLY` | n/a | `REUSE_CANONICAL` architecture | Build bounded productive runtime from official evidence and Rule Packs. |
-| `ADR-0026_RELATIONSHIP_GRAPH_PRIMARY_COMMERCIAL_ASSET.md` | defines graph ownership and boundaries; explicitly does not implement graph | `ARCHITECTURE_ONLY` | n/a | `REUSE_CANONICAL` architecture | Build graph node/edge persistence, evidence, freshness, consent and Cartera read model. |
+| Gap | Why existing assets do not satisfy it | Required owner / boundary |
+|---|---|---|
+| Canonical Person Resolution Engine | current entity resolver is name-substring search; legacy Cartera uses free-text client | Shared Identity / Relationship Graph with Cartera review surface |
+| Confirmed Policy persistence | current productive writes go to quarantined IndexedDB; read model uses static fixtures | Policy Truth authority |
+| Policy Party model | legacy shape has one client string | Policy Truth + canonical Person references |
+| Persistent intake queue | current queue is an in-memory array | Cartera intake workflow with advisor scope |
+| Payment Obligation Ledger | dates/frequency/alerts exist, but no obligation-level persistent state | Policy/Payment boundary; Cartera confirmation surface |
+| Local predictive Conservation runtime | architecture and primitive scores exist, but no canonical productive runtime proved | Conservation Intelligence |
+| Relationship Graph runtime | ADR exists; runtime not proved | Shared Relationship Graph authority |
+| Cartera Signal Envelope | engines emit incompatible scores/actions without common evidence classes | Cartera adapter boundary; Alfred final priority |
+| Cartera → Pipeline bridge | opportunity engine can suggest, but no advisor-confirmed lifecycle write is proved | Pipeline owns opportunity lifecycle |
+| Cartera → Alfred → Candy Crush orchestration | primitives exist; productive governed vertical is not proved | NBA + Advisor Experience |
 
 ---
 
-# 10. Initial blocking findings
+# 9. Next Track A inspection batch
 
-## Blocker A — legacy persistence is not canonical persistence
+Directly inspect and classify:
 
-The legacy Cartera service persists to quarantined CRMAddLife IndexedDB. Reuse of CRUD behavior does not authorize promotion of that store to canonical Policy or Person truth.
+1. `policy-ocr-engine.js`;
+2. `policy-ai-parser.js`;
+3. `policy-document-classifier.js`;
+4. `policy-schema-validator-engine.js`;
+5. `policy-normalization-engine.js`;
+6. `policy-staging-cache.js`;
+7. `policy-batch-processing-engine.js`;
+8. tests and current consumers for each.
 
-## Blocker B — Policy Read Model source is static
+Exit condition:
 
-The existing read model has strong safety boundaries but uses local fixtures and explicitly claims no canonical Policy Truth.
-
-## Blocker C — identity resolution is insufficient
-
-Name substring matching and policy duplicate heuristics cannot protect canonical person continuity.
-
-## Blocker D — many Policy Operations assets are isolated
-
-The prior move map reported zero consumers and `NO_IMPORTS` for the 77-file cluster. Each proposed reuse requires direct runtime and test verification.
-
-## Blocker E — recommendations are mixed with facts
-
-Several relationship and policy foundations generate referral, gap, risk or task outputs without a shared evidence/freshness/uncertainty envelope.
-
-## Blocker F — automation foundations exceed current authorization
-
-Auto-task, calendar, auto-approval and AI interpretation surfaces must remain disconnected until explicit gates exist.
-
----
-
-# 11. Next matrix expansion
-
-The next audit pass must inspect, in this order:
-
-1. `cartera-normalizer.js`, `cartera-validator.js`, `cartera-events.js`, `cartera-state.js` and route/controller consumers.
-2. Policy OCR, parser, classifier, validator, normalizer, staging cache and batch processor.
-3. Policy detail, timeline, renewal and task test assets.
-4. Productive database schemas and RLS for prospect, quote, policy, events and any legacy Cartera tables.
-5. Import graphs and current UI entrypoints.
-6. Existing Event & Evidence adapters required by Cartera.
-7. Existing Alfred/NBA and Candy Crush consumers suitable for governed Cartera signals.
-
-Exit gate:
-
-No runtime implementation package is authorized until its matrix rows have a resolved owner, inspected API, test expectation, persistence boundary and explicit reuse disposition.
+- productive entrypoint or isolation proved;
+- API and output contract documented;
+- persistence and effects identified;
+- test status proved;
+- reuse disposition locked;
+- exact canonical adapter or rebuild gap identified.
