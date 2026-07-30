@@ -66,6 +66,40 @@ const STAGE_OPTIONS = Object.freeze([
   Object.freeze({ value: "client", label: "Cliente" }),
 ]);
 
+export function reconcileUpdatedProspectState({
+  records = [],
+  cards = [],
+  updatedProspect,
+  requestedStatus,
+}) {
+  if (!updatedProspect?.id || updatedProspect.status !== requestedStatus) {
+    const error = new Error("PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH");
+    error.code = "PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH";
+    error.details = Object.freeze({
+      prospectId: updatedProspect?.id || null,
+      requestedStatus,
+      returnedStatus: updatedProspect?.status || null,
+    });
+    throw error;
+  }
+
+  const nextRecords = records.map(record =>
+    record.id === updatedProspect.id ? updatedProspect : record
+  );
+  const nextCards = cards.map(card =>
+    card.id === updatedProspect.id
+      ? Object.freeze({
+          ...card,
+          status: updatedProspect.status,
+          stageLabel: stageLabel(updatedProspect.status),
+          prospect: updatedProspect,
+        })
+      : card
+  );
+
+  return Object.freeze({ records: nextRecords, cards: nextCards });
+}
+
 function timelineEventLabel(eventType) {
   return ({
     PROSPECT_CREATED: "Prospecto creado",
@@ -266,8 +300,16 @@ export async function createProductiveIntelligenceAdapter() {
     if (!STAGE_OPTIONS.some(option => option.value === status)) {
       throw new Error("PRODUCTIVE_STAGE_NOT_ALLOWED");
     }
-    await service.updateProspect(prospectId, { status });
-    return reload();
+    const updatedProspect = await service.updateProspect(prospectId, { status });
+    const reconciled = reconcileUpdatedProspectState({
+      records,
+      cards,
+      updatedProspect,
+      requestedStatus: status,
+    });
+    records = reconciled.records;
+    cards = reconciled.cards;
+    return cards;
   }
 
   return Object.freeze({
