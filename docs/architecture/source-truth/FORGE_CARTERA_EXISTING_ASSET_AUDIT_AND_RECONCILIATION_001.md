@@ -6,7 +6,7 @@ Cartera / Relationship Intelligence
 
 ## Status
 
-`DISCOVERY_ACTIVE / FIRST_PASS_CLASSIFICATION_COMPLETE / RUNTIME_MUTATION_NOT_AUTHORIZED`
+`DISCOVERY_ACTIVE / LEGACY_RUNTIME_PASS_COMPLETE / POLICY_INTAKE_AUDIT_NEXT / RUNTIME_MUTATION_NOT_AUTHORIZED`
 
 ## Date
 
@@ -18,7 +18,12 @@ Canonical roadmap:
 
 - `docs/architecture/source-truth/FORGE_CARTERA_RELATIONSHIP_INTELLIGENCE_ROADMAP_001.md`
 
-This document begins the work requested by the Cartera program:
+Detailed audit artifacts:
+
+- `docs/architecture/source-truth/FORGE_CARTERA_POLICY_OPERATIONS_RUNTIME_TEST_MATRIX_001.md`
+- `docs/architecture/source-truth/FORGE_CARTERA_LEGACY_RUNTIME_RECONCILIATION_002.md`
+
+This document governs the work requested by the Cartera program:
 
 1. Audit and classify existing assets.
 2. Reconcile reusable assets under canonical authorities.
@@ -96,13 +101,22 @@ The repository contains a decision, discovery or contract but no verified produc
 
 A functional or partially functional legacy surface exists and should be reconciled or migrated rather than rebuilt blindly.
 
+## `REUSE_UI_PATTERN_ONLY`
+
+The asset contains useful UI or local-state behavior but must not own or persist canonical business truth.
+
 ## `DO_NOT_ACTIVATE`
 
 The asset must not be wired in its current form because it could bypass evidence, ownership, consent or human confirmation boundaries.
 
+## `DO_NOT_PROMOTE`
+
+The asset may remain as compatibility or migration infrastructure, but it must not become a canonical authority.
+
 ## Evidence levels
 
 - `CODE_INSPECTED`: implementation directly reviewed.
+- `CALL_GRAPH_PROVED`: productive or isolated consumer chain directly proved.
 - `INVENTORY_CONFIRMED`: file and classification confirmed; behavior still requires direct audit.
 - `ARCHITECTURE_CONFIRMED`: authoritative or candidate documentation reviewed.
 - `PRODUCTIVE_STATUS_UNPROVEN`: existence does not prove runtime integration or production use.
@@ -116,7 +130,8 @@ Cartera is not a greenfield module.
 The repository already contains:
 
 - Relationship Intelligence foundations and orchestrators;
-- a legacy Cartera UI and import surface;
+- a connected legacy Cartera route;
+- a second isolated modular Cartera stack;
 - a large Policy Operations asset cluster;
 - policy document ingestion primitives;
 - policy timeline, renewal, risk, alert and task foundations;
@@ -222,23 +237,20 @@ Evidence: `CODE_INSPECTED`
 
 Current useful capability:
 
-- recognizes marriage, child, employment, housing, retirement, business-owner, divorce and education language;
-- gathers evidence from client data, timeline, relationship history and NASH memory;
-- proposes review areas.
+- detects marriage, new child, job change, home purchase, retirement proximity, business ownership, divorce and education milestones;
+- builds candidate review areas and confidence.
 
 Blocking issues:
 
-- permanent profile state may be misread as a new event;
-- event date and freshness are not required;
-- text pattern occurrence may be treated as sufficient event evidence;
-- sensitive life events may become commercial triggers.
+- persistent profile state may be interpreted as a new event;
+- dates, freshness and evidence classes are insufficient;
+- sensitive context can become a commercial trigger.
 
 Required reconciliation:
 
-- separate `PROFILE_STATE` from `NEW_LIFE_EVENT`;
-- require source, event date, observed date and freshness;
-- produce candidate interpretation only;
-- sensitive events require explicit advisor judgment and non-manipulation guardrails.
+- separate profile facts from newly observed events;
+- require date, source, freshness, sensitivity and confirmation state;
+- preserve life context as context, never automatic sales instruction.
 
 ## 4.5 `referral-opportunity-engine.js`
 
@@ -247,22 +259,15 @@ Evidence: `CODE_INSPECTED`
 
 Current useful capability:
 
-- detects positive service, successful claim, completed review, long relationship, multiple policies and responsiveness signals;
-- proposes timing and conversational approach.
-
-Blocking issues:
-
-- combines relationship strength with permission to request referrals;
-- life events can become referral triggers;
-- score weights are unvalidated;
-- `NOW` can be produced without explicit consent or advisor judgment.
+- combines interaction, service, policy count, relationship score and tenure signals;
+- proposes timing and approach.
 
 Required reconciliation:
 
-- rename output to `RELATIONSHIP_STRENGTHENING_CANDIDATE` or `INTRODUCTION_CONVERSATION_CANDIDATE`;
-- keep relationship context separate from consent;
-- no opaque influence score may become relationship truth;
-- Alfred may consume the candidate only after evidence and boundary validation.
+- reframe output as relationship-strengthening or introduction-conversation candidate;
+- no inferred consent;
+- do not exploit claims or life events;
+- advisor owns final decision and execution.
 
 ## 4.6 `relationship-health-engine.js`
 
@@ -271,16 +276,14 @@ Evidence: `CODE_INSPECTED`
 
 Current useful capability:
 
-- identifies payments, renewals, multiple urgent events, pending reviews, possible gaps and inactivity;
-- preserves some strengths;
-- returns a deterministic attention recommendation.
+- combines payment, renewal, review, gap and inactivity signals;
+- returns attention color, risks, strengths and recommendation.
 
 Required reconciliation:
 
-- current output measures operational attention more than relationship health;
-- rename or split into `RELATIONSHIP_ATTENTION_STATE` and actual relationship health;
-- historical no-response events must not create permanent inactivity risk;
-- evidence dates and resolution state are required.
+- split operational attention from actual relationship health;
+- respect event freshness and completion state;
+- attach evidence to every factor.
 
 ## 4.7 `client-engagement-engine.js`
 
@@ -289,20 +292,14 @@ Evidence: `CODE_INSPECTED`
 
 Current useful capability:
 
-- calculates recency, interaction volume, inbound behavior and positive outcomes;
+- calculates recency and interaction-based engagement;
 - identifies last interaction and inactivity risk.
-
-Blocking issues:
-
-- no history becomes `CRITICAL` by default;
-- a fixed number of inactive days is applied to every relationship type;
-- contact frequency preference and policy lifecycle context are absent.
 
 Required reconciliation:
 
-- use relationship-specific cadence expectations;
-- distinguish missing history from deteriorating engagement;
-- never convert low engagement directly into mandatory contact.
+- relationship-specific contact cadence;
+- no history must not equal critical deterioration;
+- no mandatory contact instruction without NBA and advisor approval.
 
 ## 4.8 `relationship-review-engine.js`
 
@@ -311,19 +308,14 @@ Evidence: `CODE_INSPECTED`
 
 Current useful capability:
 
-- determines whether a review may be useful;
-- creates suggested review topics;
-- prioritizes payment, renewal, policy review, candidate gaps and life events.
+- decides whether a review is useful;
+- proposes urgency and topics.
 
 Required reconciliation:
 
-- separate mandatory service topics, suggested topics, hypotheses to validate and sensitive topics;
-- preserve all reasons instead of only the first reason;
-- attach evidence and human-decision checkpoints.
-
-Canonical role:
-
-Foundation for a governed Relationship Review Brief.
+- produce a governed Review Brief;
+- separate required topics, suggested topics, hypotheses and sensitive topics;
+- preserve all supporting reasons, not only the first.
 
 ## 4.9 `relationship-master-engine.js`
 
@@ -332,397 +324,213 @@ Evidence: `CODE_INSPECTED`
 
 Current useful capability:
 
-- orchestrates timeline, next action, opportunity, life event, referral, health, engagement and review engines.
-
-Blocking issues:
-
-- combines heterogeneous scores into one ambiguous confidence value;
-- downstream outputs do not yet share a canonical evidence envelope;
-- some consumed engines are not safe for direct activation.
+- orchestrates relationship timeline, actions, opportunities, events, referral, health, engagement and review.
 
 Required reconciliation:
 
-- retain orchestration pattern;
-- remove synthetic aggregate confidence;
-- return separate sections for facts, scheduled events, detected evidence, candidate interpretations, recommendations and human decisions required;
-- consume only reconciled versions of each engine.
-
-Canonical role:
-
-Relationship Intelligence orchestrator, not a new truth authority.
+- remove ambiguous aggregate confidence;
+- consume only reconciled engines;
+- return facts, schedules, evidence, interpretations, recommendations and human decisions separately.
 
 ---
 
-# 5. Policy Operations asset audit
+# 5. Legacy Cartera runtime audit — pass complete
 
-## 5.1 Cluster finding
+Detailed decision:
 
-A prior move-map classified 77 Policy Operations assets across:
+- `docs/architecture/source-truth/FORGE_CARTERA_LEGACY_RUNTIME_RECONCILIATION_002.md`
 
-- `policy-detail/`;
-- `policy-timeline/`;
-- `renewals/`;
-- `tasks/`;
-- `evidence/`;
-- `client-records/`.
+## 5.1 Productive route
 
-The same move-map recorded that the selected assets were `NO_IMPORTS` with zero detected root JS consumers at that time.
-
-Disposition of the cluster:
-
-`INVENTORY_CONFIRMED / PRODUCTIVE_STATUS_UNPROVEN`
-
-Therefore, file existence is reusable discovery evidence, not implementation proof.
-
-## 5.2 Policy document ingestion group
-
-Assets include:
-
-- `drag-drop-policy-zone.js`;
-- `csv-parser-engine.js`;
-- `policy-ocr-engine.js`;
-- `policy-ai-parser.js`;
-- `policy-document-classifier.js`;
-- `policy-schema-validator-engine.js`;
-- `policy-normalization-engine.js`;
-- `policy-ingestion-orchestrator.js`;
-- `policy-human-review-engine.js`;
-- `policy-import-queue.js`;
-- `policy-batch-processing-engine.js`;
-- `policy-staging-cache.js`;
-- `policy-import-dashboard-engine.js`;
-- `mass-import-preview-engine.js`;
-- `mass-import-validation-engine.js`.
-
-Primary disposition: `REUSE_WITH_ADAPTER`
-
-Verified useful flow:
+The productive call graph is proved:
 
 ```text
-file
-→ OCR
-→ parse
-→ validate
-→ normalize
-→ human review
+app.js
+→ platform/routing/route-registry.js
+→ cartera route
+→ renderCartera / bindCarteraEvents
+→ cartera.js
+→ legacy/quarantine/crmaddlife-indexeddb
 ```
 
-Required construction:
+Disposition:
 
-- persistent and resumable queue;
-- evidence packet per extracted field;
-- identity-resolution step before persistence;
-- policy-party resolution;
-- governed error and conflict states;
-- durable staging storage;
-- Event & Evidence publication after confirmation.
+`LEGACY_CONNECTED / LEGACY_SURFACE_MIGRATE`
 
-## 5.3 Policy detail and read-model group
+## 5.2 Parallel orphan stack
 
-Assets include:
+The following assets form a separate mini-stack and are not the route imported by `app.js`:
 
-- `policy-core-engine.js`;
-- `policy-detail-engine.js`;
-- `policy-detail-view-model.js`;
-- `policy-client-summary-engine.js`;
-- `policy-financial-summary-engine.js`;
-- `policy-context-engine.js`;
-- `policy-status-engine.js`;
-- `policy-live-state-engine.js`;
-- `policy-metadata-engine.js`;
-- `policy-summary-engine.js`;
-- `policy-search-engine.js`;
-- `policy-filter-engine.js`;
-- `policy-smart-sort-engine.js`;
-- `policy-quick-actions-engine.js`;
-- `policy-operational-center-engine.js`;
-- `policy-workspace-engine.js`;
-- Policy Read Model adapter and source-truth contracts.
+- `cartera-view.js`;
+- `cartera-service.js`;
+- `cartera-state.js`;
+- `cartera-events.js`;
+- `cartera-normalizer.js`;
+- `cartera-validator.js`;
+- `cartera-import-engine.js`;
+- `cartera-repository.js`.
 
-Primary disposition: `REUSE_WITH_ADAPTER`
+Disposition:
 
-Required reconciliation:
+`FOUNDATION_ORPHANED / DISASSEMBLE_AND_REUSE_BY_CAPABILITY`
 
-- Policy Intelligence remains owner of policy facts;
-- Cartera consumes a productive read model;
-- current local/static adapters must not be represented as Policy Truth;
-- person, policyholder, insured, beneficiary, payer and owner must remain separate party roles.
+## 5.3 Locked decision
 
-## 5.4 Policy timeline group
-
-Assets include:
-
-- `policy-activity-engine.js`;
-- `policy-timeline-engine.js`;
-- `policy-timeline-event.factory.js`;
-- `policy-timeline-group-engine.js`;
-- `policy-timeline-query-engine.js`;
-- `policy-timeline-view-model.js`;
-- `policy-timeline.repository.js`;
-- `policy-timeline.types.js`.
-
-Primary disposition: `REUSE_WITH_ADAPTER`
-
-Required reconciliation:
-
-- no second append-only event authority;
-- Policy Timeline must consume or project Event & Evidence facts;
-- future dates and recommendations must remain projections, not historical facts;
-- quote, application, issue, payment, cancellation and reinstatement continuity must attach to the canonical person.
-
-## 5.5 Renewal, risk and alert group
-
-Assets include:
-
-- `policy-renewal-engine.js`;
-- `policy-renewal-status-engine.js`;
-- `renewal-intelligence-engine.js`;
-- `policy-risk-engine.js`;
-- `policy-detail-alert-engine.js`;
-- `policy-review-priority-engine.js`;
-- `policy-last-contact-engine.js`.
-
-Primary disposition: `REFACTOR_FOUNDATION`
-
-Verified useful capability:
-
-- renewal proximity;
-- contact recency;
-- pending-payment signals;
-- operational alert generation;
-- deterministic risk prioritization.
-
-Blocking issues:
-
-- score weights are not validated rules;
-- payment counts may not correspond to confirmed obligations;
-- renewal proximity is not itself relationship weakness;
-- local risk must not become official Conservation truth.
-
-Canonical role:
-
-Candidate inputs to local predictive Conservation and Future Radar.
-
-## 5.6 Task and action group
-
-Assets include:
-
-- `policy-followup-engine.js`;
-- `policy-task-engine.js`;
-- `policy-task-priority-engine.js`;
-- `task-engine.js`;
-- `task-feed-engine.js`;
-- `task-priority-engine.js`;
-- `task-quick-action-engine.js`;
-- `ai-task-suggestion-engine.js`;
-- `auto-task-generator-engine.js`;
-- `overdue-task-engine.js`;
-- `realtime-task-engine.js`;
-- `google-calendar-engine.js`.
-
-Primary disposition:
-
-- suggestion and priority foundations: `REUSE_WITH_ADAPTER`;
-- automatic task and calendar execution: `DO_NOT_ACTIVATE` without human approval and execution gates.
-
-Canonical role:
-
-Cartera produces governed signals. Alfred / NBA prioritizes. Advisor Experience presents. The advisor approves execution.
-
-## 5.7 Duplicate detection
-
-Asset:
-
-- `policy-duplicate-engine.js`.
-
-Disposition: `REBUILD_CANONICAL_GAP`
-
-Current behavior compares client, product and premium. This is not sufficient for policy identity or person identity.
-
-Useful residue:
-
-- preserve duplicate-detection test fixtures and entrypoint only if compatible.
-
-Required canonical matching inputs:
-
-- carrier;
-- policy number;
-- issue date;
-- policyholder identity;
-- insured-party identity;
-- product/version;
-- source-document fingerprint;
-- existing policy references;
-- conflict state.
+- Preserve the route ID and current user-visible behavior during migration.
+- Do not promote quarantined IndexedDB as canonical truth.
+- Reuse form, import, normalization, validation, state and repository patterns selectively.
+- Replace direct browser storage, hard delete and browser event truth with governed adapters.
+- Do not wire `cartera-view.js` beside `cartera.js`; their DOM contracts overlap.
+- Retire duplicate surfaces only after vertical parity, tests and evidence.
 
 ---
 
-# 6. Legacy Cartera surface audit
+# 6. Policy Operations cluster audit
 
-Asset:
+Prior migration discovery identified a 77-asset Policy Operations cluster grouped into:
 
-- `cartera-view.js` and route-adjacent Cartera services/controllers.
+- policy detail;
+- policy timeline;
+- renewals;
+- tasks;
+- evidence;
+- client records.
 
-Disposition: `LEGACY_SURFACE_MIGRATE`
+The selected migration batch was reported as `NO_IMPORTS` with zero detected root consumers.
 
-Verified useful capability:
+That proves isolation for the selected batch at that discovery point, not productive readiness.
 
-- portfolio KPIs;
-- policy count;
-- premium total;
-- collection alerts;
-- manual form;
-- importer;
-- policy listing.
+Each asset requires direct Track A inspection before reuse.
 
-Required reconciliation:
+## Current inspected examples
 
-- preserve functional behavior and service knowledge;
-- migrate into ForgeShell and Material 3 rather than rebuild blindly;
-- replace static portfolio summary as the primary experience with Future Radar and attention surfaces;
-- connect canonical person, policy, evidence and relationship projections;
-- do not treat legacy route state as source truth.
-
----
-
-# 7. Canonical authorities to reuse without duplication
-
-## 7.1 Event & Evidence
-
-Disposition: `REUSE_CANONICAL`
-
-Owns append-only facts, provenance and evidence lineage.
-
-Cartera must publish confirmed events and consume projections. It must not create a second timeline truth.
-
-## 7.2 Canonical person continuity
-
-Disposition: `REUSE_CANONICAL`
-
-The existing `prospect_uuid` remains the continuity reference for a known person.
-
-Cartera must not create separate prospect, client and policyholder identities for the same person.
-
-## 7.3 Pipeline and Opportunity lifecycle
-
-Disposition: `REUSE_CANONICAL`
-
-Pipeline owns commercial opportunity lifecycle.
-
-Cartera may propose a candidate opportunity. Only an advisor-confirmed bridge may create or reopen an opportunity.
-
-## 7.4 Quote Intelligence
-
-Disposition: `REUSE_CANONICAL`
-
-Quote Intelligence owns quote facts, versions, calculations and acceptance state.
-
-Cartera and Pipeline consume quote lifecycle events and relationship meaning.
-
-## 7.5 Policy Intelligence and Policy Read Model
-
-Disposition: `REUSE_CANONICAL / REUSE_WITH_PRODUCTIVE_ADAPTER`
-
-Policy Intelligence owns policy facts, parties, coverage, status and source-backed dates.
-
-Cartera owns the advisor-facing post-sale read model and workflow, not Policy Truth.
-
-## 7.6 Conservation Intelligence
-
-Disposition: `ARCHITECTURE_ONLY` for the productive runtime reviewed in this audit.
-
-Existing architecture correctly separates:
-
-- production facts;
-- local predictive conservation;
-- institutional conservation truth;
-- compensation;
-- forecast;
-- business planning.
-
-Required construction:
-
-- productive local predictive Conservation runtime;
-- official snapshot intake;
-- evidence and confidence envelope;
-- policy, advisor and portfolio projections;
-- no invented LIMRA, IGC, persistency or conservation formula.
-
-## 7.7 Compensation Intelligence
-
-Disposition: `REUSE_CANONICAL / REFACTOR_FOUNDATION`
-
-Existing useful assets include commissionable-amount and commission-projection foundations plus Rule Snapshot Governance.
-
-Required construction:
-
-- validated Rule Packs;
-- policy-year and period resolver;
-- confirmed payment input;
-- expected, calculated, reported and paid commission separation;
-- reconciliation against official evidence.
-
-## 7.8 Alfred / NBA
-
-Disposition: `REUSE_CANONICAL`
-
-Owns final recommendation priority and Reason Why.
-
-Cartera must provide governed signals, not bypass Alfred with its own final ranking authority.
-
-## 7.9 NASH
-
-Disposition: `REUSE_CANONICAL`
-
-Owns conversation preparation and deterministic Conversation Brief boundaries.
-
-NASH does not own relationship graph truth, policy truth, opportunity truth or execution.
-
-## 7.10 Candy Crush / Advisor Experience
+### `policy-ingestion-orchestrator.js`
 
 Disposition: `REUSE_WITH_ADAPTER`
 
-Owns daily action presentation, progressive experience and small useful actions.
+Useful flow:
 
-Required construction:
+```text
+OCR
+→ parser
+→ validator
+→ normalizer
+```
 
-- Cartera relational mission provider;
-- action card based on Alfred-approved recommendation;
-- advisor confirmation and execution tracking;
-- no generic activity inflation.
+Missing:
 
----
+- evidence envelope;
+- identity resolution;
+- Policy Party extraction;
+- durable staging;
+- conflict state;
+- confirmation and canonical persistence.
 
-# 8. Identity audit
+### `policy-import-queue.js`
 
-## Existing assets
+Disposition: `REFACTOR_FOUNDATION`
 
-- `entity-resolver-engine.js`;
-- `policy-duplicate-engine.js`;
-- identity-related architecture and `prospect_uuid` continuity contracts.
+The queue is an in-memory array. It is not persistent, resumable, advisor-scoped or auditable.
 
-## Finding
+### `policy-human-review-engine.js`
 
-The current entity resolver performs a simple case-insensitive name substring search.
+Disposition: `REUSE_WITH_ADAPTER`
+
+The core rule is useful: validation errors or doubtful fields require review.
+
+It must also include identity conflicts, sensitive fields, provenance gaps and explicit review reasons.
+
+### `policy-duplicate-engine.js`
 
 Disposition: `REBUILD_CANONICAL_GAP`
 
-## Required construction
+Current duplicate key:
+
+```text
+client + product + premium
+```
+
+This cannot satisfy canonical policy or identity resolution.
+
+### `renewal-intelligence-engine.js`
+
+Disposition: `REFACTOR_FOUNDATION`
+
+Current score weights are deterministic foundations, not validated conservation rules.
+
+### `policy-risk-engine.js`
+
+Disposition: `REFACTOR_FOUNDATION`
+
+Must be reconciled under Conservation Intelligence to avoid duplicate risk authority.
+
+### `policy-detail-alert-engine.js`
+
+Disposition: `REUSE_WITH_ADAPTER`
+
+Alert types are useful, but every alert requires canonical source and evidence state.
+
+---
+
+# 7. Policy Read Model audit
+
+## Adapter
+
+- `platform/adapters/policy-read-model/policy-read-model-adapter-068b.js`
+
+Disposition:
+
+`REUSE_WITH_ADAPTER`
+
+Strengths:
+
+- explicit read-only mode;
+- blocked effects;
+- safety flags;
+- freshness metadata;
+- audit envelope;
+- no unsupported Policy Truth claim.
+
+Blocking fact:
+
+The current source is local static fixtures.
+
+Decision:
+
+Preserve the envelope and safety model. Replace the fixture source with a canonical Policy source adapter only after authority and persistence are implemented.
+
+---
+
+# 8. Identity and duplicate audit
+
+## `entity-resolver-engine.js`
+
+Disposition: `REBUILD_CANONICAL_GAP`
+
+Current behavior:
+
+- lowercase query;
+- first entity whose name contains the query.
+
+This cannot support identity continuity.
+
+## Required canonical engine
 
 `Canonical Person Resolution Engine`
 
-Minimum inputs:
+Minimum comparison evidence:
 
 - normalized name;
 - phone;
 - email;
 - birth date;
-- legally permitted tax identifier;
-- recent appointments;
-- quote and application references;
-- product context;
+- tax identifier when permitted;
+- appointments;
+- quotes;
+- applications;
+- products;
 - referral source;
-- household and company relationships;
+- household and company links;
 - document evidence.
 
 Required outputs:
@@ -730,269 +538,262 @@ Required outputs:
 - `MATCH_HIGH_CONFIDENCE`;
 - `MATCH_REVIEW_REQUIRED`;
 - `NO_MATCH`;
-- `CONFLICT`;
-- ranked candidate identities;
-- matching and conflicting evidence;
-- confidence and uncertainty;
-- human decision required;
-- auditable decision record.
+- `CONFLICT`.
 
-No automatic person merge is authorized.
+No automatic merge.
 
 ---
 
-# 9. Payment and commission audit
+# 9. Payment and Compensation audit
 
-## Existing useful assets
+## Reusable foundations
 
-- `payment-frequency-engine.js`;
-- policy payment-date projections;
-- pending-payment alerts;
-- commissionable-amount foundation;
-- `commission-projection-engine.js`;
-- Compensation architecture and Rule Snapshot Governance.
+- payment-frequency normalization;
+- commissionable-amount concept;
+- commission projection concept;
+- Compensation architecture;
+- Rule Snapshot governance.
 
-## Finding
+## Canonical gap
 
-The repository contains frequency and calculation primitives, but this audit did not verify a productive canonical Payment Obligation Ledger.
+No productive Payment Obligation Ledger was proved.
 
-Disposition: `REBUILD_CANONICAL_GAP`
+Required objects:
 
-## Required construction
-
-`Policy Payment Obligation Ledger`
-
-Minimum state:
-
-- obligation identifier;
-- policy identifier;
-- canonical person and payer references;
-- policy year;
-- expected date;
-- expected amount;
-- expected currency;
-- covered period;
+- expected obligation;
+- expected date and amount;
 - frequency;
-- detected evidence;
+- policy year;
+- period covered;
+- evidence state;
+- actual payment;
 - confirmation state;
-- actual date and amount;
-- partial, corrected, overdue and cancelled states;
-- evidence references;
-- actor and confirmation timestamp.
+- correction history.
 
-Cartera must not convert email detection or scheduled payment into confirmed payment truth.
+Cartera confirms and projects. Compensation owns financial interpretation.
 
 ---
 
-# 10. Relationship Graph audit
+# 10. Conservation audit
 
-## Existing authority
+Disposition:
 
-`ADR-0026_RELATIONSHIP_GRAPH_PRIMARY_COMMERCIAL_ASSET.md`
+`ARCHITECTURE_ONLY + REFACTOR_FOUNDATIONS`
 
-The ADR defines the graph as a primary commercial asset and assigns Shared Intelligence ownership for:
+The architecture correctly separates:
 
-- relationship identity;
-- relationship context;
-- referral links;
-- engagement history;
-- relationship health;
-- opportunity evidence.
+- production facts;
+- conservation interpretation;
+- compensation interpretation;
+- forecast suggestion;
+- business-planning action.
 
-## Finding
+A productive local predictive Conservation runtime was not proved.
 
-The reviewed ADR explicitly does not implement the graph.
+Reusable inputs:
 
-Disposition: `ARCHITECTURE_ONLY / REBUILD_CANONICAL_GAP`
+- payment risk;
+- cancellation or reinstatement signals;
+- renewal proximity;
+- service gaps;
+- contact gaps;
+- policy status;
+- official snapshots when available.
 
-## Required construction
-
-- graph node and edge model;
-- person, household, company and relationship links;
-- provenance and freshness per edge;
-- consent and sensitivity boundaries;
-- referral lineage;
-- relationship-role history;
-- read model for Cartera;
-- no opaque influence score as graph truth.
+No LIMRA, IGC, persistence or conservation formula may be invented.
 
 ---
 
-# 11. First-pass build versus reuse decision
+# 11. Relationship Graph audit
 
-## Do not build again
+Disposition:
 
-- a second relationship timeline authority;
-- a second relationship master engine;
-- another policy parser pipeline from scratch;
-- another policy read model without reconciling the existing one;
-- another task-priority domain inside Cartera;
-- another final NBA ranking engine;
-- another NASH message engine;
-- another quote truth store;
-- another person identity for clients;
-- another compensation formula owner.
+`ARCHITECTURE_ONLY / RUNTIME GAP`
 
-## Adapt and reconcile
+The ADR establishes the relationship graph as a primary commercial asset and assigns graph ownership outside Product Intelligence and NASH.
 
-- relationship engines;
-- policy ingestion primitives;
-- policy detail and timeline foundations;
-- renewal, risk and alert signals;
-- legacy Cartera UI and services;
-- task and quick-action foundations;
-- Policy Read Model;
-- commission projection primitives;
-- Advisor Experience presentation primitives.
+No productive graph persistence and read model were proved.
 
-## Build as canonical gaps
+Required graph capabilities:
+
+- canonical people;
+- person-to-person edges;
+- person-to-organization edges;
+- household and family roles;
+- referral and introduction links;
+- evidence and consent state;
+- relationship history;
+- freshness;
+- reversible corrections.
+
+---
+
+# 12. Alfred, NASH and Candy Crush reconciliation
+
+## Alfred / NBA
+
+Existing ranking, quick-action and suggestion foundations may be reused.
+
+Cartera must provide governed signals, not final priority truth.
+
+## NASH
+
+NASH may consume an approved relationship and policy brief to prepare the conversation.
+
+NASH does not own identity, graph, policy facts, opportunity lifecycle or permission.
+
+## Candy Crush / Advisor Experience
+
+Existing mission and quick-action patterns may be reused.
+
+Cartera provides reviewed candidate actions. Advisor Experience presents them. The advisor confirms execution.
+
+---
+
+# 13. Canonical build-only gaps
+
+The audit currently identifies these true construction gaps:
 
 1. Canonical Person Resolution Engine.
-2. Identity Resolution Review UI.
-3. Confirmed Policy and Policy Party persistence.
-4. Persistent and resumable document-import queue.
-5. Policy Payment Obligation Ledger.
-6. Payment confirmation workflow.
-7. Productive local predictive Conservation runtime.
-8. Relationship Graph runtime and read model.
-9. Cartera Signal Envelope and adapters.
-10. Advisor-confirmed Cartera-to-Pipeline opportunity bridge.
-11. Cartera-to-Alfred-to-Candy-Crush orchestration.
-12. Email payment evidence adapter.
-13. Compensation Rule Pack bridge.
-14. Productive Cartera UI migration and Future Radar.
-15. Productivity proof metrics.
+2. Identity-resolution review UI.
+3. Confirmed Policy persistence.
+4. Policy Party model and persistence.
+5. Persistent and resumable document-intake queue.
+6. Policy Evidence Candidate schema and staging.
+7. Payment Obligation Ledger.
+8. Payment-confirmation workflow.
+9. Local predictive Conservation runtime.
+10. Relationship Graph runtime and read model.
+11. Governed Cartera Signal Envelope.
+12. Cartera-to-Pipeline opportunity-confirmation bridge.
+13. Cartera-to-Alfred-to-Candy-Crush orchestration.
+14. Email evidence adapter.
+15. Compensation Rule Pack bridge.
+16. Productive Cartera read-model adapter.
+17. Productive Cartera UI migration and Future Radar.
+18. Productivity proof metrics.
 
 ---
 
-# 12. Reconciliation target architecture
+# 14. Reuse queue
 
-```text
-Canonical person / prospect_uuid
-        │
-        ├── Quote Intelligence
-        ├── Pipeline opportunities
-        ├── Policy Intelligence + Policy Parties
-        ├── Payment Obligation Ledger
-        ├── Event & Evidence
-        └── Relationship Graph
-                 │
-                 ▼
-       Relationship Intelligence
-                 │
-                 ▼
-       Cartera Signal Envelope
-        ├── confirmed facts
-        ├── scheduled events
-        ├── detected evidence
-        ├── candidate interpretations
-        ├── uncertainty / freshness
-        └── human decision required
-                 │
-                 ▼
-             Alfred / NBA
-                 │
-        ┌────────┴────────┐
-        ▼                 ▼
-      NASH        Candy Crush / Mi Día
- conversation       action surface
- preparation
-```
+## Reuse first
 
-Cartera is the advisor-facing post-sale orchestration and read-model surface over these authorities. It is not a new monolithic truth owner.
+- Event & Evidence;
+- person timeline and projections;
+- Pipeline opportunity lifecycle;
+- connected `cartera` route contract;
+- legacy search/list/KPI/import UX behavior;
+- Excel header normalization;
+- Policy Read Model safety envelope;
+- policy ingestion orchestrator pattern;
+- human-review rule;
+- relationship review and future-event foundations;
+- Compensation and Conservation authority contracts;
+- Alfred, NASH and Advisor Experience boundaries.
 
----
+## Refactor before use
 
-# 13. Execution sequence started by this document
+- relationship next action;
+- relationship opportunity;
+- life event;
+- referral opportunity;
+- relationship health;
+- engagement;
+- renewal risk;
+- policy risk;
+- import queue;
+- legacy normalizer;
+- duplicate engines;
+- automatic task generation.
 
-## Audit Track A — Inventory and direct inspection
+## Do not activate directly
 
-Status: `ACTIVE / FIRST PASS COMPLETE`
-
-Completed in this pass:
-
-- Relationship Intelligence engine code inspection;
-- Policy Operations cluster identification;
-- key policy ingestion foundation inspection;
-- renewal, risk, alert, queue, duplicate, identity, engagement and commission primitive inspection;
-- legacy Cartera UI confirmation;
-- canonical authority mapping;
-- initial gap list.
-
-Still required:
-
-- direct inspection of every Policy Operations asset proposed for reuse;
-- test discovery and execution mapping;
-- actual runtime consumer and import graph verification on the current branch;
-- persistence and schema discovery;
-- route and service call-graph discovery;
-- current productive UI entrypoint discovery;
-- duplicate and conflicting engine inventory;
-- stale or archived implementation separation.
-
-## Audit Track B — Canonical reconciliation
-
-Status: `PLANNED / NOT STARTED`
-
-Required outputs:
-
-- one owner per fact, signal and metric;
-- adapter map;
-- deprecation and non-activation map;
-- canonical evidence envelope;
-- target import graph;
-- migration order;
-- bounded implementation packages.
-
-## Audit Track C — Gap implementation
-
-Status: `BLOCKED UNTIL TRACK B CLOSURE AND PHASE AUTHORIZATION`
-
-Runtime implementation begins only after:
-
-- repository discovery is complete for the bounded phase;
-- source owners are resolved;
-- reusable assets are selected;
-- prohibited legacy behavior is identified;
-- tests and evidence expectations are explicit;
-- the specific phase is separately authorized.
+- relationship opportunity as commercial truth;
+- generative policy parsing without evidence guardrails;
+- automatic task creation;
+- automatic calendar writes;
+- automatic identity merges;
+- hard delete as policy lifecycle behavior;
+- quarantined IndexedDB as canonical truth;
+- isolated `cartera-view.js` beside the current route.
 
 ---
 
-# 14. Immediate next bounded task
+# 15. Track A execution sequence
 
-`CARTERA_AUDIT_002_POLICY_OPERATIONS_RUNTIME_AND_TEST_MATRIX`
+## Pass 1 — Relationship and inventory classification
 
-Purpose:
+Status:
 
-For each Policy Operations and legacy Cartera asset proposed for reuse, record:
+`COMPLETE`
 
-- path;
-- exported API;
-- inputs and outputs;
-- test coverage;
-- current importers and consumers;
-- persistence dependency;
-- runtime status;
-- source owner;
-- reuse disposition;
-- required adapter or refactor;
-- blocking risk.
+## Pass 2 — Legacy Cartera runtime reconciliation
 
-Exit gate:
+Status:
 
-No Policy Operations asset may be wired into the Cartera productive runtime merely because its filename exists. Reuse requires inspected behavior, ownership compatibility, tests or an explicit remediation plan.
+`COMPLETE`
+
+Evidence:
+
+- productive route call graph proved;
+- duplicate implementation proved;
+- storage and effect boundaries inspected;
+- selective reuse and migration strategy locked.
+
+## Pass 3 — Policy document intake foundations
+
+Status:
+
+`NEXT`
+
+Directly inspect:
+
+1. `policy-ocr-engine.js`;
+2. `policy-ai-parser.js`;
+3. `policy-document-classifier.js`;
+4. `policy-schema-validator-engine.js`;
+5. `policy-normalization-engine.js`;
+6. `policy-staging-cache.js`;
+7. `policy-batch-processing-engine.js`;
+8. tests and consumers.
+
+## Pass 4 — Policy detail, timeline, renewals and tasks
+
+Status:
+
+`PLANNED`
+
+## Pass 5 — Schemas, persistence, RLS and events
+
+Status:
+
+`PLANNED`
+
+## Pass 6 — Final reconciliation and build-only queue lock
+
+Status:
+
+`PLANNED`
 
 ---
 
-# 15. Decision
+# 16. Current implementation boundary
 
-Forge will not build Cartera by duplicating the repository's existing engines.
+This audit does not authorize implementation.
 
-Forge will:
+The registered implementation target remains:
 
-1. prove what already exists;
-2. classify what is canonical, adaptable, unsafe or incomplete;
-3. reconcile reusable capabilities under existing authorities;
-4. build only the missing identity, persistence and orchestration boundaries;
-5. prove every productive connection with tests, evidence and closure.
+- `CARTERA_001_PIPELINE_QUOTE_PERSON_TIMELINE_CONTINUITY`
+
+Track A may continue read-only inspection to close the asset matrix.
+
+No later Cartera phase may be implemented solely because its assets are now documented.
+
+---
+
+# 17. Current conclusion
+
+The correct Cartera strategy is now evidence-backed:
+
+> Preserve the connected user behavior, disassemble and selectively reuse the orphan foundations, replace legacy authority, and build only the canonical identity, persistence and orchestration gaps.
