@@ -99,7 +99,8 @@
 }
 
 .referral-sheet input,
-.referral-sheet textarea {
+.referral-sheet textarea,
+.referral-sheet select {
   box-sizing: border-box;
   width: 100%;
   min-height: 50px;
@@ -109,6 +110,19 @@
   color: var(--ink);
   background: rgba(3, 12, 25, 0.74);
   font: inherit;
+}
+
+.referral-sheet select {
+  color-scheme: dark;
+}
+
+.referral-sheet__source-fields {
+  display: grid;
+  gap: 15px;
+}
+
+.referral-sheet__source-fields[hidden] {
+  display: none;
 }
 
 .referral-sheet textarea {

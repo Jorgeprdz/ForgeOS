@@ -48,7 +48,7 @@ function latestTimelineEvent(events) {
 
 function stageLabel(status) {
   return ({
-    referred_new: "Referido",
+    referred_new: "Nuevo",
     contacted: "Contactado",
     appointment_scheduled: "Cita",
     proposal: "Solicitud",
@@ -58,7 +58,7 @@ function stageLabel(status) {
 }
 
 const STAGE_OPTIONS = Object.freeze([
-  Object.freeze({ value: "referred_new", label: "Referido" }),
+  Object.freeze({ value: "referred_new", label: "Nuevo" }),
   Object.freeze({ value: "contacted", label: "Contactado" }),
   Object.freeze({ value: "appointment_scheduled", label: "Cita" }),
   Object.freeze({ value: "proposal", label: "Solicitud" }),

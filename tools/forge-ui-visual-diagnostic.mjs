@@ -580,6 +580,7 @@ async function captureViewport(browser, viewport, fixture) {
       );
       await page.locator('[name="fullName"]').fill(SAMPLE_REFERRAL.fullName);
       await page.locator('[name="phone"]').fill(SAMPLE_REFERRAL.phone);
+      await page.locator('[name="source"]').selectOption("Referido");
       await page.locator('[name="referrerName"]').fill(
         SAMPLE_REFERRAL.referrerName,
       );

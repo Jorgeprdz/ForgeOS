@@ -151,7 +151,7 @@ function referralSheetTemplate() {
           <header class="referral-sheet__header">
             <div>
               <p>PIPELINE</p>
-              <h2 id="referral-sheet-title">Agregar nuevo referido</h2>
+              <h2 id="referral-sheet-title">Agregar prospecto</h2>
             </div>
             <button
               class="referral-sheet__close"
@@ -170,13 +170,26 @@ function referralSheetTemplate() {
               <input name="phone" type="tel" autocomplete="tel" required>
             </label>
             <label>
-              <span>Referido por</span>
-              <input name="referrerName" autocomplete="off">
+              <span>Fuente *</span>
+              <select name="source" required data-prospect-source>
+                <option value="">Selecciona una fuente</option>
+                <option value="Referido">Referido</option>
+                <option value="Mercado cálido">Mercado cálido</option>
+                <option value="Mercado frío">Mercado frío</option>
+                <option value="Redes sociales">Redes sociales</option>
+                <option value="Centro de influencia">Centro de influencia</option>
+              </select>
             </label>
-            <label>
-              <span>Relación con el referente</span>
-              <input name="referrerRelationship" autocomplete="off">
-            </label>
+            <div class="referral-sheet__source-fields" data-referral-source-fields hidden>
+              <label>
+                <span>Referido por</span>
+                <input name="referrerName" autocomplete="off">
+              </label>
+              <label>
+                <span>Relación con el referente</span>
+                <input name="referrerRelationship" autocomplete="off">
+              </label>
+            </div>
             <label>
               <span>Contexto inicial breve *</span>
               <textarea name="initialContext" rows="3" required></textarea>
@@ -212,13 +225,15 @@ function referralSheetTemplate() {
 function referralPayload(form) {
   const values = new FormData(form);
   const optional = (name) => String(values.get(name) || "").trim() || undefined;
+  const source = String(values.get("source") || "").trim();
+  const referred = source === "Referido";
   return {
     fullName: String(values.get("fullName") || "").trim(),
     phone: String(values.get("phone") || "").trim(),
-    source: "Referido",
+    source,
     status: "referred_new",
-    referrerName: optional("referrerName"),
-    referrerRelationship: optional("referrerRelationship"),
+    referrerName: referred ? optional("referrerName") : undefined,
+    referrerRelationship: referred ? optional("referrerRelationship") : undefined,
     initialContext: String(values.get("initialContext") || "").trim(),
     email: optional("email"),
     dateOfBirth: optional("dateOfBirth"),
@@ -437,8 +452,22 @@ async function openReferralForm({ trigger, errorNode, onCreated }) {
     const form = layer.querySelector("[data-referral-form]");
     const formError = layer.querySelector("[data-referral-error]");
     const save = layer.querySelector("[data-save-referral]");
+    const source = form.querySelector("[data-prospect-source]");
+    const referralFields = form.querySelector("[data-referral-source-fields]");
     const previousOverflow = document.body.style.overflow;
     let dirty = false;
+
+    const syncReferralFields = () => {
+      const referred = source.value === "Referido";
+      referralFields.hidden = !referred;
+      if (!referred) {
+        referralFields.querySelectorAll("input").forEach(input => {
+          input.value = "";
+        });
+      }
+    };
+    source.addEventListener("change", syncReferralFields);
+    syncReferralFields();
 
     const focusable = () => [...sheet.querySelectorAll(
       'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
@@ -636,10 +665,10 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
               type="button"
               data-pipeline-create-referral
               data-open-referral
-              aria-label="Agregar nuevo referido"
+              aria-label="Agregar prospecto"
             >
               <span aria-hidden="true">＋</span>
-              <span>Agregar nuevo referido</span>
+              <span>Agregar prospecto</span>
             </button>
             <p
               class="pipeline-module__create-error"
@@ -661,8 +690,8 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
                     <p data-productive-source-label>${escapeHtml(card.sourceSummary)}</p>
                   </div>
                   <label class="pipeline-module__stage-control">
-                    <span>Etapa del prospecto</span>
-                    <select data-productive-stage-control="${escapeHtml(card.id)}" aria-label="Cambiar etapa de ${escapeHtml(card.fullName)}">
+                    <span>Estado del prospecto</span>
+                    <select data-productive-stage-control="${escapeHtml(card.id)}" aria-label="Cambiar estado de ${escapeHtml(card.fullName)}">
                       ${card.stageOptions.map(option => `<option value="${escapeHtml(option.value)}" ${option.value === card.status ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}
                     </select>
                   </label>

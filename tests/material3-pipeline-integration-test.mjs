@@ -88,7 +88,7 @@ test("Material 3 Pipeline owns a light referral sheet independent from Alfred", 
 
   assert.match(root.innerHTML, /0 prospectos/);
   assert.match(root.innerHTML, /No hay prospectos conectados/);
-  assert.match(root.innerHTML, /Agregar nuevo referido/);
+  assert.match(root.innerHTML, /Agregar prospecto/);
   assert.match(root.innerHTML, /data-pipeline-create-referral/);
   assert.match(root.innerHTML, /data-open-referral/);
   assert.doesNotMatch(root.innerHTML, /data-open-alfred/);
@@ -148,14 +148,28 @@ test("Material 3 Pipeline owns a light referral sheet independent from Alfred", 
   ]) {
     assert.doesNotMatch(source, new RegExp(`name="${removed}"`));
   }
-  assert.doesNotMatch(source, /name="source"/);
+  assert.match(source, /<select name="source" required data-prospect-source>/);
+  for (const sourceLabel of [
+    "Referido",
+    "Mercado cálido",
+    "Mercado frío",
+    "Redes sociales",
+    "Centro de influencia",
+  ]) assert.match(source, new RegExp(`<option value="${sourceLabel}">${sourceLabel}</option>`));
+  assert.doesNotMatch(source, /source:\s*"Referido"/);
+  assert.match(source, /source,\s*\n\s*status:\s*"referred_new"/);
+  assert.match(source, /const referred = source === "Referido"/);
+  assert.match(source, /referrerName:\s*referred \? optional\("referrerName"\) : undefined/);
+  assert.match(source, /data-referral-source-fields hidden/);
+  assert.match(source, /source\.value === "Referido"/);
+  assert.match(source, /referralFields\.hidden = !referred/);
+  assert.match(source, /referralFields\.querySelectorAll\("input"\)/);
   assert.doesNotMatch(source, /name="status"/);
 
   assert.match(productiveAdapter, /ForgeProductiveProspectBootstrap067G17B/);
   assert.match(productiveAdapter, /ForgeProductiveProspectService067G17B/);
   assert.match(productiveAdapter, /serviceAuthority\.create\(client\)/);
   assert.match(source, /service\.createProspect\(referralPayload\(form\)\)/);
-  assert.match(source, /source:\s*"Referido"/);
   assert.match(source, /status:\s*"referred_new"/);
   assert.doesNotMatch(source, /shell\.setAlfred/);
   assert.match(productiveAdapter, /service\.listProspects\(\)/);
@@ -259,7 +273,9 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.match(source, /data-productive-card-status/);
   assert.match(source, /data-productive-card-actions/);
   assert.match(source, /data-productive-stage-control/);
+  assert.match(source, /Estado del prospecto/);
   assert.match(source, /data-productive-source-label/);
+  assert.match(source, /data-productive-card-metadata[\s\S]*data-productive-source-label[\s\S]*pipeline-module__stage-control[\s\S]*data-productive-stage-control/);
   assert.match(source, /productiveAdapter\.updateStage\(card\.id,\s*select\.value\)/);
   assert.match(
     source,
@@ -269,10 +285,17 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.doesNotMatch(source, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
   assert.doesNotMatch(adapter, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
   assert.match(adapter, /intelligenceLabel:\s*"Asistencia de conversación disponible"/);
+  assert.match(adapter, /referred_new:\s*"Nuevo"/);
+  assert.match(adapter, /value:\s*"referred_new",\s*label:\s*"Nuevo"/);
   assert.match(adapter, /PROSPECT_CREATED:\s*"Prospecto creado"/);
   assert.match(adapter, /OBJECTION_RECORDED:\s*"Objeción clasificada"/);
   assert.match(adapter, /label:\s*timelineEventLabel\(latest\.eventType\)/);
   assert.match(adapter, /service\.updateProspect\(prospectId,\s*\{\s*status\s*\}\)/);
+  const stageUpdater = adapter.slice(
+    adapter.indexOf("async function updateStage"),
+    adapter.indexOf("return Object.freeze({", adapter.indexOf("async function updateStage")),
+  );
+  assert.doesNotMatch(stageUpdater, /source/);
   for (const status of [
     "referred_new",
     "contacted",
