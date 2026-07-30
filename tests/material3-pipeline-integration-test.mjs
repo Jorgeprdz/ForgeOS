@@ -483,7 +483,7 @@ test("productive workspaces share one styled and recoverable lifecycle", async (
     "utf8",
   );
 
-  assert.match(source, /pipeline-referral-modal\.css\?v=ui-m06-referral-004/);
+  assert.match(source, /pipeline-referral-modal\.css\?v=ui-m06-referral-005/);
   assert.match(source, /referralStylePromise = undefined/);
   assert.match(source, /const productiveWorkspaceController = \(\(\) =>/);
   assert.match(source, /await ensureReferralStyles\(\)/);
