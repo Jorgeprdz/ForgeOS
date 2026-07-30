@@ -24,73 +24,23 @@ jobs:
           ref: fix/pipeline-mobile-interaction-persistence
           fetch-depth: 0
 
-      - name: Apply deterministic source patch
+      - name: Update focused regression expectation
         run: |
           node - <<'NODE'
           const fs = require('fs');
-
-          function replaceRequired(file, before, after, label) {
-            const source = fs.readFileSync(file, 'utf8');
-            if (!source.includes(before)) throw new Error(`PATCH_MARKER_MISSING:${label}`);
-            fs.writeFileSync(file, source.replace(before, after));
-          }
-
-          const modalCss = 'docs/static-preview/forge-alive-material3/pipeline-referral-modal.css';
-          replaceRequired(
-            modalCss,
-            `.pipeline-module__card-actions {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n}\n\n.pipeline-module__card-actions button,\n.pipeline-module__card-actions a {\n  border: 1px solid var(--outline);\n  border-radius: 999px;\n  padding: 8px 12px;\n  color: var(--ink);\n  background: rgba(255, 255, 255, 0.05);\n  font: inherit;\n  text-decoration: none;\n}\n\n`,
-            '',
-            'REMOVE_MODAL_GLOBAL_CARD_ACTION_OVERRIDE',
-          );
-
-          const adapterFile = 'docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js';
-          const adapter = fs.readFileSync(adapterFile, 'utf8');
-          const helperMarker = `\nfunction timelineEventLabel(eventType) {`;
-          if (!adapter.includes(helperMarker)) throw new Error('PATCH_MARKER_MISSING:ADAPTER_HELPER');
-          const helper = `\nexport function reconcileUpdatedProspectState({\n  records = [],\n  cards = [],\n  updatedProspect,\n  requestedStatus,\n}) {\n  if (!updatedProspect?.id || updatedProspect.status !== requestedStatus) {\n    const error = new Error("PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH");\n    error.code = "PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH";\n    error.details = Object.freeze({\n      prospectId: updatedProspect?.id || null,\n      requestedStatus,\n      returnedStatus: updatedProspect?.status || null,\n    });\n    throw error;\n  }\n\n  const nextRecords = records.map(record =>\n    record.id === updatedProspect.id ? updatedProspect : record\n  );\n  const nextCards = cards.map(card =>\n    card.id === updatedProspect.id\n      ? Object.freeze({\n          ...card,\n          status: updatedProspect.status,\n          stageLabel: stageLabel(updatedProspect.status),\n          prospect: updatedProspect,\n        })\n      : card\n  );\n\n  return Object.freeze({ records: nextRecords, cards: nextCards });\n}\n`;
-          let nextAdapter = adapter.replace(helperMarker, `${helper}${helperMarker}`);
-          const oldUpdate = `    await service.updateProspect(prospectId, { status });\n    return reload();`;
-          const newUpdate = `    const updatedProspect = await service.updateProspect(prospectId, { status });\n    const reconciled = reconcileUpdatedProspectState({\n      records,\n      cards,\n      updatedProspect,\n      requestedStatus: status,\n    });\n    records = reconciled.records;\n    cards = reconciled.cards;\n    return cards;`;
-          if (!nextAdapter.includes(oldUpdate)) throw new Error('PATCH_MARKER_MISSING:UPDATE_STAGE');
-          nextAdapter = nextAdapter.replace(oldUpdate, newUpdate);
-          fs.writeFileSync(adapterFile, nextAdapter);
-
-          replaceRequired(
-            'docs/static-preview/forge-alive-material3/pipeline-module.js',
-            './pipeline-productive-intelligence-adapter.js?v=material3-productive-001',
-            './pipeline-productive-intelligence-adapter.js?v=material3-productive-002',
-            'PIPELINE_ADAPTER_CACHE_BUST',
-          );
-          replaceRequired(
-            'docs/static-preview/forge-alive-material3/pipeline-module.js',
-            './pipeline-referral-modal.css?v=ui-m06-referral-004',
-            './pipeline-referral-modal.css?v=ui-m06-referral-005',
-            'MODAL_CSS_CACHE_BUST',
-          );
-          replaceRequired(
-            'docs/static-preview/forge-alive-material3/app.js',
-            './pipeline-module.js?v=ui-m06-pipeline-009',
-            './pipeline-module.js?v=ui-m06-pipeline-010',
-            'PIPELINE_MODULE_CACHE_BUST',
-          );
-          replaceRequired(
-            'docs/static-preview/forge-alive-material3/index.html',
-            './app.js?v=ui-m04-shell-007',
-            './app.js?v=pipeline-mobile-interaction-001',
-            'APP_CACHE_BUST',
-          );
+          const file = 'tests/material3-pipeline-integration-test.mjs';
+          const source = fs.readFileSync(file, 'utf8');
+          const before = 'pipeline-referral-modal\\.css\\?v=ui-m06-referral-004';
+          const after = 'pipeline-referral-modal\\.css\\?v=ui-m06-referral-005';
+          if (!source.includes(before)) throw new Error('PIPELINE_MODAL_VERSION_EXPECTATION_NOT_FOUND');
+          fs.writeFileSync(file, source.replace(before, after));
           NODE
 
-      - name: Commit applied runtime patch
+      - name: Commit updated regression expectation
         run: |
           git config user.name "Forge UI Repair"
           git config user.email "forge-ui-repair@users.noreply.github.com"
           git pull --rebase --autostash origin fix/pipeline-mobile-interaction-persistence
-          git add \
-            docs/static-preview/forge-alive-material3/pipeline-referral-modal.css \
-            docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js \
-            docs/static-preview/forge-alive-material3/pipeline-module.js \
-            docs/static-preview/forge-alive-material3/app.js \
-            docs/static-preview/forge-alive-material3/index.html
-          git commit -m "fix(ui): preserve Pipeline action geometry and persisted stage"
+          git add tests/material3-pipeline-integration-test.mjs
+          git commit -m "test(ui): align Pipeline modal asset expectation"
           git push origin HEAD:fix/pipeline-mobile-interaction-persistence
