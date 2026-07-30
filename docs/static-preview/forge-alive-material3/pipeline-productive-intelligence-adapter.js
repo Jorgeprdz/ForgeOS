@@ -48,13 +48,37 @@ function latestTimelineEvent(events) {
 
 function stageLabel(status) {
   return ({
-    referred_new: "Referido",
+    referred_new: "Nuevo",
     contacted: "Contactado",
-    appointment_scheduled: "Cita",
-    proposal: "Solicitud",
-    decision: "Firma",
-    client: "Cerrado",
+    appointment_scheduled: "Cita agendada",
+    proposal: "Propuesta",
+    decision: "En decisión",
+    client: "Cliente",
   })[status] || status || "Etapa no disponible";
+}
+
+const STAGE_OPTIONS = Object.freeze([
+  Object.freeze({ value: "referred_new", label: "Nuevo" }),
+  Object.freeze({ value: "contacted", label: "Contactado" }),
+  Object.freeze({ value: "appointment_scheduled", label: "Cita agendada" }),
+  Object.freeze({ value: "proposal", label: "Propuesta" }),
+  Object.freeze({ value: "decision", label: "En decisión" }),
+  Object.freeze({ value: "client", label: "Cliente" }),
+]);
+
+function timelineEventLabel(eventType) {
+  return ({
+    PROSPECT_CREATED: "Prospecto creado",
+    CONTACT_ATTEMPTED: "Contacto intentado",
+    CONVERSATION_RECORDED: "Conversación registrada",
+    APPOINTMENT_SCHEDULED: "Cita agendada",
+    APPOINTMENT_RESCHEDULED: "Cita reprogramada",
+    APPOINTMENT_COMPLETED: "Cita completada",
+    OBJECTION_RECORDED: "Objeción clasificada",
+    FOLLOW_UP_PLANNED: "Seguimiento planeado",
+    PROPOSAL_PRESENTED: "Propuesta presentada",
+    DECISION_RECORDED: "Decisión registrada",
+  })[eventType] || "Actividad registrada";
 }
 
 export async function createProductiveIntelligenceAdapter() {
@@ -87,10 +111,12 @@ export async function createProductiveIntelligenceAdapter() {
         fullName: prospect.fullName || "Nombre no disponible",
         status: prospect.status || "referred_new",
         stageLabel: stageLabel(prospect.status),
+        stageOptions: STAGE_OPTIONS,
+        sourceValue: prospect.source || "",
         sourceSummary: [prospect.source, prospect.referrerName, prospect.referrerRelationship].filter(Boolean).join(" · ") || "Fuente no disponible",
         phone: prospect.phone || prospect.whatsapp || null,
         latestActivity: latest ? {
-          label: latest.eventType || "Actividad registrada",
+          label: timelineEventLabel(latest.eventType),
           occurredAt: latest.occurredAt || latest.recordedAt || null,
           source: "TIMELINE",
         } : null,
@@ -101,7 +127,7 @@ export async function createProductiveIntelligenceAdapter() {
         } : null,
         timeline,
         timelineState,
-        intelligenceState: "CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST",
+        intelligenceLabel: "Asistencia de conversación disponible",
         prospect,
       });
     }));
@@ -236,9 +262,17 @@ export async function createProductiveIntelligenceAdapter() {
     });
   }
 
+  async function updateStage(prospectId, status) {
+    if (!STAGE_OPTIONS.some(option => option.value === status)) {
+      throw new Error("PRODUCTIVE_STAGE_NOT_ALLOWED");
+    }
+    await service.updateProspect(prospectId, { status });
+    return reload();
+  }
+
   return Object.freeze({
     service, timelineService, reload, prepareMessage, analyzeCombat,
-    registerObjectionClassification, buildNba,
+    registerObjectionClassification, buildNba, updateStage,
     createProspect: payload => service.createProspect(payload),
     get cards() { return cards; },
     get records() { return records; },

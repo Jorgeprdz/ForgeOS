@@ -99,7 +99,8 @@
 }
 
 .referral-sheet input,
-.referral-sheet textarea {
+.referral-sheet textarea,
+.referral-sheet select {
   box-sizing: border-box;
   width: 100%;
   min-height: 50px;
@@ -109,6 +110,19 @@
   color: var(--ink);
   background: rgba(3, 12, 25, 0.74);
   font: inherit;
+}
+
+.referral-sheet select {
+  color-scheme: dark;
+}
+
+.referral-sheet__source-fields {
+  display: grid;
+  gap: 15px;
+}
+
+.referral-sheet__source-fields[hidden] {
+  display: none;
 }
 
 .referral-sheet textarea {
@@ -157,8 +171,73 @@
 }
 
 .referral-sheet__footer button[disabled] {
-  cursor: wait;
+  cursor: default;
   opacity: 0.62;
+}
+
+.nash-combat-workspace {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(470px, calc(100vw - 48px));
+  max-width: 100%;
+  max-height: calc(100dvh - 36px);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.nash-combat-workspace__header,
+.nash-combat-workspace__body,
+.nash-combat-workspace__footer,
+.nba-workspace,
+.nba-workspace__body,
+.nba-workspace__body > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.nash-combat-workspace__header span {
+  display: block;
+  max-width: 34ch;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.nash-combat-workspace__body {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nash-combat-workspace__footer {
+  flex-shrink: 0;
+}
+
+.nba-workspace__body p,
+.nba-workspace__body strong,
+.nba-workspace__body span,
+.nba-workspace__body dd,
+.nba-workspace__body li,
+.nba-workspace__body button,
+.nba-workspace__body summary {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.nba-workspace__technical {
+  border: 1px solid var(--outline);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.nba-workspace__technical summary {
+  color: var(--muted);
+  cursor: pointer;
 }
 
 .referral-sheet__error {
@@ -236,5 +315,24 @@
 
   .referral-sheet__footer button {
     width: 100%;
+  }
+
+  .nash-combat-workspace {
+    width: min(100%, 500px);
+    max-height: min(92dvh, 780px);
+  }
+
+  .nash-combat-workspace__footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .nash-combat-workspace__footer button,
+  .nash-combat-workspace__footer a {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    white-space: normal;
   }
 }

@@ -8,17 +8,17 @@ import {
 
 const DEFAULT_URL =
   "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/";
-const OUTPUT_ROOT = path.resolve(
-  process.env.FORGE_DIAGNOSTIC_OUTPUT ||
-    "artifacts/forge-ui-diagnostic",
+const OUTPUT_BASE = path.resolve(
+  process.env.FORGE_DIAGNOSTIC_OUTPUT || "artifacts/forge-ui-diagnostic",
 );
+const OUTPUT_ROOT = path.join(OUTPUT_BASE, "final-visual-closure");
 const TARGET_URL = process.env.FORGE_DIAGNOSTIC_URL || DEFAULT_URL;
 const CACHE_BUST =
   process.env.FORGE_DIAGNOSTIC_SHA || String(Date.now());
 const FIXTURE_OVERRIDE =
   process.env.FORGE_DIAGNOSTIC_FIXTURE || "";
 const SAMPLE_REFERRAL = Object.freeze({
-  fullName: "Mariana Torres",
+  fullName: "Jorge Ignacio Palacios Rodríguez",
   phone: "5512345678",
   referrerName: "Ana López",
   referrerRelationship: "Amiga",
@@ -27,8 +27,9 @@ const SAMPLE_REFERRAL = Object.freeze({
 });
 
 const VIEWPORTS = Object.freeze([
-  Object.freeze({ name: "tablet-landscape", width: 1600, height: 960 }),
-  Object.freeze({ name: "desktop", width: 1440, height: 1000 }),
+  Object.freeze({ name: "mobile", width: 412, height: 915, expectedCardColumns: 1 }),
+  Object.freeze({ name: "tablet", width: 1024, height: 768, expectedCardColumns: 2 }),
+  Object.freeze({ name: "desktop", width: 1600, height: 900, expectedCardColumns: 4 }),
 ]);
 
 const SAMPLE_SEGUBECA_TEXT = `
@@ -131,6 +132,72 @@ async function settle(page, milliseconds = 1200) {
   await page.waitForTimeout(milliseconds);
 }
 
+async function verifyProductiveCardsClearFixedControls(page) {
+  const cards = page.locator("[data-productive-prospect-card]");
+  let clearsFixedControls = true;
+
+  for (let index = 0; index < await cards.count(); index += 1) {
+    const card = cards.nth(index);
+    await card.evaluate((element) => {
+      element.scrollIntoView({ block: "start", inline: "nearest" });
+    });
+    await page.waitForTimeout(80);
+    clearsFixedControls = clearsFixedControls && await card.evaluate((element) => {
+      const cardBounds = element.getBoundingClientRect();
+      const protectedNodes = [
+        document.querySelector(".bottom-shell"),
+        document.querySelector("[data-forge-command-orb]"),
+      ].filter((node) => {
+        if (!(node instanceof Element)) return false;
+        const style = getComputedStyle(node);
+        const bounds = node.getBoundingClientRect();
+        return style.display !== "none" && style.visibility !== "hidden"
+          && bounds.width > 0 && bounds.height > 0;
+      });
+      return protectedNodes.every((node) => {
+        const bounds = node.getBoundingClientRect();
+        return cardBounds.right <= bounds.left || bounds.right <= cardBounds.left
+          || cardBounds.bottom <= bounds.top || bounds.bottom <= cardBounds.top;
+      });
+    });
+  }
+
+  await page.evaluate((value) => {
+    globalThis.__FORGE_DIAGNOSTIC_NO_SHELL_OVERLAP__ = value;
+    scrollTo({ top: 0, behavior: "instant" });
+  }, clearsFixedControls);
+}
+
+async function verifyLastActionClearsFloatingControls(page, selector, flagName) {
+  const action = page.locator(selector).last();
+  await action.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(80);
+  const reachable = await action.evaluate(element => {
+    const actionBounds = element.getBoundingClientRect();
+    const protectedNodes = [
+      document.querySelector(".nav-pill"),
+      document.querySelector("[data-forge-command-orb]"),
+    ].filter(node => {
+      if (!(node instanceof Element)) return false;
+      const style = getComputedStyle(node);
+      const bounds = node.getBoundingClientRect();
+      return style.display !== "none" && style.visibility !== "hidden"
+        && bounds.width > 0 && bounds.height > 0;
+    });
+    return actionBounds.top >= 0
+      && actionBounds.bottom <= innerHeight
+      && protectedNodes.every(node => {
+        const bounds = node.getBoundingClientRect();
+        return actionBounds.right <= bounds.left || bounds.right <= actionBounds.left
+          || actionBounds.bottom <= bounds.top || bounds.bottom <= actionBounds.top;
+      });
+  });
+  await page.evaluate(({ key, value }) => {
+    globalThis[key] = value;
+  }, { key: flagName, value: reachable });
+  return reachable;
+}
+
 async function capture(page, directory, label, options = {}) {
   const fullPage = options.fullPage !== false;
   const pngPath = path.join(directory, `${label}.png`);
@@ -188,14 +255,184 @@ async function capture(page, directory, label, options = {}) {
         visibleCount("[data-productive-prospect-card]") > 0,
       productiveProspectCardContainsName:
         [...document.querySelectorAll("[data-productive-prospect-card]")]
-          .some((card) => visible(card) && card.textContent.includes("Mariana Torres")),
+          .some((card) => visible(card) && card.textContent.includes("Jorge Ignacio Palacios Rodríguez")),
+      productiveFilterBarVisible:
+        visibleCount("[data-productive-filter-bar]") > 0,
+      productiveFilterGeometryValid: (() => {
+        const bar = document.querySelector("[data-productive-filter-bar]");
+        const pipeline = document.querySelector("[data-forge-pipeline-module]");
+        if (!visible(bar) || !visible(pipeline)) return false;
+        const barBounds = bar.getBoundingClientRect();
+        const pipelineBounds = pipeline.getBoundingClientRect();
+        return barBounds.left >= pipelineBounds.left - 1
+          && barBounds.right <= pipelineBounds.right + 1
+          && [...bar.querySelectorAll("select, button")].every(control => {
+            const bounds = control.getBoundingClientRect();
+            return bounds.left >= barBounds.left - 1
+              && bounds.right <= barBounds.right + 1;
+          });
+      })(),
+      productiveFilterCount:
+        document.querySelector("[data-productive-filter-count]")?.textContent.trim() || "",
+      productiveFilterEmptyVisible:
+        visibleCount("[data-productive-filter-empty]") > 0,
+      productiveSourceFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.source === true,
+      productiveStatusFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.status === true,
+      productiveCombinedFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.combined === true,
+      productiveClearFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.clear === true,
+      productiveEmptyFilterAccepted:
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__?.empty === true,
       productiveCardUsesNormalRenderer:
         visibleCount("[data-productive-pipeline-cards] [data-productive-prospect-card]") > 0,
+      productiveCardStructured:
+        visibleCount("[data-productive-prospect-card] [data-productive-card-identity]") > 0 &&
+        visibleCount("[data-productive-prospect-card] [data-productive-card-metadata]") > 0 &&
+        visibleCount("[data-productive-prospect-card] [data-productive-card-status]") > 0,
+      productiveActionsGrouped:
+        visibleCount("[data-productive-prospect-card] [data-productive-card-actions]") > 0,
+      productiveInternalEnumVisible:
+        [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .some(card => visible(card) && card.textContent.includes(
+            "CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST",
+          )),
+      productiveGeometryValid: (() => {
+        const card = document.querySelector("[data-productive-prospect-card]");
+        if (!visible(card)) return false;
+        const bounds = card.getBoundingClientRect();
+        const inside = element => {
+          const rect = element.getBoundingClientRect();
+          return rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1
+            && rect.top >= bounds.top - 1 && rect.bottom <= bounds.bottom + 1;
+        };
+        const regions = [
+          card.querySelector("[data-productive-card-identity]"),
+          card.querySelector("[data-productive-card-metadata]"),
+          card.querySelector("[data-productive-card-status]"),
+          card.querySelector("[data-productive-card-actions]"),
+        ].filter(Boolean);
+        return card.scrollWidth <= card.clientWidth + 1
+          && regions.length === 4
+          && regions.every(inside)
+          && [...card.querySelectorAll("[data-productive-card-actions] > *")].every(inside);
+      })(),
+      productiveNameReadable: (() => {
+        const name = document.querySelector("[data-productive-card-identity] strong");
+        if (!visible(name)) return false;
+        const rect = name.getBoundingClientRect();
+        return rect.width >= 180 && rect.height <= 80
+          && getComputedStyle(name).wordBreak === "normal";
+      })(),
+      productiveStageLabelVisible:
+        visibleCount("[data-productive-stage-label]") > 0,
+      productiveSourceLabelVisible:
+        visibleCount("[data-productive-source-label]") > 0,
+      productiveStageControlVisible:
+        visibleCount("[data-productive-stage-control]") > 0,
+      productiveStageAccentVisible: (() => {
+        const card = document.querySelector("[data-productive-prospect-card]");
+        if (!visible(card)) return false;
+        const style = getComputedStyle(card);
+        return parseFloat(style.borderLeftWidth) >= 3
+          && style.borderLeftColor !== "rgba(0, 0, 0, 0)";
+      })(),
+      productiveActionsDifferentiated: (() => {
+        const actions = [...document.querySelectorAll(
+          "[data-productive-card-actions] > *",
+        )].filter(visible);
+        return new Set(actions.map(action => getComputedStyle(action).backgroundColor)).size >= 4;
+      })(),
+      productiveHumanStatusesValid: [...document.querySelectorAll(
+        "[data-productive-prospect-card]",
+      )].filter(visible).every(card => ({
+        referred_new: "Nuevo",
+        contacted: "Contactado",
+        appointment_scheduled: "Cita agendada",
+        proposal: "Propuesta",
+        decision: "En decisión",
+        client: "Cliente",
+      })[card.dataset.productiveStage] ===
+        card.querySelector("[data-productive-stage-label]")?.textContent.trim()),
+      productiveTimelineHumanReadable:
+        ![...document.querySelectorAll("[data-timeline-activity]")]
+          .some(node => node.textContent.includes("PROSPECT_CREATED")),
+      productiveSourceStatusSeparated:
+        visibleCount(
+          "[data-productive-prospect-card] [data-productive-source-label]",
+        ) > 0 &&
+        visibleCount(
+          "[data-productive-prospect-card] [data-productive-stage-control]",
+        ) > 0,
+      productiveSourceUnchangedAfterStatus:
+        globalThis.__FORGE_DIAGNOSTIC_SOURCE_UNCHANGED__ === true,
+      referralSourceConditional:
+        globalThis.__FORGE_DIAGNOSTIC_REFERRAL_CONDITIONAL__ === true,
+      productiveCardColumnCount: (() => {
+        const cards = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .filter(visible);
+        const rows = new Map();
+        cards.forEach(card => {
+          const top = Math.round(card.getBoundingClientRect().top / 3) * 3;
+          rows.set(top, (rows.get(top) || 0) + 1);
+        });
+        return Math.max(0, ...rows.values());
+      })(),
+      productiveAllGeometryValid: (() => {
+        const cards = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .filter(visible);
+        const pipeline = document.querySelector("[data-forge-pipeline-module]");
+        if (cards.length < 4 || !pipeline) return false;
+        const pipelineBounds = pipeline.getBoundingClientRect();
+        const inside = (inner, outer) =>
+          inner.left >= outer.left - 1 && inner.right <= outer.right + 1;
+        return cards.every(card => {
+          const cardBounds = card.getBoundingClientRect();
+          const regions = [
+            card.querySelector("[data-productive-card-identity]"),
+            card.querySelector("[data-productive-card-metadata]"),
+            card.querySelector(".pipeline-module__stage-control"),
+            card.querySelector("[data-productive-card-status]"),
+            card.querySelector("[data-productive-card-actions]"),
+          ];
+          const actionBounds = card.querySelector(
+            "[data-productive-card-actions]",
+          ).getBoundingClientRect();
+          return card.scrollWidth <= card.clientWidth + 1
+            && inside(cardBounds, pipelineBounds)
+            && regions.every(region => region && inside(
+              region.getBoundingClientRect(),
+              cardBounds,
+            ))
+            && [...card.querySelectorAll("[data-productive-card-actions] > *")]
+              .every(action => inside(action.getBoundingClientRect(), actionBounds));
+        });
+      })(),
+      productiveCardsDoNotOverlap: (() => {
+        const rects = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .filter(visible).map(card => card.getBoundingClientRect());
+        return rects.every((rect, index) => rects.slice(index + 1).every(other =>
+          rect.right <= other.left + 1 || other.right <= rect.left + 1
+          || rect.bottom <= other.top + 1 || other.bottom <= rect.top + 1
+        ));
+      })(),
+      productiveNamesReadable: [...document.querySelectorAll(
+        "[data-productive-card-identity] strong",
+      )].filter(visible).every(name => {
+        const rect = name.getBoundingClientRect();
+        return rect.width >= 70 && rect.height <= 96
+          && getComputedStyle(name).wordBreak === "normal";
+      }),
+      productiveNoShellOverlap: (() => {
+        return globalThis.__FORGE_DIAGNOSTIC_NO_SHELL_OVERLAP__ === true;
+      })(),
       specialSavedReferralCardPathPresent:
         document.querySelector("[data-saved-referral-card]") !== null,
       timelineCreatedEventVisible:
         [...document.querySelectorAll("[data-timeline-activity]")]
-          .some((node) => node.textContent.includes("PROSPECT_CREATED")),
+          .some((node) => node.textContent.includes("Prospecto creado")),
       lastVerifiedActivitySource:
         document.querySelector("[data-timeline-activity]")?.dataset.activitySource || null,
       nashWorkspaceVisible:
@@ -211,6 +448,9 @@ async function capture(page, directory, label, options = {}) {
         Boolean(document.querySelector("[data-nash-draft]")?.value.trim()),
       exactApprovalPassed:
         visibleCount("[data-manual-whatsapp]") > 0,
+      nashAcceptanceState:
+        document.querySelector("[data-nash-prospect-workspace]")
+          ?.dataset.nashApprovalState || null,
       manualWhatsAppHrefAvailable:
         document.querySelector("[data-manual-whatsapp]")?.getAttribute("href")
           ?.startsWith("https://wa.me/") || false,
@@ -229,9 +469,10 @@ async function capture(page, directory, label, options = {}) {
         document.querySelector('[data-pipeline-auth-state="ANONYMOUS"]') !== null
         && document.querySelector("[data-productive-prospect-card]") === null,
       combatWorkspaceVisible: visibleCount("[data-nash-combat-workspace]") > 0,
-      combatTypeStall: document.querySelector("[data-combat-type]")?.textContent.trim() === "STALL",
+      combatTypeStall:
+        document.querySelector("[data-combat-type]")?.dataset.combatTypeCode === "STALL",
       combatIntentAvoidingDecision:
-        document.querySelector("[data-combat-intent]")?.textContent.trim() === "AVOIDING_DECISION",
+        document.querySelector("[data-combat-intent]")?.dataset.combatIntentCode === "AVOIDING_DECISION",
       combatExactApprovalPassed: visibleCount("[data-combat-whatsapp]") > 0,
       combatEditedInvalidatedApproval:
         globalThis.__FORGE_DIAGNOSTIC_COMBAT_EDIT_INVALIDATED__ === true,
@@ -241,9 +482,43 @@ async function capture(page, directory, label, options = {}) {
         JSON.stringify(globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ || {}).includes("Lo voy a pensar"),
       nbaWorkspaceVisible: visibleCount("[data-nba-workspace]") > 0,
       nbaHandleObjection:
-        document.querySelector("[data-nba-workspace]")?.textContent.includes("HANDLE_OBJECTION") || false,
+        document.querySelector("[data-nba-workspace]")?.textContent.includes("Atender objeción") || false,
       nbaReasonWhyVisible:
         document.querySelector("[data-nba-workspace]")?.textContent.includes("Reason Why") || false,
+      nbaHumanCopy:
+        !/READY_FOR_HUMAN_REVIEW|HANDLE_OBJECTION|OBJECTION_RECORDED|STALL/
+          .test([...document.querySelectorAll(
+            "[data-nba-workspace] .nba-workspace__body > p",
+          )].map(node => node.textContent).join(" ")),
+      nbaInternalClippingFree: (() => {
+        const workspace = document.querySelector("[data-nba-workspace] .nba-workspace");
+        if (!visible(workspace)) return false;
+        return [...workspace.querySelectorAll("*")].every(node =>
+          node.scrollWidth <= node.clientWidth + 1
+        );
+      })(),
+      combatHeaderVisible:
+        visibleCount("[data-nash-combat-workspace] .nash-combat-workspace__header") > 0,
+      combatBodyStartsAtTop:
+        (document.querySelector(".nash-combat-workspace__body")?.scrollTop || 0) <= 1,
+      combatInternalScroll:
+        getComputedStyle(document.querySelector(".nash-combat-workspace__body") || document.body)
+          .overflowY === "auto",
+      combatHorizontalScroll:
+        (document.querySelector(".nash-combat-workspace")?.scrollWidth || 0)
+          > (document.querySelector(".nash-combat-workspace")?.clientWidth || 0) + 1,
+      combatFooterAccessible: (() => {
+        const footer = document.querySelector(".nash-combat-workspace__footer");
+        const workspace = document.querySelector(".nash-combat-workspace");
+        if (!visible(footer) || !visible(workspace)) return false;
+        const footerBounds = footer.getBoundingClientRect();
+        const workspaceBounds = workspace.getBoundingClientRect();
+        return footerBounds.left >= workspaceBounds.left - 1
+          && footerBounds.right <= workspaceBounds.right + 1
+          && footerBounds.bottom <= workspaceBounds.bottom + 1
+          && [...footer.querySelectorAll("button, a")].filter(visible)
+            .every(action => action.scrollWidth <= action.clientWidth + 1);
+      })(),
       globalAlfredLauncherVisible:
         visibleCount("[data-forge-command-orb][data-open-alfred]") > 0,
       quoteLegacyRuntimeVisible:
@@ -255,7 +530,9 @@ async function capture(page, directory, label, options = {}) {
       quoteResultsVisible:
         visibleCount("[data-material3-quote-result-ready]") > 0,
       quoteReadyState:
-        document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState === "ready",
+        ["ready", "partial"].includes(
+          document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState,
+        ),
       quoteLoadedSubstantive:
         (document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0) >= 120,
       quoteProjectionTextLength:
@@ -271,6 +548,22 @@ async function capture(page, directory, label, options = {}) {
       quoteProgressOnly:
         visibleCount("[data-quote-progress]") > 0 &&
         visibleCount("[data-material3-quote-result-ready]") === 0,
+      quoteCommercialProjection:
+        visibleCount("[data-quote-commercial-projection]") > 0,
+      quoteRawPacketVisible:
+        /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/
+          .test([...document.querySelectorAll("[data-quote-result-section]")]
+            .map(section => section.textContent).join(" ")),
+      quoteTechnicalEvidenceCollapsed: (() => {
+        const evidence = document.querySelector("[data-quote-technical-evidence]");
+        return evidence instanceof HTMLDetailsElement && !evidence.open;
+      })(),
+      quoteTechnicalEvidenceOpen:
+        document.querySelector("[data-quote-technical-evidence]")?.open === true,
+      quoteProjectionBounded:
+        (document.querySelector("[data-material3-quotes-projection]")?.scrollHeight || 0) < 6000,
+      quoteLastActionReachable:
+        globalThis.__FORGE_DIAGNOSTIC_QUOTE_LAST_ACTION_REACHABLE__ === true,
       quotePopupVisible:
         visibleCount(
           'dialog[open], [role="dialog"]:not([aria-hidden="true"])',
@@ -279,6 +572,18 @@ async function capture(page, directory, label, options = {}) {
         visibleCount("[data-pipeline-create-referral]") > 0,
       pipelineCreateProspectVisible:
         visibleCount("[data-pipeline-create-prospect]") > 0,
+      floatingNavPreserved: (() => {
+        const shell = document.querySelector(".bottom-shell");
+        return visible(shell) && getComputedStyle(shell).position === "fixed";
+      })(),
+      mobileSafeZoneConfigured: (() => {
+        const styles = getComputedStyle(document.documentElement);
+        return Boolean(
+          styles.getPropertyValue("--forge-mobile-nav-height").trim()
+          && styles.getPropertyValue("--forge-mobile-nav-clearance").trim()
+          && styles.getPropertyValue("--forge-mobile-floating-gap").trim()
+        );
+      })(),
       bodyDataset: { ...document.body.dataset },
       documentDataset: { ...document.documentElement.dataset },
     };
@@ -317,6 +622,7 @@ async function captureViewport(browser, viewport, fixture) {
 
     const records = [];
     const timeline = [];
+    let diagnosticSetSeeded = false;
     const filtered = (collection, filters) => collection.filter(
       (record) => filters.every(
         ({ column, value }) => record[column] === value,
@@ -324,7 +630,7 @@ async function captureViewport(browser, viewport, fixture) {
     );
     const query = (table) => {
       const collection = table === "prospect_commercial_timeline" ? timeline : records;
-      const state = { filters: [], inserted: null };
+      const state = { filters: [], inserted: null, patch: null };
       const builder = {
         select() {
           return builder;
@@ -357,10 +663,77 @@ async function captureViewport(browser, viewport, fixture) {
             evidence_references: [],
             contract_version: "NFAST-08.1",
           });
+          if (!diagnosticSetSeeded) {
+            diagnosticSetSeeded = true;
+            const extras = [
+              {
+                id: "diagnostic-camila",
+                full_name: "Camila Hernández",
+                phone_normalized: null,
+                source: "Mercado cálido",
+                status: "contacted",
+              },
+              {
+                id: "diagnostic-roberto",
+                full_name: "Roberto Sánchez del Valle",
+                phone_normalized: "+525511112222",
+                source: "Redes sociales",
+                status: "appointment_scheduled",
+              },
+              {
+                id: "diagnostic-lucia",
+                full_name: "Lucía Fernanda Gómez",
+                phone_normalized: "+525533334444",
+                source: "Centro de influencia",
+                status: "proposal",
+              },
+              {
+                id: "diagnostic-daniel",
+                full_name: "Daniel Ortega Ruiz",
+                phone_normalized: null,
+                source: "Mercado frío",
+                status: "client",
+              },
+              {
+                id: "diagnostic-elena",
+                full_name: "Elena Álvarez",
+                phone_normalized: "+525555556666",
+                source: "Referido",
+                status: "contacted",
+              },
+            ];
+            for (const [index, extra] of extras.entries()) {
+              records.push({
+                advisor_id: "diagnostic-advisor",
+                initial_context: "Contexto diagnóstico gobernado.",
+                archived_at: null,
+                created_at: `2026-07-29T11:0${index}:00.000Z`,
+                updated_at: `2026-07-29T11:0${index}:00.000Z`,
+                ...extra,
+              });
+            }
+            timeline.push({
+              id: "diagnostic-contact-event",
+              prospect_id: "diagnostic-camila",
+              event_type: "CONTACT_ATTEMPTED",
+              event_source: "NFAST08_TIMELINE",
+              occurred_at: "2026-07-29T11:30:00.000Z",
+              recorded_at: "2026-07-29T11:30:00.000Z",
+              payload: { channel: "PHONE", outcome: "ANSWERED" },
+              evidence_references: [],
+              contract_version: "NFAST-08.1",
+            });
+          }
+          return builder;
+        },
+        update(patch) {
+          state.patch = patch;
           return builder;
         },
         async single() {
-          return { data: state.inserted || filtered(collection, state.filters)[0], error: null };
+          const existing = filtered(collection, state.filters)[0];
+          if (state.patch && existing) Object.assign(existing, state.patch);
+          return { data: state.inserted || existing, error: null };
         },
         order() {
           return builder;
@@ -520,6 +893,17 @@ async function captureViewport(browser, viewport, fixture) {
       );
       await page.locator('[name="fullName"]').fill(SAMPLE_REFERRAL.fullName);
       await page.locator('[name="phone"]').fill(SAMPLE_REFERRAL.phone);
+      await page.locator('[name="source"]').selectOption("Mercado cálido");
+      if (await page.locator("[data-referral-source-fields]").isVisible()) {
+        throw new Error("REFERRAL_FIELDS_VISIBLE_FOR_NON_REFERRAL_SOURCE");
+      }
+      await page.locator('[name="source"]').selectOption("Referido");
+      await page.locator("[data-referral-source-fields]").waitFor({
+        state: "visible",
+      });
+      await page.evaluate(() => {
+        globalThis.__FORGE_DIAGNOSTIC_REFERRAL_CONDITIONAL__ = true;
+      });
       await page.locator('[name="referrerName"]').fill(
         SAMPLE_REFERRAL.referrerName,
       );
@@ -542,6 +926,101 @@ async function captureViewport(browser, viewport, fixture) {
         directory,
         "03b-pipeline-saved-referral-card",
       );
+      const sampleCard = page.locator("[data-productive-prospect-card]").filter({
+        hasText: SAMPLE_REFERRAL.fullName,
+      });
+      const sourceBeforeStatus = await sampleCard
+        .locator("[data-productive-source-label]").textContent();
+      await sampleCard.locator("[data-productive-stage-control]")
+        .selectOption("decision");
+      await page.locator("[data-productive-prospect-card]").filter({
+        hasText: SAMPLE_REFERRAL.fullName,
+      }).locator("[data-productive-stage-label]").filter({
+        hasText: "En decisión",
+      }).waitFor({ state: "visible", timeout: 10_000 });
+      const sourceAfterStatus = await page.locator(
+        "[data-productive-prospect-card]",
+      ).filter({ hasText: SAMPLE_REFERRAL.fullName })
+        .locator("[data-productive-source-label]").textContent();
+      if (sourceBeforeStatus !== sourceAfterStatus) {
+        throw new Error("STATUS_CHANGE_MUTATED_SOURCE");
+      }
+      await page.evaluate(() => {
+        globalThis.__FORGE_DIAGNOSTIC_SOURCE_UNCHANGED__ = true;
+      });
+      await verifyProductiveCardsClearFixedControls(page);
+      result.routes.pipelineSavedReferral = await capture(
+        page,
+        directory,
+        "03bb-pipeline-responsive-card-grid",
+      );
+      const totalCards = await page.locator("[data-productive-prospect-card]").count();
+      const initialTruth = await page.locator("[data-productive-prospect-card]")
+        .evaluateAll(cards => cards.map(card => ({
+          id: card.dataset.productiveProspectCard,
+          source: card.dataset.productiveSource,
+          status: card.dataset.productiveStage,
+        })));
+      const sourceFilter = page.locator("[data-productive-filter-source]");
+      const statusFilter = page.locator("[data-productive-filter-status]");
+      await sourceFilter.selectOption("Referido");
+      const sourceFilteredCards = page.locator("[data-productive-prospect-card]");
+      const sourceFilterAccepted = await sourceFilteredCards.count() > 0
+        && await sourceFilteredCards.evaluateAll(cards =>
+          cards.every(card => card.dataset.productiveSource === "Referido")
+        );
+      await page.locator("[data-productive-filter-source]").selectOption("");
+      await page.locator("[data-productive-filter-status]").selectOption("contacted");
+      const statusFilteredCards = page.locator("[data-productive-prospect-card]");
+      const statusFilterAccepted = await statusFilteredCards.count() > 0
+        && await statusFilteredCards.evaluateAll(cards =>
+          cards.every(card => card.dataset.productiveStage === "contacted")
+        );
+      await page.locator("[data-productive-filter-source]").selectOption("Referido");
+      const combinedCards = page.locator("[data-productive-prospect-card]");
+      const combinedFilterAccepted = await combinedCards.count() === 1
+        && await combinedCards.first().getAttribute("data-productive-source") === "Referido"
+        && await combinedCards.first().getAttribute("data-productive-stage") === "contacted";
+      result.routes.pipelineFiltered = await capture(
+        page,
+        directory,
+        "03bc-pipeline-filtered-referido-contactado",
+      );
+      await page.locator("[data-clear-productive-filters]").click();
+      const clearFilterAccepted = await page.locator("[data-productive-prospect-card]").count() === totalCards
+        && await page.locator("[data-productive-filter-count]").textContent() === `${totalCards} de ${totalCards} prospectos`;
+      await page.locator("[data-productive-filter-source]").selectOption("Mercado frío");
+      await page.locator("[data-productive-filter-status]").selectOption("proposal");
+      const emptyFilterAccepted = await page.locator("[data-productive-prospect-card]").count() === 0
+        && await page.locator("[data-productive-filter-empty]").isVisible();
+      result.routes.pipelineFilterEmpty = await capture(
+        page,
+        directory,
+        "03bd-pipeline-filter-no-results",
+      );
+      await page.locator("[data-clear-productive-filters]").click();
+      const finalTruth = await page.locator("[data-productive-prospect-card]")
+        .evaluateAll(cards => cards.map(card => ({
+          id: card.dataset.productiveProspectCard,
+          source: card.dataset.productiveSource,
+          status: card.dataset.productiveStage,
+        })));
+      const productiveTruthUnchanged =
+        JSON.stringify(finalTruth) === JSON.stringify(initialTruth);
+      await page.evaluate((acceptance) => {
+        globalThis.__FORGE_DIAGNOSTIC_FILTERS__ = acceptance;
+      }, {
+        source: sourceFilterAccepted && productiveTruthUnchanged,
+        status: statusFilterAccepted && productiveTruthUnchanged,
+        combined: combinedFilterAccepted,
+        clear: clearFilterAccepted,
+        empty: emptyFilterAccepted,
+      });
+      result.routes.pipelineFiltersAccepted = await capture(
+        page,
+        directory,
+        "03be-pipeline-filters-cleared",
+      );
       const messageAction = page.locator("[data-prepare-productive-message]").first();
       await messageAction.click();
       await page.locator("[data-nash-prospect-workspace]").waitFor({
@@ -555,6 +1034,11 @@ async function captureViewport(browser, viewport, fixture) {
       const originalDraft = await draft.inputValue();
       if (!originalDraft.trim()) throw new Error("NASH_DRAFT_EMPTY");
       if (!(await sourceMode.isVisible())) throw new Error("NASH_SOURCE_MODE_HIDDEN");
+      result.routes.pipelineNashWorkspace = await capture(
+        page,
+        directory,
+        "03c-pipeline-nash-before-acceptance",
+      );
       const urlBeforeApproval = page.url();
       await approval.click();
       await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
@@ -565,11 +1049,26 @@ async function captureViewport(browser, viewport, fixture) {
       if (page.url() !== urlBeforeApproval) {
         throw new Error("AUTOMATIC_WHATSAPP_NAVIGATION_DETECTED");
       }
-      result.routes.pipelineNashWorkspace = await capture(
+      result.routes.pipelineNashAccepted = await capture(
         page,
         directory,
-        "03c-pipeline-nash-workspace",
+        "03d-pipeline-nash-after-acceptance",
       );
+      const nashBefore = await readFile(path.join(
+        directory,
+        "03c-pipeline-nash-before-acceptance.png",
+      ));
+      const nashAfter = await readFile(path.join(
+        directory,
+        "03d-pipeline-nash-after-acceptance.png",
+      ));
+      result.nashAcceptanceVisual = {
+        stateChanged:
+          result.routes.pipelineNashWorkspace.nashAcceptanceState === "pending"
+          && result.routes.pipelineNashAccepted.nashAcceptanceState === "approved",
+        visuallyProven: !nashBefore.equals(nashAfter),
+        beforeAfterIdentical: nashBefore.equals(nashAfter),
+      };
       await draft.fill(`${originalDraft} Editado`);
       if (await whatsapp.isVisible() || await whatsapp.getAttribute("href")) {
         throw new Error("EDITED_DRAFT_APPROVAL_NOT_INVALIDATED");
@@ -577,16 +1076,18 @@ async function captureViewport(browser, viewport, fixture) {
       await page.evaluate(() => {
         globalThis.__FORGE_DIAGNOSTIC_EDIT_INVALIDATED__ = true;
       });
+      result.nashAcceptanceVisual.editedDraftInvalidatedApproval = true;
       await draft.fill(originalDraft);
       await approval.click();
       await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
-      result.routes.pipelineNashAccepted = await capture(
+      await page.locator(".referral-sheet__close[data-close-nash]").click();
+      await page.locator("[data-open-combat]").first().click();
+      await page.locator("[data-combat-header-state]").waitFor({ state: "visible" });
+      result.routes.pipelineCombatOpen = await capture(
         page,
         directory,
-        "03d-pipeline-nash-accepted",
+        "03e-pipeline-combat-open",
       );
-      await page.locator("[data-close-nash]").first().click();
-      await page.locator("[data-open-combat]").first().click();
       await page.locator("[data-combat-objection]").fill("Lo voy a pensar");
       await page.locator("[data-analyze-combat]").click();
       await page.locator("[data-combat-type]").waitFor({ state: "visible" });
@@ -603,12 +1104,20 @@ async function captureViewport(browser, viewport, fixture) {
       await page.locator("[data-approve-combat]").click();
       await page.locator("[data-register-combat]").click();
       await page.locator("[data-combat-timeline]").waitFor({ state: "visible" });
-      result.routes.pipelineCombat = await capture(page, directory, "03e-pipeline-combat");
-      await page.locator("[data-close-combat]").first().click();
+      const combatBody = page.locator(".nash-combat-workspace__body");
+      await combatBody.evaluate(element => {
+        element.scrollTop = element.scrollHeight;
+      });
+      result.routes.pipelineCombat = await capture(
+        page,
+        directory,
+        "03f-pipeline-combat-final-actions",
+      );
+      await page.locator(".referral-sheet__close[data-close-combat]").click();
       await page.locator("[data-open-nba]").first().click();
       await page.locator("[data-nba-workspace]").waitFor({ state: "visible" });
-      result.routes.pipelineNba = await capture(page, directory, "03f-pipeline-nba");
-      await page.locator("[data-close-nba]").first().click();
+      result.routes.pipelineNba = await capture(page, directory, "03g-pipeline-nba");
+      await page.locator(".referral-sheet__close[data-close-nba]").click();
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");
     }
@@ -638,15 +1147,53 @@ async function captureViewport(browser, viewport, fixture) {
     result.routes.quotesAfterUpload = await capture(
       page,
       directory,
-      "05-quotes-after-upload",
+      "05-quotes-commercial",
     );
 
-    await page.keyboard.press("Escape").catch(() => {});
-    await page.waitForTimeout(400);
+    result.routes.quotesEvidenceClosed = await capture(
+      page,
+      directory,
+      "05a-quotes-evidence-closed",
+    );
+    await page.locator("[data-quote-technical-evidence] summary").click();
+    result.routes.quotesEvidenceOpen = await capture(
+      page,
+      directory,
+      "05b-quotes-evidence-open",
+    );
+    await page.locator("[data-quote-technical-evidence] summary").click();
+    await verifyLastActionClearsFloatingControls(
+      page,
+      "[data-quote-last-actions] button",
+      "__FORGE_DIAGNOSTIC_QUOTE_LAST_ACTION_REACHABLE__",
+    );
     result.routes.quotesLoadedUnderlay = await capture(
       page,
       directory,
-      "06-quotes-loaded-underlay",
+      "05c-quotes-last-action-reachable",
+    );
+    await page.evaluate(async () => {
+      const bridge = globalThis.ForgeAcceptedQuoteBridge;
+      const candidate = bridge?.getCurrentQuoteCandidate?.();
+      const projection = document.querySelector("[data-material3-quotes-projection]");
+      const root = document.querySelector("[data-forge-quotes-module]");
+      const adapter = await import("./quotes-result-adapter.js");
+      const partialBridge = {
+        getCurrentQuoteCandidate: () => candidate,
+        getCurrentQuotePreviewCalculation: () => null,
+        getCurrentQuotePreviewCalculationState: () => ({
+          state: "PARTIAL",
+          humanConfirmationRequired: true,
+        }),
+      };
+      const viewModel = adapter.buildQuoteResultViewModel(partialBridge);
+      projection.innerHTML = adapter.renderQuoteResult(viewModel);
+      root.dataset.intakeState = viewModel.state;
+    });
+    result.routes.quotesPartial = await capture(
+      page,
+      directory,
+      "05d-quotes-partial",
     );
     await page.evaluate(() => {
       globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
@@ -669,6 +1216,14 @@ async function captureViewport(browser, viewport, fixture) {
     await writeFile(
       path.join(directory, "telemetry.json"),
       JSON.stringify(telemetry, null, 2),
+    );
+    await writeFile(
+      path.join(OUTPUT_ROOT, "console", `${viewport.name}.json`),
+      JSON.stringify(telemetry.console, null, 2),
+    );
+    await writeFile(
+      path.join(OUTPUT_ROOT, "network", `${viewport.name}.json`),
+      JSON.stringify(telemetry.failedRequests, null, 2),
     );
     await writeFile(
       path.join(directory, "result.json"),
@@ -695,7 +1250,7 @@ function markdownSummary(results, fixture, browserVersion) {
     return `| ${result.viewport.name} | ${pipelineOutcome} | ${quote.quoteResultsVisible ? "Sí" : "No"} | ${quote.quoteLegacyShellVisible ? "Sí" : "No"} | ${result.errors.length} |`;
   });
 
-  return `# Forge UI visual diagnostic
+  return `# FORGEOS — Final Visual Closure
 
 - Target: ${TARGET_URL}
 - Cache bust: ${CACHE_BUST}
@@ -709,11 +1264,19 @@ ${rows.join("\n")}
 
 ## Contenido del artifact
 
-- Screenshots PNG de Inicio, Pipeline y Cotizaciones.
+- Screenshots PNG de Inicio, Pipeline, NASH, Combat, NBA y Cotizaciones.
 - HTML completo de cada estado.
 - Estado computado en JSON.
 - Consola, errores de página y solicitudes fallidas.
 - Fixture canónico usado para el estado cargado.
+
+## Cierre
+
+- Proyección comercial de Cotizaciones: ${results.every(result => result.routes.quotesLoadedUnderlay?.quoteCommercialProjection) ? "PASS" : "FAIL"}
+- Paquete técnico fuera de la UI primaria: ${results.every(result => !result.routes.quotesLoadedUnderlay?.quoteRawPacketVisible) ? "PASS" : "FAIL"}
+- Combat con scroll interno y footer accesible: ${results.every(result => result.routes.pipelineCombat?.combatFooterAccessible) ? "PASS" : "FAIL"}
+- NBA con copy humano y wrapping interno: ${results.every(result => result.routes.pipelineNba?.nbaHumanCopy && result.routes.pipelineNba?.nbaInternalClippingFree) ? "PASS" : "FAIL"}
+- Aceptación NASH visualmente comprobada: ${results.every(result => result.nashAcceptanceVisual?.visuallyProven) ? "PASS" : "FAIL"}
 `;
 }
 
@@ -727,13 +1290,19 @@ function assertVisualAcceptance(results) {
     const viewport = result.viewport.name;
     const referral = result.routes.pipelineAfter || {};
     const card = result.routes.pipelineSavedReferral || {};
+    const filters = result.routes.pipelineFiltersAccepted || {};
+    const filtered = result.routes.pipelineFiltered || {};
+    const filterEmpty = result.routes.pipelineFilterEmpty || {};
     const nash = result.routes.pipelineNashAccepted || {};
     const authAnonymous = result.routes.authAnonymous || {};
     const authAuthenticated = result.routes.authAuthenticated || {};
     const authSignedOut = result.routes.authSignedOut || {};
+    const combatOpen = result.routes.pipelineCombatOpen || {};
     const combat = result.routes.pipelineCombat || {};
     const nba = result.routes.pipelineNba || {};
-    const quote = result.routes.quotesAfterUpload || {};
+    const quote = result.routes.quotesLoadedUnderlay || {};
+    const quoteEvidenceOpen = result.routes.quotesEvidenceOpen || {};
+    const quotePartial = result.routes.quotesPartial || {};
     const telemetry = result.telemetrySummary || {};
 
     requireFlag(viewport, "referralSheetVisible", referral.referralSheetVisible === true);
@@ -741,6 +1310,47 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "productiveProspectCardVisible", card.productiveProspectCardVisible === true);
     requireFlag(viewport, "productiveProspectCardContainsName", card.productiveProspectCardContainsName === true);
     requireFlag(viewport, "productiveCardUsesNormalRenderer", card.productiveCardUsesNormalRenderer === true);
+    requireFlag(
+      viewport,
+      `productiveCardColumnCount=${result.viewport.expectedCardColumns}`,
+      card.productiveCardColumnCount === result.viewport.expectedCardColumns,
+    );
+    requireFlag(viewport, "productiveCardStructured", card.productiveCardStructured === true);
+    requireFlag(viewport, "productiveActionsGrouped", card.productiveActionsGrouped === true);
+    requireFlag(viewport, "productiveInternalEnumVisible=false", card.productiveInternalEnumVisible === false);
+    for (const flag of [
+      "productiveGeometryValid",
+      "productiveNameReadable",
+      "productiveStageLabelVisible",
+      "productiveSourceLabelVisible",
+      "productiveStageControlVisible",
+      "productiveStageAccentVisible",
+      "productiveActionsDifferentiated",
+      "productiveTimelineHumanReadable",
+      "productiveAllGeometryValid",
+      "productiveCardsDoNotOverlap",
+      "productiveNamesReadable",
+      "productiveNoShellOverlap",
+      "productiveSourceStatusSeparated",
+      "productiveSourceUnchangedAfterStatus",
+      "referralSourceConditional",
+      "productiveHumanStatusesValid",
+    ]) requireFlag(viewport, flag, card[flag] === true);
+    requireFlag(
+      viewport,
+      "pageHorizontalOverflow=false",
+      card.scrollWidth <= card.viewportWidth + 1,
+    );
+    requireFlag(viewport, "productiveFilterBarVisible", filters.productiveFilterBarVisible === true);
+    requireFlag(viewport, "productiveFilterGeometryValid", filters.productiveFilterGeometryValid === true);
+    requireFlag(viewport, "productiveSourceFilterAccepted", filters.productiveSourceFilterAccepted === true);
+    requireFlag(viewport, "productiveStatusFilterAccepted", filters.productiveStatusFilterAccepted === true);
+    requireFlag(viewport, "productiveCombinedFilterAccepted", filters.productiveCombinedFilterAccepted === true);
+    requireFlag(viewport, "productiveClearFilterAccepted", filters.productiveClearFilterAccepted === true);
+    requireFlag(viewport, "productiveEmptyFilterAccepted", filters.productiveEmptyFilterAccepted === true);
+    requireFlag(viewport, "combinedFilterOneCard", filtered.productiveFilterCount === "1 de 6 prospectos");
+    requireFlag(viewport, "filterEmptyVisible", filterEmpty.productiveFilterEmptyVisible === true);
+    requireFlag(viewport, "filterEmptyCount", filterEmpty.productiveFilterCount === "0 de 6 prospectos");
     requireFlag(viewport, "specialSavedReferralCardPathPresent=false", card.specialSavedReferralCardPathPresent === false);
     requireFlag(viewport, "timelineCreatedEventVisible", card.timelineCreatedEventVisible === true);
     requireFlag(viewport, "lastVerifiedActivitySource=TIMELINE", card.lastVerifiedActivitySource === "TIMELINE");
@@ -751,7 +1361,6 @@ function assertVisualAcceptance(results) {
       "draftVisible",
       "exactApprovalPassed",
       "manualWhatsAppHrefAvailable",
-      "editedDraftInvalidatedApproval",
       "conversationBriefProduced",
       "humanApprovalRequired",
     ]) requireFlag(viewport, flag, nash[flag] === true);
@@ -772,6 +1381,16 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "quoteProgressOnly=false", quote.quoteProgressOnly === false);
     requireFlag(viewport, "quoteLegacyRuntimeVisible=false", quote.quoteLegacyRuntimeVisible === false);
     requireFlag(viewport, "quoteLegacyShellVisible=false", quote.quoteLegacyShellVisible === false);
+    requireFlag(viewport, "quoteCommercialProjection", quote.quoteCommercialProjection === true);
+    requireFlag(viewport, "quoteRawPacketVisible=false", quote.quoteRawPacketVisible === false);
+    requireFlag(viewport, "quoteTechnicalEvidenceCollapsed", quote.quoteTechnicalEvidenceCollapsed === true);
+    requireFlag(viewport, "quoteTechnicalEvidenceOpen", quoteEvidenceOpen.quoteTechnicalEvidenceOpen === true);
+    requireFlag(viewport, "quoteProjectionBounded", quote.quoteProjectionBounded === true);
+    requireFlag(viewport, "quoteLastActionReachable", quote.quoteLastActionReachable === true);
+    requireFlag(viewport, "quotePartialCommercial", quotePartial.quoteCommercialProjection === true);
+    requireFlag(viewport, "quotePartialState", quotePartial.bodyDataset !== undefined
+      && quotePartial.documentDataset !== undefined
+      && quotePartial.quoteReadyState === true);
     requireFlag(viewport, "pageErrors=0", telemetry.pageErrors === 0);
     requireFlag(viewport, "failedRequests=0", telemetry.failedRequests === 0);
     requireFlag(viewport, "consoleErrors=0", telemetry.consoleErrors === 0);
@@ -782,6 +1401,11 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "googleAvatarVisible", authAuthenticated.googleAvatarVisible === true);
     requireFlag(viewport, "privateDataPurged", authSignedOut.privateDataPurged === true);
     requireFlag(viewport, "combatWorkspaceVisible", combat.combatWorkspaceVisible === true);
+    requireFlag(viewport, "combatHeaderVisibleOnOpen", combatOpen.combatHeaderVisible === true);
+    requireFlag(viewport, "combatBodyStartsAtTop", combatOpen.combatBodyStartsAtTop === true);
+    requireFlag(viewport, "combatInternalScroll", combat.combatInternalScroll === true);
+    requireFlag(viewport, "combatHorizontalScroll=false", combat.combatHorizontalScroll === false);
+    requireFlag(viewport, "combatFooterAccessible", combat.combatFooterAccessible === true);
     requireFlag(viewport, "combatTypeStall", combat.combatTypeStall === true);
     requireFlag(viewport, "combatIntentAvoidingDecision", combat.combatIntentAvoidingDecision === true);
     requireFlag(viewport, "combatExactApprovalPassed", combat.combatExactApprovalPassed === true);
@@ -791,6 +1415,14 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "nbaWorkspaceVisible", nba.nbaWorkspaceVisible === true);
     requireFlag(viewport, "nbaHandleObjection", nba.nbaHandleObjection === true);
     requireFlag(viewport, "nbaReasonWhyVisible", nba.nbaReasonWhyVisible === true);
+    requireFlag(viewport, "nbaHumanCopy", nba.nbaHumanCopy === true);
+    requireFlag(viewport, "nbaInternalClippingFree", nba.nbaInternalClippingFree === true);
+    requireFlag(viewport, "floatingNavPreserved", quote.floatingNavPreserved === true);
+    requireFlag(viewport, "mobileSafeZoneConfigured", quote.mobileSafeZoneConfigured === true);
+    requireFlag(viewport, "nashAcceptanceStateChanged", result.nashAcceptanceVisual?.stateChanged === true);
+    requireFlag(viewport, "nashAcceptanceVisuallyProven", result.nashAcceptanceVisual?.visuallyProven === true);
+    requireFlag(viewport, "nashBeforeAfterIdentical=false", result.nashAcceptanceVisual?.beforeAfterIdentical === false);
+    requireFlag(viewport, "editedDraftInvalidatedApproval", result.nashAcceptanceVisual?.editedDraftInvalidatedApproval === true);
   }
 
   if (failures.length) {
@@ -800,7 +1432,13 @@ function assertVisualAcceptance(results) {
 
 async function main() {
   await rm(OUTPUT_ROOT, { recursive: true, force: true });
-  await mkdir(OUTPUT_ROOT, { recursive: true });
+  await Promise.all([
+    mkdir(OUTPUT_ROOT, { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "reports"), { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "console"), { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "network"), { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "comparisons"), { recursive: true }),
+  ]);
   const fixture = await prepareFixture();
 
   const browser = await chromium.launch({
@@ -832,10 +1470,25 @@ async function main() {
     path.join(OUTPUT_ROOT, "manifest.json"),
     JSON.stringify(manifest, null, 2),
   );
-  await writeFile(
-    path.join(OUTPUT_ROOT, "summary.md"),
-    markdownSummary(results, fixture, browserVersion),
-  );
+  const finalReport = markdownSummary(results, fixture, browserVersion);
+  await Promise.all([
+    writeFile(path.join(OUTPUT_ROOT, "FINAL_VISUAL_CLOSURE.md"), finalReport),
+    writeFile(path.join(OUTPUT_ROOT, "reports", "summary.md"), finalReport),
+    writeFile(
+      path.join(OUTPUT_ROOT, "comparisons", "nash-acceptance.json"),
+      JSON.stringify(results.map(result => ({
+        viewport: result.viewport.name,
+        ...result.nashAcceptanceVisual,
+      })), null, 2),
+    ),
+  ]);
+  await Promise.all([
+    writeFile(
+      path.join(OUTPUT_BASE, "manifest.json"),
+      JSON.stringify(manifest, null, 2),
+    ),
+    writeFile(path.join(OUTPUT_BASE, "summary.md"), finalReport),
+  ]);
 
   const sourceFixture = await readFile(fixture.path);
   await writeFile(
@@ -858,6 +1511,10 @@ async function main() {
   console.log("NASH_COMBAT_ACCEPTANCE=PASS");
   console.log("OBJECTION_TIMELINE_ACCEPTANCE=PASS");
   console.log("NBA_REASON_WHY_ACCEPTANCE=PASS");
+  console.log("QUOTES_COMMERCIAL_PROJECTION=PASS");
+  console.log("NASH_COMBAT_VIEWPORT=PASS");
+  console.log("NBA_MOBILE_WRAP=PASS");
+  console.log("NASH_ACCEPTANCE_VISUALLY_PROVEN=PASS");
   console.log(`OUTPUT=${OUTPUT_ROOT}`);
   console.log(`TARGET=${TARGET_URL}`);
   console.log(`CACHE_BUST=${CACHE_BUST}`);

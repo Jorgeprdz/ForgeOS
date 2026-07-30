@@ -31,6 +31,21 @@ await import(
 );
 
 const pipelineStateKey = Symbol.for("forge.material3.pipeline.state");
+const productiveSourceFilters = Object.freeze([
+  "Referido",
+  "Mercado cálido",
+  "Mercado frío",
+  "Redes sociales",
+  "Centro de influencia",
+]);
+const productiveStatusFilters = Object.freeze([
+  Object.freeze({ value: "referred_new", label: "Nuevo" }),
+  Object.freeze({ value: "contacted", label: "Contactado" }),
+  Object.freeze({ value: "appointment_scheduled", label: "Cita agendada" }),
+  Object.freeze({ value: "proposal", label: "Propuesta" }),
+  Object.freeze({ value: "decision", label: "En decisión" }),
+  Object.freeze({ value: "client", label: "Cliente" }),
+]);
 let referralRuntimePromise;
 let referralStylePromise;
 let activeReferralSheet;
@@ -45,6 +60,26 @@ function escapeHtml(value) {
       '"': "&quot;",
       "'": "&#39;",
     })[character],
+  );
+}
+
+const intelligenceLabels = Object.freeze({
+  CONTEXT_READY_FOR_HUMAN_REVIEW: "Contexto listo para revisión",
+  READY_FOR_HUMAN_REVIEW: "Listo para revisión",
+  HANDLE_OBJECTION: "Atender objeción",
+  OBJECTION_RECORDED: "Objeción registrada",
+  STALL: "Conversación estancada",
+  AVOIDING_DECISION: "Decisión aplazada",
+  CURRENT: "Vigente",
+  UNKNOWN: "Pendiente de confirmar",
+});
+
+function humanIntelligenceLabel(value) {
+  const text = String(value ?? "");
+  return Object.entries(intelligenceLabels).reduce(
+    (human, [technical, label]) =>
+      human.replace(new RegExp(`\\b${technical}\\b`, "g"), label),
+    text,
   );
 }
 
@@ -151,7 +186,7 @@ function referralSheetTemplate() {
           <header class="referral-sheet__header">
             <div>
               <p>PIPELINE</p>
-              <h2 id="referral-sheet-title">Agregar nuevo referido</h2>
+              <h2 id="referral-sheet-title">Agregar prospecto</h2>
             </div>
             <button
               class="referral-sheet__close"
@@ -170,13 +205,26 @@ function referralSheetTemplate() {
               <input name="phone" type="tel" autocomplete="tel" required>
             </label>
             <label>
-              <span>Referido por</span>
-              <input name="referrerName" autocomplete="off">
+              <span>Fuente *</span>
+              <select name="source" required data-prospect-source>
+                <option value="">Selecciona una fuente</option>
+                <option value="Referido">Referido</option>
+                <option value="Mercado cálido">Mercado cálido</option>
+                <option value="Mercado frío">Mercado frío</option>
+                <option value="Redes sociales">Redes sociales</option>
+                <option value="Centro de influencia">Centro de influencia</option>
+              </select>
             </label>
-            <label>
-              <span>Relación con el referente</span>
-              <input name="referrerRelationship" autocomplete="off">
-            </label>
+            <div class="referral-sheet__source-fields" data-referral-source-fields hidden>
+              <label>
+                <span>Referido por</span>
+                <input name="referrerName" autocomplete="off">
+              </label>
+              <label>
+                <span>Relación con el referente</span>
+                <input name="referrerRelationship" autocomplete="off">
+              </label>
+            </div>
             <label>
               <span>Contexto inicial breve *</span>
               <textarea name="initialContext" rows="3" required></textarea>
@@ -212,13 +260,15 @@ function referralSheetTemplate() {
 function referralPayload(form) {
   const values = new FormData(form);
   const optional = (name) => String(values.get(name) || "").trim() || undefined;
+  const source = String(values.get("source") || "").trim();
+  const referred = source === "Referido";
   return {
     fullName: String(values.get("fullName") || "").trim(),
     phone: String(values.get("phone") || "").trim(),
-    source: "Referido",
+    source,
     status: "referred_new",
-    referrerName: optional("referrerName"),
-    referrerRelationship: optional("referrerRelationship"),
+    referrerName: referred ? optional("referrerName") : undefined,
+    referrerRelationship: referred ? optional("referrerRelationship") : undefined,
     initialContext: String(values.get("initialContext") || "").trim(),
     email: optional("email"),
     dateOfBirth: optional("dateOfBirth"),
@@ -262,17 +312,22 @@ async function openNashWorkspace({ card, adapter, trigger }) {
         <a data-manual-whatsapp hidden>Continuar manualmente a WhatsApp</a>
       </div>
     </section>`;
+  layer.dataset.nashApprovalState = "pending";
   const close = () => { layer.remove(); trigger.focus(); };
   layer.querySelectorAll("[data-close-nash]").forEach(node => node.addEventListener("click", close));
   const textarea = layer.querySelector("[data-nash-draft]");
   const link = layer.querySelector("[data-manual-whatsapp]");
   const status = layer.querySelector("[data-nash-approval-status]");
+  const approveButton = layer.querySelector("[data-approve-nash-draft]");
   textarea.addEventListener("input", () => {
+    layer.dataset.nashApprovalState = "pending";
     link.hidden = true;
     link.removeAttribute("href");
+    approveButton.disabled = false;
+    approveButton.textContent = "Revisar y aprobar texto exacto";
     status.textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
   });
-  layer.querySelector("[data-approve-nash-draft]").addEventListener("click", () => {
+  approveButton.addEventListener("click", () => {
     const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
     const text = textarea.value;
     const validation = safety.draftSafetyValidator({
@@ -294,6 +349,9 @@ async function openNashWorkspace({ card, adapter, trigger }) {
       : null;
     link.hidden = !url;
     if (url) link.href = url;
+    layer.dataset.nashApprovalState = url ? "approved" : "blocked";
+    approveButton.disabled = Boolean(url);
+    approveButton.textContent = url ? "Texto exacto aprobado" : "Revisar y aprobar texto exacto";
     status.textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El mensaje no pasó la validación.";
   });
   document.body.append(layer);
@@ -301,10 +359,10 @@ async function openNashWorkspace({ card, adapter, trigger }) {
 }
 
 const displayValue = value => Array.isArray(value)
-  ? (value.join(", ") || "No disponible")
+  ? (value.map(humanIntelligenceLabel).join(", ") || "No disponible")
   : value && typeof value === "object"
-    ? Object.entries(value).map(([key, item]) => `${key}: ${item}`).join(" · ")
-    : value || "No disponible";
+    ? Object.entries(value).map(([key, item]) => `${key}: ${humanIntelligenceLabel(item)}`).join(" · ")
+    : humanIntelligenceLabel(value) || "No disponible";
 
 async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
   const layer = document.createElement("div");
@@ -312,14 +370,14 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
   layer.dataset.nashCombatWorkspace = "true";
   layer.innerHTML = `
     <button class="referral-sheet__scrim" type="button" data-close-combat></button>
-    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="combat-title">
-      <div class="referral-sheet__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" type="button" data-close-combat>×</button></div>
-      <div class="referral-sheet__body">
+    <section class="referral-sheet nash-combat-workspace" role="dialog" aria-modal="true" aria-labelledby="combat-title">
+      <div class="referral-sheet__header nash-combat-workspace__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2><span data-combat-header-state>Esperando objeción</span></div><button class="referral-sheet__close" type="button" data-close-combat>×</button></div>
+      <div class="referral-sheet__body nash-combat-workspace__body">
         <label><span>Objeción escuchada (no se guarda)</span><textarea data-combat-objection></textarea></label>
         <button type="button" data-analyze-combat>Analizar objeción</button>
         <div data-combat-results hidden></div>
       </div>
-      <div class="referral-sheet__footer" data-combat-actions hidden>
+      <div class="referral-sheet__footer nash-combat-workspace__footer" data-combat-actions hidden>
         <button type="button" data-approve-combat>Revisar y aprobar texto exacto</button>
         <button type="button" data-register-combat>Registrar clasificación en Timeline</button>
         <a data-combat-whatsapp hidden>Continuar manualmente a WhatsApp</a>
@@ -330,13 +388,17 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
   layer.querySelectorAll("[data-close-combat]").forEach(node => node.addEventListener("click", close));
   const results = layer.querySelector("[data-combat-results]");
   const actions = layer.querySelector("[data-combat-actions]");
+  const body = layer.querySelector(".nash-combat-workspace__body");
   layer.querySelector("[data-analyze-combat]").addEventListener("click", async () => {
-    combat = await adapter.analyzeCombat(card.prospect, layer.querySelector("[data-combat-objection]").value);
+    const objection = layer.querySelector("[data-combat-objection]").value;
+    combat = await adapter.analyzeCombat(card.prospect, objection);
+    layer.querySelector("[data-combat-header-state]").textContent =
+      `Objeción analizada: ${objection}`;
     results.hidden = false;
     actions.hidden = false;
     results.innerHTML = `
-      <p>Tipo candidato: <strong data-combat-type>${escapeHtml(combat.classification.type)}</strong></p>
-      <p>Intención candidata: <strong data-combat-intent>${escapeHtml(combat.classification.intent)}</strong></p>
+      <p>Tipo candidato: <strong data-combat-type data-combat-type-code="${escapeHtml(combat.classification.type)}">${escapeHtml(humanIntelligenceLabel(combat.classification.type))}</strong></p>
+      <p>Intención candidata: <strong data-combat-intent data-combat-intent-code="${escapeHtml(combat.classification.intent)}">${escapeHtml(humanIntelligenceLabel(combat.classification.intent))}</strong></p>
       <p>Confianza: ${escapeHtml(combat.classification.confidence)}</p>
       <p>Intenciones posibles: ${escapeHtml(displayValue(combat.classification.possibleIntents))}</p>
       <p>Interpretación posible: ${escapeHtml(combat.psychology.psychology)}</p>
@@ -346,6 +408,7 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
       <p>Soporte: ${escapeHtml(displayValue(combat.advisorGuidance))}</p>
       <label><span>Respuesta candidata editable</span><textarea data-combat-response>${escapeHtml(combat.objectionKillerMessage)}</textarea></label>
       <p data-combat-approval>Revisión y aprobación humana requeridas.</p>`;
+    body.scrollTop = 0;
     const response = results.querySelector("[data-combat-response]");
     response.addEventListener("input", () => {
       const link = layer.querySelector("[data-combat-whatsapp]");
@@ -376,6 +439,7 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
     results.insertAdjacentHTML("beforeend", "<p data-combat-timeline>Clasificación registrada sin texto crudo.</p>");
   });
   document.body.append(layer);
+  body.scrollTop = 0;
   layer.querySelector("[data-combat-objection]").focus();
 }
 
@@ -387,9 +451,9 @@ async function openNbaWorkspace({ card, adapter, trigger }) {
   const field = (label, value) => `<p>${label}: ${escapeHtml(displayValue(value))}</p>`;
   layer.innerHTML = `
     <button class="referral-sheet__scrim" type="button" data-close-nba></button>
-    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="nba-title">
+    <section class="referral-sheet nba-workspace" role="dialog" aria-modal="true" aria-labelledby="nba-title">
       <div class="referral-sheet__header"><div><p>NBA · REASON WHY</p><h2 id="nba-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-nba>×</button></div>
-      <div class="referral-sheet__body">
+      <div class="referral-sheet__body nba-workspace__body">
         ${field("Estado", nba.reconnectionStatus)}
         ${field("Acción candidata", nba.recommendedAction)}
         ${field("Reason Why", nba.reasonWhy)}
@@ -399,14 +463,17 @@ async function openNbaWorkspace({ card, adapter, trigger }) {
         ${field("Por qué este mensaje", nba.whyThisMessage)}
         ${field("Ángulo", nba.conversationAngle)}
         ${field("Soporte de objeción", nba.objectionSupport)}
-        ${field("Evidencia", nba.evidenceRefs)}
-        ${field("Fuentes", nba.sourceOwners)}
         ${field("Frescura", nba.freshness)}
         ${field("Confianza", nba.confidence)}
         ${field("Limitaciones", nba.confidenceLimitations)}
         ${field("Advertencias", nba.warnings)}
         ${field("Contexto faltante", nba.missingContext)}
         <p data-nba-human-review>Revisión humana requerida · ejecución automática deshabilitada.</p>
+        <details class="nba-workspace__technical">
+          <summary>Evidencia técnica</summary>
+          ${field("Referencias", nba.evidenceRefs)}
+          ${field("Fuentes", nba.sourceOwners)}
+        </details>
       </div>
       <div class="referral-sheet__footer"><button type="button" data-nba-prepare-message>Preparar mensaje con este contexto</button></div>
     </section>`;
@@ -437,8 +504,22 @@ async function openReferralForm({ trigger, errorNode, onCreated }) {
     const form = layer.querySelector("[data-referral-form]");
     const formError = layer.querySelector("[data-referral-error]");
     const save = layer.querySelector("[data-save-referral]");
+    const source = form.querySelector("[data-prospect-source]");
+    const referralFields = form.querySelector("[data-referral-source-fields]");
     const previousOverflow = document.body.style.overflow;
     let dirty = false;
+
+    const syncReferralFields = () => {
+      const referred = source.value === "Referido";
+      referralFields.hidden = !referred;
+      if (!referred) {
+        referralFields.querySelectorAll("input").forEach(input => {
+          input.value = "";
+        });
+      }
+    };
+    source.addEventListener("change", syncReferralFields);
+    syncReferralFields();
 
     const focusable = () => [...sheet.querySelectorAll(
       'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
@@ -539,6 +620,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
   let referralStatus = "";
   let productiveAdapter;
   let productiveCards = [];
+  let productiveFilters = { source: "", status: "" };
   let productiveError = "";
   let productiveHydrated = false;
   const usesProductiveRuntime = dataProvider === connectedData;
@@ -546,6 +628,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
 
   function clearPrivateState() {
     productiveCards = [];
+    productiveFilters = { source: "", status: "" };
     productiveAdapter = undefined;
     productiveHydrated = false;
     referralRuntimePromise = undefined;
@@ -606,6 +689,10 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
       writerAvailable: false,
     });
     const productive = productiveCards.length > 0;
+    const filteredProductiveCards = productiveCards.filter(card =>
+      (!productiveFilters.source || card.sourceValue === productiveFilters.source)
+      && (!productiveFilters.status || card.status === productiveFilters.status)
+    );
     const count = productive
       ? productiveCards.length
       : model.columns.reduce((total, column) => total + column.count, 0);
@@ -636,10 +723,10 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
               type="button"
               data-pipeline-create-referral
               data-open-referral
-              aria-label="Agregar nuevo referido"
+              aria-label="Agregar prospecto"
             >
               <span aria-hidden="true">＋</span>
-              <span>Agregar nuevo referido</span>
+              <span>Agregar prospecto</span>
             </button>
             <p
               class="pipeline-module__create-error"
@@ -649,24 +736,63 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
             ></p>
           </section>`
         : productive
-          ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
-              ${productiveCards.map(card => `
-                <article class="pipeline-module__prospect" data-productive-prospect-card="${escapeHtml(card.id)}">
-                  <div><strong>${escapeHtml(card.fullName)}</strong><span>${escapeHtml(card.stageLabel)}</span></div>
-                  <p>${escapeHtml(card.sourceSummary)}</p>
-                  <p data-timeline-activity data-activity-source="${card.latestActivity ? "TIMELINE" : "UNKNOWN"}">${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p>
-                  ${card.nextCommitment ? `<p>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</p>` : ""}
-                  <p>${escapeHtml(card.intelligenceState)}</p>
-                  <div class="pipeline-module__card-actions">
-                    <button type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
-                    <button type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
-                    <button type="button" data-open-combat="${escapeHtml(card.id)}">NASH Combat</button>
-                    <button type="button" data-open-nba="${escapeHtml(card.id)}">Revisar NBA</button>
-                    ${card.phone ? `<a href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}
-                    <button type="button" disabled title="NOT_CONNECTED">Agendar</button>
+          ? `<section class="pipeline-module__filters" data-productive-filter-bar aria-label="Filtros del Pipeline">
+              <label>
+                <span>Fuente</span>
+                <select data-productive-filter-source>
+                  <option value="">Todas las fuentes</option>
+                  ${productiveSourceFilters.map(source => `<option value="${escapeHtml(source)}" ${productiveFilters.source === source ? "selected" : ""}>${escapeHtml(source)}</option>`).join("")}
+                </select>
+              </label>
+              <label>
+                <span>Estado</span>
+                <select data-productive-filter-status>
+                  <option value="">Todos los estados</option>
+                  ${productiveStatusFilters.map(option => `<option value="${escapeHtml(option.value)}" ${productiveFilters.status === option.value ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}
+                </select>
+              </label>
+              <p data-productive-filter-count aria-live="polite">${filteredProductiveCards.length} de ${productiveCards.length} prospectos</p>
+              <button type="button" data-clear-productive-filters ${productiveFilters.source || productiveFilters.status ? "" : "disabled"}>Limpiar filtros</button>
+            </section>
+            ${filteredProductiveCards.length
+              ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
+              ${filteredProductiveCards.map(card => `
+                <article class="pipeline-module__prospect pipeline-module__productive-card" data-productive-prospect-card="${escapeHtml(card.id)}" data-productive-source="${escapeHtml(card.sourceValue)}" data-productive-stage="${escapeHtml(card.status)}">
+                  <header class="pipeline-module__productive-identity" data-productive-card-identity>
+                    <strong>${escapeHtml(card.fullName)}</strong>
+                    <span class="pipeline-module__productive-stage" data-productive-stage-label>${escapeHtml(card.stageLabel)}</span>
+                  </header>
+                  <div class="pipeline-module__productive-meta" data-productive-card-metadata>
+                    <span>Fuente</span>
+                    <p data-productive-source-label>${escapeHtml(card.sourceSummary)}</p>
+                  </div>
+                  <label class="pipeline-module__stage-control">
+                    <span>Estado del prospecto</span>
+                    <select data-productive-stage-control="${escapeHtml(card.id)}" aria-label="Cambiar estado de ${escapeHtml(card.fullName)}">
+                      ${card.stageOptions.map(option => `<option value="${escapeHtml(option.value)}" ${option.value === card.status ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}
+                    </select>
+                  </label>
+                  <div class="pipeline-module__productive-status" data-productive-card-status>
+                    <p data-timeline-activity data-activity-source="${card.latestActivity ? "TIMELINE" : "UNKNOWN"}">
+                      <span>Última actividad</span>
+                      <strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong>
+                    </p>
+                    ${card.nextCommitment ? `<p><span>Próximo compromiso</span><strong>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</strong></p>` : ""}
+                    <p><span>Asistencia</span><strong>${escapeHtml(card.intelligenceLabel || "Disponible al solicitarla")}</strong></p>
+                  </div>
+                  <div class="pipeline-module__card-actions" data-productive-card-actions aria-label="Acciones del prospecto">
+                    <button class="pipeline-module__action--context" type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
+                    <button class="pipeline-module__action--primary" type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
+                    <button class="pipeline-module__action--combat" type="button" data-open-combat="${escapeHtml(card.id)}">NASH Combat</button>
+                    <button class="pipeline-module__action--nba" type="button" data-open-nba="${escapeHtml(card.id)}">Revisar NBA</button>
+                    ${card.phone ? `<a class="pipeline-module__action--call" href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}
+                    <button class="pipeline-module__action--calendar" type="button" disabled title="NOT_CONNECTED">Agendar</button>
                   </div>
                 </article>`).join("")}
             </div>`
+              : `<section class="pipeline-module__filter-empty" data-productive-filter-empty>
+                  <p>No hay prospectos que coincidan con estos filtros.</p>
+                </section>`}`
           : `<div class="pipeline-module__stages">${model.columns.map(renderColumn).join("")}</div>`}
     `;
 
@@ -676,6 +802,19 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
     const errorNode = root.querySelector?.(
       "[data-pipeline-create-error]",
     );
+
+    root.querySelector?.("[data-productive-filter-source]")?.addEventListener("change", event => {
+      productiveFilters = { ...productiveFilters, source: event.currentTarget.value };
+      render();
+    });
+    root.querySelector?.("[data-productive-filter-status]")?.addEventListener("change", event => {
+      productiveFilters = { ...productiveFilters, status: event.currentTarget.value };
+      render();
+    });
+    root.querySelector?.("[data-clear-productive-filters]")?.addEventListener("click", () => {
+      productiveFilters = { source: "", status: "" };
+      render();
+    });
 
     createReferral?.addEventListener("click", (event) => {
       event.preventDefault();
@@ -696,6 +835,25 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
       trigger.addEventListener("click", () => {
         const card = productiveCards.find(item => item.id === trigger.dataset.prepareProductiveMessage);
         if (card && productiveAdapter) void openNashWorkspace({ card, adapter: productiveAdapter, trigger });
+      });
+    });
+    root.querySelectorAll?.("[data-productive-stage-control]").forEach(select => {
+      select.addEventListener("change", async () => {
+        const card = productiveCards.find(item => item.id === select.dataset.productiveStageControl);
+        if (!card || !productiveAdapter || select.value === card.status) return;
+        const previous = card.status;
+        select.disabled = true;
+        select.removeAttribute("aria-invalid");
+        try {
+          productiveCards = await productiveAdapter.updateStage(card.id, select.value);
+          referralStatus = "Etapa actualizada.";
+          render();
+        } catch {
+          select.value = previous;
+          select.disabled = false;
+          select.setAttribute("aria-invalid", "true");
+          productiveError = "No pudimos actualizar la etapa.";
+        }
       });
     });
     root.querySelectorAll?.("[data-open-combat]").forEach(trigger => {
