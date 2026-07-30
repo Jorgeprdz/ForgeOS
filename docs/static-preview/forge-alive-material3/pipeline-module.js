@@ -1,6 +1,6 @@
 import {
   createProductiveIntelligenceAdapter,
-} from "./pipeline-productive-intelligence-adapter.js?v=material3-productive-001";
+} from "./pipeline-productive-intelligence-adapter.js?v=material3-productive-002";
 
 const pipelineRuntimeBase = new URL(
   import.meta.url.includes("/docs/static-preview/")
@@ -141,7 +141,7 @@ async function ensureReferralStyles() {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
     stylesheet.href = new URL(
-      "./pipeline-referral-modal.css?v=ui-m06-referral-004",
+      "./pipeline-referral-modal.css?v=ui-m06-referral-004&fix=005",
       import.meta.url,
     );
     stylesheet.dataset.material3ReferralStyles = "true";
