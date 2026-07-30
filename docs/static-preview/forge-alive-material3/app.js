@@ -1,7 +1,7 @@
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=ui-m05-008";
-import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-008";
+import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-009";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);

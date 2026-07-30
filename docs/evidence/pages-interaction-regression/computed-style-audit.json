@@ -1,0 +1,29 @@
+{
+  "viewports": [
+    {
+      "name": "mobile",
+      "workspaceStylesLoaded": true,
+      "workspaceLayerFixed": true,
+      "workspaceWithinViewport": true,
+      "nativeUnstyledControls": 0,
+      "maximumSimultaneousWorkspaces": 1
+    },
+    {
+      "name": "tablet",
+      "workspaceStylesLoaded": true,
+      "workspaceLayerFixed": true,
+      "workspaceWithinViewport": true,
+      "nativeUnstyledControls": 0,
+      "maximumSimultaneousWorkspaces": 1
+    },
+    {
+      "name": "desktop",
+      "workspaceStylesLoaded": true,
+      "workspaceLayerFixed": true,
+      "workspaceWithinViewport": true,
+      "nativeUnstyledControls": 0,
+      "maximumSimultaneousWorkspaces": 1
+    }
+  ],
+  "result": "PASS"
+}

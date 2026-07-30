@@ -113,86 +113,6 @@ jobs:
           });
           EOF
 
-      - name: Correct cross-route auth and Timeline simulation in diagnostic harness
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("tools/forge-ui-visual-diagnostic.mjs")
-          source = path.read_text(encoding="utf-8")
-
-          def replace_once(old, new):
-              global source
-              count = source.count(old)
-              if count != 1:
-                  raise SystemExit(f"DIAGNOSTIC_PATCH_MATCH_COUNT={count}:{old[:80]!r}")
-              source = source.replace(old, new, 1)
-
-          replace_once(
-              '    if (new URL(location.href).searchParams.get("nav") !== "pipeline") return;\n\n',
-              '',
-          )
-          replace_once(
-              '    globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;\n  }, SAMPLE_REFERRAL);',
-              '''    let initialDiagnosticAuth = false;
-              try {
-                initialDiagnosticAuth = localStorage.getItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__") === "true";
-              } catch {}
-              globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = initialDiagnosticAuth;
-            }, SAMPLE_REFERRAL);''',
-          )
-          replace_once(
-              '      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = true;\n      const user = {',
-              '''      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = true;
-              localStorage.setItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__", "true");
-              const user = {''',
-          )
-          replace_once(
-              '            globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;\n            globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);',
-              '''            globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
-              localStorage.setItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__", "false");
-              globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);''',
-          )
-          replace_once(
-              '      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;\n      globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);',
-              '''      globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
-              localStorage.setItem("__FORGE_DIAGNOSTIC_AUTHENTICATED__", "false");
-              globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);''',
-          )
-          replace_once(
-              '''        rpc: async (_name, args) => {
-                    globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ = true;
-                    globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ = args;
-                    return { data: null, error: null };
-                  },''',
-              '''        rpc: async (_name, args) => {
-                    const event = {
-                      id: "diagnostic-objection-event",
-                      prospect_id: args.p_prospect_id,
-                      event_type: args.p_event_type,
-                      event_source: "ADVISOR_REPORTED",
-                      source_record_reference: args.p_source_record_reference,
-                      occurred_at: args.p_occurred_at,
-                      recorded_at: args.p_occurred_at,
-                      payload: args.p_payload || {},
-                      evidence_references: args.p_evidence_references || [],
-                      contract_version: "NFAST-08.1",
-                      privacy_classification: "RESTRICTED",
-                      retention_policy: "ADVISOR_PROSPECT_TIMELINE",
-                    };
-                    timeline.push(event);
-                    globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ = true;
-                    globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ = args.p_payload || {};
-                    return { data: event, error: null };
-                  },''',
-          )
-
-          path.write_text(source, encoding="utf-8")
-          PY
-          node --check tools/forge-ui-visual-diagnostic.mjs
-          echo "DIAGNOSTIC_AUTH_AND_TIMELINE_SIMULATION=READY"
-
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
@@ -254,9 +174,19 @@ jobs:
           test -f artifacts/forge-ui-diagnostic/manifest.json
           test -f artifacts/forge-ui-diagnostic/summary.md
           test -f artifacts/forge-ui-diagnostic/diagnostic.log
+          test -f artifacts/forge-ui-diagnostic/final-visual-closure/combat-click-through.json
+          test -f artifacts/forge-ui-diagnostic/final-visual-closure/nash-click-through.json
+          test -f artifacts/forge-ui-diagnostic/final-visual-closure/whatsapp-click-through.json
+          test -f artifacts/forge-ui-diagnostic/final-visual-closure/workspace-duplication-audit.json
           test ! -f artifacts/forge-ui-diagnostic/fatal-error.txt
           grep -F "FORGE_UI_VISUAL_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
           grep -F "GOOGLE_AUTH_RECONNECTION_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
           grep -F "NASH_COMBAT_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
           grep -F "NBA_REASON_WHY_ACCEPTANCE=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "NASH_COMBAT_BUTTON_CLICKED=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "COMBAT_WHATSAPP_CLICKED=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "PREPARE_MESSAGE_CLICKED=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "NASH_REAPPROVAL_AFTER_EDIT_CLICKED=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "WHATSAPP_EXACT_TEXT_MATCH=PASS" artifacts/forge-ui-diagnostic/diagnostic.log
+          grep -F "MAX_SIMULTANEOUS_WORKSPACES=1" artifacts/forge-ui-diagnostic/diagnostic.log
           echo "FORGE_UI_VISUAL_DIAGNOSTIC=PASS"

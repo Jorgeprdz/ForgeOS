@@ -1,0 +1,50 @@
+[
+  {
+    "viewport": {
+      "name": "mobile",
+      "width": 412,
+      "height": 915,
+      "expectedCardColumns": 1
+    },
+    "nashWorkspaceCountMax": 1,
+    "combatWorkspaceCountMax": 1,
+    "nbaWorkspaceCountMax": 1,
+    "totalActiveWorkspaceCountMax": 1,
+    "duplicateHeadings": 0,
+    "duplicateCloseButtons": 0,
+    "duplicateWhatsappLinks": 0,
+    "result": "PASS"
+  },
+  {
+    "viewport": {
+      "name": "tablet",
+      "width": 1024,
+      "height": 768,
+      "expectedCardColumns": 2
+    },
+    "nashWorkspaceCountMax": 1,
+    "combatWorkspaceCountMax": 1,
+    "nbaWorkspaceCountMax": 1,
+    "totalActiveWorkspaceCountMax": 1,
+    "duplicateHeadings": 0,
+    "duplicateCloseButtons": 0,
+    "duplicateWhatsappLinks": 0,
+    "result": "PASS"
+  },
+  {
+    "viewport": {
+      "name": "desktop",
+      "width": 1600,
+      "height": 900,
+      "expectedCardColumns": 4
+    },
+    "nashWorkspaceCountMax": 1,
+    "combatWorkspaceCountMax": 1,
+    "nbaWorkspaceCountMax": 1,
+    "totalActiveWorkspaceCountMax": 1,
+    "duplicateHeadings": 0,
+    "duplicateCloseButtons": 0,
+    "duplicateWhatsappLinks": 0,
+    "result": "PASS"
+  }
+]

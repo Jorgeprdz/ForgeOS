@@ -1,0 +1,16 @@
+{
+  "artifact": "_site",
+  "servedUnderProjectPrefix": true,
+  "projectPrefix": "/ForgeOS/",
+  "pipelineReferralStyles": {
+    "path": "static-preview/forge-alive/pipeline-referral-modal.css",
+    "present": true,
+    "expectedVersion": "ui-m06-referral-004",
+    "contentType": "text/css"
+  },
+  "requiredRuntimeAssetsPresent": true,
+  "pageErrors": 0,
+  "consoleErrors": 0,
+  "failedRequests": 0,
+  "result": "PASS"
+}
