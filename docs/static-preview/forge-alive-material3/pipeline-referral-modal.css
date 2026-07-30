@@ -10,6 +10,7 @@
 }
 
 .referral-sheet__scrim {
+  appearance: none;
   position: absolute;
   inset: 0;
   width: 100%;
@@ -18,6 +19,10 @@
   padding: 0;
   background: rgba(2, 8, 18, 0.58);
   backdrop-filter: blur(8px);
+}
+
+.referral-sheet [hidden] {
+  display: none !important;
 }
 
 .referral-sheet {
@@ -69,6 +74,7 @@
 }
 
 .referral-sheet__close {
+  appearance: none;
   flex: 0 0 44px;
   width: 44px;
   height: 44px;
@@ -101,6 +107,7 @@
 .referral-sheet input,
 .referral-sheet textarea,
 .referral-sheet select {
+  appearance: none;
   box-sizing: border-box;
   width: 100%;
   min-height: 50px;
@@ -160,6 +167,7 @@
 }
 
 .referral-sheet__footer button {
+  appearance: none;
   min-height: 50px;
   border: 0;
   border-radius: 18px;
@@ -168,6 +176,40 @@
   background: linear-gradient(105deg, #ffe09c, #e9a93b);
   font: inherit;
   font-weight: 800;
+}
+
+.referral-sheet__body button,
+.referral-sheet__footer a {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 46px;
+  max-width: 100%;
+  border: 1px solid rgba(139, 223, 255, 0.34);
+  border-radius: 16px;
+  padding: 10px 16px;
+  color: var(--ink);
+  background: rgba(80, 155, 214, 0.16);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  font: inherit;
+  font-weight: 780;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.referral-sheet__body button:hover,
+.referral-sheet__footer a:hover {
+  border-color: rgba(139, 223, 255, 0.62);
+  background: rgba(80, 155, 214, 0.24);
+}
+
+.referral-sheet__footer a[href] {
+  color: #062316;
+  border-color: rgba(107, 235, 168, 0.56);
+  background: linear-gradient(105deg, #a9f5c8, #58d597);
 }
 
 .referral-sheet__footer button[disabled] {

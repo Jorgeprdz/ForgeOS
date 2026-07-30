@@ -129,7 +129,11 @@ async function ensureReferralStyles() {
       if (existing.sheet) resolve();
       else {
         existing.addEventListener("load", resolve, { once: true });
-        existing.addEventListener("error", reject, { once: true });
+        existing.addEventListener(
+          "error",
+          () => reject(new Error("MATERIAL3_WORKSPACE_STYLES_UNAVAILABLE")),
+          { once: true },
+        );
       }
       return;
     }
@@ -137,17 +141,160 @@ async function ensureReferralStyles() {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
     stylesheet.href = new URL(
-      "./pipeline-referral-modal.css?v=ui-m06-referral-003",
+      "./pipeline-referral-modal.css?v=ui-m06-referral-004",
       import.meta.url,
     );
     stylesheet.dataset.material3ReferralStyles = "true";
     stylesheet.addEventListener("load", resolve, { once: true });
-    stylesheet.addEventListener("error", reject, { once: true });
+    stylesheet.addEventListener(
+      "error",
+      () => reject(new Error("MATERIAL3_WORKSPACE_STYLES_UNAVAILABLE")),
+      { once: true },
+    );
     document.head.append(stylesheet);
+  }).catch((error) => {
+    document.querySelector("[data-material3-referral-styles]")?.remove();
+    referralStylePromise = undefined;
+    throw error;
   });
 
   return referralStylePromise;
 }
+
+function safelyBoundedWorkspaceError(trigger) {
+  document.querySelector("[data-material3-workspace-error]")?.remove();
+  const layer = document.createElement("div");
+  layer.dataset.material3WorkspaceError = "true";
+  layer.style.cssText =
+    "position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:24px;background:rgba(2,8,18,.72)";
+  layer.innerHTML = `
+    <section role="alertdialog" aria-modal="true" aria-labelledby="workspace-error-title"
+      style="box-sizing:border-box;width:min(420px,100%);padding:24px;border:1px solid rgba(184,211,255,.3);border-radius:24px;color:#f4f7ff;background:#0b1a30;box-shadow:0 24px 70px rgba(0,0,0,.5)">
+      <h2 id="workspace-error-title" style="margin:0 0 10px">No pudimos abrir este espacio</h2>
+      <p style="margin:0 0 18px;line-height:1.5">Los estilos de interacción no estuvieron disponibles. Reintenta en un momento.</p>
+      <button type="button" data-close-workspace
+        style="min-height:44px;border:0;border-radius:15px;padding:10px 18px;color:#07111f;background:#9be8ff;font:inherit;font-weight:800">Cerrar</button>
+    </section>`;
+  const close = () => {
+    layer.remove();
+    trigger?.focus();
+  };
+  layer.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-workspace]")) close();
+  });
+  document.body.append(layer);
+  layer.querySelector("[data-close-workspace]")?.focus();
+}
+
+const productiveWorkspaceController = (() => {
+  let active;
+  let openingToken;
+  let escapeListener;
+
+  const restorationTarget = (trigger) => {
+    if (trigger?.isConnected) return trigger;
+    for (const attribute of [
+      "data-open-combat",
+      "data-open-nba",
+      "data-prepare-productive-message",
+      "data-view-productive-context",
+    ]) {
+      const value = trigger?.getAttribute?.(attribute);
+      if (value) {
+        return document.querySelector(
+          `[${attribute}="${CSS.escape(value)}"]`,
+        );
+      }
+    }
+    return null;
+  };
+
+  const close = ({ restoreFocus = true } = {}) => {
+    if (!active) return false;
+    const { layer, trigger, previousOverflow } = active;
+    active = undefined;
+    layer.remove();
+    document.documentElement.removeAttribute("data-forge-productive-workspace-open");
+    document.body.style.overflow = previousOverflow;
+    if (escapeListener) {
+      document.removeEventListener("keydown", escapeListener);
+      escapeListener = undefined;
+    }
+    if (restoreFocus) restorationTarget(trigger)?.focus();
+    return true;
+  };
+
+  const open = async ({ kind, trigger, createLayer }) => {
+    if (openingToken) return;
+    if (active?.kind === kind && active.trigger === trigger) {
+      active.layer.querySelector(
+        "[autofocus], textarea, button:not(.referral-sheet__scrim), [href], select, input",
+      )?.focus();
+      return;
+    }
+    const token = Symbol(kind);
+    openingToken = token;
+    trigger.setAttribute("aria-busy", "true");
+
+    try {
+      await ensureReferralStyles();
+      if (openingToken !== token) return;
+
+      const layer = await createLayer();
+      if (openingToken !== token) {
+        layer.remove();
+        return;
+      }
+
+      close({ restoreFocus: false });
+      const previousOverflow = document.body.style.overflow;
+      active = {
+        kind,
+        layer,
+        trigger,
+        previousOverflow,
+        openedAt: performance.now(),
+      };
+      layer.dataset.material3Workspace = kind;
+
+      layer.addEventListener("click", (event) => {
+        if (
+          event.target.matches?.(".referral-sheet__scrim")
+          && active?.layer === layer
+          && performance.now() - active.openedAt < 350
+        ) {
+          return;
+        }
+        if (event.target.closest("[data-close-workspace]")) close();
+      });
+      escapeListener = (event) => {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        close();
+      };
+      document.addEventListener("keydown", escapeListener);
+      document.body.append(layer);
+      document.body.style.overflow = "hidden";
+      document.documentElement.setAttribute(
+        "data-forge-productive-workspace-open",
+        kind,
+      );
+      requestAnimationFrame(() => {
+        const target = layer.querySelector(
+          "[autofocus], textarea, button:not(.referral-sheet__scrim), [href], select, input",
+        );
+        target?.focus();
+      });
+    } catch {
+      if (openingToken === token) safelyBoundedWorkspaceError(trigger);
+    } finally {
+      trigger.removeAttribute("aria-busy");
+      if (openingToken === token) openingToken = undefined;
+    }
+  };
+
+  return Object.freeze({ open, close });
+})();
 
 async function ensureReferralRuntime() {
   if (referralRuntimePromise) return referralRuntimePromise;
@@ -290,16 +437,20 @@ function referralErrorMessage(error) {
 }
 
 async function openNashWorkspace({ card, adapter, trigger }) {
-  const prepared = await adapter.prepareMessage(card.prospect);
-  const layer = document.createElement("div");
-  layer.className = "referral-sheet-layer";
-  layer.dataset.nashProspectWorkspace = "true";
-  layer.innerHTML = `
-    <button class="referral-sheet__scrim" type="button" data-close-nash></button>
+  return productiveWorkspaceController.open({
+    kind: "nash",
+    trigger,
+    createLayer: async () => {
+      const prepared = await adapter.prepareMessage(card.prospect);
+      const layer = document.createElement("div");
+      layer.className = "referral-sheet-layer";
+      layer.dataset.nashProspectWorkspace = "true";
+      layer.innerHTML = `
+    <button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar mensaje"></button>
     <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="nash-workspace-title">
       <div class="referral-sheet__header">
         <div><p>NASH · REVISIÓN HUMANA</p><h2 id="nash-workspace-title">Preparar mensaje</h2></div>
-        <button class="referral-sheet__close" type="button" data-close-nash aria-label="Cerrar">×</button>
+        <button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button>
       </div>
       <div class="referral-sheet__body">
         <p data-nash-source-mode>${escapeHtml(prepared.sourceMode)}</p>
@@ -312,50 +463,49 @@ async function openNashWorkspace({ card, adapter, trigger }) {
         <a data-manual-whatsapp hidden>Continuar manualmente a WhatsApp</a>
       </div>
     </section>`;
-  layer.dataset.nashApprovalState = "pending";
-  const close = () => { layer.remove(); trigger.focus(); };
-  layer.querySelectorAll("[data-close-nash]").forEach(node => node.addEventListener("click", close));
-  const textarea = layer.querySelector("[data-nash-draft]");
-  const link = layer.querySelector("[data-manual-whatsapp]");
-  const status = layer.querySelector("[data-nash-approval-status]");
-  const approveButton = layer.querySelector("[data-approve-nash-draft]");
-  textarea.addEventListener("input", () => {
-    layer.dataset.nashApprovalState = "pending";
-    link.hidden = true;
-    link.removeAttribute("href");
-    approveButton.disabled = false;
-    approveButton.textContent = "Revisar y aprobar texto exacto";
-    status.textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
+      layer.dataset.nashApprovalState = "pending";
+      const textarea = layer.querySelector("[data-nash-draft]");
+      const link = layer.querySelector("[data-manual-whatsapp]");
+      const status = layer.querySelector("[data-nash-approval-status]");
+      const approveButton = layer.querySelector("[data-approve-nash-draft]");
+      textarea.addEventListener("input", () => {
+        layer.dataset.nashApprovalState = "pending";
+        link.hidden = true;
+        link.removeAttribute("href");
+        approveButton.disabled = false;
+        approveButton.textContent = "Revisar y aprobar texto exacto";
+        status.textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
+      });
+      approveButton.addEventListener("click", () => {
+        const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
+        const text = textarea.value;
+        const validation = safety.draftSafetyValidator({
+          draftText: text,
+          draftCandidateSnapshot: { ...prepared.candidate, sendsMessage: false },
+          humanApproval: { required: true, finalAuthority: "HUMAN" },
+        });
+        const approval = safety.approveExactDraft({
+          draftText: text,
+          validationResult: validation,
+          humanDecision: safety.EXPLICIT_DRAFT_APPROVAL,
+        });
+        const gate = safety.exactDraftHumanApprovalGate({
+          draftText: text, validationResult: validation, approvalSnapshot: approval,
+        });
+        const url = gate.exactDraftApproved
+          ? globalThis.ForgeProductiveContactNavigationBoundary067G17B
+            .whatsappUrl(card.prospect, "professional", text)
+          : null;
+        link.hidden = !url;
+        if (url) link.href = url;
+        layer.dataset.nashApprovalState = url ? "approved" : "blocked";
+        approveButton.disabled = Boolean(url);
+        approveButton.textContent = url ? "Texto exacto aprobado" : "Revisar y aprobar texto exacto";
+        status.textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El mensaje no pasó la validación.";
+      });
+      return layer;
+    },
   });
-  approveButton.addEventListener("click", () => {
-    const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
-    const text = textarea.value;
-    const validation = safety.draftSafetyValidator({
-      draftText: text,
-      draftCandidateSnapshot: { ...prepared.candidate, sendsMessage: false },
-      humanApproval: { required: true, finalAuthority: "HUMAN" },
-    });
-    const approval = safety.approveExactDraft({
-      draftText: text,
-      validationResult: validation,
-      humanDecision: safety.EXPLICIT_DRAFT_APPROVAL,
-    });
-    const gate = safety.exactDraftHumanApprovalGate({
-      draftText: text, validationResult: validation, approvalSnapshot: approval,
-    });
-    const url = gate.exactDraftApproved
-      ? globalThis.ForgeProductiveContactNavigationBoundary067G17B
-        .whatsappUrl(card.prospect, "professional", text)
-      : null;
-    link.hidden = !url;
-    if (url) link.href = url;
-    layer.dataset.nashApprovalState = url ? "approved" : "blocked";
-    approveButton.disabled = Boolean(url);
-    approveButton.textContent = url ? "Texto exacto aprobado" : "Revisar y aprobar texto exacto";
-    status.textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El mensaje no pasó la validación.";
-  });
-  document.body.append(layer);
-  textarea.focus();
 }
 
 const displayValue = value => Array.isArray(value)
@@ -365,13 +515,17 @@ const displayValue = value => Array.isArray(value)
     : humanIntelligenceLabel(value) || "No disponible";
 
 async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
-  const layer = document.createElement("div");
-  layer.className = "referral-sheet-layer";
-  layer.dataset.nashCombatWorkspace = "true";
-  layer.innerHTML = `
-    <button class="referral-sheet__scrim" type="button" data-close-combat></button>
+  return productiveWorkspaceController.open({
+    kind: "combat",
+    trigger,
+    createLayer: async () => {
+      const layer = document.createElement("div");
+      layer.className = "referral-sheet-layer";
+      layer.dataset.nashCombatWorkspace = "true";
+      layer.innerHTML = `
+    <button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar NASH Combat"></button>
     <section class="referral-sheet nash-combat-workspace" role="dialog" aria-modal="true" aria-labelledby="combat-title">
-      <div class="referral-sheet__header nash-combat-workspace__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2><span data-combat-header-state>Esperando objeción</span></div><button class="referral-sheet__close" type="button" data-close-combat>×</button></div>
+      <div class="referral-sheet__header nash-combat-workspace__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2><span data-combat-header-state>Esperando objeción</span></div><button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button></div>
       <div class="referral-sheet__body nash-combat-workspace__body">
         <label><span>Objeción escuchada (no se guarda)</span><textarea data-combat-objection></textarea></label>
         <button type="button" data-analyze-combat>Analizar objeción</button>
@@ -383,13 +537,11 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
         <a data-combat-whatsapp hidden>Continuar manualmente a WhatsApp</a>
       </div>
     </section>`;
-  let combat;
-  const close = () => { layer.remove(); trigger.focus(); };
-  layer.querySelectorAll("[data-close-combat]").forEach(node => node.addEventListener("click", close));
-  const results = layer.querySelector("[data-combat-results]");
-  const actions = layer.querySelector("[data-combat-actions]");
-  const body = layer.querySelector(".nash-combat-workspace__body");
-  layer.querySelector("[data-analyze-combat]").addEventListener("click", async () => {
+      let combat;
+      const results = layer.querySelector("[data-combat-results]");
+      const actions = layer.querySelector("[data-combat-actions]");
+      const body = layer.querySelector(".nash-combat-workspace__body");
+      layer.querySelector("[data-analyze-combat]").addEventListener("click", async () => {
     const objection = layer.querySelector("[data-combat-objection]").value;
     combat = await adapter.analyzeCombat(card.prospect, objection);
     layer.querySelector("[data-combat-header-state]").textContent =
@@ -416,8 +568,8 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
       link.removeAttribute("href");
       results.querySelector("[data-combat-approval]").textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
     });
-  });
-  layer.querySelector("[data-approve-combat]").addEventListener("click", () => {
+      });
+      layer.querySelector("[data-approve-combat]").addEventListener("click", () => {
     const text = results.querySelector("[data-combat-response]")?.value || "";
     const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
     const snapshot = { rawText: text, sendsMessage: false, sourceMutable: true };
@@ -431,28 +583,33 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
     link.hidden = !url;
     if (url) link.href = url;
     results.querySelector("[data-combat-approval]").textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El texto no pasó la validación.";
-  });
-  layer.querySelector("[data-register-combat]").addEventListener("click", async () => {
+      });
+      layer.querySelector("[data-register-combat]").addEventListener("click", async () => {
     if (!combat) return;
     await onReconciled(await adapter.registerObjectionClassification(card, combat));
     layer.querySelector("[data-register-combat]").disabled = true;
     results.insertAdjacentHTML("beforeend", "<p data-combat-timeline>Clasificación registrada sin texto crudo.</p>");
+      });
+      body.scrollTop = 0;
+      return layer;
+    },
   });
-  document.body.append(layer);
-  body.scrollTop = 0;
-  layer.querySelector("[data-combat-objection]").focus();
 }
 
 async function openNbaWorkspace({ card, adapter, trigger }) {
-  const nba = await adapter.buildNba(card);
-  const layer = document.createElement("div");
-  layer.className = "referral-sheet-layer";
-  layer.dataset.nbaWorkspace = "true";
-  const field = (label, value) => `<p>${label}: ${escapeHtml(displayValue(value))}</p>`;
-  layer.innerHTML = `
-    <button class="referral-sheet__scrim" type="button" data-close-nba></button>
+  return productiveWorkspaceController.open({
+    kind: "nba",
+    trigger,
+    createLayer: async () => {
+      const nba = await adapter.buildNba(card);
+      const layer = document.createElement("div");
+      layer.className = "referral-sheet-layer";
+      layer.dataset.nbaWorkspace = "true";
+      const field = (label, value) => `<p>${label}: ${escapeHtml(displayValue(value))}</p>`;
+      layer.innerHTML = `
+    <button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar NBA"></button>
     <section class="referral-sheet nba-workspace" role="dialog" aria-modal="true" aria-labelledby="nba-title">
-      <div class="referral-sheet__header"><div><p>NBA · REASON WHY</p><h2 id="nba-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-nba>×</button></div>
+      <div class="referral-sheet__header"><div><p>NBA · REASON WHY</p><h2 id="nba-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button></div>
       <div class="referral-sheet__body nba-workspace__body">
         ${field("Estado", nba.reconnectionStatus)}
         ${field("Acción candidata", nba.recommendedAction)}
@@ -477,13 +634,12 @@ async function openNbaWorkspace({ card, adapter, trigger }) {
       </div>
       <div class="referral-sheet__footer"><button type="button" data-nba-prepare-message>Preparar mensaje con este contexto</button></div>
     </section>`;
-  const close = () => { layer.remove(); trigger.focus(); };
-  layer.querySelectorAll("[data-close-nba]").forEach(node => node.addEventListener("click", close));
-  layer.querySelector("[data-nba-prepare-message]").addEventListener("click", () => {
-    layer.remove();
-    void openNashWorkspace({ card, adapter, trigger });
+      layer.querySelector("[data-nba-prepare-message]").addEventListener("click", () => {
+        void openNashWorkspace({ card, adapter, trigger });
+      });
+      return layer;
+    },
   });
-  document.body.append(layer);
 }
 
 async function openReferralForm({ trigger, errorNode, onCreated }) {
@@ -627,6 +783,7 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
   let authStatus = usesProductiveRuntime ? "AUTH_LOADING" : "AUTHENTICATED";
 
   function clearPrivateState() {
+    productiveWorkspaceController.close({ restoreFocus: false });
     productiveCards = [];
     productiveFilters = { source: "", status: "" };
     productiveAdapter = undefined;
@@ -875,14 +1032,19 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
       trigger.addEventListener("click", () => {
         const card = productiveCards.find(item => item.id === trigger.dataset.viewProductiveContext);
         if (!card) return;
-        const layer = document.createElement("div");
-        layer.className = "referral-sheet-layer";
-        layer.dataset.productiveContextWorkspace = "true";
-        const objectionState = card.timeline.some(event => event.eventType === "OBJECTION_RECORDED")
-          ? "clasificación persistida disponible" : "sin clasificación persistida";
-        layer.innerHTML = `<button class="referral-sheet__scrim" data-close-context></button><section class="referral-sheet" role="dialog" aria-modal="true"><div class="referral-sheet__header"><div><p>CONTEXTO PRODUCTIVO</p><h2>${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-context>×</button></div><div class="referral-sheet__body"><p>${escapeHtml(card.stageLabel)}</p><p>${escapeHtml(card.sourceSummary)}</p><p data-context-timeline>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p><p>NBA: disponible para revisión</p><p>Objeciones: ${objectionState}</p><p>Mi Día: NOT_CONNECTED</p><p>Calendar: NOT_CONNECTED</p></div></section>`;
-        layer.querySelectorAll("[data-close-context]").forEach(node => node.addEventListener("click", () => { layer.remove(); trigger.focus(); }));
-        document.body.append(layer);
+        void productiveWorkspaceController.open({
+          kind: "context",
+          trigger,
+          createLayer: async () => {
+            const layer = document.createElement("div");
+            layer.className = "referral-sheet-layer";
+            layer.dataset.productiveContextWorkspace = "true";
+            const objectionState = card.timeline.some(event => event.eventType === "OBJECTION_RECORDED")
+              ? "clasificación persistida disponible" : "sin clasificación persistida";
+            layer.innerHTML = `<button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar contexto"></button><section class="referral-sheet" role="dialog" aria-modal="true"><div class="referral-sheet__header"><div><p>CONTEXTO PRODUCTIVO</p><h2>${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button></div><div class="referral-sheet__body"><p>${escapeHtml(card.stageLabel)}</p><p>${escapeHtml(card.sourceSummary)}</p><p data-context-timeline>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p><p>NBA: disponible para revisión</p><p>Objeciones: ${objectionState}</p><p>Mi Día: NOT_CONNECTED</p><p>Calendar: NOT_CONNECTED</p></div></section>`;
+            return layer;
+          },
+        });
       });
     });
 

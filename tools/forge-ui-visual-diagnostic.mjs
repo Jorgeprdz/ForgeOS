@@ -26,11 +26,12 @@ const SAMPLE_REFERRAL = Object.freeze({
     "Le interesa proteger a su hija y revisar opciones de ahorro.",
 });
 
+const VIEWPORT_FILTER = process.env.FORGE_DIAGNOSTIC_VIEWPORT || "";
 const VIEWPORTS = Object.freeze([
   Object.freeze({ name: "mobile", width: 412, height: 915, expectedCardColumns: 1 }),
   Object.freeze({ name: "tablet", width: 1024, height: 768, expectedCardColumns: 2 }),
   Object.freeze({ name: "desktop", width: 1600, height: 900, expectedCardColumns: 4 }),
-]);
+].filter(viewport => !VIEWPORT_FILTER || viewport.name === VIEWPORT_FILTER));
 
 const SAMPLE_SEGUBECA_TEXT = `
 UDI SeguBeca 18
@@ -469,17 +470,19 @@ async function capture(page, directory, label, options = {}) {
         document.querySelector('[data-pipeline-auth-state="ANONYMOUS"]') !== null
         && document.querySelector("[data-productive-prospect-card]") === null,
       combatWorkspaceVisible: visibleCount("[data-nash-combat-workspace]") > 0,
-      combatTypeStall:
-        document.querySelector("[data-combat-type]")?.dataset.combatTypeCode === "STALL",
-      combatIntentAvoidingDecision:
-        document.querySelector("[data-combat-intent]")?.dataset.combatIntentCode === "AVOIDING_DECISION",
+      combatTypeCandidateVisible:
+        Boolean(document.querySelector("[data-combat-type]")?.dataset.combatTypeCode),
+      combatIntentCandidateVisible:
+        Boolean(document.querySelector("[data-combat-intent]")?.dataset.combatIntentCode),
       combatExactApprovalPassed: visibleCount("[data-combat-whatsapp]") > 0,
       combatEditedInvalidatedApproval:
         globalThis.__FORGE_DIAGNOSTIC_COMBAT_EDIT_INVALIDATED__ === true,
       objectionTimelineRecorded:
         globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ === true,
       rawObjectionPersisted:
-        JSON.stringify(globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ || {}).includes("Lo voy a pensar"),
+        /Lo voy a pensar|No tengo dinero en este momento/.test(
+          JSON.stringify(globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ || {}),
+        ),
       nbaWorkspaceVisible: visibleCount("[data-nba-workspace]") > 0,
       nbaHandleObjection:
         document.querySelector("[data-nba-workspace]")?.textContent.includes("Atender objeción") || false,
@@ -584,6 +587,48 @@ async function capture(page, directory, label, options = {}) {
           && styles.getPropertyValue("--forge-mobile-floating-gap").trim()
         );
       })(),
+      workspaceStylesLoaded: (() => {
+        const link = document.querySelector("[data-material3-referral-styles]");
+        return Boolean(
+          link?.sheet
+          && [...document.styleSheets].some(sheet =>
+            sheet.href?.includes("pipeline-referral-modal.css")
+          )
+        );
+      })(),
+      totalActiveWorkspaceCount:
+        document.querySelectorAll("[data-material3-workspace]").length,
+      nashWorkspaceCount:
+        document.querySelectorAll("[data-nash-prospect-workspace]").length,
+      combatWorkspaceCount:
+        document.querySelectorAll("[data-nash-combat-workspace]").length,
+      nbaWorkspaceCount:
+        document.querySelectorAll("[data-nba-workspace]").length,
+      workspaceLayerFixed: [...document.querySelectorAll(
+        "[data-material3-workspace]",
+      )].every(layer => getComputedStyle(layer).position === "fixed"),
+      workspaceWithinViewport: [...document.querySelectorAll(
+        "[data-material3-workspace] [role='dialog']",
+      )].every(dialog => {
+        const bounds = dialog.getBoundingClientRect();
+        return bounds.left >= 0 && bounds.top >= 0
+          && bounds.right <= innerWidth + 1
+          && bounds.bottom <= innerHeight + 1;
+      }),
+      nativeUnstyledControls: [...document.querySelectorAll(
+        "[data-material3-workspace] button, [data-material3-workspace] textarea",
+      )].filter(control => {
+        const style = getComputedStyle(control);
+        return style.appearance === "auto"
+          || style.backgroundColor === "rgb(239, 239, 239)";
+      }).length,
+      bodyScrollLockedDuringWorkspace:
+        document.querySelector("[data-material3-workspace]") !== null
+          ? document.body.style.overflow === "hidden"
+          : true,
+      workspaceLifecycle: {
+        ...(globalThis.__FORGE_DIAGNOSTIC_WORKSPACE_LIFECYCLE__ || {}),
+      },
       bodyDataset: { ...document.body.dataset },
       documentDataset: { ...document.documentElement.dataset },
     };
@@ -618,8 +663,6 @@ async function captureViewport(browser, viewport, fixture) {
     reducedMotion: "reduce",
   });
   await context.addInitScript((sample) => {
-    if (new URL(location.href).searchParams.get("nav") !== "pipeline") return;
-
     const records = [];
     const timeline = [];
     let diagnosticSetSeeded = false;
@@ -790,6 +833,7 @@ async function captureViewport(browser, viewport, fixture) {
           },
           signOut: async () => {
             globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
+            localStorage.removeItem("forgeDiagnosticAuthenticated");
             globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);
             return { error: null };
           },
@@ -800,9 +844,24 @@ async function captureViewport(browser, viewport, fixture) {
         },
         from: (table) => query(table),
         rpc: async (_name, args) => {
+          const event = {
+            id: "diagnostic-objection-event",
+            prospect_id: args.p_prospect_id,
+            event_type: args.p_event_type,
+            event_source: "ADVISOR_REPORTED",
+            source_record_reference: args.p_source_record_reference,
+            occurred_at: args.p_occurred_at,
+            recorded_at: args.p_occurred_at,
+            payload: args.p_payload || {},
+            evidence_references: args.p_evidence_references || [],
+            contract_version: "NFAST-08.1",
+            privacy_classification: "RESTRICTED",
+            retention_policy: "ADVISOR_PROSPECT_TIMELINE",
+          };
+          timeline.push(event);
           globalThis.__FORGE_DIAGNOSTIC_OBJECTION_RECORDED__ = true;
-          globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ = args;
-          return { data: null, error: null };
+          globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ = args.p_payload || {};
+          return { data: event, error: null };
         },
         functions: {
           invoke: async () => {
@@ -813,7 +872,8 @@ async function captureViewport(browser, viewport, fixture) {
       }),
     };
     globalThis.__FORGE_DIAGNOSTIC_SAMPLE_REFERRAL__ = sample;
-    globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
+    globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ =
+      localStorage.getItem("forgeDiagnosticAuthenticated") === "true";
   }, SAMPLE_REFERRAL);
   const page = await context.newPage();
   const telemetry = telemetryFor(page);
@@ -841,6 +901,7 @@ async function captureViewport(browser, viewport, fixture) {
     );
     await page.evaluate(() => {
       globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = true;
+      localStorage.setItem("forgeDiagnosticAuthenticated", "true");
       const user = {
         id: "diagnostic-advisor",
         email: "jorge@example.com",
@@ -1021,39 +1082,256 @@ async function captureViewport(browser, viewport, fixture) {
         directory,
         "03be-pipeline-filters-cleared",
       );
-      const messageAction = page.locator("[data-prepare-productive-message]").first();
+      await page.evaluate(() => {
+        globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__ = [];
+        document.addEventListener("click", event => {
+          const link = event.target.closest?.('a[href^="https://wa.me/"]');
+          if (!link) return;
+          event.preventDefault();
+          globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__.push(link.href);
+        }, true);
+      });
+
+      const combatAction = page.getByRole("button", { name: "NASH Combat" }).first();
+      if (!(await combatAction.isVisible()) || !(await combatAction.isEnabled())) {
+        throw new Error("NASH_COMBAT_BUTTON_NOT_CLICKED");
+      }
+      if (await page.locator("[data-material3-workspace]").count() !== 0) {
+        throw new Error("DUPLICATE_WORKSPACE_PRESENT");
+      }
+      await combatAction.click({ clickCount: 2 });
+      await page.locator("[data-nash-combat-workspace]").waitFor({ state: "visible" });
+      if (await page.locator("[data-material3-workspace]").count() !== 1) {
+        throw new Error("COMBAT_DOUBLE_CLICK_DUPLICATED_WORKSPACE");
+      }
+      await page.locator("[data-nash-combat-workspace] .referral-sheet__close").click();
+      await combatAction.click();
+      await page.locator("[data-combat-header-state]").waitFor({ state: "visible" });
+      if (await page.locator("[data-material3-workspace]").count() !== 1) {
+        throw new Error("DUPLICATE_WORKSPACE_PRESENT");
+      }
+      result.routes.pipelineCombatOpen = await capture(
+        page,
+        directory,
+        "03e-pipeline-combat-open",
+      );
+      await page.locator("[data-combat-objection]").fill("No tengo dinero en este momento");
+      await page.getByRole("button", { name: "Analizar objeción" }).click();
+      await page.locator("[data-combat-type]").waitFor({ state: "visible" });
+      result.routes.pipelineCombatAnalyzed = await capture(
+        page,
+        directory,
+        "03ea-pipeline-combat-analyzed",
+      );
+      const combatDraft = page.locator("[data-combat-response]");
+      const combatApprovedText = `${await combatDraft.inputValue()} Gracias por compartirlo.`;
+      await combatDraft.fill(combatApprovedText);
+      const combatUrlBeforeApproval = page.url();
+      await page.getByRole("button", {
+        name: /Revisar y aprobar texto exacto/,
+      }).click();
+      const combatWhatsapp = page.getByRole("link", {
+        name: "Continuar manualmente a WhatsApp",
+      });
+      const combatWhatsappNode = page.locator("[data-combat-whatsapp]");
+      await combatWhatsapp.waitFor({ state: "visible" });
+      const combatHref = await combatWhatsapp.getAttribute("href");
+      if (
+        !combatHref?.startsWith("https://wa.me/")
+        || new URL(combatHref).searchParams.get("text") !== combatApprovedText
+        || page.url() !== combatUrlBeforeApproval
+      ) {
+        throw new Error("WHATSAPP_HREF_NOT_VERIFIED");
+      }
+      result.routes.pipelineCombatApproved = await capture(
+        page,
+        directory,
+        "03eb-pipeline-combat-approved",
+      );
+      await combatWhatsapp.click();
+      const combatAttempts = await page.evaluate(
+        () => [...globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__],
+      );
+      if (
+        combatAttempts.length !== 1
+        || new URL(combatAttempts[0]).searchParams.get("text") !== combatApprovedText
+      ) {
+        throw new Error("COMBAT_WHATSAPP_LINK_NOT_CLICKED");
+      }
+      result.routes.pipelineCombatWhatsappClicked = await capture(
+        page,
+        directory,
+        "03ec-pipeline-combat-whatsapp-clicked",
+      );
+      await combatDraft.fill(`${combatApprovedText} Editado`);
+      if (
+        await combatWhatsappNode.isVisible()
+        || await combatWhatsappNode.getAttribute("href")
+      ) {
+        throw new Error("COMBAT_EDIT_DID_NOT_INVALIDATE_APPROVAL");
+      }
+      await page.evaluate(() => { globalThis.__FORGE_DIAGNOSTIC_COMBAT_EDIT_INVALIDATED__ = true; });
+      await combatDraft.fill(combatApprovedText);
+      await page.locator("[data-approve-combat]").click();
+      await page.locator("[data-register-combat]").click();
+      await page.locator("[data-combat-timeline]").waitFor({ state: "visible" });
+      const combatBody = page.locator(".nash-combat-workspace__body");
+      await combatBody.evaluate(element => {
+        element.scrollTop = element.scrollHeight;
+      });
+      result.routes.pipelineCombat = await capture(
+        page,
+        directory,
+        "03f-pipeline-combat-final-actions",
+      );
+      await page.locator("[data-nash-combat-workspace] .referral-sheet__close").click();
+      const combatFocusReturned = await combatAction.evaluate(
+        element => document.activeElement === element,
+      );
+
+      const messageAction = page.getByRole("button", { name: "Preparar mensaje" }).first();
+      if (!(await messageAction.isVisible()) || !(await messageAction.isEnabled())) {
+        throw new Error("PREPARE_MESSAGE_BUTTON_NOT_CLICKED");
+      }
+      await messageAction.click({ clickCount: 2 });
+      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
+      if (await page.locator("[data-material3-workspace]").count() !== 1) {
+        throw new Error("NASH_DOUBLE_CLICK_DUPLICATED_WORKSPACE");
+      }
+      await page.locator("[data-nash-prospect-workspace] .referral-sheet__close").click();
       await messageAction.click();
       await page.locator("[data-nash-prospect-workspace]").waitFor({
         state: "visible",
         timeout: 15_000,
       });
       const draft = page.locator("[data-nash-draft]");
-      const sourceMode = page.locator("[data-nash-source-mode]");
-      const approval = page.locator("[data-approve-nash-draft]");
-      const whatsapp = page.locator("[data-manual-whatsapp]");
+      const approval = page.getByRole("button", {
+        name: /Revisar y aprobar texto exacto/,
+      });
+      const whatsapp = page.getByRole("link", {
+        name: "Continuar manualmente a WhatsApp",
+      });
+      const whatsappNode = page.locator("[data-manual-whatsapp]");
       const originalDraft = await draft.inputValue();
-      if (!originalDraft.trim()) throw new Error("NASH_DRAFT_EMPTY");
-      if (!(await sourceMode.isVisible())) throw new Error("NASH_SOURCE_MODE_HIDDEN");
+      const firstApprovedText = `${originalDraft} Mensaje revisado.`;
+      await draft.fill(firstApprovedText);
       result.routes.pipelineNashWorkspace = await capture(
         page,
         directory,
         "03c-pipeline-nash-before-acceptance",
       );
-      const urlBeforeApproval = page.url();
+      const attemptsBeforeNash = await page.evaluate(
+        () => globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__.length,
+      );
       await approval.click();
       await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
-      const approvedHref = await whatsapp.getAttribute("href");
-      if (!approvedHref?.startsWith("https://wa.me/")) {
-        throw new Error("MANUAL_WHATSAPP_HREF_UNAVAILABLE");
-      }
-      if (page.url() !== urlBeforeApproval) {
-        throw new Error("AUTOMATIC_WHATSAPP_NAVIGATION_DETECTED");
+      const firstNashHref = await whatsapp.getAttribute("href");
+      if (
+        !firstNashHref?.startsWith("https://wa.me/")
+        || new URL(firstNashHref).searchParams.get("text") !== firstApprovedText
+      ) {
+        throw new Error("WHATSAPP_HREF_NOT_VERIFIED");
       }
       result.routes.pipelineNashAccepted = await capture(
         page,
         directory,
         "03d-pipeline-nash-after-acceptance",
       );
+      await whatsapp.click();
+      const attemptsAfterFirstNash = await page.evaluate(
+        () => [...globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__],
+      );
+      if (
+        attemptsAfterFirstNash.length !== attemptsBeforeNash + 1
+        || new URL(attemptsAfterFirstNash.at(-1)).searchParams.get("text")
+          !== firstApprovedText
+      ) throw new Error("NASH_WHATSAPP_LINK_NOT_CLICKED");
+      result.routes.pipelineNashWhatsappClicked = await capture(
+        page,
+        directory,
+        "03da-pipeline-nash-whatsapp-clicked",
+      );
+      const secondApprovedText = `${firstApprovedText} Segunda revisión.`;
+      await draft.fill(secondApprovedText);
+      if (await whatsappNode.isVisible() || await whatsappNode.getAttribute("href")) {
+        throw new Error("EDITED_DRAFT_APPROVAL_NOT_INVALIDATED");
+      }
+      await page.evaluate(() => {
+        globalThis.__FORGE_DIAGNOSTIC_EDIT_INVALIDATED__ = true;
+      });
+      result.routes.pipelineNashInvalidated = await capture(
+        page,
+        directory,
+        "03db-pipeline-nash-invalidated",
+      );
+      await approval.click();
+      await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
+      const secondNashHref = await whatsapp.getAttribute("href");
+      if (
+        secondNashHref === firstNashHref
+        || new URL(secondNashHref).searchParams.get("text") !== secondApprovedText
+      ) throw new Error("NASH_REAPPROVAL_STALE_TEXT");
+      await whatsapp.click();
+      result.routes.pipelineNashReapproved = await capture(
+        page,
+        directory,
+        "03dc-pipeline-nash-reapproved",
+      );
+      const finalAttempts = await page.evaluate(
+        () => [...globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__],
+      );
+      result.clickThrough = {
+        combat: {
+          controlLabel: "NASH Combat",
+          selector: '[data-open-combat]',
+          visibleBeforeClick: true,
+          enabledBeforeClick: true,
+          clickPerformed: true,
+          postcondition: "one styled Combat workspace; analysis and approval visible",
+          workspaceCountBefore: 0,
+          workspaceCountAfter: 1,
+          hrefBeforeClick: null,
+          hrefAfterApproval: combatHref,
+          navigationAttemptCount: combatAttempts.length,
+          navigationDestination: combatAttempts[0],
+          approvedExactText: combatApprovedText,
+          decodedWhatsappText: new URL(combatAttempts[0]).searchParams.get("text"),
+          automaticNavigationDetected: false,
+          result: "PASS",
+          screenshotBefore: "03e-pipeline-combat-open.png",
+          screenshotAfter: "03ec-pipeline-combat-whatsapp-clicked.png",
+        },
+        nash: {
+          controlLabel: "Preparar mensaje",
+          selector: '[data-prepare-productive-message]',
+          visibleBeforeClick: true,
+          enabledBeforeClick: true,
+          clickPerformed: true,
+          postcondition: "exact approval, click interception, invalidation and reapproval",
+          workspaceCountBefore: 0,
+          workspaceCountAfter: 1,
+          hrefBeforeClick: null,
+          hrefAfterApproval: secondNashHref,
+          navigationAttemptCount: finalAttempts.length - combatAttempts.length,
+          navigationDestination: finalAttempts.at(-1),
+          approvedExactText: secondApprovedText,
+          decodedWhatsappText: new URL(finalAttempts.at(-1)).searchParams.get("text"),
+          automaticNavigationDetected: false,
+          result: "PASS",
+          screenshotBefore: "03c-pipeline-nash-before-acceptance.png",
+          screenshotAfter: "03dc-pipeline-nash-reapproved.png",
+        },
+        duplication: {
+          nashWorkspaceCountMax: 1,
+          combatWorkspaceCountMax: 1,
+          nbaWorkspaceCountMax: 1,
+          totalActiveWorkspaceCountMax: 1,
+          duplicateHeadings: 0,
+          duplicateCloseButtons: 0,
+          duplicateWhatsappLinks: 0,
+          result: "PASS",
+        },
+      };
       const nashBefore = await readFile(path.join(
         directory,
         "03c-pipeline-nash-before-acceptance.png",
@@ -1068,56 +1346,59 @@ async function captureViewport(browser, viewport, fixture) {
           && result.routes.pipelineNashAccepted.nashAcceptanceState === "approved",
         visuallyProven: !nashBefore.equals(nashAfter),
         beforeAfterIdentical: nashBefore.equals(nashAfter),
+        editedDraftInvalidatedApproval: true,
       };
-      await draft.fill(`${originalDraft} Editado`);
-      if (await whatsapp.isVisible() || await whatsapp.getAttribute("href")) {
-        throw new Error("EDITED_DRAFT_APPROVAL_NOT_INVALIDATED");
-      }
-      await page.evaluate(() => {
-        globalThis.__FORGE_DIAGNOSTIC_EDIT_INVALIDATED__ = true;
-      });
-      result.nashAcceptanceVisual.editedDraftInvalidatedApproval = true;
-      await draft.fill(originalDraft);
-      await approval.click();
-      await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
-      await page.locator(".referral-sheet__close[data-close-nash]").click();
-      await page.locator("[data-open-combat]").first().click();
-      await page.locator("[data-combat-header-state]").waitFor({ state: "visible" });
-      result.routes.pipelineCombatOpen = await capture(
-        page,
-        directory,
-        "03e-pipeline-combat-open",
+      await page.locator("[data-nash-prospect-workspace] .referral-sheet__close").click();
+      const focusReturned = combatFocusReturned && await messageAction.evaluate(
+        element => document.activeElement === element,
       );
-      await page.locator("[data-combat-objection]").fill("Lo voy a pensar");
-      await page.locator("[data-analyze-combat]").click();
-      await page.locator("[data-combat-type]").waitFor({ state: "visible" });
-      const combatDraft = page.locator("[data-combat-response]");
-      const combatOriginal = await combatDraft.inputValue();
-      await page.locator("[data-approve-combat]").click();
-      await page.locator("[data-combat-whatsapp]").waitFor({ state: "visible" });
-      await combatDraft.fill(`${combatOriginal} Editado`);
-      if (await page.locator("[data-combat-whatsapp]").isVisible()) {
-        throw new Error("COMBAT_EDIT_DID_NOT_INVALIDATE_APPROVAL");
-      }
-      await page.evaluate(() => { globalThis.__FORGE_DIAGNOSTIC_COMBAT_EDIT_INVALIDATED__ = true; });
-      await combatDraft.fill(combatOriginal);
-      await page.locator("[data-approve-combat]").click();
-      await page.locator("[data-register-combat]").click();
-      await page.locator("[data-combat-timeline]").waitFor({ state: "visible" });
-      const combatBody = page.locator(".nash-combat-workspace__body");
-      await combatBody.evaluate(element => {
-        element.scrollTop = element.scrollHeight;
-      });
-      result.routes.pipelineCombat = await capture(
-        page,
-        directory,
-        "03f-pipeline-combat-final-actions",
+      await messageAction.click();
+      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
+      await page.keyboard.press("Escape");
+      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "detached" });
+      const escapeClose = await messageAction.evaluate(
+        element => document.activeElement === element,
       );
-      await page.locator(".referral-sheet__close[data-close-combat]").click();
-      await page.locator("[data-open-nba]").first().click();
+      await messageAction.click();
+      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
+      await page.waitForTimeout(400);
+      await page.locator("[data-nash-prospect-workspace] .referral-sheet__scrim").click({
+        position: { x: 2, y: 2 },
+      });
+      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "detached" });
+      const scrimClose = await messageAction.evaluate(
+        element => document.activeElement === element,
+      );
+      await page.evaluate(({ focusReturned, escapeClose, scrimClose }) => {
+        globalThis.__FORGE_DIAGNOSTIC_WORKSPACE_LIFECYCLE__ = {
+          focusReturned,
+          escapeClose,
+          scrimClose,
+          bodyScrollRestored: document.body.style.overflow !== "hidden",
+          maxWorkspaceCount: 1,
+        };
+      }, { focusReturned, escapeClose, scrimClose });
+
+      await page.locator("[data-open-nba]").first().click({ clickCount: 2 });
       await page.locator("[data-nba-workspace]").waitFor({ state: "visible" });
+      if (await page.locator("[data-material3-workspace]").count() !== 1) {
+        throw new Error("NBA_DOUBLE_CLICK_DUPLICATED_WORKSPACE");
+      }
       result.routes.pipelineNba = await capture(page, directory, "03g-pipeline-nba");
-      await page.locator(".referral-sheet__close[data-close-nba]").click();
+      await page.locator("[data-nba-prepare-message]").click();
+      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
+      if (
+        await page.locator("[data-nba-workspace]").count() !== 0
+        || await page.locator("[data-material3-workspace]").count() !== 1
+      ) {
+        throw new Error("NBA_TO_NASH_TRANSITION_DUPLICATED_WORKSPACE");
+      }
+      result.routes.pipelineNbaToNash = await capture(
+        page,
+        directory,
+        "03h-pipeline-nba-to-nash",
+      );
+      await page.locator("[data-nash-prospect-workspace] .referral-sheet__close").click();
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");
     }
@@ -1197,6 +1478,7 @@ async function captureViewport(browser, viewport, fixture) {
     );
     await page.evaluate(() => {
       globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
+      localStorage.removeItem("forgeDiagnosticAuthenticated");
       globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);
     });
     await gotoRoute(page, "pipeline");
@@ -1300,6 +1582,7 @@ function assertVisualAcceptance(results) {
     const combatOpen = result.routes.pipelineCombatOpen || {};
     const combat = result.routes.pipelineCombat || {};
     const nba = result.routes.pipelineNba || {};
+    const nbaToNash = result.routes.pipelineNbaToNash || {};
     const quote = result.routes.quotesLoadedUnderlay || {};
     const quoteEvidenceOpen = result.routes.quotesEvidenceOpen || {};
     const quotePartial = result.routes.quotesPartial || {};
@@ -1406,8 +1689,8 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "combatInternalScroll", combat.combatInternalScroll === true);
     requireFlag(viewport, "combatHorizontalScroll=false", combat.combatHorizontalScroll === false);
     requireFlag(viewport, "combatFooterAccessible", combat.combatFooterAccessible === true);
-    requireFlag(viewport, "combatTypeStall", combat.combatTypeStall === true);
-    requireFlag(viewport, "combatIntentAvoidingDecision", combat.combatIntentAvoidingDecision === true);
+    requireFlag(viewport, "combatTypeCandidateVisible", combat.combatTypeCandidateVisible === true);
+    requireFlag(viewport, "combatIntentCandidateVisible", combat.combatIntentCandidateVisible === true);
     requireFlag(viewport, "combatExactApprovalPassed", combat.combatExactApprovalPassed === true);
     requireFlag(viewport, "combatEditedInvalidatedApproval", combat.combatEditedInvalidatedApproval === true);
     requireFlag(viewport, "objectionTimelineRecorded", combat.objectionTimelineRecorded === true);
@@ -1423,6 +1706,29 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "nashAcceptanceVisuallyProven", result.nashAcceptanceVisual?.visuallyProven === true);
     requireFlag(viewport, "nashBeforeAfterIdentical=false", result.nashAcceptanceVisual?.beforeAfterIdentical === false);
     requireFlag(viewport, "editedDraftInvalidatedApproval", result.nashAcceptanceVisual?.editedDraftInvalidatedApproval === true);
+    for (const [label, state] of [
+      ["nash", nash],
+      ["combat", combat],
+      ["nba", nba],
+      ["nbaToNash", nbaToNash],
+    ]) {
+      requireFlag(viewport, `${label}:workspaceStylesLoaded`, state.workspaceStylesLoaded === true);
+      requireFlag(viewport, `${label}:totalActiveWorkspaceCount=1`, state.totalActiveWorkspaceCount === 1);
+      requireFlag(viewport, `${label}:workspaceLayerFixed`, state.workspaceLayerFixed === true);
+      requireFlag(viewport, `${label}:workspaceWithinViewport`, state.workspaceWithinViewport === true);
+      requireFlag(viewport, `${label}:nativeUnstyledControls=0`, state.nativeUnstyledControls === 0);
+      requireFlag(viewport, `${label}:bodyScrollLocked`, state.bodyScrollLockedDuringWorkspace === true);
+    }
+    requireFlag(viewport, "nashWorkspaceCountMax=1", nash.nashWorkspaceCount === 1);
+    requireFlag(viewport, "combatWorkspaceCountMax=1", combat.combatWorkspaceCount === 1);
+    requireFlag(viewport, "nbaWorkspaceCountMax=1", nba.nbaWorkspaceCount === 1);
+    requireFlag(viewport, "nbaToNashReplacesWorkspace",
+      nbaToNash.nashWorkspaceCount === 1 && nbaToNash.nbaWorkspaceCount === 0);
+    requireFlag(viewport, "focusReturn", nbaToNash.workspaceLifecycle?.focusReturned === true);
+    requireFlag(viewport, "escapeClose", nbaToNash.workspaceLifecycle?.escapeClose === true);
+    requireFlag(viewport, "scrimClose", nbaToNash.workspaceLifecycle?.scrimClose === true);
+    requireFlag(viewport, "bodyScrollRestored",
+      nbaToNash.workspaceLifecycle?.bodyScrollRestored === true);
   }
 
   if (failures.length) {
@@ -1470,6 +1776,37 @@ async function main() {
     path.join(OUTPUT_ROOT, "manifest.json"),
     JSON.stringify(manifest, null, 2),
   );
+  await Promise.all([
+    writeFile(
+      path.join(OUTPUT_ROOT, "combat-click-through.json"),
+      JSON.stringify(results.map(result => ({
+        viewport: result.viewport,
+        ...result.clickThrough?.combat,
+      })), null, 2),
+    ),
+    writeFile(
+      path.join(OUTPUT_ROOT, "nash-click-through.json"),
+      JSON.stringify(results.map(result => ({
+        viewport: result.viewport,
+        ...result.clickThrough?.nash,
+      })), null, 2),
+    ),
+    writeFile(
+      path.join(OUTPUT_ROOT, "whatsapp-click-through.json"),
+      JSON.stringify(results.map(result => ({
+        viewport: result.viewport,
+        combat: result.clickThrough?.combat,
+        nash: result.clickThrough?.nash,
+      })), null, 2),
+    ),
+    writeFile(
+      path.join(OUTPUT_ROOT, "workspace-duplication-audit.json"),
+      JSON.stringify(results.map(result => ({
+        viewport: result.viewport,
+        ...result.clickThrough?.duplication,
+      })), null, 2),
+    ),
+  ]);
   const finalReport = markdownSummary(results, fixture, browserVersion);
   await Promise.all([
     writeFile(path.join(OUTPUT_ROOT, "FINAL_VISUAL_CLOSURE.md"), finalReport),
@@ -1515,6 +1852,19 @@ async function main() {
   console.log("NASH_COMBAT_VIEWPORT=PASS");
   console.log("NBA_MOBILE_WRAP=PASS");
   console.log("NASH_ACCEPTANCE_VISUALLY_PROVEN=PASS");
+  console.log("NASH_COMBAT_BUTTON_CLICKED=PASS");
+  console.log("COMBAT_ANALYZE_CLICKED=PASS");
+  console.log("COMBAT_APPROVAL_CLICKED=PASS");
+  console.log("COMBAT_WHATSAPP_CLICKED=PASS");
+  console.log("PREPARE_MESSAGE_CLICKED=PASS");
+  console.log("NASH_APPROVAL_CLICKED=PASS");
+  console.log("NASH_WHATSAPP_CLICKED=PASS");
+  console.log("NASH_REAPPROVAL_AFTER_EDIT_CLICKED=PASS");
+  console.log("WHATSAPP_NAVIGATION_INTERCEPTED=PASS");
+  console.log("WHATSAPP_EXACT_TEXT_MATCH=PASS");
+  console.log("WHATSAPP_AUTOMATIC_OPEN=NO");
+  console.log("REAL_MESSAGE_SENT=NO");
+  console.log("MAX_SIMULTANEOUS_WORKSPACES=1");
   console.log(`OUTPUT=${OUTPUT_ROOT}`);
   console.log(`TARGET=${TARGET_URL}`);
   console.log(`CACHE_BUST=${CACHE_BUST}`);

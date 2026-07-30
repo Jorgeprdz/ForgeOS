@@ -239,6 +239,7 @@ jobs:
             'app.css',
             'app.js',
             'pipeline-module.js',
+            'pipeline-referral-modal.css',
             'quotes-module.js',
             'quotes-module.css',
             'manifest.json',
@@ -283,6 +284,14 @@ jobs:
             path.join(canonical, 'quotes-module.css'),
             'utf8',
           );
+          const pipelineModule = fs.readFileSync(
+            path.join(canonical, 'pipeline-module.js'),
+            'utf8',
+          );
+          const workspaceCss = fs.readFileSync(
+            path.join(canonical, 'pipeline-referral-modal.css'),
+            'utf8',
+          );
 
           assert.match(
             quotesModule,
@@ -302,7 +311,26 @@ jobs:
           );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
           assert.match(index, /app\.css\?v=ui-m03-approved-004/);
-          assert.match(index, /app\.js\?v=ui-m04-shell-006/);
+          assert.match(index, /app\.js\?v=ui-m04-shell-007/);
+          assert.match(
+            pipelineModule,
+            /pipeline-referral-modal\.css\?v=ui-m06-referral-004/,
+          );
+          for (const selector of [
+            '.referral-sheet-layer',
+            '.referral-sheet',
+            '.referral-sheet__body',
+            '.referral-sheet__footer',
+            '.nash-combat-workspace',
+            '.nash-combat-workspace__body',
+            '.nash-combat-workspace__footer',
+            '.nba-workspace',
+          ]) {
+            assert.ok(
+              workspaceCss.includes(selector),
+              `missing productive workspace style: ${selector}`,
+            );
+          }
           assert.doesNotMatch(
             index,
             /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,

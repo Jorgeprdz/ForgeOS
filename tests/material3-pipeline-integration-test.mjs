@@ -472,3 +472,32 @@ test("final visual closure keeps Combat, NBA, NASH approval, and floating contro
   );
   assert.doesNotMatch(css, /\[data-productive-pipeline-cards\]\s*\{[^}]*padding-bottom/s);
 });
+
+test("productive workspaces share one styled and recoverable lifecycle", async () => {
+  const source = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-module.js",
+    "utf8",
+  );
+  const sheetCss = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-referral-modal.css",
+    "utf8",
+  );
+
+  assert.match(source, /pipeline-referral-modal\.css\?v=ui-m06-referral-004/);
+  assert.match(source, /referralStylePromise = undefined/);
+  assert.match(source, /const productiveWorkspaceController = \(\(\) =>/);
+  assert.match(source, /await ensureReferralStyles\(\)/);
+  assert.match(source, /close\(\{ restoreFocus: false \}\)/);
+  assert.match(source, /document\.body\.style\.overflow = "hidden"/);
+  assert.match(source, /document\.body\.style\.overflow = previousOverflow/);
+  assert.match(source, /if \(event\.key !== "Escape"\) return/);
+  assert.match(source, /data-close-workspace/);
+  assert.match(source, /openingToken !== token/);
+  assert.match(source, /trigger\.setAttribute\("aria-busy", "true"\)/);
+  assert.match(source, /kind: "nash"/);
+  assert.match(source, /kind: "combat"/);
+  assert.match(source, /kind: "nba"/);
+  assert.equal((source.match(/document\.body\.append\(layer\)/g) || []).length, 3);
+  assert.match(sheetCss, /\.referral-sheet-layer\s*\{[^}]*position:\s*fixed/s);
+  assert.match(sheetCss, /\.referral-sheet__body button,[\s\S]*appearance:\s*none/);
+});

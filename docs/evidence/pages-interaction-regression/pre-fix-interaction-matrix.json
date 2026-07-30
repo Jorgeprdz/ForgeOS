@@ -1,0 +1,38 @@
+[
+  {
+    "route": "pipeline",
+    "viewport": "Samsung Browser DeX 1600x1000",
+    "controlLabel": "NASH Combat",
+    "controlSelector": "[data-open-combat]",
+    "initialState": "productive card visible",
+    "expectedPostcondition": "one fixed styled Combat workspace",
+    "actualPostcondition": "unstyled workspace in document flow; duplicate workspace visible",
+    "enabled": true,
+    "clicked": true,
+    "result": "FAIL",
+    "workspaceCountBefore": 0,
+    "workspaceCountAfter": 2,
+    "consoleErrors": 0,
+    "failedRequests": 0,
+    "screenshotBefore": "Screenshot_20260729_221529_Samsung Browser.jpg",
+    "screenshotAfter": "Screenshot_20260729_221356_Samsung Browser.jpg"
+  },
+  {
+    "route": "pipeline",
+    "viewport": "Samsung Browser DeX 1600x1000",
+    "controlLabel": "Preparar mensaje",
+    "controlSelector": "[data-prepare-productive-message]",
+    "initialState": "productive card visible",
+    "expectedPostcondition": "one fixed styled NASH workspace",
+    "actualPostcondition": "unstyled workspace in normal document flow",
+    "enabled": true,
+    "clicked": true,
+    "result": "FAIL",
+    "workspaceCountBefore": 0,
+    "workspaceCountAfter": 1,
+    "consoleErrors": 0,
+    "failedRequests": 0,
+    "screenshotBefore": "Screenshot_20260729_221529_Samsung Browser.jpg",
+    "screenshotAfter": "Screenshot_20260729_221529_Samsung Browser.jpg"
+  }
+]
