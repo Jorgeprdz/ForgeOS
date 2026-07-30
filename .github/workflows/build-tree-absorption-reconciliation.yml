@@ -1,0 +1,688 @@
+name: Build Tree Absorption Reconciliation
+
+on:
+  push:
+    branches:
+      - governance/build-tree-absorbed-capabilities-reconciliation
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout reconciliation branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconcile absorbed capabilities
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import json
+          import textwrap
+
+          START_065E = '<!-- FORGE:065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL:START -->'
+          END_065E = '<!-- FORGE:065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL:END -->'
+          START_065E1 = '<!-- FORGE:065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER:START -->'
+          END_065E1 = '<!-- FORGE:065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER:END -->'
+
+          def clean(value: str) -> str:
+              return textwrap.dedent(value).strip() + '\n'
+
+          def write(path: str, content: str) -> None:
+              Path(path).write_text(clean(content), encoding='utf-8')
+
+          def replace_block(path: str, start: str, end: str, body: str) -> None:
+              file = Path(path)
+              text = file.read_text(encoding='utf-8')
+              if start not in text or end not in text:
+                  raise RuntimeError(f'MARKER_MISSING:{path}')
+              before, rest = text.split(start, 1)
+              _, after = rest.split(end, 1)
+              block = f'{start}\n{clean(body).rstrip()}\n{end}\n'
+              file.write_text(before.rstrip() + '\n\n' + block + after.lstrip('\n'), encoding='utf-8')
+
+          sync = r'''
+          ## 065E Unified Build Tree Missing Modules Backfill
+
+          Status: PASS / RECONCILED WITH PRODUCTIVE VERTICALS
+
+          Current lock:
+          `065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK`
+
+          Held next:
+          `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+
+          ### Capability Absorption Register
+
+          #### Referral Engine / Referidos
+
+          Status: RETAINED / OPERATIONALLY ABSORBED
+
+          Absorbed by:
+
+          - `ADVISOR_OS_SALES_PIPELINE` owns referral intake, referrer fields, source classification, prospect lifecycle, follow-up and conversion-stage movement.
+          - The capability remains in the build tree and is not deleted.
+
+          Remaining ownership:
+
+          - `RELATIONSHIP_INTELLIGENCE` retains Referral Opportunity Intelligence.
+          - `LEAD_GENERATION_BOOST` retains future intelligent referral generation only.
+
+          Rule:
+
+          - Do not create a parallel standalone Referidos module or a second referral system of record.
+
+          ### 02 Policy & Sales Operation Engine
+
+          Add `Bitacora / Notes System`:
+
+          Status: RETAINED / PARTIALLY ABSORBED / REMAINDER DISTRIBUTED
+
+          Absorbed by:
+
+          - prospect initial context -> `ADVISOR_OS_SALES_PIPELINE`;
+          - governed prospect context adapter -> `ADVISOR_OS_SALES_PIPELINE`.
+
+          Remaining ownership:
+
+          - timeline and chronological notes -> `ACTIVITY / FES`;
+          - notes by policy -> `CARTERA`;
+          - notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`;
+          - quick voice/text capture -> future capture adapter;
+          - automatic tags and AI context interpretation -> future governed intelligence scope.
+
+          Rule:
+
+          - Do not create a parallel standalone Notes module while these capabilities are owned by their productive verticals.
+          - Capture once: Pipeline context must not be duplicated in another surface.
+
+          ### 05 AI & Predictive Intelligence
+
+          Add `Real-Time Conversation Copilot`:
+
+          - real-time listening
+          - transcription
+          - objection detection
+          - response suggestions
+          - next-best question
+          - emotional analysis
+          - automatic post-appointment summary
+
+          Lock: requires explicit permission, recording consent, retention rules, privacy controls, and provider/runtime contracts.
+
+          ### 06 Lead Generation System
+
+          Add `Lead Generation Boost`:
+
+          - prospect generation
+          - intelligent referral generation only; operational referral intake and lifecycle are already absorbed by `ADVISOR_OS_SALES_PIPELINE`
+          - dormant contact reactivation
+          - outreach scripts
+          - prospecting campaigns
+          - lead scoring
+          - daily suggestions for who to contact
+
+          Lock: no outreach, campaign launch, enrichment, send, provider call, or automated contact action until separately scoped.
+
+          ### Sales Enablement Sub-Branch
+
+          Add `Sales Presentation System`:
+
+          - sales scripts
+          - financial needs analysis
+          - initial appointment structure
+          - closing appointment structure
+          - presentation creator
+          - product-specific arguments
+          - financial storytelling
+          - expected objections
+          - post-presentation summary
+
+          ### 15 Universal Command OS / Alfred
+
+          Add `Oye Alfred Wake Voice System`:
+
+          - wake phrase: Oye Alfred
+          - voice activation
+          - hands-free mode
+          - spoken command to action preview
+          - confirmation before execution
+          - fallback to text
+          - microphone consent
+          - visible listening indicator
+          - no passive listening without permission
+          - no real execution without approval gate
+
+          DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
+          ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
+          RECONCILIATION_DATE=2026-07-30
+
+          NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+          '''
+
+          for target in (
+              'FORGE_MASTER_BUILD_TREE.md',
+              'docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md',
+              'docs/roadmap/FORGE_ROADMAP_LOCK_001.md',
+          ):
+              replace_block(target, START_065E, END_065E, sync)
+
+          source_doc = r'''
+          # Forge Unified Tree Missing Modules Backfill 065E
+
+          Status: PASS / BACKFILLED / RECONCILED WITH PRODUCTIVE VERTICALS
+
+          Current lock:
+          `065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK`
+
+          Held next:
+          `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+
+          ## Capability Absorption Register
+
+          ### Referral Engine / Referidos
+
+          Status: RETAINED / OPERATIONALLY ABSORBED
+
+          Absorbed by:
+
+          - `ADVISOR_OS_SALES_PIPELINE` owns operational referral intake, referrer identity and relationship fields, source classification, prospect lifecycle, follow-up and conversion-stage movement.
+
+          Remaining ownership:
+
+          - `RELATIONSHIP_INTELLIGENCE` retains Referral Opportunity Intelligence.
+          - `LEAD_GENERATION_BOOST` retains future intelligent referral generation only.
+
+          Decision:
+
+          - Keep Referral Engine in the build tree.
+          - Do not create a parallel standalone Referidos module.
+          - Do not create a second referral system of record.
+
+          ## Modules Added To Tree
+
+          ### 02 Policy & Sales Operation Engine
+
+          Add `Bitacora / Notes System`:
+
+          Status: RETAINED / PARTIALLY ABSORBED / REMAINDER DISTRIBUTED
+
+          Absorbed by:
+
+          - prospect initial context -> `ADVISOR_OS_SALES_PIPELINE`;
+          - governed prospect context adapter -> `ADVISOR_OS_SALES_PIPELINE`.
+
+          Remaining ownership:
+
+          - timeline and chronological notes -> `ACTIVITY / FES`;
+          - notes by policy -> `CARTERA`;
+          - notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`;
+          - quick notes by voice/text -> future capture adapter;
+          - automatic tags -> future governed intelligence scope;
+          - AI context interpretation -> future governed intelligence scope.
+
+          Decision:
+
+          - Keep Bitacora / Notes System in the build tree.
+          - Do not create a parallel standalone Notes module while its capabilities are owned by productive verticals.
+          - Pipeline context remains capture-once and must not be duplicated.
+
+          ### 05 AI & Predictive Intelligence
+
+          Add `Real-Time Conversation Copilot`:
+
+          - real-time listening
+          - transcription
+          - objection detection
+          - response suggestions
+          - next-best question
+          - emotional analysis
+          - automatic post-appointment summary
+
+          Lock: requires explicit permission, recording consent, retention rules, privacy controls, and provider/runtime contracts before implementation.
+
+          ### 06 Lead Generation System
+
+          Add `Lead Generation Boost`:
+
+          - prospect generation
+          - intelligent referral generation only; operational referral intake and lifecycle are already absorbed by `ADVISOR_OS_SALES_PIPELINE`
+          - dormant contact reactivation
+          - outreach scripts
+          - prospecting campaigns
+          - lead scoring
+          - daily suggestions for who to contact
+
+          Lock: no outreach, campaign launch, enrichment, send, provider call, or automated contact action until separately scoped.
+
+          ### Sales Enablement Sub-Branch
+
+          Add `Sales Presentation System`:
+
+          - sales scripts
+          - financial needs analysis
+          - initial appointment structure
+          - closing appointment structure
+          - presentation creator
+          - product-specific arguments
+          - financial storytelling
+          - expected objections
+          - post-presentation summary
+
+          ### 15 Universal Command OS / Alfred
+
+          Add `Oye Alfred Wake Voice System`:
+
+          - wake phrase: Oye Alfred
+          - voice activation
+          - hands-free mode
+          - spoken command to action preview
+          - confirmation before execution
+          - fallback to text
+          - microphone consent
+          - visible listening indicator
+          - no passive listening without permission
+          - no real execution without approval gate
+
+          ## Decision
+
+          DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
+          ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
+          RECONCILIATION_DATE=2026-07-30
+
+          NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+          '''
+          write('docs/architecture/source-truth/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_065E.md', source_doc)
+
+          evidence_doc = r'''
+          # Forge Unified Tree Missing Modules Backfill Evidence 065E
+
+          Status: PASS / ABSORPTION RECONCILED
+
+          Backfilled and retained:
+
+          - Referral Engine / Referidos — operational capability absorbed by `ADVISOR_OS_SALES_PIPELINE`; opportunity intelligence remains in `RELATIONSHIP_INTELLIGENCE`; intelligent generation remains future `LEAD_GENERATION_BOOST` scope.
+          - Bitacora / Notes System — prospect context absorbed by `ADVISOR_OS_SALES_PIPELINE`; remaining notes ownership distributed to `ACTIVITY / FES`, `CARTERA`, and appointment lifecycle.
+          - Real-Time Conversation Copilot
+          - Lead Generation Boost
+          - Sales Presentation System
+          - Oye Alfred Wake Voice System
+
+          Reconciliation rule:
+
+          - Capabilities remain visible in the build tree.
+          - Absorption does not mean deletion.
+          - No parallel Referidos or Notes system of record may be created.
+          - Productive vertical ownership is explicit.
+
+          Boundary:
+
+          - docs/tree only
+          - no UI mutation
+          - no backend connection
+          - no CRM write
+          - no pipeline write
+          - no calendar create
+          - no message send
+          - no auth
+          - no provider runtime
+          - no recording
+          - no real engine execution
+
+          DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
+          ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
+
+          NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+          '''
+          write('docs/evidence/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_065E.md', evidence_doc)
+
+          certificate = r'''
+          # Forge Unified Tree Missing Modules Backfill Certificate 065E
+
+          DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
+          ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
+          RECONCILIATION_DATE=2026-07-30
+
+          Certificate:
+          Missing capabilities remain registered in the build tree. Referral operations are annotated as absorbed by Advisor OS Sales Pipeline. Prospect initial context and the governed prospect context adapter are annotated as absorbed by Advisor OS Sales Pipeline. Remaining Notes capabilities are distributed to Activity / FES, Cartera, appointment lifecycle, and future governed intelligence scopes. No capability was deleted and no productive runtime was changed.
+
+          NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+          '''
+          write('docs/evidence/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_CERTIFICATE_065E.md', certificate)
+
+          audit = {
+              'phase': '065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL',
+              'status': 'PASS',
+              'basePhase': '065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK',
+              'modulesBackfilled': [
+                  'Bitacora / Notes System',
+                  'Real-Time Conversation Copilot',
+                  'Lead Generation Boost',
+                  'Sales Presentation System',
+                  'Oye Alfred Wake Voice System',
+              ],
+              'absorptionReconciliation': {
+                  'status': 'PASS',
+                  'id': '065E2_ABSORBED_CAPABILITIES_ANNOTATION',
+                  'date': '2026-07-30',
+                  'retainedCapabilities': ['Referral Engine / Referidos', 'Bitacora / Notes System'],
+                  'absorbedBy': {
+                      'Referral Engine / Referidos.operationalLifecycle': 'ADVISOR_OS_SALES_PIPELINE',
+                      'Bitacora / Notes System.prospectInitialContext': 'ADVISOR_OS_SALES_PIPELINE',
+                      'Bitacora / Notes System.governedProspectContextAdapter': 'ADVISOR_OS_SALES_PIPELINE',
+                  },
+                  'remainingOwners': {
+                      'Referral Opportunity Intelligence': 'RELATIONSHIP_INTELLIGENCE',
+                      'Intelligent Referral Generation': 'LEAD_GENERATION_BOOST',
+                      'Timeline Notes': 'ACTIVITY / FES',
+                      'Policy Notes': 'CARTERA',
+                      'Appointment Notes': 'ACTIVITY / APPOINTMENT LIFECYCLE',
+                      'Automatic Tags and AI Context': 'FUTURE GOVERNED INTELLIGENCE',
+                  },
+                  'standaloneParallelModuleAllowed': {
+                      'Referral Engine / Referidos': False,
+                      'Bitacora / Notes System': False,
+                  },
+                  'capabilityDeleted': False,
+              },
+              'treeOnly': True,
+              'uiMutation': False,
+              'backendConnection': False,
+              'crmWrite': False,
+              'pipelineWrite': False,
+              'calendarCreate': False,
+              'messageSend': False,
+              'authReal': False,
+              'providerRuntime': False,
+              'recordingEnabled': False,
+              'realEffectsEnabled': False,
+              'next': '066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE',
+          }
+          Path('docs/evidence/forge-unified-tree-missing-modules-backfill-audit-065e.json').write_text(json.dumps(audit, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+          pending_block = r'''
+          ## 065E1 Roadmap Hold / Parked / Pending Register
+
+          Status: PASS / ROADMAP REGISTERED / ABSORPTION RECONCILED
+
+          Current completed lock:
+          `065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL`
+
+          Active next:
+          `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+
+          ### ABSORBED CAPABILITIES — RETAINED IN BUILD TREE
+
+          `REFERRAL_ENGINE_OPERATIONAL_CAPABILITY`
+
+          - absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+          - includes referral intake, referrer metadata, source classification, prospect lifecycle and follow-up;
+          - `RELATIONSHIP_INTELLIGENCE` retains Referral Opportunity Intelligence;
+          - `LEAD_GENERATION_BOOST` retains future intelligent referral generation;
+          - standalone parallel Referidos module: forbidden.
+
+          `NOTES_SYSTEM_PROSPECT_CONTEXT_CAPABILITY`
+
+          - prospect initial context absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+          - governed prospect context adapter absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+          - capability remains in the tree and is not deleted;
+          - standalone parallel Notes module: forbidden.
+
+          ### HOLD
+
+          `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+
+          Reason:
+          Ready to continue, but intentionally held until the operator chooses whether to run the docs-only scope via Termux shell or use Codex for the next implementation-heavy phase.
+
+          Rule:
+          Do not start `066B_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_IMPLEMENTATION` until `066A` is committed and pushed.
+
+          ### PARKED
+
+          `065F_IOS_STATIC_PREVIEW_LAYOUT_OVERFLOW_REPAIR`
+
+          Reason:
+          iOS Safari screenshot shows horizontal layout drift/overflow.
+
+          Boundary when resumed:
+          UI/CSS repair only. No backend, CRM, calendar, send, auth, provider, recording, or real engine execution.
+
+          ### PENDING REVIEW
+
+          `PRODUCT_INTELLIGENCE_REVIEW`
+
+          Purpose:
+          Re-open Product Intelligence source truth and catalog/data modules before deeper quote behavior.
+
+          `QUOTE_MODULES_REVIEW`
+
+          Purpose:
+          Review quote/cotizacion modules and Product Intelligence database usage before any quote adapter or quote preview work.
+
+          ### PENDING FUTURE SCOPES
+
+          `OYE_ALFRED_WAKE_VOICE_SYSTEM_SCOPE`
+
+          - wake phrase: Oye Alfred;
+          - voice activation;
+          - hands-free mode;
+          - spoken command to action preview;
+          - confirmation before execution;
+          - fallback to text;
+          - microphone consent;
+          - visible listening indicator;
+          - no passive listening without permission;
+          - no real execution without approval gate.
+
+          `NOTES_SYSTEM_REMAINDER_SCOPE`
+
+          Status: REMAINDER DISTRIBUTED / NOT A STANDALONE MODULE
+
+          - timeline and chronological notes -> `ACTIVITY / FES`;
+          - notes by policy -> `CARTERA`;
+          - notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`;
+          - quick voice/text capture -> future capture adapter;
+          - automatic tags and AI context -> future governed intelligence scope.
+
+          `REAL_TIME_CONVERSATION_COPILOT_SCOPE`
+
+          - real-time listening;
+          - transcription;
+          - objection detection;
+          - response suggestions;
+          - next-best question;
+          - emotional analysis;
+          - automatic post-appointment summary.
+
+          Lock:
+          Requires explicit permission, recording consent, retention/privacy rules, and provider-runtime boundary before implementation.
+
+          `LEAD_GENERATION_BOOST_SCOPE`
+
+          - prospect generation;
+          - intelligent referral generation only; operational referral intake and lifecycle are absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+          - dormant contact reactivation;
+          - outreach scripts;
+          - prospecting campaigns;
+          - lead scoring;
+          - daily suggestions for who to contact.
+
+          Lock:
+          No outreach/send/campaign execution until separately scoped.
+
+          `SALES_PRESENTATION_SYSTEM_SCOPE`
+
+          - sales scripts;
+          - financial needs analysis;
+          - initial appointment structure;
+          - closing appointment structure;
+          - presentation creator;
+          - product-specific arguments;
+          - financial storytelling;
+          - expected objections;
+          - post-presentation summary.
+
+          ### Operating Rule
+
+          Every session must end with:
+
+          - `CURRENT`;
+          - `NEXT`;
+          - `HOLD`;
+          - `PARKED`;
+          - `PENDING`;
+          - `DO_NOT_FORGET`.
+
+          DECISION=PASS_065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER
+          ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
+
+          NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+          '''
+          replace_block('docs/roadmap/FORGE_ROADMAP_LOCK_001.md', START_065E1, END_065E1, pending_block)
+
+          pending_evidence = r'''
+          # Forge Roadmap Hold / Parked / Pending Register 065E1
+
+          Status: PASS / ABSORPTION RECONCILED
+
+          Registered:
+
+          - HOLD: `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+          - PARKED: `065F_IOS_STATIC_PREVIEW_LAYOUT_OVERFLOW_REPAIR`
+          - PENDING REVIEW: Product Intelligence, Quote modules
+          - ABSORBED / RETAINED: Referral operations -> `ADVISOR_OS_SALES_PIPELINE`; Prospect initial context and governed context adapter -> `ADVISOR_OS_SALES_PIPELINE`
+          - PENDING FUTURE SCOPES: Oye Alfred, Notes remainder distributed across Activity / FES and Cartera, Conversation Copilot, Lead Generation Boost, Sales Presentation System
+          - STANDALONE PARALLEL MODULES FORBIDDEN: Referidos, Notes System
+
+          DECISION=PASS_065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER
+          ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
+
+          NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
+          '''
+          write('docs/evidence/FORGE_ROADMAP_HOLD_PARKED_PENDING_REGISTER_065E1.md', pending_evidence)
+
+          pending_audit = {
+              'phase': '065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER',
+              'status': 'PASS',
+              'basePhase': '065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL',
+              'hold': ['066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE'],
+              'parked': ['065F_IOS_STATIC_PREVIEW_LAYOUT_OVERFLOW_REPAIR'],
+              'pendingReview': ['PRODUCT_INTELLIGENCE_REVIEW', 'QUOTE_MODULES_REVIEW'],
+              'absorbedCapabilities': {
+                  'REFERRAL_ENGINE_OPERATIONAL_CAPABILITY': 'ADVISOR_OS_SALES_PIPELINE',
+                  'NOTES_SYSTEM_PROSPECT_INITIAL_CONTEXT': 'ADVISOR_OS_SALES_PIPELINE',
+                  'NOTES_SYSTEM_GOVERNED_CONTEXT_ADAPTER': 'ADVISOR_OS_SALES_PIPELINE',
+              },
+              'pendingFutureScopes': [
+                  'OYE_ALFRED_WAKE_VOICE_SYSTEM_SCOPE',
+                  'NOTES_SYSTEM_REMAINDER_SCOPE',
+                  'REAL_TIME_CONVERSATION_COPILOT_SCOPE',
+                  'LEAD_GENERATION_BOOST_SCOPE',
+                  'SALES_PRESENTATION_SYSTEM_SCOPE',
+              ],
+              'standaloneParallelModulesForbidden': ['REFERIDOS', 'NOTES_SYSTEM'],
+              'capabilityDeleted': False,
+              'roadmapOnly': True,
+              'uiMutation': False,
+              'backendConnection': False,
+              'crmWrite': False,
+              'pipelineWrite': False,
+              'calendarCreate': False,
+              'messageSend': False,
+              'authReal': False,
+              'providerRuntime': False,
+              'recordingEnabled': False,
+              'realEffectsEnabled': False,
+              'next': '066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE',
+          }
+          Path('docs/evidence/forge-roadmap-hold-parked-pending-register-audit-065e1.json').write_text(json.dumps(pending_audit, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+          # Keep the historical generators durable by replacing their generated blocks.
+          generator = Path('tools/termux/forge_065e_unified_build_tree_missing_modules_backfill.sh')
+          generator_text = generator.read_text(encoding='utf-8')
+          old_notes = '''Add `Bitacora / Notes System`:\n\n- notes by client\n- notes by policy\n- notes by appointment\n- quick notes by voice/text\n- automatic tags\n- AI context\n- integrated timeline'''
+          new_notes = '''Add `Bitacora / Notes System`:\n\nStatus: RETAINED / PARTIALLY ABSORBED / REMAINDER DISTRIBUTED\n\n- prospect initial context -> absorbed by `ADVISOR_OS_SALES_PIPELINE`\n- governed prospect context adapter -> absorbed by `ADVISOR_OS_SALES_PIPELINE`\n- timeline and chronological notes -> `ACTIVITY / FES`\n- notes by policy -> `CARTERA`\n- notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`\n- quick notes by voice/text -> future capture adapter\n- automatic tags and AI context -> future governed intelligence scope\n- standalone parallel Notes module -> forbidden'''
+          if generator_text.count(old_notes) < 2:
+              raise RuntimeError('065E_GENERATOR_NOTES_TEMPLATE_DRIFT')
+          generator_text = generator_text.replace(old_notes, new_notes)
+          generator_text = generator_text.replace('- intelligent referrals', '- intelligent referral generation only; operational referral intake and lifecycle are absorbed by `ADVISOR_OS_SALES_PIPELINE`')
+          generator_text = generator_text.replace('- Bitacora / Notes System\n- Real-Time Conversation Copilot', '- Referral Engine / Referidos — retained; operational capability absorbed by `ADVISOR_OS_SALES_PIPELINE`\n- Bitacora / Notes System — retained; prospect context absorbed by `ADVISOR_OS_SALES_PIPELINE`; remainder distributed\n- Real-Time Conversation Copilot')
+          generator_text = generator_text.replace('Missing modules were registered as future scoped branches. Implementation remains blocked until each branch receives scope, boundary, approval, audit, and safety contracts.', 'Capabilities remain registered in the build tree. Referral operations and prospect context are annotated as absorbed by Advisor OS Sales Pipeline; Notes remainder is distributed to Activity / FES, Cartera, appointment lifecycle, and future governed intelligence. No capability is deleted.')
+          generator.write_text(generator_text, encoding='utf-8')
+
+          pending_generator = Path('tools/termux/forge_065e1_roadmap_hold_parked_pending_register.sh')
+          pending_text = pending_generator.read_text(encoding='utf-8')
+          old_pending_notes = '''`NOTES_SYSTEM_SCOPE`\n\n- notes by client;\n- notes by policy;\n- notes by appointment;\n- quick notes by voice/text;\n- automatic tags;\n- AI context;\n- integrated timeline.'''
+          new_pending_notes = '''`NOTES_SYSTEM_REMAINDER_SCOPE`\n\nStatus: REMAINDER DISTRIBUTED / NOT A STANDALONE MODULE\n\n- prospect initial context -> absorbed by `ADVISOR_OS_SALES_PIPELINE`;\n- governed prospect context adapter -> absorbed by `ADVISOR_OS_SALES_PIPELINE`;\n- timeline and chronological notes -> `ACTIVITY / FES`;\n- notes by policy -> `CARTERA`;\n- notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`;\n- quick voice/text capture -> future capture adapter;\n- automatic tags and AI context -> future governed intelligence scope.'''
+          if old_pending_notes not in pending_text:
+              raise RuntimeError('065E1_GENERATOR_NOTES_TEMPLATE_DRIFT')
+          pending_text = pending_text.replace(old_pending_notes, new_pending_notes)
+          pending_text = pending_text.replace('- intelligent referrals;', '- intelligent referral generation only; operational referral intake and lifecycle are absorbed by `ADVISOR_OS_SALES_PIPELINE`;')
+          pending_text = pending_text.replace('- PENDING FUTURE SCOPES: Oye Alfred, Notes System, Conversation Copilot, Lead Generation Boost, Sales Presentation System', '- ABSORBED / RETAINED: Referral operations and prospect context -> `ADVISOR_OS_SALES_PIPELINE`\n- PENDING FUTURE SCOPES: Oye Alfred, Notes remainder distributed across Activity / FES and Cartera, Conversation Copilot, Lead Generation Boost, Sales Presentation System\n- STANDALONE PARALLEL MODULES FORBIDDEN: Referidos, Notes System')
+          pending_text = pending_text.replace('"NOTES_SYSTEM_SCOPE",', '"NOTES_SYSTEM_REMAINDER_SCOPE",')
+          pending_generator.write_text(pending_text, encoding='utf-8')
+
+          # Normalize and validate the documentation-only reconciliation.
+          targets = [
+              'FORGE_MASTER_BUILD_TREE.md',
+              'docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md',
+              'docs/roadmap/FORGE_ROADMAP_LOCK_001.md',
+              'docs/architecture/source-truth/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_065E.md',
+              'docs/evidence/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_065E.md',
+              'docs/evidence/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_CERTIFICATE_065E.md',
+              'docs/evidence/forge-unified-tree-missing-modules-backfill-audit-065e.json',
+              'docs/evidence/FORGE_ROADMAP_HOLD_PARKED_PENDING_REGISTER_065E1.md',
+              'docs/evidence/forge-roadmap-hold-parked-pending-register-audit-065e1.json',
+              'tools/termux/forge_065e_unified_build_tree_missing_modules_backfill.sh',
+              'tools/termux/forge_065e1_roadmap_hold_parked_pending_register.sh',
+          ]
+          for target in targets:
+              path = Path(target)
+              path.write_text('\n'.join(line.rstrip() for line in path.read_text(encoding='utf-8').splitlines()) + '\n', encoding='utf-8')
+
+          required = {
+              'FORGE_MASTER_BUILD_TREE.md': ['Referral Engine / Referidos', 'OPERATIONALLY ABSORBED', 'Bitacora / Notes System', 'PARTIALLY ABSORBED'],
+              'docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md': ['ADVISOR_OS_SALES_PIPELINE', 'ACTIVITY / FES', 'CARTERA'],
+              'docs/roadmap/FORGE_ROADMAP_LOCK_001.md': ['ABSORBED CAPABILITIES', 'NOTES_SYSTEM_REMAINDER_SCOPE'],
+          }
+          for path, needles in required.items():
+              text = Path(path).read_text(encoding='utf-8')
+              for needle in needles:
+                  if needle not in text:
+                      raise RuntimeError(f'REQUIRED_ANNOTATION_MISSING:{path}:{needle}')
+
+          json.loads(Path('docs/evidence/forge-unified-tree-missing-modules-backfill-audit-065e.json').read_text(encoding='utf-8'))
+          json.loads(Path('docs/evidence/forge-roadmap-hold-parked-pending-register-audit-065e1.json').read_text(encoding='utf-8'))
+          PY
+
+          bash -n tools/termux/forge_065e_unified_build_tree_missing_modules_backfill.sh
+          bash -n tools/termux/forge_065e1_roadmap_hold_parked_pending_register.sh
+          git diff --check
+
+      - name: Commit reconciled build tree
+        shell: bash
+        run: |
+          rm -f .github/workflows/build-tree-absorption-reconciliation.yml
+          git config user.name "Forge Governance Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add FORGE_MASTER_BUILD_TREE.md \
+            docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md \
+            docs/roadmap/FORGE_ROADMAP_LOCK_001.md \
+            docs/architecture/source-truth/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_065E.md \
+            docs/evidence/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_065E.md \
+            docs/evidence/FORGE_UNIFIED_TREE_MISSING_MODULES_BACKFILL_CERTIFICATE_065E.md \
+            docs/evidence/forge-unified-tree-missing-modules-backfill-audit-065e.json \
+            docs/evidence/FORGE_ROADMAP_HOLD_PARKED_PENDING_REGISTER_065E1.md \
+            docs/evidence/forge-roadmap-hold-parked-pending-register-audit-065e1.json \
+            tools/termux/forge_065e_unified_build_tree_missing_modules_backfill.sh \
+            tools/termux/forge_065e1_roadmap_hold_parked_pending_register.sh \
+            .github/workflows/build-tree-absorption-reconciliation.yml
+          git diff --cached --check
+          git commit -m "docs(governance): annotate absorbed build-tree capabilities"
+          git push origin HEAD:governance/build-tree-absorbed-capabilities-reconciliation
