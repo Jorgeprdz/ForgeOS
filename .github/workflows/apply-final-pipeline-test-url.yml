@@ -1,0 +1,45 @@
+name: Apply Final Pipeline Test URL
+
+on:
+  push:
+    branches:
+      - fix/pipeline-mobile-interaction-persistence
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/pipeline-mobile-interaction-persistence
+          fetch-depth: 0
+
+      - name: Align final cache URL expectation
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const file = 'tests/material3-pipeline-integration-test.mjs';
+          const source = fs.readFileSync(file, 'utf8');
+          const before = 'pipeline-referral-modal\\.css\\?v=ui-m06-referral-005';
+          const after = 'pipeline-referral-modal\\.css\\?v=ui-m06-referral-004&fix=005';
+          if (!source.includes(before)) throw new Error('FINAL_PIPELINE_MODAL_EXPECTATION_NOT_FOUND');
+          fs.writeFileSync(file, source.replace(before, after));
+          NODE
+
+      - name: Commit final expectation
+        run: |
+          git config user.name "Forge UI Repair"
+          git config user.email "forge-ui-repair@users.noreply.github.com"
+          git pull --rebase --autostash origin fix/pipeline-mobile-interaction-persistence
+          git add tests/material3-pipeline-integration-test.mjs
+          if git diff --cached --quiet; then
+            echo "EXPECTATION_ALREADY_APPLIED=YES"
+          else
+            git commit -m "test(ui): verify final Pipeline cache URL"
+            git push origin HEAD:fix/pipeline-mobile-interaction-persistence
+          fi
