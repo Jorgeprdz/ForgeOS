@@ -6,11 +6,25 @@ Cartera / Portfolio Post-Sale Experience
 
 ## Status
 
-PROPOSED SOURCE TRUTH
+PROGRAM REGISTERED / DOCUMENTATION ACTIVE / IMPLEMENTATION NOT STARTED
 
 ## Date
 
 2026-07-30
+
+## Canonical Planning Registration
+
+This program is registered in:
+
+- `docs/roadmap/FORGE_ROADMAP_LOCK_001.md`
+- `FORGE_MASTER_BUILD_TREE.md`
+- `docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_001.md`
+
+The registered immediate implementation target is:
+
+- `CARTERA_001_PIPELINE_QUOTE_PERSON_TIMELINE_CONTINUITY`
+
+Later phases remain planned and require their own bounded authorization, discovery, implementation evidence, tests and closure.
 
 ## Architectural Objective
 
