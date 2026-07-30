@@ -439,6 +439,7 @@ test("final visual closure keeps Combat, NBA, NASH approval, and floating contro
   assert.match(sheetCss, /\.nash-combat-workspace__footer[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)/);
 
   for (const [technical, human] of [
+    ["CONTEXT_READY_FOR_HUMAN_REVIEW", "Contexto listo para revisión"],
     ["READY_FOR_HUMAN_REVIEW", "Listo para revisión"],
     ["HANDLE_OBJECTION", "Atender objeción"],
     ["OBJECTION_RECORDED", "Objeción registrada"],

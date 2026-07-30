@@ -64,6 +64,7 @@ function escapeHtml(value) {
 }
 
 const intelligenceLabels = Object.freeze({
+  CONTEXT_READY_FOR_HUMAN_REVIEW: "Contexto listo para revisión",
   READY_FOR_HUMAN_REVIEW: "Listo para revisión",
   HANDLE_OBJECTION: "Atender objeción",
   OBJECTION_RECORDED: "Objeción registrada",
