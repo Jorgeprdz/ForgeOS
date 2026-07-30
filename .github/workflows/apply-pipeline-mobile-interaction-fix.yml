@@ -85,6 +85,7 @@ jobs:
         run: |
           git config user.name "Forge UI Repair"
           git config user.email "forge-ui-repair@users.noreply.github.com"
+          git pull --rebase --autostash origin fix/pipeline-mobile-interaction-persistence
           git add \
             docs/static-preview/forge-alive-material3/pipeline-referral-modal.css \
             docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js \
