@@ -50,20 +50,20 @@ function stageLabel(status) {
   return ({
     referred_new: "Nuevo",
     contacted: "Contactado",
-    appointment_scheduled: "Cita",
-    proposal: "Solicitud",
-    decision: "Firma",
-    client: "Cerrado",
+    appointment_scheduled: "Cita agendada",
+    proposal: "Propuesta",
+    decision: "En decisión",
+    client: "Cliente",
   })[status] || status || "Etapa no disponible";
 }
 
 const STAGE_OPTIONS = Object.freeze([
   Object.freeze({ value: "referred_new", label: "Nuevo" }),
   Object.freeze({ value: "contacted", label: "Contactado" }),
-  Object.freeze({ value: "appointment_scheduled", label: "Cita" }),
-  Object.freeze({ value: "proposal", label: "Solicitud" }),
-  Object.freeze({ value: "decision", label: "Firma" }),
-  Object.freeze({ value: "client", label: "Cerrado" }),
+  Object.freeze({ value: "appointment_scheduled", label: "Cita agendada" }),
+  Object.freeze({ value: "proposal", label: "Propuesta" }),
+  Object.freeze({ value: "decision", label: "En decisión" }),
+  Object.freeze({ value: "client", label: "Cliente" }),
 ]);
 
 function timelineEventLabel(eventType) {

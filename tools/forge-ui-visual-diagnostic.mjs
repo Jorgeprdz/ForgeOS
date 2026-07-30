@@ -27,8 +27,9 @@ const SAMPLE_REFERRAL = Object.freeze({
 });
 
 const VIEWPORTS = Object.freeze([
-  Object.freeze({ name: "tablet-landscape", width: 1600, height: 960 }),
-  Object.freeze({ name: "desktop", width: 1440, height: 1000 }),
+  Object.freeze({ name: "mobile", width: 412, height: 915, expectedCardColumns: 1 }),
+  Object.freeze({ name: "tablet", width: 1024, height: 768, expectedCardColumns: 2 }),
+  Object.freeze({ name: "desktop", width: 1600, height: 900, expectedCardColumns: 4 }),
 ]);
 
 const SAMPLE_SEGUBECA_TEXT = `
@@ -248,14 +249,105 @@ async function capture(page, directory, label, options = {}) {
         )].filter(visible);
         return new Set(actions.map(action => getComputedStyle(action).backgroundColor)).size >= 4;
       })(),
+      productiveHumanStatusesValid: [...document.querySelectorAll(
+        "[data-productive-prospect-card]",
+      )].filter(visible).every(card => ({
+        referred_new: "Nuevo",
+        contacted: "Contactado",
+        appointment_scheduled: "Cita agendada",
+        proposal: "Propuesta",
+        decision: "En decisión",
+        client: "Cliente",
+      })[card.dataset.productiveStage] ===
+        card.querySelector("[data-productive-stage-label]")?.textContent.trim()),
       productiveTimelineHumanReadable:
         ![...document.querySelectorAll("[data-timeline-activity]")]
           .some(node => node.textContent.includes("PROSPECT_CREATED")),
+      productiveSourceStatusSeparated:
+        visibleCount(
+          "[data-productive-prospect-card] [data-productive-source-label]",
+        ) > 0 &&
+        visibleCount(
+          "[data-productive-prospect-card] [data-productive-stage-control]",
+        ) > 0,
+      productiveSourceUnchangedAfterStatus:
+        globalThis.__FORGE_DIAGNOSTIC_SOURCE_UNCHANGED__ === true,
+      referralSourceConditional:
+        globalThis.__FORGE_DIAGNOSTIC_REFERRAL_CONDITIONAL__ === true,
+      productiveCardColumnCount: (() => {
+        const cards = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .filter(visible);
+        const rows = new Map();
+        cards.forEach(card => {
+          const top = Math.round(card.getBoundingClientRect().top / 3) * 3;
+          rows.set(top, (rows.get(top) || 0) + 1);
+        });
+        return Math.max(0, ...rows.values());
+      })(),
+      productiveAllGeometryValid: (() => {
+        const cards = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .filter(visible);
+        const pipeline = document.querySelector("[data-forge-pipeline-module]");
+        if (cards.length < 4 || !pipeline) return false;
+        const pipelineBounds = pipeline.getBoundingClientRect();
+        const inside = (inner, outer) =>
+          inner.left >= outer.left - 1 && inner.right <= outer.right + 1;
+        return cards.every(card => {
+          const cardBounds = card.getBoundingClientRect();
+          const regions = [
+            card.querySelector("[data-productive-card-identity]"),
+            card.querySelector("[data-productive-card-metadata]"),
+            card.querySelector(".pipeline-module__stage-control"),
+            card.querySelector("[data-productive-card-status]"),
+            card.querySelector("[data-productive-card-actions]"),
+          ];
+          const actionBounds = card.querySelector(
+            "[data-productive-card-actions]",
+          ).getBoundingClientRect();
+          return card.scrollWidth <= card.clientWidth + 1
+            && inside(cardBounds, pipelineBounds)
+            && regions.every(region => region && inside(
+              region.getBoundingClientRect(),
+              cardBounds,
+            ))
+            && [...card.querySelectorAll("[data-productive-card-actions] > *")]
+              .every(action => inside(action.getBoundingClientRect(), actionBounds));
+        });
+      })(),
+      productiveCardsDoNotOverlap: (() => {
+        const rects = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .filter(visible).map(card => card.getBoundingClientRect());
+        return rects.every((rect, index) => rects.slice(index + 1).every(other =>
+          rect.right <= other.left + 1 || other.right <= rect.left + 1
+          || rect.bottom <= other.top + 1 || other.bottom <= rect.top + 1
+        ));
+      })(),
+      productiveNamesReadable: [...document.querySelectorAll(
+        "[data-productive-card-identity] strong",
+      )].filter(visible).every(name => {
+        const rect = name.getBoundingClientRect();
+        return rect.width >= 70 && rect.height <= 96
+          && getComputedStyle(name).wordBreak === "normal";
+      }),
+      productiveNoShellOverlap: (() => {
+        const cards = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .filter(visible);
+        const protectedNodes = [
+          document.querySelector(".bottom-shell"),
+          document.querySelector("[data-forge-command-orb]"),
+        ].filter(visible);
+        return cards.every(card => protectedNodes.every(node => {
+          const a = card.getBoundingClientRect();
+          const b = node.getBoundingClientRect();
+          return a.right <= b.left || b.right <= a.left
+            || a.bottom <= b.top || b.bottom <= a.top;
+        }));
+      })(),
       specialSavedReferralCardPathPresent:
         document.querySelector("[data-saved-referral-card]") !== null,
       timelineCreatedEventVisible:
         [...document.querySelectorAll("[data-timeline-activity]")]
-          .some((node) => node.textContent.includes("PROSPECT_CREATED")),
+          .some((node) => node.textContent.includes("Prospecto creado")),
       lastVerifiedActivitySource:
         document.querySelector("[data-timeline-activity]")?.dataset.activitySource || null,
       nashWorkspaceVisible:
@@ -377,6 +469,7 @@ async function captureViewport(browser, viewport, fixture) {
 
     const records = [];
     const timeline = [];
+    let diagnosticSetSeeded = false;
     const filtered = (collection, filters) => collection.filter(
       (record) => filters.every(
         ({ column, value }) => record[column] === value,
@@ -384,7 +477,7 @@ async function captureViewport(browser, viewport, fixture) {
     );
     const query = (table) => {
       const collection = table === "prospect_commercial_timeline" ? timeline : records;
-      const state = { filters: [], inserted: null };
+      const state = { filters: [], inserted: null, patch: null };
       const builder = {
         select() {
           return builder;
@@ -417,10 +510,63 @@ async function captureViewport(browser, viewport, fixture) {
             evidence_references: [],
             contract_version: "NFAST-08.1",
           });
+          if (!diagnosticSetSeeded) {
+            diagnosticSetSeeded = true;
+            const extras = [
+              {
+                id: "diagnostic-camila",
+                full_name: "Camila Hernández",
+                phone_normalized: null,
+                source: "Mercado cálido",
+                status: "contacted",
+              },
+              {
+                id: "diagnostic-roberto",
+                full_name: "Roberto Sánchez del Valle",
+                phone_normalized: "+525511112222",
+                source: "Redes sociales",
+                status: "appointment_scheduled",
+              },
+              {
+                id: "diagnostic-lucia",
+                full_name: "Lucía Fernanda Gómez",
+                phone_normalized: "+525533334444",
+                source: "Centro de influencia",
+                status: "proposal",
+              },
+            ];
+            for (const [index, extra] of extras.entries()) {
+              records.push({
+                advisor_id: "diagnostic-advisor",
+                initial_context: "Contexto diagnóstico gobernado.",
+                archived_at: null,
+                created_at: `2026-07-29T11:0${index}:00.000Z`,
+                updated_at: `2026-07-29T11:0${index}:00.000Z`,
+                ...extra,
+              });
+            }
+            timeline.push({
+              id: "diagnostic-contact-event",
+              prospect_id: "diagnostic-camila",
+              event_type: "CONTACT_ATTEMPTED",
+              event_source: "NFAST08_TIMELINE",
+              occurred_at: "2026-07-29T11:30:00.000Z",
+              recorded_at: "2026-07-29T11:30:00.000Z",
+              payload: { channel: "PHONE", outcome: "ANSWERED" },
+              evidence_references: [],
+              contract_version: "NFAST-08.1",
+            });
+          }
+          return builder;
+        },
+        update(patch) {
+          state.patch = patch;
           return builder;
         },
         async single() {
-          return { data: state.inserted || filtered(collection, state.filters)[0], error: null };
+          const existing = filtered(collection, state.filters)[0];
+          if (state.patch && existing) Object.assign(existing, state.patch);
+          return { data: state.inserted || existing, error: null };
         },
         order() {
           return builder;
@@ -580,7 +726,17 @@ async function captureViewport(browser, viewport, fixture) {
       );
       await page.locator('[name="fullName"]').fill(SAMPLE_REFERRAL.fullName);
       await page.locator('[name="phone"]').fill(SAMPLE_REFERRAL.phone);
+      await page.locator('[name="source"]').selectOption("Mercado cálido");
+      if (await page.locator("[data-referral-source-fields]").isVisible()) {
+        throw new Error("REFERRAL_FIELDS_VISIBLE_FOR_NON_REFERRAL_SOURCE");
+      }
       await page.locator('[name="source"]').selectOption("Referido");
+      await page.locator("[data-referral-source-fields]").waitFor({
+        state: "visible",
+      });
+      await page.evaluate(() => {
+        globalThis.__FORGE_DIAGNOSTIC_REFERRAL_CONDITIONAL__ = true;
+      });
       await page.locator('[name="referrerName"]').fill(
         SAMPLE_REFERRAL.referrerName,
       );
@@ -602,6 +758,33 @@ async function captureViewport(browser, viewport, fixture) {
         page,
         directory,
         "03b-pipeline-saved-referral-card",
+      );
+      const sampleCard = page.locator("[data-productive-prospect-card]").filter({
+        hasText: SAMPLE_REFERRAL.fullName,
+      });
+      const sourceBeforeStatus = await sampleCard
+        .locator("[data-productive-source-label]").textContent();
+      await sampleCard.locator("[data-productive-stage-control]")
+        .selectOption("decision");
+      await page.locator("[data-productive-prospect-card]").filter({
+        hasText: SAMPLE_REFERRAL.fullName,
+      }).locator("[data-productive-stage-label]").filter({
+        hasText: "En decisión",
+      }).waitFor({ state: "visible", timeout: 10_000 });
+      const sourceAfterStatus = await page.locator(
+        "[data-productive-prospect-card]",
+      ).filter({ hasText: SAMPLE_REFERRAL.fullName })
+        .locator("[data-productive-source-label]").textContent();
+      if (sourceBeforeStatus !== sourceAfterStatus) {
+        throw new Error("STATUS_CHANGE_MUTATED_SOURCE");
+      }
+      await page.evaluate(() => {
+        globalThis.__FORGE_DIAGNOSTIC_SOURCE_UNCHANGED__ = true;
+      });
+      result.routes.pipelineSavedReferral = await capture(
+        page,
+        directory,
+        "03bb-pipeline-responsive-card-grid",
       );
       const messageAction = page.locator("[data-prepare-productive-message]").first();
       await messageAction.click();
@@ -802,6 +985,11 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "productiveProspectCardVisible", card.productiveProspectCardVisible === true);
     requireFlag(viewport, "productiveProspectCardContainsName", card.productiveProspectCardContainsName === true);
     requireFlag(viewport, "productiveCardUsesNormalRenderer", card.productiveCardUsesNormalRenderer === true);
+    requireFlag(
+      viewport,
+      `productiveCardColumnCount=${result.viewport.expectedCardColumns}`,
+      card.productiveCardColumnCount === result.viewport.expectedCardColumns,
+    );
     requireFlag(viewport, "productiveCardStructured", card.productiveCardStructured === true);
     requireFlag(viewport, "productiveActionsGrouped", card.productiveActionsGrouped === true);
     requireFlag(viewport, "productiveInternalEnumVisible=false", card.productiveInternalEnumVisible === false);
@@ -814,7 +1002,20 @@ function assertVisualAcceptance(results) {
       "productiveStageAccentVisible",
       "productiveActionsDifferentiated",
       "productiveTimelineHumanReadable",
+      "productiveAllGeometryValid",
+      "productiveCardsDoNotOverlap",
+      "productiveNamesReadable",
+      "productiveNoShellOverlap",
+      "productiveSourceStatusSeparated",
+      "productiveSourceUnchangedAfterStatus",
+      "referralSourceConditional",
+      "productiveHumanStatusesValid",
     ]) requireFlag(viewport, flag, card[flag] === true);
+    requireFlag(
+      viewport,
+      "pageHorizontalOverflow=false",
+      card.scrollWidth <= card.viewportWidth + 1,
+    );
     requireFlag(viewport, "specialSavedReferralCardPathPresent=false", card.specialSavedReferralCardPathPresent === false);
     requireFlag(viewport, "timelineCreatedEventVisible", card.timelineCreatedEventVisible === true);
     requireFlag(viewport, "lastVerifiedActivitySource=TIMELINE", card.lastVerifiedActivitySource === "TIMELINE");

@@ -225,6 +225,13 @@ test("visual diagnostic distinguishes referral, Alfred and legacy modal state", 
   assert.match(diagnostic, /productiveProspectCardVisible/);
   assert.match(diagnostic, /productiveProspectCardContainsName/);
   assert.match(diagnostic, /Jorge Ignacio Palacios Rodríguez/);
+  assert.match(diagnostic, /name:\s*"mobile",\s*width:\s*412,\s*height:\s*915,\s*expectedCardColumns:\s*1/);
+  assert.match(diagnostic, /name:\s*"tablet",\s*width:\s*1024,\s*height:\s*768,\s*expectedCardColumns:\s*2/);
+  assert.match(diagnostic, /name:\s*"desktop",\s*width:\s*1600,\s*height:\s*900,\s*expectedCardColumns:\s*4/);
+  assert.match(diagnostic, /timelineCreatedEventVisible[\s\S]*Prospecto creado/);
+  assert.match(diagnostic, /productiveTimelineHumanReadable[\s\S]*PROSPECT_CREATED/);
+  assert.match(diagnostic, /productiveCardColumnCount/);
+  assert.match(diagnostic, /getBoundingClientRect/);
   assert.match(diagnostic, /5512345678/);
   assert.match(diagnostic, /Ana López/);
   assert.match(diagnostic, /Amiga/);
@@ -287,6 +294,15 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.match(adapter, /intelligenceLabel:\s*"Asistencia de conversación disponible"/);
   assert.match(adapter, /referred_new:\s*"Nuevo"/);
   assert.match(adapter, /value:\s*"referred_new",\s*label:\s*"Nuevo"/);
+  for (const [value, label] of [
+    ["contacted", "Contactado"],
+    ["appointment_scheduled", "Cita agendada"],
+    ["proposal", "Propuesta"],
+    ["decision", "En decisión"],
+    ["client", "Cliente"],
+  ]) {
+    assert.match(adapter, new RegExp(`value: "${value}", label: "${label}"`));
+  }
   assert.match(adapter, /PROSPECT_CREATED:\s*"Prospecto creado"/);
   assert.match(adapter, /OBJECTION_RECORDED:\s*"Objeción clasificada"/);
   assert.match(adapter, /label:\s*timelineEventLabel\(latest\.eventType\)/);
@@ -305,9 +321,13 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
     "client",
   ]) assert.match(adapter, new RegExp(`value: "${status}"`));
   assert.match(css, /\.pipeline-module__productive-card\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
-  assert.match(css, /\.pipeline-module__productive-identity\s*\{[^}]*justify-content:\s*space-between/s);
-  assert.match(css, /\.pipeline-module__productive-status\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/s);
-  assert.match(css, /\.pipeline-module__card-actions\s*\{[^}]*display:\s*flex[^}]*flex-wrap:\s*wrap/s);
+  assert.match(css, /\[data-productive-pipeline-cards\]\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+  assert.match(css, /@media \(min-width:\s*768px\) and \(max-width:\s*1199px\)[\s\S]*\[data-productive-pipeline-cards\][^{]*\{[^}]*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s);
+  assert.match(css, /@media \(min-width:\s*1200px\)[\s\S]*\[data-productive-pipeline-cards\][^{]*\{[^}]*repeat\(4,\s*minmax\(0,\s*1fr\)\)/s);
+  assert.doesNotMatch(css, /\[data-productive-pipeline-cards\][^{]*\{[^}]*(auto-fit|auto-fill)/s);
+  assert.match(css, /\.pipeline-module__productive-card\s*\{[^}]*min-width:\s*0[^}]*gap:\s*11px[^}]*padding:\s*15px/s);
+  assert.match(css, /\.pipeline-module__productive-status\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+  assert.match(css, /\.pipeline-module__card-actions\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/s);
   assert.match(css, /word-break:\s*normal/);
   assert.match(css, /border-left:\s*4px solid var\(--pipeline-stage-accent\)/);
   assert.match(css, /data-productive-stage="referred_new"/);
@@ -317,4 +337,6 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.match(css, /\.pipeline-module__action--call/);
   assert.match(css, /\.pipeline-module__action--calendar/);
   assert.match(css, /\.pipeline-module__stage-control select/);
+  assert.match(css, /\[data-manual-whatsapp\][\s\S]*rgba\(78,\s*196,\s*119/);
+  assert.doesNotMatch(source, /data-productive-card-actions[\s\S]{0,120}data-manual-whatsapp/);
 });
