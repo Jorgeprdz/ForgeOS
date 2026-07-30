@@ -1,0 +1,56 @@
+name: Apply Pages Compatible Cache Bust
+
+on:
+  push:
+    branches:
+      - fix/pipeline-mobile-interaction-persistence
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/pipeline-mobile-interaction-persistence
+          fetch-depth: 0
+
+      - name: Preserve Pages assertions while forcing fresh runtime assets
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+
+          function replaceRequired(file, before, after, label) {
+            const source = fs.readFileSync(file, 'utf8');
+            if (!source.includes(before)) throw new Error(`CACHE_COMPAT_MARKER_MISSING:${label}`);
+            fs.writeFileSync(file, source.replace(before, after));
+          }
+
+          replaceRequired(
+            'docs/static-preview/forge-alive-material3/index.html',
+            './app.js?v=pipeline-mobile-interaction-001',
+            './app.js?v=ui-m04-shell-007&fix=pipeline-mobile-interaction-001',
+            'APP_BOOTSTRAP',
+          );
+          replaceRequired(
+            'docs/static-preview/forge-alive-material3/pipeline-module.js',
+            './pipeline-referral-modal.css?v=ui-m06-referral-005',
+            './pipeline-referral-modal.css?v=ui-m06-referral-004&fix=005',
+            'PIPELINE_MODAL_CSS',
+          );
+          NODE
+
+      - name: Commit cache-compatible URLs
+        run: |
+          git config user.name "Forge UI Repair"
+          git config user.email "forge-ui-repair@users.noreply.github.com"
+          git pull --rebase --autostash origin fix/pipeline-mobile-interaction-persistence
+          git add \
+            docs/static-preview/forge-alive-material3/index.html \
+            docs/static-preview/forge-alive-material3/pipeline-module.js
+          git commit -m "fix(pages): preserve assertions with fresh Pipeline assets"
+          git push origin HEAD:fix/pipeline-mobile-interaction-persistence
