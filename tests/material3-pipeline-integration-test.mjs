@@ -411,3 +411,63 @@ test("productive Pipeline filters loaded cards without mutating productive truth
   assert.match(diagnostic, /03bc-pipeline-filtered-referido-contactado/);
   assert.match(diagnostic, /03bd-pipeline-filter-no-results/);
 });
+
+test("final visual closure keeps Combat, NBA, NASH approval, and floating controls governed", async () => {
+  const source = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-module.js",
+    "utf8",
+  );
+  const css = await readFile(
+    "docs/static-preview/forge-alive-material3/app.css",
+    "utf8",
+  );
+  const sheetCss = await readFile(
+    "docs/static-preview/forge-alive-material3/pipeline-referral-modal.css",
+    "utf8",
+  );
+  const diagnostic = await readFile(
+    "tools/forge-ui-visual-diagnostic.mjs",
+    "utf8",
+  );
+
+  assert.match(source, /nash-combat-workspace__header/);
+  assert.match(source, /nash-combat-workspace__body/);
+  assert.match(source, /nash-combat-workspace__footer/);
+  assert.match(source, /body\.scrollTop = 0/);
+  assert.match(sheetCss, /\.nash-combat-workspace\s*\{[^}]*grid-template-rows:\s*auto minmax\(0,\s*1fr\) auto[^}]*overflow:\s*hidden/s);
+  assert.match(sheetCss, /\.nash-combat-workspace__body\s*\{[^}]*overflow-x:\s*hidden[^}]*overflow-y:\s*auto[^}]*overscroll-behavior:\s*contain/s);
+  assert.match(sheetCss, /\.nash-combat-workspace__footer[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+
+  for (const [technical, human] of [
+    ["READY_FOR_HUMAN_REVIEW", "Listo para revisión"],
+    ["HANDLE_OBJECTION", "Atender objeción"],
+    ["OBJECTION_RECORDED", "Objeción registrada"],
+    ["STALL", "Conversación estancada"],
+  ]) assert.match(source, new RegExp(`${technical}: "${human}"`));
+  assert.match(source, /nba-workspace__technical/);
+  assert.match(source, /<summary>Evidencia técnica<\/summary>/);
+  assert.match(sheetCss, /\.nba-workspace__body[\s\S]*overflow-wrap:\s*anywhere/);
+
+  assert.match(source, /dataset\.nashApprovalState = "pending"/);
+  assert.match(source, /dataset\.nashApprovalState = url \? "approved" : "blocked"/);
+  assert.match(source, /approveButton\.textContent = url \? "Texto exacto aprobado"/);
+  assert.match(diagnostic, /03c-pipeline-nash-before-acceptance/);
+  assert.match(diagnostic, /03d-pipeline-nash-after-acceptance/);
+  assert.match(diagnostic, /nashBefore\.equals\(nashAfter\)/);
+  assert.match(diagnostic, /beforeAfterIdentical/);
+
+  for (const token of [
+    "--forge-mobile-nav-height",
+    "--forge-mobile-nav-clearance",
+    "--forge-mobile-floating-gap",
+  ]) assert.match(css, new RegExp(token));
+  assert.match(
+    css,
+    /padding-bottom:\s*calc\(\s*var\(--forge-mobile-nav-height\)\s*\+\s*var\(--forge-mobile-nav-clearance\)\s*\+\s*env\(safe-area-inset-bottom\)/s,
+  );
+  assert.match(
+    css,
+    /\.bottom-shell\s*\{[^}]*bottom:\s*calc\(\s*var\(--forge-mobile-floating-gap\)\s*\+\s*env\(safe-area-inset-bottom\)/s,
+  );
+  assert.doesNotMatch(css, /\[data-productive-pipeline-cards\]\s*\{[^}]*padding-bottom/s);
+});

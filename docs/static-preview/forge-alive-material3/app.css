@@ -17,6 +17,9 @@
   --blue: #5ea2ff;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
   --spring: cubic-bezier(.2,.8,.2,1);
+  --forge-mobile-nav-height: 76px;
+  --forge-mobile-nav-clearance: 44px;
+  --forge-mobile-floating-gap: 12px;
 }
 
 * {
@@ -192,7 +195,6 @@ body::before {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
-  padding-bottom: 104px;
 }
 
 .pipeline-module__stage,
@@ -614,7 +616,14 @@ svg {
   width: min(100%, 470px);
   min-height: 100vh;
   margin: 0 auto;
-  padding: max(24px, env(safe-area-inset-top)) 16px 152px;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    16px
+    calc(
+      var(--forge-mobile-nav-height)
+      + var(--forge-mobile-nav-clearance)
+      + env(safe-area-inset-bottom)
+    );
   position: relative;
 }
 
@@ -1389,7 +1398,10 @@ h1 {
   position: fixed;
   z-index: 20;
   left: 50%;
-  bottom: max(12px, env(safe-area-inset-bottom));
+  bottom: calc(
+    var(--forge-mobile-floating-gap)
+    + env(safe-area-inset-bottom)
+  );
   width: min(calc(100% - 24px), 458px);
   display: grid;
   grid-template-columns: minmax(0,1fr) 92px;
@@ -1766,7 +1778,6 @@ h1 {
     transition-duration: 1ms !important;
   }
 }
-
 
 /* FORGE STAGE 2B — MOBILE LAYOUT + KEYBOARD */
 body.sheet-open {
@@ -2815,5 +2826,23 @@ body.keyboard-open .sheet-note {
     width: 100%;
     min-width: 0;
     height: 8px;
+  }
+}
+
+/* Final closure: shared mobile clearance without changing the floating shell. */
+@media (max-width: 1199px) {
+  .app {
+    padding-bottom: calc(
+      var(--forge-mobile-nav-height)
+      + var(--forge-mobile-nav-clearance)
+      + env(safe-area-inset-bottom)
+    );
+  }
+
+  .bottom-shell {
+    bottom: calc(
+      var(--forge-mobile-floating-gap)
+      + env(safe-area-inset-bottom)
+    );
   }
 }

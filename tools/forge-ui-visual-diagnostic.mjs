@@ -10,7 +10,7 @@ const DEFAULT_URL =
   "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/";
 const OUTPUT_ROOT = path.resolve(
   process.env.FORGE_DIAGNOSTIC_OUTPUT ||
-    "artifacts/forge-ui-diagnostic",
+    "artifacts/forge-ui-diagnostic/final-visual-closure",
 );
 const TARGET_URL = process.env.FORGE_DIAGNOSTIC_URL || DEFAULT_URL;
 const CACHE_BUST =
@@ -166,6 +166,36 @@ async function verifyProductiveCardsClearFixedControls(page) {
     globalThis.__FORGE_DIAGNOSTIC_NO_SHELL_OVERLAP__ = value;
     scrollTo({ top: 0, behavior: "instant" });
   }, clearsFixedControls);
+}
+
+async function verifyLastActionClearsFloatingControls(page, selector, flagName) {
+  const action = page.locator(selector).last();
+  await action.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(80);
+  const reachable = await action.evaluate(element => {
+    const actionBounds = element.getBoundingClientRect();
+    const protectedNodes = [
+      document.querySelector(".nav-pill"),
+      document.querySelector("[data-forge-command-orb]"),
+    ].filter(node => {
+      if (!(node instanceof Element)) return false;
+      const style = getComputedStyle(node);
+      const bounds = node.getBoundingClientRect();
+      return style.display !== "none" && style.visibility !== "hidden"
+        && bounds.width > 0 && bounds.height > 0;
+    });
+    return actionBounds.top >= 0
+      && actionBounds.bottom <= innerHeight
+      && protectedNodes.every(node => {
+        const bounds = node.getBoundingClientRect();
+        return actionBounds.right <= bounds.left || bounds.right <= actionBounds.left
+          || actionBounds.bottom <= bounds.top || bounds.bottom <= actionBounds.top;
+      });
+  });
+  await page.evaluate(({ key, value }) => {
+    globalThis[key] = value;
+  }, { key: flagName, value: reachable });
+  return reachable;
 }
 
 async function capture(page, directory, label, options = {}) {
@@ -418,6 +448,9 @@ async function capture(page, directory, label, options = {}) {
         Boolean(document.querySelector("[data-nash-draft]")?.value.trim()),
       exactApprovalPassed:
         visibleCount("[data-manual-whatsapp]") > 0,
+      nashAcceptanceState:
+        document.querySelector("[data-nash-prospect-workspace]")
+          ?.dataset.nashApprovalState || null,
       manualWhatsAppHrefAvailable:
         document.querySelector("[data-manual-whatsapp]")?.getAttribute("href")
           ?.startsWith("https://wa.me/") || false,
@@ -436,9 +469,10 @@ async function capture(page, directory, label, options = {}) {
         document.querySelector('[data-pipeline-auth-state="ANONYMOUS"]') !== null
         && document.querySelector("[data-productive-prospect-card]") === null,
       combatWorkspaceVisible: visibleCount("[data-nash-combat-workspace]") > 0,
-      combatTypeStall: document.querySelector("[data-combat-type]")?.textContent.trim() === "STALL",
+      combatTypeStall:
+        document.querySelector("[data-combat-type]")?.dataset.combatTypeCode === "STALL",
       combatIntentAvoidingDecision:
-        document.querySelector("[data-combat-intent]")?.textContent.trim() === "AVOIDING_DECISION",
+        document.querySelector("[data-combat-intent]")?.dataset.combatIntentCode === "AVOIDING_DECISION",
       combatExactApprovalPassed: visibleCount("[data-combat-whatsapp]") > 0,
       combatEditedInvalidatedApproval:
         globalThis.__FORGE_DIAGNOSTIC_COMBAT_EDIT_INVALIDATED__ === true,
@@ -448,9 +482,41 @@ async function capture(page, directory, label, options = {}) {
         JSON.stringify(globalThis.__FORGE_DIAGNOSTIC_TIMELINE_PAYLOAD__ || {}).includes("Lo voy a pensar"),
       nbaWorkspaceVisible: visibleCount("[data-nba-workspace]") > 0,
       nbaHandleObjection:
-        document.querySelector("[data-nba-workspace]")?.textContent.includes("HANDLE_OBJECTION") || false,
+        document.querySelector("[data-nba-workspace]")?.textContent.includes("Atender objeción") || false,
       nbaReasonWhyVisible:
         document.querySelector("[data-nba-workspace]")?.textContent.includes("Reason Why") || false,
+      nbaHumanCopy:
+        !/READY_FOR_HUMAN_REVIEW|HANDLE_OBJECTION|OBJECTION_RECORDED|STALL/
+          .test(document.querySelector("[data-nba-workspace]")?.textContent || ""),
+      nbaInternalClippingFree: (() => {
+        const workspace = document.querySelector("[data-nba-workspace] .nba-workspace");
+        if (!visible(workspace)) return false;
+        return [...workspace.querySelectorAll("*")].every(node =>
+          node.scrollWidth <= node.clientWidth + 1
+        );
+      })(),
+      combatHeaderVisible:
+        visibleCount("[data-nash-combat-workspace] .nash-combat-workspace__header") > 0,
+      combatBodyStartsAtTop:
+        (document.querySelector(".nash-combat-workspace__body")?.scrollTop || 0) <= 1,
+      combatInternalScroll:
+        getComputedStyle(document.querySelector(".nash-combat-workspace__body") || document.body)
+          .overflowY === "auto",
+      combatHorizontalScroll:
+        (document.querySelector(".nash-combat-workspace")?.scrollWidth || 0)
+          > (document.querySelector(".nash-combat-workspace")?.clientWidth || 0) + 1,
+      combatFooterAccessible: (() => {
+        const footer = document.querySelector(".nash-combat-workspace__footer");
+        const workspace = document.querySelector(".nash-combat-workspace");
+        if (!visible(footer) || !visible(workspace)) return false;
+        const footerBounds = footer.getBoundingClientRect();
+        const workspaceBounds = workspace.getBoundingClientRect();
+        return footerBounds.left >= workspaceBounds.left - 1
+          && footerBounds.right <= workspaceBounds.right + 1
+          && footerBounds.bottom <= workspaceBounds.bottom + 1
+          && [...footer.querySelectorAll("button, a")].filter(visible)
+            .every(action => action.scrollWidth <= action.clientWidth + 1);
+      })(),
       globalAlfredLauncherVisible:
         visibleCount("[data-forge-command-orb][data-open-alfred]") > 0,
       quoteLegacyRuntimeVisible:
@@ -462,7 +528,9 @@ async function capture(page, directory, label, options = {}) {
       quoteResultsVisible:
         visibleCount("[data-material3-quote-result-ready]") > 0,
       quoteReadyState:
-        document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState === "ready",
+        ["ready", "partial"].includes(
+          document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState,
+        ),
       quoteLoadedSubstantive:
         (document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0) >= 120,
       quoteProjectionTextLength:
@@ -478,6 +546,22 @@ async function capture(page, directory, label, options = {}) {
       quoteProgressOnly:
         visibleCount("[data-quote-progress]") > 0 &&
         visibleCount("[data-material3-quote-result-ready]") === 0,
+      quoteCommercialProjection:
+        visibleCount("[data-quote-commercial-projection]") > 0,
+      quoteRawPacketVisible:
+        /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/
+          .test([...document.querySelectorAll("[data-quote-result-section]")]
+            .map(section => section.textContent).join(" ")),
+      quoteTechnicalEvidenceCollapsed: (() => {
+        const evidence = document.querySelector("[data-quote-technical-evidence]");
+        return evidence instanceof HTMLDetailsElement && !evidence.open;
+      })(),
+      quoteTechnicalEvidenceOpen:
+        document.querySelector("[data-quote-technical-evidence]")?.open === true,
+      quoteProjectionBounded:
+        (document.querySelector("[data-material3-quotes-projection]")?.scrollHeight || 0) < 6000,
+      quoteLastActionReachable:
+        globalThis.__FORGE_DIAGNOSTIC_QUOTE_LAST_ACTION_REACHABLE__ === true,
       quotePopupVisible:
         visibleCount(
           'dialog[open], [role="dialog"]:not([aria-hidden="true"])',
@@ -486,6 +570,18 @@ async function capture(page, directory, label, options = {}) {
         visibleCount("[data-pipeline-create-referral]") > 0,
       pipelineCreateProspectVisible:
         visibleCount("[data-pipeline-create-prospect]") > 0,
+      floatingNavPreserved: (() => {
+        const shell = document.querySelector(".bottom-shell");
+        return visible(shell) && getComputedStyle(shell).position === "fixed";
+      })(),
+      mobileSafeZoneConfigured: (() => {
+        const styles = getComputedStyle(document.documentElement);
+        return Boolean(
+          styles.getPropertyValue("--forge-mobile-nav-height").trim()
+          && styles.getPropertyValue("--forge-mobile-nav-clearance").trim()
+          && styles.getPropertyValue("--forge-mobile-floating-gap").trim()
+        );
+      })(),
       bodyDataset: { ...document.body.dataset },
       documentDataset: { ...document.documentElement.dataset },
     };
@@ -936,6 +1032,11 @@ async function captureViewport(browser, viewport, fixture) {
       const originalDraft = await draft.inputValue();
       if (!originalDraft.trim()) throw new Error("NASH_DRAFT_EMPTY");
       if (!(await sourceMode.isVisible())) throw new Error("NASH_SOURCE_MODE_HIDDEN");
+      result.routes.pipelineNashWorkspace = await capture(
+        page,
+        directory,
+        "03c-pipeline-nash-before-acceptance",
+      );
       const urlBeforeApproval = page.url();
       await approval.click();
       await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
@@ -946,11 +1047,26 @@ async function captureViewport(browser, viewport, fixture) {
       if (page.url() !== urlBeforeApproval) {
         throw new Error("AUTOMATIC_WHATSAPP_NAVIGATION_DETECTED");
       }
-      result.routes.pipelineNashWorkspace = await capture(
+      result.routes.pipelineNashAccepted = await capture(
         page,
         directory,
-        "03c-pipeline-nash-workspace",
+        "03d-pipeline-nash-after-acceptance",
       );
+      const nashBefore = await readFile(path.join(
+        directory,
+        "03c-pipeline-nash-before-acceptance.png",
+      ));
+      const nashAfter = await readFile(path.join(
+        directory,
+        "03d-pipeline-nash-after-acceptance.png",
+      ));
+      result.nashAcceptanceVisual = {
+        stateChanged:
+          result.routes.pipelineNashWorkspace.nashAcceptanceState === "pending"
+          && result.routes.pipelineNashAccepted.nashAcceptanceState === "approved",
+        visuallyProven: !nashBefore.equals(nashAfter),
+        beforeAfterIdentical: nashBefore.equals(nashAfter),
+      };
       await draft.fill(`${originalDraft} Editado`);
       if (await whatsapp.isVisible() || await whatsapp.getAttribute("href")) {
         throw new Error("EDITED_DRAFT_APPROVAL_NOT_INVALIDATED");
@@ -961,13 +1077,14 @@ async function captureViewport(browser, viewport, fixture) {
       await draft.fill(originalDraft);
       await approval.click();
       await whatsapp.waitFor({ state: "visible", timeout: 10_000 });
-      result.routes.pipelineNashAccepted = await capture(
-        page,
-        directory,
-        "03d-pipeline-nash-accepted",
-      );
       await page.locator(".referral-sheet__close[data-close-nash]").click();
       await page.locator("[data-open-combat]").first().click();
+      await page.locator("[data-combat-header-state]").waitFor({ state: "visible" });
+      result.routes.pipelineCombatOpen = await capture(
+        page,
+        directory,
+        "03e-pipeline-combat-open",
+      );
       await page.locator("[data-combat-objection]").fill("Lo voy a pensar");
       await page.locator("[data-analyze-combat]").click();
       await page.locator("[data-combat-type]").waitFor({ state: "visible" });
@@ -984,11 +1101,19 @@ async function captureViewport(browser, viewport, fixture) {
       await page.locator("[data-approve-combat]").click();
       await page.locator("[data-register-combat]").click();
       await page.locator("[data-combat-timeline]").waitFor({ state: "visible" });
-      result.routes.pipelineCombat = await capture(page, directory, "03e-pipeline-combat");
+      const combatBody = page.locator(".nash-combat-workspace__body");
+      await combatBody.evaluate(element => {
+        element.scrollTop = element.scrollHeight;
+      });
+      result.routes.pipelineCombat = await capture(
+        page,
+        directory,
+        "03f-pipeline-combat-final-actions",
+      );
       await page.locator(".referral-sheet__close[data-close-combat]").click();
       await page.locator("[data-open-nba]").first().click();
       await page.locator("[data-nba-workspace]").waitFor({ state: "visible" });
-      result.routes.pipelineNba = await capture(page, directory, "03f-pipeline-nba");
+      result.routes.pipelineNba = await capture(page, directory, "03g-pipeline-nba");
       await page.locator(".referral-sheet__close[data-close-nba]").click();
     } else {
       result.errors.push("PIPELINE_CTA_NOT_FOUND");
@@ -1019,15 +1144,53 @@ async function captureViewport(browser, viewport, fixture) {
     result.routes.quotesAfterUpload = await capture(
       page,
       directory,
-      "05-quotes-after-upload",
+      "05-quotes-commercial",
     );
 
-    await page.keyboard.press("Escape").catch(() => {});
-    await page.waitForTimeout(400);
+    result.routes.quotesEvidenceClosed = await capture(
+      page,
+      directory,
+      "05a-quotes-evidence-closed",
+    );
+    await page.locator("[data-quote-technical-evidence] summary").click();
+    result.routes.quotesEvidenceOpen = await capture(
+      page,
+      directory,
+      "05b-quotes-evidence-open",
+    );
+    await page.locator("[data-quote-technical-evidence] summary").click();
+    await verifyLastActionClearsFloatingControls(
+      page,
+      "[data-quote-last-actions] button",
+      "__FORGE_DIAGNOSTIC_QUOTE_LAST_ACTION_REACHABLE__",
+    );
     result.routes.quotesLoadedUnderlay = await capture(
       page,
       directory,
-      "06-quotes-loaded-underlay",
+      "05c-quotes-last-action-reachable",
+    );
+    await page.evaluate(async () => {
+      const bridge = globalThis.ForgeAcceptedQuoteBridge;
+      const candidate = bridge?.getCurrentQuoteCandidate?.();
+      const projection = document.querySelector("[data-material3-quotes-projection]");
+      const root = document.querySelector("[data-forge-quotes-module]");
+      const adapter = await import("./quotes-result-adapter.js");
+      const partialBridge = {
+        getCurrentQuoteCandidate: () => candidate,
+        getCurrentQuotePreviewCalculation: () => null,
+        getCurrentQuotePreviewCalculationState: () => ({
+          state: "PARTIAL",
+          humanConfirmationRequired: true,
+        }),
+      };
+      const viewModel = adapter.buildQuoteResultViewModel(partialBridge);
+      projection.innerHTML = adapter.renderQuoteResult(viewModel);
+      root.dataset.intakeState = viewModel.state;
+    });
+    result.routes.quotesPartial = await capture(
+      page,
+      directory,
+      "05d-quotes-partial",
     );
     await page.evaluate(() => {
       globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
@@ -1050,6 +1213,14 @@ async function captureViewport(browser, viewport, fixture) {
     await writeFile(
       path.join(directory, "telemetry.json"),
       JSON.stringify(telemetry, null, 2),
+    );
+    await writeFile(
+      path.join(OUTPUT_ROOT, "console", `${viewport.name}.json`),
+      JSON.stringify(telemetry.console, null, 2),
+    );
+    await writeFile(
+      path.join(OUTPUT_ROOT, "network", `${viewport.name}.json`),
+      JSON.stringify(telemetry.failedRequests, null, 2),
     );
     await writeFile(
       path.join(directory, "result.json"),
@@ -1076,7 +1247,7 @@ function markdownSummary(results, fixture, browserVersion) {
     return `| ${result.viewport.name} | ${pipelineOutcome} | ${quote.quoteResultsVisible ? "Sí" : "No"} | ${quote.quoteLegacyShellVisible ? "Sí" : "No"} | ${result.errors.length} |`;
   });
 
-  return `# Forge UI visual diagnostic
+  return `# FORGEOS — Final Visual Closure
 
 - Target: ${TARGET_URL}
 - Cache bust: ${CACHE_BUST}
@@ -1090,11 +1261,19 @@ ${rows.join("\n")}
 
 ## Contenido del artifact
 
-- Screenshots PNG de Inicio, Pipeline y Cotizaciones.
+- Screenshots PNG de Inicio, Pipeline, NASH, Combat, NBA y Cotizaciones.
 - HTML completo de cada estado.
 - Estado computado en JSON.
 - Consola, errores de página y solicitudes fallidas.
 - Fixture canónico usado para el estado cargado.
+
+## Cierre
+
+- Proyección comercial de Cotizaciones: ${results.every(result => result.routes.quotesLoadedUnderlay?.quoteCommercialProjection) ? "PASS" : "FAIL"}
+- Paquete técnico fuera de la UI primaria: ${results.every(result => !result.routes.quotesLoadedUnderlay?.quoteRawPacketVisible) ? "PASS" : "FAIL"}
+- Combat con scroll interno y footer accesible: ${results.every(result => result.routes.pipelineCombat?.combatFooterAccessible) ? "PASS" : "FAIL"}
+- NBA con copy humano y wrapping interno: ${results.every(result => result.routes.pipelineNba?.nbaHumanCopy && result.routes.pipelineNba?.nbaInternalClippingFree) ? "PASS" : "FAIL"}
+- Aceptación NASH visualmente comprobada: ${results.every(result => result.nashAcceptanceVisual?.visuallyProven) ? "PASS" : "FAIL"}
 `;
 }
 
@@ -1115,9 +1294,12 @@ function assertVisualAcceptance(results) {
     const authAnonymous = result.routes.authAnonymous || {};
     const authAuthenticated = result.routes.authAuthenticated || {};
     const authSignedOut = result.routes.authSignedOut || {};
+    const combatOpen = result.routes.pipelineCombatOpen || {};
     const combat = result.routes.pipelineCombat || {};
     const nba = result.routes.pipelineNba || {};
-    const quote = result.routes.quotesAfterUpload || {};
+    const quote = result.routes.quotesLoadedUnderlay || {};
+    const quoteEvidenceOpen = result.routes.quotesEvidenceOpen || {};
+    const quotePartial = result.routes.quotesPartial || {};
     const telemetry = result.telemetrySummary || {};
 
     requireFlag(viewport, "referralSheetVisible", referral.referralSheetVisible === true);
@@ -1197,6 +1379,16 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "quoteProgressOnly=false", quote.quoteProgressOnly === false);
     requireFlag(viewport, "quoteLegacyRuntimeVisible=false", quote.quoteLegacyRuntimeVisible === false);
     requireFlag(viewport, "quoteLegacyShellVisible=false", quote.quoteLegacyShellVisible === false);
+    requireFlag(viewport, "quoteCommercialProjection", quote.quoteCommercialProjection === true);
+    requireFlag(viewport, "quoteRawPacketVisible=false", quote.quoteRawPacketVisible === false);
+    requireFlag(viewport, "quoteTechnicalEvidenceCollapsed", quote.quoteTechnicalEvidenceCollapsed === true);
+    requireFlag(viewport, "quoteTechnicalEvidenceOpen", quoteEvidenceOpen.quoteTechnicalEvidenceOpen === true);
+    requireFlag(viewport, "quoteProjectionBounded", quote.quoteProjectionBounded === true);
+    requireFlag(viewport, "quoteLastActionReachable", quote.quoteLastActionReachable === true);
+    requireFlag(viewport, "quotePartialCommercial", quotePartial.quoteCommercialProjection === true);
+    requireFlag(viewport, "quotePartialState", quotePartial.bodyDataset !== undefined
+      && quotePartial.documentDataset !== undefined
+      && quotePartial.quoteReadyState === true);
     requireFlag(viewport, "pageErrors=0", telemetry.pageErrors === 0);
     requireFlag(viewport, "failedRequests=0", telemetry.failedRequests === 0);
     requireFlag(viewport, "consoleErrors=0", telemetry.consoleErrors === 0);
@@ -1207,6 +1399,11 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "googleAvatarVisible", authAuthenticated.googleAvatarVisible === true);
     requireFlag(viewport, "privateDataPurged", authSignedOut.privateDataPurged === true);
     requireFlag(viewport, "combatWorkspaceVisible", combat.combatWorkspaceVisible === true);
+    requireFlag(viewport, "combatHeaderVisibleOnOpen", combatOpen.combatHeaderVisible === true);
+    requireFlag(viewport, "combatBodyStartsAtTop", combatOpen.combatBodyStartsAtTop === true);
+    requireFlag(viewport, "combatInternalScroll", combat.combatInternalScroll === true);
+    requireFlag(viewport, "combatHorizontalScroll=false", combat.combatHorizontalScroll === false);
+    requireFlag(viewport, "combatFooterAccessible", combat.combatFooterAccessible === true);
     requireFlag(viewport, "combatTypeStall", combat.combatTypeStall === true);
     requireFlag(viewport, "combatIntentAvoidingDecision", combat.combatIntentAvoidingDecision === true);
     requireFlag(viewport, "combatExactApprovalPassed", combat.combatExactApprovalPassed === true);
@@ -1216,6 +1413,13 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "nbaWorkspaceVisible", nba.nbaWorkspaceVisible === true);
     requireFlag(viewport, "nbaHandleObjection", nba.nbaHandleObjection === true);
     requireFlag(viewport, "nbaReasonWhyVisible", nba.nbaReasonWhyVisible === true);
+    requireFlag(viewport, "nbaHumanCopy", nba.nbaHumanCopy === true);
+    requireFlag(viewport, "nbaInternalClippingFree", nba.nbaInternalClippingFree === true);
+    requireFlag(viewport, "floatingNavPreserved", quote.floatingNavPreserved === true);
+    requireFlag(viewport, "mobileSafeZoneConfigured", quote.mobileSafeZoneConfigured === true);
+    requireFlag(viewport, "nashAcceptanceStateChanged", result.nashAcceptanceVisual?.stateChanged === true);
+    requireFlag(viewport, "nashAcceptanceVisuallyProven", result.nashAcceptanceVisual?.visuallyProven === true);
+    requireFlag(viewport, "nashBeforeAfterIdentical=false", result.nashAcceptanceVisual?.beforeAfterIdentical === false);
   }
 
   if (failures.length) {
@@ -1225,7 +1429,13 @@ function assertVisualAcceptance(results) {
 
 async function main() {
   await rm(OUTPUT_ROOT, { recursive: true, force: true });
-  await mkdir(OUTPUT_ROOT, { recursive: true });
+  await Promise.all([
+    mkdir(OUTPUT_ROOT, { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "reports"), { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "console"), { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "network"), { recursive: true }),
+    mkdir(path.join(OUTPUT_ROOT, "comparisons"), { recursive: true }),
+  ]);
   const fixture = await prepareFixture();
 
   const browser = await chromium.launch({
@@ -1257,10 +1467,18 @@ async function main() {
     path.join(OUTPUT_ROOT, "manifest.json"),
     JSON.stringify(manifest, null, 2),
   );
-  await writeFile(
-    path.join(OUTPUT_ROOT, "summary.md"),
-    markdownSummary(results, fixture, browserVersion),
-  );
+  const finalReport = markdownSummary(results, fixture, browserVersion);
+  await Promise.all([
+    writeFile(path.join(OUTPUT_ROOT, "FINAL_VISUAL_CLOSURE.md"), finalReport),
+    writeFile(path.join(OUTPUT_ROOT, "reports", "summary.md"), finalReport),
+    writeFile(
+      path.join(OUTPUT_ROOT, "comparisons", "nash-acceptance.json"),
+      JSON.stringify(results.map(result => ({
+        viewport: result.viewport.name,
+        ...result.nashAcceptanceVisual,
+      })), null, 2),
+    ),
+  ]);
 
   const sourceFixture = await readFile(fixture.path);
   await writeFile(
@@ -1283,6 +1501,10 @@ async function main() {
   console.log("NASH_COMBAT_ACCEPTANCE=PASS");
   console.log("OBJECTION_TIMELINE_ACCEPTANCE=PASS");
   console.log("NBA_REASON_WHY_ACCEPTANCE=PASS");
+  console.log("QUOTES_COMMERCIAL_PROJECTION=PASS");
+  console.log("NASH_COMBAT_VIEWPORT=PASS");
+  console.log("NBA_MOBILE_WRAP=PASS");
+  console.log("NASH_ACCEPTANCE_VISUALLY_PROVEN=PASS");
   console.log(`OUTPUT=${OUTPUT_ROOT}`);
   console.log(`TARGET=${TARGET_URL}`);
   console.log(`CACHE_BUST=${CACHE_BUST}`);

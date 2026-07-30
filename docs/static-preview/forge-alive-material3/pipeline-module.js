@@ -63,6 +63,20 @@ function escapeHtml(value) {
   );
 }
 
+const intelligenceLabels = Object.freeze({
+  READY_FOR_HUMAN_REVIEW: "Listo para revisión",
+  HANDLE_OBJECTION: "Atender objeción",
+  OBJECTION_RECORDED: "Objeción registrada",
+  STALL: "Conversación estancada",
+  AVOIDING_DECISION: "Decisión aplazada",
+  CURRENT: "Vigente",
+  UNKNOWN: "Pendiente de confirmar",
+});
+
+function humanIntelligenceLabel(value) {
+  return intelligenceLabels[String(value)] || value;
+}
+
 function connectedData() {
   return null;
 }
@@ -292,17 +306,22 @@ async function openNashWorkspace({ card, adapter, trigger }) {
         <a data-manual-whatsapp hidden>Continuar manualmente a WhatsApp</a>
       </div>
     </section>`;
+  layer.dataset.nashApprovalState = "pending";
   const close = () => { layer.remove(); trigger.focus(); };
   layer.querySelectorAll("[data-close-nash]").forEach(node => node.addEventListener("click", close));
   const textarea = layer.querySelector("[data-nash-draft]");
   const link = layer.querySelector("[data-manual-whatsapp]");
   const status = layer.querySelector("[data-nash-approval-status]");
+  const approveButton = layer.querySelector("[data-approve-nash-draft]");
   textarea.addEventListener("input", () => {
+    layer.dataset.nashApprovalState = "pending";
     link.hidden = true;
     link.removeAttribute("href");
+    approveButton.disabled = false;
+    approveButton.textContent = "Revisar y aprobar texto exacto";
     status.textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
   });
-  layer.querySelector("[data-approve-nash-draft]").addEventListener("click", () => {
+  approveButton.addEventListener("click", () => {
     const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
     const text = textarea.value;
     const validation = safety.draftSafetyValidator({
@@ -324,6 +343,9 @@ async function openNashWorkspace({ card, adapter, trigger }) {
       : null;
     link.hidden = !url;
     if (url) link.href = url;
+    layer.dataset.nashApprovalState = url ? "approved" : "blocked";
+    approveButton.disabled = Boolean(url);
+    approveButton.textContent = url ? "Texto exacto aprobado" : "Revisar y aprobar texto exacto";
     status.textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El mensaje no pasó la validación.";
   });
   document.body.append(layer);
@@ -331,10 +353,10 @@ async function openNashWorkspace({ card, adapter, trigger }) {
 }
 
 const displayValue = value => Array.isArray(value)
-  ? (value.join(", ") || "No disponible")
+  ? (value.map(humanIntelligenceLabel).join(", ") || "No disponible")
   : value && typeof value === "object"
-    ? Object.entries(value).map(([key, item]) => `${key}: ${item}`).join(" · ")
-    : value || "No disponible";
+    ? Object.entries(value).map(([key, item]) => `${key}: ${humanIntelligenceLabel(item)}`).join(" · ")
+    : humanIntelligenceLabel(value) || "No disponible";
 
 async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
   const layer = document.createElement("div");
@@ -342,14 +364,14 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
   layer.dataset.nashCombatWorkspace = "true";
   layer.innerHTML = `
     <button class="referral-sheet__scrim" type="button" data-close-combat></button>
-    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="combat-title">
-      <div class="referral-sheet__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" type="button" data-close-combat>×</button></div>
-      <div class="referral-sheet__body">
+    <section class="referral-sheet nash-combat-workspace" role="dialog" aria-modal="true" aria-labelledby="combat-title">
+      <div class="referral-sheet__header nash-combat-workspace__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2><span data-combat-header-state>Esperando objeción</span></div><button class="referral-sheet__close" type="button" data-close-combat>×</button></div>
+      <div class="referral-sheet__body nash-combat-workspace__body">
         <label><span>Objeción escuchada (no se guarda)</span><textarea data-combat-objection></textarea></label>
         <button type="button" data-analyze-combat>Analizar objeción</button>
         <div data-combat-results hidden></div>
       </div>
-      <div class="referral-sheet__footer" data-combat-actions hidden>
+      <div class="referral-sheet__footer nash-combat-workspace__footer" data-combat-actions hidden>
         <button type="button" data-approve-combat>Revisar y aprobar texto exacto</button>
         <button type="button" data-register-combat>Registrar clasificación en Timeline</button>
         <a data-combat-whatsapp hidden>Continuar manualmente a WhatsApp</a>
@@ -360,13 +382,17 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
   layer.querySelectorAll("[data-close-combat]").forEach(node => node.addEventListener("click", close));
   const results = layer.querySelector("[data-combat-results]");
   const actions = layer.querySelector("[data-combat-actions]");
+  const body = layer.querySelector(".nash-combat-workspace__body");
   layer.querySelector("[data-analyze-combat]").addEventListener("click", async () => {
-    combat = await adapter.analyzeCombat(card.prospect, layer.querySelector("[data-combat-objection]").value);
+    const objection = layer.querySelector("[data-combat-objection]").value;
+    combat = await adapter.analyzeCombat(card.prospect, objection);
+    layer.querySelector("[data-combat-header-state]").textContent =
+      `Objeción analizada: ${objection}`;
     results.hidden = false;
     actions.hidden = false;
     results.innerHTML = `
-      <p>Tipo candidato: <strong data-combat-type>${escapeHtml(combat.classification.type)}</strong></p>
-      <p>Intención candidata: <strong data-combat-intent>${escapeHtml(combat.classification.intent)}</strong></p>
+      <p>Tipo candidato: <strong data-combat-type data-combat-type-code="${escapeHtml(combat.classification.type)}">${escapeHtml(humanIntelligenceLabel(combat.classification.type))}</strong></p>
+      <p>Intención candidata: <strong data-combat-intent data-combat-intent-code="${escapeHtml(combat.classification.intent)}">${escapeHtml(humanIntelligenceLabel(combat.classification.intent))}</strong></p>
       <p>Confianza: ${escapeHtml(combat.classification.confidence)}</p>
       <p>Intenciones posibles: ${escapeHtml(displayValue(combat.classification.possibleIntents))}</p>
       <p>Interpretación posible: ${escapeHtml(combat.psychology.psychology)}</p>
@@ -376,6 +402,7 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
       <p>Soporte: ${escapeHtml(displayValue(combat.advisorGuidance))}</p>
       <label><span>Respuesta candidata editable</span><textarea data-combat-response>${escapeHtml(combat.objectionKillerMessage)}</textarea></label>
       <p data-combat-approval>Revisión y aprobación humana requeridas.</p>`;
+    body.scrollTop = 0;
     const response = results.querySelector("[data-combat-response]");
     response.addEventListener("input", () => {
       const link = layer.querySelector("[data-combat-whatsapp]");
@@ -406,6 +433,7 @@ async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
     results.insertAdjacentHTML("beforeend", "<p data-combat-timeline>Clasificación registrada sin texto crudo.</p>");
   });
   document.body.append(layer);
+  body.scrollTop = 0;
   layer.querySelector("[data-combat-objection]").focus();
 }
 
@@ -417,9 +445,9 @@ async function openNbaWorkspace({ card, adapter, trigger }) {
   const field = (label, value) => `<p>${label}: ${escapeHtml(displayValue(value))}</p>`;
   layer.innerHTML = `
     <button class="referral-sheet__scrim" type="button" data-close-nba></button>
-    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="nba-title">
+    <section class="referral-sheet nba-workspace" role="dialog" aria-modal="true" aria-labelledby="nba-title">
       <div class="referral-sheet__header"><div><p>NBA · REASON WHY</p><h2 id="nba-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" data-close-nba>×</button></div>
-      <div class="referral-sheet__body">
+      <div class="referral-sheet__body nba-workspace__body">
         ${field("Estado", nba.reconnectionStatus)}
         ${field("Acción candidata", nba.recommendedAction)}
         ${field("Reason Why", nba.reasonWhy)}
@@ -429,14 +457,17 @@ async function openNbaWorkspace({ card, adapter, trigger }) {
         ${field("Por qué este mensaje", nba.whyThisMessage)}
         ${field("Ángulo", nba.conversationAngle)}
         ${field("Soporte de objeción", nba.objectionSupport)}
-        ${field("Evidencia", nba.evidenceRefs)}
-        ${field("Fuentes", nba.sourceOwners)}
         ${field("Frescura", nba.freshness)}
         ${field("Confianza", nba.confidence)}
         ${field("Limitaciones", nba.confidenceLimitations)}
         ${field("Advertencias", nba.warnings)}
         ${field("Contexto faltante", nba.missingContext)}
         <p data-nba-human-review>Revisión humana requerida · ejecución automática deshabilitada.</p>
+        <details class="nba-workspace__technical">
+          <summary>Evidencia técnica</summary>
+          ${field("Referencias", nba.evidenceRefs)}
+          ${field("Fuentes", nba.sourceOwners)}
+        </details>
       </div>
       <div class="referral-sheet__footer"><button type="button" data-nba-prepare-message>Preparar mensaje con este contexto</button></div>
     </section>`;
