@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   apply:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -78,17 +79,9 @@ jobs:
             './app.js?v=pipeline-mobile-interaction-001',
             'APP_CACHE_BUST',
           );
-          replaceRequired(
-            '.github/workflows/pages.yml',
-            '/app\\.js\\?v=ui-m04-shell-007/',
-            '/app\\.js\\?v=pipeline-mobile-interaction-001/',
-            'PAGES_APP_ASSERTION',
-          );
-
-          fs.rmSync('.github/workflows/apply-pipeline-mobile-interaction-fix.yml');
           NODE
 
-      - name: Commit applied patch
+      - name: Commit applied runtime patch
         run: |
           git config user.name "Forge UI Repair"
           git config user.email "forge-ui-repair@users.noreply.github.com"
@@ -97,8 +90,6 @@ jobs:
             docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js \
             docs/static-preview/forge-alive-material3/pipeline-module.js \
             docs/static-preview/forge-alive-material3/app.js \
-            docs/static-preview/forge-alive-material3/index.html \
-            .github/workflows/pages.yml \
-            .github/workflows/apply-pipeline-mobile-interaction-fix.yml
+            docs/static-preview/forge-alive-material3/index.html
           git commit -m "fix(ui): preserve Pipeline action geometry and persisted stage"
           git push origin HEAD:fix/pipeline-mobile-interaction-persistence
