@@ -2,7 +2,6 @@ const ROOT_SELECTOR = "[data-forge-pipeline-module]";
 const ACTION_SELECTOR = ".pipeline-module__action--calendar";
 const CARD_SELECTOR = "[data-productive-prospect-card]";
 const STYLE_SELECTOR = "[data-pipeline-google-calendar-styles]";
-const LAYER_SELECTOR = "[data-pipeline-calendar-layer]";
 const INSTALL_KEY = Symbol.for("forge.material3.pipeline.google-calendar");
 
 export const PIPELINE_CALENDAR_TIME_ZONE = "America/Mexico_City";
@@ -116,7 +115,8 @@ function defaultStartValues(now = new Date()) {
     parts.minute,
     0,
   ));
-  const minutesToNextSlot = 30 - (floatingNow.getUTCMinutes() % 30 || 30) + 30;
+  const remainder = floatingNow.getUTCMinutes() % 30;
+  const minutesToNextSlot = remainder === 0 ? 30 : 30 - remainder;
   const rounded = new Date(floatingNow.getTime() + minutesToNextSlot * 60_000);
   return {
     date: `${rounded.getUTCFullYear()}-${String(rounded.getUTCMonth() + 1).padStart(2, "0")}-${String(rounded.getUTCDate()).padStart(2, "0")}`,
@@ -220,7 +220,7 @@ function closeWorkspace({ restoreFocus = true } = {}) {
   if (!activeWorkspace) return false;
   const { layer, trigger, previousOverflow, keydown } = activeWorkspace;
   activeWorkspace = undefined;
-  document.removeEventListener("keydown", keydown);
+  layer.ownerDocument.removeEventListener("keydown", keydown);
   layer.remove();
   document.body.style.overflow = previousOverflow;
   document.documentElement.removeAttribute("data-pipeline-calendar-workspace");
@@ -289,7 +289,7 @@ function openWorkspace(action) {
     closeWorkspace();
   };
 
-  const previousOverflow = document.body.style.overflow;
+  const previousOverflow = documentRef.body.style.overflow;
   activeWorkspace = { layer, trigger: action, previousOverflow, keydown };
   documentRef.addEventListener("keydown", keydown);
   documentRef.body.append(layer);
