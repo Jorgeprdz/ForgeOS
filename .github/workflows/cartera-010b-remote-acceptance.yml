@@ -48,7 +48,7 @@ jobs:
 
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-          allowed='^(\.github/workflows/cartera-010b-remote-acceptance\.yml|docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-010b-github-actions-remote-acceptance\.mjs|scripts/ci/cartera-010b-remote-acceptance-0[1-4]\.sql|tests/cartera-010b-remote-acceptance-harness-test\.mjs)$'
+          allowed='^(\.github/workflows/cartera-010b-remote-acceptance\.yml|docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-010b-(github-actions-remote-acceptance|precedence-hardening-deploy)\.mjs|scripts/ci/cartera-010b-remote-acceptance-0[1-4]\.sql|supabase/migrations/20260731000213_cartera010b_identity_resolution_precedence_hardening\.sql|tests/cartera-010b-(remote-acceptance-harness|precedence-hardening)-test\.mjs)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -65,10 +65,21 @@ jobs:
       - name: JavaScript syntax gate
         run: |
           node --check scripts/ci/cartera-010b-github-actions-remote-acceptance.mjs
+          node --check scripts/ci/cartera-010b-precedence-hardening-deploy.mjs
           node --check tests/cartera-010b-remote-acceptance-harness-test.mjs
+          node --check tests/cartera-010b-precedence-hardening-test.mjs
 
       - name: Repository acceptance suite
         run: node --test tests/cartera-010b-*.mjs
+
+      - name: Apply and verify identity precedence hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-010b-precedence-hardening-deploy.mjs \
+            | tee artifacts/cartera-010b-remote-acceptance/precedence-hardening-output.log
+          grep -q 'CARTERA010B_IDENTITY_PRECEDENCE_HARDENING=PASS' \
+            artifacts/cartera-010b-remote-acceptance/precedence-hardening-output.log
 
       - name: Deploy and execute transactional remote acceptance
         shell: bash
