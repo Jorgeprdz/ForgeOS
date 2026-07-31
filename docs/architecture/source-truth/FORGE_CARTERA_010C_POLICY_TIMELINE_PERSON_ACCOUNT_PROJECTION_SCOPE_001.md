@@ -1,7 +1,7 @@
 # FORGE CARTERA 010C — Policy Timeline, Person and Account Projection Scope 001
 
-Forge OS  
-Architecture Source Truth  
+Forge OS
+Architecture Source Truth
 Cartera / Productive Canonical Read Models
 
 ## Status
@@ -9,7 +9,7 @@ Cartera / Productive Canonical Read Models
 ```text
 PHASE=CARTERA_010C_POLICY_TIMELINE_PERSON_ACCOUNT_PROJECTION
 STATUS=STARTED_SCOPE_AND_EVENT_CONTRACT_LOCKED
-SOURCE_BRANCH=feature/cartera-010b-commercial-person-policy-role-foundation
+SOURCE_BRANCH=feature/cartera-010b-commercial-person-policy-role-foundATION
 SOURCE_COMMIT=73e1726f6f0ebf5f025e0dc197275503984a2705
 IMPLEMENTATION_BRANCH=feature/cartera-010c-policy-timeline-person-account-projection
 RUNTIME_MUTATION=YES_BOUNDED_PURE_CONTRACT
