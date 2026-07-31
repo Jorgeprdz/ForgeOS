@@ -341,17 +341,22 @@ function installStyles(documentRef) {
     }
 
     .pipeline-module .pipeline-module__productive-identity {
-      display: grid !important;
-      grid-template-columns: minmax(0, 1fr) auto !important;
-      grid-auto-flow: row !important;
-      align-items: start !important;
-      gap: 8px 10px !important;
+      position: relative !important;
+      display: block !important;
+      min-width: 0 !important;
     }
 
     .pipeline-module .pipeline-module__productive-name {
-      grid-column: 1 !important;
-      grid-row: 1 / span 2 !important;
+      width: 100% !important;
       min-width: 0 !important;
+    }
+
+    .pipeline-module .pipeline-module__productive-name > strong {
+      box-sizing: border-box !important;
+      display: block !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      padding-right: 118px !important;
     }
 
     .pipeline-module .pipeline-module__productive-stage {
@@ -359,10 +364,10 @@ function installStyles(documentRef) {
     }
 
     .pipeline-module .pipeline-module__stage-control--compact {
-      grid-column: 2 !important;
-      grid-row: 1 !important;
-      align-self: start !important;
-      justify-self: end !important;
+      position: absolute !important;
+      top: 0 !important;
+      right: 0 !important;
+      z-index: 2 !important;
       width: auto !important;
       min-width: 0 !important;
       margin: 0 !important;
@@ -401,16 +406,17 @@ function installStyles(documentRef) {
 
     @media (max-width: 560px) {
       .pipeline-module .pipeline-module__productive-identity {
+        display: grid !important;
         grid-template-columns: minmax(0, 1fr) !important;
+        gap: 8px !important;
       }
 
-      .pipeline-module .pipeline-module__productive-name,
-      .pipeline-module .pipeline-module__stage-control--compact {
-        grid-column: 1 !important;
-        grid-row: auto !important;
+      .pipeline-module .pipeline-module__productive-name > strong {
+        padding-right: 0 !important;
       }
 
       .pipeline-module .pipeline-module__stage-control--compact {
+        position: static !important;
         justify-self: start !important;
       }
     }

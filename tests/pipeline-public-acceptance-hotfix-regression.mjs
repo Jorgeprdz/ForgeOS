@@ -178,6 +178,8 @@ try {
   );
   const stageBox = await stageControl.boundingBox();
   assert.ok(stageBox && stageBox.height <= 36 && stageBox.width <= 160, "STAGE_CONTROL_NOT_COMPACT");
+  const nameBox = await firstCard.locator("[data-productive-card-identity] strong").boundingBox();
+  assert.ok(nameBox && nameBox.width >= 180, "PRODUCTIVE_NAME_WIDTH_REGRESSION");
   assert.equal(
     await firstCard.locator("[data-productive-stage-label]").evaluate(element => getComputedStyle(element).display),
     "none",
