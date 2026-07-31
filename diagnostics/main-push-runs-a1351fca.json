@@ -1,0 +1,31 @@
+{
+  "expectedSha": "a1351fca805ca426fcd2cdacf6d472c34a4c603c",
+  "capturedAt": "2026-07-31T14:30:46.420Z",
+  "total": 2,
+  "runs": [
+    {
+      "id": 30637466957,
+      "name": "Deploy ForgeOS to GitHub Pages",
+      "path": ".github/workflows/pages.yml",
+      "status": "completed",
+      "conclusion": "failure",
+      "event": "push",
+      "headSha": "a1351fca805ca426fcd2cdacf6d472c34a4c603c",
+      "createdAt": "2026-07-31T14:10:14Z",
+      "updatedAt": "2026-07-31T14:10:40Z",
+      "url": "https://github.com/Jorgeprdz/ForgeOS/actions/runs/30637466957"
+    },
+    {
+      "id": 30637466918,
+      "name": "Pages Public Acceptance",
+      "path": ".github/workflows/pages-public-acceptance.yml",
+      "status": "completed",
+      "conclusion": "failure",
+      "event": "push",
+      "headSha": "a1351fca805ca426fcd2cdacf6d472c34a4c603c",
+      "createdAt": "2026-07-31T14:10:14Z",
+      "updatedAt": "2026-07-31T14:20:40Z",
+      "url": "https://github.com/Jorgeprdz/ForgeOS/actions/runs/30637466918"
+    }
+  ]
+}
