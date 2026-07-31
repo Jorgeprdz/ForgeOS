@@ -1,0 +1,57 @@
+name: Pipeline Point 4 Stability Wait
+
+on:
+  push:
+    branches:
+      - fix/pipeline-persistent-new-referral-cta
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: contains(github.event.head_commit.message, '[point4-stability]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/pipeline-persistent-new-referral-cta
+          fetch-depth: 0
+
+      - name: Wait for computed stage color before asserting
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("tools/manual-ui-stability-check.mjs")
+          text = path.read_text(encoding="utf-8")
+          old = '''  await page.locator('[data-productive-stage-control="prospect-1"]').selectOption("appointment_scheduled");
+  const immediate = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
+'''
+          new = '''  await page.locator('[data-productive-stage-control="prospect-1"]').selectOption("appointment_scheduled");
+  await page.waitForFunction(beforeBorder => {
+    const card = document.querySelector('[data-productive-prospect-card="prospect-1"]');
+    return card?.dataset.productiveStage === "appointment_scheduled"
+      && card.querySelector('[data-productive-stage-label]')?.textContent === "Cita agendada"
+      && getComputedStyle(card).borderTopColor !== beforeBorder;
+  }, beforeStage.border);
+  const immediate = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
+'''
+          if old not in text:
+              raise SystemExit("Expected stability assertion source was not found")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
+
+      - name: Verify syntax and focused source tests
+        run: |
+          node --check tools/manual-ui-stability-check.mjs
+          node --test tests/manual-quotes-pipeline-stability-test.mjs
+
+      - name: Commit stability correction
+        run: |
+          git config user.name "forgeos-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git add tools/manual-ui-stability-check.mjs
+          git commit -m "test(pipeline): wait for computed stage color"
+          git push origin HEAD:fix/pipeline-persistent-new-referral-cta
