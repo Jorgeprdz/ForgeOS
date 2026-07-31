@@ -86,9 +86,12 @@ jobs:
           test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
           test -f supabase/migrations/20260731000100_pipeline_prospect_journal.sql
           node --check scripts/deploy-pipeline-journal-migration.mjs
-          ! rg -n "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
-            supabase/migrations/20260731000100_pipeline_prospect_journal.sql
-          rg -n "prospect_journal_entries|JOURNAL:|CONVERSATION_RECORDED|enable row level security" \
+          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
+            supabase/migrations/20260731000100_pipeline_prospect_journal.sql; then
+            echo "Destructive SQL rejected"
+            exit 1
+          fi
+          grep -En "prospect_journal_entries|JOURNAL:|CONVERSATION_RECORDED|enable row level security" \
             supabase/migrations/20260731000100_pipeline_prospect_journal.sql
           node --test tests/prospect-journal-service-contract-test.mjs
 
