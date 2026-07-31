@@ -1,7 +1,7 @@
 # FORGE CARTERA 020C — GOVERNED COMMAND COMPOSER PROGRESS 002
 
-Forge OS  
-Architecture Source Truth  
+Forge OS
+Architecture Source Truth
 Cartera / Governed Evidence Confirmation
 
 ## Status
