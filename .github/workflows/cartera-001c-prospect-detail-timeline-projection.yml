@@ -1,0 +1,48 @@
+name: CARTERA 001C Prospect Detail Timeline Projection
+
+on:
+  push:
+    branches:
+      - feature/cartera-001c-prospect-detail-timeline-projection
+    paths:
+      - "platform/event-evidence/prospect-quote-detail-projection.js"
+      - "advisor-os/sales-pipeline/prospect-quote-detail-projection-ui.js"
+      - "advisor-os/sales-pipeline/productive-prospect-bootstrap.js"
+      - "tests/cartera-001c-*.mjs"
+      - ".github/workflows/cartera-001c-prospect-detail-timeline-projection.yml"
+  pull_request:
+    branches:
+      - feature/cartera-001b-remote-acceptance
+    paths:
+      - "platform/event-evidence/prospect-quote-detail-projection.js"
+      - "advisor-os/sales-pipeline/prospect-quote-detail-projection-ui.js"
+      - "advisor-os/sales-pipeline/productive-prospect-bootstrap.js"
+      - "tests/cartera-001c-*.mjs"
+      - ".github/workflows/cartera-001c-prospect-detail-timeline-projection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  projection-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax gate
+        run: |
+          node --check platform/event-evidence/prospect-quote-detail-projection.js
+          node --check advisor-os/sales-pipeline/prospect-quote-detail-projection-ui.js
+          node --check advisor-os/sales-pipeline/productive-prospect-bootstrap.js
+          node --check tests/cartera-001c-prospect-quote-detail-projection-test.mjs
+          node --check tests/cartera-001c-prospect-detail-ui-test.mjs
+      - name: Targeted 001C tests
+        run: node --test tests/cartera-001c-*.mjs
+      - name: Diff integrity
+        run: git diff --check HEAD^1...HEAD
