@@ -22,7 +22,7 @@ const runtimeHotfix = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js",
 );
 const printableClosure = read(
-  "../docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js",
+  "../docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js",
 );
 
 for (const productAdapter of [
@@ -65,25 +65,28 @@ assert.match(adapter, /metadata\.stale === true/);
 assert.doesNotMatch(adapter, /const\s+CURRENT_UDI\s*=\s*\d/);
 
 assert.match(moduleSource, /quotes-result-adapter\.js\?v=quote-calculator-parity-001/);
-assert.match(productiveApp, /quotes-module\.js\?v=quote-calculator-parity-005/);
+assert.match(productiveApp, /quotes-module\.js\?v=quote-calculator-parity-006/);
 assert.match(productiveApp, /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/);
-assert.match(productiveApp, /quote-runtime-printable-closure-m05e005\.js\?v=m05e-005/);
+assert.match(productiveApp, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-006/);
+assert.doesNotMatch(productiveApp, /quote-runtime-printable-closure-m05e005\.js/);
 assert.doesNotMatch(
   productiveApp,
   /quotes-module-complete\.js\?v=manual-quotes-complete-001/,
 );
-assert.match(productiveApp, /dataset\.quoteCalculatorRuntime = "M05E-005"/);
-assert.match(cacheProofEntrypoint, /app\.js\?v=quote-calculator-parity-005/);
-assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-005/);
+assert.match(productiveApp, /dataset\.quoteCalculatorRuntime = "M05E-006"/);
+assert.match(cacheProofEntrypoint, /app\.js\?v=quote-calculator-parity-006/);
+assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-006/);
 assert.match(cacheProofEntrypoint, /cache: "no-store"/);
 assert.match(runtimeHotfix, /MXN hoy/);
 assert.match(printableClosure, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
 assert.match(printableClosure, /data-m05e005-action="preview"/);
 assert.match(printableClosure, /data-m05e005-action="download"/);
 assert.match(printableClosure, /data-m05e005-action="history"/);
+assert.doesNotMatch(printableClosure, /new MutationObserver/);
+assert.doesNotMatch(printableClosure, /"forge:quote-human-review-updated"/);
 
 console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
-  productiveRuntime: "M05E-005",
+  productiveRuntime: "M05E-006",
   products: ["vida_mujer", "segubeca", "orvi", "imagina_ser"],
   mandatoryMetrics: ["sum_assured_udi_mxn", "annual_contribution_udi_mxn"],
   orviPrimarySecondaryMapping: true,
@@ -96,4 +99,5 @@ console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
   optionalClientUx: true,
   compactPrintableActions: true,
   printableHistoryRestored: true,
+  globalMutationObserverRemoved: true,
 });
