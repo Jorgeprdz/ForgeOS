@@ -1,0 +1,115 @@
+name: CARTERA 020C Remote Preparation Gate
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-020c-identity-policy-confirmation-review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020c-remote-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  remote-preparation-static-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source ancestry and bounded paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=0daaccd556659b997f2086e12b09481281d1b019
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(\.github/workflows/cartera-020c-remote-(gate|acceptance)\.yml|advisor-os/cartera/persistent-confirmation-orchestration-service\.js|docs/evidence/FORGE_CARTERA_020C_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020c-(github-actions-remote-acceptance\.mjs|remote-acceptance\.sql)|supabase/migrations/20260731000238_cartera020c_authorization_digest_hardening\.sql|tests/cartera-020c-(authorization-digest-hardening|remote-acceptance-harness)-test\.mjs)$'
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_020C_REMOTE_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_REMOTE_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+
+      - name: Syntax and repository acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check advisor-os/cartera/persistent-confirmation-orchestration-service.js
+          node --check scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs
+          node --check tests/cartera-020c-authorization-digest-hardening-test.mjs
+          node --check tests/cartera-020c-remote-acceptance-harness-test.mjs
+          node --test tests/cartera-020c-*.mjs
+
+      - name: Verify manual-only remote workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/cartera-020c-remote-acceptance.yml
+          grep -q '^  workflow_dispatch:' "$workflow"
+          ! grep -qE '^  (push|pull_request):' "$workflow"
+          grep -q 'YES:CARTERA_020C_REMOTE_MUTATION' "$workflow"
+          grep -q 'expected_source_head:' "$workflow"
+          grep -q 'expected_acceptance_head:' "$workflow"
+          grep -q 'project_ref:' "$workflow"
+          grep -q 'cancel-in-progress: false' "$workflow"
+          echo 'REMOTE_WORKFLOW=MANUAL_ONLY'
+          echo 'REMOTE_EXECUTION_FROM_PR=IMPOSSIBLE'
+
+      - name: Verify authorization, migration and acceptance boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          migration=supabase/migrations/20260731000238_cartera020c_authorization_digest_hardening.sql
+          service=advisor-os/cartera/persistent-confirmation-orchestration-service.js
+          harness=scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs
+          acceptance=scripts/ci/cartera-020c-remote-acceptance.sql
+
+          grep -q 'forge_cartera020c_stable_json_text' "$migration"
+          grep -q 'forge_cartera020c_authorization_digest' "$migration"
+          grep -q 'CARTERA020C_IDENTITY_AUTHORIZATION_DIGEST_MISMATCH' "$migration"
+          grep -q 'CARTERA020C_POLICY_AUTHORIZATION_DIGEST_MISMATCH' "$migration"
+          grep -q 'prepare_identity_orchestration_unbound' "$migration"
+          grep -q 'attach_policy_confirmation_unbound' "$migration"
+          grep -q "cryptoApi.digest('SHA-256'" "$service"
+          grep -q 'JSON.stringify(stableJson(payload))' "$service"
+          grep -q '^begin;' "$acceptance"
+          grep -q '^rollback;' "$acceptance"
+          grep -q 'CARTERA020C_FORGED_IDENTITY_AUTHORIZATION_ACCEPTED' "$acceptance"
+          grep -q 'CARTERA020C_FORGED_POLICY_AUTHORIZATION_ACCEPTED' "$acceptance"
+          grep -q 'CARTERA020C_CHANGED_INPUT_REPLAY_NOT_BLOCKED' "$acceptance"
+          grep -q 'CARTERA020C_EARLY_RETRY_ALLOWED' "$acceptance"
+          grep -q 'Promise.all' "$harness"
+          grep -q 'CARTERA020C_STALE_STATE_VERSION' "$harness"
+          grep -q 'session_replication_role = replica' "$harness"
+          grep -q 'RESIDUAL_FIXTURES=0' "$harness"
+          ! grep -qE '^  (push|pull_request):' .github/workflows/cartera-020c-remote-acceptance.yml
+          echo 'AUTHORIZATION_DIGEST_HARDENING=REPOSITORY_READY'
+          echo 'TRANSACTIONAL_ACCEPTANCE_HARNESS=REPOSITORY_READY'
+          echo 'PARALLEL_STATE_VERSION_HARNESS=REPOSITORY_READY'
+          echo 'ROLLBACK_CLEANUP=LOCKED'
+
+      - name: Emit preparation markers
+        run: |
+          echo 'CARTERA_020C_REMOTE_GATE=REPOSITORY_READY'
+          echo 'AUTHORIZATION_DIGEST_BINDING=LOCKED'
+          echo 'CARTERA_020C_REMOTE_DEPLOYMENT=PENDING_EXPLICIT_AUTHORIZATION'
+          echo 'CARTERA_020C_REMOTE_ACCEPTANCE=PENDING'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+          echo 'CARTERA_020C_COMPLETE=NO'
+          echo 'NEXT=EXECUTE_CARTERA_020C_REMOTE_ACCEPTANCE'
