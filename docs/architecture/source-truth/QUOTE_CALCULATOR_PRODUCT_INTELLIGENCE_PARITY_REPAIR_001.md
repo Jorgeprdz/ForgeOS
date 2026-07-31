@@ -157,9 +157,10 @@ M05G dynamically proves that a snapshot without a client name:
 - produces premium self-contained HTML;
 - generates a real PDF binary;
 - reports `PORTRAIT` with width smaller than height;
-- exposes the three compact icon actions and restored History state.
+- exposes the three compact icon actions and restored History state;
+- proves the superseded M05E-004 runtime is absent from the productive entrypoint.
 
-GitHub Actions run 101 passed syntax, QPD-01 through QPD-06, M05E, M05F, M05G and diff integrity before browser acceptance.
+GitHub Actions validates syntax, QPD-01 through QPD-06, M05E, M05F, M05G and diff integrity before browser acceptance.
 
 ## Final browser acceptance
 
