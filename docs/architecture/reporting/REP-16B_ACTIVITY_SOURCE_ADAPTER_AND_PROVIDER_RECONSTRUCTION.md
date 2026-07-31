@@ -1,6 +1,6 @@
 # REP-16B — Activity Source Adapter and Provider Reconstruction
 
-Status: IN VALIDATION
+Status: CLOSED
 Date: 2026-07-31
 Branch: `integration/reporting-source-truth-reconciliation`
 
@@ -51,22 +51,67 @@ Appointments still require domain-owned INITIAL/CLOSING classification.
 
 The provider does not promote quote, presentation, proposal, objection, draft or reply evidence into applications, policies, referrals or appointment outcomes.
 
-## Authority and consistency gates
+Replay identity is scoped by `event_type + idempotency_key`, matching the canonical FES event identity boundary. Equal idempotency keys across different event types are not collapsed.
+
+## CI evidence
 
 ```text
-BOUND_ORGANIZATION_AND_ADVISOR=PASS_REQUIRED
-CANONICAL_AS_OF=PASS_REQUIRED
-BOUND_TIMEZONE_EVALUATION_DATE=PASS_REQUIRED
-CORRECTION_SUPPRESSION=PASS_REQUIRED
-IDEMPOTENT_REPLAY_NO_DOUBLE_COUNT=PASS_REQUIRED
-EVENT_TYPE_SCOPED_IDEMPOTENCY=PASS_REQUIRED
-NO_ZERO_ROW_FABRICATION=PASS_REQUIRED
-CANONICAL_PROVENANCE=PASS_REQUIRED
-UNIVERSAL_PROVIDER_CONTRACT=PASS_REQUIRED
-CORE_REGRESSION=NONE_REQUIRED
-CI=PASS_REQUIRED
+WORKFLOW=Reporting Core Validation
+RUN_ID=30674316609
+RUN_NUMBER=26
+JOB_ID=91298292043
+STATUS=COMPLETED
+CONCLUSION=SUCCESS
+NODE_VERSION=22.23.1
+
+TESTS=230
+PASS=230
+FAIL=0
+CANCELLED=0
+SKIPPED=0
+```
+
+Dedicated coverage added or expanded in this stage:
+
+```text
+EXTENDED_EVENT_MAPPING_CASES=12_PASS
+FES_SOURCE_ADAPTER_CASES=8_PASS
+ACTIVITY_PROVIDER_CASES=7_PASS
+TOTAL_REP_16B_RELEVANT_CASES=27_PASS
+```
+
+Validated behaviors include:
+
+- authority-bound event reads and snapshots;
+- tenant drift rejection;
+- one canonical `asOf`;
+- timezone-local evaluation dates;
+- FES-05B contact and conversation mappings;
+- correction suppression;
+- deterministic replay handling without input-order drift;
+- event-type-scoped idempotency;
+- empty periods without fabricated zero rows;
+- requested-dimension grouping;
+- canonical exclusions and provenance;
+- no event truth, scoring, write, UI or persistence authority.
+
+## Closure result
+
+```text
+BOUND_ORGANIZATION_AND_ADVISOR=PASS
+CANONICAL_AS_OF=PASS
+BOUND_TIMEZONE_EVALUATION_DATE=PASS
+CORRECTION_SUPPRESSION=PASS
+IDEMPOTENT_REPLAY_NO_DOUBLE_COUNT=PASS
+EVENT_TYPE_SCOPED_IDEMPOTENCY=PASS
+NO_ZERO_ROW_FABRICATION=PASS
+CANONICAL_PROVENANCE=PASS
+UNIVERSAL_PROVIDER_CONTRACT=PASS
+CORE_REGRESSION=NONE
+CI=PASS
+REP_16B_COMPLETE=YES
 ```
 
 ```text
-NEXT_AFTER_PASS=REP_16C_ACTIVITY_PROVIDER_UNIVERSAL_RUNTIME_AND_CHART_READY_PROJECTION
+NEXT=REP_16C_ACTIVITY_PROVIDER_UNIVERSAL_RUNTIME_AND_CHART_READY_PROJECTION
 ```
