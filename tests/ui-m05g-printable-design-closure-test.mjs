@@ -24,7 +24,7 @@ const app = read("docs/static-preview/forge-alive-material3/app.js");
 const proof = read("docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html");
 const runtime = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
 const styles = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.css");
-const controller = read("docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js");
+const controller = read("docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e007.js");
 
 const source = {
   packetType: ACCEPTED_QUOTE_SNAPSHOT_TYPE,
