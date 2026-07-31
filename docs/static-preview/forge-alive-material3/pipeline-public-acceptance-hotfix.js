@@ -234,51 +234,74 @@ async function persistStage(root, select) {
   showStatus(root, "Guardando estado…", { persist: true });
 
   try {
-    const service = await getService();
-    assertStageConfirmed({
-      prospect: await service.updateProspect(prospectId, { status: requested }),
-      prospectId,
-      status: requested,
-      phase: "update",
-    });
-    const confirmed = assertStageConfirmed({
-      prospect: await service.getProspect(prospectId),
-      prospectId,
-      status: requested,
-      phase: "read-after-write",
-    });
-    const listed = (await service.listProspects()).find(item => item.id === prospectId);
-    assertStageConfirmed({
-      prospect: listed,
-      prospectId,
-      status: requested,
-      phase: "list",
-    });
+    const pipelineApi = root[Symbol.for("forge.material3.pipeline.state")];
+    let confirmed;
 
-    applyConfirmedStage(card, select, confirmed.status);
-    card.dataset.stagePersistence = "saved";
+    if (typeof pipelineApi?.updateProductiveStage === "function") {
+      confirmed = assertStageConfirmed({
+        prospect: await pipelineApi.updateProductiveStage(prospectId, requested),
+        prospectId,
+        status: requested,
+        phase: "pipeline-authority",
+      });
+    } else {
+      const service = await getService();
+      assertStageConfirmed({
+        prospect: await service.updateProspect(prospectId, { status: requested }),
+        prospectId,
+        status: requested,
+        phase: "update",
+      });
+      confirmed = assertStageConfirmed({
+        prospect: await service.getProspect(prospectId),
+        prospectId,
+        status: requested,
+        phase: "read-after-write",
+      });
+      const listed = (await service.listProspects()).find(item => item.id === prospectId);
+      assertStageConfirmed({
+        prospect: listed,
+        prospectId,
+        status: requested,
+        phase: "list",
+      });
+    }
+
+    const renderedCard = root.querySelector(
+      `${CARD_SELECTOR}[data-productive-prospect-card="${CSS.escape(prospectId)}"]`,
+    );
+    const renderedSelect = renderedCard?.querySelector(STAGE_SELECTOR);
+    if (!renderedCard || !renderedSelect) {
+      const error = new Error("PRODUCTIVE_STAGE_RENDER_TARGET_UNAVAILABLE");
+      error.code = "PRODUCTIVE_STAGE_RENDER_TARGET_UNAVAILABLE";
+      throw error;
+    }
+
+    applyConfirmedStage(renderedCard, renderedSelect, confirmed.status);
+    renderedCard.dataset.stagePersistence = "saved";
     pendingStage = Object.freeze({
       prospectId,
       status: confirmed.status,
-      expiresAt: Date.now() + 12000,
+      expiresAt: Date.now() + 30000,
     });
     showStatus(root, `Estado actualizado a ${STAGE_LABELS[confirmed.status] || confirmed.status}.`);
-    globalThis.dispatchEvent(new CustomEvent("forge:auth-state-changed", {
-      detail: Object.freeze({
-        status: "authenticated",
-        source: "pipeline-public-acceptance-hotfix",
-      }),
-    }));
   } catch (error) {
-    select.value = previous;
-    select.dataset.confirmedStage = previous;
-    select.setAttribute("aria-invalid", "true");
-    card.dataset.stagePersistence = "error";
+    const currentCard = root.querySelector(
+      `${CARD_SELECTOR}[data-productive-prospect-card="${CSS.escape(prospectId)}"]`,
+    ) || card;
+    const currentSelect = currentCard?.querySelector(STAGE_SELECTOR) || select;
+    currentSelect.value = previous;
+    currentSelect.dataset.confirmedStage = previous;
+    currentSelect.setAttribute("aria-invalid", "true");
+    currentCard.dataset.stagePersistence = "error";
     showStatus(root, stageErrorMessage(error), { error: true, persist: true });
   } finally {
-    if (select.isConnected) {
-      select.disabled = false;
-      select.removeAttribute("aria-busy");
+    const currentSelect = root.querySelector(
+      `${CARD_SELECTOR}[data-productive-prospect-card="${CSS.escape(prospectId)}"] ${STAGE_SELECTOR}`,
+    ) || select;
+    if (currentSelect.isConnected) {
+      currentSelect.disabled = false;
+      currentSelect.removeAttribute("aria-busy");
     }
   }
 }
@@ -340,23 +363,40 @@ function installStyles(documentRef) {
       display: none !important;
     }
 
+    .pipeline-module .pipeline-module__productive-card {
+      gap: 8px !important;
+      padding: 13px !important;
+    }
+
     .pipeline-module .pipeline-module__productive-identity {
-      position: relative !important;
-      display: block !important;
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto !important;
+      grid-template-areas:
+        "name name"
+        "stage admin" !important;
+      align-items: center !important;
+      gap: 6px 8px !important;
       min-width: 0 !important;
     }
 
     .pipeline-module .pipeline-module__productive-name {
-      width: 100% !important;
-      min-width: 0 !important;
+      display: contents !important;
     }
 
     .pipeline-module .pipeline-module__productive-name > strong {
+      grid-area: name !important;
       box-sizing: border-box !important;
       display: block !important;
       width: 100% !important;
       min-width: 0 !important;
-      padding-right: 118px !important;
+      padding: 0 !important;
+    }
+
+    .pipeline-module .pipeline-module__identity-actions {
+      grid-area: admin !important;
+      align-self: center !important;
+      justify-self: end !important;
+      gap: 5px !important;
     }
 
     .pipeline-module .pipeline-module__productive-stage {
@@ -364,10 +404,10 @@ function installStyles(documentRef) {
     }
 
     .pipeline-module .pipeline-module__stage-control--compact {
-      position: absolute !important;
-      top: 0 !important;
-      right: 0 !important;
-      z-index: 2 !important;
+      position: static !important;
+      grid-area: stage !important;
+      align-self: center !important;
+      justify-self: start !important;
       width: auto !important;
       min-width: 0 !important;
       margin: 0 !important;
@@ -376,49 +416,44 @@ function installStyles(documentRef) {
     .pipeline-module .pipeline-module__stage-control--compact select {
       box-sizing: border-box !important;
       width: auto !important;
-      min-width: 124px !important;
-      max-width: 156px !important;
-      min-height: 32px !important;
-      height: 32px !important;
+      min-width: 108px !important;
+      max-width: 138px !important;
+      min-height: 34px !important;
+      height: 34px !important;
       margin: 0 !important;
-      padding: 4px 30px 4px 10px !important;
+      padding: 4px 28px 4px 10px !important;
       border-radius: 999px !important;
-      font-size: 10px !important;
+      font-size: 11px !important;
       font-weight: 760 !important;
       line-height: 1 !important;
+    }
+
+    .pipeline-module .pipeline-module__productive-meta,
+    .pipeline-module .pipeline-module__productive-status {
+      gap: 4px !important;
+    }
+
+    .pipeline-module .pipeline-module__productive-status > p {
+      padding: 8px 9px !important;
     }
 
     .pipeline-module .pipeline-module__public-acceptance-status[data-state="error"] {
       color: #ffb4ab !important;
     }
 
-    @media (min-width: 680px) {
-      .pipeline-module .pipeline-module__card-actions {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-      }
+    .pipeline-module .pipeline-module__card-actions {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 6px !important;
+      padding-top: 0 !important;
     }
 
-    @media (max-width: 679px) {
-      .pipeline-module .pipeline-module__card-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .pipeline-module .pipeline-module__productive-identity {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) !important;
-        gap: 8px !important;
-      }
-
-      .pipeline-module .pipeline-module__productive-name > strong {
-        padding-right: 0 !important;
-      }
-
-      .pipeline-module .pipeline-module__stage-control--compact {
-        position: static !important;
-        justify-self: start !important;
-      }
+    .pipeline-module .pipeline-module__card-actions > button,
+    .pipeline-module .pipeline-module__card-actions > a {
+      min-height: 40px !important;
+      padding: 6px 4px !important;
+      font-size: 10px !important;
+      line-height: 1.12 !important;
+      white-space: normal !important;
     }
   `;
   documentRef.head.append(style);
