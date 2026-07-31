@@ -67,9 +67,9 @@ security definer
 set search_path = public, pg_temp
 as $$
 declare
-  authorization jsonb := p_request -> 'authorization';
+  authorization_payload jsonb := p_request -> 'authorization';
   payload jsonb := p_request -> 'identityBatch';
-  supplied_digest text := authorization ->> 'payloadDigest';
+  supplied_digest text := authorization_payload ->> 'payloadDigest';
   expected_digest text;
 begin
   if payload is null or jsonb_typeof(payload) <> 'object' then
@@ -95,9 +95,9 @@ security definer
 set search_path = public, pg_temp
 as $$
 declare
-  authorization jsonb := p_request -> 'authorization';
+  authorization_payload jsonb := p_request -> 'authorization';
   payload jsonb := p_request -> 'composition';
-  supplied_digest text := authorization ->> 'payloadDigest';
+  supplied_digest text := authorization_payload ->> 'payloadDigest';
   expected_digest text;
 begin
   if payload is null or jsonb_typeof(payload) <> 'object' then

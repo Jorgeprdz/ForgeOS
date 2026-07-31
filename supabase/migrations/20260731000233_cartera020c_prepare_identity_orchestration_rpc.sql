@@ -19,7 +19,7 @@ declare
   packet_reference text;
   request_idempotency_key text;
   requested_at timestamptz;
-  authorization jsonb;
+  authorization_payload jsonb;
   authorized_at timestamptz;
   identity_batch jsonb;
   identity_commands jsonb;
@@ -62,12 +62,12 @@ begin
   review_reference := nullif(btrim(p_request ->> 'reviewReference'), '');
   packet_reference := nullif(btrim(p_request ->> 'packetReference'), '');
   request_idempotency_key := nullif(btrim(p_request ->> 'idempotencyKey'), '');
-  authorization := p_request -> 'authorization';
+  authorization_payload := p_request -> 'authorization';
   identity_batch := p_request -> 'identityBatch';
 
   begin
     requested_at := (p_request ->> 'requestedAt')::timestamptz;
-    authorized_at := (authorization ->> 'authorizedAt')::timestamptz;
+    authorized_at := (authorization_payload ->> 'authorizedAt')::timestamptz;
   exception when others then
     raise exception 'CARTERA020C_IDENTITY_EXECUTION_TIME_INVALID';
   end;
@@ -85,20 +85,20 @@ begin
   end if;
 
   if not public.forge_cartera010b_jsonb_keys_allowed(
-       authorization,
+       authorization_payload,
        array[
          'contractType','contractVersion','scope','reviewReference','advisorId',
          'actorReference','authorizedAt','confirmation','payloadDigest'
        ]
      )
-     or authorization ->> 'contractType' <> 'FORGE_CARTERA_020C_EXECUTION_AUTHORIZATION'
-     or authorization ->> 'contractVersion' <> 'CARTERA-020C.3'
-     or authorization ->> 'scope' <> 'IDENTITY_RESOLUTION'
-     or authorization ->> 'reviewReference' <> review_reference
-     or authorization ->> 'advisorId' <> actor_id::text
-     or authorization ->> 'actorReference' <> actor_id::text
-     or authorization ->> 'confirmation' <> 'CONFIRM_IDENTITY_RESOLUTION'
-     or authorization ->> 'payloadDigest' !~ '^[a-f0-9]{64}$' then
+     or authorization_payload ->> 'contractType' <> 'FORGE_CARTERA_020C_EXECUTION_AUTHORIZATION'
+     or authorization_payload ->> 'contractVersion' <> 'CARTERA-020C.3'
+     or authorization_payload ->> 'scope' <> 'IDENTITY_RESOLUTION'
+     or authorization_payload ->> 'reviewReference' <> review_reference
+     or authorization_payload ->> 'advisorId' <> actor_id::text
+     or authorization_payload ->> 'actorReference' <> actor_id::text
+     or authorization_payload ->> 'confirmation' <> 'CONFIRM_IDENTITY_RESOLUTION'
+     or authorization_payload ->> 'payloadDigest' !~ '^[a-f0-9]{64}$' then
     raise exception 'CARTERA020C_IDENTITY_EXECUTION_AUTHORIZATION_INVALID';
   end if;
 

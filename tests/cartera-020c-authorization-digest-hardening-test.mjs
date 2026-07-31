@@ -107,3 +107,18 @@ test('hardening migration remains repository-only and transactional', () => {
   assert.match(migration, /^begin;/m);
   assert.match(migration, /commit;\s*$/);
 });
+
+
+test('PL/pgSQL orchestration migrations avoid reserved authorization identifiers', () => {
+  const paths = [
+    '../supabase/migrations/20260731000233_cartera020c_prepare_identity_orchestration_rpc.sql',
+    '../supabase/migrations/20260731000234_cartera020c_attach_policy_confirmation_rpc.sql',
+    '../supabase/migrations/20260731000238_cartera020c_authorization_digest_hardening.sql',
+  ];
+  for (const path of paths) {
+    const sql = readFileSync(new URL(path, import.meta.url), 'utf8');
+    assert.doesNotMatch(sql, /^\s*authorization\s+jsonb\b/m);
+    assert.doesNotMatch(sql, /^\s*authorization\s*:=/m);
+    assert.match(sql, /authorization_payload/);
+  }
+});
