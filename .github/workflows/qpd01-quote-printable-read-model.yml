@@ -1,4 +1,4 @@
-name: QPD-01 Quote Printable Read Model
+name: QPD Quote Printable Document
 
 on:
   push:
@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  qpd01-contract:
+  qpd-contracts:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -34,10 +34,15 @@ jobs:
       - name: Syntax gate
         run: |
           node --check advisor-os/quotes/printable/quote-printable-read-model.js
+          node --check advisor-os/quotes/printable/quote-printable-document-composer.js
           node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
+          node --check advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
 
-      - name: QPD-01 contract
+      - name: QPD-01 canonical read model
         run: node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
+
+      - name: QPD-02 A4 and Letter composer
+        run: node advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
 
       - name: Diff integrity
         run: git diff --check HEAD^1...HEAD
