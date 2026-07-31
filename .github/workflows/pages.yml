@@ -311,7 +311,11 @@ jobs:
           );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
           assert.match(index, /app\.css\?v=ui-m03-approved-004/);
-          assert.match(index, /app\.js\?v=ui-m04-shell-007/);
+          assert.match(
+            index,
+            /<script type="module" src="\.\/app\.js\?v=[^"]+"><\/script>/,
+            'missing versioned Forge Alive app entry',
+          );
           assert.match(
             pipelineModule,
             /pipeline-referral-modal\.css\?v=ui-m06-referral-004/,
