@@ -6,6 +6,7 @@ const read = (path) => readFileSync(new URL(path, root), "utf8");
 
 const app = read("docs/static-preview/forge-alive-material3/app.js");
 const hotfix = read("docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js");
+const vidaMujerHandoff = read("docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js");
 const printableClosure = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
 const proof = read("docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html");
 const server = read("tools/forge-local-live-server.cjs");
@@ -13,11 +14,13 @@ const cacheEngine = read("exchange-rate-cache-engine.js");
 const staleCache = JSON.parse(read("forge-rate-cache.json"));
 
 assert.match(app, /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/);
+assert.match(app, /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05e-009/);
 assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-006/);
 assert.doesNotMatch(app, /quote-runtime-printable-closure-m05e005\.js/);
 assert.match(app, /quoteCalculatorRuntime = "M05E-006"/);
 assert.match(proof, /CALCULADORAS M05E-006/);
-assert.match(proof, /quote-calculator-parity-006/);
+assert.match(proof, /quote-calculator-parity-009/);
+assert.match(proof, /vidaMujerHandoff = "M05E-009"/);
 
 assert.match(hotfix, /MAX_CACHE_AGE_HOURS = 18/);
 assert.match(hotfix, /MAX_SOURCE_AGE_DAYS = 7/);
@@ -28,6 +31,15 @@ assert.match(hotfix, /ForgeOrviRateProvider = async/);
 assert.match(hotfix, /currentAnnualContributionMxn/);
 assert.match(hotfix, /MXN hoy/);
 assert.match(hotfix, /UDI vigente:/);
+
+assert.match(vidaMujerHandoff, /PRODUCT_FAMILY = "vida_mujer"/);
+assert.match(vidaMujerHandoff, /PRODUCT_INTELLIGENCE_SCHEMA/);
+assert.match(vidaMujerHandoff, /buildVidaMujerProductIntelligence/);
+assert.match(vidaMujerHandoff, /buildQuoteBenefitSummary/);
+assert.match(vidaMujerHandoff, /enrichVidaMujerCalculation/);
+assert.match(vidaMujerHandoff, /enrichVidaMujerSnapshot/);
+assert.match(vidaMujerHandoff, /truth_status: "source_provided"/);
+assert.doesNotMatch(vidaMujerHandoff, /new MutationObserver/);
 
 assert.match(printableClosure, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
 assert.match(printableClosure, /prepareOptionalClient/);
@@ -85,6 +97,7 @@ assert.equal(staleCache.rates.UDI_MXN.value, 8.82994);
 console.log("PASS UI-M05F live UDI and printable UX closure", {
   foundationalRuntime: "M05E-003",
   productiveRuntime: "M05E-006",
+  vidaMujerHandoff: "M05E-009",
   staleFixtureDetected: staleCache.rates.UDI_MXN.date,
   liveRateRefreshRequired: true,
   envJsSupabaseDiscovery: true,
