@@ -60,13 +60,15 @@ test("opening Prospect Detail renders minimized Quote history", async ({ page })
 
   await page.locator(`[data-open-prospect="${prospectReference}"]`).click();
   const section = page.locator("[data-cartera001c-quote-detail]");
+  const card = section.locator(".forge-cartera001c-quote-card");
+  const timeline = section.locator(".forge-cartera001c-timeline");
   await expect(section).toHaveAttribute("data-state", "READY");
   await expect(section.getByRole("heading", { name: "Cotizaciones" })).toBeVisible();
-  await expect(section.getByText("product:orvi")).toBeVisible();
-  await expect(section.getByText("Presentada", { exact: true })).toBeVisible();
-  await expect(section.getByRole("heading", { name: "Actividad de cotización" })).toBeVisible();
-  await expect(section.getByText("Propuesta presentada")).toBeVisible();
-  await expect(section.locator('[data-source-authority="QUOTE_AUTHORITY"]')).toHaveCount(1);
+  await expect(card.getByText("product:orvi", { exact: true })).toBeVisible();
+  await expect(card.getByText("Presentada", { exact: true })).toBeVisible();
+  await expect(timeline.getByRole("heading", { name: "Actividad de cotización" })).toBeVisible();
+  await expect(timeline.getByText("Propuesta presentada", { exact: true })).toBeVisible();
+  await expect(timeline.locator('[data-source-authority="QUOTE_AUTHORITY"]')).toHaveCount(1);
   await expect(section).not.toContainText("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   await expect(section).not.toContainText("Prima");
 
