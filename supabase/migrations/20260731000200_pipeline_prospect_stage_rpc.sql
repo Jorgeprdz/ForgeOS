@@ -70,4 +70,6 @@ to authenticated;
 comment on function public.forge_pipeline_update_prospect_stage(uuid, text) is
   'Authenticated owner-only prospect stage mutation authority. Returns the confirmed prospect row and preserves audit/Timeline triggers.';
 
+notify pgrst, 'reload schema';
+
 commit;
