@@ -140,7 +140,8 @@ test('one Policy projects separate insured, payor and account roles', () => {
         accountsById: new Map([[account.id, account]]),
     });
 
-    assert.deepEqual(item.personReferences.sort(), ['PERSON:001', 'PERSON:002']);
+    assert.equal(Object.isFrozen(item.personReferences), true);
+    assert.deepEqual([...item.personReferences].sort(), ['PERSON:001', 'PERSON:002']);
     assert.deepEqual(item.accountReferences, ['ACCOUNT:FAMILY:001']);
     assert.deepEqual(
         item.generalParticipantSummary.map(entry => entry.roleType).sort(),
