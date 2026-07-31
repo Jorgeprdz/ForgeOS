@@ -47,7 +47,7 @@ test('browser fixture mounts the productive route and never emulates direct Poli
   assert.match(spec, /padding-bottom:calc/);
   assert.match(config, /desktop-chromium/);
   assert.match(config, /mobile-chromium/);
-  assert.match(config, /cartera-010c-remote-browser\.spec\.mjs/);
+  assert.ok(config.includes('cartera-010c-remote-browser\\.spec\\.mjs'));
 });
 
 test('workflow is bounded and uploads both remote and browser evidence', async () => {
