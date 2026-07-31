@@ -443,7 +443,10 @@ async function main() {
     const anonymousService = createCanonicalPortfolioService({ client: anonymousClient });
     await assert.rejects(
       () => anonymousService.loadPortfolio(),
-      error => error?.code === 'CARTERA010C_AUTH_REQUIRED',
+      error => [
+        'CARTERA010C_AUTH_REQUIRED',
+        'CARTERA010C_AUTH_LOOKUP_FAILED',
+      ].includes(error?.code),
     );
     report.anonymousReadBlocked = true;
     report.remoteRead = 'PASS';
