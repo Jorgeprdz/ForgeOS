@@ -24,6 +24,9 @@ const runtimeHotfix = read(
 const printableClosure = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js",
 );
+const vidaMujerHandoff = read(
+  "../docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js",
+);
 
 for (const productAdapter of [
   "forge-imagina-ser-product-dashboard-adapter.js",
@@ -67,6 +70,10 @@ assert.doesNotMatch(adapter, /const\s+CURRENT_UDI\s*=\s*\d/);
 assert.match(moduleSource, /quotes-result-adapter\.js\?v=quote-calculator-parity-001/);
 assert.match(productiveApp, /quotes-module\.js\?v=quote-calculator-parity-006/);
 assert.match(productiveApp, /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/);
+assert.match(
+  productiveApp,
+  /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05e-009/,
+);
 assert.match(productiveApp, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-006/);
 assert.doesNotMatch(productiveApp, /quote-runtime-printable-closure-m05e005\.js/);
 assert.doesNotMatch(
@@ -74,7 +81,9 @@ assert.doesNotMatch(
   /quotes-module-complete\.js\?v=manual-quotes-complete-001/,
 );
 assert.match(productiveApp, /dataset\.quoteCalculatorRuntime = "M05E-006"/);
-assert.match(cacheProofEntrypoint, /app\.js\?v=quote-calculator-parity-006/);
+assert.match(cacheProofEntrypoint, /app\.js\?v=quote-calculator-parity-009/);
+assert.match(cacheProofEntrypoint, /source=quote-calculator-parity-009/);
+assert.match(cacheProofEntrypoint, /vidaMujerHandoff = "M05E-009"/);
 assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-006/);
 assert.match(cacheProofEntrypoint, /cache: "no-store"/);
 assert.match(runtimeHotfix, /MXN hoy/);
@@ -84,9 +93,15 @@ assert.match(printableClosure, /data-m05e005-action="download"/);
 assert.match(printableClosure, /data-m05e005-action="history"/);
 assert.doesNotMatch(printableClosure, /new MutationObserver/);
 assert.doesNotMatch(printableClosure, /"forge:quote-human-review-updated"/);
+assert.match(vidaMujerHandoff, /PRODUCT_FAMILY = "vida_mujer"/);
+assert.match(vidaMujerHandoff, /forge\.product_intelligence\.vida_mujer/);
+assert.match(vidaMujerHandoff, /buildQuoteBenefitSummary/);
+assert.match(vidaMujerHandoff, /enrichVidaMujerSnapshot/);
+assert.doesNotMatch(vidaMujerHandoff, /new MutationObserver/);
 
 console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
   productiveRuntime: "M05E-006",
+  vidaMujerHandoff: "M05E-009",
   products: ["vida_mujer", "segubeca", "orvi", "imagina_ser"],
   mandatoryMetrics: ["sum_assured_udi_mxn", "annual_contribution_udi_mxn"],
   orviPrimarySecondaryMapping: true,
