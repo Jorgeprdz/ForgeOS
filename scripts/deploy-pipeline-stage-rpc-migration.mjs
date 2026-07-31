@@ -2,9 +2,16 @@ import assert from "node:assert/strict";
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const PROJECT_REF = "rmlxigxysujsuwzgoimv";
-const MIGRATION_VERSION = "20260731000200";
-const MIGRATION_NAME = "pipeline_prospect_stage_rpc";
-const MIGRATION_FILE = `supabase/migrations/${MIGRATION_VERSION}_${MIGRATION_NAME}.sql`;
+const RPC_MIGRATION = Object.freeze({
+  version: "20260731000200",
+  name: "pipeline_prospect_stage_rpc",
+});
+const REPAIR_MIGRATION = Object.freeze({
+  version: "20260731000300",
+  name: "pipeline_stage_timeline_digest_search_path_repair",
+});
+const migrationPath = migration =>
+  `supabase/migrations/${migration.version}_${migration.name}.sql`;
 const EVIDENCE_DIR = "artifacts/pipeline-stage-rpc-migration";
 const EVIDENCE_FILE = `${EVIDENCE_DIR}/ledger.jsonl`;
 const ENDPOINT = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query`;
@@ -54,25 +61,32 @@ async function query(sql) {
   return Array.isArray(body?.result) ? body.result : (Array.isArray(body) ? body : []);
 }
 
-const migrationSql = readFileSync(MIGRATION_FILE, "utf8");
-assert.doesNotMatch(migrationSql, /\b(?:drop\s+table|truncate)\b/i, "DESTRUCTIVE_SQL_REJECTED");
-assert.match(migrationSql, /begin;[\s\S]*commit;/i, "TRANSACTION_BOUNDARY_REQUIRED");
-assert.match(migrationSql, /security definer/i, "SECURITY_DEFINER_REQUIRED");
-assert.match(migrationSql, /actor_id := auth\.uid\(\)/, "AUTH_UID_REQUIRED");
-assert.match(migrationSql, /advisor_id = actor_id/, "OWNER_FILTER_REQUIRED");
+const rpcSql = readFileSync(migrationPath(RPC_MIGRATION), "utf8");
+const repairSql = readFileSync(migrationPath(REPAIR_MIGRATION), "utf8");
+
+for (const [name, sql] of [["RPC", rpcSql], ["REPAIR", repairSql]]) {
+  assert.doesNotMatch(sql, /\b(?:drop\s+table|truncate)\b/i, `${name}_DESTRUCTIVE_SQL_REJECTED`);
+  assert.match(sql, /begin;[\s\S]*commit;/i, `${name}_TRANSACTION_BOUNDARY_REQUIRED`);
+}
+assert.match(rpcSql, /security definer/i, "SECURITY_DEFINER_REQUIRED");
+assert.match(rpcSql, /actor_id := auth\.uid\(\)/, "AUTH_UID_REQUIRED");
+assert.match(rpcSql, /advisor_id = actor_id/, "OWNER_FILTER_REQUIRED");
+assert.match(repairSql, /pg_extension[\s\S]*pgcrypto/i, "PGCRYPTO_SCHEMA_DISCOVERY_REQUIRED");
+assert.match(repairSql, /forge_nfast08_capture_pipeline_timeline/i, "CAPTURE_FUNCTION_REPAIR_REQUIRED");
+assert.match(repairSql, /forge_nfast08_append_prospect_timeline_event/i, "APPEND_FUNCTION_REPAIR_REQUIRED");
+assert.match(repairSql, /set search_path = public, %I, pg_temp/i, "RESTRICTED_DYNAMIC_SEARCH_PATH_REQUIRED");
 
 const beforeRows = await query(`
 select
   to_regclass('public.prospects') is not null as prospects_exists,
   to_regprocedure('public.forge_pipeline_update_prospect_stage(uuid,text)') is not null as rpc_exists,
+  to_regprocedure('public.forge_nfast08_capture_pipeline_timeline()') is not null as capture_exists,
+  to_regprocedure('public.forge_nfast08_append_prospect_timeline_event(uuid,text,timestamptz,text,jsonb,jsonb,text)') is not null as append_exists,
   exists (
     select 1
-    from information_schema.role_table_grants
-    where table_schema = 'public'
-      and table_name = 'prospects'
-      and grantee = 'authenticated'
-      and privilege_type in ('SELECT','UPDATE')
-  ) as prospects_authenticated_access,
+    from pg_extension extension
+    where extension.extname = 'pgcrypto'
+  ) as pgcrypto_exists,
   exists (
     select 1
     from public.prospects
@@ -80,23 +94,42 @@ select
   ) as active_prospect_exists
 `);
 const before = beforeRows[0];
-assert.equal(before?.prospects_exists, true, "PROSPECTS_TABLE_MISSING");
-assert.equal(before?.active_prospect_exists, true, "ACTIVE_PROSPECT_REQUIRED_FOR_ROLLBACK_ACCEPTANCE");
+for (const key of [
+  "prospects_exists",
+  "capture_exists",
+  "append_exists",
+  "pgcrypto_exists",
+  "active_prospect_exists",
+]) {
+  assert.equal(before?.[key], true, `PREDEPLOYMENT_${key.toUpperCase()}_FAILED`);
+}
 record("predeployment_inventory", "PASS", {
   rpcState: before.rpc_exists ? "PRESENT" : "ABSENT",
   activeProspectAvailable: true,
 });
 
-await query(migrationSql);
-record("migration_applied", "PASS", { migration: MIGRATION_VERSION });
+await query(rpcSql);
+record("migration_applied", "PASS", { migration: RPC_MIGRATION.version });
+
+await query(repairSql);
+record("timeline_digest_repair_applied", "PASS", {
+  migration: REPAIR_MIGRATION.version,
+});
 
 const contractRows = await query(`
+with pgcrypto_namespace as (
+  select namespace.nspname
+  from pg_extension extension
+  join pg_namespace namespace
+    on namespace.oid = extension.extnamespace
+  where extension.extname = 'pgcrypto'
+)
 select
   to_regprocedure('public.forge_pipeline_update_prospect_stage(uuid,text)') is not null as rpc_exists,
   coalesce((
-    select p.prosecdef
-    from pg_proc p
-    where p.oid = to_regprocedure('public.forge_pipeline_update_prospect_stage(uuid,text)')
+    select procedure.prosecdef
+    from pg_proc procedure
+    where procedure.oid = to_regprocedure('public.forge_pipeline_update_prospect_stage(uuid,text)')
   ), false) as security_definer,
   has_function_privilege(
     'authenticated',
@@ -116,7 +149,23 @@ select
   )) > 0 as checks_owner,
   position('archived_at is null' in pg_get_functiondef(
     to_regprocedure('public.forge_pipeline_update_prospect_stage(uuid,text)')
-  )) > 0 as excludes_archived
+  )) > 0 as excludes_archived,
+  exists (
+    select 1
+    from pg_proc procedure
+    cross join pgcrypto_namespace extension_schema
+    where procedure.oid = to_regprocedure('public.forge_nfast08_capture_pipeline_timeline()')
+      and position(extension_schema.nspname in array_to_string(procedure.proconfig, ',')) > 0
+  ) as capture_has_pgcrypto_search_path,
+  exists (
+    select 1
+    from pg_proc procedure
+    cross join pgcrypto_namespace extension_schema
+    where procedure.oid = to_regprocedure(
+      'public.forge_nfast08_append_prospect_timeline_event(uuid,text,timestamptz,text,jsonb,jsonb,text)'
+    )
+      and position(extension_schema.nspname in array_to_string(procedure.proconfig, ',')) > 0
+  ) as append_has_pgcrypto_search_path
 `);
 const contract = contractRows[0];
 for (const [key, value] of Object.entries(contract || {})) {
@@ -127,10 +176,18 @@ record("postdeployment_security_inventory", "PASS", {
 });
 
 const targetRows = await query(`
-select id, advisor_id, status
-from public.prospects
-where archived_at is null
-order by created_at desc
+select
+  prospect.id,
+  prospect.advisor_id,
+  prospect.status,
+  (
+    select count(*)::integer
+    from public.prospect_timeline_events timeline
+    where timeline.prospect_id = prospect.id
+  ) as timeline_count
+from public.prospects prospect
+where prospect.archived_at is null
+order by prospect.created_at desc
 limit 1
 `);
 const target = targetRows[0];
@@ -148,6 +205,7 @@ do $acceptance$
 declare
   persisted public.prospects%rowtype;
   observed_status text;
+  stage_event_exists boolean;
 begin
   persisted := public.forge_pipeline_update_prospect_stage(
     ${uuid(target.id)},
@@ -164,6 +222,18 @@ begin
   if observed_status is distinct from ${text(alternative)} then
     raise exception 'PIPELINE_STAGE_RPC_READ_AFTER_WRITE_MISMATCH';
   end if;
+
+  select exists (
+    select 1
+    from public.prospect_timeline_events
+    where prospect_id = ${uuid(target.id)}
+      and event_type = 'STAGE_CHANGED'
+      and payload ->> 'toStage' = ${text(alternative)}
+      and occurred_at >= transaction_timestamp()
+  ) into stage_event_exists;
+  if not stage_event_exists then
+    raise exception 'PIPELINE_STAGE_TIMELINE_EVENT_MISSING';
+  end if;
 end;
 $acceptance$;
 rollback;
@@ -171,14 +241,23 @@ select true as rollback_acceptance;
 `);
 
 const rollbackRows = await query(`
-select status = ${text(target.status)} as original_status_preserved
-from public.prospects
-where id = ${uuid(target.id)}
+select
+  prospect.status = ${text(target.status)} as original_status_preserved,
+  (
+    select count(*)::integer
+    from public.prospect_timeline_events timeline
+    where timeline.prospect_id = prospect.id
+  ) = ${Number(target.timeline_count)} as timeline_rollback_preserved
+from public.prospects prospect
+where prospect.id = ${uuid(target.id)}
 `);
 assert.equal(rollbackRows[0]?.original_status_preserved, true, "ROLLBACK_DID_NOT_PRESERVE_ORIGINAL_STATUS");
+assert.equal(rollbackRows[0]?.timeline_rollback_preserved, true, "ROLLBACK_DID_NOT_PRESERVE_TIMELINE");
 record("authenticated_rollback_acceptance", "PASS", {
   mutationPersisted: false,
   originalStatusPreserved: true,
+  timelineEventObservedInsideTransaction: true,
+  timelineRollbackPreserved: true,
 });
 
 const historyRows = await query(`
@@ -199,30 +278,35 @@ select
 `);
 const history = historyRows[0];
 assert.equal(history?.history_exists, true, "MIGRATION_HISTORY_TABLE_MISSING");
-const columns = ["version"];
-const values = [`'${MIGRATION_VERSION}'`];
-if (history.has_name) {
-  columns.push("name");
-  values.push(`'${MIGRATION_NAME}'`);
-}
-if (history.has_statements) {
-  columns.push("statements");
-  values.push("array['Applied by ForgeOS guarded GitHub Actions stage RPC gate']::text[]");
-}
-await query(`
+
+for (const migration of [RPC_MIGRATION, REPAIR_MIGRATION]) {
+  const columns = ["version"];
+  const values = [`'${migration.version}'`];
+  if (history.has_name) {
+    columns.push("name");
+    values.push(`'${migration.name}'`);
+  }
+  if (history.has_statements) {
+    columns.push("statements");
+    values.push("array['Applied by ForgeOS guarded GitHub Actions stage RPC gate']::text[]");
+  }
+  await query(`
 insert into supabase_migrations.schema_migrations (${columns.join(", ")})
 values (${values.join(", ")})
 on conflict (version) do nothing
 `);
-const confirmationRows = await query(`
-select exists (
-  select 1 from supabase_migrations.schema_migrations
-  where version = '${MIGRATION_VERSION}'
-) as migration_recorded
-`);
-assert.equal(confirmationRows[0]?.migration_recorded, true, "MIGRATION_HISTORY_CONFIRMATION_FAILED");
-record("migration_history", "PASS", { migration: MIGRATION_VERSION });
+}
 
-console.log("PIPELINE STAGE RPC MIGRATION: PASS");
-console.log(`MIGRATION_VERSION=${MIGRATION_VERSION}`);
+const confirmationRows = await query(`
+select count(*) = 2 as migrations_recorded
+from supabase_migrations.schema_migrations
+where version in ('${RPC_MIGRATION.version}', '${REPAIR_MIGRATION.version}')
+`);
+assert.equal(confirmationRows[0]?.migrations_recorded, true, "MIGRATION_HISTORY_CONFIRMATION_FAILED");
+record("migration_history", "PASS", {
+  migrations: [RPC_MIGRATION.version, REPAIR_MIGRATION.version],
+});
+
+console.log("PIPELINE STAGE RPC + TIMELINE DIGEST REPAIR: PASS");
+console.log(`MIGRATION_VERSION=${REPAIR_MIGRATION.version}`);
 console.log(`PROJECT_REF=${PROJECT_REF}`);

@@ -117,7 +117,7 @@ test("visual diagnostic seam persists through its PostgREST-shaped store without
   }
 });
 
-test("runtime loads the RPC authority before the historic acceptance hotfix", async () => {
+test("runtime and database authorities close the complete stage transition path", async () => {
   const app = await readFile(
     "docs/static-preview/forge-alive-material3/app.js",
     "utf8",
@@ -130,6 +130,14 @@ test("runtime loads the RPC authority before the historic acceptance hotfix", as
     "supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql",
     "utf8",
   );
+  const timelineRepair = await readFile(
+    "supabase/migrations/20260731000300_pipeline_stage_timeline_digest_search_path_repair.sql",
+    "utf8",
+  );
+  const deployer = await readFile(
+    "scripts/deploy-pipeline-stage-rpc-migration.mjs",
+    "utf8",
+  );
 
   const rpcImport = app.indexOf("pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-001");
   const oldHotfixImport = app.indexOf("pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003");
@@ -139,6 +147,7 @@ test("runtime loads the RPC authority before the historic acceptance hotfix", as
   assert.match(authority, /event\.stopImmediatePropagation\(\)/);
   assert.match(authority, /forge_pipeline_update_prospect_stage/);
   assert.match(authority, /globalThis\.__ENV__\?\.diagnostic === true/);
+  assert.match(authority, /__FORGE_DIAGNOSTIC_AUTHENTICATED__/);
   assert.match(authority, /forge:auth-state-changed/);
   assert.match(authority, /PIPELINE_STAGE_RENDER_RECONCILIATION_TIMEOUT/);
 
@@ -148,4 +157,16 @@ test("runtime loads the RPC authority before the historic acceptance hotfix", as
   assert.match(migration, /archived_at is null/);
   assert.match(migration, /notify pgrst, 'reload schema'/i);
   assert.match(migration, /grant execute[\s\S]*to authenticated/i);
+
+  assert.match(timelineRepair, /pg_extension[\s\S]*pgcrypto/i);
+  assert.match(timelineRepair, /forge_nfast08_capture_pipeline_timeline\(\)/i);
+  assert.match(timelineRepair, /forge_nfast08_append_prospect_timeline_event/i);
+  assert.match(timelineRepair, /set search_path = public, %I, pg_temp/i);
+  assert.doesNotMatch(timelineRepair, /drop\s+table|truncate/i);
+
+  assert.match(deployer, /timeline_digest_repair_applied/);
+  assert.match(deployer, /PIPELINE_STAGE_TIMELINE_EVENT_MISSING/);
+  assert.match(deployer, /timeline_rollback_preserved/);
+  assert.match(deployer, /capture_has_pgcrypto_search_path/);
+  assert.match(deployer, /append_has_pgcrypto_search_path/);
 });
