@@ -11,6 +11,7 @@ const HOST = process.env.FORGE_UI_HOST || "127.0.0.1";
 const PORT = Number(process.env.FORGE_UI_PORT || 4173);
 const REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
 const BANXICO_EDGE_FUNCTION_NAME = "banxico-rates";
+const QUOTE_RUNTIME = "M05E-005";
 const LIVE_RATE_CACHE_FILE = process.env.FORGE_RATE_CACHE_FILE || path.join(
   os.homedir(),
   ".cache",
@@ -239,6 +240,7 @@ async function main() {
     console.log(`UDI_MXN=${udi.value}`);
     console.log(`UDI_DATE=${udi.date}`);
     console.log(`UDI_SOURCE=${udi.source}`);
+    console.log(`RUNTIME=${QUOTE_RUNTIME}`);
   });
 
   const refreshTimer = setInterval(() => {
