@@ -39,10 +39,13 @@ function sendJson(response, status, payload) {
 function publicError(error) {
   const message = error?.message || String(error);
   if (/BANXICO_TOKEN/.test(message)) {
-    return "No hay proveedor Banxico configurado. Falta env.js con Supabase o BANXICO_TOKEN local.";
+    return "No hay proveedor Banxico configurado. Falta configuración Supabase o BANXICO_TOKEN local.";
   }
-  if (/404|not found/i.test(message) && /supabase/i.test(message)) {
-    return "La función Supabase banxico-rates no está desplegada o la URL del proyecto es incorrecta.";
+  if (/401|403|unauthorized|jwt/i.test(message)) {
+    return "La función Supabase banxico-rates requiere la anon key pública y env.js no la contiene.";
+  }
+  if (/404|not found/i.test(message)) {
+    return "La función Supabase banxico-rates no está desplegada en el proyecto configurado.";
   }
   return message.replace(/[a-f0-9]{48,}/gi, "[secret-redacted]");
 }
@@ -59,6 +62,37 @@ function parsePublicEnvJs(source) {
   }
 }
 
+function discoverSupabaseUrlFromPagesWorkflow() {
+  const candidates = [
+    path.join(ROOT, ".github", "workflows", "pages.yml"),
+    path.join(ROOT, ".github", "workflows", "pages.yaml"),
+  ];
+
+  for (const workflowPath of candidates) {
+    if (!fs.existsSync(workflowPath)) continue;
+    const source = fs.readFileSync(workflowPath, "utf8");
+    const match = source.match(/([a-z0-9]{10,})\.supabase\.co/i);
+    if (match) return `https://${match[1]}.supabase.co`;
+  }
+
+  return null;
+}
+
+function configureSupabaseProvider({ supabaseUrl, anonKey, source }) {
+  const normalizedUrl = String(supabaseUrl || "").trim().replace(/\/+$/, "");
+  if (!normalizedUrl) {
+    return Object.freeze({ configured: false, source, url: null });
+  }
+
+  const edgeUrl = `${normalizedUrl}/functions/v1/${BANXICO_EDGE_FUNCTION_NAME}`;
+  process.env.SUPABASE_BANXICO_RATES_URL = edgeUrl;
+  if (anonKey && !process.env.SUPABASE_ANON_KEY) {
+    process.env.SUPABASE_ANON_KEY = anonKey;
+  }
+
+  return Object.freeze({ configured: true, source, url: edgeUrl });
+}
+
 function loadPublicMarketProviderFromEnvJs() {
   if (process.env.SUPABASE_BANXICO_RATES_URL) {
     return Object.freeze({
@@ -69,36 +103,37 @@ function loadPublicMarketProviderFromEnvJs() {
   }
 
   const envPath = path.join(ROOT, "env.js");
-  if (!fs.existsSync(envPath)) {
-    return Object.freeze({
-      configured: false,
-      source: "ENV_JS_NOT_FOUND",
-      url: null,
+  const config = fs.existsSync(envPath)
+    ? parsePublicEnvJs(fs.readFileSync(envPath, "utf8"))
+    : null;
+  const envSupabaseUrl = String(config?.SUPABASE_URL || "").trim();
+  const anonKey = String(
+    config?.SUPABASE_KEY || config?.SUPABASE_ANON_KEY || "",
+  ).trim();
+
+  if (envSupabaseUrl) {
+    return configureSupabaseProvider({
+      supabaseUrl: envSupabaseUrl,
+      anonKey,
+      source: "ENV_JS",
     });
   }
 
-  const config = parsePublicEnvJs(fs.readFileSync(envPath, "utf8"));
-  const supabaseUrl = String(config?.SUPABASE_URL || "").trim().replace(/\/+$/, "");
-  const anonKey = String(config?.SUPABASE_KEY || config?.SUPABASE_ANON_KEY || "").trim();
-
-  if (!supabaseUrl) {
-    return Object.freeze({
-      configured: false,
-      source: "ENV_JS_SUPABASE_URL_MISSING",
-      url: null,
+  const workflowSupabaseUrl = discoverSupabaseUrlFromPagesWorkflow();
+  if (workflowSupabaseUrl) {
+    return configureSupabaseProvider({
+      supabaseUrl: workflowSupabaseUrl,
+      anonKey,
+      source: "PAGES_WORKFLOW",
     });
-  }
-
-  const edgeUrl = `${supabaseUrl}/functions/v1/${BANXICO_EDGE_FUNCTION_NAME}`;
-  process.env.SUPABASE_BANXICO_RATES_URL = edgeUrl;
-  if (anonKey && !process.env.SUPABASE_ANON_KEY) {
-    process.env.SUPABASE_ANON_KEY = anonKey;
   }
 
   return Object.freeze({
-    configured: true,
-    source: "ENV_JS",
-    url: edgeUrl,
+    configured: false,
+    source: fs.existsSync(envPath)
+      ? "ENV_JS_SUPABASE_URL_MISSING"
+      : "ENV_JS_NOT_FOUND",
+    url: null,
   });
 }
 
@@ -151,7 +186,10 @@ async function serveFile(request, response) {
 }
 
 async function handler(request, response) {
-  const pathname = new URL(request.url || "/", `http://${request.headers.host || `${HOST}:${PORT}`}`).pathname;
+  const pathname = new URL(
+    request.url || "/",
+    `http://${request.headers.host || `${HOST}:${PORT}`}`,
+  ).pathname;
   if (pathname === "/api/forge-market-rates") {
     try {
       sendJson(response, 200, await currentRates());
@@ -197,9 +235,13 @@ async function main() {
     void currentRates({ forceRefresh: true })
       .then((result) => {
         const refreshed = result.rates?.UDI_MXN;
-        console.log(`UDI_REFRESHED=${refreshed?.date || "unknown"}:${refreshed?.value || "blocked"}`);
+        console.log(
+          `UDI_REFRESHED=${refreshed?.date || "unknown"}:${refreshed?.value || "blocked"}`,
+        );
       })
-      .catch((error) => console.error(`UDI_REFRESH_FAILED=${publicError(error)}`));
+      .catch((error) =>
+        console.error(`UDI_REFRESH_FAILED=${publicError(error)}`),
+      );
   }, REFRESH_INTERVAL_MS);
   refreshTimer.unref?.();
 
