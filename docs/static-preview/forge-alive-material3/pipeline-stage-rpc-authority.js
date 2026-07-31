@@ -74,15 +74,56 @@ function normalizeRpcProspect(data) {
   });
 }
 
-export async function requestStageTransition({ client, prospectId, status }) {
-  if (!client?.rpc) {
-    const error = new Error("PIPELINE_STAGE_RPC_CLIENT_UNAVAILABLE");
-    error.code = "PIPELINE_STAGE_RPC_CLIENT_UNAVAILABLE";
+function isDiagnosticRuntime() {
+  return globalThis.__ENV__?.diagnostic === true;
+}
+
+async function requestDiagnosticStageTransition({ client, prospectId, status }) {
+  if (!client?.from) {
+    const error = new Error("PIPELINE_STAGE_DIAGNOSTIC_STORE_UNAVAILABLE");
+    error.code = "PIPELINE_STAGE_DIAGNOSTIC_STORE_UNAVAILABLE";
     throw error;
   }
+
+  const { data, error } = await client
+    .from("prospects")
+    .update({
+      status,
+      updated_by: "diagnostic-advisor",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", prospectId)
+    .is("archived_at", null)
+    .select("*")
+    .single();
+  if (error) throw error;
+
+  const prospect = normalizeRpcProspect(data);
+  if (prospect?.id !== prospectId || prospect?.status !== status) {
+    const mismatch = new Error("PIPELINE_STAGE_DIAGNOSTIC_CONFIRMATION_MISMATCH");
+    mismatch.code = "PIPELINE_STAGE_DIAGNOSTIC_CONFIRMATION_MISMATCH";
+    throw mismatch;
+  }
+  return prospect;
+}
+
+export async function requestStageTransition({ client, prospectId, status }) {
   if (!prospectId || !ALLOWED_STAGES.has(status)) {
     const error = new Error("PIPELINE_STAGE_NOT_ALLOWED");
     error.code = "PIPELINE_STAGE_NOT_ALLOWED";
+    throw error;
+  }
+
+  // The visual diagnostic owns an in-memory PostgREST-shaped store and has no
+  // deployed database function. This seam is unreachable in public/runtime
+  // configuration; production remains RPC-only and fail-closed.
+  if (isDiagnosticRuntime()) {
+    return requestDiagnosticStageTransition({ client, prospectId, status });
+  }
+
+  if (!client?.rpc) {
+    const error = new Error("PIPELINE_STAGE_RPC_CLIENT_UNAVAILABLE");
+    error.code = "PIPELINE_STAGE_RPC_CLIENT_UNAVAILABLE";
     throw error;
   }
 
@@ -261,5 +302,7 @@ if (
 export {
   ALLOWED_STAGES,
   STAGE_LABELS,
+  isDiagnosticRuntime,
   normalizeRpcProspect,
+  requestDiagnosticStageTransition,
 };
