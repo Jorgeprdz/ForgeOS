@@ -1,0 +1,288 @@
+[data-forge-qpd06-actions="true"] {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--md-sys-color-surface-container, #f4f4f4) 94%, transparent),
+      color-mix(in srgb, var(--md-sys-color-surface-container-high, #ececec) 88%, transparent));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+[data-forge-qpd06-actions="true"][hidden] {
+  display: none !important;
+}
+
+.forge-qpd06__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.forge-qpd06__header > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.forge-qpd06__header strong {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.forge-qpd06__header span,
+.forge-qpd06__header label,
+[data-forge-qpd06-status="true"] {
+  color: var(--md-sys-color-on-surface-variant, #555);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.forge-qpd06__header label {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 7rem;
+  font-weight: 700;
+}
+
+[data-forge-qpd06-format="true"] {
+  min-height: 2.7rem;
+  padding: 0 0.75rem;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 0.85rem;
+  background: var(--md-sys-color-surface, #fff);
+  color: inherit;
+  font: inherit;
+}
+
+.forge-qpd06__actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.forge-qpd06__actions button,
+.forge-qpd06-history__item button {
+  min-height: 3rem;
+}
+
+[data-forge-qpd06-status="true"] {
+  min-height: 1.15rem;
+  margin: 0;
+}
+
+[data-forge-qpd06-status="true"][data-tone="success"],
+[data-forge-qpd06-modal-status][data-tone="success"] {
+  color: var(--md-sys-color-primary, #146c60);
+}
+
+[data-forge-qpd06-status="true"][data-tone="warning"],
+[data-forge-qpd06-modal-status][data-tone="warning"] {
+  color: var(--md-sys-color-tertiary, #775a00);
+}
+
+[data-forge-qpd06-status="true"][data-tone="error"],
+[data-forge-qpd06-modal-status][data-tone="error"] {
+  color: var(--md-sys-color-error, #ba1a1a);
+}
+
+[data-forge-qpd06-modal="true"] {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding:
+    max(1rem, env(safe-area-inset-top))
+    max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom))
+    max(1rem, env(safe-area-inset-left));
+}
+
+[data-forge-qpd06-modal="true"][hidden] {
+  display: none !important;
+}
+
+.forge-qpd06-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 14, 22, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.forge-qpd06-modal__dialog {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(1180px, 100%);
+  height: min(92dvh, 900px);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, white 18%, transparent);
+  border-radius: 1.5rem;
+  background: var(--md-sys-color-surface, #fff);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.38);
+}
+
+.forge-qpd06-modal__dialog > header,
+.forge-qpd06-modal__dialog > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  background: var(--md-sys-color-surface-container, #f3f3f3);
+}
+
+.forge-qpd06-modal__dialog > header {
+  border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.forge-qpd06-modal__dialog > footer {
+  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.forge-qpd06-modal__dialog h2 {
+  margin: 0.1rem 0 0;
+  font-size: clamp(1.1rem, 2.2vw, 1.55rem);
+}
+
+.forge-qpd06-modal__eyebrow {
+  color: var(--md-sys-color-primary, #146c60);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.forge-qpd06-modal__close {
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  color: inherit;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+
+.forge-qpd06-modal__body {
+  min-height: 0;
+  overflow: hidden;
+  background: #d9dde3;
+}
+
+[data-forge-qpd06-preview-frame] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: white;
+}
+
+[data-forge-qpd06-preview-frame][hidden],
+[data-forge-qpd06-history-list][hidden] {
+  display: none !important;
+}
+
+[data-forge-qpd06-history-list] {
+  height: 100%;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.forge-qpd06-history__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 auto 0.75rem;
+  padding: 1rem;
+  max-width: 760px;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 1rem;
+  background: var(--md-sys-color-surface, #fff);
+}
+
+.forge-qpd06-history__item > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.forge-qpd06-history__item span,
+.forge-qpd06-history__item small,
+.forge-qpd06-history__empty span {
+  color: var(--md-sys-color-on-surface-variant, #555);
+}
+
+.forge-qpd06-history__empty {
+  display: grid;
+  place-content: center;
+  gap: 0.4rem;
+  min-height: 15rem;
+  text-align: center;
+}
+
+[data-forge-qpd06-modal-status] {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+body.forge-qpd06-modal-open {
+  overflow: hidden;
+}
+
+@media (max-width: 720px) {
+  [data-forge-qpd06-actions="true"] {
+    padding: 0.9rem;
+    margin-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  }
+
+  .forge-qpd06__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .forge-qpd06__actions {
+    grid-template-columns: 1fr;
+  }
+
+  [data-forge-qpd06-modal="true"] {
+    align-items: end;
+    padding: 0;
+  }
+
+  .forge-qpd06-modal__dialog {
+    width: 100%;
+    height: calc(100dvh - max(0.5rem, env(safe-area-inset-top)));
+    border-radius: 1.4rem 1.4rem 0 0;
+  }
+
+  .forge-qpd06-modal__dialog > header,
+  .forge-qpd06-modal__dialog > footer {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .forge-qpd06-modal__dialog > footer {
+    align-items: stretch;
+    flex-direction: column;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  .forge-qpd06-history__item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-forge-qpd06-modal="true"],
+  .forge-qpd06-modal__dialog {
+    scroll-behavior: auto;
+  }
+}
