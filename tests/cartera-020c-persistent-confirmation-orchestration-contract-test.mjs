@@ -10,10 +10,17 @@ const guards = readFileSync(
   new URL('../supabase/migrations/20260731000231_cartera020c_confirmation_orchestration_guards_rls.sql', import.meta.url),
   'utf8'
 );
-const rpcs = readFileSync(
-  new URL('../supabase/migrations/20260731000232_cartera020c_confirmation_orchestration_rpcs.sql', import.meta.url),
+const rpcs = [
+  '20260731000232_cartera020c_confirmation_orchestration_helpers.sql',
+  '20260731000233_cartera020c_prepare_identity_orchestration_rpc.sql',
+  '20260731000234_cartera020c_attach_policy_confirmation_rpc.sql',
+  '20260731000235_cartera020c_confirmation_failure_retry_helpers.sql',
+  '20260731000236_cartera020c_execute_confirmation_step_rpc.sql',
+  '20260731000237_cartera020c_confirmation_status_retry_grants.sql',
+].map((filename) => readFileSync(
+  new URL(`../supabase/migrations/${filename}`, import.meta.url),
   'utf8'
-);
+)).join('\n');
 const service = readFileSync(
   new URL('../advisor-os/cartera/persistent-confirmation-orchestration-service.js', import.meta.url),
   'utf8'
