@@ -40,7 +40,7 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
 
-          allowed='^(schemas/(commercial-person-v1|commercial-account-v1|policy-v2|policy-role-v1)\.schema\.json|platform/shared-commercial-model/cartera-010b-contract-validator\.js|supabase/migrations/202607310002(00_cartera010b_identity_policy_foundation|10_cartera010b_command_helpers|11_cartera010b_identity_resolution_rpc|12_cartera010b_confirmed_policy_rpc)\.sql|tests/cartera-010b-(contract-foundation|governed-command-rpc)-test\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010B_(PERSISTENCE_FOUNDATION_PROGRESS_001|GOVERNED_COMMAND_RPCS_PROGRESS_002)\.md|\.github/workflows/cartera-010b-foundation\.yml)$'
+          allowed='^(schemas/(commercial-person-v1|commercial-account-v1|policy-v2|policy-role-v1)\.schema\.json|platform/shared-commercial-model/cartera-010b-contract-validator\.js|supabase/migrations/202607310002(00_cartera010b_identity_policy_foundation|10_cartera010b_command_helpers|11_cartera010b_identity_resolution_rpc|12_cartera010b_confirmed_policy_rpc|13_cartera010b_identity_resolution_precedence_hardening|14_cartera010b_conflict_insert_ambiguity_hardening|15_cartera010b_general_policy_role_read_authority)\.sql|scripts/ci/cartera-010b-[A-Za-z0-9._-]+\.(mjs|sql)|tests/cartera-010b-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010B_(PERSISTENCE_FOUNDATION_PROGRESS_001|GOVERNED_COMMAND_RPCS_PROGRESS_002)\.md|docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|\.github/workflows/cartera-010b-(foundation|remote-acceptance)\.yml)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -54,22 +54,34 @@ jobs:
           echo 'PRODUCT_UI_DIFF=NONE'
 
       - name: JavaScript syntax gate
+        shell: bash
         run: |
+          set -euo pipefail
           node --check platform/shared-commercial-model/cartera-010b-contract-validator.js
-          node --check tests/cartera-010b-contract-foundation-test.mjs
-          node --check tests/cartera-010b-governed-command-rpc-test.mjs
+          for file in scripts/ci/cartera-010b-*.mjs tests/cartera-010b-*.mjs; do
+            node --check "$file"
+          done
 
-      - name: Execute 010B foundation tests
+      - name: Execute complete 010B tests
+        run: node --test tests/cartera-010b-*.mjs
+
+      - name: Verify integrated remote closure evidence
+        shell: bash
         run: |
-          node --test \
-            tests/cartera-010b-contract-foundation-test.mjs \
-            tests/cartera-010b-governed-command-rpc-test.mjs
+          set -euo pipefail
+          closure=docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_CLOSURE_001.md
+          test -f "$closure"
+          grep -q 'CARTERA_010B_REMOTE_DEPLOYMENT=PASS' "$closure"
+          grep -q 'CARTERA_010B_REMOTE_ACCEPTANCE=PASS' "$closure"
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$closure"
+          grep -q 'RESIDUAL_FIXTURES=0' "$closure"
 
-      - name: Emit progress markers
+      - name: Emit closure markers
         run: |
           echo 'CARTERA_010B_CONTRACT_VALIDATORS=PASS'
           echo 'CARTERA_010B_PERSISTENCE_FOUNDATION=REPOSITORY_READY'
           echo 'CARTERA_010B_GOVERNED_COMMAND_RPCS=REPOSITORY_READY'
-          echo 'CARTERA_010B_REMOTE_DEPLOYMENT=NOT_AUTHORIZED'
-          echo 'CARTERA_010B_COMPLETE=NO'
-          echo 'NEXT=CARTERA_010B_REMOTE_DEPLOYMENT_AND_TRANSACTIONAL_ACCEPTANCE'
+          echo 'CARTERA_010B_REMOTE_DEPLOYMENT=PASS_FROM_ACCEPTED_CLOSURE'
+          echo 'CARTERA_010B_REMOTE_ACCEPTANCE=PASS_FROM_ACCEPTED_CLOSURE'
+          echo 'CARTERA_010B_COMPLETE=YES'
+          echo 'NEXT=CARTERA_010C'
