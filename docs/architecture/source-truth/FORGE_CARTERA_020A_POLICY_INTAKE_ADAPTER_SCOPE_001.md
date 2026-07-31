@@ -1,7 +1,7 @@
 # FORGE CARTERA 020A — POLICY INTAKE ADAPTER SCOPE 001
 
-Forge OS  
-Architecture Source Truth  
+Forge OS
+Architecture Source Truth
 Cartera / Document Intake and Identity Resolution
 
 ## Status
@@ -21,6 +21,7 @@ SOURCE_BRANCH=feature/cartera-010b-commercial-person-policy-role-foundation
 SOURCE_COMMIT=e8eebac5c8215a25fc918e8d46c1a30034b0e3da
 IMPLEMENTATION_BRANCH=docs/cartera-020a-policy-intake-adapter-scope
 CANONICAL_SOURCE_TRUTH=FORGE_CARTERA_FINAL_RECONCILIATION_AND_BUILD_ONLY_QUEUE_LOCK_006.md
+INHERITED_010D_GATE_RETIREMENT=BOUNDED
 SCHEMA_MUTATION=NO
 SUPABASE_REMOTE_MUTATION=NO
 RUNTIME_MUTATION=NO
@@ -235,10 +236,10 @@ Parser resolution must use declared dimensions:
 
 ```text
 carrier
- documentType
- product
- parserId
- parserVersion
+documentType
+product
+parserId
+parserVersion
 ```
 
 Resolution outcomes:
@@ -464,6 +465,7 @@ CONFIRMED_POLICY_COMMAND_BYPASS=FORBIDDEN
 PRIVACY_AND_RLS_BOUNDARY=LOCKED
 020B_ALLOWED_PATH_ROOTS=LOCKED
 020B_REQUIRED_TESTS=LOCKED
+INHERITED_010D_GATE_RETIREMENT=BOUNDED
 SCHEMA_MUTATION=NO
 SUPABASE_REMOTE_MUTATION=NO
 RUNTIME_MUTATION=NO
