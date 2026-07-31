@@ -12,6 +12,14 @@ const legacyBase = new URL(sourceLayout ? "../forge-alive/" : "../forge-alive-ru
 const advisorBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
 const loadAuthority = async (base, path) => import(new URL(path, base));
 
+if (!document.querySelector("[data-pipeline-prospect-admin-styles]")) {
+  const adminStyles = document.createElement("link");
+  adminStyles.rel = "stylesheet";
+  adminStyles.href = new URL("pipeline-prospect-admin.css?v=pipeline-prospect-admin-001", import.meta.url);
+  adminStyles.dataset.pipelineProspectAdminStyles = "true";
+  document.head.append(adminStyles);
+}
+
 await loadAuthority(envBase, "env.js");
 await loadAuthority(legacyBase, "forge-alive-public-config-067g17a1.js");
 await loadAuthority(advisorBase, "productive-prospect-bootstrap.js");
