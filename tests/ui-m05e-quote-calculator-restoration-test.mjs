@@ -21,11 +21,17 @@ const cacheProofEntrypoint = read(
 const runtimeHotfix = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js",
 );
+const pagesRateBridge = read(
+  "../docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js",
+);
 const printableClosure = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js",
 );
 const vidaMujerHandoff = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js",
+);
+const vidaMujerVisual = read(
+  "../docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js",
 );
 
 for (const productAdapter of [
@@ -69,24 +75,49 @@ assert.doesNotMatch(adapter, /const\s+CURRENT_UDI\s*=\s*\d/);
 
 assert.match(moduleSource, /quotes-result-adapter\.js\?v=quote-calculator-parity-001/);
 assert.match(productiveApp, /quotes-module\.js\?v=quote-calculator-parity-006/);
-assert.match(productiveApp, /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/);
+assert.match(
+  productiveApp,
+  /quote-runtime-pages-rate-fetch-bridge-m05e010\.js\?v=m05e-010/,
+);
+assert.match(
+  productiveApp,
+  /quote-runtime-hotfix-m05e003\.js\?v=m05e-010-pages-rate/,
+);
 assert.match(
   productiveApp,
   /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05e-009/,
 );
-assert.match(productiveApp, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-006/);
+assert.match(
+  productiveApp,
+  /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05e-010/,
+);
+assert.match(
+  productiveApp,
+  /quote-runtime-printable-closure-m05e006\.js\?v=m05e-010-landscape/,
+);
 assert.doesNotMatch(productiveApp, /quote-runtime-printable-closure-m05e005\.js/);
 assert.doesNotMatch(
   productiveApp,
   /quotes-module-complete\.js\?v=manual-quotes-complete-001/,
 );
 assert.match(productiveApp, /dataset\.quoteCalculatorRuntime = "M05E-006"/);
+assert.match(productiveApp, /dataset\.vidaMujerVisualClosure = "M05E-010"/);
+assert.ok(
+  productiveApp.indexOf('await loadAuthority(envBase, "env.js")') <
+  productiveApp.indexOf("quote-runtime-pages-rate-fetch-bridge-m05e010.js"),
+);
+assert.ok(
+  productiveApp.indexOf("quote-runtime-pages-rate-fetch-bridge-m05e010.js") <
+  productiveApp.indexOf("quote-runtime-hotfix-m05e003.js"),
+);
 assert.match(cacheProofEntrypoint, /app\.js\?v=quote-calculator-parity-009/);
 assert.match(cacheProofEntrypoint, /source=quote-calculator-parity-009/);
 assert.match(cacheProofEntrypoint, /vidaMujerHandoff = "M05E-009"/);
 assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-006/);
 assert.match(cacheProofEntrypoint, /cache: "no-store"/);
 assert.match(runtimeHotfix, /MXN hoy/);
+assert.match(pagesRateBridge, /functions\/v1\/banxico-rates/);
+assert.match(pagesRateBridge, /cacheStatus: "LIVE_REFRESHED"/);
 assert.match(printableClosure, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
 assert.match(printableClosure, /data-m05e005-action="preview"/);
 assert.match(printableClosure, /data-m05e005-action="download"/);
@@ -98,14 +129,23 @@ assert.match(vidaMujerHandoff, /forge\.product_intelligence\.vida_mujer/);
 assert.match(vidaMujerHandoff, /buildQuoteBenefitSummary/);
 assert.match(vidaMujerHandoff, /enrichVidaMujerSnapshot/);
 assert.doesNotMatch(vidaMujerHandoff, /new MutationObserver/);
+assert.match(vidaMujerVisual, /Total aportado/);
+assert.match(vidaMujerVisual, /total-contributed/);
+assert.doesNotMatch(vidaMujerVisual, /MutationObserver/);
 
 console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
   productiveRuntime: "M05E-006",
   vidaMujerHandoff: "M05E-009",
+  vidaMujerVisualClosure: "M05E-010",
   products: ["vida_mujer", "segubeca", "orvi", "imagina_ser"],
-  mandatoryMetrics: ["sum_assured_udi_mxn", "annual_contribution_udi_mxn"],
+  mandatoryMetrics: [
+    "sum_assured_udi_mxn",
+    "annual_contribution_udi_mxn",
+    "vida_mujer_total_contributed_udi_mxn",
+  ],
   orviPrimarySecondaryMapping: true,
   verifiedDailyUdiConversion: true,
+  pagesRateAuthority: true,
   imaginaScenarios: ["base", "favorable", "unfavorable"],
   actionsWired: true,
   printableRefreshWired: true,
