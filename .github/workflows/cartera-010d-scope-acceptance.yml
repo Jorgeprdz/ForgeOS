@@ -62,6 +62,7 @@ jobs:
           set -euo pipefail
           node --check platform/policy-intelligence/cartera-010d-unified-directory-read-model.js
           node --check advisor-os/cartera/canonical-directory-service.js
+          node --check cartera.js
           for file in tests/cartera-010d-*.mjs; do
             node --check "$file"
           done
@@ -69,12 +70,13 @@ jobs:
       - name: Execute CARTERA 010D repository acceptance
         run: node --test tests/cartera-010d-*.mjs
 
-      - name: Verify privacy and authority boundaries
+      - name: Verify privacy, authority and route boundaries
         shell: bash
         run: |
           set -euo pipefail
           service=advisor-os/cartera/canonical-directory-service.js
           model=platform/policy-intelligence/cartera-010d-unified-directory-read-model.js
+          route=cartera.js
           scope=docs/architecture/source-truth/FORGE_CARTERA_010D_UNIFIED_DIRECTORY_RELATIONSHIP_SEARCH_SCOPE_001.md
 
           grep -q 'forge_cartera010b_list_general_policy_roles' "$service"
@@ -85,14 +87,25 @@ jobs:
           grep -q 'VERIFIED_EMAIL' "$model"
           grep -q 'PHONE_RENDERED=NO' "$scope"
           grep -q 'EMAIL_RENDERED=NO' "$scope"
+          grep -q 'createCanonicalDirectoryService' "$route"
+          grep -q 'directoryService.loadDirectory' "$route"
+          grep -q 'data-directory-reference' "$route"
+          grep -q 'data-directory-kind' "$route"
+          grep -q 'data-policy-open' "$route"
+          grep -q 'Timeline canónico minimizado' "$route"
+          grep -q 'safe-area-inset-bottom' "$route"
+          ! grep -q 'entry.verified_phone' "$route"
+          ! grep -q 'entry.verified_email' "$route"
+          ! grep -q 'crmaddlife-indexeddb' "$route"
 
       - name: Emit progress markers
         run: |
           echo 'CARTERA_010D_SCOPE=LOCKED'
           echo 'CARTERA_010D_UNIFIED_DIRECTORY_READ_MODEL=REPOSITORY_READY'
           echo 'CARTERA_010D_AUTHENTICATED_DIRECTORY_SERVICE=REPOSITORY_READY'
+          echo 'CARTERA_010D_PRODUCT_ROUTE_DIRECTORY_ADAPTER=REPOSITORY_READY'
           echo 'CARTERA_010D_SEARCH_PRIVACY_GATE=PASS'
           echo 'DIRECT_POLICY_ROLES_READ=FORBIDDEN'
           echo 'SCHEMA_MUTATION=NO'
           echo 'CARTERA_010D_COMPLETE=NO'
-          echo 'NEXT=CARTERA_010D_PRODUCT_ROUTE_DIRECTORY_ADAPTER'
+          echo 'NEXT=CARTERA_010D_REMOTE_READ_AND_BROWSER_ACCEPTANCE'
