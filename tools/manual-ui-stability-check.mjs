@@ -64,9 +64,18 @@ try {
             if (!event.target.matches('[data-productive-stage-control]')) return;
             const value = event.target.value;
             const label = event.target.selectedOptions[0].textContent;
+            const card = event.target.closest('[data-productive-prospect-card]');
+
+            // This fixture represents Pipeline module, the sole stage authority.
+            // The stability layer must preserve focus/scroll/layout only.
+            card.dataset.productiveStage = value;
+            card.dataset.stagePersistence = 'saving';
+            card.querySelector('[data-productive-stage-label]').textContent = label;
+            event.target.setAttribute('aria-busy', 'true');
+
             setTimeout(() => {
               root.innerHTML = '<div class="rerender-banner"></div>'
-                + '<article class="pipeline-module__productive-card" data-productive-prospect-card="prospect-1" data-productive-stage="' + value + '">'
+                + '<article class="pipeline-module__productive-card" data-productive-prospect-card="prospect-1" data-productive-stage="' + value + '" data-stage-persistence="saved">'
                 + '<span data-productive-stage-label>' + label + '</span>'
                 + '<select data-productive-stage-control="prospect-1">'
                 + '<option value="referred_new">Nuevo</option>'
@@ -101,6 +110,10 @@ try {
   const fixtureModuleUrl = `${moduleUrl}&fixture=${Date.now()}`;
   await page.addScriptTag({ type: "module", url: fixtureModuleUrl });
   await page.waitForFunction(() => document.documentElement.dataset.forgePipelineUiStability === "ready");
+  assert.equal(
+    await page.evaluate(() => document.documentElement.dataset.pipelineStageAuthority),
+    "pipeline-module",
+  );
 
   await page.locator('[data-productive-prospect-card="prospect-1"]').scrollIntoViewIfNeeded();
   const beforeStage = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
@@ -125,11 +138,13 @@ try {
   const afterRerender = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
     stage: card.dataset.productiveStage,
     label: card.querySelector('[data-productive-stage-label]').textContent,
+    persistence: card.dataset.stagePersistence,
     top: card.getBoundingClientRect().top,
     border: getComputedStyle(card).borderTopColor,
   }));
   assert.equal(afterRerender.stage, "appointment_scheduled");
   assert.equal(afterRerender.label, "Cita agendada");
+  assert.equal(afterRerender.persistence, "saved");
   assert.ok(Math.abs(afterRerender.top - beforeStage.top) <= 1.5, `card moved ${afterRerender.top - beforeStage.top}px after rerender`);
 
   const beforeWorkspace = await page.locator("#frame").evaluate(node => ({
@@ -160,6 +175,7 @@ try {
   assert.ok(Math.abs(afterWorkspace.scrollY - beforeWorkspace.scrollY) <= 1);
 
   console.log("QUOTE_COMPLETE_FIELD_MATRIX=PASS");
+  console.log("PIPELINE_STAGE_AUTHORITY=SINGLE");
   console.log("PIPELINE_STAGE_COLOR_SYNC=PASS");
   console.log("PIPELINE_RERENDER_ANCHOR_STABLE=PASS");
   console.log("PIPELINE_WORKSPACE_LAYOUT_SHIFT=ZERO");
