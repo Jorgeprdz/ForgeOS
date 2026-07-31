@@ -1,0 +1,35 @@
+name: UI M05L Shell Route First
+
+on:
+  pull_request:
+    paths:
+      - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/forge-navigation-contract.js"
+      - "tests/ui-m05l-shell-route-first-test.mjs"
+      - ".github/workflows/ui-m05l-shell-route-first.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/forge-navigation-contract.js"
+      - "tests/ui-m05l-shell-route-first-test.mjs"
+      - ".github/workflows/ui-m05l-shell-route-first.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  shell-route-first:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify shell and Cotizaciones route
+        run: node tests/ui-m05l-shell-route-first-test.mjs
