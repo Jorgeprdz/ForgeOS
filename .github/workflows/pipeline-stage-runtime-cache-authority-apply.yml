@@ -1,0 +1,203 @@
+name: Apply Pipeline Stage Runtime Cache Authority
+
+on:
+  push:
+    branches:
+      - fix/pipeline-stage-runtime-cache-authority
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/pipeline-stage-runtime-cache-authority
+          fetch-depth: 0
+
+      - name: Apply runtime and authority correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              target = Path(path)
+              text = target.read_text()
+              matches = text.count(old)
+              if matches != 1:
+                  raise SystemExit(f"{path}: expected exactly one match, found {matches}")
+              target.write_text(text.replace(old, new, 1))
+
+          replace_once(
+              "docs/static-preview/forge-alive-material3/index.html",
+              '<script type="module" src="./app.js?v=ui-m04-shell-007&fix=pipeline-mobile-interaction-001"></script>',
+              '<script type="module" src="./app.js?v=ui-m04-shell-008&fix=pipeline-stage-runtime-003"></script>',
+          )
+
+          replace_once(
+              "docs/static-preview/forge-alive-material3/app.js",
+              'import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-011";',
+              'import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";',
+          )
+          replace_once(
+              "docs/static-preview/forge-alive-material3/app.js",
+              'import "./pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-002";',
+              'import "./pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003";',
+          )
+
+          old_listener = '''  root.addEventListener("change", event => {
+            const select = event.target?.closest?.(STAGE_SELECTOR);
+            if (!select) return;
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            void persistStage(root, select);
+          }, true);
+          '''
+          new_listener = '''  root.addEventListener("change", event => {
+            const select = event.target?.closest?.(STAGE_SELECTOR);
+            if (!select) return;
+            root.dataset.pipelineStageEventObserved = "true";
+          });
+          '''
+          replace_once(
+              "docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js",
+              old_listener,
+              new_listener,
+          )
+          replace_once(
+              "docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js",
+              'document.documentElement.dataset.pipelineStageAuthority = "pipeline-public-acceptance-hotfix";',
+              'document.documentElement.dataset.pipelineStageAuthority = "pipeline-module";',
+          )
+
+          test_path = Path("tests/pipeline-card-density-stage-authority-regression.mjs")
+          test = test_path.read_text()
+          import_old = 'import { chromium } from "@playwright/test";\n\n'
+          import_new = '''import { chromium } from "@playwright/test";
+          import { readFile } from "node:fs/promises";
+
+          const [entryHtml, appSource, hotfixSource] = await Promise.all([
+            readFile("docs/static-preview/forge-alive-material3/index.html", "utf8"),
+            readFile("docs/static-preview/forge-alive-material3/app.js", "utf8"),
+            readFile("docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js", "utf8"),
+          ]);
+          assert.match(entryHtml, /app\\.js\\?v=ui-m04-shell-008&fix=pipeline-stage-runtime-003/);
+          assert.match(appSource, /pipeline-module\\.js\\?v=ui-m06-pipeline-012/);
+          assert.match(appSource, /pipeline-public-acceptance-hotfix\\.js\\?v=pipeline-public-acceptance-003/);
+          const stageListener = hotfixSource.slice(
+            hotfixSource.indexOf('root.addEventListener("change"'),
+            hotfixSource.indexOf('const observer = new windowRef.MutationObserver'),
+          );
+          assert.doesNotMatch(stageListener, /preventDefault|stopPropagation|stopImmediatePropagation|persistStage/);
+          assert.match(hotfixSource, /pipelineStageAuthority = "pipeline-module"/);
+
+          '''
+          if test.count(import_old) != 1:
+              raise SystemExit(f"test import marker matches={test.count(import_old)}")
+          test = test.replace(import_old, import_new, 1)
+
+          setup_old = '''    globalThis.__densityStageCalls = [];
+              globalThis.__authRefreshes = 0;
+          '''
+          setup_new = '''    globalThis.__densityStageCalls = [];
+              globalThis.__moduleStageEvents = 0;
+              globalThis.__authRefreshes = 0;
+          '''
+          if test.count(setup_old) != 1:
+              raise SystemExit(f"test setup marker matches={test.count(setup_old)}")
+          test = test.replace(setup_old, setup_new, 1)
+
+          authority_old = '''    root[Symbol.for("forge.material3.pipeline.state")] = {
+              async updateProductiveStage(id, status) {
+                globalThis.__densityStageCalls.push(`${id}:${status}`);
+                cards.innerHTML = markupText.replaceAll("__STATUS__", status);
+                return { id, status, stageLabel: status === "contacted" ? "Contactado" : "Nuevo" };
+              },
+            };
+          '''
+          authority_new = '''    const authorityKey = Symbol.for("forge.material3.pipeline.state");
+              root[authorityKey] = {
+                async updateProductiveStage(id, status) {
+                  globalThis.__densityStageCalls.push(`${id}:${status}`);
+                  cards.innerHTML = markupText.replaceAll("__STATUS__", status);
+                  return { id, status, stageLabel: status === "contacted" ? "Contactado" : "Nuevo" };
+                },
+              };
+              root.addEventListener("change", async event => {
+                const select = event.target?.closest?.("[data-productive-stage-control]");
+                if (!select) return;
+                globalThis.__moduleStageEvents += 1;
+                const confirmed = await root[authorityKey].updateProductiveStage(
+                  select.dataset.productiveStageControl,
+                  select.value,
+                );
+                const nextCard = root.querySelector(
+                  `[data-productive-prospect-card="${confirmed.id}"]`,
+                );
+                const nextSelect = nextCard?.querySelector("[data-productive-stage-control]");
+                if (!nextCard || !nextSelect) throw new Error("MODULE_RENDER_TARGET_MISSING");
+                nextCard.dataset.productiveStage = confirmed.status;
+                nextCard.dataset.stagePersistence = "saved";
+                nextSelect.value = confirmed.status;
+                nextSelect.dataset.confirmedStage = confirmed.status;
+              });
+          '''
+          if test.count(authority_old) != 1:
+              raise SystemExit(f"test authority marker matches={test.count(authority_old)}")
+          test = test.replace(authority_old, authority_new, 1)
+
+          assert_old = '''  assert.deepEqual(await page.evaluate(() => globalThis.__densityStageCalls), ["p1:contacted"]);
+            assert.equal(await page.evaluate(() => globalThis.__authRefreshes), 0, "AUTH_REFRESH_REINTRODUCED_STALE_STATE");
+
+            console.log("PIPELINE_MOBILE_ACTIONS_3X2=PASS");
+          '''
+          assert_new = '''  assert.deepEqual(await page.evaluate(() => globalThis.__densityStageCalls), ["p1:contacted"]);
+            assert.equal(await page.evaluate(() => globalThis.__moduleStageEvents), 1, "STAGE_EVENT_DID_NOT_REACH_PIPELINE_MODULE");
+            assert.equal(
+              await page.evaluate(() => document.documentElement.dataset.pipelineStageAuthority),
+              "pipeline-module",
+              "PIPELINE_MODULE_NOT_DECLARED_AS_STAGE_AUTHORITY",
+            );
+            assert.equal(await page.evaluate(() => globalThis.__authRefreshes), 0, "AUTH_REFRESH_REINTRODUCED_STALE_STATE");
+
+            console.log("PIPELINE_MOBILE_ACTIONS_3X2=PASS");
+          '''
+          if test.count(assert_old) != 1:
+              raise SystemExit(f"test assertion marker matches={test.count(assert_old)}")
+          test = test.replace(assert_old, assert_new, 1)
+          test = test.replace(
+              '  console.log("PIPELINE_SINGLE_STAGE_AUTHORITY=PASS");\n',
+              '  console.log("PIPELINE_SINGLE_STAGE_AUTHORITY=PASS");\n  console.log("PIPELINE_STAGE_EVENT_REACHED_MODULE=PASS");\n',
+              1,
+          )
+          test_path.write_text(test)
+          PY
+
+          node --check docs/static-preview/forge-alive-material3/app.js
+          node --check docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js
+          node --check tests/pipeline-card-density-stage-authority-regression.mjs
+
+      - name: Commit correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "forgeos-pipeline-hotfix"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            docs/static-preview/forge-alive-material3/index.html \
+            docs/static-preview/forge-alive-material3/app.js \
+            docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js \
+            tests/pipeline-card-density-stage-authority-regression.mjs
+          git commit -m "fix(pipeline): load fresh runtime and delegate stage changes"
+          git push origin HEAD:fix/pipeline-stage-runtime-cache-authority
