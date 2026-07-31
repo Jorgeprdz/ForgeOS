@@ -32,7 +32,7 @@ test('productive route renders separate Person, Account and Policy entries witho
   );
 
   const text = await visibleDirectoryText(page);
-  expect(text).toContain('Ana Directora');
+  expect(text).toContain('Anita');
   expect(text).toContain('Familia Directora');
   expect(text).toContain('010D-BROWSER-001');
   expect(text).not.toContain('+525512345678');
