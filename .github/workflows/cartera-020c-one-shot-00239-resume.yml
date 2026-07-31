@@ -1,0 +1,139 @@
+name: CARTERA 020C One-Shot 00239 Resume
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+    paths:
+      - docs/evidence/CARTERA_020C_CONFLICT_HARDENING_RESUME_AUTHORIZATION_20260731T1741-0600.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020c-one-shot-00239-resume
+  cancel-in-progress: false
+
+jobs:
+  harden-and-resume:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event_name == 'pull_request' &&
+      github.event.action == 'opened' &&
+      github.event.pull_request.head.ref == 'run/cartera-020c-conflict-hardening-resume-20260731-1741' &&
+      github.event.pull_request.head.sha == 'caaa337f83494373c55c1592c831daad4f129fea' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CARTERA_020C_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_020C_REMOTE_MUTATION
+      CARTERA_020C_EXPECTED_SOURCE_HEAD: 0daaccd556659b997f2086e12b09481281d1b019
+      CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD: 6c2fc6859b689e9c871b660efce4517ba56c7abd
+      CARTERA_020C_ACCEPTANCE_BRANCH: feature/cartera-020c-remote-acceptance
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_CONFLICT_HARDENING_RESUME_AUTHORIZATION_20260731T1741-0600.md
+
+    steps:
+      - name: Checkout exact resume authorization
+        uses: actions/checkout@v4
+        with:
+          ref: caaa337f83494373c55c1592c831daad4f129fea
+          fetch-depth: 0
+
+      - name: Validate exact 00239 resume authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_ATTEMPT" = '1'
+          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-conflict-hardening-resume-20260731-1741'
+          test -f "$AUTHORIZATION_MARKER"
+          grep -qx 'USER_AUTHORIZATION=APPLY_00239_AND_RESUME_CARTERA_020C_REMOTE_ACCEPTANCE' "$AUTHORIZATION_MARKER"
+          grep -qx 'PRIOR_RUN=30673390111' "$AUTHORIZATION_MARKER"
+          grep -qx 'PRIOR_JOB=91295600303' "$AUTHORIZATION_MARKER"
+          grep -qx 'PRIOR_ARTIFACT=8809577059' "$AUTHORIZATION_MARKER"
+          grep -qx 'RESUME_ACCEPTANCE_HEAD=6c2fc6859b689e9c871b660efce4517ba56c7abd' "$AUTHORIZATION_MARKER"
+          grep -qx 'HARDENING_MIGRATION=20260731000239' "$AUTHORIZATION_MARKER"
+          test "$(git diff --name-only HEAD^ HEAD)" = "$AUTHORIZATION_MARKER"
+          echo 'ONE_SHOT_00239_RESUME_AUTHORIZATION=PASS'
+
+      - name: Checkout exact hardened acceptance head
+        uses: actions/checkout@v4
+        with:
+          ref: 6c2fc6859b689e9c871b660efce4517ba56c7abd
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Repository and hardening gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD"
+          git merge-base --is-ancestor "$CARTERA_020C_EXPECTED_SOURCE_HEAD" HEAD
+          node --check scripts/ci/cartera-020c-conflict-ambiguity-hardening-deploy.mjs
+          node --check scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs
+          node --check tests/cartera-020c-conflict-ambiguity-hardening-test.mjs
+          node --test tests/cartera-020c-*.mjs
+          grep -q 'generated_conflict_reference' supabase/migrations/20260731000239_cartera020c_conflict_insert_ambiguity_hardening.sql
+          grep -q 'on conflict on constraint' supabase/migrations/20260731000239_cartera020c_conflict_insert_ambiguity_hardening.sql
+          echo 'CARTERA020C_00239_REPOSITORY_GATE=PASS'
+
+      - name: Apply and verify 00239 conflict ambiguity hardening
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          mkdir -p artifacts/cartera-020c-remote-acceptance
+          node scripts/ci/cartera-020c-conflict-ambiguity-hardening-deploy.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/conflict-ambiguity-hardening-output.log
+          grep -q 'CARTERA020C_CONFLICT_INSERT_AMBIGUITY_HARDENING=PASS' \
+            artifacts/cartera-020c-remote-acceptance/conflict-ambiguity-hardening-output.log
+
+      - name: Resume transactional remote acceptance
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD" \
+            node scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/workflow-output.log
+
+      - name: Verify explicit acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-020c-remote-acceptance/workflow-output.log
+          grep -q 'CARTERA_020C_REMOTE_DEPLOYMENT=PASS' "$log"
+          grep -q 'AUTHORIZATION_DIGEST_COMPATIBILITY=PASS' "$log"
+          grep -q 'CARTERA_020C_TRANSACTIONAL_ACCEPTANCE=PASS' "$log"
+          grep -q 'AUTHORIZATION_DIGEST_BINDING=PASS' "$log"
+          grep -q 'IDENTITY_ORDERED_EXECUTION=PASS' "$log"
+          grep -q 'IDENTITY_READ_AFTER_WRITE=PASS' "$log"
+          grep -q 'POLICY_READ_AFTER_WRITE=PASS' "$log"
+          grep -q 'CHANGED_INPUT_CONFLICT=PASS' "$log"
+          grep -q 'RETRY_GOVERNANCE=PASS' "$log"
+          grep -q 'PARALLEL_STATE_VERSION_SERIALIZATION=PASS' "$log"
+          grep -q 'RLS_CROSS_ADVISOR=PASS' "$log"
+          grep -q 'DIRECT_WRITES=BLOCKED' "$log"
+          grep -q 'SANITIZED_STATUS=PASS' "$log"
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$log"
+          grep -q 'CONCURRENCY_FIXTURES_CLEANED=YES' "$log"
+          grep -q 'RESIDUAL_FIXTURES=0' "$log"
+          grep -q 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS' "$log"
+
+      - name: Upload 00239 resume evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-020c-remote-acceptance-00239-resume
+          path: artifacts/cartera-020c-remote-acceptance
+          if-no-files-found: warn
+          retention-days: 30
