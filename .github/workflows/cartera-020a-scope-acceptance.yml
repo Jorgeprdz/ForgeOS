@@ -1,0 +1,29 @@
+name: CARTERA 020A Scope Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020a-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy-intake-adapter-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Execute accepted CARTERA 020A scope gate manually
+        run: node --test tests/cartera-020a-policy-intake-adapter-scope-test.mjs
+      - name: Emit closure markers
+        run: |
+          echo 'CARTERA_020A_COMPLETE=YES'
+          echo 'NEXT=CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_AND_PARSER_REGISTRY'

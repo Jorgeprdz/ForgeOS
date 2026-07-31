@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forgeos.local/schemas/cartera-020b-policy-field-candidate-v1.schema.json",
+  "title": "CARTERA 020B Policy Field Candidate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fieldName", "rawValue", "normalizedValue", "confidence", "sourceLocation",
+    "extractionMethod", "parserId", "parserVersion", "state", "warnings", "createsTruth"
+  ],
+  "properties": {
+    "fieldName": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "rawValue": {},
+    "normalizedValue": {},
+    "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "sourceLocation": { "type": ["object", "null"] },
+    "extractionMethod": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "parserId": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "parserVersion": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "state": { "enum": ["EXTRACTED", "UNKNOWN", "MISSING", "CONFLICT"] },
+    "warnings": { "type": "array" },
+    "createsTruth": { "const": false }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "const": "UNKNOWN" } } },
+      "then": {
+        "properties": {
+          "rawValue": { "type": "null" },
+          "normalizedValue": { "type": "null" }
+        }
+      }
+    }
+  ]
+}

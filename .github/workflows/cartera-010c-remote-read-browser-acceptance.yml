@@ -1,0 +1,155 @@
+name: CARTERA 010C Remote Read and Browser Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010c-remote-read-browser-acceptance
+  cancel-in-progress: true
+
+jobs:
+  remote-read-and-browser:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+    env:
+      CI: "true"
+      SOURCE_COMMIT: 8a9a927ff9d83f8d2343dc3dfe40b8a0c831e01b
+      ACCEPTANCE_BRANCH: feature/cartera-010c-remote-read-browser-acceptance
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
+
+    steps:
+      - name: Checkout exact acceptance branch
+        uses: actions/checkout@v6
+        with:
+          ref: feature/cartera-010c-remote-read-browser-acceptance
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Source, secret and bounded-path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-010c-remote-read-browser
+          touch artifacts/cartera-010c-remote-read-browser/workflow-started.marker
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          test "$(git branch --show-current)" = "$ACCEPTANCE_BRANCH"
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_ANON_KEY"
+          test -n "$ADVISOR_A_EMAIL"
+          test -n "$ADVISOR_A_PASSWORD"
+          test -n "$ADVISOR_B_EMAIL"
+          test -n "$ADVISOR_B_PASSWORD"
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(\.github/workflows/cartera-010c-remote-read-browser-acceptance\.yml|docs/evidence/FORGE_CARTERA_010C_REMOTE_READ_BROWSER_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|playwright\.cartera-010c\.config\.mjs|scripts/ci/cartera-010c-remote-read-acceptance\.mjs|tests/cartera-010c-remote-read-browser-acceptance-harness-test\.mjs|tests/e2e/cartera-010c-remote-browser\.spec\.mjs|tests/e2e/fixtures/cartera-010c/(index\.html|app\.mjs))$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010C_REMOTE_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_REMOTE_PATHS=PASS'
+          echo 'SCHEMA_DIFF=NONE'
+          echo 'PRODUCT_UI_REDESIGN=NONE'
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Syntax and harness gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/ci/cartera-010c-remote-read-acceptance.mjs
+          node --check tests/cartera-010c-remote-read-browser-acceptance-harness-test.mjs
+          node --check tests/e2e/fixtures/cartera-010c/app.mjs
+          node --check tests/e2e/cartera-010c-remote-browser.spec.mjs
+          node --check playwright.cartera-010c.config.mjs
+
+      - name: Execute complete CARTERA 010C repository acceptance
+        run: node --test tests/cartera-010c-*.mjs
+
+      - name: Execute authenticated remote read acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-010c-remote-read-acceptance.mjs \
+            | tee artifacts/cartera-010c-remote-read-browser/remote-workflow-output.log
+
+      - name: Verify remote read markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-010c-remote-read-browser/remote-workflow-output.log
+          grep -q 'CARTERA_010C_REMOTE_READ_ACCEPTANCE=PASS' "$log"
+          grep -q 'AUTHENTICATED_OWNER_PORTFOLIO_READ=PASS' "$log"
+          grep -q 'AUTHENTICATED_OWNER_POLICY_DETAIL_READ=PASS' "$log"
+          grep -q 'MINIMIZED_POLICY_TIMELINE_READ=PASS' "$log"
+          grep -q 'RLS_CROSS_ADVISOR_PORTFOLIO=PASS' "$log"
+          grep -q 'RLS_CROSS_ADVISOR_POLICY_DETAIL=PASS' "$log"
+          grep -q 'ANONYMOUS_PORTFOLIO_READ=BLOCKED' "$log"
+          grep -q 'DIRECT_POLICY_ROLES_READ=BLOCKED' "$log"
+          grep -q 'BENEFICIARY_GENERAL_PROJECTION=BLOCKED' "$log"
+          grep -q 'RAW_EVIDENCE_PROJECTION=BLOCKED' "$log"
+          grep -q 'TEST_FIXTURES_CLEANED=YES' "$log"
+          grep -q 'RESIDUAL_FIXTURES=0' "$log"
+
+      - name: Execute desktop and mobile browser acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx playwright test \
+            tests/e2e/cartera-010c-remote-browser.spec.mjs \
+            --config=playwright.cartera-010c.config.mjs
+          echo 'CARTERA_010C_BROWSER_ACCEPTANCE=PASS' \
+            | tee artifacts/cartera-010c-remote-read-browser/browser-acceptance.log
+
+      - name: Emit closure markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'MARKERS' | tee artifacts/cartera-010c-remote-read-browser/closure-markers.log
+          CARTERA_010C_REMOTE_READ=PASS
+          CARTERA_010C_DESKTOP_BROWSER=PASS
+          CARTERA_010C_MOBILE_BROWSER=PASS
+          CARTERA_010C_PRIVACY_GATE=PASS
+          CARTERA_010C_FIXTURE_CLEANUP=PASS
+          CARTERA_010C_COMPLETE=YES
+          NEXT=CARTERA_010D_AUTHORIZED
+          MARKERS
+
+      - name: Upload remote and browser evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: cartera-010c-remote-read-browser-acceptance
+          path: |
+            artifacts/cartera-010c-remote-read-browser
+            artifacts/cartera-010c-playwright-report
+            artifacts/cartera-010c-playwright-test-results
+            artifacts/cartera-010c-playwright-results.json
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,160 @@
+name: CARTERA 010D Remote Directory and Browser Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010d-remote-directory-browser-acceptance
+  cancel-in-progress: true
+
+jobs:
+  remote-directory-and-browser:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+    env:
+      CI: "true"
+      SOURCE_COMMIT: 86250c1429510a9914b9538791d168b5802e1f07
+      ACCEPTANCE_BRANCH: feature/cartera-010d-unified-directory-relationship-search
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
+
+    steps:
+      - name: Checkout exact acceptance branch
+        uses: actions/checkout@v6
+        with:
+          ref: feature/cartera-010d-unified-directory-relationship-search
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Source, secret and bounded-path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-010d-remote-directory-browser
+          touch artifacts/cartera-010d-remote-directory-browser/workflow-started.marker
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          test "$(git branch --show-current)" = "$ACCEPTANCE_BRANCH"
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_ANON_KEY"
+          test -n "$ADVISOR_A_EMAIL"
+          test -n "$ADVISOR_A_PASSWORD"
+          test -n "$ADVISOR_B_EMAIL"
+          test -n "$ADVISOR_B_PASSWORD"
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(\.github/workflows/cartera-010d-remote-directory-browser-acceptance\.yml|docs/evidence/FORGE_CARTERA_010D_REMOTE_DIRECTORY_BROWSER_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|platform/policy-intelligence/cartera-010d-unified-directory-read-model\.js|scripts/ci/cartera-010d-remote-directory-acceptance\.mjs|tests/cartera-010d-(restricted-entity-privacy|remote-directory-browser-acceptance-harness)-test\.mjs|tests/e2e/cartera-010d-remote-browser\.spec\.mjs|tests/e2e/fixtures/cartera-010d/(index\.html|app\.mjs)|playwright\.cartera-010d\.config\.mjs)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010D_REMOTE_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_REMOTE_PATHS=PASS'
+          echo 'SCHEMA_DIFF=NONE'
+          echo 'PRODUCT_UI_REDESIGN=NONE'
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Syntax and harness gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check platform/policy-intelligence/cartera-010d-unified-directory-read-model.js
+          node --check scripts/ci/cartera-010d-remote-directory-acceptance.mjs
+          node --check tests/cartera-010d-remote-directory-browser-acceptance-harness-test.mjs
+          node --check tests/e2e/fixtures/cartera-010d/app.mjs
+          node --check tests/e2e/cartera-010d-remote-browser.spec.mjs
+          node --check playwright.cartera-010d.config.mjs
+
+      - name: Execute complete CARTERA 010D repository acceptance
+        run: node --test tests/cartera-010d-*.mjs
+
+      - name: Execute authenticated remote directory acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-010d-remote-directory-acceptance.mjs \
+            | tee artifacts/cartera-010d-remote-directory-browser/remote-workflow-output.log
+
+      - name: Verify remote directory markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-010d-remote-directory-browser/remote-workflow-output.log
+          grep -q 'CARTERA_010D_REMOTE_DIRECTORY_ACCEPTANCE=PASS' "$log"
+          grep -q 'REMOTE_DIRECTORY_ENTRY_KINDS=PASS' "$log"
+          grep -q 'PHONE_SEARCH_PRIVATE=PASS' "$log"
+          grep -q 'EMAIL_SEARCH_PRIVATE=PASS' "$log"
+          grep -q 'DIRECT_ENTITY_RANKING=PASS' "$log"
+          grep -q 'RELATIONSHIP_SEARCH=PASS' "$log"
+          grep -q 'RESTRICTED_ENTITY_DIRECTORY=BLOCKED' "$log"
+          grep -q 'BENEFICIARY_GENERAL_DIRECTORY=BLOCKED' "$log"
+          grep -q 'REMOTE_POLICY_DETAIL_REACHABLE=PASS' "$log"
+          grep -q 'MINIMIZED_POLICY_TIMELINE_READ=PASS' "$log"
+          grep -q 'DIRECT_POLICY_ROLES_READ=BLOCKED' "$log"
+          grep -q 'RLS_CROSS_ADVISOR_DIRECTORY=PASS' "$log"
+          grep -q 'ANONYMOUS_DIRECTORY_READ=BLOCKED' "$log"
+          grep -q 'TEST_FIXTURES_CLEANED=YES' "$log"
+          grep -q 'RESIDUAL_FIXTURES=0' "$log"
+
+      - name: Execute desktop and mobile browser acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx playwright test \
+            tests/e2e/cartera-010d-remote-browser.spec.mjs \
+            --config=playwright.cartera-010d.config.mjs
+          echo 'CARTERA_010D_BROWSER_ACCEPTANCE=PASS' \
+            | tee artifacts/cartera-010d-remote-directory-browser/browser-acceptance.log
+
+      - name: Emit closure markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'MARKERS' | tee artifacts/cartera-010d-remote-directory-browser/closure-markers.log
+          CARTERA_010D_REMOTE_DIRECTORY=PASS
+          CARTERA_010D_DESKTOP_BROWSER=PASS
+          CARTERA_010D_MOBILE_BROWSER=PASS
+          CARTERA_010D_SEARCH_PRIVACY_GATE=PASS
+          CARTERA_010D_RESTRICTED_ENTITY_GATE=PASS
+          CARTERA_010D_FIXTURE_CLEANUP=PASS
+          CARTERA_010D_COMPLETE=YES
+          NEXT=CARTERA_POINT_1_CONTROL_BASE_CLOSURE_AUTHORIZED
+          MARKERS
+
+      - name: Upload remote and browser evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: cartera-010d-remote-directory-browser-acceptance
+          path: |
+            artifacts/cartera-010d-remote-directory-browser
+            artifacts/cartera-010d-playwright-report
+            artifacts/cartera-010d-playwright-test-results
+            artifacts/cartera-010d-playwright-results.json
+          if-no-files-found: error
+          retention-days: 30

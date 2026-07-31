@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/policy-v2.schema.json",
+  "title": "Forge Canonical Policy V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractType",
+    "schemaVersion",
+    "policyReference",
+    "advisorId",
+    "carrierReference",
+    "policyNumber",
+    "productReference",
+    "status",
+    "completenessState",
+    "freshnessState",
+    "conflictState",
+    "evidenceVersionReferences",
+    "currentVersion",
+    "createdAt",
+    "createdBy",
+    "updatedAt"
+  ],
+  "properties": {
+    "contractType": { "const": "FORGE_CANONICAL_POLICY" },
+    "schemaVersion": { "const": "2.0.0" },
+    "policyReference": { "$ref": "#/$defs/opaqueReference" },
+    "advisorId": { "$ref": "#/$defs/opaqueReference" },
+    "carrierReference": { "$ref": "#/$defs/opaqueReference" },
+    "policyNumber": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "productReference": { "$ref": "#/$defs/opaqueReference" },
+    "issueDate": { "type": ["string", "null"], "format": "date" },
+    "effectiveFrom": { "type": ["string", "null"], "format": "date-time" },
+    "effectiveTo": { "type": ["string", "null"], "format": "date-time" },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "source", "asOf"],
+      "properties": {
+        "value": { "enum": ["PENDING", "ISSUED", "ACTIVE", "SUSPENDED", "LAPSED", "CANCELLED", "MATURED", "CLAIMED", "UNKNOWN"] },
+        "source": { "$ref": "#/$defs/opaqueReference" },
+        "asOf": { "$ref": "#/$defs/isoDateTime" }
+      }
+    },
+    "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" },
+    "premiumAmount": { "type": ["number", "null"], "minimum": 0 },
+    "paymentFrequency": { "type": ["string", "null"], "enum": ["MONTHLY", "QUARTERLY", "SEMIANNUAL", "ANNUAL", "SINGLE", "OTHER", null] },
+    "sumInsured": { "type": ["number", "null"], "minimum": 0 },
+    "completenessState": { "enum": ["COMPLETE", "PARTIAL", "UNKNOWN"] },
+    "freshnessState": { "enum": ["CURRENT", "STALE", "UNKNOWN"] },
+    "conflictState": { "enum": ["CLEAR", "CONFLICT", "UNRESOLVED"] },
+    "evidenceVersionReferences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/opaqueReference" },
+      "uniqueItems": true
+    },
+    "currentVersion": { "type": "integer", "minimum": 1 },
+    "createdAt": { "$ref": "#/$defs/isoDateTime" },
+    "createdBy": { "$ref": "#/$defs/opaqueReference" },
+    "updatedAt": { "$ref": "#/$defs/isoDateTime" },
+    "archivedAt": { "type": ["string", "null"], "format": "date-time" },
+    "archivedBy": { "type": ["string", "null"], "minLength": 1, "maxLength": 240 },
+    "archiveReason": { "type": ["string", "null"], "maxLength": 500 }
+  },
+  "$defs": {
+    "opaqueReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/-]*$"
+    },
+    "isoDateTime": { "type": "string", "format": "date-time" }
+  }
+}

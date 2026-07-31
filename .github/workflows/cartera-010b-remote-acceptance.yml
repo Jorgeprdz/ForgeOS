@@ -1,0 +1,130 @@
+name: CARTERA 010B Remote Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010b-remote-acceptance
+  cancel-in-progress: true
+
+jobs:
+  remote-deployment-and-acceptance:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      SOURCE_COMMIT: 4c274a377f1b91fb176304f84008c1b42c781951
+      ACCEPTANCE_BRANCH: feature/cartera-010b-remote-acceptance
+
+    steps:
+      - name: Checkout exact acceptance branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/cartera-010b-remote-acceptance
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source, secret and bounded-path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "$ACCEPTANCE_BRANCH"
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(\.github/workflows/cartera-010b-remote-acceptance\.yml|docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-010b-(github-actions-remote-acceptance|(precedence|conflict-ambiguity)-hardening-deploy|general-role-read-deploy)\.mjs|scripts/ci/cartera-010b-remote-acceptance-0[1-4]\.sql|supabase/migrations/2026073100021(3_cartera010b_identity_resolution_precedence_hardening|4_cartera010b_conflict_insert_ambiguity_hardening|5_cartera010b_general_policy_role_read_authority)\.sql|tests/cartera-010b-(remote-acceptance-harness|(precedence|conflict-ambiguity)-hardening|general-role-read-authority)-test\.mjs)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010B_REMOTE_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          mkdir -p artifacts/cartera-010b-remote-acceptance
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_REMOTE_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+
+      - name: JavaScript syntax gate
+        run: |
+          node --check scripts/ci/cartera-010b-github-actions-remote-acceptance.mjs
+          node --check scripts/ci/cartera-010b-precedence-hardening-deploy.mjs
+          node --check scripts/ci/cartera-010b-conflict-ambiguity-hardening-deploy.mjs
+          node --check scripts/ci/cartera-010b-general-role-read-deploy.mjs
+          node --check tests/cartera-010b-remote-acceptance-harness-test.mjs
+          node --check tests/cartera-010b-precedence-hardening-test.mjs
+          node --check tests/cartera-010b-conflict-ambiguity-hardening-test.mjs
+          node --check tests/cartera-010b-general-role-read-authority-test.mjs
+
+      - name: Repository acceptance suite
+        run: node --test tests/cartera-010b-*.mjs
+
+      - name: Apply and verify identity precedence hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-010b-precedence-hardening-deploy.mjs \
+            | tee artifacts/cartera-010b-remote-acceptance/precedence-hardening-output.log
+          grep -q 'CARTERA010B_IDENTITY_PRECEDENCE_HARDENING=PASS' \
+            artifacts/cartera-010b-remote-acceptance/precedence-hardening-output.log
+
+      - name: Apply and verify conflict ambiguity hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-010b-conflict-ambiguity-hardening-deploy.mjs \
+            | tee artifacts/cartera-010b-remote-acceptance/conflict-ambiguity-hardening-output.log
+          grep -q 'CARTERA010B_CONFLICT_INSERT_AMBIGUITY_HARDENING=PASS' \
+            artifacts/cartera-010b-remote-acceptance/conflict-ambiguity-hardening-output.log
+
+      - name: Apply and verify general PolicyRole read authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-010b-general-role-read-deploy.mjs \
+            | tee artifacts/cartera-010b-remote-acceptance/general-role-read-output.log
+          grep -q 'CARTERA010B_GENERAL_POLICY_ROLE_READ_AUTHORITY=PASS' \
+            artifacts/cartera-010b-remote-acceptance/general-role-read-output.log
+
+      - name: Deploy and execute transactional remote acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$(git rev-parse HEAD)" \
+            node scripts/ci/cartera-010b-github-actions-remote-acceptance.mjs \
+            | tee artifacts/cartera-010b-remote-acceptance/workflow-output.log
+
+      - name: Verify explicit remote acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-010b-remote-acceptance/workflow-output.log
+          grep -q 'CARTERA_010B_REMOTE_DEPLOYMENT=PASS' "$log"
+          grep -q 'CARTERA_010B_REMOTE_ACCEPTANCE=PASS' "$log"
+          grep -q 'RLS_CROSS_ADVISOR=PASS' "$log"
+          grep -q 'RESTRICTED_BENEFICIARY_READ=PASS' "$log"
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$log"
+          grep -q 'RESIDUAL_FIXTURES=0' "$log"
+
+      - name: Upload remote acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-010b-remote-acceptance
+          path: artifacts/cartera-010b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30

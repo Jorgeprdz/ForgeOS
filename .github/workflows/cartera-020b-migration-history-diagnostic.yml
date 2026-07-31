@@ -1,0 +1,55 @@
+name: CARTERA 020B Migration History Diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020b-migration-history-diagnostic
+  cancel-in-progress: true
+
+jobs:
+  read-only-history-diagnostic:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Read-only source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          node --check scripts/ci/cartera-020b-migration-history-diagnostic.mjs
+          node --test tests/cartera-020b-migration-history-reconciliation-test.mjs
+          ! grep -qiE '\b(insert|update|delete|alter|create|drop|truncate)\b' \
+            scripts/ci/cartera-020b-migration-history-diagnostic.mjs
+          mkdir -p artifacts/cartera-020b-migration-history-diagnostic
+          echo 'DIAGNOSTIC_MODE=READ_ONLY'
+
+      - name: Compare deployed and local 00220 history
+        run: |
+          node scripts/ci/cartera-020b-migration-history-diagnostic.mjs \
+            | tee artifacts/cartera-020b-migration-history-diagnostic/workflow-output.log
+
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-020b-migration-history-diagnostic
+          path: artifacts/cartera-020b-migration-history-diagnostic
+          if-no-files-found: error
+          retention-days: 14
