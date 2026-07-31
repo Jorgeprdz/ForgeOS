@@ -22,7 +22,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       !contains(github.event.head_commit.message, 'merge(main): reconcile quotes with current main')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout Quotes branch with full history
@@ -43,6 +43,22 @@ jobs:
             -f context=integration/main-reconcile \
             -f description="Reconciling Quotes with current main" \
             -f target_url="$RUN_URL" >/dev/null
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install test dependencies and Chromium
+        run: |
+          set -euo pipefail
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            npm install
+          fi
+          npx playwright install --with-deps chromium
 
       - name: Configure merge identity
         run: |
@@ -218,6 +234,15 @@ jobs:
       - name: Validate current Pipeline contracts
         run: |
           set -euo pipefail
+          python3 -m http.server 4173 >/tmp/forge-integration-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
           node tests/legacy-ui-retirement-regression.mjs
           node tests/material3-pipeline-integration-test.mjs
           node tests/pipeline-google-calendar-regression.mjs
