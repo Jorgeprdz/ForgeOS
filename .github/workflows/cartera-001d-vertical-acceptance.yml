@@ -1,0 +1,121 @@
+name: CARTERA 001D Vertical Acceptance
+
+on:
+  push:
+    branches:
+      - feature/cartera-001d-vertical-acceptance-closure
+  pull_request:
+    branches:
+      - feature/cartera-001c-prospect-detail-timeline-projection
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-001d-vertical-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Source and mutation gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 96e24bf403e5d59805249de260581b763a3c7bc6 HEAD
+          test -z "$(git diff --name-only 96e24bf403e5d59805249de260581b763a3c7bc6...HEAD -- supabase/migrations)"
+          git diff --check 96e24bf403e5d59805249de260581b763a3c7bc6...HEAD
+      - name: Syntax gate
+        run: |
+          node --check platform/event-evidence/cartera-vertical-continuity-contract.js
+          node --check scripts/ci/cartera-001d-github-actions-vertical-acceptance.mjs
+          node --check tests/cartera-001d-vertical-continuity-contract-test.mjs
+          node --check tests/cartera-001d-acceptance-harness-test.mjs
+          node --check tests/e2e/cartera-001d-vertical-continuity.spec.mjs
+          node --check playwright.cartera001d.config.mjs
+      - name: Targeted 001D contract tests
+        run: node --test tests/cartera-001d-*.mjs
+
+  browser-acceptance:
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Execute vertical browser acceptance
+        run: npx playwright test --config=playwright.cartera001d.config.mjs
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-001d-browser-acceptance
+          path: |
+            artifacts/cartera001d-browser
+            artifacts/cartera001d-playwright-report
+            artifacts/cartera001d-playwright-results
+          if-no-files-found: error
+          retention-days: 30
+
+  remote-acceptance:
+    needs: [contract, browser-acceptance]
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Remote source and secret gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          git merge-base --is-ancestor 96e24bf403e5d59805249de260581b763a3c7bc6 HEAD
+          test -z "$(git diff --name-only 96e24bf403e5d59805249de260581b763a3c7bc6...HEAD -- supabase/migrations)"
+      - name: Execute transactional remote vertical acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-001d-github-actions-vertical-acceptance.mjs \
+            | tee artifacts/cartera-001d-remote/workflow-output.log
+      - name: Verify explicit remote markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'CARTERA_001D_REMOTE_VERTICAL_ACCEPTANCE=PASS' artifacts/cartera-001d-remote/workflow-output.log
+          grep -q 'FINAL_LIFECYCLE_STATE=PROSPECT_ACCEPTED' artifacts/cartera-001d-remote/workflow-output.log
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' artifacts/cartera-001d-remote/workflow-output.log
+          grep -q 'RESIDUAL_AUTH_FIXTURES=0' artifacts/cartera-001d-remote/workflow-output.log
+          grep -q 'RESIDUAL_PROSPECT_FIXTURES=0' artifacts/cartera-001d-remote/workflow-output.log
+      - name: Upload remote evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-001d-remote-acceptance
+          path: artifacts/cartera-001d-remote
+          if-no-files-found: error
+          retention-days: 30
