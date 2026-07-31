@@ -1,4 +1,4 @@
-name: Deploy Quotes Preview to Pages
+name: Deploy Quotes to Existing ForgeOS Pages
 
 on:
   push:
@@ -19,26 +19,26 @@ concurrency:
 jobs:
   deploy:
     environment:
-      name: github-pages-preview
+      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
-      - name: Checkout preview branch
+      - name: Checkout current Quotes branch
         uses: actions/checkout@v4
 
-      - name: Mark preview deployment pending
+      - name: Mark canonical Pages deployment pending
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.sha }}
-          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
+          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones
         run: |
           gh api --method POST \
             "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
             -f state=pending \
-            -f context=pages/quotes-preview \
-            -f description="Publishing Quotes preview" \
+            -f context=pages/quotes \
+            -f description="Publishing Quotes to existing ForgeOS Pages" \
             -f target_url="$PAGE_URL" >/dev/null
 
       - name: Use Node 22
@@ -95,7 +95,7 @@ jobs:
       - name: Generate Advisor OS presentation Pages runtime
         run: node scripts/build-advisor-presentation-pages-runtime.mjs
 
-      - name: Build Quotes preview artifact
+      - name: Build existing Forge Alive Pages artifact
         env:
           GITHUB_SHA: ${{ github.sha }}
         run: node scripts/build-quotes-preview-pages.mjs
@@ -108,15 +108,15 @@ jobs:
         with:
           path: _site
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to existing GitHub Pages site
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Verify published Quotes preview
+      - name: Verify existing Forge Alive URL
         env:
           EXPECTED_SHA: ${{ github.sha }}
           BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
-          QUOTES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
+          FORGE_ALIVE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones
         run: |
           set -euo pipefail
           for attempt in $(seq 1 36); do
@@ -129,37 +129,37 @@ jobs:
           if (!buildResponse.ok) process.exit(1);
           const build = await buildResponse.json();
           if (build.commitSha !== expected) process.exit(1);
-          const quoteResponse = await fetch(`${process.env.QUOTES_URL}&cb=${cacheBust}`, {
+          const appResponse = await fetch(`${process.env.FORGE_ALIVE_URL}&cb=${cacheBust}`, {
             cache: 'no-store',
           });
-          if (!quoteResponse.ok) process.exit(1);
-          const html = await quoteResponse.text();
-          if (!html.includes('CALCULADORAS M05E-010')) process.exit(1);
-          console.log(`PAGES_PREVIEW_HTTP=PASS sha=${build.commitSha}`);
+          if (!appResponse.ok) process.exit(1);
+          const html = await appResponse.text();
+          if (!html.includes('Forge Alive')) process.exit(1);
+          console.log(`PAGES_FORGE_ALIVE_HTTP=PASS sha=${build.commitSha}`);
           EOF
             then
-              echo "PAGES_URL=$QUOTES_URL"
+              echo "PAGES_URL=$FORGE_ALIVE_URL"
               exit 0
             fi
             sleep 5
           done
-          echo "PAGES_PREVIEW_HTTP=FAIL"
+          echo "PAGES_FORGE_ALIVE_HTTP=FAIL"
           exit 1
 
-      - name: Mark preview deployment successful
+      - name: Mark canonical Pages deployment successful
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.sha }}
-          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
+          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones
         run: |
           gh api --method POST \
             "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
             -f state=success \
-            -f context=pages/quotes-preview \
-            -f description="Quotes preview published and verified" \
+            -f context=pages/quotes \
+            -f description="Quotes published to existing ForgeOS Pages" \
             -f target_url="$PAGE_URL" >/dev/null
 
-      - name: Mark preview deployment failed
+      - name: Mark canonical Pages deployment failed
         if: ${{ failure() }}
         env:
           GH_TOKEN: ${{ github.token }}
@@ -169,6 +169,6 @@ jobs:
           gh api --method POST \
             "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
             -f state=failure \
-            -f context=pages/quotes-preview \
-            -f description="Quotes preview deployment failed" \
+            -f context=pages/quotes \
+            -f description="Existing ForgeOS Pages deployment failed" \
             -f target_url="$ACTIONS_URL" >/dev/null
