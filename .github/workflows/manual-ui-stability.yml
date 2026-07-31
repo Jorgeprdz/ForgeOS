@@ -10,6 +10,7 @@ on:
       - docs/static-preview/forge-alive/**
       - docs/static-preview/forge-alive-material3/**
       - supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql
+      - scripts/deploy-pipeline-stage-rpc-migration.mjs
       - tests/legacy-ui-retirement-regression.mjs
       - tests/pipeline-stage-rpc-authority-regression.mjs
       - tests/manual-quotes-pipeline-stability-test.mjs
@@ -42,6 +43,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify stage RPC syntax
+        run: |
+          node --check docs/static-preview/forge-alive-material3/pipeline-stage-rpc-authority.js
+          node --check scripts/deploy-pipeline-stage-rpc-migration.mjs
 
       - name: Run focused UI regressions
         run: >-
