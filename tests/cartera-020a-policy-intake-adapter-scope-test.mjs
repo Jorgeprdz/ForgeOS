@@ -33,7 +33,7 @@ test('020A reuses the canonical Evidence backbone instead of creating another in
     await read(path);
   }
 
-  assert.match(scope, /Car­tera must not build a new generic intake framework|Cartera must not build a new generic intake framework/);
+  assert.match(scope, /Cartera must not build a new generic intake framework/);
 });
 
 test('candidate and confirmation semantics remain non-truth before the governed Policy command', async () => {
@@ -80,7 +80,7 @@ test('parser registry preserves unknowns and field provenance', async () => {
     'UNKNOWN_PRODUCT',
     'raw value',
     'normalized candidate value',
-    'page\/source location',
+    'page/source location',
     'confidence',
     'conflict state',
   ]) {
@@ -95,7 +95,7 @@ test('durable worker scope is resumable, idempotent and isolated per file', asyn
   const scope = await read(scopePath);
 
   for (const token of [
-    'lease\/claim ownership',
+    'lease/claim ownership',
     'retry count',
     'next retry time',
     'idempotent transition command',
@@ -116,6 +116,16 @@ test('020B path roots and remote boundary are bounded', async () => {
   assert.match(scope, /supabase\/migrations\/\*cartera020b\*\.sql/);
   assert.match(scope, /`cartera\.js`/);
   assert.match(scope, /CARTERA_020B_SUPABASE_REMOTE_MUTATION=NO/);
+});
+
+test('completed 010D scope workflow is manual-only and bounded housekeeping is explicit', async () => {
+  const scope = await read(scopePath);
+  const inherited = await read('.github/workflows/cartera-010d-scope-acceptance.yml');
+
+  assert.match(scope, /INHERITED_010D_GATE_RETIREMENT=BOUNDED/);
+  assert.match(inherited, /workflow_dispatch:/);
+  assert.doesNotMatch(inherited, /^  push:/m);
+  assert.doesNotMatch(inherited, /^  pull_request:/m);
 });
 
 test('020A locks negative gates and the exact next phase', async () => {
