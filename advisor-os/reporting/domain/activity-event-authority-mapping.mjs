@@ -1,10 +1,15 @@
 export const ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION =
-  "activity-event-authority-mapping.v1";
+  "activity-event-authority-mapping.v2";
 
 export const FES_ACTIVITY_EVENT_SCHEMA_VERSION =
   "forge.activity_event.v1";
 
+export const FES_ACTIVITY_EVENT_EXTENSION_VERSION =
+  "FES-05B.1";
+
 export const REPORTABLE_ACTIVITY_TYPES = Object.freeze([
+  "CONTACT_ATTEMPTED",
+  "CONVERSATION_COMPLETED",
   "INITIAL_APPOINTMENT_SCHEDULED",
   "INITIAL_APPOINTMENT_COMPLETED",
   "CLOSING_APPOINTMENT_SCHEDULED",
@@ -12,7 +17,7 @@ export const REPORTABLE_ACTIVITY_TYPES = Object.freeze([
   "FOLLOW_UP_COMPLETED",
 ]);
 
-export const FES_FIRST_VERTICAL_EVENT_TYPES = Object.freeze([
+export const FES_ACTIVITY_EVENT_TYPES = Object.freeze([
   "PROSPECT_PROFILE_CREATED",
   "PROSPECT_CREATED",
   "INITIAL_CONTEXT_CAPTURED",
@@ -26,6 +31,27 @@ export const FES_FIRST_VERTICAL_EVENT_TYPES = Object.freeze([
   "DUE_ACTION_CREATED",
   "DUE_ACTION_RESCHEDULED",
   "DUE_ACTION_COMPLETED",
+  "MESSAGE_DRAFT_GENERATED",
+  "MESSAGE_DRAFT_EDITED",
+  "MESSAGE_DRAFT_APPROVED",
+  "MESSAGE_SENT_CONFIRMED",
+  "PROSPECT_REPLIED_CONFIRMED",
+  "OBJECTION_CAPTURED",
+  "OBJECTION_ANALYSIS_GENERATED",
+  "OBJECTION_RESPONSE_GENERATED",
+  "OBJECTION_RESPONSE_EDITED",
+  "OBJECTION_RESPONSE_APPROVED",
+  "OBJECTION_RESPONSE_USED",
+  "OBJECTION_OUTCOME_CONFIRMED",
+  "CALL_CONNECTED_CONFIRMED",
+  "CALL_NOT_ANSWERED_CONFIRMED",
+  "CALL_CONTEXT_ADDED",
+  "QUOTE_STARTED",
+  "QUOTE_PREPARED",
+  "QUOTE_REVIEWED",
+  "PRESENTATION_HELD_CONFIRMED",
+  "PRODUCT_QUESTION_CAPTURED",
+  "PROPOSAL_REQUESTED_CONFIRMED",
 ]);
 
 const APPOINTMENT_EVENTS = new Set([
@@ -33,18 +59,32 @@ const APPOINTMENT_EVENTS = new Set([
   "APPOINTMENT_HELD",
 ]);
 
-const NON_COUNTABLE_EVENTS = new Set([
-  "PROSPECT_PROFILE_CREATED",
-  "PROSPECT_CREATED",
-  "INITIAL_CONTEXT_CAPTURED",
-  "TIMELINE_INITIALIZED",
-  "APPOINTMENT_NOT_HELD",
-  "APPOINTMENT_RESCHEDULED",
-  "APPOINTMENT_NO_SHOW",
-  "ACTIVITY_CONTEXT_ADDED",
-  "DUE_ACTION_CREATED",
-  "DUE_ACTION_RESCHEDULED",
-]);
+const DIRECT_ACTIVITY_MAP = Object.freeze({
+  DUE_ACTION_COMPLETED: Object.freeze([
+    "FOLLOW_UP_COMPLETED",
+  ]),
+  MESSAGE_SENT_CONFIRMED: Object.freeze([
+    "CONTACT_ATTEMPTED",
+  ]),
+  CALL_NOT_ANSWERED_CONFIRMED: Object.freeze([
+    "CONTACT_ATTEMPTED",
+  ]),
+  CALL_CONNECTED_CONFIRMED: Object.freeze([
+    "CONTACT_ATTEMPTED",
+    "CONVERSATION_COMPLETED",
+  ]),
+});
+
+const NON_COUNTABLE_EVENTS = new Set(
+  FES_ACTIVITY_EVENT_TYPES.filter(
+    (eventType) =>
+      !APPOINTMENT_EVENTS.has(eventType) &&
+      !Object.prototype.hasOwnProperty.call(
+        DIRECT_ACTIVITY_MAP,
+        eventType,
+      ),
+  ),
+);
 
 export class ActivityEventAuthorityMappingError extends TypeError {
   constructor(message) {
@@ -76,12 +116,41 @@ function string(value, label) {
   return value.trim();
 }
 
+function instant(value, label) {
+  const normalized = string(value, label);
+  const parsed = new Date(normalized);
+  if (Number.isNaN(parsed.getTime())) {
+    fail(`${label} must be an ISO instant`);
+  }
+  return parsed.toISOString();
+}
+
 function freeze(value) {
   if (value === null || typeof value !== "object" || Object.isFrozen(value)) {
     return value;
   }
   Object.values(value).forEach(freeze);
   return Object.freeze(value);
+}
+
+function decision({
+  eventId,
+  status,
+  reason,
+  activityTypes = [],
+}) {
+  const normalizedTypes = [...activityTypes];
+  return freeze({
+    schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
+    eventId,
+    status,
+    reason,
+    activityType:
+      normalizedTypes.length === 1
+        ? normalizedTypes[0]
+        : null,
+    activityTypes: normalizedTypes,
+  });
 }
 
 export function assertCanonicalFesActivityEvent(value) {
@@ -95,17 +164,27 @@ export function assertCanonicalFesActivityEvent(value) {
   string(value.event_type, "event.event_type");
   string(value.tenant_id, "event.tenant_id");
   string(value.idempotency_key, "event.idempotency_key");
-  string(value.occurred_at, "event.occurred_at");
-  string(value.recorded_at, "event.recorded_at");
+  instant(value.occurred_at, "event.occurred_at");
+  instant(value.recorded_at, "event.recorded_at");
 
-  if (!FES_FIRST_VERTICAL_EVENT_TYPES.includes(value.event_type)) {
+  if (!FES_ACTIVITY_EVENT_TYPES.includes(value.event_type)) {
     fail(`event type ${value.event_type} is unsupported`);
   }
 
-  if (!["UNCONFIRMED", "REPORTED", "CONFIRMED", "DISPUTED"].includes(value.confirmation_state)) {
+  if (
+    ![
+      "UNCONFIRMED",
+      "REPORTED",
+      "CONFIRMED",
+      "DISPUTED",
+    ].includes(value.confirmation_state)
+  ) {
     fail("event confirmation_state is unsupported");
   }
 
+  plain(value.actor, "event.actor");
+  string(value.actor.type, "event.actor.type");
+  string(value.actor.id, "event.actor.id");
   plain(value.payload, "event.payload");
 
   if (value.correction_of !== null && value.correction_of !== undefined) {
@@ -118,13 +197,13 @@ export function assertCanonicalFesActivityEvent(value) {
   return value;
 }
 
-function appointmentActivityType(event, classifyAppointment) {
+function appointmentActivityTypes(event, classifyAppointment) {
   if (typeof classifyAppointment !== "function") {
-    return {
+    return decision({
+      eventId: event.event_id,
       status: "REQUIRES_DOMAIN_CONTEXT",
       reason: "APPOINTMENT_STAGE_NOT_IN_CANONICAL_ENVELOPE",
-      activityType: null,
-    };
+    });
   }
 
   const stage = classifyAppointment(event);
@@ -133,10 +212,11 @@ function appointmentActivityType(event, classifyAppointment) {
   }
 
   const completed = event.event_type === "APPOINTMENT_HELD";
-  return {
+  return decision({
+    eventId: event.event_id,
     status: "COUNTABLE",
     reason: "CANONICAL_CONFIRMED_APPOINTMENT",
-    activityType:
+    activityTypes: [
       stage === "INITIAL"
         ? completed
           ? "INITIAL_APPOINTMENT_COMPLETED"
@@ -144,71 +224,71 @@ function appointmentActivityType(event, classifyAppointment) {
         : completed
           ? "CLOSING_APPOINTMENT_COMPLETED"
           : "CLOSING_APPOINTMENT_SCHEDULED",
-  };
+    ],
+  });
 }
 
-export function mapCanonicalEventToActivity(eventInput, { classifyAppointment } = {}) {
+export function mapCanonicalEventToActivity(
+  eventInput,
+  { classifyAppointment } = {},
+) {
   const event = assertCanonicalFesActivityEvent(eventInput);
 
   if (event.confirmation_state === "DISPUTED") {
-    return freeze({
-      schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
+    return decision({
       eventId: event.event_id,
       status: "EXCLUDED",
       reason: "DISPUTED_EVENT",
-      activityType: null,
     });
   }
 
-  if (event.event_type === "DUE_ACTION_COMPLETED") {
+  const directTypes = DIRECT_ACTIVITY_MAP[event.event_type];
+  if (directTypes) {
     if (event.confirmation_state !== "CONFIRMED") {
-      return freeze({
-        schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
+      return decision({
         eventId: event.event_id,
         status: "EXCLUDED",
-        reason: "FOLLOW_UP_NOT_CONFIRMED",
-        activityType: null,
+        reason: "DIRECT_ACTIVITY_NOT_CONFIRMED",
       });
     }
 
-    return freeze({
-      schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
+    return decision({
       eventId: event.event_id,
       status: "COUNTABLE",
-      reason: "CONFIRMED_DUE_ACTION_COMPLETION",
-      activityType: "FOLLOW_UP_COMPLETED",
+      reason: "CANONICAL_CONFIRMED_ACTIVITY_RESULT",
+      activityTypes: directTypes,
     });
   }
 
   if (APPOINTMENT_EVENTS.has(event.event_type)) {
     if (event.confirmation_state !== "CONFIRMED") {
-      return freeze({
-        schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
+      return decision({
         eventId: event.event_id,
         status: "EXCLUDED",
         reason: "APPOINTMENT_NOT_CONFIRMED",
-        activityType: null,
       });
     }
 
-    return freeze({
-      schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
-      eventId: event.event_id,
-      ...appointmentActivityType(event, classifyAppointment),
-    });
+    return appointmentActivityTypes(event, classifyAppointment);
   }
 
   if (NON_COUNTABLE_EVENTS.has(event.event_type)) {
-    return freeze({
-      schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
+    return decision({
       eventId: event.event_id,
       status: "NOT_A_REPORTABLE_ACTIVITY",
       reason: "EVENT_IS_TIMELINE_EVIDENCE_ONLY",
-      activityType: null,
     });
   }
 
   fail(`event type ${event.event_type} lacks an explicit mapping policy`);
+}
+
+function eventOrder(left, right) {
+  const recorded =
+    new Date(left.recorded_at).getTime() -
+    new Date(right.recorded_at).getTime();
+  if (recorded !== 0) return recorded;
+  return left.event_id.localeCompare(right.event_id);
 }
 
 export function resolveCountableActivityFacts(eventsInput, options = {}) {
@@ -216,13 +296,16 @@ export function resolveCountableActivityFacts(eventsInput, options = {}) {
     fail("events must be an array");
   }
 
-  const events = eventsInput.map(assertCanonicalFesActivityEvent);
+  const events = eventsInput
+    .map(assertCanonicalFesActivityEvent)
+    .sort(eventOrder);
   const eventIds = new Set();
-  const idempotencyKeys = new Set();
   const byId = new Map();
 
   for (const event of events) {
-    if (eventIds.has(event.event_id)) fail(`duplicate event_id ${event.event_id}`);
+    if (eventIds.has(event.event_id)) {
+      fail(`duplicate event_id ${event.event_id}`);
+    }
     eventIds.add(event.event_id);
     byId.set(event.event_id, event);
   }
@@ -237,32 +320,55 @@ export function resolveCountableActivityFacts(eventsInput, options = {}) {
     }
   }
 
+  const replayKeys = new Set();
   const facts = [];
   const exclusions = [];
 
   for (const event of events) {
     if (corrected.has(event.event_id)) {
-      exclusions.push(freeze({ eventId: event.event_id, reason: "SUPERSEDED_BY_CORRECTION" }));
-      continue;
-    }
-
-    if (idempotencyKeys.has(event.idempotency_key)) {
-      exclusions.push(freeze({ eventId: event.event_id, reason: "IDEMPOTENT_REPLAY" }));
-      continue;
-    }
-    idempotencyKeys.add(event.idempotency_key);
-
-    const decision = mapCanonicalEventToActivity(event, options);
-    if (decision.status === "COUNTABLE") {
-      facts.push(freeze({
+      exclusions.push(freeze({
         eventId: event.event_id,
-        tenantId: event.tenant_id,
-        occurredAt: event.occurred_at,
-        activityType: decision.activityType,
-        correctionOf: event.correction_of ?? null,
+        eventType: event.event_type,
+        reason: "SUPERSEDED_BY_CORRECTION",
       }));
+      continue;
+    }
+
+    const replayKey = [
+      event.event_type,
+      event.idempotency_key,
+    ].join("\u001f");
+
+    if (replayKeys.has(replayKey)) {
+      exclusions.push(freeze({
+        eventId: event.event_id,
+        eventType: event.event_type,
+        reason: "IDEMPOTENT_REPLAY",
+      }));
+      continue;
+    }
+    replayKeys.add(replayKey);
+
+    const mapped = mapCanonicalEventToActivity(event, options);
+    if (mapped.status === "COUNTABLE") {
+      for (const activityType of mapped.activityTypes) {
+        facts.push(freeze({
+          factId: `${event.event_id}:${activityType}`,
+          eventId: event.event_id,
+          eventType: event.event_type,
+          tenantId: event.tenant_id,
+          occurredAt: new Date(event.occurred_at).toISOString(),
+          recordedAt: new Date(event.recorded_at).toISOString(),
+          activityType,
+          correctionOf: event.correction_of ?? null,
+        }));
+      }
     } else {
-      exclusions.push(freeze({ eventId: event.event_id, reason: decision.reason }));
+      exclusions.push(freeze({
+        eventId: event.event_id,
+        eventType: event.event_type,
+        reason: mapped.reason,
+      }));
     }
   }
 
