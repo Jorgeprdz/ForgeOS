@@ -8,12 +8,13 @@ STATUS=CLOSED_IMPLEMENTED_AND_BROWSER_ACCEPTED
 SOURCE_BRANCH=feature/cartera-001b-remote-acceptance
 SOURCE_COMMIT=f9323300eb9c2f78c05a616a01894aeec4f694f9
 IMPLEMENTATION_BRANCH=feature/cartera-001c-prospect-detail-timeline-projection
-ACCEPTED_IMPLEMENTATION_COMMIT=9ba7f22902a533a83b9a6f8dcf6b6b4348c265c1
+ACCEPTED_IMPLEMENTATION_COMMIT=fd567f37586373048fd6fc20686d59ef3b79229f
 PULL_REQUEST=19
-GITHUB_ACTIONS_RUN=30602413183
-CONTRACT_JOB=91067741005
-BROWSER_JOB=91067767424
-BROWSER_EVIDENCE_ARTIFACT_ID=8782385843
+GITHUB_ACTIONS_RUN=30602676256
+CONTRACT_JOB=91068515512
+BROWSER_JOB=91068542983
+BROWSER_EVIDENCE_ARTIFACT_ID=8782480629
+BROWSER_EVIDENCE_SHA256=3e6e18735d17846db535ca9be07528e5eb70f242eb46b04f72c5afc01f63a596
 NEXT=CARTERA_001D_VERTICAL_ACCEPTANCE_AND_CLOSURE
 ```
 
@@ -24,6 +25,7 @@ accepted quote_lifecycle_history
 → authenticated Prospect-scoped read
 → strict minimized Quote row validation
 → deterministic grouping by quote_reference
+→ self-validating projection envelope
 → current lifecycle summary
 → Quote-authority activity timeline
 → existing Productive Prospect Detail dialog
@@ -69,7 +71,9 @@ The projection rejects or omits:
 - unknown source fields;
 - automatic mutations and external effects.
 
-## Runtime defect found and closed
+## Runtime defects found and closed
+
+### Prospect Detail listener ordering
 
 Initial Chromium acceptance proved that CARTERA 001C was bound before Productive
 Prospect UI created the detail dialog. A microtask could therefore execute before
@@ -79,12 +83,30 @@ The binding now schedules mounting in the next browser task after click dispatch
 while preserving the selected Prospect reference. This keeps the integration
 independent of listener registration order and prevents a silent missing section.
 
+### Projection envelope validation
+
+The initial exported validator attempted to rebuild a projection from private
+source rows that the minimized envelope intentionally does not retain. It was
+replaced with direct envelope validation covering:
+
+- exact top-level shape;
+- projection version and source authority;
+- Prospect scope;
+- Quote and event uniqueness;
+- lifecycle and event semantics;
+- counters and conflict consistency;
+- timestamp and evidence-count shape;
+- deterministic projection digest.
+
+A valid projection now validates without private source material, while tampered
+counters or content are rejected.
+
 ## Validation
 
 ```text
 JAVASCRIPT_SYNTAX=PASS
-TARGETED_TESTS=13
-TARGETED_PASS=13
+TARGETED_TESTS=15
+TARGETED_PASS=15
 TARGETED_FAIL=0
 DIFF_INTEGRITY=PASS
 CHROMIUM_TESTS=2
@@ -103,6 +125,8 @@ The contract suite proved:
 - conflict preservation;
 - cross-Prospect rejection;
 - forbidden-field rejection;
+- self-contained envelope validation;
+- tamper detection through counters and digest;
 - HTML escaping;
 - bounded error rendering;
 - read-only bootstrap and service integration.
