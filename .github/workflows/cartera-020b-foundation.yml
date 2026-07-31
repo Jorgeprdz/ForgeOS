@@ -81,17 +81,22 @@ jobs:
           echo 'INHERITED_EVIDENCE_TESTS=9'
           echo 'INHERITED_EVIDENCE_PASS=9'
 
-      - name: Verify persistence and authority boundaries
+      - name: Verify persistence and governed command boundaries
         shell: bash
         run: |
           set -euo pipefail
           tables=supabase/migrations/20260731000220_cartera020b_evidence_tables.sql
           guards=supabase/migrations/20260731000221_cartera020b_worker_guards.sql
           rls=supabase/migrations/20260731000222_cartera020b_rls_and_grants.sql
+          helpers=supabase/migrations/20260731000223_cartera020b_command_helpers.sql
+          admission=supabase/migrations/20260731000224_cartera020b_admission_and_claim_rpcs.sql
+          result=supabase/migrations/20260731000225_cartera020b_processing_result_rpc.sql
           progress=docs/architecture/source-truth/FORGE_CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_PROGRESS_001.md
           inherited=.github/workflows/cartera-020a-scope-acceptance.yml
-          combined=$(cat "$tables" "$guards" "$rls")
+          combined=$(cat "$tables" "$guards" "$rls" "$helpers" "$admission" "$result")
 
+          grep -q 'metadata jsonb not null' "$tables"
+          ! grep -q '\bmetada\b' "$tables"
           grep -q 'cartera020b_evidence_sources' "$tables"
           grep -q 'cartera020b_policy_evidence_packets' "$tables"
           grep -q 'creates_truth boolean not null default false' "$tables"
@@ -100,14 +105,24 @@ jobs:
           grep -q 'force row level security' "$rls"
           grep -q 'using (advisor_id = auth.uid())' "$rls"
           grep -q 'revoke all on public.cartera020b_' "$rls"
+
+          grep -q 'create or replace function public.forge_cartera020b_admit_evidence' "$admission"
+          grep -q 'create or replace function public.forge_cartera020b_claim_evidence' "$admission"
+          grep -q 'create or replace function public.forge_cartera020b_record_processing_result' "$result"
+          grep -q 'for update skip locked' "$admission"
+          grep -q 'CHANGED_INPUT_REPLAY' "$helpers"
+          grep -q "set_config('forge.cartera020b_command', 'on', true)" "$admission"
+          grep -q "set_config('forge.cartera020b_command', 'on', true)" "$result"
+          grep -q 'PENDING_CONFIRMATION' "$result"
+
           ! grep -qi 'raw_document\|raw_text\|document_bytes\|bytea' <<<"$combined"
           ! grep -qi 'insert into public.canonical_policies' <<<"$combined"
           ! grep -qi 'insert into public.policy_roles' <<<"$combined"
           ! grep -qi 'insert into public.commercial_people' <<<"$combined"
-          ! grep -q 'create or replace function public.forge_cartera020b_' <<<"$combined"
+          ! grep -qi 'forge_cartera010b_confirm_policy_with_parties' <<<"$combined"
 
           grep -q 'CARTERA_020B_PERSISTENCE_SCHEMA=REPOSITORY_READY' "$progress"
-          grep -q 'CARTERA_020B_SQL_COMMANDS=NOT_IMPLEMENTED' "$progress"
+          grep -q 'CARTERA_020B_SQL_COMMANDS=REPOSITORY_READY' "$progress"
           grep -q 'CARTERA_020B_REMOTE_DEPLOYMENT=NOT_AUTHORIZED' "$progress"
           grep -q 'CARTERA_020B_COMPLETE=NO' "$progress"
           grep -q 'workflow_dispatch:' "$inherited"
@@ -115,16 +130,16 @@ jobs:
 
       - name: Emit progress markers
         run: |
-          echo 'NEW_TARGETED_TESTS=31'
-          echo 'NEW_TARGETED_PASS=31'
+          echo 'NEW_TARGETED_TESTS=43'
+          echo 'NEW_TARGETED_PASS=43'
           echo 'INHERITED_EVIDENCE_TESTS=9'
           echo 'INHERITED_EVIDENCE_PASS=9'
-          echo 'TOTAL_TARGETED_TESTS=40'
-          echo 'TOTAL_TARGETED_PASS=40'
+          echo 'TOTAL_TARGETED_TESTS=52'
+          echo 'TOTAL_TARGETED_PASS=52'
           echo 'TOTAL_TARGETED_FAIL=0'
           echo 'CARTERA_020B_CONTRACTS=REPOSITORY_READY'
           echo 'CARTERA_020B_PERSISTENCE_SCHEMA=REPOSITORY_READY'
-          echo 'CARTERA_020B_SQL_COMMANDS=NOT_IMPLEMENTED'
+          echo 'CARTERA_020B_SQL_COMMANDS=REPOSITORY_READY'
           echo 'CARTERA_020B_REMOTE_DEPLOYMENT=NOT_AUTHORIZED'
           echo 'CARTERA_020B_COMPLETE=NO'
-          echo 'NEXT=CARTERA_020B_GOVERNED_PERSISTENCE_COMMANDS'
+          echo 'NEXT=CARTERA_020B_REMOTE_DEPLOYMENT_AND_TRANSACTIONAL_ACCEPTANCE'
