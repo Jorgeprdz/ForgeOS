@@ -132,3 +132,26 @@ test("projection digest is deterministic across source ordering", () => {
   assert.equal(left.projection_digest, right.projection_digest);
   assert.deepEqual(left, right);
 });
+
+test("generated projection envelope validates without private source rows", () => {
+  const result = projection.createProspectQuoteDetailProjection({
+    prospectReference,
+    rows: [row()],
+  });
+  assert.deepEqual(projection.validateProspectQuoteDetailProjection(result), {
+    valid: true,
+    errors: [],
+  });
+});
+
+test("tampered projection envelope fails counters and digest validation", () => {
+  const result = projection.createProspectQuoteDetailProjection({
+    prospectReference,
+    rows: [row()],
+  });
+  const tampered = JSON.parse(JSON.stringify(result));
+  tampered.counters.quote_count = 99;
+  const validation = projection.validateProspectQuoteDetailProjection(tampered);
+  assert.equal(validation.valid, false);
+  assert.equal(validation.errors[0].code, "PROJECTION_COUNTER_MISMATCH");
+});
