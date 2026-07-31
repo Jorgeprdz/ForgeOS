@@ -210,7 +210,7 @@ assert.equal(
   "REVIEW_REQUIRED_MISSING_CORE_FIELDS",
 );
 assert.deepEqual(
-  missingModel.review.unavailableRequiredFields.sort(),
+  [...missingModel.review.unavailableRequiredFields].sort(),
   ["client_name", "product"],
 );
 assert.equal(missingModel.summary.client.value, null);
