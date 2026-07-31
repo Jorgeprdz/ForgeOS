@@ -1,119 +1,17 @@
-name: Pipeline Journal Migration Deployment
+name: Pipeline Journal Migration Deployment (retired)
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "supabase/migrations/20260731000100_pipeline_prospect_journal.sql"
-      - "scripts/deploy-pipeline-journal-migration.mjs"
-      - "tests/prospect-journal-service-contract-test.mjs"
-      - ".github/workflows/pipeline-journal-migration-deployment.yml"
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: pipeline-journal-migration-production
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  deploy:
-    if: github.repository == 'Jorgeprdz/ForgeOS'
+  notice:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
-
     steps:
-      - name: Checkout accepted main
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Verify deployment authorization and source
-        shell: bash
+      - name: Show canonical migration gate
         run: |
-          set -euo pipefail
-          test -n "$SUPABASE_ACCESS_TOKEN"
-          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
-          test "$(git branch --show-current)" = "main"
-          test -f supabase/migrations/20260731000100_pipeline_prospect_journal.sql
-          node --check scripts/deploy-pipeline-journal-migration.mjs
-          ! rg -n "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
-            supabase/migrations/20260731000100_pipeline_prospect_journal.sql
-          rg -n "prospect_journal_entries|JOURNAL:|CONVERSATION_RECORDED|enable row level security" \
-            supabase/migrations/20260731000100_pipeline_prospect_journal.sql
-
-      - name: Verify Journal contract
-        run: node --test tests/prospect-journal-service-contract-test.mjs
-
-      - name: Apply and confirm exactly migration 20260731000100
-        run: node scripts/deploy-pipeline-journal-migration.mjs
-
-      - name: Publish redacted remote evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch origin supabase-evidence
-          git worktree add /tmp/supabase-evidence origin/supabase-evidence
-          mkdir -p /tmp/supabase-evidence/deployments
-          cp artifacts/pipeline-journal-migration/ledger.jsonl \
-            /tmp/supabase-evidence/deployments/20260731000100-ledger.jsonl
-
-          node --input-type=module <<'NODE'
-          import { readFileSync, writeFileSync } from 'node:fs';
-          const entries = readFileSync('artifacts/pipeline-journal-migration/ledger.jsonl', 'utf8')
-            .trim()
-            .split('\n')
-            .filter(Boolean)
-            .map(line => JSON.parse(line));
-          if (!entries.length || entries.some(entry => entry.status !== 'PASS')) {
-            throw new Error('MIGRATION_LEDGER_NOT_ACCEPTED');
-          }
-          const required = [
-            'predeployment_inventory',
-            entries.some(entry => entry.name === 'migration_applied')
-              ? 'migration_applied'
-              : 'migration_already_satisfied',
-            'postdeployment_security_inventory',
-            'migration_history',
-          ];
-          for (const name of required) {
-            if (!entries.some(entry => entry.name === name && entry.status === 'PASS')) {
-              throw new Error(`MIGRATION_EVIDENCE_MISSING_${name.toUpperCase()}`);
-            }
-          }
-          const result = {
-            status: 'PASS',
-            migrationVersion: '20260731000100',
-            migrationName: 'pipeline_prospect_journal',
-            projectRef: 'rmlxigxysujsuwzgoimv',
-            sourceSha: process.env.GITHUB_SHA,
-            workflowRunId: process.env.GITHUB_RUN_ID,
-            verifiedAt: new Date().toISOString(),
-            checks: entries.map(({ name, status }) => ({ name, status })),
-          };
-          writeFileSync('/tmp/supabase-evidence/deployments/latest.json', `${JSON.stringify(result, null, 2)}\n`);
-          NODE
-
-          cd /tmp/supabase-evidence
-          git config user.name "forgeos-supabase-deploy"
-          git config user.email "actions@users.noreply.github.com"
-          git add deployments/latest.json deployments/20260731000100-ledger.jsonl
-          git commit -m "evidence(supabase): confirm journal migration ${GITHUB_SHA}"
-          git push origin HEAD:supabase-evidence
-
-      - name: Upload redacted deployment ledger
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pipeline-journal-migration-ledger
-          path: artifacts/pipeline-journal-migration/ledger.jsonl
-          if-no-files-found: error
-          retention-days: 30
+          echo "Journal migration deployment was consolidated into:"
+          echo ".github/workflows/067g17b-migration-deployment.yml"
+          echo "Migration 20260731000100 is already deployed and remotely verified."
