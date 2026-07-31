@@ -8,6 +8,7 @@ import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
 import "./pipeline-prospect-admin.js?v=pipeline-prospect-admin-001";
 import "./pipeline-action-identity.js?v=pipeline-action-identity-001";
+import "./pipeline-google-calendar.js?v=pipeline-google-calendar-001";
 import "./pipeline-context-journal.js?v=pipeline-context-journal-002";
 import "./pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003";
 import "./pipeline-filter-count-authority.js?v=pipeline-filter-count-001";
