@@ -268,10 +268,10 @@ export function createCanonicalDirectoryProjection({
     const asOfTimestamp = validAsOf(asOf);
     const activePeople = people
         .map(row => requireRecord(row, 'COMMERCIAL_PERSON'))
-        .filter(row => !row.archived_at);
+        .filter(row => !row.archived_at && row.privacy_classification !== 'RESTRICTED');
     const activeAccounts = accounts
         .map(row => requireRecord(row, 'COMMERCIAL_ACCOUNT'))
-        .filter(row => !row.archived_at);
+        .filter(row => !row.archived_at && row.privacy_classification !== 'RESTRICTED');
     const activePolicies = policies
         .map(row => requireRecord(row, 'CANONICAL_POLICY'))
         .filter(row => !row.archived_at);
