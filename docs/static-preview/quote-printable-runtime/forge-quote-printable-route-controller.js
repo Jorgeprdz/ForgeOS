@@ -179,6 +179,14 @@ function createQuotePrintableRouteController({
     if (!bundle) {
       fail("PRINTABLE_BUNDLE_REQUIRED", "Primero crea la versión imprimible.");
     }
+    if (bundle.persistedRecord) {
+      lastPersistence = deepFreeze({
+        status: "IDEMPOTENT_REPLAY",
+        durable: true,
+        record: bundle.persistedRecord,
+      });
+      return lastPersistence;
+    }
     const identity = await ensureDurableIdentity();
     if (!identity) {
       lastPersistence = deepFreeze({
