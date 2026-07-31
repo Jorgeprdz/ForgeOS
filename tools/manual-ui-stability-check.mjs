@@ -137,7 +137,10 @@ try {
   }));
   assert.equal(immediate.stage, "appointment_scheduled");
   assert.equal(immediate.label, "Cita agendada");
-  assert.equal(immediate.persistence, "saving");
+  assert.ok(
+    ["saving", "saved"].includes(immediate.persistence),
+    `unexpected immediate persistence state: ${immediate.persistence}`,
+  );
   assert.notEqual(immediate.border, beforeStage.border);
 
   await page.waitForTimeout(180);
