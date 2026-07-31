@@ -170,8 +170,9 @@
     documentRef.addEventListener("click", event => {
       const trigger = event.target?.closest?.("[data-open-prospect]");
       if (!trigger?.dataset?.openProspect) return;
-      state.lastProspectReference = trigger.dataset.openProspect;
-      queueMicrotask(() => void mountForProspect(state.lastProspectReference, state));
+      const prospectReference = trigger.dataset.openProspect;
+      state.lastProspectReference = prospectReference;
+      root.setTimeout(() => void mountForProspect(prospectReference, state), 0);
     }, { capture: true, signal: controller.signal });
     state.api = Object.freeze({
       version: UI_VERSION,
