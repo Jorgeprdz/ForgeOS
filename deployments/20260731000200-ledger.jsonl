@@ -1,4 +1,6 @@
-{"timestamp":"2026-07-31T17:19:20.924Z","name":"predeployment_inventory","status":"PASS","rpcState":"ABSENT","activeProspectAvailable":true}
-{"timestamp":"2026-07-31T17:19:21.547Z","name":"migration_applied","status":"PASS","migration":"20260731000200"}
-{"timestamp":"2026-07-31T17:19:22.134Z","name":"postdeployment_security_inventory","status":"PASS","checks":["rpc_exists","security_definer","authenticated_execute","anon_denied","checks_auth_uid","checks_owner","excludes_archived"]}
-{"timestamp":"2026-07-31T17:19:23.285Z","name":"database_query","status":"FAIL","httpStatus":400,"detail":"Failed to run sql query: ERROR:  42883: function digest(text, unknown) does not exist\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.\nQUERY:  insert into public.prospect_timeline_events (\n      prospect_id,\n      advisor_id,\n      event_type,\n      event_source,\n      source_record_reference,\n      occurred_at,\n      created_by,\n      payload,\n      evidence_references,\n      idempotency_key\n    )\n    values (\n      new.id,\n      new.advis"}
+{"timestamp":"2026-07-31T17:28:33.498Z","name":"predeployment_inventory","status":"PASS","rpcState":"PRESENT","activeProspectAvailable":true}
+{"timestamp":"2026-07-31T17:28:34.336Z","name":"migration_applied","status":"PASS","migration":"20260731000200"}
+{"timestamp":"2026-07-31T17:28:35.550Z","name":"timeline_digest_repair_applied","status":"PASS","migration":"20260731000300"}
+{"timestamp":"2026-07-31T17:28:36.171Z","name":"postdeployment_security_inventory","status":"PASS","checks":["rpc_exists","security_definer","authenticated_execute","anon_denied","checks_auth_uid","checks_owner","excludes_archived","capture_has_pgcrypto_search_path","append_has_pgcrypto_search_path"]}
+{"timestamp":"2026-07-31T17:28:38.543Z","name":"authenticated_rollback_acceptance","status":"PASS","mutationPersisted":false,"originalStatusPreserved":true,"timelineEventObservedInsideTransaction":true,"timelineRollbackPreserved":true}
+{"timestamp":"2026-07-31T17:28:41.912Z","name":"migration_history","status":"PASS","migrations":["20260731000200","20260731000300"]}
