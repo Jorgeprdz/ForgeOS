@@ -58,6 +58,10 @@ function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
 }
 
+function normalizeMigrationSql(value) {
+  return `${String(value).replace(/\r\n/g, '\n').trim()}\n`;
+}
+
 function jsonSql(value) {
   return `${sqlLiteral(JSON.stringify(value))}::jsonb`;
 }
@@ -131,8 +135,8 @@ async function readMigration(version) {
 }
 
 function normalizeStoredStatements(value) {
-  if (Array.isArray(value)) return `${value.join('\n\n').trim()}\n`;
-  if (typeof value === 'string') return `${value.trim()}\n`;
+  if (Array.isArray(value)) return normalizeMigrationSql(value.join('\n\n'));
+  if (typeof value === 'string') return normalizeMigrationSql(value);
   return null;
 }
 
@@ -146,7 +150,7 @@ function historyInsert(migration, raw, columns) {
   }
   if (columns.has('statements')) {
     names.push('statements');
-    values.push(`array[${sqlLiteral(raw)}]::text[]`);
+    values.push(`array[${sqlLiteral(normalizeMigrationSql(raw))}]::text[]`);
   }
   return `insert into supabase_migrations.schema_migrations (${names.join(', ')})
 values (${values.join(', ')}) on conflict (version) do nothing;`;
@@ -154,7 +158,8 @@ values (${values.join(', ')}) on conflict (version) do nothing;`;
 
 async function applyMigration(migration, columns) {
   const raw = readFileSync(migration.path, 'utf8');
-  const localHash = sha256(raw);
+  const canonicalLocal = normalizeMigrationSql(raw);
+  const localHash = sha256(canonicalLocal);
   const existing = await readMigration(migration.version);
   if (existing) {
     const stored = normalizeStoredStatements(existing.statements);
