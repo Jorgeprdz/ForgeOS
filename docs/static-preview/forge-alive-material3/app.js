@@ -4,7 +4,7 @@ import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module-complete.js?v=manual-quotes-complete-001";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
-import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-001";
+import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
 import "./pipeline-prospect-admin.js?v=pipeline-prospect-admin-001";
 import "./pipeline-action-identity.js?v=pipeline-action-identity-001";
