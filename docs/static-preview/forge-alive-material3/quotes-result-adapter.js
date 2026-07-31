@@ -1,7 +1,7 @@
 import {
   createQuoteResultSnapshot,
   renderQuoteResultSnapshot,
-} from "./quote-product-intelligence-presenter.js?v=quote-calculator-parity-001";
+} from "./quote-product-intelligence-presenter.js?v=quote-calculator-parity-002";
 
 const UNKNOWN = "No disponible en la propuesta";
 
@@ -11,6 +11,134 @@ function safeCall(callback, fallback = null) {
   } catch {
     return fallback;
   }
+}
+
+function hasValue(value) {
+  return value !== null && value !== undefined && value !== "";
+}
+
+function finiteNumber(value) {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+  const normalized = String(value).replace(/[^0-9.-]/g, "");
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function formatMxn(value) {
+  const numeric = finiteNumber(value);
+  if (numeric === null) return null;
+  return `≈ $${new Intl.NumberFormat("es-MX", {
+    maximumFractionDigits: 2,
+  }).format(numeric)} MXN actual`;
+}
+
+function verifiedUdiRate(snapshot) {
+  const metadata = snapshot?.rateMetadata || {};
+  const value = finiteNumber(metadata.value);
+  if (
+    value === null ||
+    value <= 0 ||
+    metadata.stale === true
+  ) {
+    return null;
+  }
+  const key = String(metadata.key || "").toUpperCase();
+  const status = String(metadata.status || "").toUpperCase();
+  return key.includes("UDI") || status.includes("UDI")
+    ? value
+    : null;
+}
+
+function sourceUdiValue(item) {
+  const value = item?.value;
+  if (value && typeof value === "object") {
+    const currency = String(value.currency || "").toUpperCase();
+    if (currency === "UDI") return finiteNumber(value.value);
+    return finiteNumber(value.udi ?? value.amountUdi ?? value.valueUdi);
+  }
+  const text = String(value ?? "");
+  return /\bUDI(?:S)?\b/i.test(text) ? finiteNumber(text) : null;
+}
+
+function appendSecondaryLine(target, text) {
+  if (!target || !hasValue(text)) return;
+  const normalized = String(text);
+  if (target.textContent?.includes(normalized)) return;
+  const line = target.ownerDocument.createElement("span");
+  line.className = "quotes-value-line quotes-value-line--conversion";
+  line.textContent = normalized;
+  target.append(line);
+}
+
+function enrichMetricNode(node, item) {
+  if (!node || !item) return;
+  const value = node.querySelector("strong");
+  if (!value) return;
+
+  const primary = item.value ?? item.primary;
+  if (!hasValue(item.value) && hasValue(primary)) {
+    value.textContent = String(primary);
+  }
+
+  appendSecondaryLine(
+    value,
+    item.secondaryValue ?? item.secondary ?? null,
+  );
+}
+
+function enrichRenderedSnapshot(snapshot, host) {
+  if (!snapshot || !host) return;
+
+  host.dataset.quoteCalculatorRuntime = "M05E-002";
+
+  const rate = verifiedUdiRate(snapshot);
+  const mandatoryCards = new Map(
+    [...host.querySelectorAll("[data-quote-mandatory-metric]")]
+      .map((card) => [card.dataset.quoteMandatoryMetric, card]),
+  );
+
+  for (const [key, item] of [
+    ["sum-assured", snapshot.mandatory?.sumAssured],
+    ["annual-contribution", snapshot.mandatory?.annualContribution],
+  ]) {
+    const card = mandatoryCards.get(key);
+    const value = card?.querySelector("strong");
+    if (!value || !item) continue;
+
+    appendSecondaryLine(
+      value,
+      item.secondaryValue ?? item.secondary ?? null,
+    );
+
+    if (!/\bMXN\b/i.test(value.textContent || "") && rate) {
+      const udi = sourceUdiValue(item);
+      const mxn = udi === null ? null : formatMxn(udi * rate);
+      appendSecondaryLine(value, mxn);
+    }
+  }
+
+  const heroItem = snapshot.dashboard?.model?.hero;
+  const hero = host.querySelector(".quotes-intelligence-hero strong");
+  appendSecondaryLine(
+    hero,
+    heroItem?.secondaryValue ?? heroItem?.secondary ?? null,
+  );
+
+  const productGrid = host.querySelector(":scope > .quotes-intelligence-grid");
+  const sectionNodes = productGrid
+    ? [...productGrid.querySelectorAll(":scope > .quotes-intelligence-section")]
+    : [];
+  const sections = snapshot.dashboard?.model?.sections || [];
+
+  sections.forEach((section, sectionIndex) => {
+    const rows = sectionNodes[sectionIndex]
+      ? [...sectionNodes[sectionIndex].querySelectorAll(".quotes-intelligence-metric")]
+      : [];
+    (section.items || []).forEach((item, itemIndex) => {
+      enrichMetricNode(rows[itemIndex], item);
+    });
+  });
 }
 
 function viewState(bridge) {
@@ -211,6 +339,7 @@ export async function reconcileQuoteResult({ bridge, projection, root }) {
       host,
       documentRef: projection.ownerDocument,
     });
+    enrichRenderedSnapshot(snapshot, host);
     appendReview(snapshot, projection, projection.ownerDocument);
     appendActions({
       snapshot,
@@ -220,6 +349,7 @@ export async function reconcileQuoteResult({ bridge, projection, root }) {
       documentRef: projection.ownerDocument,
     });
     projection.dataset.productDashboard = snapshot.dashboard.type;
+    projection.dataset.quoteCalculatorRuntime = "M05E-002";
   }
 
   projection.querySelector("[data-quote-retry]")
