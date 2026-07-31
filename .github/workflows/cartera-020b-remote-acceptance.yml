@@ -1,9 +1,6 @@
 name: CARTERA 020B Remote Acceptance
 
 on:
-  pull_request:
-    branches:
-      - feature/cartera-020b-persistent-evidence-worker-parser-registry
   workflow_dispatch:
     inputs:
       authorization:
@@ -37,17 +34,17 @@ jobs:
     timeout-minutes: 25
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_REF: ${{ inputs.project_ref || 'rmlxigxysujsuwzgoimv' }}
-      CARTERA_020B_REMOTE_MUTATION_AUTHORIZED: ${{ inputs.authorization || 'YES:CARTERA_020B_REMOTE_MUTATION' }}
-      CARTERA_020B_EXPECTED_SOURCE_HEAD: ${{ inputs.expected_source_head || '95d03f220670239fc7c2af9ab5799bb21406cbd0' }}
-      CARTERA_020B_EXPECTED_ACCEPTANCE_HEAD: ${{ inputs.expected_acceptance_head || github.sha }}
+      SUPABASE_PROJECT_REF: ${{ inputs.project_ref }}
+      CARTERA_020B_REMOTE_MUTATION_AUTHORIZED: ${{ inputs.authorization }}
+      CARTERA_020B_EXPECTED_SOURCE_HEAD: ${{ inputs.expected_source_head }}
+      CARTERA_020B_EXPECTED_ACCEPTANCE_HEAD: ${{ inputs.expected_acceptance_head }}
       CARTERA_020B_ACCEPTANCE_BRANCH: feature/cartera-020b-remote-acceptance
 
     steps:
       - name: Checkout exact authorized acceptance head
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.expected_acceptance_head || github.sha }}
+          ref: ${{ inputs.expected_acceptance_head }}
           fetch-depth: 0
 
       - name: Use Node 22
@@ -95,8 +92,8 @@ jobs:
           node --check tests/cartera-020b-conflict-ambiguity-hardening-test.mjs
           node --check tests/cartera-020b-json-null-hardening-test.mjs
           node --check tests/cartera-020b-migration-history-reconciliation-test.mjs
-          mapfile -t remote_tests < <(find tests -maxdepth 1 -name 'cartera-020b-*.mjs' ! -name 'cartera-020b-remote-acceptance-harness-test.mjs' | sort)
-          node --test "${remote_tests[@]}"
+          node --check tests/cartera-020b-remote-acceptance-harness-test.mjs
+          node --test tests/cartera-020b-*.mjs
 
       - name: Apply and verify conflict insert ambiguity hardening
         shell: bash
