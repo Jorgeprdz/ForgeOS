@@ -2,148 +2,178 @@
 
 ## Status
 
-`M05E_004_IMPLEMENTED_PENDING_BROWSER_ACCEPTANCE`
+`M05E_005_IMPLEMENTED_PENDING_FINAL_BROWSER_ACCEPTANCE`
 
 Branch: `fix/quote-calculators-product-intelligence-parity`
 
-The productive Material 3 route now reconnects the existing Product Intelligence adapters, refreshes Banxico market data through the secured provider boundary, composes printable ORVI documents and closes the final client/history UX defects discovered during browser acceptance.
+M05E-005 closes the functional and visual defects identified after the first end-to-end ORVI printable run. The productive Material 3 route keeps Product Intelligence as calculation authority, uses verified Banxico rates, removes the client-name confirmation gate, replaces the foreign light printable panel with a Forge-native dark management card, restores History and produces a redesigned portrait PDF.
 
 ## Authority
 
-Product Intelligence remains the canonical authority for product identity, premiums, protection, guaranteed values, recovery scenarios and conversion metadata. Uploaded spreadsheets and browser-generated printable documents are validation evidence for commercial presentation, not replacement calculation authorities.
+Product Intelligence remains the canonical authority for product identity, premiums, protection, guaranteed values, recovery scenarios and conversion metadata. Uploaded spreadsheets, screenshots and generated PDFs are acceptance evidence for presentation; they do not replace the canonical calculators.
 
-This repair does not modify the canonical product calculators. It reconnects the Material 3 presentation to the existing product adapters for:
+Supported in this repair:
 
 - Vida Mujer
 - SeguBeca
 - ORVI
 - Imagina Ser
 
-REALIZA remains outside this immediate repair.
+REALIZA remains outside this closure.
 
-## Mandatory cross-product presentation
+## Mandatory calculation presentation
 
 Every supported product must visibly present:
 
 1. Suma asegurada in source currency, including UDI when applicable.
-2. Current or projected MXN equivalence when the verified conversion engine provides it.
-3. Annual contribution or annual premium in source currency.
-4. Annual contribution or annual premium in MXN when conversion evidence is available.
-5. Rate value, date, source and series when rate metadata exists.
+2. Current or projected MXN equivalence when verified conversion evidence exists.
+3. Annual contribution or premium in source currency.
+4. Annual contribution or premium in MXN when conversion evidence exists.
+5. Rate value, date, source and series.
 
-No current UDI value may be hardcoded in the Material 3 presenter.
+No current UDI value is hardcoded in the Material 3 presenter.
 
-## Live UDI authority
+## Live UDI authority and clean worktree
 
-M05E-003 introduced `tools/forge-local-live-server.cjs` and the secured Supabase `banxico-rates` provider boundary.
+`tools/forge-local-live-server.cjs`:
 
-The local server:
+- refreshes Banxico through the secured `banxico-rates` provider;
+- exposes `/api/forge-market-rates` without exposing `BANXICO_TOKEN`;
+- fails closed when a verified rate is unavailable;
+- writes the live cache to `~/.cache/forgeos/market-rates.json` through `FORGE_RATE_CACHE_FILE`;
+- no longer mutates the tracked `forge-rate-cache.json` fixture.
 
-- invokes `exchange-rate-cache-engine.js` before serving Forge;
-- forces a verified Banxico refresh at startup;
-- exposes `/api/forge-market-rates` without exposing the Banxico token;
-- refreshes the cache periodically while the server remains active;
-- fails closed when no verified provider is available.
-
-The browser runtime:
-
-- accepts only a cache generated within 18 hours;
-- accepts a Banxico source date no older than seven calendar days to cover weekends and holidays;
-- blocks MXN output instead of silently accepting a stale value;
-- uses the verified current UDI for the first annual contribution equivalence;
-- keeps future values classified as projected scenarios.
+The browser continues to reject stale cache metadata and uses the verified current UDI for the first annual contribution equivalence.
 
 ## Client metadata and confirmation
 
-M05E-004 changes `Cliente / asegurado` from a blocking confirmation requirement into editable document metadata.
+`Cliente / asegurado` is optional document metadata, not a confirmation gate.
 
 Behavior:
 
-- Forge first attempts to recover the client or insured name from the accepted quote, prospect context or native calculation result.
-- When a name is not available, the printable flow uses the explicit missing-data label `Sin dato confirmado`.
-- The field remains editable before printing.
-- The value is projected into the bounded printable snapshot without mutating CRM.
-- Confirmation, preview and PDF generation are not blocked by an instruction to type a name.
-- The runtime does not invent a person identity.
+- Forge attempts to recover a real name from the accepted quote, insured or prospect context.
+- The compact field remains editable.
+- When no name exists, the printable snapshot receives `Sin dato confirmado`.
+- Confirming, previewing and downloading are not blocked by a request to type a name.
+- CRM is not mutated and no person identity is invented.
 
-## Printable actions and history
+M05E-004 is no longer loaded by the productive entrypoint. M05E-005 is the only printable UX closure layered over the M05E-003 live-rate runtime.
 
-- Preview and PDF download remain tied to an accepted quote snapshot.
-- QPD06 receives the same accepted snapshot used by the confirmation bridge.
-- History is restored as a visible action in both standalone and prospect-linked surfaces.
-- With durable Quote identity, History represents persisted printable versions for that Quote.
-- Without durable identity, the action remains available for the history exposed by the current runtime/session; the UI no longer hides the capability merely because the quote was opened standalone.
-- Restoring the action does not change the underlying QPD storage contract.
+## Forge-native UI contract
 
-## Imagina Ser contract
+The uploaded Material 3 screenshots are the visual acceptance authority for the in-app printable surface.
 
-The contribution and recovery stories remain separate:
+The UI must preserve:
 
-- Contribution term and annual UDI contribution come from the parsed PDF.
-- Base, favorable and unfavorable recovery scenarios remain visible.
-- Each scenario may include lump-sum recovery and monthly life-income values.
-- Accumulated monthly-income results supplied by Product Intelligence are presented as summary results only.
-- The UI does not render a 120- or 180-row actuarial table.
-- Monthly UDI conversion and the 120/180-month accumulation remain calculation-engine responsibilities.
+- deep navy surfaces and background;
+- thin blue/cyan borders;
+- rounded productive cards;
+- amber section hierarchy;
+- white primary text and blue-gray supporting text;
+- responsive spacing compatible with the floating mobile navigation pill.
 
-## ORVI contract
+The former white QPD action card and modal are hidden. The replacement is a dark Forge management card with:
 
-ORVI remains life-insurance protection with a limited payment term and guaranteed-value checkpoints.
+- optional client field;
+- fixed `A4 · vertical` status;
+- compact 44px icon actions;
+- printer icon for preview/print;
+- PDF icon for download;
+- clock icon for History;
+- accessible labels and tooltips;
+- useful empty History state instead of hiding the capability.
 
-The existing Product Intelligence rules remain authoritative for:
+Document utilities remain visually secondary to the commercial confirmation actions.
 
-- payment terms 6, 10, 15 or 20 years;
-- checkpoint selection derived from the payment term;
-- annual contributions converted using the rate for each payment year;
-- no new contributions after the payment term;
-- protection and recovery values in source currency and MXN;
-- recovery comparison against cumulative contributions;
-- non-investment-return classification of the comparison.
+## Portrait premium printable contract
 
-Coverage duration or maturity age is displayed only when extracted from the PDF or canonical model.
+The printable document is rebuilt rather than recolored.
 
-## Vida Mujer and SeguBeca
+HTML preview and PDF output now use:
 
-The repair restores the existing benefit-summary adapters, including:
+- A4 portrait as the productive format;
+- explicit portrait page metadata and dimensions;
+- a modern Forge cover with navy, teal and amber identity;
+- a concise executive metric grid;
+- clean identity metadata;
+- two-column commercial detail cards;
+- differentiated projection treatment;
+- compact provenance and disclaimers;
+- no scripts, network calls or recalculation authority.
 
-- source UDI values;
-- MXN conversions supplied by the calculation engine;
-- scheduled endowments or education payments;
-- protection values;
-- missing-information evidence.
+The PDF generator remains deterministic, self-contained and human-action gated.
 
-The presenter does not invent a rate or recalculate product formulas.
+## History
+
+- History is always visible after an accepted quote exists.
+- With durable Quote identity, versions persist and can be reopened.
+- Without durable identity, History opens a clear empty state and explains when durable versions will appear.
+- The underlying QPD repository ownership and append-only version contract are unchanged.
+
+## Product contracts preserved
+
+### ORVI
+
+- limited payment terms 6, 10, 15 or 20 years;
+- dynamic guaranteed-value checkpoints;
+- no contributions after the payment term;
+- continuing protection and guaranteed values;
+- UDI and MXN protection/recovery presentation;
+- recovery comparison is not presented as investment return.
+
+### Imagina Ser
+
+- contribution and recovery stories remain separate;
+- base, favorable and unfavorable scenarios remain visible;
+- lump-sum and life-income outputs remain scenario-bound;
+- 120/180-month calculations remain engine responsibilities, not UI tables.
+
+### Vida Mujer and SeguBeca
+
+- source UDI values and verified MXN conversions;
+- scheduled benefits and protection values;
+- missing-information evidence without invented calculations.
+
+## Implementation files
+
+- `advisor-os/quotes/printable/quote-printable-read-model-m05e005.js`
+- `advisor-os/quotes/printable/quote-printable-document-composer-m05e005.js`
+- `advisor-os/quotes/printable/quote-printable-pdf-generator-m05e005.js`
+- `docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js`
+- `docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js`
+- `docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.css`
 
 ## Tests
 
 - `tests/ui-m05e-quote-calculator-restoration-test.mjs`
 - `tests/ui-m05f-live-udi-review-printable-actions-test.mjs`
-- `tests/banxico-rates-edge-function-test.mjs`
+- `tests/ui-m05g-printable-design-closure-test.mjs`
+- existing QPD-01 through QPD-06 contract and browser suites
 
-The tests lock:
+M05G dynamically proves that a snapshot without a client name:
 
-- productive M05E-004 entrypoint wiring;
-- all four Product Intelligence adapters;
-- UDI/MXN mandatory metrics;
-- stale-cache rejection and live Banxico refresh;
-- optional client metadata with explicit missing-data fallback;
-- confirmation synchronization;
-- printable preview/download wiring;
-- restored History visibility without changing QPD persistence ownership.
+- becomes ready through the explicit missing-data fallback;
+- profiles as ORVI without source-revision mismatch;
+- produces premium self-contained HTML;
+- generates a real PDF binary;
+- reports `PORTRAIT` with width smaller than height;
+- exposes the three compact icon actions and restored History state.
 
-## Browser evidence and remaining acceptance
+GitHub Actions run 101 passed syntax, QPD-01 through QPD-06, M05E, M05F, M05G and diff integrity before browser acceptance.
 
-The ORVI 99-20 browser run produced two six-page printable documents containing client, product, UDI protection, current MXN protection, annual premiums, projected contribution/recovery and field-level source provenance. This proves the printable path executes end to end.
+## Final browser acceptance
 
-Final browser acceptance for M05E-004 must confirm:
+Using the ORVI 99-20 quote, confirm in one pass:
 
-- badge `CALCULADORAS M05E-004`;
-- current Banxico UDI date and value;
-- annual contribution UDI plus current MXN;
-- no blocking instruction to type a name;
-- client metadata remains editable;
-- confirmation, printable preview and PDF download remain functional;
-- History is visible and opens;
-- no horizontal overflow on the target viewport.
+- badge `CALCULADORAS M05E-005`;
+- current Banxico UDI and annual contribution MXN;
+- no prompt or blocking message requiring a name;
+- dark Forge management card aligned with the supplied screenshots;
+- compact printer, PDF and clock buttons;
+- History visible and opening its state;
+- premium A4 portrait preview;
+- newly downloaded portrait PDF;
+- no horizontal overflow;
+- clean git worktree after the live-rate refresh.
 
-After ORVI passes, repeat with representative PDFs for Vida Mujer, SeguBeca and Imagina Ser.
+After ORVI passes, repeat representative acceptance with Vida Mujer, SeguBeca and Imagina Ser.
