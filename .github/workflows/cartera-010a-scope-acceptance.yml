@@ -1,0 +1,72 @@
+name: CARTERA 010A Scope Acceptance
+
+on:
+  push:
+    branches:
+      - docs/cartera-010a-identity-policy-persistence-scope
+  pull_request:
+    branches:
+      - feature/cartera-001d-vertical-acceptance-closure
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010a-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scope-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source ancestry and documentation-only gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=2a957ef07f2579b7fe780287d66ad20422ab5e1f
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+
+          allowed='^(docs/architecture/source-truth/FORGE_CARTERA_010A_IDENTITY_POLICY_PERSISTENCE_SCOPE_001\.md|docs/evidence/FORGE_CARTERA_010A_IDENTITY_POLICY_PERSISTENCE_SCOPE_EVIDENCE_001\.md|tests/cartera-010a-identity-policy-persistence-scope-test\.mjs|\.github/workflows/cartera-010a-scope-acceptance\.yml)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010A_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          test -z "$(git diff --name-only "$SOURCE_COMMIT"...HEAD -- supabase/migrations)"
+          test -z "$(git diff --name-only "$SOURCE_COMMIT"...HEAD -- advisor-os platform schemas | grep -v '^$' || true)"
+
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'DOCUMENTATION_ONLY=PASS'
+          echo 'RUNTIME_DIFF=NONE'
+          echo 'SCHEMA_DIFF=NONE'
+          echo 'MIGRATION_DIFF=NONE'
+
+      - name: JavaScript syntax gate
+        run: node --check tests/cartera-010a-identity-policy-persistence-scope-test.mjs
+
+      - name: Execute 010A scope contract tests
+        run: node --test tests/cartera-010a-identity-policy-persistence-scope-test.mjs
+
+      - name: Emit closure markers
+        run: |
+          echo 'CARTERA_010A_SCOPE_ACCEPTANCE=PASS'
+          echo 'CARTERA_010A_COMPLETE=YES'
+          echo 'CARTERA_010B_AUTHORIZED=YES'
+          echo 'NEXT=CARTERA_010B_COMMERCIAL_PERSON_POLICY_ROLE_FOUNDATION'
