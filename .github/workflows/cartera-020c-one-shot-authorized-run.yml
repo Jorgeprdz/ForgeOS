@@ -1,9 +1,11 @@
 name: CARTERA 020C One-Shot Authorized Remote Run
 
 on:
-  push:
+  pull_request:
     branches:
-      - run/cartera-020c-remote-acceptance-20260731-1724
+      - main
+    types:
+      - opened
     paths:
       - docs/evidence/CARTERA_020C_REMOTE_RUN_AUTHORIZATION_20260731T1724-0600.md
 
@@ -18,8 +20,11 @@ jobs:
   remote-deployment-and-acceptance:
     if: >-
       github.repository == 'Jorgeprdz/ForgeOS' &&
-      github.ref == 'refs/heads/run/cartera-020c-remote-acceptance-20260731-1724' &&
-      github.run_number == 1
+      github.event_name == 'pull_request' &&
+      github.event.action == 'opened' &&
+      github.event.pull_request.head.ref == 'run/cartera-020c-remote-acceptance-20260731-1724' &&
+      github.event.pull_request.head.sha == 'd8e07f24021723571bb3d177e121be64fd7e5a84' &&
+      github.run_attempt == 1
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -29,19 +34,22 @@ jobs:
       CARTERA_020C_ACCEPTANCE_BRANCH: feature/cartera-020c-remote-acceptance
       SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
       AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_REMOTE_RUN_AUTHORIZATION_20260731T1724-0600.md
+      AUTHORIZED_LAUNCH_HEAD: d8e07f24021723571bb3d177e121be64fd7e5a84
 
     steps:
-      - name: Checkout authorization launch commit
+      - name: Checkout exact authorization launch commit
         uses: actions/checkout@v4
         with:
+          ref: d8e07f24021723571bb3d177e121be64fd7e5a84
           fetch-depth: 0
 
       - name: Validate one-shot user authorization
         shell: bash
         run: |
           set -euo pipefail
-          test "$GITHUB_RUN_NUMBER" = '1'
-          test "$GITHUB_REF" = 'refs/heads/run/cartera-020c-remote-acceptance-20260731-1724'
+          test "$GITHUB_RUN_ATTEMPT" = '1'
+          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-remote-acceptance-20260731-1724'
+          test "$(git rev-parse HEAD)" = "$AUTHORIZED_LAUNCH_HEAD"
           test -f "$AUTHORIZATION_MARKER"
           grep -qx 'USER_AUTHORIZATION=RUN_CARTERA_020C_REMOTE_ACCEPTANCE' "$AUTHORIZATION_MARKER"
           grep -qx 'AUTHORIZED_AT=2026-07-31T17:24:00-06:00' "$AUTHORIZATION_MARKER"
