@@ -63,6 +63,10 @@ jobs:
           node --check platform/policy-intelligence/cartera-010d-unified-directory-read-model.js
           node --check advisor-os/cartera/canonical-directory-service.js
           node --check cartera.js
+          node --check scripts/ci/cartera-010d-remote-directory-acceptance.mjs
+          node --check playwright.cartera-010d.config.mjs
+          node --check tests/e2e/cartera-010d-remote-browser.spec.mjs
+          node --check tests/e2e/fixtures/cartera-010d/app.mjs
           for file in tests/cartera-010d-*.mjs; do
             node --check "$file"
           done
@@ -98,14 +102,46 @@ jobs:
           ! grep -q 'entry.verified_email' "$route"
           ! grep -q 'crmaddlife-indexeddb' "$route"
 
-      - name: Emit progress markers
+      - name: Verify accepted remote and browser closure evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          closure=docs/evidence/FORGE_CARTERA_010D_REMOTE_DIRECTORY_BROWSER_ACCEPTANCE_CLOSURE_001.md
+          workflow=.github/workflows/cartera-010d-remote-directory-browser-acceptance.yml
+
+          grep -q 'WORKFLOW_RUN=30650982500' "$closure"
+          grep -q 'WORKFLOW_JOB=91223868636' "$closure"
+          grep -q 'ARTIFACT_ID=8801365114' "$closure"
+          grep -q 'ARTIFACT_SHA256=4c16dbfa88a9c6fdd2998c2babaf849ca58bc43c1152fb4b1d8d8566b4704092' "$closure"
+          grep -q 'REPOSITORY_TESTS=22' "$closure"
+          grep -q 'REPOSITORY_PASS=22' "$closure"
+          grep -q 'PLAYWRIGHT_TESTS=6' "$closure"
+          grep -q 'PLAYWRIGHT_PASS=6' "$closure"
+          grep -q 'RESIDUAL_FIXTURES=0' "$closure"
+          grep -q 'CARTERA_010D_COMPLETE=YES' "$closure"
+          grep -q 'CARTERA_POINT_1_CONTROL_BASE=COMPLETE' "$closure"
+          grep -q 'workflow_dispatch:' "$workflow"
+          ! grep -qE '^  (push|pull_request):' "$workflow"
+
+          echo 'REMOTE_DIRECTORY_EVIDENCE=VERIFIED'
+          echo 'BROWSER_EVIDENCE=VERIFIED'
+          echo 'REMOTE_WORKFLOW_TRIGGER=MANUAL_ONLY'
+          echo 'CARTERA_POINT_1_EVIDENCE=VERIFIED'
+
+      - name: Emit closure markers
         run: |
           echo 'CARTERA_010D_SCOPE=LOCKED'
-          echo 'CARTERA_010D_UNIFIED_DIRECTORY_READ_MODEL=REPOSITORY_READY'
-          echo 'CARTERA_010D_AUTHENTICATED_DIRECTORY_SERVICE=REPOSITORY_READY'
-          echo 'CARTERA_010D_PRODUCT_ROUTE_DIRECTORY_ADAPTER=REPOSITORY_READY'
+          echo 'CARTERA_010D_UNIFIED_DIRECTORY_READ_MODEL=PASS'
+          echo 'CARTERA_010D_AUTHENTICATED_DIRECTORY_SERVICE=PASS'
+          echo 'CARTERA_010D_PRODUCT_ROUTE_DIRECTORY_ADAPTER=PASS'
+          echo 'CARTERA_010D_REMOTE_DIRECTORY=PASS'
+          echo 'CARTERA_010D_DESKTOP_BROWSER=PASS'
+          echo 'CARTERA_010D_MOBILE_BROWSER=PASS'
           echo 'CARTERA_010D_SEARCH_PRIVACY_GATE=PASS'
+          echo 'CARTERA_010D_RESTRICTED_ENTITY_GATE=PASS'
+          echo 'CARTERA_010D_FIXTURE_CLEANUP=PASS'
           echo 'DIRECT_POLICY_ROLES_READ=FORBIDDEN'
           echo 'SCHEMA_MUTATION=NO'
-          echo 'CARTERA_010D_COMPLETE=NO'
-          echo 'NEXT=CARTERA_010D_REMOTE_READ_AND_BROWSER_ACCEPTANCE'
+          echo 'CARTERA_010D_COMPLETE=YES'
+          echo 'CARTERA_POINT_1_CONTROL_BASE=COMPLETE'
+          echo 'NEXT=CARTERA_POINT_2_PORTFOLIO_INTAKE_SCOPE_AUTHORIZED'
