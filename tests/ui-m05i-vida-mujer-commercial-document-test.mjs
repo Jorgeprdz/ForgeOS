@@ -16,6 +16,14 @@ import {
 import {
   buildQuotePrintablePdf,
 } from "../advisor-os/quotes/printable/quote-printable-pdf-generator-m05e008.js";
+import {
+  PRODUCT_INTELLIGENCE_SCHEMA,
+  enrichVidaMujerCalculation,
+  enrichVidaMujerSnapshot,
+} from "../docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js";
+import {
+  createQuoteResultSnapshot,
+} from "../docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js";
 
 const currentUdi = 8.797743;
 const sumAssuredUdi = 35000;
@@ -230,6 +238,201 @@ assert.ok(pdf.pageWidth < pdf.pageHeight);
 assert.ok(pdf.byteLength > 1000);
 assert.equal(pdf.getBytes()[0], 0x25);
 
+// Device regression: this is the real browser packet shape shown in the
+// rejected Samsung Browser acceptance. It intentionally begins as generic
+// `life` and without Product Intelligence.
+const realCandidate = {
+  schemaVersion: "forge.accepted_quote_packet.v1",
+  source: "browser_pdf_parser",
+  extractionVersion: "107z15p2_R11E",
+  family: "life",
+  productFamily: "life",
+  product_family: "life",
+  product: "Vida Mujer",
+  sumAssured: 50000,
+  sumInsured: 50000,
+  annualPremium: 3062,
+  paymentYears: 20,
+  coveragePeriod: "20 años",
+  context: {
+    family: "life",
+    productFamily: "life",
+    product_family: "life",
+    product: "Vida Mujer",
+  },
+  currencyMetadata: {
+    value: currentUdi,
+    currentUdiValue: currentUdi,
+    source: "BANXICO_SIE_API",
+    source_date: "10/08/2026",
+    series_id: "SP68257",
+    stale: false,
+  },
+  nativeResult: {
+    source: "browser_pdf_parser",
+    extractionVersion: "107z15p2_R11E",
+    product: "Vida Mujer",
+    productFamily: "life",
+    product_family: "life",
+    currency: "UDI",
+    sumAssured: 50000,
+    sumInsured: 50000,
+    basicSumAssured: 50000,
+    totalAnnualPremium: 3062,
+    annualPremium: 3062,
+    paymentYears: 20,
+    policyTerm: "20 años",
+    coveragePeriod: "20 años",
+    coverages: [
+      { code: "BAM", label: "BAM UI" },
+      { code: "BAIT", label: "BAIT 60 P", sumAssured: 50000 },
+      { code: "AV", label: "AV UI" },
+      { code: "BIT", label: "BIT 60 P" },
+      { code: "PCF", label: "PCF A", sumAssured: 50000 },
+    ],
+    recommendedCoverages: [
+      { code: "PEP", label: "PEP A", sumAssured: 50000 },
+      { code: "CLP", label: "CLP", sumAssured: 50000 },
+      { code: "ADAPTA", label: "ADAPTA", sumAssured: 50000 },
+    ],
+    guaranteedValues: [
+      {
+        year: 20,
+        annualPremiumAccumulatedWithAve: 61240,
+        aveSurrenderValue: 8800,
+        cashValue: 0,
+        recoveryTotal: 66300,
+        sumAssured: 50000,
+      },
+    ],
+    currencyMetadata: {
+      value: currentUdi,
+      currentUdiValue: currentUdi,
+      source: "BANXICO_SIE_API",
+      source_date: "10/08/2026",
+      series_id: "SP68257",
+      stale: false,
+    },
+  },
+};
+
+const rawDeviceCalculation = {
+  product: "Vida Mujer",
+  productFamily: "life",
+  product_family: "life",
+  productIntelligence: null,
+  currency: "UDI",
+  annualPremium: 3062,
+  paymentYears: 20,
+  currentProtectionMXN: 50000 * currentUdi,
+  totalContributed: 61240,
+  totalContributedMXN: 61240 * currentUdi,
+  udiRateMetadata: realCandidate.currencyMetadata,
+  nativeResult: realCandidate.nativeResult,
+};
+
+const enrichedDeviceCalculation = enrichVidaMujerCalculation(
+  realCandidate,
+  rawDeviceCalculation,
+);
+
+assert.equal(realCandidate.productFamily, "life");
+assert.equal(rawDeviceCalculation.productIntelligence, null);
+assert.equal(enrichedDeviceCalculation.productFamily, "vida_mujer");
+assert.equal(
+  enrichedDeviceCalculation.productIntelligence.schema.id,
+  PRODUCT_INTELLIGENCE_SCHEMA,
+);
+assert.equal(
+  enrichedDeviceCalculation.productIntelligence.protection_summary
+    .basic_sum_assured.value,
+  50000,
+);
+assert.equal(
+  enrichedDeviceCalculation.productIntelligence.premium_structure
+    .total_annual_premium.value,
+  3062,
+);
+assert.ok(enrichedDeviceCalculation.benefitSummary.length >= 4);
+
+const deviceUiSnapshot = createQuoteResultSnapshot({
+  packet: realCandidate,
+  calculation: enrichedDeviceCalculation,
+});
+assert.equal(deviceUiSnapshot.identity.family, "vida_mujer");
+assert.equal(deviceUiSnapshot.dashboard.type, "vida_mujer");
+assert.ok(deviceUiSnapshot.dashboard.model.sections.length >= 4);
+assert.ok(
+  deviceUiSnapshot.dashboard.model.sections.some(
+    (section) => section.kind === "scheduled_endowments",
+  ),
+);
+assert.ok(
+  deviceUiSnapshot.dashboard.model.sections.some(
+    (section) => section.kind === "women_health_benefits",
+  ),
+);
+assert.equal(
+  deviceUiSnapshot.productIntelligence.schema.id,
+  PRODUCT_INTELLIGENCE_SCHEMA,
+);
+
+const brokenDeviceSnapshot = {
+  packetType: ACCEPTED_QUOTE_SNAPSHOT_TYPE,
+  reviewOnly: true,
+  acceptedQuote: realCandidate,
+  calculation: rawDeviceCalculation,
+  productIntelligence: null,
+};
+const repairedDeviceSnapshot = enrichVidaMujerSnapshot(
+  brokenDeviceSnapshot,
+  realCandidate,
+);
+assert.equal(
+  repairedDeviceSnapshot.productIntelligence.schema.id,
+  PRODUCT_INTELLIGENCE_SCHEMA,
+);
+assert.equal(
+  repairedDeviceSnapshot.acceptedQuote.context.productFamily,
+  "vida_mujer",
+);
+
+const repairedNormalized = normalizePrintableReviewSnapshot(
+  repairedDeviceSnapshot,
+);
+const repairedReadModel = buildQuotePrintableReadModel({
+  reviewSnapshot: repairedNormalized,
+  generatedAt: "2026-07-31T12:35:00-06:00",
+});
+const repairedProfiled = buildProductSpecificQuotePrintableReadModel({
+  readModel: repairedReadModel,
+  reviewSnapshot: repairedNormalized,
+});
+const repairedPrintable = buildQuotePrintableDocument({
+  readModel: repairedProfiled,
+  pageFormat: "A4",
+  documentTitle: "Cotización Vida Mujer",
+});
+const repairedPdf = buildQuotePrintablePdf({
+  readModel: repairedProfiled,
+  printableDocument: repairedPrintable,
+  title: "Cotización Vida Mujer",
+  generatedAt: "2026-07-31T12:35:00-06:00",
+});
+
+assert.equal(repairedProfiled.productProfile.id, "VIDA_MUJER");
+assert.equal(repairedProfiled.commercialSummary.sumAssured.udi, 50000);
+assert.equal(repairedProfiled.commercialSummary.annualContribution.udi, 3062);
+assert.equal(repairedProfiled.commercialSummary.protections.length, 5);
+assert.equal(repairedProfiled.commercialSummary.pcfDiseases.length, 7);
+assert.equal(repairedPdf.pageCount, 2);
+assert.equal(repairedPdf.pageOrientation, "PORTRAIT");
+assert.match(repairedPrintable.html, /#702447/i);
+assert.doesNotMatch(
+  repairedPrintable.html,
+  /Accepted quote, calculation and Product Intelligence are required/,
+);
+
 const runtimeController = fs.readFileSync(
   new URL(
     "../docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js",
@@ -237,7 +440,15 @@ const runtimeController = fs.readFileSync(
   ),
   "utf8",
 );
+const productiveApp = fs.readFileSync(
+  new URL(
+    "../docs/static-preview/forge-alive-material3/app.js",
+    import.meta.url,
+  ),
+  "utf8",
+);
 assert.match(runtimeController, /m05e008/);
+assert.match(productiveApp, /quote-runtime-vida-mujer-handoff-m05e009/);
 
 console.log("PASS UI-M05I Vida Mujer pink commercial document", {
   layout: VIDA_MUJER_LAYOUT_ID,
@@ -260,4 +471,8 @@ console.log("PASS UI-M05I Vida Mujer pink commercial document", {
   survivalTotalUdi: profiled.commercialSummary.survivalTotal.udi,
   contractedProtectionOnly: true,
   recommendedCoveragesExcluded: true,
+  realPacketFamilyPromoted: enrichedDeviceCalculation.productFamily,
+  realPacketDashboardSections:
+    deviceUiSnapshot.dashboard.model.sections.length,
+  realPacketPrintableReady: repairedPdf.pageCount === 2,
 });
