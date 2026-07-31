@@ -1,16 +1,27 @@
 {
-  "status": "FAIL",
+  "status": "PASS",
   "migrationVersion": "20260731000100",
   "migrationName": "pipeline_prospect_journal",
   "projectRef": "rmlxigxysujsuwzgoimv",
-  "sourceSha": "1274e48f1790fde2b584038c12b6d8889af78255",
-  "workflowRunId": "30605776337",
-  "verifiedAt": "2026-07-31T05:04:17.919Z",
+  "sourceSha": "9e97f37d397a694e5a9571777ca34e38deb4c53d",
+  "workflowRunId": "30605854522",
+  "verifiedAt": "2026-07-31T05:06:11.226Z",
   "checks": [
     {
-      "name": "workflow_preflight",
-      "status": "FAIL",
-      "detail": "LEDGER_NOT_CREATED"
+      "name": "predeployment_inventory",
+      "status": "PASS"
+    },
+    {
+      "name": "migration_applied",
+      "status": "PASS"
+    },
+    {
+      "name": "postdeployment_security_inventory",
+      "status": "PASS"
+    },
+    {
+      "name": "migration_history",
+      "status": "PASS"
     }
   ]
 }
