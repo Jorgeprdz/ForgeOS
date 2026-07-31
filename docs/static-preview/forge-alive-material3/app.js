@@ -2,6 +2,7 @@ import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module-complete.js?v=manual-quotes-complete-001";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-010";
+import "../quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
 
