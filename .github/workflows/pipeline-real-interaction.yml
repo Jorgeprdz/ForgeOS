@@ -29,7 +29,8 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
-      - run: node --test tests/prospect-journal-service-contract-test.mjs
+      - name: Verify journal persistence contract
+        run: node --test tests/prospect-journal-service-contract-test.mjs
       - run: npx playwright install --with-deps chromium
       - name: Start Vite
         shell: bash
@@ -47,9 +48,11 @@ jobs:
             cat /tmp/forge-pipeline-vite.log
             false
           fi
-      - name: Verify Pipeline interactions
-        run: |
-          node tests/pipeline-real-interaction-regression.mjs
-          node tests/pipeline-prospect-admin-regression.mjs
-          node tests/pipeline-action-identity-regression.mjs
-          node tests/pipeline-context-journal-regression.mjs
+      - name: Verify stage persistence
+        run: timeout 120s node tests/pipeline-real-interaction-regression.mjs
+      - name: Verify prospect administration
+        run: timeout 120s node tests/pipeline-prospect-admin-regression.mjs
+      - name: Verify action identity
+        run: timeout 120s node tests/pipeline-action-identity-regression.mjs
+      - name: Verify context journal
+        run: timeout 120s node tests/pipeline-context-journal-regression.mjs
