@@ -123,6 +123,12 @@ try {
   }));
 
   await page.locator('[data-productive-stage-control="prospect-1"]').selectOption("appointment_scheduled");
+  await page.waitForFunction(beforeBorder => {
+    const card = document.querySelector('[data-productive-prospect-card="prospect-1"]');
+    return card?.dataset.productiveStage === "appointment_scheduled"
+      && card.querySelector('[data-productive-stage-label]')?.textContent === "Cita agendada"
+      && getComputedStyle(card).borderTopColor !== beforeBorder;
+  }, beforeStage.border);
   const immediate = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
     stage: card.dataset.productiveStage,
     label: card.querySelector('[data-productive-stage-label]').textContent,
