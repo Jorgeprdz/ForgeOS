@@ -164,7 +164,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.sha }}
-          ACTIONS_URL: https://github.com/${{ github.repository }}/actions/workflows/deploy-quotes-preview-pages.yml
+          ACTIONS_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           gh api --method POST \
             "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
