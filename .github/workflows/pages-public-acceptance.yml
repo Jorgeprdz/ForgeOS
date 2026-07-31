@@ -78,6 +78,10 @@ jobs:
             -o /tmp/forge-pages-app.js
           curl --fail --silent --show-error --location \
             -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/static-preview/forge-alive/pipeline-stage-rpc-authority.js?v=${EXPECTED_SHA}" \
+            -o /tmp/forge-pages-stage-rpc.js
+          curl --fail --silent --show-error --location \
+            -H 'Cache-Control: no-cache' \
             "${PUBLIC_BASE_URL}/static-preview/forge-alive-runtime/?v=${EXPECTED_SHA}" \
             -o /tmp/forge-pages-legacy-runtime.html
           curl --fail --silent --show-error --location \
@@ -96,9 +100,14 @@ jobs:
           ! grep -Fq 'forge-material3-responsive-shell' /tmp/forge-pages-pipeline.html
 
           grep -Fq 'legacy-ui-retirement.js?v=legacy-ui-retirement-001' /tmp/forge-pages-app.js
+          grep -Fq 'pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-001' /tmp/forge-pages-app.js
           grep -Fq 'pipeline-prospect-admin.js?v=pipeline-prospect-admin-001' /tmp/forge-pages-app.js
           grep -Fq 'pipeline-action-identity.js?v=pipeline-action-identity-001' /tmp/forge-pages-app.js
           grep -Fq 'pipeline-context-journal.js?v=pipeline-context-journal-002' /tmp/forge-pages-app.js
+
+          grep -Fq 'forge_pipeline_update_prospect_stage' /tmp/forge-pages-stage-rpc.js
+          grep -Fq 'event.stopImmediatePropagation()' /tmp/forge-pages-stage-rpc.js
+          grep -Fq 'PIPELINE_STAGE_RENDER_RECONCILIATION_TIMEOUT' /tmp/forge-pages-stage-rpc.js
 
           grep -Fq 'FORGE_LEGACY_UI_RETIRED' /tmp/forge-pages-legacy-runtime.html
           ! grep -Fq 'Muestra segura · solo lectura' /tmp/forge-pages-legacy-runtime.html
@@ -128,6 +137,7 @@ jobs:
               prospectAdministrationPublished: true,
               actionIdentityPublished: true,
               contextJournalPublished: true,
+              stageRpcAuthorityPublished: true,
               canonicalMaterial3Entry: true,
               rootRedirectsToCanonical: true,
               legacyUiAbsent: true,
