@@ -1,0 +1,126 @@
+name: Pages Public Acceptance
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-public-acceptance
+  cancel-in-progress: true
+
+jobs:
+  verify-public-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PUBLIC_BASE_URL: https://jorgeprdz.github.io/ForgeOS
+      EXPECTED_SHA: ${{ github.sha }}
+    steps:
+      - name: Checkout accepted main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Wait for exact Pages SHA
+        id: public
+        shell: bash
+        run: |
+          set -euo pipefail
+          deployed_sha=""
+          build_json=""
+
+          for attempt in $(seq 1 60); do
+            build_json="$(curl --fail --silent --show-error --location \
+              -H 'Cache-Control: no-cache' \
+              "${PUBLIC_BASE_URL}/build-info.json?v=${EXPECTED_SHA}-${attempt}" || true)"
+            deployed_sha="$(node -e '
+              try {
+                const value = JSON.parse(process.argv[1]);
+                process.stdout.write(String(value.commitSha || ""));
+              } catch {}
+            ' "$build_json")"
+
+            if [ "$deployed_sha" = "$EXPECTED_SHA" ]; then
+              break
+            fi
+            sleep 10
+          done
+
+          if [ "$deployed_sha" != "$EXPECTED_SHA" ]; then
+            echo "Expected Pages SHA $EXPECTED_SHA but observed ${deployed_sha:-none}"
+            exit 1
+          fi
+
+          printf '%s\n' "$build_json" > /tmp/forge-pages-build-info.json
+          echo "deployed_sha=$deployed_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Verify public Pipeline artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location \
+            -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/static-preview/forge-alive/?nav=pipeline&v=${EXPECTED_SHA}" \
+            -o /tmp/forge-pages-pipeline.html
+          curl --fail --silent --show-error --location \
+            -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/static-preview/forge-alive/app.js?v=${EXPECTED_SHA}" \
+            -o /tmp/forge-pages-app.js
+
+          grep -Fq 'data-forge-pipeline-module' /tmp/forge-pages-pipeline.html
+          grep -Fq 'pipeline-prospect-admin.js?v=pipeline-prospect-admin-001' /tmp/forge-pages-app.js
+          grep -Fq 'pipeline-action-identity.js?v=pipeline-action-identity-001' /tmp/forge-pages-app.js
+          grep -Fq 'pipeline-context-journal.js?v=pipeline-context-journal-002' /tmp/forge-pages-app.js
+
+      - name: Build deployment evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('fs');
+          const buildInfo = JSON.parse(fs.readFileSync('/tmp/forge-pages-build-info.json', 'utf8'));
+          const evidence = {
+            status: 'PASS',
+            expectedSha: process.env.EXPECTED_SHA,
+            deployedSha: buildInfo.commitSha,
+            verifiedAt: new Date().toISOString(),
+            pageUrl: `${process.env.PUBLIC_BASE_URL}/static-preview/forge-alive/?nav=pipeline`,
+            checks: {
+              buildInfoExactSha: true,
+              pipelineRouteReachable: true,
+              pipelineRootPublished: true,
+              prospectAdministrationPublished: true,
+              actionIdentityPublished: true,
+              contextJournalPublished: true
+            },
+            workflowRun: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+          };
+          fs.writeFileSync('/tmp/forge-pages-evidence.json', `${JSON.stringify(evidence, null, 2)}\n`);
+          NODE
+          cat /tmp/forge-pages-evidence.json
+
+      - name: Record evidence outside main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin pages-evidence
+          rm -rf /tmp/forge-pages-evidence-branch
+          git worktree add --detach /tmp/forge-pages-evidence-branch origin/pages-evidence
+
+          mkdir -p /tmp/forge-pages-evidence-branch/deployments
+          cp /tmp/forge-pages-evidence.json \
+            "/tmp/forge-pages-evidence-branch/deployments/${EXPECTED_SHA}.json"
+          cp /tmp/forge-pages-evidence.json \
+            /tmp/forge-pages-evidence-branch/deployments/latest.json
+
+          git -C /tmp/forge-pages-evidence-branch config user.name forgeos-ci
+          git -C /tmp/forge-pages-evidence-branch config user.email actions@users.noreply.github.com
+          git -C /tmp/forge-pages-evidence-branch add deployments
+          git -C /tmp/forge-pages-evidence-branch commit \
+            -m "chore(pages): record public deployment ${EXPECTED_SHA}"
+          git -C /tmp/forge-pages-evidence-branch push origin HEAD:pages-evidence
