@@ -7,7 +7,7 @@ const baseURL =
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testMatch: /qpd06-browser-acceptance\.spec\.mjs/,
+  testMatch: /(qpd06-browser-acceptance|m05e006-responsiveness)\.spec\.mjs/,
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
