@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   actions: write
+  deployments: write
   statuses: write
 
 concurrency:
@@ -41,6 +42,7 @@ jobs:
           TARGET_REF: ${{ github.ref_name }}
           TARGET_SHA: ${{ github.sha }}
           PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
+          ENVIRONMENT_SETTINGS_URL: https://github.com/${{ github.repository }}/settings/environments
         run: |
           set -euo pipefail
           run_id=""
@@ -78,6 +80,31 @@ jobs:
 
           printf 'PAGES_DEPLOY_REF=%s\n' "$TARGET_REF"
           printf 'PAGES_DEPLOY_SHA=%s\n' "$TARGET_SHA"
+
+          policy_error="$(mktemp)"
+          if gh api \
+            --method POST \
+            "repos/$GITHUB_REPOSITORY/environments/github-pages/deployment-branch-policies" \
+            -f name="$TARGET_REF" \
+            -f type="branch" >/dev/null 2>"$policy_error"; then
+            echo "PAGES_BRANCH_POLICY=CREATED"
+          else
+            if gh api \
+              "repos/$GITHUB_REPOSITORY/environments/github-pages/deployment-branch-policies" \
+              --jq '.branch_policies[]?.name' 2>/dev/null \
+              | grep -Fx "$TARGET_REF" >/dev/null; then
+              echo "PAGES_BRANCH_POLICY=ALREADY_PRESENT"
+            else
+              cat "$policy_error" >&2
+              post_status failure \
+                "Allow preview branch in github-pages environment" \
+                "$ENVIRONMENT_SETTINGS_URL"
+              trap - ERR
+              echo "BLOCKED=PAGES_ENVIRONMENT_BRANCH_POLICY"
+              exit 1
+            fi
+          fi
+          rm -f "$policy_error"
 
           gh workflow run pages.yml \
             --repo "$GITHUB_REPOSITORY" \
