@@ -1,3 +1,4 @@
+import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module-complete.js?v=manual-quotes-complete-001";

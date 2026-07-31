@@ -1,108 +1,37 @@
-// service-worker.js
-// Enterprise Offline-First Service Worker
+// FORGEOS_LEGACY_SERVICE_WORKER_RETIRED
+// Este worker existe únicamente para retirar el service worker raíz anterior,
+// borrar sus cachés y devolver todo el tráfico de ForgeOS a la red.
 
-importScripts(
-    './sw-cache-config.js'
-);
+const LEGACY_CACHE_NAMES = new Set([
+  'static-v7-pages-1',
+  'runtime-v7-pages-1',
+]);
 
-const STATIC =
-    self.CACHE_CONFIG.STATIC_CACHE;
+self.addEventListener('install', (event) => {
+  event.waitUntil(self.skipWaiting());
+});
 
-const RUNTIME =
-    self.CACHE_CONFIG.RUNTIME_CACHE;
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames
+        .filter((name) => LEGACY_CACHE_NAMES.has(name))
+        .map((name) => caches.delete(name)),
+    );
 
-self.addEventListener(
-    'install',
-    event => {
+    await self.clients.claim();
+    await self.registration.unregister();
 
-        event.waitUntil(
-            caches.open(STATIC)
-                .then(cache => {
+    const windows = await self.clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    });
 
-                    return cache.addAll(
-                        self.CACHE_CONFIG.STATIC_ASSETS
-                    );
-                })
-        );
+    await Promise.all(
+      windows.map((client) => client.navigate(client.url).catch(() => undefined)),
+    );
+  })());
+});
 
-        self.skipWaiting();
-    }
-);
-
-self.addEventListener(
-    'activate',
-    event => {
-
-        event.waitUntil(
-
-            caches.keys()
-                .then(keys => {
-
-                    return Promise.all(
-
-                        keys.map(key => {
-
-                            if (
-                                ![
-                                    STATIC,
-                                    RUNTIME
-                                ].includes(key)
-                            ) {
-
-                                return caches.delete(
-                                    key
-                                );
-                            }
-                        })
-                    );
-                })
-        );
-
-        self.clients.claim();
-    }
-);
-
-self.addEventListener(
-    'fetch',
-    event => {
-
-        const req =
-            event.request;
-
-        if (
-            req.method !== 'GET'
-        ) {
-
-            return;
-        }
-
-        event.respondWith(
-
-            caches.match(req)
-                .then(async cached => {
-
-                    try {
-
-                        const fresh =
-                            await fetch(req);
-
-                        const cache =
-                            await caches.open(
-                                RUNTIME
-                            );
-
-                        cache.put(
-                            req,
-                            fresh.clone()
-                        );
-
-                        return fresh;
-
-                    } catch {
-
-                        return cached;
-                    }
-                })
-        );
-    }
-);
+// Sin listener fetch: ninguna navegación o asset vuelve a resolverse desde la UI legacy.

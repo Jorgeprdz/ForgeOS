@@ -59,10 +59,15 @@ jobs:
           printf '%s\n' "$build_json" > /tmp/forge-pages-build-info.json
           echo "deployed_sha=$deployed_sha" >> "$GITHUB_OUTPUT"
 
-      - name: Verify public Pipeline artifact
+      - name: Verify canonical Material 3 and retired legacy surfaces
         shell: bash
         run: |
           set -euo pipefail
+
+          curl --fail --silent --show-error --location \
+            -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/?v=${EXPECTED_SHA}" \
+            -o /tmp/forge-pages-root.html
           curl --fail --silent --show-error --location \
             -H 'Cache-Control: no-cache' \
             "${PUBLIC_BASE_URL}/static-preview/forge-alive/?nav=pipeline&v=${EXPECTED_SHA}" \
@@ -71,11 +76,37 @@ jobs:
             -H 'Cache-Control: no-cache' \
             "${PUBLIC_BASE_URL}/static-preview/forge-alive/app.js?v=${EXPECTED_SHA}" \
             -o /tmp/forge-pages-app.js
+          curl --fail --silent --show-error --location \
+            -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/static-preview/forge-alive-runtime/?v=${EXPECTED_SHA}" \
+            -o /tmp/forge-pages-legacy-runtime.html
+          curl --fail --silent --show-error --location \
+            -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/service-worker.js?v=${EXPECTED_SHA}" \
+            -o /tmp/forge-pages-service-worker.js
 
+          grep -Fq 'FORGE_LEGACY_UI_RETIRED' /tmp/forge-pages-root.html
+          grep -Fq 'static-preview/forge-alive/' /tmp/forge-pages-root.html
+
+          grep -Fq 'data-forge-application' /tmp/forge-pages-pipeline.html
           grep -Fq 'data-forge-pipeline-module' /tmp/forge-pages-pipeline.html
+          grep -Fq "app.js?v=${EXPECTED_SHA}" /tmp/forge-pages-pipeline.html
+          ! grep -Fq 'Muestra segura · solo lectura' /tmp/forge-pages-pipeline.html
+          ! grep -Fq 'phone-shell' /tmp/forge-pages-pipeline.html
+          ! grep -Fq 'forge-material3-responsive-shell' /tmp/forge-pages-pipeline.html
+
+          grep -Fq 'legacy-ui-retirement.js?v=legacy-ui-retirement-001' /tmp/forge-pages-app.js
           grep -Fq 'pipeline-prospect-admin.js?v=pipeline-prospect-admin-001' /tmp/forge-pages-app.js
           grep -Fq 'pipeline-action-identity.js?v=pipeline-action-identity-001' /tmp/forge-pages-app.js
           grep -Fq 'pipeline-context-journal.js?v=pipeline-context-journal-002' /tmp/forge-pages-app.js
+
+          grep -Fq 'FORGE_LEGACY_UI_RETIRED' /tmp/forge-pages-legacy-runtime.html
+          ! grep -Fq 'Muestra segura · solo lectura' /tmp/forge-pages-legacy-runtime.html
+          ! grep -Fq 'phone-shell' /tmp/forge-pages-legacy-runtime.html
+
+          grep -Fq 'FORGEOS_LEGACY_SERVICE_WORKER_RETIRED' /tmp/forge-pages-service-worker.js
+          grep -Fq 'self.registration.unregister()' /tmp/forge-pages-service-worker.js
+          ! grep -Fq 'respondWith' /tmp/forge-pages-service-worker.js
 
       - name: Build deployment evidence
         shell: bash
@@ -96,7 +127,12 @@ jobs:
               pipelineRootPublished: true,
               prospectAdministrationPublished: true,
               actionIdentityPublished: true,
-              contextJournalPublished: true
+              contextJournalPublished: true,
+              canonicalMaterial3Entry: true,
+              rootRedirectsToCanonical: true,
+              legacyUiAbsent: true,
+              internalRuntimeNotNavigable: true,
+              legacyServiceWorkerRetired: true
             },
             workflowRun: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
           };
