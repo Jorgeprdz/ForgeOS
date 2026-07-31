@@ -10,6 +10,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  statuses: write
 
 concurrency:
   group: pages
@@ -26,6 +27,19 @@ jobs:
     steps:
       - name: Checkout preview branch
         uses: actions/checkout@v4
+
+      - name: Mark preview deployment pending
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.sha }}
+          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
+        run: |
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
+            -f state=pending \
+            -f context=pages/quotes-preview \
+            -f description="Publishing Quotes preview" \
+            -f target_url="$PAGE_URL" >/dev/null
 
       - name: Use Node 22
         uses: actions/setup-node@v4
@@ -131,3 +145,30 @@ jobs:
           done
           echo "PAGES_PREVIEW_HTTP=FAIL"
           exit 1
+
+      - name: Mark preview deployment successful
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.sha }}
+          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
+        run: |
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
+            -f state=success \
+            -f context=pages/quotes-preview \
+            -f description="Quotes preview published and verified" \
+            -f target_url="$PAGE_URL" >/dev/null
+
+      - name: Mark preview deployment failed
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.sha }}
+          ACTIONS_URL: https://github.com/${{ github.repository }}/actions/workflows/deploy-quotes-preview-pages.yml
+        run: |
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
+            -f state=failure \
+            -f context=pages/quotes-preview \
+            -f description="Quotes preview deployment failed" \
+            -f target_url="$ACTIONS_URL" >/dev/null
