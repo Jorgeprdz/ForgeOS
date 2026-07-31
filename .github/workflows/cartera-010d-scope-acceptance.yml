@@ -1,12 +1,6 @@
 name: CARTERA 010D Scope Acceptance
 
 on:
-  push:
-    branches:
-      - feature/cartera-010d-unified-directory-relationship-search
-  pull_request:
-    branches:
-      - feature/cartera-010b-commercial-person-policy-role-foundation
   workflow_dispatch:
 
 permissions:
