@@ -188,7 +188,7 @@ test('Person and Account relationship summaries remain explicit and multi-party'
     assert.equal(household.policyCount, 1);
     assert.ok(household.relationships.some(item => item.relationshipType === 'POLICY_OWNER'));
 
-    assert.deepEqual(policyEntry.personReferences.sort(), ['PERSON:ANA', 'PERSON:LUIS']);
+    assert.deepEqual([...policyEntry.personReferences].sort(), ['PERSON:ANA', 'PERSON:LUIS']);
     assert.deepEqual(policyEntry.accountReferences, ['ACCOUNT:FAMILY:PEREZ']);
 });
 
