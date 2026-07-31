@@ -466,6 +466,6 @@ test('composer contains no RPC execution, Supabase client or direct canonical wr
   assert.doesNotMatch(source, /SupabaseRuntime|createClient|from\(['"]/);
   assert.doesNotMatch(source, /\.insert\s*\(|\.update\s*\(|\.delete\s*\(/);
   assert.match(source, /IDENTITY_RESOLUTION/);
-  assert.match(source, /CONFIRMED_POLICY/);
+  assert.match(source, /buildConfirmedPolicyCommand/);
   assert.match(source, /CARTERA020C_ACCOUNT_CREATION_NOT_AUTHORIZED/);
 });
