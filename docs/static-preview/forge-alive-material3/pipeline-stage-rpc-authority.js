@@ -42,6 +42,16 @@ function ensureStatusNode(root) {
   node = root.ownerDocument.createElement("p");
   node.className = "pipeline-module__referral-status pipeline-module__stage-rpc-status";
   node.dataset.pipelineStageRpcStatus = "";
+  node.style.cssText = [
+    "position:fixed",
+    "z-index:1250",
+    "top:max(12px, env(safe-area-inset-top))",
+    "left:50%",
+    "transform:translateX(-50%)",
+    "width:min(420px, calc(100vw - 32px))",
+    "margin:0",
+    "pointer-events:none",
+  ].join(";");
   node.hidden = true;
   root.querySelector(".pipeline-module__header")?.insertAdjacentElement("afterend", node);
   if (!node.isConnected) root.prepend(node);
