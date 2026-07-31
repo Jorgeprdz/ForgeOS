@@ -201,7 +201,8 @@ function createQuotePrintableVersionRecord({
   if (pdfPacket.fileName !== printableDocument.fileName) {
     fail("FILE_NAME_MISMATCH", "Printable document and PDF filename mismatch");
   }
-  const generated = iso(generatedAt, "GENERATED_AT_INVALID", "Generation time");
+  const renderGeneratedAt = String(generatedAt || "").trim();
+  const generated = iso(renderGeneratedAt, "GENERATED_AT_INVALID", "Generation time");
   const persisted = iso(persistedAt, "PERSISTED_AT_INVALID", "Persistence time");
   if (Date.parse(persisted) < Date.parse(generated)) {
     fail("PERSISTED_BEFORE_GENERATED", "Persistence time cannot precede generation time");
@@ -236,6 +237,7 @@ function createQuotePrintableVersionRecord({
       printableReadModelContractVersion: readModel.contractVersion,
       documentContractVersion: printableDocument.contractVersion,
       pdfContractVersion: pdfPacket.contractVersion,
+      renderGeneratedAt,
       fileName: printableDocument.fileName,
       mediaType: pdfPacket.mediaType,
       pageCount: pdfPacket.pageCount,
@@ -353,7 +355,7 @@ function reopenQuotePrintableVersion({ record } = {}) {
   const pdfPacket = buildQuotePrintablePdf({
     readModel,
     printableDocument,
-    generatedAt: validated.generatedAt,
+    generatedAt: validated.renderManifest.renderGeneratedAt || validated.generatedAt,
     title: readModel.productProfile.documentTitle,
   });
   const manifest = validated.renderManifest;
