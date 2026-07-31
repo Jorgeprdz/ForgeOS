@@ -11,6 +11,7 @@ import "./pipeline-action-identity.js?v=pipeline-action-identity-001";
 import "./pipeline-context-journal.js?v=pipeline-context-journal-002";
 import "./pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003";
 import "./pipeline-filter-count-authority.js?v=pipeline-filter-count-001";
+import "./pipeline-stage-filter-authority.js?v=pipeline-stage-filter-001";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
