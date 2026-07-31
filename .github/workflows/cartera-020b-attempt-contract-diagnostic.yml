@@ -1,0 +1,58 @@
+name: CARTERA 020B Attempt Contract Diagnostic
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-020b-persistent-evidence-worker-parser-registry
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020b-attempt-contract-diagnostic
+  cancel-in-progress: true
+
+jobs:
+  read-only-attempt-contract:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Read-only diagnostic gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          node --check scripts/ci/cartera-020b-attempt-contract-diagnostic.mjs
+          node --test tests/cartera-020b-attempt-contract-diagnostic-test.mjs
+          ! grep -qiE '\b(insert|update|delete|alter|create|drop|truncate)\b' \
+            scripts/ci/cartera-020b-attempt-contract-diagnostic.mjs
+          mkdir -p artifacts/cartera-020b-attempt-contract-diagnostic
+          echo 'DIAGNOSTIC_MODE=READ_ONLY'
+
+      - name: Evaluate deployed attempt validator
+        run: |
+          node scripts/ci/cartera-020b-attempt-contract-diagnostic.mjs \
+            | tee artifacts/cartera-020b-attempt-contract-diagnostic/workflow-output.log
+
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-020b-attempt-contract-diagnostic
+          path: artifacts/cartera-020b-attempt-contract-diagnostic
+          if-no-files-found: error
+          retention-days: 14
