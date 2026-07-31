@@ -6,9 +6,12 @@ on:
     paths:
       - docs/static-preview/forge-alive-material3/**
       - advisor-os/sales-pipeline/**
+      - supabase/migrations/20260731000100_pipeline_prospect_journal.sql
       - tests/pipeline-real-interaction-regression.mjs
       - tests/pipeline-prospect-admin-regression.mjs
       - tests/pipeline-action-identity-regression.mjs
+      - tests/pipeline-context-journal-regression.mjs
+      - tests/prospect-journal-service-contract-test.mjs
       - .github/workflows/pipeline-real-interaction.yml
   workflow_dispatch:
 
@@ -26,6 +29,7 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
+      - run: node --test tests/prospect-journal-service-contract-test.mjs
       - run: npx playwright install --with-deps chromium
       - name: Start Vite
         shell: bash
@@ -48,3 +52,4 @@ jobs:
           node tests/pipeline-real-interaction-regression.mjs
           node tests/pipeline-prospect-admin-regression.mjs
           node tests/pipeline-action-identity-regression.mjs
+          node tests/pipeline-context-journal-regression.mjs
