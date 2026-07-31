@@ -1,0 +1,41 @@
+name: QPD-01 Quote Printable Read Model
+
+on:
+  push:
+    branches:
+      - feature/quote-printable-document-closure
+    paths:
+      - "advisor-os/quotes/**"
+      - ".github/workflows/qpd01-quote-printable-read-model.yml"
+  pull_request:
+    paths:
+      - "advisor-os/quotes/**"
+      - ".github/workflows/qpd01-quote-printable-read-model.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  qpd01-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Syntax gate
+        run: |
+          node --check advisor-os/quotes/printable/quote-printable-read-model.js
+          node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
+
+      - name: QPD-01 contract
+        run: node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
+
+      - name: Diff integrity
+        run: git diff --check HEAD^
