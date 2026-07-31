@@ -221,9 +221,10 @@ test("reviewed Quote reaches durable history, Timeline and Productive Prospect D
 
   await page.locator(`[data-open-prospect="${prospectReference}"]`).click();
   const section = page.locator("[data-cartera001c-quote-detail]");
+  const timeline = section.locator(".forge-cartera001c-timeline");
   await expect(section).toHaveAttribute("data-state", "READY");
   await expect(section.getByText("Aceptada", { exact: true })).toBeVisible();
-  await expect(section.getByText("Prospecto aceptó la cotización", { exact: true })).toBeVisible();
+  await expect(timeline.getByText("Prospecto aceptó la cotización", { exact: true })).toBeVisible();
   await expect(section.locator('[data-source-authority="QUOTE_AUTHORITY"]')).toHaveCount(4);
   await expect(section).not.toContainText(evidenceReference);
   await expect(section).not.toContainText("Prima");
