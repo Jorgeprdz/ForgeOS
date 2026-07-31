@@ -13,6 +13,12 @@ page.on("console", message => {
   if (["error", "warning"].includes(message.type())) console.error(`JOURNAL_BROWSER_${message.type().toUpperCase()}=${message.text()}`);
 });
 const checkpoint = name => console.log(`PIPELINE_CONTEXT_JOURNAL_CHECKPOINT=${name}`);
+const closeWithin = async operation => {
+  await Promise.race([
+    Promise.resolve(operation).catch(() => {}),
+    new Promise(resolve => setTimeout(resolve, 2000)),
+  ]);
+};
 
 try {
   await page.goto(new URL("manifest.json?pipeline-context-journal=1", baseUrl).href, { waitUntil: "domcontentloaded" });
@@ -164,6 +170,6 @@ try {
   console.log("PIPELINE_CONTEXT_JOURNAL_LATEST_ACTIVITY=PASS");
   console.log("PIPELINE_CONTEXT_JOURNAL_SINGLE_WORKSPACE=PASS");
 } finally {
-  await context.close().catch(() => {});
-  await browser.close().catch(() => {});
+  await closeWithin(context.close());
+  await closeWithin(browser.close());
 }
