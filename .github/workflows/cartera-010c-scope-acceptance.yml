@@ -40,7 +40,7 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
 
-          allowed='^(platform/event-evidence/policy-domain-event-contract\.js|platform/policy-intelligence/cartera-010c-portfolio-read-model\.js|advisor-os/cartera/canonical-portfolio-service\.js|cartera\.js|tests/cartera-010c-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010C_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-010c-scope-acceptance\.yml)$'
+          allowed='^(platform/event-evidence/policy-domain-event-contract\.js|platform/policy-intelligence/cartera-010c-[A-Za-z0-9._-]+\.js|advisor-os/cartera/canonical-portfolio-service\.js|cartera\.js|tests/cartera-010c-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010C_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-010c-scope-acceptance\.yml)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -61,7 +61,9 @@ jobs:
         run: |
           set -euo pipefail
           node --check platform/event-evidence/policy-domain-event-contract.js
-          node --check platform/policy-intelligence/cartera-010c-portfolio-read-model.js
+          for file in platform/policy-intelligence/cartera-010c-*.js; do
+            node --check "$file"
+          done
           node --check advisor-os/cartera/canonical-portfolio-service.js
           node --check cartera.js
           for file in tests/cartera-010c-*.mjs; do
@@ -71,7 +73,7 @@ jobs:
       - name: Execute complete 010C repository acceptance
         run: node --test tests/cartera-010c-*.mjs
 
-      - name: Verify legacy route authority removal
+      - name: Verify legacy authority removal and detail privacy
         shell: bash
         run: |
           set -euo pipefail
@@ -82,9 +84,16 @@ jobs:
           ! grep -q 'data-delete' cartera.js
           ! grep -q 'excel-input' cartera.js
           grep -q 'createCanonicalPortfolioService' cartera.js
+          grep -q 'loadPolicyDetail' advisor-os/cartera/canonical-portfolio-service.js
+          grep -q 'data-policy-open' cartera.js
+          grep -q 'data-policy-timeline' cartera.js
+          grep -q 'Timeline canónico minimizado' cartera.js
           grep -q 'safe-area-inset-bottom' cartera.js
           grep -q 'forge_cartera010b_list_general_policy_roles' advisor-os/cartera/canonical-portfolio-service.js
           ! grep -q "from('policy_roles')" advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q 'document_hash' advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q 'field_claims' advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q 'provenance' advisor-os/cartera/canonical-portfolio-service.js
 
       - name: Emit progress markers
         run: |
@@ -93,9 +102,12 @@ jobs:
           echo 'CARTERA_010C_CANONICAL_PORTFOLIO_READ_MODEL=REPOSITORY_READY'
           echo 'CARTERA_010C_AUTHENTICATED_PORTFOLIO_SERVICE=REPOSITORY_READY'
           echo 'CARTERA_010C_PERSON_ACCOUNT_PROJECTION=REPOSITORY_READY'
+          echo 'CARTERA_010C_POLICY_DETAIL=REPOSITORY_READY'
+          echo 'CARTERA_010C_MINIMIZED_POLICY_TIMELINE=REPOSITORY_READY'
           echo 'LEGACY_CARTERA_INDEXEDDB_AUTHORITY=REMOVED_FROM_ROUTE'
           echo 'LEGACY_CARTERA_DIRECT_WRITES=REMOVED'
           echo 'UNKNOWN_FACT_DEFAULTING=REMOVED'
+          echo 'BENEFICIARY_GENERAL_PROJECTION=FORBIDDEN'
           echo 'PRODUCT_UI_REDESIGN=NO'
           echo 'CARTERA_010C_COMPLETE=NO'
-          echo 'NEXT=CARTERA_010C_POLICY_DETAIL_AND_TIMELINE_PROJECTION'
+          echo 'NEXT=CARTERA_010C_REMOTE_READ_AND_BROWSER_ACCEPTANCE_CLOSURE'
