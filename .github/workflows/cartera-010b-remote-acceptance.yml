@@ -1,0 +1,100 @@
+name: CARTERA 010B Remote Acceptance
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010b-remote-acceptance
+  cancel-in-progress: true
+
+jobs:
+  remote-deployment-and-acceptance:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      SOURCE_COMMIT: 4c274a377f1b91fb176304f84008c1b42c781951
+      ACCEPTANCE_BRANCH: feature/cartera-010b-remote-acceptance
+
+    steps:
+      - name: Checkout exact acceptance branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/cartera-010b-remote-acceptance
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source, secret and bounded-path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "$ACCEPTANCE_BRANCH"
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(\.github/workflows/cartera-010b-remote-acceptance\.yml|docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-010b-github-actions-remote-acceptance\.mjs|scripts/ci/cartera-010b-remote-acceptance-0[1-4]\.sql|tests/cartera-010b-remote-acceptance-harness-test\.mjs)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010B_REMOTE_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          mkdir -p artifacts/cartera-010b-remote-acceptance
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_REMOTE_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+
+      - name: JavaScript syntax gate
+        run: |
+          node --check scripts/ci/cartera-010b-github-actions-remote-acceptance.mjs
+          node --check tests/cartera-010b-remote-acceptance-harness-test.mjs
+
+      - name: Repository acceptance suite
+        run: node --test tests/cartera-010b-*.mjs
+
+      - name: Deploy and execute transactional remote acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$(git rev-parse HEAD)" \
+            node scripts/ci/cartera-010b-github-actions-remote-acceptance.mjs \
+            | tee artifacts/cartera-010b-remote-acceptance/workflow-output.log
+
+      - name: Verify explicit remote acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-010b-remote-acceptance/workflow-output.log
+          grep -q 'CARTERA_010B_REMOTE_DEPLOYMENT=PASS' "$log"
+          grep -q 'CARTERA_010B_REMOTE_ACCEPTANCE=PASS' "$log"
+          grep -q 'RLS_CROSS_ADVISOR=PASS' "$log"
+          grep -q 'RESTRICTED_BENEFICIARY_READ=PASS' "$log"
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$log"
+          grep -q 'RESIDUAL_FIXTURES=0' "$log"
+
+      - name: Upload remote acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-010b-remote-acceptance
+          path: artifacts/cartera-010b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
