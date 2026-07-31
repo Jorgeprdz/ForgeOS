@@ -43,6 +43,7 @@ Migrations:
 20260731000223_cartera020b_command_helpers.sql
 20260731000224_cartera020b_admission_and_claim_rpcs.sql
 20260731000225_cartera020b_processing_result_rpc.sql
+20260731000226_cartera020b_claim_concurrency_hardening.sql
 ```
 
 Durable authorities:
@@ -73,8 +74,9 @@ The Inbox `metadata` column defect found during command construction was correct
 ### `forge_cartera020b_claim_evidence(text, integer)`
 
 - validates worker identity and a 30–3600 second lease;
+- serializes claim calls for each advisor/worker pair with an advisory transaction lock;
 - returns an active claim for the same worker as replay;
-- uses `FOR UPDATE SKIP LOCKED` for concurrent workers;
+- uses `LIMIT 1 FOR UPDATE SKIP LOCKED` for concurrent workers;
 - claims available, due-retry or expired-lease items;
 - increments optimistic state version;
 - appends a claim transition;
