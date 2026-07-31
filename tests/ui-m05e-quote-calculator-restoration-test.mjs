@@ -21,6 +21,9 @@ const cacheProofEntrypoint = read(
 const runtimeHotfix = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js",
 );
+const uxClosure = read(
+  "../docs/static-preview/forge-alive-material3/quote-runtime-ux-closure-m05e004.js",
+);
 
 for (const productAdapter of [
   "forge-imagina-ser-product-dashboard-adapter.js",
@@ -67,11 +70,15 @@ assert.match(moduleSource, /quotes-result-adapter\.js\?v=quote-calculator-parity
 
 assert.match(
   productiveApp,
-  /quotes-module\.js\?v=quote-calculator-parity-003/,
+  /quotes-module\.js\?v=quote-calculator-parity-004/,
 );
 assert.match(
   productiveApp,
   /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/,
+);
+assert.match(
+  productiveApp,
+  /quote-runtime-ux-closure-m05e004\.js\?v=m05e-004/,
 );
 assert.doesNotMatch(
   productiveApp,
@@ -79,19 +86,22 @@ assert.doesNotMatch(
 );
 assert.match(
   productiveApp,
-  /dataset\.quoteCalculatorRuntime = "M05E-003"/,
+  /dataset\.quoteCalculatorRuntime = "M05E-004"/,
 );
 assert.match(
   cacheProofEntrypoint,
-  /app\.js\?v=quote-calculator-parity-003/,
+  /app\.js\?v=quote-calculator-parity-004/,
 );
-assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-003/);
+assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-004/);
 assert.match(cacheProofEntrypoint, /cache: "no-store"/);
 assert.match(runtimeHotfix, /Cliente \/ asegurado/);
 assert.match(runtimeHotfix, /MXN hoy/);
+assert.match(uxClosure, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
+assert.match(uxClosure, /Datos del documento/);
+assert.match(uxClosure, /restoreHistory/);
 
 console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
-  productiveRuntime: "M05E-003",
+  productiveRuntime: "M05E-004",
   products: ["vida_mujer", "segubeca", "orvi", "imagina_ser"],
   mandatoryMetrics: ["sum_assured_udi_mxn", "annual_contribution_udi_mxn"],
   orviPrimarySecondaryMapping: true,
@@ -101,4 +111,6 @@ console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
   printableRefreshWired: true,
   productiveEntrypointWired: true,
   cacheProofEntrypoint: true,
+  optionalClientUx: true,
+  printableHistoryRestored: true,
 });
