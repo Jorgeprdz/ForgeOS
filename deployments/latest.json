@@ -3,16 +3,16 @@
   "migrationVersion": "20260731000100",
   "migrationName": "pipeline_prospect_journal",
   "projectRef": "rmlxigxysujsuwzgoimv",
-  "sourceSha": "9e97f37d397a694e5a9571777ca34e38deb4c53d",
-  "workflowRunId": "30605854522",
-  "verifiedAt": "2026-07-31T05:06:11.226Z",
+  "sourceSha": "f7410a1ecca4cace98817097bd93bdff35e0094a",
+  "workflowRunId": "30651288596",
+  "verifiedAt": "2026-07-31T17:28:36.756Z",
   "checks": [
     {
       "name": "predeployment_inventory",
       "status": "PASS"
     },
     {
-      "name": "migration_applied",
+      "name": "migration_already_satisfied",
       "status": "PASS"
     },
     {
