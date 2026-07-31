@@ -1,5 +1,19 @@
 import assert from "node:assert/strict";
 import { chromium } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+
+const runtimeEntryContract = Object.freeze({
+  appEntry: "app.js?v=ui-m04-shell-008&fix=pipeline-stage-runtime-003",
+  pipelineModule: "pipeline-module.js?v=ui-m06-pipeline-012",
+  stageHotfix: "pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003",
+});
+const [entryHtml, appSource] = await Promise.all([
+  readFile("docs/static-preview/forge-alive-material3/index.html", "utf8"),
+  readFile("docs/static-preview/forge-alive-material3/app.js", "utf8"),
+]);
+assert.match(entryHtml, new RegExp(runtimeEntryContract.appEntry.replace(/[.?+&]/g, "\\$&")));
+assert.match(appSource, new RegExp(runtimeEntryContract.pipelineModule.replace(/[.?+&]/g, "\\$&")));
+assert.match(appSource, new RegExp(runtimeEntryContract.stageHotfix.replace(/[.?+&]/g, "\\$&")));
 
 const baseUrl = process.env.FORGE_PIPELINE_TEST_BASE_URL
   || "http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/";
