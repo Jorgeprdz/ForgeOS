@@ -7,9 +7,18 @@ const tablesPath = 'supabase/migrations/20260731000220_cartera020b_evidence_tabl
 const helpersPath = 'supabase/migrations/20260731000223_cartera020b_command_helpers.sql';
 const admissionPath = 'supabase/migrations/20260731000224_cartera020b_admission_and_claim_rpcs.sql';
 const resultPath = 'supabase/migrations/20260731000225_cartera020b_processing_result_rpc.sql';
+const claimHardeningPath = 'supabase/migrations/20260731000226_cartera020b_claim_concurrency_hardening.sql';
 
 const allCommands = async () => [
-  await read(helpersPath), await read(admissionPath), await read(resultPath),
+  await read(helpersPath),
+  await read(admissionPath),
+  await read(resultPath),
+  await read(claimHardeningPath),
+].join('\n');
+
+const claimAuthority = async () => [
+  await read(admissionPath),
+  await read(claimHardeningPath),
 ].join('\n');
 
 test('inbox persistence uses the real metadata column and has no metada typo', async () => {
@@ -60,10 +69,13 @@ test('admission creates source, inbox, transition and receipt but no Policy trut
   assert.match(sql, /ALREADY_ADMITTED/);
 });
 
-test('claim RPC uses SKIP LOCKED, replays an active worker lease and recovers expired leases', async () => {
-  const sql = await read(admissionPath);
+test('claim RPC uses SKIP LOCKED, serializes each worker and recovers expired leases', async () => {
+  const sql = await claimAuthority();
+  const hardening = await read(claimHardeningPath);
   assert.match(sql, /forge_cartera020b_claim_evidence/);
-  assert.match(sql, /for update skip locked/g);
+  assert.match(hardening, /CLAIM_EVIDENCE/);
+  assert.match(hardening, /pg_advisory_xact_lock/);
+  assert.match(hardening, /limit 1\s+for update skip locked/g);
   assert.match(sql, /i\.lease_owner = p_worker_id/);
   assert.match(sql, /i\.lease_expires_at > claimed_at/);
   assert.match(sql, /i\.lease_expires_at <= claimed_at/);
@@ -72,7 +84,7 @@ test('claim RPC uses SKIP LOCKED, replays an active worker lease and recovers ex
 });
 
 test('claim mutation is governed, increments version and appends a transition', async () => {
-  const sql = await read(admissionPath);
+  const sql = await claimAuthority();
   assert.match(sql, /set_config\('forge\.cartera020b_command', 'on', true\)/);
   assert.match(sql, /state_version = i\.state_version \+ 1/);
   assert.match(sql, /transition\/claim\//);
@@ -87,7 +99,7 @@ test('processing result validates auth, lease, optimistic version and allowed st
   assert.match(sql, /CARTERA020B_VERSION_CONFLICT/);
   assert.match(sql, /CARTERA020B_CLAIM_MISMATCH/);
   assert.match(sql, /CARTERA020B_LEASE_EXPIRED/);
-  assert.match(sql, /forge_cartera020b_transition_allowed/);
+  assert.match(sql, /cartera020b_transition_allowed/);
   assert.match(sql, /CARTERA020B_STATUS_TRANSITION_INVALID/);
 });
 
