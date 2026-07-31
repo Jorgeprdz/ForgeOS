@@ -266,7 +266,7 @@ function createQuotePrintableVersionRecord({
 function createMemoryStore(initialRecords = []) {
   let records = initialRecords.map(assertVersionRecord);
   return {
-    readAll: () => records.map(cloneJson),
+    readAll: () => records.map((record) => cloneJson(record)),
     writeAll: (next) => { records = next.map(assertVersionRecord); },
   };
 }
