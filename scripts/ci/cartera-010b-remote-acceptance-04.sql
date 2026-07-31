@@ -50,6 +50,10 @@
   end if;
   policy_v2_reference := response ->> 'policyVersionReference';
 
+  -- Version and temporal-history invariants require internal inspection of tables
+  -- that remain intentionally unreadable by authenticated clients.
+  execute 'reset role';
+
   select p.current_version into row_count
   from public.canonical_policies p
   where p.advisor_id = user_a and p.policy_reference = policy_reference;
@@ -83,6 +87,10 @@
     raise exception 'CARTERA010B_POLICY_ACTIVE_ROLE_VERSION_INVALID';
   end if;
 
+  perform set_config('request.jwt.claim.sub', user_a::text, true);
+  perform set_config('request.jwt.claim.role', 'authenticated', true);
+  execute 'set local role authenticated';
+
   changed := public.forge_cartera010b_confirm_policy_with_parties(
     jsonb_set(
       jsonb_set(
@@ -98,6 +106,8 @@
      or changed ->> 'conflictType' <> 'POLICY_NUMBER_COLLISION' then
     raise exception 'CARTERA010B_POLICY_NUMBER_COLLISION_NOT_RECORDED';
   end if;
+
+  execute 'reset role';
 
   begin
     update public.policy_versions
@@ -116,8 +126,6 @@
     if position('CARTERA010B_APPEND_ONLY' in sqlerrm) = 0 then raise; end if;
   end;
 
-  execute 'reset role';
-
   perform set_config('request.jwt.claim.sub', user_b::text, true);
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   execute 'set local role authenticated';
@@ -126,7 +134,8 @@
   if row_count <> 0 then raise exception 'CARTERA010B_CROSS_ADVISOR_PERSON_LEAK'; end if;
   select count(*) into row_count from public.canonical_policies;
   if row_count <> 0 then raise exception 'CARTERA010B_CROSS_ADVISOR_POLICY_LEAK'; end if;
-  select count(*) into row_count from public.cartera_policy_roles_general;
+  select count(*) into row_count
+  from public.forge_cartera010b_list_general_policy_roles(policy_reference);
   if row_count <> 0 then raise exception 'CARTERA010B_CROSS_ADVISOR_ROLE_LEAK'; end if;
 
   begin
@@ -154,6 +163,11 @@
   begin
     perform public.forge_cartera010b_confirm_policy_with_parties(policy_command_v1);
     raise exception 'CARTERA010B_ANON_POLICY_EXECUTION_UNEXPECTED';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.forge_cartera010b_list_general_policy_roles(policy_reference);
+    raise exception 'CARTERA010B_ANON_GENERAL_ROLE_READ_UNEXPECTED';
   exception when insufficient_privilege then null;
   end;
   execute 'reset role';
