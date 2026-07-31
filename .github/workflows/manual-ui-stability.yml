@@ -9,7 +9,9 @@ on:
       - service-worker.js
       - docs/static-preview/forge-alive/**
       - docs/static-preview/forge-alive-material3/**
+      - supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql
       - tests/legacy-ui-retirement-regression.mjs
+      - tests/pipeline-stage-rpc-authority-regression.mjs
       - tests/manual-quotes-pipeline-stability-test.mjs
       - tools/manual-ui-stability-check.mjs
       - .github/workflows/manual-ui-stability.yml
@@ -48,6 +50,7 @@ jobs:
           tests/material3-pipeline-integration-test.mjs
           tests/manual-quotes-pipeline-stability-test.mjs
           tests/legacy-ui-retirement-regression.mjs
+          tests/pipeline-stage-rpc-authority-regression.mjs
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
