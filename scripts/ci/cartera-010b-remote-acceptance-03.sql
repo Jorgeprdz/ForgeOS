@@ -127,13 +127,15 @@
   exception when insufficient_privilege then null;
   end;
 
-  select count(*) into row_count from public.cartera_policy_roles_general;
+  select count(*) into row_count
+  from public.forge_cartera010b_list_general_policy_roles(policy_reference);
   if row_count <> 3 then
-    raise exception 'CARTERA010B_GENERAL_ROLE_VIEW_INVALID';
+    raise exception 'CARTERA010B_GENERAL_ROLE_READ_INVALID';
   end if;
 
   if exists (
-    select 1 from public.cartera_policy_roles_general
+    select 1
+    from public.forge_cartera010b_list_general_policy_roles(policy_reference)
     where role_type = 'BENEFICIARY'
        or visibility_scope <> 'POLICY_TEAM'
   ) then
