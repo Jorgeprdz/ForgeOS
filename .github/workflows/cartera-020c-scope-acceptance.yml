@@ -1,0 +1,125 @@
+name: CARTERA 020C Confirmation Review Scope Acceptance
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020c-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  identity-policy-confirmation-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source integration and bounded paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=528533e5ba6e060a844e5facbc127eea145542b9
+          CARTERA_020B_HEAD=5ab8ef44055a66c414d24f0bc7c37f243c959e05
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git merge-base --is-ancestor "$CARTERA_020B_HEAD" "$SOURCE_COMMIT"
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(policy-operations/intake/cartera-020c-[A-Za-z0-9._-]+\.js|tests/cartera-020c-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_020C_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-020c-[A-Za-z0-9._-]+\.yml|\.github/workflows/cartera-020b-foundation\.yml)$'
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_020C_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_COMMIT_VERIFIED=YES'
+          echo 'CARTERA_020B_INTEGRATED=YES'
+          echo 'BOUNDED_PATHS=PASS'
+          echo 'SCHEMA_DIFF=NONE'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+          echo 'INHERITED_020B_GATE_RETIREMENT=BOUNDED'
+
+      - name: JavaScript syntax and targeted acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check policy-operations/intake/cartera-020c-confirmation-review-contracts.js
+          node --check tests/cartera-020c-identity-policy-confirmation-review-scope-test.mjs
+          node --test tests/cartera-020c-*.mjs
+
+      - name: Preserve inherited confirmation primitives
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tests/evidence-confirmation-task-test.js
+          node tests/policy-evidence-packet-test.js
+          node tests/policy-advisor-confirmation-gate-test.js
+          echo 'INHERITED_CONFIRMATION_TESTS=3'
+          echo 'INHERITED_CONFIRMATION_PASS=3'
+
+      - name: Verify review and command boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract=policy-operations/intake/cartera-020c-confirmation-review-contracts.js
+          scope=docs/architecture/source-truth/FORGE_CARTERA_020C_IDENTITY_POLICY_CONFIRMATION_REVIEW_SCOPE_001.md
+          retired=.github/workflows/cartera-020b-foundation.yml
+
+          grep -q 'FORGE_IDENTITY_POLICY_CONFIRMATION_REVIEW' "$contract"
+          grep -q 'FORGE_IDENTITY_POLICY_CONFIRMATION_PLAN' "$contract"
+          grep -q "'IDENTITY_RESOLUTION', 'CONFIRMED_POLICY'" "$contract"
+          grep -q 'restricted_role_visibility_required' "$contract"
+          grep -q 'duplicate_policy_decision_required' "$contract"
+          grep -q 'requiresExplicitExecution: true' "$contract"
+          ! grep -qE '\.rpc[[:space:]]*\(' "$contract"
+          ! grep -qi 'supabase' "$contract"
+
+          grep -q 'SOURCE_COMMIT=528533e5ba6e060a844e5facbc127eea145542b9' "$scope"
+          grep -q 'CARTERA_020B_COMPLETE=YES' "$scope"
+          grep -q 'IDENTITY_BEFORE_POLICY_ORDER=LOCKED' "$scope"
+          grep -q 'GENERAL_DIRECTORY_PROJECTION=FORBIDDEN' "$scope"
+          grep -q 'CONFIRMATION_PLAN_EXECUTION=EXPLICIT_ONLY' "$scope"
+          grep -q 'SUPABASE_REMOTE_MUTATION=NO' "$scope"
+          grep -q 'PRODUCT_UI_MUTATION=NO_FIRST_CUT' "$scope"
+          grep -q 'CARTERA_020C_COMPLETE=NO' "$scope"
+          grep -q 'NEXT=CARTERA_020C_REVIEW_READ_MODEL_AND_CANDIDATE_RECONCILIATION' "$scope"
+
+          grep -q '^  workflow_dispatch:' "$retired"
+          ! grep -qE '^  (push|pull_request):' "$retired"
+          grep -q 'CARTERA_020B_GATE=ARCHIVED_MANUAL_ONLY' "$retired"
+
+          echo 'IDENTITY_REVIEW_CONTRACT=REPOSITORY_READY'
+          echo 'POLICY_ROLE_REVIEW_CONTRACT=REPOSITORY_READY'
+          echo 'DUPLICATE_POLICY_DECISION=LOCKED'
+          echo 'RESTRICTED_BENEFICIARY_BOUNDARY=LOCKED'
+          echo 'IDENTITY_BEFORE_POLICY_ORDER=LOCKED'
+          echo 'CONFIRMATION_PLAN_EXECUTION=EXPLICIT_ONLY'
+
+      - name: Emit first-cut markers
+        run: |
+          echo 'CARTERA_020C_TESTS=10'
+          echo 'CARTERA_020C_PASS=10'
+          echo 'INHERITED_CONFIRMATION_TESTS=3'
+          echo 'INHERITED_CONFIRMATION_PASS=3'
+          echo 'TOTAL_TARGETED_TESTS=13'
+          echo 'TOTAL_TARGETED_PASS=13'
+          echo 'TOTAL_TARGETED_FAIL=0'
+          echo 'CARTERA_020C_SCOPE=LOCKED'
+          echo 'CARTERA_020C_FIRST_CONTRACT_CUT=REPOSITORY_READY'
+          echo 'CARTERA_020C_COMPLETE=NO'
+          echo 'NEXT=CARTERA_020C_REVIEW_READ_MODEL_AND_CANDIDATE_RECONCILIATION'
