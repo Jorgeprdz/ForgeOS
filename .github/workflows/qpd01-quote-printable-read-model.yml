@@ -9,7 +9,9 @@ on:
       - "docs/static-preview/quote-printable-runtime/**"
       - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
       - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e00*.*"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.css"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js"
       - "docs/static-preview/forge-alive-material3/app.js"
       - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
@@ -18,6 +20,7 @@ on:
       - "tests/ui-m05g-printable-design-closure-test.mjs"
       - "tests/ui-m05h-orvi-commercial-document-test.mjs"
       - "tests/ui-m05i-vida-mujer-commercial-document-test.mjs"
+      - "tests/ui-m05k-vida-mujer-pages-landscape-test.mjs"
       - "tests/e2e/qpd06-browser-acceptance.spec.mjs"
       - "tests/e2e/m05e006-responsiveness.spec.mjs"
       - "tests/e2e/fixtures/qpd06/**"
@@ -33,7 +36,9 @@ on:
       - "docs/static-preview/quote-printable-runtime/**"
       - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
       - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e00*.*"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.css"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js"
       - "docs/static-preview/forge-alive-material3/app.js"
       - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
@@ -42,6 +47,7 @@ on:
       - "tests/ui-m05g-printable-design-closure-test.mjs"
       - "tests/ui-m05h-orvi-commercial-document-test.mjs"
       - "tests/ui-m05i-vida-mujer-commercial-document-test.mjs"
+      - "tests/ui-m05k-vida-mujer-pages-landscape-test.mjs"
       - "tests/e2e/qpd06-browser-acceptance.spec.mjs"
       - "tests/e2e/m05e006-responsiveness.spec.mjs"
       - "tests/e2e/fixtures/qpd06/**"
@@ -89,6 +95,9 @@ jobs:
           node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e008.js
           node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e008-pink.js
           node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e008.js
+          node --check advisor-os/quotes/printable/quote-printable-product-profile-m05e010.js
+          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e010.js
+          node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e010.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-read-model.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator.js
@@ -105,13 +114,19 @@ jobs:
           node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e008.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e008-pink.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e008.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-product-profile-m05e010.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e010.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e010.js
           node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js
           node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e007.js
           node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e008.js
+          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e010.js
           node --check docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js
           node --check docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js
           node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
           node --check advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
@@ -126,6 +141,7 @@ jobs:
           node --check tests/ui-m05g-printable-design-closure-test.mjs
           node --check tests/ui-m05h-orvi-commercial-document-test.mjs
           node --check tests/ui-m05i-vida-mujer-commercial-document-test.mjs
+          node --check tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
           node --check tests/e2e/qpd06-browser-acceptance.spec.mjs
           node --check tests/e2e/m05e006-responsiveness.spec.mjs
           node --check tests/e2e/fixtures/qpd06/harness.js
@@ -171,6 +187,9 @@ jobs:
 
       - name: M05I pink Vida Mujer commercial document
         run: node tests/ui-m05i-vida-mujer-commercial-document-test.mjs
+
+      - name: M05K Vida Mujer Pages landscape closure
+        run: node tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
 
       - name: Diff integrity
         run: git diff --check HEAD^1...HEAD
