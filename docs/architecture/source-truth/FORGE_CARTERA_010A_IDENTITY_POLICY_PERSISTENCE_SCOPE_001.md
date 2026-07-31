@@ -1,7 +1,7 @@
 # FORGE CARTERA 010A — Identity and Policy Persistence Scope 001
 
-Forge OS  
-Architecture Source Truth  
+Forge OS
+Architecture Source Truth
 Cartera / Control Base and Canonical Persistence
 
 ## Status
