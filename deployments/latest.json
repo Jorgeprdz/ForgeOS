@@ -3,9 +3,9 @@
   "migrationVersion": "20260731000100",
   "migrationName": "pipeline_prospect_journal",
   "projectRef": "rmlxigxysujsuwzgoimv",
-  "sourceSha": "f7410a1ecca4cace98817097bd93bdff35e0094a",
-  "workflowRunId": "30651288596",
-  "verifiedAt": "2026-07-31T17:28:36.756Z",
+  "sourceSha": "6e55d8c4e8d8d7d171f370bfaeb29c35e9e58738",
+  "workflowRunId": "30658462448",
+  "verifiedAt": "2026-07-31T19:16:49.087Z",
   "checks": [
     {
       "name": "predeployment_inventory",
