@@ -8,16 +8,18 @@ on:
 
 permissions:
   contents: read
-  actions: write
-  deployments: write
-  statuses: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: quotes-preview-pages
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  validate-dispatch-and-verify:
+  deploy:
+    environment:
+      name: github-pages-preview
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -36,110 +38,96 @@ jobs:
       - name: Validate Vida Mujer Pages landscape closure
         run: node tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
 
-      - name: Dispatch and verify canonical Pages deployment
+      - name: Validate GitHub Pages public configuration
         env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_REF: ${{ github.ref_name }}
-          TARGET_SHA: ${{ github.sha }}
-          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
-          ENVIRONMENT_SETTINGS_URL: https://github.com/${{ github.repository }}/settings/environments
+          DEMO_MODE: ${{ vars.DEMO_MODE || 'false' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           set -euo pipefail
-          run_id=""
-
-          post_status() {
-            local state="$1"
-            local description="$2"
-            local target_url="${3:-$PAGE_URL}"
-            gh api \
-              --method POST \
-              "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
-              -f state="$state" \
-              -f context="pages/quotes-preview" \
-              -f description="$description" \
-              -f target_url="$target_url" >/dev/null
-          }
-
-          fail_deploy() {
-            local code=$?
-            local target="$PAGE_URL"
-            local description="GitHub Pages preview deployment failed"
-            if [[ -n "$run_id" ]]; then
-              target="https://github.com/$GITHUB_REPOSITORY/actions/runs/$run_id"
-              description="Pages run $run_id failed"
-              gh run view "$run_id" \
-                --repo "$GITHUB_REPOSITORY" \
-                --log-failed || true
-            fi
-            post_status failure "$description" "$target"
-            exit "$code"
-          }
-
-          trap fail_deploy ERR
-          post_status pending "Publishing Quotes preview to GitHub Pages"
-
-          printf 'PAGES_DEPLOY_REF=%s\n' "$TARGET_REF"
-          printf 'PAGES_DEPLOY_SHA=%s\n' "$TARGET_SHA"
-
-          policy_error="$(mktemp)"
-          if gh api \
-            --method POST \
-            "repos/$GITHUB_REPOSITORY/environments/github-pages/deployment-branch-policies" \
-            -f name="$TARGET_REF" \
-            -f type="branch" >/dev/null 2>"$policy_error"; then
-            echo "PAGES_BRANCH_POLICY=CREATED"
-          else
-            if gh api \
-              "repos/$GITHUB_REPOSITORY/environments/github-pages/deployment-branch-policies" \
-              --jq '.branch_policies[]?.name' 2>/dev/null \
-              | grep -Fx "$TARGET_REF" >/dev/null; then
-              echo "PAGES_BRANCH_POLICY=ALREADY_PRESENT"
-            else
-              cat "$policy_error" >&2
-              post_status failure \
-                "Allow preview branch in github-pages environment" \
-                "$ENVIRONMENT_SETTINGS_URL"
-              trap - ERR
-              echo "BLOCKED=PAGES_ENVIRONMENT_BRANCH_POLICY"
+          if [ "$DEMO_MODE" != "true" ]; then
+            if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+              echo "Error: SUPABASE_URL and SUPABASE_ANON_KEY are required"
               exit 1
             fi
           fi
-          rm -f "$policy_error"
+          node -e "if(process.env.DEMO_MODE!=='true'){const u=new URL(process.env.SUPABASE_URL);if(u.hostname!=='rmlxigxysujsuwzgoimv.supabase.co')throw new Error('SUPABASE_URL_PROJECT_REF_MISMATCH')}"
 
-          gh workflow run pages.yml \
-            --repo "$GITHUB_REPOSITORY" \
-            --ref "$TARGET_REF"
+      - name: Generate env.js
+        env:
+          DEMO_MODE: ${{ vars.DEMO_MODE || 'false' }}
+          ENABLE_TEST_ADVISOR_LOGIN: ${{ vars.ENABLE_TEST_ADVISOR_LOGIN || 'false' }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const env = {
+            SUPABASE_URL: process.env.SUPABASE_URL || "",
+            SUPABASE_KEY: process.env.SUPABASE_ANON_KEY || "",
+            DEMO_MODE: process.env.DEMO_MODE === "true" ? "true" : "false",
+            ENABLE_TEST_ADVISOR_LOGIN:
+              process.env.ENABLE_TEST_ADVISOR_LOGIN === "true" ? "true" : "false"
+          };
+          fs.writeFileSync(
+            'env.js',
+            `window.__ENV__ = Object.freeze(${JSON.stringify(env, null, 2)});\n`,
+          );
+          EOF
 
-          for attempt in $(seq 1 30); do
-            run_id="$(
-              gh run list \
-                --repo "$GITHUB_REPOSITORY" \
-                --workflow pages.yml \
-                --branch "$TARGET_REF" \
-                --event workflow_dispatch \
-                --limit 20 \
-                --json databaseId,headSha,createdAt \
-                --jq '.[] | select(.headSha == env.TARGET_SHA) | .databaseId' \
-                | head -n 1
-            )"
-            if [[ -n "$run_id" ]]; then
-              break
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Generate Advisor OS presentation Pages runtime
+        run: node scripts/build-advisor-presentation-pages-runtime.mjs
+
+      - name: Build Quotes preview artifact
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: node scripts/build-quotes-preview-pages.mjs
+
+      - name: Validate generated public configuration
+        run: node scripts/validate-pages-public-config.mjs _site/env.js
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify published Quotes preview
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+          BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
+          QUOTES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 36); do
+            if node - <<'EOF'
+          const expected = process.env.EXPECTED_SHA;
+          const cacheBust = Date.now();
+          const buildResponse = await fetch(`${process.env.BUILD_INFO_URL}?cb=${cacheBust}`, {
+            cache: 'no-store',
+          });
+          if (!buildResponse.ok) process.exit(1);
+          const build = await buildResponse.json();
+          if (build.commitSha !== expected) process.exit(1);
+          const quoteResponse = await fetch(`${process.env.QUOTES_URL}&cb=${cacheBust}`, {
+            cache: 'no-store',
+          });
+          if (!quoteResponse.ok) process.exit(1);
+          const html = await quoteResponse.text();
+          if (!html.includes('CALCULADORAS M05E-010')) process.exit(1);
+          console.log(`PAGES_PREVIEW_HTTP=PASS sha=${build.commitSha}`);
+          EOF
+            then
+              echo "PAGES_URL=$QUOTES_URL"
+              exit 0
             fi
-            sleep 4
+            sleep 5
           done
-
-          if [[ -z "$run_id" ]]; then
-            echo "BLOCKED=PAGES_RUN_NOT_FOUND"
-            exit 1
-          fi
-
-          printf 'PAGES_RUN_ID=%s\n' "$run_id"
-          gh run watch "$run_id" \
-            --repo "$GITHUB_REPOSITORY" \
-            --exit-status \
-            --interval 10
-
-          post_status success "Quotes preview published to GitHub Pages"
-          trap - ERR
-          printf 'PAGES_DEPLOYMENT=PASS\n'
-          printf 'PAGES_URL=%s\n' "$PAGE_URL"
+          echo "PAGES_PREVIEW_HTTP=FAIL"
+          exit 1
