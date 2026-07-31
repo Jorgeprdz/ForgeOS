@@ -6,21 +6,35 @@ const read = (path) => readFileSync(new URL(path, root), "utf8");
 
 const app = read("docs/static-preview/forge-alive-material3/app.js");
 const hotfix = read("docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js");
+const pagesRateBridge = read("docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js");
 const vidaMujerHandoff = read("docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js");
+const vidaMujerVisual = read("docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js");
 const printableClosure = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
 const proof = read("docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html");
 const server = read("tools/forge-local-live-server.cjs");
 const cacheEngine = read("exchange-rate-cache-engine.js");
 const staleCache = JSON.parse(read("forge-rate-cache.json"));
 
-assert.match(app, /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/);
+assert.match(app, /quote-runtime-pages-rate-fetch-bridge-m05e010\.js\?v=m05e-010/);
+assert.match(app, /quote-runtime-hotfix-m05e003\.js\?v=m05e-010-pages-rate/);
 assert.match(app, /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05e-009/);
-assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-006/);
+assert.match(app, /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05e-010/);
+assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-010-landscape/);
 assert.doesNotMatch(app, /quote-runtime-printable-closure-m05e005\.js/);
 assert.match(app, /quoteCalculatorRuntime = "M05E-006"/);
+assert.match(app, /vidaMujerVisualClosure = "M05E-010"/);
 assert.match(proof, /CALCULADORAS M05E-006/);
 assert.match(proof, /quote-calculator-parity-009/);
 assert.match(proof, /vidaMujerHandoff = "M05E-009"/);
+
+assert.ok(
+  app.indexOf('await loadAuthority(envBase, "env.js")') <
+  app.indexOf("quote-runtime-pages-rate-fetch-bridge-m05e010.js"),
+);
+assert.ok(
+  app.indexOf("quote-runtime-pages-rate-fetch-bridge-m05e010.js") <
+  app.indexOf("quote-runtime-hotfix-m05e003.js"),
+);
 
 assert.match(hotfix, /MAX_CACHE_AGE_HOURS = 18/);
 assert.match(hotfix, /MAX_SOURCE_AGE_DAYS = 7/);
@@ -32,6 +46,13 @@ assert.match(hotfix, /currentAnnualContributionMxn/);
 assert.match(hotfix, /MXN hoy/);
 assert.match(hotfix, /UDI vigente:/);
 
+assert.match(pagesRateBridge, /functions\/v1\/banxico-rates/);
+assert.match(pagesRateBridge, /SUPABASE_URL/);
+assert.match(pagesRateBridge, /SUPABASE_KEY/);
+assert.match(pagesRateBridge, /cacheStatus: "LIVE_REFRESHED"/);
+assert.match(pagesRateBridge, /Cache-Control/);
+assert.match(pagesRateBridge, /globalThis\.document\?\.documentElement/);
+
 assert.match(vidaMujerHandoff, /PRODUCT_FAMILY = "vida_mujer"/);
 assert.match(vidaMujerHandoff, /PRODUCT_INTELLIGENCE_SCHEMA/);
 assert.match(vidaMujerHandoff, /buildVidaMujerProductIntelligence/);
@@ -40,6 +61,9 @@ assert.match(vidaMujerHandoff, /enrichVidaMujerCalculation/);
 assert.match(vidaMujerHandoff, /enrichVidaMujerSnapshot/);
 assert.match(vidaMujerHandoff, /truth_status: "source_provided"/);
 assert.doesNotMatch(vidaMujerHandoff, /new MutationObserver/);
+assert.match(vidaMujerVisual, /Total aportado/);
+assert.match(vidaMujerVisual, /A4 horizontal/);
+assert.doesNotMatch(vidaMujerVisual, /MutationObserver/);
 
 assert.match(printableClosure, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
 assert.match(printableClosure, /prepareOptionalClient/);
@@ -98,17 +122,20 @@ console.log("PASS UI-M05F live UDI and printable UX closure", {
   foundationalRuntime: "M05E-003",
   productiveRuntime: "M05E-006",
   vidaMujerHandoff: "M05E-009",
+  vidaMujerVisualClosure: "M05E-010",
   staleFixtureDetected: staleCache.rates.UDI_MXN.date,
   liveRateRefreshRequired: true,
   envJsSupabaseDiscovery: true,
   pagesWorkflowSupabaseDiscovery: true,
+  pagesDirectEdgeRates: true,
   liveCacheOutsideWorktree: true,
   annualContributionCurrentMxn: true,
   clientNameOptionalForFlow: true,
   confirmationSynchronized: true,
   compactPrintableActions: true,
   printableHistoryRestored: true,
-  portraitPrintableRequired: true,
+  orviPortraitPreserved: true,
+  vidaMujerLandscapeEnabled: true,
   globalMutationObserverRemoved: true,
   humanReviewFeedbackLoopRemoved: true,
 });
