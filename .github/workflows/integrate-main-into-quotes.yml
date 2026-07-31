@@ -31,6 +31,19 @@ jobs:
           fetch-depth: 0
           ref: fix/quote-calculators-product-intelligence-parity
 
+      - name: Mark integration pending
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.sha }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
+            -f state=pending \
+            -f context=integration/main-reconcile \
+            -f description="Reconciling Quotes with current main" \
+            -f target_url="$RUN_URL" >/dev/null
+
       - name: Configure merge identity
         run: |
           git config user.name "ForgeOS Integration Bot"
@@ -232,3 +245,30 @@ jobs:
         run: |
           set -euo pipefail
           git push origin HEAD:fix/quote-calculators-product-intelligence-parity
+
+      - name: Mark integration successful
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          resolved_sha="$(git rev-parse HEAD)"
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/statuses/$resolved_sha" \
+            -f state=success \
+            -f context=integration/main-reconcile \
+            -f description="Quotes reconciled with current main" \
+            -f target_url="$RUN_URL" >/dev/null
+
+      - name: Mark integration failed
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.sha }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
+            -f state=failure \
+            -f context=integration/main-reconcile \
+            -f description="Main reconciliation failed" \
+            -f target_url="$RUN_URL" >/dev/null
