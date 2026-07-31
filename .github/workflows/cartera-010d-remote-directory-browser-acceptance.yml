@@ -2,19 +2,6 @@ name: CARTERA 010D Remote Directory and Browser Acceptance
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feature/cartera-010d-unified-directory-relationship-search
-    paths:
-      - ".github/workflows/cartera-010d-remote-directory-browser-acceptance.yml"
-      - "docs/evidence/FORGE_CARTERA_010D_REMOTE_DIRECTORY_BROWSER_ACCEPTANCE_*"
-      - "platform/policy-intelligence/cartera-010d-unified-directory-read-model.js"
-      - "scripts/ci/cartera-010d-remote-directory-acceptance.mjs"
-      - "tests/cartera-010d-restricted-entity-privacy-test.mjs"
-      - "tests/cartera-010d-remote-directory-browser-acceptance-harness-test.mjs"
-      - "tests/e2e/cartera-010d-remote-browser.spec.mjs"
-      - "tests/e2e/fixtures/cartera-010d/**"
-      - "playwright.cartera-010d.config.mjs"
   pull_request:
     branches:
       - feature/cartera-010b-commercial-person-policy-role-foundation
