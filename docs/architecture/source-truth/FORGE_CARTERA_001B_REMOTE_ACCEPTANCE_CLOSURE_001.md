@@ -95,6 +95,9 @@ Remote execution used the existing repository secret `SUPABASE_ACCESS_TOKEN`
 and the Supabase Management API from GitHub Actions. No database password,
 pooler URL, local ArchForge network path or `psql` dependency was required.
 
+After closure, the workflow was returned to `workflow_dispatch` only. It does
+not mutate the remote project automatically on later pushes or PR updates.
+
 ## Closure
 
 ```text
