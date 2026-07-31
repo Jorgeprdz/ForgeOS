@@ -1,0 +1,47 @@
+name: Deploy Quotes Preview to Pages
+
+on:
+  push:
+    branches:
+      - fix/quote-calculators-product-intelligence-parity
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: quotes-preview-pages
+  cancel-in-progress: true
+
+jobs:
+  validate-and-dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Preserve locked ORVI
+        run: node tests/ui-m05h-orvi-commercial-document-test.mjs
+
+      - name: Validate Vida Mujer Pages landscape closure
+        run: node tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
+
+      - name: Dispatch canonical Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REF: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          printf 'PAGES_DEPLOY_REF=%s\n' "$TARGET_REF"
+          gh workflow run pages.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref "$TARGET_REF"
+          printf 'PAGES_DISPATCH=PASS\n'
