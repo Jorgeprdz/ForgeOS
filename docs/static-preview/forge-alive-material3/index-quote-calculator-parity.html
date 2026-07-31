@@ -22,7 +22,14 @@
       );
       html = html.replace(
         "</body>",
-        '<script>document.documentElement.dataset.quoteCalculatorLoader="M05E-002";<\/script></body>',
+        `<script>
+          document.documentElement.dataset.quoteCalculatorLoader = "M05E-002";
+          const badge = document.createElement("div");
+          badge.dataset.quoteCalculatorVersionBadge = "M05E-002";
+          badge.textContent = "CALCULADORAS M05E-002";
+          badge.style.cssText = "position:fixed;right:12px;bottom:12px;z-index:99999;padding:7px 10px;border:1px solid rgba(255,201,95,.55);border-radius:999px;background:#071426;color:#ffd47a;font:700 11px system-ui;letter-spacing:.08em;box-shadow:0 8px 30px rgba(0,0,0,.35)";
+          document.body.append(badge);
+        <\/script></body>`,
       );
       document.open();
       document.write(html);
