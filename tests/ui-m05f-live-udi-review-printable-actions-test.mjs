@@ -36,7 +36,7 @@ assert.match(hotfix, /UDI vigente:/);
 assert.match(hotfix, /history\.hidden = qpdState\.durableIdentityReady !== true/);
 assert.match(hotfix, /Historial disponible al abrir la cotización desde un prospecto/);
 assert.match(hotfix, /for \(const action of \["preview", "download"\]\)/);
-assert.match(hotfix, /data-forge-qpd06-action=\\"\$\{action\}\\"/);
+assert.match(hotfix, /data-forge-qpd06-action="\$\{action\}"/);
 
 assert.match(server, /getCachedRates\(\{ forceRefresh: true \}\)/);
 assert.match(server, /\/api\/forge-market-rates/);
