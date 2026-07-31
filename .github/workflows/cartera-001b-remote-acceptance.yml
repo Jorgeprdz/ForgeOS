@@ -12,6 +12,17 @@ on:
       - "supabase/migrations/20260730000100_cartera001b_quote_lifecycle_event_bridge.sql"
       - "supabase/migrations/20260730000110_cartera001b_idempotency_conflict_hardening.sql"
       - "supabase/migrations/20260730000120_cartera001b_quote_authority_projection_hardening.sql"
+  pull_request:
+    branches:
+      - feature/cartera-001b-quote-lifecycle-event-bridge
+    paths:
+      - ".github/workflows/cartera-001b-remote-acceptance.yml"
+      - "scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs"
+      - "scripts/ci/cartera-001b-remote-acceptance.sql"
+      - "tests/cartera-001b-*.mjs"
+      - "supabase/migrations/20260730000100_cartera001b_quote_lifecycle_event_bridge.sql"
+      - "supabase/migrations/20260730000110_cartera001b_idempotency_conflict_hardening.sql"
+      - "supabase/migrations/20260730000120_cartera001b_quote_authority_projection_hardening.sql"
   workflow_dispatch:
 
 permissions:
@@ -23,6 +34,9 @@ concurrency:
 
 jobs:
   remote-acceptance:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      (github.event_name != 'pull_request' || github.head_ref == 'feature/cartera-001b-remote-acceptance')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
