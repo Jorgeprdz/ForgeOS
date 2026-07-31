@@ -1,0 +1,89 @@
+name: Pipeline Point 4 Assistance Removal
+
+on:
+  push:
+    branches:
+      - fix/pipeline-persistent-new-referral-cta
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: contains(github.event.head_commit.message, '[point4-apply]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout working branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/pipeline-persistent-new-referral-cta
+          fetch-depth: 0
+
+      - name: Remove redundant assistance indicator
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              "docs/static-preview/forge-alive-material3/pipeline-module.js": [
+                  (
+                      '                    <p><span>Asistencia</span><strong>${escapeHtml(card.intelligenceLabel || "Disponible al solicitarla")}</strong></p>\n',
+                      '',
+                  ),
+              ],
+              "docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js": [
+                  (
+                      '        intelligenceLabel: "Asistencia de conversación disponible",\n',
+                      '',
+                  ),
+              ],
+              "tools/pipeline-mobile-interaction-regression.mjs": [
+                  (
+                      '              <p><span>Asistencia</span><strong>Asistencia de conversación disponible</strong></p>\n',
+                      '',
+                  ),
+              ],
+              "tests/material3-pipeline-integration-test.mjs": [
+                  (
+                      '  assert.match(adapter, /intelligenceLabel:\\s*"Asistencia de conversación disponible"/);\n',
+                      '  assert.doesNotMatch(source, /<span>Asistencia<\\/span>/);\n'
+                      '  assert.doesNotMatch(source, /card\\.intelligenceLabel/);\n'
+                      '  assert.doesNotMatch(adapter, /intelligenceLabel/);\n',
+                  ),
+              ],
+          }
+
+          for filename, changes in replacements.items():
+              path = Path(filename)
+              text = path.read_text(encoding="utf-8")
+              for old, new in changes:
+                  if old not in text:
+                      raise SystemExit(f"Expected point-4 source not found in {filename}: {old!r}")
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding="utf-8")
+
+          module = Path("docs/static-preview/forge-alive-material3/pipeline-module.js").read_text(encoding="utf-8")
+          adapter = Path("docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js").read_text(encoding="utf-8")
+          fixture = Path("tools/pipeline-mobile-interaction-regression.mjs").read_text(encoding="utf-8")
+          assert "<span>Asistencia</span>" not in module
+          assert "intelligenceLabel" not in adapter
+          assert "<span>Asistencia</span>" not in fixture
+          PY
+
+      - name: Run focused regressions
+        run: |
+          node --test \
+            tests/material3-pipeline-integration-test.mjs \
+            tests/pipeline-stage-mutation-authority-test.mjs
+
+      - name: Commit point 4
+        run: |
+          git config user.name "forgeos-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            docs/static-preview/forge-alive-material3/pipeline-module.js \
+            docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js \
+            tools/pipeline-mobile-interaction-regression.mjs \
+            tests/material3-pipeline-integration-test.mjs
+          git commit -m "fix(pipeline): remove redundant assistance indicator"
+          git push origin HEAD:fix/pipeline-persistent-new-referral-cta
