@@ -1,8 +1,12 @@
 # QPD-01 Canonical Quote Printable Read Model
 
-Status: `IMPLEMENTED_PENDING_GITHUB_ACCEPTANCE`
+Status: `PASS / IMPLEMENTED / GITHUB_ACCEPTED`
 
 Branch: `feature/quote-printable-document-closure`
+
+Commit: `6bad030eac2c0ee0f9c708d4150c4219b5258604`
+
+GitHub Actions run: `30592977874`
 
 ## Implemented
 
@@ -40,6 +44,17 @@ Coverage:
 10. candidate money is not promoted as fact;
 11. raw PDF rejection;
 12. fail-closed source validation.
+
+## Acceptance
+
+```text
+NODE_SYNTAX=PASS
+QPD01_CONTRACT=PASS_12_OF_12
+DIFF_INTEGRITY=PASS
+WORKFLOW_CONCLUSION=SUCCESS
+```
+
+The first workflow run correctly exposed a test that attempted to sort a deeply frozen array in place. The test was repaired to copy before sorting. A second gate confirmed the contract and repository diff.
 
 ## Safety
 
