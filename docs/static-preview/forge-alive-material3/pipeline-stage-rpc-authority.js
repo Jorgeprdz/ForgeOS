@@ -2,6 +2,9 @@ const ROOT_SELECTOR = "[data-forge-pipeline-module]";
 const CARD_SELECTOR = "[data-productive-prospect-card]";
 const STAGE_SELECTOR = "[data-productive-stage-control]";
 const INSTALL_KEY = Symbol.for("forge.material3.pipeline.stage-rpc-authority");
+const DEFERRED_RECONCILE_KEY = Symbol.for(
+  "forge.material3.pipeline.stage-rpc-deferred-reconcile",
+);
 const ALLOWED_STAGES = new Set([
   "referred_new",
   "contacted",
@@ -39,6 +42,16 @@ function ensureStatusNode(root) {
   node = root.ownerDocument.createElement("p");
   node.className = "pipeline-module__referral-status pipeline-module__stage-rpc-status";
   node.dataset.pipelineStageRpcStatus = "";
+  node.style.cssText = [
+    "position:fixed",
+    "z-index:1250",
+    "top:max(12px, env(safe-area-inset-top))",
+    "left:50%",
+    "transform:translateX(-50%)",
+    "width:min(420px, calc(100vw - 32px))",
+    "margin:0",
+    "pointer-events:none",
+  ].join(";");
   node.hidden = true;
   root.querySelector(".pipeline-module__header")?.insertAdjacentElement("afterend", node);
   if (!node.isConnected) root.prepend(node);
@@ -176,30 +189,65 @@ function applyConfirmedStage(card, select, status) {
   );
 }
 
-function waitForRenderedStage(root, prospectId, status, timeoutMs = 8000) {
-  return new Promise((resolve, reject) => {
-    const startedAt = Date.now();
-    const inspect = () => {
-      const card = root.querySelector(
-        `${CARD_SELECTOR}[data-productive-prospect-card="${CSS.escape(prospectId)}"]`,
-      );
-      if (card?.dataset.productiveStage === status) {
-        resolve(card);
-        return;
-      }
-      if (Date.now() - startedAt >= timeoutMs) {
-        const error = new Error("PIPELINE_STAGE_RENDER_RECONCILIATION_TIMEOUT");
-        error.code = "PIPELINE_STAGE_RENDER_RECONCILIATION_TIMEOUT";
-        reject(error);
-        return;
-      }
-      setTimeout(inspect, 80);
-    };
-    inspect();
-  });
+function reconcileFilteredCardPresence(root, card, status) {
+  const sourceFilter = root.querySelector("[data-productive-filter-source]")?.value || "";
+  const statusFilter = root.querySelector("[data-productive-filter-status]")?.value || "";
+  const matchesSource = !sourceFilter || card.dataset.productiveSource === sourceFilter;
+  const matchesStatus = !statusFilter || status === statusFilter;
+  if (matchesSource && matchesStatus) return true;
+
+  const container = card.closest("[data-productive-pipeline-cards]");
+  card.remove();
+  const remaining = container?.querySelectorAll(CARD_SELECTOR).length || 0;
+  const countNode = root.querySelector("[data-productive-filter-count]");
+  const total = Number(
+    String(countNode?.textContent || "").match(/de\s+(\d+)/i)?.[1] || 0,
+  );
+  if (countNode) countNode.textContent = `${remaining} de ${total} prospectos`;
+
+  if (container && remaining === 0) {
+    const empty = root.ownerDocument.createElement("section");
+    empty.className = "pipeline-module__filter-empty";
+    empty.dataset.productiveFilterEmpty = "";
+    empty.innerHTML = "<p>No hay prospectos que coincidan con estos filtros.</p>";
+    container.replaceWith(empty);
+  }
+  return false;
 }
 
-async function persistStage(root, select, windowRef) {
+function scheduleDeferredReconciliation(root, confirmed) {
+  root[DEFERRED_RECONCILE_KEY] = Object.freeze({
+    prospectId: confirmed.id,
+    prospectStatus: confirmed.status,
+    confirmedAt: Date.now(),
+  });
+  root.ownerDocument.documentElement.dataset.pipelineStageDeferredReconcile = "pending";
+}
+
+function flushDeferredReconciliation({
+  root,
+  windowRef,
+  source = "pipeline-stage-rpc-deferred-reconcile",
+}) {
+  const pending = root[DEFERRED_RECONCILE_KEY];
+  if (!pending) return false;
+  delete root[DEFERRED_RECONCILE_KEY];
+  delete root.ownerDocument.documentElement.dataset.pipelineStageDeferredReconcile;
+  windowRef.dispatchEvent(new windowRef.CustomEvent(
+    "forge:auth-state-changed",
+    {
+      detail: Object.freeze({
+        status: "authenticated",
+        source,
+        prospectId: pending.prospectId,
+        prospectStatus: pending.prospectStatus,
+      }),
+    },
+  ));
+  return true;
+}
+
+async function persistStage(root, select) {
   const card = select.closest(CARD_SELECTOR);
   const prospectId = select.dataset.productiveStageControl;
   if (!card || !prospectId) return;
@@ -223,18 +271,22 @@ async function persistStage(root, select, windowRef) {
     });
 
     applyConfirmedStage(card, select, confirmed.status);
-    windowRef.dispatchEvent(new windowRef.CustomEvent(
-      "forge:auth-state-changed",
-      {
-        detail: Object.freeze({
-          status: "authenticated",
-          source: "pipeline-stage-rpc-authority",
-          prospectId,
-          prospectStatus: confirmed.status,
-        }),
-      },
-    ));
-    await waitForRenderedStage(root, prospectId, confirmed.status);
+    const remainedVisible = reconcileFilteredCardPresence(
+      root,
+      card,
+      confirmed.status,
+    );
+    if (
+      remainedVisible
+      && root.querySelector(
+        `${CARD_SELECTOR}[data-productive-prospect-card="${CSS.escape(prospectId)}"]`,
+      ) !== card
+    ) {
+      const mismatch = new Error("PIPELINE_STAGE_CARD_IDENTITY_CHANGED");
+      mismatch.code = "PIPELINE_STAGE_CARD_IDENTITY_CHANGED";
+      throw mismatch;
+    }
+    scheduleDeferredReconciliation(root, confirmed);
     showStatus(root, `Estado actualizado a ${STAGE_LABELS[confirmed.status] || confirmed.status}.`);
   } catch (error) {
     const currentCard = root.querySelector(
@@ -276,19 +328,52 @@ export function installPipelineStageRpcAuthority({
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    void persistStage(root, select, windowRef);
+    void persistStage(root, select);
   };
+  const onVisibilityChange = () => {
+    if (!documentRef.hidden) return;
+    flushDeferredReconciliation({
+      root,
+      windowRef,
+      source: "pipeline-stage-rpc-tab-hidden",
+    });
+  };
+  const onNavigation = event => {
+    const navigation = event.target?.closest?.("[data-route-id]");
+    if (!navigation || navigation.dataset.routeId === "pipeline") return;
+    windowRef.setTimeout(() => {
+      flushDeferredReconciliation({
+        root,
+        windowRef,
+        source: "pipeline-stage-rpc-route-exit",
+      });
+    }, 0);
+  };
+
   root.addEventListener("change", onChange, true);
+  documentRef.addEventListener("visibilitychange", onVisibilityChange);
+  documentRef.addEventListener("click", onNavigation, true);
 
   documentRef.documentElement.dataset.pipelineStageAuthority = "rpc";
   documentRef.documentElement.dataset.pipelineStageRpcAuthority = "ready";
+  documentRef.documentElement.dataset.pipelineStageCommitMode = "in-place";
 
   const api = Object.freeze({
     installed: true,
+    flushDeferredReconciliation: source => flushDeferredReconciliation({
+      root,
+      windowRef,
+      source,
+    }),
     disconnect() {
       root.removeEventListener("change", onChange, true);
+      documentRef.removeEventListener("visibilitychange", onVisibilityChange);
+      documentRef.removeEventListener("click", onNavigation, true);
       delete root[INSTALL_KEY];
+      delete root[DEFERRED_RECONCILE_KEY];
       delete documentRef.documentElement.dataset.pipelineStageRpcAuthority;
+      delete documentRef.documentElement.dataset.pipelineStageCommitMode;
+      delete documentRef.documentElement.dataset.pipelineStageDeferredReconcile;
     },
   });
   root[INSTALL_KEY] = api;
@@ -306,7 +391,9 @@ if (
 export {
   ALLOWED_STAGES,
   STAGE_LABELS,
+  flushDeferredReconciliation,
   isDiagnosticRuntime,
   normalizeRpcProspect,
   requestDiagnosticStageTransition,
+  scheduleDeferredReconciliation,
 };

@@ -2,8 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
-  requestStageTransition,
+  flushDeferredReconciliation,
   normalizeRpcProspect,
+  requestStageTransition,
+  scheduleDeferredReconciliation,
 } from "../docs/static-preview/forge-alive-material3/pipeline-stage-rpc-authority.js";
 
 test("stage RPC sends only prospect id and approved status and confirms the returned row", async () => {
@@ -117,6 +119,55 @@ test("visual diagnostic seam persists through its PostgREST-shaped store without
   }
 });
 
+test("confirmed stages reconcile later instead of emitting an immediate auth refresh", () => {
+  const root = {
+    ownerDocument: {
+      documentElement: { dataset: {} },
+    },
+  };
+  const events = [];
+  const windowRef = {
+    CustomEvent: class CustomEvent {
+      constructor(type, init) {
+        this.type = type;
+        this.detail = init.detail;
+      }
+    },
+    dispatchEvent(event) {
+      events.push(event);
+      return true;
+    },
+  };
+
+  scheduleDeferredReconciliation(root, {
+    id: "prospect-1",
+    status: "decision",
+  });
+  assert.equal(
+    root.ownerDocument.documentElement.dataset.pipelineStageDeferredReconcile,
+    "pending",
+  );
+  assert.equal(events.length, 0);
+
+  assert.equal(flushDeferredReconciliation({
+    root,
+    windowRef,
+    source: "test-route-exit",
+  }), true);
+  assert.equal(events.length, 1);
+  assert.equal(events[0].type, "forge:auth-state-changed");
+  assert.deepEqual(events[0].detail, {
+    status: "authenticated",
+    source: "test-route-exit",
+    prospectId: "prospect-1",
+    prospectStatus: "decision",
+  });
+  assert.equal(
+    root.ownerDocument.documentElement.dataset.pipelineStageDeferredReconcile,
+    undefined,
+  );
+});
+
 test("runtime and database authorities close the complete stage transition path", async () => {
   const app = await readFile(
     "docs/static-preview/forge-alive-material3/app.js",
@@ -139,17 +190,25 @@ test("runtime and database authorities close the complete stage transition path"
     "utf8",
   );
 
-  const rpcImport = app.indexOf("pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-001");
+  const rpcImport = app.indexOf("pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002");
   const oldHotfixImport = app.indexOf("pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003");
   assert.ok(rpcImport >= 0);
   assert.ok(oldHotfixImport > rpcImport, "RPC authority must register its capture listener first");
 
+  const persistStart = authority.indexOf("async function persistStage");
+  const persistEnd = authority.indexOf("export function installPipelineStageRpcAuthority");
+  const persistSource = authority.slice(persistStart, persistEnd);
+  assert.ok(persistStart >= 0 && persistEnd > persistStart);
   assert.match(authority, /event\.stopImmediatePropagation\(\)/);
   assert.match(authority, /forge_pipeline_update_prospect_stage/);
   assert.match(authority, /globalThis\.__ENV__\?\.diagnostic === true/);
   assert.match(authority, /__FORGE_DIAGNOSTIC_AUTHENTICATED__/);
-  assert.match(authority, /forge:auth-state-changed/);
-  assert.match(authority, /PIPELINE_STAGE_RENDER_RECONCILIATION_TIMEOUT/);
+  assert.match(authority, /pipelineStageCommitMode = "in-place"/);
+  assert.match(authority, /pipeline-stage-rpc-route-exit/);
+  assert.match(authority, /pipeline-stage-rpc-tab-hidden/);
+  assert.match(persistSource, /scheduleDeferredReconciliation/);
+  assert.match(persistSource, /PIPELINE_STAGE_CARD_IDENTITY_CHANGED/);
+  assert.doesNotMatch(persistSource, /forge:auth-state-changed/);
 
   assert.match(migration, /security definer/i);
   assert.match(migration, /actor_id := auth\.uid\(\)/);
