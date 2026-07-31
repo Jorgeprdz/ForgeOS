@@ -12,7 +12,11 @@ const scope = readFileSync(
   'docs/architecture/source-truth/FORGE_CARTERA_010C_POLICY_TIMELINE_PERSON_ACCOUNT_PROJECTION_SCOPE_001.md',
   'utf8',
 );
-const legacyCartera = readFileSync('cartera.js', 'utf8');
+const progress = readFileSync(
+  'docs/architecture/source-truth/FORGE_CARTERA_010C_CANONICAL_READ_MODEL_ROUTE_ADAPTER_PROGRESS_002.md',
+  'utf8',
+);
+const currentCartera = readFileSync('cartera.js', 'utf8');
 
 function validPolicyEvent(overrides = {}) {
   return {
@@ -41,15 +45,21 @@ test('010C source and productive boundaries are pinned to accepted 010B', () => 
   assert.match(scope, /NEXT=CARTERA_010C_CANONICAL_READ_MODEL_AND_ROUTE_ADAPTER/);
 });
 
-test('scope classifies the actual legacy Cartera authority instead of inventing a replacement', () => {
-  assert.match(legacyCartera, /legacy\/quarantine\/crmaddlife-indexeddb\/db\.js/);
-  assert.match(legacyCartera, /DB\.obtenerTodos\(\s*'cartera'/);
-  assert.match(legacyCartera, /data-delete/);
-  assert.match(legacyCartera, /btn-new-policy/);
-  assert.match(legacyCartera, /btn-import-excel/);
+test('scope preserves the legacy liability record while the productive route removes it', () => {
   assert.match(scope, /LEGACY_STORAGE=legacy\/quarantine\/crmaddlife-indexeddb\/db\.js/);
+  assert.match(scope, /LEGACY_DIRECT_DELETE=VISIBLE/);
+  assert.match(scope, /LEGACY_EXCEL_IMPORT=VISIBLE/);
   assert.match(scope, /NEW_POLICY_DIRECT_WRITE=FORBIDDEN/);
   assert.match(scope, /DELETE_POLICY=FORBIDDEN/);
+
+  assert.match(progress, /LEGACY_INDEXEDDB_AUTHORITY_REMOVED_FROM_ROUTE=YES/);
+  assert.match(progress, /LEGACY_ROUTE_WRITE_ACTIONS=REMOVED/);
+  assert.match(currentCartera, /createCanonicalPortfolioService/);
+  assert.doesNotMatch(currentCartera, /legacy\/quarantine\/crmaddlife-indexeddb\/db\.js/);
+  assert.doesNotMatch(currentCartera, /DB\.obtenerTodos/);
+  assert.doesNotMatch(currentCartera, /data-delete/);
+  assert.doesNotMatch(currentCartera, /btn-new-policy/);
+  assert.doesNotMatch(currentCartera, /btn-import-excel/);
 });
 
 test('Policy domain contract exposes only the four reserved subjects', () => {
@@ -140,4 +150,6 @@ test('010C explicitly separates route adaptation from redesign and automation', 
   assert.match(scope, /renewal calculations or renewal calendar/);
   assert.match(scope, /automatic Policy creation/);
   assert.match(scope, /mobile content reserves safe scroll space above the floating nav pill/);
+  assert.match(progress, /VISUAL_REDESIGN=NO/);
+  assert.match(progress, /PRODUCT_UI_REDESIGN=NO/);
 });
