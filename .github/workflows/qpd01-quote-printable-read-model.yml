@@ -35,14 +35,19 @@ jobs:
         run: |
           node --check advisor-os/quotes/printable/quote-printable-read-model.js
           node --check advisor-os/quotes/printable/quote-printable-document-composer.js
+          node --check advisor-os/quotes/printable/quote-printable-pdf-generator.js
           node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
           node --check advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
+          node --check advisor-os/quotes/tests/quote-printable-pdf-generator-master-test.js
 
       - name: QPD-01 canonical read model
         run: node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
 
       - name: QPD-02 A4 and Letter composer
         run: node advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
+
+      - name: QPD-03 real PDF and download gate
+        run: node advisor-os/quotes/tests/quote-printable-pdf-generator-master-test.js
 
       - name: Diff integrity
         run: git diff --check HEAD^1...HEAD
