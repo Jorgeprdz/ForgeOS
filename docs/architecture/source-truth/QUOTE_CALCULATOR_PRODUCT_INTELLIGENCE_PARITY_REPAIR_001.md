@@ -66,7 +66,7 @@ Browser regression:
 
 - `tests/e2e/fixtures/m05e006/index.html` reproduces a human-review setter that emits its own update event;
 - `tests/e2e/m05e006-responsiveness.spec.mjs` verifies one fallback write, active main-thread heartbeat, no actionable page errors, M05E-006 API ownership and visible compact actions;
-- the sandboxed preview iframe may emit Playwright service-worker noise, which is explicitly filtered without hiding application errors.
+- Chromium acceptance passed together with the existing QPD responsive suite.
 
 ## Remaining acceptance
 
