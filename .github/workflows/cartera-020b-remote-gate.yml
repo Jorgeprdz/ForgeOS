@@ -1,0 +1,102 @@
+name: CARTERA 020B Remote Preparation Gate
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-020b-persistent-evidence-worker-parser-registry
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020b-remote-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  remote-preparation-static-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source ancestry and bounded paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=95d03f220670239fc7c2af9ab5799bb21406cbd0
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(\.github/workflows/cartera-020b-remote-(gate|acceptance)\.yml|docs/evidence/FORGE_CARTERA_020B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020b-(github-actions-remote-acceptance\.mjs|remote-acceptance\.sql)|supabase/migrations/20260731000227_cartera020b_packet_replay_hardening\.sql|tests/cartera-020b-(packet-replay-hardening|remote-acceptance-harness)-test\.mjs)$'
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_020B_REMOTE_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_REMOTE_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+
+      - name: Syntax and repository acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/ci/cartera-020b-github-actions-remote-acceptance.mjs
+          node --check tests/cartera-020b-packet-replay-hardening-test.mjs
+          node --check tests/cartera-020b-remote-acceptance-harness-test.mjs
+          node --test tests/cartera-020b-*.mjs
+
+      - name: Verify manual-only remote workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/cartera-020b-remote-acceptance.yml
+          grep -q '^  workflow_dispatch:' "$workflow"
+          ! grep -qE '^  (push|pull_request):' "$workflow"
+          grep -q 'YES:CARTERA_020B_REMOTE_MUTATION' "$workflow"
+          grep -q 'expected_source_head:' "$workflow"
+          grep -q 'expected_acceptance_head:' "$workflow"
+          grep -q 'project_ref:' "$workflow"
+          grep -q 'cancel-in-progress: false' "$workflow"
+          ! grep -q 'SUPABASE_ACCESS_TOKEN' .github/workflows/cartera-020b-remote-gate.yml
+          ! grep -q 'node scripts/ci/cartera-020b-github-actions-remote-acceptance.mjs' .github/workflows/cartera-020b-remote-gate.yml
+          echo 'REMOTE_WORKFLOW=MANUAL_ONLY'
+          echo 'REMOTE_EXECUTION_FROM_PR=IMPOSSIBLE'
+
+      - name: Verify migration and acceptance boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          hardening=supabase/migrations/20260731000227_cartera020b_packet_replay_hardening.sql
+          acceptance=scripts/ci/cartera-020b-remote-acceptance.sql
+          harness=scripts/ci/cartera-020b-github-actions-remote-acceptance.mjs
+          grep -q 'CARTERA020B_PACKET_CHANGED_REPLAY' "$hardening"
+          grep -q 'return null;' "$hardening"
+          grep -q '^begin;' "$acceptance"
+          grep -q '^rollback;' "$acceptance"
+          grep -q 'Promise.all' "$harness"
+          grep -q 'session_replication_role = replica' "$harness"
+          grep -q 'RESIDUAL_FIXTURES=0' "$harness"
+          ! grep -qi 'insert into public.canonical_policies' "$acceptance"
+          ! grep -qi 'insert into public.commercial_people' "$acceptance"
+          ! grep -qi 'insert into public.policy_roles' "$acceptance"
+          echo 'PACKET_HANDOFF_HARDENING=REPOSITORY_READY'
+          echo 'TRANSACTIONAL_ACCEPTANCE_HARNESS=REPOSITORY_READY'
+          echo 'PARALLEL_CLAIM_HARNESS=REPOSITORY_READY'
+
+      - name: Emit preparation markers
+        run: |
+          echo 'CARTERA_020B_REMOTE_GATE=REPOSITORY_READY'
+          echo 'CARTERA_020B_REMOTE_DEPLOYMENT=NOT_RUN'
+          echo 'CARTERA_020B_REMOTE_ACCEPTANCE=NOT_RUN'
+          echo 'CARTERA_020B_COMPLETE=NO'
+          echo 'NEXT=EXPLICIT_REMOTE_AUTHORIZATION_AND_MANUAL_EXECUTION'
