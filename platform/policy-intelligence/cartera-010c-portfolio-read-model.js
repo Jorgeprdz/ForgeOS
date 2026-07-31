@@ -11,6 +11,11 @@ const GENERAL_ROLE_TYPES = new Set([
     'SERVICING_ADVISOR',
 ]);
 
+const CURRENT_ROLE_CONFIRMATION_STATES = new Set([
+    'CONFIRMED',
+    'CORRECTED',
+]);
+
 const POLICY_KEYS = new Set([
     'id',
     'policy_reference',
@@ -85,7 +90,7 @@ function selectCurrentGeneralRoles(roles) {
         if (role.visibility_scope !== 'POLICY_TEAM') {
             throw new TypeError('RESTRICTED_ROLE_GENERAL_PROJECTION_FORBIDDEN');
         }
-        if (role.confirmation_state !== 'CONFIRMED') {
+        if (!CURRENT_ROLE_CONFIRMATION_STATES.has(role.confirmation_state)) {
             continue;
         }
 
@@ -254,3 +259,6 @@ export function buildCanonicalPortfolioProjection({
 }
 
 export const CARTERA_010C_GENERAL_ROLE_TYPES = Object.freeze([...GENERAL_ROLE_TYPES]);
+export const CARTERA_010C_CURRENT_ROLE_CONFIRMATION_STATES = Object.freeze([
+    ...CURRENT_ROLE_CONFIRMATION_STATES,
+]);
