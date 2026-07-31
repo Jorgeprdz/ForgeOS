@@ -1,16 +1,12 @@
 # FORGE CARTERA 020C — IDENTITY AND POLICY CONFIRMATION REVIEW SCOPE 001
 
-Forge OS  
-Architecture Source Truth  
+Forge OS
+Architecture Source Truth
 Cartera / Governed Evidence Confirmation
 
 ## Status
 
 `SCOPE_LOCKED / FIRST_CONTRACT_CUT_REPOSITORY_READY / PRODUCTIVE_EXECUTION_NOT_STARTED`
-
-## Date
-
-2026-07-31
 
 ## Execution identity
 
@@ -29,52 +25,16 @@ PRODUCT_UI_MUTATION=NO_FIRST_CUT
 
 ## Purpose
 
-Connect the accepted 020B pending-confirmation Evidence foundation to the already deployed 010B identity and confirmed-Policy authorities through one explicit advisor review boundary.
+Connect the accepted 020B pending-confirmation Evidence foundation to the deployed 010B identity and confirmed-Policy authorities through an explicit advisor review boundary.
 
-020C owns:
+020C owns identity review, Account and PolicyRole candidate review, restricted beneficiary review, duplicate-Policy decisions, deterministic command preparation, ordered execution and the later productive review UI.
 
-- productive identity review;
-- person-link versus new-person decision;
-- Account candidate review when relevant;
-- PolicyRole participant review;
-- restricted beneficiary review;
-- existing-Policy duplicate/conflict decision;
-- field and evidence review;
-- deterministic command preparation;
-- ordered execution of identity decisions before confirmed Policy persistence;
-- review UI and productive command orchestration in later bounded cuts.
+This first cut defines contracts only. It does not persist review tasks, execute RPCs, add migrations or mutate the Cartera route.
 
-This first cut locks the contract and sequencing boundary. It does not yet persist review tasks, invoke Supabase RPCs or mutate the Cartera route.
-
----
-
-# 1. Dependency gate
-
-The accepted source contains:
-
-- CARTERA 010B canonical CommercialPerson, CommercialAccount, Policy and PolicyRole persistence;
-- `forge_cartera010b_confirm_identity_resolution(jsonb)`;
-- `forge_cartera010b_confirm_policy_with_parties(jsonb)`;
-- owner-scoped RLS and direct-write denial;
-- CARTERA 020B persistent Evidence source, inbox, extraction, candidate and pending packet authorities;
-- accepted admission, lease, retry, replay, RLS and concurrency behavior;
-- no automatic Person, Policy or PolicyRole creation from parser output.
-
-```text
-CARTERA_020B_COMPLETE=YES
-PENDING_POLICY_EVIDENCE_PACKET=AVAILABLE
-IDENTITY_RESOLUTION_AUTHORITY=DEPLOYED
-CONFIRMED_POLICY_AUTHORITY=DEPLOYED
-CARTERA_020C_AUTHORIZED=YES
-```
-
----
-
-# 2. Canonical productive sequence
+## Canonical sequence
 
 ```text
 pending PolicyEvidencePacket
-→ advisor opens confirmation review
 → evidence and field review
 → identity candidate review
 → Person link/create/reject/conflict decision
@@ -82,79 +42,35 @@ pending PolicyEvidencePacket
 → PolicyRole participant review
 → restricted-party review
 → existing-Policy duplicate/conflict decision
-→ prepare governed identity commands
-→ execute identity commands
-→ verify resolved canonical participant references
-→ prepare governed confirmed Policy command
+→ prepare identity commands
+→ execute and verify identity resolution
+→ prepare confirmed Policy command
 → explicit final advisor confirmation
 → execute confirmed Policy command
-→ mark Evidence review resolved
+→ resolve Evidence review
 ```
 
-The confirmed Policy command must never run before required identity decisions have succeeded.
+The confirmed Policy command cannot run before all required identity decisions succeed.
 
-No review suggestion, confidence score, parser output or preselected option creates canonical truth.
-
----
-
-# 3. Existing authority reuse
-
-## 3.1 Identity mutation — `REUSE_CANONICAL`
+## Reused authorities
 
 ```text
 forge_cartera010b_confirm_identity_resolution(jsonb)
-```
-
-020C must emit only the existing strict contract:
-
-```text
-FORGE_IDENTITY_RESOLUTION_COMMAND
-CARTERA-010B.1
-```
-
-Allowed outcomes remain:
-
-- `LINK_CONFIRMED`;
-- `CREATE_CONFIRMED`;
-- `UNRESOLVED`;
-- `REJECTED_MATCH`;
-- `CONFLICT`;
-- `CORRECTED`.
-
-Only resolved outcomes may advance a required Policy participant into the final Policy command.
-
-## 3.2 Confirmed Policy mutation — `REUSE_CANONICAL`
-
-```text
 forge_cartera010b_confirm_policy_with_parties(jsonb)
 ```
 
-020C must emit only the existing strict contract:
+020C emits the existing contracts only:
 
 ```text
-FORGE_CONFIRMED_POLICY_COMMAND
-CARTERA-010B.1
+FORGE_IDENTITY_RESOLUTION_COMMAND / CARTERA-010B.1
+FORGE_CONFIRMED_POLICY_COMMAND / CARTERA-010B.1
 ```
 
-The command remains responsible for canonical Policy, Policy version, Evidence version and PolicyRole persistence.
+Direct writes to CommercialPerson, canonical Policy, Policy versions, Evidence versions or PolicyRole tables remain forbidden.
 
-020C must not write those tables directly.
+The historical generic advisor confirmation gate is preserved for existing consumers, but it is not promoted as the productive 020C authority because it mixes Policy, Payment and Commission paths and does not enforce identity-before-Policy ordering.
 
-## 3.3 Evidence confirmation primitives — `REUSE_WITH_STRICT_ADAPTER`
-
-- `policy-operations/evidence-inbox/evidence-confirmation-task.js`;
-- `policy-operations/policy-advisor-confirmation-gate.js`;
-- `policy-operations/evidence/policy-evidence-packet.js`.
-
-The historical generic advisor gate mixes Policy, Payment and Commission confirmation and transforms fields into operational objects without the 010B identity/Policy command sequencing required here. It is not the productive 020C command authority.
-
-020C therefore adds a bounded Policy confirmation-review adapter while preserving the generic primitives for their existing consumers.
-
----
-
-# 4. Review contract
-
-The first repository contract is:
+## Review contract
 
 ```text
 FORGE_IDENTITY_POLICY_CONFIRMATION_REVIEW
@@ -163,27 +79,11 @@ CARTERA-020C.1
 
 Required ownership:
 
-- `reviewReference`;
-- `advisorId`;
-- `actorReference` equal to the authenticated advisor;
-- `packetReference`;
-- `sourceReference`.
-
-Required candidate groups:
-
-- identity candidates;
-- Account candidates when present;
-- PolicyRole candidates;
-- duplicate/existing Policy candidates;
-- missing evidence;
-- low-confidence fields;
-- sensitive fields.
-
-Every candidate remains:
-
-```text
-createsTruth=false
-```
+- review reference;
+- advisor reference;
+- actor reference equal to the advisor;
+- packet reference;
+- source reference.
 
 A packet is admissible only when:
 
@@ -193,9 +93,13 @@ createsTruth=false
 canInvokeConfirmedPolicyCommand=false
 ```
 
----
+Every identity, Account, PolicyRole and duplicate-Policy candidate must also declare:
 
-# 5. Review states
+```text
+createsTruth=false
+```
+
+## Review states
 
 ```text
 PENDING_REVIEW
@@ -205,86 +109,36 @@ REJECTED
 CONFIRMED
 ```
 
-The review is `BLOCKED` while any required condition remains unresolved, including:
+Missing evidence, low-confidence material fields, sensitive fields, absent identity candidates, absent PolicyRole candidates, unresolved duplicate decisions, unresolved required identities and unconfirmed roles block confirmation.
 
-- missing evidence;
-- low-confidence material field;
-- sensitive field requiring explicit review;
-- absent identity candidates;
-- absent PolicyRole candidates;
-- unresolved duplicate-Policy decision;
-- unresolved required identity;
-- unconfirmed PolicyRole participant;
-- restricted role without restricted visibility.
+`READY_TO_CONFIRM` means a deterministic plan may be presented. It does not mean commands have executed.
 
-`READY_TO_CONFIRM` means a deterministic command plan can be presented for final execution. It does not mean the commands have run.
+## Identity review
 
----
+Allowed decisions remain:
 
-# 6. Identity review
+```text
+LINK_CONFIRMED
+CREATE_CONFIRMED
+UNRESOLVED
+REJECTED_MATCH
+CONFLICT
+CORRECTED
+```
 
-For each required person candidate, the advisor must explicitly choose one outcome.
+Only `LINK_CONFIRMED`, `CREATE_CONFIRMED` and `CORRECTED` may satisfy a required Policy participant.
 
-No default choice is allowed.
+No candidate may be preselected. New-person creation requires the complete strict 010B payload, privacy classification and explicit advisor action. Phone, email or normalized name may not cause silent merge.
 
-## Link existing Person
+## Account boundary
 
-Requires:
+CommercialAccount remains distinct from CommercialPerson. Person and Account references cannot collapse into a generic client ID.
 
-- selected owner-scoped confirmed `CommercialPerson` reference;
-- candidate evidence;
-- explicit `LINK_CONFIRMED` decision.
+This first cut introduces no Account mutation. Any missing governed Account-membership command requires separate authorization.
 
-## Create new Person
+## PolicyRole and beneficiary privacy
 
-Requires:
-
-- explicit `CREATE_CONFIRMED` decision;
-- complete strict new-person payload accepted by 010B;
-- no silent phone/email/name merge;
-- explicit privacy classification.
-
-## Unresolved or conflict
-
-`UNRESOLVED`, `REJECTED_MATCH` and `CONFLICT` remain valid review outcomes but cannot satisfy a required Policy participant for final confirmation.
-
-## Correction
-
-`CORRECTED` must preserve prior decision lineage and cannot silently replace identity history.
-
----
-
-# 7. Account review
-
-A `CommercialAccount` candidate remains a distinct entity from a Person.
-
-020C may:
-
-- select an existing owner-scoped Account;
-- propose an Account relationship;
-- reject an Account match;
-- leave the Account unresolved when the Policy does not require it.
-
-020C must not collapse Person and Account references into one client identifier.
-
-Any Account membership persistence requires an existing governed authority or a separately authorized additive command. This first cut introduces no Account mutation.
-
----
-
-# 8. PolicyRole review and privacy
-
-Each PolicyRole candidate requires:
-
-- candidate reference;
-- role type;
-- participant state;
-- selected canonical Person or Account reference after identity review;
-- confirmation state;
-- visibility scope;
-- evidence references;
-- effective range when applicable.
-
-General participant roles may enter the normal review projection.
+Every PolicyRole candidate requires an explicit participant and confirmation decision.
 
 Beneficiary roles are restricted:
 
@@ -295,13 +149,11 @@ GENERAL_REVIEW_PROJECTION=FORBIDDEN
 GENERAL_DIRECTORY_PROJECTION=FORBIDDEN
 ```
 
-Restricted roles still require explicit advisor review, but their details must remain outside general Cartera cards, search indexes, logs and ordinary artifacts.
+Restricted-party details must not enter general Cartera cards, search indexes, logs or ordinary artifacts.
 
----
+## Existing-Policy decision
 
-# 9. Existing-Policy decision
-
-The advisor must explicitly select one outcome:
+The advisor must explicitly select:
 
 ```text
 CREATE_NEW
@@ -310,57 +162,25 @@ BLOCK_AS_DUPLICATE
 UNRESOLVED
 ```
 
-`UNRESOLVED` cannot advance to confirmation.
+`UNRESOLVED` cannot advance. Duplicate candidates cannot be silently ignored.
 
-## CREATE_NEW
+## Field review
 
-Requires no unresolved carrier + policy-number collision candidate.
-
-## UPDATE_EXISTING
-
-Requires an owner-scoped canonical Policy reference and a version/correction plan compatible with the 010B command.
-
-## BLOCK_AS_DUPLICATE
-
-Resolves the review without creating Policy Truth.
-
-No duplicate candidate may be silently ignored.
-
----
-
-# 10. Field review
-
-Every confirmed field must preserve:
-
-- original candidate state;
-- candidate value;
-- advisor edit when present;
-- confidence;
-- source location;
-- extraction method;
-- parser identity and version;
-- Evidence source reference;
-- reviewer identity and time.
+Confirmed fields preserve candidate value, advisor edit, confidence, source location, extraction method, parser identity/version, Evidence reference, reviewer and review time.
 
 Unknown values remain `null` or explicit `UNKNOWN`.
 
-020C must not default:
+Forbidden defaults include:
 
-- premium to zero;
-- currency to MXN;
-- status to active;
+- premium zero;
+- MXN currency;
+- active status;
 - payment frequency;
 - carrier;
 - product;
 - participant identity.
 
-A materially edited field must remain distinguishable from an extracted and merely confirmed field.
-
----
-
-# 11. Command plan
-
-The deterministic plan contract is:
+## Confirmation plan
 
 ```text
 FORGE_IDENTITY_POLICY_CONFIRMATION_PLAN
@@ -374,7 +194,7 @@ IDENTITY_RESOLUTION
 CONFIRMED_POLICY
 ```
 
-The plan contains command payloads but does not execute them.
+The plan contains payloads but executes nothing:
 
 ```text
 createsTruth=false
@@ -382,124 +202,59 @@ invokesRemoteCommand=false
 requiresExplicitExecution=true
 ```
 
-The productive orchestrator must later provide:
+The later productive orchestrator must bind the authenticated advisor, use deterministic idempotency, verify identity read-after-write, stop on conflict and invoke confirmed Policy only after all required participants resolve.
 
-- exact authenticated advisor binding;
-- per-command idempotency keys;
-- read-after-write identity verification;
-- fail-closed stop after any conflict or rejection;
-- final confirmed Policy invocation only after all required participants resolve;
-- exact response and receipt persistence;
-- retry-safe behavior without duplicate Person or Policy creation.
+## First-cut paths
 
----
-
-# 12. First-cut allowed paths
+Allowed:
 
 ```text
 policy-operations/intake/cartera-020c-*.js
 tests/cartera-020c-*.mjs
 docs/architecture/source-truth/FORGE_CARTERA_020C_*.md
 .github/workflows/cartera-020c-*.yml
+.github/workflows/cartera-020b-foundation.yml  # bounded retirement only
 ```
 
-Blocked in this cut:
+Blocked:
 
 - Supabase migrations;
 - `cartera.js`;
 - Product UI;
-- direct RPC execution;
-- remote Supabase mutation;
+- RPC execution;
+- remote mutation;
 - storage mutation;
 - Payment or Commission confirmation;
-- Pipeline, Quote, Calendar, message, task, compensation or opportunity behavior.
+- Pipeline, Quote, Calendar, message, task, compensation or opportunity effects.
 
----
+## Following implementation cuts
 
-# 13. Required implementation cuts after scope acceptance
+### 020C.1 — Review read model and candidate reconciliation
 
-## 020C.1 — Review read model and candidate reconciliation
+Load pending packet authorities, reconcile owner-scoped Person/Account/Policy candidates, separate restricted roles and expose explicit blockers.
 
-- load pending packet and candidate authorities;
-- owner-bound Person, Account and Policy candidate lookup;
-- restricted role separation;
-- explicit blockers and review state.
+### 020C.2 — Governed command composer
 
-## 020C.2 — Governed command composer
+Build strict identity commands, verify their results, then build the strict confirmed Policy command with deterministic replay behavior.
 
-- strict identity command creation;
-- read-after-write identity resolution;
-- strict confirmed Policy command creation;
-- deterministic idempotency and conflict behavior.
+### 020C.3 — Persistent confirmation orchestration
 
-## 020C.3 — Persistent confirmation tasks and orchestration
+Add durable review lifecycle and retry-safe ordered execution only through a separately accepted persistence and remote gate.
 
-- durable review lifecycle;
-- retry-safe ordered execution;
-- receipts and failure state;
-- no automatic confirmation.
+### 020C.4 — Cartera review UI
 
-Any new schema or RPC requires a separate repository proposal and remote acceptance gate.
+Add the productive pending-review experience, explicit final confirmation, restricted-party privacy, desktop/mobile browser acceptance and safe bottom scroll space above the floating navigation pill.
 
-## 020C.4 — Cartera review UI
+## Negative gates
 
-- pending-review inbox;
-- evidence and field review;
-- identity selector/create proposal;
-- Account and PolicyRole review;
-- duplicate-Policy choice;
-- explicit final confirmation;
-- restricted-party privacy;
-- desktop/mobile browser acceptance;
-- safe bottom scroll space above the floating navigation pill.
+020C must not auto-select or auto-create Person, Account, Policy or PolicyRole truth; call confirmed Policy before identity resolution; expose beneficiary data generally; default unknown facts; infer consent; create Payment, payout, commission, revenue, tasks, Calendar events, messages, opportunities or recommendations; or execute remote mutation in this cut.
 
----
-
-# 14. Required first-cut tests
-
-1. only pending non-truth packets enter review;
-2. advisor and actor must match;
-3. candidates cannot claim to create truth;
-4. missing evidence and low-confidence fields block confirmation;
-5. identity decisions must cover every candidate;
-6. unresolved identity cannot advance;
-7. duplicate-Policy decision is explicit;
-8. every PolicyRole candidate is explicitly confirmed;
-9. beneficiary visibility is restricted;
-10. beneficiary candidates are excluded from general projection;
-11. the plan orders identity before Policy;
-12. the plan does not execute RPCs;
-13. unknown field values are not defaulted;
-14. no Product UI, schema or remote mutation occurs.
-
----
-
-# 15. Global negative gates
-
-020C must not:
-
-- auto-select a Person match;
-- auto-create or merge a Person;
-- auto-select an Account;
-- auto-create a Policy;
-- auto-write PolicyRole rows;
-- call the confirmed Policy command before identity resolution;
-- silently ignore duplicate candidates;
-- expose beneficiary data in general projections;
-- promote parser confidence into consent;
-- default unknown values;
-- infer communication consent;
-- create Payment, payout, commission or revenue truth;
-- create tasks, calendar events, messages, opportunities or recommendations;
-- execute remote mutation in the first cut.
-
----
-
-# 16. First-cut exit gate
+## First-cut exit gate
 
 ```text
 SOURCE_COMMIT_VERIFIED=YES
 CARTERA_020B_INTEGRATED=YES
+INHERITED_020B_GATE_RETIREMENT=BOUNDED
 IDENTITY_REVIEW_CONTRACT=REPOSITORY_READY
 POLICY_ROLE_REVIEW_CONTRACT=REPOSITORY_READY
 DUPLICATE_POLICY_DECISION=LOCKED
