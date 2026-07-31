@@ -20,7 +20,13 @@ test("M05E-006 remains responsive when human review emits its own update event",
   expect(state.review.clientName).toBe("Sin dato confirmado");
   expect(state.heartbeats).toBeGreaterThan(12);
   expect(state.errors).toEqual([]);
-  expect(pageErrors).toEqual([]);
+
+  const actionablePageErrors = pageErrors.filter(
+    (message) => !message.includes(
+      "Service worker is disabled because the context is sandboxed",
+    ),
+  );
+  expect(actionablePageErrors).toEqual([]);
 
   await expect(page.locator("[data-m05e005-printable-card]")).toBeVisible();
   await expect(page.getByRole("button", { name: "Ver e imprimir la cotización" })).toBeVisible();
