@@ -1,9 +1,6 @@
 name: CARTERA 010B Remote Acceptance
 
 on:
-  pull_request:
-    branches:
-      - feature/cartera-010b-commercial-person-policy-role-foundation
   workflow_dispatch:
 
 permissions:
