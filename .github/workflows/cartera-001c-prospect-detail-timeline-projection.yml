@@ -1,0 +1,82 @@
+name: CARTERA 001C Prospect Detail Timeline Projection
+
+on:
+  push:
+    branches:
+      - feature/cartera-001c-prospect-detail-timeline-projection
+    paths:
+      - "platform/event-evidence/prospect-quote-detail-projection.js"
+      - "advisor-os/sales-pipeline/prospect-quote-detail-projection-ui.js"
+      - "advisor-os/sales-pipeline/productive-prospect-bootstrap.js"
+      - "tests/cartera-001c-*.mjs"
+      - "tests/e2e/cartera-001c-prospect-detail-projection.spec.mjs"
+      - "playwright.cartera001c.config.mjs"
+      - ".github/workflows/cartera-001c-prospect-detail-timeline-projection.yml"
+  pull_request:
+    branches:
+      - feature/cartera-001b-remote-acceptance
+    paths:
+      - "platform/event-evidence/prospect-quote-detail-projection.js"
+      - "advisor-os/sales-pipeline/prospect-quote-detail-projection-ui.js"
+      - "advisor-os/sales-pipeline/productive-prospect-bootstrap.js"
+      - "tests/cartera-001c-*.mjs"
+      - "tests/e2e/cartera-001c-prospect-detail-projection.spec.mjs"
+      - "playwright.cartera001c.config.mjs"
+      - ".github/workflows/cartera-001c-prospect-detail-timeline-projection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  projection-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax gate
+        run: |
+          node --check platform/event-evidence/prospect-quote-detail-projection.js
+          node --check advisor-os/sales-pipeline/prospect-quote-detail-projection-ui.js
+          node --check advisor-os/sales-pipeline/productive-prospect-bootstrap.js
+          node --check tests/cartera-001c-prospect-quote-detail-projection-test.mjs
+          node --check tests/cartera-001c-prospect-detail-ui-test.mjs
+          node --check tests/e2e/cartera-001c-prospect-detail-projection.spec.mjs
+          node --check playwright.cartera001c.config.mjs
+      - name: Targeted 001C tests
+        run: node --test tests/cartera-001c-*.mjs
+      - name: Diff integrity
+        run: git diff --check HEAD^1...HEAD
+
+  browser-acceptance:
+    needs: projection-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Prospect Detail browser acceptance
+        run: npx playwright test --config=playwright.cartera001c.config.mjs
+      - name: Upload 001C browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-001c-browser-acceptance
+          path: |
+            artifacts/cartera001c-browser
+            artifacts/cartera001c-playwright-report
+            artifacts/cartera001c-playwright-results
+          if-no-files-found: error
+          retention-days: 30
