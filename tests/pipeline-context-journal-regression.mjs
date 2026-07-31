@@ -97,11 +97,15 @@ try {
   });
   checkpoint("AUTHORITIES_INJECTED");
 
-  await page.addScriptTag({
-    type: "module",
-    url: new URL(`pipeline-context-journal.js?v=${Date.now()}`, baseUrl).href,
-  });
-  checkpoint("MODULE_LOADED");
+  const moduleUrl = new URL(`pipeline-context-journal.js?v=${Date.now()}`, baseUrl).href;
+  await page.evaluate(url => {
+    const script = document.createElement("script");
+    script.type = "module";
+    script.src = url;
+    script.dataset.contextJournalRegressionModule = "true";
+    document.head.append(script);
+  }, moduleUrl);
+  checkpoint("MODULE_INSERTED");
   await page.waitForFunction(
     () => document.documentElement.dataset.pipelineContextJournal === "ready",
     null,
