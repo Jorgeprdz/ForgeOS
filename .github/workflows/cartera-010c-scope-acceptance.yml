@@ -40,7 +40,7 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
 
-          allowed='^(platform/event-evidence/policy-domain-event-contract\.js|tests/cartera-010c-policy-timeline-person-account-projection-scope-test\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010C_POLICY_TIMELINE_PERSON_ACCOUNT_PROJECTION_SCOPE_001\.md|\.github/workflows/cartera-010c-scope-acceptance\.yml)$'
+          allowed='^(platform/event-evidence/policy-domain-event-contract\.js|platform/policy-intelligence/cartera-010c-portfolio-read-model\.js|advisor-os/cartera/canonical-portfolio-service\.js|cartera\.js|tests/cartera-010c-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010C_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-010c-scope-acceptance\.yml)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -51,22 +51,51 @@ jobs:
 
           echo 'SOURCE_ANCESTRY=PASS'
           echo 'BOUNDED_PATHS=PASS'
-          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'PRODUCT_ROUTE_ADAPTER=BOUNDED'
+          echo 'PRODUCT_UI_REDESIGN=NONE'
           echo 'SCHEMA_DIFF=NONE'
           echo 'SUPABASE_REMOTE_MUTATION=NONE'
 
       - name: JavaScript syntax gate
+        shell: bash
         run: |
+          set -euo pipefail
           node --check platform/event-evidence/policy-domain-event-contract.js
-          node --check tests/cartera-010c-policy-timeline-person-account-projection-scope-test.mjs
+          node --check platform/policy-intelligence/cartera-010c-portfolio-read-model.js
+          node --check advisor-os/cartera/canonical-portfolio-service.js
+          node --check cartera.js
+          for file in tests/cartera-010c-*.mjs; do
+            node --check "$file"
+          done
 
-      - name: Execute 010C first-cut acceptance
-        run: node --test tests/cartera-010c-policy-timeline-person-account-projection-scope-test.mjs
+      - name: Execute complete 010C repository acceptance
+        run: node --test tests/cartera-010c-*.mjs
+
+      - name: Verify legacy route authority removal
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -q 'crmaddlife-indexeddb' cartera.js
+          ! grep -q 'DB\.obtenerTodos' cartera.js
+          ! grep -q 'btn-new-policy' cartera.js
+          ! grep -q 'data-edit' cartera.js
+          ! grep -q 'data-delete' cartera.js
+          ! grep -q 'excel-input' cartera.js
+          grep -q 'createCanonicalPortfolioService' cartera.js
+          grep -q 'safe-area-inset-bottom' cartera.js
+          grep -q 'forge_cartera010b_list_general_policy_roles' advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q "from('policy_roles')" advisor-os/cartera/canonical-portfolio-service.js
 
       - name: Emit progress markers
         run: |
           echo 'CARTERA_010C_SCOPE=LOCKED'
           echo 'CARTERA_010C_POLICY_DOMAIN_EVENT_CONTRACT=REPOSITORY_READY'
-          echo 'LEGACY_CARTERA_DIRECT_WRITES=FORBIDDEN'
+          echo 'CARTERA_010C_CANONICAL_PORTFOLIO_READ_MODEL=REPOSITORY_READY'
+          echo 'CARTERA_010C_AUTHENTICATED_PORTFOLIO_SERVICE=REPOSITORY_READY'
+          echo 'CARTERA_010C_PERSON_ACCOUNT_PROJECTION=REPOSITORY_READY'
+          echo 'LEGACY_CARTERA_INDEXEDDB_AUTHORITY=REMOVED_FROM_ROUTE'
+          echo 'LEGACY_CARTERA_DIRECT_WRITES=REMOVED'
+          echo 'UNKNOWN_FACT_DEFAULTING=REMOVED'
+          echo 'PRODUCT_UI_REDESIGN=NO'
           echo 'CARTERA_010C_COMPLETE=NO'
-          echo 'NEXT=CARTERA_010C_CANONICAL_READ_MODEL_AND_ROUTE_ADAPTER'
+          echo 'NEXT=CARTERA_010C_POLICY_DETAIL_AND_TIMELINE_PROJECTION'
