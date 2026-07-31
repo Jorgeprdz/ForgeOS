@@ -6,7 +6,7 @@ on:
       - feature/cartera-010b-commercial-person-policy-role-foundation
   pull_request:
     branches:
-      - feature/cartera-001d-vertical-acceptance-closure
+      - docs/cartera-010a-identity-policy-persistence-scope
   workflow_dispatch:
 
 permissions:
@@ -40,7 +40,7 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
 
-          allowed='^(schemas/(commercial-person-v1|commercial-account-v1|policy-v2|policy-role-v1)\.schema\.json|platform/shared-commercial-model/cartera-010b-contract-validator\.js|supabase/migrations/20260731000200_cartera010b_identity_policy_foundation\.sql|tests/cartera-010b-contract-foundation-test\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010B_PERSISTENCE_FOUNDATION_PROGRESS_001\.md|\.github/workflows/cartera-010b-foundation\.yml)$'
+          allowed='^(schemas/(commercial-person-v1|commercial-account-v1|policy-v2|policy-role-v1)\.schema\.json|platform/shared-commercial-model/cartera-010b-contract-validator\.js|supabase/migrations/202607310002(00_cartera010b_identity_policy_foundation|10_cartera010b_command_helpers|11_cartera010b_identity_resolution_rpc|12_cartera010b_confirmed_policy_rpc)\.sql|tests/cartera-010b-(contract-foundation|governed-command-rpc)-test\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010B_(PERSISTENCE_FOUNDATION_PROGRESS_001|GOVERNED_COMMAND_RPCS_PROGRESS_002)\.md|\.github/workflows/cartera-010b-foundation\.yml)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -57,14 +57,19 @@ jobs:
         run: |
           node --check platform/shared-commercial-model/cartera-010b-contract-validator.js
           node --check tests/cartera-010b-contract-foundation-test.mjs
+          node --check tests/cartera-010b-governed-command-rpc-test.mjs
 
       - name: Execute 010B foundation tests
-        run: node --test tests/cartera-010b-contract-foundation-test.mjs
+        run: |
+          node --test \
+            tests/cartera-010b-contract-foundation-test.mjs \
+            tests/cartera-010b-governed-command-rpc-test.mjs
 
       - name: Emit progress markers
         run: |
           echo 'CARTERA_010B_CONTRACT_VALIDATORS=PASS'
           echo 'CARTERA_010B_PERSISTENCE_FOUNDATION=REPOSITORY_READY'
+          echo 'CARTERA_010B_GOVERNED_COMMAND_RPCS=REPOSITORY_READY'
           echo 'CARTERA_010B_REMOTE_DEPLOYMENT=NOT_AUTHORIZED'
           echo 'CARTERA_010B_COMPLETE=NO'
-          echo 'NEXT=CARTERA_010B_GOVERNED_COMMAND_RPCS'
+          echo 'NEXT=CARTERA_010B_REMOTE_DEPLOYMENT_AND_TRANSACTIONAL_ACCEPTANCE'
