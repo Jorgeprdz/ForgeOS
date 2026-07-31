@@ -1,0 +1,91 @@
+name: CARTERA 001B Remote Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-001b-remote-acceptance
+  cancel-in-progress: true
+
+jobs:
+  remote-acceptance:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+
+    steps:
+      - name: Checkout exact acceptance branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/cartera-001b-remote-acceptance
+          fetch-depth: 0
+          token: ${{ github.token }}
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source and secret gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "feature/cartera-001b-remote-acceptance"
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          git diff --check
+
+      - name: Targeted contract tests
+        run: node --test tests/cartera-001b-*.mjs
+
+      - name: Recover exact remote-only migration
+        run: node scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs --recover-only
+
+      - name: Verify recovered migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t migration_files < <(find supabase/migrations -maxdepth 1 -type f -name '20260726000200_*.sql' -print | sort)
+          test "${#migration_files[@]}" -eq 1
+          recovered="${migration_files[0]}"
+          echo "RECOVERED_MIGRATION=$recovered"
+          sha256sum "$recovered"
+
+      - name: Apply and verify pgcrypto RPC hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-001b-pgcrypto-hardening-deploy.mjs \
+            | tee artifacts/cartera-001b-github-actions/pgcrypto-hardening.log
+          grep -q 'CARTERA001B_PGCRYPTO_HARDENING=PASS' artifacts/cartera-001b-github-actions/pgcrypto-hardening.log
+
+      - name: Deploy and execute transactional remote acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$(git rev-parse HEAD)" \
+            node scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs --deploy-and-accept \
+            | tee artifacts/cartera-001b-github-actions/workflow-output.log
+
+      - name: Verify explicit acceptance marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'CARTERA_001B_REMOTE_ACCEPTANCE=PASS' artifacts/cartera-001b-github-actions/workflow-output.log
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' artifacts/cartera-001b-github-actions/workflow-output.log
+          grep -q 'APPLICATION_EFFECTS=BLOCKED' artifacts/cartera-001b-github-actions/workflow-output.log
+
+      - name: Upload remote acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-001b-remote-acceptance
+          path: artifacts/cartera-001b-github-actions
+          if-no-files-found: error
+          retention-days: 30
