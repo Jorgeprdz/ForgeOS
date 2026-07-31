@@ -6,7 +6,7 @@ Cartera / Document Intake and Identity Resolution
 
 ## Status
 
-`GOVERNED_REPOSITORY_FOUNDATION_IMPLEMENTED / REMOTE_DEPLOYMENT_NOT_AUTHORIZED / PHASE_NOT_COMPLETE`
+`GOVERNED_REPOSITORY_FOUNDATION_ACCEPTED / REMOTE_DEPLOYMENT_NOT_AUTHORIZED / PHASE_NOT_COMPLETE`
 
 ## Execution identity
 
@@ -16,6 +16,7 @@ AUTHORIZED_PHASE=CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_AND_PARSER_REGISTRY
 SOURCE_BRANCH=feature/cartera-010b-commercial-person-policy-role-foundation
 SOURCE_COMMIT=bb7105e622075a36feae65d8296f93b9e2f7c93d
 IMPLEMENTATION_BRANCH=feature/cartera-020b-persistent-evidence-worker-parser-registry
+ACCEPTED_HEAD=c68f2d2d07bfdd924e08f68fc884aa59de94956a
 SCHEMA_MUTATION=REPOSITORY_PROPOSAL_ONLY
 SUPABASE_REMOTE_MUTATION=NO
 PRODUCT_UI_MUTATION=NO
@@ -106,15 +107,25 @@ The Inbox `metadata` column defect found during command construction was correct
 - no RPC invokes the confirmed Policy command;
 - no payment, compensation, task, calendar, message or opportunity effect exists.
 
-## Repository acceptance target
+## Repository acceptance
 
 ```text
+WORKFLOW_RUN=30658372819
+WORKFLOW_JOB=91248342949
 NEW_TARGETED_TESTS=43
+NEW_TARGETED_PASS=43
 INHERITED_EVIDENCE_TESTS=9
+INHERITED_EVIDENCE_PASS=9
 TOTAL_TARGETED_TESTS=52
-EXPECTED_PASS=52
-EXPECTED_FAIL=0
+TOTAL_TARGETED_PASS=52
+TOTAL_TARGETED_FAIL=0
+SOURCE_COMMIT_VERIFIED=YES
+BOUNDED_PATHS=PASS
+PRODUCT_UI_DIFF=NONE
+SUPABASE_REMOTE_MUTATION=NONE
 ```
+
+This acceptance is repository and static-contract evidence. It does not prove PostgreSQL compilation, transactional behavior, RLS execution or production readiness.
 
 ## Current decision
 
