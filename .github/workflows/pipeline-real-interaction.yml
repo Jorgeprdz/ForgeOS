@@ -21,43 +21,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  apply-stage-authority-contract:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'fix/pipeline-card-density-stage-authority'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-      - name: Update integration contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          python <<'PY'
-          from pathlib import Path
-          path = Path('tests/material3-pipeline-integration-test.mjs')
-          text = path.read_text()
-          old = '  assert.match(source, /productiveAdapter\\.updateStage\\(card\\.id,\\s*select\\.value\\)/);\n'
-          new = '''  assert.match(source, /async function persistProductiveStage\\(prospectId, status\\)/);\n  assert.match(source, /productiveAdapter\\.updateStage\\(prospectId, status\\)/);\n  assert.match(source, /await persistProductiveStage\\(prospectId, requested\\)/);\n  assert.match(source, /updateProductiveStage\\(prospectId, status\\)[\\s\\S]*persistProductiveStage\\(prospectId, status\\)/);\n'''
-          if text.count(old) != 1:
-              raise SystemExit(f'OLD_STAGE_CONTRACT_MATCHES={text.count(old)}')
-          path.write_text(text.replace(old, new, 1))
-          PY
-          node --test tests/material3-pipeline-integration-test.mjs
-      - name: Commit test contract only
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "forgeos-pipeline-closure"
-          git config user.email "actions@users.noreply.github.com"
-          git add tests/material3-pipeline-integration-test.mjs
-          git commit -m "test(pipeline): assert shared stage authority"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
