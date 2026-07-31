@@ -253,7 +253,7 @@ export function installPipelineContextJournal(options = {}) {
     documentRef.querySelectorAll(`${ROOT_SELECTOR} ${TRIGGER_SELECTOR}`).forEach(trigger => {
       const card = trigger.closest(CARD_SELECTOR);
       const name = card?.querySelector("[data-productive-card-identity] strong")?.textContent?.trim() || "prospecto";
-      trigger.textContent = "Bitácora";
+      if (trigger.textContent?.trim() !== "Bitácora") trigger.textContent = "Bitácora";
       trigger.setAttribute("aria-label", `Abrir bitácora de ${name}`);
       trigger.setAttribute("title", "Consultar contexto y registrar una nota");
     });
