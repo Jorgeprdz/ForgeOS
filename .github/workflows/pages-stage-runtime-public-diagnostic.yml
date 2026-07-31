@@ -19,7 +19,7 @@ permissions:
 jobs:
   verify-public-runtime:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 3
     env:
       EXPECTED_SHA: a1351fca805ca426fcd2cdacf6d472c34a4c603c
       PUBLIC_BASE_URL: https://jorgeprdz.github.io/ForgeOS
@@ -30,27 +30,16 @@ jobs:
           ref: fix/pipeline-stage-runtime-cache-authority
           fetch-depth: 0
 
-      - name: Observe public deployment
+      - name: Observe public deployment once
         shell: bash
         run: |
           set -u
-          deployed_sha=""
-          script_src=""
-          build_json=""
-          page_html=""
-          for attempt in $(seq 1 36); do
-            build_json="$(curl --fail --silent --show-error --location -H 'Cache-Control: no-cache' \
-              "${PUBLIC_BASE_URL}/build-info.json?v=${EXPECTED_SHA}-${attempt}" || true)"
-            deployed_sha="$(node -e 'try{process.stdout.write(String(JSON.parse(process.argv[1]).commitSha||""))}catch{}' "$build_json")"
-            page_html="$(curl --fail --silent --show-error --location -H 'Cache-Control: no-cache' \
-              "${PUBLIC_BASE_URL}/static-preview/forge-alive/?nav=pipeline&v=${EXPECTED_SHA}-${attempt}" || true)"
-            script_src="$(printf '%s' "$page_html" | grep -o 'app\.js?v=[^"<]*' | head -n1 || true)"
-            if [ "$deployed_sha" = "$EXPECTED_SHA" ] && [ "$script_src" = "$EXPECTED_ENTRY" ]; then
-              break
-            fi
-            sleep 10
-          done
-
+          build_json="$(curl --fail --silent --show-error --location -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/build-info.json?v=${EXPECTED_SHA}-immediate" || true)"
+          deployed_sha="$(node -e 'try{process.stdout.write(String(JSON.parse(process.argv[1]).commitSha||""))}catch{}' "$build_json")"
+          page_html="$(curl --fail --silent --show-error --location -H 'Cache-Control: no-cache' \
+            "${PUBLIC_BASE_URL}/static-preview/forge-alive/?nav=pipeline&v=${EXPECTED_SHA}-immediate" || true)"
+          script_src="$(printf '%s' "$page_html" | grep -o 'app\.js?v=[^"<]*' | head -n1 || true)"
           export DEPLOYED_SHA="$deployed_sha"
           export SCRIPT_SRC="$script_src"
           export RESULT_STATUS="$([ "$deployed_sha" = "$EXPECTED_SHA" ] && [ "$script_src" = "$EXPECTED_ENTRY" ] && echo PASS || echo FAIL)"
