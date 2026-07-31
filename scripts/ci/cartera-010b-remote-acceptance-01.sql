@@ -1,6 +1,7 @@
 begin;
 
 do $cartera010b$
+#variable_conflict use_variable
 declare
   user_a uuid := gen_random_uuid();
   user_b uuid := gen_random_uuid();
