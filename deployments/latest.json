@@ -1,0 +1,16 @@
+{
+  "status": "FAIL",
+  "migrationVersion": "20260731000100",
+  "migrationName": "pipeline_prospect_journal",
+  "projectRef": "rmlxigxysujsuwzgoimv",
+  "sourceSha": "1274e48f1790fde2b584038c12b6d8889af78255",
+  "workflowRunId": "30605776337",
+  "verifiedAt": "2026-07-31T05:04:17.919Z",
+  "checks": [
+    {
+      "name": "workflow_preflight",
+      "status": "FAIL",
+      "detail": "LEDGER_NOT_CREATED"
+    }
+  ]
+}
