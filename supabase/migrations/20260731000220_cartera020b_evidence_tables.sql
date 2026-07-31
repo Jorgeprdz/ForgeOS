@@ -72,7 +72,7 @@ create table if not exists public.cartera020b_evidence_inbox_items (
   state_version integer not null default 1 check (state_version >= 1),
   blocked_reason text,
   warnings jsonb not null default '[]'::jsonb check (jsonb_typeof(warnings) = 'array'),
-  metada jsonb not null default '{}'::jsonb check (jsonb_typeof(metadata) = 'object'),
+  metadata jsonb not null default '{}'::jsonb check (jsonb_typeof(metadata) = 'object'),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint cartera020b_inbox_reference_ck
