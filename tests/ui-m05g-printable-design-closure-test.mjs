@@ -22,7 +22,7 @@ const read = (path) => readFileSync(new URL(path, root), "utf8");
 
 const app = read("docs/static-preview/forge-alive-material3/app.js");
 const proof = read("docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html");
-const runtime = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js");
+const runtime = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
 const styles = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.css");
 const controller = read("docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js");
 
@@ -30,7 +30,7 @@ const source = {
   packetType: ACCEPTED_QUOTE_SNAPSHOT_TYPE,
   reviewOnly: true,
   acceptedQuote: {
-    quoteId: "ORVI-M05E005-001",
+    quoteId: "ORVI-M05E006-001",
     acceptedAt: "2026-07-31T00:25:00-06:00",
     context: { productFamily: "ORVI" },
   },
@@ -116,11 +116,12 @@ assert.ok(pdf.pageWidth < pdf.pageHeight);
 assert.ok(pdf.pageCount >= 2);
 assert.ok(pdf.byteLength > 1000);
 
-assert.match(app, /quote-runtime-printable-closure-m05e005\.js\?v=m05e-005/);
+assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-006/);
+assert.doesNotMatch(app, /quote-runtime-printable-closure-m05e005\.js/);
 assert.doesNotMatch(app, /quote-runtime-ux-closure-m05e004/);
-assert.match(app, /quoteCalculatorRuntime = "M05E-005"/);
-assert.match(proof, /CALCULADORAS M05E-005/);
-assert.match(proof, /quote-calculator-parity-005/);
+assert.match(app, /quoteCalculatorRuntime = "M05E-006"/);
+assert.match(proof, /CALCULADORAS M05E-006/);
+assert.match(proof, /quote-calculator-parity-006/);
 assert.match(controller, /normalizePrintableReviewSnapshot/);
 assert.match(controller, /pageOrientation: "PORTRAIT"/);
 
@@ -131,9 +132,17 @@ assert.match(runtime, /aria-label="Ver e imprimir la cotización"/);
 assert.match(runtime, /aria-label="Descargar cotización en PDF"/);
 assert.match(runtime, /aria-label="Abrir historial de versiones"/);
 assert.match(runtime, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
-assert.match(runtime, /prepareOptionalClient/);
+assert.match(runtime, /preparedCandidates = new WeakSet/);
+assert.match(runtime, /alreadyPrepared = hasText\(reviewed\?\.clientName\)/);
+assert.match(runtime, /setAttributeOnce/);
+assert.match(runtime, /setHiddenOnce/);
+assert.match(runtime, /installApiAuthority/);
+assert.match(runtime, /retryMount/);
 assert.match(runtime, /data-m05e005-legacy-hidden/);
 assert.match(runtime, /Aún no hay versiones guardadas/);
+assert.doesNotMatch(runtime, /new MutationObserver/);
+assert.doesNotMatch(runtime, /"forge:quote-human-review-updated"/);
+assert.doesNotMatch(runtime, /queueMicrotask/);
 assert.doesNotMatch(runtime, /Escribe tu nombre para continuar/);
 assert.doesNotMatch(runtime, /Captura el nombre antes de confirmar/);
 
@@ -144,15 +153,16 @@ assert.match(styles, /\.forge-printable-toolbar/);
 assert.match(styles, /\.forge-printable-modal__dialog/);
 
 console.log("PASS UI-M05G printable design and UX closure", {
-  productiveRuntime: "M05E-005",
+  productiveRuntime: "M05E-006",
   optionalClientIsNonBlocking: true,
-  obsoleteUxLayerRemoved: true,
+  obsoleteUxLayersRemoved: ["M05E-004", "M05E-005"],
   compactDocumentActions: ["printer", "pdf", "history"],
   forgeDarkUiParity: true,
   pageFormat: "A4",
   pageOrientation: pdf.pageOrientation,
   premiumPrintableDesign: true,
   historyVisibleWithUsefulEmptyState: true,
+  feedbackLoopRemoved: true,
   pdfPages: pdf.pageCount,
   pdfBytes: pdf.byteLength,
 });
