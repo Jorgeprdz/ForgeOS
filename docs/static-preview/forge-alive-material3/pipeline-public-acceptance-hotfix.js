@@ -4,10 +4,10 @@ import {
 
 const ROOT_SELECTOR = "[data-forge-pipeline-module]";
 const CARD_SELECTOR = "[data-productive-prospect-card]";
-const NAME_SEARCH_SELECTOR = "[data-productive-filter-name]";
-const NAME_SEARCH_CLEAR_SELECTOR = "[data-clear-productive-name-search]";
-const NAME_SEARCH_EMPTY_SELECTOR = "[data-productive-name-filter-empty]";
-const STAGE_CONTROL_SELECTOR = "[data-productive-stage-control]";
+const NAME_INPUT_SELECTOR = "[data-productive-filter-name]";
+const NAME_CLEAR_SELECTOR = "[data-clear-productive-name-search]";
+const NAME_EMPTY_SELECTOR = "[data-productive-name-filter-empty]";
+const STAGE_SELECTOR = "[data-productive-stage-control]";
 const SEARCH_MIN_LENGTH = 3;
 const INSTALL_KEY = Symbol.for("forge.material3.pipeline.public-acceptance-hotfix");
 const STAGE_LABELS = Object.freeze({
@@ -19,10 +19,10 @@ const STAGE_LABELS = Object.freeze({
   client: "Cliente",
 });
 
-let productiveServicePromise;
-let productiveNameQuery = "";
-let pendingStageConfirmation = null;
-let reconciliationScheduled = false;
+let servicePromise;
+let nameQuery = "";
+let scheduled = false;
+let pendingStage = null;
 let statusTimer;
 
 function normalizeSearchText(value) {
@@ -33,7 +33,7 @@ function normalizeSearchText(value) {
     .trim();
 }
 
-function createNameSearchControl(documentRef) {
+function createNameSearch(documentRef) {
   const field = documentRef.createElement("label");
   field.className = "pipeline-module__name-search";
   field.dataset.productiveNameSearchField = "";
@@ -65,34 +65,29 @@ function createNameSearchControl(documentRef) {
 function ensureNameSearch(root) {
   const filters = root.querySelector("[data-productive-filter-bar]");
   if (!filters) return null;
-  let input = filters.querySelector(NAME_SEARCH_SELECTOR);
+  let input = filters.querySelector(NAME_INPUT_SELECTOR);
   if (!input) {
-    filters.prepend(createNameSearchControl(root.ownerDocument));
-    input = filters.querySelector(NAME_SEARCH_SELECTOR);
+    filters.prepend(createNameSearch(root.ownerDocument));
+    input = filters.querySelector(NAME_INPUT_SELECTOR);
   }
-  if (input && input.value !== productiveNameQuery) input.value = productiveNameQuery;
+  if (input && input.value !== nameQuery) input.value = nameQuery;
   return input;
 }
 
-function productiveCardName(card) {
+function cardName(card) {
   return card.querySelector(
     "[data-productive-card-identity] strong, .pipeline-module__productive-name > strong",
   )?.textContent?.trim() || "";
 }
 
-function removeNameSearchEmptyState(root) {
-  root.querySelector(NAME_SEARCH_EMPTY_SELECTOR)?.remove();
-}
-
-function ensureNameSearchEmptyState(root, active, visibleCount, renderedCount) {
-  if (!active || renderedCount === 0 || visibleCount > 0) {
-    removeNameSearchEmptyState(root);
+function syncNameEmptyState(root, { active, visible, total }) {
+  const current = root.querySelector(NAME_EMPTY_SELECTOR);
+  if (!active || total === 0 || visible > 0) {
+    current?.remove();
     return;
   }
-
-  let empty = root.querySelector(NAME_SEARCH_EMPTY_SELECTOR);
-  if (empty) return;
-  empty = root.ownerDocument.createElement("section");
+  if (current) return;
+  const empty = root.ownerDocument.createElement("section");
   empty.className = "pipeline-module__filter-empty";
   empty.dataset.productiveNameFilterEmpty = "";
   empty.innerHTML = "<p>No hay prospectos que coincidan con este nombre.</p>";
@@ -100,43 +95,46 @@ function ensureNameSearchEmptyState(root, active, visibleCount, renderedCount) {
 }
 
 function applyNameSearch(root) {
-  const input = root.querySelector(NAME_SEARCH_SELECTOR);
+  const input = root.querySelector(NAME_INPUT_SELECTOR);
   if (!input) return;
 
-  productiveNameQuery = input.value;
+  nameQuery = input.value;
   const query = input.value.trim();
-  const normalizedQuery = normalizeSearchText(query);
+  const normalized = normalizeSearchText(query);
   const active = query.length >= SEARCH_MIN_LENGTH;
   const cards = [...root.querySelectorAll(CARD_SELECTOR)];
-  let visibleCount = 0;
+  let visible = 0;
 
   for (const card of cards) {
-    const matches = !active
-      || normalizeSearchText(productiveCardName(card)).includes(normalizedQuery);
-    card.hidden = !matches;
-    card.style.display = matches ? "" : "none";
-    card.dataset.nameSearchMatch = matches ? "true" : "false";
-    if (matches) visibleCount += 1;
+    const matches = !active || normalizeSearchText(cardName(card)).includes(normalized);
+    if (card.hidden === matches) card.hidden = !matches;
+    const nextDisplay = matches ? "" : "none";
+    if (card.style.display !== nextDisplay) card.style.display = nextDisplay;
+    const nextMatch = matches ? "true" : "false";
+    if (card.dataset.nameSearchMatch !== nextMatch) card.dataset.nameSearchMatch = nextMatch;
+    if (matches) visible += 1;
   }
 
   const count = root.querySelector("[data-productive-filter-count]");
-  if (count) {
-    count.textContent = active
-      ? `${visibleCount} de ${cards.length} prospectos`
-      : `${cards.length} de ${cards.length} prospectos`;
-  }
+  const countText = active
+    ? `${visible} de ${cards.length} prospectos`
+    : `${cards.length} de ${cards.length} prospectos`;
+  if (count && count.textContent.trim() !== countText) count.textContent = countText;
 
-  const clearName = root.querySelector(NAME_SEARCH_CLEAR_SELECTOR);
-  if (clearName) clearName.hidden = query.length === 0;
+  const clearName = root.querySelector(NAME_CLEAR_SELECTOR);
+  if (clearName && clearName.hidden !== (query.length === 0)) {
+    clearName.hidden = query.length === 0;
+  }
 
   const source = root.querySelector("[data-productive-filter-source]")?.value || "";
   const status = root.querySelector("[data-productive-filter-status]")?.value || "";
   const clearFilters = root.querySelector("[data-clear-productive-filters]");
-  if (clearFilters) clearFilters.disabled = !(query || source || status);
+  const disabled = !(query || source || status);
+  if (clearFilters && clearFilters.disabled !== disabled) clearFilters.disabled = disabled;
 
   root.dataset.productiveNameSearchState = active ? "active" : "idle";
   root.dataset.productiveNameSearchLength = String(query.length);
-  ensureNameSearchEmptyState(root, active, visibleCount, cards.length);
+  syncNameEmptyState(root, { active, visible, total: cards.length });
 }
 
 function ensureStatusNode(root) {
@@ -145,11 +143,9 @@ function ensureStatusNode(root) {
   node = root.ownerDocument.createElement("p");
   node.className = "pipeline-module__referral-status pipeline-module__public-acceptance-status";
   node.dataset.pipelinePublicAcceptanceStatus = "";
-  node.setAttribute("role", "status");
   node.hidden = true;
-  const header = root.querySelector(".pipeline-module__header");
-  if (header) header.insertAdjacentElement("afterend", node);
-  else root.prepend(node);
+  root.querySelector(".pipeline-module__header")?.insertAdjacentElement("afterend", node);
+  if (!node.isConnected) root.prepend(node);
   return node;
 }
 
@@ -157,17 +153,16 @@ function showStatus(root, message, { error = false, persist = false } = {}) {
   const node = ensureStatusNode(root);
   clearTimeout(statusTimer);
   node.hidden = false;
-  node.textContent = message;
+  if (node.textContent !== message) node.textContent = message;
   node.dataset.state = error ? "error" : "success";
   node.setAttribute("role", error ? "alert" : "status");
-  if (!persist) {
-    statusTimer = setTimeout(() => {
-      if (!node.isConnected) return;
-      node.hidden = true;
-      node.textContent = "";
-      delete node.dataset.state;
-    }, 4200);
-  }
+  if (persist) return;
+  statusTimer = setTimeout(() => {
+    if (!node.isConnected) return;
+    node.hidden = true;
+    node.textContent = "";
+    delete node.dataset.state;
+  }, 4200);
 }
 
 function stageErrorMessage(error) {
@@ -199,37 +194,36 @@ function assertStageConfirmed({ prospect, prospectId, status, phase }) {
   throw error;
 }
 
-async function getProductiveService() {
-  const injectedFactory = globalThis.__FORGE_PIPELINE_ACCEPTANCE_SERVICE_FACTORY__;
-  if (typeof injectedFactory === "function") return injectedFactory();
-  if (!productiveServicePromise) {
-    productiveServicePromise = createProductiveIntelligenceAdapter()
+async function getService() {
+  const injected = globalThis.__FORGE_PIPELINE_ACCEPTANCE_SERVICE_FACTORY__;
+  if (typeof injected === "function") return injected();
+  if (!servicePromise) {
+    servicePromise = createProductiveIntelligenceAdapter()
       .then(adapter => adapter.service)
       .catch(error => {
-        productiveServicePromise = undefined;
+        servicePromise = undefined;
         throw error;
       });
   }
-  return productiveServicePromise;
+  return servicePromise;
 }
 
 function applyConfirmedStage(card, select, status) {
   card.dataset.productiveStage = status;
   select.value = status;
   select.dataset.confirmedStage = status;
-  const staticLabel = card.querySelector("[data-productive-stage-label]");
-  if (staticLabel) staticLabel.textContent = STAGE_LABELS[status] || status;
+  const duplicateLabel = card.querySelector("[data-productive-stage-label]");
+  if (duplicateLabel && duplicateLabel.textContent !== (STAGE_LABELS[status] || status)) {
+    duplicateLabel.textContent = STAGE_LABELS[status] || status;
+  }
 }
 
-async function persistStageChange(root, select) {
+async function persistStage(root, select) {
   const card = select.closest(CARD_SELECTOR);
   const prospectId = select.dataset.productiveStageControl;
   if (!card || !prospectId) return;
 
-  const previous = select.dataset.confirmedStage
-    || card.dataset.productiveStage
-    || select.querySelector("option:checked")?.value
-    || "";
+  const previous = select.dataset.confirmedStage || card.dataset.productiveStage || "";
   const requested = select.value;
   if (!requested || requested === previous) return;
 
@@ -240,7 +234,7 @@ async function persistStageChange(root, select) {
   showStatus(root, "Guardando estado…", { persist: true });
 
   try {
-    const service = await getProductiveService();
+    const service = await getService();
     assertStageConfirmed({
       prospect: await service.updateProspect(prospectId, { status: requested }),
       prospectId,
@@ -253,7 +247,7 @@ async function persistStageChange(root, select) {
       status: requested,
       phase: "read-after-write",
     });
-    const listed = (await service.listProspects()).find(prospect => prospect.id === prospectId);
+    const listed = (await service.listProspects()).find(item => item.id === prospectId);
     assertStageConfirmed({
       prospect: listed,
       prospectId,
@@ -263,13 +257,12 @@ async function persistStageChange(root, select) {
 
     applyConfirmedStage(card, select, confirmed.status);
     card.dataset.stagePersistence = "saved";
-    pendingStageConfirmation = Object.freeze({
+    pendingStage = Object.freeze({
       prospectId,
       status: confirmed.status,
       expiresAt: Date.now() + 12000,
     });
     showStatus(root, `Estado actualizado a ${STAGE_LABELS[confirmed.status] || confirmed.status}.`);
-
     globalThis.dispatchEvent(new CustomEvent("forge:auth-state-changed", {
       detail: Object.freeze({
         status: "authenticated",
@@ -293,13 +286,12 @@ async function persistStageChange(root, select) {
 function compactStageControl(card) {
   const identity = card.querySelector("[data-productive-card-identity]");
   const control = card.querySelector(".pipeline-module__stage-control");
-  const select = control?.querySelector(STAGE_CONTROL_SELECTOR);
+  const select = control?.querySelector(STAGE_SELECTOR);
   if (!identity || !control || !select) return;
 
   control.classList.add("pipeline-module__stage-control--compact");
   if (control.parentElement !== identity) identity.append(control);
-  const staticLabel = identity.querySelector("[data-productive-stage-label]");
-  if (staticLabel) staticLabel.setAttribute("aria-hidden", "true");
+  identity.querySelector("[data-productive-stage-label]")?.setAttribute("aria-hidden", "true");
   if (!select.dataset.confirmedStage) {
     select.dataset.confirmedStage = card.dataset.productiveStage || select.value;
   }
@@ -320,7 +312,8 @@ function installStyles(documentRef) {
       gap: 5px !important;
     }
 
-    .pipeline-module .pipeline-module__name-search small {
+    .pipeline-module .pipeline-module__name-search small,
+    .pipeline-module .pipeline-module__stage-control--compact > span {
       position: absolute !important;
       width: 1px !important;
       height: 1px !important;
@@ -373,16 +366,6 @@ function installStyles(documentRef) {
       width: auto !important;
       min-width: 0 !important;
       margin: 0 !important;
-    }
-
-    .pipeline-module .pipeline-module__stage-control--compact > span {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      margin: -1px !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      white-space: nowrap !important;
     }
 
     .pipeline-module .pipeline-module__stage-control--compact select {
@@ -440,22 +423,20 @@ function synchronize(root) {
   root.querySelectorAll(CARD_SELECTOR).forEach(compactStageControl);
   if (input) applyNameSearch(root);
 
-  if (pendingStageConfirmation) {
+  if (pendingStage) {
+    const confirmation = pendingStage;
     const card = root.querySelector(
-      `${CARD_SELECTOR}[data-productive-prospect-card="${CSS.escape(pendingStageConfirmation.prospectId)}"]`,
+      `${CARD_SELECTOR}[data-productive-prospect-card="${CSS.escape(confirmation.prospectId)}"]`,
     );
-    if (card?.dataset.productiveStage === pendingStageConfirmation.status) {
-      showStatus(
-        root,
-        `Estado actualizado a ${STAGE_LABELS[pendingStageConfirmation.status] || pendingStageConfirmation.status}.`,
-      );
-      pendingStageConfirmation = null;
-    } else if (Date.now() > pendingStageConfirmation.expiresAt) {
+    if (card?.dataset.productiveStage === confirmation.status) {
+      pendingStage = null;
+      showStatus(root, `Estado actualizado a ${STAGE_LABELS[confirmation.status] || confirmation.status}.`);
+    } else if (Date.now() > confirmation.expiresAt) {
+      pendingStage = null;
       showStatus(root, "El estado se guardó, pero la tarjeta no pudo reconciliarse. Recarga la página.", {
         error: true,
         persist: true,
       });
-      pendingStageConfirmation = null;
     }
   }
 
@@ -463,11 +444,11 @@ function synchronize(root) {
   document.documentElement.dataset.pipelineStageAuthority = "pipeline-public-acceptance-hotfix";
 }
 
-function scheduleReconciliation(root) {
-  if (reconciliationScheduled) return;
-  reconciliationScheduled = true;
+function schedule(root) {
+  if (scheduled) return;
+  scheduled = true;
   queueMicrotask(() => {
-    reconciliationScheduled = false;
+    scheduled = false;
     synchronize(root);
   });
 }
@@ -483,51 +464,48 @@ export function installPipelinePublicAcceptanceHotfix({
   installStyles(documentRef);
 
   root.addEventListener("input", event => {
-    const input = event.target?.closest?.(NAME_SEARCH_SELECTOR);
+    const input = event.target?.closest?.(NAME_INPUT_SELECTOR);
     if (!input) return;
-    productiveNameQuery = input.value;
+    nameQuery = input.value;
     applyNameSearch(root);
   }, true);
 
   for (const eventName of ["keyup", "change", "search"]) {
     root.addEventListener(eventName, event => {
-      const input = event.target?.closest?.(NAME_SEARCH_SELECTOR);
+      const input = event.target?.closest?.(NAME_INPUT_SELECTOR);
       if (!input) return;
-      productiveNameQuery = input.value;
+      nameQuery = input.value;
       applyNameSearch(root);
     }, true);
   }
 
   root.addEventListener("click", event => {
-    if (event.target?.closest?.(NAME_SEARCH_CLEAR_SELECTOR)) {
-      productiveNameQuery = "";
+    if (event.target?.closest?.(NAME_CLEAR_SELECTOR)) {
+      nameQuery = "";
       queueMicrotask(() => {
-        const input = root.querySelector(NAME_SEARCH_SELECTOR);
+        const input = root.querySelector(NAME_INPUT_SELECTOR);
         if (input) input.value = "";
         applyNameSearch(root);
       });
-      return;
-    }
-    if (event.target?.closest?.("[data-clear-productive-filters]")) {
-      productiveNameQuery = "";
+    } else if (event.target?.closest?.("[data-clear-productive-filters]")) {
+      nameQuery = "";
     }
   }, true);
 
   root.addEventListener("change", event => {
-    const select = event.target?.closest?.(STAGE_CONTROL_SELECTOR);
+    const select = event.target?.closest?.(STAGE_SELECTOR);
     if (!select) return;
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    void persistStageChange(root, select);
+    void persistStage(root, select);
   }, true);
 
   const observer = new windowRef.MutationObserver(mutations => {
-    if (!mutations.some(mutation => mutation.type === "childList")) return;
-    scheduleReconciliation(root);
+    if (mutations.some(mutation => mutation.type === "childList")) schedule(root);
   });
   observer.observe(root, { childList: true, subtree: true });
-  scheduleReconciliation(root);
+  schedule(root);
 
   const api = Object.freeze({
     installed: true,
