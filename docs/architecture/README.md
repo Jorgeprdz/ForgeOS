@@ -38,13 +38,16 @@ Official architecture documentation index.
 ## Advisor OS / Productive Pipeline
 
 - [Pipeline Stage Persistence In-Place Closure 067G17B4](source-truth/PIPELINE_STAGE_PERSISTENCE_IN_PLACE_CLOSURE_067G17B4.md)
+- [Pipeline Stage Persistence In-Place Certificate 067G17B4](../evidence/PIPELINE_STAGE_PERSISTENCE_IN_PLACE_CERTIFICATE_067G17B4.md)
+- [Pipeline Google Calendar Draft Handoff Closure 067G17B5](source-truth/PIPELINE_GOOGLE_CALENDAR_DRAFT_HANDOFF_CLOSURE_067G17B5.md)
+- [Pipeline Google Calendar Draft Handoff Certificate 067G17B5](../evidence/PIPELINE_GOOGLE_CALENDAR_DRAFT_HANDOFF_CERTIFICATE_067G17B5.md)
 - [Current Implemented Build Tree 002](source-truth/FORGE_CURRENT_IMPLEMENTED_BUILD_TREE_002.md)
 - [Unified Build Tree 002 — Advisor Pipeline Lock](source-truth/FORGE_UNIFIED_BUILD_TREE_002_ADVISOR_PIPELINE_LOCK.md)
-- [Pipeline Stage Persistence In-Place Certificate 067G17B4](../evidence/PIPELINE_STAGE_PERSISTENCE_IN_PLACE_CERTIFICATE_067G17B4.md)
 
 ## Operating References
 
 - [AGENTS.md](../../AGENTS.md)
 - [Forge Master Build Tree](../../FORGE_MASTER_BUILD_TREE.md)
 - [Current Implemented Build Tree 002](source-truth/FORGE_CURRENT_IMPLEMENTED_BUILD_TREE_002.md)
-- [Unified Advisor Pipeline Tree Amendment 067G17B4](source-truth/FORGE_UNIFIED_BUILD_TREE_002_ADVISOR_PIPELINE_LOCK.md)
+- [Unified Advisor Pipeline Tree Amendment 067G17B4 + 067G17B5](source-truth/FORGE_UNIFIED_BUILD_TREE_002_ADVISOR_PIPELINE_LOCK.md)
+- [Build Tree Update Report](../02-build-tree/BUILD_TREE_UPDATE_REPORT.txt)

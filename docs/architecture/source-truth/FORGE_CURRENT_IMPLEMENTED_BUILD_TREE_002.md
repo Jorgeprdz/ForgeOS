@@ -11,7 +11,7 @@ Inheritance rule: all branches not explicitly changed below retain their status 
 ## Status Vocabulary
 
 - IMPLEMENTED_AND_CLOSED: implementation and closure evidence exist.
-- PRODUCTION_ACCEPTED: authenticated production path and public deployment evidence exist.
+- PRODUCTION_ACCEPTED: authenticated or public production path and human acceptance evidence exist.
 - LOCKED: behavior is a protected regression contract.
 - PARTIAL: some implementation exists, branch-level closure incomplete.
 - PENDING: planned or future work.
@@ -68,33 +68,66 @@ Inheritance rule: all branches not explicitly changed below retain their status 
 ├── Prospect Create Canonical Modal 067G17B3
 │   └── PRODUCTION_ACCEPTED
 │
-└── Productive Pipeline Stage Persistence In-Place 067G17B4
+├── Productive Pipeline Stage Persistence In-Place 067G17B4
+│   ├── PRODUCTION_ACCEPTED / LOCKED
+│   ├── Authenticated owner-only RPC
+│   │   └── forge_pipeline_update_prospect_stage
+│   ├── Allowed Stage validation
+│   │   └── fail-closed
+│   ├── Timeline evidence
+│   │   └── STAGE_CHANGED append-only event
+│   ├── Timeline digest search-path repair
+│   │   └── pgcrypto schema resolution verified
+│   ├── UI commit mode
+│   │   └── same card DOM node updated in place
+│   ├── Authentication behavior
+│   │   ├── no auth refresh event during save
+│   │   └── no AUTH_LOADING during save
+│   ├── Filter behavior
+│   │   ├── Source and Stage filters apply in place
+│   │   ├── same card nodes retained
+│   │   └── combined/empty/count states verified
+│   ├── Reconciliation
+│   │   └── deferred until route exit or tab backgrounding
+│   ├── Public runtime
+│   │   ├── canonical Material 3 route only
+│   │   ├── legacy UI absent
+│   │   └── legacy service worker retired
+│   └── Public acceptance SHA
+│       └── 5fca4409457022c59c04937da52de83488a352e2
+│
+└── Productive Pipeline Google Calendar Draft Handoff 067G17B5
     ├── PRODUCTION_ACCEPTED / LOCKED
-    ├── Authenticated owner-only RPC
-    │   └── forge_pipeline_update_prospect_stage
-    ├── Allowed Stage validation
-    │   └── fail-closed
-    ├── Timeline evidence
-    │   └── STAGE_CHANGED append-only event
-    ├── Timeline digest search-path repair
-    │   └── pgcrypto schema resolution verified
-    ├── UI commit mode
-    │   └── same card DOM node updated in place
-    ├── Authentication behavior
-    │   ├── no auth refresh event during save
-    │   └── no AUTH_LOADING during save
-    ├── Filter behavior
-    │   ├── Source and Stage filters apply in place
-    │   ├── same card nodes retained
-    │   └── combined/empty/count states verified
-    ├── Reconciliation
-    │   └── deferred until route exit or tab backgrounding
-    ├── Public runtime
-    │   ├── canonical Material 3 route only
-    │   ├── legacy UI absent
-    │   └── legacy service worker retired
-    └── Public acceptance SHA
-        └── 5fca4409457022c59c04937da52de83488a352e2
+    ├── Productive entry
+    │   └── Agendar action on the Material 3 prospect card
+    ├── Scheduling workspace
+    │   ├── date
+    │   ├── local time
+    │   ├── bounded duration
+    │   └── responsive mobile safe-area behavior
+    ├── Runtime authority
+    │   └── pipeline-google-calendar.js
+    ├── Handoff target
+    │   └── calendar.google.com/calendar/render
+    ├── Time zone
+    │   └── America/Mexico_City
+    ├── Context
+    │   └── prospect and Pipeline context prefilled for review
+    ├── Approval authority
+    │   └── advisor reviews and saves in Google Calendar
+    ├── Explicit non-authorities
+    │   ├── no OAuth or Google tokens
+    │   ├── no event-saved confirmation
+    │   ├── no automatic Stage mutation
+    │   ├── no automatic Timeline event
+    │   ├── no automatic task or message send
+    │   └── no legacy Calendar UI revival
+    ├── Public runtime cache authority
+    │   └── pipeline-google-calendar-001
+    ├── Human production acceptance
+    │   └── PASS
+    └── Accepted public runtime SHA
+        └── 831118409b038931d5eec83b0c8948d2852c1047
 ```
 
 ## 067G17B4 Evidence Anchors
@@ -108,12 +141,25 @@ Inheritance rule: all branches not explicitly changed below retain their status 
 - `tests/pipeline-stage-rpc-authority-regression.mjs`
 - `tools/manual-ui-stability-check.mjs`
 
+## 067G17B5 Evidence Anchors
+
+- `docs/architecture/source-truth/PIPELINE_GOOGLE_CALENDAR_DRAFT_HANDOFF_CLOSURE_067G17B5.md`
+- `docs/evidence/PIPELINE_GOOGLE_CALENDAR_DRAFT_HANDOFF_CERTIFICATE_067G17B5.md`
+- `docs/static-preview/forge-alive-material3/pipeline-google-calendar.js`
+- `docs/static-preview/forge-alive-material3/pipeline-google-calendar.css`
+- `tests/pipeline-google-calendar-regression.mjs`
+- PR #43 and PR #44.
+
 ## Locked Boundaries
 
 - Stage persistence may not return to preview-only behavior.
 - A successful Stage save may not reconstruct the Pipeline module.
 - The prospect Source may not be mutated by a Stage transition.
-- UI success requires the RPC-confirmed row.
+- UI Stage success requires the RPC-confirmed row.
 - Filters may not restore stale Stage memory.
-- Automatic messaging, appointment creation and action execution remain separate authorities.
-- The mobile navigation pill remains intentionally floating; mobile content must preserve bottom safe space.
+- `Agendar` may open only a reviewable Google Calendar draft under 067G17B5.
+- Opening a Calendar draft may not be reported as a saved event.
+- The draft handoff may not mutate Stage, Timeline, tasks or messages.
+- OAuth, token custody and bidirectional Calendar synchronization remain separate future authorities.
+- Automatic messaging and automatic action execution remain separate authorities.
+- The mobile navigation pill remains intentionally floating; mobile content and workspaces must preserve bottom safe space.
