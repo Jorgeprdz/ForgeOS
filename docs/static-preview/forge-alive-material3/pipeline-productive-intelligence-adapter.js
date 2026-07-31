@@ -227,7 +227,6 @@ export async function createProductiveIntelligenceAdapter(options = {}) {
         } : null,
         timeline,
         timelineState,
-        intelligenceLabel: "Asistencia de conversación disponible",
         prospect,
       });
     }));

@@ -100,7 +100,6 @@ try {
             </label>
             <div class="pipeline-module__productive-status" data-productive-card-status>
               <p><span>Última actividad</span><strong>Sin actividad verificada</strong></p>
-              <p><span>Asistencia</span><strong>Asistencia de conversación disponible</strong></p>
             </div>
             <div class="pipeline-module__card-actions" data-productive-card-actions aria-label="Acciones del prospecto">
               <button class="pipeline-module__action--context" type="button" data-test-workspace="context">Ver contexto</button>
