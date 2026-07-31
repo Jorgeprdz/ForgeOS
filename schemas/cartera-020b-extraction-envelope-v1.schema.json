@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forgeos.local/schemas/cartera-020b-extraction-envelope-v1.schema.json",
+  "title": "CARTERA 020B Provider-neutral Extraction Envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provider", "providerVersion", "method", "status", "sourceDigest",
+    "pageCount", "text", "warnings", "errors", "startedAt", "completedAt", "createsTruth"
+  ],
+  "properties": {
+    "provider": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "providerVersion": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "method": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "status": { "enum": ["COMPLETE", "EMPTY", "FAILED", "UNSUPPORTED", "REVIEW_REQUIRED"] },
+    "sourceDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "pageCount": { "type": ["integer", "null"], "minimum": 0 },
+    "text": { "type": ["string", "null"] },
+    "warnings": { "type": "array" },
+    "errors": { "type": "array" },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "createsTruth": { "const": false }
+  }
+}
