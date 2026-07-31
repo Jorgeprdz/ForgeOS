@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Use Node 22
         uses: actions/setup-node@v4
@@ -38,4 +40,4 @@ jobs:
         run: node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
 
       - name: Diff integrity
-        run: git diff --check HEAD^
+        run: git diff --check HEAD^1...HEAD
