@@ -1,0 +1,15 @@
+.pipeline-module__productive-name {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  justify-content: stretch;
+  width: 100%;
+}
+
+.pipeline-module__productive-name > strong {
+  width: 100%;
+}
+
+.pipeline-module__identity-actions {
+  justify-content: flex-start;
+}

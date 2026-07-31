@@ -4,12 +4,23 @@ import { createQuotesModule } from "./quotes-module-complete.js?v=manual-quotes-
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-010";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
+import "./pipeline-prospect-admin.js?v=pipeline-prospect-admin-001";
+import "./pipeline-action-identity.js?v=pipeline-action-identity-001";
+import "./pipeline-context-journal.js?v=pipeline-context-journal-002";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
 const legacyBase = new URL(sourceLayout ? "../forge-alive/" : "../forge-alive-runtime/", import.meta.url);
 const advisorBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
 const loadAuthority = async (base, path) => import(new URL(path, base));
+
+if (!document.querySelector("[data-pipeline-prospect-admin-styles]")) {
+  const adminStyles = document.createElement("link");
+  adminStyles.rel = "stylesheet";
+  adminStyles.href = new URL("pipeline-prospect-admin.css?v=pipeline-prospect-admin-001", import.meta.url);
+  adminStyles.dataset.pipelineProspectAdminStyles = "true";
+  document.head.append(adminStyles);
+}
 
 await loadAuthority(envBase, "env.js");
 await loadAuthority(legacyBase, "forge-alive-public-config-067g17a1.js");

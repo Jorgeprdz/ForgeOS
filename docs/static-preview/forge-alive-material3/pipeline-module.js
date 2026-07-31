@@ -935,7 +935,6 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
                       <strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong>
                     </p>
                     ${card.nextCommitment ? `<p><span>Próximo compromiso</span><strong>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</strong></p>` : ""}
-                    <p><span>Asistencia</span><strong>${escapeHtml(card.intelligenceLabel || "Disponible al solicitarla")}</strong></p>
                   </div>
                   <div class="pipeline-module__card-actions" data-productive-card-actions aria-label="Acciones del prospecto">
                     <button class="pipeline-module__action--context" type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>

@@ -291,7 +291,9 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.doesNotMatch(source, /card\.intelligenceState/);
   assert.doesNotMatch(source, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
   assert.doesNotMatch(adapter, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
-  assert.match(adapter, /intelligenceLabel:\s*"Asistencia de conversación disponible"/);
+  assert.doesNotMatch(source, /<span>Asistencia<\/span>/);
+  assert.doesNotMatch(source, /card\.intelligenceLabel/);
+  assert.doesNotMatch(adapter, /intelligenceLabel/);
   assert.match(adapter, /referred_new:\s*"Nuevo"/);
   assert.match(adapter, /value:\s*"referred_new",\s*label:\s*"Nuevo"/);
   for (const [value, label] of [

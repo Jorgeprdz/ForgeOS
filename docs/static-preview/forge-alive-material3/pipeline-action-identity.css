@@ -1,0 +1,116 @@
+:root {
+  --pipeline-whatsapp: #25d366;
+  --pipeline-whatsapp-ink: #d9ffe6;
+  --pipeline-phone: #5ea2ff;
+  --pipeline-phone-ink: #d7e8ff;
+  --pipeline-calendar: #f4f7ff;
+  --pipeline-calendar-ink: #f4f7ff;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand] {
+  gap: 7px;
+  isolation: isolate;
+}
+
+.pipeline-module__action-icon {
+  width: 17px;
+  height: 17px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 17px;
+  line-height: 0;
+}
+
+.pipeline-module__action-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="whatsapp"] {
+  border-color: color-mix(in srgb, var(--pipeline-whatsapp) 66%, transparent);
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--pipeline-whatsapp) 25%, transparent),
+      color-mix(in srgb, var(--pipeline-whatsapp) 12%, transparent));
+  color: var(--pipeline-whatsapp-ink);
+  box-shadow:
+    0 6px 16px color-mix(in srgb, var(--pipeline-whatsapp) 15%, transparent),
+    inset 0 1px color-mix(in srgb, white 16%, transparent);
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="whatsapp"]:hover,
+.pipeline-module__card-actions [data-pipeline-action-brand="whatsapp"]:focus-visible {
+  border-color: color-mix(in srgb, var(--pipeline-whatsapp) 86%, white);
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--pipeline-whatsapp) 34%, transparent),
+      color-mix(in srgb, var(--pipeline-whatsapp) 19%, transparent));
+  color: #effff4;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="whatsapp"]:focus-visible {
+  outline: 2px solid var(--pipeline-whatsapp);
+  outline-offset: 2px;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="phone"] {
+  border-color: color-mix(in srgb, var(--pipeline-phone) 68%, transparent);
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--pipeline-phone) 24%, transparent),
+      color-mix(in srgb, var(--pipeline-phone) 11%, transparent));
+  color: var(--pipeline-phone-ink);
+  box-shadow:
+    0 6px 16px color-mix(in srgb, var(--pipeline-phone) 14%, transparent),
+    inset 0 1px color-mix(in srgb, white 14%, transparent);
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="phone"]:hover,
+.pipeline-module__card-actions [data-pipeline-action-brand="phone"]:focus-visible {
+  border-color: color-mix(in srgb, var(--pipeline-phone) 86%, white);
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--pipeline-phone) 34%, transparent),
+      color-mix(in srgb, var(--pipeline-phone) 18%, transparent));
+  color: #f3f8ff;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="phone"]:focus-visible {
+  outline: 2px solid var(--pipeline-phone);
+  outline-offset: 2px;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="calendar"] {
+  border-color: color-mix(in srgb, var(--pipeline-calendar) 34%, transparent);
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--pipeline-calendar) 11%, transparent),
+      color-mix(in srgb, var(--pipeline-calendar) 5%, transparent));
+  color: var(--pipeline-calendar-ink);
+  box-shadow: inset 0 1px color-mix(in srgb, white 12%, transparent);
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="calendar"]:not(:disabled):hover,
+.pipeline-module__card-actions [data-pipeline-action-brand="calendar"]:focus-visible {
+  border-color: color-mix(in srgb, var(--pipeline-calendar) 60%, transparent);
+  background: color-mix(in srgb, var(--pipeline-calendar) 15%, transparent);
+  color: white;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="calendar"]:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--pipeline-calendar) 78%, #7fa7ff);
+  outline-offset: 2px;
+}
+
+.pipeline-module__card-actions [data-pipeline-action-brand="calendar"]:disabled {
+  opacity: .68;
+  cursor: not-allowed;
+  filter: saturate(.55);
+}
+
+@media (max-width: 759px) {
+  .pipeline-module__card-actions [data-pipeline-action-brand] {
+    min-height: 40px;
+  }
+}
