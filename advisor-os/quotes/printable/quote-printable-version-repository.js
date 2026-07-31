@@ -1,6 +1,4 @@
-import {
-  QUOTE_PRINTABLE_READ_MODEL_TYPE,
-} from "./quote-printable-read-model.js";
+import { QUOTE_PRINTABLE_READ_MODEL_TYPE } from "./quote-printable-read-model.js";
 import {
   PRODUCT_PROFILE_TYPE,
   buildProductSpecificQuotePrintableDocument,
@@ -14,17 +12,9 @@ const QUOTE_PRINTABLE_VERSION_TYPE = "FORGE_QUOTE_PRINTABLE_VERSION_RECORD";
 const CONTRACT_VERSION = "QPD05_VERSION_REPOSITORY_V1";
 const STORAGE_SCHEMA_VERSION = 1;
 const DEFAULT_STORAGE_KEY = "forge:qpd05:quote-printable-versions:v1";
-
 const FORBIDDEN_KEYS = new Set([
-  "arraybuffer",
-  "base64",
-  "binary",
-  "blob",
-  "bytes",
-  "dataurl",
-  "html",
-  "pdfbytes",
-  "rawpdf",
+  "arraybuffer", "base64", "binary", "blob", "bytes",
+  "dataurl", "html", "pdfbytes", "rawpdf",
 ]);
 
 class QuotePrintableRepositoryError extends Error {
@@ -44,45 +34,35 @@ function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function normalizeKey(value) {
+function normalizedKey(value) {
   return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 function cloneJson(value, path = "root", seen = new WeakSet()) {
-  if (
-    value === null ||
-    typeof value === "string" ||
-    typeof value === "boolean"
-  ) return value;
-
+  if (value === null || ["string", "boolean"].includes(typeof value)) return value;
   if (typeof value === "number") {
     if (!Number.isFinite(value)) fail("NON_FINITE_NUMBER", `Non-finite number at ${path}`);
     return value;
   }
-
   if (typeof value === "undefined") fail("UNDEFINED_VALUE", `Undefined value at ${path}`);
   if (["function", "symbol", "bigint"].includes(typeof value)) {
     fail("NON_JSON_VALUE", `Non-JSON value at ${path}`);
   }
-  if (
-    typeof ArrayBuffer !== "undefined" &&
-    (value instanceof ArrayBuffer || ArrayBuffer.isView?.(value))
-  ) {
+  if (typeof ArrayBuffer !== "undefined" &&
+      (value instanceof ArrayBuffer || ArrayBuffer.isView?.(value))) {
     fail("BINARY_VALUE", `Binary value at ${path}`);
   }
   if (seen.has(value)) fail("CIRCULAR_VALUE", `Circular value at ${path}`);
   seen.add(value);
-
   if (Array.isArray(value)) {
     const output = value.map((item, index) => cloneJson(item, `${path}[${index}]`, seen));
     seen.delete(value);
     return output;
   }
   if (!isRecord(value)) fail("NON_PLAIN_OBJECT", `Non-plain object at ${path}`);
-
   const output = {};
   for (const [key, item] of Object.entries(value)) {
-    if (FORBIDDEN_KEYS.has(normalizeKey(key))) {
+    if (FORBIDDEN_KEYS.has(normalizedKey(key))) {
       fail("FORBIDDEN_PERSISTED_KEY", `Forbidden persisted key at ${path}.${key}`);
     }
     output[key] = cloneJson(item, `${path}.${key}`, seen);
@@ -94,7 +74,7 @@ function cloneJson(value, path = "root", seen = new WeakSet()) {
 function deepFreeze(value, seen = new WeakSet()) {
   if (!value || typeof value !== "object" || seen.has(value)) return value;
   seen.add(value);
-  for (const item of Object.values(value)) deepFreeze(item, seen);
+  Object.values(value).forEach((item) => deepFreeze(item, seen));
   return Object.freeze(value);
 }
 
@@ -123,26 +103,20 @@ function fnv1a32(text, seed) {
 
 function stableDigest(value) {
   const text = typeof value === "string" ? value : stableStringify(value);
-  const seeds = [
-    2166136261,
-    2166136261 ^ 0x9e3779b9,
-    2166136261 ^ 0x85ebca6b,
-    2166136261 ^ 0xc2b2ae35,
-    2166136261 ^ 0x27d4eb2f,
-    2166136261 ^ 0x165667b1,
-    2166136261 ^ 0xd3a2646c,
-    2166136261 ^ 0xfd7046c5,
-  ];
-  return seeds.map((seed) => fnv1a32(text, seed)).join("");
+  return [
+    2166136261, 2166136261 ^ 0x9e3779b9,
+    2166136261 ^ 0x85ebca6b, 2166136261 ^ 0xc2b2ae35,
+    2166136261 ^ 0x27d4eb2f, 2166136261 ^ 0x165667b1,
+    2166136261 ^ 0xd3a2646c, 2166136261 ^ 0xfd7046c5,
+  ].map((seed) => fnv1a32(text, seed)).join("");
 }
 
 function opaque(value, code, label, maximum = 240) {
   const normalized = String(value || "").trim();
-  if (
-    !normalized ||
-    normalized.length > maximum ||
-    !/^[A-Za-z0-9][A-Za-z0-9._:@/-]*$/.test(normalized)
-  ) fail(code, `${label} is invalid`);
+  if (!normalized || normalized.length > maximum ||
+      !/^[A-Za-z0-9][A-Za-z0-9._:@/-]*$/.test(normalized)) {
+    fail(code, `${label} is invalid`);
+  }
   return normalized;
 }
 
@@ -157,75 +131,53 @@ function normalizeQuoteIdentity(value) {
   if (!isRecord(value)) fail("QUOTE_IDENTITY_REQUIRED", "Durable Quote identity is required");
   return {
     quoteReference: opaque(value.quoteReference, "QUOTE_REFERENCE_INVALID", "Quote reference"),
-    quoteVersionReference: opaque(
-      value.quoteVersionReference,
-      "QUOTE_VERSION_REFERENCE_INVALID",
-      "Quote version reference",
-    ),
-    prospectReference: opaque(
-      value.prospectReference,
-      "PROSPECT_REFERENCE_INVALID",
-      "Prospect reference",
-    ),
-    productReference: opaque(
-      value.productReference,
-      "PRODUCT_REFERENCE_INVALID",
-      "Product reference",
-    ),
-    quoteSnapshotDigest: opaque(
-      value.quoteSnapshotDigest,
-      "QUOTE_SNAPSHOT_DIGEST_INVALID",
-      "Quote snapshot digest",
-      128,
-    ),
+    quoteVersionReference: opaque(value.quoteVersionReference,
+      "QUOTE_VERSION_REFERENCE_INVALID", "Quote version reference"),
+    prospectReference: opaque(value.prospectReference,
+      "PROSPECT_REFERENCE_INVALID", "Prospect reference"),
+    productReference: opaque(value.productReference,
+      "PRODUCT_REFERENCE_INVALID", "Product reference"),
+    quoteSnapshotDigest: opaque(value.quoteSnapshotDigest,
+      "QUOTE_SNAPSHOT_DIGEST_INVALID", "Quote snapshot digest", 128),
   };
 }
 
-function assertReadModel(readModel) {
-  if (!isRecord(readModel) || readModel.packetType !== QUOTE_PRINTABLE_READ_MODEL_TYPE) {
+function assertReadModel(value) {
+  if (!isRecord(value) || value.packetType !== QUOTE_PRINTABLE_READ_MODEL_TYPE ||
+      value.status !== "READY_FOR_DOCUMENT_COMPOSITION" ||
+      value.productProfile?.packetType !== PRODUCT_PROFILE_TYPE) {
     fail("READ_MODEL_INVALID", "Product-profiled printable read model is required");
   }
-  if (readModel.status !== "READY_FOR_DOCUMENT_COMPOSITION") {
-    fail("READ_MODEL_NOT_READY", "Printable read model is not ready");
-  }
-  if (readModel.productProfile?.packetType !== PRODUCT_PROFILE_TYPE) {
-    fail("PRODUCT_PROFILE_REQUIRED", "Product profile is required before persistence");
-  }
-  return readModel;
+  return value;
 }
 
-function assertDocument(document) {
-  if (!isRecord(document) || document.status !== "READY_FOR_HUMAN_PRINT_OR_PDF") {
+function assertDocument(value) {
+  if (!isRecord(value) || value.status !== "PRINTABLE_HTML_READY") {
     fail("PRINTABLE_DOCUMENT_INVALID", "Composed printable document is required");
   }
-  return document;
+  return value;
 }
 
-function assertPdfPacket(pdfPacket) {
-  if (!isRecord(pdfPacket) || pdfPacket.packetType !== QUOTE_PRINTABLE_PDF_TYPE) {
+function assertPdfPacket(value) {
+  if (!isRecord(value) || value.packetType !== QUOTE_PRINTABLE_PDF_TYPE ||
+      value.status !== "PDF_BINARY_READY") {
     fail("PDF_PACKET_INVALID", "Real PDF packet is required");
   }
-  if (pdfPacket.status !== "PDF_BINARY_READY") {
-    fail("PDF_PACKET_NOT_READY", "PDF packet is not ready");
-  }
-  return pdfPacket;
+  return value;
 }
 
 function recordPayload(record) {
-  const copy = cloneJson(record);
-  delete copy.recordDigest;
-  return copy;
+  const payload = cloneJson(record);
+  delete payload.recordDigest;
+  return payload;
 }
 
 function assertVersionRecord(record) {
-  if (!isRecord(record) || record.packetType !== QUOTE_PRINTABLE_VERSION_TYPE) {
+  if (!isRecord(record) || record.packetType !== QUOTE_PRINTABLE_VERSION_TYPE ||
+      record.contractVersion !== CONTRACT_VERSION) {
     fail("VERSION_RECORD_INVALID", "Unsupported printable version record");
   }
-  if (record.contractVersion !== CONTRACT_VERSION) {
-    fail("VERSION_CONTRACT_INVALID", "Printable version contract mismatch");
-  }
-  const expected = stableDigest(recordPayload(record));
-  if (record.recordDigest !== expected) {
+  if (stableDigest(recordPayload(record)) !== record.recordDigest) {
     fail("VERSION_DIGEST_MISMATCH", "Printable version record digest mismatch");
   }
   assertReadModel(record.readModelSnapshot);
@@ -234,37 +186,26 @@ function assertVersionRecord(record) {
 }
 
 function createQuotePrintableVersionRecord({
-  quoteIdentity,
-  readModel,
-  printableDocument,
-  pdfPacket,
-  generatedAt,
-  persistedAt = new Date().toISOString(),
+  quoteIdentity, readModel, printableDocument, pdfPacket,
+  generatedAt, persistedAt = new Date().toISOString(),
 } = {}) {
   const identity = normalizeQuoteIdentity(quoteIdentity);
   assertReadModel(readModel);
   assertDocument(printableDocument);
   assertPdfPacket(pdfPacket);
-
-  if (
-    printableDocument.sourceDocumentId !== readModel.documentId ||
-    printableDocument.sourceRevisionHash !== readModel.sourceRevisionHash ||
-    pdfPacket.sourceDocumentId !== readModel.documentId ||
-    pdfPacket.sourceRevisionHash !== readModel.sourceRevisionHash
-  ) {
+  if ([printableDocument, pdfPacket].some((item) =>
+    item.sourceDocumentId !== readModel.documentId ||
+    item.sourceRevisionHash !== readModel.sourceRevisionHash)) {
     fail("SOURCE_REVISION_MISMATCH", "Printable assets do not share the same source revision");
   }
   if (pdfPacket.fileName !== printableDocument.fileName) {
     fail("FILE_NAME_MISMATCH", "Printable document and PDF filename mismatch");
   }
-
   const generated = iso(generatedAt, "GENERATED_AT_INVALID", "Generation time");
   const persisted = iso(persistedAt, "PERSISTED_AT_INVALID", "Persistence time");
   if (Date.parse(persisted) < Date.parse(generated)) {
     fail("PERSISTED_BEFORE_GENERATED", "Persistence time cannot precede generation time");
   }
-
-  const snapshot = cloneJson(readModel, "readModelSnapshot");
   const versionSeed = {
     quoteVersionReference: identity.quoteVersionReference,
     sourceRevisionHash: readModel.sourceRevisionHash,
@@ -273,7 +214,6 @@ function createQuotePrintableVersionRecord({
     generatedAt: generated,
     pdfBinaryRevisionHash: pdfPacket.binaryRevisionHash,
   };
-
   const base = {
     packetType: QUOTE_PRINTABLE_VERSION_TYPE,
     contractVersion: CONTRACT_VERSION,
@@ -291,7 +231,7 @@ function createQuotePrintableVersionRecord({
     pageFormat: printableDocument.pageFormat,
     generatedAt: generated,
     persistedAt: persisted,
-    readModelSnapshot: snapshot,
+    readModelSnapshot: cloneJson(readModel, "readModelSnapshot"),
     renderManifest: {
       printableReadModelContractVersion: readModel.contractVersion,
       documentContractVersion: printableDocument.contractVersion,
@@ -320,28 +260,14 @@ function createQuotePrintableVersionRecord({
       humanReviewRequired: true,
     },
   };
-
-  const record = {
-    ...base,
-    recordDigest: stableDigest(base),
-  };
-  return assertVersionRecord(record);
+  return assertVersionRecord({ ...base, recordDigest: stableDigest(base) });
 }
 
 function createMemoryStore(initialRecords = []) {
-  const records = new Map();
-  for (const record of initialRecords) {
-    const validated = assertVersionRecord(record);
-    records.set(validated.printableVersionReference, validated);
-  }
+  let records = initialRecords.map(assertVersionRecord);
   return {
-    readAll() {
-      return [...records.values()].map((record) => cloneJson(record));
-    },
-    writeAll(next) {
-      records.clear();
-      for (const record of next) records.set(record.printableVersionReference, assertVersionRecord(record));
-    },
+    readAll: () => records.map(cloneJson),
+    writeAll: (next) => { records = next.map(assertVersionRecord); },
   };
 }
 
@@ -354,12 +280,10 @@ function createLocalStorageStore({ storage, storageKey = DEFAULT_STORAGE_KEY } =
       const raw = storage.getItem(storageKey);
       if (!raw) return [];
       let parsed;
-      try {
-        parsed = JSON.parse(raw);
-      } catch {
-        fail("LOCAL_STORAGE_CORRUPTED", "Stored printable versions are corrupted");
-      }
-      if (!isRecord(parsed) || parsed.schemaVersion !== STORAGE_SCHEMA_VERSION || !Array.isArray(parsed.records)) {
+      try { parsed = JSON.parse(raw); }
+      catch { fail("LOCAL_STORAGE_CORRUPTED", "Stored printable versions are corrupted"); }
+      if (!isRecord(parsed) || parsed.schemaVersion !== STORAGE_SCHEMA_VERSION ||
+          !Array.isArray(parsed.records)) {
         fail("LOCAL_STORAGE_SCHEMA_INVALID", "Stored printable version schema is invalid");
       }
       return parsed.records;
@@ -374,73 +298,40 @@ function createLocalStorageStore({ storage, storageKey = DEFAULT_STORAGE_KEY } =
 }
 
 function createQuotePrintableVersionRepository({ store = createMemoryStore() } = {}) {
-  if (!store?.readAll || !store?.writeAll) {
-    fail("STORE_REQUIRED", "A printable version store is required");
-  }
-
-  function readValidated() {
+  if (!store?.readAll || !store?.writeAll) fail("STORE_REQUIRED", "A version store is required");
+  const read = () => {
     const records = store.readAll();
     if (!Array.isArray(records)) fail("STORE_PAYLOAD_INVALID", "Store payload must be an array");
     return records.map(assertVersionRecord);
-  }
-
-  function append(record) {
+  };
+  const append = (record) => {
     const validated = assertVersionRecord(record);
-    const records = readValidated();
-    const existing = records.find(
-      (item) => item.printableVersionReference === validated.printableVersionReference,
-    );
+    const records = read();
+    const existing = records.find((item) =>
+      item.printableVersionReference === validated.printableVersionReference);
     if (existing) {
       if (existing.recordDigest !== validated.recordDigest) {
-        fail("APPEND_CONFLICT", "Printable version reference already exists with different content");
+        fail("APPEND_CONFLICT", "Version reference exists with different content");
       }
       return deepFreeze({ status: "IDEMPOTENT_REPLAY", record: existing });
     }
-    if (records.some((item) => item.recordDigest === validated.recordDigest)) {
-      fail("DUPLICATE_RECORD_DIGEST", "Equivalent printable version already exists with another reference");
-    }
     store.writeAll([...records, validated]);
     return deepFreeze({ status: "APPENDED", record: validated });
-  }
-
-  function get(printableVersionReference) {
-    const reference = opaque(
-      printableVersionReference,
-      "PRINTABLE_VERSION_REFERENCE_INVALID",
-      "Printable version reference",
-    );
-    const record = readValidated().find((item) => item.printableVersionReference === reference);
-    return record || null;
-  }
-
-  function listByQuote(quoteReference) {
-    const reference = opaque(quoteReference, "QUOTE_REFERENCE_INVALID", "Quote reference");
-    return deepFreeze(
-      readValidated()
-        .filter((item) => item.quoteIdentity.quoteReference === reference)
-        .sort((a, b) => Date.parse(b.persistedAt) - Date.parse(a.persistedAt)),
-    );
-  }
-
-  function latestByQuote(quoteReference) {
-    return listByQuote(quoteReference)[0] || null;
-  }
-
-  function remove() {
-    fail("APPEND_ONLY_DELETE_DENIED", "Printable versions are append-only");
-  }
-
-  function replace() {
-    fail("APPEND_ONLY_UPDATE_DENIED", "Printable versions are append-only");
-  }
-
+  };
+  const get = (reference) => read().find((item) =>
+    item.printableVersionReference === opaque(reference,
+      "PRINTABLE_VERSION_REFERENCE_INVALID", "Printable version reference")) || null;
+  const listByQuote = (reference) => deepFreeze(read()
+    .filter((item) => item.quoteIdentity.quoteReference === opaque(reference,
+      "QUOTE_REFERENCE_INVALID", "Quote reference"))
+    .sort((a, b) => Date.parse(b.persistedAt) - Date.parse(a.persistedAt)));
   return deepFreeze({
     append,
     get,
     listByQuote,
-    latestByQuote,
-    remove,
-    replace,
+    latestByQuote: (reference) => listByQuote(reference)[0] || null,
+    remove: () => fail("APPEND_ONLY_DELETE_DENIED", "Printable versions are append-only"),
+    replace: () => fail("APPEND_ONLY_UPDATE_DENIED", "Printable versions are append-only"),
     diagnostics: () => deepFreeze({
       contractVersion: CONTRACT_VERSION,
       storageSchemaVersion: STORAGE_SCHEMA_VERSION,
@@ -465,20 +356,17 @@ function reopenQuotePrintableVersion({ record } = {}) {
     generatedAt: validated.generatedAt,
     title: readModel.productProfile.documentTitle,
   });
-
   const manifest = validated.renderManifest;
-  const mismatches = [];
-  if (printableDocument.fileName !== manifest.fileName) mismatches.push("fileName");
-  if (pdfPacket.binaryRevisionHash !== manifest.binaryRevisionHash) mismatches.push("binaryRevisionHash");
-  if (pdfPacket.pageCount !== manifest.pageCount) mismatches.push("pageCount");
-  if (pdfPacket.byteLength !== manifest.byteLength) mismatches.push("byteLength");
-  if (pdfPacket.contractVersion !== manifest.pdfContractVersion) mismatches.push("pdfContractVersion");
+  const mismatches = [
+    ["fileName", printableDocument.fileName, manifest.fileName],
+    ["binaryRevisionHash", pdfPacket.binaryRevisionHash, manifest.binaryRevisionHash],
+    ["pageCount", pdfPacket.pageCount, manifest.pageCount],
+    ["byteLength", pdfPacket.byteLength, manifest.byteLength],
+    ["pdfContractVersion", pdfPacket.contractVersion, manifest.pdfContractVersion],
+  ].filter(([, actual, expected]) => actual !== expected).map(([key]) => key);
   if (mismatches.length) {
-    fail("REOPEN_RENDER_MISMATCH", "Reopened printable version does not match its stored manifest", {
-      mismatches,
-    });
+    fail("REOPEN_RENDER_MISMATCH", "Reopened version does not match its manifest", { mismatches });
   }
-
   return deepFreeze({
     status: "REOPENED_EXACT_REVISION",
     record: validated,
