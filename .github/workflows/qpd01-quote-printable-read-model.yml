@@ -8,10 +8,18 @@ on:
       - "advisor-os/quotes/**"
       - "docs/static-preview/quote-printable-runtime/**"
       - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.*"
+      - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
+      - "tests/ui-m05e-quote-calculator-restoration-test.mjs"
+      - "tests/ui-m05f-live-udi-review-printable-actions-test.mjs"
+      - "tests/ui-m05g-printable-design-closure-test.mjs"
       - "tests/e2e/qpd06-browser-acceptance.spec.mjs"
       - "tests/e2e/fixtures/qpd06/**"
       - "playwright.qpd06.config.mjs"
+      - "exchange-rate-cache-engine.js"
+      - "tools/forge-local-live-server.cjs"
       - "supabase/migrations/20260730000200_qpd05_printable_quote_versions.sql"
       - ".github/workflows/qpd01-quote-printable-read-model.yml"
   pull_request:
@@ -19,10 +27,18 @@ on:
       - "advisor-os/quotes/**"
       - "docs/static-preview/quote-printable-runtime/**"
       - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.*"
+      - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
+      - "tests/ui-m05e-quote-calculator-restoration-test.mjs"
+      - "tests/ui-m05f-live-udi-review-printable-actions-test.mjs"
+      - "tests/ui-m05g-printable-design-closure-test.mjs"
       - "tests/e2e/qpd06-browser-acceptance.spec.mjs"
       - "tests/e2e/fixtures/qpd06/**"
       - "playwright.qpd06.config.mjs"
+      - "exchange-rate-cache-engine.js"
+      - "tools/forge-local-live-server.cjs"
       - "supabase/migrations/20260730000200_qpd05_printable_quote_versions.sql"
       - ".github/workflows/qpd01-quote-printable-read-model.yml"
 
@@ -53,13 +69,21 @@ jobs:
           node --check advisor-os/quotes/printable/quote-printable-product-profile.js
           node --check advisor-os/quotes/printable/quote-printable-version-repository.js
           node --check advisor-os/quotes/printable/quote-printable-supabase-repository.js
+          node --check advisor-os/quotes/printable/quote-printable-read-model-m05e005.js
+          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e005.js
+          node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e005.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-read-model.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-product-profile.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-version-repository.js
           node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-read-model-m05e005.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e005.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e005.js
+          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js
           node --check docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js
           node --check docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js
           node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
           node --check advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
@@ -69,9 +93,14 @@ jobs:
           node --check advisor-os/quotes/tests/quote-printable-persistence-migration-security-test.js
           node --check advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
           node --check advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+          node --check tests/ui-m05e-quote-calculator-restoration-test.mjs
+          node --check tests/ui-m05f-live-udi-review-printable-actions-test.mjs
+          node --check tests/ui-m05g-printable-design-closure-test.mjs
           node --check tests/e2e/qpd06-browser-acceptance.spec.mjs
           node --check tests/e2e/fixtures/qpd06/harness.js
           node --check playwright.qpd06.config.mjs
+          node --check tools/forge-local-live-server.cjs
+          node --check exchange-rate-cache-engine.js
 
       - name: QPD-01 canonical read model
         run: node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
@@ -96,6 +125,15 @@ jobs:
 
       - name: QPD-06 browser binding and responsive safety
         run: node advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+
+      - name: M05E Product Intelligence restoration
+        run: node tests/ui-m05e-quote-calculator-restoration-test.mjs
+
+      - name: M05F live UDI and printable integration
+        run: node tests/ui-m05f-live-udi-review-printable-actions-test.mjs
+
+      - name: M05G premium portrait printable closure
+        run: node tests/ui-m05g-printable-design-closure-test.mjs
 
       - name: Diff integrity
         run: git diff --check HEAD^1...HEAD
