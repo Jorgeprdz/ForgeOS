@@ -34,7 +34,7 @@ const person = Object.freeze({
   id: '20000000-0000-0000-0000-000000000001',
   person_reference: 'PERSON:BROWSER:ANA',
   display_name: 'Ana Aceptación',
-  preferred_name: 'Ana',
+  preferred_name: null,
   lifecycle_state: 'CONFIRMED',
   privacy_classification: 'PRIVATE',
 });
@@ -144,6 +144,19 @@ function filteredRows(table, filters = []) {
   return rows;
 }
 
+function projectSelection(rows, selection) {
+  if (!selection || selection === '*') {
+    return rows;
+  }
+  const columns = selection
+    .split(',')
+    .map(column => column.trim())
+    .filter(Boolean);
+  return rows.map(row => Object.freeze(Object.fromEntries(
+    columns.map(column => [column, row[column]])
+  )));
+}
+
 class FakeQuery {
   constructor(table) {
     this.table = table;
@@ -166,7 +179,11 @@ class FakeQuery {
   in(column, values) {
     this.filters.push({ type: 'in', column, values });
     calls.push({ operation: 'in', table: this.table, column, values });
-    return Promise.resolve({ data: filteredRows(this.table, this.filters), error: null });
+    const rows = projectSelection(
+      filteredRows(this.table, this.filters),
+      this.selection,
+    );
+    return Promise.resolve({ data: rows, error: null });
   }
 
   order(column, options) {
@@ -178,12 +195,18 @@ class FakeQuery {
       const direction = options?.ascending === false ? -1 : 1;
       return leftValue > rightValue ? direction : -direction;
     });
-    return Promise.resolve({ data: rows, error: null });
+    return Promise.resolve({
+      data: projectSelection(rows, this.selection),
+      error: null,
+    });
   }
 
   maybeSingle() {
     calls.push({ operation: 'maybeSingle', table: this.table });
-    const rows = filteredRows(this.table, this.filters);
+    const rows = projectSelection(
+      filteredRows(this.table, this.filters),
+      this.selection,
+    );
     return Promise.resolve({ data: rows[0] || null, error: null });
   }
 }
