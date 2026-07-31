@@ -122,7 +122,12 @@ async function rawQuery(sql, label) {
     .replace(/sbp_[A-Za-z0-9_-]+/g, '[REDACTED]')
     .slice(0, 1800);
   if (!response.ok || body?.error) {
-    return { ok: false, status: response.status, error: `${label}_HTTP_${response.status}:${detail}`, rows: [] };
+    return {
+      ok: false,
+      status: response.status,
+      error: `${label}_HTTP_${response.status}:${detail}`,
+      rows: [],
+    };
   }
   const rows = Array.isArray(body?.result) ? body.result : Array.isArray(body) ? body : [];
   return { ok: true, status: response.status, error: null, rows };
@@ -183,7 +188,13 @@ async function applyMigration(migration, columns) {
   const existing = await readMigration(migration.version);
   if (existing) {
     const stored = normalizeStoredStatements(existing.statements);
-    if (stored) assert.equal(sha256(stored), localHash, `MIGRATION_${migration.version}_REMOTE_CONTENT_MISMATCH`);
+    if (stored) {
+      assert.equal(
+        sha256(stored),
+        localHash,
+        `MIGRATION_${migration.version}_REMOTE_CONTENT_MISMATCH`,
+      );
+    }
     report.migrations.push({ ...migration, status: 'ALREADY_APPLIED_AND_MATCHED', sha256: localHash });
     log(`MIGRATION_${migration.version}=ALREADY_APPLIED_AND_MATCHED`);
     return;
@@ -247,7 +258,11 @@ function findObjectCell(rows, key) {
     const value = row[key];
     if (value && typeof value === 'object') return value;
     if (typeof value === 'string') {
-      try { return JSON.parse(value); } catch { /* continue */ }
+      try {
+        return JSON.parse(value);
+      } catch {
+        // Continue looking for a structured result cell.
+      }
     }
   }
   return null;
@@ -269,6 +284,7 @@ async function runParallelStateVersionAcceptance() {
   const identityCandidateReference = `CARTERA020C_CONCURRENCY:IDENTITY:${suffix}`;
   const personReference = `CARTERA020C_CONCURRENCY:PERSON:${suffix}`;
   const requestedAt = new Date(Date.now() - 60_000).toISOString();
+
   const batch = {
     contractType: 'FORGE_CARTERA_020C_IDENTITY_COMMAND_BATCH',
     contractVersion: 'CARTERA-020C.2',
@@ -317,6 +333,7 @@ async function runParallelStateVersionAcceptance() {
     invokesRemoteCommand: false,
     requiresExplicitExecution: true,
   };
+
   const request = {
     contractType: 'FORGE_CARTERA_020C_IDENTITY_EXECUTION_REQUEST',
     contractVersion: 'CARTERA-020C.3',
@@ -448,7 +465,11 @@ async function checkResidualFixtures() {
     `select
       (select count(*) from auth.users where email like 'cartera020c-%@forge.invalid')::bigint as auth_users,
       (select count(*) from public.cartera020c_confirmation_reviews where review_reference like 'CARTERA020C_%')::bigint as reviews,
-      (select count(*) from public.cartera020c_confirmation_commands where command_reference like 'CONFIRMATION_COMMAND:%')::bigint as commands,
+      (select count(*)
+         from public.cartera020c_confirmation_commands c
+         join public.cartera020c_confirmation_reviews r
+           on r.id = c.review_id and r.advisor_id = c.advisor_id
+        where r.review_reference like 'CARTERA020C_%')::bigint as commands,
       (select count(*) from public.cartera020b_evidence_sources where source_reference like 'CARTERA020C_%')::bigint as sources,
       (select count(*) from public.commercial_people where person_reference like 'CARTERA020C_%')::bigint as people,
       (select count(*) from public.canonical_policies where policy_reference like 'CARTERA020C_%')::bigint as policies`,
@@ -466,7 +487,9 @@ async function checkResidualFixtures() {
 async function main() {
   mkdirSync(ARTIFACT_DIR, { recursive: true });
   assert.ok(existsSync(ACCEPTANCE_SQL), `ACCEPTANCE_SQL_MISSING:${ACCEPTANCE_SQL}`);
-  for (const migration of MIGRATIONS) assert.ok(existsSync(migration.path), `REQUIRED_MIGRATION_MISSING:${migration.path}`);
+  for (const migration of MIGRATIONS) {
+    assert.ok(existsSync(migration.path), `REQUIRED_MIGRATION_MISSING:${migration.path}`);
+  }
   const columns = await migrationColumns();
   for (const migration of MIGRATIONS) await applyMigration(migration, columns);
   log('CARTERA_020C_REMOTE_DEPLOYMENT=PASS');
