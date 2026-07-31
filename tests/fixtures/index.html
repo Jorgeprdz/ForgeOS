@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CARTERA 001D Secure Origin</title>
+  <script>
+    (() => {
+      const NativeDate = Date;
+      const fixedNow = NativeDate.parse("2026-07-30T20:00:00.000Z");
+      class FixedDate extends NativeDate {
+        constructor(...args) {
+          super(...(args.length ? args : [fixedNow]));
+        }
+        static now() {
+          return fixedNow;
+        }
+      }
+      window.Date = FixedDate;
+    })();
+  </script>
+</head>
+<body></body>
+</html>
