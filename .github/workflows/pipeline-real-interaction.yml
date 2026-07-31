@@ -16,52 +16,13 @@ on:
       - tests/pipeline-card-density-stage-authority-regression.mjs
       - tests/prospect-journal-service-contract-test.mjs
       - tools/forge-ui-visual-diagnostic.mjs
-      - scripts/apply-pipeline-card-density-stage-authority.py
       - .github/workflows/pipeline-real-interaction.yml
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  apply-density-stage-authority:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'fix/pipeline-card-density-stage-authority'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Apply product hotfix
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/apply-pipeline-card-density-stage-authority.py
-          node --check docs/static-preview/forge-alive-material3/pipeline-module.js
-          node --check docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js
-          node --check tests/pipeline-card-density-stage-authority-regression.mjs
-      - name: Commit product files only
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "forgeos-pipeline-closure"
-          git config user.email "actions@users.noreply.github.com"
-          git add \
-            docs/static-preview/forge-alive-material3/app.js \
-            docs/static-preview/forge-alive-material3/pipeline-module.js \
-            docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js \
-            tests/pipeline-card-density-stage-authority-regression.mjs
-          if git diff --cached --quiet; then
-            echo "PIPELINE_DENSITY_STAGE_AUTHORITY_ALREADY_APPLIED=PASS"
-            exit 0
-          fi
-          git commit -m "fix(pipeline): compact cards and unify stage authority"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
