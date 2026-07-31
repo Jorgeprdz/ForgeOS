@@ -2,10 +2,6 @@
 // The service never writes canonical tables directly. It invokes only the accepted
 // 020C lifecycle RPCs, which in turn sequence the governed 010B mutation authorities.
 
-import Cartera010BValidator from '../../platform/shared-commercial-model/cartera-010b-contract-validator.js';
-
-const { stableDigest } = Cartera010BValidator;
-
 export const CARTERA_020C_ORCHESTRATION_STATES = Object.freeze({
   IDENTITY_READY: 'IDENTITY_READY',
   IDENTITY_EXECUTING: 'IDENTITY_EXECUTING',
@@ -62,6 +58,27 @@ function rpcData(result, code) {
   if (result?.error) throw fail(code, result.error);
   if (!isRecord(result?.data)) throw fail(code);
   return Object.freeze(result.data);
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) return value.map(stableJson);
+  if (!isRecord(value)) return value;
+  return Object.keys(value).sort().reduce((output, key) => {
+    output[key] = stableJson(value[key]);
+    return output;
+  }, {});
+}
+
+async function authorizationDigest(payload) {
+  const cryptoApi = globalThis.crypto?.subtle;
+  if (!cryptoApi || typeof TextEncoder !== 'function') {
+    throw fail('CARTERA020C_AUTHORIZATION_CRYPTO_UNAVAILABLE');
+  }
+  const bytes = new TextEncoder().encode(JSON.stringify(stableJson(payload)));
+  const buffer = await cryptoApi.digest('SHA-256', bytes);
+  return [...new Uint8Array(buffer)]
+    .map((value) => value.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 async function authenticatedUser(client) {
@@ -207,7 +224,7 @@ function validatePolicyComposition(composition, userId) {
   return composition;
 }
 
-function authorization({
+async function authorization({
   scope,
   reviewReference,
   userId,
@@ -224,7 +241,7 @@ function authorization({
     actorReference: userId,
     authorizedAt: requireIso(authorizedAt, 'CARTERA020C_AUTHORIZED_AT_REQUIRED'),
     confirmation,
-    payloadDigest: stableDigest(payload),
+    payloadDigest: await authorizationDigest(payload),
   });
 }
 
@@ -278,7 +295,7 @@ export function createPersistentConfirmationOrchestrationService({
         'CARTERA020C_IDENTITY_REQUEST_IDEMPOTENCY_INVALID'
       ),
       requestedAt: timestamp,
-      authorization: authorization({
+      authorization: await authorization({
         scope: 'IDENTITY_RESOLUTION',
         reviewReference: batch.reviewReference,
         userId: user.id,
@@ -315,7 +332,7 @@ export function createPersistentConfirmationOrchestrationService({
         'CARTERA020C_POLICY_REQUEST_IDEMPOTENCY_INVALID'
       ),
       requestedAt: timestamp,
-      authorization: authorization({
+      authorization: await authorization({
         scope: 'CONFIRMED_POLICY',
         reviewReference: resolvedComposition.reviewReference,
         userId: user.id,
