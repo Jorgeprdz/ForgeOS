@@ -34,7 +34,7 @@ jobs:
           git diff --check "$SOURCE_COMMIT"...HEAD
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-          allowed='^(\.github/workflows/cartera-020b-remote-(gate|acceptance)\.yml|docs/evidence/FORGE_CARTERA_020B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020b-(github-actions-remote-acceptance|conflict-ambiguity-hardening-deploy)\.mjs|scripts/ci/cartera-020b-remote-acceptance\.sql|supabase/migrations/2026073100022(7_cartera020b_packet_replay_hardening|8_cartera020b_conflict_insert_ambiguity_hardening)\.sql|tests/cartera-020b-(packet-replay-hardening|conflict-ambiguity-hardening|remote-acceptance-harness)-test\.mjs)$'
+          allowed='^(\.github/workflows/cartera-020b-(remote-(gate|acceptance)|migration-history-diagnostic)\.yml|docs/evidence/FORGE_CARTERA_020B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020b-(github-actions-remote-acceptance|conflict-ambiguity-hardening-deploy|migration-history-diagnostic)\.mjs|scripts/ci/cartera-020b-remote-acceptance\.sql|supabase/migrations/2026073100022(7_cartera020b_packet_replay_hardening|8_cartera020b_conflict_insert_ambiguity_hardening)\.sql|tests/cartera-020b-(packet-replay-hardening|conflict-ambiguity-hardening|remote-acceptance-harness|migration-history-reconciliation)-test\.mjs)$'
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
               echo "UNAUTHORIZED_020B_REMOTE_PATH=$path" >&2
@@ -52,9 +52,11 @@ jobs:
           set -euo pipefail
           node --check scripts/ci/cartera-020b-github-actions-remote-acceptance.mjs
           node --check scripts/ci/cartera-020b-conflict-ambiguity-hardening-deploy.mjs
+          test ! -f scripts/ci/cartera-020b-migration-history-diagnostic.mjs || node --check scripts/ci/cartera-020b-migration-history-diagnostic.mjs
           node --check tests/cartera-020b-packet-replay-hardening-test.mjs
           node --check tests/cartera-020b-conflict-ambiguity-hardening-test.mjs
           node --check tests/cartera-020b-remote-acceptance-harness-test.mjs
+          test ! -f tests/cartera-020b-migration-history-reconciliation-test.mjs || node --check tests/cartera-020b-migration-history-reconciliation-test.mjs
           node --test tests/cartera-020b-*.mjs
 
       - name: Verify manual-only remote workflow
@@ -100,7 +102,7 @@ jobs:
       - name: Emit preparation markers
         run: |
           echo 'CARTERA_020B_REMOTE_GATE=REPOSITORY_READY'
-          echo 'CARTERA_020B_REMOTE_DEPLOYMENT=PARTIAL_00220_TO_00227'
-          echo 'CARTERA_020B_REMOTE_ACCEPTANCE=NOT_PASSING_YET'
+          echo 'CARTERA_020B_REMOTE_DEPLOYMENT=00220_TO_00228_APPLIED'
+          echo 'CARTERA_020B_REMOTE_ACCEPTANCE=HISTORY_RECONCILIATION_PENDING'
           echo 'CARTERA_020B_COMPLETE=NO'
-          echo 'NEXT=APPLY_00228_AND_RERUN_TRANSACTIONAL_ACCEPTANCE'
+          echo 'NEXT=READ_ONLY_MIGRATION_HISTORY_DIAGNOSTIC'
