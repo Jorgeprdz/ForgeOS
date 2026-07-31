@@ -41,7 +41,7 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
 
-          allowed='^(docs/architecture/source-truth/FORGE_CARTERA_020A_POLICY_INTAKE_ADAPTER_SCOPE_001\.md|tests/cartera-020a-policy-intake-adapter-scope-test\.mjs|\.github/workflows/cartera-020a-scope-acceptance\.yml)$'
+          allowed='^(docs/architecture/source-truth/FORGE_CARTERA_020A_POLICY_INTAKE_ADAPTER_SCOPE_001\.md|tests/cartera-020a-policy-intake-adapter-scope-test\.mjs|\.github/workflows/cartera-020a-scope-acceptance\.yml|\.github/workflows/cartera-010d-scope-acceptance\.yml)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -52,6 +52,7 @@ jobs:
 
           echo 'SOURCE_COMMIT_VERIFIED=YES'
           echo 'DOCUMENTATION_ONLY_PATHS=PASS'
+          echo 'INHERITED_010D_GATE_RETIREMENT=BOUNDED'
           echo 'SCHEMA_MUTATION=NO'
           echo 'SUPABASE_REMOTE_MUTATION=NO'
           echo 'RUNTIME_MUTATION=NO'
@@ -67,6 +68,7 @@ jobs:
         run: |
           set -euo pipefail
           scope=docs/architecture/source-truth/FORGE_CARTERA_020A_POLICY_INTAKE_ADAPTER_SCOPE_001.md
+          inherited=.github/workflows/cartera-010d-scope-acceptance.yml
 
           grep -q 'CANONICAL_EVIDENCE_BACKBONE=LOCKED' "$scope"
           grep -q 'PROVIDER_ENVELOPE=LOCKED' "$scope"
@@ -75,14 +77,18 @@ jobs:
           grep -q 'RESUMABLE_BATCH_BOUNDARY=LOCKED' "$scope"
           grep -q 'IDENTITY_BEFORE_CREATION=LOCKED' "$scope"
           grep -q 'CONFIRMED_POLICY_COMMAND_BYPASS=FORBIDDEN' "$scope"
+          grep -q 'INHERITED_010D_GATE_RETIREMENT=BOUNDED' "$scope"
           grep -q 'CARTERA_020A_COMPLETE=YES' "$scope"
           grep -q 'NEXT=CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_AND_PARSER_REGISTRY' "$scope"
+          grep -q 'workflow_dispatch:' "$inherited"
+          ! grep -qE '^  (push|pull_request):' "$inherited"
 
       - name: Emit closure markers
         run: |
           echo 'CARTERA_020A_SCOPE=LOCKED'
           echo 'REUSE_MAP_COMPLETE=YES'
           echo 'DOMAIN_AUTHORITY_PRESERVED=YES'
+          echo 'INHERITED_010D_GATE_RETIREMENT=BOUNDED'
           echo 'NEGATIVE_TESTS=PASS'
           echo 'UNAUTHORIZED_EFFECTS=NONE'
           echo 'CARTERA_020A_COMPLETE=YES'
