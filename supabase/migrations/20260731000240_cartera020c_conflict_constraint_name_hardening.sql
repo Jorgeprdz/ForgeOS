@@ -4,10 +4,39 @@
 
 begin;
 
-alter table public.cartera020c_confirmation_conflicts
-  rename constraint
-    cartera020c_confirmation_conflicts_advisor_id_conflict_referenc
-  to cartera020c_conflict_reference_uq;
+do $cartera020c_constraint_name$
+declare
+  discovered_constraint_name text;
+begin
+  select c.conname
+    into discovered_constraint_name
+  from pg_constraint c
+  join pg_class t on t.oid = c.conrelid
+  join pg_namespace n on n.oid = t.relnamespace
+  where n.nspname = 'public'
+    and t.relname = 'cartera020c_confirmation_conflicts'
+    and c.contype = 'u'
+    and (
+      select array_agg(a.attname order by key_column.ordinality)
+      from unnest(c.conkey) with ordinality as key_column(attnum, ordinality)
+      join pg_attribute a
+        on a.attrelid = c.conrelid
+       and a.attnum = key_column.attnum
+    ) = array['advisor_id', 'conflict_reference']::name[]
+  limit 1;
+
+  if discovered_constraint_name is null then
+    raise exception 'CARTERA020C_CONFLICT_REFERENCE_UNIQUE_CONSTRAINT_NOT_FOUND';
+  end if;
+
+  if discovered_constraint_name <> 'cartera020c_conflict_reference_uq' then
+    execute format(
+      'alter table public.cartera020c_confirmation_conflicts rename constraint %I to cartera020c_conflict_reference_uq',
+      discovered_constraint_name
+    );
+  end if;
+end;
+$cartera020c_constraint_name$;
 
 create or replace function public.forge_cartera020c_record_conflict(
   p_actor_id uuid,
