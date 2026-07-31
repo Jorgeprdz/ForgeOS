@@ -9,15 +9,16 @@ on:
 permissions:
   contents: read
   actions: write
+  statuses: write
 
 concurrency:
   group: quotes-preview-pages
   cancel-in-progress: true
 
 jobs:
-  validate-and-dispatch:
+  validate-dispatch-and-verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - name: Checkout preview branch
@@ -34,14 +35,68 @@ jobs:
       - name: Validate Vida Mujer Pages landscape closure
         run: node tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
 
-      - name: Dispatch canonical Pages deployment
+      - name: Dispatch and verify canonical Pages deployment
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_REF: ${{ github.ref_name }}
+          TARGET_SHA: ${{ github.sha }}
+          PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
         run: |
           set -euo pipefail
+
+          post_status() {
+            local state="$1"
+            local description="$2"
+            gh api \
+              --method POST \
+              "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
+              -f state="$state" \
+              -f context="pages/quotes-preview" \
+              -f description="$description" \
+              -f target_url="$PAGE_URL" >/dev/null
+          }
+
+          trap 'post_status failure "GitHub Pages preview deployment failed"' ERR
+          post_status pending "Publishing Quotes preview to GitHub Pages"
+
           printf 'PAGES_DEPLOY_REF=%s\n' "$TARGET_REF"
+          printf 'PAGES_DEPLOY_SHA=%s\n' "$TARGET_SHA"
+
           gh workflow run pages.yml \
             --repo "$GITHUB_REPOSITORY" \
             --ref "$TARGET_REF"
-          printf 'PAGES_DISPATCH=PASS\n'
+
+          run_id=""
+          for attempt in $(seq 1 30); do
+            run_id="$(
+              gh run list \
+                --repo "$GITHUB_REPOSITORY" \
+                --workflow pages.yml \
+                --branch "$TARGET_REF" \
+                --event workflow_dispatch \
+                --limit 20 \
+                --json databaseId,headSha,createdAt \
+                --jq '.[] | select(.headSha == env.TARGET_SHA) | .databaseId' \
+                | head -n 1
+            )"
+            if [[ -n "$run_id" ]]; then
+              break
+            fi
+            sleep 4
+          done
+
+          if [[ -z "$run_id" ]]; then
+            echo "BLOCKED=PAGES_RUN_NOT_FOUND"
+            exit 1
+          fi
+
+          printf 'PAGES_RUN_ID=%s\n' "$run_id"
+          gh run watch "$run_id" \
+            --repo "$GITHUB_REPOSITORY" \
+            --exit-status \
+            --interval 10
+
+          post_status success "Quotes preview published to GitHub Pages"
+          trap - ERR
+          printf 'PAGES_DEPLOYMENT=PASS\n'
+          printf 'PAGES_URL=%s\n' "$PAGE_URL"
