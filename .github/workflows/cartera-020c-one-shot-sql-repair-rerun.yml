@@ -1,4 +1,4 @@
-name: CARTERA 020C One-Shot SQL Repair and Rerun
+name: CARTERA 020C One-Shot SQL-Only Repair and Rerun
 
 on:
   pull_request:
@@ -7,13 +7,13 @@ on:
     types:
       - opened
     paths:
-      - docs/evidence/CARTERA_020C_REMOTE_REPAIR_RERUN_AUTHORIZATION_20260731T1733-0600.md
+      - docs/evidence/CARTERA_020C_SQL_ONLY_REPAIR_RERUN_AUTHORIZATION_20260731T1737-0600.md
 
 permissions:
   contents: write
 
 concurrency:
-  group: cartera-020c-one-shot-sql-repair-rerun
+  group: cartera-020c-one-shot-sql-only-repair-rerun
   cancel-in-progress: false
 
 jobs:
@@ -22,8 +22,8 @@ jobs:
       github.repository == 'Jorgeprdz/ForgeOS' &&
       github.event_name == 'pull_request' &&
       github.event.action == 'opened' &&
-      github.event.pull_request.head.ref == 'run/cartera-020c-remote-repair-rerun-20260731-1733' &&
-      github.event.pull_request.head.sha == 'ca41329355eea1428db62313369a335541e3e871' &&
+      github.event.pull_request.head.ref == 'run/cartera-020c-sql-only-repair-rerun-20260731-1737' &&
+      github.event.pull_request.head.sha == '22df69bc7086e40f66c0df78a3e90af64f2b2bb7' &&
       github.run_attempt == 1
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -33,32 +33,32 @@ jobs:
       CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD: 0075a54ed1886811a9dd4b295128bdab0a69eccb
       CARTERA_020C_ACCEPTANCE_BRANCH: feature/cartera-020c-remote-acceptance
       SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
-      AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_REMOTE_REPAIR_RERUN_AUTHORIZATION_20260731T1733-0600.md
-      AUTHORIZED_LAUNCH_HEAD: ca41329355eea1428db62313369a335541e3e871
+      AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_SQL_ONLY_REPAIR_RERUN_AUTHORIZATION_20260731T1737-0600.md
+      AUTHORIZED_LAUNCH_HEAD: 22df69bc7086e40f66c0df78a3e90af64f2b2bb7
 
     steps:
-      - name: Checkout exact repair authorization
+      - name: Checkout exact SQL-only repair authorization
         uses: actions/checkout@v4
         with:
-          ref: ca41329355eea1428db62313369a335541e3e871
+          ref: 22df69bc7086e40f66c0df78a3e90af64f2b2bb7
           fetch-depth: 0
 
-      - name: Validate exact repair authorization
+      - name: Validate exact SQL-only repair authorization
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_RUN_ATTEMPT" = '1'
-          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-remote-repair-rerun-20260731-1733'
+          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-sql-only-repair-rerun-20260731-1737'
           test "$(git rev-parse HEAD)" = "$AUTHORIZED_LAUNCH_HEAD"
           test -f "$AUTHORIZATION_MARKER"
-          grep -qx 'USER_AUTHORIZATION=REPAIR_AND_RERUN_CARTERA_020C_REMOTE_ACCEPTANCE' "$AUTHORIZATION_MARKER"
-          grep -qx 'FAILED_RUN=30673019382' "$AUTHORIZATION_MARKER"
-          grep -qx 'FAILED_JOB=91294524865' "$AUTHORIZATION_MARKER"
+          grep -qx 'USER_AUTHORIZATION=REPAIR_SQL_AND_RERUN_CARTERA_020C_REMOTE_ACCEPTANCE' "$AUTHORIZATION_MARKER"
+          grep -qx 'ORIGINAL_FAILED_RUN=30673019382' "$AUTHORIZATION_MARKER"
+          grep -qx 'REPAIR_SAVE_FAILED_RUN=30673275283' "$AUTHORIZATION_MARKER"
           grep -qx 'FAILED_MIGRATION=20260731000233' "$AUTHORIZATION_MARKER"
-          grep -qx 'FAILURE=CARTERA020C_PLPGSQL_RESERVED_IDENTIFIER_AUTHORIZATION' "$AUTHORIZATION_MARKER"
+          grep -qx 'SQL_REPAIR_SCOPE=00233,00234,00238,AUTHORIZATION_TEST' "$AUTHORIZATION_MARKER"
           grep -qx 'ACCEPTANCE_HEAD=0075a54ed1886811a9dd4b295128bdab0a69eccb' "$AUTHORIZATION_MARKER"
           test "$(git diff --name-only HEAD^ HEAD)" = "$AUTHORIZATION_MARKER"
-          echo 'ONE_SHOT_REPAIR_AUTHORIZATION=PASS'
+          echo 'ONE_SHOT_SQL_ONLY_REPAIR_AUTHORIZATION=PASS'
 
       - name: Checkout exact accepted remote branch
         uses: actions/checkout@v4
@@ -86,8 +86,7 @@ jobs:
               index = 0
               in_single = False
               replacements = 0
-              length = len(text)
-              while index < length:
+              while index < len(text):
                   if not in_single and text.startswith('--', index):
                       end = text.find('\n', index)
                       if end == -1:
@@ -98,7 +97,7 @@ jobs:
                       continue
                   char = text[index]
                   if char == "'":
-                      if in_single and index + 1 < length and text[index + 1] == "'":
+                      if in_single and index + 1 < len(text) and text[index + 1] == "'":
                           out.append("''")
                           index += 2
                           continue
@@ -109,7 +108,7 @@ jobs:
                   if not in_single and text.startswith(old, index):
                       before = text[index - 1] if index else ''
                       after_index = index + len(old)
-                      after = text[after_index] if after_index < length else ''
+                      after = text[after_index] if after_index < len(text) else ''
                       if not (before.isalnum() or before == '_') and not (after.isalnum() or after == '_'):
                           out.append(new)
                           index = after_index
@@ -119,11 +118,7 @@ jobs:
                   index += 1
               return ''.join(out), replacements
 
-          expected_counts = {
-              sql_paths[0]: 12,
-              sql_paths[1]: 12,
-              sql_paths[2]: 4,
-          }
+          expected_counts = {sql_paths[0]: 12, sql_paths[1]: 12, sql_paths[2]: 4}
           for path in sql_paths:
               original = path.read_text(encoding='utf-8')
               repaired, count = replace_bare_identifier(original)
@@ -133,18 +128,6 @@ jobs:
                   raise SystemExit(f'RESERVED_IDENTIFIER_REMAINS:{path}')
               path.write_text(repaired, encoding='utf-8')
               print(f'REPAIRED_IDENTIFIER_COUNT={path}:{count}')
-
-          workflow_paths = [
-              Path('.github/workflows/cartera-020c-remote-gate.yml'),
-              Path('.github/workflows/cartera-020c-remote-acceptance.yml'),
-          ]
-          old = r'supabase/migrations/20260731000238_cartera020c_authorization_digest_hardening\.sql'
-          new = r'supabase/migrations/202607310002(33_cartera020c_prepare_identity_orchestration_rpc|34_cartera020c_attach_policy_confirmation_rpc|38_cartera020c_authorization_digest_hardening)\.sql'
-          for path in workflow_paths:
-              text = path.read_text(encoding='utf-8')
-              if text.count(old) != 1:
-                  raise SystemExit(f'UNEXPECTED_ALLOWED_PATH_PATTERN:{path}')
-              path.write_text(text.replace(old, new), encoding='utf-8')
 
           test_path = Path('tests/cartera-020c-authorization-digest-hardening-test.mjs')
           text = test_path.read_text(encoding='utf-8')
@@ -170,11 +153,11 @@ jobs:
           PY
 
           mapfile -t changed < <(git diff --name-only)
-          printf 'REPAIR_CHANGED_FILE=%s\n' "${changed[@]}"
-          expected=$'.github/workflows/cartera-020c-remote-acceptance.yml\n.github/workflows/cartera-020c-remote-gate.yml\nsupabase/migrations/20260731000233_cartera020c_prepare_identity_orchestration_rpc.sql\nsupabase/migrations/20260731000234_cartera020c_attach_policy_confirmation_rpc.sql\nsupabase/migrations/20260731000238_cartera020c_authorization_digest_hardening.sql\ntests/cartera-020c-authorization-digest-hardening-test.mjs'
+          printf 'SQL_REPAIR_CHANGED_FILE=%s\n' "${changed[@]}"
+          expected=$'supabase/migrations/20260731000233_cartera020c_prepare_identity_orchestration_rpc.sql\nsupabase/migrations/20260731000234_cartera020c_attach_policy_confirmation_rpc.sql\nsupabase/migrations/20260731000238_cartera020c_authorization_digest_hardening.sql\ntests/cartera-020c-authorization-digest-hardening-test.mjs'
           test "$(printf '%s\n' "${changed[@]}" | sort)" = "$expected"
           git diff --check
-          echo 'BOUNDED_SQL_REPAIR=PASS'
+          echo 'BOUNDED_SQL_ONLY_REPAIR=PASS'
 
       - name: Commit repaired acceptance head
         shell: bash
@@ -183,8 +166,6 @@ jobs:
           git config user.name 'forge-cartera-remote-acceptance'
           git config user.email 'forge-cartera-remote-acceptance@users.noreply.github.com'
           git add \
-            .github/workflows/cartera-020c-remote-acceptance.yml \
-            .github/workflows/cartera-020c-remote-gate.yml \
             supabase/migrations/20260731000233_cartera020c_prepare_identity_orchestration_rpc.sql \
             supabase/migrations/20260731000234_cartera020c_attach_policy_confirmation_rpc.sql \
             supabase/migrations/20260731000238_cartera020c_authorization_digest_hardening.sql \
@@ -212,8 +193,7 @@ jobs:
           node --check tests/cartera-020c-authorization-digest-hardening-test.mjs
           node --check tests/cartera-020c-remote-acceptance-harness-test.mjs
           node --test tests/cartera-020c-*.mjs
-          ! grep -nE '^\s*authorization\s+jsonb\b' \
-            supabase/migrations/2026073100023{3,4,8}_*.sql
+          ! grep -nE '^\s*authorization\s+jsonb\b' supabase/migrations/2026073100023{3,4,8}_*.sql
           echo 'PLPGSQL_RESERVED_IDENTIFIER_REPAIR=PASS'
 
       - name: Deploy repaired migrations and execute remote acceptance
@@ -255,7 +235,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cartera-020c-remote-acceptance-repaired
+          name: cartera-020c-remote-acceptance-sql-repaired
           path: artifacts/cartera-020c-remote-acceptance
           if-no-files-found: warn
           retention-days: 30
