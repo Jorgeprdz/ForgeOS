@@ -4,6 +4,7 @@ import { createQuotesModule } from "./quotes-module-complete.js?v=manual-quotes-
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-010";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
+import "./pipeline-prospect-admin.js?v=pipeline-prospect-admin-001";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
