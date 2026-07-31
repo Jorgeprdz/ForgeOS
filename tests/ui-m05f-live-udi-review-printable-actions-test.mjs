@@ -67,6 +67,7 @@ assert.match(server, /SUPABASE_URL/);
 assert.match(server, /SUPABASE_KEY/);
 assert.match(server, /functions\/v1\/\$\{BANXICO_EDGE_FUNCTION_NAME\}/);
 assert.match(server, /BANXICO_EDGE_FUNCTION_NAME = "banxico-rates"/);
+assert.match(server, /QUOTE_RUNTIME = "M05E-006"/);
 assert.match(server, /MARKET_RATE_PROVIDER=/);
 assert.match(server, /\/api\/forge-market-rates/);
 assert.match(server, /FORGE_LIVE_SERVER=READY/);
