@@ -1,0 +1,66 @@
+name: Pipeline Journal Migration Deployment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "supabase/migrations/20260731000100_pipeline_prospect_journal.sql"
+      - "scripts/deploy-pipeline-journal-migration.mjs"
+      - "tests/prospect-journal-service-contract-test.mjs"
+      - ".github/workflows/pipeline-journal-migration-deployment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-journal-migration-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'Jorgeprdz/ForgeOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+
+    steps:
+      - name: Checkout accepted main
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify deployment authorization and source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          test "$(git branch --show-current)" = "main"
+          test -f supabase/migrations/20260731000100_pipeline_prospect_journal.sql
+          node --check scripts/deploy-pipeline-journal-migration.mjs
+          ! rg -n "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
+            supabase/migrations/20260731000100_pipeline_prospect_journal.sql
+          rg -n "prospect_journal_entries|JOURNAL:|CONVERSATION_RECORDED|enable row level security" \
+            supabase/migrations/20260731000100_pipeline_prospect_journal.sql
+
+      - name: Verify Journal contract
+        run: node --test tests/prospect-journal-service-contract-test.mjs
+
+      - name: Apply and confirm exactly migration 20260731000100
+        run: node scripts/deploy-pipeline-journal-migration.mjs
+
+      - name: Upload redacted deployment ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-journal-migration-ledger
+          path: artifacts/pipeline-journal-migration/ledger.jsonl
+          if-no-files-found: error
+          retention-days: 30
