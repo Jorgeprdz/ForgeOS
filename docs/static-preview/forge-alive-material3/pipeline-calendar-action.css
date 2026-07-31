@@ -1,0 +1,257 @@
+.pipeline-calendar-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: 24px 18px calc(104px + env(safe-area-inset-bottom));
+}
+
+.pipeline-calendar-layer__scrim {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  background: rgba(3, 10, 24, 0.72);
+  backdrop-filter: blur(12px);
+}
+
+.pipeline-calendar-sheet {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  inline-size: min(620px, 100%);
+  max-block-size: calc(100dvh - 48px - env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--forge-outline, #afc6e9) 34%, transparent);
+  border-radius: 28px;
+  color: var(--forge-on-surface, #eef5ff);
+  background: color-mix(in srgb, var(--forge-surface-container, #13253f) 96%, #06101f);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.52);
+}
+
+.pipeline-calendar-sheet__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+  padding: 24px 24px 18px;
+  border-block-end: 1px solid color-mix(in srgb, var(--forge-outline, #afc6e9) 20%, transparent);
+}
+
+.pipeline-calendar-sheet__header p,
+.pipeline-calendar-sheet__header h2,
+.pipeline-calendar-sheet__header span,
+.pipeline-calendar-preview strong,
+.pipeline-calendar-preview span,
+.pipeline-calendar-error {
+  margin: 0;
+}
+
+.pipeline-calendar-sheet__header p {
+  margin-block-end: 6px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--forge-primary, #9be8ff);
+}
+
+.pipeline-calendar-sheet__header h2 {
+  font-size: clamp(1.35rem, 4vw, 1.9rem);
+  line-height: 1.1;
+}
+
+.pipeline-calendar-sheet__header span {
+  display: block;
+  margin-block-start: 8px;
+  max-inline-size: 48ch;
+  color: var(--forge-on-surface-variant, #c3cee0);
+  line-height: 1.45;
+}
+
+.pipeline-calendar-sheet__close {
+  inline-size: 42px;
+  block-size: 42px;
+  border: 1px solid color-mix(in srgb, var(--forge-outline, #afc6e9) 24%, transparent);
+  border-radius: 50%;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: 1.55rem;
+  cursor: pointer;
+}
+
+.pipeline-calendar-sheet__body {
+  overflow: auto;
+  padding: 22px 24px;
+}
+
+.pipeline-calendar-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.pipeline-calendar-fields label,
+.pipeline-calendar-invite {
+  display: grid;
+  gap: 7px;
+  min-inline-size: 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--forge-on-surface-variant, #c3cee0);
+}
+
+.pipeline-calendar-fields__wide {
+  grid-column: 1 / -1;
+}
+
+.pipeline-calendar-fields small {
+  font: inherit;
+  font-weight: 500;
+  opacity: 0.74;
+}
+
+.pipeline-calendar-fields input,
+.pipeline-calendar-fields select {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: 48px;
+  border: 1px solid color-mix(in srgb, var(--forge-outline, #afc6e9) 34%, transparent);
+  border-radius: 15px;
+  padding: 10px 13px;
+  color: var(--forge-on-surface, #eef5ff);
+  background: color-mix(in srgb, var(--forge-surface, #0b1a30) 88%, transparent);
+  font: inherit;
+  font-weight: 650;
+}
+
+.pipeline-calendar-fields input:focus-visible,
+.pipeline-calendar-fields select:focus-visible,
+.pipeline-calendar-sheet button:focus-visible,
+.pipeline-calendar-sheet a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--forge-primary, #9be8ff) 72%, transparent);
+  outline-offset: 2px;
+}
+
+.pipeline-calendar-invite {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  margin-block-start: 18px;
+  border: 1px solid color-mix(in srgb, var(--forge-outline, #afc6e9) 20%, transparent);
+  border-radius: 16px;
+  padding: 13px 14px;
+  cursor: pointer;
+}
+
+.pipeline-calendar-invite input {
+  inline-size: 20px;
+  block-size: 20px;
+  accent-color: var(--forge-primary, #9be8ff);
+}
+
+.pipeline-calendar-preview {
+  display: grid;
+  gap: 5px;
+  margin-block-start: 18px;
+  border-radius: 17px;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--forge-primary, #9be8ff) 10%, transparent);
+}
+
+.pipeline-calendar-preview strong {
+  color: var(--forge-on-surface, #eef5ff);
+}
+
+.pipeline-calendar-preview span {
+  color: var(--forge-on-surface-variant, #c3cee0);
+  font-size: 0.82rem;
+}
+
+.pipeline-calendar-error {
+  margin-block-start: 12px;
+  color: var(--forge-error, #ffb4ab);
+  font-weight: 750;
+}
+
+.pipeline-calendar-sheet__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px calc(18px + env(safe-area-inset-bottom));
+  border-block-start: 1px solid color-mix(in srgb, var(--forge-outline, #afc6e9) 20%, transparent);
+  background: color-mix(in srgb, var(--forge-surface-container, #13253f) 96%, #06101f);
+}
+
+.pipeline-calendar-primary,
+.pipeline-calendar-secondary {
+  box-sizing: border-box;
+  min-block-size: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pipeline-calendar-primary {
+  border: 0;
+  color: #07111f;
+  background: var(--forge-primary, #9be8ff);
+}
+
+.pipeline-calendar-primary.is-disabled {
+  pointer-events: none;
+  opacity: 0.48;
+}
+
+.pipeline-calendar-secondary {
+  border: 1px solid color-mix(in srgb, var(--forge-outline, #afc6e9) 32%, transparent);
+  color: var(--forge-on-surface, #eef5ff);
+  background: transparent;
+}
+
+@media (max-width: 560px) {
+  .pipeline-calendar-layer {
+    place-items: end center;
+    padding: 18px 10px calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .pipeline-calendar-sheet {
+    inline-size: 100%;
+    max-block-size: calc(100dvh - 26px - env(safe-area-inset-bottom));
+    border-radius: 24px 24px 18px 18px;
+  }
+
+  .pipeline-calendar-sheet__header,
+  .pipeline-calendar-sheet__body {
+    padding-inline: 18px;
+  }
+
+  .pipeline-calendar-fields {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .pipeline-calendar-fields__wide {
+    grid-column: auto;
+  }
+
+  .pipeline-calendar-sheet__footer {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    padding-inline: 18px;
+  }
+
+  .pipeline-calendar-primary,
+  .pipeline-calendar-secondary {
+    inline-size: 100%;
+    padding-inline: 12px;
+  }
+}

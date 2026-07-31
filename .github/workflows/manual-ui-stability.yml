@@ -13,6 +13,7 @@ on:
       - scripts/deploy-pipeline-stage-rpc-migration.mjs
       - tests/legacy-ui-retirement-regression.mjs
       - tests/pipeline-stage-rpc-authority-regression.mjs
+      - tests/pipeline-google-calendar-handoff-regression.mjs
       - tests/manual-quotes-pipeline-stability-test.mjs
       - tools/manual-ui-stability-check.mjs
       - .github/workflows/manual-ui-stability.yml
@@ -44,9 +45,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify stage RPC syntax
+      - name: Verify runtime syntax
         run: |
           node --check docs/static-preview/forge-alive-material3/pipeline-stage-rpc-authority.js
+          node --check docs/static-preview/forge-alive-material3/pipeline-calendar-action.js
           node --check scripts/deploy-pipeline-stage-rpc-migration.mjs
 
       - name: Run focused UI regressions
@@ -57,6 +59,7 @@ jobs:
           tests/manual-quotes-pipeline-stability-test.mjs
           tests/legacy-ui-retirement-regression.mjs
           tests/pipeline-stage-rpc-authority-regression.mjs
+          tests/pipeline-google-calendar-handoff-regression.mjs
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
