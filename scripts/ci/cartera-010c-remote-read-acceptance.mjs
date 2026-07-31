@@ -401,7 +401,8 @@ async function main() {
 
     const detailA = await serviceA.loadPolicyDetail(fixture.policyReference);
     assert.equal(detailA.policy.policyReference, fixture.policyReference);
-    assert.equal(detailA.policy.policyNumber, fixture.policyNumber);
+    assert.equal(detailA.policy.policyNumber.state, 'KNOWN');
+    assert.equal(detailA.policy.policyNumber.value, fixture.policyNumber);
     assert.equal(detailA.policy.premiumAmount.value, 24000);
     assert.ok(detailA.timeline.length >= 4, 'MINIMIZED_TIMELINE_INCOMPLETE');
     assertNoSensitiveProjection(detailA);
