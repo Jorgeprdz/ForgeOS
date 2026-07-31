@@ -10,6 +10,7 @@ on:
       - tests/pipeline-real-interaction-regression.mjs
       - tests/pipeline-prospect-admin-regression.mjs
       - tests/pipeline-action-identity-regression.mjs
+      - tests/pipeline-google-calendar-regression.mjs
       - tests/pipeline-context-journal-regression.mjs
       - tests/pipeline-public-acceptance-hotfix-regression.mjs
       - tests/pipeline-filter-count-authority-regression.mjs
@@ -59,6 +60,8 @@ jobs:
         run: timeout 120s node tests/pipeline-prospect-admin-regression.mjs
       - name: Verify action identity
         run: timeout 120s node tests/pipeline-action-identity-regression.mjs
+      - name: Verify Google Calendar draft flow
+        run: timeout 120s node tests/pipeline-google-calendar-regression.mjs
       - name: Verify context journal
         run: timeout 120s node tests/pipeline-context-journal-regression.mjs
       - name: Verify public acceptance hotfix
