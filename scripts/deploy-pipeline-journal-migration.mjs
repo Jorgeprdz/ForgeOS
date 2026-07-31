@@ -88,7 +88,7 @@ select
   ) as timeline_accepts_advisor_declaration,
   to_regclass('public.prospect_journal_entries') is not null as journal_exists,
   (
-    select count(*) = 7
+    select count(*) = 8
     from information_schema.columns
     where table_schema = 'public'
       and table_name = 'prospect_journal_entries'
