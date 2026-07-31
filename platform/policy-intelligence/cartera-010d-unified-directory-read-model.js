@@ -18,6 +18,28 @@ const ENTRY_KIND_ORDER = Object.freeze({
     [ENTRY_KIND.POLICY]: 2,
 });
 
+const SEARCH_REASON_WEIGHT = Object.freeze({
+    VERIFIED_PHONE: 120,
+    VERIFIED_EMAIL: 120,
+    POLICY_NUMBER: 110,
+    DISPLAY_NAME: 100,
+    PREFERRED_NAME: 100,
+    ACCOUNT_LABEL: 100,
+    PERSON_REFERENCE: 90,
+    ACCOUNT_REFERENCE: 90,
+    POLICY_REFERENCE: 90,
+    CARRIER_REFERENCE: 80,
+    PRODUCT_REFERENCE: 80,
+    ACCOUNT_TYPE: 70,
+    POLICY_STATUS: 70,
+    RELATIONSHIP_ROLE: 45,
+    POLICY_ROLE: 45,
+    RELATIONSHIP_LABEL: 20,
+    RELATIONSHIP_REFERENCE: 20,
+    PARTICIPANT_LABEL: 20,
+    PARTICIPANT_REFERENCE: 20,
+});
+
 const CURRENT_STATES = new Set(CARTERA_010C_CURRENT_ROLE_CONFIRMATION_STATES);
 const GENERAL_ROLE_TYPES = new Set(CARTERA_010C_GENERAL_ROLE_TYPES);
 const REFERENCE_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,239}$/;
@@ -55,6 +77,7 @@ export function normalizeCarteraDirectorySearchText(value = '') {
         .trim()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[_-]+/g, ' ')
         .replace(/\s+/g, ' ');
 }
 
@@ -160,6 +183,17 @@ function policyRoleParticipant(role, peopleById, accountsById) {
     });
 }
 
+function tokenMatchScore(token, term) {
+    const reasonWeight = SEARCH_REASON_WEIGHT[token.reason] || 0;
+    if (token.value === term) {
+        return reasonWeight + 100;
+    }
+    if (token.value.startsWith(term)) {
+        return reasonWeight + 30;
+    }
+    return reasonWeight + 10;
+}
+
 function searchRecords(records, query, limit) {
     const normalizedQuery = normalizeCarteraDirectorySearchText(query);
     const safeLimit = Number.isInteger(limit) && limit > 0
@@ -187,16 +221,13 @@ function searchRecords(records, query, limit) {
                 complete = false;
                 break;
             }
+
+            let bestTermScore = 0;
             for (const token of termTokens) {
                 reasons.add(token.reason);
-                if (token.value === term) {
-                    score += 100;
-                } else if (token.value.startsWith(term)) {
-                    score += 30;
-                } else {
-                    score += 10;
-                }
+                bestTermScore = Math.max(bestTermScore, tokenMatchScore(token, term));
             }
+            score += bestTermScore;
         }
 
         if (complete) {
@@ -247,7 +278,6 @@ export function createCanonicalDirectoryProjection({
 
     const peopleById = new Map(activePeople.map(person => [person.id, person]));
     const accountsById = new Map(activeAccounts.map(account => [account.id, account]));
-    const policyById = new Map(activePolicies.map(policy => [policy.id, policy]));
 
     const membershipsByPersonId = new Map();
     const membershipsByAccountId = new Map();
@@ -484,3 +514,4 @@ export function createCanonicalDirectoryProjection({
 }
 
 export const CARTERA_010D_ENTRY_KIND = ENTRY_KIND;
+export const CARTERA_010D_SEARCH_REASON_WEIGHT = SEARCH_REASON_WEIGHT;
