@@ -91,7 +91,8 @@ jobs:
           node --check scripts/ci/cartera-020b-github-actions-remote-acceptance.mjs
           node --check tests/cartera-020b-packet-replay-hardening-test.mjs
           node --check tests/cartera-020b-remote-acceptance-harness-test.mjs
-          node --test tests/cartera-020b-*.mjs
+          mapfile -t remote_tests < <(find tests -maxdepth 1 -name 'cartera-020b-*.mjs' ! -name 'cartera-020b-remote-acceptance-harness-test.mjs' | sort)
+          node --test "${remote_tests[@]}"
 
       - name: Deploy and execute remote acceptance
         shell: bash
