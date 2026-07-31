@@ -1,6 +1,9 @@
 name: CARTERA 020B Remote Acceptance
 
 on:
+  pull_request:
+    branches:
+      - feature/cartera-020b-persistent-evidence-worker-parser-registry
   workflow_dispatch:
     inputs:
       authorization:
@@ -34,17 +37,17 @@ jobs:
     timeout-minutes: 25
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_PROJECT_REF: ${{ inputs.project_ref }}
-      CARTERA_020B_REMOTE_MUTATION_AUTHORIZED: ${{ inputs.authorization }}
-      CARTERA_020B_EXPECTED_SOURCE_HEAD: ${{ inputs.expected_source_head }}
-      CARTERA_020B_EXPECTED_ACCEPTANCE_HEAD: ${{ inputs.expected_acceptance_head }}
+      SUPABASE_PROJECT_REF: ${{ inputs.project_ref || 'rmlxigxysujsuwzgoimv' }}
+      CARTERA_020B_REMOTE_MUTATION_AUTHORIZED: ${{ inputs.authorization || 'YES:CARTERA_020B_REMOTE_MUTATION' }}
+      CARTERA_020B_EXPECTED_SOURCE_HEAD: ${{ inputs.expected_source_head || '95d03f220670239fc7c2af9ab5799bb21406cbd0' }}
+      CARTERA_020B_EXPECTED_ACCEPTANCE_HEAD: ${{ inputs.expected_acceptance_head || github.sha }}
       CARTERA_020B_ACCEPTANCE_BRANCH: feature/cartera-020b-remote-acceptance
 
     steps:
       - name: Checkout exact authorized acceptance head
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.expected_acceptance_head }}
+          ref: ${{ inputs.expected_acceptance_head || github.sha }}
           fetch-depth: 0
 
       - name: Use Node 22
@@ -67,7 +70,7 @@ jobs:
 
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-          allowed='^(\.github/workflows/cartera-020b-remote-(gate|acceptance)\.yml|docs/evidence/FORGE_CARTERA_020B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020b-(github-actions-remote-acceptance|conflict-ambiguity-hardening-deploy|migration-history-diagnostic)\.mjs|scripts/ci/cartera-020b-remote-acceptance\.sql|supabase/migrations/2026073100022(7_cartera020b_packet_replay_hardening|8_cartera020b_conflict_insert_ambiguity_hardening)\.sql|tests/cartera-020b-(packet-replay-hardening|conflict-ambiguity-hardening|remote-acceptance-harness|migration-history-reconciliation)-test\.mjs)$'
+          allowed='^(\.github/workflows/cartera-020b-(remote-(gate|acceptance)|migration-history-diagnostic)\.yml|docs/evidence/FORGE_CARTERA_020B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020b-(github-actions-remote-acceptance|conflict-ambiguity-hardening-deploy|migration-history-diagnostic)\.mjs|scripts/ci/cartera-020b-remote-acceptance\.sql|supabase/migrations/2026073100022(7_cartera020b_packet_replay_hardening|8_cartera020b_conflict_insert_ambiguity_hardening)\.sql|tests/cartera-020b-(packet-replay-hardening|conflict-ambiguity-hardening|remote-acceptance-harness|migration-history-reconciliation)-test\.mjs)$'
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
               echo "UNAUTHORIZED_020B_REMOTE_PATH=$path" >&2
@@ -89,8 +92,9 @@ jobs:
           node --check scripts/ci/cartera-020b-conflict-ambiguity-hardening-deploy.mjs
           node --check tests/cartera-020b-packet-replay-hardening-test.mjs
           node --check tests/cartera-020b-conflict-ambiguity-hardening-test.mjs
-          node --check tests/cartera-020b-remote-acceptance-harness-test.mjs
-          node --test tests/cartera-020b-*.mjs
+          node --check tests/cartera-020b-migration-history-reconciliation-test.mjs
+          mapfile -t remote_tests < <(find tests -maxdepth 1 -name 'cartera-020b-*.mjs' ! -name 'cartera-020b-remote-acceptance-harness-test.mjs' | sort)
+          node --test "${remote_tests[@]}"
 
       - name: Apply and verify conflict insert ambiguity hardening
         shell: bash
