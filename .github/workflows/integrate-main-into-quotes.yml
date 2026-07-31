@@ -1,0 +1,234 @@
+name: Integrate Main Into Quotes
+
+on:
+  push:
+    branches:
+      - fix/quote-calculators-product-intelligence-parity
+    paths:
+      - .github/workflows/integrate-main-into-quotes.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  statuses: write
+
+concurrency:
+  group: integrate-main-into-quotes
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      !contains(github.event.head_commit.message, 'merge(main): reconcile quotes with current main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Quotes branch with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: fix/quote-calculators-product-intelligence-parity
+
+      - name: Configure merge identity
+        run: |
+          git config user.name "ForgeOS Integration Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+      - name: Merge current main
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if git merge-base --is-ancestor origin/main HEAD; then
+            echo "MAIN_ALREADY_INTEGRATED=YES"
+            exit 0
+          fi
+
+          set +e
+          git merge --no-ff --no-commit origin/main
+          merge_code=$?
+          set -e
+
+          conflicts="$(git diff --name-only --diff-filter=U)"
+          if [[ -n "$conflicts" ]]; then
+            printf 'MERGE_CONFLICTS=\n%s\n' "$conflicts"
+            expected="docs/static-preview/forge-alive-material3/app.js"
+            if [[ "$conflicts" != "$expected" ]]; then
+              echo "BLOCKED=UNEXPECTED_MERGE_CONFLICTS"
+              exit 1
+            fi
+          elif [[ "$merge_code" -ne 0 ]]; then
+            echo "BLOCKED=MERGE_FAILED_WITHOUT_REPORTED_CONFLICT"
+            exit 1
+          fi
+
+      - name: Resolve shared Material 3 entrypoint
+        run: |
+          cat > docs/static-preview/forge-alive-material3/app.js <<'APPJS'
+          import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";
+          import { createForgeShell } from "./forge-shell.js";
+          import { createHomeModule } from "./home-module.js";
+          import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
+          import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";
+          import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
+          import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002";
+          import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
+          import "./pipeline-prospect-admin.js?v=pipeline-prospect-admin-001";
+          import "./pipeline-action-identity.js?v=pipeline-action-identity-001";
+          import "./pipeline-google-calendar.js?v=pipeline-google-calendar-001";
+          import "./pipeline-context-journal.js?v=pipeline-context-journal-002";
+          import "./pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003";
+          import "./pipeline-filter-count-authority.js?v=pipeline-filter-count-001";
+          import "./pipeline-stage-filter-authority.js?v=pipeline-stage-filter-001";
+
+          const sourceLayout = import.meta.url.includes("/docs/static-preview/");
+          const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
+          const moduleBase = new URL("./", import.meta.url);
+          const legacyBase = new URL(sourceLayout ? "../forge-alive/" : "../forge-alive-runtime/", import.meta.url);
+          const advisorBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
+          const loadAuthority = async (base, path) => import(new URL(path, base));
+
+          if (!document.querySelector("[data-pipeline-prospect-admin-styles]")) {
+            const adminStyles = document.createElement("link");
+            adminStyles.rel = "stylesheet";
+            adminStyles.href = new URL("pipeline-prospect-admin.css?v=pipeline-prospect-admin-001", import.meta.url);
+            adminStyles.dataset.pipelineProspectAdminStyles = "true";
+            document.head.append(adminStyles);
+          }
+
+          await loadAuthority(envBase, "env.js");
+          await loadAuthority(
+            moduleBase,
+            "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
+          );
+          await loadAuthority(
+            moduleBase,
+            "quote-runtime-hotfix-m05e003.js?v=m05e-010-pages-rate",
+          );
+          await loadAuthority(
+            moduleBase,
+            "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05e-009",
+          );
+          await loadAuthority(
+            moduleBase,
+            "quote-runtime-vida-mujer-visual-m05e010.js?v=m05e-010",
+          );
+          await loadAuthority(
+            moduleBase,
+            "quote-runtime-printable-closure-m05e006.js?v=m05e-010-landscape",
+          );
+
+          await loadAuthority(legacyBase, "forge-alive-public-config-067g17a1.js");
+          await loadAuthority(advisorBase, "productive-prospect-bootstrap.js");
+          if (!document.querySelector("[data-forge-auth-entry-styles]")) {
+            const authStyles = document.createElement("link");
+            authStyles.rel = "stylesheet";
+            authStyles.href = new URL("forge-alive-auth-entry-067g17b1.css", legacyBase);
+            authStyles.dataset.forgeAuthEntryStyles = "true";
+            document.head.append(authStyles);
+          }
+          await loadAuthority(legacyBase, "forge-alive-auth-entry-067g17b1.js");
+
+          if (
+            !globalThis.ForgeAlivePublicConfig067G17A1
+            || !globalThis.ForgeProductiveProspectBootstrap067G17B
+            || !globalThis.ForgeAliveAuthEntry067G17B1
+          ) {
+            document.body.insertAdjacentHTML("afterbegin", '<p role="alert" data-auth-runtime-error>No se pudo iniciar la autenticación de Forge.</p>');
+            throw new Error("MATERIAL3_AUTH_AUTHORITIES_REQUIRED");
+          }
+
+          const application = document.querySelector("[data-forge-application]");
+          const moduleViewport = document.querySelector(
+            "[data-forge-module-viewport]",
+          );
+          const homeRoot = document.querySelector("[data-forge-home-module]");
+          const quotesRoot = document.querySelector("[data-forge-quotes-module]");
+          const pipelineRoot = document.querySelector("[data-forge-pipeline-module]");
+
+          if (!application || !moduleViewport || !homeRoot || !quotesRoot || !pipelineRoot) {
+            throw new Error("UI-M04 canonical shell boundary is incomplete");
+          }
+
+          const shell = createForgeShell({
+            root: application,
+            moduleViewport,
+          });
+          const home = createHomeModule({
+            root: homeRoot,
+            shell,
+          });
+          const quotes = createQuotesModule({
+            root: quotesRoot,
+            shell,
+          });
+          const pipeline = createPipelineModule({
+            root: pipelineRoot,
+            shell,
+          });
+
+          shell
+            .registerRouteModule("inicio", home)
+            .registerRouteModule("pipeline", pipeline)
+            .registerRouteModule("quotes", quotes);
+          shell.initialize();
+
+          document.documentElement.dataset.forgeCleanHomeReady = "true";
+          document.documentElement.dataset.forgeShellReady = "true";
+          document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
+          document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
+          APPJS
+
+          git add docs/static-preview/forge-alive-material3/app.js
+          unresolved="$(git diff --name-only --diff-filter=U)"
+          if [[ -n "$unresolved" ]]; then
+            printf 'BLOCKED=UNRESOLVED_CONFLICTS\n%s\n' "$unresolved"
+            exit 1
+          fi
+
+      - name: Validate Quotes contracts
+        run: |
+          set -euo pipefail
+          node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
+          node advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
+          node advisor-os/quotes/tests/quote-printable-pdf-generator-master-test.js
+          node advisor-os/quotes/tests/quote-printable-product-profile-master-test.js
+          node advisor-os/quotes/tests/quote-printable-version-repository-master-test.js
+          node advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
+          node advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+          node tests/banxico-rates-edge-function-test.mjs
+          node tests/ui-m05h-orvi-commercial-document-test.mjs
+          node tests/ui-m05i-vida-mujer-commercial-document-test.mjs
+          node tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
+
+      - name: Validate current Pipeline contracts
+        run: |
+          set -euo pipefail
+          node tests/legacy-ui-retirement-regression.mjs
+          node tests/material3-pipeline-integration-test.mjs
+          node tests/pipeline-google-calendar-regression.mjs
+          node tests/pipeline-real-interaction-regression.mjs
+          node tests/pipeline-stage-mutation-authority-test.mjs
+          node tests/pipeline-stage-rpc-authority-regression.mjs
+          node tests/prospect-journal-service-contract-test.mjs
+
+      - name: Commit reconciled branch
+        id: commit
+        run: |
+          set -euo pipefail
+          git add --all
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "INTEGRATION_COMMIT=NOT_REQUIRED"
+            exit 0
+          fi
+          git commit -m "merge(main): reconcile quotes with current main"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "INTEGRATION_COMMIT=$(git rev-parse HEAD)"
+
+      - name: Push reconciled branch
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git push origin HEAD:fix/quote-calculators-product-intelligence-parity
