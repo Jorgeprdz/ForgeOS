@@ -12,6 +12,8 @@ on:
       - 'tests/chart-ready-surface-contract-test.mjs'
       - 'tests/activity-report-source-port-test.mjs'
       - 'tests/activity-event-authority-mapping-test.mjs'
+      - 'tests/fes-activity-report-source-adapter-test.mjs'
+      - 'tests/activity-report-provider-test.mjs'
       - '.github/workflows/reporting-core-validation-ci.yml'
   workflow_dispatch:
 
@@ -38,6 +40,8 @@ jobs:
           node --check advisor-os/reporting/application/report-provider-port.mjs
           node --check advisor-os/reporting/application/chart-ready-surface-contract.mjs
           node --check advisor-os/reporting/application/activity-report-source-port.mjs
+          node --check advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs
+          node --check advisor-os/reporting/providers/activity-report-provider.mjs
           node --check advisor-os/reporting/runtime/universal-reporting-kernel.mjs
           node --check advisor-os/reporting/runtime/universal-period-resolver.mjs
           node --check advisor-os/reporting/runtime/report-provider-runtime.mjs
@@ -53,4 +57,6 @@ jobs:
             tests/report-comparison-engine-test.mjs \
             tests/chart-ready-surface-contract-test.mjs \
             tests/activity-report-source-port-test.mjs \
-            tests/activity-event-authority-mapping-test.mjs
+            tests/activity-event-authority-mapping-test.mjs \
+            tests/fes-activity-report-source-adapter-test.mjs \
+            tests/activity-report-provider-test.mjs
