@@ -43,20 +43,37 @@ jobs:
           PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/index-quote-calculator-parity.html?nav=cotizaciones
         run: |
           set -euo pipefail
+          run_id=""
 
           post_status() {
             local state="$1"
             local description="$2"
+            local target_url="${3:-$PAGE_URL}"
             gh api \
               --method POST \
               "repos/$GITHUB_REPOSITORY/statuses/$TARGET_SHA" \
               -f state="$state" \
               -f context="pages/quotes-preview" \
               -f description="$description" \
-              -f target_url="$PAGE_URL" >/dev/null
+              -f target_url="$target_url" >/dev/null
           }
 
-          trap 'post_status failure "GitHub Pages preview deployment failed"' ERR
+          fail_deploy() {
+            local code=$?
+            local target="$PAGE_URL"
+            local description="GitHub Pages preview deployment failed"
+            if [[ -n "$run_id" ]]; then
+              target="https://github.com/$GITHUB_REPOSITORY/actions/runs/$run_id"
+              description="Pages run $run_id failed"
+              gh run view "$run_id" \
+                --repo "$GITHUB_REPOSITORY" \
+                --log-failed || true
+            fi
+            post_status failure "$description" "$target"
+            exit "$code"
+          }
+
+          trap fail_deploy ERR
           post_status pending "Publishing Quotes preview to GitHub Pages"
 
           printf 'PAGES_DEPLOY_REF=%s\n' "$TARGET_REF"
@@ -66,7 +83,6 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --ref "$TARGET_REF"
 
-          run_id=""
           for attempt in $(seq 1 30); do
             run_id="$(
               gh run list \
