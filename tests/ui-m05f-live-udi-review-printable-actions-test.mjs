@@ -39,12 +39,17 @@ assert.match(hotfix, /for \(const action of \["preview", "download"\]\)/);
 assert.match(hotfix, /data-forge-qpd06-action="\$\{action\}"/);
 
 // The server centralizes cache access in currentRates(), forces a startup
-// refresh, and discovers the existing public Supabase project configuration
-// from the same root env.js used by Forge.
+// refresh, discovers Supabase from env.js, and falls back to the public project
+// hostname already governed by the Pages workflow when env.js is empty.
 assert.match(server, /const cache = await getCachedRates\(\{ forceRefresh \}\)/);
 assert.match(server, /currentRates\(\{ forceRefresh: true \}\)/);
 assert.match(server, /loadPublicMarketProviderFromEnvJs/);
 assert.match(server, /parsePublicEnvJs/);
+assert.match(server, /discoverSupabaseUrlFromPagesWorkflow/);
+assert.match(server, /\.github.*workflows.*pages\.yml/s);
+assert.match(server, /([a-z0-9]\{10,\})\\\.supabase\\\.co/);
+assert.match(server, /source: "PAGES_WORKFLOW"/);
+assert.match(server, /configureSupabaseProvider/);
 assert.match(server, /SUPABASE_URL/);
 assert.match(server, /SUPABASE_KEY/);
 assert.match(server, /functions\/v1\/\$\{BANXICO_EDGE_FUNCTION_NAME\}/);
@@ -63,6 +68,7 @@ console.log("PASS UI-M05F live UDI human review printable actions", {
   staleFixtureDetected: staleCache.rates.UDI_MXN.date,
   liveRateRefreshRequired: true,
   envJsSupabaseDiscovery: true,
+  pagesWorkflowSupabaseDiscovery: true,
   annualContributionCurrentMxn: true,
   clientHumanReview: true,
   confirmationSynchronized: true,
