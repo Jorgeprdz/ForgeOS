@@ -11,11 +11,21 @@ const deploy = readFileSync(
   'utf8',
 );
 
-test('00240 renames the PostgreSQL-truncated constraint to a stable bounded name', () => {
+test('00240 discovers the conflict unique constraint by table columns', () => {
   assert.match(migration, /^begin;/m);
   assert.match(migration, /commit;\s*$/);
-  assert.match(migration, /cartera020c_confirmation_conflicts_advisor_id_conflict_referenc/);
-  assert.match(migration, /to cartera020c_conflict_reference_uq/);
+  assert.match(migration, /from pg_constraint c/);
+  assert.match(migration, /unnest\(c\.conkey\) with ordinality/);
+  assert.match(migration, /advisor_id/);
+  assert.match(migration, /conflict_reference/);
+  assert.match(migration, /CARTERA020C_CONFLICT_REFERENCE_UNIQUE_CONSTRAINT_NOT_FOUND/);
+  assert.doesNotMatch(migration, /cartera020c_confirmation_conflicts_advisor_id_conflict_referenc\s+to/);
+});
+
+test('00240 renames the discovered constraint to a stable bounded name', () => {
+  assert.match(migration, /discovered_constraint_name/);
+  assert.match(migration, /execute format/);
+  assert.match(migration, /rename constraint %I to cartera020c_conflict_reference_uq/);
 });
 
 test('00240 recompiles conflict recording against the stable constraint', () => {
