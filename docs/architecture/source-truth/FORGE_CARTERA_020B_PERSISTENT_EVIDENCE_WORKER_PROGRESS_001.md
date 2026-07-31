@@ -6,7 +6,7 @@ Cartera / Document Intake and Identity Resolution
 
 ## Status
 
-`CONTRACTS_ADAPTERS_AND_PERSISTENCE_SCHEMA_IMPLEMENTED / GOVERNED_SQL_COMMANDS_PENDING / REMOTE_DEPLOYMENT_NOT_AUTHORIZED`
+`GOVERNED_REPOSITORY_FOUNDATION_IMPLEMENTED / REMOTE_DEPLOYMENT_NOT_AUTHORIZED / PHASE_NOT_COMPLETE`
 
 ## Execution identity
 
@@ -25,98 +25,92 @@ PRODUCT_UI_MUTATION=NO
 
 - strict provider-neutral extraction envelope;
 - extraction statuses `COMPLETE`, `EMPTY`, `FAILED`, `UNSUPPORTED` and `REVIEW_REQUIRED`;
-- confidence-based classification with matched evidence, competitors and ambiguity;
+- classification candidates with confidence, matched evidence, competitors and ambiguity;
 - policy field candidates preserving raw value, normalized candidate value, confidence, source location, parser identity and unknown/conflict state;
 - deterministic parser registry by carrier, document type and product;
-- explicit `MATCHED`, `AMBIGUOUS`, `UNSUPPORTED`, `UNKNOWN_CARRIER` and `UNKNOWN_PRODUCT` outcomes;
 - filename-based parser selection forbidden;
-- deterministic worker model with optimistic versioning, leases, retries and changed-input replay rejection;
-- sequential batch processing with per-file failure isolation.
+- worker state with optimistic versions, leases, retries and per-file batch isolation;
+- canonical EvidenceSource, EvidenceInboxItem and pending PolicyEvidencePacket adapters.
 
-## Existing foundation adapters
+## Durable repository proposal
 
-```text
-policy-ocr-engine.js
-→ cartera-020b-pdftotext-adapter.js
-→ provider-neutral extraction envelope
-
-EvidenceSource + EvidenceInboxItem
-→ cartera-020b-evidence-admission-adapter.js
-→ governed admission command candidate
-
-Policy field candidates
-→ cartera-020b-policy-packet-adapter.js
-→ canonical PolicyEvidencePacket in pending_confirmation
-```
-
-The classifier corrects the legacy policy-first defect. A receipt or endorsement mentioning a policy is not automatically classified as a policy, and materially competing signals remain ambiguous.
-
-## Repository persistence proposal
+Migrations:
 
 ```text
 20260731000220_cartera020b_evidence_tables.sql
 20260731000221_cartera020b_worker_guards.sql
 20260731000222_cartera020b_rls_and_grants.sql
+20260731000223_cartera020b_command_helpers.sql
+20260731000224_cartera020b_admission_and_claim_rpcs.sql
+20260731000225_cartera020b_processing_result_rpc.sql
 ```
 
-Proposed owner-scoped authorities:
+Durable authorities:
 
-- `cartera020b_evidence_sources`;
-- `cartera020b_evidence_inbox_items`;
-- `cartera020b_evidence_transitions`;
-- `cartera020b_extraction_attempts`;
-- `cartera020b_extraction_candidates`;
-- `cartera020b_policy_evidence_packets`;
-- `cartera020b_command_receipts`;
-- `cartera020b_command_conflicts`.
+- Evidence sources and Inbox items;
+- append-only transitions and extraction attempts;
+- non-truth extraction candidates;
+- pending-confirmation Policy evidence packets;
+- exact idempotency receipts;
+- persistent changed-input replay conflicts.
 
-The schema stores SHA-256 document and extracted-text digests plus opaque storage references. It does not store raw document bytes or extracted text in relational tables.
+The Inbox `metadata` column defect found during command construction was corrected before remote deployment.
 
-## Implemented persistence boundaries
+## Governed commands
 
-- advisor-bound and forced RLS on every intake authority;
-- authenticated reads limited to `advisor_id = auth.uid()`;
-- all direct authenticated writes revoked;
-- source, transition, attempt, candidate, packet, receipt and conflict history append-only;
-- inbox mutation requires the governed command context;
-- durable lease, retry and optimistic state-version fields;
-- one source per advisor, digest and purpose;
-- command receipt and changed-input conflict authorities reserved;
-- candidates and packets structurally enforce `creates_truth = false`;
-- packets structurally remain `PENDING_CONFIRMATION`.
+### `forge_cartera020b_admit_evidence(jsonb)`
 
-## Deliberately pending SQL command cut
+- requires an authenticated owner-matched actor;
+- validates a strict versioned contract;
+- computes the command digest server-side;
+- locks idempotency and advisor/digest/purpose keys;
+- persists source, Inbox item, initial transition and receipt atomically;
+- identical replay returns the original response;
+- changed-input replay writes a durable conflict;
+- duplicate document digest and purpose returns `ALREADY_ADMITTED` without duplicating rows;
+- stores hashes and opaque references, never raw bytes.
 
-The following `security definer` commands are not yet present and remain the next repository cut:
+### `forge_cartera020b_claim_evidence(text, integer)`
 
-- `forge_cartera020b_admit_evidence(jsonb)`;
-- `forge_cartera020b_claim_evidence(text, integer)`;
-- `forge_cartera020b_record_processing_result(jsonb)`.
+- validates worker identity and a 30–3600 second lease;
+- returns an active claim for the same worker as replay;
+- uses `FOR UPDATE SKIP LOCKED` for concurrent workers;
+- claims available, due-retry or expired-lease items;
+- increments optimistic state version;
+- appends a claim transition;
+- creates no business truth.
 
-They must add authentication, exact idempotency receipts, persistent changed-input conflict responses, `FOR UPDATE SKIP LOCKED`, expired-lease recovery and bounded state transitions before any remote deployment is authorized.
+### `forge_cartera020b_record_processing_result(jsonb)`
 
-## Explicit non-effects
+- checks replay before requiring the prior lease;
+- requires owner, worker, lease token and exact state version;
+- rejects expired or mismatched claims;
+- enforces the existing Evidence status transition authority;
+- persists attempts, candidates and packets transactionally;
+- validates source digest and blocks raw-document payload keys;
+- keeps candidate and packet rows structurally `creates_truth = false`;
+- keeps packets `PENDING_CONFIRMATION`;
+- schedules retries with bounded exponential delay;
+- always clears the lease after a recorded result;
+- persists transition and receipt atomically.
 
-This cut does not:
+## Privacy and authority boundary
 
-- deploy migrations to Supabase;
-- upload a real document;
-- expose a mutation RPC;
-- create or merge a CommercialPerson;
-- create or update a canonical Policy;
-- write PolicyRole rows;
-- invoke the confirmed Policy command;
-- confirm identity or extracted fields;
-- modify Cartera UI;
-- create payment, compensation, opportunity, task, calendar or message effects.
+- forced advisor RLS remains enabled on every table;
+- direct authenticated writes remain revoked;
+- public callers receive only the three bounded security-definer RPCs;
+- raw PDF bytes and extracted text are not persisted in relational tables;
+- no RPC writes `CommercialPerson`, canonical Policy or PolicyRole;
+- no RPC invokes the confirmed Policy command;
+- no payment, compensation, task, calendar, message or opportunity effect exists.
 
 ## Repository acceptance target
 
 ```text
-NEW_TARGETED_TESTS=31
+NEW_TARGETED_TESTS=43
 INHERITED_EVIDENCE_TESTS=9
-TOTAL_TARGETED_TESTS=40
-EXPECTED_PASS=40
+TOTAL_TARGETED_TESTS=52
+EXPECTED_PASS=52
 EXPECTED_FAIL=0
 ```
 
@@ -129,8 +123,8 @@ CARTERA_020B_PROVIDER_ADAPTER=REPOSITORY_READY
 CARTERA_020B_CLASSIFIER=REPOSITORY_READY
 CARTERA_020B_PARSER_REGISTRY=REPOSITORY_READY
 CARTERA_020B_PERSISTENCE_SCHEMA=REPOSITORY_READY
-CARTERA_020B_SQL_COMMANDS=NOT_IMPLEMENTED
+CARTERA_020B_SQL_COMMANDS=REPOSITORY_READY
 CARTERA_020B_REMOTE_DEPLOYMENT=NOT_AUTHORIZED
 CARTERA_020B_COMPLETE=NO
-NEXT=CARTERA_020B_GOVERNED_PERSISTENCE_COMMANDS
+NEXT=CARTERA_020B_REMOTE_DEPLOYMENT_AND_TRANSACTIONAL_ACCEPTANCE
 ```
