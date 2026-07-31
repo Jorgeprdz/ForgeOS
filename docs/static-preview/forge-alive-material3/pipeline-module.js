@@ -822,6 +822,30 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
     }
   }
 
+  async function persistProductiveStage(prospectId, status) {
+    const current = productiveCards.find(item => item.id === prospectId);
+    if (!current || !productiveAdapter) {
+      const error = new Error("PRODUCTIVE_STAGE_AUTHORITY_UNAVAILABLE");
+      error.code = "PRODUCTIVE_STAGE_AUTHORITY_UNAVAILABLE";
+      throw error;
+    }
+    if (!status || status === current.status) return current;
+
+    productiveError = "";
+    const nextCards = await productiveAdapter.updateStage(prospectId, status);
+    const confirmed = nextCards.find(item => item.id === prospectId);
+    if (!confirmed || confirmed.status !== status) {
+      const error = new Error("PRODUCTIVE_STAGE_RENDER_CONFIRMATION_MISMATCH");
+      error.code = "PRODUCTIVE_STAGE_RENDER_CONFIRMATION_MISMATCH";
+      throw error;
+    }
+
+    productiveCards = nextCards;
+    referralStatus = `Estado actualizado a ${confirmed.stageLabel}.`;
+    render();
+    return confirmed;
+  }
+
   function render() {
     if (usesProductiveRuntime && authStatus !== "AUTHENTICATED") {
       const loading = authStatus === "AUTH_LOADING";
@@ -935,7 +959,6 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
                       <strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong>
                     </p>
                     ${card.nextCommitment ? `<p><span>Próximo compromiso</span><strong>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</strong></p>` : ""}
-                    <p><span>Asistencia</span><strong>${escapeHtml(card.intelligenceLabel || "Disponible al solicitarla")}</strong></p>
                   </div>
                   <div class="pipeline-module__card-actions" data-productive-card-actions aria-label="Acciones del prospecto">
                     <button class="pipeline-module__action--context" type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
@@ -996,20 +1019,23 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
     });
     root.querySelectorAll?.("[data-productive-stage-control]").forEach(select => {
       select.addEventListener("change", async () => {
-        const card = productiveCards.find(item => item.id === select.dataset.productiveStageControl);
+        const prospectId = select.dataset.productiveStageControl;
+        const card = productiveCards.find(item => item.id === prospectId);
         if (!card || !productiveAdapter || select.value === card.status) return;
         const previous = card.status;
+        const requested = select.value;
         select.disabled = true;
         select.removeAttribute("aria-invalid");
         try {
-          productiveCards = await productiveAdapter.updateStage(card.id, select.value);
-          referralStatus = "Etapa actualizada.";
-          render();
+          await persistProductiveStage(prospectId, requested);
         } catch {
-          select.value = previous;
-          select.disabled = false;
-          select.setAttribute("aria-invalid", "true");
-          productiveError = "No pudimos actualizar la etapa.";
+          if (select.isConnected) {
+            select.value = previous;
+            select.disabled = false;
+            select.setAttribute("aria-invalid", "true");
+          }
+          productiveError = "No pudimos actualizar el estado.";
+          render();
         }
       });
     });
@@ -1069,6 +1095,12 @@ export function createPipelineModule({ root, shell, dataProvider = connectedData
   const api = Object.freeze({
     id: "pipeline",
     root,
+    updateProductiveStage(prospectId, status) {
+      return persistProductiveStage(prospectId, status);
+    },
+    getProductiveCard(prospectId) {
+      return productiveCards.find(item => item.id === prospectId) || null;
+    },
     mount() {
       root.hidden = false;
       root.dataset.moduleActive = "true";

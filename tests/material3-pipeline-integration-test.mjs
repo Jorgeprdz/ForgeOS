@@ -283,7 +283,10 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.match(source, /Estado del prospecto/);
   assert.match(source, /data-productive-source-label/);
   assert.match(source, /data-productive-card-metadata[\s\S]*data-productive-source-label[\s\S]*pipeline-module__stage-control[\s\S]*data-productive-stage-control/);
-  assert.match(source, /productiveAdapter\.updateStage\(card\.id,\s*select\.value\)/);
+  assert.match(source, /async function persistProductiveStage\(prospectId, status\)/);
+  assert.match(source, /productiveAdapter\.updateStage\(prospectId, status\)/);
+  assert.match(source, /await persistProductiveStage\(prospectId, requested\)/);
+  assert.match(source, /updateProductiveStage\(prospectId, status\)[\s\S]*persistProductiveStage\(prospectId, status\)/);
   assert.match(
     source,
     /data-productive-card-actions[^>]*aria-label="Acciones del prospecto"[\s\S]*Ver contexto[\s\S]*Preparar mensaje[\s\S]*NASH Combat[\s\S]*Revisar NBA[\s\S]*Llamar[\s\S]*Agendar/,
@@ -291,7 +294,9 @@ test("productive prospect uses a structured Material 3 card layout", async () =>
   assert.doesNotMatch(source, /card\.intelligenceState/);
   assert.doesNotMatch(source, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
   assert.doesNotMatch(adapter, /CONVERSATION_BRIEF_AVAILABLE_ON_REQUEST/);
-  assert.match(adapter, /intelligenceLabel:\s*"Asistencia de conversación disponible"/);
+  assert.doesNotMatch(source, /<span>Asistencia<\/span>/);
+  assert.doesNotMatch(source, /card\.intelligenceLabel/);
+  assert.doesNotMatch(adapter, /intelligenceLabel/);
   assert.match(adapter, /referred_new:\s*"Nuevo"/);
   assert.match(adapter, /value:\s*"referred_new",\s*label:\s*"Nuevo"/);
   for (const [value, label] of [

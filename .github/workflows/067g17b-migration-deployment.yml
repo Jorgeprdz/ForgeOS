@@ -1,9 +1,10 @@
-name: 067G17B Targeted Prospect Migration Deployment
+name: ForgeOS Targeted Migration Deployment
 
 on:
   push:
     branches:
       - feature/067g17b-productive-prospect-crud
+      - main
     paths:
       - "supabase/migrations/20260619000100_supabase_rls_beta_foundation.sql"
       - "supabase/migrations/20260619000200_supabase_rls_live_hardening.sql"
@@ -11,16 +12,26 @@ on:
       - "supabase/migrations/20260718000100_067g17b_productive_prospect_crud.sql"
       - "supabase/migrations/20260718000200_067g17b_remove_legacy_prospect_delete.sql"
       - "supabase/migrations/20260718000300_067g17b_owned_archive_guard_repair.sql"
+      - "supabase/migrations/20260731000100_pipeline_prospect_journal.sql"
+      - "supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql"
       - "scripts/forge-067g17b-deploy-migrations.mjs"
+      - "scripts/deploy-pipeline-journal-migration.mjs"
+      - "scripts/deploy-pipeline-stage-rpc-migration.mjs"
+      - "tests/prospect-journal-service-contract-test.mjs"
+      - "tests/pipeline-stage-rpc-authority-regression.mjs"
       - ".github/workflows/067g17b-migration-deployment.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: forgeos-targeted-migration-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   deploy-prospect-foundation:
-    if: github.actor == 'Jorgeprdz'
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'feature/067g17b-productive-prospect-crud'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -53,3 +64,216 @@ jobs:
           name: 067g17b-migration-deployment-ledger
           path: artifacts/067g17b-migration/ledger.jsonl
           if-no-files-found: error
+
+  deploy-pipeline-journal:
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - name: Checkout accepted main
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Journal migration contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          test -f supabase/migrations/20260731000100_pipeline_prospect_journal.sql
+          node --check scripts/deploy-pipeline-journal-migration.mjs
+          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
+            supabase/migrations/20260731000100_pipeline_prospect_journal.sql; then
+            echo "Destructive SQL rejected"
+            exit 1
+          fi
+          grep -En "prospect_journal_entries|JOURNAL:|CONVERSATION_RECORDED|enable row level security" \
+            supabase/migrations/20260731000100_pipeline_prospect_journal.sql
+          node --test tests/prospect-journal-service-contract-test.mjs
+
+      - name: Apply and confirm exactly migration 20260731000100
+        run: node scripts/deploy-pipeline-journal-migration.mjs
+
+      - name: Publish redacted remote evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/pipeline-journal-migration
+          if [ ! -s artifacts/pipeline-journal-migration/ledger.jsonl ]; then
+            printf '%s\n' '{"name":"workflow_preflight","status":"FAIL","detail":"LEDGER_NOT_CREATED"}' \
+              > artifacts/pipeline-journal-migration/ledger.jsonl
+          fi
+
+          git fetch origin supabase-evidence
+          git worktree add /tmp/supabase-evidence origin/supabase-evidence
+          mkdir -p /tmp/supabase-evidence/deployments
+          cp artifacts/pipeline-journal-migration/ledger.jsonl \
+            /tmp/supabase-evidence/deployments/20260731000100-ledger.jsonl
+
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const entries = readFileSync('artifacts/pipeline-journal-migration/ledger.jsonl', 'utf8')
+            .trim()
+            .split('\n')
+            .filter(Boolean)
+            .map(line => JSON.parse(line));
+          const required = [
+            'predeployment_inventory',
+            entries.some(entry => entry.name === 'migration_applied')
+              ? 'migration_applied'
+              : 'migration_already_satisfied',
+            'postdeployment_security_inventory',
+            'migration_history',
+          ];
+          const accepted = entries.length > 0
+            && entries.every(entry => entry.status === 'PASS')
+            && required.every(name => entries.some(entry => entry.name === name && entry.status === 'PASS'));
+          const result = {
+            status: accepted ? 'PASS' : 'FAIL',
+            migrationVersion: '20260731000100',
+            migrationName: 'pipeline_prospect_journal',
+            projectRef: 'rmlxigxysujsuwzgoimv',
+            sourceSha: process.env.GITHUB_SHA,
+            workflowRunId: process.env.GITHUB_RUN_ID,
+            verifiedAt: new Date().toISOString(),
+            checks: entries.map(({ name, status, detail, failedChecks }) => ({
+              name,
+              status,
+              ...(detail ? { detail } : {}),
+              ...(failedChecks ? { failedChecks } : {}),
+            })),
+          };
+          writeFileSync('/tmp/supabase-evidence/deployments/latest.json', `${JSON.stringify(result, null, 2)}\n`);
+          NODE
+
+          cd /tmp/supabase-evidence
+          git config user.name "forgeos-supabase-deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add deployments/latest.json deployments/20260731000100-ledger.jsonl
+          git commit -m "evidence(supabase): report journal migration ${GITHUB_SHA}"
+          git push origin HEAD:supabase-evidence
+
+      - name: Upload redacted deployment ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-journal-migration-ledger
+          path: artifacts/pipeline-journal-migration/ledger.jsonl
+          if-no-files-found: error
+          retention-days: 30
+
+  deploy-pipeline-stage-rpc:
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - name: Checkout accepted main
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify stage RPC migration contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          test -f supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql
+          node --check scripts/deploy-pipeline-stage-rpc-migration.mjs
+          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
+            supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql; then
+            echo "Destructive SQL rejected"
+            exit 1
+          fi
+          grep -En "forge_pipeline_update_prospect_stage|security definer|auth.uid|advisor_id = actor_id|grant execute" \
+            supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql
+          node --test tests/pipeline-stage-rpc-authority-regression.mjs
+
+      - name: Apply and rollback-test exactly migration 20260731000200
+        run: node scripts/deploy-pipeline-stage-rpc-migration.mjs
+
+      - name: Publish redacted stage RPC evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/pipeline-stage-rpc-migration
+          if [ ! -s artifacts/pipeline-stage-rpc-migration/ledger.jsonl ]; then
+            printf '%s\n' '{"name":"workflow_preflight","status":"FAIL","detail":"LEDGER_NOT_CREATED"}' \
+              > artifacts/pipeline-stage-rpc-migration/ledger.jsonl
+          fi
+
+          git fetch origin supabase-evidence
+          rm -rf /tmp/supabase-stage-rpc-evidence
+          git worktree add /tmp/supabase-stage-rpc-evidence origin/supabase-evidence
+          mkdir -p /tmp/supabase-stage-rpc-evidence/deployments
+          cp artifacts/pipeline-stage-rpc-migration/ledger.jsonl \
+            /tmp/supabase-stage-rpc-evidence/deployments/20260731000200-ledger.jsonl
+
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const entries = readFileSync('artifacts/pipeline-stage-rpc-migration/ledger.jsonl', 'utf8')
+            .trim()
+            .split('\n')
+            .filter(Boolean)
+            .map(line => JSON.parse(line));
+          const required = [
+            'predeployment_inventory',
+            'migration_applied',
+            'postdeployment_security_inventory',
+            'authenticated_rollback_acceptance',
+            'migration_history',
+          ];
+          const accepted = entries.length > 0
+            && entries.every(entry => entry.status === 'PASS')
+            && required.every(name => entries.some(entry => entry.name === name && entry.status === 'PASS'));
+          const result = {
+            status: accepted ? 'PASS' : 'FAIL',
+            migrationVersion: '20260731000200',
+            migrationName: 'pipeline_prospect_stage_rpc',
+            projectRef: 'rmlxigxysujsuwzgoimv',
+            sourceSha: process.env.GITHUB_SHA,
+            workflowRunId: process.env.GITHUB_RUN_ID,
+            verifiedAt: new Date().toISOString(),
+            checks: entries.map(({ name, status, detail, failedChecks }) => ({
+              name,
+              status,
+              ...(detail ? { detail } : {}),
+              ...(failedChecks ? { failedChecks } : {}),
+            })),
+          };
+          writeFileSync(
+            '/tmp/supabase-stage-rpc-evidence/deployments/pipeline-stage-rpc-latest.json',
+            `${JSON.stringify(result, null, 2)}\n`,
+          );
+          NODE
+
+          cd /tmp/supabase-stage-rpc-evidence
+          git config user.name "forgeos-supabase-deploy"
+          git config user.email "actions@users.noreply.github.com"
+          git add deployments/pipeline-stage-rpc-latest.json deployments/20260731000200-ledger.jsonl
+          git commit -m "evidence(supabase): report stage RPC migration ${GITHUB_SHA}"
+          git push origin HEAD:supabase-evidence
+
+      - name: Upload redacted stage RPC ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-stage-rpc-migration-ledger
+          path: artifacts/pipeline-stage-rpc-migration/ledger.jsonl
+          if-no-files-found: error
+          retention-days: 30

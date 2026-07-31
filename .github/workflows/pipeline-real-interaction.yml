@@ -6,7 +6,18 @@ on:
     paths:
       - docs/static-preview/forge-alive-material3/**
       - advisor-os/sales-pipeline/**
+      - supabase/migrations/20260731000100_pipeline_prospect_journal.sql
       - tests/pipeline-real-interaction-regression.mjs
+      - tests/pipeline-prospect-admin-regression.mjs
+      - tests/pipeline-action-identity-regression.mjs
+      - tests/pipeline-google-calendar-regression.mjs
+      - tests/pipeline-context-journal-regression.mjs
+      - tests/pipeline-public-acceptance-hotfix-regression.mjs
+      - tests/pipeline-filter-count-authority-regression.mjs
+      - tests/pipeline-card-density-stage-authority-regression.mjs
+      - tests/material3-pipeline-integration-test.mjs
+      - tests/prospect-journal-service-contract-test.mjs
+      - tools/forge-ui-visual-diagnostic.mjs
       - .github/workflows/pipeline-real-interaction.yml
   workflow_dispatch:
 
@@ -24,6 +35,8 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
+      - name: Verify journal persistence contract
+        run: node --test tests/prospect-journal-service-contract-test.mjs
       - run: npx playwright install --with-deps chromium
       - name: Start Vite
         shell: bash
@@ -41,5 +54,19 @@ jobs:
             cat /tmp/forge-pipeline-vite.log
             false
           fi
-      - name: Interact with buttons and change prospect stage
-        run: node tests/pipeline-real-interaction-regression.mjs
+      - name: Verify stage persistence
+        run: timeout 120s node tests/pipeline-real-interaction-regression.mjs
+      - name: Verify prospect administration
+        run: timeout 120s node tests/pipeline-prospect-admin-regression.mjs
+      - name: Verify action identity
+        run: timeout 120s node tests/pipeline-action-identity-regression.mjs
+      - name: Verify Google Calendar draft flow
+        run: timeout 120s node tests/pipeline-google-calendar-regression.mjs
+      - name: Verify context journal
+        run: timeout 120s node tests/pipeline-context-journal-regression.mjs
+      - name: Verify public acceptance hotfix
+        run: timeout 120s node tests/pipeline-public-acceptance-hotfix-regression.mjs
+      - name: Verify combined filter totals
+        run: timeout 120s node tests/pipeline-filter-count-authority-regression.mjs
+      - name: Verify mobile density and single stage authority
+        run: timeout 120s node tests/pipeline-card-density-stage-authority-regression.mjs

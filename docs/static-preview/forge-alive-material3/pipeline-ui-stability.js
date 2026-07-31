@@ -97,7 +97,6 @@ export function installPipelineUiStability({
   let anchor = null;
   let anchorRestorationScheduled = false;
   let scrollLockSnapshot = null;
-  let observerApplyingStage = false;
 
   const pipelineRoot = () => documentRef.querySelector("[data-forge-pipeline-module]");
   const escapeValue = value => windowRef.CSS?.escape?.(value) || String(value).replace(/["\\]/g, "\\$&");
@@ -196,36 +195,9 @@ export function installPipelineUiStability({
   }, true);
 
   documentRef.addEventListener("change", event => {
-    const select = event.target?.closest?.("[data-productive-stage-control]");
-    if (select) {
-      const card = select.closest("[data-productive-prospect-card]");
-      const cardId = card?.dataset?.productiveProspectCard;
-      const desired = select.value;
-      const previous = card?.dataset?.productiveStage;
-      if (!card || !cardId || !desired || desired === previous) return;
-
-      captureAnchor(select);
-      const snapshot = applyStagePresentation(card, desired, "saving");
-      pendingStages.set(cardId, {
-        ...snapshot,
-        cardId,
-        desired,
-        startedAt: Date.now(),
-      });
-
-      const failureObserver = new Observer(() => {
-        if (select.getAttribute("aria-invalid") !== "true") return;
-        const pending = pendingStages.get(cardId);
-        if (pending) restoreStagePresentation(card, pending);
-        pendingStages.delete(cardId);
-        failureObserver.disconnect();
-      });
-      failureObserver.observe(select, { attributes: true, attributeFilter: ["aria-invalid"] });
-      windowRef.setTimeout(() => failureObserver.disconnect(), 15000);
-      return;
-    }
-
-    if (event.target?.matches?.("[data-productive-filter-source], [data-productive-filter-status]")) {
+    if (event.target?.matches?.(
+      "[data-productive-stage-control], [data-productive-filter-source], [data-productive-filter-status]",
+    )) {
       captureAnchor(event.target);
     }
   }, true);
@@ -240,36 +212,7 @@ export function installPipelineUiStability({
   });
 
   const rootObserver = new Observer(mutations => {
-    if (observerApplyingStage) return;
-    const root = pipelineRoot();
-    if (!root || !mutations.some(mutation => mutation.type === "childList")) return;
-
-    observerApplyingStage = true;
-    try {
-      for (const [cardId, pending] of pendingStages) {
-        const selector = `[data-productive-prospect-card="${escapeValue(cardId)}"]`;
-        const card = root.querySelector(selector);
-        if (!card) continue;
-
-        const authoritative = card.dataset.productiveStage;
-        if (authoritative === pending.desired) {
-          applyStagePresentation(card, pending.desired, "saved");
-          card.querySelector?.("[data-productive-stage-control]")?.removeAttribute?.("aria-busy");
-          pendingStages.delete(cardId);
-          windowRef.setTimeout(() => {
-            if (card.isConnected && card.dataset.stagePersistence === "saved") {
-              delete card.dataset.stagePersistence;
-            }
-          }, 900);
-        } else if (Date.now() - pending.startedAt > 12000) {
-          applyStagePresentation(card, authoritative, "error");
-          card.querySelector?.("[data-productive-stage-control]")?.removeAttribute?.("aria-busy");
-          pendingStages.delete(cardId);
-        }
-      }
-    } finally {
-      observerApplyingStage = false;
-    }
+    if (!mutations.some(mutation => mutation.type === "childList")) return;
     restoreAnchorAfterRender();
   });
 
@@ -277,15 +220,18 @@ export function installPipelineUiStability({
   if (root) rootObserver.observe(root, { childList: true, subtree: false });
 
   documentRef.documentElement.dataset.forgePipelineUiStability = "ready";
+  documentRef.documentElement.dataset.pipelineStageAuthority = "pipeline-module";
 
   return Object.freeze({
     installed: true,
     pendingStages,
+    stageAuthority: "PIPELINE_MODULE",
     synchronizeScrollLock,
     disconnect() {
       htmlObserver.disconnect();
       rootObserver.disconnect();
       delete documentRef.documentElement.dataset.forgePipelineUiStability;
+      delete documentRef.documentElement.dataset.pipelineStageAuthority;
     },
   });
 }

@@ -1,0 +1,17 @@
+name: Pipeline Journal Migration Deployment (retired)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show canonical migration gate
+        run: |
+          echo "Journal migration deployment was consolidated into:"
+          echo ".github/workflows/067g17b-migration-deployment.yml"
+          echo "Migration 20260731000100 is already deployed and remotely verified."

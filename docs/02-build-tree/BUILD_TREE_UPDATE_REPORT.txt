@@ -1,157 +1,190 @@
 FORGE BUILD TREE UPDATE REPORT
 
 Status:
-BUILD TREE UPDATE ONLY
+BUILD TREE UPDATE COMPLETE
+
+Date:
+2026-07-31
 
 Scope:
-Documentation only.
-No code.
-No engines.
-No schemas.
-No UI.
-No implementation.
+Documentation and source-truth synchronization only.
+No runtime code changed.
+No schema changed.
+No UI changed.
+No deployment behavior changed.
 
 1. EXECUTIVE SUMMARY
 
-FORGE_MASTER_BUILD_TREE.md was updated to reflect the latest GMM and Core
-Intelligence discoveries.
+The Advisor OS Productive Pipeline now records two consecutive locked
+production capabilities:
 
-The active focus is now explicitly:
+067G17B4
+PRODUCTIVE PIPELINE STAGE PERSISTENCE IN-PLACE
+IMPLEMENTED / PRODUCTION_ACCEPTED / LOCKED
 
-GMM Validation Phase - ACTIVE
+067G17B5
+GOOGLE CALENDAR DRAFT HANDOFF
+IMPLEMENTED / PRODUCTION_ACCEPTED / LOCKED
 
-Implementation remains blocked pending:
+067G17B5 closes the Material 3 Agendar action, scheduling workspace,
+America/Mexico_City Calendar draft generation, public runtime cache authority
+and human production acceptance.
 
-- real evidence packets
-- human review protocol
-- real Alfa Medical caratula validation
-- real Alfa Medical quote validation
-- quote vs policy comparison
-- scenario fixtures
+The closure is intentionally bounded. It does not claim OAuth, Google API save
+confirmation, bidirectional synchronization, automatic Stage mutation,
+Timeline mutation, task creation or message sending.
 
-2. FILES UPDATED
+2. TREE MOVEMENT
 
-- FORGE_MASTER_BUILD_TREE.md
-- BUILD_TREE_UPDATE_REPORT.txt
+Previous historical Calendar status superseded for this branch:
 
-3. BUILD TREE MOVEMENTS COMPLETED
+- Agendar: NOT_CONNECTED
+- Calendar handoff: unavailable in the current Material 3 card
+- legacy advisor-os Calendar draft builder: not a Productive UI authority
 
-GMM Product Family was moved from:
+Current 067G17B5 status:
 
-ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+- Productive Material 3 Agendar action: ACTIVE
+- Scheduling workspace: PRODUCTION ACCEPTED
+- date/time/duration selection: CLOSED
+- Google Calendar render URL: CLOSED
+- America/Mexico_City: LOCKED
+- prospect context prefill: CLOSED
+- advisor review and save: REQUIRED
+- event-saved confirmation: NOT CLAIMED
+- automatic Pipeline/Timeline effects: FORBIDDEN
+- OAuth and token custody: OUT OF SCOPE
+- canonical Material 3 public route: ACTIVE
+- legacy UI and legacy service worker: RETIRED
 
-to:
+3. TREES UPDATED
 
-ACTIVE VALIDATION PHASE / IMPLEMENTATION BLOCKED
+- docs/architecture/source-truth/FORGE_CURRENT_IMPLEMENTED_BUILD_TREE_002.md
+- docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_002_ADVISOR_PIPELINE_LOCK.md
 
-Completed GMM discovery stages were added:
+The current and unified trees now include 067G17B5 without reopening or
+weakening the locked 067G17B4 Stage authority.
 
-- Discovery: COMPLETE
-- Rule Extraction: COMPLETE
-- Evaluation Architecture: COMPLETE
-- Coverage Blueprint: COMPLETE
-- Source Registry: COMPLETE
-- Evidence Packet Standard: COMPLETE
-- Validation: ACTIVE
-- Implementation: BLOCKED pending real evidence packets and human review protocol
+4. CLOSURE DOCUMENTS ADDED
 
-4. GMM VALIDATION PHASE ADDED
+- docs/architecture/source-truth/PIPELINE_GOOGLE_CALENDAR_DRAFT_HANDOFF_CLOSURE_067G17B5.md
+- docs/evidence/PIPELINE_GOOGLE_CALENDAR_DRAFT_HANDOFF_CERTIFICATE_067G17B5.md
 
-Subitems added:
+5. IMPLEMENTED RUNTIME TREE
 
-- Real Alfa Medical Caratula Validation
-- Real Alfa Medical Quote Validation
-- Quote vs Policy Comparison
-- Evidence Packet Reality Check
-- Human Review Protocol
-- Scenario Fixtures
+Productive Pipeline card
+-> Agendar
+-> pipeline-google-calendar.js
+-> Material 3 scheduling workspace
+-> date + local time + bounded duration
+-> calendar.google.com/calendar/render
+-> ctz=America/Mexico_City
+-> prefilled prospect context
+-> Google Calendar draft
+-> advisor reviews and saves
 
-5. DOCUMENT INTELLIGENCE REQUIREMENT ADDED
+6. IMPLEMENTATION EVIDENCE
 
-Candidate module added:
+Runtime files:
 
-Document Classification Intelligence
+- docs/static-preview/forge-alive-material3/pipeline-google-calendar.js
+- docs/static-preview/forge-alive-material3/pipeline-google-calendar.css
+- docs/static-preview/forge-alive-material3/app.js
+- tests/pipeline-google-calendar-regression.mjs
+- .github/workflows/pipeline-real-interaction.yml
 
-Status:
-DISCOVERY VALIDATED / NOT IMPLEMENTED
+Implementation PR:
 
-Purpose:
-Distinguish evidence document classes:
+- PR #43
+- head: 029933ada665d5395c2789e563e99c04c083374c
+- merge: 9c33345c6a2224db8c6f97cc6f4b03dcacc6081c
 
-- Quote / Cotizacion
-- Policy Caratula / Caratula
-- Conditions / Condiciones Generales
-- Endorsement / Endoso
-- Sales Illustration / Material Comercial
+Public cache authority PR:
 
-6. QUOTE-TO-POLICY VALIDATION ADDED
+- PR #44
+- head: 702f4c8f34e93035bfb84891eb45827c56af99a7
+- merge: 831118409b038931d5eec83b0c8948d2852c1047
 
-Candidate capability added:
+7. ACCEPTANCE EVIDENCE
 
-Quote-to-Policy Validation
+PR #43 passed:
 
-Status:
-PARKED / VALIDATION CANDIDATE
+- Pipeline Mobile Interaction Regression: 30666091017
+- Pipeline Real Interaction Regression: 30666091093
+- Manual Quotes and Pipeline Stability: 30666091101
+- Forge UI Visual Diagnostic: 30666091108
 
-Purpose:
-Detect what changed between a proposed scenario and an issued policy.
+PR #44 passed:
 
-7. PROPOSAL INTELLIGENCE ADDED
+- Pipeline Mobile Interaction Regression: 30666747304
+- Pipeline Real Interaction Regression: 30666747261
+- Manual Quotes and Pipeline Stability: 30666747262
+- Forge UI Visual Diagnostic: 30666747266
 
-Added under:
+The Manual Quotes and Pipeline Stability run passed on a controlled rerun after
+an isolated border assertion flake did not reproduce. No runtime or style
+correction was required for that rerun.
 
-Forge Core
-└── Decision Intelligence Layer
-    └── Proposal Intelligence
+Human production acceptance:
 
-Status:
-PARKED / CORE CANDIDATE / DO NOT IMPLEMENT YET
+PASS
 
-Subitems:
+Canonical route:
 
-- Proposal Family
-- Scenario Comparison
-- Economic / Balanced / Premium Options
-- Tradeoff Explanation
-- Decision Clarity Recommendation
+https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=pipeline
 
-8. ACTIVE FOCUS / PARKED STATUS
+Accepted public runtime SHA:
 
-Active:
+831118409b038931d5eec83b0c8948d2852c1047
 
-- GMM Validation Phase
+8. REGRESSION LOCKS
 
-Parked:
+Forbidden:
 
-- Proposal Intelligence
-- Shared Tax Intelligence
-- Shared Economic Projection Intelligence
-- Retirement Closure Review
-- Nuevo Plenitud Knowledge Capture
-- Sienten / Sintieron / Descubrieron Analysis
+- returning Agendar to NOT_CONNECTED without an explicit retirement decision
+- adding duplicate Calendar listeners after card rerender
+- omitting America/Mexico_City
+- opening an incomplete or unreviewable Calendar draft
+- claiming an event was saved merely because the draft opened
+- changing Stage automatically from the draft handoff
+- writing Timeline, task or message effects from the draft handoff
+- introducing OAuth or Google token storage inside 067G17B5
+- reviving the legacy advisor-os Calendar UI as a public authority
+- allowing the scheduling workspace to collide with the floating mobile nav
 
-9. VALIDATION
+9. BOUNDARIES PRESERVED
 
-Confirmed:
+- Human approval remains mandatory in Google Calendar.
+- No Google API read-back exists in this phase.
+- No automatic WhatsApp send.
+- No automatic task creation.
+- No automatic Stage or Timeline mutation.
+- No automatic NBA execution.
+- No RLS, authentication or ownership behavior changed.
+- The floating mobile navigation remains intentional; bottom safe space remains required.
+- Bidirectional Calendar synchronization remains a separate future authority.
 
-- No code modified intentionally.
-- No engines modified.
-- No schemas modified.
-- No UI modified.
-- No implementation started.
-- Only Build Tree and report were updated for this request.
+10. TREE STATUS PRESERVED FROM 067G17B4
 
-10. IMPLEMENTATION STATUS
+- authenticated owner-only Stage RPC: LOCKED
+- Timeline STAGE_CHANGED evidence: LOCKED
+- same-card DOM commit: LOCKED
+- no AUTH_LOADING during Stage save: LOCKED
+- no authentication refresh during Stage save: LOCKED
+- Source/Stage filters in place: LOCKED
 
-Implementation remains:
+067G17B5 does not mutate or supersede these authorities.
 
-NOT APPROVED.
+11. FINAL STATUS
 
-GMM Coverage Intelligence Engine remains:
+SEMAFORO=GREEN
 
-BLOCKED.
+067G17B4_PIPELINE_STAGE_PERSISTENCE_IN_PLACE=LOCKED
 
-Next recommended step:
+067G17B5_PIPELINE_GOOGLE_CALENDAR_DRAFT_HANDOFF=LOCKED
 
-Complete GMM Validation Phase using real evidence packets and a human review
-protocol before any engine, schema or UI work.
+GOOGLE_CALENDAR_DRAFT_OPEN=PRODUCTION_ACCEPTED
+
+GOOGLE_CALENDAR_SAVE_CONFIRMATION=NOT_CLAIMED
+
+AUTOMATIC_PIPELINE_OR_TIMELINE_MUTATION=FORBIDDEN

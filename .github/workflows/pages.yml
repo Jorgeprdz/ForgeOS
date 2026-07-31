@@ -102,7 +102,9 @@ jobs:
           const publicRootFiles = new Set([
             '.nojekyll',
             '_redirects',
-            'manifest.json'
+            'index.html',
+            'manifest.json',
+            'service-worker.js'
           ]);
           const publicConversationRuntimeFiles = new Set([
             'nash-intent-engine.js',
@@ -194,6 +196,17 @@ jobs:
             { recursive: true },
           );
 
+          const canonicalIndexPath = path.join(canonicalForgeAliveTarget, 'index.html');
+          const canonicalIndex = fs.readFileSync(canonicalIndexPath, 'utf8');
+          const versionedCanonicalIndex = canonicalIndex.replace(
+            /<script type="module" src="\.\/app\.js\?[^"]+"><\/script>/,
+            `<script type="module" src="./app.js?v=${process.env.GITHUB_SHA}"></script>`,
+          );
+          if (versionedCanonicalIndex === canonicalIndex) {
+            throw new Error('canonical Forge Alive app entry was not versioned');
+          }
+          fs.writeFileSync(canonicalIndexPath, versionedCanonicalIndex);
+
           for (const file of trackedFiles.filter(file => file.startsWith('docs/') && file.endsWith('.html'))) {
             const target = path.join(siteDir, file.slice('docs/'.length));
             if (!fs.existsSync(target)) continue;
@@ -226,18 +239,26 @@ jobs:
           const path = require('path');
 
           const canonical = '_site/static-preview/forge-alive';
-          const quotesRuntime =
-            '_site/static-preview/forge-alive-runtime/nueva-cotizacion/index.html';
+          const legacyRuntime = '_site/static-preview/forge-alive-runtime';
+          const quotesRuntime = path.join(legacyRuntime, 'nueva-cotizacion/index.html');
 
           assert.ok(
             fs.existsSync(quotesRuntime),
             'missing published Quotes functional runtime',
           );
 
+          for (const rootFile of ['index.html', 'service-worker.js']) {
+            assert.ok(
+              fs.existsSync(path.join('_site', rootFile)),
+              `missing public retirement file: ${rootFile}`,
+            );
+          }
+
           const required = [
             'index.html',
             'app.css',
             'app.js',
+            'legacy-ui-retirement.js',
             'pipeline-module.js',
             'pipeline-referral-modal.css',
             'quotes-module.js',
@@ -272,35 +293,26 @@ jobs:
             assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
           }
 
-          const index = fs.readFileSync(
-            path.join(canonical, 'index.html'),
-            'utf8',
-          );
-          const quotesModule = fs.readFileSync(
-            path.join(canonical, 'quotes-module.js'),
-            'utf8',
-          );
-          const quotesCss = fs.readFileSync(
-            path.join(canonical, 'quotes-module.css'),
-            'utf8',
-          );
-          const pipelineModule = fs.readFileSync(
-            path.join(canonical, 'pipeline-module.js'),
-            'utf8',
-          );
-          const workspaceCss = fs.readFileSync(
-            path.join(canonical, 'pipeline-referral-modal.css'),
-            'utf8',
-          );
+          const rootIndex = fs.readFileSync('_site/index.html', 'utf8');
+          const serviceWorker = fs.readFileSync('_site/service-worker.js', 'utf8');
+          const legacyIndex = fs.readFileSync(path.join(legacyRuntime, 'index.html'), 'utf8');
+          const index = fs.readFileSync(path.join(canonical, 'index.html'), 'utf8');
+          const app = fs.readFileSync(path.join(canonical, 'app.js'), 'utf8');
+          const quotesModule = fs.readFileSync(path.join(canonical, 'quotes-module.js'), 'utf8');
+          const quotesCss = fs.readFileSync(path.join(canonical, 'quotes-module.css'), 'utf8');
+          const pipelineModule = fs.readFileSync(path.join(canonical, 'pipeline-module.js'), 'utf8');
+          const workspaceCss = fs.readFileSync(path.join(canonical, 'pipeline-referral-modal.css'), 'utf8');
 
-          assert.match(
-            quotesModule,
-            /forge-alive-runtime\/nueva-cotizacion\/index\.html/,
-          );
-          assert.match(
-            quotesModule,
-            /forge:quote-intake-state-change/,
-          );
+          assert.match(rootIndex, /FORGE_LEGACY_UI_RETIRED/);
+          assert.match(rootIndex, /static-preview\/forge-alive/);
+          assert.match(serviceWorker, /FORGEOS_LEGACY_SERVICE_WORKER_RETIRED/);
+          assert.match(serviceWorker, /self\.registration\.unregister\(\)/);
+          assert.doesNotMatch(serviceWorker, /respondWith|importScripts|CACHE_CONFIG/);
+          assert.match(legacyIndex, /FORGE_LEGACY_UI_RETIRED/);
+          assert.doesNotMatch(legacyIndex, /Muestra segura · solo lectura|phone-shell|forge-material3-responsive-shell/);
+
+          assert.match(quotesModule, /forge-alive-runtime\/nueva-cotizacion\/index\.html/);
+          assert.match(quotesModule, /forge:quote-intake-state-change/);
           assert.match(
             quotesCss,
             /\[data-forge-quotes-runtime-host\]\s*\[hidden\][^{]*\{[^}]*display:\s*none\s*!important/s,
@@ -311,7 +323,16 @@ jobs:
           );
           assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
           assert.match(index, /app\.css\?v=ui-m03-approved-004/);
-          assert.match(index, /app\.js\?v=ui-m04-shell-007/);
+          assert.ok(
+            index.includes(`app.js?v=${process.env.EXPECTED_COMMIT_SHA}`),
+            'canonical app entry does not use the deployed commit SHA',
+          );
+          assert.match(index, /data-forge-application/);
+          assert.doesNotMatch(
+            index,
+            /Muestra segura · solo lectura|phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime/,
+          );
+          assert.match(app, /legacy-ui-retirement\.js\?v=legacy-ui-retirement-001/);
           assert.match(
             pipelineModule,
             /pipeline-referral-modal\.css\?v=ui-m06-referral-004/,
@@ -331,10 +352,6 @@ jobs:
               `missing productive workspace style: ${selector}`,
             );
           }
-          assert.doesNotMatch(
-            index,
-            /phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime|forge-alive-public-config/i,
-          );
 
           const buildInfo = JSON.parse(
             fs.readFileSync('_site/build-info.json', 'utf8'),
@@ -373,6 +390,9 @@ jobs:
           );
 
           console.log('PAGES_CLEAN_FORGE_ALIVE_ARTIFACT=PASS');
+          console.log('PAGES_LEGACY_UI_RETIRED=PASS');
+          console.log('PAGES_LEGACY_SERVICE_WORKER_RETIRED=PASS');
+          console.log('PAGES_CANONICAL_RUNTIME_SHA_VERSIONED=PASS');
           EOF
 
       - name: Upload Pages artifact
