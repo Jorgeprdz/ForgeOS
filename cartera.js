@@ -1,15 +1,17 @@
 // cartera.js
-// CARTERA 010C read-only canonical route adapter.
+// CARTERA 010D read-only unified directory route adapter.
 
 import { AppState } from './state-manager.js';
 import { EventBus } from './event-system.js';
 import { Logger } from './logger.js';
 import { Memory } from './memory-manager.js';
 import { createCanonicalPortfolioService } from './advisor-os/cartera/canonical-portfolio-service.js';
+import { createCanonicalDirectoryService } from './advisor-os/cartera/canonical-directory-service.js';
 
 const CarteraState = {
-    items: [],
-    filtered: [],
+    directory: null,
+    entries: [],
+    results: [],
     search: '',
     status: 'IDLE',
     errorCode: null,
@@ -19,6 +21,34 @@ const CarteraState = {
     detailErrorCode: null,
 };
 
+const ENTRY_KIND_LABEL = Object.freeze({
+    COMMERCIAL_PERSON: 'PERSONA',
+    COMMERCIAL_ACCOUNT: 'CUENTA',
+    POLICY: 'PÓLIZA',
+});
+
+const MATCH_REASON_LABEL = Object.freeze({
+    DISPLAY_NAME: 'Nombre',
+    PREFERRED_NAME: 'Nombre preferido',
+    PERSON_REFERENCE: 'Referencia de persona',
+    VERIFIED_PHONE: 'Teléfono verificado',
+    VERIFIED_EMAIL: 'Email verificado',
+    ACCOUNT_LABEL: 'Nombre de cuenta',
+    ACCOUNT_REFERENCE: 'Referencia de cuenta',
+    ACCOUNT_TYPE: 'Tipo de cuenta',
+    POLICY_NUMBER: 'Número de póliza',
+    POLICY_REFERENCE: 'Referencia de póliza',
+    CARRIER_REFERENCE: 'Compañía',
+    PRODUCT_REFERENCE: 'Producto',
+    POLICY_STATUS: 'Estado',
+    RELATIONSHIP_ROLE: 'Relación',
+    RELATIONSHIP_LABEL: 'Entidad relacionada',
+    RELATIONSHIP_REFERENCE: 'Referencia relacionada',
+    POLICY_ROLE: 'Rol en póliza',
+    PARTICIPANT_LABEL: 'Participante',
+    PARTICIPANT_REFERENCE: 'Referencia de participante',
+});
+
 function escapeHTML(value = '') {
     return String(value)
         .replace(/&/g, '&amp;')
@@ -26,14 +56,6 @@ function escapeHTML(value = '') {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
-}
-
-function normalizeText(value = '') {
-    return String(value)
-        .toLowerCase()
-        .trim()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
 }
 
 function debounce(fn, delay = 220) {
@@ -121,50 +143,50 @@ function visibleValue(fact, unknownLabel = 'Desconocido') {
     return fact?.state === 'KNOWN' ? fact.value : unknownLabel;
 }
 
-function summarizePremium(items) {
-    const known = items.filter(item => (
-        item.premiumAmount.state === 'KNOWN'
-        && item.currency.state === 'KNOWN'
-    ));
-
-    if (known.length === 0) {
-        return '—';
-    }
-
-    const currencies = new Set(known.map(item => item.currency.value));
-    if (currencies.size !== 1) {
-        return `${known.length} importes conocidos`;
-    }
-
-    const currency = known[0].currency.value;
-    const total = known.reduce(
-        (sum, item) => sum + Number(item.premiumAmount.value || 0),
-        0
-    );
-
-    try {
-        return new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency,
-            maximumFractionDigits: 0,
-        }).format(total);
-    } catch {
-        return `${total.toLocaleString('es-MX')} ${currency}`;
-    }
-}
-
 function statusLabel(item) {
     return item.status.state === 'KNOWN'
         ? item.status.value
         : 'ESTADO DESCONOCIDO';
 }
 
-function participantLabels(item) {
-    const labels = item.generalParticipantSummary
-        .filter(role => ['POLICY_OWNER', 'INSURED', 'PAYOR'].includes(role.roleType))
-        .map(role => role.displayLabel);
+function entryKindLabel(kind) {
+    return ENTRY_KIND_LABEL[kind] || 'ENTIDAD';
+}
 
-    return [...new Set(labels)];
+function resultMatchLabels(result) {
+    return [...new Set(
+        (result.matchReasons || []).map(reason => MATCH_REASON_LABEL[reason] || reason)
+    )];
+}
+
+function relationshipSummary(entry) {
+    const visible = entry.relationships.slice(0, 4);
+    if (visible.length === 0) {
+        return '<div style="font-size:12px;color:var(--text-secondary);">Sin relaciones generales visibles.</div>';
+    }
+
+    const items = visible.map(relationship => `
+        <div class="glass-widget" style="padding:9px;min-width:0;">
+            <div style="font-size:10px;color:var(--text-secondary);font-weight:800;overflow-wrap:anywhere;">
+                ${escapeHTML(relationship.relationshipType)}
+            </div>
+            <div style="margin-top:3px;font-size:12px;font-weight:700;overflow-wrap:anywhere;">
+                ${escapeHTML(relationship.targetLabel)}
+            </div>
+        </div>
+    `).join('');
+
+    const remaining = entry.relationships.length - visible.length;
+    return `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;">
+            ${items}
+        </div>
+        ${remaining > 0 ? `
+            <div style="margin-top:6px;font-size:10px;color:var(--text-secondary);">
+                +${escapeHTML(remaining)} relación(es) adicional(es)
+            </div>
+        ` : ''}
+    `;
 }
 
 export function renderCartera() {
@@ -179,7 +201,7 @@ export function renderCartera() {
                     <div>
                         <h2 id="cartera-title" style="margin:0;font-size:22px;font-weight:800;">Cartera</h2>
                         <p style="margin:5px 0 0;color:var(--text-secondary);font-size:12px;">
-                            Pólizas y participantes desde autoridad canónica
+                            Directorio canónico de personas, cuentas y pólizas
                         </p>
                     </div>
                     <span
@@ -189,18 +211,22 @@ export function renderCartera() {
                     </span>
                 </div>
 
-                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:10px;margin-top:16px;">
+                    <div class="glass-widget" style="padding:13px;">
+                        <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Personas</span>
+                        <div id="kpi-total-personas" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
+                    </div>
+                    <div class="glass-widget" style="padding:13px;">
+                        <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Cuentas</span>
+                        <div id="kpi-total-cuentas" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
+                    </div>
                     <div class="glass-widget" style="padding:13px;">
                         <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Pólizas</span>
                         <div id="kpi-total-polizas" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
                     </div>
                     <div class="glass-widget" style="padding:13px;">
-                        <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Prima conocida</span>
-                        <div id="kpi-total-prima" style="font-size:17px;font-weight:800;margin-top:7px;overflow-wrap:anywhere;">—</div>
-                    </div>
-                    <div class="glass-widget" style="padding:13px;">
-                        <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Conflictos</span>
-                        <div id="kpi-conflictos" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
+                        <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Directorio</span>
+                        <div id="kpi-total-directorio" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
                     </div>
                 </div>
             </div>
@@ -209,16 +235,19 @@ export function renderCartera() {
 
             <div class="glass-widget" style="padding:18px;">
                 <label for="cartera-search" style="display:block;font-size:11px;color:var(--text-secondary);font-weight:800;margin-bottom:7px;">
-                    BUSCAR EN PROYECCIÓN CANÓNICA
+                    BUSCAR PERSONA, CUENTA O PÓLIZA
                 </label>
                 <input
                     id="cartera-search"
                     class="glass-input"
-                    placeholder="Persona, cuenta, producto o referencia..."
+                    placeholder="Nombre, teléfono, email, póliza, compañía, producto o relación..."
                     autocomplete="off"
                     spellcheck="false"
                     style="width:100%;box-sizing:border-box;"
                 >
+                <div style="margin-top:7px;font-size:10px;color:var(--text-secondary);">
+                    Teléfono y email solo ayudan a encontrar coincidencias; sus valores no se muestran en este directorio.
+                </div>
                 <div id="cartera-route-state" aria-live="polite" style="margin-top:14px;"></div>
                 <div id="cartera-list" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;"></div>
             </div>
@@ -233,17 +262,18 @@ export async function bindCarteraEvents() {
         return;
     }
 
-    const service = createCanonicalPortfolioService();
+    const policyService = createCanonicalPortfolioService();
+    const directoryService = createCanonicalDirectoryService();
     resetCarteraState();
 
     const onSearch = debounce(event => {
         CarteraState.search = event.target.value;
-        applyFilter();
+        applyDirectorySearch();
     });
     const onRootClick = event => {
         const openButton = event.target.closest('[data-policy-open]');
         if (openButton) {
-            openPolicyDetail(service, openButton.dataset.policyOpen);
+            openPolicyDetail(policyService, openButton.dataset.policyOpen);
             return;
         }
         if (event.target.closest('[data-policy-close]')) {
@@ -262,25 +292,31 @@ export async function bindCarteraEvents() {
     renderRouteState();
     renderKPIs();
     renderPolicyDetail();
-    EventBus.emit('cartera:loading', { authority: 'CANONICAL_POLICY' });
+    EventBus.emit('cartera:loading', { authority: 'CANONICAL_DIRECTORY' });
 
     try {
-        const items = await service.loadPortfolio();
+        const directory = await directoryService.loadDirectory();
 
-        CarteraState.items = [...items];
+        CarteraState.directory = directory;
+        CarteraState.entries = [...directory.entries];
         CarteraState.status = 'READY';
-        AppState.set('cartera', CarteraState.items);
-        applyFilter();
+        AppState.set('cartera', CarteraState.entries);
+        AppState.set('cartera:directory', {
+            counts: directory.counts,
+            entries: CarteraState.entries,
+        });
+        applyDirectorySearch();
 
         EventBus.emit('cartera:mounted', {
-            authority: 'CANONICAL_POLICY',
-            count: CarteraState.items.length,
+            authority: 'CANONICAL_DIRECTORY',
+            count: CarteraState.entries.length,
+            counts: directory.counts,
             readOnly: true,
         });
     } catch (error) {
         CarteraState.status = 'ERROR';
-        CarteraState.errorCode = error?.code || error?.message || 'CARTERA010C_READ_FAILED';
-        Logger.error('[CARTERA 010C CANONICAL READ ERROR]', error);
+        CarteraState.errorCode = error?.code || error?.message || 'CARTERA010D_DIRECTORY_READ_FAILED';
+        Logger.error('[CARTERA 010D DIRECTORY READ ERROR]', error);
         renderRouteState();
         renderList();
         renderKPIs();
@@ -289,8 +325,9 @@ export async function bindCarteraEvents() {
 }
 
 function resetCarteraState() {
-    CarteraState.items = [];
-    CarteraState.filtered = [];
+    CarteraState.directory = null;
+    CarteraState.entries = [];
+    CarteraState.results = [];
     CarteraState.search = '';
     CarteraState.status = 'LOADING';
     CarteraState.errorCode = null;
@@ -350,25 +387,14 @@ function closePolicyDetail() {
     renderPolicyDetail();
 }
 
-function applyFilter() {
-    const query = normalizeText(CarteraState.search);
-
-    if (!query) {
-        CarteraState.filtered = [...CarteraState.items];
+function applyDirectorySearch() {
+    if (!CarteraState.directory) {
+        CarteraState.results = [];
     } else {
-        CarteraState.filtered = CarteraState.items.filter(item => {
-            const participants = participantLabels(item).join(' ');
-            const haystack = normalizeText([
-                item.policyReference,
-                item.carrierReference,
-                item.productReference,
-                item.status.value,
-                participants,
-                item.personReferences.join(' '),
-                item.accountReferences.join(' '),
-            ].join(' '));
-            return haystack.includes(query);
-        });
+        CarteraState.results = [...CarteraState.directory.search(
+            CarteraState.search,
+            { limit: 200 }
+        )];
     }
 
     renderRouteState();
@@ -385,7 +411,7 @@ function renderRouteState() {
     if (CarteraState.status === 'LOADING') {
         container.innerHTML = `
             <div class="glass-widget" style="padding:16px;color:var(--text-secondary);">
-                Cargando la cartera canónica…
+                Cargando la cartera canónica y su directorio…
             </div>
         `;
         return;
@@ -404,22 +430,22 @@ function renderRouteState() {
         return;
     }
 
-    if (CarteraState.status === 'READY' && CarteraState.items.length === 0) {
+    if (CarteraState.status === 'READY' && CarteraState.entries.length === 0) {
         container.innerHTML = `
             <div class="glass-widget" style="padding:18px;text-align:center;">
-                <strong>Aún no hay pólizas canónicas confirmadas.</strong>
+                <strong>Aún no hay pólizas canónicas confirmadas ni personas o cuentas vinculadas.</strong>
                 <div style="margin-top:6px;font-size:12px;color:var(--text-secondary);">
-                    No se mostrarán registros legacy ni pólizas creadas sin evidencia.
+                    No se mostrarán registros legacy ni identidades creadas sin autoridad canónica.
                 </div>
             </div>
         `;
         return;
     }
 
-    if (CarteraState.status === 'READY' && CarteraState.filtered.length === 0) {
+    if (CarteraState.status === 'READY' && CarteraState.results.length === 0) {
         container.innerHTML = `
             <div style="font-size:12px;color:var(--text-secondary);padding:4px 2px;">
-                Sin coincidencias en la proyección actual.
+                Sin coincidencias en el directorio canónico.
             </div>
         `;
         return;
@@ -429,25 +455,26 @@ function renderRouteState() {
 }
 
 function renderKPIs() {
-    const total = document.getElementById('kpi-total-polizas');
-    const premium = document.getElementById('kpi-total-prima');
-    const conflicts = document.getElementById('kpi-conflictos');
-    if (!total || !premium || !conflicts) {
+    const people = document.getElementById('kpi-total-personas');
+    const accounts = document.getElementById('kpi-total-cuentas');
+    const policies = document.getElementById('kpi-total-polizas');
+    const total = document.getElementById('kpi-total-directorio');
+    if (!people || !accounts || !policies || !total) {
         return;
     }
 
-    if (CarteraState.status !== 'READY') {
+    if (CarteraState.status !== 'READY' || !CarteraState.directory) {
+        people.textContent = '—';
+        accounts.textContent = '—';
+        policies.textContent = '—';
         total.textContent = '—';
-        premium.textContent = '—';
-        conflicts.textContent = '—';
         return;
     }
 
-    total.textContent = String(CarteraState.items.length);
-    premium.textContent = summarizePremium(CarteraState.items);
-    conflicts.textContent = String(
-        CarteraState.items.filter(item => item.conflictState !== 'CLEAR').length
-    );
+    people.textContent = String(CarteraState.directory.counts.people);
+    accounts.textContent = String(CarteraState.directory.counts.accounts);
+    policies.textContent = String(CarteraState.directory.counts.policies);
+    total.textContent = String(CarteraState.directory.counts.total);
 }
 
 function renderList() {
@@ -456,74 +483,103 @@ function renderList() {
         return;
     }
 
-    if (CarteraState.status !== 'READY' || CarteraState.filtered.length === 0) {
+    if (CarteraState.status !== 'READY' || CarteraState.results.length === 0) {
         container.innerHTML = '';
         return;
     }
 
-    container.innerHTML = CarteraState.filtered.map(renderPolicyCard).join('');
+    container.innerHTML = CarteraState.results.map(renderDirectoryCard).join('');
 }
 
-function renderPolicyCard(item) {
-    const participants = participantLabels(item);
-    const participantText = participants.length > 0
-        ? participants.join(' · ')
-        : 'Participantes generales no disponibles';
-    const conflict = item.conflictState !== 'CLEAR';
-
-    return `
-        <article class="glass-widget" data-policy-reference="${escapeHTML(item.policyReference)}" style="padding:16px;">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
-                <div style="min-width:0;">
-                    <h3 style="margin:0;font-size:15px;font-weight:800;overflow-wrap:anywhere;">
-                        ${escapeHTML(item.productReference)}
-                    </h3>
-                    <div style="margin-top:4px;font-size:12px;color:var(--text-secondary);overflow-wrap:anywhere;">
-                        ${escapeHTML(item.policyReference)} · ${escapeHTML(item.carrierReference)}
-                    </div>
-                </div>
-                <span style="font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:var(--surface-variant,rgba(255,255,255,.08));text-align:right;">
-                    ${escapeHTML(statusLabel(item))}
-                </span>
-            </div>
-
-            <div style="margin-top:12px;font-size:13px;font-weight:700;overflow-wrap:anywhere;">
-                ${escapeHTML(participantText)}
-            </div>
-
-            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px;">
-                <div>
-                    <div style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Prima</div>
-                    <div style="margin-top:4px;font-size:13px;font-weight:800;overflow-wrap:anywhere;">${escapeHTML(formatMoneyFact(item))}</div>
-                </div>
-                <div>
-                    <div style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Vigencia / fuente</div>
-                    <div style="margin-top:4px;font-size:12px;font-weight:700;">${escapeHTML(formatDate(item.policyEffectiveFrom || item.statusAsOf))}</div>
-                </div>
-            </div>
-
-            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:13px;">
-                <span style="font-size:10px;padding:4px 7px;border-radius:999px;background:var(--surface-variant,rgba(255,255,255,.08));">
-                    ${escapeHTML(item.completenessState)}
-                </span>
-                <span style="font-size:10px;padding:4px 7px;border-radius:999px;background:var(--surface-variant,rgba(255,255,255,.08));">
-                    ${escapeHTML(item.freshnessState)}
-                </span>
-                ${conflict ? `
-                    <span style="font-size:10px;padding:4px 7px;border-radius:999px;background:var(--surface-variant,rgba(255,255,255,.08));font-weight:800;">
-                        REQUIERE REVISIÓN
-                    </span>
-                ` : ''}
-            </div>
-
+function renderDirectoryCard(result) {
+    const entry = result.entry;
+    const matchLabels = resultMatchLabels(result);
+    const kind = entryKindLabel(entry.kind);
+    const policyData = entry.kind === 'POLICY'
+        ? ` data-policy-reference="${escapeHTML(entry.reference)}"`
+        : '';
+    const openPolicy = entry.kind === 'POLICY'
+        ? `
             <button
                 type="button"
-                data-policy-open="${escapeHTML(item.policyReference)}"
+                data-policy-open="${escapeHTML(entry.reference)}"
                 class="glass-button"
                 style="width:100%;margin-top:14px;min-height:42px;"
             >
                 Ver detalle canónico
             </button>
+        `
+        : '';
+
+    return `
+        <article
+            class="glass-widget"
+            data-directory-reference="${escapeHTML(entry.reference)}"
+            data-directory-kind="${escapeHTML(entry.kind)}"
+            ${policyData}
+            style="padding:16px;"
+        >
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+                <div style="min-width:0;">
+                    <div style="font-size:10px;color:var(--text-secondary);font-weight:800;">${escapeHTML(kind)}</div>
+                    <h3 style="margin:5px 0 0;font-size:15px;font-weight:800;overflow-wrap:anywhere;">
+                        ${escapeHTML(entry.displayLabel)}
+                    </h3>
+                    <div style="margin-top:4px;font-size:11px;color:var(--text-secondary);overflow-wrap:anywhere;">
+                        ${escapeHTML(entry.reference)}
+                    </div>
+                </div>
+                <span style="font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:var(--surface-variant,rgba(255,255,255,.08));text-align:right;">
+                    ${escapeHTML(entry.secondaryLabel)}
+                </span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:13px;">
+                ${renderDirectoryCount('Personas', entry.personCount)}
+                ${renderDirectoryCount('Cuentas', entry.accountCount)}
+                ${renderDirectoryCount('Pólizas', entry.policyCount)}
+            </div>
+
+            <div style="margin-top:13px;">
+                <div style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;margin-bottom:7px;">
+                    Relación básica
+                </div>
+                ${relationshipSummary(entry)}
+            </div>
+
+            ${matchLabels.length > 0 ? `
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;" data-directory-match-reasons>
+                    ${matchLabels.map(label => `
+                        <span style="font-size:10px;padding:4px 7px;border-radius:999px;background:var(--surface-variant,rgba(255,255,255,.08));">
+                            Coincidencia: ${escapeHTML(label)}
+                        </span>
+                    `).join('')}
+                </div>
+            ` : ''}
+
+            ${openPolicy}
+        </article>
+    `;
+}
+
+function renderDirectoryCount(label, value) {
+    return `
+        <div class="glass-widget" style="padding:9px;text-align:center;">
+            <div style="font-size:10px;color:var(--text-secondary);font-weight:800;">${escapeHTML(label)}</div>
+            <div style="margin-top:4px;font-size:16px;font-weight:800;">${escapeHTML(value)}</div>
+        </div>
+    `;
+}
+
+// Retained as an accepted 010C compatibility renderer for policy-only projections.
+// The productive list is now renderDirectoryCard; this function remains read-only.
+function renderPolicyCard(item) {
+    const conflict = item.conflictState !== 'CLEAR';
+    return `
+        <article class="glass-widget" data-policy-reference="${escapeHTML(item.policyReference)}" style="padding:16px;">
+            <h3>${escapeHTML(item.productReference)}</h3>
+            ${conflict ? '<span>REQUIERE REVISIÓN</span>' : ''}
+            <button type="button" data-policy-open="${escapeHTML(item.policyReference)}">Ver detalle canónico</button>
         </article>
     `;
 }
