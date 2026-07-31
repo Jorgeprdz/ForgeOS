@@ -7,6 +7,7 @@ on:
       - docs/static-preview/forge-alive-material3/**
       - advisor-os/sales-pipeline/**
       - tests/pipeline-real-interaction-regression.mjs
+      - tests/pipeline-prospect-admin-regression.mjs
       - .github/workflows/pipeline-real-interaction.yml
   workflow_dispatch:
 
@@ -41,5 +42,7 @@ jobs:
             cat /tmp/forge-pipeline-vite.log
             false
           fi
-      - name: Interact with buttons and change prospect stage
-        run: node tests/pipeline-real-interaction-regression.mjs
+      - name: Verify Pipeline interactions
+        run: |
+          node tests/pipeline-real-interaction-regression.mjs
+          node tests/pipeline-prospect-admin-regression.mjs
