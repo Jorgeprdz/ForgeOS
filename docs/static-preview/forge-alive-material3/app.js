@@ -1,11 +1,11 @@
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
-import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-005";
+import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-010";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
 import "./quote-runtime-hotfix-m05e003.js?v=m05e-003";
-import "./quote-runtime-printable-closure-m05e005.js?v=m05e-005";
+import "./quote-runtime-printable-closure-m05e006.js?v=m05e-006";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
@@ -71,4 +71,4 @@ shell.initialize();
 
 document.documentElement.dataset.forgeCleanHomeReady = "true";
 document.documentElement.dataset.forgeShellReady = "true";
-document.documentElement.dataset.quoteCalculatorRuntime = "M05E-005";
+document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
