@@ -68,6 +68,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p artifacts/cartera-010c-remote-read-browser
+          touch artifacts/cartera-010c-remote-read-browser/workflow-started.marker
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           test "$(git branch --show-current)" = "$ACCEPTANCE_BRANCH"
           test -n "$SUPABASE_ACCESS_TOKEN"
           test -n "$SUPABASE_URL"
@@ -90,7 +93,6 @@ jobs:
             fi
           done
 
-          mkdir -p artifacts/cartera-010c-remote-read-browser
           echo 'SOURCE_ANCESTRY=PASS'
           echo 'BOUNDED_REMOTE_PATHS=PASS'
           echo 'SCHEMA_DIFF=NONE'
