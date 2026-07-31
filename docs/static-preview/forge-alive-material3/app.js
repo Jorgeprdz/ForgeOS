@@ -5,6 +5,7 @@ import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-010
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
 import "./quote-runtime-hotfix-m05e003.js?v=m05e-003";
+import "./quote-runtime-vida-mujer-handoff-m05e009.js?v=m05e-009";
 import "./quote-runtime-printable-closure-m05e006.js?v=m05e-006";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
