@@ -2,21 +2,15 @@
 
 ## Status
 
-`M05E_003_IMPLEMENTED_PENDING_SECOND_BROWSER_ACCEPTANCE`
+`M05E_004_IMPLEMENTED_PENDING_BROWSER_ACCEPTANCE`
 
 Branch: `fix/quote-calculators-product-intelligence-parity`
 
-The first browser attempt was rejected because the productive Material 3 entrypoint still loaded the previous complete adapter. The second browser attempt proved ORVI product parity for source UDI, current MXN protection, dynamic checkpoints and recovery comparisons, but exposed three additional integration defects:
-
-1. The local preview served a stale root `forge-rate-cache.json` dated 10/06/2026 because Python's static server never invoked the existing 12-hour Banxico refresh engine.
-2. The Material 3 screen did not capture the client/insured name required by the printable read model.
-3. Confirmation, printable actions and history did not project their actual runtime state clearly.
-
-M05E-003 repairs those integration defects and remains pending browser acceptance.
+The productive Material 3 route now reconnects the existing Product Intelligence adapters, refreshes Banxico market data through the secured provider boundary, composes printable ORVI documents and closes the final client/history UX defects discovered during browser acceptance.
 
 ## Authority
 
-Product Intelligence remains the canonical authority for product identity, premiums, protection, guaranteed values, recovery scenarios and conversion metadata. The spreadsheet supplied by the repository owner is validation evidence for commercial presentation, not a replacement calculation authority.
+Product Intelligence remains the canonical authority for product identity, premiums, protection, guaranteed values, recovery scenarios and conversion metadata. Uploaded spreadsheets and browser-generated printable documents are validation evidence for commercial presentation, not replacement calculation authorities.
 
 This repair does not modify the canonical product calculators. It reconnects the Material 3 presentation to the existing product adapters for:
 
@@ -41,15 +35,15 @@ No current UDI value may be hardcoded in the Material 3 presenter.
 
 ## Live UDI authority
 
-M05E-003 adds `tools/forge-local-live-server.cjs`.
+M05E-003 introduced `tools/forge-local-live-server.cjs` and the secured Supabase `banxico-rates` provider boundary.
 
 The local server:
 
-- invokes the existing `exchange-rate-cache-engine.js` before serving Forge;
+- invokes `exchange-rate-cache-engine.js` before serving Forge;
 - forces a verified Banxico refresh at startup;
 - exposes `/api/forge-market-rates` without exposing the Banxico token;
 - refreshes the cache periodically while the server remains active;
-- fails closed when neither `BANXICO_TOKEN` nor `SUPABASE_BANXICO_RATES_URL` is configured.
+- fails closed when no verified provider is available.
 
 The browser runtime:
 
@@ -59,24 +53,27 @@ The browser runtime:
 - uses the verified current UDI for the first annual contribution equivalence;
 - keeps future values classified as projected scenarios.
 
-## Human review and confirmation
+## Client metadata and confirmation
 
-The Material 3 surface now captures `Cliente / asegurado` locally before confirmation and printing.
+M05E-004 changes `Cliente / asegurado` from a blocking confirmation requirement into editable document metadata.
 
-The review value:
+Behavior:
 
-- is applied to the current accepted-quote candidate when possible;
-- is projected into the immutable review snapshot through a bounded wrapper;
-- does not mutate CRM;
-- satisfies the printable read model's required client field;
-- synchronizes the visible confirmation button with an already accepted quote.
+- Forge first attempts to recover the client or insured name from the accepted quote, prospect context or native calculation result.
+- When a name is not available, the printable flow uses the explicit missing-data label `Sin dato confirmado`.
+- The field remains editable before printing.
+- The value is projected into the bounded printable snapshot without mutating CRM.
+- Confirmation, preview and PDF generation are not blocked by an instruction to type a name.
+- The runtime does not invent a person identity.
 
-## Printable actions
+## Printable actions and history
 
-- Preview and PDF download remain blocked until the accepted quote has a client/insured name.
-- Once the reviewed snapshot is complete, QPD06 receives the same accepted snapshot and may compose the document.
-- History is hidden in standalone local mode.
-- History is shown only when a durable Quote identity exists, where it represents saved printable versions for the same Quote.
+- Preview and PDF download remain tied to an accepted quote snapshot.
+- QPD06 receives the same accepted snapshot used by the confirmation bridge.
+- History is restored as a visible action in both standalone and prospect-linked surfaces.
+- With durable Quote identity, History represents persisted printable versions for that Quote.
+- Without durable identity, the action remains available for the history exposed by the current runtime/session; the UI no longer hides the capability merely because the quote was opened standalone.
+- Restoring the action does not change the underlying QPD storage contract.
 
 ## Imagina Ser contract
 
@@ -121,31 +118,32 @@ The presenter does not invent a rate or recalculate product formulas.
 
 - `tests/ui-m05e-quote-calculator-restoration-test.mjs`
 - `tests/ui-m05f-live-udi-review-printable-actions-test.mjs`
+- `tests/banxico-rates-edge-function-test.mjs`
 
 The tests lock:
 
-- productive M05E-003 entrypoint wiring;
+- productive M05E-004 entrypoint wiring;
 - all four Product Intelligence adapters;
 - UDI/MXN mandatory metrics;
-- stale-cache rejection;
-- Banxico refresh before local serving;
-- client/insured human review;
+- stale-cache rejection and live Banxico refresh;
+- optional client metadata with explicit missing-data fallback;
 - confirmation synchronization;
-- printable action gating;
-- durable-only history visibility.
+- printable preview/download wiring;
+- restored History visibility without changing QPD persistence ownership.
 
-## Acceptance still required
+## Browser evidence and remaining acceptance
 
-Using the same ORVI 99-20 PDF, confirm:
+The ORVI 99-20 browser run produced two six-page printable documents containing client, product, UDI protection, current MXN protection, annual premiums, projected contribution/recovery and field-level source provenance. This proves the printable path executes end to end.
 
-- badge `CALCULADORAS M05E-003`;
+Final browser acceptance for M05E-004 must confirm:
+
+- badge `CALCULADORAS M05E-004`;
 - current Banxico UDI date and value;
 - annual contribution UDI plus current MXN;
-- client/insured capture;
-- confirmation state visibly changes;
-- printable preview opens;
-- PDF downloads through a human click;
-- history is hidden in standalone mode;
+- no blocking instruction to type a name;
+- client metadata remains editable;
+- confirmation, printable preview and PDF download remain functional;
+- History is visible and opens;
 - no horizontal overflow on the target viewport.
 
 After ORVI passes, repeat with representative PDFs for Vida Mujer, SeguBeca and Imagina Ser.
