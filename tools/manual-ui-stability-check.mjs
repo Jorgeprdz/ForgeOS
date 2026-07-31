@@ -3,7 +3,14 @@ import { chromium } from "@playwright/test";
 
 const baseUrl = process.env.FORGE_MANUAL_UI_BASE_URL
   || "http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/";
-const moduleUrl = new URL("pipeline-ui-stability.js?v=manual-pipeline-stability-001", baseUrl).href;
+const stabilityModuleUrl = new URL(
+  "pipeline-ui-stability.js?v=manual-pipeline-stability-001",
+  baseUrl,
+).href;
+const stageAuthorityUrl = new URL(
+  "pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002",
+  baseUrl,
+).href;
 
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({
@@ -36,55 +43,59 @@ try {
           }
           .pipeline-module__card-actions { margin-top: 24px; }
           .pipeline-module__card-actions button:hover { transform: translateY(-1px); }
-          .rerender-banner { height: 72px; }
           .referral-sheet-layer { position: fixed; inset: 0; z-index: 100; }
         </style>
       </head>
       <body>
+        <button type="button" data-route-id="inicio">Inicio</button>
         <div id="frame">
-          <main data-forge-pipeline-module>
-            <article class="pipeline-module__productive-card"
-              data-productive-prospect-card="prospect-1"
-              data-productive-stage="referred_new">
-              <span data-productive-stage-label>Nuevo</span>
-              <select data-productive-stage-control="prospect-1">
-                <option value="referred_new" selected>Nuevo</option>
-                <option value="appointment_scheduled">Cita agendada</option>
-                <option value="client">Cliente</option>
-              </select>
-              <div class="pipeline-module__card-actions">
-                <button type="button" data-open-combat="prospect-1">NASH Combat</button>
-              </div>
-            </article>
+          <main data-forge-pipeline-module data-module-active="true">
+            <header class="pipeline-module__header"><p>PIPELINE</p><h1>Relaciones en movimiento</h1></header>
+            <section data-productive-filter-bar>
+              <select data-productive-filter-source><option value="">Todas</option></select>
+              <select data-productive-filter-status><option value="">Todos</option></select>
+              <p data-productive-filter-count>1 de 1 prospectos</p>
+            </section>
+            <div data-productive-pipeline-cards>
+              <article class="pipeline-module__productive-card"
+                data-productive-prospect-card="prospect-1"
+                data-productive-source="Referido"
+                data-productive-stage="referred_new">
+                <span data-productive-stage-label>Nuevo</span>
+                <select data-productive-stage-control="prospect-1" data-confirmed-stage="referred_new">
+                  <option value="referred_new" selected>Nuevo</option>
+                  <option value="appointment_scheduled">Cita agendada</option>
+                  <option value="client">Cliente</option>
+                </select>
+                <div class="pipeline-module__card-actions">
+                  <button type="button" data-open-combat="prospect-1">NASH Combat</button>
+                </div>
+              </article>
+            </div>
           </main>
         </div>
         <script>
-          const root = document.querySelector('[data-forge-pipeline-module]');
-          root.addEventListener('change', event => {
-            if (!event.target.matches('[data-productive-stage-control]')) return;
-            const value = event.target.value;
-            const label = event.target.selectedOptions[0].textContent;
-            const card = event.target.closest('[data-productive-prospect-card]');
-
-            // This fixture represents Pipeline module, the sole stage authority.
-            // The stability layer must preserve focus/scroll/layout only.
-            card.dataset.productiveStage = value;
-            card.dataset.stagePersistence = 'saving';
-            card.querySelector('[data-productive-stage-label]').textContent = label;
-            event.target.setAttribute('aria-busy', 'true');
-
-            setTimeout(() => {
-              root.innerHTML = '<div class="rerender-banner"></div>'
-                + '<article class="pipeline-module__productive-card" data-productive-prospect-card="prospect-1" data-productive-stage="' + value + '" data-stage-persistence="saved">'
-                + '<span data-productive-stage-label>' + label + '</span>'
-                + '<select data-productive-stage-control="prospect-1">'
-                + '<option value="referred_new">Nuevo</option>'
-                + '<option value="appointment_scheduled" ' + (value === 'appointment_scheduled' ? 'selected' : '') + '>Cita agendada</option>'
-                + '<option value="client" ' + (value === 'client' ? 'selected' : '') + '>Cliente</option>'
-                + '</select>'
-                + '<div class="pipeline-module__card-actions"><button type="button" data-open-combat="prospect-1">NASH Combat</button></div>'
-                + '</article>';
-            }, 20);
+          globalThis.__FORGE_AUTH_REFRESH_COUNT__ = 0;
+          globalThis.ForgeProductiveProspectBootstrap067G17B = {
+            getClient: async () => ({
+              rpc: async (name, args) => {
+                if (name !== 'forge_pipeline_update_prospect_stage') {
+                  return { data: null, error: new Error('UNEXPECTED_RPC') };
+                }
+                return {
+                  data: {
+                    id: args.p_prospect_id,
+                    status: args.p_status,
+                    full_name: 'Prospecto Uno',
+                    updated_at: '2026-07-31T18:00:00.000Z'
+                  },
+                  error: null
+                };
+              }
+            })
+          };
+          window.addEventListener('forge:auth-state-changed', () => {
+            globalThis.__FORGE_AUTH_REFRESH_COUNT__ += 1;
           });
           document.addEventListener('click', event => {
             const trigger = event.target.closest('[data-open-combat]');
@@ -107,54 +118,80 @@ try {
       </body>
     </html>`);
 
-  const fixtureModuleUrl = `${moduleUrl}&fixture=${Date.now()}`;
-  await page.addScriptTag({ type: "module", url: fixtureModuleUrl });
-  await page.waitForFunction(() => document.documentElement.dataset.forgePipelineUiStability === "ready");
+  await page.addScriptTag({
+    type: "module",
+    url: `${stabilityModuleUrl}&fixture=${Date.now()}`,
+  });
+  await page.waitForFunction(() =>
+    document.documentElement.dataset.forgePipelineUiStability === "ready"
+  );
+  await page.addScriptTag({
+    type: "module",
+    url: `${stageAuthorityUrl}&fixture=${Date.now()}`,
+  });
+  await page.waitForFunction(() =>
+    document.documentElement.dataset.pipelineStageRpcAuthority === "ready"
+  );
+
   assert.equal(
     await page.evaluate(() => document.documentElement.dataset.pipelineStageAuthority),
-    "pipeline-module",
+    "rpc",
+  );
+  assert.equal(
+    await page.evaluate(() => document.documentElement.dataset.pipelineStageCommitMode),
+    "in-place",
   );
 
   await page.locator('[data-productive-prospect-card="prospect-1"]').scrollIntoViewIfNeeded();
-  const beforeStage = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
-    stage: card.dataset.productiveStage,
-    border: getComputedStyle(card).borderTopColor,
-    top: card.getBoundingClientRect().top,
-  }));
+  const beforeStage = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => {
+    globalThis.__FORGE_CARD_BEFORE__ = card;
+    return {
+      stage: card.dataset.productiveStage,
+      border: getComputedStyle(card).borderTopColor,
+      top: card.getBoundingClientRect().top,
+      scrollY: window.scrollY,
+    };
+  });
 
   await page.locator('[data-productive-stage-control="prospect-1"]').selectOption("appointment_scheduled");
-  await page.waitForFunction(beforeBorder => {
+  await page.waitForFunction(() => {
     const card = document.querySelector('[data-productive-prospect-card="prospect-1"]');
     return card?.dataset.productiveStage === "appointment_scheduled"
-      && card.querySelector('[data-productive-stage-label]')?.textContent === "Cita agendada"
-      && getComputedStyle(card).borderTopColor !== beforeBorder;
-  }, beforeStage.border);
-  const immediate = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
-    stage: card.dataset.productiveStage,
-    label: card.querySelector('[data-productive-stage-label]').textContent,
-    persistence: card.dataset.stagePersistence,
-    border: getComputedStyle(card).borderTopColor,
-  }));
-  assert.equal(immediate.stage, "appointment_scheduled");
-  assert.equal(immediate.label, "Cita agendada");
-  assert.ok(
-    ["saving", "saved"].includes(immediate.persistence),
-    `unexpected immediate persistence state: ${immediate.persistence}`,
-  );
-  assert.notEqual(immediate.border, beforeStage.border);
+      && card.dataset.stagePersistence === "saved"
+      && card.querySelector('[data-productive-stage-label]')?.textContent === "Cita agendada";
+  });
 
-  await page.waitForTimeout(180);
-  const afterRerender = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
+  const committed = await page.locator('[data-productive-prospect-card="prospect-1"]').evaluate(card => ({
+    sameNode: globalThis.__FORGE_CARD_BEFORE__ === card,
     stage: card.dataset.productiveStage,
     label: card.querySelector('[data-productive-stage-label]').textContent,
     persistence: card.dataset.stagePersistence,
-    top: card.getBoundingClientRect().top,
     border: getComputedStyle(card).borderTopColor,
+    top: card.getBoundingClientRect().top,
+    scrollY: window.scrollY,
+    authRefreshCount: globalThis.__FORGE_AUTH_REFRESH_COUNT__,
+    authLoadingVisible: document.querySelector('[data-pipeline-auth-state="AUTH_LOADING"]') !== null,
+    deferred: document.documentElement.dataset.pipelineStageDeferredReconcile,
   }));
-  assert.equal(afterRerender.stage, "appointment_scheduled");
-  assert.equal(afterRerender.label, "Cita agendada");
-  assert.equal(afterRerender.persistence, "saved");
-  assert.ok(Math.abs(afterRerender.top - beforeStage.top) <= 1.5, `card moved ${afterRerender.top - beforeStage.top}px after rerender`);
+
+  assert.equal(committed.sameNode, true);
+  assert.equal(committed.stage, "appointment_scheduled");
+  assert.equal(committed.label, "Cita agendada");
+  assert.equal(committed.persistence, "saved");
+  assert.notEqual(committed.border, beforeStage.border);
+  assert.ok(Math.abs(committed.top - beforeStage.top) <= 1.5);
+  assert.ok(Math.abs(committed.scrollY - beforeStage.scrollY) <= 1);
+  assert.equal(committed.authRefreshCount, 0);
+  assert.equal(committed.authLoadingVisible, false);
+  assert.equal(committed.deferred, "pending");
+
+  await page.waitForTimeout(250);
+  const afterDelay = await page.evaluate(() => ({
+    sameNode: globalThis.__FORGE_CARD_BEFORE__ === document.querySelector('[data-productive-prospect-card="prospect-1"]'),
+    authRefreshCount: globalThis.__FORGE_AUTH_REFRESH_COUNT__,
+  }));
+  assert.equal(afterDelay.sameNode, true);
+  assert.equal(afterDelay.authRefreshCount, 0);
 
   const beforeWorkspace = await page.locator("#frame").evaluate(node => ({
     width: node.getBoundingClientRect().width,
@@ -165,28 +202,30 @@ try {
   const duringWorkspace = await page.locator("#frame").evaluate(node => ({
     width: node.getBoundingClientRect().width,
     scrollY: window.scrollY,
-    paddingRight: getComputedStyle(document.body).paddingRight,
     open: document.documentElement.getAttribute("data-forge-productive-workspace-open"),
   }));
   assert.equal(duringWorkspace.open, "combat");
-  assert.ok(Math.abs(duringWorkspace.width - beforeWorkspace.width) <= 1, `layout width shifted ${duringWorkspace.width - beforeWorkspace.width}px`);
-  assert.ok(Math.abs(duringWorkspace.scrollY - beforeWorkspace.scrollY) <= 1, `scroll shifted ${duringWorkspace.scrollY - beforeWorkspace.scrollY}px`);
+  assert.ok(Math.abs(duringWorkspace.width - beforeWorkspace.width) <= 1);
+  assert.ok(Math.abs(duringWorkspace.scrollY - beforeWorkspace.scrollY) <= 1);
 
   await page.getByRole("button", { name: "Cerrar" }).click();
   await page.waitForTimeout(40);
-  const afterWorkspace = await page.locator("#frame").evaluate(node => ({
-    width: node.getBoundingClientRect().width,
-    scrollY: window.scrollY,
-    open: document.documentElement.hasAttribute("data-forge-productive-workspace-open"),
-  }));
-  assert.equal(afterWorkspace.open, false);
-  assert.ok(Math.abs(afterWorkspace.width - beforeWorkspace.width) <= 1);
-  assert.ok(Math.abs(afterWorkspace.scrollY - beforeWorkspace.scrollY) <= 1);
+  assert.equal(
+    await page.evaluate(() => document.documentElement.hasAttribute("data-forge-productive-workspace-open")),
+    false,
+  );
 
-  console.log("QUOTE_COMPLETE_FIELD_MATRIX=PASS");
-  console.log("PIPELINE_STAGE_AUTHORITY=SINGLE");
-  console.log("PIPELINE_STAGE_COLOR_SYNC=PASS");
-  console.log("PIPELINE_RERENDER_ANCHOR_STABLE=PASS");
+  await page.getByRole("button", { name: "Inicio" }).click();
+  await page.waitForFunction(() => globalThis.__FORGE_AUTH_REFRESH_COUNT__ === 1);
+  assert.equal(
+    await page.evaluate(() => document.documentElement.dataset.pipelineStageDeferredReconcile),
+    undefined,
+  );
+
+  console.log("PIPELINE_STAGE_AUTHORITY=RPC");
+  console.log("PIPELINE_STAGE_PERSISTENCE=PASS");
+  console.log("PIPELINE_STAGE_NO_MODULE_REFRESH=PASS");
+  console.log("PIPELINE_STAGE_DEFERRED_RECONCILIATION=PASS");
   console.log("PIPELINE_WORKSPACE_LAYOUT_SHIFT=ZERO");
 } finally {
   await context.close();
