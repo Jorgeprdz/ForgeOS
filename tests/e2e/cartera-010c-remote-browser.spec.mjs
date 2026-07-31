@@ -28,16 +28,21 @@ test('productive Cartera route opens and closes canonical Policy detail without 
   await expect(openButton).toBeVisible();
   await openButton.click();
 
-  await expect(page.getByRole('heading', { name: 'VIDA_MUJER' })).toBeVisible();
-  await expect(page.getByText('010C-BROWSER-001')).toBeVisible();
-  await expect(page.getByText(/24,000/)).toBeVisible();
-  await expect(page.getByText(/1,500,000/)).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Timeline canónico minimizado' })).toBeVisible();
-  await expect(page.locator('[data-policy-timeline] [data-policy-event-type]')).toHaveCount(5);
-  await expect(page.locator('[data-policy-event-type="POLICY_CONFIRMED"]')).toHaveCount(1);
-  await expect(page.locator('[data-policy-event-type="POLICY_VERSION_CONFIRMED"]')).toHaveCount(1);
-  await expect(page.locator('[data-policy-event-type="POLICY_EVIDENCE_CONFIRMED"]')).toHaveCount(1);
-  await expect(page.locator('[data-policy-event-type="POLICY_ROLE_CONFIRMED"]')).toHaveCount(2);
+  const detailPanel = page.locator('#cartera-detail-panel');
+  await expect(
+    detailPanel.getByRole('heading', { name: 'VIDA_MUJER', level: 2 }),
+  ).toBeVisible();
+  await expect(detailPanel.getByText('010C-BROWSER-001')).toBeVisible();
+  await expect(detailPanel.getByText(/24,000/)).toBeVisible();
+  await expect(detailPanel.getByText(/1,500,000/)).toBeVisible();
+  await expect(
+    detailPanel.getByRole('heading', { name: 'Timeline canónico minimizado' }),
+  ).toBeVisible();
+  await expect(detailPanel.locator('[data-policy-timeline] [data-policy-event-type]')).toHaveCount(5);
+  await expect(detailPanel.locator('[data-policy-event-type="POLICY_CONFIRMED"]')).toHaveCount(1);
+  await expect(detailPanel.locator('[data-policy-event-type="POLICY_VERSION_CONFIRMED"]')).toHaveCount(1);
+  await expect(detailPanel.locator('[data-policy-event-type="POLICY_EVIDENCE_CONFIRMED"]')).toHaveCount(1);
+  await expect(detailPanel.locator('[data-policy-event-type="POLICY_ROLE_CONFIRMED"]')).toHaveCount(2);
 
   const bodyText = await page.locator('body').innerText();
   expect(bodyText).not.toContain('SENSITIVE_BENEFICIARY_BROWSER_FIXTURE');
@@ -53,7 +58,7 @@ test('productive Cartera route opens and closes canonical Policy detail without 
     && call.name === 'forge_cartera010b_list_general_policy_roles'
   ))).toBe(true);
 
-  await page.getByRole('button', { name: 'Cerrar' }).click();
+  await detailPanel.getByRole('button', { name: 'Cerrar' }).click();
   await expect(page.locator('#cartera-detail-panel > section')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Ver detalle canónico' })).toBeVisible();
 
