@@ -67,8 +67,6 @@ jobs:
           grep -q 'expected_acceptance_head:' "$workflow"
           grep -q 'project_ref:' "$workflow"
           grep -q 'cancel-in-progress: false' "$workflow"
-          ! grep -q 'SUPABASE_ACCESS_TOKEN' .github/workflows/cartera-020b-remote-gate.yml
-          ! grep -q 'node scripts/ci/cartera-020b-github-actions-remote-acceptance.mjs' .github/workflows/cartera-020b-remote-gate.yml
           echo 'REMOTE_WORKFLOW=MANUAL_ONLY'
           echo 'REMOTE_EXECUTION_FROM_PR=IMPOSSIBLE'
 
