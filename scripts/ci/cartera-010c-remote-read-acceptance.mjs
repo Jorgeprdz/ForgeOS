@@ -365,90 +365,92 @@ function assertNoSensitiveProjection(detail) {
 }
 
 async function main() {
-  const [authA, authB] = await Promise.all([
-    clientA.auth.signInWithPassword({
-      email: process.env.ADVISOR_A_EMAIL,
-      password: process.env.ADVISOR_A_PASSWORD,
-    }),
-    clientB.auth.signInWithPassword({
-      email: process.env.ADVISOR_B_EMAIL,
-      password: process.env.ADVISOR_B_PASSWORD,
-    }),
-  ]);
-  assert.ifError(authA.error);
-  assert.ifError(authB.error);
-  advisorAId = authA.data.user?.id;
-  advisorBId = authB.data.user?.id;
-  assert.match(advisorAId || '', /^[0-9a-f-]{36}$/i);
-  assert.match(advisorBId || '', /^[0-9a-f-]{36}$/i);
-  assert.notEqual(advisorAId, advisorBId);
-  log('AUTHENTICATED_TWO_ADVISORS=PASS');
-
-  await managementQuery(seedSql(), 'CARTERA010C_FIXTURE_SEED');
-  seeded = true;
-  log('REMOTE_FIXTURE_SEEDED=PASS');
-
-  const serviceA = createCanonicalPortfolioService({ client: clientA });
-  const portfolioA = await serviceA.loadPortfolio();
-  const itemA = portfolioA.find(item => item.policyReference === fixture.policyReference);
-  assert.ok(itemA, 'OWNER_PORTFOLIO_POLICY_MISSING');
-  assert.deepEqual(
-    new Set(itemA.generalParticipantSummary.map(role => role.roleType)),
-    new Set(['INSURED', 'POLICY_OWNER']),
-  );
-  assert.equal(JSON.stringify(itemA).includes(fixture.sensitiveMarker), false);
-
-  const detailA = await serviceA.loadPolicyDetail(fixture.policyReference);
-  assert.equal(detailA.policy.policyReference, fixture.policyReference);
-  assert.equal(detailA.policy.policyNumber, fixture.policyNumber);
-  assert.equal(detailA.policy.premiumAmount.value, 24000);
-  assert.ok(detailA.timeline.length >= 4, 'MINIMIZED_TIMELINE_INCOMPLETE');
-  assertNoSensitiveProjection(detailA);
-  report.ownerRead = true;
-  report.beneficiaryGeneralProjectionBlocked = true;
-  report.rawEvidenceProjectionBlocked = true;
-  log('AUTHENTICATED_OWNER_PORTFOLIO_READ=PASS');
-  log('AUTHENTICATED_OWNER_POLICY_DETAIL_READ=PASS');
-  log('MINIMIZED_POLICY_TIMELINE_READ=PASS');
-  log('BENEFICIARY_GENERAL_PROJECTION=BLOCKED');
-  log('RAW_EVIDENCE_PROJECTION=BLOCKED');
-
-  const directRoleRead = await clientA
-    .from('policy_roles')
-    .select('id')
-    .eq('policy_id', fixture.policyId);
-  assert.ok(directRoleRead.error, 'DIRECT_POLICY_ROLES_READ_UNEXPECTEDLY_ALLOWED');
-  report.directPolicyRolesReadBlocked = true;
-  log('DIRECT_POLICY_ROLES_READ=BLOCKED');
-
-  const serviceB = createCanonicalPortfolioService({ client: clientB });
-  const portfolioB = await serviceB.loadPortfolio();
-  assert.equal(
-    portfolioB.some(item => item.policyReference === fixture.policyReference),
-    false,
-  );
-  await assert.rejects(
-    () => serviceB.loadPolicyDetail(fixture.policyReference),
-    error => error?.code === 'CARTERA010C_POLICY_NOT_FOUND',
-  );
-  report.crossAdvisorIsolation = true;
-  log('RLS_CROSS_ADVISOR_PORTFOLIO=PASS');
-  log('RLS_CROSS_ADVISOR_POLICY_DETAIL=PASS');
-
-  const anonymousService = createCanonicalPortfolioService({ client: anonymousClient });
-  await assert.rejects(
-    () => anonymousService.loadPortfolio(),
-    error => error?.code === 'CARTERA010C_AUTH_REQUIRED',
-  );
-  report.anonymousReadBlocked = true;
-  report.remoteRead = 'PASS';
-  log('ANONYMOUS_PORTFOLIO_READ=BLOCKED');
-  log('CARTERA_010C_REMOTE_READ_ACCEPTANCE=PASS');
-} finally {
   try {
-    if (seeded) await cleanup();
+    const [authA, authB] = await Promise.all([
+      clientA.auth.signInWithPassword({
+        email: process.env.ADVISOR_A_EMAIL,
+        password: process.env.ADVISOR_A_PASSWORD,
+      }),
+      clientB.auth.signInWithPassword({
+        email: process.env.ADVISOR_B_EMAIL,
+        password: process.env.ADVISOR_B_PASSWORD,
+      }),
+    ]);
+    assert.ifError(authA.error);
+    assert.ifError(authB.error);
+    advisorAId = authA.data.user?.id;
+    advisorBId = authB.data.user?.id;
+    assert.match(advisorAId || '', /^[0-9a-f-]{36}$/i);
+    assert.match(advisorBId || '', /^[0-9a-f-]{36}$/i);
+    assert.notEqual(advisorAId, advisorBId);
+    log('AUTHENTICATED_TWO_ADVISORS=PASS');
+
+    await managementQuery(seedSql(), 'CARTERA010C_FIXTURE_SEED');
+    seeded = true;
+    log('REMOTE_FIXTURE_SEEDED=PASS');
+
+    const serviceA = createCanonicalPortfolioService({ client: clientA });
+    const portfolioA = await serviceA.loadPortfolio();
+    const itemA = portfolioA.find(item => item.policyReference === fixture.policyReference);
+    assert.ok(itemA, 'OWNER_PORTFOLIO_POLICY_MISSING');
+    assert.deepEqual(
+      new Set(itemA.generalParticipantSummary.map(role => role.roleType)),
+      new Set(['INSURED', 'POLICY_OWNER']),
+    );
+    assert.equal(JSON.stringify(itemA).includes(fixture.sensitiveMarker), false);
+
+    const detailA = await serviceA.loadPolicyDetail(fixture.policyReference);
+    assert.equal(detailA.policy.policyReference, fixture.policyReference);
+    assert.equal(detailA.policy.policyNumber, fixture.policyNumber);
+    assert.equal(detailA.policy.premiumAmount.value, 24000);
+    assert.ok(detailA.timeline.length >= 4, 'MINIMIZED_TIMELINE_INCOMPLETE');
+    assertNoSensitiveProjection(detailA);
+    report.ownerRead = true;
+    report.beneficiaryGeneralProjectionBlocked = true;
+    report.rawEvidenceProjectionBlocked = true;
+    log('AUTHENTICATED_OWNER_PORTFOLIO_READ=PASS');
+    log('AUTHENTICATED_OWNER_POLICY_DETAIL_READ=PASS');
+    log('MINIMIZED_POLICY_TIMELINE_READ=PASS');
+    log('BENEFICIARY_GENERAL_PROJECTION=BLOCKED');
+    log('RAW_EVIDENCE_PROJECTION=BLOCKED');
+
+    const directRoleRead = await clientA
+      .from('policy_roles')
+      .select('id')
+      .eq('policy_id', fixture.policyId);
+    assert.ok(directRoleRead.error, 'DIRECT_POLICY_ROLES_READ_UNEXPECTEDLY_ALLOWED');
+    report.directPolicyRolesReadBlocked = true;
+    log('DIRECT_POLICY_ROLES_READ=BLOCKED');
+
+    const serviceB = createCanonicalPortfolioService({ client: clientB });
+    const portfolioB = await serviceB.loadPortfolio();
+    assert.equal(
+      portfolioB.some(item => item.policyReference === fixture.policyReference),
+      false,
+    );
+    await assert.rejects(
+      () => serviceB.loadPolicyDetail(fixture.policyReference),
+      error => error?.code === 'CARTERA010C_POLICY_NOT_FOUND',
+    );
+    report.crossAdvisorIsolation = true;
+    log('RLS_CROSS_ADVISOR_PORTFOLIO=PASS');
+    log('RLS_CROSS_ADVISOR_POLICY_DETAIL=PASS');
+
+    const anonymousService = createCanonicalPortfolioService({ client: anonymousClient });
+    await assert.rejects(
+      () => anonymousService.loadPortfolio(),
+      error => error?.code === 'CARTERA010C_AUTH_REQUIRED',
+    );
+    report.anonymousReadBlocked = true;
+    report.remoteRead = 'PASS';
+    log('ANONYMOUS_PORTFOLIO_READ=BLOCKED');
+    log('CARTERA_010C_REMOTE_READ_ACCEPTANCE=PASS');
   } finally {
-    await Promise.allSettled([clientA.auth.signOut(), clientB.auth.signOut()]);
+    try {
+      if (seeded) await cleanup();
+    } finally {
+      await Promise.allSettled([clientA.auth.signOut(), clientB.auth.signOut()]);
+    }
   }
 }
 
