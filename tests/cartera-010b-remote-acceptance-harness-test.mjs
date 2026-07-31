@@ -31,7 +31,7 @@ function requireMarkers(text, markers) {
   }
 }
 
-test("remote runner deploys only the four accepted 010B migrations", () => {
+test("remote runner deploys only the four foundational 010B migrations", () => {
   requireMarkers(runner, [
     'version: "20260731000200"',
     'version: "20260731000210"',
@@ -85,7 +85,7 @@ test("acceptance covers multi-party roles and restricted beneficiary visibility"
     "'roleType','PAYOR'",
     "'roleType','BENEFICIARY'",
     "'visibilityScope','RESTRICTED_ROLE_VIEW'",
-    "public.cartera_policy_roles_general",
+    "forge_cartera010b_list_general_policy_roles",
     "CARTERA010B_RESTRICTED_ROLE_TABLE_READ_UNEXPECTED",
   ]);
 });
