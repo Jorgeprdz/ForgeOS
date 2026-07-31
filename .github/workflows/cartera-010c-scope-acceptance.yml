@@ -1,0 +1,72 @@
+name: CARTERA 010C Scope Acceptance
+
+on:
+  push:
+    branches:
+      - feature/cartera-010c-policy-timeline-person-account-projection
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010c-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy-projection-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source ancestry and bounded path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=73e1726f6f0ebf5f025e0dc197275503984a2705
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+
+          allowed='^(platform/event-evidence/policy-domain-event-contract\.js|tests/cartera-010c-policy-timeline-person-account-projection-scope-test\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010C_POLICY_TIMELINE_PERSON_ACCOUNT_PROJECTION_SCOPE_001\.md|\.github/workflows/cartera-010c-scope-acceptance\.yml)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010C_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'SCHEMA_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+
+      - name: JavaScript syntax gate
+        run: |
+          node --check platform/event-evidence/policy-domain-event-contract.js
+          node --check tests/cartera-010c-policy-timeline-person-account-projection-scope-test.mjs
+
+      - name: Execute 010C first-cut acceptance
+        run: node --test tests/cartera-010c-policy-timeline-person-account-projection-scope-test.mjs
+
+      - name: Emit progress markers
+        run: |
+          echo 'CARTERA_010C_SCOPE=LOCKED'
+          echo 'CARTERA_010C_POLICY_DOMAIN_EVENT_CONTRACT=REPOSITORY_READY'
+          echo 'LEGACY_CARTERA_DIRECT_WRITES=FORBIDDEN'
+          echo 'CARTERA_010C_COMPLETE=NO'
+          echo 'NEXT=CARTERA_010C_CANONICAL_READ_MODEL_AND_ROUTE_ADAPTER'
