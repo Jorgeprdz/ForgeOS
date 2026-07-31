@@ -1,3 +1,4 @@
+# One-shot trigger: this workflow removes itself after repairing Pages.
 name: Apply Pages Runtime Entry Validator Repair
 
 on:
