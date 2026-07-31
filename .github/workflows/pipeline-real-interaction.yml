@@ -8,6 +8,7 @@ on:
       - advisor-os/sales-pipeline/**
       - tests/pipeline-real-interaction-regression.mjs
       - tests/pipeline-prospect-admin-regression.mjs
+      - tests/pipeline-action-identity-regression.mjs
       - .github/workflows/pipeline-real-interaction.yml
   workflow_dispatch:
 
@@ -46,3 +47,4 @@ jobs:
         run: |
           node tests/pipeline-real-interaction-regression.mjs
           node tests/pipeline-prospect-admin-regression.mjs
+          node tests/pipeline-action-identity-regression.mjs
