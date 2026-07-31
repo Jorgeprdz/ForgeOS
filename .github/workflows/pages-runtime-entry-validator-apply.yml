@@ -3,9 +3,6 @@ name: Apply Pages Runtime Entry Validator Repair
 on:
   push:
     branches:
-      - fix/pages-runtime-entry-validator
-  pull_request:
-    branches:
       - main
     paths:
       - .github/workflows/pages-runtime-entry-validator-apply.yml
@@ -16,13 +13,12 @@ permissions:
 
 jobs:
   apply:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'fix/pages-runtime-entry-validator'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/pages-runtime-entry-validator
+          ref: main
           fetch-depth: 0
 
       - name: Replace brittle app version assertion
@@ -40,8 +36,6 @@ jobs:
             'missing versioned Forge Alive app entry',
           );
 '''
-          if new in text:
-              raise SystemExit(0)
           if text.count(old) != 1:
               raise SystemExit(f'OLD_PAGES_APP_ASSERTION_MATCHES={text.count(old)}')
           path.write_text(text.replace(old, new, 1))
@@ -50,16 +44,13 @@ jobs:
           grep -F 'missing versioned Forge Alive app entry' .github/workflows/pages.yml
           ! grep -F 'app\.js\?v=ui-m04-shell-007' .github/workflows/pages.yml
 
-      - name: Commit validator repair
+      - name: Commit repair and retire applicator
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet; then
-            echo 'Pages validator already repaired'
-            exit 0
-          fi
+          rm .github/workflows/pages-runtime-entry-validator-apply.yml
           git config user.name forgeos-pages-repair
           git config user.email actions@users.noreply.github.com
-          git add .github/workflows/pages.yml
+          git add .github/workflows/pages.yml .github/workflows/pages-runtime-entry-validator-apply.yml
           git commit -m "fix(pages): validate versioned runtime entry without stale pin"
-          git push origin HEAD:fix/pages-runtime-entry-validator
+          git push origin HEAD:main
