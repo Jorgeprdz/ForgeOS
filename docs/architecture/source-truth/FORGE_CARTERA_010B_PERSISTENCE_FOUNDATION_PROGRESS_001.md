@@ -1,7 +1,7 @@
 # FORGE CARTERA 010B — Persistence Foundation Progress 001
 
-Forge OS  
-Architecture Source Truth  
+Forge OS
+Architecture Source Truth
 Cartera / Commercial Person and Policy Role Foundation
 
 ## Status
