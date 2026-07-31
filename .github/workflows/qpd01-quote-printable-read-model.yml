@@ -15,6 +15,7 @@ on:
       - "tests/ui-m05e-quote-calculator-restoration-test.mjs"
       - "tests/ui-m05f-live-udi-review-printable-actions-test.mjs"
       - "tests/ui-m05g-printable-design-closure-test.mjs"
+      - "tests/ui-m05h-orvi-commercial-document-test.mjs"
       - "tests/e2e/qpd06-browser-acceptance.spec.mjs"
       - "tests/e2e/m05e006-responsiveness.spec.mjs"
       - "tests/e2e/fixtures/qpd06/**"
@@ -36,6 +37,7 @@ on:
       - "tests/ui-m05e-quote-calculator-restoration-test.mjs"
       - "tests/ui-m05f-live-udi-review-printable-actions-test.mjs"
       - "tests/ui-m05g-printable-design-closure-test.mjs"
+      - "tests/ui-m05h-orvi-commercial-document-test.mjs"
       - "tests/e2e/qpd06-browser-acceptance.spec.mjs"
       - "tests/e2e/m05e006-responsiveness.spec.mjs"
       - "tests/e2e/fixtures/qpd06/**"
@@ -76,6 +78,9 @@ jobs:
           node --check advisor-os/quotes/printable/quote-printable-read-model-m05e005.js
           node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e005.js
           node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e005.js
+          node --check advisor-os/quotes/printable/quote-printable-product-profile-m05e007.js
+          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e007.js
+          node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e007.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-read-model.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator.js
@@ -85,7 +90,11 @@ jobs:
           node --check docs/static-preview/quote-printable-runtime/quote-printable-read-model-m05e005.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e005.js
           node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e005.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-product-profile-m05e007.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e007.js
+          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e007.js
           node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js
+          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e007.js
           node --check docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
@@ -101,6 +110,7 @@ jobs:
           node --check tests/ui-m05e-quote-calculator-restoration-test.mjs
           node --check tests/ui-m05f-live-udi-review-printable-actions-test.mjs
           node --check tests/ui-m05g-printable-design-closure-test.mjs
+          node --check tests/ui-m05h-orvi-commercial-document-test.mjs
           node --check tests/e2e/qpd06-browser-acceptance.spec.mjs
           node --check tests/e2e/m05e006-responsiveness.spec.mjs
           node --check tests/e2e/fixtures/qpd06/harness.js
@@ -140,6 +150,9 @@ jobs:
 
       - name: M05G premium portrait printable closure
         run: node tests/ui-m05g-printable-design-closure-test.mjs
+
+      - name: M05H concise ORVI commercial document
+        run: node tests/ui-m05h-orvi-commercial-document-test.mjs
 
       - name: Diff integrity
         run: git diff --check HEAD^1...HEAD
