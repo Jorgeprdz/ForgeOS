@@ -52,7 +52,7 @@ assert.match(sql, /QPD05_RECORD_CONFLICT/);
 pass(8, "idempotent replay and conflicting payload rejection are explicit");
 
 assert.match(sql, /with \(security_invoker = true\)/);
-assert.match(sql, /where advisor_id = auth\.uid\(\)\)/);
+assert.match(sql, /where advisor_id = auth\.uid\(\);/);
 assert.match(sql, /quote_printable_document_history/);
 pass(9, "cross-device history view preserves caller RLS");
 
