@@ -100,6 +100,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p artifacts/cartera-001d-remote
           node scripts/ci/cartera-001d-github-actions-vertical-acceptance.mjs \
             | tee artifacts/cartera-001d-remote/workflow-output.log
       - name: Verify explicit remote markers
