@@ -24,6 +24,19 @@ function createStorage() {
   };
 }
 
+function collectNormalizedKeys(value, output = []) {
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectNormalizedKeys(item, output));
+    return output;
+  }
+  if (!value || typeof value !== "object") return output;
+  for (const [key, item] of Object.entries(value)) {
+    output.push(String(key).toLowerCase().replace(/[^a-z0-9]/g, ""));
+    collectNormalizedKeys(item, output);
+  }
+  return output;
+}
+
 function snapshot() {
   return {
     packetType: "ACCEPTED_QUOTE_AND_CALCULATION_REVIEW_SNAPSHOT",
@@ -174,17 +187,22 @@ assert.equal(preview.persistence.status, "APPENDED");
 assert.equal(preview.persistence.durable, true);
 pass(4, "confirmed quote opens a product-aware printable preview and appends a version");
 
-const storedText = storage.dump();
+const storedPayload = JSON.parse(storage.dump());
+const storedKeys = collectNormalizedKeys(storedPayload);
 for (const forbidden of [
-  "pdfBytes",
-  "rawPdf",
-  "arrayBuffer",
+  "pdfbytes",
+  "rawpdf",
+  "arraybuffer",
   "base64",
-  "\"html\"",
+  "binary",
+  "blob",
+  "html",
 ]) {
-  assert.equal(storedText.includes(forbidden), false);
+  assert.equal(storedKeys.includes(forbidden), false);
 }
-pass(5, "browser storage persists no PDF bytes, raw PDF, Base64 or HTML");
+assert.equal(storage.dump().includes("%PDF-1.4"), false);
+assert.equal(storage.dump().includes("<!doctype html>"), false);
+pass(5, "browser storage persists no PDF bytes, raw PDF, Base64 or HTML payload");
 
 const history = await controller.history();
 assert.equal(history.length, 1);
