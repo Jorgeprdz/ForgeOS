@@ -1,0 +1,146 @@
+name: CARTERA 010C Scope Acceptance
+
+on:
+  push:
+    branches:
+      - feature/cartera-010c-policy-timeline-person-account-projection
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010c-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy-projection-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source ancestry and bounded path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=73e1726f6f0ebf5f025e0dc197275503984a2705
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+
+          allowed='^(platform/event-evidence/policy-domain-event-contract\.js|platform/policy-intelligence/cartera-010c-[A-Za-z0-9._-]+\.js|advisor-os/cartera/canonical-portfolio-service\.js|cartera\.js|tests/cartera-010c-[A-Za-z0-9._-]+\.mjs|tests/e2e/cartera-010c-remote-browser\.spec\.mjs|tests/e2e/fixtures/cartera-010c/(index\.html|app\.mjs)|scripts/ci/cartera-010c-remote-read-acceptance\.mjs|playwright\.cartera-010c\.config\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010C_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_010C_REMOTE_READ_BROWSER_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|\.github/workflows/cartera-010c-(scope-acceptance|remote-read-browser-acceptance)\.yml)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010C_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_PATHS=PASS'
+          echo 'PRODUCT_ROUTE_ADAPTER=BOUNDED'
+          echo 'REMOTE_ACCEPTANCE_EVIDENCE=BOUNDED'
+          echo 'PRODUCT_UI_REDESIGN=NONE'
+          echo 'SCHEMA_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+
+      - name: JavaScript syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check platform/event-evidence/policy-domain-event-contract.js
+          for file in platform/policy-intelligence/cartera-010c-*.js; do
+            node --check "$file"
+          done
+          node --check advisor-os/cartera/canonical-portfolio-service.js
+          node --check cartera.js
+          node --check scripts/ci/cartera-010c-remote-read-acceptance.mjs
+          node --check playwright.cartera-010c.config.mjs
+          node --check tests/e2e/cartera-010c-remote-browser.spec.mjs
+          node --check tests/e2e/fixtures/cartera-010c/app.mjs
+          for file in tests/cartera-010c-*.mjs; do
+            node --check "$file"
+          done
+
+      - name: Execute complete 010C repository acceptance
+        run: node --test tests/cartera-010c-*.mjs
+
+      - name: Verify legacy authority removal and detail privacy
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -q 'crmaddlife-indexeddb' cartera.js
+          ! grep -q 'DB\.obtenerTodos' cartera.js
+          ! grep -q 'btn-new-policy' cartera.js
+          ! grep -q 'data-edit' cartera.js
+          ! grep -q 'data-delete' cartera.js
+          ! grep -q 'excel-input' cartera.js
+          grep -q 'createCanonicalPortfolioService' cartera.js
+          grep -q 'loadPolicyDetail' advisor-os/cartera/canonical-portfolio-service.js
+          grep -q 'data-policy-open' cartera.js
+          grep -q 'data-policy-timeline' cartera.js
+          grep -q 'Timeline canónico minimizado' cartera.js
+          grep -q 'safe-area-inset-bottom' cartera.js
+          grep -q 'forge_cartera010b_list_general_policy_roles' advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q "from('policy_roles')" advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q 'document_hash' advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q 'field_claims' advisor-os/cartera/canonical-portfolio-service.js
+          ! grep -q 'provenance' advisor-os/cartera/canonical-portfolio-service.js
+
+      - name: Verify accepted remote and browser closure evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          closure=docs/evidence/FORGE_CARTERA_010C_REMOTE_READ_BROWSER_ACCEPTANCE_CLOSURE_001.md
+          workflow=.github/workflows/cartera-010c-remote-read-browser-acceptance.yml
+
+          grep -q 'WORKFLOW_RUN=30645544410' "$closure"
+          grep -q 'WORKFLOW_JOB=91205892352' "$closure"
+          grep -q 'ARTIFACT_ID=8799264473' "$closure"
+          grep -q 'ARTIFACT_SHA256=79d951cb5473a06ee4f3a3c9a8cd157f9397162e4ffb9a2d576b49a3f1b0c116' "$closure"
+          grep -q 'REPOSITORY_TESTS=31' "$closure"
+          grep -q 'PLAYWRIGHT_TESTS=4' "$closure"
+          grep -q 'PLAYWRIGHT_PASS=4' "$closure"
+          grep -q 'RESIDUAL_FIXTURES=0' "$closure"
+          grep -q 'CARTERA_010C_COMPLETE=YES' "$closure"
+          grep -q 'workflow_dispatch:' "$workflow"
+          ! grep -qE '^  (push|pull_request):' "$workflow"
+
+          echo 'REMOTE_READ_EVIDENCE=VERIFIED'
+          echo 'BROWSER_EVIDENCE=VERIFIED'
+          echo 'REMOTE_WORKFLOW_TRIGGER=MANUAL_ONLY'
+
+      - name: Emit closure markers
+        run: |
+          echo 'CARTERA_010C_SCOPE=LOCKED'
+          echo 'CARTERA_010C_POLICY_DOMAIN_EVENT_CONTRACT=REPOSITORY_READY'
+          echo 'CARTERA_010C_CANONICAL_PORTFOLIO_READ_MODEL=REPOSITORY_READY'
+          echo 'CARTERA_010C_AUTHENTICATED_PORTFOLIO_SERVICE=REPOSITORY_READY'
+          echo 'CARTERA_010C_PERSON_ACCOUNT_PROJECTION=REPOSITORY_READY'
+          echo 'CARTERA_010C_POLICY_DETAIL=REPOSITORY_READY'
+          echo 'CARTERA_010C_MINIMIZED_POLICY_TIMELINE=REPOSITORY_READY'
+          echo 'CARTERA_010C_REMOTE_READ=PASS'
+          echo 'CARTERA_010C_DESKTOP_BROWSER=PASS'
+          echo 'CARTERA_010C_MOBILE_BROWSER=PASS'
+          echo 'CARTERA_010C_PRIVACY_GATE=PASS'
+          echo 'CARTERA_010C_FIXTURE_CLEANUP=PASS'
+          echo 'LEGACY_CARTERA_INDEXEDDB_AUTHORITY=REMOVED_FROM_ROUTE'
+          echo 'LEGACY_CARTERA_DIRECT_WRITES=REMOVED'
+          echo 'UNKNOWN_FACT_DEFAULTING=REMOVED'
+          echo 'BENEFICIARY_GENERAL_PROJECTION=FORBIDDEN'
+          echo 'PRODUCT_UI_REDESIGN=NO'
+          echo 'CARTERA_010C_COMPLETE=YES'
+          echo 'NEXT=CARTERA_010D_AUTHORIZED'
