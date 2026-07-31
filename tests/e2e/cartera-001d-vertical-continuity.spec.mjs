@@ -21,6 +21,7 @@ async function loadRuntime(page) {
 
 test("reviewed Quote reaches durable history, Timeline and Productive Prospect Detail", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
   await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>
     body{font-family:system-ui;margin:0;padding:16px;background:#f7f2fa;color:#1d1b20}
     button{font:inherit}dialog{width:min(94vw,620px);border:0;border-radius:24px;padding:0}
@@ -254,6 +255,7 @@ test("reviewed Quote reaches durable history, Timeline and Productive Prospect D
 });
 
 test("reviewed Quote without Prospect identity remains non-durable and orphan-free", async ({ page }) => {
+  await page.goto("/");
   await page.setContent("<!doctype html><html><body><p data-material3-quotes-status></p></body></html>");
   await loadRuntime(page);
   const result = await page.evaluate(async () => {
