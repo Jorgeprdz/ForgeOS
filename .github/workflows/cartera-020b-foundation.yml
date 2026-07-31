@@ -1,9 +1,6 @@
 name: CARTERA 020B Foundation Acceptance
 
 on:
-  push:
-    branches:
-      - feature/cartera-020b-persistent-evidence-worker-parser-registry
   pull_request:
     branches:
       - feature/cartera-010b-commercial-person-policy-role-foundation
