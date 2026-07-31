@@ -170,6 +170,31 @@
   cursor: pointer;
 }
 
+[data-forge-qpd06-modal-download] {
+  min-height: 2.85rem;
+  padding: 0.68rem 1.15rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--md-sys-color-primary, #146c60);
+  color: var(--md-sys-color-on-primary, #fff);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.1;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--md-sys-color-primary, #146c60) 24%, transparent);
+  cursor: pointer;
+}
+
+[data-forge-qpd06-modal-download]:hover {
+  filter: brightness(1.06);
+}
+
+[data-forge-qpd06-modal-download]:focus-visible,
+.forge-qpd06-modal__close:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--md-sys-color-primary, #146c60) 42%, white);
+  outline-offset: 2px;
+}
+
 .forge-qpd06-modal__body {
   min-height: 0;
   overflow: hidden;
@@ -272,6 +297,11 @@ body.forge-qpd06-modal-open {
     align-items: stretch;
     flex-direction: column;
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  [data-forge-qpd06-modal-download] {
+    width: 100%;
+    min-height: 3.1rem;
   }
 
   .forge-qpd06-history__item {
