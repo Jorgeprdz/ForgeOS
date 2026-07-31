@@ -117,6 +117,7 @@ assert.ok(pdf.pageCount >= 2);
 assert.ok(pdf.byteLength > 1000);
 
 assert.match(app, /quote-runtime-printable-closure-m05e005\.js\?v=m05e-005/);
+assert.doesNotMatch(app, /quote-runtime-ux-closure-m05e004/);
 assert.match(app, /quoteCalculatorRuntime = "M05E-005"/);
 assert.match(proof, /CALCULADORAS M05E-005/);
 assert.match(proof, /quote-calculator-parity-005/);
@@ -145,6 +146,7 @@ assert.match(styles, /\.forge-printable-modal__dialog/);
 console.log("PASS UI-M05G printable design and UX closure", {
   productiveRuntime: "M05E-005",
   optionalClientIsNonBlocking: true,
+  obsoleteUxLayerRemoved: true,
   compactDocumentActions: ["printer", "pdf", "history"],
   forgeDarkUiParity: true,
   pageFormat: "A4",
