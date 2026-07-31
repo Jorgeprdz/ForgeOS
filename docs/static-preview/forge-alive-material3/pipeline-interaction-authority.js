@@ -1,12 +1,3 @@
-const STAGE_LABELS = Object.freeze({
-  referred_new: "Nuevo",
-  contacted: "Contactado",
-  appointment_scheduled: "Cita agendada",
-  proposal: "Propuesta",
-  decision: "En decisión",
-  client: "Cliente",
-});
-
 const PIPELINE_ROOT_SELECTOR = "[data-forge-pipeline-module]";
 const CREATE_REFERRAL_SELECTOR = "[data-pipeline-create-referral]";
 const CREATE_ERROR_SELECTOR = "[data-pipeline-create-error]";
@@ -14,31 +5,9 @@ const NAME_SEARCH_SELECTOR = "[data-productive-filter-name]";
 const NAME_SEARCH_CLEAR_SELECTOR = "[data-clear-productive-name-search]";
 const NAME_SEARCH_EMPTY_SELECTOR = "[data-productive-name-filter-empty]";
 const NAME_SEARCH_MIN_LENGTH = 3;
-const pendingStages = new Map();
 const nativePipelineQueries = new WeakMap();
 let productiveNameQuery = "";
 let nameSearchRenderScheduled = false;
-
-function escapeValue(value) {
-  return globalThis.CSS?.escape?.(String(value)) || String(value).replace(/["\\]/g, "\\$&");
-}
-
-function cardFor(id, root = document) {
-  return root.querySelector(`[data-productive-prospect-card="${escapeValue(id)}"]`);
-}
-
-function applyStage(card, status, persistence) {
-  if (!card || !status) return;
-  card.dataset.productiveStage = status;
-  card.dataset.stagePersistence = persistence;
-  const label = card.querySelector("[data-productive-stage-label]");
-  if (label) label.textContent = STAGE_LABELS[status] || status;
-  const select = card.querySelector("[data-productive-stage-control]");
-  if (select) {
-    select.value = status;
-    select.setAttribute("aria-busy", persistence === "saving" ? "true" : "false");
-  }
-}
 
 function nativePipelineQuery(root, selector) {
   const query = nativePipelineQueries.get(root);
@@ -117,9 +86,9 @@ function normalizeSearchText(value) {
 }
 
 function productiveCardName(card) {
-  return card.querySelector("[data-productive-card-identity] strong, .pipeline-module__productive-identity strong")
-    ?.textContent
-    ?.trim() || "";
+  return card.querySelector(
+    "[data-productive-card-identity] strong, .pipeline-module__productive-identity strong",
+  )?.textContent?.trim() || "";
 }
 
 function createNameSearchControl() {
@@ -182,9 +151,7 @@ function ensureNameSearchEmptyState(root, visibleCount, renderedCardCount) {
 function applyNameSearch(root) {
   if (!root || nativePipelineQuery(root, "[data-pipeline-auth-state]")) return;
   const input = nativePipelineQuery(root, NAME_SEARCH_SELECTOR);
-  const cards = [
-    ...root.querySelectorAll("[data-productive-prospect-card]"),
-  ];
+  const cards = [...root.querySelectorAll("[data-productive-prospect-card]")];
   const count = nativePipelineQuery(root, "[data-productive-filter-count]");
   if (!input) return;
 
@@ -310,12 +277,8 @@ function installGeometryAuthority() {
       grid-row: 1;
       margin-bottom: 2px;
     }
-    .pipeline-module .pipeline-module__header--with-action > h1 {
-      grid-row: 2;
-    }
-    .pipeline-module .pipeline-module__header--with-action > span {
-      grid-row: 3;
-    }
+    .pipeline-module .pipeline-module__header--with-action > h1 { grid-row: 2; }
+    .pipeline-module .pipeline-module__header--with-action > span { grid-row: 3; }
     .pipeline-module .pipeline-module__create--header {
       grid-column: 2;
       grid-row: 1 / 4;
@@ -356,7 +319,7 @@ function installGeometryAuthority() {
       min-height: 48px;
       border: 1px solid rgba(184, 211, 255, .2);
       border-radius: 14px;
-      padding: 8px 42px 8px 38px;
+      padding: 8px 46px 8px 38px;
       color: var(--ink);
       background: rgba(5, 18, 35, .86);
       font: inherit;
@@ -374,7 +337,7 @@ function installGeometryAuthority() {
     }
     .pipeline-module .pipeline-module__name-search-control button {
       position: absolute;
-      right: 2px;
+      right: 4px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -424,9 +387,7 @@ function installGeometryAuthority() {
       white-space: normal !important;
     }
     @media (min-width: 768px) and (max-width: 1199px) {
-      .pipeline-module .pipeline-module__name-search {
-        grid-column: 1 / -1;
-      }
+      .pipeline-module .pipeline-module__name-search { grid-column: 1 / -1; }
     }
     @media (min-width: 1200px) {
       .pipeline-module .pipeline-module__filters {
@@ -466,59 +427,17 @@ function installGeometryAuthority() {
   document.head.append(style);
 }
 
-function installStageAuthority() {
-  document.addEventListener("change", event => {
-    const select = event.target?.closest?.("[data-productive-stage-control]");
-    if (!select) return;
-    const id = select.dataset.productiveStageControl;
-    const card = select.closest("[data-productive-prospect-card]");
-    const requested = select.value;
-    const previous = card?.dataset.productiveStage;
-    if (!id || !card || !requested || requested === previous) return;
-    pendingStages.set(id, { requested, previous });
-    applyStage(card, requested, "saving");
-  }, true);
-
-  const observer = new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      if (mutation.type === "attributes" && mutation.target.matches?.("[data-productive-stage-control]")) {
-        const select = mutation.target;
-        if (select.getAttribute("aria-invalid") !== "true") continue;
-        const id = select.dataset.productiveStageControl;
-        const pending = pendingStages.get(id);
-        if (!pending) continue;
-        applyStage(select.closest("[data-productive-prospect-card]"), pending.previous, "error");
-        select.removeAttribute("aria-busy");
-        pendingStages.delete(id);
-      }
-    }
-
-    for (const [id, pending] of pendingStages) {
-      const card = cardFor(id);
-      if (!card) continue;
-      if (card.dataset.productiveStage !== pending.requested) {
-        applyStage(card, pending.requested, "saving");
-      }
-    }
-  });
-  observer.observe(document.documentElement, {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    attributeFilter: ["aria-invalid"],
-  });
+if (typeof document !== "undefined") {
+  installPersistentReferralAuthority();
+  installNameSearchAuthority();
+  installGeometryAuthority();
+  document.documentElement.dataset.pipelineInteractionAuthority = "ready";
+  document.documentElement.dataset.pipelineStageAuthority = "pipeline-module";
 }
-
-installPersistentReferralAuthority();
-installNameSearchAuthority();
-installGeometryAuthority();
-installStageAuthority();
-document.documentElement.dataset.pipelineInteractionAuthority = "ready";
 
 export {
   NAME_SEARCH_MIN_LENGTH,
   applyNameSearch,
-  applyStage,
   ensureNameSearch,
   ensurePersistentReferralAction,
   ensurePersistentReferralError,
