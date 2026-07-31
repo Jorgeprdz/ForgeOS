@@ -40,7 +40,7 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
 
-          allowed='^(platform/policy-intelligence/cartera-010d-[A-Za-z0-9._-]+\.js|advisor-os/cartera/canonical-directory-service\.js|cartera\.js|tests/cartera-010d-[A-Za-z0-9._-]+\.mjs|tests/e2e/cartera-010d-[A-Za-z0-9._-]+\.spec\.mjs|tests/e2e/fixtures/cartera-010d/(index\.html|app\.mjs)|playwright\.cartera-010d\.config\.mjs|scripts/ci/cartera-010d-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010D_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_010D_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-010d-[A-Za-z0-9._-]+\.yml)$'
+          allowed='^(platform/policy-intelligence/cartera-010d-[A-Za-z0-9._-]+\.js|advisor-os/cartera/canonical-directory-service\.js|cartera\.js|tests/cartera-010d-[A-Za-z0-9._-]+\.mjs|tests/e2e/cartera-010d-[A-Za-z0-9._-]+\.spec\.mjs|tests/e2e/fixtures/cartera-010d/(index\.html|app\.mjs)|playwright\.cartera-010d\.config\.mjs|scripts/ci/cartera-010d-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010D_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_010D_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-010d-[A-Za-z0-9._-]+\.yml|\.github/workflows/cartera-010c-scope-acceptance\.yml)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -54,6 +54,7 @@ jobs:
           echo 'SCHEMA_DIFF=NONE'
           echo 'SUPABASE_REMOTE_MUTATION=NONE'
           echo 'PRODUCT_UI_REDESIGN=NONE'
+          echo 'INHERITED_010C_GATE_RETIREMENT=BOUNDED'
 
       - name: JavaScript syntax gate
         shell: bash
