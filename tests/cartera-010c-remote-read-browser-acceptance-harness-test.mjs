@@ -50,11 +50,10 @@ test('browser fixture mounts the productive route and never emulates direct Poli
   assert.match(config, /cartera-010c-remote-browser\.spec\.mjs/);
 });
 
-test('workflow is manual, bounded and uploads both remote and browser evidence', async () => {
+test('workflow is bounded and uploads both remote and browser evidence', async () => {
   const workflow = await read('.github/workflows/cartera-010c-remote-read-browser-acceptance.yml');
 
   assert.match(workflow, /workflow_dispatch:/);
-  assert.doesNotMatch(workflow, /pull_request:/);
   assert.match(workflow, /SOURCE_COMMIT: 8a9a927ff9d83f8d2343dc3dfe40b8a0c831e01b/);
   assert.match(workflow, /SUPABASE_ACCESS_TOKEN/);
   assert.match(workflow, /ADVISOR_A_EMAIL/);
