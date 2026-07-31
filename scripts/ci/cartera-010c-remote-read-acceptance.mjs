@@ -359,8 +359,11 @@ function assertNoSensitiveProjection(detail) {
   assert.doesNotMatch(serialized, /DO_NOT_PROJECT/);
   assert.doesNotMatch(serialized, /fieldClaims|provenance|rawDocument|documentHash/);
   for (const event of detail.timeline) {
-    const payload = JSON.stringify(event.payload);
-    assert.doesNotMatch(payload, /premium|sumInsured|currency|paymentFrequency|policyNumber/i);
+    const eventProjection = JSON.stringify(event) || '';
+    assert.doesNotMatch(
+      eventProjection,
+      /premium|sumInsured|currency|paymentFrequency|policyNumber/i,
+    );
   }
 }
 
