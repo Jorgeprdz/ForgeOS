@@ -96,9 +96,16 @@ jobs:
         run: node scripts/deploy-pipeline-journal-migration.mjs
 
       - name: Publish redacted remote evidence
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p artifacts/pipeline-journal-migration
+          if [ ! -s artifacts/pipeline-journal-migration/ledger.jsonl ]; then
+            printf '%s\n' '{"name":"workflow_preflight","status":"FAIL","detail":"LEDGER_NOT_CREATED"}' \
+              > artifacts/pipeline-journal-migration/ledger.jsonl
+          fi
+
           git fetch origin supabase-evidence
           git worktree add /tmp/supabase-evidence origin/supabase-evidence
           mkdir -p /tmp/supabase-evidence/deployments
@@ -112,9 +119,6 @@ jobs:
             .split('\n')
             .filter(Boolean)
             .map(line => JSON.parse(line));
-          if (!entries.length || entries.some(entry => entry.status !== 'PASS')) {
-            throw new Error('MIGRATION_LEDGER_NOT_ACCEPTED');
-          }
           const required = [
             'predeployment_inventory',
             entries.some(entry => entry.name === 'migration_applied')
@@ -123,20 +127,23 @@ jobs:
             'postdeployment_security_inventory',
             'migration_history',
           ];
-          for (const name of required) {
-            if (!entries.some(entry => entry.name === name && entry.status === 'PASS')) {
-              throw new Error(`MIGRATION_EVIDENCE_MISSING_${name.toUpperCase()}`);
-            }
-          }
+          const accepted = entries.length > 0
+            && entries.every(entry => entry.status === 'PASS')
+            && required.every(name => entries.some(entry => entry.name === name && entry.status === 'PASS'));
           const result = {
-            status: 'PASS',
+            status: accepted ? 'PASS' : 'FAIL',
             migrationVersion: '20260731000100',
             migrationName: 'pipeline_prospect_journal',
             projectRef: 'rmlxigxysujsuwzgoimv',
             sourceSha: process.env.GITHUB_SHA,
             workflowRunId: process.env.GITHUB_RUN_ID,
             verifiedAt: new Date().toISOString(),
-            checks: entries.map(({ name, status }) => ({ name, status })),
+            checks: entries.map(({ name, status, detail, failedChecks }) => ({
+              name,
+              status,
+              ...(detail ? { detail } : {}),
+              ...(failedChecks ? { failedChecks } : {}),
+            })),
           };
           writeFileSync('/tmp/supabase-evidence/deployments/latest.json', `${JSON.stringify(result, null, 2)}\n`);
           NODE
@@ -145,7 +152,7 @@ jobs:
           git config user.name "forgeos-supabase-deploy"
           git config user.email "actions@users.noreply.github.com"
           git add deployments/latest.json deployments/20260731000100-ledger.jsonl
-          git commit -m "evidence(supabase): confirm journal migration ${GITHUB_SHA}"
+          git commit -m "evidence(supabase): report journal migration ${GITHUB_SHA}"
           git push origin HEAD:supabase-evidence
 
       - name: Upload redacted deployment ledger
