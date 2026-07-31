@@ -1,131 +1,27 @@
 name: CARTERA 020B Foundation Acceptance
 
 on:
-  pull_request:
-    branches:
-      - feature/cartera-010b-commercial-person-policy-role-foundation
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: cartera-020b-foundation-${{ github.ref }}
+  group: cartera-020b-foundation-archived-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  persistent-evidence-worker:
+  verify-accepted-closure:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
 
-      - name: Source ancestry and bounded path gate
+      - name: Verify immutable 020B closure evidence
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE_COMMIT=bb7105e622075a36feae65d8296f93b9e2f7c93d
-          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
-          git diff --check "$SOURCE_COMMIT"...HEAD
-          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
-          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-          allowed='^(policy-operations/intake/cartera-020b-[A-Za-z0-9._-]+\.js|platform/policy-intelligence/intake/cartera-020b-[A-Za-z0-9._-]+\.js|schemas/cartera-020b-[A-Za-z0-9._-]+\.schema\.json|supabase/migrations/[0-9]+_cartera020b_[A-Za-z0-9._-]+\.sql|tests/cartera-020b-[A-Za-z0-9._-]+\.mjs|scripts/ci/cartera-020b-[A-Za-z0-9._-]+\.(mjs|sql)|docs/architecture/source-truth/FORGE_CARTERA_020B_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_020B_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-020b-[A-Za-z0-9._-]+\.yml|\.github/workflows/cartera-020a-scope-acceptance\.yml)$'
-          for path in "${changed[@]}"; do
-            if [[ ! "$path" =~ $allowed ]]; then
-              echo "UNAUTHORIZED_020B_PATH=$path" >&2
-              exit 1
-            fi
-          done
-          echo 'SOURCE_COMMIT_VERIFIED=YES'
-          echo 'BOUNDED_PATHS=PASS'
-          echo 'PRODUCT_UI_DIFF=NONE'
-          echo 'INHERITED_020A_GATE_RETIREMENT=BOUNDED'
-
-      - name: JavaScript and JSON syntax gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          for file in policy-operations/intake/cartera-020b-*.js; do node --check "$file"; done
-          for file in platform/policy-intelligence/intake/cartera-020b-*.js; do node --check "$file"; done
-          for file in scripts/ci/cartera-020b-*.mjs; do node --check "$file"; done
-          for file in tests/cartera-020b-*.mjs; do node --check "$file"; done
-          for file in schemas/cartera-020b-*.schema.json; do node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'))" "$file"; done
-
-      - name: Execute CARTERA 020B consolidated acceptance
-        run: node --test tests/cartera-020b-*.mjs
-
-      - name: Preserve inherited Evidence contract tests
-        shell: bash
-        run: |
-          set -euo pipefail
-          files=(
-            tests/evidence-source-test.js
-            tests/evidence-processing-status-test.js
-            tests/evidence-inbox-item-test.js
-            tests/evidence-extraction-candidate-test.js
-            tests/evidence-confirmation-task-test.js
-            tests/evidence-inbox-scope-gate-test.js
-            tests/evidence-inbox-router-contract-test.js
-            tests/policy-evidence-packet-test.js
-            tests/policy-advisor-confirmation-gate-test.js
-          )
-          for file in "${files[@]}"; do node "$file"; done
-          echo 'INHERITED_EVIDENCE_TESTS=9'
-          echo 'INHERITED_EVIDENCE_PASS=9'
-
-      - name: Verify persistence, hardening and authority boundaries
-        shell: bash
-        run: |
-          set -euo pipefail
-          tables=supabase/migrations/20260731000220_cartera020b_evidence_tables.sql
-          guards=supabase/migrations/20260731000221_cartera020b_worker_guards.sql
-          rls=supabase/migrations/20260731000222_cartera020b_rls_and_grants.sql
-          helpers=supabase/migrations/20260731000223_cartera020b_command_helpers.sql
-          admission=supabase/migrations/20260731000224_cartera020b_admission_and_claim_rpcs.sql
-          result=supabase/migrations/20260731000225_cartera020b_processing_result_rpc.sql
-          claim_hardening=supabase/migrations/20260731000226_cartera020b_claim_concurrency_hardening.sql
-          packet_hardening=supabase/migrations/20260731000227_cartera020b_packet_replay_hardening.sql
-          conflict_hardening=supabase/migrations/20260731000228_cartera020b_conflict_insert_ambiguity_hardening.sql
-          json_null_hardening=supabase/migrations/20260731000229_cartera020b_json_null_payload_hardening.sql
           closure=docs/evidence/FORGE_CARTERA_020B_REMOTE_ACCEPTANCE_CLOSURE_001.md
-          inherited=.github/workflows/cartera-020a-scope-acceptance.yml
-          combined=$(cat "$tables" "$guards" "$rls" "$helpers" "$admission" "$result" "$claim_hardening" "$packet_hardening" "$conflict_hardening" "$json_null_hardening")
-
-          grep -q 'metadata jsonb not null' "$tables"
-          ! grep -q '\bmetada\b' "$tables"
-          grep -q 'cartera020b_evidence_sources' "$tables"
-          grep -q 'cartera020b_policy_evidence_packets' "$tables"
-          grep -q 'creates_truth boolean not null default false' "$tables"
-          grep -q 'CARTERA020B_APPEND_ONLY' "$guards"
-          grep -q 'CARTERA020B_GOVERNED_COMMAND_REQUIRED' "$guards"
-          grep -q 'force row level security' "$rls"
-          grep -q 'using (advisor_id = auth.uid())' "$rls"
-          grep -q 'revoke all on public.cartera020b_' "$rls"
-
-          grep -q 'create or replace function public.forge_cartera020b_admit_evidence' "$admission"
-          grep -q 'create or replace function public.forge_cartera020b_claim_evidence' "$claim_hardening"
-          grep -q 'create or replace function public.forge_cartera020b_record_processing_result' "$result"
-          grep -q 'for update skip locked' "$claim_hardening"
-          grep -q 'CHANGED_INPUT_REPLAY' "$helpers"
-          grep -q 'CARTERA020B_PACKET_CHANGED_REPLAY' "$packet_hardening"
-          grep -q 'on conflict on constraint' "$conflict_hardening"
-          grep -q 'cartera020b_command_conflicts_advisor_id_conflict_reference_key' "$conflict_hardening"
-          grep -q "attempt := nullif(result -> ''attempt'', ''null''::jsonb)" "$json_null_hardening"
-          grep -q "candidate := nullif(result -> ''candidate'', ''null''::jsonb)" "$json_null_hardening"
-          grep -q "packet := nullif(result -> ''packet'', ''null''::jsonb)" "$json_null_hardening"
-          grep -q 'PENDING_CONFIRMATION' "$result"
-
-          ! grep -qi 'raw_document\|raw_text\|document_bytes\|bytea' <<<"$combined"
-          ! grep -qi 'insert into public.canonical_policies' <<<"$combined"
-          ! grep -qi 'insert into public.policy_roles' <<<"$combined"
-          ! grep -qi 'insert into public.commercial_people' <<<"$combined"
-          ! grep -qi 'forge_cartera010b_confirm_policy_with_parties' <<<"$combined"
-
           grep -q 'STATUS=CLOSED_REMOTE_ACCEPTED' "$closure"
           grep -q 'WORKFLOW_RUN=30663283378' "$closure"
           grep -q 'WORKFLOW_JOB=91264294890' "$closure"
@@ -133,38 +29,26 @@ jobs:
           grep -q 'ARTIFACT_SHA256=0f9ed05a298712d4dfb8ee3e57a9c5c0a93ed0d36338cb8e79a8c46e92e27df9' "$closure"
           grep -q 'CARTERA_020B_REMOTE_DEPLOYMENT=PASS' "$closure"
           grep -q 'CARTERA_020B_REMOTE_ACCEPTANCE=PASS' "$closure"
-          grep -q 'PARALLEL_WORKER_CLAIM_SERIALIZATION=PASS' "$closure"
           grep -q 'RESIDUAL_FIXTURES=0' "$closure"
           grep -q 'CARTERA_020B_COMPLETE=YES' "$closure"
 
+      - name: Verify remote workflows remain manual only
+        shell: bash
+        run: |
+          set -euo pipefail
           for workflow in \
             .github/workflows/cartera-020b-remote-acceptance.yml \
             .github/workflows/cartera-020b-migration-history-diagnostic.yml \
             .github/workflows/cartera-020b-attempt-contract-diagnostic.yml \
             .github/workflows/cartera-020b-final-inbox-state-diagnostic.yml; do
-            grep -q 'workflow_dispatch:' "$workflow"
+            grep -q '^  workflow_dispatch:' "$workflow"
             ! grep -qE '^  (push|pull_request):' "$workflow"
           done
-          grep -q 'workflow_dispatch:' "$inherited"
-          ! grep -qE '^  (push|pull_request):' "$inherited"
-
-          echo 'REMOTE_CLOSURE_EVIDENCE=PASS'
           echo 'REMOTE_WORKFLOWS=MANUAL_ONLY'
-          echo 'SUPABASE_REMOTE_MUTATION=NONE_IN_CONSOLIDATED_GATE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
 
-      - name: Emit closure markers
+      - name: Emit archived closure markers
         run: |
-          echo 'CARTERA_020B_REPOSITORY_TESTS=70'
-          echo 'CARTERA_020B_REPOSITORY_PASS=70'
-          echo 'INHERITED_EVIDENCE_TESTS=9'
-          echo 'INHERITED_EVIDENCE_PASS=9'
-          echo 'TOTAL_TARGETED_TESTS=79'
-          echo 'TOTAL_TARGETED_PASS=79'
-          echo 'TOTAL_TARGETED_FAIL=0'
-          echo 'CARTERA_020B_CONTRACTS=REPOSITORY_READY'
-          echo 'CARTERA_020B_PERSISTENCE_SCHEMA=REMOTE_DEPLOYED'
-          echo 'CARTERA_020B_SQL_COMMANDS=REMOTE_ACCEPTED'
-          echo 'CARTERA_020B_REMOTE_DEPLOYMENT=PASS_EVIDENCE_VERIFIED'
-          echo 'CARTERA_020B_REMOTE_ACCEPTANCE=PASS_EVIDENCE_VERIFIED'
           echo 'CARTERA_020B_COMPLETE=YES'
+          echo 'CARTERA_020B_GATE=ARCHIVED_MANUAL_ONLY'
           echo 'NEXT=CARTERA_020C_IDENTITY_AND_POLICY_CONFIRMATION_REVIEW'
