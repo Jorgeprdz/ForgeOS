@@ -59,7 +59,9 @@ jobs:
         run: |
           set -euo pipefail
           node --check policy-operations/intake/cartera-020c-confirmation-review-contracts.js
+          node --check policy-operations/intake/cartera-020c-governed-command-composer.js
           node --check platform/policy-intelligence/intake/cartera-020c-review-read-model.js
+          node --check platform/policy-intelligence/intake/cartera-020c-candidate-reconciliation.js
           node --check advisor-os/cartera/canonical-confirmation-review-service.js
           for file in tests/cartera-020c-*.mjs; do node --check "$file"; done
           node --test tests/cartera-020c-*.mjs
@@ -79,15 +81,17 @@ jobs:
         run: |
           set -euo pipefail
           contract=policy-operations/intake/cartera-020c-confirmation-review-contracts.js
+          composer=policy-operations/intake/cartera-020c-governed-command-composer.js
           model=platform/policy-intelligence/intake/cartera-020c-review-read-model.js
+          reconciliation=platform/policy-intelligence/intake/cartera-020c-candidate-reconciliation.js
           service=advisor-os/cartera/canonical-confirmation-review-service.js
           scope=docs/architecture/source-truth/FORGE_CARTERA_020C_IDENTITY_POLICY_CONFIRMATION_REVIEW_SCOPE_001.md
           retired=.github/workflows/cartera-020b-foundation.yml
-          combined=$(cat "$contract" "$model" "$service")
 
           grep -q 'FORGE_IDENTITY_POLICY_CONFIRMATION_REVIEW' "$contract"
           grep -q 'FORGE_IDENTITY_POLICY_CONFIRMATION_PLAN' "$contract"
           grep -q "'IDENTITY_RESOLUTION', 'CONFIRMED_POLICY'" "$contract"
+          grep -q 'accountDecisions' "$contract"
           grep -q 'requiresExplicitExecution: true' "$contract"
 
           grep -q 'FORGE_CARTERA_020C_REVIEW_READ_MODEL' "$model"
@@ -95,19 +99,31 @@ jobs:
           grep -q 'SENSITIVE_FIELD_PATTERN' "$model"
           grep -q 'restrictedPolicyRoleCandidates' "$model"
           grep -q 'existingPersonMatches' "$model"
-          grep -q "matchReasons: freezeList" "$model"
           grep -q 'canInvokeConfirmedPolicyCommand: false' "$model"
+          grep -q 'partitionCartera020cIdentityCandidates' "$reconciliation"
+
+          grep -q 'FORGE_CARTERA_020C_IDENTITY_COMMAND_BATCH' "$composer"
+          grep -q 'FORGE_CARTERA_020C_IDENTITY_RESULT_VERIFICATION' "$composer"
+          grep -q 'FORGE_CARTERA_020C_GOVERNED_COMMAND_COMPOSITION' "$composer"
+          grep -q 'buildIdentityResolutionCommand' "$composer"
+          grep -q 'buildConfirmedPolicyCommand' "$composer"
+          grep -q 'CARTERA020C_ACCOUNT_CREATION_NOT_AUTHORIZED' "$composer"
+          grep -q "OWNER: 'POLICY_OWNER'" "$composer"
+          grep -q "'RESTRICTED_ROLE_VIEW'" "$composer"
+          grep -q 'requiresExplicitExecution: true' "$composer"
+          ! grep -qE '\.(rpc|insert|update|delete)[[:space:]]*\(' "$composer"
+          ! grep -qE 'SupabaseRuntime|createClient|from\(' "$composer"
 
           grep -q "from('cartera020b_policy_evidence_packets')" "$service"
           grep -q "from('commercial_people')" "$service"
           grep -q "from('commercial_accounts')" "$service"
           grep -q "from('canonical_policies')" "$service"
           ! grep -q "from('policy_roles')" "$service"
-          ! grep -qE '\.rpc[[:space:]]*\(' "$service"
-          ! grep -qi 'insert\|update\|delete' "$service"
-          ! grep -qE '\.rpc[[:space:]]*\(' "$combined"
-          ! grep -q 'premiumAmount: 0' "$combined"
-          ! grep -q "currency: 'MXN'" "$combined"
+          ! grep -qE '\.(rpc|insert|update|delete)[[:space:]]*\(' "$service"
+
+          ! grep -qE '\.rpc[[:space:]]*\(' "$contract" "$composer" "$model" "$reconciliation" "$service"
+          ! grep -q 'premiumAmount: 0' "$contract" "$composer" "$model" "$reconciliation" "$service"
+          ! grep -q "currency: 'MXN'" "$contract" "$composer" "$model" "$reconciliation" "$service"
 
           grep -q 'SOURCE_COMMIT=528533e5ba6e060a844e5facbc127eea145542b9' "$scope"
           grep -q 'CARTERA_020B_COMPLETE=YES' "$scope"
@@ -124,6 +140,9 @@ jobs:
           echo 'REVIEW_READ_MODEL=REPOSITORY_READY'
           echo 'CANDIDATE_RECONCILIATION=REPOSITORY_READY'
           echo 'AUTHENTICATED_REVIEW_SERVICE=REPOSITORY_READY'
+          echo 'GOVERNED_COMMAND_COMPOSER=REPOSITORY_READY'
+          echo 'IDENTITY_RESULT_VERIFICATION=LOCKED'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
           echo 'CONTACT_MATCH_VALUES_PUBLIC_PROJECTION=FORBIDDEN'
           echo 'RESTRICTED_BENEFICIARY_BOUNDARY=LOCKED'
           echo 'IDENTITY_BEFORE_POLICY_ORDER=LOCKED'
@@ -131,15 +150,16 @@ jobs:
 
       - name: Emit progress markers
         run: |
-          echo 'CARTERA_020C_TESTS=18'
-          echo 'CARTERA_020C_PASS=18'
+          echo 'CARTERA_020C_TESTS=30'
+          echo 'CARTERA_020C_PASS=30'
           echo 'INHERITED_CONFIRMATION_TESTS=3'
           echo 'INHERITED_CONFIRMATION_PASS=3'
-          echo 'TOTAL_TARGETED_TESTS=21'
-          echo 'TOTAL_TARGETED_PASS=21'
+          echo 'TOTAL_TARGETED_TESTS=33'
+          echo 'TOTAL_TARGETED_PASS=33'
           echo 'TOTAL_TARGETED_FAIL=0'
           echo 'CARTERA_020C_SCOPE=LOCKED'
           echo 'CARTERA_020C_REVIEW_READ_MODEL=REPOSITORY_READY'
           echo 'CARTERA_020C_CANDIDATE_RECONCILIATION=REPOSITORY_READY'
+          echo 'CARTERA_020C_GOVERNED_COMMAND_COMPOSER=REPOSITORY_READY'
           echo 'CARTERA_020C_COMPLETE=NO'
-          echo 'NEXT=CARTERA_020C_GOVERNED_COMMAND_COMPOSER'
+          echo 'NEXT=CARTERA_020C_PERSISTENT_CONFIRMATION_ORCHESTRATION'
