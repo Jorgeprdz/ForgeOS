@@ -6,10 +6,12 @@ on:
       - feature/quote-printable-document-closure
     paths:
       - "advisor-os/quotes/**"
+      - "supabase/migrations/20260730000200_qpd05_printable_quote_versions.sql"
       - ".github/workflows/qpd01-quote-printable-read-model.yml"
   pull_request:
     paths:
       - "advisor-os/quotes/**"
+      - "supabase/migrations/20260730000200_qpd05_printable_quote_versions.sql"
       - ".github/workflows/qpd01-quote-printable-read-model.yml"
 
 permissions:
@@ -37,10 +39,14 @@ jobs:
           node --check advisor-os/quotes/printable/quote-printable-document-composer.js
           node --check advisor-os/quotes/printable/quote-printable-pdf-generator.js
           node --check advisor-os/quotes/printable/quote-printable-product-profile.js
+          node --check advisor-os/quotes/printable/quote-printable-version-repository.js
+          node --check advisor-os/quotes/printable/quote-printable-supabase-repository.js
           node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
           node --check advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
           node --check advisor-os/quotes/tests/quote-printable-pdf-generator-master-test.js
           node --check advisor-os/quotes/tests/quote-printable-product-profile-master-test.js
+          node --check advisor-os/quotes/tests/quote-printable-version-repository-master-test.js
+          node --check advisor-os/quotes/tests/quote-printable-persistence-migration-security-test.js
 
       - name: QPD-01 canonical read model
         run: node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
@@ -53,6 +59,12 @@ jobs:
 
       - name: QPD-04 product-specific quote sections
         run: node advisor-os/quotes/tests/quote-printable-product-profile-master-test.js
+
+      - name: QPD-05 persistence versioning and reopen
+        run: node advisor-os/quotes/tests/quote-printable-version-repository-master-test.js
+
+      - name: QPD-05 migration security
+        run: node advisor-os/quotes/tests/quote-printable-persistence-migration-security-test.js
 
       - name: Diff integrity
         run: git diff --check HEAD^1...HEAD
