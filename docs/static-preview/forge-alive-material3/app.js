@@ -1,6 +1,6 @@
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
-import { createQuotesModule } from "./quotes-module-complete.js?v=manual-quotes-complete-001";
+import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-002";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-010";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
@@ -69,3 +69,4 @@ shell.initialize();
 
 document.documentElement.dataset.forgeCleanHomeReady = "true";
 document.documentElement.dataset.forgeShellReady = "true";
+document.documentElement.dataset.quoteCalculatorRuntime = "M05E-002";
