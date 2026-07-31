@@ -38,7 +38,11 @@ assert.match(hotfix, /Historial disponible al abrir la cotización desde un pros
 assert.match(hotfix, /for \(const action of \["preview", "download"\]\)/);
 assert.match(hotfix, /data-forge-qpd06-action="\$\{action\}"/);
 
-assert.match(server, /getCachedRates\(\{ forceRefresh: true \}\)/);
+// The server deliberately centralizes cache access in currentRates(). The
+// startup path forces refresh through that wrapper, while the wrapper passes
+// the same flag to the canonical cache engine.
+assert.match(server, /const cache = await getCachedRates\(\{ forceRefresh \}\)/);
+assert.match(server, /currentRates\(\{ forceRefresh: true \}\)/);
 assert.match(server, /\/api\/forge-market-rates/);
 assert.match(server, /FORGE_LIVE_SERVER=READY/);
 assert.match(server, /UDI_DATE=/);
