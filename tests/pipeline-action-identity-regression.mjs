@@ -35,6 +35,7 @@ const context = await browser.newContext({
 const page = await context.newPage();
 
 try {
+  await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
   await page.setContent(`<!doctype html>
     <html>
       <head><link rel="stylesheet" href="${appCssUrl}"></head>
