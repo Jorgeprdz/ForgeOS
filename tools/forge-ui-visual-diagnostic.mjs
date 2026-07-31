@@ -327,8 +327,16 @@ async function capture(page, directory, label, options = {}) {
         return rect.width >= 180 && rect.height <= 80
           && getComputedStyle(name).wordBreak === "normal";
       })(),
-      productiveStageLabelVisible:
-        visibleCount("[data-productive-stage-label]") > 0,
+      productiveStageLabelVisible: (() => {
+        const compactAuthority =
+          document.documentElement.dataset.pipelineStageAuthority
+            === "pipeline-public-acceptance-hotfix";
+        if (compactAuthority) {
+          return visibleCount("[data-productive-stage-control]") > 0
+            && visibleCount("[data-productive-stage-label]") === 0;
+        }
+        return visibleCount("[data-productive-stage-label]") > 0;
+      })(),
       productiveSourceLabelVisible:
         visibleCount("[data-productive-source-label]") > 0,
       productiveStageControlVisible:
@@ -994,11 +1002,14 @@ async function captureViewport(browser, viewport, fixture) {
         .locator("[data-productive-source-label]").textContent();
       await sampleCard.locator("[data-productive-stage-control]")
         .selectOption("decision");
-      await page.locator("[data-productive-prospect-card]").filter({
-        hasText: SAMPLE_REFERRAL.fullName,
-      }).locator("[data-productive-stage-label]").filter({
-        hasText: "En decisión",
-      }).waitFor({ state: "visible", timeout: 10_000 });
+      await page.waitForFunction(({ name, status }) => {
+        const card = [...document.querySelectorAll("[data-productive-prospect-card]")]
+          .find(element => element.textContent.includes(name));
+        return card?.querySelector("[data-productive-stage-control]")?.value === status;
+      }, {
+        name: SAMPLE_REFERRAL.fullName,
+        status: "decision",
+      }, { timeout: 10_000 });
       const sourceAfterStatus = await page.locator(
         "[data-productive-prospect-card]",
       ).filter({ hasText: SAMPLE_REFERRAL.fullName })
