@@ -31,7 +31,12 @@ const MIGRATIONS = Object.freeze([
     path: "supabase/migrations/20260731000212_cartera010b_confirmed_policy_rpc.sql",
   }),
 ]);
-const ACCEPTANCE_PATH = "scripts/ci/cartera-010b-remote-acceptance.sql";
+const ACCEPTANCE_PATHS = Object.freeze([
+  "scripts/ci/cartera-010b-remote-acceptance-01.sql",
+  "scripts/ci/cartera-010b-remote-acceptance-02.sql",
+  "scripts/ci/cartera-010b-remote-acceptance-03.sql",
+  "scripts/ci/cartera-010b-remote-acceptance-04.sql",
+]);
 const ARTIFACT_DIR = "artifacts/cartera-010b-remote-acceptance";
 const REPORT_PATH = join(ARTIFACT_DIR, "report.json");
 const LOG_PATH = join(ARTIFACT_DIR, "acceptance.log");
@@ -201,7 +206,9 @@ async function applyMigration(migration, columns) {
 }
 
 async function runAcceptance() {
-  const sql = readFileSync(ACCEPTANCE_PATH, "utf8");
+  const sql = ACCEPTANCE_PATHS
+    .map((path) => readFileSync(path, "utf8"))
+    .join("\n");
   assert.match(sql, /^begin;/m, "ACCEPTANCE_TRANSACTION_BEGIN_MISSING");
   assert.match(sql, /rollback;\s*$/i, "ACCEPTANCE_TRANSACTION_ROLLBACK_MISSING");
 
@@ -261,10 +268,9 @@ async function main() {
       `REQUIRED_MIGRATION_MISSING:${migration.path}`,
     );
   }
-  assert.ok(
-    existsSync(ACCEPTANCE_PATH),
-    `ACCEPTANCE_SQL_MISSING:${ACCEPTANCE_PATH}`,
-  );
+  for (const path of ACCEPTANCE_PATHS) {
+    assert.ok(existsSync(path), `ACCEPTANCE_SQL_MISSING:${path}`);
+  }
 
   const columns = await migrationColumns();
   for (const migration of MIGRATIONS) {
