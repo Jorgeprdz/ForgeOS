@@ -9,7 +9,7 @@ Cartera / Control Base Closure
 ```text
 PHASE=CARTERA_010D_UNIFIED_DIRECTORY_RELATIONSHIP_SEARCH
 STATUS=SCOPE_LOCKED_IMPLEMENTATION_STARTED
-SOURCE_BRANCH=feature/cartera-010b-commercial-person-policy-role-foundATION
+SOURCE_BRANCH=feature/cartera-010b-commercial-person-policy-role-foundation
 SOURCE_COMMIT=f7aaf82586d051b94dc6f526c603f02c83f15a66
 IMPLEMENTATION_BRANCH=feature/cartera-010d-unified-directory-relationship-search
 RUNTIME_MUTATION=YES_BOUNDED_READ_ONLY
