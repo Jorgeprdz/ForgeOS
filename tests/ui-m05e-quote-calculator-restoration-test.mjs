@@ -21,8 +21,8 @@ const cacheProofEntrypoint = read(
 const runtimeHotfix = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js",
 );
-const uxClosure = read(
-  "../docs/static-preview/forge-alive-material3/quote-runtime-ux-closure-m05e004.js",
+const printableClosure = read(
+  "../docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js",
 );
 
 for (const productAdapter of [
@@ -39,7 +39,6 @@ assert.match(presenter, /\["sum-assured"/);
 assert.match(presenter, /\["annual-contribution"/);
 assert.match(presenter, /Suma asegurada/);
 assert.match(presenter, /Aportación anual/);
-
 assert.match(presenter, /value\.udi/);
 assert.match(presenter, /mxnCurrent/);
 assert.match(presenter, /projectedMxn/);
@@ -58,7 +57,6 @@ assert.match(adapter, /data-quote-next-action=\"confirm_quote\"/);
 assert.match(adapter, /ForgeQuoteAcceptanceEntrypointR16J0A/);
 assert.match(adapter, /ForgeQuotePrintableEntrypointQPD06\?\.refresh/);
 assert.match(adapter, /scrollIntoView/);
-
 assert.match(adapter, /function verifiedUdiRate\(snapshot\)/);
 assert.match(adapter, /item\.secondaryValue \?\? item\.secondary/);
 assert.match(adapter, /item\.value \?\? item\.primary/);
@@ -67,41 +65,25 @@ assert.match(adapter, /metadata\.stale === true/);
 assert.doesNotMatch(adapter, /const\s+CURRENT_UDI\s*=\s*\d/);
 
 assert.match(moduleSource, /quotes-result-adapter\.js\?v=quote-calculator-parity-001/);
-
-assert.match(
-  productiveApp,
-  /quotes-module\.js\?v=quote-calculator-parity-004/,
-);
-assert.match(
-  productiveApp,
-  /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/,
-);
-assert.match(
-  productiveApp,
-  /quote-runtime-ux-closure-m05e004\.js\?v=m05e-004/,
-);
+assert.match(productiveApp, /quotes-module\.js\?v=quote-calculator-parity-005/);
+assert.match(productiveApp, /quote-runtime-hotfix-m05e003\.js\?v=m05e-003/);
+assert.match(productiveApp, /quote-runtime-printable-closure-m05e005\.js\?v=m05e-005/);
 assert.doesNotMatch(
   productiveApp,
   /quotes-module-complete\.js\?v=manual-quotes-complete-001/,
 );
-assert.match(
-  productiveApp,
-  /dataset\.quoteCalculatorRuntime = "M05E-004"/,
-);
-assert.match(
-  cacheProofEntrypoint,
-  /app\.js\?v=quote-calculator-parity-004/,
-);
-assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-004/);
+assert.match(productiveApp, /dataset\.quoteCalculatorRuntime = "M05E-005"/);
+assert.match(cacheProofEntrypoint, /app\.js\?v=quote-calculator-parity-005/);
+assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-005/);
 assert.match(cacheProofEntrypoint, /cache: "no-store"/);
-assert.match(runtimeHotfix, /Cliente \/ asegurado/);
 assert.match(runtimeHotfix, /MXN hoy/);
-assert.match(uxClosure, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
-assert.match(uxClosure, /Datos del documento/);
-assert.match(uxClosure, /restoreHistory/);
+assert.match(printableClosure, /MISSING_CLIENT_LABEL = "Sin dato confirmado"/);
+assert.match(printableClosure, /data-m05e005-action="preview"/);
+assert.match(printableClosure, /data-m05e005-action="download"/);
+assert.match(printableClosure, /data-m05e005-action="history"/);
 
 console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
-  productiveRuntime: "M05E-004",
+  productiveRuntime: "M05E-005",
   products: ["vida_mujer", "segubeca", "orvi", "imagina_ser"],
   mandatoryMetrics: ["sum_assured_udi_mxn", "annual_contribution_udi_mxn"],
   orviPrimarySecondaryMapping: true,
@@ -112,5 +94,6 @@ console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
   productiveEntrypointWired: true,
   cacheProofEntrypoint: true,
   optionalClientUx: true,
+  compactPrintableActions: true,
   printableHistoryRestored: true,
 });
