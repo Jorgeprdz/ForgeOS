@@ -13,6 +13,17 @@ on:
       - "tests/cartera-010c-remote-read-browser-acceptance-harness-test.mjs"
       - "tests/e2e/cartera-010c-remote-browser.spec.mjs"
       - "tests/e2e/fixtures/cartera-010c/**"
+  pull_request:
+    branches:
+      - feature/cartera-010c-policy-timeline-person-account-projection
+    paths:
+      - ".github/workflows/cartera-010c-remote-read-browser-acceptance.yml"
+      - "docs/evidence/FORGE_CARTERA_010C_REMOTE_READ_BROWSER_ACCEPTANCE_*"
+      - "playwright.cartera-010c.config.mjs"
+      - "scripts/ci/cartera-010c-remote-read-acceptance.mjs"
+      - "tests/cartera-010c-remote-read-browser-acceptance-harness-test.mjs"
+      - "tests/e2e/cartera-010c-remote-browser.spec.mjs"
+      - "tests/e2e/fixtures/cartera-010c/**"
 
 permissions:
   contents: read
