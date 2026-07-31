@@ -40,48 +40,69 @@ jobs:
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
 
-          allowed='^(schemas/(commercial-person-v1|commercial-account-v1|policy-v2|policy-role-v1)\.schema\.json|platform/shared-commercial-model/cartera-010b-contract-validator\.js|supabase/migrations/202607310002(00_cartera010b_identity_policy_foundation|10_cartera010b_command_helpers|11_cartera010b_identity_resolution_rpc|12_cartera010b_confirmed_policy_rpc|13_cartera010b_identity_resolution_precedence_hardening|14_cartera010b_conflict_insert_ambiguity_hardening|15_cartera010b_general_policy_role_read_authority)\.sql|scripts/ci/cartera-010b-[A-Za-z0-9._-]+\.(mjs|sql)|tests/cartera-010b-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010B_(PERSISTENCE_FOUNDATION_PROGRESS_001|GOVERNED_COMMAND_RPCS_PROGRESS_002)\.md|docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|\.github/workflows/cartera-010b-(foundation|remote-acceptance)\.yml)$'
+          allowed='^(schemas/(commercial-person-v1|commercial-account-v1|policy-v2|policy-role-v1)\.schema\.json|platform/shared-commercial-model/cartera-010b-contract-validator\.js|platform/event-evidence/policy-domain-event-contract\.js|platform/policy-intelligence/cartera-010c-[A-Za-z0-9._-]+\.js|advisor-os/cartera/canonical-portfolio-service\.js|cartera\.js|supabase/migrations/202607310002(00_cartera010b_identity_policy_foundation|10_cartera010b_command_helpers|11_cartera010b_identity_resolution_rpc|12_cartera010b_confirmed_policy_rpc|13_cartera010b_identity_resolution_precedence_hardening|14_cartera010b_conflict_insert_ambiguity_hardening|15_cartera010b_general_policy_role_read_authority)\.sql|scripts/ci/cartera-010b-[A-Za-z0-9._-]+\.(mjs|sql)|scripts/ci/cartera-010c-remote-read-acceptance\.mjs|tests/cartera-010(b|c)-[A-Za-z0-9._-]+\.mjs|tests/e2e/cartera-010c-remote-browser\.spec\.mjs|tests/e2e/fixtures/cartera-010c/(index\.html|app\.mjs)|playwright\.cartera-010c\.config\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010(B|C)_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_010(B|C)_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-010(b|c)-[A-Za-z0-9._-]+\.yml)$'
 
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
-              echo "UNAUTHORIZED_010B_PATH=$path" >&2
+              echo "UNAUTHORIZED_010B_010C_PATH=$path" >&2
               exit 1
             fi
           done
 
           echo 'SOURCE_ANCESTRY=PASS'
           echo 'BOUNDED_PATHS=PASS'
-          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'CARTERA_010C_INTEGRATION=BOUNDED'
+          echo 'SCHEMA_DIFF=ACCEPTED_010B_ONLY'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
 
       - name: JavaScript syntax gate
         shell: bash
         run: |
           set -euo pipefail
           node --check platform/shared-commercial-model/cartera-010b-contract-validator.js
-          for file in scripts/ci/cartera-010b-*.mjs tests/cartera-010b-*.mjs; do
+          node --check platform/event-evidence/policy-domain-event-contract.js
+          for file in platform/policy-intelligence/cartera-010c-*.js; do
+            node --check "$file"
+          done
+          node --check advisor-os/cartera/canonical-portfolio-service.js
+          node --check cartera.js
+          node --check scripts/ci/cartera-010c-remote-read-acceptance.mjs
+          node --check playwright.cartera-010c.config.mjs
+          node --check tests/e2e/cartera-010c-remote-browser.spec.mjs
+          node --check tests/e2e/fixtures/cartera-010c/app.mjs
+          for file in scripts/ci/cartera-010b-*.mjs tests/cartera-010b-*.mjs tests/cartera-010c-*.mjs; do
             node --check "$file"
           done
 
-      - name: Execute complete 010B tests
-        run: node --test tests/cartera-010b-*.mjs
+      - name: Execute complete 010B and 010C repository acceptance
+        run: node --test tests/cartera-010b-*.mjs tests/cartera-010c-*.mjs
 
       - name: Verify integrated remote closure evidence
         shell: bash
         run: |
           set -euo pipefail
-          closure=docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_CLOSURE_001.md
-          test -f "$closure"
-          grep -q 'CARTERA_010B_REMOTE_DEPLOYMENT=PASS' "$closure"
-          grep -q 'CARTERA_010B_REMOTE_ACCEPTANCE=PASS' "$closure"
-          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$closure"
-          grep -q 'RESIDUAL_FIXTURES=0' "$closure"
+          closure_010b=docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_CLOSURE_001.md
+          closure_010c=docs/evidence/FORGE_CARTERA_010C_REMOTE_READ_BROWSER_ACCEPTANCE_CLOSURE_001.md
+          test -f "$closure_010b"
+          test -f "$closure_010c"
+          grep -q 'CARTERA_010B_REMOTE_DEPLOYMENT=PASS' "$closure_010b"
+          grep -q 'CARTERA_010B_REMOTE_ACCEPTANCE=PASS' "$closure_010b"
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$closure_010b"
+          grep -q 'RESIDUAL_FIXTURES=0' "$closure_010b"
+          grep -q 'CARTERA_010C_COMPLETE=YES' "$closure_010c"
+          grep -q 'PLAYWRIGHT_PASS=4' "$closure_010c"
+          grep -q 'TEST_FIXTURES_CLEANED=YES' "$closure_010c"
+          grep -q 'RESIDUAL_FIXTURES=0' "$closure_010c"
 
       - name: Emit closure markers
         run: |
           echo 'CARTERA_010B_CONTRACT_VALIDATORS=PASS'
-          echo 'CARTERA_010B_PERSISTENCE_FOUNDATION=REPOSITORY_READY'
-          echo 'CARTERA_010B_GOVERNED_COMMAND_RPCS=REPOSITORY_READY'
+          echo 'CARTERA_010B_PERSISTENCE_FOUNDATION=PASS'
+          echo 'CARTERA_010B_GOVERNED_COMMAND_RPCS=PASS'
           echo 'CARTERA_010B_REMOTE_DEPLOYMENT=PASS_FROM_ACCEPTED_CLOSURE'
           echo 'CARTERA_010B_REMOTE_ACCEPTANCE=PASS_FROM_ACCEPTED_CLOSURE'
-          echo 'CARTERA_010B_COMPLETE=YES'
-          echo 'NEXT=CARTERA_010C'
+          echo 'CARTERA_010C_CANONICAL_PORTFOLIO=PASS'
+          echo 'CARTERA_010C_POLICY_DETAIL_TIMELINE=PASS'
+          echo 'CARTERA_010C_REMOTE_BROWSER_ACCEPTANCE=PASS_FROM_ACCEPTED_CLOSURE'
+          echo 'CARTERA_010B_010C_STACK_COMPLETE=YES'
+          echo 'NEXT=CARTERA_010D_CONTROL_BASE_DIRECTORY_SEARCH_CLOSURE'
