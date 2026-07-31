@@ -10,6 +10,7 @@ const ROOT = path.resolve(__dirname, "..");
 const HOST = process.env.FORGE_UI_HOST || "127.0.0.1";
 const PORT = Number(process.env.FORGE_UI_PORT || 4173);
 const REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
+const BANXICO_EDGE_FUNCTION_NAME = "banxico-rates";
 
 const MIME = Object.freeze({
   ".css": "text/css; charset=utf-8",
@@ -38,9 +39,67 @@ function sendJson(response, status, payload) {
 function publicError(error) {
   const message = error?.message || String(error);
   if (/BANXICO_TOKEN/.test(message)) {
-    return "No hay proveedor Banxico configurado. Exporta BANXICO_TOKEN o SUPABASE_BANXICO_RATES_URL.";
+    return "No hay proveedor Banxico configurado. Falta env.js con Supabase o BANXICO_TOKEN local.";
+  }
+  if (/404|not found/i.test(message) && /supabase/i.test(message)) {
+    return "La función Supabase banxico-rates no está desplegada o la URL del proyecto es incorrecta.";
   }
   return message.replace(/[a-f0-9]{48,}/gi, "[secret-redacted]");
+}
+
+function parsePublicEnvJs(source) {
+  const match = String(source || "").match(
+    /(?:window|globalThis)\.__ENV__\s*=\s*Object\.freeze\((\{[\s\S]*\})\)\s*;?/,
+  );
+  if (!match) return null;
+  try {
+    return JSON.parse(match[1]);
+  } catch {
+    return null;
+  }
+}
+
+function loadPublicMarketProviderFromEnvJs() {
+  if (process.env.SUPABASE_BANXICO_RATES_URL) {
+    return Object.freeze({
+      configured: true,
+      source: "PROCESS_ENV",
+      url: process.env.SUPABASE_BANXICO_RATES_URL,
+    });
+  }
+
+  const envPath = path.join(ROOT, "env.js");
+  if (!fs.existsSync(envPath)) {
+    return Object.freeze({
+      configured: false,
+      source: "ENV_JS_NOT_FOUND",
+      url: null,
+    });
+  }
+
+  const config = parsePublicEnvJs(fs.readFileSync(envPath, "utf8"));
+  const supabaseUrl = String(config?.SUPABASE_URL || "").trim().replace(/\/+$/, "");
+  const anonKey = String(config?.SUPABASE_KEY || config?.SUPABASE_ANON_KEY || "").trim();
+
+  if (!supabaseUrl) {
+    return Object.freeze({
+      configured: false,
+      source: "ENV_JS_SUPABASE_URL_MISSING",
+      url: null,
+    });
+  }
+
+  const edgeUrl = `${supabaseUrl}/functions/v1/${BANXICO_EDGE_FUNCTION_NAME}`;
+  process.env.SUPABASE_BANXICO_RATES_URL = edgeUrl;
+  if (anonKey && !process.env.SUPABASE_ANON_KEY) {
+    process.env.SUPABASE_ANON_KEY = anonKey;
+  }
+
+  return Object.freeze({
+    configured: true,
+    source: "ENV_JS",
+    url: edgeUrl,
+  });
 }
 
 async function currentRates({ forceRefresh = false } = {}) {
@@ -110,6 +169,10 @@ async function handler(request, response) {
 
 async function main() {
   process.chdir(ROOT);
+  const provider = loadPublicMarketProviderFromEnvJs();
+  console.log(`MARKET_RATE_PROVIDER=${provider.source}`);
+  console.log(`MARKET_RATE_PROVIDER_CONFIGURED=${provider.configured}`);
+
   const initial = await currentRates({ forceRefresh: true });
   const udi = initial.rates?.UDI_MXN;
   if (!udi?.value || !udi?.date) {
