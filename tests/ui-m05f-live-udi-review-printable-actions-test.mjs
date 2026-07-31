@@ -61,7 +61,11 @@ assert.match(server, /MARKET_RATE_PROVIDER=/);
 assert.match(server, /\/api\/forge-market-rates/);
 assert.match(server, /FORGE_LIVE_SERVER=READY/);
 assert.match(server, /UDI_DATE=/);
+assert.match(server, /LIVE_RATE_CACHE_FILE/);
+assert.match(server, /RATE_CACHE_FILE=/);
 assert.match(cacheEngine, /MAX_CACHE_AGE_HOURS = 12/);
+assert.match(cacheEngine, /FORGE_RATE_CACHE_FILE/);
+assert.match(cacheEngine, /function cacheFilePath\(\)/);
 
 assert.equal(staleCache.rates.UDI_MXN.date, "10/06/2026");
 assert.equal(staleCache.rates.UDI_MXN.value, 8.82994);
@@ -73,6 +77,7 @@ console.log("PASS UI-M05F live UDI and printable UX closure", {
   liveRateRefreshRequired: true,
   envJsSupabaseDiscovery: true,
   pagesWorkflowSupabaseDiscovery: true,
+  liveCacheOutsideWorktree: true,
   annualContributionCurrentMxn: true,
   clientNameOptionalForFlow: true,
   confirmationSynchronized: true,
