@@ -9,6 +9,7 @@ on:
       - "docs/static-preview/quote-printable-runtime/**"
       - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
       - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e00*.*"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js"
       - "docs/static-preview/forge-alive-material3/app.js"
       - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
@@ -32,6 +33,7 @@ on:
       - "docs/static-preview/quote-printable-runtime/**"
       - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
       - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e00*.*"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js"
       - "docs/static-preview/forge-alive-material3/app.js"
       - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
@@ -109,6 +111,7 @@ jobs:
           node --check docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js
           node --check docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js
           node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
           node --check advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
