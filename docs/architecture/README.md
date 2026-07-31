@@ -35,7 +35,16 @@ Official architecture documentation index.
 - [PAQ-10 Conservation Intelligence Discovery](../02-adr-candidates/PAQ-10-CONSERVATION-INTELLIGENCE-DISCOVERY.md)
 - [PAQ-10.5 Conservation Intelligence Architecture Lock](../02-adr-candidates/PAQ-10.5-CONSERVATION-INTELLIGENCE-ARCHITECTURE-LOCK.md)
 
+## Advisor OS / Productive Pipeline
+
+- [Pipeline Stage Persistence In-Place Closure 067G17B4](source-truth/PIPELINE_STAGE_PERSISTENCE_IN_PLACE_CLOSURE_067G17B4.md)
+- [Current Implemented Build Tree 002](source-truth/FORGE_CURRENT_IMPLEMENTED_BUILD_TREE_002.md)
+- [Unified Build Tree 002 — Advisor Pipeline Lock](source-truth/FORGE_UNIFIED_BUILD_TREE_002_ADVISOR_PIPELINE_LOCK.md)
+- [Pipeline Stage Persistence In-Place Certificate 067G17B4](../evidence/PIPELINE_STAGE_PERSISTENCE_IN_PLACE_CERTIFICATE_067G17B4.md)
+
 ## Operating References
 
 - [AGENTS.md](../../AGENTS.md)
 - [Forge Master Build Tree](../../FORGE_MASTER_BUILD_TREE.md)
+- [Current Implemented Build Tree 002](source-truth/FORGE_CURRENT_IMPLEMENTED_BUILD_TREE_002.md)
+- [Unified Advisor Pipeline Tree Amendment 067G17B4](source-truth/FORGE_UNIFIED_BUILD_TREE_002_ADVISOR_PIPELINE_LOCK.md)
