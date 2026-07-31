@@ -3,14 +3,23 @@
 
 const http = require("http");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
-const { getCachedRates } = require("../exchange-rate-cache-engine");
 
 const ROOT = path.resolve(__dirname, "..");
 const HOST = process.env.FORGE_UI_HOST || "127.0.0.1";
 const PORT = Number(process.env.FORGE_UI_PORT || 4173);
 const REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
 const BANXICO_EDGE_FUNCTION_NAME = "banxico-rates";
+const LIVE_RATE_CACHE_FILE = process.env.FORGE_RATE_CACHE_FILE || path.join(
+  os.homedir(),
+  ".cache",
+  "forgeos",
+  "market-rates.json",
+);
+
+process.env.FORGE_RATE_CACHE_FILE = LIVE_RATE_CACHE_FILE;
+const { getCachedRates } = require("../exchange-rate-cache-engine");
 
 const MIME = Object.freeze({
   ".css": "text/css; charset=utf-8",
@@ -210,6 +219,7 @@ async function main() {
   const provider = loadPublicMarketProviderFromEnvJs();
   console.log(`MARKET_RATE_PROVIDER=${provider.source}`);
   console.log(`MARKET_RATE_PROVIDER_CONFIGURED=${provider.configured}`);
+  console.log(`RATE_CACHE_FILE=${LIVE_RATE_CACHE_FILE}`);
 
   const initial = await currentRates({ forceRefresh: true });
   const udi = initial.rates?.UDI_MXN;
