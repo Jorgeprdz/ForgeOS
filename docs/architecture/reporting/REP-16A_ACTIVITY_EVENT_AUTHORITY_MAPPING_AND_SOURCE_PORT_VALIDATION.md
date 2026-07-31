@@ -14,9 +14,9 @@ SCORING_AUTHORITY=NO
 AI_INTERPRETATION_AUTHORITY=NO
 ```
 
-## Reconciled event policy
+## Reconciled event policy at REP-16A closure
 
-The FES first vertical contains 13 canonical event types. Reporting does not treat every timeline event as a productive Activity metric.
+The original FES first vertical contains 13 canonical event types. Reporting does not treat every timeline event as a productive Activity metric.
 
 ### Directly countable
 
@@ -41,7 +41,7 @@ The canonical FES envelope does not identify an appointment as INITIAL or CLOSIN
 
 Prospect creation, context, timeline initialization, appointment failure/reschedule/no-show, activity context, and due-action creation/reschedule are visible evidence but are not productive Activity counters.
 
-### Not yet present in the FES first vertical
+### Unsupported at the original first-vertical checkpoint
 
 ```text
 REFERRAL_ACQUIRED
@@ -51,12 +51,34 @@ APPLICATION_SUBMITTED
 POLICY_PAID
 ```
 
-These Activity types remain unsupported until canonical event types and authoritative producers exist. No proxy inference is authorized.
+No proxy inference was authorized.
+
+## Subsequent authority extension discovered during REP-16B
+
+The productive FES contract later added extension `FES-05B.1` while preserving schema `forge.activity_event.v1`. That extension introduces confirmed message and call facts.
+
+REP-16B therefore supersedes only the unsupported-status statement for these two Activity types:
+
+```text
+MESSAGE_SENT_CONFIRMED -> CONTACT_ATTEMPTED
+CALL_NOT_ANSWERED_CONFIRMED -> CONTACT_ATTEMPTED
+CALL_CONNECTED_CONFIRMED -> CONTACT_ATTEMPTED + CONVERSATION_COMPLETED
+```
+
+The following remain unsupported because no canonical event entails them:
+
+```text
+REFERRAL_ACQUIRED
+APPLICATION_SUBMITTED
+POLICY_PAID
+```
+
+Quote, presentation, proposal, objection, draft and reply evidence are not promoted into those outcomes.
 
 ## Double-count prevention
 
 - duplicate `event_id` is rejected;
-- repeated `idempotency_key` is excluded as replay;
+- replay identity is scoped by `event_type + idempotency_key`;
 - append-only correction suppresses the corrected original for counting;
 - correction target must be present in the supplied authority set;
 - disputed and unconfirmed outcomes are excluded;
@@ -68,7 +90,7 @@ These Activity types remain unsupported until canonical event types and authorit
 - `tests/activity-event-authority-mapping-test.mjs`
 - CI registration in `reporting-core-validation-ci.yml`
 
-## CI evidence
+## Original CI evidence
 
 ```text
 WORKFLOW=Reporting Core Validation
@@ -86,23 +108,7 @@ CANCELLED=0
 SKIPPED=0
 ```
 
-The nine dedicated mapping cases passed:
-
-```text
-FOLLOW_UP_MAPPING=PASS
-APPOINTMENT_CONTEXT_REQUIRED=PASS
-INITIAL_CLOSING_CLASSIFICATION=PASS
-TIMELINE_ONLY_EVENTS=PASS
-CONFIRMATION_GATE=PASS
-CORRECTION_SUPPRESSION=PASS
-IDEMPOTENT_REPLAY=PASS
-INVALID_CORRECTION_TARGET=PASS
-AUTHORITY_BOUNDARIES=PASS
-```
-
 ## Reconciliation result
-
-No mapping or source-port defect was found during CI execution.
 
 ```text
 FES_EVENT_SCHEMA_BOUNDARY=PASS
