@@ -82,7 +82,8 @@ function installPagesRateFetchBridge() {
   };
 
   globalThis.__forgePagesRateFetchBridgeInstalled = true;
-  document.documentElement.dataset.forgePagesRateBridge = VERSION;
+  const root = globalThis.document?.documentElement;
+  if (root) root.dataset.forgePagesRateBridge = VERSION;
   return true;
 }
 
