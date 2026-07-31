@@ -7,22 +7,26 @@ on:
     paths:
       - ".github/workflows/cartera-001b-remote-acceptance.yml"
       - "scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs"
+      - "scripts/ci/cartera-001b-pgcrypto-hardening-deploy.mjs"
       - "scripts/ci/cartera-001b-remote-acceptance.sql"
       - "tests/cartera-001b-*.mjs"
       - "supabase/migrations/20260730000100_cartera001b_quote_lifecycle_event_bridge.sql"
       - "supabase/migrations/20260730000110_cartera001b_idempotency_conflict_hardening.sql"
       - "supabase/migrations/20260730000120_cartera001b_quote_authority_projection_hardening.sql"
+      - "supabase/migrations/20260730000130_cartera001b_pgcrypto_search_path_hardening.sql"
   pull_request:
     branches:
       - feature/cartera-001b-quote-lifecycle-event-bridge
     paths:
       - ".github/workflows/cartera-001b-remote-acceptance.yml"
       - "scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs"
+      - "scripts/ci/cartera-001b-pgcrypto-hardening-deploy.mjs"
       - "scripts/ci/cartera-001b-remote-acceptance.sql"
       - "tests/cartera-001b-*.mjs"
       - "supabase/migrations/20260730000100_cartera001b_quote_lifecycle_event_bridge.sql"
       - "supabase/migrations/20260730000110_cartera001b_idempotency_conflict_hardening.sql"
       - "supabase/migrations/20260730000120_cartera001b_quote_authority_projection_hardening.sql"
+      - "supabase/migrations/20260730000130_cartera001b_pgcrypto_search_path_hardening.sql"
   workflow_dispatch:
 
 permissions:
@@ -30,7 +34,7 @@ permissions:
 
 concurrency:
   group: cartera-001b-remote-acceptance
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   remote-acceptance:
@@ -98,6 +102,14 @@ jobs:
 
           echo "RECOVERED_MIGRATION=$recovered"
           sha256sum "$recovered"
+
+      - name: Apply and verify pgcrypto RPC hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-001b-pgcrypto-hardening-deploy.mjs \
+            | tee artifacts/cartera-001b-github-actions/pgcrypto-hardening.log
+          grep -q 'CARTERA001B_PGCRYPTO_HARDENING=PASS' artifacts/cartera-001b-github-actions/pgcrypto-hardening.log
 
       - name: Deploy and execute transactional remote acceptance
         shell: bash
