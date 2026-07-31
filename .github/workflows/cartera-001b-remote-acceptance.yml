@@ -1,32 +1,6 @@
 name: CARTERA 001B Remote Acceptance
 
 on:
-  push:
-    branches:
-      - feature/cartera-001b-remote-acceptance
-    paths:
-      - ".github/workflows/cartera-001b-remote-acceptance.yml"
-      - "scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs"
-      - "scripts/ci/cartera-001b-pgcrypto-hardening-deploy.mjs"
-      - "scripts/ci/cartera-001b-remote-acceptance.sql"
-      - "tests/cartera-001b-*.mjs"
-      - "supabase/migrations/20260730000100_cartera001b_quote_lifecycle_event_bridge.sql"
-      - "supabase/migrations/20260730000110_cartera001b_idempotency_conflict_hardening.sql"
-      - "supabase/migrations/20260730000120_cartera001b_quote_authority_projection_hardening.sql"
-      - "supabase/migrations/20260730000130_cartera001b_pgcrypto_search_path_hardening.sql"
-  pull_request:
-    branches:
-      - feature/cartera-001b-quote-lifecycle-event-bridge
-    paths:
-      - ".github/workflows/cartera-001b-remote-acceptance.yml"
-      - "scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs"
-      - "scripts/ci/cartera-001b-pgcrypto-hardening-deploy.mjs"
-      - "scripts/ci/cartera-001b-remote-acceptance.sql"
-      - "tests/cartera-001b-*.mjs"
-      - "supabase/migrations/20260730000100_cartera001b_quote_lifecycle_event_bridge.sql"
-      - "supabase/migrations/20260730000110_cartera001b_idempotency_conflict_hardening.sql"
-      - "supabase/migrations/20260730000120_cartera001b_quote_authority_projection_hardening.sql"
-      - "supabase/migrations/20260730000130_cartera001b_pgcrypto_search_path_hardening.sql"
   workflow_dispatch:
 
 permissions:
@@ -38,9 +12,7 @@ concurrency:
 
 jobs:
   remote-acceptance:
-    if: >-
-      github.repository == 'Jorgeprdz/ForgeOS' &&
-      (github.event_name != 'pull_request' || github.head_ref == 'feature/cartera-001b-remote-acceptance')
+    if: github.repository == 'Jorgeprdz/ForgeOS'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -75,31 +47,13 @@ jobs:
       - name: Recover exact remote-only migration
         run: node scripts/ci/cartera-001b-github-actions-remote-acceptance.mjs --recover-only
 
-      - name: Verify and version recovered migration
+      - name: Verify recovered migration
         shell: bash
         run: |
           set -euo pipefail
           mapfile -t migration_files < <(find supabase/migrations -maxdepth 1 -type f -name '20260726000200_*.sql' -print | sort)
           test "${#migration_files[@]}" -eq 1
           recovered="${migration_files[0]}"
-
-          mapfile -t unexpected < <(
-            git status --porcelain --untracked-files=all \
-              | awk '{print $2}' \
-              | grep -v '^artifacts/cartera-001b-github-actions/' \
-              | grep -v "^${recovered}$" \
-              || true
-          )
-          test "${#unexpected[@]}" -eq 0
-
-          git add "$recovered"
-          if ! git diff --cached --quiet; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore(supabase): recover remote migration 20260726000200"
-            git push origin HEAD:feature/cartera-001b-remote-acceptance
-          fi
-
           echo "RECOVERED_MIGRATION=$recovered"
           sha256sum "$recovered"
 
