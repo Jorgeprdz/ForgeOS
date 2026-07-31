@@ -2,7 +2,7 @@
 // Reads owner-scoped Evidence and canonical candidate authorities; executes no mutation RPC.
 
 import { SupabaseRuntime } from '../../supabase-runtime.js';
-import { createCartera020cReviewReadModel } from '../../platform/policy-intelligence/intake/cartera-020c-review-read-model.js';
+import { createCartera020cReviewReadModel } from '../../platform/policy-intelligence/intake/cartera-020c-candidate-reconciliation.js';
 
 const PACKET_SELECT = [
   'id', 'advisor_id', 'packet_reference', 'inbox_item_id', 'candidate_id',
