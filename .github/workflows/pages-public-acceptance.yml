@@ -90,7 +90,7 @@ jobs:
 
           grep -Fq 'data-forge-application' /tmp/forge-pages-pipeline.html
           grep -Fq 'data-forge-pipeline-module' /tmp/forge-pages-pipeline.html
-          grep -Fq 'app.js?v=ui-m04-shell-008&fix=pipeline-stage-runtime-003' /tmp/forge-pages-pipeline.html
+          grep -Fq "app.js?v=${EXPECTED_SHA}" /tmp/forge-pages-pipeline.html
           ! grep -Fq 'Muestra segura · solo lectura' /tmp/forge-pages-pipeline.html
           ! grep -Fq 'phone-shell' /tmp/forge-pages-pipeline.html
           ! grep -Fq 'forge-material3-responsive-shell' /tmp/forge-pages-pipeline.html
