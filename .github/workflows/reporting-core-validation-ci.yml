@@ -9,6 +9,7 @@ on:
       - 'tests/report-provider-runtime-test.mjs'
       - 'tests/universal-report-aggregation-runtime-test.mjs'
       - 'tests/report-comparison-engine-test.mjs'
+      - 'tests/chart-ready-surface-contract-test.mjs'
       - '.github/workflows/reporting-core-validation-ci.yml'
   workflow_dispatch:
 
@@ -30,7 +31,9 @@ jobs:
           node --check advisor-os/reporting/domain/report-definition.mjs
           node --check advisor-os/reporting/domain/report-comparison-definition.mjs
           node --check advisor-os/reporting/domain/universal-report-model.mjs
+          node --check advisor-os/reporting/domain/chart-ready-reporting-contract.mjs
           node --check advisor-os/reporting/application/report-provider-port.mjs
+          node --check advisor-os/reporting/application/chart-ready-surface-contract.mjs
           node --check advisor-os/reporting/runtime/universal-reporting-kernel.mjs
           node --check advisor-os/reporting/runtime/universal-period-resolver.mjs
           node --check advisor-os/reporting/runtime/report-provider-runtime.mjs
@@ -43,4 +46,5 @@ jobs:
             tests/universal-period-resolver-test.mjs \
             tests/report-provider-runtime-test.mjs \
             tests/universal-report-aggregation-runtime-test.mjs \
-            tests/report-comparison-engine-test.mjs
+            tests/report-comparison-engine-test.mjs \
+            tests/chart-ready-surface-contract-test.mjs
