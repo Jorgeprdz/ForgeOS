@@ -1,0 +1,267 @@
+.pipeline-calendar-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
+}
+
+.pipeline-calendar__scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: rgba(1, 7, 16, .78);
+  backdrop-filter: blur(10px);
+  cursor: default;
+}
+
+.pipeline-calendar {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: min(560px, 100%);
+  max-height: min(760px, calc(100dvh - 40px));
+  overflow: auto;
+  border: 1px solid rgba(184, 211, 255, .22);
+  border-radius: 28px;
+  color: var(--ink, #f4f7ff);
+  background:
+    radial-gradient(circle at 88% 8%, rgba(118, 203, 255, .14), transparent 34%),
+    linear-gradient(160deg, rgba(12, 31, 55, .99), rgba(5, 17, 33, .99));
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .58);
+}
+
+.pipeline-calendar__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 18px;
+  padding: 24px 24px 18px;
+  border-bottom: 1px solid rgba(184, 211, 255, .12);
+}
+
+.pipeline-calendar__header p {
+  margin: 0 0 7px;
+  color: var(--aqua, #9be8ff);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .12em;
+}
+
+.pipeline-calendar__header h2 {
+  margin: 0;
+  font-size: clamp(22px, 4vw, 30px);
+  line-height: 1.08;
+}
+
+.pipeline-calendar__header span {
+  display: block;
+  margin-top: 9px;
+  color: var(--muted, #a9b8cc);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.pipeline-calendar__header > button {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(184, 211, 255, .16);
+  border-radius: 50%;
+  padding: 0;
+  color: var(--ink, #f4f7ff);
+  background: rgba(255, 255, 255, .06);
+  font: inherit;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.pipeline-calendar__body {
+  display: grid;
+  gap: 18px;
+  padding: 22px 24px;
+}
+
+.pipeline-calendar__context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pipeline-calendar__context span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border: 1px solid rgba(184, 211, 255, .12);
+  border-radius: 16px;
+  padding: 11px 13px;
+  color: var(--muted, #a9b8cc);
+  background: rgba(255, 255, 255, .035);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.pipeline-calendar__context strong {
+  overflow: hidden;
+  color: var(--ink, #f4f7ff);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.pipeline-calendar__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.pipeline-calendar__fields label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.pipeline-calendar__fields label > span {
+  color: var(--muted, #a9b8cc);
+  font-size: 11px;
+  font-weight: 760;
+}
+
+.pipeline-calendar__fields input,
+.pipeline-calendar__fields select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid rgba(184, 211, 255, .2);
+  border-radius: 15px;
+  padding: 10px 12px;
+  color: var(--ink, #f4f7ff);
+  background: rgba(3, 14, 29, .86);
+  color-scheme: dark;
+  font: inherit;
+  font-size: 14px;
+}
+
+.pipeline-calendar__fields input:focus-visible,
+.pipeline-calendar__fields select:focus-visible,
+.pipeline-calendar__header > button:focus-visible,
+.pipeline-calendar__footer button:focus-visible,
+.pipeline-calendar__footer a:focus-visible {
+  outline: 2px solid var(--aqua, #9be8ff);
+  outline-offset: 2px;
+}
+
+.pipeline-calendar__fields input[readonly] {
+  color: var(--muted, #a9b8cc);
+}
+
+.pipeline-calendar__preview {
+  margin: 0;
+  border-radius: 16px;
+  padding: 13px 15px;
+  color: #dff9ff;
+  background: rgba(67, 198, 225, .11);
+  font-size: 13px;
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.pipeline-calendar__boundary {
+  margin: 0;
+  color: var(--muted, #a9b8cc);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.pipeline-calendar__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 18px 24px max(20px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(184, 211, 255, .12);
+}
+
+.pipeline-calendar__footer button,
+.pipeline-calendar__footer a {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 15px;
+  padding: 10px 17px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 820;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pipeline-calendar__footer button {
+  border: 1px solid rgba(184, 211, 255, .18);
+  color: var(--ink, #f4f7ff);
+  background: rgba(255, 255, 255, .05);
+}
+
+.pipeline-calendar__footer a {
+  border: 1px solid rgba(155, 232, 255, .55);
+  color: #06101f;
+  background: linear-gradient(135deg, #9be8ff, #c8f4ff);
+  box-shadow: 0 10px 24px rgba(74, 195, 225, .2);
+}
+
+.pipeline-calendar__footer a[aria-disabled="true"] {
+  opacity: .48;
+  pointer-events: none;
+  filter: grayscale(.45);
+}
+
+.pipeline-module__card-actions [data-pipeline-calendar-state="draft-only"]:not(:disabled) {
+  cursor: pointer;
+  opacity: 1;
+  filter: none;
+}
+
+@media (max-width: 599px) {
+  .pipeline-calendar-layer {
+    place-items: end center;
+    padding: max(12px, env(safe-area-inset-top)) 0 0;
+  }
+
+  .pipeline-calendar {
+    width: 100%;
+    max-height: calc(100dvh - max(12px, env(safe-area-inset-top)));
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .pipeline-calendar__header,
+  .pipeline-calendar__body,
+  .pipeline-calendar__footer {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .pipeline-calendar__fields,
+  .pipeline-calendar__context {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pipeline-calendar__footer {
+    display: grid;
+    grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr);
+  }
+}
