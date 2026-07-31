@@ -91,9 +91,10 @@ jobs:
           helpers=supabase/migrations/20260731000223_cartera020b_command_helpers.sql
           admission=supabase/migrations/20260731000224_cartera020b_admission_and_claim_rpcs.sql
           result=supabase/migrations/20260731000225_cartera020b_processing_result_rpc.sql
+          claim_hardening=supabase/migrations/20260731000226_cartera020b_claim_concurrency_hardening.sql
           progress=docs/architecture/source-truth/FORGE_CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_PROGRESS_001.md
           inherited=.github/workflows/cartera-020a-scope-acceptance.yml
-          combined=$(cat "$tables" "$guards" "$rls" "$helpers" "$admission" "$result")
+          combined=$(cat "$tables" "$guards" "$rls" "$helpers" "$admission" "$result" "$claim_hardening")
 
           grep -q 'metadata jsonb not null' "$tables"
           ! grep -q '\bmetada\b' "$tables"
@@ -107,11 +108,14 @@ jobs:
           grep -q 'revoke all on public.cartera020b_' "$rls"
 
           grep -q 'create or replace function public.forge_cartera020b_admit_evidence' "$admission"
-          grep -q 'create or replace function public.forge_cartera020b_claim_evidence' "$admission"
+          grep -q 'create or replace function public.forge_cartera020b_claim_evidence' "$claim_hardening"
           grep -q 'create or replace function public.forge_cartera020b_record_processing_result' "$result"
-          grep -q 'for update skip locked' "$admission"
+          grep -q 'CLAIM_EVIDENCE' "$claim_hardening"
+          grep -q 'pg_advisory_xact_lock' "$claim_hardening"
+          grep -q 'limit 1' "$claim_hardening"
+          grep -q 'for update skip locked' "$claim_hardening"
           grep -q 'CHANGED_INPUT_REPLAY' "$helpers"
-          grep -q "set_config('forge.cartera020b_command', 'on', true)" "$admission"
+          grep -q "set_config('forge.cartera020b_command', 'on', true)" "$claim_hardening"
           grep -q "set_config('forge.cartera020b_command', 'on', true)" "$result"
           grep -q 'PENDING_CONFIRMATION' "$result"
 
