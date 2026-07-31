@@ -7,6 +7,17 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function prospectQuoteDetailProjectionFactory() {
   const PROJECTION_VERSION = "CARTERA-001C.1";
   const SOURCE_AUTHORITY = "QUOTE_AUTHORITY";
+  const PROJECTION_STATES = Object.freeze(["EMPTY", "READY", "CONFLICT_REVIEW_REQUIRED"]);
+  const PROJECTION_KEYS = Object.freeze([
+    "projection_version",
+    "prospect_reference",
+    "source_authority",
+    "state",
+    "quotes",
+    "timeline",
+    "counters",
+    "projection_digest",
+  ]);
   const ALLOWED_ROW_KEYS = Object.freeze([
     "quote_reference",
     "quote_version_reference",
@@ -124,6 +135,23 @@
       fail(code, `${label} no es válido.`);
     }
     return new Date(value).toISOString();
+  }
+
+  function requireNonNegativeInteger(value, code, label) {
+    if (!Number.isInteger(value) || value < 0) fail(code, `${label} no es válido.`);
+    return value;
+  }
+
+  function assertExactKeys(value, allowedKeys, code, label) {
+    if (!isPlainObject(value)) fail(code, `${label} debe ser un objeto.`);
+    const keys = Object.keys(value).sort();
+    const expected = [...allowedKeys].sort();
+    if (stableStringify(keys) !== stableStringify(expected)) {
+      fail(code, `${label} contiene una forma no autorizada.`, {
+        actual_keys: keys,
+        expected_keys: expected,
+      });
+    }
   }
 
   function assertAllowedKeys(row) {
@@ -298,11 +326,86 @@
 
   function validateProspectQuoteDetailProjection(input) {
     try {
-      const rebuilt = createProspectQuoteDetailProjection({
-        prospectReference: input?.prospect_reference,
-        rows: input?._source_rows || [],
-      });
-      return deepFreeze({ valid: stableStringify(rebuilt) === stableStringify(input), errors: [] });
+      assertExactKeys(input, PROJECTION_KEYS, "PROJECTION_ENVELOPE_INVALID", "La proyección");
+      if (input.projection_version !== PROJECTION_VERSION) {
+        fail("PROJECTION_VERSION_INVALID", "La versión de proyección no es válida.");
+      }
+      if (input.source_authority !== SOURCE_AUTHORITY) {
+        fail("PROJECTION_SOURCE_AUTHORITY_INVALID", "La autoridad de proyección no es válida.");
+      }
+      const prospectReference = requireOpaque(
+        input.prospect_reference,
+        "PROJECTION_PROSPECT_REFERENCE_INVALID",
+        "La referencia de Prospect",
+      );
+      if (!PROJECTION_STATES.includes(input.state)) {
+        fail("PROJECTION_STATE_INVALID", "El estado de proyección no es válido.");
+      }
+      if (!Array.isArray(input.quotes) || !Array.isArray(input.timeline)) {
+        fail("PROJECTION_COLLECTIONS_INVALID", "Las colecciones de proyección no son válidas.");
+      }
+      if (!isPlainObject(input.counters)) {
+        fail("PROJECTION_COUNTERS_INVALID", "Los contadores de proyección no son válidos.");
+      }
+      const quoteCount = requireNonNegativeInteger(input.counters.quote_count, "PROJECTION_QUOTE_COUNT_INVALID", "El total de cotizaciones");
+      const eventCount = requireNonNegativeInteger(input.counters.quote_event_count, "PROJECTION_EVENT_COUNT_INVALID", "El total de eventos");
+      const conflictCount = requireNonNegativeInteger(input.counters.conflict_count, "PROJECTION_CONFLICT_COUNT_INVALID", "El total de conflictos");
+      if (quoteCount !== input.quotes.length || eventCount !== input.timeline.length) {
+        fail("PROJECTION_COUNTER_MISMATCH", "Los contadores no coinciden con la proyección.");
+      }
+      const quoteReferences = new Set();
+      for (const quote of input.quotes) {
+        if (!isPlainObject(quote)) fail("PROJECTION_QUOTE_INVALID", "La cotización proyectada no es válida.");
+        const quoteReference = requireOpaque(quote.quote_reference, "PROJECTION_QUOTE_REFERENCE_INVALID", "La cotización");
+        if (quoteReferences.has(quoteReference)) fail("PROJECTION_QUOTE_DUPLICATED", "La cotización está duplicada.");
+        quoteReferences.add(quoteReference);
+        if (quote.prospect_reference !== prospectReference || quote.source_authority !== SOURCE_AUTHORITY) {
+          fail("PROJECTION_QUOTE_SCOPE_INVALID", "La cotización está fuera del alcance del Prospect.");
+        }
+        if (!LIFECYCLE_STATES.includes(quote.lifecycle_state)) {
+          fail("PROJECTION_QUOTE_STATE_INVALID", "El estado proyectado de Quote no es válido.");
+        }
+        requireNonNegativeInteger(quote.version_count, "PROJECTION_VERSION_COUNT_INVALID", "El total de versiones");
+        requireNonNegativeInteger(quote.event_count, "PROJECTION_QUOTE_EVENT_COUNT_INVALID", "El total de eventos de Quote");
+        requireNonNegativeInteger(quote.evidence_count, "PROJECTION_EVIDENCE_COUNT_INVALID", "El total de evidencias");
+      }
+      let computedConflicts = 0;
+      for (const quote of input.quotes) {
+        if (quote.truth_state === "CONFLICT_REVIEW_REQUIRED") computedConflicts += 1;
+      }
+      if (computedConflicts !== conflictCount) {
+        fail("PROJECTION_CONFLICT_COUNTER_MISMATCH", "El total de conflictos no coincide.");
+      }
+      const eventIds = new Set();
+      for (const item of input.timeline) {
+        if (!isPlainObject(item)) fail("PROJECTION_TIMELINE_ITEM_INVALID", "El evento proyectado no es válido.");
+        const eventId = requireOpaque(item.event_id, "PROJECTION_EVENT_REFERENCE_INVALID", "El evento");
+        if (eventIds.has(eventId)) fail("PROJECTION_EVENT_DUPLICATED", "El evento está duplicado.");
+        eventIds.add(eventId);
+        if (item.source_authority !== SOURCE_AUTHORITY) {
+          fail("PROJECTION_EVENT_AUTHORITY_INVALID", "La autoridad del evento no es válida.");
+        }
+        if (!EVENT_TYPES.includes(item.event_type) || !LIFECYCLE_STATES.includes(item.lifecycle_state)) {
+          fail("PROJECTION_EVENT_SEMANTICS_INVALID", "La semántica del evento no es válida.");
+        }
+        requireIso(item.occurred_at, "PROJECTION_EVENT_OCCURRED_AT_INVALID", "La fecha efectiva");
+        requireIso(item.recorded_at, "PROJECTION_EVENT_RECORDED_AT_INVALID", "La fecha de registro");
+        requireNonNegativeInteger(item.evidence_count, "PROJECTION_EVENT_EVIDENCE_COUNT_INVALID", "El total de evidencias del evento");
+      }
+      if (input.state === "EMPTY" && (quoteCount !== 0 || eventCount !== 0 || conflictCount !== 0)) {
+        fail("PROJECTION_EMPTY_STATE_INVALID", "El estado vacío contiene datos.");
+      }
+      if (input.state === "CONFLICT_REVIEW_REQUIRED" && conflictCount < 1) {
+        fail("PROJECTION_CONFLICT_STATE_INVALID", "El estado de conflicto no contiene conflictos.");
+      }
+      if (typeof input.projection_digest !== "string" || !/^[a-f0-9]{8}$/.test(input.projection_digest)) {
+        fail("PROJECTION_DIGEST_INVALID", "El digest de proyección no es válido.");
+      }
+      const { projection_digest: digest, ...digestInput } = input;
+      if (stableDigest(digestInput) !== digest) {
+        fail("PROJECTION_DIGEST_MISMATCH", "El digest de proyección no coincide.");
+      }
+      return deepFreeze({ valid: true, errors: [] });
     } catch (error) {
       return deepFreeze({
         valid: false,
@@ -318,6 +421,8 @@
   return deepFreeze({
     PROJECTION_VERSION,
     SOURCE_AUTHORITY,
+    PROJECTION_STATES,
+    PROJECTION_KEYS,
     ALLOWED_ROW_KEYS,
     EVENT_TYPES,
     LIFECYCLE_STATES,
