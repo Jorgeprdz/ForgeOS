@@ -31,6 +31,7 @@ const RESOLVED_IDENTITY_OUTCOMES = new Set([
 ]);
 const ALLOWED_IDENTITY_OUTCOMES = new Set(Object.values(CARTERA_020C_IDENTITY_OUTCOMES));
 const ALLOWED_POLICY_DECISIONS = new Set(Object.values(CARTERA_020C_POLICY_DECISIONS));
+const ALLOWED_ACCOUNT_OUTCOMES = new Set(['LINK_CONFIRMED', 'NOT_APPLICABLE']);
 
 function requireReference(value, fieldName) {
   if (typeof value !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,239}$/.test(value)) {
@@ -120,6 +121,7 @@ export function createIdentityPolicyConfirmationReview({
     .map((candidate) => Object.freeze({ ...ensureCandidateBoundary(candidate, 'duplicate_policy') }));
 
   uniqueReferences(normalizedIdentityCandidates, 'candidateReference', 'identity_candidate');
+  uniqueReferences(normalizedAccountCandidates, 'candidateReference', 'account_candidate');
   uniqueReferences(normalizedRoleCandidates, 'candidateReference', 'policy_role_candidate');
 
   const blockers = [];
@@ -159,6 +161,7 @@ export function createIdentityPolicyConfirmationReview({
 export function prepareIdentityPolicyConfirmationPlan({
   review,
   identityDecisions = [],
+  accountDecisions = [],
   policyRoleDecisions = [],
   duplicatePolicyDecision,
   confirmedPolicyCommand,
@@ -172,6 +175,9 @@ export function prepareIdentityPolicyConfirmationPlan({
   }
   if (!Array.isArray(identityDecisions) || identityDecisions.length !== review.identityCandidates.length) {
     throw new TypeError('identity_decisions_incomplete');
+  }
+  if (!Array.isArray(accountDecisions) || accountDecisions.length !== review.accountCandidates.length) {
+    throw new TypeError('account_decisions_incomplete');
   }
   if (!Array.isArray(policyRoleDecisions) || policyRoleDecisions.length !== review.policyRoleCandidates.length) {
     throw new TypeError('policy_role_decisions_incomplete');
@@ -198,6 +204,24 @@ export function prepareIdentityPolicyConfirmationPlan({
       throw new TypeError('identity_resolution_command_required');
     }
     return Object.freeze({ ...decision.command });
+  });
+
+  const accountCandidateReferences = new Set(review.accountCandidates.map((item) => item.candidateReference));
+  const normalizedAccountDecisions = accountDecisions.map((decision) => {
+    if (!accountCandidateReferences.has(decision.candidateReference)) {
+      throw new TypeError('account_decision_candidate_mismatch');
+    }
+    if (!ALLOWED_ACCOUNT_OUTCOMES.has(decision.outcome)) {
+      throw new TypeError('account_decision_outcome_invalid');
+    }
+    const candidate = review.accountCandidates.find((item) => item.candidateReference === decision.candidateReference);
+    if (candidate.required && decision.outcome !== 'LINK_CONFIRMED') {
+      throw new TypeError('required_account_unresolved');
+    }
+    if (decision.outcome === 'LINK_CONFIRMED') {
+      requireReference(decision.existingAccountReference, 'existing_account_reference');
+    }
+    return Object.freeze({ ...decision });
   });
 
   const roleCandidateReferences = new Set(review.policyRoleCandidates.map((item) => item.candidateReference));
@@ -231,6 +255,7 @@ export function prepareIdentityPolicyConfirmationPlan({
     packetReference: review.packetReference,
     state: CARTERA_020C_REVIEW_STATES.READY_TO_CONFIRM,
     identityCommands: Object.freeze(identityCommands),
+    accountDecisions: Object.freeze(normalizedAccountDecisions),
     policyRoleDecisions: Object.freeze(policyRoleDecisions.map((decision) => Object.freeze({ ...decision }))),
     duplicatePolicyDecision: Object.freeze({ ...duplicatePolicyDecision }),
     confirmedPolicyCommand: Object.freeze({ ...confirmedPolicyCommand }),
