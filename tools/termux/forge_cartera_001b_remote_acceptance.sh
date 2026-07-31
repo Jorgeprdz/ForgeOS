@@ -4,6 +4,7 @@ set -uo pipefail
 REPO="${FORGE_REPO:-/storage/emulated/0/Forge OS}"
 BRANCH="feature/cartera-001b-remote-acceptance"
 MINIMUM_IMPLEMENTATION_HEAD="02ed3d50b54fe8c5758eb0ca30e620a7f78c6370"
+RECOVERED_REMOTE_VERSION="20260726000200"
 LOG_DIR="${FORGE_EVIDENCE_DIR:-/storage/emulated/0/ForgeGemini}"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 LOG_FILE="$LOG_DIR/cartera-001b-remote-acceptance-$STAMP.log"
@@ -56,9 +57,19 @@ main() {
     printf 'SOURCE_GATE=FAIL_MISSING_001B_HARDENING\n'
     return 1
   }
-  printf 'SOURCE_GATE=PASS\n'
+
+  shopt -s nullglob
+  RECOVERED_MIGRATIONS=(supabase/migrations/${RECOVERED_REMOTE_VERSION}_*.sql)
+  shopt -u nullglob
+  [[ "${#RECOVERED_MIGRATIONS[@]}" -eq 1 ]] || {
+    printf 'SOURCE_GATE=FAIL_MISSING_RECOVERED_REMOTE_MIGRATION\n'
+    printf 'EXPECTED_VERSION=%s\n' "$RECOVERED_REMOTE_VERSION"
+    printf 'RECOVERY_COMMAND=bash tools/archforge/forge_recover_remote_migration_20260726000200.sh\n'
+    return 1
+  }
 
   for migration in \
+    "${RECOVERED_MIGRATIONS[0]}" \
     supabase/migrations/20260730000100_cartera001b_quote_lifecycle_event_bridge.sql \
     supabase/migrations/20260730000110_cartera001b_idempotency_conflict_hardening.sql \
     supabase/migrations/20260730000120_cartera001b_quote_authority_projection_hardening.sql \
@@ -68,17 +79,23 @@ main() {
       return 1
     }
   done
+  printf 'SOURCE_GATE=PASS\n'
 
   printf '%s\n' '========== TARGETED TESTS =========='
   node --test tests/cartera-001b-*.mjs || return 1
   printf 'TARGETED_TESTS=PASS\n'
 
-  printf '%s\n' '========== CURRENT REMOTE HISTORY =========='
-  supabase migration list --linked || return 1
+  if [[ -z "${SUPABASE_DB_PASSWORD:-}" ]]; then
+    read -rsp 'Supabase DB password: ' SUPABASE_DB_PASSWORD
+    printf '\n'
+    export SUPABASE_DB_PASSWORD
+  fi
 
-  printf '%s\n' '========== MIGRATION DRY RUN =========='
-  supabase db push --linked --dry-run || return 1
-  printf 'REMOTE_DRY_RUN=PASS\n'
+  [[ -n "${SUPABASE_DB_PASSWORD:-}" ]] || {
+    printf 'SUPABASE_DB_PASSWORD_REQUIRED=YES\n'
+    return 1
+  }
+  printf 'DATABASE_PASSWORD_GATE=PASS\n'
 
   DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
   if [[ -z "$DB_URL" && -f supabase/.temp/pooler-url ]]; then
@@ -89,10 +106,34 @@ main() {
     printf '%s\n' 'DATABASE_URL_REQUIRED=YES'
     printf '%s\n' 'No se aplicó ninguna migración remota.'
     printf '%s\n' 'Exporta SUPABASE_DB_URL con la URL Session pooler del panel Connect y vuelve a ejecutar.'
-    printf '%s\n' "Ejemplo: export SUPABASE_DB_URL='postgresql://postgres.PROJECT_REF:PASSWORD@HOST:5432/postgres?sslmode=require'"
     return 1
   fi
+
+  DB_URL_WITHOUT_EMBEDDED_PASSWORD="$(
+    printf '%s' "$DB_URL" \
+      | sed -E 's#^(postgres(ql)?://[^:/@]+):[^@]*@#\1@#'
+  )"
   printf 'DATABASE_URL_GATE=PASS\n'
+
+  printf '%s\n' '========== CURRENT REMOTE HISTORY =========='
+  REMOTE_HISTORY_BEFORE="$(supabase migration list --linked 2>&1)" || {
+    printf '%s\n' "$REMOTE_HISTORY_BEFORE"
+    return 1
+  }
+  printf '%s\n' "$REMOTE_HISTORY_BEFORE"
+
+  RECOVERED_VERSION_OCCURRENCES="$(
+    grep -o "$RECOVERED_REMOTE_VERSION" <<< "$REMOTE_HISTORY_BEFORE" | wc -l
+  )"
+  [[ "$RECOVERED_VERSION_OCCURRENCES" -ge 2 ]] || {
+    printf 'REMOTE_HISTORY_DIVERGENCE=%s\n' "$RECOVERED_REMOTE_VERSION"
+    return 1
+  }
+  printf 'REMOTE_HISTORY_RECONCILIATION=PASS\n'
+
+  printf '%s\n' '========== MIGRATION DRY RUN =========='
+  supabase db push --linked --dry-run || return 1
+  printf 'REMOTE_DRY_RUN=PASS\n'
 
   printf '%s\n' '========== REMOTE MIGRATION PUSH =========='
   supabase db push --linked || return 1
@@ -100,7 +141,8 @@ main() {
 
   printf '%s\n' '========== TRANSACTIONAL REMOTE ACCEPTANCE =========='
   ACCEPTANCE_OUTPUT="$(
-    psql "$DB_URL" \
+    PGPASSWORD="$SUPABASE_DB_PASSWORD" \
+      psql "$DB_URL_WITHOUT_EMBEDDED_PASSWORD" \
       -v ON_ERROR_STOP=1 \
       -f scripts/ci/cartera-001b-remote-acceptance.sql \
       2>&1
@@ -124,7 +166,11 @@ main() {
   }
   printf '%s\n' "$REMOTE_HISTORY"
 
-  for version in 20260730000100 20260730000110 20260730000120; do
+  for version in \
+    "$RECOVERED_REMOTE_VERSION" \
+    20260730000100 \
+    20260730000110 \
+    20260730000120; do
     grep -q "$version" <<< "$REMOTE_HISTORY" || {
       printf 'REMOTE_MIGRATION_MISSING=%s\n' "$version"
       return 1
@@ -134,6 +180,7 @@ main() {
   printf '%s\n' '============================================================'
   printf 'CARTERA_001B_REMOTE_ACCEPTANCE=PASS\n'
   printf 'SOURCE_HEAD=%s\n' "$CURRENT_HEAD"
+  printf 'RECOVERED_REMOTE_MIGRATION=%s\n' "$RECOVERED_REMOTE_VERSION"
   printf 'MIGRATIONS=20260730000100,20260730000110,20260730000120\n'
   printf 'RLS=PASS\nRPC=PASS\nIDEMPOTENCY=PASS\nCONFLICTS=PASS\n'
   printf 'CORRECTIONS=PASS\nQUOTE_AUTHORITY_PROJECTION=PASS\nAPPEND_ONLY=PASS\n'
