@@ -58,12 +58,14 @@ test('browser fixture mounts the productive route and covers directory privacy',
   assert.ok(config.includes('cartera-010d-remote-browser\\.spec\\.mjs'));
 });
 
-test('remote workflow is bounded, temporary-triggered and uploads all evidence', async () => {
+test('accepted remote workflow is bounded, manual-only and uploads all evidence', async () => {
   const workflow = await read(
     '.github/workflows/cartera-010d-remote-directory-browser-acceptance.yml'
   );
 
   assert.match(workflow, /workflow_dispatch:/);
+  assert.doesNotMatch(workflow, /^  push:/m);
+  assert.doesNotMatch(workflow, /^  pull_request:/m);
   assert.match(workflow, /SOURCE_COMMIT: 86250c1429510a9914b9538791d168b5802e1f07/);
   assert.match(workflow, /SUPABASE_ACCESS_TOKEN/);
   assert.match(workflow, /ADVISOR_A_EMAIL/);
