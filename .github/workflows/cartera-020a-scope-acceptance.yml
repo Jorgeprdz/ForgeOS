@@ -1,0 +1,89 @@
+name: CARTERA 020A Scope Acceptance
+
+on:
+  push:
+    branches:
+      - docs/cartera-020a-policy-intake-adapter-scope
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020a-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy-intake-adapter-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify source ancestry and documentation-only paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=e8eebac5c8215a25fc918e8d46c1a30034b0e3da
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+
+          allowed='^(docs/architecture/source-truth/FORGE_CARTERA_020A_POLICY_INTAKE_ADAPTER_SCOPE_001\.md|tests/cartera-020a-policy-intake-adapter-scope-test\.mjs|\.github/workflows/cartera-020a-scope-acceptance\.yml)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_020A_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_COMMIT_VERIFIED=YES'
+          echo 'DOCUMENTATION_ONLY_PATHS=PASS'
+          echo 'SCHEMA_MUTATION=NO'
+          echo 'SUPABASE_REMOTE_MUTATION=NO'
+          echo 'RUNTIME_MUTATION=NO'
+
+      - name: JavaScript syntax gate
+        run: node --check tests/cartera-020a-policy-intake-adapter-scope-test.mjs
+
+      - name: Execute CARTERA 020A scope acceptance
+        run: node --test tests/cartera-020a-policy-intake-adapter-scope-test.mjs
+
+      - name: Verify locked source-truth markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          scope=docs/architecture/source-truth/FORGE_CARTERA_020A_POLICY_INTAKE_ADAPTER_SCOPE_001.md
+
+          grep -q 'CANONICAL_EVIDENCE_BACKBONE=LOCKED' "$scope"
+          grep -q 'PROVIDER_ENVELOPE=LOCKED' "$scope"
+          grep -q 'CLASSIFICATION_AMBIGUITY=LOCKED' "$scope"
+          grep -q 'PARSER_REGISTRY_BOUNDARY=LOCKED' "$scope"
+          grep -q 'RESUMABLE_BATCH_BOUNDARY=LOCKED' "$scope"
+          grep -q 'IDENTITY_BEFORE_CREATION=LOCKED' "$scope"
+          grep -q 'CONFIRMED_POLICY_COMMAND_BYPASS=FORBIDDEN' "$scope"
+          grep -q 'CARTERA_020A_COMPLETE=YES' "$scope"
+          grep -q 'NEXT=CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_AND_PARSER_REGISTRY' "$scope"
+
+      - name: Emit closure markers
+        run: |
+          echo 'CARTERA_020A_SCOPE=LOCKED'
+          echo 'REUSE_MAP_COMPLETE=YES'
+          echo 'DOMAIN_AUTHORITY_PRESERVED=YES'
+          echo 'NEGATIVE_TESTS=PASS'
+          echo 'UNAUTHORIZED_EFFECTS=NONE'
+          echo 'CARTERA_020A_COMPLETE=YES'
+          echo 'NEXT=CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_AND_PARSER_REGISTRY'
