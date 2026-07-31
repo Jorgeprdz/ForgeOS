@@ -96,6 +96,10 @@
     raise exception 'CARTERA010B_POLICY_CHANGED_REPLAY_NOT_CONFLICT';
   end if;
 
+  -- Structural row counts are acceptance-internal invariants and run under the
+  -- management transaction role. Authenticated access remains intentionally denied.
+  execute 'reset role';
+
   select count(*) into row_count
   from public.canonical_policies p
   where p.advisor_id = user_a and p.policy_reference = policy_reference;
@@ -112,6 +116,10 @@
   join public.canonical_policies p on p.id = r.policy_id and p.advisor_id = r.advisor_id
   where p.advisor_id = user_a and p.policy_reference = policy_reference;
   if row_count <> 4 then raise exception 'CARTERA010B_POLICY_ROLE_COUNT_INVALID'; end if;
+
+  perform set_config('request.jwt.claim.sub', user_a::text, true);
+  perform set_config('request.jwt.claim.role', 'authenticated', true);
+  execute 'set local role authenticated';
 
   begin
     perform 1 from public.policy_roles limit 1;
