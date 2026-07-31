@@ -20,7 +20,7 @@ const row = {
   quote_reference: "quote:22222222-2222-4222-8222-222222222222",
   quote_version_reference: "quote-version:33333333-3333-4333-8333-333333333333",
   prospect_id: prospectReference,
-  product_reference: "product:<orvi>",
+  product_reference: "product:orvi",
   lifecycle_state: "PRESENTED",
   event_id: "quote-event:44444444-4444-4444-8444-444444444444",
   event_type: "QUOTE_PRESENTED",
@@ -42,9 +42,26 @@ test("UI renders a read-only Quote summary and minimized timeline", () => {
   assert.match(html, /Actividad de cotización/);
   assert.match(html, /Propuesta presentada/);
   assert.match(html, /data-source-authority="QUOTE_AUTHORITY"/);
-  assert.match(html, /product:&lt;orvi&gt;/);
+  assert.match(html, /product:orvi/);
   assert.doesNotMatch(html, /premium|prima|coverage|cobertura|deductible|coinsurance/i);
   assert.doesNotMatch(html, /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/);
+});
+
+test("renderer escapes display text even when called outside the strict projector", () => {
+  const html = ui.quoteCardTemplate({
+    quote_reference: "quote:<unsafe>",
+    product_reference: "<img src=x onerror=alert(1)>",
+    truth_state: "CONFIRMED",
+    lifecycle_label: "<b>Aceptada</b>",
+    latest_event_label: "<script>alert(1)</script>",
+    latest_occurred_at: "2026-07-30T21:00:00.000Z",
+    event_count: 1,
+    version_count: 1,
+  });
+  assert.doesNotMatch(html, /<img|<script|<b>/);
+  assert.match(html, /&lt;img/);
+  assert.match(html, /&lt;script/);
+  assert.match(html, /&lt;b&gt;Aceptada/);
 });
 
 test("empty projection is explicit instead of inventing Quote state", () => {
