@@ -19,12 +19,22 @@ test("runner gates the exact implementation branch and hardening ancestor", () =
   assert.match(script, /git merge-base --is-ancestor/);
 });
 
-test("runner executes tests and dry-run before remote push", () => {
+test("runner executes tests, dry-run, and database URL gate before remote push", () => {
   const tests = index("node --test tests/cartera-001b-*.mjs");
   const dryRun = index("supabase db push --linked --dry-run");
+  const dbGate = index("DATABASE_URL_GATE=PASS");
   const push = index("supabase db push --linked || return 1");
   assert.ok(tests < dryRun);
-  assert.ok(dryRun < push);
+  assert.ok(dryRun < dbGate);
+  assert.ok(dbGate < push);
+});
+
+test("missing database URL blocks before remote migration push", () => {
+  const missingUrl = index("DATABASE_URL_REQUIRED=YES");
+  const noMigrationMessage = index("No se aplicó ninguna migración remota.");
+  const push = index("supabase db push --linked || return 1");
+  assert.ok(missingUrl < push);
+  assert.ok(noMigrationMessage < push);
 });
 
 test("runner never resets or repairs remote migration history", () => {
