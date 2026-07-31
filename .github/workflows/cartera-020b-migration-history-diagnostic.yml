@@ -1,9 +1,6 @@
 name: CARTERA 020B Migration History Diagnostic
 
 on:
-  pull_request:
-    branches:
-      - feature/cartera-020b-persistent-evidence-worker-parser-registry
   workflow_dispatch:
 
 permissions:
