@@ -316,6 +316,7 @@ async function appendQuoteLifecycleEvent(input = {}) {
   return persisted;
 }
 
+
 function updateVisibleStatus(captureResult) {
   const status = document?.querySelector?.(
     "[data-material3-quotes-status], .fq-file-status-105dr",
