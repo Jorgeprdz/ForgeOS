@@ -71,6 +71,24 @@ begin
 end;
 $$;
 
+create or replace function public.forge_cartera010b_jsonb_keys_allowed(
+  p_value jsonb,
+  p_allowed text[]
+)
+returns boolean
+language sql
+immutable
+set search_path = public, pg_temp
+as $$
+  select p_value is not null
+    and jsonb_typeof(p_value) = 'object'
+    and not exists (
+      select 1
+      from jsonb_object_keys(p_value) as supplied(key)
+      where not (supplied.key = any(p_allowed))
+    );
+$$;
+
 -- The foundation originally made source links fully append-only. Corrections need
 -- one narrowly governed transition: closing the prior effective period. No other
 -- column may change and direct authenticated writes remain revoked.
@@ -130,6 +148,8 @@ for each row execute function public.forge_cartera010b_source_link_supersession_
 revoke all on function public.forge_cartera010b_command_digest(jsonb)
   from public, anon, authenticated;
 revoke all on function public.forge_cartera010b_reference_array_valid(jsonb, integer, integer)
+  from public, anon, authenticated;
+revoke all on function public.forge_cartera010b_jsonb_keys_allowed(jsonb, text[])
   from public, anon, authenticated;
 
 commit;
