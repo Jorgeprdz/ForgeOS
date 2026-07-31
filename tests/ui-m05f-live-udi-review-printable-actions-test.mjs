@@ -38,11 +38,18 @@ assert.match(hotfix, /Historial disponible al abrir la cotización desde un pros
 assert.match(hotfix, /for \(const action of \["preview", "download"\]\)/);
 assert.match(hotfix, /data-forge-qpd06-action="\$\{action\}"/);
 
-// The server deliberately centralizes cache access in currentRates(). The
-// startup path forces refresh through that wrapper, while the wrapper passes
-// the same flag to the canonical cache engine.
+// The server centralizes cache access in currentRates(), forces a startup
+// refresh, and discovers the existing public Supabase project configuration
+// from the same root env.js used by Forge.
 assert.match(server, /const cache = await getCachedRates\(\{ forceRefresh \}\)/);
 assert.match(server, /currentRates\(\{ forceRefresh: true \}\)/);
+assert.match(server, /loadPublicMarketProviderFromEnvJs/);
+assert.match(server, /parsePublicEnvJs/);
+assert.match(server, /SUPABASE_URL/);
+assert.match(server, /SUPABASE_KEY/);
+assert.match(server, /functions\/v1\/\$\{BANXICO_EDGE_FUNCTION_NAME\}/);
+assert.match(server, /BANXICO_EDGE_FUNCTION_NAME = "banxico-rates"/);
+assert.match(server, /MARKET_RATE_PROVIDER=/);
 assert.match(server, /\/api\/forge-market-rates/);
 assert.match(server, /FORGE_LIVE_SERVER=READY/);
 assert.match(server, /UDI_DATE=/);
@@ -55,6 +62,7 @@ console.log("PASS UI-M05F live UDI human review printable actions", {
   runtime: "M05E-003",
   staleFixtureDetected: staleCache.rates.UDI_MXN.date,
   liveRateRefreshRequired: true,
+  envJsSupabaseDiscovery: true,
   annualContributionCurrentMxn: true,
   clientHumanReview: true,
   confirmationSynchronized: true,
