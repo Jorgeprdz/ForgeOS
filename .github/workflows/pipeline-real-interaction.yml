@@ -12,6 +12,7 @@ on:
       - tests/pipeline-action-identity-regression.mjs
       - tests/pipeline-context-journal-regression.mjs
       - tests/pipeline-public-acceptance-hotfix-regression.mjs
+      - tests/pipeline-filter-count-authority-regression.mjs
       - tests/prospect-journal-service-contract-test.mjs
       - tools/forge-ui-visual-diagnostic.mjs
       - .github/workflows/pipeline-real-interaction.yml
@@ -60,3 +61,5 @@ jobs:
         run: timeout 120s node tests/pipeline-context-journal-regression.mjs
       - name: Verify public acceptance hotfix
         run: timeout 120s node tests/pipeline-public-acceptance-hotfix-regression.mjs
+      - name: Verify combined filter totals
+        run: timeout 120s node tests/pipeline-filter-count-authority-regression.mjs
