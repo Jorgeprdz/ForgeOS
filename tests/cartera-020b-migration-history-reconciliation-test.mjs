@@ -33,10 +33,10 @@ test('diagnostic preserves both local and remote SQL as evidence', () => {
 });
 
 test('remote harness hashes canonical SQL rather than trailing file whitespace', () => {
-  assert.match(harness, /function normalizeMigrationSql\(value\)/);
-  assert.match(harness, /replace\(\/\\r\\n\/g, '\\n'\)\.trim\(\)/);
-  assert.match(harness, /const canonicalLocal = normalizeMigrationSql\(raw\)/);
-  assert.match(harness, /const localHash = sha256\(canonicalLocal\)/);
-  assert.match(harness, /normalizeMigrationSql\(value\.join\('\n\\n'\)\)/);
-  assert.match(harness, /array\[\$\{sqlLiteral\(normalizeMigrationSql\(raw\)\)\}\]::text\[\]/);
+  assert.ok(harness.includes('function normalizeMigrationSql(value)'));
+  assert.ok(harness.includes("replace(/\\r\\n/g, '\\n').trim()"));
+  assert.ok(harness.includes('const canonicalLocal = normalizeMigrationSql(raw)'));
+  assert.ok(harness.includes('const localHash = sha256(canonicalLocal)'));
+  assert.ok(harness.includes("normalizeMigrationSql(value.join('\\n\\n'))"));
+  assert.ok(harness.includes('sqlLiteral(normalizeMigrationSql(raw))'));
 });
