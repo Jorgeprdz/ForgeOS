@@ -11,19 +11,20 @@
   <script>
     (async () => {
       const response = await fetch(
-        `./index.html?source=quote-calculator-parity-006&ts=${Date.now()}`,
+        `./index.html?source=quote-calculator-parity-009&ts=${Date.now()}`,
         { cache: "no-store" },
       );
       if (!response.ok) throw new Error(`INDEX_LOAD_FAILED_${response.status}`);
       let html = await response.text();
       html = html.replace(
         /<script\s+type="module"\s+src="\.\/app\.js[^"]*"><\/script>/,
-        '<script type="module" src="./app.js?v=quote-calculator-parity-006"><\/script>',
+        '<script type="module" src="./app.js?v=quote-calculator-parity-009"><\/script>',
       );
       html = html.replace(
         "</body>",
         `<script>
           document.documentElement.dataset.quoteCalculatorLoader = "M05E-006";
+          document.documentElement.dataset.vidaMujerHandoff = "M05E-009";
           const badge = document.createElement("div");
           badge.dataset.quoteCalculatorVersionBadge = "M05E-006";
           badge.textContent = "CALCULADORAS M05E-006";
