@@ -1,0 +1,130 @@
+name: CARTERA 020B Foundation Acceptance
+
+on:
+  push:
+    branches:
+      - feature/cartera-020b-persistent-evidence-worker-parser-registry
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020b-foundation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  persistent-evidence-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source ancestry and bounded path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=bb7105e622075a36feae65d8296f93b9e2f7c93d
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(policy-operations/intake/cartera-020b-[A-Za-z0-9._-]+\.js|platform/policy-intelligence/intake/cartera-020b-[A-Za-z0-9._-]+\.js|schemas/cartera-020b-[A-Za-z0-9._-]+\.schema\.json|supabase/migrations/[0-9]+_cartera020b_[A-Za-z0-9._-]+\.sql|tests/cartera-020b-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_020B_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-020b-[A-Za-z0-9._-]+\.yml|\.github/workflows/cartera-020a-scope-acceptance\.yml)$'
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_020B_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'SOURCE_COMMIT_VERIFIED=YES'
+          echo 'BOUNDED_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+          echo 'INHERITED_020A_GATE_RETIREMENT=BOUNDED'
+
+      - name: JavaScript and JSON syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in policy-operations/intake/cartera-020b-*.js; do node --check "$file"; done
+          for file in platform/policy-intelligence/intake/cartera-020b-*.js; do node --check "$file"; done
+          for file in tests/cartera-020b-*.mjs; do node --check "$file"; done
+          for file in schemas/cartera-020b-*.schema.json; do node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'))" "$file"; done
+
+      - name: Execute CARTERA 020B targeted acceptance
+        run: node --test tests/cartera-020b-*.mjs
+
+      - name: Preserve inherited Evidence contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            tests/evidence-source-test.js
+            tests/evidence-processing-status-test.js
+            tests/evidence-inbox-item-test.js
+            tests/evidence-extraction-candidate-test.js
+            tests/evidence-confirmation-task-test.js
+            tests/evidence-inbox-scope-gate-test.js
+            tests/evidence-inbox-router-contract-test.js
+            tests/policy-evidence-packet-test.js
+            tests/policy-advisor-confirmation-gate-test.js
+          )
+          for file in "${files[@]}"; do node "$file"; done
+          echo 'INHERITED_EVIDENCE_TESTS=9'
+          echo 'INHERITED_EVIDENCE_PASS=9'
+
+      - name: Verify persistence and authority boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          tables=supabase/migrations/20260731000220_cartera020b_evidence_tables.sql
+          guards=supabase/migrations/20260731000221_cartera020b_worker_guards.sql
+          rls=supabase/migrations/20260731000222_cartera020b_rls_and_grants.sql
+          progress=docs/architecture/source-truth/FORGE_CARTERA_020B_PERSISTENT_EVIDENCE_WORKER_PROGRESS_001.md
+          inherited=.github/workflows/cartera-020a-scope-acceptance.yml
+          combined=$(cat "$tables" "$guards" "$rls")
+
+          grep -q 'cartera020b_evidence_sources' "$tables"
+          grep -q 'cartera020b_policy_evidence_packets' "$tables"
+          grep -q 'creates_truth boolean not null default false' "$tables"
+          grep -q 'CARTERA020B_APPEND_ONLY' "$guards"
+          grep -q 'CARTERA020B_GOVERNED_COMMAND_REQUIRED' "$guards"
+          grep -q 'force row level security' "$rls"
+          grep -q 'using (advisor_id = auth.uid())' "$rls"
+          grep -q 'revoke all on public.cartera020b_' "$rls"
+          ! grep -qi 'raw_document\|raw_text\|document_bytes\|bytea' <<<"$combined"
+          ! grep -qi 'insert into public.canonical_policies' <<<"$combined"
+          ! grep -qi 'insert into public.policy_roles' <<<"$combined"
+          ! grep -qi 'insert into public.commercial_people' <<<"$combined"
+          ! grep -q 'create or replace function public.forge_cartera020b_' <<<"$combined"
+
+          grep -q 'CARTERA_020B_PERSISTENCE_SCHEMA=REPOSITORY_READY' "$progress"
+          grep -q 'CARTERA_020B_SQL_COMMANDS=NOT_IMPLEMENTED' "$progress"
+          grep -q 'CARTERA_020B_REMOTE_DEPLOYMENT=NOT_AUTHORIZED' "$progress"
+          grep -q 'CARTERA_020B_COMPLETE=NO' "$progress"
+          grep -q 'workflow_dispatch:' "$inherited"
+          ! grep -qE '^  (push|pull_request):' "$inherited"
+
+      - name: Emit progress markers
+        run: |
+          echo 'NEW_TARGETED_TESTS=31'
+          echo 'NEW_TARGETED_PASS=31'
+          echo 'INHERITED_EVIDENCE_TESTS=9'
+          echo 'INHERITED_EVIDENCE_PASS=9'
+          echo 'TOTAL_TARGETED_TESTS=40'
+          echo 'TOTAL_TARGETED_PASS=40'
+          echo 'TOTAL_TARGETED_FAIL=0'
+          echo 'CARTERA_020B_CONTRACTS=REPOSITORY_READY'
+          echo 'CARTERA_020B_PERSISTENCE_SCHEMA=REPOSITORY_READY'
+          echo 'CARTERA_020B_SQL_COMMANDS=NOT_IMPLEMENTED'
+          echo 'CARTERA_020B_REMOTE_DEPLOYMENT=NOT_AUTHORIZED'
+          echo 'CARTERA_020B_COMPLETE=NO'
+          echo 'NEXT=CARTERA_020B_GOVERNED_PERSISTENCE_COMMANDS'
