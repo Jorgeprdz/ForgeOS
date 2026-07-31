@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/policy-role-v1.schema.json",
+  "title": "Forge Policy Role V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractType",
+    "schemaVersion",
+    "policyRoleReference",
+    "policyReference",
+    "advisorId",
+    "roleType",
+    "confirmationState",
+    "privacyClassification",
+    "visibilityScope",
+    "evidenceReferences",
+    "effectiveFrom",
+    "createdAt",
+    "createdBy",
+    "version"
+  ],
+  "properties": {
+    "contractType": { "const": "FORGE_POLICY_ROLE" },
+    "schemaVersion": { "const": "1.0.0" },
+    "policyRoleReference": { "$ref": "#/$defs/opaqueReference" },
+    "policyReference": { "$ref": "#/$defs/opaqueReference" },
+    "advisorId": { "$ref": "#/$defs/opaqueReference" },
+    "participantPersonReference": { "type": ["string", "null"], "minLength": 1, "maxLength": 240 },
+    "participantAccountReference": { "type": ["string", "null"], "minLength": 1, "maxLength": 240 },
+    "roleType": {
+      "enum": [
+        "POLICY_OWNER",
+        "INSURED",
+        "ADDITIONAL_INSURED",
+        "PAYOR",
+        "BENEFICIARY",
+        "ADVISOR_OF_RECORD",
+        "ORIGINATING_ADVISOR",
+        "SERVICING_ADVISOR"
+      ]
+    },
+    "confirmationState": { "enum": ["CONFIRMED", "PROPOSED", "DISPUTED", "CORRECTED"] },
+    "privacyClassification": { "enum": ["PRIVATE", "SENSITIVE", "RESTRICTED"] },
+    "visibilityScope": { "enum": ["POLICY_TEAM", "OWNING_ADVISOR_ONLY", "RESTRICTED_ROLE_VIEW"] },
+    "evidenceReferences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/opaqueReference" },
+      "uniqueItems": true
+    },
+    "effectiveFrom": { "$ref": "#/$defs/isoDateTime" },
+    "effectiveTo": { "type": ["string", "null"], "format": "date-time" },
+    "createdAt": { "$ref": "#/$defs/isoDateTime" },
+    "createdBy": { "$ref": "#/$defs/opaqueReference" },
+    "version": { "type": "integer", "minimum": 1 },
+    "correctionOf": { "type": ["string", "null"], "minLength": 1, "maxLength": 240 },
+    "archivedAt": { "type": ["string", "null"], "format": "date-time" },
+    "archivedBy": { "type": ["string", "null"], "minLength": 1, "maxLength": 240 },
+    "archiveReason": { "type": ["string", "null"], "maxLength": 500 }
+  },
+  "oneOf": [
+    {
+      "required": ["participantPersonReference"],
+      "properties": { "participantAccountReference": { "type": "null" } }
+    },
+    {
+      "required": ["participantAccountReference"],
+      "properties": { "participantPersonReference": { "type": "null" } }
+    }
+  ],
+  "$defs": {
+    "opaqueReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/-]*$"
+    },
+    "isoDateTime": { "type": "string", "format": "date-time" }
+  }
+}
