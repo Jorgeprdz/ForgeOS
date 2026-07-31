@@ -116,11 +116,13 @@ assert.ok(pdf.pageWidth < pdf.pageHeight);
 assert.ok(pdf.pageCount >= 2);
 assert.ok(pdf.byteLength > 1000);
 
-assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-006/);
+assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-010-landscape/);
 assert.match(app, /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05e-009/);
+assert.match(app, /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05e-010/);
 assert.doesNotMatch(app, /quote-runtime-printable-closure-m05e005\.js/);
 assert.doesNotMatch(app, /quote-runtime-ux-closure-m05e004/);
 assert.match(app, /quoteCalculatorRuntime = "M05E-006"/);
+assert.match(app, /vidaMujerVisualClosure = "M05E-010"/);
 assert.match(proof, /CALCULADORAS M05E-006/);
 assert.match(proof, /quote-calculator-parity-009/);
 assert.match(proof, /vidaMujerHandoff = "M05E-009"/);
@@ -157,12 +159,15 @@ assert.match(styles, /\.forge-printable-modal__dialog/);
 console.log("PASS UI-M05G printable design and UX closure", {
   productiveRuntime: "M05E-006",
   vidaMujerHandoff: "M05E-009",
+  vidaMujerVisualClosure: "M05E-010",
   optionalClientIsNonBlocking: true,
   obsoleteUxLayersRemoved: ["M05E-004", "M05E-005"],
   compactDocumentActions: ["printer", "pdf", "history"],
   forgeDarkUiParity: true,
-  pageFormat: "A4",
-  pageOrientation: pdf.pageOrientation,
+  orviPageFormat: "A4",
+  orviPageOrientation: pdf.pageOrientation,
+  orviPortraitPreserved: true,
+  vidaMujerLandscapeDelegatedToM05K: true,
   premiumPrintableDesign: true,
   historyVisibleWithUsefulEmptyState: true,
   feedbackLoopRemoved: true,
