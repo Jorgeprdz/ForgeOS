@@ -21,8 +21,6 @@ function createState() {
     order: [],
     source: "",
     status: "",
-    observer: null,
-    scheduled: false,
   };
 }
 
@@ -33,30 +31,12 @@ function registerCard(state, card) {
   state.cards.set(id, card);
 }
 
-function replaceRegistryFromDom(root, state) {
+function refreshRegistryFromDom(root, state) {
   const cards = [...root.querySelectorAll(CARD_SELECTOR)];
-  if (!cards.length) return false;
+  if (!cards.length) return;
   state.cards.clear();
   state.order = [];
   cards.forEach(card => registerCard(state, card));
-  return true;
-}
-
-function mergeRegistryFromDom(root, state) {
-  root.querySelectorAll(CARD_SELECTOR).forEach(card => registerCard(state, card));
-}
-
-function observe(root, state) {
-  state.observer?.observe(root, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["data-productive-stage", "data-productive-source"],
-  });
-}
-
-function pauseObservation(state) {
-  state.observer?.disconnect();
 }
 
 function ensureFilterSurfaces(root) {
@@ -88,11 +68,10 @@ function ensureFilterSurfaces(root) {
 }
 
 function matchesFilters(card, state) {
-  const sourceMatches = !state.source
-    || card.dataset.productiveSource === state.source;
-  const statusMatches = !state.status
-    || card.dataset.productiveStage === state.status;
-  return sourceMatches && statusMatches;
+  return (
+    (!state.source || card.dataset.productiveSource === state.source)
+    && (!state.status || card.dataset.productiveStage === state.status)
+  );
 }
 
 function totalFromHeader(root, fallback) {
@@ -121,58 +100,28 @@ function updateControls(root, state, visibleCount) {
   if (clear) clear.disabled = !(state.source || state.status || nameQuery);
 }
 
-function reapplyNameSearch(root) {
-  const input = root.querySelector(NAME_SELECTOR);
-  if (!input) return;
-  input.dispatchEvent(new Event("input", { bubbles: true }));
-}
-
 function applyFiltersInPlace(root, state) {
-  mergeRegistryFromDom(root, state);
   const cards = state.order
     .map(id => state.cards.get(id))
     .filter(Boolean);
   const matching = cards.filter(card => matchesFilters(card, state));
   const { grid, empty } = ensureFilterSurfaces(root);
 
-  pauseObservation(state);
-  try {
-    grid.replaceChildren(...matching);
-    grid.hidden = matching.length === 0;
-    empty.hidden = matching.length !== 0;
-    updateControls(root, state, matching.length);
-    root.ownerDocument.documentElement.dataset.pipelineStageFilterAuthority =
-      "ready";
-  } finally {
-    observe(root, state);
-  }
+  grid.replaceChildren(...matching);
+  grid.hidden = matching.length === 0;
+  empty.hidden = matching.length !== 0;
+  updateControls(root, state, matching.length);
+  root.ownerDocument.documentElement.dataset.pipelineStageFilterAuthority =
+    "ready";
 
-  queueMicrotask(() => reapplyNameSearch(root));
+  const nameInput = root.querySelector(NAME_SELECTOR);
+  if (nameInput?.value) {
+    nameInput.dispatchEvent(new root.ownerDocument.defaultView.Event(
+      "input",
+      { bubbles: true },
+    ));
+  }
   return matching;
-}
-
-function synchronizeFromDom(root, state) {
-  const source = root.querySelector(SOURCE_SELECTOR)?.value || "";
-  const status = root.querySelector(STATUS_SELECTOR)?.value || "";
-  const controlsChanged = source !== state.source || status !== state.status;
-
-  if (controlsChanged) {
-    state.source = source;
-    state.status = status;
-  }
-
-  if (!state.source && !state.status) replaceRegistryFromDom(root, state);
-  else mergeRegistryFromDom(root, state);
-}
-
-function scheduleSynchronize(root, state) {
-  if (state.scheduled) return;
-  state.scheduled = true;
-  queueMicrotask(() => {
-    state.scheduled = false;
-    synchronizeFromDom(root, state);
-    if (state.source || state.status) applyFiltersInPlace(root, state);
-  });
 }
 
 function clearAllFilters(root, state) {
@@ -184,12 +133,11 @@ function clearAllFilters(root, state) {
   if (source) source.value = "";
   if (status) status.value = "";
   if (name) name.value = "";
-  applyFiltersInPlace(root, state);
+  return applyFiltersInPlace(root, state);
 }
 
 export function installPipelineStageFilterAuthority({
   documentRef = document,
-  windowRef = window,
 } = {}) {
   const root = documentRef.querySelector(ROOT_SELECTOR);
   if (!root) return null;
@@ -205,7 +153,8 @@ export function installPipelineStageFilterAuthority({
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    mergeRegistryFromDom(root, state);
+
+    if (!state.source && !state.status) refreshRegistryFromDom(root, state);
     state.source = root.querySelector(SOURCE_SELECTOR)?.value || "";
     state.status = root.querySelector(STATUS_SELECTOR)?.value || "";
     applyFiltersInPlace(root, state);
@@ -216,44 +165,24 @@ export function installPipelineStageFilterAuthority({
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    mergeRegistryFromDom(root, state);
+    if (!state.cards.size) refreshRegistryFromDom(root, state);
     clearAllFilters(root, state);
   };
 
-  state.observer = new windowRef.MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      if (
-        mutation.type === "attributes"
-        && mutation.target?.matches?.(CARD_SELECTOR)
-      ) {
-        registerCard(state, mutation.target);
-      }
-      for (const node of mutation.addedNodes || []) {
-        if (!(node instanceof windowRef.Element)) continue;
-        if (node.matches(CARD_SELECTOR)) registerCard(state, node);
-        node.querySelectorAll?.(CARD_SELECTOR).forEach(card =>
-          registerCard(state, card)
-        );
-      }
-    }
-    scheduleSynchronize(root, state);
-  });
-
   root.addEventListener("change", onChange, true);
   root.addEventListener("click", onClick, true);
-  observe(root, state);
-  scheduleSynchronize(root, state);
+  queueMicrotask(() => refreshRegistryFromDom(root, state));
 
   const api = Object.freeze({
     installed: true,
     apply: () => applyFiltersInPlace(root, state),
+    refresh: () => refreshRegistryFromDom(root, state),
     getState: () => Object.freeze({
       source: state.source,
       status: state.status,
       cardCount: state.cards.size,
     }),
     disconnect() {
-      state.observer.disconnect();
       root.removeEventListener("change", onChange, true);
       root.removeEventListener("click", onClick, true);
       delete root[INSTALL_KEY];
@@ -266,7 +195,6 @@ export function installPipelineStageFilterAuthority({
 
 if (
   typeof document !== "undefined"
-  && typeof window !== "undefined"
   && !globalThis.__FORGE_DISABLE_PIPELINE_STAGE_FILTER_AUTHORITY_AUTO_INSTALL__
 ) {
   installPipelineStageFilterAuthority();
@@ -275,6 +203,6 @@ if (
 export {
   applyFiltersInPlace,
   matchesFilters,
+  refreshRegistryFromDom,
   registerCard,
-  replaceRegistryFromDom,
 };
