@@ -1,4 +1,4 @@
-import { reconcileQuoteResult } from "./quotes-result-adapter.js?v=ui-m05-008";
+import { reconcileQuoteResult } from "./quotes-result-adapter.js?v=quote-calculator-parity-001";
 
 const quotesStateKey = Symbol.for("forge.ui-m05.quotes.state");
 let runtimePromise;

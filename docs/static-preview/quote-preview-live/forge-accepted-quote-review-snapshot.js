@@ -12,6 +12,38 @@ const FORBIDDEN_KEY_TOKENS = new Set([
   "rawpdf",
 ]);
 
+function bootQuotePrintableRouteQpd06() {
+  if (typeof document === "undefined") return;
+
+  const styleHref = new URL(
+    "../forge-alive/forge-quote-printable-entrypoint-qpd06.css?v=qpd06_productive_route_20260730_1",
+    import.meta.url,
+  ).href;
+  const existingStyle = [...document.querySelectorAll(
+    'link[rel="stylesheet"][href]',
+  )].some((link) => link.href === styleHref);
+
+  if (!existingStyle) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = styleHref;
+    link.dataset.forgeQpd06Style = "true";
+    document.head.appendChild(link);
+  }
+
+  void import(
+    "../forge-alive/forge-quote-printable-entrypoint-qpd06.js?v=qpd06_productive_route_20260730_1"
+  ).catch((error) => {
+    globalThis.__FORGE_QPD06_LOAD_ERROR__ = Object.freeze({
+      message: error?.message || String(error),
+      source: "accepted_quote_review_snapshot_boundary",
+    });
+    console.error("[Forge QPD-06]", error);
+  });
+}
+
+bootQuotePrintableRouteQpd06();
+
 function isRecord(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return false;

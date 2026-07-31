@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>M05E-006 responsiveness harness</title>
+  <style>
+    body { margin: 0; min-height: 100vh; background: #06101f; color: white; font-family: system-ui; }
+    [data-material3-quotes-projection] { padding: 24px; }
+  </style>
+</head>
+<body>
+  <main data-material3-quotes-projection>
+    <section data-quote-human-review-m05e003></section>
+    <section data-forge-qpd06-actions="true"></section>
+    <div data-quote-last-actions></div>
+  </main>
+  <script type="module">
+    const candidate = { context: {}, client: {} };
+    const review = {};
+    let snapshot = null;
+    let humanReviewWrites = 0;
+    let heartbeats = 0;
+    const errors = [];
+
+    globalThis.addEventListener("error", (event) => errors.push(event.message));
+    globalThis.addEventListener("unhandledrejection", (event) => errors.push(String(event.reason)));
+    setInterval(() => { heartbeats += 1; }, 25);
+
+    globalThis.ForgeAcceptedQuoteBridge = {
+      getCurrentQuoteCandidate: () => candidate,
+      getCurrentQuoteHumanReview: () => ({ ...review }),
+      setCurrentQuoteHumanReview(patch) {
+        humanReviewWrites += 1;
+        Object.assign(review, patch);
+        globalThis.dispatchEvent(new CustomEvent("forge:quote-human-review-updated"));
+        return { ...review };
+      },
+      getAcceptedQuoteReviewSnapshot: () => snapshot,
+      async confirmCurrentQuoteCandidate() { return snapshot; },
+    };
+
+    globalThis.__m05e006Harness = {
+      state: () => ({
+        humanReviewWrites,
+        heartbeats,
+        errors: [...errors],
+        review: { ...review },
+        runtime: globalThis.ForgeQuotePrintableEntrypointQPD06?.version || null,
+      }),
+    };
+
+    await import("../../../../docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
+
+    snapshot = {
+      packetType: "ACCEPTED_QUOTE_AND_CALCULATION_REVIEW_SNAPSHOT",
+      reviewOnly: true,
+      acceptedQuote: {
+        quoteId: "M05E006-HARNESS",
+        context: { productFamily: "ORVI" },
+      },
+      calculation: {
+        product: "ORVI 99-20 PAGOS UDIS",
+        productFamily: "ORVI",
+      },
+      productIntelligence: {
+        schema: { id: "forge.product_intelligence.orvi", version: "R15A" },
+        identity: { detected_product_name: "ORVI 99-20 PAGOS UDIS" },
+      },
+    };
+    globalThis.dispatchEvent(new CustomEvent("forge:accepted-quote-confirmed"));
+    document.documentElement.dataset.m05e006HarnessReady = "true";
+  </script>
+</body>
+</html>

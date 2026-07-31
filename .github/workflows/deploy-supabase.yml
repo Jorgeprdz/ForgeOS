@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-semantic-extract:
+  deploy-edge-functions:
     runs-on: ubuntu-latest
 
     env:
@@ -20,14 +20,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Print deployed source version
+      - name: Print deployed source versions
         run: |
           echo "Commit:"
           git rev-parse HEAD
-          echo "Function source version:"
+          echo "semantic-extract source version:"
           grep -n "FUNCTION_VERSION\|MODEL_VERSION" supabase/functions/semantic-extract/index.ts
-          echo "Function directory:"
-          find supabase/functions/semantic-extract -maxdepth 2 -type f -print
+          echo "banxico-rates source version:"
+          grep -n "FUNCTION_VERSION" supabase/functions/banxico-rates/logic.mjs
+          echo "Function directories:"
+          find supabase/functions/semantic-extract supabase/functions/banxico-rates -maxdepth 2 -type f -print
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -37,10 +39,22 @@ jobs:
       - name: Supabase CLI version
         run: supabase --version
 
+      - name: Test Banxico Edge Function contract
+        run: node tests/banxico-rates-edge-function-test.mjs
+
       - name: Deploy semantic-extract
         run: |
           supabase functions deploy semantic-extract \
             --project-ref "$SUPABASE_PROJECT_REF" \
+            --debug
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy banxico-rates
+        run: |
+          supabase functions deploy banxico-rates \
+            --project-ref "$SUPABASE_PROJECT_REF" \
+            --no-verify-jwt \
             --debug
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -62,3 +76,27 @@ jobs:
           cat response.json
 
           node scripts/validate-semantic-extract-smoke.mjs response.json
+
+      - name: Smoke test banxico-rates
+        run: |
+          curl --fail --max-time 30 -sS -L \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/banxico-rates" \
+            | tee banxico-response.json
+
+          node - <<'NODE'
+          const fs = require('fs');
+          const payload = JSON.parse(fs.readFileSync('banxico-response.json', 'utf8'));
+          if (payload?.ok !== true) throw new Error(`BANXICO_SMOKE_NOT_OK: ${JSON.stringify(payload)}`);
+          for (const [key, seriesId] of Object.entries({ UDI_MXN: 'SP68257', USD_MXN_FIX: 'SF43718' })) {
+            const rate = payload?.rates?.[key];
+            if (!rate || rate.seriesId !== seriesId || !Number.isFinite(rate.value) || !rate.date) {
+              throw new Error(`BANXICO_SMOKE_INVALID_${key}`);
+            }
+            if (rate.source !== 'BANXICO_SIE_API' || rate.mode !== 'LATEST_VERIFIED') {
+              throw new Error(`BANXICO_SMOKE_PROVENANCE_${key}`);
+            }
+          }
+          console.log('BANXICO_EDGE_SMOKE=PASS');
+          console.log(`UDI_MXN=${payload.rates.UDI_MXN.value}`);
+          console.log(`UDI_DATE=${payload.rates.UDI_MXN.date}`);
+          NODE

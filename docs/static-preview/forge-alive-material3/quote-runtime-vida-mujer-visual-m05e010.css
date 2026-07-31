@@ -1,0 +1,233 @@
+[data-product-dashboard="vida_mujer"] {
+  --vm-plum: #74576a;
+  --vm-plum-deep: #4f3b4a;
+  --vm-rose: #caa1af;
+  --vm-blush: #f3e9ed;
+  --vm-sage: #8fa79a;
+  --vm-sand: #dcccad;
+  --vm-ink: #f8f3f5;
+  --vm-muted: #c8b9c1;
+  gap: 1rem;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-identity {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: 1.75rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background:
+    radial-gradient(circle at 92% 12%, rgba(202, 161, 175, .28), transparent 32%),
+    linear-gradient(135deg, rgba(79, 59, 74, .96), rgba(24, 45, 67, .9));
+  box-shadow: 0 1.25rem 3.2rem rgba(0, 0, 0, .24);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-identity::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.5rem 1.25rem auto;
+  inline-size: 5.5rem;
+  block-size: .3rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--vm-rose), var(--vm-sage), var(--vm-sand));
+  opacity: .85;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-identity span {
+  color: #e4ccd6;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-identity h2 {
+  color: #fff7fa;
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  letter-spacing: -.035em;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-identity p {
+  color: var(--vm-muted);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-mandatory-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .85rem;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-mandatory-metric {
+  position: relative;
+  overflow: hidden;
+  min-block-size: 8.25rem;
+  border: 0;
+  border-radius: 1.55rem;
+  padding: 1.2rem;
+  background: linear-gradient(145deg, rgba(116, 87, 106, .34), rgba(12, 34, 57, .82));
+  box-shadow: inset 0 1px rgba(255,255,255,.05), 0 .8rem 2.1rem rgba(0,0,0,.18);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-mandatory-metric::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  inline-size: .32rem;
+  background: var(--vm-rose);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-mandatory-metric:nth-child(2)::before {
+  background: var(--vm-sand);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-mandatory-metric:nth-child(3)::before {
+  background: var(--vm-sage);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-mandatory-metric > span {
+  color: var(--vm-muted);
+  font-size: .78rem;
+  font-weight: 750;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-mandatory-metric strong {
+  color: var(--vm-ink);
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  line-height: 1.15;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-value-line--conversion {
+  color: #decfb3;
+  font-size: .78em;
+  font-weight: 650;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: .85rem;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-section {
+  grid-column: span 6;
+  border: 0;
+  border-radius: 1.55rem;
+  padding: clamp(1rem, 2vw, 1.45rem);
+  background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(8,27,49,.78));
+  box-shadow: inset 0 1px rgba(255,255,255,.045), 0 .75rem 1.9rem rgba(0,0,0,.16);
+}
+
+[data-product-dashboard="vida_mujer"] [data-product-section="scheduled_endowments"],
+[data-product-dashboard="vida_mujer"] [data-product-section="women_health_benefits"] {
+  grid-column: span 7;
+}
+
+[data-product-dashboard="vida_mujer"] [data-product-section="recovery_summary"],
+[data-product-dashboard="vida_mujer"] [data-product-section="recommended_benefits"] {
+  grid-column: span 5;
+}
+
+[data-product-dashboard="vida_mujer"] [data-product-section="contribution_summary"] {
+  background:
+    linear-gradient(145deg, rgba(143, 167, 154, .14), rgba(8,27,49,.82));
+}
+
+[data-product-dashboard="vida_mujer"] [data-product-section="scheduled_endowments"] {
+  background:
+    linear-gradient(145deg, rgba(202, 161, 175, .14), rgba(8,27,49,.82));
+}
+
+[data-product-dashboard="vida_mujer"] [data-product-section="women_health_benefits"] {
+  background:
+    linear-gradient(145deg, rgba(116, 87, 106, .2), rgba(8,27,49,.82));
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-section h3,
+[data-product-dashboard="vida_mujer"] .quotes-rate-metadata h3 {
+  margin: 0 0 .75rem;
+  color: #e2c3cf;
+  font-size: 1.02rem;
+  letter-spacing: -.01em;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-values {
+  gap: 0;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-metric {
+  grid-template-columns: minmax(8rem, .72fr) minmax(0, 1.28fr);
+  align-items: baseline;
+  gap: .8rem;
+  border-bottom-color: rgba(255,255,255,.075);
+  padding: .7rem 0;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-metric:last-child {
+  border-bottom: 0;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-metric > span {
+  color: var(--vm-muted);
+  font-size: .82rem;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-intelligence-metric > strong {
+  color: #f7f1f4;
+  font-size: .92rem;
+  text-align: end;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-rate-metadata {
+  border: 0;
+  border-radius: 1.4rem;
+  background: rgba(8, 27, 49, .58);
+  box-shadow: inset 0 1px rgba(255,255,255,.04);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-rate-metadata .quotes-intelligence-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-rate-metadata .quotes-intelligence-metric {
+  display: block;
+  border: 0;
+  border-radius: 1rem;
+  padding: .85rem;
+  background: rgba(255,255,255,.035);
+}
+
+[data-product-dashboard="vida_mujer"] .quotes-rate-metadata .quotes-intelligence-metric > strong {
+  display: block;
+  margin-top: .25rem;
+  text-align: start;
+}
+
+@media (max-width: 900px) {
+  [data-product-dashboard="vida_mujer"] .quotes-mandatory-metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-product-dashboard="vida_mujer"] .quotes-intelligence-section,
+  [data-product-dashboard="vida_mujer"] [data-product-section] {
+    grid-column: 1 / -1;
+  }
+
+  [data-product-dashboard="vida_mujer"] .quotes-rate-metadata .quotes-intelligence-values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  [data-product-dashboard="vida_mujer"] .quotes-intelligence-metric {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .25rem;
+  }
+
+  [data-product-dashboard="vida_mujer"] .quotes-intelligence-metric > strong {
+    text-align: start;
+  }
+
+  [data-product-dashboard="vida_mujer"] .quotes-rate-metadata .quotes-intelligence-values {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

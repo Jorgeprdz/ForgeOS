@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QPD-06 Browser Acceptance</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css?v=qpd06-e2e">
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, Roboto, system-ui, sans-serif;
+      background: #eef2f6;
+      color: #17212b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top right, rgba(36, 145, 132, .14), transparent 34rem),
+        #eef2f6;
+    }
+    main {
+      width: min(980px, 100%);
+      margin: 0 auto;
+    }
+    section[data-harness-quote-surface] {
+      padding: 1rem;
+      border-radius: 1.5rem;
+      background: white;
+      box-shadow: 0 18px 60px rgba(25, 40, 55, .12);
+    }
+    h1 { margin: 0 0 1rem; }
+    h2 { margin: 0 0 .4rem; }
+    p { line-height: 1.5; }
+    .harness-existing-button {
+      min-height: 3rem;
+      padding: 0 .95rem;
+      border: 0;
+      border-radius: 999px;
+      background: #176f65;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .harness-nav-pill {
+      position: fixed;
+      z-index: 500;
+      left: 50%;
+      bottom: max(.75rem, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: min(340px, calc(100vw - 2rem));
+      height: 4.5rem;
+      border-radius: 999px;
+      background: rgba(19, 31, 42, .94);
+      box-shadow: 0 12px 38px rgba(0, 0, 0, .3);
+      pointer-events: none;
+    }
+    @media (max-width: 720px) {
+      body { padding: 12px; }
+      section[data-harness-quote-surface] { padding: .8rem; }
+    }
+  </style>
+</head>
+<body>
+  <main data-forge-saas-module-host-r16c5l="cotizaciones">
+    <h1>Cotizaciones</h1>
+    <section data-harness-quote-surface>
+      <h2>Carga tu cotización</h2>
+      <p>Cotización confirmada por el asesor para aceptación QPD-06.</p>
+      <button type="button" class="harness-existing-button">Revisar resultado</button>
+    </section>
+  </main>
+  <div class="harness-nav-pill" aria-hidden="true"></div>
+  <script type="module" src="./harness.js"></script>
+</body>
+</html>

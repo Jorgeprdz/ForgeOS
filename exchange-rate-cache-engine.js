@@ -1,21 +1,33 @@
 const fs = require("fs");
+const path = require("path");
 const { getCurrentRates } = require("./shared-banxico-rate-engine");
 const { getCurrentRatesFromSupabaseEdge } = require("./shared-banxico-edge-provider");
 
 const CACHE_FILE = "forge-rate-cache.json";
 const MAX_CACHE_AGE_HOURS = 12;
 
+function cacheFilePath() {
+  const configured = String(process.env.FORGE_RATE_CACHE_FILE || "").trim();
+  return configured ? path.resolve(configured) : CACHE_FILE;
+}
+
 function hoursBetween(a, b) {
   return Math.abs(new Date(a) - new Date(b)) / 36e5;
 }
 
 function readCache() {
-  if (!fs.existsSync(CACHE_FILE)) return null;
-  return JSON.parse(fs.readFileSync(CACHE_FILE, "utf8"));
+  const file = cacheFilePath();
+  if (!fs.existsSync(file)) return null;
+  return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
 function writeCache(data) {
-  fs.writeFileSync(CACHE_FILE, JSON.stringify(data, null, 2));
+  const file = cacheFilePath();
+  const directory = path.dirname(file);
+  if (directory && directory !== ".") {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
 async function getCurrentRatesWithConfiguredProvider() {
@@ -55,6 +67,8 @@ async function getCachedRates({ forceRefresh = false } = {}) {
 }
 
 module.exports = {
+  CACHE_FILE,
+  cacheFilePath,
   getCachedRates,
   readCache,
   writeCache
