@@ -2,6 +2,7 @@ const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const pipelineBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
 const nashBase = new URL(sourceLayout ? "../../../nash/" : "../../nash/", import.meta.url);
 const managerNbaBase = new URL(sourceLayout ? "../../../manager-os/nba/" : "../../manager-os/nba/", import.meta.url);
+const STAGE_CONFIRMATION_TTL_MS = 30000;
 
 async function load(url) {
   await import(`${url.href}?v=material3-productive-001`);
@@ -66,22 +67,35 @@ const STAGE_OPTIONS = Object.freeze([
   Object.freeze({ value: "client", label: "Cliente" }),
 ]);
 
+function prospectVersion(prospect) {
+  const value = Date.parse(prospect?.updatedAt || prospect?.updated_at || "");
+  return Number.isFinite(value) ? value : 0;
+}
+
+export function assertConfirmedStage({ prospect, requestedStatus, phase = "mutation" }) {
+  if (prospect?.id && prospect.status === requestedStatus) return prospect;
+  const error = new Error("PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH");
+  error.code = "PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH";
+  error.details = Object.freeze({
+    phase,
+    prospectId: prospect?.id || null,
+    requestedStatus,
+    returnedStatus: prospect?.status || null,
+  });
+  throw error;
+}
+
 export function reconcileUpdatedProspectState({
   records = [],
   cards = [],
   updatedProspect,
   requestedStatus,
 }) {
-  if (!updatedProspect?.id || updatedProspect.status !== requestedStatus) {
-    const error = new Error("PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH");
-    error.code = "PRODUCTIVE_STAGE_PERSISTENCE_MISMATCH";
-    error.details = Object.freeze({
-      prospectId: updatedProspect?.id || null,
-      requestedStatus,
-      returnedStatus: updatedProspect?.status || null,
-    });
-    throw error;
-  }
+  assertConfirmedStage({
+    prospect: updatedProspect,
+    requestedStatus,
+    phase: "update-response",
+  });
 
   const nextRecords = records.map(record =>
     record.id === updatedProspect.id ? updatedProspect : record
@@ -100,6 +114,51 @@ export function reconcileUpdatedProspectState({
   return Object.freeze({ records: nextRecords, cards: nextCards });
 }
 
+export function reconcileReloadedProspectState({
+  loadedRecords = [],
+  confirmations = new Map(),
+  now = Date.now(),
+  confirmationTtlMs = STAGE_CONFIRMATION_TTL_MS,
+}) {
+  const nextConfirmations = new Map(confirmations);
+  const seen = new Set();
+  const records = loadedRecords.map(record => {
+    seen.add(record.id);
+    const confirmation = nextConfirmations.get(record.id);
+    if (!confirmation) return record;
+
+    const loadedVersion = prospectVersion(record);
+    const confirmedVersion = prospectVersion(confirmation.prospect);
+    const expired = now - confirmation.confirmedAt > confirmationTtlMs;
+
+    if (record.status === confirmation.status) {
+      nextConfirmations.delete(record.id);
+      return record;
+    }
+
+    if (expired || (loadedVersion > confirmedVersion && loadedVersion > 0)) {
+      nextConfirmations.delete(record.id);
+      return record;
+    }
+
+    return confirmation.prospect;
+  });
+
+  for (const [prospectId, confirmation] of nextConfirmations) {
+    if (seen.has(prospectId)) continue;
+    if (now - confirmation.confirmedAt > confirmationTtlMs) {
+      nextConfirmations.delete(prospectId);
+      continue;
+    }
+    records.push(confirmation.prospect);
+  }
+
+  return Object.freeze({
+    records: Object.freeze(records),
+    confirmations: nextConfirmations,
+  });
+}
+
 function timelineEventLabel(eventType) {
   return ({
     PROSPECT_CREATED: "Prospecto creado",
@@ -112,26 +171,33 @@ function timelineEventLabel(eventType) {
     FOLLOW_UP_PLANNED: "Seguimiento planeado",
     PROPOSAL_PRESENTED: "Propuesta presentada",
     DECISION_RECORDED: "Decisión registrada",
+    STAGE_CHANGED: "Estado actualizado",
   })[eventType] || "Actividad registrada";
 }
 
-export async function createProductiveIntelligenceAdapter() {
-  await loadAuthorities();
+export async function createProductiveIntelligenceAdapter(options = {}) {
+  const injected = Boolean(options.service && options.timelineService);
+  if (!injected) await loadAuthorities();
+
   const bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B;
   const serviceAuthority = globalThis.ForgeProductiveProspectService067G17B;
   const timelineAuthority = globalThis.ForgeProspectTimelineServiceNFAST08;
-  if (!bootstrap?.getClient || !serviceAuthority?.create || !timelineAuthority?.create) {
+  if (!injected && (!bootstrap?.getClient || !serviceAuthority?.create || !timelineAuthority?.create)) {
     throw new Error("PRODUCTIVE_INTELLIGENCE_AUTHORITY_UNAVAILABLE");
   }
-  const client = await bootstrap.getClient();
-  const service = serviceAuthority.create(client);
-  const timelineService = timelineAuthority.create(client);
+
+  const client = options.client || (injected ? {} : await bootstrap.getClient());
+  const service = options.service || serviceAuthority.create(client);
+  const timelineService = options.timelineService || timelineAuthority.create(client);
   let records = [];
   let cards = [];
+  let reloadSequence = 0;
+  let stageMutationSequence = 0;
+  const latestStageMutation = new Map();
+  let confirmedStages = new Map();
 
-  async function reload() {
-    records = await service.listProspects();
-    cards = await Promise.all(records.map(async prospect => {
+  async function buildCards(nextRecords) {
+    return Promise.all(nextRecords.map(async prospect => {
       let timeline = [];
       let timelineState = "CONNECTED";
       try {
@@ -165,6 +231,21 @@ export async function createProductiveIntelligenceAdapter() {
         prospect,
       });
     }));
+  }
+
+  async function reload() {
+    const sequence = ++reloadSequence;
+    const loadedRecords = await service.listProspects();
+    const reconciled = reconcileReloadedProspectState({
+      loadedRecords,
+      confirmations: confirmedStages,
+    });
+    const nextCards = await buildCards(reconciled.records);
+    if (sequence !== reloadSequence) return cards;
+
+    records = [...reconciled.records];
+    cards = nextCards;
+    confirmedStages = reconciled.confirmations;
     return cards;
   }
 
@@ -172,8 +253,8 @@ export async function createProductiveIntelligenceAdapter() {
     await loadNashAuthorities();
     const orchestrator = globalThis.ForgePipelineNashDraftOrchestrator
       .createPipelineNashDraftOrchestrator({
-        invokeFunction: (name, options) => client.functions?.invoke
-          ? client.functions.invoke(name, options)
+        invokeFunction: (name, requestOptions) => client.functions?.invoke
+          ? client.functions.invoke(name, requestOptions)
           : Promise.resolve({ error: new Error("PROVIDER_NOT_CONFIGURED") }),
       });
     const result = await orchestrator.requestDraft({
@@ -300,16 +381,47 @@ export async function createProductiveIntelligenceAdapter() {
     if (!STAGE_OPTIONS.some(option => option.value === status)) {
       throw new Error("PRODUCTIVE_STAGE_NOT_ALLOWED");
     }
-    const updatedProspect = await service.updateProspect(prospectId, { status });
-    const reconciled = reconcileUpdatedProspectState({
-      records,
-      cards,
-      updatedProspect,
-      requestedStatus: status,
-    });
-    records = reconciled.records;
-    cards = reconciled.cards;
-    return cards;
+
+    const mutationId = ++stageMutationSequence;
+    latestStageMutation.set(prospectId, mutationId);
+    reloadSequence += 1;
+
+    try {
+      assertConfirmedStage({
+        prospect: await service.updateProspect(prospectId, { status }),
+        requestedStatus: status,
+        phase: "update-response",
+      });
+      const confirmedProspect = assertConfirmedStage({
+        prospect: await service.getProspect(prospectId),
+        requestedStatus: status,
+        phase: "read-after-write",
+      });
+
+      if (latestStageMutation.get(prospectId) !== mutationId) return cards;
+
+      confirmedStages.set(prospectId, Object.freeze({
+        status,
+        prospect: confirmedProspect,
+        confirmedAt: Date.now(),
+        mutationId,
+      }));
+      const reconciled = reconcileUpdatedProspectState({
+        records,
+        cards,
+        updatedProspect: confirmedProspect,
+        requestedStatus: status,
+      });
+      records = reconciled.records;
+      cards = reconciled.cards;
+      latestStageMutation.delete(prospectId);
+      return cards;
+    } catch (error) {
+      if (latestStageMutation.get(prospectId) === mutationId) {
+        latestStageMutation.delete(prospectId);
+      }
+      throw error;
+    }
   }
 
   return Object.freeze({
@@ -318,5 +430,6 @@ export async function createProductiveIntelligenceAdapter() {
     createProspect: payload => service.createProspect(payload),
     get cards() { return cards; },
     get records() { return records; },
+    get confirmedStages() { return new Map(confirmedStages); },
   });
 }
