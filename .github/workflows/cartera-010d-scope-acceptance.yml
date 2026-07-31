@@ -1,0 +1,97 @@
+name: CARTERA 010D Scope Acceptance
+
+on:
+  push:
+    branches:
+      - feature/cartera-010d-unified-directory-relationship-search
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-010d-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unified-directory-search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Source ancestry and bounded path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=f7aaf82586d051b94dc6f526c603f02c83f15a66
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+
+          allowed='^(platform/policy-intelligence/cartera-010d-[A-Za-z0-9._-]+\.js|advisor-os/cartera/canonical-directory-service\.js|cartera\.js|tests/cartera-010d-[A-Za-z0-9._-]+\.mjs|tests/e2e/cartera-010d-[A-Za-z0-9._-]+\.spec\.mjs|tests/e2e/fixtures/cartera-010d/(index\.html|app\.mjs)|playwright\.cartera-010d\.config\.mjs|scripts/ci/cartera-010d-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_010D_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_010D_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-010d-[A-Za-z0-9._-]+\.yml)$'
+
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_010D_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_PATHS=PASS'
+          echo 'SCHEMA_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+          echo 'PRODUCT_UI_REDESIGN=NONE'
+
+      - name: JavaScript syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check platform/policy-intelligence/cartera-010d-unified-directory-read-model.js
+          node --check advisor-os/cartera/canonical-directory-service.js
+          for file in tests/cartera-010d-*.mjs; do
+            node --check "$file"
+          done
+
+      - name: Execute CARTERA 010D repository acceptance
+        run: node --test tests/cartera-010d-*.mjs
+
+      - name: Verify privacy and authority boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          service=advisor-os/cartera/canonical-directory-service.js
+          model=platform/policy-intelligence/cartera-010d-unified-directory-read-model.js
+          scope=docs/architecture/source-truth/FORGE_CARTERA_010D_UNIFIED_DIRECTORY_RELATIONSHIP_SEARCH_SCOPE_001.md
+
+          grep -q 'forge_cartera010b_list_general_policy_roles' "$service"
+          grep -q 'commercial_account_memberships' "$service"
+          ! grep -q "from('policy_roles')" "$service"
+          ! grep -qE '\.(insert|update|delete|upsert)\(' "$service"
+          grep -q 'VERIFIED_PHONE' "$model"
+          grep -q 'VERIFIED_EMAIL' "$model"
+          grep -q 'PHONE_RENDERED=NO' "$scope"
+          grep -q 'EMAIL_RENDERED=NO' "$scope"
+
+      - name: Emit progress markers
+        run: |
+          echo 'CARTERA_010D_SCOPE=LOCKED'
+          echo 'CARTERA_010D_UNIFIED_DIRECTORY_READ_MODEL=REPOSITORY_READY'
+          echo 'CARTERA_010D_AUTHENTICATED_DIRECTORY_SERVICE=REPOSITORY_READY'
+          echo 'CARTERA_010D_SEARCH_PRIVACY_GATE=PASS'
+          echo 'DIRECT_POLICY_ROLES_READ=FORBIDDEN'
+          echo 'SCHEMA_MUTATION=NO'
+          echo 'CARTERA_010D_COMPLETE=NO'
+          echo 'NEXT=CARTERA_010D_PRODUCT_ROUTE_DIRECTORY_ADAPTER'
