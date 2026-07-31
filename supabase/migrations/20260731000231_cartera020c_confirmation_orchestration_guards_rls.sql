@@ -1,5 +1,6 @@
 -- CARTERA 020C.3 append-only audit, governed lifecycle guards and owner-private RLS.
--- Repository implementation only. Direct table mutation remains forbidden.
+-- Repository implementation only. This migration is NOT remote deployment authorization.
+-- Direct table mutation remains forbidden.
 
 begin;
 
