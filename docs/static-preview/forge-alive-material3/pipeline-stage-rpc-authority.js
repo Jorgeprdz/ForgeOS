@@ -75,7 +75,11 @@ function normalizeRpcProspect(data) {
 }
 
 function isDiagnosticRuntime() {
-  return globalThis.__ENV__?.diagnostic === true;
+  return globalThis.__ENV__?.diagnostic === true
+    || Object.prototype.hasOwnProperty.call(
+      globalThis,
+      "__FORGE_DIAGNOSTIC_AUTHENTICATED__",
+    );
 }
 
 async function requestDiagnosticStageTransition({ client, prospectId, status }) {
