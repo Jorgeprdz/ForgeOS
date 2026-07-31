@@ -1,0 +1,28 @@
+{
+  "status": "FAIL",
+  "migrationVersion": "20260731000200",
+  "migrationName": "pipeline_prospect_stage_rpc",
+  "projectRef": "rmlxigxysujsuwzgoimv",
+  "sourceSha": "2dd1834388baabcfadaef04e24f36f7ee1c0f9bd",
+  "workflowRunId": "30650686988",
+  "verifiedAt": "2026-07-31T17:19:27.632Z",
+  "checks": [
+    {
+      "name": "predeployment_inventory",
+      "status": "PASS"
+    },
+    {
+      "name": "migration_applied",
+      "status": "PASS"
+    },
+    {
+      "name": "postdeployment_security_inventory",
+      "status": "PASS"
+    },
+    {
+      "name": "database_query",
+      "status": "FAIL",
+      "detail": "Failed to run sql query: ERROR:  42883: function digest(text, unknown) does not exist\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.\nQUERY:  insert into public.prospect_timeline_events (\n      prospect_id,\n      advisor_id,\n      event_type,\n      event_source,\n      source_record_reference,\n      occurred_at,\n      created_by,\n      payload,\n      evidence_references,\n      idempotency_key\n    )\n    values (\n      new.id,\n      new.advis"
+    }
+  ]
+}
