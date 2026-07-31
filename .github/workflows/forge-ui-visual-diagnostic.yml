@@ -217,19 +217,15 @@ jobs:
           node --check tools/forge-ui-visual-diagnostic.mjs
           node --check tests/pipeline-public-acceptance-hotfix-regression.mjs
 
-      - name: Restore trusted workflows and commit clean result
+      - name: Commit product and diagnostic files only
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin main
-          git show origin/main:.github/workflows/forge-ui-visual-diagnostic.yml \
-            > .github/workflows/forge-ui-visual-diagnostic.yml
-          rm -f \
-            scripts/apply-pipeline-public-acceptance-visual-fix.py \
-            .github/workflows/pipeline-public-acceptance-visual-fix.yml \
-            .github/.pipeline-public-acceptance-visual-fix-trigger
           git config user.name "forgeos-visual-closure"
           git config user.email "actions@users.noreply.github.com"
-          git add -A
+          git add \
+            docs/static-preview/forge-alive-material3/pipeline-public-acceptance-hotfix.js \
+            tools/forge-ui-visual-diagnostic.mjs \
+            tests/pipeline-public-acceptance-hotfix-regression.mjs
           git commit -m "fix(pipeline): align compact stage visual contract"
           git push origin HEAD:"$HEAD_BRANCH"
