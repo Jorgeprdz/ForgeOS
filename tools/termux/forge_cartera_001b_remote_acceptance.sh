@@ -80,10 +80,6 @@ main() {
   supabase db push --linked --dry-run || return 1
   printf 'REMOTE_DRY_RUN=PASS\n'
 
-  printf '%s\n' '========== REMOTE MIGRATION PUSH =========='
-  supabase db push --linked || return 1
-  printf 'SUPABASE_REMOTE_MIGRATION=PASS\n'
-
   DB_URL="${SUPABASE_DB_URL:-${DATABASE_URL:-}}"
   if [[ -z "$DB_URL" && -f supabase/.temp/pooler-url ]]; then
     DB_URL="$(cat supabase/.temp/pooler-url)"
@@ -91,10 +87,16 @@ main() {
 
   if [[ -z "$DB_URL" ]]; then
     printf '%s\n' 'DATABASE_URL_REQUIRED=YES'
+    printf '%s\n' 'No se aplicó ninguna migración remota.'
     printf '%s\n' 'Exporta SUPABASE_DB_URL con la URL Session pooler del panel Connect y vuelve a ejecutar.'
     printf '%s\n' "Ejemplo: export SUPABASE_DB_URL='postgresql://postgres.PROJECT_REF:PASSWORD@HOST:5432/postgres?sslmode=require'"
     return 1
   fi
+  printf 'DATABASE_URL_GATE=PASS\n'
+
+  printf '%s\n' '========== REMOTE MIGRATION PUSH =========='
+  supabase db push --linked || return 1
+  printf 'SUPABASE_REMOTE_MIGRATION=PASS\n'
 
   printf '%s\n' '========== TRANSACTIONAL REMOTE ACCEPTANCE =========='
   ACCEPTANCE_OUTPUT="$(
