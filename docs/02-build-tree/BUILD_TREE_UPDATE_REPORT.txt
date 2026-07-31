@@ -1,157 +1,134 @@
 FORGE BUILD TREE UPDATE REPORT
 
 Status:
-BUILD TREE UPDATE ONLY
+BUILD TREE UPDATE COMPLETE
+
+Date:
+2026-07-31
 
 Scope:
-Documentation only.
-No code.
-No engines.
-No schemas.
-No UI.
-No implementation.
+Documentation and source-truth synchronization only.
+No runtime code changed.
+No schema changed.
+No UI changed.
+No deployment behavior changed.
 
 1. EXECUTIVE SUMMARY
 
-FORGE_MASTER_BUILD_TREE.md was updated to reflect the latest GMM and Core
-Intelligence discoveries.
+The Advisor OS Productive Pipeline Stage branch is now documented as:
 
-The active focus is now explicitly:
+IMPLEMENTED / PRODUCTION_ACCEPTED / LOCKED
 
-GMM Validation Phase - ACTIVE
+067G17B4 closes the authenticated Stage writer, Timeline evidence path,
+in-place card update, in-place Source/Stage filtering and public Pages
+acceptance.
 
-Implementation remains blocked pending:
+2. TREE MOVEMENT
 
-- real evidence packets
-- human review protocol
-- real Alfa Medical caratula validation
-- real Alfa Medical quote validation
-- quote vs policy comparison
-- scenario fixtures
+Previous historical statuses superseded for this branch:
 
-2. FILES UPDATED
+- transitions preview-only
+- production persistence blocked
+- Stage writer blocked
+- full module rerender accepted as reconciliation
 
-- FORGE_MASTER_BUILD_TREE.md
-- BUILD_TREE_UPDATE_REPORT.txt
+Current status:
 
-3. BUILD TREE MOVEMENTS COMPLETED
+- authenticated owner-only RPC: CLOSED
+- Stage persistence: PRODUCTION ACCEPTED
+- Timeline STAGE_CHANGED evidence: CLOSED
+- in-place card commit: LOCKED
+- no AUTH_LOADING during save: LOCKED
+- no authentication refresh during save: LOCKED
+- Source/Stage filters in place: LOCKED
+- canonical Material 3 public route: ACTIVE
+- legacy UI and legacy service worker: RETIRED
 
-GMM Product Family was moved from:
+3. TREES UPDATED
 
-ARCHITECTURE DISCOVERY / NOT IMPLEMENTED
+- docs/architecture/source-truth/FORGE_CURRENT_IMPLEMENTED_BUILD_TREE_002.md
+- docs/architecture/source-truth/FORGE_UNIFIED_BUILD_TREE_002_ADVISOR_PIPELINE_LOCK.md
 
-to:
+The new documents supersede conflicting historical Pipeline statuses while
+preserving prior tree files as historical evidence.
 
-ACTIVE VALIDATION PHASE / IMPLEMENTATION BLOCKED
+4. CLOSURE DOCUMENTS ADDED
 
-Completed GMM discovery stages were added:
+- docs/architecture/source-truth/PIPELINE_STAGE_PERSISTENCE_IN_PLACE_CLOSURE_067G17B4.md
+- docs/evidence/PIPELINE_STAGE_PERSISTENCE_IN_PLACE_CERTIFICATE_067G17B4.md
 
-- Discovery: COMPLETE
-- Rule Extraction: COMPLETE
-- Evaluation Architecture: COMPLETE
-- Coverage Blueprint: COMPLETE
-- Source Registry: COMPLETE
-- Evidence Packet Standard: COMPLETE
-- Validation: ACTIVE
-- Implementation: BLOCKED pending real evidence packets and human review protocol
+5. IMPLEMENTED RUNTIME TREE
 
-4. GMM VALIDATION PHASE ADDED
+Stage select
+-> pipeline-stage-rpc-authority.js
+-> forge_pipeline_update_prospect_stage
+-> auth.uid() owner validation
+-> prospects.status
+-> Timeline STAGE_CHANGED
+-> confirmed row
+-> same card DOM node updated in place
+-> pipeline-stage-filter-authority.js
+-> deferred full reconciliation on route exit or tab backgrounding
 
-Subitems added:
+6. DATABASE EVIDENCE
 
-- Real Alfa Medical Caratula Validation
-- Real Alfa Medical Quote Validation
-- Quote vs Policy Comparison
-- Evidence Packet Reality Check
-- Human Review Protocol
-- Scenario Fixtures
+- supabase/migrations/20260731000200_pipeline_prospect_stage_rpc.sql
+- supabase/migrations/20260731000300_pipeline_stage_timeline_digest_search_path_repair.sql
+- authenticated transition confirmed
+- Timeline event confirmed
+- rollback integrity confirmed
 
-5. DOCUMENT INTELLIGENCE REQUIREMENT ADDED
+7. ACCEPTANCE EVIDENCE
 
-Candidate module added:
+PR chain:
 
-Document Classification Intelligence
+- PR #33: Stage RPC authority
+- PR #35: Timeline digest search-path repair
+- PR #37: no-refresh in-place commit and filter authority
 
-Status:
-DISCOVERY VALIDATED / NOT IMPLEMENTED
+Final product merge:
 
-Purpose:
-Distinguish evidence document classes:
+6e55d8c4e8d8d7d171f370bfaeb29c35e9e58738
 
-- Quote / Cotizacion
-- Policy Caratula / Caratula
-- Conditions / Condiciones Generales
-- Endorsement / Endoso
-- Sales Illustration / Material Comercial
+Final public acceptance SHA:
 
-6. QUOTE-TO-POLICY VALIDATION ADDED
+5fca4409457022c59c04937da52de83488a352e2
 
-Candidate capability added:
+Passed gates:
 
-Quote-to-Policy Validation
+- Pipeline Real Interaction Regression
+- Pipeline Mobile Interaction Regression
+- Manual Quotes and Pipeline Stability
+- Forge UI Visual Diagnostic for mobile, tablet and desktop
+- Pages exact-SHA public acceptance
 
-Status:
-PARKED / VALIDATION CANDIDATE
+8. REGRESSION LOCKS
 
-Purpose:
-Detect what changed between a proposed scenario and an issued policy.
+Forbidden:
 
-7. PROPOSAL INTELLIGENCE ADDED
+- preview-only Stage behavior
+- generic Stage update without RPC-confirmed row
+- second Stage mutation authority
+- stale renderer memory restoring the old Stage
+- Pipeline module or card reconstruction during save
+- auth-state refresh during save
+- Source mutation caused by Stage change
+- filters rebuilding from stale data
+- legacy UI returning as a public authority
 
-Added under:
+9. BOUNDARIES PRESERVED
 
-Forge Core
-└── Decision Intelligence Layer
-    └── Proposal Intelligence
+- No automatic WhatsApp send.
+- No automatic task or appointment creation.
+- No automatic NBA execution.
+- No Source mutation from Stage transition.
+- No RLS or ownership bypass.
+- The floating mobile navigation remains intentional; bottom safe space remains required.
 
-Status:
-PARKED / CORE CANDIDATE / DO NOT IMPLEMENT YET
+10. FINAL STATUS
 
-Subitems:
+SEMAFORO=GREEN
 
-- Proposal Family
-- Scenario Comparison
-- Economic / Balanced / Premium Options
-- Tradeoff Explanation
-- Decision Clarity Recommendation
+067G17B4_PIPELINE_STAGE_PERSISTENCE_IN_PLACE=LOCKED
 
-8. ACTIVE FOCUS / PARKED STATUS
-
-Active:
-
-- GMM Validation Phase
-
-Parked:
-
-- Proposal Intelligence
-- Shared Tax Intelligence
-- Shared Economic Projection Intelligence
-- Retirement Closure Review
-- Nuevo Plenitud Knowledge Capture
-- Sienten / Sintieron / Descubrieron Analysis
-
-9. VALIDATION
-
-Confirmed:
-
-- No code modified intentionally.
-- No engines modified.
-- No schemas modified.
-- No UI modified.
-- No implementation started.
-- Only Build Tree and report were updated for this request.
-
-10. IMPLEMENTATION STATUS
-
-Implementation remains:
-
-NOT APPROVED.
-
-GMM Coverage Intelligence Engine remains:
-
-BLOCKED.
-
-Next recommended step:
-
-Complete GMM Validation Phase using real evidence packets and a human review
-protocol before any engine, schema or UI work.
+PRODUCTION_STATUS=ACCEPTED
