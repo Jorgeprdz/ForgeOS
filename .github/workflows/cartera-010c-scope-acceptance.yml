@@ -1,12 +1,6 @@
 name: CARTERA 010C Scope Acceptance
 
 on:
-  push:
-    branches:
-      - feature/cartera-010c-policy-timeline-person-account-projection
-  pull_request:
-    branches:
-      - feature/cartera-010b-commercial-person-policy-role-foundation
   workflow_dispatch:
 
 permissions:
