@@ -8,6 +8,8 @@ const NAME = 'cartera020c_conflict_constraint_name_hardening';
 const PATH = 'supabase/migrations/20260731000240_cartera020c_conflict_constraint_name_hardening.sql';
 const ARTIFACT_DIR = 'artifacts/cartera-020c-remote-acceptance';
 const LOG_PATH = `${ARTIFACT_DIR}/conflict-constraint-name-hardening.log`;
+const MAX_QUERY_ATTEMPTS = 5;
+const RETRYABLE_HTTP_STATUSES = new Set([429, 500, 502, 503, 504]);
 
 assert.equal(process.env.SUPABASE_PROJECT_REF, PROJECT_REF, 'SUPABASE_PROJECT_REF_MISMATCH');
 assert.equal(
@@ -40,27 +42,66 @@ function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
 }
 
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+function retryDelay(attempt) {
+  return 750 * (2 ** (attempt - 1));
+}
+
 async function query(sql, label) {
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.SUPABASE_ACCESS_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ query: sql }),
-  });
-  const text = await response.text();
-  let body;
-  try { body = JSON.parse(text); } catch { body = { message: 'NON_JSON_RESPONSE' }; }
-  if (!response.ok || body?.error) {
+  let finalError = null;
+
+  for (let attempt = 1; attempt <= MAX_QUERY_ATTEMPTS; attempt += 1) {
+    let response;
+    let text = '';
+    let body = null;
+
+    try {
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.SUPABASE_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: sql }),
+      });
+      text = await response.text();
+      try { body = JSON.parse(text); } catch { body = { message: 'NON_JSON_RESPONSE' }; }
+    } catch (error) {
+      finalError = new Error(`${label}_NETWORK:${String(error?.message ?? error).slice(0, 1200)}`);
+      if (attempt < MAX_QUERY_ATTEMPTS) {
+        const delay = retryDelay(attempt);
+        log(`${label}_TRANSIENT_RETRY=${attempt}/${MAX_QUERY_ATTEMPTS}:NETWORK:${delay}MS`);
+        await sleep(delay);
+        continue;
+      }
+      throw finalError;
+    }
+
+    if (response.ok && !body?.error) {
+      if (Array.isArray(body?.result)) return body.result;
+      if (Array.isArray(body)) return body;
+      return [];
+    }
+
     const detail = String(body?.message ?? body?.error ?? 'QUERY_REJECTED')
       .replace(/sbp_[A-Za-z0-9_-]+/g, '[REDACTED]')
       .slice(0, 1800);
-    throw new Error(`${label}_HTTP_${response.status}:${detail}`);
+    finalError = new Error(`${label}_HTTP_${response.status}:${detail}`);
+
+    if (RETRYABLE_HTTP_STATUSES.has(response.status) && attempt < MAX_QUERY_ATTEMPTS) {
+      const delay = retryDelay(attempt);
+      log(`${label}_TRANSIENT_RETRY=${attempt}/${MAX_QUERY_ATTEMPTS}:HTTP_${response.status}:${delay}MS`);
+      await sleep(delay);
+      continue;
+    }
+
+    throw finalError;
   }
-  if (Array.isArray(body?.result)) return body.result;
-  if (Array.isArray(body)) return body;
-  return [];
+
+  throw finalError ?? new Error(`${label}_QUERY_ATTEMPTS_EXHAUSTED`);
 }
 
 function stripOuterTransaction(sql) {
