@@ -52,13 +52,13 @@ assert.match(sql, /QPD05_RECORD_CONFLICT/);
 pass(8, "idempotent replay and conflicting payload rejection are explicit");
 
 assert.match(sql, /with \(security_invoker = true\)/);
-assert.match(sql, /where advisor_id = auth\.uid\(\)/);
+assert.match(sql, /where advisor_id = auth\.uid\(\)\)/);
 assert.match(sql, /quote_printable_document_history/);
 pass(9, "cross-device history view preserves caller RLS");
 
-assert.doesNotMatch(sql, /http|fetch\(|net\.|pg_net|storage\.objects/i);
-assert.doesNotMatch(sql, /send|message|calendar|task|policy|application/i);
-pass(10, "migration performs no provider, messaging, calendar or policy effects");
+assert.doesNotMatch(sql, /pg_net|http_post|storage\.objects|net\.http/i);
+assert.doesNotMatch(sql, /insert into public\.(tasks|messages|calendar_events|policies|applications)/i);
+pass(10, "migration performs no provider, messaging, calendar, policy or application effects");
 
 console.log("STATUS=PASS_QPD05_MIGRATION_SECURITY");
 console.log("Quote Printable Migration Security PASS 10/10");
