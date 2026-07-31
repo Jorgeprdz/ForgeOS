@@ -11,6 +11,7 @@ on:
       - tests/pipeline-prospect-admin-regression.mjs
       - tests/pipeline-action-identity-regression.mjs
       - tests/pipeline-context-journal-regression.mjs
+      - tests/pipeline-public-acceptance-hotfix-regression.mjs
       - tests/prospect-journal-service-contract-test.mjs
       - .github/workflows/pipeline-real-interaction.yml
   workflow_dispatch:
@@ -56,3 +57,5 @@ jobs:
         run: timeout 120s node tests/pipeline-action-identity-regression.mjs
       - name: Verify context journal
         run: timeout 120s node tests/pipeline-context-journal-regression.mjs
+      - name: Verify public acceptance hotfix
+        run: timeout 120s node tests/pipeline-public-acceptance-hotfix-regression.mjs
