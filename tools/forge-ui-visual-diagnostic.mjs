@@ -228,6 +228,21 @@ async function capture(page, directory, label, options = {}) {
 
     const visibleCount = (selector) =>
       [...document.querySelectorAll(selector)].filter(visible).length;
+    const quoteProjection = document.querySelector(
+      "[data-material3-quotes-projection]",
+    );
+    const quoteHost = quoteProjection?.querySelector(
+      "[data-quote-product-intelligence-host]",
+    );
+    const quoteWorkspace = quoteProjection?.querySelector(
+      "[data-quote-result-workspace]",
+    );
+    const quoteReady = Boolean(
+      quoteProjection?.dataset.material3QuoteProjectionReady === "true"
+      && visible(quoteProjection)
+      && visible(quoteHost),
+    );
+    const quotePrimaryText = quoteHost?.textContent || "";
 
     return {
       url: location.href,
@@ -538,39 +553,35 @@ async function capture(page, directory, label, options = {}) {
         ) > 0,
       quoteLegacyShellVisible:
         visibleCount(".fq-shell-105dr") > 0,
-      quoteResultsVisible:
-        visibleCount("[data-material3-quote-result-ready]") > 0,
+      quoteResultsVisible: quoteReady,
       quoteReadyState:
         ["ready", "partial"].includes(
           document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState,
         ),
       quoteLoadedSubstantive:
-        (document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0) >= 120,
+        quotePrimaryText.trim().length >= 120,
       quoteProjectionTextLength:
-        document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0,
+        quotePrimaryText.trim().length,
       quoteProjectionSectionCount:
-        visibleCount("[data-quote-result-section]"),
+        visibleCount("[data-product-section]"),
       quoteProductIdentityVisible:
-        visibleCount("[data-quote-product-identity]") > 0,
+        visibleCount(".quotes-intelligence-identity") > 0,
       quoteNumericResultVisible:
-        /\d/.test(document.querySelector("[data-quote-calculation-values]")?.textContent || ""),
+        /\d/.test(document.querySelector("[data-quote-mandatory-metrics]")?.textContent || ""),
       quoteWarningsOrEvidenceVisible:
         visibleCount("[data-quote-evidence-warnings]") > 0,
       quoteProgressOnly:
-        visibleCount("[data-quote-progress]") > 0 &&
-        visibleCount("[data-material3-quote-result-ready]") === 0,
+        visibleCount("[data-quote-progress]") > 0 && !quoteReady,
       quoteCommercialProjection:
-        visibleCount("[data-quote-commercial-projection]") > 0,
+        quoteReady
+          && visible(quoteWorkspace)
+          && visibleCount("[data-quote-mandatory-metric]") >= 2
+          && visibleCount("[data-product-section]") >= 3,
       quoteRawPacketVisible:
         /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/
-          .test([...document.querySelectorAll("[data-quote-result-section]")]
-            .map(section => section.textContent).join(" ")),
-      quoteTechnicalEvidenceCollapsed: (() => {
-        const evidence = document.querySelector("[data-quote-technical-evidence]");
-        return evidence instanceof HTMLDetailsElement && !evidence.open;
-      })(),
-      quoteTechnicalEvidenceOpen:
-        document.querySelector("[data-quote-technical-evidence]")?.open === true,
+          .test(quotePrimaryText),
+      quoteTechnicalPacketAbsent:
+        document.querySelector("[data-quote-technical-evidence]") === null,
       quoteProjectionBounded:
         (document.querySelector("[data-material3-quotes-projection]")?.scrollHeight || 0) < 6000,
       quoteLastActionReachable:
@@ -671,6 +682,22 @@ async function captureViewport(browser, viewport, fixture) {
     reducedMotion: "reduce",
   });
   await context.addInitScript((sample) => {
+    const safeStorage = Object.freeze({
+      get(key) {
+        try {
+          return globalThis.localStorage?.getItem(key) ?? null;
+        } catch {
+          return null;
+        }
+      },
+      remove(key) {
+        try {
+          globalThis.localStorage?.removeItem(key);
+        } catch {
+          // Sandboxed preview frames intentionally have no storage authority.
+        }
+      },
+    });
     const records = [];
     const timeline = [];
     let diagnosticSetSeeded = false;
@@ -841,7 +868,7 @@ async function captureViewport(browser, viewport, fixture) {
           },
           signOut: async () => {
             globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ = false;
-            localStorage.removeItem("forgeDiagnosticAuthenticated");
+            safeStorage.remove("forgeDiagnosticAuthenticated");
             globalThis.__FORGE_DIAGNOSTIC_AUTH_LISTENER__?.("SIGNED_OUT", null);
             return { error: null };
           },
@@ -881,7 +908,7 @@ async function captureViewport(browser, viewport, fixture) {
     };
     globalThis.__FORGE_DIAGNOSTIC_SAMPLE_REFERRAL__ = sample;
     globalThis.__FORGE_DIAGNOSTIC_AUTHENTICATED__ =
-      localStorage.getItem("forgeDiagnosticAuthenticated") === "true";
+      safeStorage.get("forgeDiagnosticAuthenticated") === "true";
   }, SAMPLE_REFERRAL);
   const page = await context.newPage();
   const telemetry = telemetryFor(page);
@@ -1432,7 +1459,7 @@ async function captureViewport(browser, viewport, fixture) {
       .setInputFiles(fixture.path);
 
     await page.waitForSelector(
-      '[data-material3-quote-result-ready], .quote-result__state--error',
+      '[data-material3-quotes-projection][data-material3-quote-projection-ready="true"] [data-quote-result-workspace], .quote-result__state--error',
       { state: "visible", timeout: 40_000 },
     );
 
@@ -1445,9 +1472,8 @@ async function captureViewport(browser, viewport, fixture) {
     result.routes.quotesEvidenceClosed = await capture(
       page,
       directory,
-      "05a-quotes-evidence-closed",
+      "05a-quotes-technical-packet-absent",
     );
-    await page.locator("[data-quote-technical-evidence] summary").click();
     result.routes.quotesEvidenceOpen = await capture(
       page,
       directory,
@@ -1478,9 +1504,11 @@ async function captureViewport(browser, viewport, fixture) {
           humanConfirmationRequired: true,
         }),
       };
-      const viewModel = adapter.buildQuoteResultViewModel(partialBridge);
-      projection.innerHTML = adapter.renderQuoteResult(viewModel);
-      root.dataset.intakeState = viewModel.state;
+      await adapter.reconcileQuoteResult({
+        bridge: partialBridge,
+        projection,
+        root,
+      });
     });
     result.routes.quotesPartial = await capture(
       page,
@@ -1595,7 +1623,6 @@ function assertVisualAcceptance(results) {
     const nba = result.routes.pipelineNba || {};
     const nbaToNash = result.routes.pipelineNbaToNash || {};
     const quote = result.routes.quotesLoadedUnderlay || {};
-    const quoteEvidenceOpen = result.routes.quotesEvidenceOpen || {};
     const quotePartial = result.routes.quotesPartial || {};
     const telemetry = result.telemetrySummary || {};
 
@@ -1677,8 +1704,7 @@ function assertVisualAcceptance(results) {
     requireFlag(viewport, "quoteLegacyShellVisible=false", quote.quoteLegacyShellVisible === false);
     requireFlag(viewport, "quoteCommercialProjection", quote.quoteCommercialProjection === true);
     requireFlag(viewport, "quoteRawPacketVisible=false", quote.quoteRawPacketVisible === false);
-    requireFlag(viewport, "quoteTechnicalEvidenceCollapsed", quote.quoteTechnicalEvidenceCollapsed === true);
-    requireFlag(viewport, "quoteTechnicalEvidenceOpen", quoteEvidenceOpen.quoteTechnicalEvidenceOpen === true);
+    requireFlag(viewport, "quoteTechnicalPacketAbsent", quote.quoteTechnicalPacketAbsent === true);
     requireFlag(viewport, "quoteProjectionBounded", quote.quoteProjectionBounded === true);
     requireFlag(viewport, "quoteLastActionReachable", quote.quoteLastActionReachable === true);
     requireFlag(viewport, "quotePartialCommercial", quotePartial.quoteCommercialProjection === true);
