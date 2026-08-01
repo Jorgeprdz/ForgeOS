@@ -57,9 +57,20 @@ function formatPeriod(period) {
   return period.from === period.to ? from : `${from} – ${to}`;
 }
 
+function surfaceOf(root) {
+  return root.querySelector("[data-activity-surface]");
+}
+
+function setSurfaceState(root, state) {
+  const surface = surfaceOf(root);
+  surface.dataset.activityState = state;
+  surface.dataset.activitySurfaceState = state;
+  return surface;
+}
+
 function renderChrome(root, selectedPeriod) {
   root.innerHTML = `
-    <section class="activity-operational" data-activity-operational data-activity-state="idle">
+    <section class="activity-operational" data-activity-operational data-activity-surface data-activity-state="idle" data-activity-surface-state="idle">
       <header class="activity-hero">
         <div>
           <p class="section-kicker accent">ACTIVIDAD</p>
@@ -83,14 +94,13 @@ function renderChrome(root, selectedPeriod) {
         <div class="activity-chart" data-activity-chart role="img"></div>
         <div class="activity-legend" data-activity-legend aria-label="Tipos de actividad"></div>
       </section>
-      <p class="activity-authority-note">Forge representa eventos canónicos de FES mediante REP. Esta vista no crea ni corrige actividad.</p>
+      <p class="activity-authority-note" data-activity-authority-note>Forge representa eventos canónicos de FES mediante REP. Esta vista no crea ni corrige actividad.</p>
     </section>
   `;
 }
 
 function renderLoading(root) {
-  const surface = root.querySelector("[data-activity-operational]");
-  surface.dataset.activityState = "loading";
+  const surface = setSurfaceState(root, "loading");
   surface.setAttribute("aria-busy", "true");
   root.querySelector("[data-activity-summary]").hidden = true;
   root.querySelector("[data-activity-chart-card]").hidden = true;
@@ -102,7 +112,7 @@ function renderLoading(root) {
 function renderError(root, error) {
   const session = error?.code === "FES_LEDGER_SESSION_BINDING_FAILED" || error?.code === "SESSION_REQUIRED";
   const status = root.querySelector("[data-activity-status-card]");
-  root.querySelector("[data-activity-operational]").dataset.activityState = session ? "session-required" : "source-unavailable";
+  setSurfaceState(root, session ? "session-required" : "source-unavailable");
   root.querySelector("[data-activity-summary]").hidden = true;
   root.querySelector("[data-activity-chart-card]").hidden = true;
   status.hidden = false;
@@ -111,7 +121,7 @@ function renderError(root, error) {
 
 function renderEmpty(root, result) {
   const status = root.querySelector("[data-activity-status-card]");
-  root.querySelector("[data-activity-operational]").dataset.activityState = "empty";
+  setSurfaceState(root, "empty");
   root.querySelector("[data-activity-summary]").hidden = true;
   root.querySelector("[data-activity-chart-card]").hidden = true;
   status.hidden = false;
@@ -121,8 +131,7 @@ function renderEmpty(root, result) {
 function renderReady(root, result) {
   const { report, chartReady } = result;
   const total = report.totals.activityCount;
-  const surface = root.querySelector("[data-activity-operational]");
-  surface.dataset.activityState = "ready";
+  const surface = setSurfaceState(root, "ready");
   surface.dataset.chartReadySurfaceId = chartReady.surfaceId;
   surface.removeAttribute("aria-busy");
   root.querySelector("[data-activity-status-card]").hidden = true;
@@ -138,7 +147,10 @@ function renderReady(root, result) {
   chart.innerHTML = dates.map((date) => {
     const segments = chartReady.series.flatMap((series) => {
       const type = typeOf(series);
-      return series.points.filter((point) => point.x === date).map((point) => `<span class="activity-chart-segment ${classOf(type)}" style="--activity-flex:${Math.max(Number(point.value) || 0, 0.0001)}" title="${escapeHtml(labelOf(type))}: ${escapeHtml(point.value)}"><b>${escapeHtml(point.value)}</b></span>`);
+      return series.points.filter((point) => point.x === date).map((point) => {
+        const rowKeys = Array.isArray(point.rowKeys) ? point.rowKeys.join(",") : "";
+        return `<span class="activity-chart-segment ${classOf(type)}" data-point-id="${escapeHtml(point.pointId || `${series.seriesId}:${date}`)}" data-row-keys="${escapeHtml(rowKeys)}" style="--activity-flex:${Math.max(Number(point.value) || 0, 0.0001)}" title="${escapeHtml(labelOf(type))}: ${escapeHtml(point.value)}"><b>${escapeHtml(point.value)}</b></span>`;
+      });
     }).join("");
     return `<div class="activity-chart-row"><span class="activity-chart-date">${escapeHtml(formatDate(date, { weekday: "short", day: "numeric", month: "short" }))}</span><div class="activity-chart-stack">${segments}</div></div>`;
   }).join("");
