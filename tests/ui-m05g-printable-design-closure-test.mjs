@@ -117,8 +117,8 @@ assert.ok(pdf.pageCount >= 2);
 assert.ok(pdf.byteLength > 1000);
 
 assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-011-eager-print-actions/);
-assert.match(app, /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05e-009/);
-assert.match(app, /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05e-010/);
+assert.match(app, /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05r-001-bridge-composition/);
+assert.match(app, /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05t-001-coalesced/);
 assert.doesNotMatch(app, /quote-runtime-printable-closure-m05e005\.js/);
 assert.doesNotMatch(app, /quote-runtime-ux-closure-m05e004/);
 assert.match(app, /quoteCalculatorRuntime = "M05E-006"/);
