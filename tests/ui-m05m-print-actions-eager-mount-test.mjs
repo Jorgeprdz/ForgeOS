@@ -5,8 +5,16 @@ const app = fs.readFileSync(
   "docs/static-preview/forge-alive-material3/app.js",
   "utf8",
 );
+const identityPersistence = fs.readFileSync(
+  "docs/static-preview/forge-alive-material3/quote-runtime-client-identity-persistence-m05y001.js",
+  "utf8",
+);
 const printable = fs.readFileSync(
   "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js",
+  "utf8",
+);
+const vidaMujerVisual = fs.readFileSync(
+  "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js",
   "utf8",
 );
 
@@ -14,15 +22,18 @@ const shellInitialize = app.indexOf("shell.initialize();");
 const printableBoot = app.indexOf("void startPrintableAuthority();");
 const environmentWait = app.indexOf('await loadAuthority(envBase, "env.js")');
 const rateBridgeWait = app.indexOf("quote-runtime-pages-rate-fetch-bridge-m05e010.js");
-const identityPersistence = app.indexOf(
+const identityPersistenceMount = app.indexOf(
   "quote-runtime-client-identity-persistence-m05y001.js",
 );
-const printableStateHandoff = app.indexOf(
-  "quote-runtime-printable-state-handoff-m05z001.js",
-);
-const vidaMujerVisual = app.indexOf(
+const vidaMujerVisualMount = app.indexOf(
   "quote-runtime-vida-mujer-visual-m05e010.js",
 );
+const directM05zImports = app.match(
+  /quote-runtime-printable-state-handoff-m05z001\.js/g,
+) || [];
+const transitiveM05zImports = identityPersistence.match(
+  /quote-runtime-printable-state-handoff-m05z001\.js/g,
+) || [];
 
 assert.ok(shellInitialize >= 0, "shell initialize is missing");
 assert.ok(printableBoot > shellInitialize, "printable actions must start after shell init");
@@ -45,26 +56,32 @@ assert.doesNotMatch(
 );
 
 assert.ok(
-  identityPersistence >= 0,
+  identityPersistenceMount >= 0,
   "client identity persistence authority must be mounted",
 );
-assert.ok(
-  printableStateHandoff > identityPersistence,
-  "M05Z productive handoff must load after client identity persistence",
-);
-assert.ok(
-  vidaMujerVisual > printableStateHandoff,
-  "M05Z productive handoff must load before Vida Mujer visual reconciliation",
-);
 assert.match(
   app,
-  /quote-runtime-printable-state-handoff-m05z001\.js\?v=m05z-001-productive-mount/,
-  "productive app must import the accepted-state handoff",
+  /quote-runtime-client-identity-persistence-m05y001\.js\?v=m05y-002-single-m05z-instance/,
+  "productive app must cache-bust the M05Y authority that owns the M05Z import",
+);
+assert.equal(
+  directM05zImports.length,
+  0,
+  "app.js must not load a second M05Z module instance",
+);
+assert.equal(
+  transitiveM05zImports.length,
+  1,
+  "M05Y must own exactly one M05Z import",
 );
 assert.match(
-  app,
-  /"quote-printable-state-handoff"/,
-  "productive authority status must expose the M05Z mount",
+  identityPersistence,
+  /quote-runtime-printable-state-handoff-m05z001\.js\?v=m05z-002-single-instance/,
+  "the single M05Z instance must be cache-busted",
+);
+assert.ok(
+  vidaMujerVisualMount > identityPersistenceMount,
+  "Vida Mujer visual reconciliation must load after the single M05Y/M05Z chain",
 );
 
 for (const iconName of ["printer", "pdf", "history"]) {
@@ -77,8 +94,20 @@ for (const action of ["preview", "download", "history"]) {
   );
 }
 
+assert.match(
+  vidaMujerVisual,
+  /ensureTotalContributedCard\(host, calculation\)/,
+  "the established Vida Mujer calculation presentation must remain mounted",
+);
+assert.match(
+  vidaMujerVisual,
+  /data-quote-mandatory-metric=\"total-contributed\"/,
+  "the total contributed metric must remain part of the existing visual authority",
+);
+
 console.log("PASS UI-M05M eager printable actions", {
   actions: ["printer", "pdf", "history"],
   independentFromRateAuthority: true,
-  productiveM05zMount: true,
+  productiveM05zInstances: 1,
+  calculationAuthorityMutated: false,
 });
