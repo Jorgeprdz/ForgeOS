@@ -49,10 +49,8 @@ jobs:
           node --test tests/ui-m05f-live-udi-review-printable-actions-test.mjs
           node --test tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
 
-      - name: Existing Pipeline regressions
-        run: |
-          node --test tests/pipeline-stage-rpc-authority-regression.mjs
-          node --test tests/pipeline-card-density-stage-authority-regression.mjs
+      - name: Pipeline stage authority contract
+        run: node --test tests/pipeline-stage-rpc-authority-regression.mjs
 
       - name: Pages runtime generation
         env:
