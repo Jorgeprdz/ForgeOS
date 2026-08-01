@@ -12,7 +12,7 @@ git merge-base --is-ancestor "$SOURCE_HEAD" HEAD
 git diff --check "$SOURCE_HEAD"...HEAD
 mapfile -t changed < <(git diff --name-only "$SOURCE_HEAD"...HEAD)
 printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-allowed='^(app\.js|advisor-os/cartera/cartera-040[a-d]-[A-Za-z0-9._-]+\.js|platform/relationship-intelligence/cartera-040[a-d]-[A-Za-z0-9._-]+\.js|supabase/migrations/2026080100027[01]_cartera040_[A-Za-z0-9._-]+\.sql|tests/cartera-040(abcd|a|b|c|d)-[A-Za-z0-9._-]+\.mjs|scripts/ci/cartera-040abcd-[A-Za-z0-9._-]+\.(mjs|sql|sh)|docs/architecture/source-truth/FORGE_CARTERA_040ABCD_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_040ABCD_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-040abcd-[A-Za-z0-9._-]+\.yml)$'
+allowed='^(app\.js|advisor-os/cartera/cartera-040[a-d]-[A-Za-z0-9._-]+\.js|platform/relationship-intelligence/cartera-040[a-d]-[A-Za-z0-9._-]+\.js|supabase/migrations/2026080100027[01]_cartera040_[A-Za-z0-9._-]+\.sql|tests/cartera-040(abcd|a|b|c|d)-[A-Za-z0-9._-]+\.mjs|tests/cartera-030cd-ui-integration-test\.mjs|scripts/ci/cartera-040abcd-[A-Za-z0-9._-]+\.(mjs|sql|sh)|docs/architecture/source-truth/FORGE_CARTERA_040ABCD_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_040ABCD_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-040abcd-[A-Za-z0-9._-]+\.yml)$'
 for path in "${changed[@]}"; do
   [[ "$path" =~ $allowed ]] || { echo "UNAUTHORIZED_040ABCD_PATH=$path" >&2; exit 1; }
 done
