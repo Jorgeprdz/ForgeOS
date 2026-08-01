@@ -19,7 +19,21 @@ const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
 const moduleBase = new URL("./", import.meta.url);
 const legacyBase = new URL(sourceLayout ? "../forge-alive/" : "../forge-alive-runtime/", import.meta.url);
 const advisorBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
+const fesBase = new URL(sourceLayout ? "../../../platform/event-evidence/" : "../../platform/event-evidence/", import.meta.url);
 const loadAuthority = async (base, path) => import(new URL(path, base));
+
+function installReportingCryptoImportMap() {
+  if (document.querySelector("[data-reporting-crypto-import-map]")) return;
+  const importMap = document.createElement("script");
+  importMap.type = "importmap";
+  importMap.dataset.reportingCryptoImportMap = "true";
+  importMap.textContent = JSON.stringify({
+    imports: {
+      "node:crypto": new URL("node-crypto-shim.mjs", import.meta.url).href,
+    },
+  });
+  document.head.append(importMap);
+}
 
 if (!document.querySelector("[data-pipeline-prospect-admin-styles]")) {
   const adminStyles = document.createElement("link");
@@ -71,6 +85,22 @@ if (
   throw new Error("MATERIAL3_AUTH_AUTHORITIES_REQUIRED");
 }
 
+await loadAuthority(fesBase, "canonical-activity-event-contract.js");
+await loadAuthority(fesBase, "activity-ledger-contract.js");
+await loadAuthority(fesBase, "activity-ledger-local-store.js");
+await loadAuthority(fesBase, "activity-ledger-sync-service.js");
+await loadAuthority(fesBase, "activity-ledger-supabase-gateway.js");
+await loadAuthority(fesBase, "activity-ledger-browser-runtime.js");
+
+if (!globalThis.ForgeActivityLedgerBrowserRuntimeFES02C) {
+  throw new Error("REP_16D_FES_LEDGER_BROWSER_RUNTIME_REQUIRED");
+}
+
+installReportingCryptoImportMap();
+const { createActivityModule } = await import(
+  "./activity-module.js?v=rep-16d-001"
+);
+
 const application = document.querySelector("[data-forge-application]");
 const moduleViewport = document.querySelector(
   "[data-forge-module-viewport]",
@@ -78,8 +108,26 @@ const moduleViewport = document.querySelector(
 const homeRoot = document.querySelector("[data-forge-home-module]");
 const quotesRoot = document.querySelector("[data-forge-quotes-module]");
 const pipelineRoot = document.querySelector("[data-forge-pipeline-module]");
+let activityRoot = document.querySelector("[data-forge-activity-module]");
 
-if (!application || !moduleViewport || !homeRoot || !quotesRoot || !pipelineRoot) {
+if (moduleViewport && !activityRoot) {
+  activityRoot = document.createElement("section");
+  activityRoot.className = "activity-module";
+  activityRoot.dataset.forgeActivityModule = "true";
+  activityRoot.dataset.routeModule = "actividad";
+  activityRoot.hidden = true;
+  activityRoot.setAttribute("aria-label", "Actividad");
+  moduleViewport.append(activityRoot);
+}
+
+if (
+  !application
+  || !moduleViewport
+  || !homeRoot
+  || !quotesRoot
+  || !pipelineRoot
+  || !activityRoot
+) {
   throw new Error("UI-M04 canonical shell boundary is incomplete");
 }
 
@@ -99,14 +147,20 @@ const pipeline = createPipelineModule({
   root: pipelineRoot,
   shell,
 });
+const activity = createActivityModule({
+  root: activityRoot,
+  shell,
+});
 
 shell
   .registerRouteModule("inicio", home)
   .registerRouteModule("pipeline", pipeline)
-  .registerRouteModule("quotes", quotes);
+  .registerRouteModule("quotes", quotes)
+  .registerRouteModule("actividad", activity);
 shell.initialize();
 
 document.documentElement.dataset.forgeCleanHomeReady = "true";
 document.documentElement.dataset.forgeShellReady = "true";
 document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
 document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
+document.documentElement.dataset.activityReportingRuntime = "REP-16D";
