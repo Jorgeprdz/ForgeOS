@@ -143,9 +143,9 @@ async function loadEnvironmentAuthority() {
   }
 }
 
-async function loadQuoteAuthorities(environmentReady) {
+async function loadQuoteAuthorities() {
   // Rate-dependent quote enhancements must wait for the same public environment.
-  await environmentReady;
+  await environmentAuthority;
 
   try {
     await startAuthority(
@@ -185,7 +185,7 @@ function showAuthRuntimeError() {
   );
 }
 
-async function loadAuthAuthorities(environmentReady) {
+async function loadAuthAuthorities() {
   ensureStylesheet({
     selector: "[data-forge-auth-entry-styles]",
     href: new URL("forge-alive-auth-entry-067g17b1.css", legacyBase).href,
@@ -193,7 +193,7 @@ async function loadAuthAuthorities(environmentReady) {
   });
 
   try {
-    const environmentLoaded = await environmentReady;
+    const environmentLoaded = await environmentAuthority;
     if (!environmentLoaded) {
       throw new Error("MATERIAL3_PUBLIC_ENV_REQUIRED");
     }
@@ -230,5 +230,5 @@ async function loadAuthAuthorities(environmentReady) {
   }
 }
 
-void loadQuoteAuthorities(environmentAuthority);
-void loadAuthAuthorities(environmentAuthority);
+void loadQuoteAuthorities();
+void loadAuthAuthorities();
