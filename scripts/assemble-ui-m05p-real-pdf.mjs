@@ -34,7 +34,12 @@ const chunkSpecs = [
   { name: "solucionline.pdf.b64.tail-01-2", length: 775, sha256: "346af587c227b7673ea2e8d9b26793f86aef26360492f67f92eddfdcf0ff0c31" },
   { name: "solucionline.pdf.b64.tail-01-3-0", length: 200, sha256: "b603f87733097e6431fc3d3f34e5fe3098ef2ba4a92cdc034d84c9ddc9643c02" },
   { name: "solucionline.pdf.b64.tail-01-3-1", length: 200, sha256: "aa452ff8e490dc67e1b20b96e6301f9de1e8fb10e047fc093da78f276223783b" },
-  { name: "solucionline.pdf.b64.tail-01-3-2", length: 200, sha256: "ed49b28dc0067286539aa802b3b73bb5ad491856a1c77e34fda4e198d038b748" },
+  {
+    name: "inline:jAgC-x50",
+    content: "jAgC".repeat(50),
+    length: 200,
+    sha256: "ed49b28dc0067286539aa802b3b73bb5ad491856a1c77e34fda4e198d038b748",
+  },
   { name: "solucionline.pdf.b64.tail-01-3-3", length: 175, sha256: "704b38a3d9198f1793c9322b04430c08541a32f04d36e0b8ecc62de3e7b6059b" },
   { name: "solucionline.pdf.b64.tail-02", length: 3_100, sha256: "54a3205637e672181b24a501e26b68b7999f415287b2c1789871b6dbffd800b3" },
 ];
@@ -46,7 +51,9 @@ function digest(payload) {
 const encodedChunks = [];
 const chunkDiagnostics = [];
 for (const spec of chunkSpecs) {
-  const raw = await readFile(path.join(sourceDirectory, spec.name), "utf8");
+  const raw = typeof spec.content === "string"
+    ? spec.content
+    : await readFile(path.join(sourceDirectory, spec.name), "utf8");
   const normalized = raw.replace(/\s+/g, "");
   const sha256 = digest(Buffer.from(normalized, "utf8"));
   const matches = normalized.length === spec.length && sha256 === spec.sha256;
@@ -104,7 +111,7 @@ await writeFile(outputPath, payload);
 await writeFile(
   `${outputPath}.metadata.json`,
   `${JSON.stringify({
-    schema: "forge.ui.m05p.real-pdf-fixture.v4",
+    schema: "forge.ui.m05p.real-pdf-fixture.v5",
     sourceFileName: "Solucionline_20260711_16_05.PDF",
     product: "Vida Mujer",
     insured: "Alejandra Moleres",
