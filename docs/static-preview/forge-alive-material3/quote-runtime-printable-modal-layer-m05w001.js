@@ -18,6 +18,7 @@ function installLayerContract() {
   `;
   document.head.append(style);
   document.documentElement.dataset.printableModalLayer = VERSION;
+  document.documentElement.dataset.printableModalAuthIsolation = "ready";
   return true;
 }
 
