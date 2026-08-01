@@ -14,6 +14,7 @@ create temporary table cartera100_results (
 ) on commit drop;
 grant select on cartera100_ids to authenticated;
 grant select, insert, update on cartera100_results to authenticated;
+grant execute on function public.forge_cartera030b_digest(jsonb) to authenticated;
 
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
