@@ -6,6 +6,7 @@ on:
       - run/cartera-030b-identity-collision-diagnostic-20260731-2035
     types:
       - opened
+      - synchronize
 
 permissions:
   contents: write
