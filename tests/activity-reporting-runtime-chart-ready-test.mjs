@@ -36,6 +36,10 @@ function event({
     recorded_at: recordedAt,
     confirmation_state: confirmationState,
     correction_of: correctionOf,
+    actor: {
+      type: "ADVISOR",
+      id: "advisor-1",
+    },
     payload: {},
   };
 }
@@ -180,9 +184,7 @@ test("marks current to-date reports as partial", async () => {
   const result = await runtime().runChartReady({
     period: {
       kind: "MONTH_TO_DATE",
-      parameters: {
-        referenceDate: "2026-07-15",
-      },
+      parameters: {},
     },
     timeZone: "America/Mexico_City",
     asOf: "2026-07-15T23:00:00.000Z",
