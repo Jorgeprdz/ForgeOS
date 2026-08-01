@@ -1,0 +1,89 @@
+name: CARTERA 040A + 040B + 040C + 040D Combined Acceptance
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-030cd-payment-reconciliation-calendar-product
+    types:
+      - opened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-040abcd-combined-acceptance
+  cancel-in-progress: false
+
+jobs:
+  combined-delivery:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.repo.full_name == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.ref == 'feature/cartera-040abcd-relationship-memory-product' &&
+      github.event.pull_request.base.ref == 'feature/cartera-030cd-payment-reconciliation-calendar-product' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_040ABCD_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_040ABCD_REMOTE_MUTATION
+      CARTERA_040ABCD_EXPECTED_SOURCE_HEAD: 655a0595515a4b3ed2ef1eb8d91f080939049f00
+      CARTERA_040ABCD_ACCEPTANCE_BRANCH: feature/cartera-040abcd-relationship-memory-product
+
+    steps:
+      - name: Checkout exact combined branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Materialize complete 040A–040D delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-040abcd-remote-acceptance
+          echo 'CARTERA_040ABCD_WORKFLOW=STARTED' > artifacts/cartera-040abcd-remote-acceptance/bootstrap.log
+          shopt -s nullglob
+          fragments=(.forge-bootstrap/cartera040.bundle.*.b64)
+          if (( ${#fragments[@]} > 0 )); then
+            printf '%s\n' "${fragments[@]}" | sort > /tmp/cartera040-fragments
+            while IFS= read -r fragment; do cat "$fragment"; done < /tmp/cartera040-fragments \
+              | base64 --decode > /tmp/cartera040-bundle.tar.gz
+            tar -xzf /tmp/cartera040-bundle.tar.gz
+            rm -rf .forge-bootstrap
+            test -f supabase/migrations/20260801000270_cartera040_relationship_memory_authority.sql
+            test -f supabase/migrations/20260801000271_cartera040_relationship_brief_read.sql
+            test -x scripts/ci/cartera-040abcd-combined-acceptance.sh
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -A
+            git commit -m 'feat(cartera): materialize combined 040A through 040D delivery'
+            git push origin HEAD:feature/cartera-040abcd-relationship-memory-product
+            echo 'CARTERA_040ABCD_BUNDLE=MATERIALIZED'
+          else
+            test -f supabase/migrations/20260801000270_cartera040_relationship_memory_authority.sql
+            test -f supabase/migrations/20260801000271_cartera040_relationship_brief_read.sql
+            test -x scripts/ci/cartera-040abcd-combined-acceptance.sh
+            echo 'CARTERA_040ABCD_BUNDLE=ALREADY_MATERIALIZED'
+          fi
+          echo "CARTERA_040ABCD_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Execute combined gates and remote acceptance
+        shell: bash
+        run: scripts/ci/cartera-040abcd-combined-acceptance.sh
+
+      - name: Upload combined evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-040abcd-combined-remote-acceptance
+          path: artifacts/cartera-040abcd-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
