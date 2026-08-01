@@ -41,8 +41,15 @@ jobs:
           set -euo pipefail
           mkdir -p artifacts/cartera-070abcd-remote-acceptance
           echo 'CARTERA_070ABCD_WORKFLOW=STARTED' > artifacts/cartera-070abcd-remote-acceptance/bootstrap.log
-          test -f .forge-bootstrap/cartera070.bundle.b64
-          base64 --decode .forge-bootstrap/cartera070.bundle.b64 > /tmp/cartera070-bundle.tar.gz
+          shopt -s nullglob
+          fragments=(.forge-bootstrap/cartera070.bundle.*.b64)
+          if (( ${#fragments[@]} != 5 )); then
+            echo "CARTERA_070ABCD_FRAGMENT_COUNT=${#fragments[@]}"
+            exit 1
+          fi
+          printf '%s\n' "${fragments[@]}" | sort > /tmp/cartera070-fragments
+          while IFS= read -r fragment; do cat "$fragment"; done < /tmp/cartera070-fragments \
+            | base64 --decode > /tmp/cartera070-bundle.tar.gz
           tar -xzf /tmp/cartera070-bundle.tar.gz
           rm -rf .forge-bootstrap
           node scripts/ci/cartera-070abcd-materialize-app.mjs
