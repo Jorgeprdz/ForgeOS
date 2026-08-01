@@ -346,8 +346,7 @@ export function renderQuoteResultSnapshot(snapshot, { host, documentRef = docume
   const header = documentRef.createElement("header");
   header.className = "quotes-intelligence-identity";
   const eyebrow = documentRef.createElement("span");
-  eyebrow.textContent = [snapshot.identity.family, snapshot.identity.version].filter(Boolean).join(" · ")
-    || "PRODUCT INTELLIGENCE";
+  eyebrow.textContent = snapshot.identity.family || "INTELIGENCIA DE PRODUCTO";
   const title = documentRef.createElement("h2");
   title.textContent = snapshot.identity.name || "Resultado de producto";
   const plan = documentRef.createElement("p");
