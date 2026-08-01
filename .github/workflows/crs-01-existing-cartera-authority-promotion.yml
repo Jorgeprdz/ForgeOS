@@ -1,0 +1,119 @@
+name: CRS 01 Existing Cartera Authority Promotion
+
+on:
+  pull_request:
+    paths:
+      - "platform/shared-commercial-model/crs-01-existing-cartera-authority-registry.js"
+      - "advisor-os/shared-commercial-model/crs-01-commercial-person-authority-facade.js"
+      - "docs/architecture/source-truth/FORGE_CRS_01_EXISTING_CARTERA_AUTHORITY_PROMOTION_001.md"
+      - "docs/evidence/FORGE_CRS_01_ABCD_CLOSURE_001.md"
+      - "tests/crs-01-existing-cartera-authority-registry-test.mjs"
+      - "tests/crs-01-commercial-person-authority-facade-test.mjs"
+      - ".github/workflows/crs-01-existing-cartera-authority-promotion.yml"
+  push:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-01-existing-cartera-authority-registry.js"
+      - "advisor-os/shared-commercial-model/crs-01-commercial-person-authority-facade.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authority-promotion:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+          allowed='^(platform/shared-commercial-model/crs-01-existing-cartera-authority-registry\.js|advisor-os/shared-commercial-model/crs-01-commercial-person-authority-facade\.js|docs/architecture/source-truth/FORGE_CRS_01_EXISTING_CARTERA_AUTHORITY_PROMOTION_001\.md|docs/evidence/FORGE_CRS_01_ABCD_CLOSURE_001\.md|tests/crs-01-existing-cartera-authority-registry-test\.mjs|tests/crs-01-commercial-person-authority-facade-test\.mjs|\.github/workflows/crs-01-existing-cartera-authority-promotion\.yml)$'
+
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_01_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'CRS_01_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check platform/shared-commercial-model/crs-01-existing-cartera-authority-registry.js
+          node --input-type=module --check < advisor-os/shared-commercial-model/crs-01-commercial-person-authority-facade.js
+
+      - name: CRS 01 targeted acceptance
+        run: |
+          node --test tests/crs-01-existing-cartera-authority-registry-test.mjs
+          node --test tests/crs-01-commercial-person-authority-facade-test.mjs
+
+      - name: Preserve CommercialPerson and identity authority
+        run: |
+          node --test tests/cartera-010a-identity-policy-persistence-scope-test.mjs
+          node --test tests/cartera-010b-contract-foundation-test.mjs
+          node --test tests/cartera-010b-conflict-ambiguity-hardening-test.mjs
+          node --test tests/cartera-010b-precedence-hardening-test.mjs
+
+      - name: Preserve directory, portfolio and relationship brief
+        run: |
+          node --test tests/cartera-010c-canonical-read-model-route-adapter-test.mjs
+          node --test tests/cartera-010d-unified-directory-read-model-service-test.mjs
+          node --test tests/cartera-010d-restricted-entity-privacy-test.mjs
+          node --test tests/cartera-040a-relationship-memory-service-test.mjs
+          node --test tests/cartera-040b-relationship-memory-projection-test.mjs
+
+      - name: Preserve relationship intelligence foundations
+        run: |
+          node --test tests/cartera-050c-authority-adapters-test.mjs
+          node --test tests/cartera-090b-relationship-capital-boundary-test.mjs
+          node --test tests/cartera-100a-productivity-proof-contract-test.mjs
+          node --test tests/cartera-100b-outcome-learning-boundary-test.mjs
+          node --test tests/cartera-100c-productivity-proof-service-test.mjs
+
+      - name: Enforce read-only facade and no duplicate authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          facade='advisor-os/shared-commercial-model/crs-01-commercial-person-authority-facade.js'
+          registry='platform/shared-commercial-model/crs-01-existing-cartera-authority-registry.js'
+          source='docs/architecture/source-truth/FORGE_CRS_01_EXISTING_CARTERA_AUTHORITY_PROMOTION_001.md'
+
+          ! grep -Eq '\.(insert|update|delete|upsert)\(' "$facade"
+          ! grep -Eq '\.rpc\(' "$facade"
+          ! grep -Eq 'localStorage|sessionStorage|indexedDB' "$facade"
+          grep -q 'readOnly: true' "$facade"
+          grep -q 'newCommercialPersonTable: false' "$registry"
+          grep -q 'parallelIdentityResolution: false' "$registry"
+          grep -q 'newPersonTimelineLedger: false' "$registry"
+          grep -q 'newRelationshipIntelligenceStack: false' "$registry"
+          grep -q 'CANONICAL_PERSON_AUTHORITY=CARTERA_010B_COMMERCIAL_PERSON' "$source"
+          grep -q 'NEW_ADVISOR_COMMERCIAL_RELATIONSHIP_PERSISTENCE=NOT_AUTHORIZED_WITHOUT_PROVEN_NON_DUPLICATE_LIFECYCLE' "$source"
+
+          echo 'CRS_01A_EXISTING_AUTHORITY_INVENTORY=PASS'
+          echo 'CRS_01B_AUTHORITY_PROMOTION_MAP=PASS'
+          echo 'CRS_01C_SHARED_READ_FACADE=PASS'
+          echo 'CRS_01_DUPLICATE_AUTHORITY_CONSTRUCTION=BLOCKED'
+          echo 'CRS_01_DATABASE_MUTATION=NO'
+          echo 'CRS_01_EXTERNAL_EFFECT=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
