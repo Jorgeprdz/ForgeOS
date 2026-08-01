@@ -4,13 +4,15 @@ import { readFile } from 'node:fs/promises';
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
-test('030D product enhancement is bound before the existing Cartera route emits mounted events', async () => {
+test('030D product enhancement is bound before all later Cartera enhancers and canonical route events', async () => {
     const app = await read('app.js');
     assert.match(app, /bindCartera030dPolicyPaymentCalendar/);
-    assert.match(
-        app,
-        /function bindCarteraProductEvents\(\) \{\s*bindCartera030dPolicyPaymentCalendar\(\);\s*(?:bindCartera040RelationshipMemory\(\);\s*)?return bindCarteraEvents\(\);/s
-    );
+    const binder = app.match(/function bindCarteraProductEvents\(\) \{([\s\S]*?)\n\}/)?.[1] || '';
+    const calendar = binder.indexOf('bindCartera030dPolicyPaymentCalendar');
+    const relationship = binder.indexOf('bindCartera040RelationshipMemory');
+    const radar = binder.indexOf('bindCartera050FutureRadar');
+    const route = binder.indexOf('bindCarteraEvents');
+    assert.ok(calendar >= 0 && calendar < relationship && relationship < radar && radar < route);
     assert.match(app, /bindCarteraEvents: bindCarteraProductEvents/);
 });
 
