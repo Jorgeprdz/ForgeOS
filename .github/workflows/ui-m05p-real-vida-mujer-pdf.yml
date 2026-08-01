@@ -89,6 +89,7 @@ jobs:
           echo "TARGET_URL=$target"
 
       - name: Generate governed local public environment
+        shell: bash
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
