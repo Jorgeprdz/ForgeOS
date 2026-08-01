@@ -1,0 +1,79 @@
+name: UI M05U Real PDF Smoke
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - .github/workflows/ui-m05u-real-pdf-smoke.yml
+      - playwright.ui-m05u.config.mjs
+      - tests/e2e/ui-m05u-real-pdf-smoke.spec.mjs
+      - scripts/assemble-ui-m05p-real-pdf.mjs
+      - scripts/serve-ui-m05p-acceptance.mjs
+      - tests/fixtures/ui-m05p-real-vida-mujer-pdf/**
+      - docs/static-preview/forge-alive-material3/**
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/ui-m05u-real-pdf-smoke.yml
+      - playwright.ui-m05u.config.mjs
+      - tests/e2e/ui-m05u-real-pdf-smoke.spec.mjs
+      - scripts/assemble-ui-m05p-real-pdf.mjs
+      - scripts/serve-ui-m05p-acceptance.mjs
+      - tests/fixtures/ui-m05p-real-vida-mujer-pdf/**
+      - docs/static-preview/forge-alive-material3/**
+
+permissions:
+  contents: read
+
+jobs:
+  real-pdf-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+    env:
+      CI: "true"
+      FORGE_M05P_PDF_PATH: artifacts/ui-m05p/fixture/Solucionline_20260711_16_05.PDF
+      FORGE_M05U_TARGET_URL: http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+
+      - name: Generate governed public environment
+        shell: bash
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "${SUPABASE_URL:-}"
+          test -n "${SUPABASE_ANON_KEY:-}"
+          node - <<'EOF'
+          const fs = require('fs');
+          fs.writeFileSync(
+            'env.js',
+            `window.__ENV__ = Object.freeze(${JSON.stringify({
+              SUPABASE_URL: process.env.SUPABASE_URL,
+              SUPABASE_KEY: process.env.SUPABASE_ANON_KEY,
+              DEMO_MODE: "false",
+              ENABLE_TEST_ADVISOR_LOGIN: "false",
+            }, null, 2)});\n`,
+          );
+          EOF
+
+      - name: Assemble exact uploaded PDF
+        run: node scripts/assemble-ui-m05p-real-pdf.mjs
+
+      - name: Run fast closure smoke
+        run: npx playwright test --config=playwright.ui-m05u.config.mjs
+
+      - name: Upload smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-m05u-real-pdf-${{ github.run_id }}
+          path: artifacts/ui-m05u
+          if-no-files-found: error
+          retention-days: 30

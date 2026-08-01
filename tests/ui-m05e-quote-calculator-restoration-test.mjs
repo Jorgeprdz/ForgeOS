@@ -81,15 +81,15 @@ assert.match(
 );
 assert.match(
   productiveApp,
-  /quote-runtime-hotfix-m05e003\.js\?v=m05e-010-pages-rate/,
+  /quote-runtime-hotfix-m05e003\.js\?v=m05q-001-loop-closure/,
 );
 assert.match(
   productiveApp,
-  /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05e-009/,
+  /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05r-001-bridge-composition/,
 );
 assert.match(
   productiveApp,
-  /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05e-010/,
+  /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05t-001-coalesced/,
 );
 assert.match(
   productiveApp,

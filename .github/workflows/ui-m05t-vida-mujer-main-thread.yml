@@ -1,0 +1,38 @@
+name: UI M05T Vida Mujer Main Thread
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-bridge-composition-m05r001.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js
+      - tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+      - tests/ui-m05r-quote-bridge-composition-test.mjs
+      - tests/ui-m05t-vida-mujer-visual-coalescing-test.mjs
+      - .github/workflows/ui-m05t-vida-mujer-main-thread.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-bridge-composition-m05r001.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js
+      - tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+      - tests/ui-m05r-quote-bridge-composition-test.mjs
+      - tests/ui-m05t-vida-mujer-visual-coalescing-test.mjs
+      - .github/workflows/ui-m05t-vida-mujer-main-thread.yml
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+      - run: node tests/ui-m05r-quote-bridge-composition-test.mjs
+      - run: node tests/ui-m05t-vida-mujer-visual-coalescing-test.mjs

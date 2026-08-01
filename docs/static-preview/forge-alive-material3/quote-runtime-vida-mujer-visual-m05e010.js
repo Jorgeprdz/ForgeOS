@@ -1,4 +1,5 @@
 const VERSION = "M05E-010";
+const SCHEDULER_VERSION = "M05T-001";
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -157,7 +158,9 @@ function ensureTotalContributedCard(host, calculation) {
     value.replaceChildren();
     expected.forEach((text, index) => appendValueLine(value, text, index > 0));
   }
-  card.dataset.totalContributionBasis = "current_udi_equivalence";
+  if (card.dataset.totalContributionBasis !== "current_udi_equivalence") {
+    card.dataset.totalContributionBasis = "current_udi_equivalence";
+  }
   return true;
 }
 
@@ -177,52 +180,122 @@ function refineIdentity(host) {
 function refinePrintableCard() {
   const card = document.querySelector("[data-m05e005-printable-card]");
   const title = card?.querySelector(".forge-printable-card__title p");
-  const format = card?.querySelector(".forge-printable-card__format");
-  if (title) {
-    title.textContent =
-      "Propuesta comercial A4 horizontal, lista para revisar o compartir.";
+  const formatNode = card?.querySelector(".forge-printable-card__format");
+  const expectedTitle =
+    "Propuesta comercial A4 horizontal, lista para revisar o compartir.";
+  if (title && title.textContent !== expectedTitle) {
+    title.textContent = expectedTitle;
   }
-  if (format) format.textContent = "A4 · horizontal";
+  if (formatNode && formatNode.textContent !== "A4 · horizontal") {
+    formatNode.textContent = "A4 · horizontal";
+  }
 }
 
-function enhance() {
+let lastAppliedCalculation = null;
+
+function enhance(calculation = currentCalculation()) {
   ensureStyles();
-  const calculation = currentCalculation();
   if (!calculation || !isVidaMujer(calculation)) return false;
   const host = document.querySelector('[data-product-dashboard="vida_mujer"]');
   if (!host) return false;
+  if (
+    calculation === lastAppliedCalculation
+    && host.dataset.vidaMujerVisual === VERSION
+  ) {
+    return true;
+  }
 
-  host.dataset.vidaMujerVisual = VERSION;
+  if (host.dataset.vidaMujerVisual !== VERSION) {
+    host.dataset.vidaMujerVisual = VERSION;
+  }
   refineIdentity(host);
   ensureTotalContributedCard(host, calculation);
   refinePrintableCard();
   document.documentElement.dataset.vidaMujerVisualClosure = VERSION;
+  document.documentElement.dataset.vidaMujerVisualScheduler = SCHEDULER_VERSION;
+  lastAppliedCalculation = calculation;
   return true;
 }
 
-function schedule() {
-  for (const delay of [0, 60, 180, 450, 900]) {
-    globalThis.setTimeout(enhance, delay);
+function confirmationDialogOpen() {
+  const accept = document.querySelector('[data-quote-preview-action="accept"]');
+  if (!accept) return false;
+  const dialog = accept.closest('[role="dialog"], .forge-quote-preview-popup');
+  if (!dialog) return false;
+  return !dialog.hidden && dialog.getAttribute("aria-hidden") !== "true";
+}
+
+let scheduled = false;
+let retryTimer = null;
+let pendingReason = "boot";
+
+function clearRetry() {
+  if (retryTimer === null) return;
+  globalThis.clearTimeout(retryTimer);
+  retryTimer = null;
+}
+
+function flush() {
+  scheduled = false;
+
+  // The extraction confirmation must remain completely interaction-first.
+  // Visual enrichment starts only after the modal is gone.
+  if (confirmationDialogOpen()) {
+    if (retryTimer === null) {
+      retryTimer = globalThis.setTimeout(() => {
+        retryTimer = null;
+        schedule("confirmation-closed-retry");
+      }, 120);
+    }
+    return false;
   }
+
+  clearRetry();
+  const calculation = currentCalculation();
+  const applied = enhance(calculation);
+  document.documentElement.dataset.vidaMujerVisualLastReason = pendingReason;
+  if (!applied && retryTimer === null) {
+    retryTimer = globalThis.setTimeout(() => {
+      retryTimer = null;
+      schedule("single-host-retry");
+    }, 120);
+  }
+  return applied;
+}
+
+function schedule(reason = "event") {
+  pendingReason = reason;
+  if (scheduled) return;
+  scheduled = true;
+  const enqueue = globalThis.requestAnimationFrame
+    ? (callback) => globalThis.requestAnimationFrame(callback)
+    : (callback) => globalThis.setTimeout(callback, 0);
+  enqueue(flush);
 }
 
 for (const eventName of [
-  "forge:quotes-module-ready",
-  "forge:quote-candidate-ready",
   "forge:quote-preview-calculated",
   "forge:accepted-quote-confirmed",
   "forge:vida-mujer-handoff-ready",
   "forge:current-rate-authority-ready",
   "forge:qpd06-state",
 ]) {
-  globalThis.addEventListener?.(eventName, schedule);
+  globalThis.addEventListener?.(eventName, () => schedule(eventName));
 }
 
-schedule();
+globalThis.addEventListener?.("click", (event) => {
+  if (event.target?.closest?.('[data-quote-preview-action="accept"]')) {
+    schedule("quote-preview-accepted");
+  }
+});
+
+schedule("boot");
 
 globalThis.ForgeVidaMujerVisualM05E010 = Object.freeze({
   version: VERSION,
+  schedulerVersion: SCHEDULER_VERSION,
   enhance,
+  schedule,
   totalContribution,
 });
 
@@ -230,5 +303,6 @@ export {
   VERSION,
   enhance,
   isVidaMujer,
+  schedule,
   totalContribution,
 };

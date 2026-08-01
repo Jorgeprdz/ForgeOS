@@ -1,0 +1,30 @@
+name: UI M05W Printable Modal Layer
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/index.html
+      - docs/static-preview/forge-alive-material3/quote-runtime-printable-modal-layer-m05w001.js
+      - tests/ui-m05w-printable-modal-layer-test.mjs
+      - .github/workflows/ui-m05w-printable-modal-layer.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/index.html
+      - docs/static-preview/forge-alive-material3/quote-runtime-printable-modal-layer-m05w001.js
+      - tests/ui-m05w-printable-modal-layer-test.mjs
+      - .github/workflows/ui-m05w-printable-modal-layer.yml
+
+permissions:
+  contents: read
+
+jobs:
+  modal-layer-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node tests/ui-m05w-printable-modal-layer-test.mjs

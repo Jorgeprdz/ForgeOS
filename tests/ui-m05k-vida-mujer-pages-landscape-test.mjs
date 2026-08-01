@@ -208,15 +208,36 @@ const rateBridgeIndex = app.indexOf(
   "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
 );
 const hotfixIndex = app.indexOf(
-  "quote-runtime-hotfix-m05e003.js?v=m05e-010-pages-rate",
+  "quote-runtime-hotfix-m05e003.js?v=m05q-001-loop-closure",
 );
-assert.ok(envIndex >= 0 && rateBridgeIndex > envIndex && hotfixIndex > rateBridgeIndex);
-assert.match(app, /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05e-010/);
+const handoffIndex = app.indexOf(
+  "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05r-001-bridge-composition",
+);
+const compositionIndex = app.indexOf(
+  "quote-runtime-bridge-composition-m05r001.js?v=m05r-001",
+);
+const visualIndex = app.indexOf(
+  "quote-runtime-vida-mujer-visual-m05e010.js?v=m05t-001-coalesced",
+);
+assert.ok(
+  envIndex >= 0
+    && rateBridgeIndex > envIndex
+    && hotfixIndex > rateBridgeIndex
+    && handoffIndex > hotfixIndex
+    && compositionIndex > handoffIndex
+    && visualIndex > compositionIndex,
+);
+assert.match(
+  app,
+  /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05t-001-coalesced/,
+);
 assert.match(app, /vidaMujerVisualClosure = "M05E-010"/);
 assert.match(visualRuntime, /data-quote-mandatory-metric=\"total-contributed\"/);
 assert.match(visualRuntime, /Total aportado/);
 assert.match(visualRuntime, /A4 horizontal/);
+assert.match(visualRuntime, /SCHEDULER_VERSION = "M05T-001"/);
 assert.doesNotMatch(visualRuntime, /MutationObserver/);
+assert.doesNotMatch(visualRuntime, /\[0, 60, 180, 450, 900\]/);
 assert.match(visualStyles, /--vm-rose:\s*#caa1af/i);
 assert.match(visualStyles, /grid-template-columns:\s*repeat\(3/);
 assert.match(rateBridge, /functions\/v1\/banxico-rates/);
