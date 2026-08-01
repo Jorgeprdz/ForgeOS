@@ -16,9 +16,9 @@ const environmentBoot = app.indexOf(
   "const environmentAuthority = loadEnvironmentAuthority();",
 );
 const environmentImport = app.indexOf('await loadAuthority(envBase, "env.js")');
-const authFunction = app.indexOf("async function loadAuthAuthorities(environmentReady)");
+const authFunction = app.indexOf("async function loadAuthAuthorities()");
 const authEnvironmentGate = app.indexOf(
-  "const environmentLoaded = await environmentReady;",
+  "const environmentLoaded = await environmentAuthority;",
   authFunction,
 );
 const publicConfigImport = app.indexOf(
@@ -38,8 +38,9 @@ assert.ok(
 );
 
 assert.match(app, /if \(!globalThis\.__ENV__ \|\| typeof globalThis\.__ENV__ !== "object"\)/);
-assert.match(app, /void loadQuoteAuthorities\(environmentAuthority\);/);
-assert.match(app, /void loadAuthAuthorities\(environmentAuthority\);/);
+assert.match(app, /async function loadQuoteAuthorities\(\)[\s\S]*await environmentAuthority/);
+assert.match(app, /void loadQuoteAuthorities\(\);/);
+assert.match(app, /void loadAuthAuthorities\(\);/);
 assert.equal(
   (app.match(/loadAuthority\(envBase, "env\.js"\)/g) || []).length,
   1,
@@ -55,4 +56,5 @@ console.log("PASS UI-M05N public config boot order", {
   sharedEnvironmentAuthority: true,
   publicConfigAfterEnvironment: true,
   authRaceRemoved: true,
+  routeFirstBootContractPreserved: true,
 });
