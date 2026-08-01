@@ -5,6 +5,7 @@
 ```text
 DELIVERY_MODE=ONE_BRANCH_ONE_PR_ONE_UNIFIED_PASS
 BASE_BRANCH=feature/advisor-forecast-001-stages-0-2
+PR=133
 STAGE_3_COMPOSER_V1=IMPLEMENTED
 STAGE_4_EXPLANATION_ENGINE=IMPLEMENTED
 STAGE_5_READ_MODEL=IMPLEMENTED
@@ -19,14 +20,14 @@ This pass consumes the normalized and evidence-aware `ADVISOR_FORECAST_INPUT_V1`
 
 ## Stage 3 — Advisor Forecast Composer V1
 
-The Composer now:
+The Composer:
 
 - validates the Stage 1 input contract;
 - preserves immutable `KNOWN`, `ZERO`, `UNKNOWN`, `MISSING` and `STALE` semantics;
 - calculates confirmed-policy pace over the normalized monthly period;
 - emits conservative, baseline and stretch pace scenarios using `0.8`, `1.0` and `1.2` multipliers;
-- composes the existing `manager-advisor-forecast-engine.js` for protected activity, follow-up, prospecting, referral, appointment, Pipeline, production and historical context;
-- retains the existing Manager Forecast boundary and its blocked uses;
+- composes the real `manager-advisor-forecast-engine.js`;
+- retains the existing Manager Forecast boundary and blocked-use policy;
 - calculates current and projected policy-goal coverage;
 - emits deterministic confidence and health states;
 - performs no writes and creates no revenue, compensation, Pipeline or activity truth.
@@ -40,9 +41,10 @@ PACE_METHOD=LINEAR_CONFIRMED_POLICY_RATE
 SCENARIOS=0.8_1.0_1.2
 PACE_AUTHORITY_LABEL=SMNYL_PACE_FORECAST_COMPATIBLE_V1
 DIRECT_LEGACY_ESM_IMPORT=NO
+PRODUCTIVE_ADVISOR_FORECAST_PACE_OWNER=ADVISOR_FORECAST_COMPOSER_V1
 ```
 
-The existing SMNYL rule-pack is an isolated ESM-style module while Manager OS is CommonJS. The Composer therefore exposes a bounded compatibility projection with the same monthly pace semantics without importing the disconnected executive-dashboard runtime. It is the only productive Advisor Forecast V1 pace calculation introduced by this pass.
+The existing SMNYL rule-pack is an isolated ESM-style module while Manager OS is CommonJS. The Composer exposes a bounded compatibility projection with the same monthly pace semantics without importing the disconnected executive-dashboard runtime.
 
 ### Health states
 
@@ -54,11 +56,11 @@ NEEDS_UPDATE=CRITICAL_TARGET_OR_PRODUCTION_SIGNAL_STALE
 INSUFFICIENT_DATA=TARGET_OR_PRODUCTION_NOT_USABLE
 ```
 
-These states are navigation and review context only. They do not create performance, ranking, promotion, punishment or lifecycle truth.
+These states are review context only. They do not create performance, ranking, promotion, punishment or lifecycle truth.
 
 ## Stage 4 — Explanation Engine
 
-The explanation layer now produces:
+The explanation layer produces:
 
 - one primary explanation;
 - up to five supporting facts;
@@ -67,16 +69,6 @@ The explanation layer now produces:
 - no more than three human-review action intents;
 - evidence references and source authorities;
 - explicit uncertainty and non-causation language.
-
-It may state that:
-
-- confirmed policy pace projects a given count;
-- active Pipeline contains a given count;
-- Pipeline is not yet weighted by amount or probability;
-- activity authority reports a given count;
-- a source is missing, unknown or stale.
-
-It may not claim that a particular activity caused production, that an opportunity will close, or that a projected policy count is certain.
 
 ```text
 HIDDEN_CAUSATION=BLOCKED
@@ -87,25 +79,20 @@ UNSUPPORTED_REVENUE_CLAIM=BLOCKED
 
 ## Stage 5 — Advisor Forecast Read Model V1
 
-The Read Model exposes a calculation-free UI contract:
+The calculation-free UI contract exposes:
 
-- period and localized period label;
+- period and localized label;
 - monthly policy target;
 - confirmed production;
 - current progress;
-- pace projection;
-- conservative, baseline and stretch scenarios;
+- pace projection and three scenarios;
 - projected coverage;
 - confidence and health status;
-- primary explanation;
-- supporting and risk facts;
+- primary explanation, supporting facts and risks;
 - active opportunity count;
 - stale and missing counts;
 - bounded action intents;
-- evidence and freshness;
-- render hints.
-
-It does not mount a SmartWidget, calculate business truth, create routes or mutate any source.
+- evidence, freshness and render hints.
 
 ```text
 READ_MODEL_CALCULATION_PERFORMED=NO
@@ -116,15 +103,21 @@ CONTEXTUAL_NAVIGATION=NOT_INCLUDED
 
 ## Validation
 
+First remote validation:
+
 ```text
+WORKFLOW=Advisor Forecast Stages 3-5 Validation
+RUN_ID=30710394545
+CONCLUSION=SUCCESS
 LOCAL_STAGE_3_4_5_TESTS=24_OF_24_PASS
-REAL_MANAGER_ENGINE_INTEGRATION=CI_REQUIRED
-INHERITED_STAGE_0_1_TESTS=REQUIRED
-INHERITED_STAGE_2_TESTS=REQUIRED
-MANAGER_ADVISOR_FORECAST_MASTER=REQUIRED
-FORBIDDEN_RUNTIME_DEPENDENCY_SCAN=REQUIRED
-CI_STATUS=PENDING
+REAL_MANAGER_ENGINE_INTEGRATION=PASS
+INHERITED_STAGE_0_1_TESTS=PASS
+INHERITED_STAGE_2_TESTS=PASS
+MANAGER_ADVISOR_FORECAST_MASTER=PASS
+FORBIDDEN_RUNTIME_DEPENDENCY_SCAN=PASS
 ```
+
+The evidence-persistence commit triggers the same workflow again. Final delivery requires that latest run to remain green.
 
 ## Files
 
@@ -148,14 +141,17 @@ CI_STATUS=PENDING
 - automatic activity, task, message, calendar or Pipeline mutation;
 - Forecast versus actual reconciliation.
 
-## Final state before remote validation
+## Final state
 
 ```text
-ADVISOR_FORECAST_STAGE_3=IMPLEMENTED
-ADVISOR_FORECAST_STAGE_4=IMPLEMENTED
-ADVISOR_FORECAST_STAGE_5=IMPLEMENTED
+ADVISOR_FORECAST_STAGE_3=COMPLETE
+ADVISOR_FORECAST_STAGE_4=COMPLETE
+ADVISOR_FORECAST_STAGE_5=COMPLETE
 LOCAL_VALIDATION=24_OF_24_PASS
-REMOTE_CI=PENDING
+REMOTE_VALIDATION=PASS_RUN_30710394545
+PR_STATE=OPEN
+PR_MERGEABLE=YES
+PR_MERGED=NO
 MERGE_AUTHORIZATION=NOT_ASSUMED
 NEXT=ADVISOR_FORECAST_STAGE_6_HOME_SMARTWIDGET
 ```
