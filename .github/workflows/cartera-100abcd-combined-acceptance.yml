@@ -2,7 +2,7 @@ name: CARTERA 100A + 100B + 100C + 100D Combined Acceptance
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
     branches:
       - feature/cartera-090abcd-relationship-capital
 
@@ -12,6 +12,7 @@ permissions:
 jobs:
   combined-delivery:
     if: >-
+      github.actor != 'github-actions[bot]' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.head.ref == 'feature/cartera-100abcd-productivity-proof-learning' &&
       github.event.pull_request.base.ref == 'feature/cartera-090abcd-relationship-capital'
@@ -35,16 +36,21 @@ jobs:
         with:
           node-version: 22
 
-      - name: Materialize 100D productive app binding
+      - name: Materialize accepted source and productive app binding
         shell: bash
         run: |
           set -euo pipefail
+          node scripts/ci/cartera-100-materialize-source-fixes.mjs
           node scripts/ci/cartera-100-materialize-app.mjs
-          if ! git diff --quiet -- app.js; then
+          if ! git diff --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add app.js
-            git commit -m 'feat(cartera): mount productivity proof surface'
+            git add \
+              app.js \
+              platform/productivity/cartera-100a-productivity-proof-contract.js \
+              platform/productivity/cartera-100b-outcome-learning-boundary.js \
+              advisor-os/cartera/cartera-100c-productivity-proof-service.js
+            git commit -m 'fix(cartera): materialize accepted productivity boundaries'
             git push origin HEAD:feature/cartera-100abcd-productivity-proof-learning
           fi
           echo "CARTERA_100ABCD_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
