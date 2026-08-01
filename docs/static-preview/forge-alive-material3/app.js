@@ -1,3 +1,4 @@
+import "./authenticated-route-guard.js?v=auth-route-guard-001";
 import "./login-integrated-demo.js?v=forge-demo-login-001";
 import "./rep-17-session-transition-guard.js?v=rep-17c-001";
 import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";
