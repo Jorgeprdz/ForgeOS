@@ -56,6 +56,10 @@ const pagesRuntimeMode =
   process.env.FORGE_PAGES_RUNTIME_MODE === "pages"
   || process.env.GITHUB_WORKFLOW === "Deploy ForgeOS to GitHub Pages";
 
+const carteraPagesRuntimeMode =
+  process.env.FORGE_CARTERA_PAGES_RUNTIME_MODE === "pages"
+  || process.env.GITHUB_WORKFLOW === "Deploy ForgeOS to GitHub Pages";
+
 async function listFiles(directory, predicate, prefix = "") {
   const entries = await readdir(directory, { withFileTypes: true });
   const selected = [];
@@ -360,7 +364,9 @@ if (pagesRuntimeMode) {
     )).href}?smart-widget-pages-build=${Date.now()}`
   );
 
-  const carteraRuntimeFiles = await generateCarteraPagesRuntime();
+  const carteraRuntimeFiles = carteraPagesRuntimeMode
+    ? await generateCarteraPagesRuntime()
+    : [];
 
   console.log(
     `Generated ${reportingFiles.length} reporting .js modules, ${smartWidgetFiles.length} Smart Widget .js modules, ${activityLedgerRuntimeFiles.length} FES ledger modules and ${carteraRuntimeFiles.length} Cartera modules for Pages.`,
