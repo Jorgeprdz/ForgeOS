@@ -1,0 +1,75 @@
+name: Task 2 Clean Rebase and Auth Acceptance
+
+on:
+  push:
+    branches:
+      - feature/login-integrated-demo-tenants
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/authenticated-route-guard.js
+      - tests/authenticated-route-guard-test.mjs
+      - .github/workflows/task2-clean-rebase-and-auth-acceptance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: task2-clean-rebase-auth-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-and-clean:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact Task 2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/login-integrated-demo-tenants
+          fetch-depth: 0
+          token: ${{ github.token }}
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate authentication boundary
+        run: |
+          node --check docs/static-preview/forge-alive-material3/app.js
+          node --check docs/static-preview/forge-alive-material3/authenticated-route-guard.js
+          node --test tests/authenticated-route-guard-test.mjs
+
+      - name: Rebase only Task 2 commits onto merged main
+        env:
+          STACKED_BASE: 670c613c8838c3f7b60e809ab7565580c08e5077
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin main feature/login-integrated-demo-tenants
+
+          if git merge-base --is-ancestor "$STACKED_BASE" HEAD; then
+            git rebase --onto origin/main "$STACKED_BASE" HEAD
+            git push --force-with-lease origin HEAD:feature/login-integrated-demo-tenants
+            echo "TASK_2_HISTORY_REBUILT=YES"
+          else
+            echo "TASK_2_HISTORY_ALREADY_CLEAN=YES"
+          fi
+
+      - name: Verify Task 1 files are inherited, not reintroduced
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main feature/login-integrated-demo-tenants
+          git diff --name-only origin/main...origin/feature/login-integrated-demo-tenants > /tmp/task2-files.txt
+          forbidden='^(\.github/workflows/cartera-pages-runtime-assets\.yml|docs/evidence/FORGE_CARTERA_PAGES_RUNTIME_ASSET_HOTFIX_001\.md|scripts/build-advisor-presentation-pages-runtime\.mjs|tests/cartera-pages-runtime-assets-test\.mjs)$'
+          if grep -E "$forbidden" /tmp/task2-files.txt; then
+            echo "TASK_1_FILE_REINTRODUCTION=FAIL" >&2
+            exit 1
+          fi
+          grep -Fx 'docs/static-preview/forge-alive-material3/authenticated-route-guard.js' /tmp/task2-files.txt
+          grep -Fx 'tests/authenticated-route-guard-test.mjs' /tmp/task2-files.txt
+          echo "TASK_2_DIFF_CLEAN=PASS"
+          echo "AUTH_ROUTE_GUARD=PASS"
