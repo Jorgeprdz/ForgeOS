@@ -52,13 +52,15 @@ function uncertainty(readModel) {
     ...(readModel?.missingInformation || []).map((entry) => entry.signal || entry),
     ...(readModel?.staleInformation || []).map((entry) => entry.signal || entry),
     ...(readModel?.opportunityForecast?.unknownCount > 0 ? ["opportunity_evidence_incomplete"] : []),
+    ...(readModel?.activityRequirement?.status === "INSUFFICIENT_DATA" ? ["activity_conversion_context_incomplete"] : []),
     "weighted_pipeline_is_decision_context_not_guaranteed_production",
   ]);
 }
 
 export function createAdvisorForecastSmartWidget({ readModel, monthEndWindow = false, rankScore = 70 } = {}) {
-  if (!readModel || readModel.schema !== "ADVISOR_FORECAST_READ_MODEL_V2") {
-    throw new TypeError("ADVISOR_FORECAST_READ_MODEL_V2 is required");
+  const acceptedSchemas = ["ADVISOR_FORECAST_READ_MODEL_V2", "ADVISOR_FORECAST_READ_MODEL_V3"];
+  if (!readModel || !acceptedSchemas.includes(readModel.schema)) {
+    throw new TypeError("ADVISOR_FORECAST_READ_MODEL_V2 or V3 is required");
   }
   const state = widgetState(readModel);
   const detailRoute = resolveAdvisorForecastNavigationAction({
@@ -116,11 +118,12 @@ export function createAdvisorForecastSmartWidget({ readModel, monthEndWindow = f
     missingContext: uniqueStrings([
       ...(readModel.missingInformation || []).map((entry) => entry.signal || entry),
       ...(readModel.goalGap?.state === "DATA_INSUFFICIENT" ? ["goal_gap_context"] : []),
+      ...(readModel.activityRequirement?.missingRates || []),
     ]),
     confidence: readModel.confidence || "LOW",
     freshness: cloneJson({ generatedAt: readModel.generatedAt, staleSignalCount: readModel.staleSignalCount || 0 }),
     sourceAuthorities: [
-      "ADVISOR_FORECAST_READ_MODEL_V2",
+      readModel.schema,
       "PRODUCTION_EVENTS",
       "ADVISOR_MONTHLY_POLICY_GOAL",
       "PIPELINE",
@@ -138,6 +141,8 @@ export function createAdvisorForecastSmartWidget({ readModel, monthEndWindow = f
       healthStatus: readModel.healthStatus,
       goalGap: readModel.goalGap,
       opportunityForecast: readModel.opportunityForecast,
+      activityRequirement: readModel.activityRequirement || null,
+      activityHandoff: readModel.activityHandoff || null,
       actions: readModel.actions,
     }),
     unavailableDataRedacted: state === SMART_WIDGET_STATES.SOURCE_UNAVAILABLE,
