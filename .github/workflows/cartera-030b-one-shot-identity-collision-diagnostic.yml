@@ -1,0 +1,149 @@
+name: CARTERA 030B One-Shot Identity Collision Diagnostic
+
+on:
+  pull_request:
+    branches:
+      - run/cartera-030b-durable-conflict-hardening-20260731-2031
+    types:
+      - opened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-030b-identity-collision-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.ref == 'run/cartera-030b-identity-collision-diagnostic-20260731-2035' &&
+      github.event.pull_request.base.ref == 'run/cartera-030b-durable-conflict-hardening-20260731-2031' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_030B_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_030B_REMOTE_MUTATION
+      CARTERA_030B_EXPECTED_SOURCE_HEAD: 23b52fc7a442f52494c51fead67699004923c547
+      CARTERA_030B_ACCEPTANCE_BRANCH: run/cartera-030b-identity-collision-diagnostic-20260731-2035
+
+    steps:
+      - name: Checkout exact diagnostic branch
+        uses: actions/checkout@v4
+        with:
+          ref: run/cartera-030b-identity-collision-diagnostic-20260731-2035
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Authorization and diagnostic scope gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-030b-remote-acceptance
+          test "$CARTERA_030B_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_030B_REMOTE_MUTATION'
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          base=df41c7ea43850c3a6b7d56d98905842d5c48c96c
+          git merge-base --is-ancestor "$base" HEAD
+          git diff --check "$base"...HEAD
+          mapfile -t changed < <(git diff --name-only "$base"...HEAD)
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = '.github/workflows/cartera-030b-one-shot-identity-collision-diagnostic.yml'
+          echo 'IDENTITY_COLLISION_DIAGNOSTIC_AUTHORIZATION=PASS'
+          echo 'SUPABASE_SCHEMA_MUTATION=NO'
+
+      - name: Persist rollback-only diagnostic instrumentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          old_branch = 'run/cartera-030b-durable-conflict-hardening-20260731-2031'
+          new_branch = 'run/cartera-030b-identity-collision-diagnostic-20260731-2035'
+
+          runner = Path('scripts/ci/cartera-030b-remote-acceptance.mjs')
+          source = runner.read_text()
+          if source.count(old_branch) != 1:
+              raise SystemExit('RUNNER_BRANCH_REPLACEMENT_COUNT_INVALID')
+          runner.write_text(source.replace(old_branch, new_branch))
+
+          contract = Path('tests/cartera-030b-remote-acceptance-contract-test.mjs')
+          source = contract.read_text()
+          old_assertion = "  assert.match(source, /run\\/cartera-030b-durable-conflict-hardening-20260731-2031/);"
+          new_assertion = "  assert.match(source, /run\\/cartera-030b-identity-collision-diagnostic-20260731-2035/);"
+          if source.count(old_assertion) != 1:
+              raise SystemExit('CONTRACT_BRANCH_ASSERTION_COUNT_INVALID')
+          contract.write_text(source.replace(old_assertion, new_assertion))
+
+          acceptance = Path('scripts/ci/cartera-030b-remote-acceptance.sql')
+          source = acceptance.read_text()
+          old = "    raise exception 'CARTERA030B_IDENTITY_COLLISION_CONFLICT_NOT_DURABLE';"
+          new = """    raise exception 'CARTERA030B_IDENTITY_COLLISION_CONFLICT_NOT_DURABLE_DIAGNOSTIC:response=%,forged=%,conflicts=%',
+              (select payload from cartera030b_acceptance_results where name = 'identity-collision'),
+              (select forged_reference from cartera030b_acceptance_ids),
+              coalesce((
+                select jsonb_agg(jsonb_build_object(
+                  'type', c.conflict_type,
+                  'reference', c.conflict_reference,
+                  'obligationReference', c.claims ->> 'obligationReference',
+                  'claims', c.claims
+                ) order by c.recorded_at)
+                from public.cartera030b_obligation_conflicts c
+                where c.advisor_id = (select user_a from cartera030b_acceptance_ids)
+              ), '[]'::jsonb);"""
+          if source.count(old) != 1:
+              raise SystemExit('DIAGNOSTIC_REPLACEMENT_COUNT_INVALID')
+          repaired = source.replace(old, new)
+          if old in repaired or repaired.count('IDENTITY_COLLISION_CONFLICT_NOT_DURABLE_DIAGNOSTIC') != 1:
+              raise SystemExit('DIAGNOSTIC_INSTRUMENTATION_VERIFICATION_FAILED')
+          acceptance.write_text(repaired)
+          PY
+
+          mapfile -t changed < <(git status --short | sed 's/^...//')
+          test "${#changed[@]}" -eq 3
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            scripts/ci/cartera-030b-remote-acceptance.sql \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs \
+            | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+          node --check scripts/ci/cartera-030b-remote-acceptance.mjs
+          node --test tests/cartera-030b-*.mjs
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            scripts/ci/cartera-030b-remote-acceptance.sql \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs
+          git commit -m 'test(cartera): instrument 030B identity collision diagnostic'
+          git push origin HEAD:run/cartera-030b-identity-collision-diagnostic-20260731-2035
+          echo "CARTERA_030B_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo 'IDENTITY_COLLISION_DIAGNOSTIC=PERSISTED'
+
+      - name: Execute rollback-only remote diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-030b-remote-acceptance.mjs \
+            | tee artifacts/cartera-030b-remote-acceptance/workflow-output.log
+
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-030b-identity-collision-diagnostic
+          path: artifacts/cartera-030b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
