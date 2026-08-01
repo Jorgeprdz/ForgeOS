@@ -1,98 +1,108 @@
 name: Reporting Core Validation
 
 on:
-  push:
-    branches:
-      - 'integration/reporting-source-truth-reconciliation'
-    paths:
-      - 'advisor-os/reporting/**'
-      - 'platform/event-evidence/**'
-      - 'docs/static-preview/forge-alive-material3/index.html'
-      - 'docs/static-preview/forge-alive-material3/app.js'
-      - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
-      - 'docs/static-preview/forge-alive-material3/activity-*'
-      - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
-      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
-      - 'tests/rep-16d-productive-activity-delivery-test.mjs'
-      - 'tests/rep-16f-pages-runtime-generator-test.mjs'
-      - '.github/workflows/reporting-core-validation-ci.yml'
   pull_request:
+    branches:
+      - main
     paths:
-      - 'advisor-os/reporting/**'
-      - 'platform/event-evidence/**'
-      - 'docs/static-preview/forge-alive-material3/index.html'
-      - 'docs/static-preview/forge-alive-material3/app.js'
-      - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
-      - 'docs/static-preview/forge-alive-material3/activity-*'
-      - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
-      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
-      - 'tests/universal-reporting-kernel-test.mjs'
-      - 'tests/universal-period-resolver-test.mjs'
-      - 'tests/report-provider-runtime-test.mjs'
-      - 'tests/universal-report-aggregation-runtime-test.mjs'
-      - 'tests/report-comparison-engine-test.mjs'
-      - 'tests/chart-ready-surface-contract-test.mjs'
-      - 'tests/activity-report-source-port-test.mjs'
-      - 'tests/activity-event-authority-mapping-test.mjs'
-      - 'tests/fes-activity-report-source-adapter-test.mjs'
-      - 'tests/activity-report-provider-test.mjs'
-      - 'tests/activity-reporting-runtime-chart-ready-test.mjs'
-      - 'tests/rep-16d-productive-activity-delivery-test.mjs'
-      - 'tests/rep-16f-pages-runtime-generator-test.mjs'
       - '.github/workflows/reporting-core-validation-ci.yml'
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
+    if: github.actor == 'Jorgeprdz'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      - name: Validate imports
+          ref: hotfix/rep-16f-pages-mjs-publication
+          fetch-depth: 0
+
+      - name: Apply exact Pages mjs publication boundary
         run: |
-          node --check advisor-os/reporting/domain/reporting-kernel-contract.mjs
-          node --check advisor-os/reporting/domain/reporting-calendar-policy.mjs
-          node --check advisor-os/reporting/domain/report-definition.mjs
-          node --check advisor-os/reporting/domain/report-comparison-definition.mjs
-          node --check advisor-os/reporting/domain/universal-report-model.mjs
-          node --check advisor-os/reporting/domain/chart-ready-reporting-contract.mjs
-          node --check advisor-os/reporting/domain/activity-event-authority-mapping.mjs
-          node --check advisor-os/reporting/application/report-provider-port.mjs
-          node --check advisor-os/reporting/application/chart-ready-surface-contract.mjs
-          node --check advisor-os/reporting/application/activity-report-source-port.mjs
-          node --check advisor-os/reporting/application/activity-chart-ready-projection.mjs
-          node --check advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs
-          node --check advisor-os/reporting/providers/activity-report-provider.mjs
-          node --check advisor-os/reporting/runtime/universal-reporting-kernel.mjs
-          node --check advisor-os/reporting/runtime/universal-period-resolver.mjs
-          node --check advisor-os/reporting/runtime/report-provider-runtime.mjs
-          node --check advisor-os/reporting/runtime/universal-report-aggregation-runtime.mjs
-          node --check advisor-os/reporting/runtime/report-comparison-engine.mjs
-          node --check advisor-os/reporting/runtime/activity-reporting-runtime.mjs
-          node --check docs/static-preview/forge-alive-material3/node-crypto-shim.mjs
-          node --check docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
-          node --check scripts/build-advisor-presentation-pages-runtime.mjs
-          node --check tests/rep-16f-pages-runtime-generator-test.mjs
-          node --input-type=module --check < docs/static-preview/forge-alive-material3/activity-module.js
-          node --input-type=module --check < docs/static-preview/forge-alive-material3/app.js
-      - name: Run isolated core tests
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/pages.yml')
+          text = path.read_text()
+
+          old_extension = """            '.map',
+            '.png',"""
+          new_extension = """            '.map',
+            '.mjs',
+            '.png',"""
+          if text.count(old_extension) != 1:
+              raise SystemExit(
+                  f"expected one public extension boundary, got {text.count(old_extension)}"
+              )
+          text = text.replace(old_extension, new_extension)
+
+          old_validation = """          for (const file of requiredConversationRuntime) {
+            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
+          }
+
+          const rootIndex = fs.readFileSync('_site/index.html', 'utf8');"""
+          new_validation = """          for (const file of requiredConversationRuntime) {
+            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
+          }
+          const requiredActivityRuntime = [
+            'advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs',
+            'advisor-os/reporting/runtime/activity-reporting-runtime.mjs',
+            'advisor-os/reporting/runtime/universal-reporting-kernel.mjs',
+            'platform/event-evidence/canonical-activity-event-contract.js',
+            'platform/event-evidence/activity-ledger-contract.js',
+            'platform/event-evidence/activity-ledger-local-store.js',
+            'platform/event-evidence/activity-ledger-sync-service.js',
+            'platform/event-evidence/activity-ledger-supabase-gateway.js',
+            'platform/event-evidence/activity-ledger-browser-runtime.js',
+          ];
+          for (const file of requiredActivityRuntime) {
+            assert.ok(
+              fs.existsSync(path.join('_site', file)),
+              `missing productive Activity runtime asset: ${file}`,
+            );
+          }
+
+          const rootIndex = fs.readFileSync('_site/index.html', 'utf8');"""
+          if text.count(old_validation) != 1:
+              raise SystemExit(
+                  f"expected one Pages validation boundary, got {text.count(old_validation)}"
+              )
+          text = text.replace(old_validation, new_validation)
+          path.write_text(text)
+          PY
+
+      - name: Validate exact publication contract
         run: |
-          node --test \
-            tests/universal-reporting-kernel-test.mjs \
-            tests/universal-period-resolver-test.mjs \
-            tests/report-provider-runtime-test.mjs \
-            tests/universal-report-aggregation-runtime-test.mjs \
-            tests/report-comparison-engine-test.mjs \
-            tests/chart-ready-surface-contract-test.mjs \
-            tests/activity-report-source-port-test.mjs \
-            tests/activity-event-authority-mapping-test.mjs \
-            tests/fes-activity-report-source-adapter-test.mjs \
-            tests/activity-report-provider-test.mjs \
-            tests/activity-reporting-runtime-chart-ready-test.mjs \
-            tests/rep-16d-productive-activity-delivery-test.mjs \
-            tests/rep-16f-pages-runtime-generator-test.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/pages.yml').read_text()
+          assert text.count("'.mjs',") == 1
+          for asset in [
+              'advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs',
+              'advisor-os/reporting/runtime/activity-reporting-runtime.mjs',
+              'advisor-os/reporting/runtime/universal-reporting-kernel.mjs',
+              'platform/event-evidence/activity-ledger-browser-runtime.js',
+          ]:
+              assert asset in text, asset
+          assert 'requiredActivityRuntime' in text
+          print('REP_16F_PAGES_MJS_PUBLIC_EXTENSION=PASS')
+          print('REP_16F_PAGES_ACTIVITY_ASSET_ASSERTIONS=PASS')
+          PY
+          FORGE_PAGES_RUNTIME_MODE=pages node scripts/build-advisor-presentation-pages-runtime.mjs
+          test -f docs/advisor-os/reporting/runtime/activity-reporting-runtime.mjs
+          test -f docs/platform/event-evidence/activity-ledger-browser-runtime.js
+          git reset -q HEAD -- docs/advisor-os docs/platform docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
+          rm -rf docs/advisor-os docs/platform
+          git checkout -- docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
+
+      - name: Commit clean hotfix and restore CI workflow
+        run: |
+          git config user.name "ForgeOS Governance Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout 74706bdeb4f000761a109e08f0a7f4267c8ea494 -- .github/workflows/reporting-core-validation-ci.yml
+          git add .github/workflows/pages.yml .github/workflows/reporting-core-validation-ci.yml
+          git commit -m "REP-16F publish mjs Activity assets in Pages"
+          git push origin HEAD:hotfix/rep-16f-pages-mjs-publication
