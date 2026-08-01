@@ -77,21 +77,21 @@ select
   coalesce(
     has_function_privilege(
       'authenticated',
-      'public.forge_demo_current_session()',
+      to_regprocedure('public.forge_demo_current_session()'),
       'EXECUTE'
     ), false
   ) as authenticated_session_rpc,
   not coalesce(
     has_function_privilege(
       'anon',
-      'public.forge_demo_current_session()',
+      to_regprocedure('public.forge_demo_current_session()'),
       'EXECUTE'
     ), false
   ) as anonymous_session_rpc_blocked,
   not coalesce(
     has_table_privilege(
       'authenticated',
-      'public.forge_demo_advisors',
+      to_regclass('public.forge_demo_advisors'),
       'SELECT,INSERT,UPDATE,DELETE,TRUNCATE'
     ), false
   ) as authenticated_registry_access_blocked,
