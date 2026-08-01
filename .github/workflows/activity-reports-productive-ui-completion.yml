@@ -1,0 +1,73 @@
+name: Activity Reports Productive UI Completion
+
+on:
+  pull_request:
+    paths:
+      - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/activity-module.js"
+      - "docs/static-preview/forge-alive-material3/activity-operational-module.js"
+      - "docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js"
+      - "docs/static-preview/forge-alive-material3/activity-module.css"
+      - "tests/activity-reports-productive-ui-completion-test.mjs"
+      - "docs/evidence/ACTIVITY_REPORTS_PRODUCTIVE_UI_COMPLETION_001.md"
+      - ".github/workflows/activity-reports-productive-ui-completion.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/activity-*"
+      - "tests/activity-reports-productive-ui-completion-test.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate browser module syntax
+        run: |
+          node --input-type=module --check < docs/static-preview/forge-alive-material3/app.js
+          node --input-type=module --check < docs/static-preview/forge-alive-material3/activity-module.js
+          node --input-type=module --check < docs/static-preview/forge-alive-material3/activity-operational-module.js
+          node --input-type=module --check < docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js
+
+      - name: Validate Activity and Reports productive completion
+        run: node --test tests/activity-reports-productive-ui-completion-test.mjs
+
+      - name: Preserve REP and Pages reporting authority
+        run: |
+          node --test tests/rep-16d-productive-activity-delivery-test.mjs
+          node --test tests/rep-16f-pages-runtime-generator-test.mjs
+          node --test tests/activity-reporting-runtime-chart-ready-test.mjs
+          node --test tests/report-comparison-engine-test.mjs
+          node --test tests/chart-ready-surface-contract-test.mjs
+
+      - name: Preserve Forecast and Smart Widgets
+        run: |
+          node tests/advisor-forecast-runtime-acceptance-test.mjs
+          node tests/advisor-forecast-runtime-responsive-contract-test.mjs
+          node tests/smart-widgets-home-productive-mount-test.mjs
+          node tests/productive-smart-widget-orchestrator-master-test.mjs
+
+      - name: Preserve Cartera, Pipeline and session boundaries
+        run: |
+          node tests/cartera-material3-productive-ui-mount-test.mjs
+          node tests/material3-pipeline-integration-test.mjs
+          node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Reject automatic mutation boundaries
+        run: |
+          ! grep -Eq "\.insert\(|\.update\(|\.delete\(|createTask|createCalendarEvent|sendMessage" docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js
+          grep -Fq "automaticTaskCreation: false" docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js
+          grep -Fq "automaticCalendarCreation: false" docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js
+          grep -Fq "automaticFesEvent: false" docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js
+          grep -Fq "databaseMutation: false" docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js
+          grep -Fq "crmMutation: false" docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js
