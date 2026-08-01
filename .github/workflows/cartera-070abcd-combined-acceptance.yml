@@ -35,35 +35,31 @@ jobs:
         with:
           node-version: 22
 
-      - name: Materialize complete 070A–070D delivery
+      - name: Verify materialized delivery and persist harness repair
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p artifacts/cartera-070abcd-remote-acceptance
-          echo 'CARTERA_070ABCD_WORKFLOW=STARTED' > artifacts/cartera-070abcd-remote-acceptance/bootstrap.log
-          shopt -s nullglob
-          fragments=(.forge-bootstrap/cartera070.bundle.*.b64)
-          if (( ${#fragments[@]} != 5 )); then
-            echo "CARTERA_070ABCD_FRAGMENT_COUNT=${#fragments[@]}"
-            exit 1
-          fi
-          printf '%s\n' "${fragments[@]}" | sort > /tmp/cartera070-fragments
-          while IFS= read -r fragment; do cat "$fragment"; done < /tmp/cartera070-fragments \
-            | base64 --decode > /tmp/cartera070-bundle.tar.gz
-          tar -xzf /tmp/cartera070-bundle.tar.gz
-          rm -rf .forge-bootstrap
-          node scripts/ci/cartera-070abcd-materialize-app.mjs
+          echo 'CARTERA_070ABCD_WORKFLOW=RESUMED' > artifacts/cartera-070abcd-remote-acceptance/bootstrap.log
           test -f supabase/migrations/20260801000300_cartera070_relational_activation_helpers.sql
           test -f supabase/migrations/20260801000301_cartera070_relational_activation_read.sql
           test -f scripts/ci/cartera-070abcd-combined-acceptance.sh
+          test -f scripts/ci/cartera-070abcd-remote-acceptance.sql
           test -f advisor-os/cartera/cartera-070d-relational-activation-enhancement.js
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'feat(cartera): materialize combined 070A through 070D delivery'
-          git push origin HEAD:feature/cartera-070abcd-relational-activation
+          sed -i "s/'INCOMPLETE', 'CURRENT', 'CLEAR'/'PARTIAL', 'CURRENT', 'CLEAR'/" \
+            scripts/ci/cartera-070abcd-remote-acceptance.sql
+          grep -q "'PARTIAL', 'CURRENT', 'CLEAR'" \
+            scripts/ci/cartera-070abcd-remote-acceptance.sql
+          if ! git diff --quiet -- scripts/ci/cartera-070abcd-remote-acceptance.sql; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add scripts/ci/cartera-070abcd-remote-acceptance.sql
+            git commit -m 'test(cartera): use canonical partial completeness in 070 fixture'
+            git push origin HEAD:feature/cartera-070abcd-relational-activation
+          fi
           echo "CARTERA_070ABCD_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-          echo 'CARTERA_070ABCD_DELIVERY=MATERIALIZED'
+          echo 'CARTERA_070ABCD_DELIVERY=ALREADY_MATERIALIZED'
+          echo 'CARTERA_070ABCD_FIXTURE_COMPLETENESS=PARTIAL'
 
       - name: Execute combined gates and remote acceptance
         run: bash scripts/ci/cartera-070abcd-combined-acceptance.sh
