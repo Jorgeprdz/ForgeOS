@@ -69,7 +69,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node --test tests/confirmation-policy-write-cut-test.mjs tests/confirmation-production-runtime-test.mjs tests/confirmation-review-bridge-test.mjs
+          node tests/confirmation-policy-write-cut-test.mjs
+          node tests/confirmation-production-runtime-test.mjs
+          node tests/confirmation-review-bridge-test.mjs
 
       - name: Verify accepted remote closure and authority boundaries
         shell: bash
@@ -103,7 +105,9 @@ jobs:
           echo 'CARTERA_020C_TESTS=95'
           echo 'CARTERA_020C_PASS=95'
           echo 'CARTERA_020C_FAIL=0'
+          echo 'INHERITED_CONFIRMATION_TESTS=3'
+          echo 'INHERITED_CONFIRMATION_PASS=3'
           echo 'CARTERA_020C_REMOTE_DEPLOYMENT=PASS'
           echo 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS'
           echo 'CARTERA_020C_COMPLETE=YES'
-          echo 'NEXT=ADVANCE_CARTERA_ROADMAP'
+          echo 'NEXT=CARTERA_030A_POLICY_PAYMENT_CALENDAR_SCOPE'
