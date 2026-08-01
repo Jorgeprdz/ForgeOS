@@ -211,11 +211,11 @@ test("productive FES ledger reaches chart-ready Material 3 Activity", async ({ p
   );
   await expect(page.locator("html")).toHaveAttribute(
     "data-activity-reporting-runtime",
-    "REP-16E",
+    "REP-18",
   );
   await expect(page.locator("[data-reporting-crypto-import-map]")).toHaveCount(1);
 
-  const bottomReserve = await surface.evaluate((element) =>
+  const bottomReserve = await page.locator("[data-activity-workspace]").evaluate((element) =>
     Number.parseFloat(getComputedStyle(element).paddingBottom),
   );
   expect(bottomReserve).toBeGreaterThanOrEqual(170);
