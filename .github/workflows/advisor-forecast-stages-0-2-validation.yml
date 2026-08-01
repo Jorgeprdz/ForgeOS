@@ -1,0 +1,33 @@
+name: Advisor Forecast Stages 0-2 Validation
+
+on:
+  pull_request:
+    paths:
+      - "manager-os/forecast/advisor-forecast-runtime-reconciliation.js"
+      - "manager-os/forecast/advisor-forecast-input-contract.js"
+      - "manager-os/forecast/advisor-forecast-normalizer.js"
+      - "manager-os/tests/advisor-forecast-stages-0-1-test.js"
+      - "manager-os/tests/advisor-forecast-stage-2-test.js"
+      - "manager-os/forecast/manager-advisor-forecast-engine.js"
+      - "manager-os/forecast/manager-forecast-boundary-contract.js"
+      - ".github/workflows/advisor-forecast-stages-0-2-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate stages 0 and 1
+        run: node manager-os/tests/advisor-forecast-stages-0-1-test.js
+      - name: Validate stage 2
+        run: node manager-os/tests/advisor-forecast-stage-2-test.js
+      - name: Preserve existing Advisor Forecast contract
+        run: node manager-os/tests/manager-advisor-forecast-engine-master-test.js
