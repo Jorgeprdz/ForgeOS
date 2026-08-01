@@ -1,0 +1,62 @@
+name: Advisor Forecast Runtime Acceptance
+
+on:
+  pull_request:
+    paths:
+      - docs/static-preview/forge-alive-material3/advisor-forecast-runtime-acceptance.js
+      - docs/static-preview/forge-alive-material3/advisor-forecast-runtime-acceptance.css
+      - docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js
+      - tests/advisor-forecast-runtime-acceptance-test.mjs
+      - tests/advisor-forecast-runtime-responsive-contract-test.mjs
+      - docs/evidence/ADVISOR_FORECAST_RUNTIME_ACCEPTANCE_001.md
+      - docs/roadmaps/ADVISOR_FORECAST_001_EXISTING_RUNTIME_RECONCILIATION.md
+      - .github/workflows/advisor-forecast-runtime-acceptance.yml
+  push:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/advisor-forecast-runtime-acceptance.js
+      - docs/static-preview/forge-alive-material3/advisor-forecast-runtime-acceptance.css
+      - docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js
+      - tests/advisor-forecast-runtime-acceptance-test.mjs
+      - tests/advisor-forecast-runtime-responsive-contract-test.mjs
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax boundaries
+        run: |
+          node --check docs/static-preview/forge-alive-material3/advisor-forecast-runtime-acceptance.js
+          node --check docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js
+      - name: Runtime parity and acceptance
+        run: |
+          node tests/advisor-forecast-runtime-acceptance-test.mjs
+          node tests/advisor-forecast-runtime-responsive-contract-test.mjs
+      - name: Preserve Advisor Forecast stages 0 through 13
+        run: |
+          node manager-os/tests/advisor-forecast-stages-0-1-test.js
+          node manager-os/tests/advisor-forecast-stage-2-test.js
+          node manager-os/tests/advisor-forecast-stages-3-5-test.js
+          node tests/advisor-forecast-stages-6-8-test.mjs
+          node manager-os/tests/advisor-forecast-stages-9-10-test.js
+          node manager-os/tests/advisor-forecast-stages-11-13-test.js
+          node tests/advisor-forecast-stages-11-13-handoff-test.mjs
+      - name: Preserve current productive Home and Smart Widgets
+        run: |
+          node tests/productive-smart-widget-orchestrator-master-test.mjs
+          node tests/productive-smart-widget-source-adapters-test.mjs
+          node tests/smart-widget-monthly-policy-goal-authority-test.mjs
+          node tests/smart-widgets-home-productive-mount-test.mjs
+          node --test tests/rep-16f-pages-runtime-generator-test.mjs
+      - name: Preserve productive Pipeline
+        run: node tests/material3-pipeline-integration-test.mjs
+      - name: Preserve FES Activity boundary
+        run: node tests/fes-01-canonical-activity-event-contract-test.mjs

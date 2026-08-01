@@ -1,0 +1,67 @@
+.advisor-forecast-route-surface {
+  min-width: 0;
+  padding-bottom: calc(132px + env(safe-area-inset-bottom));
+}
+
+.advisor-forecast-plan-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(142px, auto);
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.advisor-forecast-plan-row input[type="checkbox"] {
+  inline-size: 20px;
+  block-size: 20px;
+}
+
+.advisor-forecast-plan-row input[type="date"] {
+  min-height: 42px;
+  max-width: 190px;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 14px;
+  padding: 8px 10px;
+  color: inherit;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  font: inherit;
+}
+
+.advisor-forecast-plan-status,
+[data-advisor-forecast-plan-result] {
+  margin-top: 12px;
+  line-height: 1.45;
+}
+
+[data-advisor-forecast-pipeline-context] {
+  margin: 16px;
+  padding: 18px;
+}
+
+[data-advisor-forecast-pipeline-context] ul {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding-left: 20px;
+}
+
+[data-advisor-forecast-sources] pre {
+  max-width: 100%;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 680px) {
+  .advisor-forecast-plan-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .advisor-forecast-plan-row input[type="date"] {
+    grid-column: 2;
+    width: 100%;
+    max-width: none;
+  }
+}
