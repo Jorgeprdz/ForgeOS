@@ -1,9 +1,9 @@
 name: REP-16E Visual Harness Reconcile
 
 on:
-  push:
+  pull_request:
     branches:
-      - promotion/rep-16e-activity-clean-main
+      - main
     paths:
       - .github/workflows/rep-16e-visual-harness-reconcile.yml
 
