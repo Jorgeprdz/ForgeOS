@@ -1,0 +1,63 @@
+name: One Shot Reconcile QPD Version Gates V2
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - .github/workflows/one-shot-reconcile-qpd-version-gates-v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/vida-mujer-pdf-main-thread
+      - name: Replace retired authority cache keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              "m05e-010-pages-rate": "m05q-001-loop-closure",
+              "m05e-009": "m05r-001-bridge-composition",
+              "m05e-010": "m05t-001-coalesced",
+          }
+          files = [
+              Path("tests/ui-m05e-quote-calculator-restoration-test.mjs"),
+              Path("tests/ui-m05f-live-udi-review-printable-actions-test.mjs"),
+              Path("tests/ui-m05g-printable-design-closure-test.mjs"),
+          ]
+          for path in files:
+              text = path.read_text()
+              before = text
+              if path.name != "ui-m05g-printable-design-closure-test.mjs":
+                  text = text.replace("m05e-010-pages-rate", "m05q-001-loop-closure")
+              text = text.replace(
+                  "quote-runtime-vida-mujer-handoff-m05e009\\.js\\?v=m05e-009",
+                  "quote-runtime-vida-mujer-handoff-m05e009\\.js\\?v=m05r-001-bridge-composition",
+              )
+              text = text.replace(
+                  "quote-runtime-vida-mujer-visual-m05e010\\.js\\?v=m05e-010",
+                  "quote-runtime-vida-mujer-visual-m05e010\\.js\\?v=m05t-001-coalesced",
+              )
+              if text == before:
+                  raise SystemExit(f"NO_VERSION_GATE_CHANGE={path}")
+              path.write_text(text)
+          PY
+          grep -F 'm05q-001-loop-closure' tests/ui-m05e-quote-calculator-restoration-test.mjs
+          grep -F 'm05r-001-bridge-composition' tests/ui-m05g-printable-design-closure-test.mjs
+          grep -F 'm05t-001-coalesced' tests/ui-m05g-printable-design-closure-test.mjs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/ui-m05e-quote-calculator-restoration-test.mjs \
+            tests/ui-m05f-live-udi-review-printable-actions-test.mjs \
+            tests/ui-m05g-printable-design-closure-test.mjs
+          git commit -m "test(ui): reconcile QPD gates with M05Q M05R M05T"
+          git push origin HEAD:fix/vida-mujer-pdf-main-thread
