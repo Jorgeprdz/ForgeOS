@@ -4,10 +4,13 @@ on:
   pull_request:
     paths:
       - "advisor-os/forge-alive/smart-widgets/**"
+      - "docs/static-preview/forge-alive-material3/home-module.js"
+      - "docs/static-preview/forge-alive-material3/home-productive-orchestrator.js"
       - "docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.*"
       - "scripts/build-advisor-presentation-pages-runtime.mjs"
       - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
       - "tests/productive-smart-widget-*.mjs"
+      - "tests/smart-widgets-home-productive-mount-test.mjs"
       - "tests/rep-16f-pages-runtime-generator-test.mjs"
       - "tests/smart-widget-monthly-policy-goal-authority-test.mjs"
       - ".github/workflows/smart-widgets-productive-validation.yml"
@@ -38,14 +41,20 @@ jobs:
       - name: Monthly policy goal authority
         run: node tests/smart-widget-monthly-policy-goal-authority-test.mjs
 
+      - name: Productive Home mount contract
+        run: node tests/smart-widgets-home-productive-mount-test.mjs
+
       - name: Pages runtime generation
         run: node --test tests/rep-16f-pages-runtime-generator-test.mjs
 
       - name: Legacy Smart Widget read model regression
         run: node manager-os/tests/forge-alive-smart-widget-stack-read-model-master-test.js
 
-      - name: Browser adapter syntax
-        run: node --check docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js
+      - name: Browser runtime syntax
+        run: |
+          node --check docs/static-preview/forge-alive-material3/home-module.js
+          node --check docs/static-preview/forge-alive-material3/home-productive-orchestrator.js
+          node --check docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js
 
       - name: Boundary assertions
         shell: bash
@@ -63,3 +72,7 @@ jobs:
             advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs
           grep -q "UNKNOWN_IS_NOT_ZERO" \
             advisor-os/forge-alive/smart-widgets/productive-smart-widget-contract.mjs
+          grep -q "POLICY_SOLD_CONFIRMED" \
+            docs/static-preview/forge-alive-material3/home-productive-orchestrator.js
+          grep -q "forge_cartera050_list_future_radar" \
+            docs/static-preview/forge-alive-material3/home-productive-orchestrator.js
