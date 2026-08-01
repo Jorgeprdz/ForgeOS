@@ -103,7 +103,10 @@ test('logout, route unmount and late results are rejected', () => {
     'clearProductSession("route-unmounted")',
     'runCleaners(sessionCleaners)',
     'root.replaceChildren()',
+    'activeProduct.AppState.state.cartera = []',
+    'key.startsWith("cartera:")',
   ]);
+  assert.doesNotMatch(moduleSource, /dataset\.carteraAdvisorId/);
   assert.doesNotMatch(moduleSource, /Memory\.cleanup\(\)/);
 });
 

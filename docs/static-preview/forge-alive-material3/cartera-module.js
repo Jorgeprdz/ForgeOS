@@ -42,6 +42,7 @@ async function loadProductModules() {
   const [
     runtime,
     memory,
+    appState,
     cartera,
     paymentCalendar,
     relationshipMemory,
@@ -54,6 +55,7 @@ async function loadProductModules() {
   ] = await Promise.all([
     import(moduleUrl("supabase-runtime.js")),
     import(moduleUrl("memory-manager.js")),
+    import(moduleUrl("state-manager.js")),
     import(moduleUrl("cartera.js")),
     import(moduleUrl("advisor-os/cartera/cartera-030d-policy-payment-calendar-enhancement.js")),
     import(moduleUrl("advisor-os/cartera/cartera-040d-relationship-memory-enhancement.js")),
@@ -68,6 +70,7 @@ async function loadProductModules() {
   return Object.freeze({
     SupabaseRuntime: runtime.SupabaseRuntime,
     Memory: memory.Memory,
+    AppState: appState.AppState,
     renderCartera: cartera.renderCartera,
     bindCarteraEvents: cartera.bindCarteraEvents,
     binders: Object.freeze([
@@ -163,14 +166,21 @@ export function createCarteraModule({ root, shell } = {}) {
   let generation = 0;
   let productModulesPromise = null;
   let activeAdvisorId = null;
+  let activeProduct = null;
 
   function clearProductSession(reason = "scrub") {
     generation += 1;
     runCleaners(sessionCleaners);
+    if (activeProduct?.AppState?.state) {
+      activeProduct.AppState.state.cartera = [];
+      for (const key of Object.keys(activeProduct.AppState.state)) {
+        if (key.startsWith("cartera:")) delete activeProduct.AppState.state[key];
+      }
+    }
+    activeProduct = null;
     activeAdvisorId = null;
     root.replaceChildren();
     root.dataset.carteraMaterial3State = reason;
-    delete root.dataset.carteraAdvisorId;
     document.documentElement.dataset.carteraMaterial3Runtime = reason;
   }
 
@@ -200,9 +210,9 @@ export function createCarteraModule({ root, shell } = {}) {
       const product = await productModulesPromise;
       if (!mounted || requestGeneration !== generation) return;
 
+      activeProduct = product;
       product.SupabaseRuntime.init(client);
       activeAdvisorId = user.id;
-      root.dataset.carteraAdvisorId = user.id;
       root.dataset.carteraMaterial3State = "binding";
       root.innerHTML = `
         <div
@@ -233,7 +243,7 @@ export function createCarteraModule({ root, shell } = {}) {
       globalThis.dispatchEvent(new CustomEvent("forge:cartera-material3-mounted", {
         detail: Object.freeze({
           contractId: CONTRACT_ID,
-          advisorId: user.id,
+          authenticated: true,
           routeId: "cartera",
           readOnlyDirectory: true,
           automaticPolicyCreation: false,
@@ -301,7 +311,7 @@ export function createCarteraModule({ root, shell } = {}) {
         contractId: CONTRACT_ID,
         mounted,
         state: root.dataset.carteraMaterial3State || "idle",
-        advisorId: activeAdvisorId,
+        authenticated: Boolean(activeAdvisorId),
         capturedCleanerCount: sessionCleaners.length,
         productiveMutationAuthorized: false,
       });
