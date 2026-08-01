@@ -1,0 +1,63 @@
+name: REP-17 Unified Regression
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rep-17-regression-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rep-17:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax
+        run: |
+          node --check docs/static-preview/forge-alive-material3/app.js
+          node --check docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js
+          node --check tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: REP-17 integrated contract
+        run: node --test tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Current shell and auth regressions
+        run: |
+          node --test tests/ui-m05l-shell-route-first-test.mjs
+          node --test tests/ui-m05n-public-config-boot-order-test.mjs
+
+      - name: Existing quote-printable regressions
+        run: |
+          node --test advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
+          node --test advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+          node --test tests/ui-m05f-live-udi-review-printable-actions-test.mjs
+          node --test tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
+
+      - name: Pipeline stage authority contract
+        run: node --test tests/pipeline-stage-rpc-authority-regression.mjs
+
+      - name: Pages runtime generation
+        env:
+          FORGE_PAGES_RUNTIME: "true"
+        run: |
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node --test tests/rep-16f-pages-runtime-generator-test.mjs
+
+      - name: Diff integrity
+        run: git diff --check

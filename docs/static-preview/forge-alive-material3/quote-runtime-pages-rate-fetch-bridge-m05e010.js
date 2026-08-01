@@ -37,6 +37,23 @@ function jsonResponse(payload, status = 200) {
   });
 }
 
+function isExpectedAbort(error, signal = null) {
+  return Boolean(
+    signal?.aborted ||
+    error?.name === "AbortError" ||
+    error?.code === "ABORT_ERR",
+  );
+}
+
+function unavailableResponse(code, status = 503) {
+  return jsonResponse({
+    ok: false,
+    code,
+    cacheStatus: "LIVE_UNAVAILABLE",
+    rates: null,
+  }, status);
+}
+
 function normalizeEdgePayload(payload) {
   if (payload?.ok !== true || !payload?.rates?.UDI_MXN) return payload;
   return {
@@ -57,7 +74,7 @@ function installPagesRateFetchBridge() {
     if (!isMarketRateRequest(input)) return originalFetch(input, init);
 
     const url = edgeUrl();
-    if (!url) return originalFetch(input, init);
+    if (!url) return unavailableResponse("BANXICO_EDGE_NOT_CONFIGURED");
 
     const env = currentEnv();
     const key = String(env.SUPABASE_KEY || "").trim();
@@ -73,11 +90,18 @@ function installPagesRateFetchBridge() {
         method: "GET",
         cache: "no-store",
         headers,
+        signal: init?.signal,
       });
-      const payload = await response.json();
+      let payload;
+      try {
+        payload = await response.json();
+      } catch {
+        return unavailableResponse("BANXICO_EDGE_PAYLOAD_INVALID", 502);
+      }
       return jsonResponse(normalizeEdgePayload(payload), response.status);
-    } catch {
-      return originalFetch(input, init);
+    } catch (error) {
+      if (isExpectedAbort(error, init?.signal)) throw error;
+      return unavailableResponse("BANXICO_EDGE_UNAVAILABLE");
     }
   };
 
@@ -93,12 +117,14 @@ globalThis.ForgePagesRateFetchBridgeM05E010 = Object.freeze({
   version: VERSION,
   edgeUrl,
   install: installPagesRateFetchBridge,
+  isExpectedAbort,
 });
 
 export {
   VERSION,
   edgeUrl,
   installPagesRateFetchBridge,
+  isExpectedAbort,
   isMarketRateRequest,
   normalizeEdgePayload,
 };
