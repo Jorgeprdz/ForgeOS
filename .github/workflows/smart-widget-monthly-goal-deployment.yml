@@ -1,0 +1,114 @@
+name: Smart Widget Monthly Goal Deployment
+
+on:
+  pull_request:
+    paths:
+      - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
+      - "scripts/deploy-smart-widget-monthly-goal-migration.mjs"
+      - "tests/smart-widget-monthly-goal-authority-test.mjs"
+      - "tests/smart-widget-monthly-goal-deployment-contract-test.mjs"
+      - ".github/workflows/smart-widget-monthly-goal-deployment.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
+      - "scripts/deploy-smart-widget-monthly-goal-migration.mjs"
+      - "tests/smart-widget-monthly-goal-authority-test.mjs"
+      - "tests/smart-widget-monthly-goal-deployment-contract-test.mjs"
+      - ".github/workflows/smart-widget-monthly-goal-deployment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: smart-widget-monthly-goal-deployment-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate exact deployment surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql
+          test -f scripts/deploy-smart-widget-monthly-goal-migration.mjs
+          node --check scripts/deploy-smart-widget-monthly-goal-migration.mjs
+          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
+            supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql; then
+            echo "Destructive SQL rejected"
+            exit 1
+          fi
+          grep -En "advisor_monthly_policy_goals|forge_set_monthly_policy_goal|enable row level security|security definer" \
+            supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql
+
+      - name: Monthly goal authority contracts
+        run: |
+          node tests/smart-widget-monthly-policy-goal-authority-test.mjs
+          node tests/smart-widget-monthly-goal-deployment-contract-test.mjs
+
+  deploy:
+    needs: validate
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.actor == 'Jorgeprdz' &&
+      github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - name: Checkout accepted main
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify guarded remote authority contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          node --check scripts/deploy-smart-widget-monthly-goal-migration.mjs
+          node tests/smart-widget-monthly-goal-authority-test.mjs
+          node tests/smart-widget-monthly-goal-deployment-contract-test.mjs
+
+      - name: Apply and rollback-test exact monthly goal migration
+        run: node scripts/deploy-smart-widget-monthly-goal-migration.mjs
+
+      - name: Ensure redacted evidence exists
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/smart-widget-monthly-goal-migration
+          if [ ! -s artifacts/smart-widget-monthly-goal-migration/ledger.jsonl ]; then
+            printf '%s\n' \
+              '{"name":"workflow_preflight","status":"FAIL","detail":"LEDGER_NOT_CREATED"}' \
+              > artifacts/smart-widget-monthly-goal-migration/ledger.jsonl
+          fi
+
+      - name: Upload redacted deployment ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-widget-monthly-goal-migration-ledger
+          path: artifacts/smart-widget-monthly-goal-migration/ledger.jsonl
+          if-no-files-found: error
+          retention-days: 30
