@@ -119,6 +119,14 @@ await writeFile(
 if (pagesRuntimeMode) {
   const reportingSource = join(root, "advisor-os/reporting");
   const reportingTarget = join(root, "docs/advisor-os/reporting");
+  const smartWidgetSource = join(
+    root,
+    "advisor-os/forge-alive/smart-widgets",
+  );
+  const smartWidgetTarget = join(
+    root,
+    "docs/advisor-os/forge-alive/smart-widgets",
+  );
   const eventEvidenceSource = join(root, "platform/event-evidence");
   const eventEvidenceTarget = join(root, "docs/platform/event-evidence");
   const bridgePath = join(
@@ -128,6 +136,7 @@ if (pagesRuntimeMode) {
 
   await Promise.all([
     rm(reportingTarget, { recursive: true, force: true }),
+    rm(smartWidgetTarget, { recursive: true, force: true }),
     rm(eventEvidenceTarget, { recursive: true, force: true }),
   ]);
 
@@ -144,6 +153,22 @@ if (pagesRuntimeMode) {
     await writeReportingModule(
       join(reportingSource, file),
       join(reportingTarget, publicReportingPath(file)),
+    );
+  }
+
+  const smartWidgetFiles = await listFiles(
+    smartWidgetSource,
+    (file) => file.endsWith(".mjs"),
+  );
+  if (smartWidgetFiles.length < 5) {
+    throw new Error(
+      `SMART_WIDGET_PAGES_RUNTIME_INCOMPLETE=${smartWidgetFiles.length}`,
+    );
+  }
+  for (const file of smartWidgetFiles) {
+    await writeReportingModule(
+      join(smartWidgetSource, file),
+      join(smartWidgetTarget, publicReportingPath(file)),
     );
   }
 
@@ -189,6 +214,7 @@ if (pagesRuntimeMode) {
       "-f",
       "--",
       relative(root, reportingTarget),
+      relative(root, smartWidgetTarget),
       relative(root, eventEvidenceTarget),
       relative(root, bridgePath),
     ],
@@ -198,9 +224,15 @@ if (pagesRuntimeMode) {
   await import(
     `${pathToFileURL(bridgePath).href}?rep16f-pages-build=${Date.now()}`
   );
+  await import(
+    `${pathToFileURL(join(
+      smartWidgetTarget,
+      "productive-smart-widget-orchestrator.js",
+    )).href}?smart-widget-pages-build=${Date.now()}`
+  );
 
   console.log(
-    `Generated ${reportingFiles.length} reporting .js modules and ${activityLedgerRuntimeFiles.length} FES ledger modules for Pages.`,
+    `Generated ${reportingFiles.length} reporting .js modules, ${smartWidgetFiles.length} Smart Widget .js modules and ${activityLedgerRuntimeFiles.length} FES ledger modules for Pages.`,
   );
 }
 
