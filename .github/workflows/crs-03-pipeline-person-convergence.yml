@@ -1,0 +1,114 @@
+name: CRS 03 Pipeline Person Convergence
+
+on:
+  pull_request:
+    paths:
+      - "platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract.js"
+      - "advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js"
+      - "docs/architecture/source-truth/FORGE_CRS_03_PIPELINE_PERSON_CONVERGENCE_001.md"
+      - "docs/evidence/FORGE_CRS_03_ABCD_CLOSURE_001.md"
+      - "tests/crs-03-pipeline-person-convergence-contract-test.mjs"
+      - "tests/crs-03-pipeline-person-convergence-service-test.mjs"
+      - ".github/workflows/crs-03-pipeline-person-convergence.yml"
+  push:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract.js"
+      - "advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline-person-convergence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+          allowed='^(platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract\.js|advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service\.js|docs/architecture/source-truth/FORGE_CRS_03_PIPELINE_PERSON_CONVERGENCE_001\.md|docs/evidence/FORGE_CRS_03_ABCD_CLOSURE_001\.md|tests/crs-03-pipeline-person-convergence-contract-test\.mjs|tests/crs-03-pipeline-person-convergence-service-test\.mjs|\.github/workflows/crs-03-pipeline-person-convergence\.yml)$'
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_03_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'CRS_03_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        run: |
+          node --check platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract.js
+          node --check advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js
+
+      - name: CRS 03 targeted acceptance
+        run: |
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-service-test.mjs
+
+      - name: Preserve CRS 01 and CRS 02 foundations
+        run: |
+          node --test tests/crs-01-existing-cartera-authority-registry-test.mjs
+          node --test tests/crs-01-commercial-person-authority-facade-test.mjs
+          node --test tests/crs-02-domain-link-envelope-contract-test.mjs
+          node --test tests/crs-02-authoritative-domain-link-adapters-test.mjs
+
+      - name: Preserve Cartera identity and productive Pipeline authorities
+        run: |
+          node --test tests/cartera-010b-contract-foundation-test.mjs
+          node --test tests/forge-067g17b2-create-entry-contract-test.mjs
+          node --test tests/pipeline-stage-mutation-authority-test.mjs
+          node --test tests/material3-pipeline-integration-test.mjs
+          node --test tests/pipeline-prospect-admin-regression.mjs
+
+      - name: Enforce authority and no-invention boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract='platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract.js'
+          service='advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js'
+          source='docs/architecture/source-truth/FORGE_CRS_03_PIPELINE_PERSON_CONVERGENCE_001.md'
+
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\(' "$contract" "$service"
+          ! grep -Eq 'create table|alter table|localStorage|sessionStorage|indexedDB|XMLHttpRequest|fetch\(' "$contract" "$service"
+          grep -q 'commercial_source_identity_links' "$service"
+          grep -q 'identity_resolution_decisions' "$service"
+          grep -q 'commercial_people' "$service"
+          grep -q 'PIPELINE_STAGE_RPC' "$contract" "$service"
+          grep -q 'PIPELINE_STAGE_EVENT_AUTHORITY' "$service"
+          grep -q 'OPPORTUNITY_AUTHORITY_STATUS=NOT_PRODUCTIVE' "$source"
+          grep -q 'NEW_OPPORTUNITY_TABLE=NOT_AUTHORIZED_BY_CRS_03' "$source"
+          grep -q 'APPLICATION_SIGNED=PROJECTED_ONLY' "$source"
+          grep -q 'POLICY_ISSUED=PROJECTED_ONLY' "$source"
+          grep -q 'automaticIdentityResolution: false' "$contract" "$service"
+          grep -q 'automaticOpportunityCreation: false' "$contract" "$service"
+          grep -q 'automaticStageAdvance: false' "$contract" "$service"
+
+          echo 'CRS_03A_PIPELINE_SCOPE_AND_AUTHORITY_DISCOVERY=PASS'
+          echo 'CRS_03B_PIPELINE_PERSON_CONVERGENCE_CONTRACT=PASS'
+          echo 'CRS_03C_PRODUCTIVE_CONVERGENCE_SERVICE=PASS'
+          echo 'CRS_03_OPPORTUNITY_AUTHORITY=NOT_PRODUCTIVE'
+          echo 'CRS_03_NEW_STAGE_WRITER=NO'
+          echo 'CRS_03_IDENTITY_MUTATION=NO'
+          echo 'CRS_03_DATABASE_MIGRATION=NO'
+          echo 'CRS_03_PRODUCT_UI_MUTATION=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
