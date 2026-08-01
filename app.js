@@ -106,13 +106,25 @@ class AppManager {
         });
     }
 
+    // ─────────────────────────────────────────────────────────
+    // INIT — Bootstrap principal
+    // ─────────────────────────────────────────────────────────
+
     async init() {
         return this.shell.init();
     }
 
+    // ─────────────────────────────────────────────────────────
+    // _showApp — Revela la UI tras autenticación exitosa
+    // ─────────────────────────────────────────────────────────
+
     _showApp(user) {
         showCrmAddlifeApp(user);
     }
+
+    // ─────────────────────────────────────────────────────────
+    // _showLogin — Pantalla de bienvenida para usuarios no auth
+    // ─────────────────────────────────────────────────────────
 
     _showLogin() {
         renderCrmAddlifeLogin({
@@ -120,11 +132,24 @@ class AppManager {
         });
     }
 
+    // ─────────────────────────────────────────────────────────
+    // _showFatalError — Bootstrap falló, mostrar error recuperable
+    // ─────────────────────────────────────────────────────────
+
     _showFatalError(err) {
         renderCrmAddlifeFatalError(err);
     }
 
+    // ─────────────────────────────────────────────────────────
+    // _bindGlobalListeners
+    // Registrado UNA SOLA VEZ después de auth exitosa.
+    // Delegación de eventos en nav para evitar re-registro
+    // en cada navegación de ruta.
+    // ─────────────────────────────────────────────────────────
+
     _bindGlobalListeners() {
+
+        // ── Navegación inferior — delegación sobre el contenedor nav
         const nav = document.getElementById('main-sidebar');
         if (nav) {
             nav.addEventListener('click', (e) => {
@@ -135,6 +160,7 @@ class AppManager {
             });
         }
 
+        // ── Logout
         const btnLogout = document.getElementById('btn-cerrar-sesion');
         if (btnLogout) {
             btnLogout.addEventListener('click', () => {
@@ -147,13 +173,28 @@ class AppManager {
         });
 
         bindCrmAddlifeChatShell();
+
         bindPlatformRuntimeListeners();
+
         Logger.info('[APP] Global listeners registrados');
     }
 
 }
 
+// ═══════════════════════════════════════════════════════════════
+// EXPORT getSupabase
+// Compatibilidad con módulos legacy pendientes de migración.
+// Los módulos ya migrados leen el usuario desde AppState.get('user').
+// TODO: eliminar cuando todos los módulos estén migrados.
+// ═══════════════════════════════════════════════════════════════
+
 export { getSupabase };
+
+// ═══════════════════════════════════════════════════════════════
+// BOOTSTRAP
+// DOMContentLoaded garantiza que el HTML está completamente
+// parseado antes de acceder a cualquier elemento del DOM.
+// ═══════════════════════════════════════════════════════════════
 
 const _appInstance = new AppManager();
 
