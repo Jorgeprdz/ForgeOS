@@ -1,0 +1,134 @@
+name: CRS 05 Quote Person Convergence
+
+on:
+  pull_request:
+    paths:
+      - "platform/shared-commercial-model/crs-05-quote-person-convergence-contract.js"
+      - "platform/event-evidence/crs-05-quote-person-convergence-service.js"
+      - "docs/architecture/source-truth/FORGE_CRS_05_QUOTE_PERSON_CONVERGENCE_001.md"
+      - "docs/evidence/FORGE_CRS_05_ABCD_CLOSURE_001.md"
+      - "tests/crs-05-quote-person-convergence-contract-test.mjs"
+      - "tests/crs-05-quote-person-convergence-service-test.mjs"
+      - ".github/workflows/crs-05-quote-person-convergence.yml"
+  push:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-05-quote-person-convergence-contract.js"
+      - "platform/event-evidence/crs-05-quote-person-convergence-service.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quote-person-convergence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+          allowed='^(platform/shared-commercial-model/crs-05-quote-person-convergence-contract\.js|platform/event-evidence/crs-05-quote-person-convergence-service\.js|docs/architecture/source-truth/FORGE_CRS_05_QUOTE_PERSON_CONVERGENCE_001\.md|docs/evidence/FORGE_CRS_05_ABCD_CLOSURE_001\.md|tests/crs-05-quote-person-convergence-contract-test\.mjs|tests/crs-05-quote-person-convergence-service-test\.mjs|\.github/workflows/crs-05-quote-person-convergence\.yml)$'
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_05_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'CRS_05_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        run: |
+          node --check platform/shared-commercial-model/crs-05-quote-person-convergence-contract.js
+          node --check platform/event-evidence/crs-05-quote-person-convergence-service.js
+          node --check tests/crs-05-quote-person-convergence-contract-test.mjs
+          node --check tests/crs-05-quote-person-convergence-service-test.mjs
+
+      - name: CRS 05 targeted acceptance
+        run: |
+          node --test tests/crs-05-quote-person-convergence-contract-test.mjs
+          node --test tests/crs-05-quote-person-convergence-service-test.mjs
+
+      - name: Preserve Quote lifecycle and persistence authorities
+        run: |
+          node --test tests/cartera-001b-quote-lifecycle-event-contract-test.mjs
+          node --test tests/cartera-001b-quote-lifecycle-event-bridge-test.mjs
+          node --test tests/cartera-001b-quote-lifecycle-browser-bridge-test.mjs
+          node --test tests/cartera-001b-quote-lifecycle-migration-security-test.mjs
+
+      - name: Preserve Quote to Cartera and CRS foundations
+        run: |
+          node --test tests/quote-cartera-relationship-contract-test.mjs
+          node --test tests/quote-cartera-relationship-adapter-test.mjs
+          node --test tests/crs-02-domain-link-envelope-contract-test.mjs
+          node --test tests/crs-02-authoritative-domain-link-adapters-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-service-test.mjs
+          node --test tests/crs-04-activity-person-convergence-contract-test.mjs
+          node --test tests/crs-04-activity-person-convergence-service-test.mjs
+          node --test tests/cartera-010b-contract-foundation-test.mjs
+
+      - name: Preserve SeguBeca calculation and printable authorities
+        run: |
+          node --test tests/segubeca-calculation-authority-restoration-test.mjs
+          node tests/segubeca-solucionline-parser-test.mjs
+          node tests/segubeca-projected-mxn-runtime-test.mjs
+          node --test advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+
+      - name: Enforce authority and no-effect boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract='platform/shared-commercial-model/crs-05-quote-person-convergence-contract.js'
+          service='platform/event-evidence/crs-05-quote-person-convergence-service.js'
+          source='docs/architecture/source-truth/FORGE_CRS_05_QUOTE_PERSON_CONVERGENCE_001.md'
+
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\(' "$contract" "$service"
+          ! grep -Eq 'localStorage|sessionStorage|indexedDB|XMLHttpRequest|fetch\(' "$contract" "$service"
+          ! grep -Eq 'create table|alter table' "$contract" "$service" "$source"
+          grep -q 'quote_lifecycle_quotes' "$service"
+          grep -q 'quote_lifecycle_versions' "$service"
+          grep -q 'quote_lifecycle_events' "$service"
+          grep -q 'commercial_source_identity_links' "$service"
+          grep -q 'commercial_people' "$service"
+          grep -q 'identity_resolution_decisions' "$service"
+          grep -q 'QUOTE_PROSPECT_ACCEPTED_IS_APPLICATION=NO' "$source"
+          grep -q 'QUOTE_PROSPECT_ACCEPTED_IS_POLICY=NO' "$source"
+          grep -q 'LEGACY_QUOTE_CORRELATION_REINTERPRETED_AS_COMMERCIAL_MOVEMENT=NO' "$source"
+          grep -q 'CRS_05_COPIES_SEGUBECA_NUMERIC_TRUTH=NO' "$source"
+          grep -q 'PDF_BYTES_IN_CONVERGENCE=FORBIDDEN' "$source"
+          grep -q 'automaticApplicationCreation: false' "$contract"
+          grep -q 'automaticPolicyCreation: false' "$contract"
+          grep -q 'automaticQuoteMutation: false' "$contract"
+          grep -q 'numericQuoteTruthCopied: false' "$contract" "$service"
+          grep -q 'pdfBytesCopied: false' "$contract" "$service"
+
+          echo 'CRS_05A_QUOTE_SCOPE_AND_AUTHORITY_DISCOVERY=PASS'
+          echo 'CRS_05B_QUOTE_PERSON_CONVERGENCE_CONTRACT=PASS'
+          echo 'CRS_05C_PRODUCTIVE_READ_CONVERGENCE_SERVICE=PASS'
+          echo 'CRS_05_QUOTE_ACCEPTED_IS_APPLICATION=NO'
+          echo 'CRS_05_QUOTE_ACCEPTED_IS_POLICY=NO'
+          echo 'CRS_05_NUMERIC_QUOTE_TRUTH_COPIED=NO'
+          echo 'CRS_05_PDF_BYTES_COPIED=NO'
+          echo 'CRS_05_DATABASE_MIGRATION=NO'
+          echo 'CRS_05_PRODUCT_UI_MUTATION=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
