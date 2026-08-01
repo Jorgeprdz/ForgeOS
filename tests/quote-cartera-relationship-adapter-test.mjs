@@ -1,10 +1,23 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import test from "node:test";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const adapter = require(
   "../platform/shared-commercial-model/accepted-quote-cartera-relationship-adapter.js",
+);
+const quoteBridgeSource = fs.readFileSync(
+  "docs/static-preview/quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js",
+  "utf8",
+);
+const policyValidatorSource = fs.readFileSync(
+  "platform/shared-commercial-model/cartera-010b-contract-validator.js",
+  "utf8",
+);
+const confirmationServiceSource = fs.readFileSync(
+  "advisor-os/cartera/persistent-confirmation-orchestration-service.js",
+  "utf8",
 );
 
 function quoteReceipt(overrides = {}) {
@@ -33,6 +46,27 @@ function identityReceipt(overrides = {}) {
     ...overrides,
   };
 }
+
+test("adapter remains aligned with the promoted 001B, 010B and 020C authorities", () => {
+  for (const field of [
+    "quoteReference",
+    "quoteVersionReference",
+    "prospectReference",
+    "productReference",
+    "lifecycleState",
+    "eventIds",
+    "snapshotDigest",
+  ]) {
+    assert.match(quoteBridgeSource, new RegExp(field));
+  }
+  assert.match(
+    policyValidatorSource,
+    /\["UNVERIFIED", "REVIEWED", "CONFIRMED", "DISPUTED"\]/,
+  );
+  assert.match(confirmationServiceSource, /requiresExplicitExecution !== true/);
+  assert.match(confirmationServiceSource, /CONFIRM_POLICY_PERSISTENCE/);
+  assert.match(confirmationServiceSource, /forge_cartera020c_attach_policy_confirmation/);
+});
 
 test("adapts the promoted 001B Quote receipt without copying calculation truth", () => {
   const relationship = adapter.createRelationshipFromAuthorityReceipts({
