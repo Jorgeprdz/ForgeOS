@@ -1,0 +1,226 @@
+name: CARTERA 030B Final Push Acceptance
+
+on:
+  push:
+    branches:
+      - run/cartera-030b-final-push-acceptance-20260731-2043
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-030b-final-push-acceptance
+  cancel-in-progress: false
+
+jobs:
+  correct-harness-and-accept:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.ref == 'refs/heads/run/cartera-030b-final-push-acceptance-20260731-2043' &&
+      github.actor != 'github-actions[bot]' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_030B_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_030B_REMOTE_MUTATION
+      CARTERA_030B_EXPECTED_SOURCE_HEAD: 23b52fc7a442f52494c51fead67699004923c547
+      CARTERA_030B_ACCEPTANCE_BRANCH: run/cartera-030b-final-push-acceptance-20260731-2043
+
+    steps:
+      - name: Checkout exact launch branch
+        uses: actions/checkout@v4
+        with:
+          ref: run/cartera-030b-final-push-acceptance-20260731-2043
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Authorization and one-file launch gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-030b-remote-acceptance
+          test "$CARTERA_030B_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_030B_REMOTE_MUTATION'
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          base=4494af093b57d09e07d19aad9384bb392899465e
+          git merge-base --is-ancestor "$base" HEAD
+          git diff --check "$base"...HEAD
+          mapfile -t changed < <(git diff --name-only "$base"...HEAD)
+          printf 'LAUNCH_FILE=%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = '.github/workflows/cartera-030b-final-push-acceptance.yml'
+          echo 'FINAL_PUSH_AUTHORIZATION=PASS'
+          echo 'SCHEMA_MUTATION=NO'
+          echo 'PRODUCT_UI_MUTATION=NO'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+
+      - name: Persist final relational harness correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          old_branch = 'run/cartera-030b-identity-collision-diagnostic-20260731-2035'
+          new_branch = 'run/cartera-030b-final-push-acceptance-20260731-2043'
+
+          runner = Path('scripts/ci/cartera-030b-remote-acceptance.mjs')
+          source = runner.read_text()
+          if source.count(old_branch) != 1:
+              raise SystemExit('RUNNER_BRANCH_REPLACEMENT_COUNT_INVALID')
+          source = source.replace(old_branch, new_branch)
+          if old_branch in source or source.count(new_branch) != 1:
+              raise SystemExit('RUNNER_BRANCH_REPAIR_VERIFICATION_FAILED')
+          runner.write_text(source)
+
+          contract = Path('tests/cartera-030b-remote-acceptance-contract-test.mjs')
+          source = contract.read_text()
+          old_assertion = "  assert.match(source, /run\\/cartera-030b-identity-collision-diagnostic-20260731-2035/);"
+          new_assertion = "  assert.match(source, /run\\/cartera-030b-final-push-acceptance-20260731-2043/);"
+          if source.count(old_assertion) != 1:
+              raise SystemExit('CONTRACT_BRANCH_ASSERTION_COUNT_INVALID')
+          source = source.replace(old_assertion, new_assertion)
+          if old_assertion in source or source.count(new_assertion) != 1:
+              raise SystemExit('CONTRACT_BRANCH_REPAIR_VERIFICATION_FAILED')
+          contract.write_text(source)
+
+          acceptance = Path('scripts/ci/cartera-030b-remote-acceptance.sql')
+          source = acceptance.read_text()
+          start_anchor = """DO $$
+begin
+  if not exists (
+    select 1
+    from public.cartera030b_obligation_conflicts c
+    join cartera030b_acceptance_ids ids on ids.forged_reference = (
+      c.claims ->> 'obligationReference'
+    )
+    where c.conflict_type = 'OBLIGATION_IDENTITY_COLLISION'
+  ) then
+"""
+          end_anchor = "\n\n  if to_regprocedure('public.forge_cartera030b_reconcile_payment_event(jsonb)')"
+          start = source.find(start_anchor)
+          if start < 0 or source.find(start_anchor, start + 1) >= 0:
+              raise SystemExit('IDENTITY_ASSERTION_START_ANCHOR_INVALID')
+          end = source.find(end_anchor, start)
+          if end < 0:
+              raise SystemExit('IDENTITY_ASSERTION_END_ANCHOR_MISSING')
+
+          replacement = """DO $$
+declare
+  identity_response jsonb;
+begin
+  select payload
+  into identity_response
+  from cartera030b_acceptance_results
+  where name = 'identity-collision';
+
+  if identity_response ->> 'generationState' <> 'CONFLICT'
+    or identity_response ->> 'reason' <> 'OBLIGATION_IDENTITY_COLLISION'
+    or nullif(identity_response ->> 'conflictReference', '') is null then
+    raise exception 'CARTERA030B_IDENTITY_COLLISION_RESPONSE_INVALID:%', identity_response;
+  end if;
+
+  if not exists (
+    select 1
+    from public.cartera030b_obligation_conflicts c
+    join public.cartera030b_expected_payment_obligations o
+      on o.id = c.obligation_id
+     and o.advisor_id = c.advisor_id
+    join cartera030b_acceptance_ids ids
+      on ids.forged_reference = o.obligation_reference
+    where c.conflict_type = 'OBLIGATION_IDENTITY_COLLISION'
+      and c.conflict_reference = identity_response ->> 'conflictReference'
+      and c.claims ->> 'existingObligationReference' = ids.forged_reference
+  ) then
+    raise exception 'CARTERA030B_IDENTITY_COLLISION_CONFLICT_NOT_DURABLE';
+  end if;"""
+
+          source = source[:start] + replacement + source[end:]
+          if 'IDENTITY_COLLISION_CONFLICT_NOT_DURABLE_DIAGNOSTIC' in source:
+              raise SystemExit('DIAGNOSTIC_ASSERTION_NOT_REMOVED')
+          if "c.claims ->> 'obligationReference'" in source:
+              raise SystemExit('WRONG_IDENTITY_CLAIM_KEY_REMAINS')
+          if source.count("c.claims ->> 'existingObligationReference'") != 1:
+              raise SystemExit('DURABLE_IDENTITY_CLAIM_ASSERTION_INVALID')
+          if source.count('o.id = c.obligation_id') != 1:
+              raise SystemExit('RELATIONAL_OBLIGATION_ASSERTION_INVALID')
+          acceptance.write_text(source)
+          PY
+
+          mapfile -t changed < <(git status --short | sed 's/^...//')
+          printf 'HARNESS_FILE=%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 3
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            scripts/ci/cartera-030b-remote-acceptance.sql \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs \
+            | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+          node --check scripts/ci/cartera-030b-remote-acceptance.mjs
+          node --test tests/cartera-030b-*.mjs
+          node tests/payment-evidence-packet-test.js
+          node tests/payment-event-engine-test.js
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            scripts/ci/cartera-030b-remote-acceptance.sql \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs
+          git commit -m 'test(cartera): verify durable identity conflict relationally'
+          git push origin HEAD:run/cartera-030b-final-push-acceptance-20260731-2043
+          echo "CARTERA_030B_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo 'IDENTITY_CONFLICT_HARNESS_FIX=PERSISTED'
+
+      - name: Execute final rollback-only remote acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-030b-remote-acceptance.mjs \
+            | tee artifacts/cartera-030b-remote-acceptance/workflow-output.log
+
+      - name: Verify complete acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-030b-remote-acceptance/workflow-output.log
+          for marker in \
+            MIGRATION_20260731000250=ALREADY_APPLIED_AND_MATCHED \
+            MIGRATION_20260731000251=ALREADY_APPLIED_AND_MATCHED \
+            MIGRATION_20260731000252=ALREADY_APPLIED_AND_MATCHED \
+            CARTERA_030B_REMOTE_DEPLOYMENT=PASS \
+            CARTERA_030B_CATALOG_VERIFICATION=PASS \
+            AUTHORIZATION_DIGEST_COMPATIBILITY=PASS \
+            CARTERA_030B_TRANSACTIONAL_ACCEPTANCE=PASS \
+            DETERMINISTIC_RECURRENCE=PASS \
+            IDEMPOTENT_REPLAY=PASS \
+            CHANGED_INPUT_CONFLICT_PERSISTENCE=PASS \
+            IDENTITY_COLLISION_CONFLICT_PERSISTENCE=PASS \
+            OPTIMISTIC_STATE_VERSION=PASS \
+            RLS_CROSS_ADVISOR=PASS \
+            DIRECT_TABLE_ACCESS=BLOCKED \
+            SANITIZED_CALENDAR=PASS \
+            NO_LAPSE_INFERENCE=PASS \
+            TEST_FIXTURES_ROLLED_BACK=YES \
+            RESIDUAL_FIXTURES=0 \
+            CARTERA_030B_REMOTE_ACCEPTANCE=PASS; do
+            grep -q "$marker" "$log"
+          done
+
+      - name: Upload final 030B remote evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-030b-final-push-remote-acceptance
+          path: artifacts/cartera-030b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
