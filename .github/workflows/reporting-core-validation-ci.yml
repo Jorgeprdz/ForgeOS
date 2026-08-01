@@ -1,4 +1,4 @@
-# REP_16F_TRIGGER_SEQUENCE=4
+# REP_16F_TRIGGER_SEQUENCE=5
 name: Reporting Core Validation
 
 on:
@@ -45,25 +45,27 @@ jobs:
               raise SystemExit(
                   f"expected one Pages root index marker, got {text.count(root_index_marker)}"
               )
-          activity_validation = """          const requiredActivityRuntime = [
-            'advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs',
-            'advisor-os/reporting/runtime/activity-reporting-runtime.mjs',
-            'advisor-os/reporting/runtime/universal-reporting-kernel.mjs',
-            'platform/event-evidence/canonical-activity-event-contract.js',
-            'platform/event-evidence/activity-ledger-contract.js',
-            'platform/event-evidence/activity-ledger-local-store.js',
-            'platform/event-evidence/activity-ledger-sync-service.js',
-            'platform/event-evidence/activity-ledger-supabase-gateway.js',
-            'platform/event-evidence/activity-ledger-browser-runtime.js',
-          ];
-          for (const file of requiredActivityRuntime) {
-            assert.ok(
-              fs.existsSync(path.join('_site', file)),
-              `missing productive Activity runtime asset: ${file}`,
-            );
-          }
-
-"""
+          activity_validation = "\n".join([
+              "          const requiredActivityRuntime = [",
+              "            'advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs',",
+              "            'advisor-os/reporting/runtime/activity-reporting-runtime.mjs',",
+              "            'advisor-os/reporting/runtime/universal-reporting-kernel.mjs',",
+              "            'platform/event-evidence/canonical-activity-event-contract.js',",
+              "            'platform/event-evidence/activity-ledger-contract.js',",
+              "            'platform/event-evidence/activity-ledger-local-store.js',",
+              "            'platform/event-evidence/activity-ledger-sync-service.js',",
+              "            'platform/event-evidence/activity-ledger-supabase-gateway.js',",
+              "            'platform/event-evidence/activity-ledger-browser-runtime.js',",
+              "          ];",
+              "          for (const file of requiredActivityRuntime) {",
+              "            assert.ok(",
+              "              fs.existsSync(path.join('_site', file)),",
+              "              `missing productive Activity runtime asset: ${file}`,",
+              "            );",
+              "          }",
+              "",
+              "",
+          ])
           text = text.replace(
               root_index_marker,
               activity_validation + root_index_marker,
