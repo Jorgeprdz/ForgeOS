@@ -1,0 +1,61 @@
+name: CARTERA 060A + 060B + 060C + 060D Combined Acceptance
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - feature/cartera-050abcd-future-radar-conservation
+
+permissions:
+  contents: write
+
+jobs:
+  combined-delivery:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/cartera-060abcd-relationship-growth-intelligence' &&
+      github.event.pull_request.base.ref == 'feature/cartera-050abcd-future-radar-conservation'
+    runs-on: ubuntu-24.04
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_060ABCD_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_060ABCD_REMOTE_MUTATION
+      CARTERA_060ABCD_EXPECTED_SOURCE_HEAD: 162a190b035b7ba3297665e7859042553981590c
+      CARTERA_060ABCD_ACCEPTANCE_BRANCH: feature/cartera-060abcd-relationship-growth-intelligence
+    steps:
+      - name: Checkout exact combined branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify complete 060A–060D delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-060abcd-remote-acceptance
+          echo 'CARTERA_060ABCD_WORKFLOW=STARTED' > artifacts/cartera-060abcd-remote-acceptance/bootstrap.log
+          test -f supabase/migrations/20260801000290_cartera060_relationship_growth_helpers.sql
+          test -f supabase/migrations/20260801000291_cartera060_relationship_growth_read.sql
+          test -f scripts/ci/cartera-060abcd-combined-acceptance.sh
+          test -f advisor-os/cartera/cartera-060d-relationship-growth-enhancement.js
+          echo "CARTERA_060ABCD_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo 'CARTERA_060ABCD_DELIVERY=MATERIALIZED'
+
+      - name: Execute combined gates and remote acceptance
+        run: bash scripts/ci/cartera-060abcd-combined-acceptance.sh
+
+      - name: Upload combined evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-060abcd-combined-remote-acceptance
+          path: artifacts/cartera-060abcd-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
