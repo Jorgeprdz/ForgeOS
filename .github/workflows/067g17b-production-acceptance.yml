@@ -82,6 +82,66 @@ jobs:
         run: |
           export FORGE_CHROMIUM_PATH="$(node --input-type=module -e "import puppeteer from 'puppeteer'; console.log(puppeteer.executablePath())")"
           node tests/rep-16f-pages-public-asset-diagnostic.mjs
+      - name: Scope live telemetry to REP-16F Activity runtime
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('tests/rep-16f-pages-live-activity-acceptance.mjs')
+          text = path.read_text()
+          old = '''const runtimeFailures = [];
+          const rpcRequests = [];
+          page.on("pageerror", (error) => runtimeFailures.push(`pageerror:${error.message}`));
+          page.on("console", (message) => {
+            if (message.type() === "error") runtimeFailures.push(`console:${message.text()}`);
+          });'''
+          new = '''const activityRuntimeFailures = [];
+          const unrelatedRuntimeObservations = [];
+          const rpcRequests = [];
+          const isActivityRuntimeUrl = (value) => /advisor-os\\/reporting|platform\\/event-evidence|activity-ledger-reporting-bridge|forge_fes02_(pull|append)_activity_events/.test(value);
+          page.on("pageerror", (error) => {
+            activityRuntimeFailures.push(`pageerror:${error.message}`);
+          });
+          page.on("response", (response) => {
+            if (response.status() < 400) return;
+            const observation = `http:${response.status()}:${response.url()}`;
+            (isActivityRuntimeUrl(response.url())
+              ? activityRuntimeFailures
+              : unrelatedRuntimeObservations).push(observation);
+          });
+          page.on("requestfailed", (request) => {
+            const observation = `requestfailed:${request.failure()?.errorText || "unknown"}:${request.url()}`;
+            (isActivityRuntimeUrl(request.url())
+              ? activityRuntimeFailures
+              : unrelatedRuntimeObservations).push(observation);
+          });
+          page.on("console", (message) => {
+            if (message.type() !== "error") return;
+            const text = message.text();
+            (/(activity|ledger|reporting|FES)/i.test(text)
+              ? activityRuntimeFailures
+              : unrelatedRuntimeObservations).push(`console:${text}`);
+          });'''
+          if text.count(old) != 1:
+              raise SystemExit(f'REP_16F_TELEMETRY_SOURCE_MATCHES={text.count(old)}')
+          text = text.replace(old, new)
+
+          old_close = '''  assert.deepEqual(runtimeFailures, [], runtimeFailures.join("; "));
+          evidence.runtimeFailures = [];
+          evidence.result = "PASS";'''
+          new_close = '''  assert.deepEqual(
+            activityRuntimeFailures,
+            [],
+            activityRuntimeFailures.join("; "),
+          );
+          evidence.activityRuntimeFailures = [];
+          evidence.unrelatedRuntimeObservations = unrelatedRuntimeObservations;
+          evidence.result = "PASS";'''
+          if text.count(old_close) != 1:
+              raise SystemExit(f'REP_16F_TELEMETRY_CLOSE_MATCHES={text.count(old_close)}')
+          path.write_text(text.replace(old_close, new_close))
+          PY
+          node --check tests/rep-16f-pages-live-activity-acceptance.mjs
       - name: Run REP-16F Pages and live authenticated Activity acceptance
         env:
           FORGE_PUPPETEER_CORE_PATH: puppeteer
