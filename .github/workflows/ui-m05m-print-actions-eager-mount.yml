@@ -1,0 +1,31 @@
+name: UI M05M Print Actions Eager Mount
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
+      - tests/ui-m05m-print-actions-eager-mount-test.mjs
+      - .github/workflows/ui-m05m-print-actions-eager-mount.yml
+  push:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
+      - tests/ui-m05m-print-actions-eager-mount-test.mjs
+      - .github/workflows/ui-m05m-print-actions-eager-mount.yml
+
+permissions:
+  contents: read
+
+jobs:
+  print-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify eager print actions
+        run: node tests/ui-m05m-print-actions-eager-mount-test.mjs
