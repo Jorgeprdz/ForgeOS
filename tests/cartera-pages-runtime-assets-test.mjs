@@ -41,6 +41,7 @@ execFileSync(
     env: {
       ...process.env,
       FORGE_PAGES_RUNTIME_MODE: "pages",
+      FORGE_CARTERA_PAGES_RUNTIME_MODE: "pages",
     },
     stdio: "inherit",
   },
