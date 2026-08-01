@@ -681,26 +681,31 @@ end if;
   from public.cartera020c_confirmation_reviews r
   where c.review_id=r.id and c.advisor_id=user_a
     and r.review_reference=retry_review_reference and c.sequence_number=1;
-  update public.cartera020c_confirmation_reviews
+  update public.cartera020c_confirmation_reviews r
   set state='IDENTITY_EXECUTING',state_version=2,active_sequence=1,updated_at=clock_timestamp()
-  where advisor_id=user_a and review_reference=retry_review_reference;
+  where r.advisor_id=user_a and r.review_reference=retry_review_reference;
   update public.cartera020c_confirmation_commands c
   set status='RETRY_WAIT',next_retry_at=clock_timestamp()+interval '5 minutes',
       last_error_code='REMOTE_TRANSIENT_TEST',updated_at=clock_timestamp()
   from public.cartera020c_confirmation_reviews r
   where c.review_id=r.id and c.advisor_id=user_a
     and r.review_reference=retry_review_reference and c.sequence_number=1;
-  update public.cartera020c_confirmation_reviews
+  update public.cartera020c_confirmation_reviews r
   set state='RETRY_WAIT',state_version=3,next_retry_at=clock_timestamp()+interval '5 minutes',
       last_error_code='REMOTE_TRANSIENT_TEST',retry_count=1,updated_at=clock_timestamp()
-  where advisor_id=user_a and review_reference=retry_review_reference;
+  where r.advisor_id=user_a and r.review_reference=retry_review_reference;
 
   perform set_config('request.jwt.claim.sub', user_a::text, true);
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   execute 'set local role authenticated';
+  retry_status := public.forge_cartera020c_get_confirmation_status(retry_review_reference);
+  if retry_status ->> 'state' <> 'RETRY_WAIT'
+     or (retry_status ->> 'stateVersion')::integer <> 3 then
+    raise exception 'CARTERA020C_RETRY_WAIT_FIXTURE_INVALID';
+  end if;
   begin
     perform public.forge_cartera020c_retry_confirmation(
-      retry_review_reference,3,clock_timestamp()
+      retry_review_reference,(retry_status ->> 'stateVersion')::integer,clock_timestamp()
     );
     raise exception 'CARTERA020C_EARLY_RETRY_ALLOWED';
   exception when others then
@@ -714,15 +719,20 @@ end if;
   from public.cartera020c_confirmation_reviews r
   where c.review_id=r.id and c.advisor_id=user_a
     and r.review_reference=retry_review_reference and c.sequence_number=1;
-  update public.cartera020c_confirmation_reviews
+  update public.cartera020c_confirmation_reviews r
   set next_retry_at=clock_timestamp()-interval '1 second',updated_at=clock_timestamp()
-  where advisor_id=user_a and review_reference=retry_review_reference;
+  where r.advisor_id=user_a and r.review_reference=retry_review_reference;
 
   perform set_config('request.jwt.claim.sub', user_a::text, true);
   perform set_config('request.jwt.claim.role', 'authenticated', true);
   execute 'set local role authenticated';
+  retry_status := public.forge_cartera020c_get_confirmation_status(retry_review_reference);
+  if retry_status ->> 'state' <> 'RETRY_WAIT'
+     or (retry_status ->> 'stateVersion')::integer <> 3 then
+    raise exception 'CARTERA020C_DUE_RETRY_FIXTURE_INVALID';
+  end if;
   retry_status := public.forge_cartera020c_retry_confirmation(
-    retry_review_reference,3,clock_timestamp()
+    retry_review_reference,(retry_status ->> 'stateVersion')::integer,clock_timestamp()
   );
   if retry_status ->> 'state' <> 'IDENTITY_READY'
      or (retry_status ->> 'stateVersion')::integer <> 4 then
