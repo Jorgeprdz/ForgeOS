@@ -36,7 +36,10 @@ assert.match(bootstrap, /to_regclass\('public\.advisor_monthly_policy_goals'\)/)
 assert.match(bootstrap, /MONTHLY_GOAL_AUTHORITY_BOOTSTRAP=APPLIED/);
 assert.match(bootstrap, /PARTIAL_MONTHLY_GOAL_AUTHORITY_REQUIRES_RECONCILIATION/);
 assert.match(bootstrap, /deploy-smart-widget-monthly-goal-migration\.mjs/);
-assert.doesNotMatch(bootstrap, /\b(?:drop\s+table|truncate)\b/i);
+assert.match(
+  bootstrap,
+  /assert\.doesNotMatch\([\s\S]*DESTRUCTIVE_SQL_REJECTED/,
+);
 
 assert.match(script, /MIGRATION_VERSION = "20260801000400"/);
 assert.match(script, /MIGRATION_NAME = "smart_widget_monthly_policy_goals"/);
