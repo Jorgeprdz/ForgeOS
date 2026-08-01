@@ -115,7 +115,18 @@ function startAuthority(base, path, name) {
   return task;
 }
 
+function startPrintableAuthority() {
+  return startAuthority(
+    moduleBase,
+    "quote-runtime-printable-closure-m05e006.js?v=m05e-011-eager-print-actions",
+    "quote-printable",
+  );
+}
+
 async function loadQuoteAuthorities() {
+  // Printing is a core result action. It must mount independently from UDI/network work.
+  void startPrintableAuthority();
+
   markAuthority("environment", "loading");
   try {
     await loadAuthority(envBase, "env.js");
@@ -147,10 +158,6 @@ async function loadQuoteAuthorities() {
     [
       "quote-runtime-vida-mujer-visual-m05e010.js?v=m05e-010",
       "vida-mujer-visual",
-    ],
-    [
-      "quote-runtime-printable-closure-m05e006.js?v=m05e-010-landscape",
-      "quote-printable",
     ],
   ];
 
