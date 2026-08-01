@@ -1,4 +1,5 @@
 import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";
+import "./quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001";
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
