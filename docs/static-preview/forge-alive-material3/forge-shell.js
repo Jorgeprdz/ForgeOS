@@ -2,6 +2,7 @@ import {
   navigationItems,
   resolveForgeRoute,
 } from "./forge-navigation-contract.js";
+import { createCarteraModule } from "./cartera-module.js?v=cartera-material3-productive-001";
 
 const shellStateKey = Symbol.for("forge.ui-m04.shell.state");
 
@@ -47,6 +48,7 @@ export function createForgeShell({ root, moduleViewport }) {
   const abortController = new AbortController();
   const { signal } = abortController;
   let currentModule = null;
+  let builtInCarteraModule = null;
   const routeModules = new Map();
   let initialized = false;
 
@@ -96,6 +98,26 @@ export function createForgeShell({ root, moduleViewport }) {
     }
   }
 
+  function ensureBuiltInCarteraRoute() {
+    if (builtInCarteraModule) return builtInCarteraModule;
+    let carteraRoot = moduleViewport.querySelector("[data-forge-cartera-module]");
+    if (!carteraRoot) {
+      carteraRoot = document.createElement("section");
+      carteraRoot.className = "cartera-module";
+      carteraRoot.dataset.forgeCarteraModule = "true";
+      carteraRoot.dataset.routeModule = "cartera";
+      carteraRoot.hidden = true;
+      carteraRoot.setAttribute("aria-label", "Cartera");
+      moduleViewport.append(carteraRoot);
+    }
+    builtInCarteraModule = createCarteraModule({
+      root: carteraRoot,
+      shell: api,
+    });
+    routeModules.set("cartera", builtInCarteraModule);
+    return builtInCarteraModule;
+  }
+
   function reconcile() {
     const routeId = resolveForgeRoute();
     const routeModule = routeModules.get(routeId);
@@ -134,6 +156,7 @@ export function createForgeShell({ root, moduleViewport }) {
       return api;
     }
     initialized = true;
+    ensureBuiltInCarteraRoute();
     setAlfredState("idle", "thinking");
     reconcile();
 
@@ -195,6 +218,7 @@ export function createForgeShell({ root, moduleViewport }) {
     destroy() {
       abortController.abort();
       currentModule?.unmount?.();
+      builtInCarteraModule?.destroy?.();
       delete root[shellStateKey];
     },
   });
