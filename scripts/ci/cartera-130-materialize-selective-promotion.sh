@@ -29,10 +29,12 @@ if [[ ! -f "$LEGACY_BACKUP" ]]; then
 fi
 
 promotion_pattern='^(advisor-os/cartera/|advisor-os/sales-pipeline/prospect-quote-detail-projection-ui\.js$|advisor-os/sales-pipeline/productive-prospect-bootstrap\.js$|cartera\.js$|platform/economic-connection/|platform/event-evidence/(cartera-vertical-continuity-contract|policy-domain-event-contract|prospect-quote-detail-projection|quote-lifecycle-event-bridge|quote-lifecycle-event-contract|quote-lifecycle-supabase-service)\.js$|platform/experience-engine/cartera-|platform/policy-intelligence/|platform/portfolio-intelligence/|platform/productivity/|platform/program-governance/cartera-110|platform/relationship-intelligence/|platform/shared-commercial-model/|policy-operations/calendar/cartera-|policy-operations/intake/cartera-|policy-operations/payments/cartera-|schemas/(cartera-|commercial-|policy-)|supabase/migrations/[0-9_]*cartera|tests/cartera-|docs/architecture/source-truth/FORGE_CARTERA_(001|010|020|030|040|050|060|070|080|090|100|110)|docs/evidence/FORGE_CARTERA_(001|010|020|030|040|050|060|070|080|090|100|110)|docs/static-preview/quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b\.js$)'
+excluded_historical_notes='^(docs/architecture/source-truth/FORGE_CARTERA_001A_PIPELINE_QUOTE_EVENT_CONTRACT_DISCOVERY_001\.md|docs/architecture/source-truth/FORGE_CARTERA_001B_REMOTE_ACCEPTANCE_STAGE_GATE_001\.md)$'
 
 mapfile -t source_paths < <(
   git ls-tree -r --name-only "$ACCEPTED_PROGRAM_HEAD" |
   grep -E "$promotion_pattern" |
+  grep -Ev "$excluded_historical_notes" |
   sed '/^[[:space:]]*$/d'
 )
 
