@@ -728,28 +728,33 @@ $$;
 reset role;
 
 DO $$
+declare
+  identity_response jsonb;
 begin
+  select payload
+  into identity_response
+  from cartera030b_acceptance_results
+  where name = 'identity-collision';
+
+  if identity_response ->> 'generationState' <> 'CONFLICT'
+    or identity_response ->> 'reason' <> 'OBLIGATION_IDENTITY_COLLISION'
+    or nullif(identity_response ->> 'conflictReference', '') is null then
+    raise exception 'CARTERA030B_IDENTITY_COLLISION_RESPONSE_INVALID:%', identity_response;
+  end if;
+
   if not exists (
     select 1
     from public.cartera030b_obligation_conflicts c
-    join cartera030b_acceptance_ids ids on ids.forged_reference = (
-      c.claims ->> 'obligationReference'
-    )
+    join public.cartera030b_expected_payment_obligations o
+      on o.id = c.obligation_id
+     and o.advisor_id = c.advisor_id
+    join cartera030b_acceptance_ids ids
+      on ids.forged_reference = o.obligation_reference
     where c.conflict_type = 'OBLIGATION_IDENTITY_COLLISION'
+      and c.conflict_reference = identity_response ->> 'conflictReference'
+      and c.claims ->> 'existingObligationReference' = ids.forged_reference
   ) then
-    raise exception 'CARTERA030B_IDENTITY_COLLISION_CONFLICT_NOT_DURABLE_DIAGNOSTIC:response=%,forged=%,conflicts=%',
-    (select payload from cartera030b_acceptance_results where name = 'identity-collision'),
-    (select forged_reference from cartera030b_acceptance_ids),
-    coalesce((
-      select jsonb_agg(jsonb_build_object(
-        'type', c.conflict_type,
-        'reference', c.conflict_reference,
-        'obligationReference', c.claims ->> 'obligationReference',
-        'claims', c.claims
-      ) order by c.recorded_at)
-      from public.cartera030b_obligation_conflicts c
-      where c.advisor_id = (select user_a from cartera030b_acceptance_ids)
-    ), '[]'::jsonb);
+    raise exception 'CARTERA030B_IDENTITY_COLLISION_CONFLICT_NOT_DURABLE';
   end if;
 
   if to_regprocedure('public.forge_cartera030b_reconcile_payment_event(jsonb)') is not null then

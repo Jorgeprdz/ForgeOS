@@ -5,7 +5,7 @@ import { join } from 'node:path';
 
 const PROJECT_REF = 'rmlxigxysujsuwzgoimv';
 const SOURCE_HEAD = '23b52fc7a442f52494c51fead67699004923c547';
-const ACCEPTANCE_BRANCH = 'run/cartera-030b-identity-collision-diagnostic-20260731-2035';
+const ACCEPTANCE_BRANCH = 'run/cartera-030b-target-remote-launch-20260731-2120';
 const AUTHORIZATION = 'YES:CARTERA_030B_REMOTE_MUTATION';
 const ACCEPTANCE_SQL = 'scripts/ci/cartera-030b-remote-acceptance.sql';
 const ARTIFACT_DIR = 'artifacts/cartera-030b-remote-acceptance';
