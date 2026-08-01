@@ -159,7 +159,7 @@ test("application loads the complete Quotes module and Pipeline stability layer"
     "utf8",
   );
   const quotesModule = await readFile(
-    "docs/static-preview/forge-alive-material3/quotes-module-complete.js",
+    "docs/static-preview/forge-alive-material3/quotes-module.js",
     "utf8",
   );
   const quoteAdapter = await readFile(
@@ -171,9 +171,9 @@ test("application loads the complete Quotes module and Pipeline stability layer"
     "utf8",
   );
 
-  assert.match(app, /quotes-module-complete\.js\?v=manual-quotes-complete-001/);
+  assert.match(app, /quotes-module\.js\?v=quote-calculator-parity-006/);
   assert.match(app, /pipeline-ui-stability\.js\?v=manual-pipeline-stability-001/);
-  assert.match(quotesModule, /quotes-result-adapter-complete\.js\?v=manual-quotes-complete-001/);
+  assert.match(quotesModule, /quotes-result-adapter\.js\?v=quote-calculator-parity-006/);
   assert.match(quoteAdapter, /premiumTable/);
   assert.match(pipelineStability, /windowRef\.innerWidth - documentRef\.documentElement\.clientWidth/);
   assert.match(pipelineStability, /data-productive-stage-label/);
