@@ -16,6 +16,14 @@ const bridgePath = join(
 );
 const reportingSource = join(root, "advisor-os/reporting");
 const reportingTarget = join(root, "docs/advisor-os/reporting");
+const smartWidgetSource = join(
+  root,
+  "advisor-os/forge-alive/smart-widgets",
+);
+const smartWidgetTarget = join(
+  root,
+  "docs/advisor-os/forge-alive/smart-widgets",
+);
 const eventEvidenceSource = join(root, "platform/event-evidence");
 const eventEvidenceTarget = join(root, "docs/platform/event-evidence");
 const activityLedgerRuntimeFiles = [
@@ -62,7 +70,40 @@ async function assertEqualFiles(source, target) {
   );
 }
 
-test("REP-16F generator materializes public reporting js and exact FES assets", async () => {
+async function assertGeneratedModules(sourceRoot, targetRoot, minimumCount) {
+  const sourceFiles = await listFiles(
+    sourceRoot,
+    (file) => file.endsWith(".mjs"),
+  );
+  assert.ok(sourceFiles.length >= minimumCount);
+  const expectedPublicFiles = sourceFiles.map(publicReportingPath).sort();
+  assert.deepEqual(
+    await listFiles(targetRoot, (file) => file.endsWith(".js")),
+    expectedPublicFiles,
+  );
+  assert.deepEqual(
+    await listFiles(targetRoot, (file) => file.endsWith(".mjs")),
+    [],
+  );
+
+  for (const file of sourceFiles) {
+    const source = await readFile(join(sourceRoot, file), "utf8");
+    const target = await readFile(
+      join(targetRoot, publicReportingPath(file)),
+      "utf8",
+    );
+    assert.equal(target, transformReportingModule(source));
+    assert.equal(
+      /(?:from\s+|import\(\s*)["'][^"']+\.mjs["']/.test(target),
+      false,
+      `public module import remained .mjs: ${file}`,
+    );
+  }
+
+  return sourceFiles;
+}
+
+test("REP-16F generator materializes reporting, Smart Widgets and exact FES assets", async () => {
   const originalBridge = await readFile(bridgePath, "utf8");
   try {
     execFileSync(
@@ -79,36 +120,18 @@ test("REP-16F generator materializes public reporting js and exact FES assets", 
       },
     );
 
-    const reportingFiles = await listFiles(
-      reportingSource,
-      (file) => file.endsWith(".mjs"),
+    await assertGeneratedModules(reportingSource, reportingTarget, 19);
+    const smartWidgetFiles = await assertGeneratedModules(
+      smartWidgetSource,
+      smartWidgetTarget,
+      5,
     );
-    assert.ok(reportingFiles.length >= 19);
-    const expectedPublicFiles = reportingFiles
-      .map(publicReportingPath)
-      .sort();
-    assert.deepEqual(
-      await listFiles(reportingTarget, (file) => file.endsWith(".js")),
-      expectedPublicFiles,
-    );
-    assert.deepEqual(
-      await listFiles(reportingTarget, (file) => file.endsWith(".mjs")),
-      [],
-    );
-
-    for (const file of reportingFiles) {
-      const source = await readFile(join(reportingSource, file), "utf8");
-      const target = await readFile(
-        join(reportingTarget, publicReportingPath(file)),
-        "utf8",
-      );
-      assert.equal(target, transformReportingModule(source));
-      assert.equal(
-        /(?:from\s+|import\(\s*)["'][^"']+\.mjs["']/.test(target),
-        false,
-        `public reporting import remained .mjs: ${file}`,
-      );
-    }
+    assert.ok(smartWidgetFiles.includes(
+      "productive-smart-widget-orchestrator.mjs",
+    ));
+    assert.ok(smartWidgetFiles.includes(
+      "productive-smart-widget-source-adapters.mjs",
+    ));
 
     assert.deepEqual(
       await listFiles(eventEvidenceTarget, (file) => file.endsWith(".js")),
@@ -149,6 +172,9 @@ test("REP-16F generator materializes public reporting js and exact FES assets", 
       "docs/advisor-os/reporting/runtime/activity-reporting-runtime.js",
     ));
     assert.ok(indexed.includes(
+      "docs/advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.js",
+    ));
+    assert.ok(indexed.includes(
       "docs/platform/event-evidence/activity-ledger-browser-runtime.js",
     ));
   } finally {
@@ -160,7 +186,7 @@ test("REP-16F generator materializes public reporting js and exact FES assets", 
         "-q",
         "HEAD",
         "--",
-        "docs/advisor-os/reporting",
+        "docs/advisor-os",
         "docs/platform/event-evidence",
         "docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs",
       ],
