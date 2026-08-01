@@ -25,11 +25,11 @@ function requireMarkers(text, markers) {
   }
 }
 
-test("Material 3 loads one login-integrated demo adapter", () => {
-  assert.match(
-    source.app,
-    /^import "\.\/login-integrated-demo\.js\?v=forge-demo-login-001";/,
-  );
+test("Material 3 loads the auth guard before one login-integrated demo adapter", () => {
+  const guardImport = 'import "./authenticated-route-guard.js?v=auth-route-guard-001";';
+  const demoImport = 'import "./login-integrated-demo.js?v=forge-demo-login-001";';
+  assert.ok(source.app.startsWith(`${guardImport}\n${demoImport}\n`));
+  assert.equal(source.app.split(demoImport).length - 1, 1);
   requireMarkers(source.frontend, [
     "Explorar ForgeOS con datos demo",
     "forge_demo_current_session",
