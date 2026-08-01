@@ -2,202 +2,43 @@ name: 067G17B Production Browser Acceptance
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - hotfix/rep-16f-pages-activity-assets
-    paths:
-      - '.forge/rep-16f-pages-activity-hotfix-trigger.txt'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  rep-16f-pages-hotfix:
-    if: github.event_name == 'pull_request' && github.actor == 'Jorgeprdz'
+  productive-prospect-browser:
+    if: github.actor == 'Jorgeprdz'
+    environment: 067g17a1-remote-acceptance
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    env:
+      FORGE_067G17B_PRODUCTION_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?v=${{ github.sha }}
+      FORGE_067G17B_EVIDENCE_DIR: artifacts/067g17b-production
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          ref: hotfix/rep-16f-pages-activity-assets
-          fetch-depth: 0
-
-      - name: Apply exact Pages Activity asset hotfix
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install isolated browser harness
+        run: npm install --no-save puppeteer@24.16.0
+      - name: Run productive prospect browser acceptance
+        env:
+          FORGE_PUPPETEER_CORE_PATH: puppeteer
+          FORGE_CHROMIUM_PATH: ${{ env.PUPPETEER_EXECUTABLE_PATH }}
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          def replace_exact(path, old, new, expected=1):
-              text = path.read_text()
-              count = text.count(old)
-              if count != expected:
-                  raise SystemExit(f"{path}: expected {expected} exact matches, got {count}: {old!r}")
-              path.write_text(text.replace(old, new))
-
-          bridge = Path('docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs')
-          replace_exact(
-              bridge,
-              '''import {
-  createFesActivityReportSourceAdapter,
-  FES_ACTIVITY_EVENT_AUTHORITY_SNAPSHOT_SCHEMA_VERSION,
-} from "../../../advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs";
-
-import {
-  createActivityReportingRuntime,
-} from "../../../advisor-os/reporting/runtime/activity-reporting-runtime.mjs";
-''',
-              '''const sourceLayout = import.meta.url.includes("/docs/static-preview/");
-const reportingBase = new URL(
-  sourceLayout ? "../../../advisor-os/reporting/" : "../../advisor-os/reporting/",
-  import.meta.url,
-);
-
-const [
-  {
-    createFesActivityReportSourceAdapter,
-    FES_ACTIVITY_EVENT_AUTHORITY_SNAPSHOT_SCHEMA_VERSION,
-  },
-  { createActivityReportingRuntime },
-] = await Promise.all([
-  import(new URL(
-    "infrastructure/fes-activity-report-source-adapter.mjs",
-    reportingBase,
-  )),
-  import(new URL("runtime/activity-reporting-runtime.mjs", reportingBase)),
-]);
-''',
-          )
-
-          pages = Path('.github/workflows/pages.yml')
-          replace_exact(
-              pages,
-              '''            'manager-os/nba/nash-mick-nba-reconnection-engine.js'
-          ]);
-
-          function isPublicFile(file) {''',
-              '''            'manager-os/nba/nash-mick-nba-reconnection-engine.js'
-          ]);
-          const publicActivityLedgerRuntimeFiles = new Set([
-            'platform/event-evidence/canonical-activity-event-contract.js',
-            'platform/event-evidence/activity-ledger-contract.js',
-            'platform/event-evidence/activity-ledger-local-store.js',
-            'platform/event-evidence/activity-ledger-sync-service.js',
-            'platform/event-evidence/activity-ledger-supabase-gateway.js',
-            'platform/event-evidence/activity-ledger-browser-runtime.js'
-          ]);
-
-          function isPublicFile(file) {''',
-          )
-          replace_exact(
-              pages,
-              '''            if (file.startsWith('advisor-os/sales-pipeline/')) {
-              return publicExtensions.has(path.extname(file).toLowerCase());
-            }
-            if (publicConversationRuntimeFiles.has(file)) return true;''',
-              '''            if (file.startsWith('advisor-os/sales-pipeline/')) {
-              return publicExtensions.has(path.extname(file).toLowerCase());
-            }
-            if (file.startsWith('advisor-os/reporting/')) {
-              return path.extname(file).toLowerCase() === '.mjs';
-            }
-            if (publicActivityLedgerRuntimeFiles.has(file)) return true;
-            if (publicConversationRuntimeFiles.has(file)) return true;''',
-          )
-          replace_exact(
-              pages,
-              '''          for (const file of requiredConversationRuntime) {
-            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
-          }
-
-          const rootIndex = fs.readFileSync('_site/index.html', 'utf8');''',
-              '''          for (const file of requiredConversationRuntime) {
-            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
-          }
-          const requiredActivityRuntime = [
-            'advisor-os/reporting/application/activity-chart-ready-projection.mjs',
-            'advisor-os/reporting/application/activity-report-source-port.mjs',
-            'advisor-os/reporting/application/chart-ready-surface-contract.mjs',
-            'advisor-os/reporting/application/report-provider-port.mjs',
-            'advisor-os/reporting/domain/activity-event-authority-mapping.mjs',
-            'advisor-os/reporting/domain/chart-ready-reporting-contract.mjs',
-            'advisor-os/reporting/domain/report-comparison-definition.mjs',
-            'advisor-os/reporting/domain/report-definition.mjs',
-            'advisor-os/reporting/domain/reporting-calendar-policy.mjs',
-            'advisor-os/reporting/domain/reporting-kernel-contract.mjs',
-            'advisor-os/reporting/domain/universal-report-model.mjs',
-            'advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs',
-            'advisor-os/reporting/providers/activity-report-provider.mjs',
-            'advisor-os/reporting/runtime/activity-reporting-runtime.mjs',
-            'advisor-os/reporting/runtime/report-comparison-engine.mjs',
-            'advisor-os/reporting/runtime/report-provider-runtime.mjs',
-            'advisor-os/reporting/runtime/universal-period-resolver.mjs',
-            'advisor-os/reporting/runtime/universal-report-aggregation-runtime.mjs',
-            'advisor-os/reporting/runtime/universal-reporting-kernel.mjs',
-            'platform/event-evidence/canonical-activity-event-contract.js',
-            'platform/event-evidence/activity-ledger-contract.js',
-            'platform/event-evidence/activity-ledger-local-store.js',
-            'platform/event-evidence/activity-ledger-sync-service.js',
-            'platform/event-evidence/activity-ledger-supabase-gateway.js',
-            'platform/event-evidence/activity-ledger-browser-runtime.js',
-          ];
-          for (const file of requiredActivityRuntime) {
-            assert.ok(
-              fs.existsSync(path.join('_site', file)),
-              `missing productive Activity runtime asset: ${file}`,
-            );
-          }
-
-          const rootIndex = fs.readFileSync('_site/index.html', 'utf8');''',
-          )
-          replace_exact(
-              pages,
-              '''          const workspaceCss = fs.readFileSync(path.join(canonical, 'pipeline-referral-modal.css'), 'utf8');
-
-          assert.match(rootIndex, /FORGE_LEGACY_UI_RETIRED/);''',
-              '''          const workspaceCss = fs.readFileSync(path.join(canonical, 'pipeline-referral-modal.css'), 'utf8');
-          const activityBridge = fs.readFileSync(
-            path.join(canonical, 'activity-ledger-reporting-bridge.mjs'),
-            'utf8',
-          );
-
-          assert.match(rootIndex, /FORGE_LEGACY_UI_RETIRED/);''',
-          )
-          replace_exact(
-              pages,
-              '''          assert.match(app, /legacy-ui-retirement\\.js\\?v=legacy-ui-retirement-001/);
-          assert.match(
-            pipelineModule,''',
-              '''          assert.match(app, /legacy-ui-retirement\\.js\\?v=legacy-ui-retirement-001/);
-          assert.match(activityBridge, /sourceLayout/);
-          assert.match(activityBridge, /\.\.\/\.\.\/advisor-os\/reporting\//);
-          assert.doesNotMatch(
-            activityBridge,
-            /from ["']\.\.\/\.\.\/\.\.\/advisor-os\/reporting\//,
-          );
-          assert.match(
-            pipelineModule,''',
-          )
-          PY
-
-      - name: Validate exact hotfix boundaries
-        run: |
-          node --check docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
-          grep -F "file.startsWith('advisor-os/reporting/')" .github/workflows/pages.yml
-          grep -F "publicActivityLedgerRuntimeFiles" .github/workflows/pages.yml
-          grep -F "requiredActivityRuntime" .github/workflows/pages.yml
-          ! grep -F 'from "../../../advisor-os/reporting/' docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
-          node tests/rep-16d-productive-activity-delivery-test.mjs
-          node tests/activity-reporting-runtime-chart-ready-test.mjs
-          node tests/fes-activity-report-source-adapter-test.mjs
-
-      - name: Commit clean hotfix and restore registered workflow
-        run: |
-          git config user.name "ForgeOS Governance Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git checkout 42f2266338d0566609fdb6c3525fcd06f1fad52b -- .github/workflows/067g17b-production-acceptance.yml
-          git rm .github/workflows/rep-16f-pages-activity-hotfix-once.yml
-          git add .github/workflows/pages.yml \
-            .github/workflows/067g17b-production-acceptance.yml \
-            docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
-          git commit -m "REP-16F publish productive Activity runtime assets"
-          git push origin HEAD:hotfix/rep-16f-pages-activity-assets
+          export FORGE_CHROMIUM_PATH="$(node --input-type=module -e "import puppeteer from 'puppeteer'; console.log(puppeteer.executablePath())")"
+          node tests/forge-067g17b-production-browser-acceptance.mjs
+      - name: Upload redacted production evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 067g17b-production-browser-evidence
+          path: artifacts/067g17b-production
+          if-no-files-found: error
