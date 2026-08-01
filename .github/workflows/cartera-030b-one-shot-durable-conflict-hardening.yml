@@ -1,0 +1,167 @@
+name: CARTERA 030B One-Shot Durable Conflict Hardening
+
+on:
+  pull_request:
+    branches:
+      - run/cartera-030b-pgcrypto-repair-v2-20260731-2028
+    types:
+      - opened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-030b-durable-conflict-hardening
+  cancel-in-progress: false
+
+jobs:
+  persist-hardening-and-resume:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.ref == 'run/cartera-030b-durable-conflict-hardening-20260731-2031' &&
+      github.event.pull_request.base.ref == 'run/cartera-030b-pgcrypto-repair-v2-20260731-2028' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_030B_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_030B_REMOTE_MUTATION
+      CARTERA_030B_EXPECTED_SOURCE_HEAD: 23b52fc7a442f52494c51fead67699004923c547
+      CARTERA_030B_ACCEPTANCE_BRANCH: run/cartera-030b-durable-conflict-hardening-20260731-2031
+
+    steps:
+      - name: Checkout exact hardening branch
+        uses: actions/checkout@v4
+        with:
+          ref: run/cartera-030b-durable-conflict-hardening-20260731-2031
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Authorization and bounded hardening gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-030b-remote-acceptance
+          test "$CARTERA_030B_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_030B_REMOTE_MUTATION'
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          base=8dd9c110383240ef4b203405460c0a4064050b60
+          git merge-base --is-ancestor "$base" HEAD
+          git diff --check "$base"...HEAD
+          mapfile -t changed < <(git diff --name-only "$base"...HEAD)
+          test "${#changed[@]}" -eq 3
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' \
+            .github/workflows/cartera-030b-one-shot-durable-conflict-hardening.yml \
+            supabase/migrations/20260731000252_cartera030b_durable_generation_conflict_receipts.sql \
+            tests/cartera-030b-durable-conflict-receipt-hardening-test.mjs \
+            | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+          echo 'DURABLE_CONFLICT_HARDENING_AUTHORIZATION=PASS'
+          echo 'INITIAL_00252_SCOPE=PASS'
+
+      - name: Extend the pinned runner through migration 00252
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          old_branch = 'run/cartera-030b-pgcrypto-repair-v2-20260731-2028'
+          new_branch = 'run/cartera-030b-durable-conflict-hardening-20260731-2031'
+
+          runner = Path('scripts/ci/cartera-030b-remote-acceptance.mjs')
+          source = runner.read_text()
+          if source.count(old_branch) != 1:
+              raise SystemExit('RUNNER_BRANCH_REPLACEMENT_COUNT_INVALID')
+          source = source.replace(old_branch, new_branch)
+          old_migrations = "  ['20260731000251', 'cartera030b_generation_and_calendar_rpc'],\n].map"
+          new_migrations = "  ['20260731000251', 'cartera030b_generation_and_calendar_rpc'],\n  ['20260731000252', 'cartera030b_durable_generation_conflict_receipts'],\n].map"
+          if source.count(old_migrations) != 1:
+              raise SystemExit('RUNNER_MIGRATION_LIST_REPLACEMENT_COUNT_INVALID')
+          source = source.replace(old_migrations, new_migrations)
+          if old_branch in source or source.count(new_branch) != 1:
+              raise SystemExit('RUNNER_BRANCH_HARDENING_VERIFICATION_FAILED')
+          if source.count('20260731000252') != 1:
+              raise SystemExit('RUNNER_00252_REGISTRATION_FAILED')
+          runner.write_text(source)
+
+          contract = Path('tests/cartera-030b-remote-acceptance-contract-test.mjs')
+          source = contract.read_text()
+          old_assertion = "  assert.match(source, /run\\/cartera-030b-pgcrypto-repair-v2-20260731-2028/);"
+          new_assertion = "  assert.match(source, /run\\/cartera-030b-durable-conflict-hardening-20260731-2031/);"
+          if source.count(old_assertion) != 1:
+              raise SystemExit('CONTRACT_BRANCH_ASSERTION_COUNT_INVALID')
+          source = source.replace(old_assertion, new_assertion)
+          source = source.replace(
+              "test('remote deployment is limited to migrations 00250 and 00251'",
+              "test('remote deployment is limited to migrations 00250 through 00252'",
+          )
+          old_lines = "  assert.match(source, /20260731000251/);\n  assert.doesNotMatch(source, /2026073100025[2-9]/);"
+          new_lines = "  assert.match(source, /20260731000251/);\n  assert.match(source, /20260731000252/);\n  assert.doesNotMatch(source, /2026073100025[3-9]/);"
+          if source.count(old_lines) != 1:
+              raise SystemExit('CONTRACT_MIGRATION_ASSERTION_COUNT_INVALID')
+          source = source.replace(old_lines, new_lines)
+          if '2026073100025[2-9]' in source or source.count('20260731000252') != 1:
+              raise SystemExit('CONTRACT_00252_REGISTRATION_FAILED')
+          contract.write_text(source)
+          PY
+
+          mapfile -t changed < <(git status --short | sed 's/^...//')
+          printf 'PINNED_RUNNER_FILE=%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 2
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs \
+            | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+          node --check scripts/ci/cartera-030b-remote-acceptance.mjs
+          node --test tests/cartera-030b-*.mjs
+          node tests/payment-evidence-packet-test.js
+          node tests/payment-event-engine-test.js
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs
+          git commit -m 'test(cartera): extend 030B acceptance through 00252'
+          git push origin HEAD:run/cartera-030b-durable-conflict-hardening-20260731-2031
+          echo "CARTERA_030B_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo 'DURABLE_CONFLICT_HARDENING_RUNNER=PERSISTED'
+
+      - name: Deploy 00252 and resume transactional acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-030b-remote-acceptance.mjs \
+            | tee artifacts/cartera-030b-remote-acceptance/workflow-output.log
+
+      - name: Verify final acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-030b-remote-acceptance/workflow-output.log
+          grep -q 'MIGRATION_20260731000250=ALREADY_APPLIED_AND_MATCHED' "$log"
+          grep -q 'MIGRATION_20260731000251=ALREADY_APPLIED_AND_MATCHED' "$log"
+          grep -q 'MIGRATION_20260731000252=APPLIED' "$log"
+          grep -q 'CHANGED_INPUT_CONFLICT_PERSISTENCE=PASS' "$log"
+          grep -q 'IDENTITY_COLLISION_CONFLICT_PERSISTENCE=PASS' "$log"
+          grep -q 'CARTERA_030B_REMOTE_ACCEPTANCE=PASS' "$log"
+
+      - name: Upload 00252 and remote acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-030b-durable-conflict-hardening-and-remote-acceptance
+          path: artifacts/cartera-030b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
