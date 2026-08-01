@@ -43,6 +43,7 @@ import { bindCartera040RelationshipMemory } from './advisor-os/cartera/cartera-0
 import { bindCartera050FutureRadar } from './advisor-os/cartera/cartera-050d-future-radar-enhancement.js';
 import { bindCartera060RelationshipGrowth } from './advisor-os/cartera/cartera-060d-relationship-growth-enhancement.js';
 import { bindCartera070RelationalActivation } from './advisor-os/cartera/cartera-070d-relational-activation-enhancement.js';
+import { bindCartera080EconomicConnection } from './advisor-os/cartera/cartera-080d-economic-connection-enhancement.js';
 import { renderComisiones,  bindComisionesEvents   } from './comisiones.js';
 
 import { EventBus }     from './event-system.js';
@@ -68,6 +69,7 @@ function bindCarteraProductEvents() {
     bindCartera050FutureRadar();
     bindCartera060RelationshipGrowth();
     bindCartera070RelationalActivation();
+    bindCartera080EconomicConnection();
     return bindCarteraEvents();
 }
 
