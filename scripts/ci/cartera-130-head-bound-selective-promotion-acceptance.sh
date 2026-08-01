@@ -67,8 +67,8 @@ git diff --quiet "$CURRENT_MAIN_HEAD" -- actividad.js
 git diff --quiet "$CURRENT_MAIN_HEAD" -- dashboard.js
 git diff --quiet "$CURRENT_MAIN_HEAD" -- pipeline.js
 
-material3_added_lines="$(git diff --unified=0 "$CURRENT_MAIN_HEAD" -- "$MATERIAL3_APP" | grep '^+' | grep -v '^+++' | wc -l | tr -d ' ')"
-material3_removed_lines="$(git diff --unified=0 "$CURRENT_MAIN_HEAD" -- "$MATERIAL3_APP" | grep '^-' | grep -v '^---' | wc -l | tr -d ' ')"
+material3_added_lines="$(git diff --unified=0 "$CURRENT_MAIN_HEAD" -- "$MATERIAL3_APP" | awk '/^\+/ && !/^\+\+\+/ { count += 1 } END { print count + 0 }')"
+material3_removed_lines="$(git diff --unified=0 "$CURRENT_MAIN_HEAD" -- "$MATERIAL3_APP" | awk '/^-/ && !/^---/ { count += 1 } END { print count + 0 }')"
 [[ "$material3_added_lines" == '1' ]]
 [[ "$material3_removed_lines" == '0' ]]
 grep -q 'forge-quote-lifecycle-browser-bridge-cartera001b.js' "$MATERIAL3_APP"
