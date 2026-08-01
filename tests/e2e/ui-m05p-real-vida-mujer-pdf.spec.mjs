@@ -123,6 +123,14 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   );
   await expect(projection).toBeVisible({ timeout: 15_000 });
 
+  const clientNameInput = page.locator(
+    "[data-quote-human-review-client]",
+  ).first();
+  await expect(clientNameInput).toHaveValue(/Alejandra Moleres/i, {
+    timeout: 8_000,
+  });
+  const clientName = await clientNameInput.inputValue();
+
   const confirm = page.locator('[data-quote-next-action="confirm_quote"]');
   await expect(confirm).toBeVisible({ timeout: 10_000 });
   await confirm.click({ force: true, timeout: 4_000 });
@@ -153,8 +161,8 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   const errorText = await resultError.textContent({ timeout: 2_000 })
     .catch(() => "");
 
+  expect(clientName).toMatch(/Alejandra Moleres/i);
   expect(bodyText).toMatch(/Vida Mujer/i);
-  expect(bodyText).toMatch(/Alejandra Moleres/i);
   expect(bodyText).toMatch(/3[,\s]?0(?:61\.82|62)/);
   expect(bodyText).toMatch(/3[,\s]?890(?:\.21)?/);
   expect(bodyText).toMatch(/50[,\s]?000/);
@@ -188,11 +196,12 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   }
 
   const state = {
-    schema: "forge.ui.m05p.real-vida-mujer-browser-state.v4",
+    schema: "forge.ui.m05p.real-vida-mujer-browser-state.v5",
     targetUrl: page.url(),
     project: testInfo.project.name,
     viewport: page.viewportSize(),
     responsivenessProbeMs,
+    extractedClientName: clientName,
     intakeAccepted: true,
     quoteProjectionReady: true,
     confirmationState: "accepted",
