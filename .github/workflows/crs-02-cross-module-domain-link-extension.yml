@@ -1,0 +1,109 @@
+name: CRS 02 Cross-Module Domain Link Extension
+
+on:
+  pull_request:
+    paths:
+      - "platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js"
+      - "platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js"
+      - "docs/architecture/source-truth/FORGE_CRS_02_CROSS_MODULE_DOMAIN_LINK_EXTENSION_001.md"
+      - "docs/evidence/FORGE_CRS_02_ABCD_CLOSURE_001.md"
+      - "tests/crs-02-domain-link-envelope-contract-test.mjs"
+      - "tests/crs-02-authoritative-domain-link-adapters-test.mjs"
+      - ".github/workflows/crs-02-cross-module-domain-link-extension.yml"
+  push:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js"
+      - "platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  domain-link-extension:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+          allowed='^(platform/shared-commercial-model/crs-02-domain-link-envelope-contract\.js|platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters\.js|docs/architecture/source-truth/FORGE_CRS_02_CROSS_MODULE_DOMAIN_LINK_EXTENSION_001\.md|docs/evidence/FORGE_CRS_02_ABCD_CLOSURE_001\.md|tests/crs-02-domain-link-envelope-contract-test\.mjs|tests/crs-02-authoritative-domain-link-adapters-test\.mjs|\.github/workflows/crs-02-cross-module-domain-link-extension\.yml)$'
+
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_02_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'CRS_02_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        run: |
+          node --check platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js
+          node --check platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js
+
+      - name: CRS 02 targeted acceptance
+        run: |
+          node --test tests/crs-02-domain-link-envelope-contract-test.mjs
+          node --test tests/crs-02-authoritative-domain-link-adapters-test.mjs
+
+      - name: Preserve CRS 01 person authority promotion
+        run: |
+          node --test tests/crs-01-existing-cartera-authority-registry-test.mjs
+          node --test tests/crs-01-commercial-person-authority-facade-test.mjs
+
+      - name: Preserve FES and Quote source authorities
+        run: |
+          node --test tests/fes-01-canonical-activity-event-contract-test.mjs
+          node --test tests/cartera-001b-quote-lifecycle-event-contract-test.mjs
+          node --test tests/quote-cartera-relationship-contract-test.mjs
+          node --test tests/quote-cartera-relationship-adapter-test.mjs
+
+      - name: Enforce reference-only and no-persistence boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract='platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js'
+          adapters='platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js'
+          source='docs/architecture/source-truth/FORGE_CRS_02_CROSS_MODULE_DOMAIN_LINK_EXTENSION_001.md'
+
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\(' "$contract" "$adapters"
+          ! grep -Eq 'localStorage|sessionStorage|indexedDB|XMLHttpRequest|fetch\(' "$contract" "$adapters"
+          ! grep -Eq 'payload[[:space:]]*:' "$contract" "$adapters"
+          grep -q 'durableRelationshipEntityCreated: false' "$contract" "$adapters"
+          grep -q 'centralLinkLedgerCreated: false' "$contract" "$adapters"
+          grep -q 'authoritativePayloadCopied: false' "$contract" "$adapters"
+          grep -q 'sourceCorrelationReinterpretedAsCommercialMovement: false' "$adapters"
+          grep -q 'LEGACY_SOURCE_CORRELATION_AUTO_REINTERPRETATION=FORBIDDEN' "$source"
+          grep -q 'DURABLE_ADVISOR_COMMERCIAL_RELATIONSHIP_ENTITY=NO' "$source"
+          grep -q 'APPLICATION_AUTHORITY_STATUS=RESERVED_NOT_YET_PRODUCTIVE' "$source"
+
+          echo 'CRS_02A_CORRELATION_DOMAIN_LINK_SCOPE=PASS'
+          echo 'CRS_02B_COMMON_DOMAIN_LINK_CONTRACT=PASS'
+          echo 'CRS_02C_AUTHORITATIVE_RECEIPT_ADAPTERS=PASS'
+          echo 'CRS_02_RELATIONSHIP_ENTITY_PERSISTENCE=NO'
+          echo 'CRS_02_CENTRAL_LINK_LEDGER=NO'
+          echo 'CRS_02_AUTHORITATIVE_PAYLOAD_COPY=NO'
+          echo 'CRS_02_LEGACY_CORRELATION_REINTERPRETATION=BLOCKED'
+          echo 'CRS_02_DATABASE_MUTATION=NO'
+          echo 'CRS_02_EXTERNAL_EFFECT=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
