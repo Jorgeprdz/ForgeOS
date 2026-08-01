@@ -6,6 +6,7 @@ on:
       - feature/cartera-030b-expected-payment-obligation-ledger-calendar
     types:
       - opened
+      - synchronize
 
 permissions:
   contents: write
