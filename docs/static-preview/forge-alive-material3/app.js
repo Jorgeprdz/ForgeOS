@@ -22,7 +22,13 @@ const legacyBase = new URL(
   import.meta.url,
 );
 const advisorBase = new URL(
-  sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/",
+  sourceLayout
+    ? "../../../advisor-os/sales-pipeline/"
+    : "../../advisor-os/sales-pipeline/",
+  import.meta.url,
+);
+const fesBase = new URL(
+  sourceLayout ? "../../../platform/event-evidence/" : "../../platform/event-evidence/",
   import.meta.url,
 );
 const loadAuthority = (base, path) => import(new URL(path, base));
@@ -34,6 +40,10 @@ function ensureStylesheet({ selector, href, datasetKey }) {
   stylesheet.href = href;
   stylesheet.dataset[datasetKey] = "true";
   document.head.append(stylesheet);
+}
+
+if (!document.querySelector("[data-reporting-crypto-import-map]")) {
+  throw new Error("REP_16E_REPORTING_IMPORT_MAP_REQUIRED_BEFORE_APP_MODULE");
 }
 
 ensureStylesheet({
@@ -52,10 +62,32 @@ const moduleViewport = document.querySelector(
 const homeRoot = document.querySelector("[data-forge-home-module]");
 const quotesRoot = document.querySelector("[data-forge-quotes-module]");
 const pipelineRoot = document.querySelector("[data-forge-pipeline-module]");
+let activityRoot = document.querySelector("[data-forge-activity-module]");
 
-if (!application || !moduleViewport || !homeRoot || !quotesRoot || !pipelineRoot) {
+if (moduleViewport && !activityRoot) {
+  activityRoot = document.createElement("section");
+  activityRoot.className = "activity-module";
+  activityRoot.dataset.forgeActivityModule = "true";
+  activityRoot.dataset.routeModule = "actividad";
+  activityRoot.hidden = true;
+  activityRoot.setAttribute("aria-label", "Actividad");
+  moduleViewport.append(activityRoot);
+}
+
+if (
+  !application
+  || !moduleViewport
+  || !homeRoot
+  || !quotesRoot
+  || !pipelineRoot
+  || !activityRoot
+) {
   throw new Error("UI-M04 canonical shell boundary is incomplete");
 }
+
+const { createActivityModule } = await import(
+  "./activity-module.js?v=rep-16e-002"
+);
 
 const shell = createForgeShell({
   root: application,
@@ -73,11 +105,16 @@ const pipeline = createPipelineModule({
   root: pipelineRoot,
   shell,
 });
+const activity = createActivityModule({
+  root: activityRoot,
+  shell,
+});
 
 shell
   .registerRouteModule("inicio", home)
   .registerRouteModule("pipeline", pipeline)
-  .registerRouteModule("quotes", quotes);
+  .registerRouteModule("quotes", quotes)
+  .registerRouteModule("actividad", activity);
 shell.initialize();
 
 document.documentElement.dataset.forgeCleanHomeReady = "true";
@@ -85,6 +122,7 @@ document.documentElement.dataset.forgeShellReady = "true";
 document.documentElement.dataset.forgeShellBoot = "route-first";
 document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
 document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
+document.documentElement.dataset.activityReportingRuntime = "REP-16E";
 
 function authorityDatasetKey(name) {
   return `forgeAuthority${name
@@ -115,6 +153,12 @@ function startAuthority(base, path, name) {
   return task;
 }
 
+function refreshActivityIfActive() {
+  if (application.dataset.forgeRoute === "actividad") {
+    void activity.refresh();
+  }
+}
+
 function startPrintableAuthority() {
   return startAuthority(
     moduleBase,
@@ -123,9 +167,10 @@ function startPrintableAuthority() {
   );
 }
 
-// Printing remains eager, while every config consumer shares one environment gate.
+// Printing remains eager. Environment, reporting and auth load after shell initialization.
 void startPrintableAuthority();
 const environmentAuthority = loadEnvironmentAuthority();
+void loadActivityAuthorities();
 
 async function loadEnvironmentAuthority() {
   markAuthority("environment", "loading");
@@ -140,6 +185,34 @@ async function loadEnvironmentAuthority() {
   } catch (error) {
     markAuthority("environment", "failed", error);
     return false;
+  }
+}
+
+async function loadActivityAuthorities() {
+  const authorities = [
+    ["canonical-activity-event-contract.js", "fes-canonical-event"],
+    ["activity-ledger-contract.js", "fes-ledger-contract"],
+    ["activity-ledger-local-store.js", "fes-ledger-local-store"],
+    ["activity-ledger-sync-service.js", "fes-ledger-sync"],
+    ["activity-ledger-supabase-gateway.js", "fes-ledger-gateway"],
+    ["activity-ledger-browser-runtime.js", "fes-ledger-browser-runtime"],
+  ];
+
+  try {
+    for (const [path, name] of authorities) {
+      await startAuthority(fesBase, path, name);
+    }
+
+    if (!globalThis.ForgeActivityLedgerBrowserRuntimeFES02C) {
+      throw new Error("REP_16E_FES_LEDGER_BROWSER_RUNTIME_REQUIRED");
+    }
+
+    document.documentElement.dataset.activityLedgerRuntime = "ready";
+    refreshActivityIfActive();
+  } catch (error) {
+    markAuthority("activity-runtime", "failed", error);
+    document.documentElement.dataset.activityLedgerRuntime = "failed";
+    refreshActivityIfActive();
   }
 }
 
@@ -224,9 +297,11 @@ async function loadAuthAuthorities() {
 
     document.documentElement.dataset.forgeAuthRuntime = "ready";
     shell.reconcile();
+    refreshActivityIfActive();
   } catch (error) {
     markAuthority("auth-runtime", "failed", error);
     showAuthRuntimeError();
+    refreshActivityIfActive();
   }
 }
 
