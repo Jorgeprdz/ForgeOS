@@ -62,39 +62,6 @@ jobs:
               "quote capture setup",
           )
 
-          old_quote_flags = '''      quoteResultsVisible:
-                visibleCount("[data-material3-quote-result-ready]") > 0,
-              quoteReadyState:
-                ["ready", "partial"].includes(
-                  document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState,
-                ),
-              quoteLoadedSubstantive:
-                (document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0) >= 120,
-              quoteProjectionTextLength:
-                document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0,
-              quoteProjectionSectionCount:
-                visibleCount("[data-quote-result-section]"),
-              quoteProductIdentityVisible:
-                visibleCount("[data-quote-product-identity]") > 0,
-              quoteNumericResultVisible:
-                /\\d/.test(document.querySelector("[data-quote-calculation-values]")?.textContent || ""),
-              quoteWarningsOrEvidenceVisible:
-                visibleCount("[data-quote-evidence-warnings]") > 0,
-              quoteProgressOnly:
-                visibleCount("[data-quote-progress]") > 0 &&
-                visibleCount("[data-material3-quote-result-ready]") === 0,
-              quoteCommercialProjection:
-                visibleCount("[data-quote-commercial-projection]") > 0,
-              quoteRawPacketVisible:
-                /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/
-                  .test([...document.querySelectorAll("[data-quote-result-section]")]
-                    .map(section => section.textContent).join(" ")),
-              quoteTechnicalEvidenceCollapsed: (() => {
-                const evidence = document.querySelector("[data-quote-technical-evidence]");
-                return evidence instanceof HTMLDetailsElement && !evidence.open;
-              })(),
-              quoteTechnicalEvidenceOpen:
-                document.querySelector("[data-quote-technical-evidence]")?.open === true,'''
           new_quote_flags = '''      quoteResultsVisible: quoteReady,
               quoteReadyState:
                 ["ready", "partial"].includes(
@@ -124,12 +91,11 @@ jobs:
                   .test(quotePrimaryText),
               quoteTechnicalPacketAbsent:
                 document.querySelector("[data-quote-technical-evidence]") === null,'''
-          diagnostic = replace_once(
-              diagnostic,
-              old_quote_flags,
-              new_quote_flags,
-              "quote capture flags",
-          )
+          flags_start = diagnostic.index("      quoteResultsVisible:")
+          flags_end_marker = '''      quoteTechnicalEvidenceOpen:
+                document.querySelector("[data-quote-technical-evidence]")?.open === true,'''
+          flags_end = diagnostic.index(flags_end_marker, flags_start) + len(flags_end_marker)
+          diagnostic = diagnostic[:flags_start] + new_quote_flags + diagnostic[flags_end:]
 
           init_start = diagnostic.index("  await context.addInitScript((sample) => {")
           init_end = diagnostic.index("  }, SAMPLE_REFERRAL);", init_start)
