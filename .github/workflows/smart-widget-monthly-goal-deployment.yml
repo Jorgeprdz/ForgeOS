@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
+      - "scripts/bootstrap-smart-widget-monthly-goal-migration.mjs"
       - "scripts/deploy-smart-widget-monthly-goal-migration.mjs"
       - "tests/smart-widget-monthly-policy-goal-authority-test.mjs"
       - "tests/smart-widget-monthly-goal-deployment-contract-test.mjs"
@@ -13,6 +14,7 @@ on:
       - main
     paths:
       - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
+      - "scripts/bootstrap-smart-widget-monthly-goal-migration.mjs"
       - "scripts/deploy-smart-widget-monthly-goal-migration.mjs"
       - "tests/smart-widget-monthly-policy-goal-authority-test.mjs"
       - "tests/smart-widget-monthly-goal-deployment-contract-test.mjs"
@@ -45,7 +47,9 @@ jobs:
         run: |
           set -euo pipefail
           test -f supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql
+          test -f scripts/bootstrap-smart-widget-monthly-goal-migration.mjs
           test -f scripts/deploy-smart-widget-monthly-goal-migration.mjs
+          node --check scripts/bootstrap-smart-widget-monthly-goal-migration.mjs
           node --check scripts/deploy-smart-widget-monthly-goal-migration.mjs
           if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
             supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql; then
@@ -86,13 +90,14 @@ jobs:
           set -euo pipefail
           test -n "$SUPABASE_ACCESS_TOKEN"
           test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          node --check scripts/bootstrap-smart-widget-monthly-goal-migration.mjs
           node --check scripts/deploy-smart-widget-monthly-goal-migration.mjs
           node tests/smart-widget-monthly-policy-goal-authority-test.mjs
           node tests/smart-widget-monthly-goal-deployment-contract-test.mjs
 
-      - name: Apply and rollback-test exact monthly goal migration
+      - name: Bootstrap, apply and rollback-test exact monthly goal migration
         id: deploy_authority
-        run: node scripts/deploy-smart-widget-monthly-goal-migration.mjs
+        run: node scripts/bootstrap-smart-widget-monthly-goal-migration.mjs
 
       - name: Ensure redacted evidence exists
         if: always()
