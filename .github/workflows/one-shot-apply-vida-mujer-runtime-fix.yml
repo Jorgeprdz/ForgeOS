@@ -1,0 +1,228 @@
+name: One Shot Apply Vida Mujer Runtime Fix
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - .github/workflows/one-shot-apply-vida-mujer-runtime-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-runtime-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout clean fix branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/vida-mujer-pdf-main-thread
+          fetch-depth: 0
+
+      - name: Import governed diagnostic runtime and acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin test/vida-mujer-real-pdf-visual-acceptance
+          source_ref="origin/test/vida-mujer-real-pdf-visual-acceptance"
+
+          git checkout "$source_ref" -- \
+            docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js \
+            docs/static-preview/forge-alive-material3/quote-runtime-bridge-composition-m05r001.js \
+            docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js \
+            tests/ui-m05q-quote-enhancement-loop-closure-test.mjs \
+            tests/ui-m05r-quote-bridge-composition-test.mjs \
+            .github/workflows/ui-m05p-real-vida-mujer-pdf.yml \
+            playwright.ui-m05p.config.mjs \
+            scripts/assemble-ui-m05p-real-pdf.mjs \
+            scripts/serve-ui-m05p-acceptance.mjs \
+            scripts/summarize-ui-m05p-acceptance.mjs \
+            tests/e2e/ui-m05p-real-vida-mujer-pdf.spec.mjs \
+            tests/fixtures/ui-m05p-real-vida-mujer-pdf
+
+      - name: Serialize quote authorities on current main app
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('docs/static-preview/forge-alive-material3/app.js')
+          text = path.read_text()
+          old = '''  try {
+              await startAuthority(
+                moduleBase,
+                "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
+                "quote-rate-bridge",
+              );
+            } catch {
+              // Quote enhancements below are independent and must still start.
+            }
+
+            const optionalAuthorities = [
+              [
+                "quote-runtime-hotfix-m05e003.js?v=m05e-010-pages-rate",
+                "quote-rate-runtime",
+              ],
+              [
+                "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05e-009",
+                "vida-mujer-handoff",
+              ],
+              [
+                "quote-runtime-vida-mujer-visual-m05e010.js?v=m05e-010",
+                "vida-mujer-visual",
+              ],
+            ];
+
+            for (const [path, name] of optionalAuthorities) {
+              void startAuthority(moduleBase, path, name);
+            }
+          '''
+          # Normalize indentation to the exact source block.
+          old = '\n'.join(line[8:] if line.startswith('        ') else line for line in old.splitlines())
+          new = '''  try {
+              await startAuthority(
+                moduleBase,
+                "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
+                "quote-rate-bridge",
+              );
+            } catch {
+              // Continue with bounded local quote authorities when the rate bridge fails.
+            }
+
+            // Order is contractual: no parallel wrapping and no visual enrichment
+            // before the bridge has a single composed identity.
+            try {
+              await startAuthority(
+                moduleBase,
+                "quote-runtime-hotfix-m05e003.js?v=m05q-001-loop-closure",
+                "quote-rate-runtime",
+              );
+            } catch {}
+            try {
+              await startAuthority(
+                moduleBase,
+                "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05r-001-bridge-composition",
+                "vida-mujer-handoff",
+              );
+            } catch {}
+            try {
+              await startAuthority(
+                moduleBase,
+                "quote-runtime-bridge-composition-m05r001.js?v=m05r-001",
+                "quote-bridge-composition",
+              );
+            } catch {}
+            try {
+              await startAuthority(
+                moduleBase,
+                "quote-runtime-vida-mujer-visual-m05e010.js?v=m05t-001-coalesced",
+                "vida-mujer-visual",
+              );
+            } catch {}
+          '''
+          new = '\n'.join(line[8:] if line.startswith('        ') else line for line in new.splitlines())
+          if old not in text:
+              raise SystemExit('APP_QUOTE_AUTHORITY_BLOCK_NOT_FOUND')
+          path.write_text(text.replace(old, new, 1))
+
+          index = Path('docs/static-preview/forge-alive-material3/index.html')
+          html = index.read_text()
+          old_src = './app.js?v=ui-m05m-print-actions-eager-001&rep=16e-002'
+          new_src = './app.js?v=ui-m05t-vida-mujer-coalesced-001&rep=16e-002'
+          if old_src not in html:
+              raise SystemExit('INDEX_APP_CACHE_KEY_NOT_FOUND')
+          index.write_text(html.replace(old_src, new_src, 1))
+          PY
+
+      - name: Add coalescing contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > tests/ui-m05t-vida-mujer-visual-coalescing-test.mjs <<'EOF'
+          import assert from "node:assert/strict";
+          import { readFile } from "node:fs/promises";
+
+          const visual = await readFile(
+            "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js",
+            "utf8",
+          );
+          const app = await readFile(
+            "docs/static-preview/forge-alive-material3/app.js",
+            "utf8",
+          );
+          const index = await readFile(
+            "docs/static-preview/forge-alive-material3/index.html",
+            "utf8",
+          );
+
+          assert.match(visual, /const SCHEDULER_VERSION = "M05T-001"/);
+          assert.match(visual, /if \(scheduled\) return;/);
+          assert.match(visual, /confirmationDialogOpen\(\)/);
+          assert.match(visual, /lastAppliedCalculation/);
+          assert.match(visual, /requestAnimationFrame/);
+          assert.doesNotMatch(visual, /\[0, 60, 180, 450, 900\]/);
+          assert.doesNotMatch(visual, /"forge:quotes-module-ready"/);
+          assert.doesNotMatch(visual, /"forge:quote-candidate-ready"/);
+          assert.match(app, /quote-runtime-bridge-composition-m05r001\.js\?v=m05r-001/);
+          assert.match(app, /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05t-001-coalesced/);
+          assert.doesNotMatch(app, /for \(const \[path, name\] of optionalAuthorities\)/);
+          assert.match(index, /ui-m05t-vida-mujer-coalesced-001/);
+
+          console.log("UI_M05T_VIDA_MUJER_VISUAL_COALESCING=PASS");
+          EOF
+
+          cat > .github/workflows/ui-m05t-vida-mujer-main-thread.yml <<'EOF'
+          name: UI M05T Vida Mujer Main Thread
+
+          on:
+            push:
+              branches:
+                - fix/vida-mujer-pdf-main-thread
+              paths:
+                - docs/static-preview/forge-alive-material3/app.js
+                - docs/static-preview/forge-alive-material3/index.html
+                - docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js
+                - docs/static-preview/forge-alive-material3/quote-runtime-bridge-composition-m05r001.js
+                - docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js
+                - tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+                - tests/ui-m05r-quote-bridge-composition-test.mjs
+                - tests/ui-m05t-vida-mujer-visual-coalescing-test.mjs
+                - .github/workflows/ui-m05t-vida-mujer-main-thread.yml
+            pull_request:
+              branches: [main]
+              paths:
+                - docs/static-preview/forge-alive-material3/app.js
+                - docs/static-preview/forge-alive-material3/index.html
+                - docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js
+                - docs/static-preview/forge-alive-material3/quote-runtime-bridge-composition-m05r001.js
+                - docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js
+                - tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+                - tests/ui-m05r-quote-bridge-composition-test.mjs
+                - tests/ui-m05t-vida-mujer-visual-coalescing-test.mjs
+                - .github/workflows/ui-m05t-vida-mujer-main-thread.yml
+
+          permissions:
+            contents: read
+
+          jobs:
+            runtime-contract:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - run: node tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+                - run: node tests/ui-m05r-quote-bridge-composition-test.mjs
+                - run: node tests/ui-m05t-vida-mujer-visual-coalescing-test.mjs
+          EOF
+
+      - name: Commit governed repair and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/one-shot-apply-vida-mujer-runtime-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(ui): close Vida Mujer PDF main-thread loop"
+          git push origin HEAD:fix/vida-mujer-pdf-main-thread
