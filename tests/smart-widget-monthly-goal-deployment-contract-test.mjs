@@ -20,6 +20,9 @@ assert.match(workflow, /github\.ref_name == 'main'/);
 assert.match(workflow, /SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv/);
 assert.match(workflow, /deploy-smart-widget-monthly-goal-migration\.mjs/);
 assert.match(workflow, /smart-widget-monthly-goal-deployment-contract-test\.mjs/);
+assert.match(workflow, /statuses:\s*write/);
+assert.match(workflow, /smart-widgets\/monthly-goal-authority/);
+assert.match(workflow, /steps\.deploy_authority\.outcome/);
 assert.doesNotMatch(workflow, /supabase\s+db\s+push/i);
 assert.doesNotMatch(workflow, /supabase\/migrations\/\*\*/);
 
@@ -40,4 +43,4 @@ assert.match(migration, /grant execute on function public\.forge_set_monthly_pol
 assert.doesNotMatch(migration, /\b(?:drop\s+table|truncate)\b/i);
 assert.doesNotMatch(migration, /grant\s+(?:insert|update|delete)[^;]*authenticated/i);
 
-console.log("Smart Widget Monthly Goal Deployment Contract PASS 24/24");
+console.log("Smart Widget Monthly Goal Deployment Contract PASS 27/27");
