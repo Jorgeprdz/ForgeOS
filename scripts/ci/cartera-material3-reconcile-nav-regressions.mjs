@@ -2,22 +2,26 @@ import { readFileSync, writeFileSync } from 'node:fs';
 
 function patch(path, replacements) {
   let source = readFileSync(path, 'utf8');
+  let changed = false;
   for (const [before, after, code] of replacements) {
+    if (source.includes(after)) continue;
     if (!source.includes(before)) {
       throw new Error(`${code}:${path}`);
     }
     source = source.replace(before, after);
+    changed = true;
   }
-  writeFileSync(path, source);
+  if (changed) writeFileSync(path, source);
+  return changed;
 }
 
-patch('tests/material3-pipeline-integration-test.mjs', [[
+const navigationChanged = patch('tests/material3-pipeline-integration-test.mjs', [[
   '    "Cotizaciones",\n  ]);',
   '    "Cotizaciones",\n    "Cartera",\n  ]);',
   'CARTERA_M3_NAV_REGRESSION_EXPECTATION_NOT_FOUND',
 ]]);
 
-patch('docs/static-preview/forge-alive-material3/cartera-module.js', [
+const moduleChanged = patch('docs/static-preview/forge-alive-material3/cartera-module.js', [
   [
     '    runtime,\n    memory,\n    cartera,',
     '    runtime,\n    memory,\n    appState,\n    cartera,',
@@ -60,12 +64,13 @@ patch('docs/static-preview/forge-alive-material3/cartera-module.js', [
   ],
 ]);
 
-patch('tests/cartera-material3-productive-ui-mount-test.mjs', [[
+const contractChanged = patch('tests/cartera-material3-productive-ui-mount-test.mjs', [[
   "    'root.replaceChildren()',\n  ]);\n  assert.doesNotMatch(moduleSource, /Memory\\.cleanup\\(\\)/);",
   "    'root.replaceChildren()',\n    'activeProduct.AppState.state.cartera = []',\n    'key.startsWith(\"cartera:\")',\n  ]);\n  assert.doesNotMatch(moduleSource, /dataset\\.carteraAdvisorId/);\n  assert.doesNotMatch(moduleSource, /Memory\\.cleanup\\(\\)/);",
   'CARTERA_M3_SCRUB_TEST_POINT_NOT_FOUND',
 ]]);
 
-console.log('CARTERA_MATERIAL3_NAV_REGRESSION_RECONCILIATION=PASS');
-console.log('CARTERA_MATERIAL3_APP_STATE_SCRUB=PASS');
+console.log(`CARTERA_MATERIAL3_NAV_REGRESSION_RECONCILIATION=${navigationChanged ? 'MATERIALIZED' : 'ALREADY_RECONCILED'}`);
+console.log(`CARTERA_MATERIAL3_APP_STATE_SCRUB=${moduleChanged ? 'MATERIALIZED' : 'ALREADY_RECONCILED'}`);
+console.log(`CARTERA_MATERIAL3_CONTRACT_HARDENING=${contractChanged ? 'MATERIALIZED' : 'ALREADY_RECONCILED'}`);
 console.log('CARTERA_MATERIAL3_DOM_IDENTITY_EXPOSURE=BLOCKED');
