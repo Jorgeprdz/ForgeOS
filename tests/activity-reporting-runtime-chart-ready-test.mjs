@@ -133,7 +133,7 @@ test("runs canonical events through the universal report model", async () => {
   assert.equal(report.provider.providerId, "activity");
   assert.equal(report.definition.definitionId, "activity-by-date-and-type");
   assert.equal(report.totals.activityCount, 4);
-  assert.equal(report.rows.length, 4);
+  assert.equal(report.rows.length, 3);
   assert.equal(report.boundary.reportingAggregationAuthority, true);
   assert.equal(report.boundary.domainTruthAuthority, false);
 });
@@ -171,8 +171,7 @@ test("creates chart-ready series with point-to-row traceability", async () => {
   assert.deepEqual(
     contactSeries.points.map((point) => [point.x, point.value]),
     [
-      ["2026-07-10", 1],
-      ["2026-07-10", 1],
+      ["2026-07-10", 2],
     ],
   );
 });
