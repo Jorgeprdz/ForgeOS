@@ -84,7 +84,8 @@ test("empty, partial and error states remain explicit around presenter compositi
   assert.doesNotMatch(adapter, /function objectMarkup|function valueMarkup/);
   assert.doesNotMatch(adapter, /069C|073D|GMM/);
 
-  assert.match(presenter, /data-quote-mandatory-metric/);
+  assert.match(presenter, /dataset\.quoteMandatoryMetric/);
+  assert.match(presenter, /quotes-mandatory-metric/);
   assert.match(presenter, /missingInformation/);
   assert.match(presenter, /Pendiente/);
 });
