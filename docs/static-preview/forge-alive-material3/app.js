@@ -74,7 +74,7 @@ if (moduleViewport && !activityRoot) {
   activityRoot.dataset.forgeActivityModule = "true";
   activityRoot.dataset.routeModule = "actividad";
   activityRoot.hidden = true;
-  activityRoot.setAttribute("aria-label", "Actividad");
+  activityRoot.setAttribute("aria-label", "Actividad y Reportes");
   moduleViewport.append(activityRoot);
 }
 
@@ -90,7 +90,7 @@ if (
 }
 
 const { createActivityModule } = await import(
-  "./activity-module.js?v=rep-16e-002"
+  "./activity-module.js?v=rep-18-001"
 );
 
 const shell = createForgeShell({
@@ -126,7 +126,7 @@ document.documentElement.dataset.forgeShellReady = "true";
 document.documentElement.dataset.forgeShellBoot = "route-first";
 document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
 document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
-document.documentElement.dataset.activityReportingRuntime = "REP-16E";
+document.documentElement.dataset.activityReportingRuntime = "REP-18";
 
 function authorityDatasetKey(name) {
   return `forgeAuthority${name
@@ -171,7 +171,6 @@ function startPrintableAuthority() {
   );
 }
 
-// Printing remains eager. Environment, reporting and auth load after shell initialization.
 void startPrintableAuthority();
 const environmentAuthority = loadEnvironmentAuthority();
 void loadActivityAuthorities();
@@ -232,16 +231,12 @@ async function startOptionalQuoteAuthority(path, name) {
 async function loadQuoteAuthorities() {
   globalThis.ForgeQuoteIntakeReadinessM05X001?.markPreparing?.();
   try {
-    // Rate-dependent quote enhancements must wait for the same public environment.
     await environmentAuthority;
 
     await startOptionalQuoteAuthority(
       "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
       "quote-rate-bridge",
     );
-
-    // Order is contractual. Parallel imports previously allowed the bridge
-    // wrappers and visual retries to amplify each other until the page stalled.
     await startOptionalQuoteAuthority(
       "quote-runtime-hotfix-m05e003.js?v=m05q-001-loop-closure",
       "quote-rate-runtime",
