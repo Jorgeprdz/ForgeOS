@@ -1,0 +1,29 @@
+name: UI M05Q Quote Enhancement Loop Closure
+
+on:
+  push:
+    branches:
+      - test/vida-mujer-real-pdf-visual-acceptance
+    paths:
+      - .github/workflows/ui-m05q-quote-enhancement-loop-closure.yml
+      - docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js
+      - tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/ui-m05q-quote-enhancement-loop-closure.yml
+      - docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js
+      - tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
+
+permissions:
+  contents: read
+
+jobs:
+  loop-closure-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Enforce bounded quote enhancement
+        run: node tests/ui-m05q-quote-enhancement-loop-closure-test.mjs
