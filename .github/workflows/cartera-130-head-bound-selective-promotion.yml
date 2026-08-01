@@ -1,0 +1,68 @@
+name: CARTERA 130 Head-Bound Selective Promotion
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  selective-promotion:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'promotion/cartera-130-head-bound-selective-promotion' &&
+      github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-24.04
+    env:
+      CARTERA_130_CURRENT_MAIN_HEAD: 9d014116f6b3f0a626d8848d680a5c607f924d99
+      CARTERA_130_ACCEPTED_PROGRAM_HEAD: b83a37abe3eb8b3a48c2fe89940b562e1367bfcc
+    steps:
+      - name: Checkout exact promotion head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Fetch locked source heads
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main:refs/remotes/origin/main
+          git fetch origin \
+            feature/cartera-110abcd-program-completion-promotion:refs/remotes/origin/feature/cartera-110abcd-program-completion-promotion
+          git cat-file -e "$CARTERA_130_ACCEPTED_PROGRAM_HEAD^{commit}"
+          test "$(git rev-parse origin/main)" = "$CARTERA_130_CURRENT_MAIN_HEAD"
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute selective promotion acceptance
+        shell: bash
+        run: bash scripts/ci/cartera-130-head-bound-selective-promotion-acceptance.sh
+
+      - name: Persist materialized promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --all -- ':!artifacts/**'
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat(cartera): materialize accepted program on current main'
+            git push origin HEAD:promotion/cartera-130-head-bound-selective-promotion
+          fi
+
+      - name: Upload selective promotion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-130-head-bound-selective-promotion
+          path: artifacts/cartera-130-selective-promotion
+          if-no-files-found: error
+          retention-days: 30

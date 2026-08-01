@@ -38,6 +38,14 @@ import { renderProspeccion, bindProspeccionEvents  } from './prospeccion.js';
 import { renderReferidos,   bindReferidosEvents    } from './referidos.js';
 import { renderActividad,   bindActividadEvents    } from './actividad.js';
 import { renderCartera,     bindCarteraEvents      } from './cartera.js';
+import { bindCartera030dPolicyPaymentCalendar } from './advisor-os/cartera/cartera-030d-policy-payment-calendar-enhancement.js';
+import { bindCartera040RelationshipMemory } from './advisor-os/cartera/cartera-040d-relationship-memory-enhancement.js';
+import { bindCartera050FutureRadar } from './advisor-os/cartera/cartera-050d-future-radar-enhancement.js';
+import { bindCartera060RelationshipGrowth } from './advisor-os/cartera/cartera-060d-relationship-growth-enhancement.js';
+import { bindCartera070RelationalActivation } from './advisor-os/cartera/cartera-070d-relational-activation-enhancement.js';
+import { bindCartera080EconomicConnection } from './advisor-os/cartera/cartera-080d-economic-connection-enhancement.js';
+import { bindCartera090RelationshipCapital } from './advisor-os/cartera/cartera-090d-relationship-capital-enhancement.js';
+import { bindCartera100ProductivityProof } from './advisor-os/cartera/cartera-100d-productivity-proof-enhancement.js';
 import { renderComisiones,  bindComisionesEvents   } from './comisiones.js';
 
 import { EventBus }     from './event-system.js';
@@ -56,6 +64,18 @@ import {
     renderCrmAddlifeLogin,
     renderCrmAddlifeFatalError,
 } from './legacy/crmaddlife/ui-shell.js';
+
+function bindCarteraProductEvents() {
+    bindCartera030dPolicyPaymentCalendar();
+    bindCartera040RelationshipMemory();
+    bindCartera050FutureRadar();
+    bindCartera060RelationshipGrowth();
+    bindCartera070RelationalActivation();
+    bindCartera080EconomicConnection();
+    bindCartera090RelationshipCapital();
+    bindCartera100ProductivityProof();
+    return bindCarteraEvents();
+}
 
 // ═══════════════════════════════════════════════════════════════
 // APP MANAGER
@@ -77,7 +97,7 @@ class AppManager {
                 renderActividad,
                 bindActividadEvents,
                 renderCartera,
-                bindCarteraEvents,
+                bindCarteraEvents: bindCarteraProductEvents,
                 renderComisiones,
                 bindComisionesEvents,
             }),
