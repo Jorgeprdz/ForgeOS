@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_HEAD='07e37653c1199e47f4440d1a535ef6ed3a182985'
+BRANCH='feature/cartera-070abcd-relational-activation'
+
+echo '========== CARTERA 070A–070D SOURCE GATE =========='
+git merge-base --is-ancestor "$SOURCE_HEAD" HEAD
+echo 'SOURCE_ANCESTRY=PASS'
+for path in $(git diff --name-only "$SOURCE_HEAD"...HEAD); do
+  case "$path" in
+    .github/workflows/cartera-070abcd-combined-acceptance.yml|\
+    advisor-os/cartera/cartera-070*.js|\
+    platform/experience-engine/cartera-070*.js|\
+    scripts/ci/cartera-070*|\
+    supabase/migrations/2026080100030*.sql|\
+    tests/cartera-070*|\
+    docs/architecture/source-truth/FORGE_CARTERA_070*|\
+    docs/evidence/FORGE_CARTERA_070*|\
+    app.js) ;;
+    *) echo "UNBOUNDED_PATH=$path"; exit 1 ;;
+  esac
+done
+echo 'BOUNDED_PATHS=PASS'
+echo 'PRODUCT_UI_MUTATION=YES_BOUNDED_TO_CARTERA'
+echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+echo 'CONTACT_EXECUTION_MUTATION=NOT_AUTHORIZED'
+echo 'MESSAGE_MUTATION=NOT_AUTHORIZED'
+echo 'TASK_MUTATION=NOT_AUTHORIZED'
+echo 'CALENDAR_MUTATION=NOT_AUTHORIZED'
+echo 'PIPELINE_OPPORTUNITY_MUTATION=NOT_AUTHORIZED'
+echo 'FINAL_NBA_PRIORITY_OWNERSHIP=NO'
+echo 'ADR_016_SUBORDINATE_POLICY=YES'
+
+echo '========== CARTERA 070A RELATIONAL ACTION PROJECTION =========='
+node --test tests/cartera-070a-relational-activation-projection-test.mjs tests/cartera-070ab-sql-contract-test.mjs
+echo 'CARTERA_070A_ACTION_PROJECTION_GATE=PASS'
+
+echo '========== CARTERA 070B CAPACITY FIT AND NBA BOUNDARY =========='
+node --test tests/cartera-070b-capacity-fit-policy-test.mjs tests/cartera-070ab-sql-contract-test.mjs
+echo 'CARTERA_070B_CAPACITY_GATE=PASS'
+
+echo '========== CARTERA 070C HUMAN REVIEW HANDOFF =========='
+node --test tests/cartera-070c-action-review-boundary-test.mjs tests/cartera-070c-service-contract-test.mjs
+echo 'CARTERA_070C_REVIEW_HANDOFF_GATE=PASS'
+
+echo '========== CARTERA 070D PRODUCT SURFACE =========='
+node --test tests/cartera-070d-relational-activation-view-test.mjs tests/cartera-070abcd-ui-integration-test.mjs
+echo 'CARTERA_070D_PRODUCT_GATE=PASS'
+
+echo '========== INHERITED CARTERA =========='
+node --test tests/cartera-060*.mjs
+node --test tests/cartera-050*.mjs
+node --test tests/cartera-040*.mjs
+node --test tests/cartera-030cd*.mjs
+echo 'INHERITED_CARTERA_GATES=PASS'
+
+echo '========== CARTERA 070A–D REMOTE ACCEPTANCE =========='
+node scripts/ci/cartera-070abcd-remote-acceptance.mjs
+
+echo '========== PERSIST CLOSURE =========='
+mkdir -p docs/evidence
+cat > docs/evidence/FORGE_CARTERA_070ABCD_REMOTE_ACCEPTANCE_CLOSURE_001.md <<EOF2
+# FORGE CARTERA 070A–070D — REMOTE ACCEPTANCE CLOSURE 001
+
+\`\`\`text
+STATUS=REMOTE_ACCEPTED
+WORKFLOW_RUN=${GITHUB_RUN_ID}
+WORKFLOW_JOB=combined-delivery
+WORKFLOW_ATTEMPT=${GITHUB_RUN_ATTEMPT}
+ACCEPTANCE_HEAD=${CARTERA_070ABCD_ACCEPTANCE_HEAD}
+PROJECT_REF=${SUPABASE_PROJECT_REF}
+MIGRATION_20260801000300=APPLIED_AND_MATCHED
+MIGRATION_20260801000301=APPLIED_AND_MATCHED
+CARTERA_070A_ACTION_PROJECTION_GATE=PASS
+CARTERA_070B_CAPACITY_GATE=PASS
+CARTERA_070C_REVIEW_HANDOFF_GATE=PASS
+CARTERA_070D_PRODUCT_GATE=PASS
+SMALL_HIGH_VALUE_ACTION_SET=PASS
+CAPACITY_FIT_WITHIN_FREE_HOUR=PASS
+PAYMENT_CONFIRMATION_ACTION=PASS
+FUTURE_RADAR_COMPOSITION=PASS
+RELATIONSHIP_GROWTH_COMPOSITION=PASS
+EXPLAINABILITY_AND_EVIDENCE=PASS
+RLS_CROSS_ADVISOR=PASS
+AUTOMATIC_CONTACT=BLOCKED
+AUTOMATIC_MESSAGE_SEND=BLOCKED
+AUTOMATIC_TASK_CREATION=BLOCKED
+AUTOMATIC_CALENDAR_CREATION=BLOCKED
+AUTOMATIC_OPPORTUNITY=BLOCKED
+REFERRAL_REQUEST_EXECUTION=BLOCKED
+FINAL_NBA_PRIORITY_TRUTH=BLOCKED
+VARIABLE_REWARD_OPTIMIZATION=BLOCKED
+ARTIFICIAL_ACTIVITY_INFLATION=BLOCKED
+TEST_FIXTURES_ROLLED_BACK=YES
+RESIDUAL_FIXTURES=0
+PRODUCT_UI_MUTATION=YES_BOUNDED_TO_CARTERA
+ACCOUNT_MUTATION=NOT_AUTHORIZED
+CARTERA_070ABCD_REMOTE_ACCEPTANCE=PASS
+CARTERA_070A_COMPLETE=YES
+CARTERA_070B_COMPLETE=YES
+CARTERA_070C_COMPLETE=YES
+CARTERA_070D_COMPLETE=YES
+CARTERA_070_COMPLETE=YES
+NEXT=CARTERA_080_EMAIL_PAYMENT_COMPENSATION_CONNECTION
+\`\`\`
+EOF2
+git config user.name 'github-actions[bot]'
+git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+git add docs/evidence/FORGE_CARTERA_070ABCD_REMOTE_ACCEPTANCE_CLOSURE_001.md
+git commit -m 'docs(cartera): close combined 070A through 070D acceptance'
+git push origin "HEAD:$BRANCH"
+echo 'CARTERA_070ABCD_CLOSURE=PERSISTED'
