@@ -10,10 +10,12 @@ Integrate the existing Advisor Forecast intelligence into the productive ForgeOS
 STAGE_0_RUNTIME_RECONCILIATION=IMPLEMENTED
 STAGE_1_INPUT_CONTRACT=IMPLEMENTED
 STAGE_2_NORMALIZATION=IMPLEMENTED
-LOCAL_MASTER_TEST=22_OF_22_PASS
-SMART_WIDGET_MOUNTED=NO
+STAGE_3_COMPOSER_V1=IMPLEMENTED
+STAGE_4_EXPLANATION_ENGINE=IMPLEMENTED
+STAGE_5_READ_MODEL=IMPLEMENTED
+PRODUCTIVE_UI_MOUNT=NO
 DATABASE_MUTATION=NO
-NEXT=STAGE_3_ADVISOR_FORECAST_COMPOSER_V1
+NEXT=STAGE_6_HOME_SMARTWIDGET
 ```
 
 ## Locked productive authorities
@@ -35,10 +37,10 @@ FORECAST_BOUNDARY=MANAGER_FORECAST_BOUNDARY
 ADVISOR_FORECAST_STAGE_0_RUNTIME_RECONCILIATION=COMPLETE
 ADVISOR_FORECAST_STAGE_1_INPUT_CONTRACT=COMPLETE
 ADVISOR_FORECAST_STAGE_2_NORMALIZATION=COMPLETE
-ADVISOR_FORECAST_STAGE_3_COMPOSER_V1=NEXT
-ADVISOR_FORECAST_STAGE_4_EXPLANATION_ENGINE=PENDING
-ADVISOR_FORECAST_STAGE_5_READ_MODEL=PENDING
-ADVISOR_FORECAST_STAGE_6_HOME_SMARTWIDGET=PENDING
+ADVISOR_FORECAST_STAGE_3_COMPOSER_V1=COMPLETE
+ADVISOR_FORECAST_STAGE_4_EXPLANATION_ENGINE=COMPLETE
+ADVISOR_FORECAST_STAGE_5_READ_MODEL=COMPLETE
+ADVISOR_FORECAST_STAGE_6_HOME_SMARTWIDGET=NEXT
 ADVISOR_FORECAST_STAGE_7_CONTEXTUAL_NAVIGATION=PENDING
 ADVISOR_FORECAST_STAGE_8_DETAIL_SCREEN=PENDING
 ADVISOR_FORECAST_STAGE_9_OPPORTUNITY_WEIGHTING=PENDING
@@ -50,37 +52,39 @@ ADVISOR_FORECAST_RUNTIME_ACCEPTANCE=PENDING
 ADVISOR_FORECAST_COMPLETE=NO
 ```
 
-## Stage 0 deliverables
+## Stage 3 deliverables
 
-- Productive source map.
-- Runtime reuse and rejection matrix.
-- Duplicate-calculation ownership policy.
-- Direct UI, Supabase and mutation dependencies blocked from Forecast core.
+- Composer consumes Stage 2 normalization.
+- Confirmed-production pace projection.
+- Existing Manager Advisor Forecast scenario composition.
+- Forecast Boundary preserved.
+- Confidence and health statuses.
+- Pace and protected scenario context remain separate.
 
-## Stage 1 deliverables
+## Stage 4 deliverables
 
-- `ADVISOR_FORECAST_INPUT_V1`.
-- Explicit `KNOWN`, `ZERO`, `UNKNOWN`, `MISSING` and `STALE` semantics.
-- Evidence required for explicit zero.
-- Immutable input and false truth/write flags.
+- Evidence-linked primary explanation.
+- Supporting and risk signals.
+- Missing and stale context disclosure.
+- Bounded attention recommendations.
+- Unsupported claims and automatic actions blocked.
 
-## Stage 2 deliverables
+## Stage 5 deliverables
 
-- America/Mexico_City period normalization.
-- Monthly policy target normalization.
-- Unique `POLICY_SOLD_CONFIRMED` production normalization.
-- Pipeline opportunity count without amount or probability weighting.
-- REP activity and protected Manager metrics normalization.
-- Historical context handoff.
-- Cross-advisor source rejection.
+- `ADVISOR_FORECAST_READ_MODEL_V1`.
+- Calculation-free UI contract.
+- Target, confirmed production, current coverage and pace projection.
+- Conservative, baseline and stretch contexts.
+- Confidence, health and explanation.
+- Bounded navigation actions.
+- No UI mount or source mutation.
 
 ## Out of scope until later stages
 
-- Forecast composition.
-- UI Read Model.
 - SmartWidget mounting.
 - Opportunity probability or amount weighting.
-- Goal-gap calculation.
+- Monetary forecast.
+- Goal-gap engine beyond current confirmed coverage.
 - Required-activity calculation.
 - Forecast versus actual reconciliation.
 
@@ -88,15 +92,18 @@ ADVISOR_FORECAST_COMPLETE=NO
 
 ```text
 SOURCE_TRUTH_RECONCILED=PASS
-CURRENT_RUNTIME_IDENTIFIED=PASS
-LEGACY_RUNTIME_REJECTED_OR_MAPPED=PASS
-DUPLICATE_CALCULATIONS=NONE_AUTHORIZED
 INPUT_CONTRACT=PASS
-UNKNOWN_ZERO_SEMANTICS=PASS
-SOURCE_OWNER_PER_FIELD=PASS
 NORMALIZATION_LAYER=PASS
+COMPOSER_V1=PASS
+PACE_PROJECTION=CONFIRMED_PRODUCTION_ONLY
+SCENARIO_CONTEXT=PROTECTED_CONTEXT_ONLY
+EXPLANATION_ENGINE=PASS
+READ_MODEL=PASS
+READ_MODEL_CALCULATION=BLOCKED
+UNKNOWN_ZERO_SEMANTICS=PASS
 DATE_TIMEZONE=AMERICA_MEXICO_CITY
 CROSS_ADVISOR_SCOPE=PASS
 REVENUE_TRUTH_CREATED=NO
-PIPELINE_OR_ACTIVITY_MUTATION=NO
+DATABASE_MUTATION=NO
+PRODUCTIVE_UI_MOUNT=NO
 ```
