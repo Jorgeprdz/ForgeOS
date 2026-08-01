@@ -67,6 +67,37 @@ async function copyExact(source, target) {
   }
 }
 
+function publicReportingPath(file) {
+  if (!file.endsWith(".mjs")) {
+    throw new Error(`REP_16F_REPORTING_EXTENSION_INVALID=${file}`);
+  }
+  return `${file.slice(0, -4)}.js`;
+}
+
+function transformReportingModule(source) {
+  return source.replace(/\.mjs(?=["'])/g, ".js");
+}
+
+async function writeReportingModule(sourcePath, targetPath) {
+  const source = await readFile(sourcePath, "utf8");
+  const transformed = transformReportingModule(source);
+  if (
+    /(?:from\s+|import\(\s*)["'][^"']+\.mjs["']/.test(transformed)
+  ) {
+    throw new Error(
+      `REP_16F_REPORTING_IMPORT_NOT_TRANSFORMED=${relative(root, sourcePath)}`,
+    );
+  }
+  await mkdir(dirname(targetPath), { recursive: true });
+  await writeFile(targetPath, transformed);
+  const generated = await readFile(targetPath, "utf8");
+  if (generated !== transformed) {
+    throw new Error(
+      `REP_16F_REPORTING_TRANSFORM_MISMATCH=${relative(root, targetPath)}`,
+    );
+  }
+}
+
 await mkdir(targetDir, { recursive: true });
 for (const file of files) {
   await copyExact(join(sourceDir, file), join(targetDir, basename(file)));
@@ -110,9 +141,9 @@ if (pagesRuntimeMode) {
     );
   }
   for (const file of reportingFiles) {
-    await copyExact(
+    await writeReportingModule(
       join(reportingSource, file),
-      join(reportingTarget, file),
+      join(reportingTarget, publicReportingPath(file)),
     );
   }
 
@@ -127,15 +158,28 @@ if (pagesRuntimeMode) {
   const sourcePrefix = "../../../advisor-os/reporting/";
   const deployedPrefix = "../../advisor-os/reporting/";
   const sourcePrefixCount = bridgeSource.split(sourcePrefix).length - 1;
-  if (sourcePrefixCount !== 2) {
+  const sourceReportingSpecifierCount = (
+    bridgeSource.match(
+      /\.\.\/\.\.\/\.\.\/advisor-os\/reporting\/[^"']+\.mjs/g,
+    ) || []
+  ).length;
+  if (sourcePrefixCount !== 2 || sourceReportingSpecifierCount !== 2) {
     throw new Error(
-      `REP_16F_ACTIVITY_BRIDGE_SOURCE_PREFIX_COUNT=${sourcePrefixCount}`,
+      `REP_16F_ACTIVITY_BRIDGE_SOURCE_SPECIFIERS=${sourcePrefixCount}:${sourceReportingSpecifierCount}`,
     );
   }
-  const deployedBridge = bridgeSource.replaceAll(
-    sourcePrefix,
-    deployedPrefix,
-  );
+  const deployedBridge = bridgeSource
+    .replaceAll(sourcePrefix, deployedPrefix)
+    .replace(
+      /(\.\.\/\.\.\/advisor-os\/reporting\/[^"']+)\.mjs/g,
+      "$1.js",
+    );
+  if (
+    deployedBridge.includes(sourcePrefix)
+    || /advisor-os\/reporting\/[^"']+\.mjs/.test(deployedBridge)
+  ) {
+    throw new Error("REP_16F_ACTIVITY_BRIDGE_DEPLOYED_SPECIFIER_INVALID");
+  }
   await writeFile(bridgePath, deployedBridge);
 
   execFileSync(
@@ -156,7 +200,7 @@ if (pagesRuntimeMode) {
   );
 
   console.log(
-    `Generated ${reportingFiles.length} reporting modules and ${activityLedgerRuntimeFiles.length} FES ledger modules for Pages.`,
+    `Generated ${reportingFiles.length} reporting .js modules and ${activityLedgerRuntimeFiles.length} FES ledger modules for Pages.`,
   );
 }
 
