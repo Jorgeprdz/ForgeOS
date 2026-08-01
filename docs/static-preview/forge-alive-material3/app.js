@@ -33,19 +33,6 @@ const fesBase = new URL(
 );
 const loadAuthority = (base, path) => import(new URL(path, base));
 
-function installReportingCryptoImportMap() {
-  if (document.querySelector("[data-reporting-crypto-import-map]")) return;
-  const importMap = document.createElement("script");
-  importMap.type = "importmap";
-  importMap.dataset.reportingCryptoImportMap = "true";
-  importMap.textContent = JSON.stringify({
-    imports: {
-      "node:crypto": new URL("node-crypto-shim.mjs", import.meta.url).href,
-    },
-  });
-  document.head.append(importMap);
-}
-
 function ensureStylesheet({ selector, href, datasetKey }) {
   if (document.querySelector(selector)) return;
   const stylesheet = document.createElement("link");
@@ -55,7 +42,9 @@ function ensureStylesheet({ selector, href, datasetKey }) {
   document.head.append(stylesheet);
 }
 
-installReportingCryptoImportMap();
+if (!document.querySelector("[data-reporting-crypto-import-map]")) {
+  throw new Error("REP_16E_REPORTING_IMPORT_MAP_REQUIRED_BEFORE_APP_MODULE");
+}
 
 ensureStylesheet({
   selector: "[data-pipeline-prospect-admin-styles]",
@@ -97,7 +86,7 @@ if (
 }
 
 const { createActivityModule } = await import(
-  "./activity-module.js?v=rep-16e-001"
+  "./activity-module.js?v=rep-16e-002"
 );
 
 const shell = createForgeShell({
