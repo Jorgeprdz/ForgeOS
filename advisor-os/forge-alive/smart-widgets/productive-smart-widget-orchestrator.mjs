@@ -155,11 +155,23 @@ function createJudgmentPromptWidget(reason, pendingDependencies = []) {
 
 async function materializeSource(source, context) {
   if (!source || typeof source !== "object") return {};
-  if (typeof source.load === "function") {
+  if (typeof source.load !== "function") return source;
+  try {
     const loaded = await source.load(context);
     return { ...source, ...(loaded && typeof loaded === "object" ? loaded : {}) };
+  } catch (error) {
+    if (error?.name === "AbortError" || context.signal?.aborted) throw error;
+    return {
+      ...source,
+      sourceConnected: source.sourceConnected !== false,
+      sourceComplete: false,
+      sourceUnavailable: true,
+      sourceError: {
+        name: error?.name || "Error",
+        message: error?.message || "Source unavailable",
+      },
+    };
   }
-  return source;
 }
 
 function dependencyStatus(inventory) {
