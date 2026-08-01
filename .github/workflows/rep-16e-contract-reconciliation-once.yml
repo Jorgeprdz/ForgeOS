@@ -1,11 +1,11 @@
 name: REP-16E Contract Reconciliation Once
 
 on:
-  push:
+  pull_request:
     branches:
       - promotion/rep-16e-activity-reporting
     paths:
-      - .github/workflows/rep-16e-contract-reconciliation-once.yml
+      - .forge/rep-16e-contract-reconciliation-trigger.txt
 
 permissions:
   contents: write
