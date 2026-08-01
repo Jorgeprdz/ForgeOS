@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import {
+  access,
   copyFile,
   mkdir,
   readFile,
@@ -7,7 +8,7 @@ import {
   rm,
   writeFile,
 } from "node:fs/promises";
-import { basename, dirname, join, relative } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const root = process.cwd();
@@ -34,6 +35,21 @@ const activityLedgerRuntimeFiles = Object.freeze([
   "activity-ledger-sync-service.js",
   "activity-ledger-supabase-gateway.js",
   "activity-ledger-browser-runtime.js",
+]);
+
+const carteraPagesEntrypoints = Object.freeze([
+  "supabase-runtime.js",
+  "memory-manager.js",
+  "state-manager.js",
+  "cartera.js",
+  "advisor-os/cartera/cartera-030d-policy-payment-calendar-enhancement.js",
+  "advisor-os/cartera/cartera-040d-relationship-memory-enhancement.js",
+  "advisor-os/cartera/cartera-050d-future-radar-enhancement.js",
+  "advisor-os/cartera/cartera-060d-relationship-growth-enhancement.js",
+  "advisor-os/cartera/cartera-070d-relational-activation-enhancement.js",
+  "advisor-os/cartera/cartera-080d-economic-connection-enhancement.js",
+  "advisor-os/cartera/cartera-090d-relationship-capital-enhancement.js",
+  "advisor-os/cartera/cartera-100d-productivity-proof-enhancement.js",
 ]);
 
 const pagesRuntimeMode =
@@ -96,6 +112,119 @@ async function writeReportingModule(sourcePath, targetPath) {
       `REP_16F_REPORTING_TRANSFORM_MISMATCH=${relative(root, targetPath)}`,
     );
   }
+}
+
+function toPosixPath(value) {
+  return value.split(sep).join("/");
+}
+
+function extractLocalModuleSpecifiers(source) {
+  const specifiers = new Set();
+  const patterns = [
+    /\b(?:import|export)\s+(?:[^;"']*?\s+from\s+)?["']([^"']+)["']/gs,
+    /\bimport\s*\(\s*["']([^"']+)["']\s*\)/g,
+  ];
+
+  for (const pattern of patterns) {
+    for (const match of source.matchAll(pattern)) {
+      if (match[1]?.startsWith(".")) specifiers.add(match[1]);
+    }
+  }
+  return [...specifiers];
+}
+
+async function resolveLocalModule(importer, specifier) {
+  const importerDirectory = dirname(join(root, importer));
+  const unresolved = resolve(importerDirectory, specifier);
+  const candidates = specifier.endsWith(".js")
+    ? [unresolved]
+    : [unresolved, `${unresolved}.js`, join(unresolved, "index.js")];
+
+  for (const candidate of candidates) {
+    try {
+      await access(candidate);
+      const repositoryPath = toPosixPath(relative(root, candidate));
+      if (
+        repositoryPath === ".."
+        || repositoryPath.startsWith("../")
+        || repositoryPath.startsWith("docs/")
+      ) {
+        throw new Error(
+          `CARTERA_PAGES_RUNTIME_IMPORT_OUTSIDE_SOURCE=${importer}:${specifier}`,
+        );
+      }
+      if (!repositoryPath.endsWith(".js")) {
+        throw new Error(
+          `CARTERA_PAGES_RUNTIME_NON_JS_IMPORT=${importer}:${specifier}`,
+        );
+      }
+      return repositoryPath;
+    } catch (error) {
+      if (error?.code !== "ENOENT") throw error;
+    }
+  }
+
+  throw new Error(
+    `CARTERA_PAGES_RUNTIME_IMPORT_MISSING=${importer}:${specifier}`,
+  );
+}
+
+async function collectCarteraPagesRuntime() {
+  const pending = [...carteraPagesEntrypoints];
+  const collected = new Set();
+
+  while (pending.length > 0) {
+    const current = pending.pop();
+    if (collected.has(current)) continue;
+    const sourcePath = join(root, current);
+    const source = await readFile(sourcePath, "utf8");
+    collected.add(current);
+
+    for (const specifier of extractLocalModuleSpecifiers(source)) {
+      const dependency = await resolveLocalModule(current, specifier);
+      if (!collected.has(dependency)) pending.push(dependency);
+    }
+  }
+
+  return [...collected].sort();
+}
+
+async function generateCarteraPagesRuntime() {
+  const runtimeFiles = await collectCarteraPagesRuntime();
+  const generatedPaths = [];
+
+  for (const file of runtimeFiles) {
+    const target = join(root, "docs", file);
+    await copyExact(join(root, file), target);
+    generatedPaths.push(relative(root, target));
+  }
+
+  const manifestPath = join(root, "docs/cartera-pages-runtime-manifest.json");
+  await writeFile(
+    manifestPath,
+    `${JSON.stringify({
+      contractId: "CARTERA_PAGES_RUNTIME_ASSET_CLOSURE_V1",
+      entrypoints: carteraPagesEntrypoints,
+      files: runtimeFiles,
+    }, null, 2)}\n`,
+  );
+  generatedPaths.push(relative(root, manifestPath));
+
+  execFileSync(
+    "git",
+    ["add", "-f", "--", ...generatedPaths],
+    { cwd: root, stdio: "inherit" },
+  );
+
+  for (const file of carteraPagesEntrypoints) {
+    const generated = join(root, "docs", file);
+    await access(generated);
+  }
+
+  console.log(
+    `Generated ${runtimeFiles.length} Cartera dependency-closed Pages runtime modules.`,
+  );
+  return runtimeFiles;
 }
 
 await mkdir(targetDir, { recursive: true });
@@ -231,8 +360,10 @@ if (pagesRuntimeMode) {
     )).href}?smart-widget-pages-build=${Date.now()}`
   );
 
+  const carteraRuntimeFiles = await generateCarteraPagesRuntime();
+
   console.log(
-    `Generated ${reportingFiles.length} reporting .js modules, ${smartWidgetFiles.length} Smart Widget .js modules and ${activityLedgerRuntimeFiles.length} FES ledger modules for Pages.`,
+    `Generated ${reportingFiles.length} reporting .js modules, ${smartWidgetFiles.length} Smart Widget .js modules, ${activityLedgerRuntimeFiles.length} FES ledger modules and ${carteraRuntimeFiles.length} Cartera modules for Pages.`,
   );
 }
 
