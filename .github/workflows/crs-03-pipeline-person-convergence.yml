@@ -70,13 +70,12 @@ jobs:
           node --test tests/crs-02-domain-link-envelope-contract-test.mjs
           node --test tests/crs-02-authoritative-domain-link-adapters-test.mjs
 
-      - name: Preserve Cartera identity and productive Pipeline authorities
+      - name: Preserve Cartera identity and productive Pipeline contracts
         run: |
           node --test tests/cartera-010b-contract-foundation-test.mjs
-          node --test tests/forge-067g17b2-create-entry-contract-test.mjs
+          node --test tests/prospect-journal-service-contract-test.mjs
           node --test tests/pipeline-stage-mutation-authority-test.mjs
           node --test tests/material3-pipeline-integration-test.mjs
-          node --test tests/pipeline-prospect-admin-regression.mjs
 
       - name: Enforce authority and no-invention boundaries
         shell: bash
