@@ -1,0 +1,59 @@
+name: CARTERA 110A + 110B + 110C + 110D Combined Acceptance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - feature/cartera-100abcd-productivity-proof-learning
+
+permissions:
+  contents: write
+
+jobs:
+  combined-delivery:
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/cartera-110abcd-program-completion-promotion' &&
+      github.event.pull_request.base.ref == 'feature/cartera-100abcd-productivity-proof-learning'
+    runs-on: ubuntu-24.04
+    env:
+      CARTERA_110ABCD_EXPECTED_SOURCE_HEAD: 2d9975be06aa2cdf8e494ecd26266612b9de6af3
+      CARTERA_110ABCD_ACCEPTANCE_BRANCH: feature/cartera-110abcd-program-completion-promotion
+    steps:
+      - name: Checkout exact 110 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute 110A through 110D one-pass acceptance
+        shell: bash
+        run: bash scripts/ci/cartera-110abcd-combined-acceptance.sh
+
+      - name: Persist accepted closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! git diff --quiet -- docs/evidence/FORGE_CARTERA_110ABCD_PROGRAM_COMPLETION_PROMOTION_CLOSURE_001.md; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add docs/evidence/FORGE_CARTERA_110ABCD_PROGRAM_COMPLETION_PROMOTION_CLOSURE_001.md
+            git commit -m 'docs(cartera): close 110A through 110D program promotion decision'
+            git push origin HEAD:feature/cartera-110abcd-program-completion-promotion
+          fi
+
+      - name: Upload combined evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-110abcd-combined-acceptance
+          path: artifacts/cartera-110abcd-acceptance
+          if-no-files-found: error
+          retention-days: 30
