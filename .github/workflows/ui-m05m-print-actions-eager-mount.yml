@@ -6,14 +6,20 @@ on:
     paths:
       - docs/static-preview/forge-alive-material3/app.js
       - docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-client-identity-persistence-m05y001.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-printable-state-handoff-m05z001.js
       - tests/ui-m05m-print-actions-eager-mount-test.mjs
+      - tests/ui-m05z-printable-state-handoff-test.mjs
       - .github/workflows/ui-m05m-print-actions-eager-mount.yml
   push:
     branches: [main]
     paths:
       - docs/static-preview/forge-alive-material3/app.js
       - docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-client-identity-persistence-m05y001.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-printable-state-handoff-m05z001.js
       - tests/ui-m05m-print-actions-eager-mount-test.mjs
+      - tests/ui-m05z-printable-state-handoff-test.mjs
       - .github/workflows/ui-m05m-print-actions-eager-mount.yml
 
 permissions:
@@ -28,4 +34,6 @@ jobs:
         with:
           node-version: "22"
       - name: Verify eager print actions
-        run: node tests/ui-m05m-print-actions-eager-mount-test.mjs
+        run: |
+          node tests/ui-m05m-print-actions-eager-mount-test.mjs
+          node tests/ui-m05z-printable-state-handoff-test.mjs
