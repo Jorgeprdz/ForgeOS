@@ -6,6 +6,7 @@ ACCEPTED_PROGRAM_HEAD="${CARTERA_130_ACCEPTED_PROGRAM_HEAD:-b83a37abe3eb8b3a48c2
 AUTHORIZATION_RECEIPT='docs/evidence/FORGE_CARTERA_120_SELECTIVE_PROMOTION_AUTHORIZATION_RECEIPT_001.md'
 MANIFEST='docs/evidence/FORGE_CARTERA_130_SELECTIVE_PROMOTION_MANIFEST_001.tsv'
 LEGACY_BACKUP='legacy/quarantine/cartera-enterprise-main-pre-canonical-20260801.js'
+MATERIAL3_APP='docs/static-preview/forge-alive-material3/app.js'
 
 actual_main="$(git rev-parse origin/main)"
 [[ "$actual_main" == "$CURRENT_MAIN_HEAD" ]] || {
@@ -59,6 +60,12 @@ node scripts/ci/cartera-130-reconcile-runtime.mjs
     "$(git rev-parse "$CURRENT_MAIN_HEAD:app.js")" \
     "$(git hash-object app.js)"
   printf '%s\t%s\t%s\t%s\t%s\n' \
+    "$MATERIAL3_APP" \
+    'RECONCILE_BOUNDED_CARTERA_QUOTE_BRIDGE' \
+    "$CURRENT_MAIN_HEAD" \
+    "$(git rev-parse "$CURRENT_MAIN_HEAD:$MATERIAL3_APP")" \
+    "$(git hash-object "$MATERIAL3_APP")"
+  printf '%s\t%s\t%s\t%s\t%s\n' \
     "$LEGACY_BACKUP" \
     'PRESERVE_PRE_PROMOTION_LEGACY' \
     "$CURRENT_MAIN_HEAD" \
@@ -67,7 +74,7 @@ node scripts/ci/cartera-130-reconcile-runtime.mjs
 } > "$MANIFEST"
 
 copied_count="${#source_paths[@]}"
-reconciled_count=2
+reconciled_count=3
 
 echo "CARTERA_130_FILES_COPIED=$copied_count"
 echo "CARTERA_130_FILES_RECONCILED=$reconciled_count"
