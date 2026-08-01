@@ -582,11 +582,11 @@ perform set_config('request.jwt.claim.sub', user_a::text, true);
 perform set_config('request.jwt.claim.role', 'authenticated', true);
 execute 'set local role authenticated';
 select count(*) into row_count
-from public.cartera020c_confirmation_conflicts
-where advisor_id = user_a
-  and review_reference = conflict_review_reference
-  and conflict_type = 'CHANGED_INPUT_REPLAY'
-  and conflict_reference = conflict_status ->> 'conflictReference';
+from public.cartera020c_confirmation_conflicts c
+where c.advisor_id = user_a
+  and c.review_reference = conflict_review_reference
+  and c.conflict_type = 'CHANGED_INPUT_REPLAY'
+  and c.conflict_reference = conflict_status ->> 'conflictReference';
 execute 'reset role';
 execute 'revoke select on public.cartera020c_confirmation_conflicts from authenticated';
 if row_count <> 1 then
