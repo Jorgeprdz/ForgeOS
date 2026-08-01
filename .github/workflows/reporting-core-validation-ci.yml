@@ -7,6 +7,7 @@ on:
     paths:
       - 'advisor-os/reporting/**'
       - 'platform/event-evidence/**'
+      - 'docs/static-preview/forge-alive-material3/index.html'
       - 'docs/static-preview/forge-alive-material3/app.js'
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
@@ -17,6 +18,7 @@ on:
     paths:
       - 'advisor-os/reporting/**'
       - 'platform/event-evidence/**'
+      - 'docs/static-preview/forge-alive-material3/index.html'
       - 'docs/static-preview/forge-alive-material3/app.js'
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
