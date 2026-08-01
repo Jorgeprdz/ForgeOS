@@ -38,5 +38,12 @@ if (replaceExactly(
   'CARTERA100_SECOND_POLICY_CAUSAL_BOUNDARY_ANCHOR_MISSING'
 )) changed.push('platform/productivity/cartera-100b-outcome-learning-boundary.js');
 
+if (replaceExactly(
+  'scripts/ci/cartera-100abcd-remote-acceptance.sql',
+  'grant select on cartera100_ids to authenticated;\ngrant select, insert, update on cartera100_results to authenticated;',
+  'grant select on cartera100_ids to authenticated;\ngrant select, insert, update on cartera100_results to authenticated;\ngrant execute on function public.forge_cartera030b_digest(jsonb) to authenticated;',
+  'CARTERA100_ACCEPTANCE_DIGEST_GRANT_ANCHOR_MISSING'
+)) changed.push('scripts/ci/cartera-100abcd-remote-acceptance.sql');
+
 console.log(`CARTERA_100_SOURCE_FIX_MATERIALIZATION=${changed.length ? 'UPDATED' : 'ALREADY_CURRENT'}`);
 console.log(`CARTERA_100_SOURCE_FIX_FILES=${[...new Set(changed)].join(',') || 'NONE'}`);
