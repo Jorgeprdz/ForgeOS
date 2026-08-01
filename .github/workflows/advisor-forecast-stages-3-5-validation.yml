@@ -1,0 +1,34 @@
+name: Advisor Forecast Stages 3-5 Validation
+
+on:
+  pull_request:
+    paths:
+      - "manager-os/forecast/advisor-forecast-*.js"
+      - "manager-os/tests/advisor-forecast-*.js"
+      - ".github/workflows/advisor-forecast-stages-3-5-validation.yml"
+      - "docs/evidence/ADVISOR_FORECAST_001_STAGES_3_4_5_UNIFIED_PASS.md"
+  push:
+    branches: [main]
+    paths:
+      - "manager-os/forecast/advisor-forecast-*.js"
+      - "manager-os/tests/advisor-forecast-*.js"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate prerequisite stages
+        run: |
+          node manager-os/tests/advisor-forecast-stages-0-1-test.js
+          node manager-os/tests/advisor-forecast-stage-2-test.js
+      - name: Validate composer explanation and read model
+        run: node manager-os/tests/advisor-forecast-stages-3-5-test.js
+      - name: Preserve existing forecast boundary
+        run: node manager-os/tests/manager-advisor-forecast-engine-master-test.js

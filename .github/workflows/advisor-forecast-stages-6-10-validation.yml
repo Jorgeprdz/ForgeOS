@@ -1,0 +1,39 @@
+name: Advisor Forecast Stages 6-10 Validation
+
+on:
+  pull_request:
+    paths:
+      - manager-os/forecast/advisor-forecast-*.js
+      - manager-os/tests/advisor-forecast-*.js
+      - advisor-os/forge-alive/smart-widgets/advisor-forecast-smart-widget.mjs
+      - advisor-os/forge-alive/navigation/advisor-forecast-navigation.mjs
+      - docs/static-preview/forge-alive-material3/advisor-forecast-detail-screen.*
+      - tests/advisor-forecast-stages-6-8-test.mjs
+      - .github/workflows/advisor-forecast-stages-6-10-validation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate prerequisite stages 0 through 5
+        run: |
+          node manager-os/tests/advisor-forecast-stages-0-1-test.js
+          node manager-os/tests/advisor-forecast-stage-2-test.js
+          node manager-os/tests/advisor-forecast-stages-3-5-test.js
+      - name: Validate Home widget navigation and detail screen
+        run: node tests/advisor-forecast-stages-6-8-test.mjs
+      - name: Validate opportunity weighting and goal gap
+        run: node manager-os/tests/advisor-forecast-stages-9-10-test.js
+      - name: Preserve existing Manager Advisor Forecast boundary
+        run: node manager-os/tests/manager-advisor-forecast-engine-master-test.js
+      - name: Preserve productive Smart Widget orchestration
+        run: node tests/productive-smart-widget-orchestrator-master-test.mjs

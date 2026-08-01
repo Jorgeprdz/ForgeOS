@@ -1,0 +1,63 @@
+name: Advisor Forecast Stages 11-13 Validation
+
+on:
+  pull_request:
+    paths:
+      - "manager-os/forecast/advisor-activity-requirement-engine.js"
+      - "manager-os/forecast/advisor-forecast-composer-v3.js"
+      - "manager-os/forecast/advisor-forecast-read-model-v3.js"
+      - "manager-os/forecast/advisor-forecast-reconciliation-engine.js"
+      - "advisor-os/forge-alive/activity/advisor-forecast-activity-handoff.mjs"
+      - "advisor-os/forge-alive/navigation/advisor-forecast-navigation.mjs"
+      - "advisor-os/forge-alive/smart-widgets/advisor-forecast-smart-widget.mjs"
+      - "docs/static-preview/forge-alive-material3/advisor-forecast-detail-screen.js"
+      - "manager-os/tests/advisor-forecast-stages-11-13-test.js"
+      - "tests/advisor-forecast-stages-11-13-handoff-test.mjs"
+      - ".github/workflows/advisor-forecast-stages-11-13-validation.yml"
+      - "docs/evidence/ADVISOR_FORECAST_001_STAGES_11_12_13_UNIFIED_PASS.md"
+      - "docs/roadmaps/ADVISOR_FORECAST_001_EXISTING_RUNTIME_RECONCILIATION.md"
+  push:
+    branches: [main]
+    paths:
+      - "manager-os/forecast/advisor-activity-requirement-engine.js"
+      - "manager-os/forecast/advisor-forecast-composer-v3.js"
+      - "manager-os/forecast/advisor-forecast-read-model-v3.js"
+      - "manager-os/forecast/advisor-forecast-reconciliation-engine.js"
+      - "advisor-os/forge-alive/activity/advisor-forecast-activity-handoff.mjs"
+      - "advisor-os/forge-alive/navigation/advisor-forecast-navigation.mjs"
+      - "advisor-os/forge-alive/smart-widgets/advisor-forecast-smart-widget.mjs"
+      - "docs/static-preview/forge-alive-material3/advisor-forecast-detail-screen.js"
+      - "manager-os/tests/advisor-forecast-stages-11-13-test.js"
+      - "tests/advisor-forecast-stages-11-13-handoff-test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate prerequisite stages 0 through 5
+        run: |
+          node manager-os/tests/advisor-forecast-stages-0-1-test.js
+          node manager-os/tests/advisor-forecast-stage-2-test.js
+          node manager-os/tests/advisor-forecast-stages-3-5-test.js
+      - name: Validate prerequisite stages 6 through 10
+        run: |
+          node tests/advisor-forecast-stages-6-8-test.mjs
+          node manager-os/tests/advisor-forecast-stages-9-10-test.js
+      - name: Validate activity requirement and reports reconciliation
+        run: node manager-os/tests/advisor-forecast-stages-11-13-test.js
+      - name: Validate human-confirmed Activity handoff and V3 UI
+        run: node tests/advisor-forecast-stages-11-13-handoff-test.mjs
+      - name: Preserve Manager Advisor Forecast boundary
+        run: node manager-os/tests/manager-advisor-forecast-engine-master-test.js
+      - name: Preserve productive Smart Widget orchestration
+        run: node tests/productive-smart-widget-orchestrator-master-test.mjs
+      - name: Preserve canonical FES Activity boundary
+        run: node tests/fes-01-canonical-activity-event-contract-test.mjs
