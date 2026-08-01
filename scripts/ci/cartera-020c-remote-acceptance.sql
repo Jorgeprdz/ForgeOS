@@ -577,14 +577,21 @@ begin
     raise exception 'CARTERA020C_CHANGED_INPUT_REPLAY_NOT_BLOCKED';
   end if;
   execute 'reset role';
-  select count(*) into row_count
-  from public.cartera020c_confirmation_conflicts
-  where advisor_id = user_a
-    and review_reference = conflict_review_reference
-    and conflict_type = 'CHANGED_INPUT_REPLAY';
-  if row_count <> 1 then
-    raise exception 'CARTERA020C_CHANGED_INPUT_CONFLICT_NOT_PERSISTED';
-  end if;
+execute 'grant select on public.cartera020c_confirmation_conflicts to authenticated';
+perform set_config('request.jwt.claim.sub', user_a::text, true);
+perform set_config('request.jwt.claim.role', 'authenticated', true);
+execute 'set local role authenticated';
+select count(*) into row_count
+from public.cartera020c_confirmation_conflicts
+where advisor_id = user_a
+  and review_reference = conflict_review_reference
+  and conflict_type = 'CHANGED_INPUT_REPLAY'
+  and conflict_reference = conflict_status ->> 'conflictReference';
+execute 'reset role';
+execute 'revoke select on public.cartera020c_confirmation_conflicts from authenticated';
+if row_count <> 1 then
+  raise exception 'CARTERA020C_CHANGED_INPUT_CONFLICT_NOT_PERSISTED:COUNT:%', row_count;
+end if;
 
   -- Retry release is explicit, optimistic and cannot run early.
   insert into public.cartera020b_evidence_sources (
