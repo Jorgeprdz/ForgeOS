@@ -84,8 +84,11 @@ test("Meta mensual no inventa una meta cuando falta autoridad", () => {
 test("Cartera desconectada no se representa como cero pólizas en riesgo", () => {
   const widget = createPolicyServiceRiskWidget({ sourceConnected: false });
   assert.equal(widget.state, SMART_WIDGET_STATES.NOT_CONNECTED);
-  assert.equal(widget.primaryMetric.value, 0);
+  assert.equal(widget.primaryMetric.value, null);
   assert.equal(widget.primaryMetric.display, null);
+  assert.deepEqual(widget.payload, {});
+  assert.equal(widget.unavailableDataRedacted, true);
+  assert.ok(widget.boundaryBadges.includes("UNKNOWN_IS_NOT_ZERO"));
   assert.equal(widget.blockedReason, "WAITING_FOR_CARTERA_050_MAIN_PROMOTION");
 });
 
@@ -137,6 +140,7 @@ test("Ingresos no usa cotizaciones ni convierte desconexión en cero visible", (
   const widget = createIncomeProgressWidget({ sourceConnected: false, quoteProjection: 142000 });
   assert.equal(widget.state, SMART_WIDGET_STATES.NOT_CONNECTED);
   assert.equal(widget.primaryMetric.value, null);
+  assert.deepEqual(widget.payload, {});
   assert.ok(widget.uncertainty.includes("income_must_not_be_derived_from_quotes_or_premium"));
 });
 
@@ -196,6 +200,34 @@ test("Una fuente caída no derriba los demás widgets", async () => {
   assert.equal(stack.primary.widgetFamily, PRODUCTIVE_SMART_WIDGET_FAMILIES.OPPORTUNITY_CLOSE_LIKELIHOOD_WIDGET);
   const activity = stack.inventory.find((widget) => widget.widgetFamily === PRODUCTIVE_SMART_WIDGET_FAMILIES.ACTIVITY_PROGRESS_WIDGET);
   assert.equal(activity.state, SMART_WIDGET_STATES.SOURCE_UNAVAILABLE);
+  assert.equal(activity.primaryMetric.value, null);
+  assert.deepEqual(activity.payload, {});
+});
+
+test("Inventario de dependencias mide autoridad y no mera visibilidad", async () => {
+  const stack = await buildProductiveSmartWidgetStack({
+    now: "2026-08-01T11:00:00-06:00",
+    session: { status: "AUTHENTICATED", advisorId: "advisor-1" },
+    sources: {
+      activity: {
+        reportResult: { report: { totals: { activityCount: 5 } }, chartReady: {} },
+      },
+      monthlyGoal: {
+        goalSnapshot: { yearMonth: "2026-08", targetPolicyCount: 10 },
+        sourceComplete: true,
+        policyFacts: [],
+      },
+      policyService: { sourceConnected: true, sourceComplete: true, signals: [] },
+      opportunities: { sourceConnected: true, sourceComplete: true, opportunities: [] },
+      income: { sourceConnected: true, sourceComplete: true, compensationSnapshot: {} },
+    },
+  });
+  const status = Object.fromEntries(stack.pendingDependencies.map((item) => [item.dependencyId, item.status]));
+  assert.equal(status.MICK_ACTIVITY_SCORING_SNAPSHOT, "PENDING");
+  assert.equal(status.ADVISOR_MONTHLY_POLICY_GOAL_PERSISTENCE, "UNLOCKED_OR_PARTIAL");
+  assert.equal(status.CARTERA_050_MAIN_PROMOTION, "UNLOCKED_OR_PARTIAL");
+  assert.equal(status.COMPENSATION_INCOME_TRUTH_MINIMUM, "UNLOCKED_OR_PARTIAL");
+  assert.equal(status.PIPELINE_BITACORA_SIGNAL_MAPPING, "UNLOCKED_OR_PARTIAL");
 });
 
 test("Orquestador muestra máximo una primaria y dos de apoyo", async () => {
