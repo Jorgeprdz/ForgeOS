@@ -108,7 +108,7 @@ select role_a_id, user_a, 'CARTERA070_ACCEPTANCE:POLICY_ROLE:A', policy_id, vers
 from cartera070_ids
 union all
 select role_c_id, user_a, 'CARTERA070_ACCEPTANCE:POLICY_ROLE:C', policy_id, version_id,
-  person_c, 'POLICYHOLDER', 'CONFIRMED', 'PRIVATE', 'POLICY_TEAM',
+  person_c, 'POLICY_OWNER', 'CONFIRMED', 'PRIVATE', 'POLICY_TEAM',
   jsonb_build_array('CARTERA070_ACCEPTANCE:POLICY_ROLE_EVIDENCE:C'),
   timestamptz '2024-01-15 00:00:00+00', 1, user_a
 from cartera070_ids;
