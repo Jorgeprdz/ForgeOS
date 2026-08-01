@@ -1,5 +1,6 @@
 export const ADVISOR_FORECAST_DESTINATIONS = Object.freeze({
   ADVISOR_FORECAST_DETAIL: "ADVISOR_FORECAST_DETAIL",
+  ACTIVITY_FORECAST_PLAN: "ACTIVITY_FORECAST_PLAN",
   PIPELINE_FORECAST_CONTEXT: "PIPELINE_FORECAST_CONTEXT",
   PIPELINE_AT_RISK: "PIPELINE_AT_RISK",
   FORECAST_SOURCE_REVIEW: "FORECAST_SOURCE_REVIEW"
@@ -10,6 +11,12 @@ const ROUTES = Object.freeze({
     deepLink: "?nav=actividad&view=advisor-forecast",
     module: "ACTIVIDAD",
     view: "advisor-forecast",
+    filter: null
+  },
+  [ADVISOR_FORECAST_DESTINATIONS.ACTIVITY_FORECAST_PLAN]: {
+    deepLink: "?nav=actividad&view=forecast-plan",
+    module: "ACTIVIDAD",
+    view: "forecast-plan",
     filter: null
   },
   [ADVISOR_FORECAST_DESTINATIONS.PIPELINE_FORECAST_CONTEXT]: {
