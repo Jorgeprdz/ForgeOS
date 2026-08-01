@@ -1,0 +1,20 @@
+# FORGE CARTERA 030B — REMOTE LAUNCH 001
+
+```text
+AUTHORIZED_PHASE=CARTERA_030B_REMOTE_ACCEPTANCE
+AUTHORIZATION=YES:CARTERA_030B_REMOTE_MUTATION
+SOURCE_BRANCH=feature/cartera-030b-expected-payment-obligation-ledger-calendar
+SOURCE_HEAD=23b52fc7a442f52494c51fead67699004923c547
+CANONICAL_BASE_HEAD=7f148e7ecaa7371954d1eef884a7fc3b0bbbc301
+LAUNCH_BRANCH=run/cartera-030b-canonical-remote-launch-20260731-2052
+PROJECT_REF=rmlxigxysujsuwzgoimv
+MIGRATIONS=20260731000250,20260731000251,20260731000252
+EXPECTED_MIGRATION_STATE=ALREADY_APPLIED_AND_MATCHED
+SCHEMA_MUTATION=NO_NEW_MIGRATIONS
+FIXTURES=ROLLBACK_ONLY
+PRODUCT_UI_MUTATION=NO
+ACCOUNT_MUTATION=NOT_AUTHORIZED
+EXPECTED_OUTCOME=CARTERA_030B_REMOTE_ACCEPTANCE=PASS
+```
+
+This launch exists only to trigger the exact registered workflow in the canonical CARTERA 030B implementation branch. It authorizes no Account mutation, no product UI mutation, no payment-reconciliation RPC, no compensation or payout truth, and no migration beyond the already deployed 00250–00252 set.
