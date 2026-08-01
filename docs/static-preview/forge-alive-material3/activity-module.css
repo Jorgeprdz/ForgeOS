@@ -12,6 +12,10 @@
   color: #eef7ff;
 }
 
+.activity-surface [hidden] {
+  display: none !important;
+}
+
 .activity-hero {
   display: flex;
   align-items: flex-start;
