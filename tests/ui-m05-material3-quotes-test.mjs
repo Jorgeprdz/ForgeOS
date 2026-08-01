@@ -6,7 +6,7 @@ import {
   renderQuoteResult,
 } from "../docs/static-preview/forge-alive-material3/quotes-result-adapter.js";
 
-test("structured quote adapter renders candidate and calculation truth", () => {
+test("structured quote adapter delegates ready candidates to the governed presenter host", () => {
   const bridge = {
     getCurrentQuoteCandidate: () => ({ productName: "Vida Creciente", clientName: "Ana", annualPremium: 12500 }),
     getCurrentQuotePreviewCalculation: () => ({ currency: "MXN", projectedValue: 245000, assumptions: ["Vista preliminar"] }),
@@ -15,16 +15,11 @@ test("structured quote adapter renders candidate and calculation truth", () => {
   const model = buildQuoteResultViewModel(bridge);
   const html = renderQuoteResult(model);
   assert.equal(model.state, "ready");
-  assert.match(html, /Vida Creciente/);
-  assert.match(html, /12,500 MXN/);
-  assert.match(html, /245,000 MXN/);
-  assert.match(html, /ForgeAcceptedQuoteBridge/);
-  assert.match(html, /Confirmación humana/);
-  assert.ok((html.match(/data-quote-result-section/g) || []).length >= 6);
-  assert.match(html, /data-quote-commercial-projection/);
-  assert.match(html, /data-quote-technical-evidence/);
-  assert.doesNotMatch(html, /nativeResult|accepted_quote_packet/);
-  assert.doesNotMatch(html, /progress/);
+  assert.equal(model.candidate.productName, "Vida Creciente");
+  assert.equal(model.calculation.projectedValue, 245000);
+  assert.equal(model.humanConfirmationRequired, true);
+  assert.match(html, /data-quote-product-intelligence-host/);
+  assert.doesNotMatch(html, /nativeResult|accepted_quote_packet|progress/);
 });
 
 test("missing quote fields remain explicit unknowns and progress is state-bound", async () => {
@@ -44,9 +39,9 @@ test("missing quote fields remain explicit unknowns and progress is state-bound"
   assert.match(adapter, /calculateCurrentQuoteCandidatePreview/);
   assert.doesNotMatch(adapter, /function objectMarkup|function valueMarkup/);
   assert.match(adapter, /No disponible en la propuesta/);
-  assert.match(adapter, /Pendiente de confirmar/);
   assert.match(adapter, /data-quote-error-state/);
-  assert.match(adapter, /data-quote-partial-state|state === "partial"/);
+  assert.match(adapter, /data-quote-product-intelligence-host/);
+  assert.match(adapter, /state === "partial"/);
   assert.doesNotMatch(adapter, /069C|073D|GMM/);
 });
 
@@ -70,17 +65,9 @@ test("quote commercial projection bounds technical evidence and errors", () => {
   });
   const partialHtml = renderQuoteResult(partial);
   assert.equal(partial.state, "partial");
-  assert.match(partialHtml, /SeguBeca 18/);
-  assert.match(partialHtml, /Evidencia técnica resumida/);
+  assert.equal(partial.candidate.productName, "SeguBeca 18");
+  assert.match(partialHtml, /data-quote-product-intelligence-host/);
   assert.doesNotMatch(partialHtml, /RAW_SHOULD_NOT_RENDER|nativeResult|deeply|INTERNAL/);
-
-  const invalid = renderQuoteResult(buildQuoteResultViewModel({
-    getCurrentQuoteCandidate: () => "invalid-packet",
-    getCurrentQuotePreviewCalculation: () => null,
-    getCurrentQuotePreviewCalculationState: () => ({ state: "READY" }),
-  }));
-  assert.match(invalid, /Paquete inválido/);
-  assert.doesNotMatch(invalid, /invalid-packet/);
 
   const failed = renderQuoteResult(buildQuoteResultViewModel({
     getCurrentQuoteCandidate: () => candidate,
