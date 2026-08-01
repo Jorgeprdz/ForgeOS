@@ -69,9 +69,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node tests/confirmation-policy-write-cut-test.mjs
-          node tests/confirmation-production-runtime-test.mjs
-          node tests/confirmation-review-bridge-test.mjs
+          node tests/evidence-confirmation-task-test.js
+          node tests/policy-evidence-packet-test.js
+          node tests/policy-advisor-confirmation-gate-test.js
 
       - name: Verify accepted remote closure and authority boundaries
         shell: bash
