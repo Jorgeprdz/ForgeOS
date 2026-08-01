@@ -30,10 +30,11 @@ if (partNames.length !== 8) {
 }
 
 const encodedParts = [];
+const rawPartLengths = [];
 for (const name of partNames) {
-  encodedParts.push(
-    (await readFile(path.join(sourceDirectory, name), "utf8")).trim(),
-  );
+  const raw = await readFile(path.join(sourceDirectory, name), "utf8");
+  rawPartLengths.push(raw.length);
+  encodedParts.push(raw.replace(/\s+/g, ""));
 }
 
 function digest(payload) {
@@ -123,7 +124,8 @@ await writeFile(
     byteLength: recovered.payload.length,
     sha256: recovered.sha256,
     partNames,
-    partLengths: encodedParts.map((part) => part.length),
+    rawPartLengths,
+    normalizedPartLengths: encodedParts.map((part) => part.length),
     rawEncodedLength: rawEncoded.length,
     recovery,
   }, null, 2)}\n`,
