@@ -1,0 +1,62 @@
+name: CARTERA 100A + 100B + 100C + 100D Combined Acceptance
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - feature/cartera-090abcd-relationship-capital
+
+permissions:
+  contents: write
+
+jobs:
+  combined-delivery:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/cartera-100abcd-productivity-proof-learning' &&
+      github.event.pull_request.base.ref == 'feature/cartera-090abcd-relationship-capital'
+    runs-on: ubuntu-24.04
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_100ABCD_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_100ABCD_REMOTE_MUTATION
+      CARTERA_100ABCD_EXPECTED_SOURCE_HEAD: de51560ddf506c42c6e50e198be58b18c7ddd518
+      CARTERA_100ABCD_ACCEPTANCE_BRANCH: feature/cartera-100abcd-productivity-proof-learning
+    steps:
+      - name: Checkout exact 100 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize 100D productive app binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-100-materialize-app.mjs
+          if ! git diff --quiet -- app.js; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app.js
+            git commit -m 'feat(cartera): mount productivity proof surface'
+            git push origin HEAD:feature/cartera-100abcd-productivity-proof-learning
+          fi
+          echo "CARTERA_100ABCD_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Execute combined gates and guarded remote acceptance
+        run: bash scripts/ci/cartera-100abcd-combined-acceptance.sh
+
+      - name: Upload combined evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-100abcd-combined-remote-acceptance
+          path: artifacts/cartera-100abcd-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
