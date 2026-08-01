@@ -217,7 +217,16 @@ test("locks canonical shell and Material 3 Activity delivery boundaries", async 
   assert.match(app, /ForgeActivityLedgerBrowserRuntimeFES02C/);
   assert.match(app, /node:crypto/);
   assert.match(app, /registerRouteModule\("actividad", activity\)/);
-  assert.match(app, /dataset\.activityReportingRuntime = "REP-16D"/);
+  assert.match(app, /dataset\.activityReportingRuntime = "REP-16E"/);
+  assert.match(app, /dataset\.forgeShellBoot = "route-first"/);
+  assert.match(app, /m05e-011-eager-print-actions/);
+  assert.match(app, /const environmentAuthority = loadEnvironmentAuthority\(\)/);
+  assert.match(app, /refreshActivityIfActive/);
+  assert.ok(
+    app.indexOf("shell.initialize();") <
+      app.indexOf("void loadActivityAuthorities();"),
+    "shell must initialize before FES Activity authorities start",
+  );
   assert.match(navigation, /routeId: "actividad"/);
   assert.match(navigation, /availability: "available"/);
   assert.match(moduleSource, /runChartReady/);
