@@ -46,6 +46,14 @@ export const NON_VISIBLE_WIDGET_STATES = Object.freeze(new Set([
   SMART_WIDGET_STATES.HIDDEN_BY_SCOPE,
 ]));
 
+const DATA_REDACTED_WIDGET_STATES = Object.freeze(new Set([
+  SMART_WIDGET_STATES.LOADING,
+  SMART_WIDGET_STATES.SOURCE_UNAVAILABLE,
+  SMART_WIDGET_STATES.NOT_CONNECTED,
+  SMART_WIDGET_STATES.SESSION_REQUIRED,
+  SMART_WIDGET_STATES.HIDDEN_BY_SCOPE,
+]));
+
 const FALSE_BOUNDARY_FLAGS = Object.freeze({
   actionExecutionAllowed: false,
   approvalMutationAllowed: false,
@@ -117,6 +125,7 @@ export function createProductiveSmartWidget(input = {}) {
   const widgetId = input.widgetId || `forge-${input.widgetFamily.toLowerCase()}`;
   const score = asFiniteNumber(input.rankScore) ?? 0;
   const confidence = input.confidence || "UNKNOWN";
+  const redactUnavailableData = DATA_REDACTED_WIDGET_STATES.has(input.state);
 
   return deepFreeze({
     schemaVersion: PRODUCTIVE_SMART_WIDGET_SCHEMA_VERSION,
@@ -127,11 +136,11 @@ export function createProductiveSmartWidget(input = {}) {
     hardPriority: input.hardPriority || null,
     title: input.title || "",
     subtitle: input.subtitle || "",
-    primaryMetric: input.primaryMetric || createMetric(),
-    secondaryMetric: input.secondaryMetric || createMetric(),
-    comparison: cloneJson(input.comparison ?? null),
-    trend: cloneJson(input.trend ?? null),
-    chartReady: cloneJson(input.chartReady ?? null),
+    primaryMetric: redactUnavailableData ? createMetric() : (input.primaryMetric || createMetric()),
+    secondaryMetric: redactUnavailableData ? createMetric() : (input.secondaryMetric || createMetric()),
+    comparison: redactUnavailableData ? null : cloneJson(input.comparison ?? null),
+    trend: redactUnavailableData ? null : cloneJson(input.trend ?? null),
+    chartReady: redactUnavailableData ? null : cloneJson(input.chartReady ?? null),
     whyNow: input.whyNow || "",
     evidence: uniqueStrings(input.evidence || []),
     uncertainty: uniqueStrings(input.uncertainty || []),
@@ -143,7 +152,8 @@ export function createProductiveSmartWidget(input = {}) {
     reviewAction: cloneJson(input.reviewAction ?? null),
     blockedReason: input.blockedReason || null,
     renderVariant: input.renderVariant,
-    payload: cloneJson(input.payload ?? {}),
+    payload: redactUnavailableData ? {} : cloneJson(input.payload ?? {}),
+    unavailableDataRedacted: redactUnavailableData,
     readOnly: true,
     finalAuthority: "HUMAN",
     reasonWhyVisible: Boolean(input.whyNow),
@@ -153,6 +163,7 @@ export function createProductiveSmartWidget(input = {}) {
       "FINAL_AUTHORITY_HUMAN",
       "ARTICLE_0_ACTIVE",
       "NO_AUTONOMOUS_EXECUTION",
+      ...(redactUnavailableData ? ["UNKNOWN_IS_NOT_ZERO"] : []),
     ],
     ...FALSE_BOUNDARY_FLAGS,
   });
