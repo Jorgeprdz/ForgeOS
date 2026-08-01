@@ -73,7 +73,7 @@ select policy_id, user_a, 'CARTERA070_ACCEPTANCE:POLICY:A',
   'CARTERA070_ACCEPTANCE:PRODUCT', date '2024-01-15',
   timestamptz '2024-01-15 00:00:00+00', timestamptz '2026-09-15 23:59:59+00',
   'ACTIVE', 'CARTERA070_ACCEPTANCE', timestamptz '2026-08-01 00:00:00+00',
-  'MXN', 1200, 'MONTHLY', 1000000, 'INCOMPLETE', 'CURRENT', 'CLEAR', 1, user_a
+  'MXN', 1200, 'MONTHLY', 1000000, 'PARTIAL', 'CURRENT', 'CLEAR', 1, user_a
 from cartera070_ids;
 
 insert into public.policy_evidence_versions (
