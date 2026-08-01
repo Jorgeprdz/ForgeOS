@@ -35,9 +35,12 @@ test("Material 3 loads one login-integrated demo adapter", () => {
     "forge_demo_current_session",
     "Modo demostración · Datos ficticios · Solo lectura",
     "/functions/v1/forge-demo-login",
-    "dataClass: \"SYNTHETIC\"",
     "Esta acción externa está bloqueada",
   ]);
+  assert.match(
+    source.frontend,
+    /dataClass:\s*state\.active\s*\?\s*"SYNTHETIC"\s*:\s*null/,
+  );
   assert.doesNotMatch(source.frontend, /[?&]mode=demo/i);
   assert.doesNotMatch(source.frontend, /ADVISOR_[AB]_(EMAIL|PASSWORD)/);
 });
