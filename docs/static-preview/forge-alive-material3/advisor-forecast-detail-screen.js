@@ -1,4 +1,4 @@
-const DETAIL_SCREEN_VERSION = "AF-DETAIL-001";
+const DETAIL_SCREEN_VERSION = "AF-DETAIL-002";
 
 function text(value) { return value === undefined || value === null ? "" : String(value); }
 function finite(value) { return typeof value === "number" && Number.isFinite(value) ? value : null; }
@@ -27,8 +27,8 @@ function contributorRows(readModel) {
 }
 
 export function buildAdvisorForecastDetailView(readModel = {}) {
-  if (readModel.schema !== "ADVISOR_FORECAST_READ_MODEL_V2") {
-    throw new TypeError("ADVISOR_FORECAST_READ_MODEL_V2 is required");
+  if (!["ADVISOR_FORECAST_READ_MODEL_V2", "ADVISOR_FORECAST_READ_MODEL_V3"].includes(readModel.schema)) {
+    throw new TypeError("ADVISOR_FORECAST_READ_MODEL_V2 or V3 is required");
   }
   return Object.freeze({
     version: DETAIL_SCREEN_VERSION,
@@ -56,6 +56,18 @@ export function buildAdvisorForecastDetailView(readModel = {}) {
       unknownCount: finite(readModel.opportunityForecast?.unknownCount),
       contributors: contributorRows(readModel),
     },
+    activityRequirement: readModel.activityRequirement ? {
+      status: readModel.activityRequirement.status || null,
+      confidence: readModel.activityRequirement.confidence || null,
+      contactsRequired: finite(readModel.activityRequirement.contactsRequired),
+      appointmentsRequired: finite(readModel.activityRequirement.appointmentsRequired),
+      presentationsRequired: finite(readModel.activityRequirement.presentationsRequired),
+      applicationsRequired: finite(readModel.activityRequirement.applicationsRequired),
+      policiesRequired: finite(readModel.activityRequirement.policiesRequired),
+      cadence: readModel.activityRequirement.cadence || null,
+      missingRates: safeArray(readModel.activityRequirement.missingRates),
+      humanConfirmationRequired: true,
+    } : null,
     scenarios: readModel.scenarios || {},
     explanation: readModel.primaryExplanation || "No hay una explicación disponible.",
     risks: safeArray(readModel.riskSignals),
@@ -67,6 +79,7 @@ export function buildAdvisorForecastDetailView(readModel = {}) {
     finalAuthority: "HUMAN",
     createsRevenueTruth: false,
     createsDatabaseWrite: false,
+    createsTask: false,
   });
 }
 
@@ -83,6 +96,39 @@ function renderContributors(contributors) {
         <small>${metric(entry.expectedPolicyContribution)} póliza esperada</small>
       </div>
     </article>`).join("")}</div>`;
+}
+
+function renderActivityRequirement(requirement) {
+  if (!requirement) return "";
+  if (["INSUFFICIENT_DATA", "BLOCKED"].includes(requirement.status)) {
+    const missing = requirement.missingRates.length ? ` Faltan: ${requirement.missingRates.join(", ")}.` : "";
+    return `
+    <section class="advisor-forecast-section advisor-forecast-boundary">
+      <h3>Actividad necesaria</h3>
+      <p>No existe evidencia suficiente para convertir la brecha en actividad confiable.${escapeHtml(missing)}</p>
+    </section>`;
+  }
+  if (requirement.status === "GOAL_COVERED") {
+    return `
+    <section class="advisor-forecast-section advisor-forecast-boundary">
+      <h3>Actividad necesaria</h3>
+      <p>La brecha gobernada está cubierta; Forecast no prescribe actividad adicional.</p>
+    </section>`;
+  }
+  return `
+    <section class="advisor-forecast-section">
+      <div class="advisor-forecast-section-heading">
+        <h3>Actividad mínima para sostener la brecha</h3>
+        <span>Confianza ${escapeHtml(text(requirement.confidence).toLowerCase())}</span>
+      </div>
+      <div class="advisor-forecast-summary-grid advisor-forecast-activity-grid">
+        <article><span>Contactos</span><strong>${metric(requirement.contactsRequired)}</strong><small>prospección</small></article>
+        <article><span>Citas</span><strong>${metric(requirement.appointmentsRequired)}</strong><small>mínimo estimado</small></article>
+        <article><span>Presentaciones</span><strong>${metric(requirement.presentationsRequired)}</strong><small>mínimo estimado</small></article>
+        <article><span>Solicitudes</span><strong>${metric(requirement.applicationsRequired)}</strong><small>para ${metric(requirement.policiesRequired)} pólizas</small></article>
+      </div>
+      <p class="advisor-forecast-empty">Es un mínimo de planeación basado en conversiones respaldadas por evidencia. Requiere revisión y confirmación humana antes de pasar a Actividad.</p>
+    </section>`;
 }
 
 function renderActions(actions) {
@@ -117,9 +163,11 @@ export function renderAdvisorForecastDetailMarkup(readModel = {}) {
       ${renderContributors(view.opportunities.contributors)}
     </section>
 
+    ${renderActivityRequirement(view.activityRequirement)}
+
     <section class="advisor-forecast-section advisor-forecast-boundary">
       <h3>Cómo leer esta proyección</h3>
-      <p>La producción confirmada proviene exclusivamente de POLICY_SOLD_CONFIRMED. El Pipeline representa contribución esperada y no crea ingreso, emisión ni cierre automático.</p>
+      <p>La producción confirmada proviene exclusivamente de POLICY_SOLD_CONFIRMED. El Pipeline y la actividad requerida son contexto de decisión: no crean ingreso, emisión, tarea ni cierre automático.</p>
     </section>
 
     <footer class="advisor-forecast-detail-actions">${renderActions(view.actions)}</footer>
