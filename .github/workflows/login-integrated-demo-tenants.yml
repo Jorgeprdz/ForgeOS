@@ -223,7 +223,7 @@ jobs:
         run: node scripts/seed-login-integrated-demo-tenants.mjs
 
       - name: Seal demo tenants read-only
-        if: always()
+        if: always() && env.FORGE_DEMO_ADMIN_TOKEN != ''
         shell: bash
         run: |
           set -euo pipefail
