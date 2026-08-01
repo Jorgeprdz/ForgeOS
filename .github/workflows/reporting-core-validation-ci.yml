@@ -28,26 +28,23 @@ jobs:
           path = Path('.github/workflows/pages.yml')
           text = path.read_text()
 
-          old_extension = """            '.map',
-            '.png',"""
-          new_extension = """            '.map',
-            '.mjs',
-            '.png',"""
+          old_extension = "            '.map',\n            '.png',"
+          new_extension = "            '.map',\n            '.mjs',\n            '.png',"
           if text.count(old_extension) != 1:
               raise SystemExit(
                   f"expected one public extension boundary, got {text.count(old_extension)}"
               )
           text = text.replace(old_extension, new_extension)
 
-          old_validation = """          for (const file of requiredConversationRuntime) {
-            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
-          }
-
-          const rootIndex = fs.readFileSync('_site/index.html', 'utf8');"""
-          new_validation = """          for (const file of requiredConversationRuntime) {
-            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
-          }
-          const requiredActivityRuntime = [
+          root_index_marker = (
+              "          const rootIndex = "
+              "fs.readFileSync('_site/index.html', 'utf8');"
+          )
+          if text.count(root_index_marker) != 1:
+              raise SystemExit(
+                  f"expected one Pages root index marker, got {text.count(root_index_marker)}"
+              )
+          activity_validation = """          const requiredActivityRuntime = [
             'advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs',
             'advisor-os/reporting/runtime/activity-reporting-runtime.mjs',
             'advisor-os/reporting/runtime/universal-reporting-kernel.mjs',
@@ -65,12 +62,11 @@ jobs:
             );
           }
 
-          const rootIndex = fs.readFileSync('_site/index.html', 'utf8');"""
-          if text.count(old_validation) != 1:
-              raise SystemExit(
-                  f"expected one Pages validation boundary, got {text.count(old_validation)}"
-              )
-          text = text.replace(old_validation, new_validation)
+"""
+          text = text.replace(
+              root_index_marker,
+              activity_validation + root_index_marker,
+          )
           path.write_text(text)
           PY
 
