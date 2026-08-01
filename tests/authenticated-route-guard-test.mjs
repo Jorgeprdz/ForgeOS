@@ -35,3 +35,14 @@ test("deep links restore only after authentication", () => {
   assert.match(guard, /restoreAuthenticatedRoute/);
   assert.match(guard, /dispatchEvent\(new PopStateEvent\("popstate"\)\)/);
 });
+
+test("browser acceptance harness cannot activate on Pages or arbitrary local ports", () => {
+  assert.match(guard, /\["127\.0\.0\.1",\s*"localhost",\s*"\[::1\]"\]/);
+  assert.match(guard, /location\.port === "4173"/);
+  assert.doesNotMatch(guard, /github\.io/);
+  assert.match(guard, /forgeAuthAcceptanceHarness = "loopback-only"/);
+  assert.match(
+    guard,
+    /state\.acceptanceHarness && \["anonymous", "auth_error"\]\.includes\(status\)/,
+  );
+});
