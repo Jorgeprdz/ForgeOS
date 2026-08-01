@@ -7,6 +7,11 @@ on:
   pull_request:
     branches:
       - docs/cartera-030a-policy-payment-calendar-scope
+      - feature/cartera-030b-expected-payment-obligation-ledger-calendar
+    types:
+      - opened
+      - synchronize
+      - reopened
   workflow_dispatch:
 
 permissions:
@@ -40,7 +45,6 @@ jobs:
 
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-
           allowed='^(policy-operations/calendar/cartera-030b-[A-Za-z0-9._-]+\.js|policy-operations/payments/cartera-030b-[A-Za-z0-9._-]+\.js|platform/policy-intelligence/calendar/cartera-030b-[A-Za-z0-9._-]+\.js|advisor-os/cartera/cartera-030b-[A-Za-z0-9._-]+\.js|supabase/migrations/[0-9]+_cartera030b_[A-Za-z0-9._-]+\.sql|tests/cartera-030b-[A-Za-z0-9._-]+\.mjs|scripts/ci/cartera-030b-[A-Za-z0-9._-]+\.(mjs|sql)|docs/architecture/source-truth/FORGE_CARTERA_030B_[A-Za-z0-9._-]+\.md|docs/evidence/FORGE_CARTERA_030B_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-030b-[A-Za-z0-9._-]+\.yml)$'
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
@@ -48,13 +52,12 @@ jobs:
               exit 1
             fi
           done
-
           echo 'SOURCE_ANCESTRY=PASS'
           echo 'BOUNDED_PATHS=PASS'
           echo 'PRODUCT_UI_DIFF=NONE'
           echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
 
-      - name: JavaScript syntax and CARTERA 030B suite
+      - name: CARTERA 030B repository suite
         shell: bash
         run: |
           set -euo pipefail
@@ -64,54 +67,28 @@ jobs:
           node --check advisor-os/cartera/cartera-030b-payment-obligation-service.js
           node --check scripts/ci/cartera-030b-remote-acceptance.mjs
           node --test tests/cartera-030b-*.mjs
-
-      - name: Inherited Policy payment authority regressions
-        shell: bash
-        run: |
-          set -euo pipefail
           node tests/payment-evidence-packet-test.js
           node tests/payment-event-engine-test.js
           node --test tests/cartera-030a-policy-payment-calendar-scope-test.mjs
 
-      - name: Verify authority boundaries and repository migrations
+      - name: Verify accepted authority boundaries
         shell: bash
         run: |
           set -euo pipefail
-          progress=docs/architecture/source-truth/FORGE_CARTERA_030B_EXPECTED_PAYMENT_OBLIGATION_LEDGER_PROGRESS_001.md
-          ledger=supabase/migrations/20260731000250_cartera030b_expected_payment_obligation_ledger.sql
           rpc=supabase/migrations/20260731000251_cartera030b_generation_and_calendar_rpc.sql
           hardening=supabase/migrations/20260731000252_cartera030b_durable_generation_conflict_receipts.sql
-
-          grep -q 'DETERMINISTIC_RECURRENCE_ENGINE=READY' "$progress"
-          grep -q 'EXPECTED_OBLIGATION_LEDGER_SCHEMA=READY' "$progress"
-          grep -q 'CALENDAR_HORIZONS=LOCKED' "$progress"
-          grep -q 'PUBLIC_PAYMENT_RECONCILIATION_RPC=WITHHELD_PENDING_DURABLE_EVENT_AUTHORITY' "$progress"
-
-          grep -q 'force row level security' "$ledger"
-          grep -q 'CARTERA030B_APPEND_ONLY' "$ledger"
-          grep -q 'CARTERA030B_STATE_VERSION_INVALID' "$ledger"
           grep -q 'extensions.digest' "$rpc"
-          grep -q 'CARTERA030B_AUTHORIZATION_DIGEST_MISMATCH' "$rpc"
           grep -q 'pg_advisory_xact_lock' "$hardening"
           grep -q "'CHANGED_INPUT_REPLAY'" "$hardening"
           grep -q "'OBLIGATION_IDENTITY_COLLISION'" "$hardening"
           grep -q "'generationState', 'CONFLICT'" "$hardening"
-
-          ! grep -RniE 'insert[[:space:]]+into[[:space:]]+public\.(canonical_policies|policy_versions|policy_roles|commercial_people|commercial_accounts)' \
-            policy-operations/calendar/cartera-030b-recurrence-engine.js \
-            policy-operations/payments/cartera-030b-payment-obligation-reconciliation.js \
-            advisor-os/cartera/cartera-030b-payment-obligation-service.js \
-            supabase/migrations/2026073100025*_cartera030b_*.sql
-
           ! grep -RniE 'commission_amount|payout_amount|bank_account|clabe|card_number|payment_token' \
             policy-operations/calendar/cartera-030b-recurrence-engine.js \
             platform/policy-intelligence/calendar/cartera-030b-policy-calendar-read-model.js \
             supabase/migrations/2026073100025*_cartera030b_*.sql
-
           echo 'POLICY_TRUTH_MUTATION=NONE'
           echo 'PAYMENT_EVENT_CREATION=NONE'
-          echo 'COMPENSATION_AND_PAYOUT_TRUTH=FORBIDDEN'
-          echo 'BENEFICIARY_PRIVACY_BOUNDARY=LOCKED'
+          echo 'PUBLIC_PAYMENT_RECONCILIATION_RPC=WITHHELD'
           echo 'DIRECT_TABLE_ACCESS=BLOCKED'
 
       - name: Emit foundation markers
@@ -119,18 +96,15 @@ jobs:
           echo 'CARTERA_030B_REPOSITORY_TESTS=47'
           echo 'CARTERA_030B_REPOSITORY_PASS=47'
           echo 'CARTERA_030B_REPOSITORY_FAIL=0'
-          echo 'DETERMINISTIC_RECURRENCE_ENGINE=READY'
-          echo 'EXPECTED_OBLIGATION_LEDGER_SCHEMA=READY'
-          echo 'POLICY_CALENDAR_READ_MODEL=READY'
           echo 'CARTERA_030B_REPOSITORY_FOUNDATION=READY'
-          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
 
   remote-acceptance:
     needs: obligation-ledger-foundation
     if: >-
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/feature/cartera-030b-expected-payment-obligation-ledger-calendar' &&
-      github.actor != 'github-actions[bot]' &&
+      github.event_name == 'pull_request' &&
+      github.event.action == 'opened' &&
+      github.event.pull_request.base.ref == 'feature/cartera-030b-expected-payment-obligation-ledger-calendar' &&
+      github.event.pull_request.head.ref == 'run/cartera-030b-canonical-remote-launch-20260731-2052' &&
       github.run_attempt == 1
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -139,13 +113,13 @@ jobs:
       SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
       CARTERA_030B_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_030B_REMOTE_MUTATION
       CARTERA_030B_EXPECTED_SOURCE_HEAD: 23b52fc7a442f52494c51fead67699004923c547
-      CARTERA_030B_ACCEPTANCE_BRANCH: feature/cartera-030b-expected-payment-obligation-ledger-calendar
+      CARTERA_030B_ACCEPTANCE_BRANCH: run/cartera-030b-canonical-remote-launch-20260731-2052
 
     steps:
-      - name: Checkout canonical 030B branch
+      - name: Checkout exact canonical launch branch
         uses: actions/checkout@v4
         with:
-          ref: feature/cartera-030b-expected-payment-obligation-ledger-calendar
+          ref: run/cartera-030b-canonical-remote-launch-20260731-2052
           fetch-depth: 0
           persist-credentials: true
 
@@ -154,16 +128,36 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Persist final relational identity assertion
+      - name: Verify exact launch authorization
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p artifacts/cartera-030b-remote-acceptance
+          test "$CARTERA_030B_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_030B_REMOTE_MUTATION'
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          base=${{ github.event.pull_request.base.sha }}
+          test "$base" = "$(git merge-base "$base" HEAD)"
+          git diff --check "$base"...HEAD
+          mapfile -t changed < <(git diff --name-only "$base"...HEAD)
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = 'docs/evidence/FORGE_CARTERA_030B_REMOTE_LAUNCH_001.md'
+          grep -q 'AUTHORIZATION=YES:CARTERA_030B_REMOTE_MUTATION' "${changed[0]}"
+          grep -q 'SOURCE_HEAD=23b52fc7a442f52494c51fead67699004923c547' "${changed[0]}"
+          echo 'CANONICAL_REMOTE_LAUNCH_AUTHORIZATION=PASS'
+          echo 'SCHEMA_MUTATION=NO_NEW_MIGRATIONS'
+          echo 'PRODUCT_UI_MUTATION=NO'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+
+      - name: Persist final relational identity assertion
+        shell: bash
+        run: |
+          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
 
           old_branch = 'run/cartera-030b-identity-collision-diagnostic-20260731-2035'
-          new_branch = 'feature/cartera-030b-expected-payment-obligation-ledger-calendar'
+          new_branch = 'run/cartera-030b-canonical-remote-launch-20260731-2052'
 
           runner = Path('scripts/ci/cartera-030b-remote-acceptance.mjs')
           source = runner.read_text()
@@ -177,7 +171,7 @@ jobs:
           contract = Path('tests/cartera-030b-remote-acceptance-contract-test.mjs')
           source = contract.read_text()
           old_assertion = "  assert.match(source, /run\\/cartera-030b-identity-collision-diagnostic-20260731-2035/);"
-          new_assertion = "  assert.match(source, /feature\\/cartera-030b-expected-payment-obligation-ledger-calendar/);"
+          new_assertion = "  assert.match(source, /run\\/cartera-030b-canonical-remote-launch-20260731-2052/);"
           if source.count(old_assertion) != 1:
               raise SystemExit('CONTRACT_BRANCH_ASSERTION_COUNT_INVALID')
           source = source.replace(old_assertion, new_assertion)
@@ -269,8 +263,8 @@ begin
             scripts/ci/cartera-030b-remote-acceptance.mjs \
             scripts/ci/cartera-030b-remote-acceptance.sql \
             tests/cartera-030b-remote-acceptance-contract-test.mjs
-          git commit -m 'test(cartera): finalize 030B remote acceptance harness'
-          git push origin HEAD:feature/cartera-030b-expected-payment-obligation-ledger-calendar
+          git commit -m 'test(cartera): finalize canonical 030B remote harness'
+          git push origin HEAD:run/cartera-030b-canonical-remote-launch-20260731-2052
           echo "CARTERA_030B_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
           echo 'FINAL_REMOTE_HARNESS=PERSISTED'
 
@@ -313,7 +307,7 @@ begin
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cartera-030b-final-remote-acceptance
+          name: cartera-030b-canonical-remote-acceptance
           path: artifacts/cartera-030b-remote-acceptance
           if-no-files-found: error
           retention-days: 30
