@@ -24,6 +24,9 @@ assert.match(
   app,
   /quote-runtime-printable-modal-layer-m05w001\.js\?v=m05w-001/,
 );
-assert.match(index, /ui-m05w-printable-modal-layer-001/);
+assert.match(
+  index,
+  /app\.js\?v=ui-m05x-quote-intake-ready-001&rep=16e-002/,
+);
 
 console.log("UI_M05W_PRINTABLE_MODAL_LAYER=PASS");
