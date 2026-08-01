@@ -47,6 +47,51 @@ async function viewportScreenshot(page, outputPath) {
   });
 }
 
+async function scrollToCenter(page, locator) {
+  await locator.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    const target = Math.max(
+      0,
+      window.scrollY + rect.top - window.innerHeight / 2 + rect.height / 2,
+    );
+    window.scrollTo({ top: target, behavior: "instant" });
+  });
+  await page.waitForTimeout(100);
+}
+
+async function pointerClick(page, locator, label) {
+  await expect(locator, `${label} debe estar visible`).toBeVisible();
+  const hitTest = await locator.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const hit = document.elementFromPoint(x, y);
+    return {
+      x,
+      y,
+      width: rect.width,
+      height: rect.height,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      receivesPointer: Boolean(hit && (hit === element || element.contains(hit))),
+      hitTag: hit?.tagName || null,
+      hitClass: hit?.className || null,
+    };
+  });
+  expect(hitTest.width, `${label} debe tener ancho`).toBeGreaterThan(0);
+  expect(hitTest.height, `${label} debe tener alto`).toBeGreaterThan(0);
+  expect(hitTest.x, `${label} debe estar dentro del viewport`).toBeGreaterThan(0);
+  expect(hitTest.y, `${label} debe estar dentro del viewport`).toBeGreaterThan(0);
+  expect(hitTest.x).toBeLessThan(hitTest.viewportWidth);
+  expect(hitTest.y).toBeLessThan(hitTest.viewportHeight);
+  expect(
+    hitTest.receivesPointer,
+    `${label} está cubierto por ${hitTest.hitTag}.${hitTest.hitClass}`,
+  ).toBe(true);
+  await page.mouse.click(hitTest.x, hitTest.y);
+  return hitTest;
+}
+
 test("procesa el PDF real y expone imprimir, PDF e historial", async (
   { page },
   testInfo,
@@ -97,8 +142,11 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
     name: "Aceptar",
     exact: true,
   });
-  await expect(intakeAccept).toBeVisible();
-  await intakeAccept.click();
+  const intakeAcceptHitTest = await pointerClick(
+    page,
+    intakeAccept,
+    "Aceptar cotización extraída",
+  );
   await intakeDialog.waitFor({ state: "hidden", timeout: 15_000 });
 
   const projection = page.locator(
@@ -110,8 +158,12 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
     '[data-quote-next-action="confirm_quote"]',
   );
   await confirmQuote.waitFor({ state: "visible", timeout: 15_000 });
-  await confirmQuote.scrollIntoViewIfNeeded();
-  await confirmQuote.click();
+  await scrollToCenter(page, confirmQuote);
+  const confirmQuoteHitTest = await pointerClick(
+    page,
+    confirmQuote,
+    "Confirmar cotización",
+  );
 
   let confirmationState = "timeout";
   try {
@@ -138,9 +190,9 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   await printableCard.waitFor({ state: "visible", timeout: 12_000 })
     .catch(() => {});
   if (await visible(printableCard)) {
-    await printableCard.scrollIntoViewIfNeeded();
+    await scrollToCenter(page, printableCard);
   } else {
-    await confirmQuote.scrollIntoViewIfNeeded().catch(() => {});
+    await scrollToCenter(page, confirmQuote).catch(() => {});
   }
   await page.waitForTimeout(250);
 
@@ -168,13 +220,15 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   };
 
   const state = {
-    schema: "forge.ui.m05p.real-vida-mujer-browser-state.v2",
+    schema: "forge.ui.m05p.real-vida-mujer-browser-state.v3",
     targetUrl: page.url(),
     project: testInfo.project.name,
     viewport: page.viewportSize(),
     intakeAccepted: true,
+    intakeAcceptHitTest,
     quoteProjectionReady: await visible(projection),
     confirmationState,
+    confirmQuoteHitTest,
     quoteAccepted: await quotesModule.getAttribute("data-quote-accepted"),
     blockedVisible,
     publicConfigNoticeVisible,
@@ -217,33 +271,29 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   await expect(download.locator("svg")).toHaveCount(1);
   await expect(history.locator("svg")).toHaveCount(1);
 
-  const actionsHitTest = await page.evaluate(() => {
-    const output = {};
-    for (const action of ["preview", "download", "history"]) {
-      const button = document.querySelector(
-        `[data-m05e005-action="${action}"]`,
-      );
-      if (!button) {
-        output[action] = false;
-        continue;
-      }
-      button.scrollIntoView({ block: "center", inline: "center" });
-      const rect = button.getBoundingClientRect();
-      const hit = document.elementFromPoint(
-        rect.left + rect.width / 2,
-        rect.top + rect.height / 2,
-      );
-      output[action] = Boolean(hit && (hit === button || button.contains(hit)));
-    }
-    return output;
-  });
+  const actionsHitTest = {};
+  for (const [action, locator] of [
+    ["preview", preview],
+    ["download", download],
+    ["history", history],
+  ]) {
+    await scrollToCenter(page, locator);
+    actionsHitTest[action] = await locator.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      const hit = document.elementFromPoint(x, y);
+      return Boolean(hit && (hit === element || element.contains(hit)));
+    });
+  }
   expect(actionsHitTest).toEqual({
     preview: true,
     download: true,
     history: true,
   });
 
-  await preview.click();
+  await scrollToCenter(page, preview);
+  await pointerClick(page, preview, "Vista previa");
   const printableModal = page.locator("[data-m05e005-printable-modal]");
   await expect(printableModal).toBeVisible();
   await expect(printableModal.locator("#m05e005-modal-title")).toContainText(
@@ -253,11 +303,13 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
     printableModal.locator("[data-m05e005-preview-frame]"),
   ).toBeVisible();
   state.actions.preview = "pass";
-  await printableModal.locator("[data-m05e005-close]").last().click();
+  const previewClose = printableModal.locator("[data-m05e005-close]").last();
+  await pointerClick(page, previewClose, "Cerrar vista previa");
   await expect(printableModal).toBeHidden();
 
   const downloadEvent = page.waitForEvent("download", { timeout: 20_000 });
-  await download.click();
+  await scrollToCenter(page, download);
+  await pointerClick(page, download, "Descargar PDF");
   const downloaded = await downloadEvent;
   const downloadedPath = path.join(
     downloadDirectory,
@@ -273,7 +325,8 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
     byteLength: downloadedBytes.length,
   };
 
-  await history.click();
+  await scrollToCenter(page, history);
+  await pointerClick(page, history, "Historial de versiones");
   await expect(printableModal).toBeVisible();
   await expect(printableModal.locator("#m05e005-modal-title")).toContainText(
     /Historial de versiones/i,
@@ -282,7 +335,8 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
     printableModal.locator("[data-m05e005-history-list]"),
   ).toBeVisible();
   state.actions.history = "pass";
-  await printableModal.locator("[data-m05e005-close]").last().click();
+  const historyClose = printableModal.locator("[data-m05e005-close]").last();
+  await pointerClick(page, historyClose, "Cerrar historial");
 
   state.consoleErrors = consoleErrors;
   state.pageErrors = pageErrors;
