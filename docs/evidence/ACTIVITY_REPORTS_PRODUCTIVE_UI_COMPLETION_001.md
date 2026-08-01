@@ -1,0 +1,122 @@
+# ACTIVITY + REPORTS — Productive UI Completion 001
+
+## Objective
+
+Complete the authenticated Material 3 Activity and Reports experience without creating a second event ledger, promoting projections to facts, or authorizing automatic commercial effects.
+
+## Unified delivery
+
+```text
+DELIVERY_MODE=ONE_BRANCH_ONE_PR_ONE_PASS
+SOURCE_MAIN=e0b8f4e2e8629e506ef1e49beecc48dd741ffefa
+RUNTIME_VERSION=ACTIVITY-REPORTS-RUNTIME-001
+ACTIVITY_RUNTIME=REP-18
+DATABASE_MUTATION=NO
+CRM_MUTATION=NO
+AUTOMATIC_TASK_CREATION=NO
+AUTOMATIC_CALENDAR_CREATION=NO
+AUTOMATIC_FES_EVENT=NO
+```
+
+## Completed stages
+
+```text
+STAGE_0_SOURCE_TRUTH_RECONCILIATION=IMPLEMENTED
+STAGE_1_AUTHENTICATED_SHARED_RUNTIME=IMPLEMENTED
+STAGE_2_OPERATIONAL_ACTIVITY_VIEW=IMPLEMENTED
+STAGE_3_PRODUCTIVE_REPORTS_VIEW=IMPLEMENTED
+STAGE_4_CURRENT_PREVIOUS_PERIOD_COMPARISON=IMPLEMENTED
+STAGE_5_MONTHLY_GOAL_AND_CONFIRMED_POLICY_REPORTING=IMPLEMENTED
+STAGE_6_FORECAST_CONTEXT_RECONCILIATION=IMPLEMENTED
+STAGE_7_HONEST_SOURCE_INVENTORY=IMPLEMENTED
+STAGE_8_LOGOUT_SCRUB_AND_LATE_RESULT_REJECTION=IMPLEMENTED
+STAGE_9_RESPONSIVE_AND_PAGES_ACCEPTANCE=PENDING_CI
+```
+
+## Product structure
+
+The canonical navigation pill keeps one **Actividad** destination. Inside that destination, a compact segmented control exposes:
+
+- **Actividad:** operational REP/FES chart-ready view;
+- **Reportes:** comparative and monthly productive reading.
+
+This avoids adding another mobile navigation item while preserving direct deep-linking through `?nav=actividad&view=reportes`.
+
+## Locked authorities
+
+```text
+ACTIVITY_EVENT_TRUTH=FES_CANONICAL_ACTIVITY_EVENT
+ACTIVITY_AGGREGATION=REP_UNIVERSAL_REPORTING_RUNTIME
+ACTIVITY_VISUALIZATION=REP_CHART_READY_SURFACE
+MONTHLY_TARGET=ADVISOR_MONTHLY_POLICY_GOAL
+PRODUCTION=UNIQUE_POLICY_SOLD_CONFIRMED
+POLICY_CONFIRMATION=CANONICAL_POLICY_CONFIRMED_VERSION
+FORECAST_CONTEXT=ADVISOR_FORECAST_READ_MODEL_AND_ISSUED_SNAPSHOT
+AUTH_IDENTITY=FORGE_PRODUCTIVE_PROSPECT_BOOTSTRAP_SESSION
+TIME_ZONE=AMERICA_MEXICO_CITY
+```
+
+## Reporting semantics
+
+- Current and previous periods use equal-length calendar windows.
+- An empty previous period does not generate an invented percentage change.
+- Missing Forecast degrades only the Forecast section and does not collapse Activity.
+- Missing or disconnected sources remain visible as unavailable; they are never normalized to zero.
+- Confirmed policy production is counted by unique canonical Policy reference for the selected month.
+- Forecast pace and weighted Pipeline remain decision context, not production, revenue or a guaranteed close.
+
+## Session safety
+
+```text
+AUTHENTICATED_ADVISOR_REQUIRED=YES
+ADVISOR_SWITCH_SCRUB=ENFORCED
+LOGOUT_SCRUB=ENFORCED
+ADVISOR_BOUND_FES_RUNTIME_CLOSE=ENFORCED
+GENERATION_CHECK=ENFORCED
+ABORT_SIGNAL=ENFORCED
+LATE_CROSS_SESSION_RESULT=BLOCKED
+PRIVATE_REPORT_DOM_AFTER_LOGOUT=BLOCKED
+```
+
+## Non-authorizations
+
+```text
+PARALLEL_ACTIVITY_LEDGER=BLOCKED
+ACTIVITY_CAPTURE_FROM_REPORTS=BLOCKED
+ACTIVITY_CORRECTION_FROM_REPORTS=BLOCKED
+AUTOMATIC_DECISION=BLOCKED
+AUTOMATIC_TASK_CREATION=BLOCKED
+AUTOMATIC_CALENDAR_CREATION=BLOCKED
+AUTOMATIC_FES_EVENT=BLOCKED
+POLICY_CREATION=BLOCKED
+OPPORTUNITY_CREATION=BLOCKED
+DATABASE_MUTATION=BLOCKED
+CRM_MUTATION=BLOCKED
+FORECAST_RETROACTIVE_MUTATION=BLOCKED
+```
+
+## Responsive contract
+
+- Desktop: four KPI cards and two-column analysis.
+- Tablet: two-column KPI grid and single-column analysis.
+- Mobile: horizontally snapping KPI cards, scroll-safe comparison rows and bottom clearance above the floating navigation pill.
+- Existing floating navigation behavior is preserved.
+
+## Acceptance gates
+
+```text
+ACTIVITY_REPORTS_PRODUCTIVE_UI_COMPLETION=PENDING_CI
+ACTIVITY_OPERATIONAL_VIEW=PENDING_CI
+REPORTS_PRODUCTIVE_VIEW=PENDING_CI
+FES_REP_ACTIVITY_BINDING=PENDING_CI
+CURRENT_PREVIOUS_COMPARISON=PENDING_CI
+ZERO_DENOMINATOR_FALSE_PRECISION_BLOCK=PENDING_CI
+POLICY_SOLD_CONFIRMED_REPORTING=PENDING_CI
+FORECAST_CONTEXT_RECONCILIATION=PENDING_CI
+HONEST_SOURCE_INVENTORY=PENDING_CI
+LOGOUT_SCRUB_AND_LATE_RESULT_REJECTION=PENDING_CI
+MOBILE_SAFE_AREA=PENDING_CI
+TABLET_LAYOUT=PENDING_CI
+DESKTOP_LAYOUT=PENDING_CI
+PAGES_CANONICAL=PENDING_CONTROLLED_MERGE
+```
