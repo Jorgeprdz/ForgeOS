@@ -86,8 +86,19 @@ for (const project of expectedProjects) {
   if (state.authRuntimeErrorVisible) {
     failures.push(`${project}:AUTH_RUNTIME_ERROR`);
   }
-  if (state.settlement !== "ready") {
-    failures.push(`${project}:QUOTE_${String(state.settlement).toUpperCase()}`);
+  if (!state.intakeAccepted) {
+    failures.push(`${project}:INTAKE_NOT_ACCEPTED`);
+  }
+  if (!state.quoteProjectionReady) {
+    failures.push(`${project}:QUOTE_PROJECTION_NOT_READY`);
+  }
+  if (state.confirmationState !== "accepted" || state.quoteAccepted !== "true") {
+    failures.push(
+      `${project}:QUOTE_CONFIRMATION_${String(state.confirmationState).toUpperCase()}`,
+    );
+  }
+  if (state.quoteErrorVisible) {
+    failures.push(`${project}:QUOTE_ERROR_VISIBLE`);
   }
   if (!state.printableCardVisible) {
     failures.push(`${project}:PRINTABLE_CARD_MISSING`);
@@ -99,6 +110,12 @@ for (const project of expectedProjects) {
     if (state.actions?.[action] !== "pass") {
       failures.push(`${project}:${action.toUpperCase()}_ACTION_FAIL`);
     }
+    if (state.actionsHitTest?.[action] !== true) {
+      failures.push(`${project}:${action.toUpperCase()}_HIT_TEST_FAIL`);
+    }
+  }
+  if (state.pageErrors?.length) {
+    failures.push(`${project}:PAGE_ERRORS=${state.pageErrors.length}`);
   }
   if (state.status !== "PASS") {
     failures.push(`${project}:STATE_NOT_PASS`);
@@ -106,7 +123,7 @@ for (const project of expectedProjects) {
 }
 
 const summary = {
-  schema: "forge.ui.m05p.real-vida-mujer-acceptance.v1",
+  schema: "forge.ui.m05p.real-vida-mujer-acceptance.v2",
   generatedAt: new Date().toISOString(),
   targetMode: process.env.FORGE_M05P_TARGET_MODE || "unknown",
   targetUrl: process.env.FORGE_M05P_TARGET_URL || null,
@@ -139,6 +156,7 @@ await writeFile(
 console.log(`UI_M05P_ACCEPTANCE=${summary.status}`);
 console.log(`SCREENSHOTS=${summary.screenshotCount}`);
 console.log(`SOURCE_PAGES=${summary.sourcePageCount}`);
+console.log(`STATES=${summary.stateCount}`);
 for (const failure of summary.failures) console.log(`FAILURE=${failure}`);
 
 if (process.env.FORGE_M05P_ENFORCE === "true" && summary.status !== "PASS") {
