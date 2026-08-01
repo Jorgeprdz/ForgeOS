@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import {
   createAdvisorForecastSmartWidget,
   createAdvisorForecastHomeAdditionalWidgets,
@@ -11,10 +12,13 @@ import {
   resolveAdvisorForecastNavigationAction,
   navigateAdvisorForecastAction,
 } from "../advisor-os/forge-alive/navigation/advisor-forecast-navigation.mjs";
-import {
+
+const detailSource = await fs.readFile(new URL("../docs/static-preview/forge-alive-material3/advisor-forecast-detail-screen.js", import.meta.url), "utf8");
+const detailModule = await import(`data:text/javascript;base64,${Buffer.from(detailSource).toString("base64")}`);
+const {
   buildAdvisorForecastDetailView,
   renderAdvisorForecastDetailMarkup,
-} from "../docs/static-preview/forge-alive-material3/advisor-forecast-detail-screen.js";
+} = detailModule;
 
 console.log("\nADVISOR FORECAST STAGES 6-8 TEST\n");
 
