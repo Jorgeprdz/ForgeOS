@@ -249,3 +249,5 @@ test("sync failure never promotes cached entries as complete truth", async ({ pa
   await expect(page.locator("[data-activity-summary]")).toHaveAttribute("hidden", "");
   await expect(page.locator("[data-activity-chart-card]")).toHaveAttribute("hidden", "");
 });
+
+// REP-16E validation-only trigger; no runtime behavior.
