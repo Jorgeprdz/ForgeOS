@@ -1,0 +1,55 @@
+name: CARTERA 090A + 090B + 090C + 090D Combined Acceptance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - feature/cartera-080abcd-economic-connection-rework
+
+permissions:
+  contents: write
+
+jobs:
+  combined-delivery:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/cartera-090abcd-relationship-capital' &&
+      github.event.pull_request.base.ref == 'feature/cartera-080abcd-economic-connection-rework'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact 090 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize 090D app binding idempotently
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-090-materialize-app.mjs
+          if ! git diff --quiet -- app.js; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app.js
+            git commit -m 'feat(cartera): mount relationship capital surface'
+            git push origin HEAD:feature/cartera-090abcd-relationship-capital
+          fi
+
+      - name: Execute combined gates
+        run: bash scripts/ci/cartera-090abcd-combined-acceptance.sh
+
+      - name: Upload remote acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-090abcd-combined-remote-acceptance
+          path: artifacts/cartera-090abcd-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
