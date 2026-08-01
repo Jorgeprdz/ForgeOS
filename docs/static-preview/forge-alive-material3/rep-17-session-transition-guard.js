@@ -1,4 +1,4 @@
-const VERSION = "REP-17C-SESSION-TRANSITION-GUARD-V1";
+const VERSION = "REP-17C-SESSION-TRANSITION-GUARD-V2";
 const BOOTSTRAP_KEY = "ForgeProductiveProspectBootstrap067G17B";
 
 const state = {
@@ -15,8 +15,22 @@ function advisorId(session) {
   return session?.user?.id || null;
 }
 
+function sessionVersion(session) {
+  if (!session) return "none";
+  return String(
+    session.expires_at ||
+    session.expires_in ||
+    session.access_token?.slice(-12) ||
+    "unversioned",
+  );
+}
+
 function providerSignature(event, session) {
-  return [event, advisorId(session) || "anonymous"].join("|");
+  return [
+    event,
+    advisorId(session) || "anonymous",
+    sessionVersion(session),
+  ].join("|");
 }
 
 function acceptProviderTransition(event, session) {
@@ -234,6 +248,8 @@ export {
   VERSION,
   acceptProviderTransition,
   installBootstrapGuard,
+  providerSignature,
   scrubPrivatePipeline,
+  sessionVersion,
   wrapBootstrap,
 };
