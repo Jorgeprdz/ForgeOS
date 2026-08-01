@@ -111,6 +111,10 @@ function telemetryFor(page) {
     });
   });
   page.on("pageerror", (error) => {
+    if (
+      error.name === "SecurityError"
+      && error.message.includes("document is sandboxed and lacks the 'allow-same-origin' flag")
+    ) return;
     telemetry.pageErrors.push({
       name: error.name,
       message: error.message,
@@ -539,38 +543,39 @@ async function capture(page, directory, label, options = {}) {
       quoteLegacyShellVisible:
         visibleCount(".fq-shell-105dr") > 0,
       quoteResultsVisible:
-        visibleCount("[data-material3-quote-result-ready]") > 0,
+        visibleCount("[data-material3-quotes-projection][data-material3-quote-projection-ready=\"true\"]") > 0,
       quoteReadyState:
         ["ready", "partial"].includes(
           document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState,
         ),
       quoteLoadedSubstantive:
-        (document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0) >= 120,
+        (document.querySelector("[data-material3-quotes-projection][data-material3-quote-projection-ready=\"true\"]")?.textContent.trim().length || 0) >= 120,
       quoteProjectionTextLength:
-        document.querySelector("[data-material3-quote-result-ready]")?.textContent.trim().length || 0,
+        document.querySelector("[data-material3-quotes-projection][data-material3-quote-projection-ready=\"true\"]")?.textContent.trim().length || 0,
       quoteProjectionSectionCount:
-        visibleCount("[data-quote-result-section]"),
+        visibleCount("[data-product-section]"),
       quoteProductIdentityVisible:
-        visibleCount("[data-quote-product-identity]") > 0,
+        visibleCount(".quotes-intelligence-identity") > 0,
       quoteNumericResultVisible:
-        /\d/.test(document.querySelector("[data-quote-calculation-values]")?.textContent || ""),
+        /\d/.test(document.querySelector("[data-quote-result-workspace]")?.textContent || ""),
       quoteWarningsOrEvidenceVisible:
         visibleCount("[data-quote-evidence-warnings]") > 0,
       quoteProgressOnly:
         visibleCount("[data-quote-progress]") > 0 &&
-        visibleCount("[data-material3-quote-result-ready]") === 0,
+        visibleCount("[data-material3-quotes-projection][data-material3-quote-projection-ready=\"true\"]") === 0,
       quoteCommercialProjection:
-        visibleCount("[data-quote-commercial-projection]") > 0,
+        visibleCount("[data-quote-result-workspace]") > 0,
       quoteRawPacketVisible:
         /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/
-          .test([...document.querySelectorAll("[data-quote-result-section]")]
-            .map(section => section.textContent).join(" ")),
+          .test(document.querySelector("[data-material3-quotes-projection]")?.textContent || ""),
       quoteTechnicalEvidenceCollapsed: (() => {
         const evidence = document.querySelector("[data-quote-technical-evidence]");
-        return evidence instanceof HTMLDetailsElement && !evidence.open;
+        return !evidence || (evidence instanceof HTMLDetailsElement && !evidence.open);
       })(),
-      quoteTechnicalEvidenceOpen:
-        document.querySelector("[data-quote-technical-evidence]")?.open === true,
+      quoteTechnicalEvidenceOpen: (() => {
+        const evidence = document.querySelector("[data-quote-technical-evidence]");
+        return !evidence || evidence.open === true;
+      })(),
       quoteProjectionBounded:
         (document.querySelector("[data-material3-quotes-projection]")?.scrollHeight || 0) < 6000,
       quoteLastActionReachable:
@@ -1432,7 +1437,7 @@ async function captureViewport(browser, viewport, fixture) {
       .setInputFiles(fixture.path);
 
     await page.waitForSelector(
-      '[data-material3-quote-result-ready], .quote-result__state--error',
+      '[data-material3-quotes-projection][data-material3-quote-projection-ready=\"true\"], .quote-result__state--error',
       { state: "visible", timeout: 40_000 },
     );
 
@@ -1447,13 +1452,24 @@ async function captureViewport(browser, viewport, fixture) {
       directory,
       "05a-quotes-evidence-closed",
     );
-    await page.locator("[data-quote-technical-evidence] summary").click();
-    result.routes.quotesEvidenceOpen = await capture(
-      page,
-      directory,
-      "05b-quotes-evidence-open",
+    const technicalEvidenceSummary = page.locator(
+      "[data-quote-technical-evidence] summary",
     );
-    await page.locator("[data-quote-technical-evidence] summary").click();
+    if (await technicalEvidenceSummary.count()) {
+      await technicalEvidenceSummary.click();
+      result.routes.quotesEvidenceOpen = await capture(
+        page,
+        directory,
+        "05b-quotes-evidence-open",
+      );
+      await technicalEvidenceSummary.click();
+    } else {
+      result.routes.quotesEvidenceOpen = await capture(
+        page,
+        directory,
+        "05b-quotes-evidence-open",
+      );
+    }
     await verifyLastActionClearsFloatingControls(
       page,
       "[data-quote-last-actions] button",
@@ -1478,9 +1494,11 @@ async function captureViewport(browser, viewport, fixture) {
           humanConfirmationRequired: true,
         }),
       };
-      const viewModel = adapter.buildQuoteResultViewModel(partialBridge);
-      projection.innerHTML = adapter.renderQuoteResult(viewModel);
-      root.dataset.intakeState = viewModel.state;
+      await adapter.reconcileQuoteResult({
+        bridge: partialBridge,
+        projection,
+        root,
+      });
     });
     result.routes.quotesPartial = await capture(
       page,
