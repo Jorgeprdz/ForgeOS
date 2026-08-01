@@ -1,0 +1,234 @@
+.cartera-module {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+}
+
+.cartera-material3-frame {
+  --text-secondary: var(--muted);
+  --surface-variant: rgba(170, 199, 255, .09);
+  width: 100%;
+  min-width: 0;
+  padding: 4px 0 18px;
+}
+
+.cartera-material3-frame #cartera-root {
+  width: 100%;
+  min-width: 0;
+}
+
+.cartera-material3-frame .glass-widget {
+  min-width: 0;
+  border: 1px solid var(--outline);
+  border-radius: 28px 38px 26px 34px / 32px 27px 39px 29px;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(82, 230, 223, .07), transparent 34%),
+    linear-gradient(145deg, rgba(20, 38, 68, .96), rgba(8, 22, 42, .98));
+  box-shadow: 0 18px 46px rgba(0, 0, 0, .24);
+}
+
+.cartera-material3-frame .glass-widget .glass-widget {
+  border-radius: 18px 24px 17px 22px;
+  background: rgba(4, 16, 32, .54);
+  box-shadow: none;
+}
+
+.cartera-material3-frame .glass-input,
+.cartera-material3-frame input,
+.cartera-material3-frame select,
+.cartera-material3-frame textarea {
+  min-height: 48px;
+  border: 1px solid var(--outline-strong);
+  border-radius: 17px 23px 16px 21px;
+  outline: 0;
+  background: rgba(3, 13, 27, .76);
+  color: var(--ink);
+  font: inherit;
+  color-scheme: dark;
+}
+
+.cartera-material3-frame .glass-input {
+  padding: 0 15px;
+}
+
+.cartera-material3-frame input:focus-visible,
+.cartera-material3-frame select:focus-visible,
+.cartera-material3-frame textarea:focus-visible,
+.cartera-material3-frame button:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 3px;
+}
+
+.cartera-material3-frame button {
+  min-height: 40px;
+  border: 1px solid var(--outline);
+  border-radius: 16px 22px 15px 20px;
+  background: rgba(82, 230, 223, .07);
+  color: var(--aqua-soft);
+  font: inherit;
+  font-weight: 720;
+}
+
+.cartera-material3-frame h2,
+.cartera-material3-frame h3,
+.cartera-material3-frame strong {
+  color: var(--ink);
+}
+
+.cartera-material3-frame [data-policy-open],
+.cartera-material3-frame [data-calendar-policy-open] {
+  cursor: pointer;
+}
+
+.cartera-m3-state {
+  min-height: min(72vh, 620px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  align-items: center;
+  gap: 18px;
+  padding: clamp(24px, 7vw, 58px);
+  border: 1px solid var(--outline);
+  border-radius: 38px 52px 34px 46px / 45px 35px 52px 38px;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(159, 130, 255, .16), transparent 24rem),
+    radial-gradient(circle at 5% 88%, rgba(82, 230, 223, .10), transparent 20rem),
+    linear-gradient(145deg, rgba(19, 38, 68, .97), rgba(7, 20, 39, .98));
+  box-shadow: var(--shadow);
+}
+
+.cartera-m3-state h1 {
+  max-width: 760px;
+  margin-bottom: 12px;
+  font-size: clamp(32px, 7vw, 58px);
+  line-height: 1;
+}
+
+.cartera-m3-state p:not(.section-kicker) {
+  max-width: 720px;
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: clamp(14px, 2vw, 17px);
+  line-height: 1.55;
+}
+
+.cartera-m3-state small {
+  display: block;
+  margin-top: 14px;
+  color: #7f8ca8;
+  overflow-wrap: anywhere;
+}
+
+.cartera-m3-state-icon,
+.cartera-m3-spinner {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(82, 230, 223, .38);
+  border-radius: 22px 29px 20px 27px;
+  background: rgba(82, 230, 223, .10);
+  color: var(--aqua);
+  font-size: 26px;
+  box-shadow: 0 0 28px rgba(82, 230, 223, .12);
+}
+
+.cartera-m3-spinner {
+  border-color: rgba(82, 230, 223, .18);
+  border-top-color: var(--aqua);
+  border-radius: 50%;
+  animation: cartera-m3-spin .9s linear infinite;
+}
+
+.cartera-m3-primary,
+.cartera-m3-secondary {
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 18px 25px 17px 23px;
+  font: inherit;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.cartera-m3-primary {
+  border: 0;
+  background: linear-gradient(110deg, var(--gold-soft), #e4a43b);
+  color: #201300;
+}
+
+.cartera-m3-secondary {
+  border: 1px solid rgba(82, 230, 223, .34);
+  background: rgba(82, 230, 223, .08);
+  color: var(--aqua-soft);
+}
+
+@keyframes cartera-m3-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* The floating nav remains intentional. Five destinations use two compact rows,
+   while the content receives enough safe clearance to scroll above it. */
+@media (max-width: 899px) {
+  :root {
+    --forge-mobile-nav-height: 108px;
+    --forge-mobile-nav-clearance: 52px;
+  }
+
+  .nav-pill {
+    min-height: 108px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: stretch;
+  }
+
+  .nav-item {
+    min-width: 0;
+    padding: 5px 2px;
+  }
+
+  .nav-item span {
+    max-width: 100%;
+    font-size: 10px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .app {
+    padding-bottom: calc(
+      var(--forge-mobile-nav-height)
+      + var(--forge-mobile-nav-clearance)
+      + env(safe-area-inset-bottom)
+    );
+  }
+}
+
+@media (max-width: 560px) {
+  .cartera-m3-state {
+    min-height: 68vh;
+    grid-template-columns: 1fr;
+    align-content: center;
+    padding: 26px 20px;
+  }
+
+  .cartera-m3-state-icon,
+  .cartera-m3-spinner {
+    width: 50px;
+    height: 50px;
+  }
+
+  .cartera-material3-frame #cartera-root > .glass-widget,
+  .cartera-material3-frame #cartera-root > [id$="-panel"] {
+    margin-inline: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .cartera-material3-frame {
+    padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cartera-m3-spinner {
+    animation-duration: 1.8s;
+  }
+}
