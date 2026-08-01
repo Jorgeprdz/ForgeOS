@@ -17,6 +17,10 @@ function targetUrl() {
   return url.toString();
 }
 
+function isExpectedSandboxConsoleError(message) {
+  return /^Blocked script execution in 'about:(?:blank|srcdoc)' because the document's frame is sandboxed and the 'allow-scripts' permission is not set\.$/.test(message);
+}
+
 test("PDF real completa confirmación e impresión sin bloquear el hilo", async ({ page }) => {
   test.setTimeout(55_000);
   await mkdir(artifactRoot, { recursive: true });
@@ -170,10 +174,17 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
     animations: "disabled",
   });
 
+  const expectedSandboxConsoleErrors = consoleErrors.filter(
+    isExpectedSandboxConsoleError,
+  );
+  const unexpectedConsoleErrors = consoleErrors.filter(
+    (message) => !isExpectedSandboxConsoleError(message),
+  );
+
   await writeFile(
     path.join(artifactRoot, "state.json"),
     `${JSON.stringify({
-      schema: "forge.ui.m05u.real-pdf-smoke.v3",
+      schema: "forge.ui.m05u.real-pdf-smoke.v4",
       status: "PASS",
       fixtureBytes: fixture.length,
       intakeProbeMs,
@@ -191,10 +202,13 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
       },
       downloadedPdfBytes: downloadedBytes.length,
       pageErrors,
-      consoleErrors,
+      console: {
+        expectedSandboxErrors: expectedSandboxConsoleErrors,
+        unexpectedErrors: unexpectedConsoleErrors,
+      },
     }, null, 2)}\n`,
   );
 
   expect(pageErrors).toEqual([]);
-  expect(consoleErrors).toEqual([]);
+  expect(unexpectedConsoleErrors).toEqual([]);
 });
