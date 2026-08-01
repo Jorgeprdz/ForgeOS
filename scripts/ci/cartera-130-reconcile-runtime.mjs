@@ -1,6 +1,8 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const APP_PATH = 'app.js';
+const MATERIAL3_APP_PATH = 'docs/static-preview/forge-alive-material3/app.js';
+
 const source = readFileSync(APP_PATH, 'utf8');
 let output = source;
 
@@ -61,5 +63,28 @@ if (output !== source) {
   console.log('CARTERA_130_APP_RECONCILIATION=IDEMPOTENT');
 }
 
+const material3Source = readFileSync(MATERIAL3_APP_PATH, 'utf8');
+let material3Output = material3Source;
+const bridgeImport = 'import "../quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";';
+const material3Anchor = 'import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";';
+
+if (!material3Output.includes(bridgeImport)) {
+  if (!material3Output.includes(material3Anchor)) {
+    throw new Error('CARTERA130_MATERIAL3_BRIDGE_ANCHOR_MISSING');
+  }
+  material3Output = material3Output.replace(
+    material3Anchor,
+    `${bridgeImport}\n${material3Anchor}`,
+  );
+}
+
+if (material3Output !== material3Source) {
+  writeFileSync(MATERIAL3_APP_PATH, material3Output);
+  console.log('CARTERA_130_MATERIAL3_QUOTE_BRIDGE=UPDATED');
+} else {
+  console.log('CARTERA_130_MATERIAL3_QUOTE_BRIDGE=IDEMPOTENT');
+}
+
 console.log('CARTERA_130_CURRENT_MAIN_APP_PRESERVED=YES');
 console.log('CARTERA_130_CARTERA_PRODUCT_BINDING=PASS');
+console.log('CARTERA_130_MATERIAL3_BOUNDED_BRIDGE=PASS');
