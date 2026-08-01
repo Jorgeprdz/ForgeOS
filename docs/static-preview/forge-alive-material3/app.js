@@ -249,6 +249,10 @@ async function loadQuoteAuthorities() {
     "quote-bridge-composition",
   );
   await startOptionalQuoteAuthority(
+    "quote-runtime-client-identity-transfer-m05v001.js?v=m05v-001",
+    "quote-client-identity",
+  );
+  await startOptionalQuoteAuthority(
     "quote-runtime-vida-mujer-visual-m05e010.js?v=m05t-001-coalesced",
     "vida-mujer-visual",
   );
