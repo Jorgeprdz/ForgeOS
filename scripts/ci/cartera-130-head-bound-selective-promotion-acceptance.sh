@@ -25,6 +25,7 @@ mapfile -t changed_paths < <(git diff --name-only "$CURRENT_MAIN_HEAD")
 [[ ${#changed_paths[@]} -gt 40 ]]
 for path in "${changed_paths[@]}"; do
   case "$path" in
+    .github/workflows/cartera-050-current-main-promotion.yml|\
     .github/workflows/cartera-130-head-bound-selective-promotion.yml|\
     app.js|\
     cartera.js|\
@@ -72,10 +73,13 @@ material3_removed_lines="$(git diff --unified=0 "$CURRENT_MAIN_HEAD" -- "$MATERI
 [[ "$material3_added_lines" == '1' ]]
 [[ "$material3_removed_lines" == '0' ]]
 grep -q 'forge-quote-lifecycle-browser-bridge-cartera001b.js' "$MATERIAL3_APP"
+grep -q "github.event.pull_request.head.ref == 'integration/cartera-050-current-main'" \
+  .github/workflows/cartera-050-current-main-promotion.yml
 
 echo 'BOUNDED_PATHS=PASS'
 echo 'CURRENT_MAIN_FORECAST_ACTIVITY_PIPELINE_PRESERVED=PASS'
 echo 'MATERIAL3_BOUNDED_CARTERA_BRIDGE_ONLY=PASS'
+echo 'LEGACY_050_BOUNDARY_SCOPED_TO_ITS_PROMOTION_BRANCH=PASS'
 echo 'FULL_HISTORY_MERGE=FORBIDDEN'
 echo 'STACKED_BRANCH_MERGE=FORBIDDEN'
 
