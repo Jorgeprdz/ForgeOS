@@ -48,6 +48,8 @@ async function verifyProfile(name, viewport) {
     const appStyle = app ? getComputedStyle(app) : null;
     return {
       href: location.href,
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight,
       shellRoute: application?.dataset.forgeRoute,
       viewportRoute: viewport?.dataset.activeRoute,
       navigationCount: nav?.querySelectorAll('[data-route-id]').length || 0,
@@ -77,8 +79,18 @@ async function verifyProfile(name, viewport) {
     throw new Error(`${name}:HONEST_AUTH_STATE_MISSING`);
   }
   if (!state.authButtonVisible) throw new Error(`${name}:AUTH_ACTION_MISSING`);
-  if (name === 'mobile' && state.navPosition !== 'fixed') {
-    throw new Error('mobile:FLOATING_NAV_NOT_PRESERVED');
+
+  if (name === 'mobile') {
+    const bottomPadding = Number.parseFloat(state.appPaddingBottom || '0');
+    const navFloatsAboveContent = state.navPosition !== 'static'
+      && state.navRect
+      && state.navRect.top > state.innerHeight * 0.45;
+    if (!navFloatsAboveContent) {
+      throw new Error(`mobile:FLOATING_NAV_NOT_PRESERVED:${state.navPosition}`);
+    }
+    if (!Number.isFinite(bottomPadding) || bottomPadding < 140) {
+      throw new Error(`mobile:NAV_CLEARANCE_INSUFFICIENT:${state.appPaddingBottom}`);
+    }
   }
 
   await page.screenshot({
@@ -106,6 +118,7 @@ try {
   console.log('CARTERA_MATERIAL3_TABLET=PASS');
   console.log('CARTERA_MATERIAL3_DESKTOP=PASS');
   console.log('CARTERA_MATERIAL3_FLOATING_NAV=PASS');
+  console.log('CARTERA_MATERIAL3_MOBILE_NAV_CLEARANCE=PASS');
   console.log('CARTERA_MATERIAL3_HONEST_AUTH_STATE=PASS');
 } catch (error) {
   writeFileSync(
