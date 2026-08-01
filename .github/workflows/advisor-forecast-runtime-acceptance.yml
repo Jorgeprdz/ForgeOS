@@ -45,10 +45,13 @@ jobs:
           node manager-os/tests/advisor-forecast-stages-9-10-test.js
           node manager-os/tests/advisor-forecast-stages-11-13-test.js
           node tests/advisor-forecast-stages-11-13-handoff-test.mjs
-      - name: Preserve productive Home and Smart Widgets
+      - name: Preserve current productive Home and Smart Widgets
         run: |
           node tests/productive-smart-widget-orchestrator-master-test.mjs
-          node tests/ui-m03-productive-home-surface-test.mjs
+          node tests/productive-smart-widget-source-adapters-test.mjs
+          node tests/smart-widget-monthly-policy-goal-authority-test.mjs
+          node tests/smart-widgets-home-productive-mount-test.mjs
+          node --test tests/rep-16f-pages-runtime-generator-test.mjs
       - name: Preserve Pipeline and responsive shell
         run: |
           node tests/material3-pipeline-integration-test.mjs
