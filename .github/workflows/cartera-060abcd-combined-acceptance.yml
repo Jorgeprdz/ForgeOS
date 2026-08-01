@@ -35,39 +35,21 @@ jobs:
         with:
           node-version: 22
 
-      - name: Materialize complete 060A–060D delivery
+      - name: Verify complete 060A–060D delivery
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p artifacts/cartera-060abcd-remote-acceptance
           echo 'CARTERA_060ABCD_WORKFLOW=STARTED' > artifacts/cartera-060abcd-remote-acceptance/bootstrap.log
-          shopt -s nullglob
-          fragments=(.forge-bootstrap/cartera060.bundle.*.b64)
-          if (( ${#fragments[@]} > 0 )); then
-            printf '%s\n' "${fragments[@]}" | sort > /tmp/cartera060-fragments
-            while IFS= read -r fragment; do cat "$fragment"; done < /tmp/cartera060-fragments \
-              | base64 --decode > /tmp/cartera060-bundle.tar.gz
-            tar -xzf /tmp/cartera060-bundle.tar.gz
-            rm -rf .forge-bootstrap
-            node scripts/ci/cartera-060abcd-materialize-app.mjs
-            test -f supabase/migrations/20260801000290_cartera060_relationship_growth_helpers.sql
-            test -f supabase/migrations/20260801000291_cartera060_relationship_growth_read.sql
-            test -x scripts/ci/cartera-060abcd-combined-acceptance.sh
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add -A
-            git commit -m 'feat(cartera): materialize combined 060A through 060D delivery'
-            git push origin HEAD:feature/cartera-060abcd-relationship-growth-intelligence
-            echo 'CARTERA_060ABCD_BUNDLE=MATERIALIZED'
-          else
-            test -f supabase/migrations/20260801000290_cartera060_relationship_growth_helpers.sql
-            test -x scripts/ci/cartera-060abcd-combined-acceptance.sh
-            echo 'CARTERA_060ABCD_BUNDLE=ALREADY_MATERIALIZED'
-          fi
+          test -f supabase/migrations/20260801000290_cartera060_relationship_growth_helpers.sql
+          test -f supabase/migrations/20260801000291_cartera060_relationship_growth_read.sql
+          test -f scripts/ci/cartera-060abcd-combined-acceptance.sh
+          test -f advisor-os/cartera/cartera-060d-relationship-growth-enhancement.js
           echo "CARTERA_060ABCD_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo 'CARTERA_060ABCD_DELIVERY=MATERIALIZED'
 
       - name: Execute combined gates and remote acceptance
-        run: scripts/ci/cartera-060abcd-combined-acceptance.sh
+        run: bash scripts/ci/cartera-060abcd-combined-acceptance.sh
 
       - name: Upload combined evidence
         if: always()
