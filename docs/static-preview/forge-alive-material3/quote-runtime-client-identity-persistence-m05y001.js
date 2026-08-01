@@ -1,3 +1,5 @@
+import "./quote-runtime-printable-state-handoff-m05z001.js?v=m05z-001";
+
 const VERSION = "M05Y-001";
 const REJECTED_NAMES = new Set([
   "sin dato confirmado",
@@ -56,6 +58,9 @@ function persistIdentity() {
     if (lastPersistedName !== name) {
       lastPersistedName = name;
       globalThis.setTimeout(() => {
+        globalThis.ForgeQuotePrintableStateHandoffM05Z001?.reconcile?.(
+          "client-identity-persisted",
+        );
         globalThis.ForgeQuotePrintableEntrypointQPD06?.refresh?.();
       }, 0);
     }
