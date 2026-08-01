@@ -1,0 +1,47 @@
+name: One Shot Reconcile QPD Version Gates
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - .github/workflows/one-shot-reconcile-qpd-version-gates.yml
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/vida-mujer-pdf-main-thread
+      - name: Reconcile M05E M05F M05G authority versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in \
+            tests/ui-m05e-quote-calculator-restoration-test.mjs \
+            tests/ui-m05f-live-udi-review-printable-actions-test.mjs
+          do
+            sed -i 's/m05e-010-pages-rate/m05q-001-loop-closure/g' "$file"
+          done
+          for file in \
+            tests/ui-m05e-quote-calculator-restoration-test.mjs \
+            tests/ui-m05f-live-udi-review-printable-actions-test.mjs \
+            tests/ui-m05g-printable-design-closure-test.mjs
+          do
+            sed -i 's/quote-runtime-vida-mujer-handoff-m05e009\\\\.js\\\\?v=m05e-009/quote-runtime-vida-mujer-handoff-m05e009\\\\.js\\\\?v=m05r-001-bridge-composition/g' "$file"
+            sed -i 's/quote-runtime-vida-mujer-visual-m05e010\\\\.js\\\\?v=m05e-010/quote-runtime-vida-mujer-visual-m05e010\\\\.js\\\\?v=m05t-001-coalesced/g' "$file"
+          done
+          grep -F 'm05q-001-loop-closure' tests/ui-m05e-quote-calculator-restoration-test.mjs
+          grep -F 'm05r-001-bridge-composition' tests/ui-m05g-printable-design-closure-test.mjs
+          grep -F 'm05t-001-coalesced' tests/ui-m05g-printable-design-closure-test.mjs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/ui-m05e-quote-calculator-restoration-test.mjs \
+            tests/ui-m05f-live-udi-review-printable-actions-test.mjs \
+            tests/ui-m05g-printable-design-closure-test.mjs
+          git commit -m "test(ui): reconcile QPD gates with M05Q M05R M05T"
+          git push origin HEAD:fix/vida-mujer-pdf-main-thread
