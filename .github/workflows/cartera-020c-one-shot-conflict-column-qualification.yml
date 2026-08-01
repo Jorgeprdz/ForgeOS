@@ -1,0 +1,204 @@
+name: CARTERA 020C One-Shot Conflict Column Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened]
+    paths:
+      - docs/evidence/CARTERA_020C_CONFLICT_COLUMN_QUALIFICATION_AUTHORIZATION_20260731T1815-0600.md
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-020c-one-shot-conflict-column-qualification
+  cancel-in-progress: false
+
+jobs:
+  qualify-and-resume:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.action == 'opened' &&
+      github.event.pull_request.head.ref == 'run/cartera-020c-conflict-column-qualification-20260731-1815' &&
+      github.event.pull_request.head.sha == 'e56e1b894efb167e8fe771535d9957e4a0dbd9f3' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      CARTERA_020C_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_020C_REMOTE_MUTATION
+      CARTERA_020C_EXPECTED_SOURCE_HEAD: 0daaccd556659b997f2086e12b09481281d1b019
+      CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD: ecc54132e11cf96004859d2483238fe187857dd6
+      CARTERA_020C_ACCEPTANCE_BRANCH: feature/cartera-020c-remote-acceptance
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_CONFLICT_COLUMN_QUALIFICATION_AUTHORIZATION_20260731T1815-0600.md
+
+    steps:
+      - name: Checkout exact qualification authorization
+        uses: actions/checkout@v4
+        with:
+          ref: e56e1b894efb167e8fe771535d9957e4a0dbd9f3
+          fetch-depth: 0
+
+      - name: Validate exact qualification authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_ATTEMPT" = '1'
+          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-conflict-column-qualification-20260731-1815'
+          test -f "$AUTHORIZATION_MARKER"
+          grep -qx 'USER_AUTHORIZATION=QUALIFY_CONFLICT_VERIFICATION_COLUMNS_AND_RESUME_CARTERA_020C' "$AUTHORIZATION_MARKER"
+          grep -qx 'PRIOR_RUN=30674903648' "$AUTHORIZATION_MARKER"
+          grep -qx 'ROOT_FAILURE=PLPGSQL_VARIABLE_COLUMN_COLLISION_REVIEW_REFERENCE' "$AUTHORIZATION_MARKER"
+          grep -qx 'ACCEPTANCE_HEAD=ecc54132e11cf96004859d2483238fe187857dd6' "$AUTHORIZATION_MARKER"
+          grep -qx 'MIGRATION_00241=DEPLOYED_AND_VERIFIED' "$AUTHORIZATION_MARKER"
+          test "$(git diff --name-only HEAD^ HEAD)" = "$AUTHORIZATION_MARKER"
+          echo 'ONE_SHOT_CONFLICT_COLUMN_QUALIFICATION_AUTHORIZATION=PASS'
+
+      - name: Checkout exact acceptance head
+        uses: actions/checkout@v4
+        with:
+          ref: feature/cartera-020c-remote-acceptance
+          fetch-depth: 0
+
+      - name: Qualify conflict verification columns
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'ecc54132e11cf96004859d2483238fe187857dd6'
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('scripts/ci/cartera-020c-remote-acceptance.sql')
+          text = path.read_text(encoding='utf-8')
+          pattern = re.compile(
+              r"from public\.cartera020c_confirmation_conflicts\n"
+              r"\s*where advisor_id = user_a\n"
+              r"\s*and review_reference = conflict_review_reference\n"
+              r"\s*and conflict_type = 'CHANGED_INPUT_REPLAY'\n"
+              r"\s*and conflict_reference = conflict_status ->> 'conflictReference';"
+          )
+          replacement = """from public.cartera020c_confirmation_conflicts c
+          where c.advisor_id = user_a
+            and c.review_reference = conflict_review_reference
+            and c.conflict_type = 'CHANGED_INPUT_REPLAY'
+            and c.conflict_reference = conflict_status ->> 'conflictReference';"""
+          repaired, count = pattern.subn(replacement, text)
+          if count != 1:
+              raise SystemExit(f'UNEXPECTED_CONFLICT_COLUMN_QUALIFICATION_COUNT:{count}')
+          path.write_text(repaired, encoding='utf-8')
+
+          Path('tests/cartera-020c-conflict-column-qualification-test.mjs').write_text("""import test from 'node:test';
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+
+          const sql = readFileSync(
+            new URL('../scripts/ci/cartera-020c-remote-acceptance.sql', import.meta.url),
+            'utf8',
+          );
+
+          test('conflict verification qualifies columns under use_variable PL/pgSQL mode', () => {
+            assert.match(sql, /from public\\.cartera020c_confirmation_conflicts c/);
+            assert.match(sql, /where c\\.advisor_id = user_a/);
+            assert.match(sql, /c\\.review_reference = conflict_review_reference/);
+            assert.match(sql, /c\\.conflict_type = 'CHANGED_INPUT_REPLAY'/);
+            assert.match(sql, /c\\.conflict_reference = conflict_status ->> 'conflictReference'/);
+          });
+
+          test('unqualified conflict verification columns cannot regress', () => {
+            assert.doesNotMatch(sql, /from public\\.cartera020c_confirmation_conflicts\\n\\s*where advisor_id = user_a/);
+            assert.match(sql, /#variable_conflict use_variable/);
+          });
+          """, encoding='utf-8')
+          PY
+
+          mapfile -t changed < <({ git diff --name-only; git ls-files --others --exclude-standard; } | sort -u)
+          expected=$'scripts/ci/cartera-020c-remote-acceptance.sql\ntests/cartera-020c-conflict-column-qualification-test.mjs'
+          test "$(printf '%s\n' "${changed[@]}")" = "$expected"
+          git diff --check
+          echo 'CONFLICT_COLUMN_QUALIFICATION=PASS'
+
+      - name: Commit qualified acceptance harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'forge-cartera-remote-acceptance'
+          git config user.email 'forge-cartera-remote-acceptance@users.noreply.github.com'
+          git add scripts/ci/cartera-020c-remote-acceptance.sql tests/cartera-020c-conflict-column-qualification-test.mjs
+          git commit -m 'test(cartera): qualify conflict verification columns'
+          git push origin HEAD:feature/cartera-020c-remote-acceptance
+          qualified_head="$(git rev-parse HEAD)"
+          echo "CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD=$qualified_head" >> "$GITHUB_ENV"
+          echo "QUALIFIED_ACCEPTANCE_HEAD=$qualified_head" >> "$GITHUB_ENV"
+          echo "QUALIFIED_ACCEPTANCE_HEAD=$qualified_head"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Repository gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$QUALIFIED_ACCEPTANCE_HEAD"
+          git merge-base --is-ancestor "$CARTERA_020C_EXPECTED_SOURCE_HEAD" HEAD
+          node --check tests/cartera-020c-conflict-column-qualification-test.mjs
+          node --test tests/cartera-020c-*.mjs
+          echo 'CARTERA020C_QUALIFIED_HARNESS_GATE=PASS'
+
+      - name: Verify deployed 00241 remains matched
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          mkdir -p artifacts/cartera-020c-remote-acceptance
+          node scripts/ci/cartera-020c-conflict-persistence-hardening-deploy.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+          grep -q 'MIGRATION_20260731000241=ALREADY_APPLIED_AND_MATCHED' artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+          grep -q 'CARTERA020C_CONFLICT_PERSISTENCE_RECEIPT_HARDENING=PASS' artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+
+      - name: Resume transactional remote acceptance
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$QUALIFIED_ACCEPTANCE_HEAD" node scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/workflow-output.log
+
+      - name: Verify acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-020c-remote-acceptance/workflow-output.log
+          for marker in \
+            CARTERA_020C_REMOTE_DEPLOYMENT=PASS \
+            AUTHORIZATION_DIGEST_COMPATIBILITY=PASS \
+            CARTERA_020C_TRANSACTIONAL_ACCEPTANCE=PASS \
+            AUTHORIZATION_DIGEST_BINDING=PASS \
+            IDENTITY_ORDERED_EXECUTION=PASS \
+            IDENTITY_READ_AFTER_WRITE=PASS \
+            POLICY_READ_AFTER_WRITE=PASS \
+            CHANGED_INPUT_CONFLICT=PASS \
+            RETRY_GOVERNANCE=PASS \
+            PARALLEL_STATE_VERSION_SERIALIZATION=PASS \
+            RLS_CROSS_ADVISOR=PASS \
+            DIRECT_WRITES=BLOCKED \
+            SANITIZED_STATUS=PASS \
+            TEST_FIXTURES_ROLLED_BACK=YES \
+            CONCURRENCY_FIXTURES_CLEANED=YES \
+            RESIDUAL_FIXTURES=0 \
+            CARTERA_020C_REMOTE_ACCEPTANCE=PASS; do
+            grep -q "$marker" "$log"
+          done
+
+      - name: Upload qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-020c-remote-acceptance-conflict-column-qualification
+          path: artifacts/cartera-020c-remote-acceptance
+          if-no-files-found: warn
+          retention-days: 30
