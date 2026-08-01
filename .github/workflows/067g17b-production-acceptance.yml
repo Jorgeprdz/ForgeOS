@@ -2,13 +2,20 @@ name: 067G17B Production Browser Acceptance
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/067g17b-production-acceptance.yml'
+      - 'tests/rep-16f-pages-public-asset-diagnostic.mjs'
+      - 'tests/rep-16f-pages-live-activity-acceptance.mjs'
 
 permissions:
   contents: read
 
 jobs:
   productive-prospect-browser:
-    if: github.actor == 'Jorgeprdz'
+    if: github.event_name == 'workflow_dispatch' && github.actor == 'Jorgeprdz'
     environment: 067g17a1-remote-acceptance
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -42,3 +49,51 @@ jobs:
           name: 067g17b-production-browser-evidence
           path: artifacts/067g17b-production
           if-no-files-found: error
+
+  rep-16f-live-activity:
+    if: github.event_name == 'pull_request' && github.actor == 'Jorgeprdz'
+    environment: 067g17a1-remote-acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FORGE_REP16F_PRODUCTION_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
+      FORGE_REP16F_BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
+      FORGE_REP16F_ENV_URL: https://jorgeprdz.github.io/ForgeOS/env.js
+      FORGE_REP16F_EXPECTED_MAIN_SHA: ${{ github.event.pull_request.base.sha }}
+      FORGE_REP16F_EVIDENCE_DIR: artifacts/rep16f-live-activity
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install repository dependencies
+        run: npm ci
+      - name: Install isolated browser harness
+        run: npm install --no-save puppeteer@24.16.0
+      - name: Run exact public Activity asset preflight
+        env:
+          FORGE_PUPPETEER_CORE_PATH: puppeteer
+          FORGE_CHROMIUM_PATH: ${{ env.PUPPETEER_EXECUTABLE_PATH }}
+        run: |
+          export FORGE_CHROMIUM_PATH="$(node --input-type=module -e "import puppeteer from 'puppeteer'; console.log(puppeteer.executablePath())")"
+          node tests/rep-16f-pages-public-asset-diagnostic.mjs
+      - name: Run REP-16F Pages and live authenticated Activity acceptance
+        env:
+          FORGE_PUPPETEER_CORE_PATH: puppeteer
+          FORGE_CHROMIUM_PATH: ${{ env.PUPPETEER_EXECUTABLE_PATH }}
+        run: |
+          export FORGE_CHROMIUM_PATH="$(node --input-type=module -e "import puppeteer from 'puppeteer'; console.log(puppeteer.executablePath())")"
+          node tests/rep-16f-pages-live-activity-acceptance.mjs
+      - name: Upload redacted REP-16F evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rep-16f-live-activity-${{ github.run_id }}
+          path: artifacts/rep16f-live-activity
+          if-no-files-found: error
+          retention-days: 30
