@@ -1,37 +1,34 @@
-import {
-  createProductiveActivityReportingBridge,
-} from "./activity-ledger-reporting-bridge.js";
+import { createActivityOperationalModule } from "./activity-operational-module.js?v=rep-18-001";
+import { createActivityReportsProductivityRuntime } from "./activity-reports-productivity-runtime.js?v=rep-18-001";
 
-const ACTIVITY_PERIODS = Object.freeze([
-  Object.freeze({ kind: "TODAY", label: "Hoy" }),
-  Object.freeze({ kind: "WEEK_TO_DATE", label: "Semana" }),
-  Object.freeze({ kind: "MONTH_TO_DATE", label: "Mes" }),
-  Object.freeze({ kind: "ROLLING_30_DAYS", label: "30 días" }),
+const STATE = Symbol.for("forge.activity-reports.productive-ui.v1");
+const REPORT_PERIODS = Object.freeze([
+  { kind: "TODAY", label: "Hoy" },
+  { kind: "WEEK_TO_DATE", label: "Semana" },
+  { kind: "MONTH_TO_DATE", label: "Mes" },
+  { kind: "ROLLING_30_DAYS", label: "30 días" },
 ]);
-
 const ACTIVITY_LABELS = Object.freeze({
   CONTACT_ATTEMPTED: "Contactos",
   CONVERSATION_COMPLETED: "Conversaciones",
-  INITIAL_APPOINTMENT_SCHEDULED: "Citas iniciales agendadas",
-  INITIAL_APPOINTMENT_COMPLETED: "Citas iniciales realizadas",
+  INITIAL_APPOINTMENT_SCHEDULED: "Citas agendadas",
+  INITIAL_APPOINTMENT_COMPLETED: "Citas realizadas",
   CLOSING_APPOINTMENT_SCHEDULED: "Cierres agendados",
   CLOSING_APPOINTMENT_COMPLETED: "Cierres realizados",
   FOLLOW_UP_COMPLETED: "Seguimientos",
 });
 
-const moduleStateKey = Symbol.for("forge.rep-16d.activity-module.state");
-
 function ensureStylesheet() {
   if (document.querySelector("[data-activity-module-styles]")) return;
   const link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = new URL("activity-module.css?v=rep-16d-001", import.meta.url);
+  link.href = new URL("activity-module.css?v=rep-18-001", import.meta.url);
   link.dataset.activityModuleStyles = "true";
   document.head.append(link);
 }
 
 function escapeHtml(value) {
-  return String(value)
+  return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -39,361 +36,312 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function activityTypeFromSeries(series) {
-  const prefix = "activity-series:";
-  return series.seriesId.startsWith(prefix)
-    ? series.seriesId.slice(prefix.length)
-    : series.seriesId;
+function selectedView() {
+  const value = new URL(window.location.href).searchParams.get("view");
+  return value === "reportes" ? "reportes" : "actividad";
 }
 
-function activityLabel(activityType) {
-  return ACTIVITY_LABELS[activityType] ?? activityType;
+function updateViewUrl(view) {
+  const url = new URL(window.location.href);
+  if (view === "reportes") url.searchParams.set("view", "reportes");
+  else url.searchParams.delete("view");
+  window.history.pushState({ forgeRoute: "actividad", activityView: view }, "", url);
 }
 
-function activityClass(activityType) {
-  return `activity-type--${activityType.toLowerCase().replaceAll("_", "-")}`;
+function formatNumber(value) {
+  return Number.isFinite(value) ? new Intl.NumberFormat("es-MX").format(value) : "—";
+}
+function formatPercent(value) {
+  return Number.isFinite(value) ? `${value > 0 ? "+" : ""}${value}%` : "Sin comparación";
+}
+function formatPeriod(range) {
+  if (!range?.from || !range?.to) return "Periodo no disponible";
+  const formatter = new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "short", timeZone: "UTC" });
+  const from = formatter.format(new Date(`${range.from}T12:00:00.000Z`));
+  const to = formatter.format(new Date(`${range.to}T12:00:00.000Z`));
+  return range.from === range.to ? from : `${from} – ${to}`;
 }
 
-function formatPeriod(period) {
-  const formatter = new Intl.DateTimeFormat("es-MX", {
-    day: "numeric",
-    month: "short",
-    timeZone: "UTC",
-  });
-  const from = formatter.format(new Date(`${period.from}T12:00:00.000Z`));
-  const to = formatter.format(new Date(`${period.to}T12:00:00.000Z`));
-  return period.from === period.to ? from : `${from} – ${to}`;
-}
-
-function formatDateLabel(value) {
-  return new Intl.DateTimeFormat("es-MX", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    timeZone: "UTC",
-  }).format(new Date(`${value}T12:00:00.000Z`));
-}
-
-function renderModuleChrome(root, selectedPeriod) {
+function renderWorkspace(root) {
   root.innerHTML = `
-    <div class="activity-surface" data-activity-surface data-activity-surface-state="idle">
-      <header class="activity-hero">
-        <div>
-          <p class="section-kicker accent">ACTIVIDAD</p>
-          <h1>Tu trabajo comercial, respaldado por hechos</h1>
-          <p class="activity-subtitle">Lectura directa del ledger FES · sin captura paralela</p>
-        </div>
-        <button class="activity-refresh" type="button" data-activity-refresh aria-label="Actualizar actividad">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.7 6.3A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.8-4.3L13 11h8V3l-3.3 3.3Z"/></svg>
-        </button>
-      </header>
-
-      <div class="activity-periods" role="group" aria-label="Periodo de actividad">
-        ${ACTIVITY_PERIODS.map((period) => `
-          <button
-            type="button"
-            class="activity-period${period.kind === selectedPeriod ? " active" : ""}"
-            data-activity-period="${period.kind}"
-            aria-pressed="${period.kind === selectedPeriod}"
-          >${period.label}</button>
-        `).join("")}
+    <div class="activity-workspace" data-activity-workspace data-activity-view="actividad">
+      <div class="activity-view-tabs" role="tablist" aria-label="Actividad y reportes">
+        <button type="button" role="tab" data-activity-view-tab="actividad" aria-selected="true">Actividad</button>
+        <button type="button" role="tab" data-activity-view-tab="reportes" aria-selected="false">Reportes</button>
       </div>
-
-      <section class="activity-status-card organic-card" data-activity-status-card aria-live="polite">
-        <div class="activity-loading" data-activity-loading>
-          <span class="activity-spinner" aria-hidden="true"></span>
-          <div>
-            <strong>Consultando el ledger FES</strong>
-            <span>Sincronizando la autoridad antes de calcular.</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="activity-summary organic-card" data-activity-summary hidden></section>
-      <section class="activity-chart-card organic-card" data-activity-chart-card hidden>
-        <div class="activity-card-heading">
-          <div>
-            <p class="section-kicker accent">DISTRIBUCIÓN</p>
-            <h2 data-activity-chart-title>Actividad por día</h2>
-          </div>
-          <span class="activity-chart-policy" data-activity-chart-policy></span>
-        </div>
-        <div class="activity-chart" data-activity-chart role="img"></div>
-        <div class="activity-legend" data-activity-legend aria-label="Tipos de actividad"></div>
-      </section>
-
-      <p class="activity-authority-note" data-activity-authority-note>
-        Forge calcula desde eventos canónicos. Esta pantalla sólo representa la proyección chart-ready.
-      </p>
+      <section data-activity-operational-root></section>
+      <section class="activity-reports" data-activity-reports-root hidden aria-live="polite"></section>
     </div>
   `;
 }
 
-function renderLoading(root) {
-  const surface = root.querySelector("[data-activity-surface]");
-  const status = root.querySelector("[data-activity-status-card]");
-  const summary = root.querySelector("[data-activity-summary]");
-  const chartCard = root.querySelector("[data-activity-chart-card]");
-  surface.dataset.activitySurfaceState = "loading";
-  delete surface.dataset.chartReadySurfaceId;
-  status.hidden = false;
-  summary.hidden = true;
-  chartCard.hidden = true;
-  status.innerHTML = `
-    <div class="activity-loading" data-activity-loading>
-      <span class="activity-spinner" aria-hidden="true"></span>
+function reportsChrome(periodKind) {
+  return `
+    <header class="activity-reports-hero">
       <div>
-        <strong>Consultando el ledger FES</strong>
-        <span>Sincronizando la autoridad antes de calcular.</span>
+        <p class="section-kicker accent">REPORTES</p>
+        <h1>Lo que ocurrió, sin convertir proyección en verdad</h1>
+        <p>Actividad REP/FES, producción confirmada y contexto Forecast en una sola lectura.</p>
       </div>
+      <button type="button" class="activity-refresh" data-reports-refresh aria-label="Actualizar reportes">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.7 6.3A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.8-4.3L13 11h8V3l-3.3 3.3Z"/></svg>
+      </button>
+    </header>
+    <div class="activity-periods" role="group" aria-label="Periodo del reporte">
+      ${REPORT_PERIODS.map((period) => `<button type="button" class="activity-period${period.kind === periodKind ? " active" : ""}" data-reports-period="${period.kind}" aria-pressed="${period.kind === periodKind}">${period.label}</button>`).join("")}
     </div>
+    <section class="activity-report-status organic-card" data-reports-status></section>
+    <div data-reports-content hidden></div>
   `;
 }
 
-function renderError(root, error) {
-  const surface = root.querySelector("[data-activity-surface]");
-  const status = root.querySelector("[data-activity-status-card]");
-  const summary = root.querySelector("[data-activity-summary]");
-  const chartCard = root.querySelector("[data-activity-chart-card]");
-  const sessionFailure = error?.code === "FES_LEDGER_SESSION_BINDING_FAILED";
-  const syncFailure = error?.code === "FES_LEDGER_SYNC_UNAVAILABLE";
-
-  surface.dataset.activitySurfaceState = sessionFailure
-    ? "session-required"
-    : syncFailure
-      ? "source-unavailable"
-      : "error";
-  summary.hidden = true;
-  chartCard.hidden = true;
-  status.hidden = false;
-  status.innerHTML = `
-    <div class="activity-state activity-state--error">
-      <span class="activity-state-icon" aria-hidden="true">!</span>
-      <div>
-        <strong>${sessionFailure ? "Necesitamos una sesión activa" : "No pudimos validar la actividad"}</strong>
-        <span>${syncFailure
-          ? "El ledger FES no respondió. No mostraremos datos locales como si fueran completos."
-          : sessionFailure
-            ? "Inicia sesión nuevamente para consultar tu ledger productivo."
-            : "La lectura gobernada no pudo completarse."}</span>
-      </div>
-      <button type="button" data-activity-retry>Reintentar</button>
-    </div>
-  `;
+function renderReportsLoading(root, periodKind) {
+  root.innerHTML = reportsChrome(periodKind);
+  root.dataset.reportsState = "loading";
+  root.querySelector("[data-reports-status]").innerHTML = `<div class="activity-loading"><span class="activity-spinner" aria-hidden="true"></span><div><strong>Componiendo el reporte productivo</strong><span>Validando sesión y fuentes antes de mostrar resultados.</span></div></div>`;
 }
 
-function renderEmpty(root, report, surfaceModel) {
-  const surface = root.querySelector("[data-activity-surface]");
-  const status = root.querySelector("[data-activity-status-card]");
-  const summary = root.querySelector("[data-activity-summary]");
-  const chartCard = root.querySelector("[data-activity-chart-card]");
-  surface.dataset.activitySurfaceState = "empty";
-  surface.dataset.chartReadySurfaceId = surfaceModel.surfaceId;
-  summary.hidden = true;
-  chartCard.hidden = true;
-  status.hidden = false;
-  status.innerHTML = `
-    <div class="activity-state activity-state--empty">
-      <span class="activity-state-icon" aria-hidden="true">✓</span>
-      <div>
-        <strong>No hay actividad confirmada en este periodo</strong>
-        <span>${escapeHtml(formatPeriod(report.period))} · no se inventaron ceros.</span>
-      </div>
-    </div>
-  `;
+function renderReportsFailure(root, model, periodKind) {
+  root.innerHTML = reportsChrome(periodKind);
+  root.dataset.reportsState = model?.state || "source-unavailable";
+  const session = model?.state === "SESSION_REQUIRED";
+  root.querySelector("[data-reports-status]").innerHTML = `<div class="activity-state activity-state--error"><span class="activity-state-icon" aria-hidden="true">!</span><div><strong>${session ? "Necesitamos una sesión activa" : "El reporte no pudo validar su fuente principal"}</strong><span>${session ? "Inicia sesión nuevamente. Los datos privados anteriores ya fueron retirados." : "No mostraremos datos parciales como si fueran un reporte completo."}</span></div><button type="button" data-reports-retry>Reintentar</button></div>`;
 }
 
-function renderReady(root, result) {
-  const { report, chartReady } = result;
-  const surface = root.querySelector("[data-activity-surface]");
-  const status = root.querySelector("[data-activity-status-card]");
-  const summary = root.querySelector("[data-activity-summary]");
-  const chartCard = root.querySelector("[data-activity-chart-card]");
-  const chart = root.querySelector("[data-activity-chart]");
-  const legend = root.querySelector("[data-activity-legend]");
-  const policy = root.querySelector("[data-activity-chart-policy]");
+function sourceLabel(sourceId) {
+  return ({
+    FES_REP_ACTIVITY: "Actividad FES + REP",
+    MONTHLY_GOAL_AND_CONFIRMED_POLICIES: "Meta y pólizas confirmadas",
+    ADVISOR_FORECAST_ISSUED_SNAPSHOT: "Forecast emitido",
+  })[sourceId] || sourceId;
+}
+function sourceStateLabel(state) {
+  return ({ READY: "Conectada", UNAVAILABLE: "No disponible", SESSION_REQUIRED: "Requiere sesión" })[state] || state;
+}
 
-  surface.dataset.activitySurfaceState = "ready";
-  surface.dataset.chartReadySurfaceId = chartReady.surfaceId;
+function mixRows(model) {
+  const current = model?.activity?.comparison?.currentMix || {};
+  const previous = model?.activity?.comparison?.previousMix || {};
+  const types = [...new Set([...Object.keys(current), ...Object.keys(previous)])];
+  if (!types.length) return `<p class="activity-report-empty">No hay hechos de actividad para desglosar.</p>`;
+  const max = Math.max(1, ...types.flatMap((type) => [current[type] || 0, previous[type] || 0]));
+  return types.map((type) => `
+    <div class="activity-report-mix-row">
+      <span>${escapeHtml(ACTIVITY_LABELS[type] || type)}</span>
+      <div class="activity-report-bars">
+        <i class="current" style="--report-bar:${((current[type] || 0) / max) * 100}%" title="Actual: ${current[type] || 0}"></i>
+        <i class="previous" style="--report-bar:${((previous[type] || 0) / max) * 100}%" title="Anterior: ${previous[type] || 0}"></i>
+      </div>
+      <strong>${formatNumber(current[type] ?? 0)}</strong>
+    </div>
+  `).join("");
+}
+
+function renderReportsReady(root, model, periodKind) {
+  root.innerHTML = reportsChrome(periodKind);
+  root.dataset.reportsState = model.state.toLowerCase();
+  const status = root.querySelector("[data-reports-status]");
   status.hidden = true;
-  summary.hidden = false;
-  chartCard.hidden = false;
+  const content = root.querySelector("[data-reports-content]");
+  content.hidden = false;
 
-  const total = report.totals.activityCount;
-  const partial = chartReady.partialPeriodState === "PARTIAL_CURRENT_PERIOD";
-  summary.innerHTML = `
-    <div class="activity-summary-copy">
-      <p class="section-kicker accent">TOTAL DEL PERIODO</p>
-      <strong>${escapeHtml(total)}</strong>
-      <span>${escapeHtml(formatPeriod(report.period))}</span>
-    </div>
-    <div class="activity-truth-badge">
-      <span aria-hidden="true">◆</span>
-      <div>
-        <strong>FES confirmado</strong>
-        <small>${partial ? "Periodo actual parcial" : "Periodo completo"}</small>
+  const comparison = model.activity?.comparison || {};
+  const production = model.production;
+  const readModel = model.forecast?.readModel;
+  const snapshot = model.forecast?.snapshot;
+  const forecastPace = readModel?.paceProjection ?? snapshot?.paceProjection ?? null;
+  const forecastState = readModel?.healthStatus || readModel?.state || (snapshot ? "ISSUED" : null);
+  const activityUnavailable = !model.activity;
+
+  content.innerHTML = `
+    <section class="activity-report-kpis" aria-label="Indicadores del reporte">
+      <article class="organic-card">
+        <p>Actividad actual</p>
+        <strong>${formatNumber(comparison.current)}</strong>
+        <span>${escapeHtml(formatPeriod(model.period.current))}</span>
+      </article>
+      <article class="organic-card">
+        <p>Contra periodo anterior</p>
+        <strong>${comparison.delta === null ? "—" : `${comparison.delta > 0 ? "+" : ""}${comparison.delta}`}</strong>
+        <span>${formatPercent(comparison.deltaPercent)} · ${escapeHtml(formatPeriod(model.period.previous))}</span>
+      </article>
+      <article class="organic-card">
+        <p>Pólizas confirmadas</p>
+        <strong>${production ? `${formatNumber(production.sold)} / ${formatNumber(production.target)}` : "—"}</strong>
+        <span>${production ? "POLICY_SOLD_CONFIRMED únicamente" : "Fuente no disponible"}</span>
+      </article>
+      <article class="organic-card">
+        <p>Ritmo Forecast</p>
+        <strong>${formatNumber(forecastPace)}</strong>
+        <span>${escapeHtml(forecastState || "Forecast no emitido")}</span>
+      </article>
+    </section>
+
+    <section class="activity-report-grid">
+      <article class="activity-report-card organic-card">
+        <div class="activity-card-heading">
+          <div><p class="section-kicker accent">MEZCLA DE ACTIVIDAD</p><h2>Actual frente al periodo anterior</h2></div>
+          <span class="activity-chart-policy">REP chart-ready</span>
+        </div>
+        ${activityUnavailable ? `<p class="activity-report-empty">Actividad no disponible.</p>` : mixRows(model)}
+        <div class="activity-report-bar-legend"><span><i class="current"></i>Actual</span><span><i class="previous"></i>Anterior</span></div>
+      </article>
+
+      <article class="activity-report-card organic-card">
+        <p class="section-kicker accent">CONTEXTO FORECAST</p>
+        <h2>${escapeHtml(readModel?.primaryExplanation || (snapshot ? "Snapshot mensual emitido" : "Sin Forecast emitido"))}</h2>
+        <dl class="activity-report-facts">
+          <div><dt>Meta</dt><dd>${formatNumber(readModel?.target ?? snapshot?.target)}</dd></div>
+          <div><dt>Producción actual</dt><dd>${formatNumber(readModel?.currentProduction ?? snapshot?.currentProduction)}</dd></div>
+          <div><dt>Pipeline ponderado</dt><dd>${formatNumber(readModel?.goalGap?.weightedPipelineContribution ?? snapshot?.weightedPipelineContribution)}</dd></div>
+          <div><dt>Confianza</dt><dd>${escapeHtml(readModel?.confidence || "No disponible")}</dd></div>
+        </dl>
+        <p class="activity-authority-note">El ritmo y el Pipeline ponderado son contexto. No son producción, ingreso ni garantía de cierre.</p>
+      </article>
+    </section>
+
+    <section class="activity-report-sources organic-card">
+      <div><p class="section-kicker accent">FUENTES</p><h2>Inventario honesto</h2></div>
+      <div class="activity-report-source-list">
+        ${model.sources.map((source) => `<div data-report-source-state="${escapeHtml(source.state)}"><span>${escapeHtml(sourceLabel(source.sourceId))}</span><strong>${escapeHtml(sourceStateLabel(source.state))}</strong>${source.error ? `<small>${escapeHtml(source.error.code)}</small>` : ""}</div>`).join("")}
       </div>
-    </div>
+    </section>
+
+    <p class="activity-authority-note">Reporte de sólo lectura. No crea actividad, tareas, calendario, pólizas, oportunidades ni mutaciones CRM.</p>
   `;
-
-  const dates = [...new Set(
-    chartReady.series.flatMap((series) => series.points.map((point) => point.x)),
-  )].sort();
-
-  chart.setAttribute(
-    "aria-label",
-    `Actividad por día. Total confirmado: ${total}.`,
-  );
-  chart.innerHTML = dates.map((date) => {
-    const segments = chartReady.series.flatMap((series) => {
-      const activityType = activityTypeFromSeries(series);
-      return series.points
-        .filter((point) => point.x === date)
-        .map((point) => `
-          <span
-            class="activity-chart-segment ${activityClass(activityType)}"
-            style="--activity-flex:${Math.max(point.value, 0.0001)}"
-            data-point-id="${escapeHtml(point.pointId)}"
-            data-row-keys="${escapeHtml(point.rowKeys.join(","))}"
-            title="${escapeHtml(activityLabel(activityType))}: ${escapeHtml(point.value)}"
-          ><b>${escapeHtml(point.value)}</b></span>
-        `);
-    }).join("");
-
-    return `
-      <div class="activity-chart-row">
-        <span class="activity-chart-date">${escapeHtml(formatDateLabel(date))}</span>
-        <div class="activity-chart-stack">${segments}</div>
-      </div>
-    `;
-  }).join("");
-
-  legend.innerHTML = chartReady.series.map((series) => {
-    const activityType = activityTypeFromSeries(series);
-    return `
-      <span class="activity-legend-item">
-        <i class="${activityClass(activityType)}" aria-hidden="true"></i>
-        ${escapeHtml(activityLabel(activityType))}
-      </span>
-    `;
-  }).join("");
-
-  policy.textContent = chartReady.recommendedVisualization === "STACKED_BAR"
-    ? "Barras apiladas"
-    : chartReady.recommendedVisualization;
 }
 
 export function createActivityModule({
   root,
   shell,
-  runtimeFactory = createProductiveActivityReportingBridge,
-  timeZone = "America/Mexico_City",
-  clock = () => new Date(),
+  operationalFactory = createActivityOperationalModule,
+  reportsRuntimeFactory = createActivityReportsProductivityRuntime,
 } = {}) {
-  if (!root) throw new Error("REP-16D Activity root is required");
-  if (root[moduleStateKey]) return root[moduleStateKey].api;
-
+  if (!root) throw new Error("Activity and Reports root is required");
+  if (root[STATE]) return root[STATE];
   ensureStylesheet();
-  let selectedPeriod = "WEEK_TO_DATE";
-  let runtime = null;
+  renderWorkspace(root);
+
+  const operationalRoot = root.querySelector("[data-activity-operational-root]");
+  const reportsRoot = root.querySelector("[data-activity-reports-root]");
+  const operational = operationalFactory({ root: operationalRoot, shell });
+  const reportsRuntime = reportsRuntimeFactory();
+  let view = selectedView();
+  let reportPeriod = "MONTH_TO_DATE";
   let mounted = false;
-  let requestSequence = 0;
-  let eventController = null;
+  let generation = 0;
+  let controller = null;
+  let events = null;
 
-  renderModuleChrome(root, selectedPeriod);
-
-  async function getRuntime() {
-    if (!runtime) {
-      runtime = await runtimeFactory({ timeZone, clock });
-    }
-    return runtime;
-  }
-
-  function syncPeriodButtons() {
-    root.querySelectorAll("[data-activity-period]").forEach((button) => {
-      const active = button.dataset.activityPeriod === selectedPeriod;
+  function syncTabs() {
+    root.querySelectorAll("[data-activity-view-tab]").forEach((button) => {
+      const active = button.dataset.activityViewTab === view;
+      button.setAttribute("aria-selected", String(active));
       button.classList.toggle("active", active);
-      button.setAttribute("aria-pressed", String(active));
     });
+    root.querySelector("[data-activity-workspace]").dataset.activityView = view;
   }
 
-  async function load() {
-    const sequence = ++requestSequence;
-    renderLoading(root);
+  async function loadReports() {
+    const selectedGeneration = ++generation;
+    controller?.abort();
+    controller = new AbortController();
+    renderReportsLoading(reportsRoot, reportPeriod);
     try {
-      const selectedRuntime = await getRuntime();
-      const result = await selectedRuntime.runChartReady({
-        period: {
-          kind: selectedPeriod,
-          parameters: {},
-        },
-        timeZone,
-        asOf: clock().toISOString(),
-      });
-      if (!mounted || sequence !== requestSequence) return;
-
-      if (
-        result.chartReady.missingDataState === "NO_MATCHING_FACTS" ||
-        result.report.state === "EMPTY"
-      ) {
-        renderEmpty(root, result.report, result.chartReady);
-      } else {
-        renderReady(root, result);
-      }
+      const model = await reportsRuntime.load({ periodKind: reportPeriod, signal: controller.signal });
+      if (!mounted || view !== "reportes" || selectedGeneration !== generation) return;
+      if (["SESSION_REQUIRED", "SOURCE_UNAVAILABLE"].includes(model.state)) renderReportsFailure(reportsRoot, model, reportPeriod);
+      else renderReportsReady(reportsRoot, model, reportPeriod);
     } catch (error) {
-      if (!mounted || sequence !== requestSequence) return;
-      renderError(root, error);
+      if (error?.name === "AbortError" || !mounted || selectedGeneration !== generation) return;
+      renderReportsFailure(reportsRoot, { state: "SOURCE_UNAVAILABLE", error }, reportPeriod);
     }
   }
 
-  function bindEvents() {
-    eventController?.abort();
-    eventController = new AbortController();
-    const { signal } = eventController;
+  async function activate(nextView, { updateUrl = false } = {}) {
+    view = nextView === "reportes" ? "reportes" : "actividad";
+    if (updateUrl) updateViewUrl(view);
+    syncTabs();
+    if (view === "reportes") {
+      operational.unmount();
+      operationalRoot.hidden = true;
+      reportsRoot.hidden = false;
+      await loadReports();
+    } else {
+      generation += 1;
+      controller?.abort();
+      reportsRoot.hidden = true;
+      operationalRoot.hidden = false;
+      operational.mount();
+    }
+  }
 
+  async function scrub(reason = "session-scrub") {
+    generation += 1;
+    controller?.abort();
+    await Promise.allSettled([
+      operational.scrub?.(),
+      reportsRuntime.scrub?.(reason),
+    ]);
+    reportsRoot.replaceChildren();
+    reportsRoot.dataset.reportsState = "scrubbed";
+  }
+
+  function bind() {
+    events?.abort();
+    events = new AbortController();
     root.addEventListener("click", (event) => {
-      const periodButton = event.target.closest("[data-activity-period]");
-      const refreshButton = event.target.closest(
-        "[data-activity-refresh], [data-activity-retry]",
-      );
-
-      if (periodButton) {
-        selectedPeriod = periodButton.dataset.activityPeriod;
-        syncPeriodButtons();
-        load();
+      const tab = event.target.closest("[data-activity-view-tab]");
+      const period = event.target.closest("[data-reports-period]");
+      if (tab) void activate(tab.dataset.activityViewTab, { updateUrl: true });
+      if (period) {
+        reportPeriod = period.dataset.reportsPeriod;
+        void loadReports();
       }
-      if (refreshButton) load();
-    }, { signal });
+      if (event.target.closest("[data-reports-refresh], [data-reports-retry]")) void loadReports();
+    }, { signal: events.signal });
+    globalThis.addEventListener("forge:auth-state-changed", () => {
+      void scrub("auth-state-changed").then(() => mounted && activate(selectedView()));
+    }, { signal: events.signal });
+    globalThis.addEventListener("forge:advisor-forecast-read-model-ready", () => {
+      if (mounted && view === "reportes") void loadReports();
+    }, { signal: events.signal });
   }
 
   const api = Object.freeze({
     mount() {
       mounted = true;
       root.hidden = false;
-      bindEvents();
+      bind();
       shell?.setAlfredState?.("idle", "thinking");
-      load();
+      void activate(selectedView());
     },
     unmount() {
       mounted = false;
-      requestSequence += 1;
-      eventController?.abort();
+      generation += 1;
+      controller?.abort();
+      events?.abort();
+      operational.unmount();
       root.hidden = true;
+      void reportsRuntime.scrub?.("route-unmount");
     },
     reconcile() {
-      if (mounted) syncPeriodButtons();
+      const requested = selectedView();
+      if (mounted && requested !== view) void activate(requested);
+      else syncTabs();
     },
-    refresh: load,
+    refresh() {
+      return view === "reportes" ? loadReports() : operational.refresh();
+    },
+    scrub,
     async destroy() {
       mounted = false;
-      requestSequence += 1;
-      eventController?.abort();
-      await runtime?.close?.();
-      runtime = null;
-      delete root[moduleStateKey];
+      events?.abort();
+      controller?.abort();
+      await Promise.allSettled([operational.destroy?.(), reportsRuntime.scrub?.("destroy")]);
+      delete root[STATE];
     },
   });
-
-  root[moduleStateKey] = { api };
+  root[STATE] = api;
   return api;
 }
