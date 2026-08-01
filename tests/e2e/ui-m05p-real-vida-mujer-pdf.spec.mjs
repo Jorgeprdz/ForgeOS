@@ -93,6 +93,12 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
 
   const fileInput = page.locator("#fq-solution-online-pdf-105dr");
   await expect(fileInput).toBeAttached({ timeout: 15_000 });
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-quote-intake-readiness",
+    "ready",
+    { timeout: 25_000 },
+  );
+  await expect(fileInput).toBeEnabled({ timeout: 25_000 });
   await screenshot(page, testInfo.project.name, "01-before-upload");
   await fileInput.setInputFiles(fixturePath);
 
@@ -196,7 +202,7 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   }
 
   const state = {
-    schema: "forge.ui.m05p.real-vida-mujer-browser-state.v5",
+    schema: "forge.ui.m05p.real-vida-mujer-browser-state.v6",
     targetUrl: page.url(),
     project: testInfo.project.name,
     viewport: page.viewportSize(),
@@ -246,6 +252,7 @@ test("procesa el PDF real y expone imprimir, PDF e historial", async (
   const downloadEvent = page.waitForEvent("download", { timeout: 15_000 });
   await download.click({ force: true, timeout: 4_000 });
   const downloaded = await downloadEvent;
+  expect(downloaded.suggestedFilename()).toMatch(/alejandra-moleres/i);
   const downloadedPath = path.join(
     downloadDirectory,
     `${testInfo.project.name}-${downloaded.suggestedFilename()}`,
