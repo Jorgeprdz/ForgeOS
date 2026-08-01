@@ -1,0 +1,69 @@
+name: CARTERA 120A + 120B + 120C + 120D Combined Acceptance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  combined-delivery:
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/cartera-120abcd-controlled-promotion-authorization' &&
+      github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-24.04
+    env:
+      CARTERA_120_CURRENT_MAIN_HEAD: 9d014116f6b3f0a626d8848d680a5c607f924d99
+      CARTERA_120_ACCEPTED_PROGRAM_HEAD: b83a37abe3eb8b3a48c2fe89940b562e1367bfcc
+      CARTERA_120_MERGE_BASE: a060fde0b5b2f38e0912f54f47dc4f141c21e45c
+    steps:
+      - name: Checkout exact 120 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Fetch accepted Cartera program source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin \
+            feature/cartera-110abcd-program-completion-promotion:refs/remotes/origin/feature/cartera-110abcd-program-completion-promotion
+          git cat-file -e "$CARTERA_120_ACCEPTED_PROGRAM_HEAD^{commit}"
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute 120A through 120D one-pass acceptance
+        shell: bash
+        run: bash scripts/ci/cartera-120abcd-combined-acceptance.sh
+
+      - name: Persist accepted closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          closure='docs/evidence/FORGE_CARTERA_120ABCD_CONTROLLED_PROMOTION_AUTHORIZATION_CLOSURE_001.md'
+          if [[ -n "$(git status --porcelain -- "$closure")" ]]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add "$closure"
+            git commit -m 'docs(cartera): close 120A through 120D controlled promotion authorization'
+            git push origin HEAD:feature/cartera-120abcd-controlled-promotion-authorization
+          fi
+
+      - name: Upload combined evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-120abcd-combined-acceptance
+          path: artifacts/cartera-120abcd-acceptance
+          if-no-files-found: error
+          retention-days: 30
