@@ -1,10 +1,14 @@
-# Forge Smart Widgets Productive Unified PASS 001
+# Forge Smart Widgets Productive Unified PASS 001 — Final Closure
 
-## Status
+## Final status
 
 ```text
 PASS=FORGE_SMART_WIDGETS_PRODUCTIVE_UNIFIED_PASS_001
-IMPLEMENTATION_BRANCH=feature/smart-widgets-productive-unified-pass
+SOURCE_COMMIT=24022a055f65959472a335088ed23bfa94dc5ec4
+IMPLEMENTATION_HEAD=8ca70233512c440f78a46cb5b8498c314eba0eae
+MERGE_COMMIT=d46139730c58db80b7db34b045dfbf4ebc88e086
+PR=123
+MERGED_TO_MAIN=YES
 ACCOUNT_MUTATION=NOT_AUTHORIZED
 REMOTE_DATABASE_MUTATION=NOT_EXECUTED
 PRODUCTIVE_UI_MOUNT=NOT_EXECUTED
@@ -13,13 +17,13 @@ STATIC_MOCK_REPLACEMENT=NOT_EXECUTED
 
 ## Purpose
 
-Implement every Smart Widget layer that can be safely developed now, including layers whose productive authority is not connected yet, while documenting the exact dependency required to activate each remaining surface.
+Implement every Smart Widget layer that can be safely developed now, including layers whose productive authority is not connected yet, and record the exact dependency required to activate each remaining surface.
 
-This PASS does not convert unknown values to zero, does not treat inferences as confirmed facts, does not derive income from quotes or premium, and does not execute commercial actions.
+The PASS does not convert unknown values to zero, does not treat inferences as confirmed facts, does not derive income from quotes or premium, and does not execute commercial actions.
 
-## Implemented now
+## Implemented and merged
 
-### 1. Productive presentation contract
+### Productive presentation contract
 
 Implemented:
 
@@ -28,13 +32,15 @@ Implemented:
 - common metric, comparison, trend, chart, evidence, uncertainty and freshness fields;
 - read-only and human-final-authority boundaries;
 - explicit blocked and not-connected states;
+- unavailable-data redaction, including internal metrics and payloads;
+- `UNKNOWN_IS_NOT_ZERO` boundary badge;
 - stack contract with one primary, at most two supporting cards and full inventory.
 
-File:
+Canonical source:
 
 - `advisor-os/forge-alive/smart-widgets/productive-smart-widget-contract.mjs`
 
-### 2. Productive providers
+### Productive providers
 
 Implemented:
 
@@ -44,7 +50,7 @@ Implemented:
 - `OPPORTUNITY_CLOSE_LIKELIHOOD_WIDGET`;
 - `INCOME_PROGRESS_WIDGET`.
 
-File:
+Canonical source:
 
 - `advisor-os/forge-alive/smart-widgets/productive-smart-widget-providers.mjs`
 
@@ -56,7 +62,7 @@ Provider boundaries:
 - Opportunity likelihood v1 is deterministic, versioned and signal-explainable; Nash may explain it but does not own or invent the percentage.
 - Income consumes Compensation snapshots only and explicitly rejects quote/premium substitution.
 
-### 3. Contextual ranking and stability
+### Contextual ranking and stability
 
 Implemented:
 
@@ -69,15 +75,16 @@ Implemented:
 - challenger margin;
 - anti-flapping;
 - visible limit of one primary plus two supporting widgets;
-- dependency inventory;
-- session-required fail closed behavior;
-- late result and abort-compatible source loading.
+- authority-aware dependency inventory;
+- session-required fail-closed behavior;
+- per-source failure isolation;
+- late-result and abort-compatible source loading.
 
-File:
+Canonical source:
 
 - `advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs`
 
-Hard priority examples:
+Hard priority order:
 
 ```text
 CONFIRMED_OVERDUE_POLICY
@@ -89,9 +96,11 @@ CONFIRMED_OVERDUE_POLICY
   > MONTH_END_GOAL_RISK
 ```
 
-### 4. Source adapters
+One unavailable authority does not collapse the remaining stack. A disconnected source is excluded rather than represented as a zero.
 
-Implemented, but connection remains authority-dependent:
+### Source adapters
+
+Implemented:
 
 - Activity REP source adapter;
 - monthly policy goal source adapter;
@@ -105,20 +114,20 @@ All adapters:
 - reject cross-advisor data;
 - honor abort signals;
 - expose honest disconnected states;
-- perform no writes.
+- perform no hidden writes.
 
-File:
+Canonical source:
 
 - `advisor-os/forge-alive/smart-widgets/productive-smart-widget-source-adapters.mjs`
 
-### 5. Monthly policy goal authority
+### Monthly policy goal authority
 
-Implemented in repository, not deployed remotely:
+Implemented in the repository, not deployed remotely:
 
 - append-only target history;
 - one row per revision;
 - owner-scoped RLS;
-- authenticated RPC for new revisions;
+- authenticated RPC for explicit new revisions;
 - cross-advisor isolation;
 - advisory transaction lock;
 - no authenticated direct insert/update/delete grant;
@@ -129,9 +138,9 @@ Files:
 - `supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql`
 - `advisor-os/forge-alive/smart-widgets/advisor-monthly-policy-goal-repository.mjs`
 
-Activation still requires the normal migration deployment and remote transactional acceptance. The repository changes alone do not mutate the remote database.
+Activation still requires the normal migration deployment and remote transactional acceptance. Merging the repository migration did not mutate the remote database.
 
-### 6. Productive Material 3 home adapter
+### Productive Material 3 home adapter
 
 Implemented, not mounted:
 
@@ -150,40 +159,57 @@ Files:
 - `docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js`
 - `docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.css`
 
-The current static metric cards remain untouched until the productive orchestrator is published to the browser surface and minimum authorities are connected. This prevents a half-migrated home screen.
+The current fixed metric cards remain untouched until the productive mount gate is satisfied. This prevents a half-migrated Home surface.
 
-## Test coverage
+### Browser-safe Pages runtime
 
-Implemented tests:
+Implemented and validated:
 
-- anonymous session renders no private widgets;
-- REP chart data is preserved;
-- missing Mick scoring does not fabricate points;
-- monthly sold-policy deduplication;
-- historical goal comparison;
-- missing goal is blocked, not zero;
-- disconnected Cartera is not represented as zero risk;
-- confirmed overdue remains distinct from inferred late payment;
-- deterministic explainable opportunity likelihood;
-- decision-due-today priority;
-- Income cannot consume quote projection;
-- hard-priority ordering;
-- anti-flapping;
-- maximum one primary and two supporting cards;
-- source abort handling;
-- cross-advisor source isolation;
-- monthly goal repository validation;
-- monthly goal RLS and append-only migration assertions;
-- legacy Smart Widget read-model regression.
+- the Pages generator now materializes the canonical Smart Widget `.mjs` sources as browser-safe `.js` modules;
+- local module specifiers are transformed from `.mjs` to `.js`;
+- the generated orchestrator is imported during generator validation;
+- generation does not mount the Home adapter or connect an authority by itself.
 
 Files:
 
-- `tests/productive-smart-widget-orchestrator-master-test.mjs`
-- `tests/productive-smart-widget-source-adapters-test.mjs`
-- `tests/smart-widget-monthly-policy-goal-authority-test.mjs`
-- `.github/workflows/smart-widgets-productive-validation.yml`
+- `scripts/build-advisor-presentation-pages-runtime.mjs`
+- `tests/rep-16f-pages-runtime-generator-test.mjs`
 
-## Connection status by widget
+## Remote validation
+
+Final pull-request head:
+
+```text
+HEAD=8ca70233512c440f78a46cb5b8498c314eba0eae
+```
+
+Required workflows:
+
+```text
+SMART_WIDGETS_PRODUCTIVE_VALIDATION=PASS
+RUN_ID=30707229292
+ORCHESTRATOR_TESTS=15/15_PASS
+SOURCE_ADAPTER_TESTS=5/5_PASS
+MONTHLY_GOAL_AUTHORITY_TESTS=10/10_PASS
+LEGACY_SMART_WIDGET_TESTS=15/15_PASS
+PAGES_RUNTIME_GENERATION=PASS
+BOUNDARY_ASSERTIONS=PASS
+
+REPORTING_CORE_VALIDATION=PASS
+RUN_ID=30707229284
+
+REP_17_UNIFIED_REGRESSION=PASS
+RUN_ID=30707229296
+
+PIPELINE_MOBILE_INTERACTION_REGRESSION=PASS
+PIPELINE_REAL_INTERACTION_REGRESSION=PASS
+MANUAL_QUOTES_AND_PIPELINE_STABILITY=PASS
+UI_M05U_REAL_PDF_SMOKE=PASS
+UI_M05P_REAL_VIDA_MUJER_PDF=PASS
+FORGE_UI_VISUAL_DIAGNOSTIC=PASS
+```
+
+## Connection status and exact dependencies
 
 ### Activity
 
@@ -191,17 +217,19 @@ Files:
 PROVIDER=IMPLEMENTED
 REP_ADAPTER=IMPLEMENTED
 CHART_READY_SUPPORT=IMPLEMENTED
-PRODUCTIVE_BROWSER_BINDING=PENDING
+PAGES_BROWSER_CORE=IMPLEMENTED
+PRODUCTIVE_HOME_BINDING=PENDING
 MICK_25_POINT_SCORING_SNAPSHOT=PENDING
 ```
 
 Dependencies:
 
-1. publish/import the productive orchestrator on the Material 3 Pages surface;
-2. connect the current Activity Reporting Runtime;
-3. define and expose the authoritative Mick points snapshot with rule version.
+1. connect the browser-published orchestrator to the authenticated Home lifecycle;
+2. connect the current Activity Reporting Runtime source;
+3. define and expose the authoritative Mick points snapshot with scoring-rule version;
+4. pass logout scrub, route abort and Pages acceptance after mounting.
 
-Until item 3 exists, Activity may show confirmed event totals and real charts as `PARTIAL`, but it must not claim `18 / 25`.
+Until Mick scoring exists, Activity may show confirmed event totals and real charts as `PARTIAL`, but it must not claim `18 / 25`.
 
 ### Monthly policy goal
 
@@ -219,7 +247,7 @@ Dependencies:
 1. deploy migration `20260801000400` through the normal remote gate;
 2. add the human goal-entry/editor surface;
 3. connect canonical `POLICY_SOLD_CONFIRMED` production facts;
-4. remote RLS and cross-advisor acceptance.
+4. complete remote RLS, revision and cross-advisor acceptance.
 
 ### Policy service risk
 
@@ -231,11 +259,11 @@ PRODUCTIVE_DATA=PENDING
 
 Dependency:
 
-- promote and connect at least Cartera 050 Future Radar authority to the current main/runtime surface.
+- promote/connect at least Cartera 050 Future Radar authority to the current `main` runtime surface.
 
 The provider already understands the required distinctions. It must not copy Cartera logic or query its internal tables directly.
 
-Later Cartera 060/070 growth and relational activation may provide additional widget families, but they do not block the payment/vencimiento widget. Cartera 080 may improve email/payment/compensation evidence connection.
+Cartera 060/070 may later add growth/relational widget families, but they do not block the payment and expiry widget. Cartera 080 may improve email, payment and compensation evidence connections.
 
 ### Opportunity close likelihood
 
@@ -245,13 +273,14 @@ EXPLAINABILITY=IMPLEMENTED
 CONFIDENCE=IMPLEMENTED
 BITACORA_SIGNAL_EXTRACTION=PENDING_CONNECTION
 NASH_EXPLANATION=PENDING_CONNECTION
+STATISTICAL_CALIBRATION=PENDING
 ```
 
 Dependencies:
 
 1. map canonical Pipeline/Bitácora facts to the v1 signal vocabulary;
 2. preserve evidence references and timestamps;
-3. calibrate weights against real outcomes before treating the percentage as statistically calibrated;
+3. calibrate weights against real outcomes before calling the percentage statistically calibrated;
 4. connect Nash only as explanation, never as hidden percentage authority.
 
 Until calibration exists, the UI must label the result as an explainable commercial estimate with confidence.
@@ -267,15 +296,15 @@ PRODUCTIVE_DATA=PENDING
 
 Dependency:
 
-- `COMPENSATION_INCOME_TRUTH_MINIMUM` must expose scoped snapshots for:
+- `COMPENSATION_INCOME_TRUTH_MINIMUM` must expose advisor-scoped period snapshots for:
   - income real;
   - income earned;
   - income paid;
   - income potential;
   - income at risk;
-  - evidence and period.
+  - evidence and freshness.
 
-Cartera 080 may connect payment/compensation evidence, but Smart Widgets still requires Compensation to own the final income classifications. Quotes, premium and pipeline value cannot be shown as confirmed income.
+Cartera 080 may connect payment/compensation evidence, but Smart Widgets still requires Compensation to own final income classifications. Quotes, premium and Pipeline value cannot be shown as confirmed income.
 
 ## Productive mount gate
 
@@ -295,7 +324,9 @@ PAGES_ASSET_PUBLICATION=PASS
 MOBILE_TABLET_DESKTOP_QA=PASS
 ```
 
-## Deliberately not included
+`PUBLIC_BROWSER_ORCHESTRATOR=AVAILABLE` is now satisfied by the Pages generator. The remaining gates are runtime authority and productive mounting gates.
+
+## Deliberately outside this PASS
 
 - remote migration execution;
 - direct account mutation;
@@ -309,20 +340,24 @@ MOBILE_TABLET_DESKTOP_QA=PASS
 - Cartera 060/070 promotion;
 - Compensation implementation outside the minimum source contract.
 
-These are not silently deferred Smart Widget behaviors. They are separate authority domains or explicit safety boundaries.
+These are separate authority domains or explicit safety boundaries, not missing hidden behavior inside Smart Widgets.
 
-## Final state
+## Final decision
 
 ```text
 PRODUCTIVE_WIDGET_CONTRACT=PASS
 PRODUCTIVE_WIDGET_PROVIDERS=PASS
 CONTEXTUAL_RANKING=PASS
 STABILITY_AND_ANTI_FLAPPING=PASS
+SOURCE_FAILURE_ISOLATION=PASS
+UNKNOWN_IS_NOT_ZERO=PASS
+AUTHORITY_AWARE_DEPENDENCIES=PASS
 SOURCE_ADAPTERS=PASS
 MONTHLY_GOAL_AUTHORITY_REPOSITORY=PASS_NOT_DEPLOYED
+PAGES_BROWSER_RUNTIME=PASS_NOT_MOUNTED
 MATERIAL3_HOME_ADAPTER=PASS_NOT_MOUNTED
-TESTS_LOCAL=PASS
-REMOTE_CI=PENDING_PR_RUN
+REMOTE_CI=PASS
+MERGED_TO_MAIN=YES
 
 ACTIVITY_WIDGET=DEVELOPED_PARTIAL_UNTIL_MICK_SCORING
 MONTHLY_GOAL_WIDGET=DEVELOPED_PENDING_MIGRATION_AND_FACT_CONNECTION
@@ -332,5 +367,5 @@ INCOME_WIDGET=DEVELOPED_PENDING_COMPENSATION_AUTHORITY
 
 STATIC_FAKE_METRICS_REMOVED=NO
 REASON=PRODUCTIVE_MOUNT_GATE_NOT_YET_SATISFIED
-NEXT=OPEN_PR_RUN_CI_THEN_CONNECT_AUTHORITIES_INCREMENTALLY_WITHOUT_REWRITING_WIDGETS
+NEXT=CONNECT_AUTHORITIES_INCREMENTALLY_WITHOUT_REWRITING_WIDGETS
 ```
