@@ -27,6 +27,27 @@ const advisorBase = new URL(
 );
 const loadAuthority = (base, path) => import(new URL(path, base));
 
+const quoteAuthorityStages = Object.freeze([
+  "core",
+  "printable",
+  "rate-bridge",
+  "rate-runtime",
+  "vida-handoff",
+  "composition",
+  "visual",
+]);
+const requestedIsolationStage = new URL(globalThis.location.href)
+  .searchParams.get("m05s");
+const quoteAuthorityStage = quoteAuthorityStages.includes(requestedIsolationStage)
+  ? requestedIsolationStage
+  : "visual";
+const quoteAuthorityStageIndex = quoteAuthorityStages.indexOf(
+  quoteAuthorityStage,
+);
+const allowsQuoteAuthorityStage = (stage) => (
+  quoteAuthorityStageIndex >= quoteAuthorityStages.indexOf(stage)
+);
+
 function ensureStylesheet({ selector, href, datasetKey }) {
   if (document.querySelector(selector)) return;
   const stylesheet = document.createElement("link");
@@ -85,6 +106,7 @@ document.documentElement.dataset.forgeShellReady = "true";
 document.documentElement.dataset.forgeShellBoot = "route-first";
 document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
 document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
+document.documentElement.dataset.forgeM05sStage = quoteAuthorityStage;
 
 function authorityDatasetKey(name) {
   return `forgeAuthority${name
@@ -123,8 +145,13 @@ function startPrintableAuthority() {
   );
 }
 
-// Printing remains eager, while every config consumer shares one environment gate.
-void startPrintableAuthority();
+// Printing remains eager in normal execution. M05S can stop before this stage
+// to prove whether the base PDF intake is responsive without enrichments.
+if (allowsQuoteAuthorityStage("printable")) {
+  void startPrintableAuthority();
+} else {
+  markAuthority("quote-printable", "isolated");
+}
 const environmentAuthority = loadEnvironmentAuthority();
 
 async function loadEnvironmentAuthority() {
@@ -156,25 +183,48 @@ async function loadQuoteAuthorities() {
   // Rate-dependent quote enhancements must wait for the same public environment.
   await environmentAuthority;
 
+  if (!allowsQuoteAuthorityStage("rate-bridge")) {
+    markAuthority("quote-rate-bridge", "isolated");
+    return;
+  }
   await startOptionalQuoteAuthority(
     "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
     "quote-rate-bridge",
   );
 
+  if (!allowsQuoteAuthorityStage("rate-runtime")) {
+    markAuthority("quote-rate-runtime", "isolated");
+    return;
+  }
   // Wrapper order is contractual. Parallel imports previously allowed M05E-003
   // and Vida Mujer to wrap each other repeatedly until the browser stalled.
   await startOptionalQuoteAuthority(
     "quote-runtime-hotfix-m05e003.js?v=m05q-001-loop-closure",
     "quote-rate-runtime",
   );
+
+  if (!allowsQuoteAuthorityStage("vida-handoff")) {
+    markAuthority("vida-mujer-handoff", "isolated");
+    return;
+  }
   await startOptionalQuoteAuthority(
     "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05r-001-bridge-composition",
     "vida-mujer-handoff",
   );
+
+  if (!allowsQuoteAuthorityStage("composition")) {
+    markAuthority("quote-bridge-composition", "isolated");
+    return;
+  }
   await startOptionalQuoteAuthority(
     "quote-runtime-bridge-composition-m05r001.js?v=m05r-001",
     "quote-bridge-composition",
   );
+
+  if (!allowsQuoteAuthorityStage("visual")) {
+    markAuthority("vida-mujer-visual", "isolated");
+    return;
+  }
   await startOptionalQuoteAuthority(
     "quote-runtime-vida-mujer-visual-m05e010.js?v=m05r-001",
     "vida-mujer-visual",
