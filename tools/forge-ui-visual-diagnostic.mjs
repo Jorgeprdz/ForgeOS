@@ -1474,12 +1474,6 @@ async function captureViewport(browser, viewport, fixture) {
       directory,
       "05a-quotes-technical-packet-absent",
     );
-    result.routes.quotesEvidenceOpen = await capture(
-      page,
-      directory,
-      "05b-quotes-evidence-open",
-    );
-    await page.locator("[data-quote-technical-evidence] summary").click();
     await verifyLastActionClearsFloatingControls(
       page,
       "[data-quote-last-actions] button",
