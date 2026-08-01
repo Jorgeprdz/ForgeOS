@@ -1,3 +1,4 @@
+// REP-16E validation trigger: no acceptance behavior change.
 import {
   test,
   expect,
