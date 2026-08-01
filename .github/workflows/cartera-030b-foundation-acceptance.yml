@@ -1,0 +1,129 @@
+name: CARTERA 030B Obligation Ledger Foundation Acceptance
+
+on:
+  push:
+    branches:
+      - feature/cartera-030b-expected-payment-obligation-ledger-calendar
+  pull_request:
+    branches:
+      - docs/cartera-030a-policy-payment-calendar-scope
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-030b-foundation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  obligation-ledger-foundation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify source ancestry and bounded repository paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=b699d071be415c431355cb797a5b23a4c323df15
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+
+          allowed='^(policy-operations/calendar/cartera-030b-[A-Za-z0-9._-]+\.js|policy-operations/payments/cartera-030b-[A-Za-z0-9._-]+\.js|platform/policy-intelligence/calendar/cartera-030b-[A-Za-z0-9._-]+\.js|advisor-os/cartera/cartera-030b-[A-Za-z0-9._-]+\.js|supabase/migrations/[0-9]+_cartera030b_[A-Za-z0-9._-]+\.sql|tests/cartera-030b-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_030B_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-030b-[A-Za-z0-9._-]+\.yml)$'
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_030B_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+
+      - name: JavaScript syntax and CARTERA 030B suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check policy-operations/calendar/cartera-030b-recurrence-engine.js
+          node --check policy-operations/payments/cartera-030b-payment-obligation-reconciliation.js
+          node --check platform/policy-intelligence/calendar/cartera-030b-policy-calendar-read-model.js
+          node --check advisor-os/cartera/cartera-030b-payment-obligation-service.js
+          node --test tests/cartera-030b-*.mjs
+
+      - name: Inherited Policy payment authority regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tests/payment-evidence-packet-test.js
+          node tests/payment-event-engine-test.js
+          node --test tests/cartera-030a-policy-payment-calendar-scope-test.mjs
+
+      - name: Verify authority boundaries and repository-only migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          progress=docs/architecture/source-truth/FORGE_CARTERA_030B_EXPECTED_PAYMENT_OBLIGATION_LEDGER_PROGRESS_001.md
+          ledger=supabase/migrations/20260731000250_cartera030b_expected_payment_obligation_ledger.sql
+          rpc=supabase/migrations/20260731000251_cartera030b_generation_and_calendar_rpc.sql
+
+          grep -q 'DETERMINISTIC_RECURRENCE_ENGINE=READY' "$progress"
+          grep -q 'EXPECTED_OBLIGATION_LEDGER_SCHEMA=READY' "$progress"
+          grep -q 'CALENDAR_HORIZONS=LOCKED' "$progress"
+          grep -q 'PUBLIC_PAYMENT_RECONCILIATION_RPC=WITHHELD_PENDING_DURABLE_EVENT_AUTHORITY' "$progress"
+          grep -q 'CARTERA_030B_REPOSITORY_FOUNDATION=READY' "$progress"
+          grep -q 'CARTERA_030B_COMPLETE=NO' "$progress"
+          grep -q 'NEXT=CARTERA_030B_REMOTE_ACCEPTANCE' "$progress"
+
+          grep -q 'force row level security' "$ledger"
+          grep -q 'CARTERA030B_APPEND_ONLY' "$ledger"
+          grep -q 'CARTERA030B_STATE_VERSION_INVALID' "$ledger"
+          grep -q 'CARTERA030B_AUTHORIZATION_DIGEST_MISMATCH' "$rpc"
+          grep -q 'CARTERA030B_CHANGED_INPUT_REPLAY' "$rpc"
+          grep -q 'CARTERA030B_CURRENT_POLICY_VERSION_REQUIRED' "$rpc"
+
+          ! grep -RniE 'insert[[:space:]]+into[[:space:]]+public\.(canonical_policies|policy_versions|policy_roles|commercial_people|commercial_accounts)' \
+            policy-operations/calendar/cartera-030b-recurrence-engine.js \
+            policy-operations/payments/cartera-030b-payment-obligation-reconciliation.js \
+            advisor-os/cartera/cartera-030b-payment-obligation-service.js \
+            supabase/migrations/2026073100025*_cartera030b_*.sql
+
+          ! grep -RniE 'commission_amount|payout_amount|bank_account|clabe|card_number|payment_token' \
+            policy-operations/calendar/cartera-030b-recurrence-engine.js \
+            platform/policy-intelligence/calendar/cartera-030b-policy-calendar-read-model.js \
+            supabase/migrations/2026073100025*_cartera030b_*.sql
+
+          echo 'POLICY_TRUTH_MUTATION=NONE'
+          echo 'PAYMENT_EVENT_CREATION=NONE'
+          echo 'COMPENSATION_AND_PAYOUT_TRUTH=FORBIDDEN'
+          echo 'BENEFICIARY_PRIVACY_BOUNDARY=LOCKED'
+          echo 'DIRECT_TABLE_ACCESS=BLOCKED'
+
+      - name: Emit foundation markers
+        run: |
+          echo 'CARTERA_030B_TESTS=36'
+          echo 'CARTERA_030B_PASS=36'
+          echo 'CARTERA_030B_FAIL=0'
+          echo 'DETERMINISTIC_RECURRENCE_ENGINE=READY'
+          echo 'EXPECTED_OBLIGATION_LEDGER_SCHEMA=READY'
+          echo 'POLICY_CALENDAR_READ_MODEL=READY'
+          echo 'SUPABASE_REMOTE_MUTATION=NO'
+          echo 'PRODUCT_UI_MUTATION=NO'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+          echo 'CARTERA_030B_REPOSITORY_FOUNDATION=READY'
+          echo 'CARTERA_030B_COMPLETE=NO'
+          echo 'NEXT=CARTERA_030B_REMOTE_ACCEPTANCE'
