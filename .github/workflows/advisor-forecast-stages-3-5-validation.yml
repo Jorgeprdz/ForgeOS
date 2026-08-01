@@ -1,0 +1,49 @@
+name: Advisor Forecast Stages 3-5 Validation
+
+on:
+  pull_request:
+    paths:
+      - "manager-os/forecast/advisor-forecast-*.js"
+      - "manager-os/tests/advisor-forecast-*.js"
+      - "docs/roadmaps/ADVISOR_FORECAST_001_EXISTING_RUNTIME_RECONCILIATION.md"
+      - "docs/evidence/ADVISOR_FORECAST_002_STAGES_3_4_5_UNIFIED_PASS.md"
+      - ".github/workflows/advisor-forecast-stages-3-5-validation.yml"
+  push:
+    branches: [main]
+    paths:
+      - "manager-os/forecast/advisor-forecast-*.js"
+      - "manager-os/tests/advisor-forecast-*.js"
+      - "docs/roadmaps/ADVISOR_FORECAST_001_EXISTING_RUNTIME_RECONCILIATION.md"
+      - "docs/evidence/ADVISOR_FORECAST_002_STAGES_3_4_5_UNIFIED_PASS.md"
+      - ".github/workflows/advisor-forecast-stages-3-5-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  advisor-forecast-stages-3-5:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate inherited stages 0 through 2
+        run: |
+          node manager-os/tests/advisor-forecast-stages-0-1-test.js
+          node manager-os/tests/advisor-forecast-stage-2-test.js
+      - name: Validate stages 3 through 5
+        run: |
+          node manager-os/tests/advisor-forecast-stages-3-5-test.js
+          node manager-os/tests/advisor-forecast-stage-3-real-engine-integration-test.js
+      - name: Preserve protected Manager Advisor Forecast contract
+        run: node manager-os/tests/manager-advisor-forecast-engine-master-test.js
+      - name: Reject productive mutations and UI dependencies
+        run: |
+          if grep -En "(supabase|document\.|window\.|localStorage|sessionStorage|\.insert\(|\.update\(|\.delete\(|fetch\()" \
+            manager-os/forecast/advisor-forecast-composer.js \
+            manager-os/forecast/advisor-forecast-explanation-engine.js \
+            manager-os/forecast/advisor-forecast-read-model.js; then
+            echo "Forbidden runtime dependency or mutation found"
+            exit 1
+          fi
