@@ -17,10 +17,21 @@ import "./pipeline-stage-filter-authority.js?v=pipeline-stage-filter-001";
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
 const moduleBase = new URL("./", import.meta.url);
-const legacyBase = new URL(sourceLayout ? "../forge-alive/" : "../forge-alive-runtime/", import.meta.url);
-const advisorBase = new URL(sourceLayout ? "../../../advisor-os/sales-pipeline/" : "../../advisor-os/sales-pipeline/", import.meta.url);
-const fesBase = new URL(sourceLayout ? "../../../platform/event-evidence/" : "../../platform/event-evidence/", import.meta.url);
-const loadAuthority = async (base, path) => import(new URL(path, base));
+const legacyBase = new URL(
+  sourceLayout ? "../forge-alive/" : "../forge-alive-runtime/",
+  import.meta.url,
+);
+const advisorBase = new URL(
+  sourceLayout
+    ? "../../../advisor-os/sales-pipeline/"
+    : "../../advisor-os/sales-pipeline/",
+  import.meta.url,
+);
+const fesBase = new URL(
+  sourceLayout ? "../../../platform/event-evidence/" : "../../platform/event-evidence/",
+  import.meta.url,
+);
+const loadAuthority = (base, path) => import(new URL(path, base));
 
 function installReportingCryptoImportMap() {
   if (document.querySelector("[data-reporting-crypto-import-map]")) return;
@@ -35,71 +46,25 @@ function installReportingCryptoImportMap() {
   document.head.append(importMap);
 }
 
-if (!document.querySelector("[data-pipeline-prospect-admin-styles]")) {
-  const adminStyles = document.createElement("link");
-  adminStyles.rel = "stylesheet";
-  adminStyles.href = new URL("pipeline-prospect-admin.css?v=pipeline-prospect-admin-001", import.meta.url);
-  adminStyles.dataset.pipelineProspectAdminStyles = "true";
-  document.head.append(adminStyles);
-}
-
-await loadAuthority(envBase, "env.js");
-await loadAuthority(
-  moduleBase,
-  "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
-);
-await loadAuthority(
-  moduleBase,
-  "quote-runtime-hotfix-m05e003.js?v=m05e-010-pages-rate",
-);
-await loadAuthority(
-  moduleBase,
-  "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05e-009",
-);
-await loadAuthority(
-  moduleBase,
-  "quote-runtime-vida-mujer-visual-m05e010.js?v=m05e-010",
-);
-await loadAuthority(
-  moduleBase,
-  "quote-runtime-printable-closure-m05e006.js?v=m05e-010-landscape",
-);
-
-await loadAuthority(legacyBase, "forge-alive-public-config-067g17a1.js");
-await loadAuthority(advisorBase, "productive-prospect-bootstrap.js");
-if (!document.querySelector("[data-forge-auth-entry-styles]")) {
-  const authStyles = document.createElement("link");
-  authStyles.rel = "stylesheet";
-  authStyles.href = new URL("forge-alive-auth-entry-067g17b1.css", legacyBase);
-  authStyles.dataset.forgeAuthEntryStyles = "true";
-  document.head.append(authStyles);
-}
-await loadAuthority(legacyBase, "forge-alive-auth-entry-067g17b1.js");
-
-if (
-  !globalThis.ForgeAlivePublicConfig067G17A1
-  || !globalThis.ForgeProductiveProspectBootstrap067G17B
-  || !globalThis.ForgeAliveAuthEntry067G17B1
-) {
-  document.body.insertAdjacentHTML("afterbegin", '<p role="alert" data-auth-runtime-error>No se pudo iniciar la autenticación de Forge.</p>');
-  throw new Error("MATERIAL3_AUTH_AUTHORITIES_REQUIRED");
-}
-
-await loadAuthority(fesBase, "canonical-activity-event-contract.js");
-await loadAuthority(fesBase, "activity-ledger-contract.js");
-await loadAuthority(fesBase, "activity-ledger-local-store.js");
-await loadAuthority(fesBase, "activity-ledger-sync-service.js");
-await loadAuthority(fesBase, "activity-ledger-supabase-gateway.js");
-await loadAuthority(fesBase, "activity-ledger-browser-runtime.js");
-
-if (!globalThis.ForgeActivityLedgerBrowserRuntimeFES02C) {
-  throw new Error("REP_16D_FES_LEDGER_BROWSER_RUNTIME_REQUIRED");
+function ensureStylesheet({ selector, href, datasetKey }) {
+  if (document.querySelector(selector)) return;
+  const stylesheet = document.createElement("link");
+  stylesheet.rel = "stylesheet";
+  stylesheet.href = href;
+  stylesheet.dataset[datasetKey] = "true";
+  document.head.append(stylesheet);
 }
 
 installReportingCryptoImportMap();
-const { createActivityModule } = await import(
-  "./activity-module.js?v=rep-16d-001"
-);
+
+ensureStylesheet({
+  selector: "[data-pipeline-prospect-admin-styles]",
+  href: new URL(
+    "pipeline-prospect-admin.css?v=pipeline-prospect-admin-001",
+    import.meta.url,
+  ).href,
+  datasetKey: "pipelineProspectAdminStyles",
+});
 
 const application = document.querySelector("[data-forge-application]");
 const moduleViewport = document.querySelector(
@@ -131,6 +96,10 @@ if (
   throw new Error("UI-M04 canonical shell boundary is incomplete");
 }
 
+const { createActivityModule } = await import(
+  "./activity-module.js?v=rep-16e-001"
+);
+
 const shell = createForgeShell({
   root: application,
   moduleViewport,
@@ -161,6 +130,191 @@ shell.initialize();
 
 document.documentElement.dataset.forgeCleanHomeReady = "true";
 document.documentElement.dataset.forgeShellReady = "true";
+document.documentElement.dataset.forgeShellBoot = "route-first";
 document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
 document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
-document.documentElement.dataset.activityReportingRuntime = "REP-16D";
+document.documentElement.dataset.activityReportingRuntime = "REP-16E";
+
+function authorityDatasetKey(name) {
+  return `forgeAuthority${name
+    .split(/[^a-z0-9]+/i)
+    .filter(Boolean)
+    .map((part) => `${part[0].toUpperCase()}${part.slice(1)}`)
+    .join("")}`;
+}
+
+function markAuthority(name, status, error = null) {
+  document.documentElement.dataset[authorityDatasetKey(name)] = status;
+  if (!error) return;
+  document.documentElement.dataset.forgeAuthorityState = "degraded";
+  console.error(`[Forge] ${name} authority failed`, error);
+}
+
+function startAuthority(base, path, name) {
+  markAuthority(name, "loading");
+  const task = loadAuthority(base, path);
+  task
+    .then(() => {
+      markAuthority(name, "ready");
+      shell.reconcile();
+    })
+    .catch((error) => {
+      markAuthority(name, "failed", error);
+    });
+  return task;
+}
+
+function refreshActivityIfActive() {
+  if (application.dataset.forgeRoute === "actividad") {
+    void activity.refresh();
+  }
+}
+
+function startPrintableAuthority() {
+  return startAuthority(
+    moduleBase,
+    "quote-runtime-printable-closure-m05e006.js?v=m05e-011-eager-print-actions",
+    "quote-printable",
+  );
+}
+
+// Printing remains eager. Environment, reporting and auth load after shell initialization.
+void startPrintableAuthority();
+const environmentAuthority = loadEnvironmentAuthority();
+void loadActivityAuthorities();
+
+async function loadEnvironmentAuthority() {
+  markAuthority("environment", "loading");
+  try {
+    await loadAuthority(envBase, "env.js");
+    if (!globalThis.__ENV__ || typeof globalThis.__ENV__ !== "object") {
+      throw new Error("MATERIAL3_PUBLIC_ENV_REQUIRED");
+    }
+    markAuthority("environment", "ready");
+    shell.reconcile();
+    return true;
+  } catch (error) {
+    markAuthority("environment", "failed", error);
+    return false;
+  }
+}
+
+async function loadActivityAuthorities() {
+  const authorities = [
+    ["canonical-activity-event-contract.js", "fes-canonical-event"],
+    ["activity-ledger-contract.js", "fes-ledger-contract"],
+    ["activity-ledger-local-store.js", "fes-ledger-local-store"],
+    ["activity-ledger-sync-service.js", "fes-ledger-sync"],
+    ["activity-ledger-supabase-gateway.js", "fes-ledger-gateway"],
+    ["activity-ledger-browser-runtime.js", "fes-ledger-browser-runtime"],
+  ];
+
+  try {
+    for (const [path, name] of authorities) {
+      await startAuthority(fesBase, path, name);
+    }
+
+    if (!globalThis.ForgeActivityLedgerBrowserRuntimeFES02C) {
+      throw new Error("REP_16E_FES_LEDGER_BROWSER_RUNTIME_REQUIRED");
+    }
+
+    document.documentElement.dataset.activityLedgerRuntime = "ready";
+    refreshActivityIfActive();
+  } catch (error) {
+    markAuthority("activity-runtime", "failed", error);
+    document.documentElement.dataset.activityLedgerRuntime = "failed";
+    refreshActivityIfActive();
+  }
+}
+
+async function loadQuoteAuthorities() {
+  // Rate-dependent quote enhancements must wait for the same public environment.
+  await environmentAuthority;
+
+  try {
+    await startAuthority(
+      moduleBase,
+      "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
+      "quote-rate-bridge",
+    );
+  } catch {
+    // Quote enhancements below are independent and must still start.
+  }
+
+  const optionalAuthorities = [
+    [
+      "quote-runtime-hotfix-m05e003.js?v=m05e-010-pages-rate",
+      "quote-rate-runtime",
+    ],
+    [
+      "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05e-009",
+      "vida-mujer-handoff",
+    ],
+    [
+      "quote-runtime-vida-mujer-visual-m05e010.js?v=m05e-010",
+      "vida-mujer-visual",
+    ],
+  ];
+
+  for (const [path, name] of optionalAuthorities) {
+    void startAuthority(moduleBase, path, name);
+  }
+}
+
+function showAuthRuntimeError() {
+  if (document.querySelector("[data-auth-runtime-error]")) return;
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    '<p role="alert" data-auth-runtime-error>No se pudo iniciar la autenticación de Forge.</p>',
+  );
+}
+
+async function loadAuthAuthorities() {
+  ensureStylesheet({
+    selector: "[data-forge-auth-entry-styles]",
+    href: new URL("forge-alive-auth-entry-067g17b1.css", legacyBase).href,
+    datasetKey: "forgeAuthEntryStyles",
+  });
+
+  try {
+    const environmentLoaded = await environmentAuthority;
+    if (!environmentLoaded) {
+      throw new Error("MATERIAL3_PUBLIC_ENV_REQUIRED");
+    }
+
+    await startAuthority(
+      legacyBase,
+      "forge-alive-public-config-067g17a1.js",
+      "public-config",
+    );
+    await startAuthority(
+      advisorBase,
+      "productive-prospect-bootstrap.js",
+      "productive-bootstrap",
+    );
+    await startAuthority(
+      legacyBase,
+      "forge-alive-auth-entry-067g17b1.js",
+      "auth-entry",
+    );
+
+    if (
+      !globalThis.ForgeAlivePublicConfig067G17A1
+      || !globalThis.ForgeProductiveProspectBootstrap067G17B
+      || !globalThis.ForgeAliveAuthEntry067G17B1
+    ) {
+      throw new Error("MATERIAL3_AUTH_AUTHORITIES_REQUIRED");
+    }
+
+    document.documentElement.dataset.forgeAuthRuntime = "ready";
+    shell.reconcile();
+    refreshActivityIfActive();
+  } catch (error) {
+    markAuthority("auth-runtime", "failed", error);
+    showAuthRuntimeError();
+    refreshActivityIfActive();
+  }
+}
+
+void loadQuoteAuthorities();
+void loadAuthAuthorities();
