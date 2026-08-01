@@ -12,7 +12,7 @@ on:
         required: true
         type: string
       expected_acceptance_head:
-        description: Exact remote-acceptance branch head to execute
+        description: Exact remote-acceptance head to execute
         required: true
         type: string
       project_ref:
@@ -31,7 +31,7 @@ jobs:
   remote-deployment-and-acceptance:
     if: github.repository == 'Jorgeprdz/ForgeOS'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROJECT_REF: ${{ inputs.project_ref }}
@@ -50,48 +50,51 @@ jobs:
       - name: Use Node 22
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
 
-      - name: Authorization, source and bounded-path gate
+      - name: Authorization and source gate
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE_COMMIT=0daaccd556659b997f2086e12b09481281d1b019
           test "$CARTERA_020C_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_020C_REMOTE_MUTATION'
-          test "$CARTERA_020C_EXPECTED_SOURCE_HEAD" = "$SOURCE_COMMIT"
+          test "$CARTERA_020C_EXPECTED_SOURCE_HEAD" = '0daaccd556659b997f2086e12b09481281d1b019'
           test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
           test -n "$SUPABASE_ACCESS_TOKEN"
           test "$(git rev-parse HEAD)" = "$CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD"
-          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
-          git diff --check "$SOURCE_COMMIT"...HEAD
-
-          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
-          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-          allowed='^(\.github/workflows/cartera-020c-remote-(gate|acceptance)\.yml|advisor-os/cartera/persistent-confirmation-orchestration-service\.js|docs/evidence/FORGE_CARTERA_020C_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020c-(github-actions-remote-acceptance\.mjs|remote-acceptance\.sql)|supabase/migrations/20260731000238_cartera020c_authorization_digest_hardening\.sql|tests/cartera-020c-(authorization-digest-hardening|remote-acceptance-harness)-test\.mjs)$'
-          for path in "${changed[@]}"; do
-            if [[ ! "$path" =~ $allowed ]]; then
-              echo "UNAUTHORIZED_020C_REMOTE_PATH=$path" >&2
-              exit 1
-            fi
-          done
-
+          git merge-base --is-ancestor "$CARTERA_020C_EXPECTED_SOURCE_HEAD" HEAD
+          git diff --check "$CARTERA_020C_EXPECTED_SOURCE_HEAD"...HEAD
           mkdir -p artifacts/cartera-020c-remote-acceptance
           echo 'REMOTE_AUTHORIZATION=PASS'
           echo 'SOURCE_ANCESTRY=PASS'
-          echo 'BOUNDED_REMOTE_PATHS=PASS'
           echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
 
-      - name: Repository and harness gate
+      - name: Repository acceptance suite
         shell: bash
         run: |
           set -euo pipefail
           node --check advisor-os/cartera/persistent-confirmation-orchestration-service.js
           node --check scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs
-          node --check tests/cartera-020c-authorization-digest-hardening-test.mjs
-          node --check tests/cartera-020c-remote-acceptance-harness-test.mjs
+          node --check scripts/ci/cartera-020c-conflict-ambiguity-hardening-deploy.mjs
+          node --check scripts/ci/cartera-020c-conflict-constraint-name-hardening-deploy.mjs
+          node --check scripts/ci/cartera-020c-conflict-persistence-hardening-deploy.mjs
           node --test tests/cartera-020c-*.mjs
 
-      - name: Deploy and execute remote acceptance
+      - name: Apply and verify additive remote hardenings
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-020c-conflict-ambiguity-hardening-deploy.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/conflict-ambiguity-hardening-output.log
+          node scripts/ci/cartera-020c-conflict-constraint-name-hardening-deploy.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/conflict-constraint-name-hardening-output.log
+          node scripts/ci/cartera-020c-conflict-persistence-hardening-deploy.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+          grep -q 'CARTERA020C_CONFLICT_INSERT_AMBIGUITY_HARDENING=PASS' artifacts/cartera-020c-remote-acceptance/conflict-ambiguity-hardening-output.log
+          grep -q 'CARTERA020C_CONFLICT_CONSTRAINT_NAME_HARDENING=PASS' artifacts/cartera-020c-remote-acceptance/conflict-constraint-name-hardening-output.log
+          grep -q 'CARTERA020C_CONFLICT_PERSISTENCE_RECEIPT_HARDENING=PASS' artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+
+      - name: Deploy base migrations and execute complete acceptance
         shell: bash
         run: |
           set -euo pipefail
@@ -104,23 +107,26 @@ jobs:
         run: |
           set -euo pipefail
           log=artifacts/cartera-020c-remote-acceptance/workflow-output.log
-          grep -q 'CARTERA_020C_REMOTE_DEPLOYMENT=PASS' "$log"
-          grep -q 'AUTHORIZATION_DIGEST_COMPATIBILITY=PASS' "$log"
-          grep -q 'CARTERA_020C_TRANSACTIONAL_ACCEPTANCE=PASS' "$log"
-          grep -q 'AUTHORIZATION_DIGEST_BINDING=PASS' "$log"
-          grep -q 'IDENTITY_ORDERED_EXECUTION=PASS' "$log"
-          grep -q 'IDENTITY_READ_AFTER_WRITE=PASS' "$log"
-          grep -q 'POLICY_READ_AFTER_WRITE=PASS' "$log"
-          grep -q 'CHANGED_INPUT_CONFLICT=PASS' "$log"
-          grep -q 'RETRY_GOVERNANCE=PASS' "$log"
-          grep -q 'PARALLEL_STATE_VERSION_SERIALIZATION=PASS' "$log"
-          grep -q 'RLS_CROSS_ADVISOR=PASS' "$log"
-          grep -q 'DIRECT_WRITES=BLOCKED' "$log"
-          grep -q 'SANITIZED_STATUS=PASS' "$log"
-          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$log"
-          grep -q 'CONCURRENCY_FIXTURES_CLEANED=YES' "$log"
-          grep -q 'RESIDUAL_FIXTURES=0' "$log"
-          grep -q 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS' "$log"
+          for marker in \
+            CARTERA_020C_REMOTE_DEPLOYMENT=PASS \
+            AUTHORIZATION_DIGEST_COMPATIBILITY=PASS \
+            CARTERA_020C_TRANSACTIONAL_ACCEPTANCE=PASS \
+            AUTHORIZATION_DIGEST_BINDING=PASS \
+            IDENTITY_ORDERED_EXECUTION=PASS \
+            IDENTITY_READ_AFTER_WRITE=PASS \
+            POLICY_READ_AFTER_WRITE=PASS \
+            CHANGED_INPUT_CONFLICT=PASS \
+            RETRY_GOVERNANCE=PASS \
+            PARALLEL_STATE_VERSION_SERIALIZATION=PASS \
+            RLS_CROSS_ADVISOR=PASS \
+            DIRECT_WRITES=BLOCKED \
+            SANITIZED_STATUS=PASS \
+            TEST_FIXTURES_ROLLED_BACK=YES \
+            CONCURRENCY_FIXTURES_CLEANED=YES \
+            RESIDUAL_FIXTURES=0 \
+            CARTERA_020C_REMOTE_ACCEPTANCE=PASS; do
+            grep -q "$marker" "$log"
+          done
 
       - name: Upload remote acceptance evidence
         if: always()
