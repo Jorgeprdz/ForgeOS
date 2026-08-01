@@ -1,0 +1,31 @@
+name: UI M05N Public Config Boot Order
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive/forge-alive-public-config-067g17a1.js
+      - tests/ui-m05n-public-config-boot-order-test.mjs
+      - .github/workflows/ui-m05n-public-config-boot-order.yml
+  push:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive/forge-alive-public-config-067g17a1.js
+      - tests/ui-m05n-public-config-boot-order-test.mjs
+      - .github/workflows/ui-m05n-public-config-boot-order.yml
+
+permissions:
+  contents: read
+
+jobs:
+  public-config-order:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify public configuration boot order
+        run: node tests/ui-m05n-public-config-boot-order-test.mjs

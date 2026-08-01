@@ -123,18 +123,29 @@ function startPrintableAuthority() {
   );
 }
 
-async function loadQuoteAuthorities() {
-  // Printing is a core result action. It must mount independently from UDI/network work.
-  void startPrintableAuthority();
+// Printing remains eager, while every config consumer shares one environment gate.
+void startPrintableAuthority();
+const environmentAuthority = loadEnvironmentAuthority();
 
+async function loadEnvironmentAuthority() {
   markAuthority("environment", "loading");
   try {
     await loadAuthority(envBase, "env.js");
+    if (!globalThis.__ENV__ || typeof globalThis.__ENV__ !== "object") {
+      throw new Error("MATERIAL3_PUBLIC_ENV_REQUIRED");
+    }
     markAuthority("environment", "ready");
     shell.reconcile();
+    return true;
   } catch (error) {
     markAuthority("environment", "failed", error);
+    return false;
   }
+}
+
+async function loadQuoteAuthorities() {
+  // Rate-dependent quote enhancements must wait for the same public environment.
+  await environmentAuthority;
 
   try {
     await startAuthority(
@@ -182,6 +193,11 @@ async function loadAuthAuthorities() {
   });
 
   try {
+    const environmentLoaded = await environmentAuthority;
+    if (!environmentLoaded) {
+      throw new Error("MATERIAL3_PUBLIC_ENV_REQUIRED");
+    }
+
     await startAuthority(
       legacyBase,
       "forge-alive-public-config-067g17a1.js",
