@@ -38,7 +38,8 @@ function safeArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
-function readyState({ connected = true, sourceComplete = false, hasData = false, stale = false, blocked = false }) {
+function readyState({ connected = true, sourceComplete = false, hasData = false, stale = false, blocked = false, unavailable = false }) {
+  if (unavailable) return SMART_WIDGET_STATES.SOURCE_UNAVAILABLE;
   if (!connected) return SMART_WIDGET_STATES.NOT_CONNECTED;
   if (blocked) return SMART_WIDGET_STATES.BLOCKED_BY_MISSING_EVIDENCE;
   if (stale) return SMART_WIDGET_STATES.STALE;
@@ -63,6 +64,7 @@ export function createActivityProgressWidget(input = {}) {
     sourceComplete: sourceComplete && scoringConnected,
     hasData,
     stale: input.stale === true,
+    unavailable: input.sourceUnavailable === true,
   });
   const remaining = pointsEarned !== null && dailyTarget !== null ? Math.max(0, dailyTarget - pointsEarned) : null;
   const display = pointsEarned !== null && dailyTarget !== null
@@ -146,6 +148,7 @@ export function createMonthlyPolicyGoalWidget(input = {}) {
     hasData: Boolean(goal) || facts.length > 0,
     stale: input.stale === true,
     blocked,
+    unavailable: input.sourceUnavailable === true,
   });
 
   return createProductiveSmartWidget({
@@ -224,6 +227,7 @@ export function createPolicyServiceRiskWidget(input = {}) {
     sourceComplete: input.sourceComplete === true,
     hasData: signals.length > 0,
     stale: input.stale === true,
+    unavailable: input.sourceUnavailable === true,
   });
   const hardPriority = counts.OVERDUE_CONFIRMED > 0
     ? "CONFIRMED_OVERDUE_POLICY"
@@ -344,6 +348,7 @@ export function createOpportunityCloseLikelihoodWidget(input = {}) {
     hasData,
     stale: input.stale === true,
     blocked: Boolean(top && top.scoring.confidence === "LOW" && input.requireMinimumConfidence === true),
+    unavailable: input.sourceUnavailable === true,
   });
   const scoring = top?.scoring || null;
 
@@ -392,7 +397,8 @@ export function createOpportunityCloseLikelihoodWidget(input = {}) {
 
 export function createIncomeProgressWidget(input = {}) {
   const snapshot = input.compensationSnapshot || null;
-  const connected = input.sourceConnected === true && Boolean(snapshot);
+  const authorityConnected = input.sourceConnected === true;
+  const connected = authorityConnected && Boolean(snapshot);
   const real = asFiniteNumber(snapshot?.incomeReal);
   const earned = asFiniteNumber(snapshot?.incomeEarned);
   const paid = asFiniteNumber(snapshot?.incomePaid);
@@ -403,10 +409,11 @@ export function createIncomeProgressWidget(input = {}) {
   const gap = actual !== null && target !== null ? Math.max(0, target - actual) : null;
   const hasData = [real, earned, paid, potential, atRisk].some((value) => value !== null);
   const state = readyState({
-    connected,
+    connected: authorityConnected,
     sourceComplete: input.sourceComplete === true,
     hasData,
     stale: input.stale === true,
+    unavailable: input.sourceUnavailable === true,
   });
 
   return createProductiveSmartWidget({
