@@ -6,6 +6,10 @@ on:
       - fix/vida-mujer-pdf-main-thread
     paths:
       - .github/workflows/one-shot-m05p-targeted-text.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/one-shot-m05p-targeted-text.yml
 
 permissions:
   contents: write
