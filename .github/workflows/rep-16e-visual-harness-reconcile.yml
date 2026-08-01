@@ -24,12 +24,19 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           def replace_once(text, old, new, label):
               count = text.count(old)
               if count != 1:
                   raise SystemExit(f"{label}: expected 1 match, found {count}")
               return text.replace(old, new, 1)
+
+          def sub_once(text, pattern, replacement, label):
+              updated, count = re.subn(pattern, replacement, text, count=1, flags=re.MULTILINE | re.DOTALL)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected 1 match, found {count}")
+              return updated
 
           diagnostic_path = Path("tools/forge-ui-visual-diagnostic.mjs")
           diagnostic = diagnostic_path.read_text()
@@ -62,7 +69,7 @@ jobs:
               "quote capture setup",
           )
 
-          new_quote_flags = '''      quoteResultsVisible: quoteReady,
+          quote_flags = '''      quoteResultsVisible: quoteReady,
               quoteReadyState:
                 ["ready", "partial"].includes(
                   document.querySelector("[data-forge-quotes-module]")?.dataset.intakeState,
@@ -90,12 +97,14 @@ jobs:
                 /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/
                   .test(quotePrimaryText),
               quoteTechnicalPacketAbsent:
-                document.querySelector("[data-quote-technical-evidence]") === null,'''
-          flags_start = diagnostic.index("      quoteResultsVisible:")
-          flags_end_marker = '''      quoteTechnicalEvidenceOpen:
-                document.querySelector("[data-quote-technical-evidence]")?.open === true,'''
-          flags_end = diagnostic.index(flags_end_marker, flags_start) + len(flags_end_marker)
-          diagnostic = diagnostic[:flags_start] + new_quote_flags + diagnostic[flags_end:]
+                document.querySelector("[data-quote-technical-evidence]") === null,
+              quoteProjectionBounded:'''
+          diagnostic = sub_once(
+              diagnostic,
+              r'^      quoteResultsVisible:.*?^      quoteProjectionBounded:',
+              quote_flags,
+              "quote capture flags",
+          )
 
           init_start = diagnostic.index("  await context.addInitScript((sample) => {")
           init_end = diagnostic.index("  }, SAMPLE_REFERRAL);", init_start)
@@ -153,25 +162,15 @@ jobs:
               "quote ready selector",
           )
 
-          diagnostic = replace_once(
+          diagnostic = sub_once(
               diagnostic,
-              '''    result.routes.quotesEvidenceClosed = await capture(
-                page,
-                directory,
-                "05a-quotes-evidence-closed",
-              );
-              await page.locator("[data-quote-technical-evidence] summary").click();
-              result.routes.quotesEvidenceOpen = await capture(
-                page,
-                directory,
-                "05b-quotes-evidence-open",
-              );
-              await page.locator("[data-quote-technical-evidence] summary").click();''',
+              r'^    result\.routes\.quotesEvidenceClosed = await capture\(.*?^    await page\.locator\("\[data-quote-technical-evidence\] summary"\)\.click\(\);\n',
               '''    result.routes.quotesEvidenceClosed = await capture(
                 page,
                 directory,
                 "05a-quotes-technical-packet-absent",
-              );''',
+              );
+''',
               "obsolete technical evidence accordion",
           )
 
