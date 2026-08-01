@@ -207,7 +207,8 @@ test("locks canonical shell and Material 3 Activity delivery boundaries", async 
     "../docs/static-preview/forge-alive-material3/",
     import.meta.url,
   );
-  const [app, navigation, moduleSource, styles] = await Promise.all([
+  const [index, app, navigation, moduleSource, styles] = await Promise.all([
+    readFile(new URL("index.html", base), "utf8"),
     readFile(new URL("app.js", base), "utf8"),
     readFile(new URL("forge-navigation-contract.js", base), "utf8"),
     readFile(new URL("activity-module.js", base), "utf8"),
@@ -215,7 +216,13 @@ test("locks canonical shell and Material 3 Activity delivery boundaries", async 
   ]);
 
   assert.match(app, /ForgeActivityLedgerBrowserRuntimeFES02C/);
-  assert.match(app, /node:crypto/);
+  assert.match(index, /type="importmap" data-reporting-crypto-import-map/);
+  assert.match(index, /"node:crypto":"\.\/node-crypto-shim\.mjs\?v=rep-16e-001"/);
+  assert.ok(
+    index.indexOf('type="importmap"') < index.indexOf('type="module"'),
+    "reporting import map must precede the application module",
+  );
+  assert.match(app, /REP_16E_REPORTING_IMPORT_MAP_REQUIRED_BEFORE_APP_MODULE/);
   assert.match(app, /registerRouteModule\("actividad", activity\)/);
   assert.match(app, /dataset\.activityReportingRuntime = "REP-16E"/);
   assert.match(app, /dataset\.forgeShellBoot = "route-first"/);
