@@ -1,0 +1,73 @@
+name: CARTERA Pages Runtime Asset Closure
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - scripts/build-advisor-presentation-pages-runtime.mjs
+      - tests/cartera-pages-runtime-assets-test.mjs
+      - docs/evidence/FORGE_CARTERA_PAGES_RUNTIME_ASSET_HOTFIX_001.md
+      - .github/workflows/cartera-pages-runtime-assets.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pages-runtime:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'fix/cartera-pages-runtime-assets'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify bounded implementation paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t paths < <(git diff --name-only "${{ github.event.pull_request.base.sha }}...HEAD")
+          [[ ${#paths[@]} -gt 0 ]]
+          for path in "${paths[@]}"; do
+            case "$path" in
+              scripts/build-advisor-presentation-pages-runtime.mjs|\
+              tests/cartera-pages-runtime-assets-test.mjs|\
+              docs/evidence/FORGE_CARTERA_PAGES_RUNTIME_ASSET_HOTFIX_001.md|\
+              .github/workflows/cartera-pages-runtime-assets.yml)
+                ;;
+              *)
+                echo "UNAUTHORIZED_PATH=$path" >&2
+                exit 1
+                ;;
+            esac
+          done
+          echo "BOUNDED_PATHS=PASS"
+
+      - name: Syntax gate
+        run: |
+          node --check scripts/build-advisor-presentation-pages-runtime.mjs
+          node --check tests/cartera-pages-runtime-assets-test.mjs
+
+      - name: Generate and validate dependency-closed artifact
+        run: node --test tests/cartera-pages-runtime-assets-test.mjs
+
+      - name: Verify required public URLs exist in generated tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f docs/supabase-runtime.js
+          test -f docs/state-manager.js
+          test -f docs/memory-manager.js
+          test -f docs/cartera.js
+          test -f docs/advisor-os/cartera/cartera-030d-policy-payment-calendar-enhancement.js
+          test -f docs/advisor-os/cartera/cartera-100d-productivity-proof-enhancement.js
+          echo "CARTERA_PAGES_RUNTIME_ASSETS=PASS"
