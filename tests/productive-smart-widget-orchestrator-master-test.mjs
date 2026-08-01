@@ -178,6 +178,26 @@ test("Anti-flapping conserva primary durante ventana pegajosa", () => {
   assert.equal(ranked.selectionReason, "ANTI_FLAPPING_STICKY_PRIMARY");
 });
 
+test("Una fuente caída no derriba los demás widgets", async () => {
+  const stack = await buildProductiveSmartWidgetStack({
+    now: "2026-08-01T11:00:00-06:00",
+    session: { status: "AUTHENTICATED", advisorId: "advisor-1" },
+    sources: {
+      activity: { load: async () => { throw new Error("REP unavailable"); } },
+      monthlyGoal: { sourceConnected: false },
+      policyService: { sourceConnected: false },
+      opportunities: {
+        sourceComplete: true,
+        opportunities: [{ opportunityId: "op-2", personName: "Ana", signals: ["QUOTE_PRESENTED", "BUDGET_CONFIRMED", "DECISION_DATE_SET"] }],
+      },
+      income: { sourceConnected: false },
+    },
+  });
+  assert.equal(stack.primary.widgetFamily, PRODUCTIVE_SMART_WIDGET_FAMILIES.OPPORTUNITY_CLOSE_LIKELIHOOD_WIDGET);
+  const activity = stack.inventory.find((widget) => widget.widgetFamily === PRODUCTIVE_SMART_WIDGET_FAMILIES.ACTIVITY_PROGRESS_WIDGET);
+  assert.equal(activity.state, SMART_WIDGET_STATES.SOURCE_UNAVAILABLE);
+});
+
 test("Orquestador muestra máximo una primaria y dos de apoyo", async () => {
   const input = {
     now: "2026-08-28T16:00:00-06:00",
