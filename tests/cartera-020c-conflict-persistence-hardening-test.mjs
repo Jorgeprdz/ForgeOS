@@ -38,7 +38,8 @@ test('00241 deploy is migration-aware and verifies the installed invariant', () 
   assert.match(deploy, /20260731000241/);
   assert.match(deploy, /supabase_migrations\.schema_migrations/);
   assert.match(deploy, /pg_get_functiondef/);
-  assert.match(deploy, /returning \\* into persisted_conflict/i);
+  assert.match(deploy, /assert\.match\(definition, \/returning/);
+  assert.match(deploy, /persisted_conflict/);
   assert.match(deploy, /CARTERA020C_CONFLICT_PERSISTENCE_RECEIPT_HARDENING=PASS/);
   assert.match(deploy, /MAX_QUERY_ATTEMPTS = 5/);
 });
