@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 
 const app = readFileSync('app.js', 'utf8');
 const cartera = readFileSync('cartera.js', 'utf8');
+const material3App = readFileSync('docs/static-preview/forge-alive-material3/app.js', 'utf8');
 const receipt = readFileSync(
   'docs/evidence/FORGE_CARTERA_120_SELECTIVE_PROMOTION_AUTHORIZATION_RECEIPT_001.md',
   'utf8'
@@ -83,13 +84,17 @@ test('130 materializes every required productive runtime family', () => {
 test('130 manifest is head-bound and distinguishes copy from reconciliation', () => {
   assert.match(manifest, /\tCOPY_ACCEPTED_BLOB\tb83a37abe3eb8b3a48c2fe89940b562e1367bfcc\t/);
   assert.match(manifest, /^app\.js\tRECONCILE_CURRENT_MAIN\t9d014116f6b3f0a626d8848d680a5c607f924d99\t/m);
+  assert.match(manifest, /^docs\/static-preview\/forge-alive-material3\/app\.js\tRECONCILE_BOUNDED_CARTERA_QUOTE_BRIDGE\t9d014116f6b3f0a626d8848d680a5c607f924d99\t/m);
   assert.match(manifest, /^cartera\.js\tREPLACE_LEGACY_WITH_ACCEPTED_CANONICAL_ROUTE\t/m);
   assert.match(manifest, /^legacy\/quarantine\/cartera-enterprise-main-pre-canonical-20260801\.js\tPRESERVE_PRE_PROMOTION_LEGACY\t/m);
 });
 
-test('130 does not replace productive Pages Material 3 or execute remote effects', () => {
-  assert.ok(existsSync('docs/static-preview/forge-alive-material3/app.js'));
-  assert.doesNotMatch(manifest, /^docs\/static-preview\/forge-alive-material3\/app\.js\t/m);
+test('130 changes Material 3 only through the bounded Quote lifecycle bridge', () => {
+  assert.match(material3App, /forge-quote-lifecycle-browser-bridge-cartera001b\.js/);
+  assert.match(material3App, /rep-17-session-transition-guard\.js/);
+  assert.match(material3App, /quote-runtime-printable-modal-layer-m05w001\.js/);
+  assert.match(material3App, /quote-runtime-intake-readiness-m05x001\.js/);
+  assert.match(material3App, /pipeline-stage-rpc-authority\.js/);
   assert.doesNotMatch(manifest, /^\.github\/workflows\/cartera-0/m);
   assert.doesNotMatch(manifest, /DEPLOY|REMOTE_MUTATION|FULL_HISTORY_MERGE/);
 });
