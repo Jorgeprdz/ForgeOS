@@ -30,7 +30,9 @@ assert.match(files.orchestrator, /generation \+= 1/);
 assert.match(files.orchestrator, /activeAdvisorId !== session\.advisorId/);
 assert.match(files.adapter, /requestRevision/);
 assert.match(files.adapter, /activeController\.signal\.aborted/);
-assert.match(files.adapter, /root\.replaceChildren\(\)/);
+assert.match(files.adapter, /root\.replaceChildren\(\.\.\.dialogs\)/);
+assert.match(files.adapter, /clearSurface\(root, \{ scrubDialog: true \}\)/);
+assert.match(files.adapter, /input\.value = ""/);
 assert.match(files.adapter, /root\.hidden = true/);
 
 assert.match(files.adapter, /Array\.isArray\(entry\?\.points\)/);
