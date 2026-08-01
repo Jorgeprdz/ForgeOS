@@ -22,17 +22,17 @@ const canonicalMetadata = [
 
 const strictGatewayPush = [
   "const result = await gateway.pushMutation(mutation);",
-  '    assert.ok(["ACKNOWLEDGED", "IDEMPOTENT_REPLAY"].includes(result.status));',
+  'assert.ok(["ACKNOWLEDGED", "IDEMPOTENT_REPLAY"].includes(result.status));',
 ].join("\n    ");
 const canonicalRemotePush = [
   "const response = await api.rpc(\"forge_fes02_append_activity_event\", {",
-  "      p_mutation: mutation,",
-  "    });",
-  "    assert.ifError(response.error);",
-  "    const result = Array.isArray(response.data)",
-  "      ? response.data[0]",
-  "      : response.data;",
-  "    assert.ok(result && [\"ACKNOWLEDGED\", \"IDEMPOTENT_REPLAY\"].includes(result.status));",
+  "  p_mutation: mutation,",
+  "});",
+  "assert.ifError(response.error);",
+  "const result = Array.isArray(response.data)",
+  "  ? response.data[0]",
+  "  : response.data;",
+  "assert.ok(result && [\"ACKNOWLEDGED\", \"IDEMPOTENT_REPLAY\"].includes(result.status));",
 ].join("\n    ");
 
 const source = await readFile(sourcePath, "utf8");
@@ -59,7 +59,7 @@ assert.doesNotMatch(runtime, /gateway\.pushMutation\(mutation\)/);
 
 try {
   await writeFile(runtimePath, runtime, { flag: "wx", mode: 0o600 });
-  await import(`${pathToFileURL(runtimePath).href}?v=canonical-fes-remote-002`);
+  await import(`${pathToFileURL(runtimePath).href}?v=canonical-fes-remote-003`);
 } finally {
   await rm(runtimePath, { force: true });
 }
