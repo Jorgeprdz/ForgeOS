@@ -12,7 +12,9 @@ on:
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
+      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
       - 'tests/rep-16d-productive-activity-delivery-test.mjs'
+      - 'tests/rep-16f-pages-runtime-generator-test.mjs'
       - '.github/workflows/reporting-core-validation-ci.yml'
   pull_request:
     paths:
@@ -23,6 +25,7 @@ on:
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
+      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
       - 'tests/universal-reporting-kernel-test.mjs'
       - 'tests/universal-period-resolver-test.mjs'
       - 'tests/report-provider-runtime-test.mjs'
@@ -35,6 +38,7 @@ on:
       - 'tests/activity-report-provider-test.mjs'
       - 'tests/activity-reporting-runtime-chart-ready-test.mjs'
       - 'tests/rep-16d-productive-activity-delivery-test.mjs'
+      - 'tests/rep-16f-pages-runtime-generator-test.mjs'
       - '.github/workflows/reporting-core-validation-ci.yml'
   workflow_dispatch:
 
@@ -72,6 +76,8 @@ jobs:
           node --check advisor-os/reporting/runtime/activity-reporting-runtime.mjs
           node --check docs/static-preview/forge-alive-material3/node-crypto-shim.mjs
           node --check docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
+          node --check scripts/build-advisor-presentation-pages-runtime.mjs
+          node --check tests/rep-16f-pages-runtime-generator-test.mjs
           node --input-type=module --check < docs/static-preview/forge-alive-material3/activity-module.js
           node --input-type=module --check < docs/static-preview/forge-alive-material3/app.js
       - name: Run isolated core tests
@@ -88,4 +94,5 @@ jobs:
             tests/fes-activity-report-source-adapter-test.mjs \
             tests/activity-report-provider-test.mjs \
             tests/activity-reporting-runtime-chart-ready-test.mjs \
-            tests/rep-16d-productive-activity-delivery-test.mjs
+            tests/rep-16d-productive-activity-delivery-test.mjs \
+            tests/rep-16f-pages-runtime-generator-test.mjs
