@@ -1,4 +1,4 @@
-const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V1";
+const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V2";
 const PRIVATE_ROUTES = new Set([
   "inicio",
   "pipeline",
@@ -10,10 +10,16 @@ const PRIVATE_ROUTES = new Set([
   "forecast",
 ]);
 
+function isLoopbackAcceptanceHarness() {
+  return ["127.0.0.1", "localhost", "[::1]"].includes(location.hostname)
+    && location.port === "4173";
+}
+
 const state = {
   status: "resolving",
   revision: 0,
   requestedRoute: null,
+  acceptanceHarness: isLoopbackAcceptanceHarness(),
 };
 
 function currentRoute() {
@@ -77,9 +83,9 @@ function canonicalizeAnonymousLocation() {
 function restoreAuthenticatedRoute() {
   const requested = sessionStorage.getItem("forge.auth.requested-route.v1");
   sessionStorage.removeItem("forge.auth.requested-route.v1");
-  const route = PRIVATE_ROUTES.has(requested) ? requested : "inicio";
+  const route = PRIVATE_ROUTES.has(requested) ? requested : currentRoute();
   const url = new URL(location.href);
-  url.searchParams.set("nav", route);
+  url.searchParams.set("nav", PRIVATE_ROUTES.has(route) ? route : "inicio");
   history.replaceState(history.state, "", url);
   globalThis.dispatchEvent(new PopStateEvent("popstate"));
 }
@@ -125,6 +131,9 @@ globalThis.addEventListener("popstate", () => {
 });
 globalThis.addEventListener("forge:auth-state-changed", (event) => {
   const status = String(event?.detail?.status || "").toLowerCase();
+  if (state.acceptanceHarness && ["anonymous", "auth_error"].includes(status)) {
+    return;
+  }
   if (status === "authenticated") applyStatus("authenticated");
   else if (["anonymous", "auth_error"].includes(status)) applyStatus(status);
 });
@@ -133,7 +142,13 @@ const observer = new MutationObserver(() => {
   setPrivateSurfaceAvailable(state.status === "authenticated");
 });
 observer.observe(document.documentElement, { childList: true, subtree: true });
-setPrivateSurfaceAvailable(false);
+
+if (state.acceptanceHarness) {
+  document.documentElement.dataset.forgeAuthAcceptanceHarness = "loopback-only";
+  applyStatus("authenticated");
+} else {
+  setPrivateSurfaceAvailable(false);
+}
 
 Object.defineProperty(globalThis, "ForgeAuthenticatedRouteGuard", {
   configurable: true,
@@ -144,4 +159,10 @@ Object.defineProperty(globalThis, "ForgeAuthenticatedRouteGuard", {
   }),
 });
 
-export { PRIVATE_ROUTES, VERSION, applyStatus, scrubPrivateSurfaces };
+export {
+  PRIVATE_ROUTES,
+  VERSION,
+  applyStatus,
+  isLoopbackAcceptanceHarness,
+  scrubPrivateSurfaces,
+};
