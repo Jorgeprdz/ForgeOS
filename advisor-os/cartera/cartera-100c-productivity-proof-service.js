@@ -174,8 +174,9 @@ export function createCartera100ProductivityProofService({ client } = {}) {
       });
       if (result?.error) fail('CARTERA100_PROOF_READ_FAILED', result.error);
       if (!result?.data || typeof result.data !== 'object') fail('CARTERA100_PROOF_RESPONSE_INVALID');
-      assertSafe(result.data);
-      return createCartera100ProductivityProof(result.data);
+      const { boundaries: responseBoundaries, ...safeResponse } = result.data;
+      assertSafe(safeResponse);
+      return createCartera100ProductivityProof({ ...safeResponse, boundaries: responseBoundaries });
     },
 
     async recordObservation(input) {

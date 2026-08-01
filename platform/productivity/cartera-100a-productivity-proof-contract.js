@@ -374,7 +374,8 @@ function normalizeRecommendation(raw, latestFeedback) {
 }
 
 export function createCartera100ProductivityProof(raw = {}) {
-  assertSafe(raw);
+  const { boundaries: suppliedBoundaries, ...safeRaw } = raw || {};
+  assertSafe(safeRaw);
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) fail('CARTERA100_PROOF_INPUT_INVALID');
   const period = raw.period || {};
   const startDate = isoDate(period.startDate, 'CARTERA100_PERIOD_START_INVALID');
@@ -433,7 +434,7 @@ export function createCartera100ProductivityProof(raw = {}) {
       automaticCalendarCreation: false,
       automaticOpportunityCreation: false,
       advisorFeedbackRequiredForLearning: true,
-      ...raw.boundaries,
+      ...suppliedBoundaries,
     }),
     projectionAuthority: 'CARTERA100_PRODUCTIVITY_PROOF_READ_MODEL',
     readOnly: true,

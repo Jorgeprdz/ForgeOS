@@ -132,6 +132,7 @@ export function createCartera100AcceptedRecommendationObservations({
         reviewPrepared: true,
         opportunityCreated: false,
         clientIntentInferred: false,
+        causalOutcomeClaimed: false,
       },
     }));
   }
