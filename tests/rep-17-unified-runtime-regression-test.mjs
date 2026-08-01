@@ -96,8 +96,8 @@ test("REP-17A keeps Activity out of the repair boundary", async () => {
   const app = await source(
     "docs/static-preview/forge-alive-material3/app.js",
   );
-  assert.match(app, /activity-module\.js\?v=rep-16e-002/);
-  assert.match(app, /activityReportingRuntime = "REP-16E"/);
+  assert.match(app, /activity-module\.js\?v=rep-(?:16e-002|18-001)/);
+  assert.match(app, /activityReportingRuntime = "REP-(?:16E|18)"/);
   const guard = await source(
     "docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js",
   );
