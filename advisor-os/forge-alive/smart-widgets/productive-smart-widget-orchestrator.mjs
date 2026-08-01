@@ -28,9 +28,26 @@ const HARD_PRIORITY_SCORES = Object.freeze({
   MONTH_END_GOAL_RISK: 720,
 });
 
+const ALL_PENDING_DEPENDENCIES = Object.freeze([
+  ...PRODUCTIVE_SMART_WIDGET_PENDING_DEPENDENCIES,
+  {
+    dependencyId: "PIPELINE_BITACORA_SIGNAL_MAPPING",
+    unlocks: [PRODUCTIVE_SMART_WIDGET_FAMILIES.OPPORTUNITY_CLOSE_LIKELIHOOD_WIDGET],
+    requiredAuthority: "PIPELINE_AND_BITACORA",
+    requiredContract: "Canonical dated evidence-backed signals mapped to opportunity-likelihood.v1 vocabulary",
+  },
+]);
+
 const DEFAULT_LIMITS = Object.freeze({ primary: 1, supporting: 2, visible: 3 });
 const DEFAULT_STICKY_WINDOW_MS = 15 * 60 * 1000;
 const DEFAULT_CHALLENGER_MARGIN = 8;
+const AUTHORITY_UNAVAILABLE_STATES = Object.freeze(new Set([
+  SMART_WIDGET_STATES.LOADING,
+  SMART_WIDGET_STATES.SOURCE_UNAVAILABLE,
+  SMART_WIDGET_STATES.NOT_CONNECTED,
+  SMART_WIDGET_STATES.SESSION_REQUIRED,
+  SMART_WIDGET_STATES.HIDDEN_BY_SCOPE,
+]));
 
 function parseTime(value) {
   const time = new Date(value).getTime();
@@ -154,7 +171,9 @@ function createJudgmentPromptWidget(reason, pendingDependencies = []) {
 }
 
 async function materializeSource(source, context) {
-  if (!source || typeof source !== "object") return {};
+  if (!source || typeof source !== "object") {
+    return { sourceConnected: false, sourceComplete: false };
+  }
   if (typeof source.load !== "function") return source;
   try {
     const loaded = await source.load(context);
@@ -174,14 +193,37 @@ async function materializeSource(source, context) {
   }
 }
 
+function authorityAvailable(widget) {
+  return !AUTHORITY_UNAVAILABLE_STATES.has(widget.state);
+}
+
+function dependencyUnlocked(dependency, related) {
+  const widget = related[0];
+  if (!widget) return false;
+
+  switch (dependency.dependencyId) {
+    case "MICK_ACTIVITY_SCORING_SNAPSHOT":
+      return Number.isFinite(widget.payload?.pointsEarned)
+        && Number.isFinite(widget.payload?.dailyTarget);
+    case "ADVISOR_MONTHLY_POLICY_GOAL_PERSISTENCE":
+      return Number.isFinite(widget.payload?.target);
+    default:
+      return related.some(authorityAvailable);
+  }
+}
+
 function dependencyStatus(inventory) {
-  return PRODUCTIVE_SMART_WIDGET_PENDING_DEPENDENCIES.map((dependency) => {
+  return ALL_PENDING_DEPENDENCIES.map((dependency) => {
     const related = inventory.filter((widget) => dependency.unlocks.includes(widget.widgetFamily));
-    const unlocked = related.some((widget) => [SMART_WIDGET_STATES.READY, SMART_WIDGET_STATES.PARTIAL, SMART_WIDGET_STATES.STALE].includes(widget.state));
+    const unlocked = dependencyUnlocked(dependency, related);
     return {
       ...dependency,
       status: unlocked ? "UNLOCKED_OR_PARTIAL" : "PENDING",
-      widgetStates: related.map((widget) => ({ widgetId: widget.widgetId, state: widget.state, blockedReason: widget.blockedReason })),
+      widgetStates: related.map((widget) => ({
+        widgetId: widget.widgetId,
+        state: widget.state,
+        blockedReason: widget.blockedReason,
+      })),
     };
   });
 }
@@ -230,7 +272,7 @@ export async function buildProductiveSmartWidgetStack(input = {}) {
       supporting: [],
       visible: [],
       inventory: [],
-      pendingDependencies: PRODUCTIVE_SMART_WIDGET_PENDING_DEPENDENCIES,
+      pendingDependencies: ALL_PENDING_DEPENDENCIES,
       selectionTrace: [{ reason: "SESSION_REQUIRED", privateDataRendered: false }],
     });
     if (JSON.stringify(input) !== before) throw new Error("Productive Smart Widget orchestrator mutated input");
