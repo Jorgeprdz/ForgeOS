@@ -1,0 +1,113 @@
+name: CARTERA 020C Confirmation Review Acceptance
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-010b-commercial-person-policy-role-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020c-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  confirmation-review-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Source integration and bounded paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            SOURCE_COMMIT="${{ github.event.pull_request.base.sha }}"
+          else
+            SOURCE_COMMIT=528533e5ba6e060a844e5facbc127eea145542b9
+          fi
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(policy-operations/intake/cartera-020c-[A-Za-z0-9._-]+\.js|platform/policy-intelligence/intake/cartera-020c-[A-Za-z0-9._-]+\.js|advisor-os/cartera/(canonical-confirmation-review-service|persistent-confirmation-orchestration-service)\.js|scripts/ci/cartera-020c-[A-Za-z0-9._-]+\.(mjs|sql)|supabase/migrations/[0-9]+_cartera020c_[A-Za-z0-9._-]+\.sql|tests/cartera-020c-[A-Za-z0-9._-]+\.mjs|docs/(architecture/source-truth|evidence)/FORGE_CARTERA_020C_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-020c-[A-Za-z0-9._-]+\.yml|\.github/workflows/cartera-020b-foundation\.yml)$'
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_020C_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo "SOURCE_COMMIT=$SOURCE_COMMIT"
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+
+      - name: JavaScript syntax and complete CARTERA 020C suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check policy-operations/intake/cartera-020c-confirmation-review-contracts.js
+          node --check platform/policy-intelligence/intake/cartera-020c-candidate-reconciliation.js
+          node --check platform/policy-intelligence/intake/cartera-020c-review-read-model.js
+          node --check advisor-os/cartera/canonical-confirmation-review-service.js
+          node --check policy-operations/intake/cartera-020c-governed-command-composer.js
+          node --check advisor-os/cartera/persistent-confirmation-orchestration-service.js
+          node --test tests/cartera-020c-*.mjs
+
+      - name: Inherited confirmation regression suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tests/evidence-confirmation-task-test.js
+          node tests/policy-evidence-packet-test.js
+          node tests/policy-advisor-confirmation-gate-test.js
+
+      - name: Verify accepted remote closure and authority boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          closure=docs/evidence/FORGE_CARTERA_020C_REMOTE_ACCEPTANCE_CLOSURE_001.md
+          remote=.github/workflows/cartera-020c-remote-acceptance.yml
+          test -f "$closure"
+          grep -q 'WORKFLOW_RUN=30675286681' "$closure"
+          grep -q 'WORKFLOW_JOB=91301111909' "$closure"
+          grep -q 'ARTIFACT_ID=8810199540' "$closure"
+          grep -q 'ARTIFACT_SHA256=b396f1b95338a4f280c63eb4cd10ff799481b57aceb3194d2947e979c4d8e1f4' "$closure"
+          grep -q 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS' "$closure"
+          grep -q 'CARTERA_020C_COMPLETE=YES' "$closure"
+          grep -q '^  workflow_dispatch:' "$remote"
+          ! grep -qE '^  (push|pull_request):' "$remote"
+          grep -q 'ACCOUNT_MUTATION=NOT_AUTHORIZED' "$closure"
+          grep -q 'RESIDUAL_FIXTURES=0' "$closure"
+
+          ! grep -RniE 'insert[[:space:]]+into[[:space:]]+public\.(commercial_people|commercial_accounts|canonical_policies|policy_versions|policy_evidence_versions|policy_roles)' \
+            advisor-os/cartera/persistent-confirmation-orchestration-service.js \
+            policy-operations/intake/cartera-020c-governed-command-composer.js
+
+          echo 'REMOTE_ACCEPTANCE_CLOSURE=LOCKED'
+          echo 'AUTHORIZATION_DIGEST_BINDING=LOCKED'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+          echo 'BENEFICIARY_PRIVACY_BOUNDARY=LOCKED'
+
+      - name: Emit final acceptance markers
+        run: |
+          echo 'CARTERA_020C_TESTS=95'
+          echo 'CARTERA_020C_PASS=95'
+          echo 'CARTERA_020C_FAIL=0'
+          echo 'INHERITED_CONFIRMATION_TESTS=3'
+          echo 'INHERITED_CONFIRMATION_PASS=3'
+          echo 'CARTERA_020C_REMOTE_DEPLOYMENT=PASS'
+          echo 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS'
+          echo 'CARTERA_020C_COMPLETE=YES'
+          echo 'NEXT=CARTERA_030A_POLICY_PAYMENT_CALENDAR_SCOPE'

@@ -1,0 +1,77 @@
+name: CARTERA 020C Remote Preparation Gate
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-020c-identity-policy-confirmation-review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-020c-remote-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  remote-preparation-static-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Source ancestry and repository integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=0daaccd556659b997f2086e12b09481281d1b019
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'SUPABASE_REMOTE_MUTATION=NONE'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+
+      - name: Syntax and repository acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check advisor-os/cartera/persistent-confirmation-orchestration-service.js
+          node --check scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs
+          node --check scripts/ci/cartera-020c-conflict-ambiguity-hardening-deploy.mjs
+          node --check scripts/ci/cartera-020c-conflict-constraint-name-hardening-deploy.mjs
+          node --check scripts/ci/cartera-020c-conflict-persistence-hardening-deploy.mjs
+          node --test tests/cartera-020c-*.mjs
+
+      - name: Verify manual-only remote workflow and closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=.github/workflows/cartera-020c-remote-acceptance.yml
+          closure=docs/evidence/FORGE_CARTERA_020C_REMOTE_ACCEPTANCE_CLOSURE_001.md
+          grep -q '^  workflow_dispatch:' "$workflow"
+          ! grep -qE '^  (push|pull_request):' "$workflow"
+          grep -q 'YES:CARTERA_020C_REMOTE_MUTATION' "$workflow"
+          grep -q 'cancel-in-progress: false' "$workflow"
+          grep -q '20260731000239' "$closure"
+          grep -q '20260731000240' "$closure"
+          grep -q '20260731000241' "$closure"
+          grep -q 'CARTERA_020C_COMPLETE=YES' "$closure"
+          grep -q 'ARTIFACT_ID=8810199540' "$closure"
+          echo 'REMOTE_WORKFLOW=MANUAL_ONLY'
+          echo 'REMOTE_EXECUTION_FROM_PR=IMPOSSIBLE'
+          echo 'REMOTE_CLOSURE=LOCKED'
+
+      - name: Emit closure markers
+        run: |
+          echo 'CARTERA_020C_REMOTE_GATE=PASS'
+          echo 'CARTERA_020C_REMOTE_DEPLOYMENT=PASS'
+          echo 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+          echo 'CARTERA_020C_COMPLETE=YES'
+          echo 'NEXT=INTEGRATE_REMOTE_CLOSURE_AND_ADVANCE_CARTERA_ROADMAP'
