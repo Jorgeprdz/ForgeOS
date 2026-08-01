@@ -1,0 +1,3 @@
+REP-16E governed test-only reconciliation trigger
+TARGET=promotion/rep-16e-activity-reporting
+WORKFLOW_MUTATION=NO
