@@ -76,7 +76,7 @@ node --test \
   tests/cartera-080-economic-connection-view-test.mjs \
   tests/cartera-080-ui-integration-test.mjs \
   tests/cartera-070a-relational-activation-projection-test.mjs \
-  tests/cartera-070b-capacity-selection-test.mjs \
+  tests/cartera-070b-capacity-fit-policy-test.mjs \
   tests/cartera-070c-action-review-boundary-test.mjs \
   tests/cartera-070d-relational-activation-view-test.mjs \
   tests/cartera-070abcd-ui-integration-test.mjs \
