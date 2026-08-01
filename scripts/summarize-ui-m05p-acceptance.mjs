@@ -1,4 +1,5 @@
 import {
+  mkdir,
   readFile,
   readdir,
   stat,
@@ -17,6 +18,8 @@ const expectedProjects = [
   "desktop-1440x900",
   "desktop-wide-1920x1080",
 ];
+
+await mkdir(root, { recursive: true });
 
 async function files(directory, extension) {
   try {
