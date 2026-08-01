@@ -1,3 +1,4 @@
+# REP_16F_TRIGGER_SEQUENCE=2
 name: Reporting Core Validation
 
 on:
