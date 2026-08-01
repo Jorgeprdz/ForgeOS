@@ -1,3 +1,4 @@
+import "./rep-17-session-transition-guard.js?v=rep-17c-001";
 import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
