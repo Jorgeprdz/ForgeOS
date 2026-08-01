@@ -1,0 +1,125 @@
+name: CARTERA 030B One-Shot Remote Acceptance
+
+on:
+  pull_request:
+    branches:
+      - feature/cartera-030b-expected-payment-obligation-ledger-calendar
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-030b-one-shot-remote-acceptance
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-accept:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.ref == 'run/cartera-030b-remote-acceptance-20260731-2014' &&
+      github.event.pull_request.base.ref == 'feature/cartera-030b-expected-payment-obligation-ledger-calendar' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_030B_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_030B_REMOTE_MUTATION
+      CARTERA_030B_EXPECTED_SOURCE_HEAD: 23b52fc7a442f52494c51fead67699004923c547
+      CARTERA_030B_ACCEPTANCE_BRANCH: run/cartera-030b-remote-acceptance-20260731-2014
+      CARTERA_030B_ACCEPTANCE_HEAD: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - name: Checkout exact authorized acceptance head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Authorization, ancestry and bounded path gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$CARTERA_030B_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_030B_REMOTE_MUTATION'
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$(git rev-parse HEAD)" = "$CARTERA_030B_ACCEPTANCE_HEAD"
+          git merge-base --is-ancestor "$CARTERA_030B_EXPECTED_SOURCE_HEAD" HEAD
+          git diff --check "$CARTERA_030B_EXPECTED_SOURCE_HEAD"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$CARTERA_030B_EXPECTED_SOURCE_HEAD"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          allowed='^(scripts/ci/cartera-030b-remote-acceptance\.(mjs|sql)|tests/cartera-030b-remote-acceptance-contract-test\.mjs|\.github/workflows/cartera-030b-one-shot-remote-acceptance\.yml)$'
+          test "${#changed[@]}" -eq 4
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_030B_REMOTE_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          mkdir -p artifacts/cartera-030b-remote-acceptance
+          echo 'REMOTE_AUTHORIZATION=PASS'
+          echo 'SOURCE_ANCESTRY=PASS'
+          echo 'BOUNDED_REMOTE_PATHS=PASS'
+          echo 'PRODUCT_UI_DIFF=NONE'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+
+      - name: Repository and remote acceptance contract gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/ci/cartera-030b-remote-acceptance.mjs
+          node --test tests/cartera-030b-*.mjs
+          node tests/payment-evidence-packet-test.js
+          node tests/payment-event-engine-test.js
+
+      - name: Deploy migrations and execute transactional remote acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-030b-remote-acceptance.mjs \
+            | tee artifacts/cartera-030b-remote-acceptance/workflow-output.log
+
+      - name: Verify explicit acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-030b-remote-acceptance/workflow-output.log
+          for marker in \
+            CARTERA_030B_REMOTE_DEPLOYMENT=PASS \
+            CARTERA_030B_CATALOG_VERIFICATION=PASS \
+            AUTHORIZATION_DIGEST_COMPATIBILITY=PASS \
+            CARTERA_030B_TRANSACTIONAL_ACCEPTANCE=PASS \
+            DETERMINISTIC_RECURRENCE=PASS \
+            IDEMPOTENT_REPLAY=PASS \
+            CHANGED_INPUT_CONFLICT_PERSISTENCE=PASS \
+            IDENTITY_COLLISION_CONFLICT_PERSISTENCE=PASS \
+            OPTIMISTIC_STATE_VERSION=PASS \
+            RLS_CROSS_ADVISOR=PASS \
+            DIRECT_TABLE_ACCESS=BLOCKED \
+            SANITIZED_CALENDAR=PASS \
+            NO_LAPSE_INFERENCE=PASS \
+            TEST_FIXTURES_ROLLED_BACK=YES \
+            RESIDUAL_FIXTURES=0 \
+            CARTERA_030B_REMOTE_ACCEPTANCE=PASS; do
+            grep -q "$marker" "$log"
+          done
+
+      - name: Upload remote acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-030b-remote-acceptance-attempt-1
+          path: artifacts/cartera-030b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
