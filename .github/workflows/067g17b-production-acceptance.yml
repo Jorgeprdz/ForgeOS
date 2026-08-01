@@ -126,20 +126,23 @@ jobs:
               raise SystemExit(f'REP_16F_TELEMETRY_SOURCE_MATCHES={text.count(old)}')
           text = text.replace(old, new)
 
-          old_close = '''  assert.deepEqual(runtimeFailures, [], runtimeFailures.join("; "));
-          evidence.runtimeFailures = [];
-          evidence.result = "PASS";'''
-          new_close = '''  assert.deepEqual(
+          old_assertion = '  assert.deepEqual(runtimeFailures, [], runtimeFailures.join("; "));'
+          new_assertion = '''  assert.deepEqual(
             activityRuntimeFailures,
             [],
             activityRuntimeFailures.join("; "),
-          );
-          evidence.activityRuntimeFailures = [];
+          );'''
+          if text.count(old_assertion) != 1:
+              raise SystemExit(f'REP_16F_TELEMETRY_ASSERT_MATCHES={text.count(old_assertion)}')
+          text = text.replace(old_assertion, new_assertion)
+
+          old_evidence = '  evidence.runtimeFailures = [];\n  evidence.result = "PASS";'
+          new_evidence = '''  evidence.activityRuntimeFailures = [];
           evidence.unrelatedRuntimeObservations = unrelatedRuntimeObservations;
           evidence.result = "PASS";'''
-          if text.count(old_close) != 1:
-              raise SystemExit(f'REP_16F_TELEMETRY_CLOSE_MATCHES={text.count(old_close)}')
-          path.write_text(text.replace(old_close, new_close))
+          if text.count(old_evidence) != 1:
+              raise SystemExit(f'REP_16F_TELEMETRY_EVIDENCE_MATCHES={text.count(old_evidence)}')
+          path.write_text(text.replace(old_evidence, new_evidence))
           PY
           node --check tests/rep-16f-pages-live-activity-acceptance.mjs
       - name: Run REP-16F Pages and live authenticated Activity acceptance
