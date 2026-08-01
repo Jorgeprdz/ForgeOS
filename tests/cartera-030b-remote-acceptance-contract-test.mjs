@@ -12,14 +12,15 @@ test('remote runner is pinned to the exact 030B foundation and project', async (
   assert.match(source, /23b52fc7a442f52494c51fead67699004923c547/);
   assert.match(source, /rmlxigxysujsuwzgoimv/);
   assert.match(source, /YES:CARTERA_030B_REMOTE_MUTATION/);
-  assert.match(source, /run\/cartera-030b-pgcrypto-repair-v2-20260731-2028/);
+  assert.match(source, /run\/cartera-030b-durable-conflict-hardening-20260731-2031/);
 });
 
-test('remote deployment is limited to migrations 00250 and 00251', async () => {
+test('remote deployment is limited to migrations 00250 through 00252', async () => {
   const source = await read(runnerPath);
   assert.match(source, /20260731000250/);
   assert.match(source, /20260731000251/);
-  assert.doesNotMatch(source, /2026073100025[2-9]/);
+  assert.match(source, /20260731000252/);
+  assert.doesNotMatch(source, /2026073100025[3-9]/);
 });
 
 test('transactional acceptance always rolls fixtures back', async () => {
