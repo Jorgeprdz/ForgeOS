@@ -5,6 +5,7 @@ import {
   writeFile,
 } from "node:fs/promises";
 import path from "node:path";
+import { inflateSync } from "node:zlib";
 
 const root = process.cwd();
 const sourceDirectory = path.join(
@@ -19,6 +20,15 @@ const expectedSize = 69_973;
 const expectedEncodedLength = 93_300;
 const expectedSha256 =
   "16be81ab3d912c919bb60b504d711fa09f5534b3cf7db2874843a4c12ca66a2a";
+const compressedTail02 = [
+  "eNrtVkmP6jgQ/kHvklVqDu+QhYSEtulshOSWpWXIAoy6O9uvn7ITXho6SKM5zWEOJUGl/PlzueorYz8QLOXSfrMeD4RohfLNAh6flC3SlC1m8dccrEprt4nqC3y3WktXSCrYf8H6lzeIe+VdOTMD8srFTXp21/EBF1ldtbm56iGmceB/HMqcpZct9iCew8dsfaySML/kmsIjwNNOK7aOxWlcj3yL+szUNM5Zr3AUx61XX/na1lKREFSsCdJUb/bLxzSkHAzVCcC8TxU4HFPKj6u4KOyuEWd8xUJXAX/gjLk45ENr3NvPzf2npyntyDc+74WqzE1CsO508x7xNTWD3tKtnq4LThS7q6LQvaZ1RhDbiz++G/k1",
+  "3rgXiBNwEVB8nBzwkITyD9xwzgPd+9cbYEIOyim/PfLAb65OCfjDXvnERcRDfgYEuKhQWtizQ7rTWgZHtHr/FU+xqEA0P+OdVR/03sSdNt7rP7Yik4DDgAb079bDyod6+24iKuCOi6xHwBcPVj/7IgH34CvWNEfiXKP3HKbv0sjvhsM4Q96zac3kLyKR+pG/nvzjHugn3jO+PPYjuq6DO5l644Y39cx43sk3xk057B/PsNOJ/Bg77T/5kLSb95nu4G7vO26sh4r/7b9ps6Y+s4U7fWZjfVSP/R7M/V60L1Rb9puqjT1l0i63yqDik4PKpSLTVhX+V+nZITtf4ZnuCUbrmftrLBxBq4N21DO2jsW9+laHmObF",
+  "H1GYD5bujBotyJxT2s27pvRwTtAi64/fr41PyoFpcmBoW87ok9D4eF3bTWqy9XZuGh9JiNW0zj8gtr3p8f406nEgulUakElfDSHmb/rqiDs2T9jcMZOwq4BfD31944Di0Cip7k46j6PD8ZCELpdQroVFe7Pxw2rIhOrrBy5/tOKwOicbh+39VkgPOY/uNPbVj3ro7U8EaKD9Le1JBLnFJ/VxhkrfZuglMFdifLCrWFO1d0/Vs3M10JxsvftZsPs2C7Zr3L8fMMy1lgT1vk1Fm8v68p7foPyoiWBjN/FmX8QHi2wNtcmFfR+HDnHOJXFEW85EF2ZmSVg9iHYVHdwmOymX+ZvqxQe1yc7uAPwAV/p1d7bzEfAi",
+  "VvdoYFpL83AzAvOQR0NAYspv9nf0zthvTf2idT76gw7mAuRy/GaZ0h887K9B9y1yw01nPB75RKB1+BMPzC+5J3gyu68lvAJmrLbIr0d6JC3jWR0uFvEE7DNtX8CLeHgXDIt4BdSWbi3jFQ6PF/GUfuezt8oSnkBnyjJexi3jRcJOV7gneNLOL5fwIBeOiBbvI4LZrjzhl8l4iJbxCotDi/USSUhfy0t4aICe9pfzt9Mz8cl5oSYCbhkv4Fh/LeH5irxcz4DnI3H5vCXUunOHl2/sI9U06L/tm96yd2pyuML7FbG3Y1CvGng3dvNbFDSsfiFT33u39yTtW+hXKav3NZ0fkAeB6rjt7Q2fi7BGfv/+G2R/+Qc=",
+].join("");
+const exactTail02 = inflateSync(
+  Buffer.from(compressedTail02, "base64"),
+).toString("utf8");
 
 const chunkSpecs = [
   { name: "solucionline.pdf.b64.part-00", length: 12_000, sha256: "ef3c1f4e642a56f4d296b5eb03741ac3641aa12e5b3af6ed6994ac557162e4e4" },
@@ -46,10 +56,12 @@ const chunkSpecs = [
     length: 175,
     sha256: "704b38a3d9198f1793c9322b04430c08541a32f04d36e0b8ecc62de3e7b6059b",
   },
-  { name: "solucionline.pdf.b64.tail-02-0", length: 775, sha256: "612654d09422061d0a946def4fbb05270f224249bbe6039c41ce0d3348f47632" },
-  { name: "solucionline.pdf.b64.tail-02-1", length: 775, sha256: "7ac41ca6724d53637221f15eef95962207edd44b84799a6fd0394c83081b3322" },
-  { name: "solucionline.pdf.b64.tail-02-2", length: 775, sha256: "f2c6eb7963c605a3275c471f0dcbd61b214c365731391b1834009650e472e5a7" },
-  { name: "solucionline.pdf.b64.tail-02-3", length: 775, sha256: "30e893425966610ea252a2b84804d9889511cb5becea9d8f33ae6b16871536a3" },
+  {
+    name: "inflate:tail-02",
+    content: exactTail02,
+    length: 3_100,
+    sha256: "54a3205637e672181b24a501e26b68b7999f415287b2c1789871b6dbffd800b3",
+  },
 ];
 
 function digest(payload) {
@@ -119,7 +131,7 @@ await writeFile(outputPath, payload);
 await writeFile(
   `${outputPath}.metadata.json`,
   `${JSON.stringify({
-    schema: "forge.ui.m05p.real-pdf-fixture.v6",
+    schema: "forge.ui.m05p.real-pdf-fixture.v7",
     sourceFileName: "Solucionline_20260711_16_05.PDF",
     product: "Vida Mujer",
     insured: "Alejandra Moleres",
