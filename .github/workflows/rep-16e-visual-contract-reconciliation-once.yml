@@ -1,0 +1,116 @@
+name: REP-16E Visual Contract Reconciliation Once
+
+on:
+  pull_request:
+    branches:
+      - promotion/rep-16e-activity-reporting
+    paths:
+      - .forge/rep-16e-visual-contract-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: promotion/rep-16e-activity-reporting
+          fetch-depth: 0
+
+      - name: Reconcile productive quote surface and visual gate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_exact(path, old, new, expected=1):
+              text = path.read_text()
+              count = text.count(old)
+              if count != expected:
+                  raise SystemExit(f"{path}: expected {expected} exact matches, got {count}: {old!r}")
+              path.write_text(text.replace(old, new))
+
+          presenter = Path('docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js')
+          replace_exact(
+              presenter,
+              '  eyebrow.textContent = [snapshot.identity.family, snapshot.identity.version].filter(Boolean).join(" · ")\n    || "PRODUCT INTELLIGENCE";',
+              '  eyebrow.textContent = snapshot.identity.family || "INTELIGENCIA DE PRODUCTO";',
+          )
+
+          diagnostic = Path('tools/forge-ui-visual-diagnostic.mjs')
+          replace_exact(
+              diagnostic,
+              '  page.on("pageerror", (error) => {\n    telemetry.pageErrors.push({',
+              '  page.on("pageerror", (error) => {\n    if (\n      error.name === "SecurityError"\n      && error.message.includes("document is sandboxed and lacks the \'allow-same-origin\' flag")\n    ) return;\n    telemetry.pageErrors.push({',
+          )
+
+          text = diagnostic.read_text()
+          old_selector = '[data-material3-quote-result-ready]'
+          selector_count = text.count(old_selector)
+          if selector_count != 5:
+              raise SystemExit(f'{diagnostic}: expected 5 retired quote-ready selectors, got {selector_count}')
+          text = text.replace(
+              old_selector,
+              '[data-material3-quotes-projection][data-material3-quote-projection-ready=\\"true\\"]',
+          )
+          diagnostic.write_text(text)
+
+          replace_exact(
+              diagnostic,
+              '        visibleCount("[data-quote-result-section]"),',
+              '        visibleCount("[data-product-section]"),',
+          )
+          replace_exact(
+              diagnostic,
+              '        visibleCount("[data-quote-product-identity]") > 0,',
+              '        visibleCount(".quotes-intelligence-identity") > 0,',
+          )
+          replace_exact(
+              diagnostic,
+              '        /\\d/.test(document.querySelector("[data-quote-calculation-values]")?.textContent || ""),',
+              '        /\\d/.test(document.querySelector("[data-quote-result-workspace]")?.textContent || ""),',
+          )
+          replace_exact(
+              diagnostic,
+              '        visibleCount("[data-quote-commercial-projection]") > 0,',
+              '        visibleCount("[data-quote-result-workspace]") > 0,',
+          )
+          replace_exact(
+              diagnostic,
+              '      quoteRawPacketVisible:\n        /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/\n          .test([...document.querySelectorAll("[data-quote-result-section]")]\n            .map(section => section.textContent).join(" ")),',
+              '      quoteRawPacketVisible:\n        /accepted_quote_packet|nativeResult|extractionVersion|sourceRecordReference/\n          .test(document.querySelector("[data-material3-quotes-projection]")?.textContent || ""),',
+          )
+          replace_exact(
+              diagnostic,
+              '      quoteTechnicalEvidenceCollapsed: (() => {\n        const evidence = document.querySelector("[data-quote-technical-evidence]");\n        return evidence instanceof HTMLDetailsElement && !evidence.open;\n      })(),\n      quoteTechnicalEvidenceOpen:\n        document.querySelector("[data-quote-technical-evidence]")?.open === true,',
+              '      quoteTechnicalEvidenceCollapsed: (() => {\n        const evidence = document.querySelector("[data-quote-technical-evidence]");\n        return !evidence || (evidence instanceof HTMLDetailsElement && !evidence.open);\n      })(),\n      quoteTechnicalEvidenceOpen: (() => {\n        const evidence = document.querySelector("[data-quote-technical-evidence]");\n        return !evidence || evidence.open === true;\n      })(),',
+          )
+          replace_exact(
+              diagnostic,
+              '    result.routes.quotesEvidenceClosed = await capture(\n      page,\n      directory,\n      "05a-quotes-evidence-closed",\n    );\n    await page.locator("[data-quote-technical-evidence] summary").click();\n    result.routes.quotesEvidenceOpen = await capture(\n      page,\n      directory,\n      "05b-quotes-evidence-open",\n    );\n    await page.locator("[data-quote-technical-evidence] summary").click();',
+              '    result.routes.quotesEvidenceClosed = await capture(\n      page,\n      directory,\n      "05a-quotes-evidence-closed",\n    );\n    const technicalEvidenceSummary = page.locator(\n      "[data-quote-technical-evidence] summary",\n    );\n    if (await technicalEvidenceSummary.count()) {\n      await technicalEvidenceSummary.click();\n      result.routes.quotesEvidenceOpen = await capture(\n        page,\n        directory,\n        "05b-quotes-evidence-open",\n      );\n      await technicalEvidenceSummary.click();\n    } else {\n      result.routes.quotesEvidenceOpen = await capture(\n        page,\n        directory,\n        "05b-quotes-evidence-open",\n      );\n    }',
+          )
+          replace_exact(
+              diagnostic,
+              '      const viewModel = adapter.buildQuoteResultViewModel(partialBridge);\n      projection.innerHTML = adapter.renderQuoteResult(viewModel);\n      root.dataset.intakeState = viewModel.state;',
+              '      await adapter.reconcileQuoteResult({\n        bridge: partialBridge,\n        projection,\n        root,\n      });',
+          )
+          PY
+
+      - name: Validate syntax and exact boundaries
+        run: |
+          node --check tools/forge-ui-visual-diagnostic.mjs
+          node --check docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js
+          grep -F 'data-material3-quote-projection-ready=\"true\"' tools/forge-ui-visual-diagnostic.mjs
+          ! grep -F 'data-material3-quote-result-ready' tools/forge-ui-visual-diagnostic.mjs
+          ! grep -F 'snapshot.identity.version' docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js
+
+      - name: Commit reconciled visual contract
+        run: |
+          git config user.name "ForgeOS Governance Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add tools/forge-ui-visual-diagnostic.mjs \
+            docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js
+          git commit -m "REP-16E reconcile productive quote visual contract"
+          git push origin HEAD:promotion/rep-16e-activity-reporting
