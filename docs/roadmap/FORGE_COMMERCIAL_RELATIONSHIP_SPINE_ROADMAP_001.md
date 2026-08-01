@@ -6,72 +6,66 @@
 STATUS=ACTIVE_OWNER_ALIGNED_ROADMAP
 RECORDED=2026-08-01
 SOURCE_MAIN_HEAD=e0b8f4e2e8629e506ef1e49beecc48dd741ffefa
-CURRENT=CRS_00_SOURCE_TRUTH_AND_ROADMAP_LOCK
-NEXT=CRS_01_CANONICAL_PERSON_RELATIONSHIP_SPINE
-MAIN_MUTATION=NO
+CURRENT=CRS_00_ABCD_SINGLE_PASS
+NEXT=CRS_01A_PERSON_RELATIONSHIP_SCOPE
+STAGES=12
+SUBSTAGES=48
+SUBSTAGE_PATTERN=A_B_C_D
+RUNTIME_MUTATION=NO
 PRODUCT_UI_MUTATION=NO
 SUPABASE_MUTATION=NO
 ```
 
 ## Product decision
 
-ForgeOS follows the complete commercial relationship with a person. It does not treat Pipeline, Bitácora, Cotizaciones, Solicitudes and Cartera as disconnected records.
-
-The canonical center is:
+ForgeOS follows the complete commercial relationship with a person. Pipeline, Activity / Bitácora, Cotizaciones, Solicitudes and Cartera remain separate domain authorities linked to one stable commercial identity.
 
 ```text
-CommercialPerson
-+ AdvisorCommercialRelationship
+CANONICAL_ROOT=CommercialPerson
+RELATIONSHIP_ROOT=AdvisorCommercialRelationship
+COMMERCIAL_MOVEMENT=correlationId
+UNIFIED_TIMELINE=COMPOSED_READ_MODEL
+CENTRAL_DUPLICATE_TRUTH_STORE=FORBIDDEN
 ```
-
-Every module preserves its own truth and links its records to that shared person and relationship.
 
 ```text
 CommercialPerson
 └── AdvisorCommercialRelationship
     ├── Prospect and Pipeline opportunities
-    ├── Activity and Bitácora records
-    ├── Meetings and commitments
+    ├── Activity, meetings, notes and commitments
     ├── Quotes and Quote Versions
-    ├── Applications and signatures
+    ├── Applications and signature evidence
     ├── Policies and Policy Roles
-    ├── Payments and service events
+    ├── Payments, service and conservation
     └── Referrals and relationship context
 ```
-
-The unified Timeline is a composed read model. It references authoritative records and events; it is not a second truth store.
 
 ## Governing journey
 
 ```text
 Juan Pérez contacto inicial
-→ Pipeline creates or links a Prospect and opportunity
+→ Pipeline owns Prospect and Opportunity
 
 Cita con Juan Pérez
-→ Activity / Bitácora records the interaction, context and commitments
+→ Activity / Bitácora owns context and commitments
 
 Cotización con Juan Pérez
-→ Quote authority stores Quote and Quote Version linked to the same person relationship
+→ Quote authority owns calculation, Quote and Quote Version
 
 Cita de cierre con Juan Pérez
-→ Activity / Bitácora records the closing interaction and outcome
+→ Activity / Bitácora owns interaction and outcome
 
 Juan Pérez firmó solicitud
-→ Application authority records signature evidence
-→ Pipeline reflects the authoritative application milestone
+→ Application authority owns Application and signature evidence
+→ Pipeline reflects the authoritative milestone
 
 Se emitió la póliza de Juan Pérez
-→ Cartera creates or links the canonical Policy after governed confirmation
+→ Cartera owns canonical Policy and Policy Roles
 
-Revisión anual con Juan Pérez
-→ Activity / Bitácora records service context
-→ Cartera continues to own Policy, payment and conservation truth
-
-Nueva necesidad detectada
-→ Pipeline may open a new opportunity for the same CommercialPerson
+Revisión anual y nueva necesidad
+→ same CommercialPerson
+→ new Activity, service event or Opportunity without duplication
 ```
-
-The person remains the same throughout the journey. Opportunities, meetings, Quotes, Applications and Policies may be multiple.
 
 ```text
 ONE_PERSON=MANY_OPPORTUNITIES
@@ -82,105 +76,36 @@ ONE_PERSON=MANY_POLICIES
 PERSON_DUPLICATION=FORBIDDEN
 ```
 
-## Canonical entities
-
-### CommercialPerson
-
-Represents the stable commercial identity of the human being.
-
-```text
-personReference
-advisorId
-displayIdentity
-verifiedIdentityLinks
-lifecycleState
-privacyClassification
-evidenceReferences
-```
-
-CommercialPerson does not own opportunity stage, Quote calculations, meeting notes, Application state or Policy state.
-
-### AdvisorCommercialRelationship
-
-Represents the relationship between one advisor and one CommercialPerson.
-
-```text
-relationshipReference
-advisorId
-personReference
-relationshipState
-originReferences
-createdAt
-lastInteractionAt|null
-```
-
-The relationship is not a lead score, human-worth score or automatic sales trigger.
-
-### Domain references
-
-Each domain record remains under its authority and links through references:
-
-```text
-prospectReference|null
-opportunityReference|null
-activityReference|null
-meetingReference|null
-quoteReference|null
-quoteVersionReference|null
-applicationReference|null
-policyReference|null
-paymentEventReference|null
-serviceCommitmentReference|null
-```
-
-### Correlation
-
-A `correlationId` groups records that belong to one commercial movement without replacing the stable person or relationship identity.
-
-Examples:
-
-```text
-relationshipReference=relationship:juan-perez
-correlationId=movement:juan-perez:retirement-2026
-
-relationshipReference=relationship:juan-perez
-correlationId=movement:juan-perez:education-2027
-```
-
-The same person may have simultaneous commercial movements.
-
 ## Authority matrix
 
 | Domain | Owns | Must not own |
 |---|---|---|
-| Identity / Shared Commercial Model | CommercialPerson, identity decisions and advisor relationship | Pipeline stage, calculations, Application or Policy truth |
-| Pipeline | Opportunities, stage, commercial movement and next-step workflow | Quote calculations, meeting evidence, signature evidence or Policy issuance |
-| Activity / Bitácora | Interactions, meetings, notes, commitments, outcomes and context | Opportunity authority, Quote truth or Policy truth |
-| Cotizaciones | Quote, Quote Version, product calculation and presentation lifecycle | Person creation, opportunity mutation or Policy issuance |
-| Solicitudes / Application | Application identity, signature evidence and submission lifecycle | Pipeline stage invention or Policy issuance |
-| Cartera | Policy, Policy Roles, issuance, status, payments, service and conservation | Quote calculations or Application signature truth |
-| Timeline | Composed chronological projection with source references | Independent event truth or silent mutation |
-| Alfred / NBA / Council | Explanation and recommendation candidates | Canonical identity, final priority or automatic business action |
+| Shared Commercial Model | CommercialPerson, identity decisions, AdvisorCommercialRelationship and domain links | Pipeline stage, Quote calculations, Application or Policy truth |
+| Pipeline | Prospect, Opportunity, stage, commercial movement and next-step workflow | Meeting evidence, signature evidence or Policy issuance |
+| Activity / Bitácora | Interactions, meetings, notes, commitments, outcomes and context | Opportunity stage, Quote, Application or Policy truth |
+| Cotizaciones | Quote, Quote Version, calculation and presentation lifecycle | Person, Application or Policy creation |
+| Application | Application identity, versions, signature and submission lifecycle | Policy issuance |
+| Cartera | Policy, roles, issuance, status, payments, service and conservation | Quote calculation or Application signature truth |
+| Timeline | Source-attributed chronological projection | Independent truth or mutation |
+| Alfred / NBA / Nash | Explanation, recommendation and draft candidates | Canonical truth or automatic action |
 
 ## Existing accepted foundations
 
-The roadmap reuses existing work rather than replacing it:
-
 ```text
-FES_ACTIVITY_AND_TIMELINE_FOUNDATION=REUSE
+FES_ACTIVITY_EVENT_LEDGER_TIMELINE=REUSE
 CARTERA_001B_QUOTE_LIFECYCLE=REUSE
 CARTERA_010B_COMMERCIAL_PERSON_AND_POLICY=REUSE
 CARTERA_020B_POLICY_EVIDENCE=REUSE
 CARTERA_020C_GOVERNED_CONFIRMATION=REUSE
-QUOTE_CARTERA_RELATIONSHIP_PR_144=REUSE_AS_EDGE
-CARTERA_PRODUCTIVE_ROUTE_PR_145=REUSE
+PR_144_QUOTE_TO_POLICY_EDGE=REUSE
+PR_145_CARTERA_PRODUCTIVE_ROUTE=REUSE
 ```
 
-PR #144 remains valid as the Quote-to-Policy lineage edge. It is not the system spine.
+PR #144 remains valid as one Quote-to-Policy lineage edge. It is not the system spine.
 
 ```text
 PR_144_ROLE=QUOTE_TO_POLICY_LINEAGE_EDGE
-PR_144_ROLE=NOT_CANONICAL_PERSON_SPINE
+PR_144_ROLE_IS_SYSTEM_SPINE=NO
 REVERT_REQUIRED=NO
 ```
 
@@ -205,64 +130,77 @@ SENSITIVE_CONTEXT_AS_SALES_TRIGGER=FORBIDDEN
 HUMAN_CONFIRMATION_REQUIRED_FOR_CANONICAL_MUTATION=YES
 ```
 
+## Execution pattern
+
+Every stage uses the same four substages:
+
+```text
+A=SCOPE_DISCOVERY_AND_AUTHORITIES
+B=CONTRACTS_MODELS_AND_FOUNDATIONS
+C=PRODUCTIVE_INTEGRATION_AND_RUNTIME
+D=ACCEPTANCE_EVIDENCE_AND_CLOSURE
+```
+
+A stage is not complete until its `D` substage closes. Contract completion alone never implies productive completion.
+
+---
+
 ## Stage 00 — Source truth and roadmap lock
 
-### `CRS_00_SOURCE_TRUTH_AND_ROADMAP_LOCK`
+### CRS_00A_REPOSITORY_DISCOVERY_AND_AUTHORITY_INVENTORY
 
-Deliver:
+Inventory accepted Activity, Pipeline, Quote, identity, Policy, evidence and confirmation authorities. Identify gaps without replacing existing truth.
 
-- this roadmap;
-- canonical decision that CommercialPerson plus AdvisorCommercialRelationship is the spine;
-- authority matrix;
-- accepted-foundation inventory;
-- locked sequence and safety boundaries;
-- Segubeca dependency rule.
+### CRS_00B_SOURCE_TRUTH_AND_DOMAIN_AUTHORITY_LOCK
 
-```text
-RUNTIME_MUTATION=NO
-SCHEMA_MUTATION=NO
-PRODUCT_UI_MUTATION=NO
-```
+Lock `CommercialPerson + AdvisorCommercialRelationship`, the domain authority matrix, the Juan Pérez journey and all safety invariants.
 
-## Stage 01 — Canonical person and relationship spine
+### CRS_00C_ROADMAP_GOVERNANCE_AND_VALIDATION
 
-### `CRS_01_CANONICAL_PERSON_RELATIONSHIP_SPINE`
+Formalize 12 stages, 48 substages, dependency rules, machine validation and documentation-only scope enforcement.
 
-Deliver an executable, versioned contract for:
+### CRS_00D_ACCEPTANCE_EVIDENCE_AND_CLOSURE
+
+Persist closure evidence proving the roadmap, source truth, counts, boundaries and next authorized pass.
 
 ```text
-CommercialPerson
-AdvisorCommercialRelationship
-RelationshipOrigin
-PersonDomainLink
+CRS_00_RUNTIME_MUTATION=NO
+CRS_00_SCHEMA_MUTATION=NO
+CRS_00_PRODUCT_UI_MUTATION=NO
+CRS_00_SUPABASE_MUTATION=NO
 ```
 
-Requirements:
+---
 
-- owner-scoped identity;
-- deterministic references;
-- explicit identity-resolution outcomes;
-- one advisor relationship per advisor-person pair unless explicitly versioned;
-- no duplicate person creation from module-local records;
-- no automatic merge;
-- correction and dispute lineage;
-- privacy classification and evidence references.
+## Stage 01 — Canonical person and advisor relationship spine
 
-Acceptance:
+### CRS_01A_PERSON_RELATIONSHIP_SCOPE_AND_AUTHORITY
 
-```text
-PERSON_REFERENCE_STABLE=PASS
-ADVISOR_PERSON_RELATIONSHIP_UNIQUE=PASS
-MODULE_LOCAL_PERSON_CREATION=BLOCKED
-AUTOMATIC_IDENTITY_MERGE=BLOCKED
-CROSS_ADVISOR_ACCESS=BLOCKED
-```
+Define ownership, identity precedence, advisor scope, privacy and correction rules.
+
+### CRS_01B_PERSON_RELATIONSHIP_CONTRACTS_AND_MODELS
+
+Deliver versioned contracts for `CommercialPerson`, `AdvisorCommercialRelationship`, `RelationshipOrigin` and stable references.
+
+### CRS_01C_PERSON_RELATIONSHIP_PRODUCTIVE_PERSISTENCE
+
+Mount owner-scoped persistence and governed identity resolution without automatic merge.
+
+### CRS_01D_PERSON_RELATIONSHIP_ACCEPTANCE_AND_CLOSURE
+
+Accept uniqueness, idempotency, disputes, corrections, RLS and duplicate prevention.
+
+---
 
 ## Stage 02 — Correlation and domain-link contract
 
-### `CRS_02_CORRELATION_AND_DOMAIN_LINK_CONTRACT`
+### CRS_02A_CORRELATION_DOMAIN_LINK_SCOPE
 
-Deliver the common reference envelope used by every module:
+Define commercial movement, source authority, missing-link and replay semantics.
+
+### CRS_02B_CORRELATION_DOMAIN_LINK_CONTRACTS
+
+Deliver the common envelope:
 
 ```text
 personReference
@@ -278,39 +216,33 @@ recordedAt
 privacyClassification
 ```
 
-Requirements:
+### CRS_02C_CORRELATION_DOMAIN_LINK_PRODUCTIVE_ADAPTERS
 
-- links reference authoritative records without copying their payloads;
-- one commercial movement may span Pipeline, Bitácora, Quote, Application and Policy;
-- a person may have multiple active movements;
-- missing references remain explicit;
-- changed-input replay produces conflict rather than silent overwrite.
+Create pure adapters for authoritative domain receipts without copying payload truth.
 
-Acceptance:
+### CRS_02D_CORRELATION_DOMAIN_LINK_ACCEPTANCE
 
-```text
-DOMAIN_TRUTH_COPY=BLOCKED
-MULTIPLE_MOVEMENTS_PER_PERSON=PASS
-CORRELATION_CONTINUITY=PASS
-CHANGED_INPUT_CONFLICT=PASS
-```
+Accept multiple movements, changed-input conflicts, source attribution and no truth duplication.
+
+---
 
 ## Stage 03 — Pipeline convergence
 
-### `CRS_03_PIPELINE_PERSON_RELATIONSHIP_CONVERGENCE`
+### CRS_03A_PIPELINE_PERSON_RELATIONSHIP_SCOPE
 
-Connect Prospect and Opportunity records to the canonical person relationship.
+Map Prospect, Opportunity, stages, bulk import and external milestones.
 
-Deliver:
+### CRS_03B_PIPELINE_PERSON_RELATIONSHIP_CONTRACTS
 
-- Prospect-to-Person link;
-- Opportunity-to-Relationship and Correlation link;
-- multiple opportunities for one person;
-- stage events that preserve Pipeline authority;
-- read models that can show previous Quotes, meetings and Policies by reference;
-- duplicate-person prevention during manual and bulk intake.
+Define Prospect-to-Person, Opportunity-to-Relationship and movement correlation contracts.
 
-Pipeline may reflect milestones from other authorities but may not fabricate them.
+### CRS_03C_PIPELINE_PERSON_RELATIONSHIP_INTEGRATION
+
+Bind manual and bulk intake, cards, detail and stage events to canonical identity.
+
+### CRS_03D_PIPELINE_PERSON_RELATIONSHIP_ACCEPTANCE
+
+Accept multiple opportunities, duplicate prevention and authoritative milestone projection.
 
 ```text
 APPLICATION_SIGNED_SOURCE=APPLICATION_AUTHORITY
@@ -319,98 +251,65 @@ PIPELINE_REFLECTION_ALLOWED=YES
 PIPELINE_INVENTS_EXTERNAL_MILESTONE=NO
 ```
 
-Acceptance:
-
-```text
-PROSPECT_PERSON_LINK=PASS
-OPPORTUNITY_RELATIONSHIP_LINK=PASS
-MULTIPLE_OPPORTUNITIES=PASS
-MILESTONE_SOURCE_ATTRIBUTION=PASS
-BULK_IMPORT_DUPLICATION=BLOCKED
-```
+---
 
 ## Stage 04 — Activity and Bitácora convergence
 
-### `CRS_04_ACTIVITY_BITACORA_RELATIONSHIP_CONVERGENCE`
+### CRS_04A_ACTIVITY_BITACORA_RELATIONSHIP_SCOPE
 
-Connect calls, messages, meetings, notes, commitments and outcomes to the person relationship and optional commercial movement.
+Map calls, messages, meetings, notes, commitments, outcomes, consent and privacy.
 
-Deliver:
+### CRS_04B_ACTIVITY_BITACORA_RELATIONSHIP_CONTRACTS
 
-- interaction subject link;
-- meeting and appointment correlation;
-- context and commitment references;
-- source, evidence strength and privacy;
-- unresolved context states;
-- activity records usable across Pipeline, Quote and Cartera views.
+Extend canonical Activity subject links with person, relationship and optional movement.
 
-Bitácora remains the contextual memory of what happened. It does not become a duplicate Pipeline or Policy store.
+### CRS_04C_ACTIVITY_BITACORA_RELATIONSHIP_INTEGRATION
 
-Acceptance:
+Bind Activity, appointments, outcomes and contextual memory across module views.
 
-```text
-ACTIVITY_PERSON_LINK=PASS
-MEETING_CORRELATION=PASS
-CONTEXT_AUTHORITY_PRESERVED=PASS
-SENSITIVE_CONTEXT_CONSENT_GATE=PASS
-AUTOMATIC_SALES_TRIGGER=BLOCKED
-```
+### CRS_04D_ACTIVITY_BITACORA_RELATIONSHIP_ACCEPTANCE
+
+Accept chronology, privacy, corrections, unresolved context and blocked automatic sales triggers.
+
+---
 
 ## Stage 05 — Quote convergence
 
-### `CRS_05_QUOTE_RELATIONSHIP_CONVERGENCE`
+### CRS_05A_QUOTE_RELATIONSHIP_SCOPE
 
-Generalize the accepted Quote lifecycle so every Quote carries:
+Map Quote lifecycle, accepted receipts, local-only states and product-neutral identity needs.
 
-```text
-personReference
-relationshipReference
-prospectReference|null
-opportunityReference|null
-correlationId
-quoteReference
-quoteVersionReference
-productReference
-```
+### CRS_05B_QUOTE_RELATIONSHIP_CONTRACTS
 
-Reuse PR #144 for Quote-to-Policy lineage.
+Require person, relationship, optional opportunity and movement references while preserving Quote truth.
 
-Requirements:
+### CRS_05C_QUOTE_RELATIONSHIP_INTEGRATION
 
-- Quote calculation truth remains inside Quote authority;
-- accepted Quote does not automatically create Application or Policy;
-- Quotes opened without Prospect context remain local or explicitly unresolved;
-- Vida Mujer, Segubeca and future products use the same relationship contract;
-- product-specific identity adapters are forbidden.
+Bind Vida Mujer, Segubeca and future products through one common relationship adapter.
 
-Acceptance:
+### CRS_05D_QUOTE_RELATIONSHIP_ACCEPTANCE
 
-```text
-QUOTE_PERSON_RELATIONSHIP_LINK=PASS
-QUOTE_OPPORTUNITY_LINK=PASS
-QUOTE_CALCULATION_COPY=BLOCKED
-AUTOMATIC_APPLICATION_CREATION=BLOCKED
-AUTOMATIC_POLICY_CREATION=BLOCKED
-PRODUCT_SPECIFIC_PERSON_ADAPTER=BLOCKED
-```
+Accept relationship lineage and block calculation copying, automatic Application and automatic Policy creation.
+
+---
 
 ## Stage 06 — Application and signature authority
 
-### `CRS_06_APPLICATION_SIGNATURE_AUTHORITY`
+### CRS_06A_APPLICATION_SIGNATURE_SCOPE
 
-Create or reconcile the missing authoritative bridge between accepted Quote and issued Policy.
+Discover existing request, signature, submission, requirements, approval and issuance evidence sources.
 
-Deliver:
+### CRS_06B_APPLICATION_SIGNATURE_CONTRACTS
 
-- canonical Application identity;
-- Application Version and status events;
-- signer and signature-evidence references;
-- Quote and Opportunity lineage;
-- submitted, pending, requirements, approved, declined, withdrawn and issued transitions as supported by evidence;
-- Pipeline milestone projection from Application authority;
-- Cartera handoff only after issuance evidence.
+Define Application, Application Version, signer, signature evidence and lifecycle events.
 
-A signed request is not an issued Policy.
+### CRS_06C_APPLICATION_SIGNATURE_PRODUCTIVE_INTEGRATION
+
+Bind Quote and Opportunity lineage, Pipeline projections and governed handoff toward Cartera.
+
+### CRS_06D_APPLICATION_SIGNATURE_ACCEPTANCE
+
+Accept signature evidence and state transitions; block Policy creation before issuance evidence.
 
 ```text
 SIGNED_APPLICATION_IS_POLICY=NO
@@ -419,149 +318,85 @@ APPROVED_APPLICATION_IS_POLICY=NO
 ISSUANCE_EVIDENCE_REQUIRED_FOR_POLICY=YES
 ```
 
-Acceptance:
-
-```text
-APPLICATION_AUTHORITY=PASS
-SIGNATURE_EVIDENCE=PASS
-QUOTE_APPLICATION_LINEAGE=PASS
-PIPELINE_APPLICATION_REFLECTION=PASS
-POLICY_CREATION_BEFORE_ISSUANCE=BLOCKED
-```
+---
 
 ## Stage 07 — Cartera convergence
 
-### `CRS_07_CARTERA_PERSON_RELATIONSHIP_CONVERGENCE`
+### CRS_07A_CARTERA_PERSON_RELATIONSHIP_SCOPE
 
-Connect canonical Policy and Policy Roles to the same CommercialPerson and advisor relationship.
+Map Policy, roles, accounts, issuance, payments, service and conservation against the person relationship.
 
-Deliver:
+### CRS_07B_CARTERA_PERSON_RELATIONSHIP_CONTRACTS
 
-- Application-to-Policy lineage;
-- Policy-to-Person and Account links;
-- Policy owner, insured, payor and permitted role projections;
-- service, payment and conservation events in the relationship Timeline;
-- multiple Policies per person;
-- no duplicate identity or Policy creation from Quote data.
+Define Application-to-Policy, Policy-to-Person and permitted role lineage.
 
-Acceptance:
+### CRS_07C_CARTERA_PERSON_RELATIONSHIP_INTEGRATION
 
-```text
-POLICY_PERSON_RELATIONSHIP_LINK=PASS
-APPLICATION_POLICY_LINEAGE=PASS
-MULTIPLE_POLICIES_PER_PERSON=PASS
-POLICY_ROLE_PRIVACY=PASS
-QUOTE_AS_POLICY_SOURCE=BLOCKED
-```
+Bind productive Cartera records and events to canonical identity and movement references.
+
+### CRS_07D_CARTERA_PERSON_RELATIONSHIP_ACCEPTANCE
+
+Accept multiple Policies, role privacy, no duplicate Policy and no Quote-as-Policy source.
+
+---
 
 ## Stage 08 — Unified person Timeline
 
-### `CRS_08_UNIFIED_PERSON_TIMELINE_READ_MODEL`
+### CRS_08A_UNIFIED_PERSON_TIMELINE_SCOPE
 
-Compose one chronological read model from authoritative events and records.
+Define event taxonomy, source attribution, privacy, corrections, stale and disputed states.
 
-The Timeline may include:
+### CRS_08B_UNIFIED_PERSON_TIMELINE_READ_MODEL
 
-```text
-PROSPECT_CREATED
-CONTACT_ATTEMPTED
-MEETING_SCHEDULED
-MEETING_COMPLETED
-CONTEXT_RECORDED
-QUOTE_REVIEWED
-QUOTE_PRESENTED
-QUOTE_ACCEPTED
-CLOSING_MEETING_COMPLETED
-APPLICATION_SIGNED
-APPLICATION_SUBMITTED
-APPLICATION_REQUIREMENT_REQUESTED
-APPLICATION_APPROVED
-POLICY_ISSUED
-PAYMENT_CONFIRMED
-SERVICE_COMMITMENT_RECORDED
-ANNUAL_REVIEW_COMPLETED
-NEW_OPPORTUNITY_OPENED
-```
+Compose chronological entries from authoritative events; do not create a second ledger.
 
-Each item must expose:
+### CRS_08C_UNIFIED_PERSON_TIMELINE_INTEGRATION
 
-```text
-eventReference
-sourceAuthority
-sourceRecordReference
-personReference
-relationshipReference
-correlationId|null
-effectiveAt
-recordedAt
-evidenceStrength
-confirmationState
-privacyClassification
-```
+Mount person Timeline projections in Pipeline, Activity, Quotes and Cartera surfaces.
 
-The Timeline must support corrections, stale information, disputes and missing evidence without flattening them into false certainty.
+### CRS_08D_UNIFIED_PERSON_TIMELINE_ACCEPTANCE
 
-Acceptance:
+Accept chronology, corrections, unknown states, source visibility and no duplicate truth.
 
-```text
-TIMELINE_DUPLICATE_TRUTH=NO
-SOURCE_AUTHORITY_VISIBLE=PASS
-CROSS_MODULE_CHRONOLOGY=PASS
-CORRECTION_LINEAGE=PASS
-UNKNOWN_REMAINS_UNKNOWN=PASS
-```
+---
 
 ## Stage 09 — Productive person workspace
 
-### `CRS_09_PRODUCTIVE_PERSON_WORKSPACE`
+### CRS_09A_PERSON_WORKSPACE_SCOPE_AND_INFORMATION_ARCHITECTURE
 
-Deliver one person-centered workspace reachable from Pipeline, Activity, Cotizaciones and Cartera.
+Define sections, module ownership, deep links and mobile/desktop behavior.
 
-Sections:
+### CRS_09B_PERSON_WORKSPACE_READ_MODEL_AND_ACTION_BOUNDARIES
 
-```text
-Identity and relationship
-Current opportunities
-Next commitments
-Recent interactions
-Quotes and presentations
-Applications and requirements
-Policies and service
-Unified Timeline
-Relationship context
-```
+Compose identity, opportunities, commitments, interactions, Quotes, Applications, Policies and Timeline.
 
-Navigation preserves module ownership. Opening a Quote, Application or Policy moves to its authoritative module rather than recreating its controls inside the person workspace.
+### CRS_09C_PERSON_WORKSPACE_PRODUCTIVE_MOUNT
 
-Acceptance:
+Mount one authenticated person-centered workspace reachable from all modules.
 
-```text
-ONE_PERSON_WORKSPACE=PASS
-MODULE_DEEP_LINKS=PASS
-MOBILE_SAFE_AREA=PASS
-DESKTOP_RESPONSIVE=PASS
-NO_DUPLICATE_MUTATION_CONTROLS=PASS
-AUTH_LOGOUT_SCRUB=PASS
-LATE_RESULT_REJECTION=PASS
-```
+### CRS_09D_PERSON_WORKSPACE_ACCEPTANCE
+
+Accept responsive behavior, safe area, logout scrub, late-result rejection and no duplicate mutation controls.
+
+---
 
 ## Stage 10 — Relationship intelligence
 
-### `CRS_10_RELATIONSHIP_INTELLIGENCE_COMPOSITION`
+### CRS_10A_RELATIONSHIP_INTELLIGENCE_SCOPE_AND_SAFETY
 
-Compose evidence-backed assistance from the unified relationship without creating new truth silos.
+Define permitted evidence, consent, uncertainty and prohibited human scoring.
 
-Possible outputs:
+### CRS_10B_RELATIONSHIP_INTELLIGENCE_COMPOSITION_CONTRACTS
 
-- incomplete commitments;
-- stalled opportunity explanation;
-- missing meeting outcome;
-- Quote follow-up context;
-- Application requirement reminder candidate;
-- Policy review and service opportunity;
-- referral or relationship-growth review where consent exists.
+Define evidence-backed explanation, recommendation and draft envelopes.
 
-Authority remains:
+### CRS_10C_RELATIONSHIP_INTELLIGENCE_PRODUCTIVE_INTEGRATION
+
+Compose Alfred, NBA and Nash candidates without automatic execution.
+
+### CRS_10D_RELATIONSHIP_INTELLIGENCE_ACCEPTANCE
+
+Accept why-now evidence, uncertainty, human confirmation and blocked opaque scoring.
 
 ```text
 ALFRED_EXPLAINS=YES
@@ -572,49 +407,25 @@ MODULE_AUTHORITY_EXECUTES=YES
 AUTOMATIC_BUSINESS_ACTION=NO
 ```
 
-Acceptance:
-
-```text
-RECOMMENDATION_EVIDENCE=PASS
-WHY_NOW_EXPLANATION=PASS
-UNCERTAINTY_VISIBLE=PASS
-HUMAN_CONFIRMATION_REQUIRED=PASS
-OPAQUE_HUMAN_SCORE=BLOCKED
-AUTOMATIC_EXECUTION=BLOCKED
-```
+---
 
 ## Stage 11 — End-to-end acceptance
 
-### `CRS_11_END_TO_END_RELATIONSHIP_ACCEPTANCE`
+### CRS_11A_END_TO_END_ACCEPTANCE_PLAN
 
-Accept the real journey using one person identity:
+Lock fixtures, environments, devices, identities, expected events and rollback criteria.
 
-```text
-create or link Juan Pérez
-→ open initial Pipeline opportunity
-→ record contact and meeting in Activity / Bitácora
-→ create and present Quote
-→ record closing meeting
-→ confirm Application signature and submission
-→ reflect Application milestone in Pipeline
-→ confirm Policy issuance in Cartera
-→ show complete source-attributed Timeline
-→ open a later service interaction
-→ open a second opportunity without duplicating Juan Pérez
-```
+### CRS_11B_END_TO_END_DATA_AND_SECURITY_ACCEPTANCE
 
-Validate:
+Validate RLS, idempotency, conflicts, correction lineage, privacy and cross-advisor isolation.
 
-- authenticated mobile and desktop runtime;
-- RLS and cross-advisor isolation;
-- idempotency and changed-input conflicts;
-- offline/outbox behavior where applicable;
-- correction and dispute lineage;
-- privacy and restricted role handling;
-- no automatic identity merge;
-- no automatic stage, Application or Policy creation;
-- zero residual test fixtures;
-- Pages and productive runtime evidence.
+### CRS_11C_END_TO_END_PRODUCTIVE_JOURNEY_ACCEPTANCE
+
+Run the complete Juan Pérez journey through Pipeline, Bitácora, Quote, Application and Cartera.
+
+### CRS_11D_PROGRAM_CLOSURE_AND_PROMOTION
+
+Persist evidence, close residual gaps and promote the relationship spine as productive authority.
 
 ```text
 ONE_PERSON_END_TO_END=PASS
@@ -627,28 +438,24 @@ MODULE_AUTHORITIES_PRESERVED=PASS
 
 ## Segubeca dependency and sequencing
 
-Segubeca is not blocked by completion of the entire roadmap.
-
-The correct sequence is:
+Segubeca is not blocked by all 12 stages.
 
 ```text
-CRS_00_SOURCE_TRUTH_AND_ROADMAP_LOCK
-→ CRS_01_CANONICAL_PERSON_RELATIONSHIP_SPINE
-→ CRS_02_CORRELATION_AND_DOMAIN_LINK_CONTRACT
-→ SEGUBECA_PRODUCT_AND_QUOTE_IMPLEMENTATION
+CRS_00_COMPLETE
+→ CRS_01_COMPLETE
+→ CRS_02_COMPLETE
+→ SEGUBECA_PRODUCTIVE_RELATIONSHIP_BINDING
 → CRS_03_THROUGH_CRS_11_INCREMENTAL_CONVERGENCE
 ```
 
-Segubeca calculation and product rules may be developed while CRS 01–02 are built, but productive persistence must use the common relationship contract before release.
-
 ```text
 SEGUBECA_CALCULATION_WORK_CAN_PROCEED=YES
+SEGUBECA_PRODUCTIVE_RELEASE_REQUIRES_CRS_01_02=YES
 SEGUBECA_PRODUCT_SPECIFIC_IDENTITY_ADAPTER=FORBIDDEN
 SEGUBECA_PRODUCT_SPECIFIC_CARTERA_ADAPTER=FORBIDDEN
-SEGUBECA_PRODUCTIVE_RELEASE_REQUIRES_CRS_01_02=YES
 ```
 
-## Locked sequence
+## Locked stage sequence
 
 ```text
 CRS_00_SOURCE_TRUTH_AND_ROADMAP_LOCK
@@ -681,12 +488,12 @@ CENTRAL_DUPLICATE_TRUTH_STORE=NO
 MODULE_AUTHORITIES_PRESERVED=YES
 ```
 
-## Immediate next pass
+## CRS 00 single-pass state
 
 ```text
-NEXT=CRS_01_CANONICAL_PERSON_RELATIONSHIP_SPINE
-DELIVERY_MODE=CONTRACT_FIRST_NO_PRODUCT_UI
-PRODUCT_UI_MUTATION=NO
-SUPABASE_REMOTE_MUTATION=NO_UNTIL_SEPARATELY_AUTHORIZED
-SEGUBECA_PARALLEL_DISCOVERY=ALLOWED
+CRS_00A_REPOSITORY_DISCOVERY_AND_AUTHORITY_INVENTORY=COMPLETE
+CRS_00B_SOURCE_TRUTH_AND_DOMAIN_AUTHORITY_LOCK=COMPLETE
+CRS_00C_ROADMAP_GOVERNANCE_AND_VALIDATION=IN_PROGRESS
+CRS_00D_ACCEPTANCE_EVIDENCE_AND_CLOSURE=PENDING
+NEXT=CRS_00C_ROADMAP_GOVERNANCE_AND_VALIDATION
 ```
