@@ -71,6 +71,7 @@ set local role authenticated;
 do $$
 declare
   command_payload jsonb;
+  changed_payload jsonb;
   authorized_payload jsonb;
   first_result jsonb;
   replay_result jsonb;
@@ -109,20 +110,18 @@ begin
 
   first_result := public.forge_cartera100_record_productivity_observation(authorized_payload);
   replay_result := public.forge_cartera100_record_productivity_observation(authorized_payload);
+  changed_payload := jsonb_set(
+    jsonb_set(command_payload, '{quantity}', '2'::jsonb),
+    '{metadata,changedInput}',
+    'true'::jsonb,
+    true
+  );
   changed_result := public.forge_cartera100_record_productivity_observation(
-    jsonb_set(
-      jsonb_set(command_payload, '{quantity}', '2'::jsonb)
-        || jsonb_build_object(
-          'authorization', jsonb_build_object(
-            'authorized', true,
-            'payloadDigest', public.forge_cartera030b_digest(
-              jsonb_set(command_payload, '{quantity}', '2'::jsonb)
-            )
-          )
-        ),
-      '{metadata,changedInput}',
-      'true'::jsonb,
-      true
+    changed_payload || jsonb_build_object(
+      'authorization', jsonb_build_object(
+        'authorized', true,
+        'payloadDigest', public.forge_cartera030b_digest(changed_payload)
+      )
     )
   );
 
