@@ -1,4 +1,4 @@
-import "./quote-runtime-printable-state-handoff-m05z001.js?v=m05z-001";
+import "./quote-runtime-printable-state-handoff-m05z001.js?v=m05z-002-single-instance";
 
 const VERSION = "M05Y-001";
 const REJECTED_NAMES = new Set([
