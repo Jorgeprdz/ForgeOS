@@ -109,8 +109,25 @@ function stateLabel(state) {
   return labels[state] || text(state);
 }
 
+function clearSurface(root, { scrubDialog = false } = {}) {
+  const dialogs = [...root.querySelectorAll(":scope > [data-forge-monthly-goal-dialog]")];
+  for (const dialog of dialogs) {
+    if (scrubDialog) {
+      dialog.close?.();
+      const input = dialog.querySelector("[data-forge-monthly-goal-input]");
+      const error = dialog.querySelector("[data-forge-monthly-goal-error]");
+      if (input) input.value = "";
+      if (error) {
+        error.textContent = "";
+        error.hidden = true;
+      }
+    }
+  }
+  root.replaceChildren(...dialogs);
+}
+
 function renderPending(root, message, state = "LOADING") {
-  root.replaceChildren();
+  clearSurface(root);
   root.hidden = false;
   root.dataset.smartWidgetStackState = state;
   const card = element("article", "productive-smart-widget productive-smart-widget-status");
@@ -148,7 +165,7 @@ export function createProductiveSmartWidgetHomeAdapter({
 
   function render(stack) {
     currentStack = stack;
-    root.replaceChildren();
+    clearSurface(root);
     root.dataset.smartWidgetStackState = stack.stackStatus;
 
     if (stack.stackStatus === "SESSION_REQUIRED") {
@@ -240,7 +257,7 @@ export function createProductiveSmartWidgetHomeAdapter({
     abortCurrent(reason);
     currentStack = null;
     previousSelection = null;
-    root.replaceChildren();
+    clearSurface(root, { scrubDialog: true });
     root.hidden = true;
     root.dataset.smartWidgetStackState = "SESSION_REQUIRED";
     root.dataset.productiveSmartWidgetScrub = reason;
