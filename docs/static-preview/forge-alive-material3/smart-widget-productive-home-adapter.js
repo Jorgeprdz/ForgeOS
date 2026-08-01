@@ -1,4 +1,10 @@
-const ADAPTER_STATE = Symbol.for("forge.smart-widgets.productive-home-adapter.v2");
+import {
+  enrichProductiveStackWithAdvisorForecast,
+  prepareAdvisorForecastRuntimeSources,
+  scrubAdvisorForecastRuntime,
+} from "./advisor-forecast-runtime-acceptance.js?v=af-runtime-acceptance-001";
+
+const ADAPTER_STATE = Symbol.for("forge.smart-widgets.productive-home-adapter.v3");
 
 function text(value) {
   return value === undefined || value === null ? "" : String(value);
@@ -216,24 +222,50 @@ export function createProductiveSmartWidgetHomeAdapter({
     controller = new AbortController();
     const activeController = controller;
     const revision = ++requestRevision;
+    const reconcileNow = now();
     renderPending(root, "Leyendo las señales que importan ahora…");
 
     try {
-      const stack = await buildStack({
-        now: now(),
-        timeZone,
+      const runtimeContext = await prepareAdvisorForecastRuntimeSources({
         session,
         sources,
+        now: reconcileNow,
+        timeZone,
+        signal: activeController.signal,
+      });
+      if (activeController.signal.aborted || revision !== requestRevision) return null;
+
+      const baseStack = await buildStack({
+        now: reconcileNow,
+        timeZone,
+        session,
+        sources: runtimeContext.sources || sources,
         additionalWidgets,
         previousSelection,
         signal: activeController.signal,
       });
       if (activeController.signal.aborted || revision !== requestRevision) return null;
+
+      let stack = baseStack;
+      try {
+        stack = await enrichProductiveStackWithAdvisorForecast({
+          stack: baseStack,
+          runtimeContext,
+          previousSelection,
+          now: reconcileNow,
+          timeZone,
+        });
+      } catch (error) {
+        if (error?.name === "AbortError" || activeController.signal.aborted || revision !== requestRevision) return null;
+        console.error("Forge Advisor Forecast runtime enrichment failed", error);
+      }
+      if (activeController.signal.aborted || revision !== requestRevision) return null;
+
       render(stack);
       if (stack.primary?.widgetId) {
         previousSelection = {
           primaryWidgetId: stack.primary.widgetId,
-          selectedAt: stack.generatedAt || now(),
+          selectedAt: stack.generatedAt || reconcileNow,
         };
       }
       return stack;
@@ -257,6 +289,7 @@ export function createProductiveSmartWidgetHomeAdapter({
     abortCurrent(reason);
     currentStack = null;
     previousSelection = null;
+    scrubAdvisorForecastRuntime(reason);
     clearSurface(root, { scrubDialog: true });
     root.hidden = true;
     root.dataset.smartWidgetStackState = "SESSION_REQUIRED";
