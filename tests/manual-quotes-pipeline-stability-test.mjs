@@ -182,7 +182,8 @@ test("application loads the current Quotes presenter and Pipeline stability laye
   assert.match(quoteAdapter, /createQuoteResultSnapshot/);
   assert.match(quoteAdapter, /renderQuoteResultSnapshot/);
   assert.match(quoteAdapter, /data-quote-product-intelligence-host/);
-  assert.match(quotePresenter, /data-quote-mandatory-metric/);
+  assert.match(quotePresenter, /dataset\.quoteMandatoryMetric/);
+  assert.match(quotePresenter, /quotes-mandatory-metric/);
   assert.match(quotePresenter, /missingInformation/);
   assert.match(pipelineStability, /windowRef\.innerWidth - documentRef\.documentElement\.clientWidth/);
   assert.match(pipelineStability, /data-productive-stage-label/);
