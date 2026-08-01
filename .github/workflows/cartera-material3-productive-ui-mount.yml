@@ -11,7 +11,9 @@ on:
       - docs/static-preview/forge-alive-material3/forge-shell.js
       - docs/architecture/source-truth/FORGE_CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_001.md
       - docs/evidence/FORGE_CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_CLOSURE_001.md
+      - scripts/ci/cartera-material3-reconcile-nav-regressions.mjs
       - tests/cartera-material3-productive-ui-mount-test.mjs
+      - tests/material3-pipeline-integration-test.mjs
       - .github/workflows/cartera-material3-productive-ui-mount.yml
 
 permissions:
@@ -56,7 +58,9 @@ jobs:
               docs/static-preview/forge-alive-material3/forge-shell.js|\
               docs/architecture/source-truth/FORGE_CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_001.md|\
               docs/evidence/FORGE_CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_CLOSURE_001.md|\
-              tests/cartera-material3-productive-ui-mount-test.mjs)
+              scripts/ci/cartera-material3-reconcile-nav-regressions.mjs|\
+              tests/cartera-material3-productive-ui-mount-test.mjs|\
+              tests/material3-pipeline-integration-test.mjs)
                 ;;
               *)
                 echo "UNAUTHORIZED_PATH=$path" >&2
@@ -67,14 +71,20 @@ jobs:
           echo 'SOURCE_ANCESTRY=PASS'
           echo 'BOUNDED_PATHS=PASS'
 
+      - name: Reconcile inherited navigation expectations and session scrub
+        run: node scripts/ci/cartera-material3-reconcile-nav-regressions.mjs
+
       - name: Syntax gate
         run: |
           node --check docs/static-preview/forge-alive-material3/cartera-module.js
           node --check docs/static-preview/forge-alive-material3/forge-navigation-contract.js
           node --check docs/static-preview/forge-alive-material3/forge-shell.js
 
-      - name: Material 3 mount contract
-        run: node --test tests/cartera-material3-productive-ui-mount-test.mjs
+      - name: Material 3 mount and inherited navigation contracts
+        run: >-
+          node --test
+          tests/cartera-material3-productive-ui-mount-test.mjs
+          tests/material3-pipeline-integration-test.mjs
 
       - name: Inherited Cartera UI authority regressions
         run: >-
@@ -82,7 +92,7 @@ jobs:
           tests/cartera-100d-productivity-proof-view-test.mjs
           tests/cartera-100abcd-ui-integration-test.mjs
 
-      - name: Persist acceptance closure
+      - name: Persist reconciled source and acceptance closure
         shell: bash
         run: |
           set -euo pipefail
@@ -105,10 +115,13 @@ jobs:
           PRODUCTIVE_AUTH_CLIENT_REUSE=PASS
           CANONICAL_CARTERA_DIRECTORY_REUSE=PASS
           CARTERA_030D_TO_100D_BINDING=PASS
-          LOGOUT_SCRUB=PASS
+          LOGOUT_DOM_SCRUB=PASS
+          LOGOUT_APP_STATE_SCRUB=PASS
+          DOM_ADVISOR_ID_EXPOSURE=BLOCKED
           LATE_RESULT_REJECTION=PASS
           FLOATING_NAV_PRESERVED=YES
           MOBILE_NAV_CLEARANCE=PASS
+          MATERIAL3_PIPELINE_NAV_REGRESSION=PASS
           DIRECT_DATABASE_WRITE=NO
           POLICY_CREATION=NO
           PERSON_CREATION=NO
@@ -118,10 +131,14 @@ jobs:
           PAGES_DEPLOYMENT=PENDING_CONTROLLED_MERGE
           \`\`\`
           EOF
-          if [[ -n "$(git status --porcelain -- "$CLOSURE_PATH")" ]]; then
+          if [[ -n "$(git status --porcelain)" ]]; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add "$CLOSURE_PATH"
-            git commit -m 'docs(cartera): close Material 3 productive UI mount acceptance'
+            git add \
+              docs/static-preview/forge-alive-material3/cartera-module.js \
+              tests/cartera-material3-productive-ui-mount-test.mjs \
+              tests/material3-pipeline-integration-test.mjs \
+              "$CLOSURE_PATH"
+            git commit -m 'fix(cartera): reconcile Material 3 navigation and session scrub'
             git push origin HEAD:feature/cartera-material3-productive-ui-mount
           fi
