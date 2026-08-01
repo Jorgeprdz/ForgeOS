@@ -39,7 +39,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: login-integrated-demo-tenants-${{ github.ref }}
+  group: login-integrated-demo-tenants-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -120,7 +120,10 @@ jobs:
 
   deploy-seed-and-seal:
     needs: contract-validation
-    if: github.event_name == 'push' && github.ref_name == 'feature/login-integrated-demo-tenants'
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/login-integrated-demo-tenants'
     runs-on: ubuntu-24.04
     environment: 067g17a1-remote-acceptance
     env:
@@ -138,7 +141,7 @@ jobs:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Use Node 22
