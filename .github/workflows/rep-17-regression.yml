@@ -41,7 +41,7 @@ jobs:
         run: |
           node --test tests/ui-m05l-shell-route-first-test.mjs
           node --test tests/ui-m05n-public-config-boot-order-test.mjs
-          node --test tests/forge-067g17b1-auth-entry-static-test.mjs
+          node --test tests/forge-067g17a1-public-config-test.mjs
 
       - name: Existing quote-printable regressions
         run: |
