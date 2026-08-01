@@ -1,146 +1,16 @@
-name: CARTERA 020C One-Shot Authorized Remote Run
+name: CARTERA 020C Retired One-Shot Authorized Run
 
 on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-    paths:
-      - docs/evidence/CARTERA_020C_REMOTE_RUN_AUTHORIZATION_20260731T1724-0600.md
+  workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: cartera-020c-one-shot-authorized-remote-run
-  cancel-in-progress: false
-
 jobs:
-  remote-deployment-and-acceptance:
-    if: >-
-      github.repository == 'Jorgeprdz/ForgeOS' &&
-      github.event_name == 'pull_request' &&
-      github.event.action == 'opened' &&
-      github.event.pull_request.head.ref == 'run/cartera-020c-remote-acceptance-20260731-1724' &&
-      github.event.pull_request.head.sha == 'd8e07f24021723571bb3d177e121be64fd7e5a84' &&
-      github.run_attempt == 1
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      CARTERA_020C_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_020C_REMOTE_MUTATION
-      CARTERA_020C_EXPECTED_SOURCE_HEAD: 0daaccd556659b997f2086e12b09481281d1b019
-      CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD: 0075a54ed1886811a9dd4b295128bdab0a69eccb
-      CARTERA_020C_ACCEPTANCE_BRANCH: feature/cartera-020c-remote-acceptance
-      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
-      AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_REMOTE_RUN_AUTHORIZATION_20260731T1724-0600.md
-      AUTHORIZED_LAUNCH_HEAD: d8e07f24021723571bb3d177e121be64fd7e5a84
-
     steps:
-      - name: Checkout exact authorization launch commit
-        uses: actions/checkout@v4
-        with:
-          ref: d8e07f24021723571bb3d177e121be64fd7e5a84
-          fetch-depth: 0
-
-      - name: Validate one-shot user authorization
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$GITHUB_RUN_ATTEMPT" = '1'
-          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-remote-acceptance-20260731-1724'
-          test "$(git rev-parse HEAD)" = "$AUTHORIZED_LAUNCH_HEAD"
-          test -f "$AUTHORIZATION_MARKER"
-          grep -qx 'USER_AUTHORIZATION=RUN_CARTERA_020C_REMOTE_ACCEPTANCE' "$AUTHORIZATION_MARKER"
-          grep -qx 'AUTHORIZED_AT=2026-07-31T17:24:00-06:00' "$AUTHORIZATION_MARKER"
-          grep -qx 'AUTHORIZATION=YES:CARTERA_020C_REMOTE_MUTATION' "$AUTHORIZATION_MARKER"
-          grep -qx 'EXPECTED_SOURCE_HEAD=0daaccd556659b997f2086e12b09481281d1b019' "$AUTHORIZATION_MARKER"
-          grep -qx 'EXPECTED_ACCEPTANCE_HEAD=0075a54ed1886811a9dd4b295128bdab0a69eccb' "$AUTHORIZATION_MARKER"
-          grep -qx 'PROJECT_REF=rmlxigxysujsuwzgoimv' "$AUTHORIZATION_MARKER"
-          test "$(git diff --name-only HEAD^ HEAD)" = "$AUTHORIZATION_MARKER"
-          echo 'ONE_SHOT_USER_AUTHORIZATION=PASS'
-
-      - name: Checkout exact frozen acceptance head
-        uses: actions/checkout@v4
-        with:
-          ref: 0075a54ed1886811a9dd4b295128bdab0a69eccb
-          fetch-depth: 0
-
-      - name: Use Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Verify pinned source, ancestry and bounded diff
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD"
-          git merge-base --is-ancestor "$CARTERA_020C_EXPECTED_SOURCE_HEAD" HEAD
-          git branch -r --contains HEAD | grep -q 'origin/feature/cartera-020c-remote-acceptance'
-          git diff --check "$CARTERA_020C_EXPECTED_SOURCE_HEAD"...HEAD
-          mapfile -t changed < <(git diff --name-only "$CARTERA_020C_EXPECTED_SOURCE_HEAD"...HEAD)
-          allowed='^(\.github/workflows/cartera-020c-remote-(gate|acceptance)\.yml|advisor-os/cartera/persistent-confirmation-orchestration-service\.js|docs/evidence/FORGE_CARTERA_020C_REMOTE_ACCEPTANCE_(PREPARATION|CLOSURE)_001\.md|scripts/ci/cartera-020c-(github-actions-remote-acceptance\.mjs|remote-acceptance\.sql)|supabase/migrations/20260731000238_cartera020c_authorization_digest_hardening\.sql|tests/cartera-020c-(authorization-digest-hardening|remote-acceptance-harness)-test\.mjs)$'
-          for path in "${changed[@]}"; do
-            if [[ ! "$path" =~ $allowed ]]; then
-              echo "UNAUTHORIZED_020C_REMOTE_PATH=$path" >&2
-              exit 1
-            fi
-          done
-          echo 'PINNED_ACCEPTANCE_HEAD=PASS'
-          echo 'SOURCE_ANCESTRY=PASS'
-          echo 'BOUNDED_REMOTE_PATHS=PASS'
-
-      - name: Repository and harness gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --check advisor-os/cartera/persistent-confirmation-orchestration-service.js
-          node --check scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs
-          node --check tests/cartera-020c-authorization-digest-hardening-test.mjs
-          node --check tests/cartera-020c-remote-acceptance-harness-test.mjs
-          node --test tests/cartera-020c-*.mjs
-
-      - name: Deploy and execute remote acceptance
-        shell: bash
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          set -euo pipefail
-          test -n "$SUPABASE_ACCESS_TOKEN"
-          mkdir -p artifacts/cartera-020c-remote-acceptance
-          GITHUB_SHA="$(git rev-parse HEAD)" \
-            node scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs \
-            | tee artifacts/cartera-020c-remote-acceptance/workflow-output.log
-
-      - name: Verify explicit acceptance markers
-        shell: bash
-        run: |
-          set -euo pipefail
-          log=artifacts/cartera-020c-remote-acceptance/workflow-output.log
-          grep -q 'CARTERA_020C_REMOTE_DEPLOYMENT=PASS' "$log"
-          grep -q 'AUTHORIZATION_DIGEST_COMPATIBILITY=PASS' "$log"
-          grep -q 'CARTERA_020C_TRANSACTIONAL_ACCEPTANCE=PASS' "$log"
-          grep -q 'AUTHORIZATION_DIGEST_BINDING=PASS' "$log"
-          grep -q 'IDENTITY_ORDERED_EXECUTION=PASS' "$log"
-          grep -q 'IDENTITY_READ_AFTER_WRITE=PASS' "$log"
-          grep -q 'POLICY_READ_AFTER_WRITE=PASS' "$log"
-          grep -q 'CHANGED_INPUT_CONFLICT=PASS' "$log"
-          grep -q 'RETRY_GOVERNANCE=PASS' "$log"
-          grep -q 'PARALLEL_STATE_VERSION_SERIALIZATION=PASS' "$log"
-          grep -q 'RLS_CROSS_ADVISOR=PASS' "$log"
-          grep -q 'DIRECT_WRITES=BLOCKED' "$log"
-          grep -q 'SANITIZED_STATUS=PASS' "$log"
-          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$log"
-          grep -q 'CONCURRENCY_FIXTURES_CLEANED=YES' "$log"
-          grep -q 'RESIDUAL_FIXTURES=0' "$log"
-          grep -q 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS' "$log"
-
-      - name: Upload remote acceptance evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cartera-020c-remote-acceptance
-          path: artifacts/cartera-020c-remote-acceptance
-          if-no-files-found: error
-          retention-days: 30
+      - run: |
+          echo 'WORKFLOW_STATUS=RETIRED'
+          echo 'REMOTE_MUTATION=IMPOSSIBLE'
+          echo 'CARTERA_020C_COMPLETE=YES'

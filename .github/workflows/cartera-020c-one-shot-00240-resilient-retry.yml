@@ -1,136 +1,16 @@
-name: CARTERA 020C One-Shot 00240 Catalog Retry
+name: CARTERA 020C Retired One-Shot 00240 Retry
 
 on:
-  pull_request:
-    branches: [main]
-    types: [opened]
-    paths:
-      - docs/evidence/CARTERA_020C_00240_CATALOG_RETRY_AUTHORIZATION_20260731T1750-0600.md
+  workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: cartera-020c-one-shot-00240-catalog-retry
-  cancel-in-progress: false
-
 jobs:
-  harden-and-resume:
-    if: >-
-      github.repository == 'Jorgeprdz/ForgeOS' &&
-      github.event.action == 'opened' &&
-      github.event.pull_request.head.ref == 'run/cartera-020c-00240-catalog-retry-20260731-1750' &&
-      github.event.pull_request.head.sha == '0d9e56cbec260e3fce7bfc4e7dd859534d17c2d9' &&
-      github.run_attempt == 1
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
-    env:
-      CARTERA_020C_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_020C_REMOTE_MUTATION
-      CARTERA_020C_EXPECTED_SOURCE_HEAD: 0daaccd556659b997f2086e12b09481281d1b019
-      CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD: c845852aeba82120a9fb1b3e9510e0c321156879
-      CARTERA_020C_ACCEPTANCE_BRANCH: feature/cartera-020c-remote-acceptance
-      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
-      AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_00240_CATALOG_RETRY_AUTHORIZATION_20260731T1750-0600.md
-
     steps:
-      - name: Checkout exact catalog retry authorization
-        uses: actions/checkout@v4
-        with:
-          ref: 0d9e56cbec260e3fce7bfc4e7dd859534d17c2d9
-          fetch-depth: 0
-
-      - name: Validate exact catalog retry authorization
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$GITHUB_RUN_ATTEMPT" = '1'
-          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-00240-catalog-retry-20260731-1750'
-          test -f "$AUTHORIZATION_MARKER"
-          grep -qx 'USER_AUTHORIZATION=RETRY_CATALOG_DRIVEN_00240_AND_RESUME_CARTERA_020C' "$AUTHORIZATION_MARKER"
-          grep -qx 'PRIOR_RUN=30673847611' "$AUTHORIZATION_MARKER"
-          grep -qx 'PRIOR_FAILURE=POSTGRES_GENERATED_CONSTRAINT_NAME_NOT_INFERABLE' "$AUTHORIZATION_MARKER"
-          grep -qx 'RETRY_ACCEPTANCE_HEAD=c845852aeba82120a9fb1b3e9510e0c321156879' "$AUTHORIZATION_MARKER"
-          grep -qx 'CONSTRAINT_DISCOVERY=TABLE_AND_COLUMNS' "$AUTHORIZATION_MARKER"
-          test "$(git diff --name-only HEAD^ HEAD)" = "$AUTHORIZATION_MARKER"
-          echo 'ONE_SHOT_00240_CATALOG_RETRY_AUTHORIZATION=PASS'
-
-      - name: Checkout catalog-driven acceptance head
-        uses: actions/checkout@v4
-        with:
-          ref: c845852aeba82120a9fb1b3e9510e0c321156879
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Repository and catalog discovery gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD"
-          git merge-base --is-ancestor "$CARTERA_020C_EXPECTED_SOURCE_HEAD" HEAD
-          node --check scripts/ci/cartera-020c-conflict-constraint-name-hardening-deploy.mjs
-          node --check scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs
-          node --test tests/cartera-020c-*.mjs
-          grep -q 'unnest(c.conkey) with ordinality' supabase/migrations/20260731000240_cartera020c_conflict_constraint_name_hardening.sql
-          grep -q 'MAX_QUERY_ATTEMPTS = 5' scripts/ci/cartera-020c-conflict-constraint-name-hardening-deploy.mjs
-          echo 'CARTERA020C_00240_CATALOG_RETRY_GATE=PASS'
-
-      - name: Apply and verify 00240
-        shell: bash
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          set -euo pipefail
-          test -n "$SUPABASE_ACCESS_TOKEN"
-          mkdir -p artifacts/cartera-020c-remote-acceptance
-          node scripts/ci/cartera-020c-conflict-constraint-name-hardening-deploy.mjs \
-            | tee artifacts/cartera-020c-remote-acceptance/conflict-constraint-name-hardening-output.log
-          grep -q 'CARTERA020C_CONFLICT_CONSTRAINT_NAME_HARDENING=PASS' \
-            artifacts/cartera-020c-remote-acceptance/conflict-constraint-name-hardening-output.log
-
-      - name: Resume transactional remote acceptance
-        shell: bash
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          set -euo pipefail
-          GITHUB_SHA="$CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD" \
-            node scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs \
-            | tee artifacts/cartera-020c-remote-acceptance/workflow-output.log
-
-      - name: Verify acceptance markers
-        shell: bash
-        run: |
-          set -euo pipefail
-          log=artifacts/cartera-020c-remote-acceptance/workflow-output.log
-          for marker in \
-            CARTERA_020C_REMOTE_DEPLOYMENT=PASS \
-            AUTHORIZATION_DIGEST_COMPATIBILITY=PASS \
-            CARTERA_020C_TRANSACTIONAL_ACCEPTANCE=PASS \
-            AUTHORIZATION_DIGEST_BINDING=PASS \
-            IDENTITY_ORDERED_EXECUTION=PASS \
-            IDENTITY_READ_AFTER_WRITE=PASS \
-            POLICY_READ_AFTER_WRITE=PASS \
-            CHANGED_INPUT_CONFLICT=PASS \
-            RETRY_GOVERNANCE=PASS \
-            PARALLEL_STATE_VERSION_SERIALIZATION=PASS \
-            RLS_CROSS_ADVISOR=PASS \
-            DIRECT_WRITES=BLOCKED \
-            SANITIZED_STATUS=PASS \
-            TEST_FIXTURES_ROLLED_BACK=YES \
-            CONCURRENCY_FIXTURES_CLEANED=YES \
-            RESIDUAL_FIXTURES=0 \
-            CARTERA_020C_REMOTE_ACCEPTANCE=PASS; do
-            grep -q "$marker" "$log"
-          done
-
-      - name: Upload catalog retry evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cartera-020c-remote-acceptance-00240-catalog-retry
-          path: artifacts/cartera-020c-remote-acceptance
-          if-no-files-found: warn
-          retention-days: 30
+      - run: |
+          echo 'WORKFLOW_STATUS=RETIRED'
+          echo 'REMOTE_MUTATION=IMPOSSIBLE'
+          echo 'CARTERA_020C_COMPLETE=YES'
