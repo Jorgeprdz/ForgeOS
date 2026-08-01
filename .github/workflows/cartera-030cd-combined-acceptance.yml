@@ -203,6 +203,8 @@ jobs:
           CARTERA_030_COMPLETE=YES
           \`\`\`
           EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$closure"
           git commit -m 'docs(cartera): close combined 030C and 030D acceptance'
           git push origin HEAD:feature/cartera-030cd-payment-reconciliation-calendar-product
