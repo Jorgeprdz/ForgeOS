@@ -1,0 +1,61 @@
+name: One Shot M05W Wire Modal Layer
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - .github/workflows/one-shot-m05w-wire-modal-layer.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/one-shot-m05w-wire-modal-layer.yml
+
+permissions:
+  contents: write
+
+jobs:
+  wire-modal-layer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/vida-mujer-pdf-main-thread
+      - name: Load M05W before auth and bump app cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          app = Path('docs/static-preview/forge-alive-material3/app.js')
+          source = app.read_text()
+          anchor = 'import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";\n'
+          addition = (
+              anchor
+              + 'import "./quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001";\n'
+          )
+          if 'quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001' not in source:
+              if anchor not in source:
+                  raise SystemExit('APP_IMPORT_ANCHOR_NOT_FOUND')
+              source = source.replace(anchor, addition, 1)
+              app.write_text(source)
+
+          index = Path('docs/static-preview/forge-alive-material3/index.html')
+          html = index.read_text()
+          old = './app.js?v=ui-m05t-vida-mujer-coalesced-001&rep=16e-002'
+          new = './app.js?v=ui-m05w-printable-modal-layer-001&rep=16e-002'
+          if old not in html and new not in html:
+              raise SystemExit('INDEX_CACHE_KEY_NOT_FOUND')
+          index.write_text(html.replace(old, new, 1))
+          PY
+          grep -F 'quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001' \
+            docs/static-preview/forge-alive-material3/app.js
+          grep -F 'ui-m05w-printable-modal-layer-001&rep=16e-002' \
+            docs/static-preview/forge-alive-material3/index.html
+          rm .github/workflows/one-shot-m05w-wire-modal-layer.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(ui): wire printable modal above auth avatar"
+          git push origin HEAD:fix/vida-mujer-pdf-main-thread
