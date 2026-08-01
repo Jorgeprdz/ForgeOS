@@ -225,7 +225,7 @@ test("productive FES ledger reaches chart-ready Material 3 Activity", async ({ p
   const navBox = await page.locator("[data-forge-nav-pill]").boundingBox();
   expect(noteBox).not.toBeNull();
   expect(navBox).not.toBeNull();
-  expect(noteBox.bottom).toBeLessThanOrEqual(navBox.top + 2);
+  expect(noteBox.y + noteBox.height).toBeLessThanOrEqual(navBox.y + 2);
 
   expect(failures).toEqual([]);
 });
