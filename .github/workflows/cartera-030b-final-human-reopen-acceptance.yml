@@ -1,7 +1,7 @@
 name: CARTERA 030B Final Human Reopen Acceptance
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - feature/cartera-030b-expected-payment-obligation-ledger-calendar
     types:
@@ -47,7 +47,7 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Verify trusted one-file authorization
+      - name: Verify trusted two-file authorization
         shell: bash
         run: |
           set -euo pipefail
@@ -60,11 +60,15 @@ jobs:
           git merge-base --is-ancestor "$base" HEAD
           git diff --check "$base"...HEAD
           mapfile -t changed < <(git diff --name-only "$base"...HEAD)
-          printf 'LAUNCH_FILE=%s\n' "${changed[@]}"
-          test "${#changed[@]}" -eq 1
-          test "${changed[0]}" = 'docs/evidence/FORGE_CARTERA_030B_TARGET_REMOTE_LAUNCH_001.md'
-          grep -q 'AUTHORIZATION=YES:CARTERA_030B_REMOTE_MUTATION' "${changed[0]}"
-          grep -q 'MIGRATIONS=20260731000250,20260731000251,20260731000252' "${changed[0]}"
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' \
+            .github/workflows/cartera-030b-final-human-reopen-acceptance.yml \
+            docs/evidence/FORGE_CARTERA_030B_TARGET_REMOTE_LAUNCH_001.md \
+            | sort > /tmp/expected
+          test "${#changed[@]}" -eq 2
+          diff -u /tmp/expected /tmp/actual
+          grep -q 'AUTHORIZATION=YES:CARTERA_030B_REMOTE_MUTATION' docs/evidence/FORGE_CARTERA_030B_TARGET_REMOTE_LAUNCH_001.md
+          grep -q 'MIGRATIONS=20260731000250,20260731000251,20260731000252' docs/evidence/FORGE_CARTERA_030B_TARGET_REMOTE_LAUNCH_001.md
           echo 'HUMAN_REOPEN_AUTHORIZATION=PASS'
           echo 'SCHEMA_MUTATION=NO_NEW_MIGRATIONS'
           echo 'PRODUCT_UI_MUTATION=NO'
