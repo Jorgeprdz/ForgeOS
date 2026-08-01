@@ -45,5 +45,12 @@ if (replaceExactly(
   'CARTERA100_ACCEPTANCE_DIGEST_GRANT_ANCHOR_MISSING'
 )) changed.push('scripts/ci/cartera-100abcd-remote-acceptance.sql');
 
+if (replaceExactly(
+  'scripts/ci/cartera-100abcd-remote-acceptance.sql',
+  'grant execute on function public.forge_cartera030b_digest(jsonb) to authenticated;',
+  'grant execute on function public.forge_cartera030b_digest(jsonb) to authenticated;\ngrant execute on function public.forge_cartera030b_stable_json_text(jsonb) to authenticated;',
+  'CARTERA100_ACCEPTANCE_STABLE_JSON_GRANT_ANCHOR_MISSING'
+)) changed.push('scripts/ci/cartera-100abcd-remote-acceptance.sql');
+
 console.log(`CARTERA_100_SOURCE_FIX_MATERIALIZATION=${changed.length ? 'UPDATED' : 'ALREADY_CURRENT'}`);
 console.log(`CARTERA_100_SOURCE_FIX_FILES=${[...new Set(changed)].join(',') || 'NONE'}`);
