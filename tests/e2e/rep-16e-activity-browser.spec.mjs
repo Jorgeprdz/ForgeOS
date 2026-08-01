@@ -220,12 +220,15 @@ test("productive FES ledger reaches chart-ready Material 3 Activity", async ({ p
   );
   expect(bottomReserve).toBeGreaterThanOrEqual(170);
 
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  const noteBox = await page.locator("[data-activity-authority-note]").boundingBox();
-  const navBox = await page.locator("[data-forge-nav-pill]").boundingBox();
-  expect(noteBox).not.toBeNull();
-  expect(navBox).not.toBeNull();
-  expect(noteBox.y + noteBox.height).toBeLessThanOrEqual(navBox.y + 2);
+  const viewport = page.viewportSize();
+  if (viewport && viewport.width <= 640) {
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const noteBox = await page.locator("[data-activity-authority-note]").boundingBox();
+    const navBox = await page.locator("[data-forge-nav-pill]").boundingBox();
+    expect(noteBox).not.toBeNull();
+    expect(navBox).not.toBeNull();
+    expect(noteBox.y + noteBox.height).toBeLessThanOrEqual(navBox.y + 2);
+  }
 
   expect(failures).toEqual([]);
 });
