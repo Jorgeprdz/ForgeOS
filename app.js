@@ -39,6 +39,7 @@ import { renderReferidos,   bindReferidosEvents    } from './referidos.js';
 import { renderActividad,   bindActividadEvents    } from './actividad.js';
 import { renderCartera,     bindCarteraEvents      } from './cartera.js';
 import { bindCartera030dPolicyPaymentCalendar } from './advisor-os/cartera/cartera-030d-policy-payment-calendar-enhancement.js';
+import { bindCartera040RelationshipMemory } from './advisor-os/cartera/cartera-040d-relationship-memory-enhancement.js';
 import { renderComisiones,  bindComisionesEvents   } from './comisiones.js';
 
 import { EventBus }     from './event-system.js';
@@ -60,6 +61,7 @@ import {
 
 function bindCarteraProductEvents() {
     bindCartera030dPolicyPaymentCalendar();
+    bindCartera040RelationshipMemory();
     return bindCarteraEvents();
 }
 
