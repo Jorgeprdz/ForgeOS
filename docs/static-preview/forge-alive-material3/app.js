@@ -216,38 +216,42 @@ async function loadActivityAuthorities() {
   }
 }
 
+async function startOptionalQuoteAuthority(path, name) {
+  try {
+    await startAuthority(moduleBase, path, name);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function loadQuoteAuthorities() {
   // Rate-dependent quote enhancements must wait for the same public environment.
   await environmentAuthority;
 
-  try {
-    await startAuthority(
-      moduleBase,
-      "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
-      "quote-rate-bridge",
-    );
-  } catch {
-    // Quote enhancements below are independent and must still start.
-  }
+  await startOptionalQuoteAuthority(
+    "quote-runtime-pages-rate-fetch-bridge-m05e010.js?v=m05e-010",
+    "quote-rate-bridge",
+  );
 
-  const optionalAuthorities = [
-    [
-      "quote-runtime-hotfix-m05e003.js?v=m05e-010-pages-rate",
-      "quote-rate-runtime",
-    ],
-    [
-      "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05e-009",
-      "vida-mujer-handoff",
-    ],
-    [
-      "quote-runtime-vida-mujer-visual-m05e010.js?v=m05e-010",
-      "vida-mujer-visual",
-    ],
-  ];
-
-  for (const [path, name] of optionalAuthorities) {
-    void startAuthority(moduleBase, path, name);
-  }
+  // Order is contractual. Parallel imports previously allowed the bridge
+  // wrappers and visual retries to amplify each other until the page stalled.
+  await startOptionalQuoteAuthority(
+    "quote-runtime-hotfix-m05e003.js?v=m05q-001-loop-closure",
+    "quote-rate-runtime",
+  );
+  await startOptionalQuoteAuthority(
+    "quote-runtime-vida-mujer-handoff-m05e009.js?v=m05r-001-bridge-composition",
+    "vida-mujer-handoff",
+  );
+  await startOptionalQuoteAuthority(
+    "quote-runtime-bridge-composition-m05r001.js?v=m05r-001",
+    "quote-bridge-composition",
+  );
+  await startOptionalQuoteAuthority(
+    "quote-runtime-vida-mujer-visual-m05e010.js?v=m05t-001-coalesced",
+    "vida-mujer-visual",
+  );
 }
 
 function showAuthRuntimeError() {
