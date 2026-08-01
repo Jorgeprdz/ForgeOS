@@ -38,6 +38,7 @@ async function verifyProfile(name, viewport) {
   });
 
   const state = await page.evaluate(() => {
+    const application = document.querySelector('[data-forge-application]');
     const nav = document.querySelector('[data-forge-nav-pill]');
     const button = document.querySelector('[data-route-id="cartera"]');
     const module = document.querySelector('[data-forge-cartera-module]');
@@ -47,7 +48,7 @@ async function verifyProfile(name, viewport) {
     const appStyle = app ? getComputedStyle(app) : null;
     return {
       href: location.href,
-      shellRoute: document.querySelector('[data-forge-shell]')?.dataset.forgeRoute,
+      shellRoute: application?.dataset.forgeRoute,
       viewportRoute: viewport?.dataset.activeRoute,
       navigationCount: nav?.querySelectorAll('[data-route-id]').length || 0,
       carteraActive: button?.classList.contains('active') || false,
@@ -106,6 +107,12 @@ try {
   console.log('CARTERA_MATERIAL3_DESKTOP=PASS');
   console.log('CARTERA_MATERIAL3_FLOATING_NAV=PASS');
   console.log('CARTERA_MATERIAL3_HONEST_AUTH_STATE=PASS');
+} catch (error) {
+  writeFileSync(
+    `${artifactDir}/summary.json`,
+    `${JSON.stringify({ status: 'FAIL', error: error.message, results }, null, 2)}\n`,
+  );
+  throw error;
 } finally {
   await browser.close();
 }
