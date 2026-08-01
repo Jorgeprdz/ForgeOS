@@ -1,0 +1,58 @@
+name: Smart Widgets Productive Validation
+
+on:
+  pull_request:
+    paths:
+      - "advisor-os/forge-alive/smart-widgets/**"
+      - "docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.*"
+      - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
+      - "tests/productive-smart-widget-*.mjs"
+      - "tests/smart-widget-monthly-policy-goal-authority-test.mjs"
+      - ".github/workflows/smart-widgets-productive-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Productive orchestrator contracts
+        run: node tests/productive-smart-widget-orchestrator-master-test.mjs
+
+      - name: Source adapter isolation and aborts
+        run: node tests/productive-smart-widget-source-adapters-test.mjs
+
+      - name: Monthly policy goal authority
+        run: node tests/smart-widget-monthly-policy-goal-authority-test.mjs
+
+      - name: Legacy Smart Widget read model regression
+        run: node manager-os/tests/forge-alive-smart-widget-stack-read-model-master-test.js
+
+      - name: Browser adapter syntax
+        run: node --check docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js
+
+      - name: Boundary assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -RInE "navigator\.sendBeacon|XMLHttpRequest|\.insert\(|\.update\(|\.delete\(" \
+            advisor-os/forge-alive/smart-widgets/productive-smart-widget-contract.mjs \
+            advisor-os/forge-alive/smart-widgets/productive-smart-widget-providers.mjs \
+            advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs
+          grep -q "income_must_not_be_derived_from_quotes_or_premium" \
+            advisor-os/forge-alive/smart-widgets/productive-smart-widget-providers.mjs
+          grep -q "possible_late_payment_is_inference_not_confirmed_nonpayment" \
+            advisor-os/forge-alive/smart-widgets/productive-smart-widget-providers.mjs
+          grep -q "SESSION_REQUIRED" \
+            advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs
