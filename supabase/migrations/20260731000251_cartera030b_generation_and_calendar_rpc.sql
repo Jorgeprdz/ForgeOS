@@ -37,7 +37,7 @@ strict
 set search_path = public, pg_temp
 as $$
   select encode(
-    digest(convert_to(public.forge_cartera030b_stable_json_text(p_value), 'UTF8'), 'sha256'),
+    extensions.digest(convert_to(public.forge_cartera030b_stable_json_text(p_value), 'UTF8'), 'sha256'),
     'hex'
   );
 $$;
