@@ -2,7 +2,7 @@
 
 ## Decisión
 
-Forge utiliza **una sola relación canónica y agnóstica al producto** para enlazar una Quote durable con la futura continuidad de Cartera.
+Forge utiliza **una sola relación canónica y agnóstica al producto** para enlazar una Quote durable con la continuidad de Cartera.
 
 ```text
 Durable Quote
@@ -121,22 +121,53 @@ Vida Mujer, Segubeca y futuros productos usan el mismo contrato. La única difer
 ```text
 PRODUCT_SPECIFIC_RELATIONSHIP_ADAPTERS=FORBIDDEN
 PRODUCT_FORMULAS_IN_RELATIONSHIP=FORBIDDEN
+VIDA_MUJER_AND_SEGUBECA_SHARED_CONTRACT=PASS
 ```
 
 Esto permite avanzar con Segubeca sin crear una integración especial que después deba rehacerse.
 
-## Relación con la promoción de Cartera
+## Cartera promovida y adaptador real
 
-Este contrato se desarrolla en una rama independiente de la promoción selectiva CARTERA 130:
+CARTERA 130 fue promovida a `main` mediante PR #143 antes de abrir este PR sobre la base productiva resultante.
 
 ```text
+CARTERA_130_PROMOTED=YES
+CARTERA_130_MERGE_SHA=6d73f0ef030aaa9172e6e9263a1b08e539ecd576
 STACKED_BRANCH=NO
 PROMOTION_PATH_REPLACEMENT=NO
 SUPABASE_MUTATION=NO
 PRODUCT_UI_MUTATION=NO
 ```
 
-Después de que CARTERA 130 quede en `main`, el siguiente paso será montar un adaptador productivo que lea los recibos reales de 001B, 010B y 020B y produzca este envelope. Ese montaje no podrá crear Policy ni ejecutar automáticamente CARTERA 020C.
+El adaptador `accepted-quote-cartera-relationship-adapter.js` consume las formas reales promovidas de:
+
+```text
+CARTERA_001B_QUOTE_PERSISTENCE_RECEIPT
+CARTERA_010B_IDENTITY_DECISION_RECEIPT
+CARTERA_020B_POLICY_EVIDENCE_RECEIPT
+```
+
+y produce el envelope común. El adaptador no escucha eventos, no llama RPC, no persiste información y no ejecuta CARTERA 020C.
+
+```text
+AUTOMATIC_LISTENERS=NO
+AUTOMATIC_RPC=NO
+AUTOMATIC_PERSISTENCE=NO
+AUTOMATIC_POLICY_CREATION=NO
+AUTOMATIC_POLICY_CONFIRMATION=NO
+```
+
+Una evidencia `CONFIRMED` por la autoridad de evidencia sólo significa que el paquete está listo para revisión gobernada; nunca equivale a una Policy confirmada.
+
+## Siguiente montaje permitido
+
+Una superficie productiva futura podrá mostrar el estado de la relación y abrir la revisión humana correspondiente. No podrá crear Policy, resolver identidad ni ejecutar confirmación automáticamente.
+
+```text
+RUNTIME_READ_MODEL=FUTURE_PASS
+AUTOMATIC_EXECUTION=FORBIDDEN
+SEGUBECA_CAN_REUSE_CONTRACT=YES
+```
 
 ## Criterios de aceptación
 
@@ -148,5 +179,7 @@ POLICY_EVIDENCE_GATE=PASS
 POLICY_CREATION_BLOCKED=PASS
 CALCULATION_COPY_BLOCKED=PASS
 VIDA_MUJER_AND_SEGUBECA_SHARED_CONTRACT=PASS
+PROMOTED_AUTHORITY_RECEIPT_ADAPTER=PASS
 TAMPER_EVIDENT_MUTATION_BOUNDARY=PASS
+AUTOMATIC_RUNTIME_EFFECTS=BLOCKED
 ```
