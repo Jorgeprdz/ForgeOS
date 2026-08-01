@@ -12,7 +12,7 @@ test('remote runner is pinned to the exact 030B foundation and project', async (
   assert.match(source, /23b52fc7a442f52494c51fead67699004923c547/);
   assert.match(source, /rmlxigxysujsuwzgoimv/);
   assert.match(source, /YES:CARTERA_030B_REMOTE_MUTATION/);
-  assert.match(source, /run\/cartera-030b-durable-conflict-hardening-20260731-2031/);
+  assert.match(source, /run\/cartera-030b-identity-collision-diagnostic-20260731-2035/);
 });
 
 test('remote deployment is limited to migrations 00250 through 00252', async () => {

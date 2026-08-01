@@ -737,7 +737,19 @@ begin
     )
     where c.conflict_type = 'OBLIGATION_IDENTITY_COLLISION'
   ) then
-    raise exception 'CARTERA030B_IDENTITY_COLLISION_CONFLICT_NOT_DURABLE';
+    raise exception 'CARTERA030B_IDENTITY_COLLISION_CONFLICT_NOT_DURABLE_DIAGNOSTIC:response=%,forged=%,conflicts=%',
+    (select payload from cartera030b_acceptance_results where name = 'identity-collision'),
+    (select forged_reference from cartera030b_acceptance_ids),
+    coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'type', c.conflict_type,
+        'reference', c.conflict_reference,
+        'obligationReference', c.claims ->> 'obligationReference',
+        'claims', c.claims
+      ) order by c.recorded_at)
+      from public.cartera030b_obligation_conflicts c
+      where c.advisor_id = (select user_a from cartera030b_acceptance_ids)
+    ), '[]'::jsonb);
   end if;
 
   if to_regprocedure('public.forge_cartera030b_reconcile_payment_event(jsonb)') is not null then
