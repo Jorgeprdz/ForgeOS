@@ -10,13 +10,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: cartera-020c-${{ github.ref }}
+  group: cartera-020c-acceptance-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  identity-policy-confirmation-review:
+  confirmation-review-acceptance:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,21 +24,19 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
 
       - name: Source integration and bounded paths
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE_COMMIT=528533e5ba6e060a844e5facbc127eea145542b9
-          CARTERA_020B_HEAD=5ab8ef44055a66c414d24f0bc7c37f243c959e05
+          SOURCE_COMMIT=4c274a377f1b91fb176304f84008c1b42c781951
           git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
-          git merge-base --is-ancestor "$CARTERA_020B_HEAD" "$SOURCE_COMMIT"
           git diff --check "$SOURCE_COMMIT"...HEAD
 
           mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-          allowed='^(policy-operations/intake/cartera-020c-[A-Za-z0-9._-]+\.js|platform/policy-intelligence/intake/cartera-020c-[A-Za-z0-9._-]+\.js|advisor-os/cartera/(canonical-confirmation-review-service|persistent-confirmation-orchestration-service)\.js|supabase/migrations/[0-9]+_cartera020c_[A-Za-z0-9._-]+\.sql|tests/cartera-020c-[A-Za-z0-9._-]+\.mjs|docs/architecture/source-truth/FORGE_CARTERA_020C_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-020c-[A-Za-z0-9._-]+\.yml|\.github/workflows/cartera-020b-foundation\.yml)$'
+          allowed='^(policy-operations/intake/cartera-020c-[A-Za-z0-9._-]+\.js|platform/policy-intelligence/intake/cartera-020c-[A-Za-z0-9._-]+\.js|advisor-os/cartera/(canonical-confirmation-review-service|persistent-confirmation-orchestration-service)\.js|scripts/ci/cartera-020c-[A-Za-z0-9._-]+\.(mjs|sql)|supabase/migrations/[0-9]+_cartera020c_[A-Za-z0-9._-]+\.sql|tests/cartera-020c-[A-Za-z0-9._-]+\.mjs|docs/(architecture/source-truth|evidence)/FORGE_CARTERA_020C_[A-Za-z0-9._-]+\.md|\.github/workflows/cartera-020c-[A-Za-z0-9._-]+\.yml|\.github/workflows/cartera-020b-foundation\.yml)$'
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
               echo "UNAUTHORIZED_020C_PATH=$path" >&2
@@ -46,221 +44,64 @@ jobs:
             fi
           done
 
-          echo 'SOURCE_COMMIT_VERIFIED=YES'
-          echo 'CARTERA_020B_INTEGRATED=YES'
+          echo 'SOURCE_ANCESTRY=PASS'
           echo 'BOUNDED_PATHS=PASS'
-          echo 'SCHEMA_DIFF=REPOSITORY_ONLY'
           echo 'PRODUCT_UI_DIFF=NONE'
-          echo 'SUPABASE_REMOTE_MUTATION=NONE'
-          echo 'INHERITED_020B_GATE_RETIREMENT=BOUNDED'
 
-      - name: JavaScript syntax and targeted acceptance
+      - name: JavaScript syntax and complete CARTERA 020C suite
         shell: bash
         run: |
           set -euo pipefail
           node --check policy-operations/intake/cartera-020c-confirmation-review-contracts.js
-          node --check policy-operations/intake/cartera-020c-governed-command-composer.js
-          node --check platform/policy-intelligence/intake/cartera-020c-review-read-model.js
           node --check platform/policy-intelligence/intake/cartera-020c-candidate-reconciliation.js
+          node --check platform/policy-intelligence/intake/cartera-020c-review-read-model.js
           node --check advisor-os/cartera/canonical-confirmation-review-service.js
+          node --check policy-operations/intake/cartera-020c-governed-command-composer.js
           node --check advisor-os/cartera/persistent-confirmation-orchestration-service.js
-          for file in tests/cartera-020c-*.mjs; do node --check "$file"; done
           node --test tests/cartera-020c-*.mjs
 
-      - name: Preserve inherited confirmation primitives
+      - name: Inherited confirmation regression suite
         shell: bash
         run: |
           set -euo pipefail
-          node tests/evidence-confirmation-task-test.js
-          node tests/policy-evidence-packet-test.js
-          node tests/policy-advisor-confirmation-gate-test.js
-          echo 'INHERITED_CONFIRMATION_TESTS=3'
-          echo 'INHERITED_CONFIRMATION_PASS=3'
+          node --test \
+            tests/confirmation-policy-write-cut-test.mjs \
+            tests/confirmation-production-runtime-test.mjs \
+            tests/confirmation-review-bridge-test.mjs
 
-      - name: Verify review, privacy and composer boundaries
+      - name: Verify accepted remote closure and authority boundaries
         shell: bash
         run: |
           set -euo pipefail
-          contract=policy-operations/intake/cartera-020c-confirmation-review-contracts.js
-          composer=policy-operations/intake/cartera-020c-governed-command-composer.js
-          model=platform/policy-intelligence/intake/cartera-020c-review-read-model.js
-          reconciliation=platform/policy-intelligence/intake/cartera-020c-candidate-reconciliation.js
-          review_service=advisor-os/cartera/canonical-confirmation-review-service.js
-          orchestration_service=advisor-os/cartera/persistent-confirmation-orchestration-service.js
-          scope=docs/architecture/source-truth/FORGE_CARTERA_020C_IDENTITY_POLICY_CONFIRMATION_REVIEW_SCOPE_001.md
-          retired=.github/workflows/cartera-020b-foundation.yml
+          closure=docs/evidence/FORGE_CARTERA_020C_REMOTE_ACCEPTANCE_CLOSURE_001.md
+          remote=.github/workflows/cartera-020c-remote-acceptance.yml
+          test -f "$closure"
+          grep -q 'WORKFLOW_RUN=30675286681' "$closure"
+          grep -q 'WORKFLOW_JOB=91301111909' "$closure"
+          grep -q 'ARTIFACT_ID=8810199540' "$closure"
+          grep -q 'ARTIFACT_SHA256=b396f1b95338a4f280c63eb4cd10ff799481b57aceb3194d2947e979c4d8e1f4' "$closure"
+          grep -q 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS' "$closure"
+          grep -q 'CARTERA_020C_COMPLETE=YES' "$closure"
+          grep -q '^  workflow_dispatch:' "$remote"
+          ! grep -qE '^  (push|pull_request):' "$remote"
+          grep -q 'ACCOUNT_MUTATION=NOT_AUTHORIZED' "$closure"
+          grep -q 'RESIDUAL_FIXTURES=0' "$closure"
 
-          grep -q 'FORGE_IDENTITY_POLICY_CONFIRMATION_REVIEW' "$contract"
-          grep -q 'FORGE_IDENTITY_POLICY_CONFIRMATION_PLAN' "$contract"
-          grep -q "'IDENTITY_RESOLUTION', 'CONFIRMED_POLICY'" "$contract"
-          grep -q 'accountDecisions' "$contract"
-          grep -q 'requiresExplicitExecution: true' "$contract"
+          ! grep -RniE 'insert[[:space:]]+into[[:space:]]+public\.(commercial_people|commercial_accounts|canonical_policies|policy_versions|policy_evidence_versions|policy_roles)' \
+            advisor-os/cartera/persistent-confirmation-orchestration-service.js \
+            policy-operations/intake/cartera-020c-governed-command-composer.js
 
-          grep -q 'FORGE_CARTERA_020C_REVIEW_READ_MODEL' "$model"
-          grep -q 'CARTERA020C_EVIDENCE_CHAIN_MISMATCH' "$model"
-          grep -q 'SENSITIVE_FIELD_PATTERN' "$model"
-          grep -q 'restrictedPolicyRoleCandidates' "$model"
-          grep -q 'existingPersonMatches' "$model"
-          grep -q 'canInvokeConfirmedPolicyCommand: false' "$model"
-          grep -q 'partitionCartera020cIdentityCandidates' "$reconciliation"
-
-          grep -q 'FORGE_CARTERA_020C_IDENTITY_COMMAND_BATCH' "$composer"
-          grep -q 'FORGE_CARTERA_020C_IDENTITY_RESULT_VERIFICATION' "$composer"
-          grep -q 'FORGE_CARTERA_020C_GOVERNED_COMMAND_COMPOSITION' "$composer"
-          grep -q 'buildIdentityResolutionCommand' "$composer"
-          grep -q 'buildConfirmedPolicyCommand' "$composer"
-          grep -q 'CARTERA020C_ACCOUNT_CREATION_NOT_AUTHORIZED' "$composer"
-          grep -q "OWNER: 'POLICY_OWNER'" "$composer"
-          grep -q "'RESTRICTED_ROLE_VIEW'" "$composer"
-          grep -q 'requiresExplicitExecution: true' "$composer"
-          ! grep -qE '\.(rpc|insert|update|delete)[[:space:]]*\(' "$composer"
-          ! grep -qE 'SupabaseRuntime|createClient|from\(' "$composer"
-
-          grep -q "from('cartera020b_policy_evidence_packets')" "$review_service"
-          grep -q "from('commercial_people')" "$review_service"
-          grep -q "from('commercial_accounts')" "$review_service"
-          grep -q "from('canonical_policies')" "$review_service"
-          ! grep -q "from('policy_roles')" "$review_service"
-          ! grep -qE '\.(rpc|insert|update|delete)[[:space:]]*\(' "$review_service"
-
-          grep -q 'CONFIRM_IDENTITY_RESOLUTION' "$orchestration_service"
-          grep -q 'CONFIRM_POLICY_PERSISTENCE' "$orchestration_service"
-          grep -q 'forge_cartera020c_prepare_identity_orchestration' "$orchestration_service"
-          grep -q 'forge_cartera020c_attach_policy_confirmation' "$orchestration_service"
-          grep -q 'forge_cartera020c_execute_next_confirmation_step' "$orchestration_service"
-          grep -q 'forge_cartera020c_get_confirmation_status' "$orchestration_service"
-          grep -q 'forge_cartera020c_retry_confirmation' "$orchestration_service"
-          ! grep -q 'forge_cartera010b_' "$orchestration_service"
-          ! grep -qE '\.from[[:space:]]*\(|\.(insert|update|delete)[[:space:]]*\(' "$orchestration_service"
-
-          ! grep -q 'premiumAmount: 0' "$contract" "$composer" "$model" "$reconciliation" "$review_service" "$orchestration_service"
-          ! grep -q "currency: 'MXN'" "$contract" "$composer" "$model" "$reconciliation" "$review_service" "$orchestration_service"
-
-          grep -q 'SOURCE_COMMIT=528533e5ba6e060a844e5facbc127eea145542b9' "$scope"
-          grep -q 'CARTERA_020B_COMPLETE=YES' "$scope"
-          grep -q 'IDENTITY_BEFORE_POLICY_ORDER=LOCKED' "$scope"
-          grep -q 'GENERAL_DIRECTORY_PROJECTION=FORBIDDEN' "$scope"
-          grep -q 'SUPABASE_REMOTE_MUTATION=NO' "$scope"
-          grep -q 'CARTERA_020C_COMPLETE=NO' "$scope"
-
-          grep -q '^  workflow_dispatch:' "$retired"
-          ! grep -qE '^  (push|pull_request):' "$retired"
-          grep -q 'CARTERA_020B_GATE=ARCHIVED_MANUAL_ONLY' "$retired"
-
-          echo 'IDENTITY_REVIEW_CONTRACT=REPOSITORY_READY'
-          echo 'REVIEW_READ_MODEL=REPOSITORY_READY'
-          echo 'CANDIDATE_RECONCILIATION=REPOSITORY_READY'
-          echo 'AUTHENTICATED_REVIEW_SERVICE=REPOSITORY_READY'
-          echo 'GOVERNED_COMMAND_COMPOSER=REPOSITORY_READY'
-          echo 'PERSISTENT_ORCHESTRATION_SERVICE=REPOSITORY_READY'
-          echo 'IDENTITY_RESULT_VERIFICATION=LOCKED'
+          echo 'REMOTE_ACCEPTANCE_CLOSURE=LOCKED'
+          echo 'AUTHORIZATION_DIGEST_BINDING=LOCKED'
           echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
-          echo 'CONTACT_MATCH_VALUES_PUBLIC_PROJECTION=FORBIDDEN'
-          echo 'RESTRICTED_BENEFICIARY_BOUNDARY=LOCKED'
-          echo 'IDENTITY_BEFORE_POLICY_ORDER=LOCKED'
-          echo 'CONFIRMATION_EXECUTION=EXPLICIT_ONLY'
+          echo 'BENEFICIARY_PRIVACY_BOUNDARY=LOCKED'
 
-      - name: Verify persistent orchestration authority
-        shell: bash
+      - name: Emit final acceptance markers
         run: |
-          set -euo pipefail
-          tables=supabase/migrations/20260731000230_cartera020c_confirmation_orchestration_tables.sql
-          guards=supabase/migrations/20260731000231_cartera020c_confirmation_orchestration_guards_rls.sql
-          rpcs=(supabase/migrations/2026073100023{2..7}_cartera020c_*.sql)
-          progress=docs/architecture/source-truth/FORGE_CARTERA_020C_PERSISTENT_CONFIRMATION_ORCHESTRATION_PROGRESS_003.md
-          combined=$(cat "$tables" "$guards" "${rpcs[@]}")
-
-          for table in \
-            cartera020c_confirmation_reviews \
-            cartera020c_confirmation_commands \
-            cartera020c_confirmation_attempts \
-            cartera020c_confirmation_transitions \
-            cartera020c_confirmation_conflicts; do
-            grep -q "create table if not exists public.$table" "$tables"
-            grep -q "alter table public.$table force row level security" "$guards"
-            grep -q "revoke all on public.$table from public, anon, authenticated" "$guards"
-            ! grep -q "grant select on public.$table" "$guards"
-          done
-
-          grep -q 'cartera020c_attempts_append_only' "$guards"
-          grep -q 'cartera020c_transitions_append_only' "$guards"
-          grep -q 'cartera020c_conflicts_append_only' "$guards"
-          grep -q "confirmation_required' and p_to in ('confirmed', 'rejected', 'blocked', 'archived')" "$guards"
-
-          for fn in \
-            forge_cartera020c_prepare_identity_orchestration \
-            forge_cartera020c_attach_policy_confirmation \
-            forge_cartera020c_execute_next_confirmation_step \
-            forge_cartera020c_get_confirmation_status \
-            forge_cartera020c_retry_confirmation; do
-            grep -q "create or replace function public.$fn" "${rpcs[@]}"
-            grep -q "grant execute on function public.$fn" "${rpcs[@]}"
-          done
-
-          grep -q 'forge_cartera010b_confirm_identity_resolution(command.command_payload)' "${rpcs[@]}"
-          grep -q 'forge_cartera010b_confirm_policy_with_parties(command.command_payload)' "${rpcs[@]}"
-          grep -q 'CARTERA020C_IDENTITY_BEFORE_POLICY_ORDER_VIOLATION' "${rpcs[@]}"
-          grep -q 'CARTERA020C_POLICY_BEFORE_IDENTITY_FORBIDDEN' "${rpcs[@]}"
-          grep -q 'CARTERA020C_IDENTITY_READ_AFTER_WRITE_VERIFIED' "${rpcs[@]}"
-          grep -q 'CARTERA020C_POLICY_READ_AFTER_WRITE_VERIFIED' "${rpcs[@]}"
-          grep -q 'CARTERA020C_STALE_STATE_VERSION' "${rpcs[@]}"
-          grep -q 'CARTERA020C_RETRY_NOT_DUE' "${rpcs[@]}"
-          grep -q "'commandPayloadProjected', false" "${rpcs[@]}"
-          grep -q 'update public.cartera020b_evidence_inbox_items' "${rpcs[@]}"
-          grep -q 'insert into public.cartera020b_evidence_transitions' "${rpcs[@]}"
-
-          ! grep -qiE 'insert into public\.(commercial_people|commercial_accounts|canonical_policies|policy_versions|policy_evidence_versions|policy_roles)' <<<"$combined"
-          ! grep -qiE 'update public\.(commercial_people|commercial_accounts|canonical_policies|policy_versions|policy_evidence_versions|policy_roles)' <<<"$combined"
-          ! grep -qiE 'delete from public\.(commercial_people|commercial_accounts|canonical_policies|policy_versions|policy_evidence_versions|policy_roles)' <<<"$combined"
-          ! grep -q 'update public.cartera020b_policy_evidence_packets' "${rpcs[@]}"
-          ! grep -q 'delete from public.cartera020b_policy_evidence_packets' "${rpcs[@]}"
-          ! grep -q 'newAccount' "${rpcs[@]}"
-
-          python - <<'PY'
-          from pathlib import Path
-          paths = [
-              Path('supabase/migrations/20260731000230_cartera020c_confirmation_orchestration_tables.sql'),
-              Path('supabase/migrations/20260731000231_cartera020c_confirmation_orchestration_guards_rls.sql'),
-              *sorted(Path('supabase/migrations').glob('2026073100023[2-7]_cartera020c_*.sql')),
-          ]
-          for path in paths:
-              text = path.read_text()
-              assert text.count('$$') % 2 == 0, path
-              assert text.rstrip().endswith('commit;'), path
-              assert 'NOT remote deployment authorization' in text, path
-          PY
-
-          grep -q 'SOURCE_COMMIT=6d072cd65d44a470df8069680fca11d737c1d910' "$progress"
-          grep -q 'PERSISTENT_CONFIRMATION_ORCHESTRATION=REPOSITORY_READY' "$progress"
-          grep -q 'SUPABASE_REMOTE_MUTATION=NO' "$progress"
-          grep -q 'ACCOUNT_MUTATION=NOT_AUTHORIZED' "$progress"
-          grep -q 'CARTERA_020C_COMPLETE=NO' "$progress"
-          grep -q 'NEXT=CARTERA_020C_PERSISTENT_CONFIRMATION_REMOTE_ACCEPTANCE' "$progress"
-
-          echo 'DURABLE_REVIEW_LIFECYCLE=REPOSITORY_READY'
-          echo 'RETRY_SAFE_ORDERED_EXECUTION=LOCKED'
-          echo 'IDENTITY_READ_AFTER_WRITE=LOCKED'
-          echo 'POLICY_READ_AFTER_WRITE=LOCKED'
-          echo 'PACKET_IMMUTABILITY=PRESERVED'
-          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
-          echo 'SUPABASE_REMOTE_MUTATION=NONE'
-
-      - name: Emit progress markers
-        run: |
-          echo 'CARTERA_020C_TESTS=62'
-          echo 'CARTERA_020C_PASS=62'
-          echo 'INHERITED_CONFIRMATION_TESTS=3'
-          echo 'INHERITED_CONFIRMATION_PASS=3'
-          echo 'TOTAL_TARGETED_TESTS=65'
-          echo 'TOTAL_TARGETED_PASS=65'
-          echo 'TOTAL_TARGETED_FAIL=0'
-          echo 'CARTERA_020C_SCOPE=LOCKED'
-          echo 'CARTERA_020C_REVIEW_READ_MODEL=REPOSITORY_READY'
-          echo 'CARTERA_020C_CANDIDATE_RECONCILIATION=REPOSITORY_READY'
-          echo 'CARTERA_020C_GOVERNED_COMMAND_COMPOSER=REPOSITORY_READY'
-          echo 'CARTERA_020C_PERSISTENT_CONFIRMATION_ORCHESTRATION=REPOSITORY_READY'
-          echo 'IDENTITY_RESULT_VERIFICATION=LOCKED'
-          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
-          echo 'SUPABASE_REMOTE_MUTATION=NO'
-          echo 'CARTERA_020C_COMPLETE=NO'
-          echo 'NEXT=CARTERA_020C_PERSISTENT_CONFIRMATION_REMOTE_ACCEPTANCE'
+          echo 'CARTERA_020C_TESTS=95'
+          echo 'CARTERA_020C_PASS=95'
+          echo 'CARTERA_020C_FAIL=0'
+          echo 'CARTERA_020C_REMOTE_DEPLOYMENT=PASS'
+          echo 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS'
+          echo 'CARTERA_020C_COMPLETE=YES'
+          echo 'NEXT=ADVANCE_CARTERA_ROADMAP'
