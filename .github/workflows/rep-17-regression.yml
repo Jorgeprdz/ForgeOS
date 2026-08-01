@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -35,9 +37,9 @@ jobs:
       - name: REP-17 integrated contract
         run: node --test tests/rep-17-unified-runtime-regression-test.mjs
 
-      - name: Existing auth and shell regressions
+      - name: Current shell and auth regressions
         run: |
-          node --test tests/ui-m04-canonical-shell-test.mjs
+          node --test tests/ui-m05l-shell-route-first-test.mjs
           node --test tests/ui-m05n-public-config-boot-order-test.mjs
           node --test tests/forge-067g17b1-auth-entry-static-test.mjs
 
