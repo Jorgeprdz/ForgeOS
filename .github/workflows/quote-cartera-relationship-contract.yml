@@ -4,7 +4,9 @@ on:
   pull_request:
     paths:
       - "platform/shared-commercial-model/accepted-quote-cartera-relationship-contract.js"
+      - "platform/shared-commercial-model/accepted-quote-cartera-relationship-adapter.js"
       - "tests/quote-cartera-relationship-contract-test.mjs"
+      - "tests/quote-cartera-relationship-adapter-test.mjs"
       - "docs/architecture/source-truth/FORGE_QUOTE_CARTERA_RELATIONSHIP_CONTRACT_001.md"
       - ".github/workflows/quote-cartera-relationship-contract.yml"
   workflow_dispatch:
@@ -26,16 +28,22 @@ jobs:
           node-version: "22"
 
       - name: Syntax
-        run: node --check platform/shared-commercial-model/accepted-quote-cartera-relationship-contract.js
+        run: |
+          node --check platform/shared-commercial-model/accepted-quote-cartera-relationship-contract.js
+          node --check platform/shared-commercial-model/accepted-quote-cartera-relationship-adapter.js
 
       - name: Relationship acceptance
-        run: node --test tests/quote-cartera-relationship-contract-test.mjs
+        run: |
+          node --test \
+            tests/quote-cartera-relationship-contract-test.mjs \
+            tests/quote-cartera-relationship-adapter-test.mjs
 
       - name: Safety boundary
         shell: bash
         run: |
           set -euo pipefail
           contract="platform/shared-commercial-model/accepted-quote-cartera-relationship-contract.js"
+          adapter="platform/shared-commercial-model/accepted-quote-cartera-relationship-adapter.js"
           document="docs/architecture/source-truth/FORGE_QUOTE_CARTERA_RELATIONSHIP_CONTRACT_001.md"
 
           grep -q 'policyCandidateCreated: false' "$contract"
@@ -44,10 +52,20 @@ jobs:
           grep -q 'personMerge: false' "$contract"
           grep -q 'carteraMutation: false' "$contract"
           grep -q 'crmMutation: false' "$contract"
+
+          grep -q 'automaticListeners: false' "$adapter"
+          grep -q 'automaticRpc: false' "$adapter"
+          grep -q 'automaticPersistence: false' "$adapter"
+          grep -q 'automaticPolicyCreation: false' "$adapter"
+          grep -q 'automaticPolicyConfirmation: false' "$adapter"
+
           grep -q 'VIDA_MUJER_AND_SEGUBECA_SHARED_CONTRACT=PASS' "$document"
           grep -q 'PRODUCT_SPECIFIC_RELATIONSHIP_ADAPTERS=FORBIDDEN' "$document"
+          grep -q 'CARTERA_130_PROMOTED=YES' "$document"
 
           echo "QUOTE_CARTERA_RELATIONSHIP_CONTRACT=PASS"
+          echo "PROMOTED_AUTHORITY_RECEIPT_ADAPTER=PASS"
           echo "AUTOMATIC_POLICY_CREATION=BLOCKED"
           echo "PERSON_DUPLICATION=BLOCKED"
           echo "CALCULATION_COPY=BLOCKED"
+          echo "AUTOMATIC_RUNTIME_EFFECTS=BLOCKED"
