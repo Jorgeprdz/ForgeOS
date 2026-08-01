@@ -246,6 +246,6 @@ test("sync failure never promotes cached entries as complete truth", async ({ pa
   await expect(page.locator("[data-activity-status-card]")).toContainText(
     "No mostraremos datos locales como si fueran completos",
   );
-  await expect(page.locator("[data-activity-summary]")).toBeHidden();
-  await expect(page.locator("[data-activity-chart-card]")).toBeHidden();
+  await expect(page.locator("[data-activity-summary]")).toHaveAttribute("hidden", "");
+  await expect(page.locator("[data-activity-chart-card]")).toHaveAttribute("hidden", "");
 });
