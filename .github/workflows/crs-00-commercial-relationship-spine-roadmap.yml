@@ -1,0 +1,81 @@
+name: CRS 00 Commercial Relationship Spine Roadmap
+
+on:
+  pull_request:
+    paths:
+      - "docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001.md"
+      - "docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001.md"
+      - "docs/evidence/FORGE_CRS_00_ABCD_CLOSURE_001.md"
+      - "tests/crs-00-commercial-relationship-spine-roadmap-test.mjs"
+      - ".github/workflows/crs-00-commercial-relationship-spine-roadmap.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  roadmap-lock:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Documentation-only path boundary
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+
+          allowed='^(docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001\.md|docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001\.md|docs/evidence/FORGE_CRS_00_ABCD_CLOSURE_001\.md|tests/crs-00-commercial-relationship-spine-roadmap-test\.mjs|\.github/workflows/crs-00-commercial-relationship-spine-roadmap\.yml)$'
+
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_00_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo "CRS_00_DOCUMENTATION_ONLY_PATH_BOUNDARY=PASS"
+
+      - name: Roadmap and source-truth acceptance
+        run: node --test tests/crs-00-commercial-relationship-spine-roadmap-test.mjs
+
+      - name: Locked acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          roadmap='docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001.md'
+          source='docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001.md'
+
+          grep -q 'STAGES=12' "$roadmap"
+          grep -q 'SUBSTAGES=48' "$roadmap"
+          grep -q 'CANONICAL_ROOT=CommercialPerson' "$roadmap"
+          grep -q 'RELATIONSHIP_ROOT=AdvisorCommercialRelationship' "$roadmap"
+          grep -q 'CENTRAL_DUPLICATE_TRUTH_STORE=FORBIDDEN' "$roadmap"
+          grep -q 'SEGUBECA_PRODUCTIVE_RELEASE_REQUIRES_CRS_01_02=YES' "$roadmap"
+
+          grep -q 'GAP_01=ADVISOR_COMMERCIAL_RELATIONSHIP_CONTRACT' "$source"
+          grep -q 'GAP_06=APPLICATION_AND_SIGNATURE_AUTHORITY' "$source"
+          grep -q 'CRS_TIMELINE_PARALLEL_TRUTH=FORBIDDEN' "$source"
+
+          echo 'CRS_00A_REPOSITORY_DISCOVERY=PASS'
+          echo 'CRS_00B_SOURCE_TRUTH_LOCK=PASS'
+          echo 'CRS_00C_ROADMAP_GOVERNANCE=PASS'
+          echo 'CRS_STAGES=12'
+          echo 'CRS_SUBSTAGES=48'
+          echo 'RUNTIME_MUTATION=NO'
+          echo 'PRODUCT_UI_MUTATION=NO'
+          echo 'SCHEMA_MUTATION=NO'
+          echo 'SUPABASE_MUTATION=NO'
