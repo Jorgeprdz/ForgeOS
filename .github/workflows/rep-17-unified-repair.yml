@@ -1,0 +1,91 @@
+name: REP-17 Unified Repair and Regression
+
+on:
+  push:
+    branches:
+      - fix/rep-17-unified-repair
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rep-17-unified-repair-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  repair-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout REP-17 source
+        uses: actions/checkout@v4
+        with:
+          ref: fix/rep-17-unified-repair
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply REP-17 unified source repair
+        run: node scripts/rep-17-unified-repair.mjs
+
+      - name: Validate modified JavaScript syntax
+        run: |
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js
+          node --check docs/static-preview/forge-alive-material3/pipeline-module.js
+          node --check docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.js
+          node --check tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Run REP-17 integrated regression
+        run: node --test tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Run existing shell and auth regressions
+        run: |
+          node --test tests/ui-m04-canonical-shell-test.mjs
+          node --test tests/ui-m05n-public-config-boot-order-test.mjs
+          node --test tests/forge-067g17b1-auth-entry-static-test.mjs
+
+      - name: Run existing quote-printable regressions
+        run: |
+          node --test advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
+          node --test advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+          node --test tests/ui-m05f-live-udi-review-printable-actions-test.mjs
+          node --test tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
+
+      - name: Run existing Pipeline regressions
+        run: |
+          node --test tests/pipeline-stage-rpc-authority-regression.mjs
+          node --test tests/pipeline-card-density-stage-authority-regression.mjs
+
+      - name: Generate and validate Pages runtime
+        env:
+          FORGE_PAGES_RUNTIME: "true"
+        run: |
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node --test tests/rep-16f-pages-runtime-generator-test.mjs
+
+      - name: Validate diff integrity
+        run: |
+          git diff --check
+          git status --short
+
+      - name: Commit accepted REP-17 implementation
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "REP_17_SOURCE_ALREADY_APPLIED=YES"
+            exit 0
+          fi
+          git config user.name "forge-repair-bot"
+          git config user.email "forge-repair-bot@users.noreply.github.com"
+          git add \
+            docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js \
+            docs/static-preview/forge-alive-material3/pipeline-module.js \
+            docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.js \
+            docs/quote-printable/index.html \
+            docs/static-preview/quote-printable/index.html \
+            tests/rep-17-unified-runtime-regression-test.mjs \
+            docs/evidence/REP_17_UNIFIED_REPAIR_AND_REGRESSION.md
+          git commit -m "fix(rep-17): reconcile public routes, aborts and sessions"
+          git push origin HEAD:fix/rep-17-unified-repair
