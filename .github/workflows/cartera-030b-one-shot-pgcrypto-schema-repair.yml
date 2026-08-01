@@ -1,0 +1,154 @@
+name: CARTERA 030B One-Shot Pgcrypto Schema Repair
+
+on:
+  pull_request:
+    branches:
+      - run/cartera-030b-remote-acceptance-20260731-2014
+    types:
+      - opened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-030b-pgcrypto-schema-repair
+  cancel-in-progress: false
+
+jobs:
+  persist-repair-and-resume:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.ref == 'run/cartera-030b-pgcrypto-schema-repair-20260731-2025' &&
+      github.event.pull_request.base.ref == 'run/cartera-030b-remote-acceptance-20260731-2014' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_030B_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_030B_REMOTE_MUTATION
+      CARTERA_030B_EXPECTED_SOURCE_HEAD: 23b52fc7a442f52494c51fead67699004923c547
+      CARTERA_030B_ACCEPTANCE_BRANCH: run/cartera-030b-pgcrypto-schema-repair-20260731-2025
+
+    steps:
+      - name: Checkout exact repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: run/cartera-030b-pgcrypto-schema-repair-20260731-2025
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Authorization and launch scope gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$CARTERA_030B_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_030B_REMOTE_MUTATION'
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          base=9ad90b64e86cdbbf1d61c507774050ad62a018eb
+          git merge-base --is-ancestor "$base" HEAD
+          git diff --check "$base"...HEAD
+          mapfile -t changed < <(git diff --name-only "$base"...HEAD)
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = '.github/workflows/cartera-030b-one-shot-pgcrypto-schema-repair.yml'
+          echo 'REPAIR_AUTHORIZATION=PASS'
+          echo 'INITIAL_REPAIR_SCOPE=PASS'
+
+      - name: Persist exact pgcrypto schema qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          migration = Path('supabase/migrations/20260731000251_cartera030b_generation_and_calendar_rpc.sql')
+          source = migration.read_text()
+          old = "    digest(convert_to(public.forge_cartera030b_stable_json_text(p_value), 'UTF8'), 'sha256'),"
+          new = "    extensions.digest(convert_to(public.forge_cartera030b_stable_json_text(p_value), 'UTF8'), 'sha256'),"
+          if source.count(old) != 1:
+              raise SystemExit('PGCRYPTO_DIGEST_REPLACEMENT_COUNT_INVALID')
+          migration.write_text(source.replace(old, new))
+
+          runner = Path('scripts/ci/cartera-030b-remote-acceptance.mjs')
+          runner_source = runner.read_text()
+          old_branch = 'run/cartera-030b-remote-acceptance-20260731-2014'
+          new_branch = 'run/cartera-030b-pgcrypto-schema-repair-20260731-2025'
+          if runner_source.count(old_branch) != 1:
+              raise SystemExit('RUNNER_BRANCH_REPLACEMENT_COUNT_INVALID')
+          runner.write_text(runner_source.replace(old_branch, new_branch))
+
+          contract = Path('tests/cartera-030b-remote-acceptance-contract-test.mjs')
+          contract_source = contract.read_text()
+          if contract_source.count(old_branch) != 1:
+              raise SystemExit('CONTRACT_BRANCH_REPLACEMENT_COUNT_INVALID')
+          contract.write_text(contract_source.replace(old_branch, new_branch))
+
+          Path('tests/cartera-030b-pgcrypto-schema-qualification-test.mjs').write_text("""import test from 'node:test';
+          import assert from 'node:assert/strict';
+          import { readFile } from 'node:fs/promises';
+
+          test('030B digest uses the Supabase pgcrypto extension schema explicitly', async () => {
+            const sql = await readFile(new URL('../supabase/migrations/20260731000251_cartera030b_generation_and_calendar_rpc.sql', import.meta.url), 'utf8');
+            assert.match(sql, /extensions\\.digest\\(convert_to/);
+            assert.doesNotMatch(sql, /(^|[^.])\\bdigest\\(convert_to/m);
+          });
+          """)
+          PY
+
+          mapfile -t changed < <(git status --short | sed 's/^...//')
+          printf 'REPAIR_FILE=%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 4
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            supabase/migrations/20260731000251_cartera030b_generation_and_calendar_rpc.sql \
+            tests/cartera-030b-pgcrypto-schema-qualification-test.mjs \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs \
+            | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+          node --check scripts/ci/cartera-030b-remote-acceptance.mjs
+          node --test tests/cartera-030b-*.mjs
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            supabase/migrations/20260731000251_cartera030b_generation_and_calendar_rpc.sql \
+            tests/cartera-030b-pgcrypto-schema-qualification-test.mjs \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs
+          git commit -m 'fix(cartera): qualify 030B pgcrypto digest schema'
+          git push origin HEAD:run/cartera-030b-pgcrypto-schema-repair-20260731-2025
+          echo "CARTERA_030B_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo 'PGCRYPTO_SCHEMA_QUALIFICATION=PERSISTED'
+
+      - name: Resume deployment and transactional acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-030b-remote-acceptance
+          node scripts/ci/cartera-030b-remote-acceptance.mjs \
+            | tee artifacts/cartera-030b-remote-acceptance/workflow-output.log
+
+      - name: Verify acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-030b-remote-acceptance/workflow-output.log
+          grep -q 'MIGRATION_20260731000250=ALREADY_APPLIED_AND_MATCHED' "$log"
+          grep -q 'MIGRATION_20260731000251=APPLIED' "$log"
+          grep -q 'CARTERA_030B_REMOTE_ACCEPTANCE=PASS' "$log"
+
+      - name: Upload repair and acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-030b-pgcrypto-repair-and-remote-resume
+          path: artifacts/cartera-030b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
