@@ -35,6 +35,9 @@ const canonicalRemotePush = [
   "assert.ok(result && [\"ACKNOWLEDGED\", \"IDEMPOTENT_REPLAY\"].includes(result.status));",
 ].join("\n    ");
 
+const unsupportedPaymentState = 'confirmationState: "CONFIRMED",';
+const canonicalPaymentState = 'confirmationState: "confirmed",';
+
 const source = await readFile(sourcePath, "utf8");
 assert.equal(
   source.split(unsupportedMetadata).length - 1,
@@ -46,20 +49,27 @@ assert.equal(
   1,
   "DEMO_SEED_FES_REMOTE_RECEIPT_ADAPTER_SOURCE_DRIFT",
 );
+assert.equal(
+  source.split(unsupportedPaymentState).length - 1,
+  1,
+  "DEMO_SEED_PAYMENT_CONFIRMATION_STATE_SOURCE_DRIFT",
+);
 
 const runtime = source
   .replace(unsupportedMetadata, canonicalMetadata)
-  .replace(strictGatewayPush, canonicalRemotePush);
+  .replace(strictGatewayPush, canonicalRemotePush)
+  .replace(unsupportedPaymentState, canonicalPaymentState);
 
 assert.doesNotMatch(runtime, /metadata:\s*\{\s*data_class:/);
 assert.match(runtime, /observation_code:\s*spec\.scenario/);
 assert.match(runtime, /confirmation_actor_type:/);
 assert.match(runtime, /forge_fes02_append_activity_event/);
 assert.doesNotMatch(runtime, /gateway\.pushMutation\(mutation\)/);
+assert.match(runtime, /confirmationState:\s*"confirmed"/);
 
 try {
   await writeFile(runtimePath, runtime, { flag: "wx", mode: 0o600 });
-  await import(`${pathToFileURL(runtimePath).href}?v=canonical-fes-remote-003`);
+  await import(`${pathToFileURL(runtimePath).href}?v=canonical-fes-payment-004`);
 } finally {
   await rm(runtimePath, { force: true });
 }
