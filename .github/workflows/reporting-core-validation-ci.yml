@@ -1,6 +1,18 @@
 name: Reporting Core Validation
 
 on:
+  push:
+    branches:
+      - 'integration/reporting-source-truth-reconciliation'
+    paths:
+      - 'advisor-os/reporting/**'
+      - 'platform/event-evidence/**'
+      - 'docs/static-preview/forge-alive-material3/app.js'
+      - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
+      - 'docs/static-preview/forge-alive-material3/activity-*'
+      - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
+      - 'tests/rep-16d-productive-activity-delivery-test.mjs'
+      - '.github/workflows/reporting-core-validation-ci.yml'
   pull_request:
     paths:
       - 'advisor-os/reporting/**'
