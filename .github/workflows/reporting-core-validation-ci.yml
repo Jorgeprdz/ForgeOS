@@ -1,0 +1,66 @@
+name: Reporting Core Validation
+
+on:
+  pull_request:
+    paths:
+      - 'advisor-os/reporting/**'
+      - 'tests/universal-reporting-kernel-test.mjs'
+      - 'tests/universal-period-resolver-test.mjs'
+      - 'tests/report-provider-runtime-test.mjs'
+      - 'tests/universal-report-aggregation-runtime-test.mjs'
+      - 'tests/report-comparison-engine-test.mjs'
+      - 'tests/chart-ready-surface-contract-test.mjs'
+      - 'tests/activity-report-source-port-test.mjs'
+      - 'tests/activity-event-authority-mapping-test.mjs'
+      - 'tests/fes-activity-report-source-adapter-test.mjs'
+      - 'tests/activity-report-provider-test.mjs'
+      - 'tests/activity-reporting-runtime-chart-ready-test.mjs'
+      - '.github/workflows/reporting-core-validation-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate imports
+        run: |
+          node --check advisor-os/reporting/domain/reporting-kernel-contract.mjs
+          node --check advisor-os/reporting/domain/reporting-calendar-policy.mjs
+          node --check advisor-os/reporting/domain/report-definition.mjs
+          node --check advisor-os/reporting/domain/report-comparison-definition.mjs
+          node --check advisor-os/reporting/domain/universal-report-model.mjs
+          node --check advisor-os/reporting/domain/chart-ready-reporting-contract.mjs
+          node --check advisor-os/reporting/domain/activity-event-authority-mapping.mjs
+          node --check advisor-os/reporting/application/report-provider-port.mjs
+          node --check advisor-os/reporting/application/chart-ready-surface-contract.mjs
+          node --check advisor-os/reporting/application/activity-report-source-port.mjs
+          node --check advisor-os/reporting/application/activity-chart-ready-projection.mjs
+          node --check advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs
+          node --check advisor-os/reporting/providers/activity-report-provider.mjs
+          node --check advisor-os/reporting/runtime/universal-reporting-kernel.mjs
+          node --check advisor-os/reporting/runtime/universal-period-resolver.mjs
+          node --check advisor-os/reporting/runtime/report-provider-runtime.mjs
+          node --check advisor-os/reporting/runtime/universal-report-aggregation-runtime.mjs
+          node --check advisor-os/reporting/runtime/report-comparison-engine.mjs
+          node --check advisor-os/reporting/runtime/activity-reporting-runtime.mjs
+      - name: Run isolated core tests
+        run: |
+          node --test \
+            tests/universal-reporting-kernel-test.mjs \
+            tests/universal-period-resolver-test.mjs \
+            tests/report-provider-runtime-test.mjs \
+            tests/universal-report-aggregation-runtime-test.mjs \
+            tests/report-comparison-engine-test.mjs \
+            tests/chart-ready-surface-contract-test.mjs \
+            tests/activity-report-source-port-test.mjs \
+            tests/activity-event-authority-mapping-test.mjs \
+            tests/fes-activity-report-source-adapter-test.mjs \
+            tests/activity-report-provider-test.mjs \
+            tests/activity-reporting-runtime-chart-ready-test.mjs
