@@ -1,0 +1,184 @@
+name: CARTERA 030B Final Human Reopen Acceptance
+
+on:
+  pull_request_target:
+    branches:
+      - feature/cartera-030b-expected-payment-obligation-ledger-calendar
+    types:
+      - reopened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-030b-final-human-reopen-acceptance
+  cancel-in-progress: false
+
+jobs:
+  accept:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.repo.full_name == 'Jorgeprdz/ForgeOS' &&
+      github.event.pull_request.head.ref == 'run/cartera-030b-target-remote-launch-20260731-2120' &&
+      github.event.pull_request.base.ref == 'feature/cartera-030b-expected-payment-obligation-ledger-calendar' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_030B_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_030B_REMOTE_MUTATION
+      CARTERA_030B_EXPECTED_SOURCE_HEAD: 23b52fc7a442f52494c51fead67699004923c547
+      CARTERA_030B_ACCEPTANCE_BRANCH: run/cartera-030b-target-remote-launch-20260731-2120
+      CARTERA_030B_FINAL_ACCEPTANCE_BRANCH: run/cartera-030b-target-remote-launch-20260731-2120
+      CARTERA_030B_ACCEPTANCE_HEAD: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - name: Checkout exact same-repository launch head
+        uses: actions/checkout@v4
+        with:
+          repository: Jorgeprdz/ForgeOS
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify trusted one-file authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-030b-remote-acceptance
+          test "$CARTERA_030B_REMOTE_MUTATION_AUTHORIZED" = 'YES:CARTERA_030B_REMOTE_MUTATION'
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$(git rev-parse HEAD)" = "$CARTERA_030B_ACCEPTANCE_HEAD"
+          base=${{ github.event.pull_request.base.sha }}
+          git merge-base --is-ancestor "$base" HEAD
+          git diff --check "$base"...HEAD
+          mapfile -t changed < <(git diff --name-only "$base"...HEAD)
+          printf 'LAUNCH_FILE=%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = 'docs/evidence/FORGE_CARTERA_030B_TARGET_REMOTE_LAUNCH_001.md'
+          grep -q 'AUTHORIZATION=YES:CARTERA_030B_REMOTE_MUTATION' "${changed[0]}"
+          grep -q 'MIGRATIONS=20260731000250,20260731000251,20260731000252' "${changed[0]}"
+          echo 'HUMAN_REOPEN_AUTHORIZATION=PASS'
+          echo 'SCHEMA_MUTATION=NO_NEW_MIGRATIONS'
+          echo 'PRODUCT_UI_MUTATION=NO'
+          echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
+
+      - name: Prepare final acceptance harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-030b-finalize-remote-harness.mjs
+          mapfile -t changed < <(git status --short | sed 's/^...//')
+          test "${#changed[@]}" -eq 3
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            scripts/ci/cartera-030b-remote-acceptance.sql \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs \
+            | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+      - name: Run repository and inherited payment gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/ci/cartera-030b-remote-acceptance.mjs
+          node --test tests/cartera-030b-*.mjs
+          node tests/payment-evidence-packet-test.js
+          node tests/payment-event-engine-test.js
+
+      - name: Execute rollback-only remote acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/cartera-030b-remote-acceptance.mjs \
+            | tee artifacts/cartera-030b-remote-acceptance/workflow-output.log
+
+      - name: Verify complete acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-030b-remote-acceptance/workflow-output.log
+          for marker in \
+            MIGRATION_20260731000250=ALREADY_APPLIED_AND_MATCHED \
+            MIGRATION_20260731000251=ALREADY_APPLIED_AND_MATCHED \
+            MIGRATION_20260731000252=ALREADY_APPLIED_AND_MATCHED \
+            CARTERA_030B_REMOTE_DEPLOYMENT=PASS \
+            CARTERA_030B_CATALOG_VERIFICATION=PASS \
+            AUTHORIZATION_DIGEST_COMPATIBILITY=PASS \
+            CARTERA_030B_TRANSACTIONAL_ACCEPTANCE=PASS \
+            DETERMINISTIC_RECURRENCE=PASS \
+            IDEMPOTENT_REPLAY=PASS \
+            CHANGED_INPUT_CONFLICT_PERSISTENCE=PASS \
+            IDENTITY_COLLISION_CONFLICT_PERSISTENCE=PASS \
+            OPTIMISTIC_STATE_VERSION=PASS \
+            RLS_CROSS_ADVISOR=PASS \
+            DIRECT_TABLE_ACCESS=BLOCKED \
+            SANITIZED_CALENDAR=PASS \
+            NO_LAPSE_INFERENCE=PASS \
+            TEST_FIXTURES_ROLLED_BACK=YES \
+            RESIDUAL_FIXTURES=0 \
+            CARTERA_030B_REMOTE_ACCEPTANCE=PASS; do
+            grep -q "$marker" "$log"
+          done
+
+      - name: Persist final harness and closure marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          closure=docs/evidence/FORGE_CARTERA_030B_REMOTE_ACCEPTANCE_CLOSURE_001.md
+          cat > "$closure" <<EOF
+          # FORGE CARTERA 030B — REMOTE ACCEPTANCE CLOSURE 001
+
+          \`\`\`text
+          STATUS=REMOTE_ACCEPTED
+          WORKFLOW_RUN=${GITHUB_RUN_ID}
+          WORKFLOW_ATTEMPT=${GITHUB_RUN_ATTEMPT}
+          ACCEPTANCE_HEAD=${CARTERA_030B_ACCEPTANCE_HEAD}
+          PROJECT_REF=${SUPABASE_PROJECT_REF}
+          MIGRATION_20260731000250=ALREADY_APPLIED_AND_MATCHED
+          MIGRATION_20260731000251=ALREADY_APPLIED_AND_MATCHED
+          MIGRATION_20260731000252=ALREADY_APPLIED_AND_MATCHED
+          CARTERA_030B_REMOTE_DEPLOYMENT=PASS
+          CARTERA_030B_TRANSACTIONAL_ACCEPTANCE=PASS
+          CHANGED_INPUT_CONFLICT_PERSISTENCE=PASS
+          IDENTITY_COLLISION_CONFLICT_PERSISTENCE=PASS
+          RLS_CROSS_ADVISOR=PASS
+          DIRECT_TABLE_ACCESS=BLOCKED
+          SANITIZED_CALENDAR=PASS
+          TEST_FIXTURES_ROLLED_BACK=YES
+          RESIDUAL_FIXTURES=0
+          PRODUCT_UI_MUTATION=NO
+          ACCOUNT_MUTATION=NOT_AUTHORIZED
+          CARTERA_030B_REMOTE_ACCEPTANCE=PASS
+          CARTERA_030B_COMPLETE=YES
+          ARTIFACT_NAME=cartera-030b-final-human-reopen-remote-acceptance
+          \`\`\`
+          EOF
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            scripts/ci/cartera-030b-remote-acceptance.mjs \
+            scripts/ci/cartera-030b-remote-acceptance.sql \
+            tests/cartera-030b-remote-acceptance-contract-test.mjs \
+            "$closure"
+          git commit -m 'test(cartera): close 030B remote acceptance'
+          git push origin HEAD:run/cartera-030b-target-remote-launch-20260731-2120
+          echo 'CARTERA_030B_CLOSURE=PERSISTED'
+
+      - name: Upload final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-030b-final-human-reopen-remote-acceptance
+          path: artifacts/cartera-030b-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
