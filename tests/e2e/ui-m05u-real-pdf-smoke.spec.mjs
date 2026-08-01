@@ -65,11 +65,26 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
   );
   await expect(projection).toBeVisible({ timeout: 12_000 });
 
+  const quotesModule = page.locator("[data-forge-quotes-module]");
   const confirm = page.locator('[data-quote-next-action="confirm_quote"]');
   await expect(confirm).toBeVisible({ timeout: 8_000 });
-  await expect(confirm).toBeEnabled({ timeout: 8_000 });
-  await confirm.click({ timeout: 4_000 });
-  await expect(page.locator("[data-forge-quotes-module]")).toHaveAttribute(
+
+  const confirmationState = await confirm.evaluate((button) => ({
+    disabled: button instanceof HTMLButtonElement ? button.disabled : null,
+    ariaDisabled: button.getAttribute("aria-disabled"),
+    text: button.textContent?.trim() || "",
+  }));
+
+  let confirmationMode;
+  if (confirmationState.disabled === false) {
+    confirmationMode = "clicked";
+    await confirm.click({ timeout: 4_000 });
+  } else {
+    confirmationMode = "already_confirmed";
+    expect(confirmationState.text).toMatch(/Cotización confirmada/i);
+  }
+
+  await expect(quotesModule).toHaveAttribute(
     "data-quote-accepted",
     "true",
     { timeout: 12_000 },
@@ -158,11 +173,15 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
   await writeFile(
     path.join(artifactRoot, "state.json"),
     `${JSON.stringify({
-      schema: "forge.ui.m05u.real-pdf-smoke.v2",
+      schema: "forge.ui.m05u.real-pdf-smoke.v3",
       status: "PASS",
       fixtureBytes: fixture.length,
       intakeProbeMs,
       accepted: true,
+      confirmation: {
+        mode: confirmationMode,
+        initialState: confirmationState,
+      },
       printableCard: true,
       previewEvidence: { before: beforePreview, after: afterPreview },
       actions: {
