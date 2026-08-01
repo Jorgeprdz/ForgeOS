@@ -207,11 +207,12 @@ test("locks canonical shell and Material 3 Activity delivery boundaries", async 
     "../docs/static-preview/forge-alive-material3/",
     import.meta.url,
   );
-  const [index, app, navigation, moduleSource, styles] = await Promise.all([
+  const [index, app, navigation, workspaceSource, operationalSource, styles] = await Promise.all([
     readFile(new URL("index.html", base), "utf8"),
     readFile(new URL("app.js", base), "utf8"),
     readFile(new URL("forge-navigation-contract.js", base), "utf8"),
     readFile(new URL("activity-module.js", base), "utf8"),
+    readFile(new URL("activity-operational-module.js", base), "utf8"),
     readFile(new URL("activity-module.css", base), "utf8"),
   ]);
 
@@ -224,7 +225,7 @@ test("locks canonical shell and Material 3 Activity delivery boundaries", async 
   );
   assert.match(app, /REP_16E_REPORTING_IMPORT_MAP_REQUIRED_BEFORE_APP_MODULE/);
   assert.match(app, /registerRouteModule\("actividad", activity\)/);
-  assert.match(app, /dataset\.activityReportingRuntime = "REP-16E"/);
+  assert.match(app, /dataset\.activityReportingRuntime = "REP-(?:16E|18)"/);
   assert.match(app, /dataset\.forgeShellBoot = "route-first"/);
   assert.match(app, /m05e-011-eager-print-actions/);
   assert.match(app, /const environmentAuthority = loadEnvironmentAuthority\(\)/);
@@ -236,11 +237,13 @@ test("locks canonical shell and Material 3 Activity delivery boundaries", async 
   );
   assert.match(navigation, /routeId: "actividad"/);
   assert.match(navigation, /availability: "available"/);
-  assert.match(moduleSource, /runChartReady/);
-  assert.match(moduleSource, /const total = report\.totals\.activityCount/);
-  assert.match(moduleSource, /data-row-keys/);
-  assert.match(moduleSource, /No mostraremos datos locales como si fueran completos/);
-  assert.doesNotMatch(moduleSource, /appendCanonicalEvent/);
-  assert.doesNotMatch(moduleSource, /score|scoring/i);
-  assert.match(styles, /calc\(170px \+ env\(safe-area-inset-bottom\)\)/);
+  assert.match(workspaceSource, /data-activity-view-tab="actividad"/);
+  assert.match(workspaceSource, /data-activity-view-tab="reportes"/);
+  assert.match(operationalSource, /runChartReady/);
+  assert.match(operationalSource, /const total = report\.totals\.activityCount/);
+  assert.match(operationalSource, /No mostraremos datos locales como si fueran completos/);
+  assert.doesNotMatch(workspaceSource, /appendCanonicalEvent/);
+  assert.doesNotMatch(operationalSource, /appendCanonicalEvent/);
+  assert.doesNotMatch(operationalSource, /score|scoring/i);
+  assert.match(styles, /calc\(190px \+ env\(safe-area-inset-bottom\)\)/);
 });
