@@ -10,8 +10,11 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./tokens.css?v=ui-m03-approved-001">
   <link rel="stylesheet" href="./app.css?v=ui-m03-approved-004">
-  <!-- previous runtime contract: app.js?v=ui-m04-shell-008&fix=pipeline-stage-runtime-003 -->
-  <script type="module" src="./app.js?v=ui-m04-shell-008&fix=pipeline-google-calendar-001"></script>
+  <script type="importmap" data-reporting-crypto-import-map>
+    {"imports":{"node:crypto":"./node-crypto-shim.mjs?v=rep-16e-001"}}
+  </script>
+  <!-- preserves the current M05M eager-print entry contract while adding REP-16E -->
+  <script type="module" src="./app.js?v=ui-m05m-print-actions-eager-001&rep=16e-002"></script>
 </head>
 <body data-forge-application>
   <div class="forge-background" aria-hidden="true"></div>
