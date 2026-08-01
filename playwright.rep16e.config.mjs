@@ -43,7 +43,7 @@ export default defineConfig({
     serviceWorkers: "block",
   },
   webServer: {
-    command: `npx vite --config vite.rep16e.config.mjs --host 127.0.0.1 --port ${port} --strictPort`,
+    command: `python3 -m http.server ${port} --bind 127.0.0.1`,
     url: `${baseURL}/docs/static-preview/forge-alive-material3/`,
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
