@@ -39,11 +39,13 @@ async function verifyProfile(name, viewport) {
 
   const state = await page.evaluate(() => {
     const application = document.querySelector('[data-forge-application]');
+    const bottomShell = document.querySelector('.bottom-shell');
     const nav = document.querySelector('[data-forge-nav-pill]');
     const button = document.querySelector('[data-route-id="cartera"]');
     const module = document.querySelector('[data-forge-cartera-module]');
     const viewport = document.querySelector('[data-forge-module-viewport]');
     const app = document.querySelector('.app');
+    const bottomShellStyle = bottomShell ? getComputedStyle(bottomShell) : null;
     const navStyle = nav ? getComputedStyle(nav) : null;
     const appStyle = app ? getComputedStyle(app) : null;
     return {
@@ -59,9 +61,13 @@ async function verifyProfile(name, viewport) {
       moduleVisible: Boolean(module && !module.hidden),
       moduleState: module?.dataset.carteraMaterial3State,
       authButtonVisible: Boolean(module?.querySelector('[data-forge-auth-open]')),
+      bottomShellPosition: bottomShellStyle?.position,
+      bottomShellPointerEvents: bottomShellStyle?.pointerEvents,
       navPosition: navStyle?.position,
+      navPointerEvents: navStyle?.pointerEvents,
       navColumns: navStyle?.gridTemplateColumns,
       appPaddingBottom: appStyle?.paddingBottom,
+      bottomShellRect: bottomShell?.getBoundingClientRect().toJSON?.() || null,
       navRect: nav?.getBoundingClientRect().toJSON?.() || null,
       moduleRect: module?.getBoundingClientRect().toJSON?.() || null,
     };
@@ -82,11 +88,17 @@ async function verifyProfile(name, viewport) {
 
   if (name === 'mobile') {
     const bottomPadding = Number.parseFloat(state.appPaddingBottom || '0');
-    const navFloatsAboveContent = state.navPosition !== 'static'
-      && state.navRect
-      && state.navRect.top > state.innerHeight * 0.45;
-    if (!navFloatsAboveContent) {
-      throw new Error(`mobile:FLOATING_NAV_NOT_PRESERVED:${state.navPosition}`);
+    const shellFloatsAboveContent = state.bottomShellPosition === 'fixed'
+      && state.bottomShellRect
+      && state.bottomShellRect.top > state.innerHeight * 0.45
+      && state.bottomShellRect.bottom <= state.innerHeight + 2;
+    if (!shellFloatsAboveContent) {
+      throw new Error(
+        `mobile:FLOATING_BOTTOM_SHELL_NOT_PRESERVED:${state.bottomShellPosition}`,
+      );
+    }
+    if (state.bottomShellPointerEvents !== 'none' || state.navPointerEvents === 'none') {
+      throw new Error('mobile:FLOATING_NAV_POINTER_BOUNDARY_INVALID');
     }
     if (!Number.isFinite(bottomPadding) || bottomPadding < 140) {
       throw new Error(`mobile:NAV_CLEARANCE_INSUFFICIENT:${state.appPaddingBottom}`);
