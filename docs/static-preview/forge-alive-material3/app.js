@@ -226,7 +226,7 @@ async function loadQuoteAuthorities() {
     return;
   }
   await startOptionalQuoteAuthority(
-    "quote-runtime-vida-mujer-visual-m05e010.js?v=m05r-001",
+    "quote-runtime-vida-mujer-visual-m05e010.js?v=m05t-001-coalesced",
     "vida-mujer-visual",
   );
 }
