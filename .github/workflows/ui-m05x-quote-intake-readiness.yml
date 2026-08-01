@@ -1,0 +1,34 @@
+name: UI M05X Quote Intake Readiness
+
+on:
+  push:
+    branches:
+      - fix/vida-mujer-pdf-main-thread
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/index.html
+      - docs/static-preview/forge-alive-material3/quote-runtime-intake-readiness-m05x001.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-client-identity-persistence-m05y001.js
+      - tests/e2e/ui-m05p-real-vida-mujer-pdf.spec.mjs
+      - tests/ui-m05x-quote-intake-readiness-test.mjs
+      - .github/workflows/ui-m05x-quote-intake-readiness.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/index.html
+      - docs/static-preview/forge-alive-material3/quote-runtime-intake-readiness-m05x001.js
+      - docs/static-preview/forge-alive-material3/quote-runtime-client-identity-persistence-m05y001.js
+      - tests/e2e/ui-m05p-real-vida-mujer-pdf.spec.mjs
+      - tests/ui-m05x-quote-intake-readiness-test.mjs
+      - .github/workflows/ui-m05x-quote-intake-readiness.yml
+
+permissions:
+  contents: read
+
+jobs:
+  intake-readiness-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node tests/ui-m05x-quote-intake-readiness-test.mjs
