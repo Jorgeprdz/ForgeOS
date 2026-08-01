@@ -14,6 +14,7 @@ on:
       - scripts/ci/cartera-material3-reconcile-nav-regressions.mjs
       - tests/cartera-material3-productive-ui-mount-test.mjs
       - tests/material3-pipeline-integration-test.mjs
+      - tests/e2e/cartera-material3-route-smoke.mjs
       - .github/workflows/cartera-material3-productive-ui-mount.yml
 
 permissions:
@@ -29,6 +30,7 @@ jobs:
     env:
       CARTERA_M3_SOURCE_HEAD: e30c355a85befa0b59a4bd0565517fdead4f89b2
       CLOSURE_PATH: docs/evidence/FORGE_CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_CLOSURE_001.md
+      FORGE_CARTERA_M3_URL: http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/?nav=cartera
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
@@ -60,7 +62,8 @@ jobs:
               docs/evidence/FORGE_CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_CLOSURE_001.md|\
               scripts/ci/cartera-material3-reconcile-nav-regressions.mjs|\
               tests/cartera-material3-productive-ui-mount-test.mjs|\
-              tests/material3-pipeline-integration-test.mjs)
+              tests/material3-pipeline-integration-test.mjs|\
+              tests/e2e/cartera-material3-route-smoke.mjs)
                 ;;
               *)
                 echo "UNAUTHORIZED_PATH=$path" >&2
@@ -79,6 +82,7 @@ jobs:
           node --check docs/static-preview/forge-alive-material3/cartera-module.js
           node --check docs/static-preview/forge-alive-material3/forge-navigation-contract.js
           node --check docs/static-preview/forge-alive-material3/forge-shell.js
+          node --check tests/e2e/cartera-material3-route-smoke.mjs
 
       - name: Material 3 mount and inherited navigation contracts
         run: >-
@@ -91,6 +95,37 @@ jobs:
           node --test
           tests/cartera-100d-productivity-proof-view-test.mjs
           tests/cartera-100abcd-ui-integration-test.mjs
+
+      - name: Install browser acceptance dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Start candidate static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/cartera-m3-http.log 2>&1 &
+          echo $! > /tmp/cartera-m3-http.pid
+          for attempt in {1..30}; do
+            if curl -fsS "$FORGE_CARTERA_M3_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/cartera-m3-http.log
+          exit 1
+
+      - name: Mobile tablet and desktop browser acceptance
+        run: node tests/e2e/cartera-material3-route-smoke.mjs
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-material3-route-smoke
+          path: artifacts/cartera-material3-route-smoke
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Persist reconciled source and acceptance closure
         shell: bash
@@ -122,6 +157,11 @@ jobs:
           FLOATING_NAV_PRESERVED=YES
           MOBILE_NAV_CLEARANCE=PASS
           MATERIAL3_PIPELINE_NAV_REGRESSION=PASS
+          CARTERA_MATERIAL3_BROWSER_ROUTE=PASS
+          CARTERA_MATERIAL3_MOBILE=PASS
+          CARTERA_MATERIAL3_TABLET=PASS
+          CARTERA_MATERIAL3_DESKTOP=PASS
+          HONEST_ANONYMOUS_STATE=PASS
           DIRECT_DATABASE_WRITE=NO
           POLICY_CREATION=NO
           PERSON_CREATION=NO
@@ -139,6 +179,14 @@ jobs:
               tests/cartera-material3-productive-ui-mount-test.mjs \
               tests/material3-pipeline-integration-test.mjs \
               "$CLOSURE_PATH"
-            git commit -m 'fix(cartera): reconcile Material 3 navigation and session scrub'
+            git commit -m 'fix(cartera): reconcile Material 3 navigation and browser acceptance'
             git push origin HEAD:feature/cartera-material3-productive-ui-mount
+          fi
+
+      - name: Stop candidate static server
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f /tmp/cartera-m3-http.pid ]]; then
+            kill "$(cat /tmp/cartera-m3-http.pid)" 2>/dev/null || true
           fi
