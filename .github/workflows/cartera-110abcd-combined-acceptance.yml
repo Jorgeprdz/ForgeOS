@@ -41,10 +41,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if ! git diff --quiet -- docs/evidence/FORGE_CARTERA_110ABCD_PROGRAM_COMPLETION_PROMOTION_CLOSURE_001.md; then
+          closure='docs/evidence/FORGE_CARTERA_110ABCD_PROGRAM_COMPLETION_PROMOTION_CLOSURE_001.md'
+          if [[ -n "$(git status --porcelain -- "$closure")" ]]; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add docs/evidence/FORGE_CARTERA_110ABCD_PROGRAM_COMPLETION_PROMOTION_CLOSURE_001.md
+            git add "$closure"
             git commit -m 'docs(cartera): close 110A through 110D program promotion decision'
             git push origin HEAD:feature/cartera-110abcd-program-completion-promotion
           fi
