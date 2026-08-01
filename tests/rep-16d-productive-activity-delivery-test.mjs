@@ -221,7 +221,7 @@ test("locks canonical shell and Material 3 Activity delivery boundaries", async 
   assert.match(navigation, /routeId: "actividad"/);
   assert.match(navigation, /availability: "available"/);
   assert.match(moduleSource, /runChartReady/);
-  assert.match(moduleSource, /result\.report\.totals\.activityCount/);
+  assert.match(moduleSource, /const total = report\.totals\.activityCount/);
   assert.match(moduleSource, /data-row-keys/);
   assert.match(moduleSource, /No mostraremos datos locales como si fueran completos/);
   assert.doesNotMatch(moduleSource, /appendCanonicalEvent/);
