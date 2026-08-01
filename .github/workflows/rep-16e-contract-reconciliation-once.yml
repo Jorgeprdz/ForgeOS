@@ -6,6 +6,7 @@ on:
       - promotion/rep-16e-activity-reporting
     paths:
       - .forge/rep-16e-contract-reconciliation-trigger.txt
+      - .forge/rep-16e-contract-reconciliation-trigger-2.txt
 
 permissions:
   contents: write
@@ -21,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Reconcile exact retired contracts
+      - name: Reconcile exact retired test contracts
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -39,12 +40,6 @@ jobs:
                       'app.js?v=ui-m05m-print-actions-eager-001&rep=16e-002',
                   ),
               ],
-              Path('.github/workflows/forge-ui-visual-diagnostic.yml'): [
-                  (
-                      'nohup npm run serve:e2e > /tmp/forge-vite.log 2>&1 &',
-                      'nohup python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/forge-vite.log 2>&1 &',
-                  ),
-              ],
           }
 
           for path, pairs in replacements.items():
@@ -55,16 +50,12 @@ jobs:
                       raise SystemExit(f'{path}: expected one exact match for {old!r}, got {count}')
                   text = text.replace(old, new)
               path.write_text(text)
-
-          Path('.github/workflows/rep-16e-contract-reconciliation-once.yml').unlink()
           PY
-      - name: Commit reconciled contracts
+      - name: Commit reconciled tests
         run: |
           git config user.name "ForgeOS Governance Bot"
           git config user.email "actions@users.noreply.github.com"
           git add tests/material3-pipeline-integration-test.mjs \
-            tests/pipeline-card-density-stage-authority-regression.mjs \
-            .github/workflows/forge-ui-visual-diagnostic.yml \
-            .github/workflows/rep-16e-contract-reconciliation-once.yml
-          git commit -m "REP-16E reconcile Activity navigation and static visual gate"
+            tests/pipeline-card-density-stage-authority-regression.mjs
+          git commit -m "REP-16E reconcile Activity navigation test contracts"
           git push origin HEAD:promotion/rep-16e-activity-reporting
