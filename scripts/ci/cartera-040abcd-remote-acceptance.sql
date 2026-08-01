@@ -435,16 +435,25 @@ begin
     or (brief -> 'boundaries' ->> 'automaticOpportunityCreation')::boolean
     or (brief -> 'boundaries' ->> 'automaticContactExecution')::boolean
     or (brief -> 'boundaries' ->> 'finalMessageGeneration')::boolean
-    or (brief -> 'boundaries' ->> 'rawEvidenceExposed')::boolean then
+    or (brief -> 'boundaries' ->> 'rawEvidenceExposed')::boolean
+    or (brief -> 'boundaries' ->> 'beneficiaryDataExposed')::boolean
+    or (brief -> 'boundaries' ->> 'paymentInstrumentDataExposed')::boolean then
     raise exception 'CARTERA040_BRIEF_BOUNDARY_INVALID:%', brief;
   end if;
 
+  -- Inspect concrete restricted data keys, not the safe boundary metadata that
+  -- explicitly reports those categories as false.
   brief_text := lower(brief::text);
   if brief_text like '%verified_phone%'
     or brief_text like '%verified_email%'
-    or brief_text like '%beneficiar%'
-    or brief_text like '%paymentinstrument%'
+    or brief_text like '%"beneficiaryreference":%'
+    or brief_text like '%"beneficiaryname":%'
+    or brief_text like '%"beneficiaryrole":%'
+    or brief_text like '%"paymentinstrumentreference":%'
+    or brief_text like '%"bankaccount":%'
+    or brief_text like '%"routingnumber":%'
     or brief_text like '%evidence_references%'
+    or brief_text like '%"documentref":%'
     or brief_text like '%providerresponse%'
     or brief_text like '%transcript%' then
     raise exception 'CARTERA040_RESTRICTED_DATA_LEAK:%', brief_text;
