@@ -2,28 +2,29 @@
 
 ## Objective
 
-Integrate Advisor Forecast intelligence into the productive ForgeOS runtime without duplicating calculations, presenting projection context as truth, or executing activity without human confirmation.
+Integrate Advisor Forecast intelligence into the productive ForgeOS runtime without duplicating source truth, presenting projection context as truth, or executing activity without human confirmation.
 
 ## Current closure
 
 ```text
-STAGE_0_RUNTIME_RECONCILIATION=IMPLEMENTED
-STAGE_1_INPUT_CONTRACT=IMPLEMENTED
-STAGE_2_NORMALIZATION=IMPLEMENTED
-STAGE_3_COMPOSER_V1=IMPLEMENTED
-STAGE_4_EXPLANATION_ENGINE=IMPLEMENTED
-STAGE_5_READ_MODEL=IMPLEMENTED
-STAGE_6_HOME_SMARTWIDGET=IMPLEMENTED
-STAGE_7_CONTEXTUAL_NAVIGATION=IMPLEMENTED
-STAGE_8_DETAIL_SCREEN=IMPLEMENTED
-STAGE_9_OPPORTUNITY_WEIGHTING=IMPLEMENTED
-STAGE_10_GOAL_GAP_ENGINE=IMPLEMENTED
-STAGE_11_ACTIVITY_REQUIREMENT_ENGINE=IMPLEMENTED
-STAGE_12_ACTIVITY_HANDOFF=IMPLEMENTED
-STAGE_13_REPORTS_RECONCILIATION=IMPLEMENTED
-PRODUCTIVE_UI_AUTOMOUNT=NO
+STAGE_0_RUNTIME_RECONCILIATION=COMPLETE
+STAGE_1_INPUT_CONTRACT=COMPLETE
+STAGE_2_NORMALIZATION=COMPLETE
+STAGE_3_COMPOSER_V1=COMPLETE
+STAGE_4_EXPLANATION_ENGINE=COMPLETE
+STAGE_5_READ_MODEL=COMPLETE
+STAGE_6_HOME_SMARTWIDGET=COMPLETE
+STAGE_7_CONTEXTUAL_NAVIGATION=COMPLETE
+STAGE_8_DETAIL_SCREEN=COMPLETE
+STAGE_9_OPPORTUNITY_WEIGHTING=COMPLETE
+STAGE_10_GOAL_GAP_ENGINE=COMPLETE
+STAGE_11_ACTIVITY_REQUIREMENT_ENGINE=COMPLETE
+STAGE_12_ACTIVITY_HANDOFF=COMPLETE
+STAGE_13_REPORTS_RECONCILIATION=COMPLETE
+ADVISOR_FORECAST_RUNTIME_ACCEPTANCE=IMPLEMENTED
+FUNCTIONAL_MERGE_SHA=722aa7538f71c99e1abb662348f4ae8533783a6d
 DATABASE_MUTATION=NO
-NEXT=ADVISOR_FORECAST_RUNTIME_ACCEPTANCE
+NEXT=CI_PAGES_AND_CONTROLLED_MERGE
 ```
 
 ## Locked productive authorities
@@ -38,69 +39,45 @@ ADVISOR_SIGNALS=ADVISOR_MANAGER_SNAPSHOT+MANAGER_ADVISOR_METRICS
 HISTORICAL_CONTEXT=MANAGER_ADVISOR_HISTORICAL_ANALYTICS
 FORECAST_BOUNDARY=MANAGER_FORECAST_BOUNDARY
 ACTIVITY_EVENT_BOUNDARY=FES_CANONICAL_ACTIVITY_EVENT
+REPORTS_ACTUAL=UNIQUE_POLICY_SOLD_CONFIRMED
 ```
 
-## Roadmap
+## Runtime acceptance deliverables
+
+- Functional stages 0–13 promoted cumulatively to `main` through PR #139.
+- Browser compatibility bridge `AF-RUNTIME-ACCEPTANCE-001` for GitHub Pages.
+- Browser opportunity weighting and Goal Gap checked for parity against Manager OS in CI.
+- Productive authenticated Home mount through the existing Smart Widget adapter and ranking policy.
+- One Forecast SmartWidget per advisor/month; no event-level Forecast card multiplication.
+- Productive Pipeline and Bitácora source binding with evidence-backed signals.
+- Forecast detail, Activity plan and source review routes inside the Material 3 runtime.
+- Read-only Pipeline context for weighted contributors and at-risk opportunities.
+- Explicit human confirmation, selection and dates before Activity receives a plan draft.
+- Activity review inbox only; automatic tasks, calendar events and FES events remain blocked.
+- SHA-256 issued Forecast snapshot capture and closed-period reconciliation bridge for Reports.
+- Advisor-switch/logout scrub, tab-scoped storage and generation-based late-result rejection.
+- Mobile bottom safe area above the floating nav pill, responsive planning controls and scroll-safe diagnostics.
+
+## Runtime state
 
 ```text
-ADVISOR_FORECAST_STAGE_0_RUNTIME_RECONCILIATION=COMPLETE
-ADVISOR_FORECAST_STAGE_1_INPUT_CONTRACT=COMPLETE
-ADVISOR_FORECAST_STAGE_2_NORMALIZATION=COMPLETE
-ADVISOR_FORECAST_STAGE_3_COMPOSER_V1=COMPLETE
-ADVISOR_FORECAST_STAGE_4_EXPLANATION_ENGINE=COMPLETE
-ADVISOR_FORECAST_STAGE_5_READ_MODEL=COMPLETE
-ADVISOR_FORECAST_STAGE_6_HOME_SMARTWIDGET=COMPLETE
-ADVISOR_FORECAST_STAGE_7_CONTEXTUAL_NAVIGATION=COMPLETE
-ADVISOR_FORECAST_STAGE_8_DETAIL_SCREEN=COMPLETE
-ADVISOR_FORECAST_STAGE_9_OPPORTUNITY_WEIGHTING=COMPLETE
-ADVISOR_FORECAST_STAGE_10_GOAL_GAP_ENGINE=COMPLETE
-ADVISOR_FORECAST_STAGE_11_ACTIVITY_REQUIREMENT_ENGINE=COMPLETE
-ADVISOR_FORECAST_STAGE_12_ACTIVITY_HANDOFF=COMPLETE
-ADVISOR_FORECAST_STAGE_13_REPORTS_RECONCILIATION=COMPLETE
-ADVISOR_FORECAST_RUNTIME_ACCEPTANCE=NEXT
-ADVISOR_FORECAST_COMPLETE=NO
+ADVISOR_FORECAST_STAGE_0=COMPLETE
+ADVISOR_FORECAST_STAGE_1=COMPLETE
+ADVISOR_FORECAST_STAGE_2=COMPLETE
+ADVISOR_FORECAST_STAGE_3=COMPLETE
+ADVISOR_FORECAST_STAGE_4=COMPLETE
+ADVISOR_FORECAST_STAGE_5=COMPLETE
+ADVISOR_FORECAST_STAGE_6=COMPLETE
+ADVISOR_FORECAST_STAGE_7=COMPLETE
+ADVISOR_FORECAST_STAGE_8=COMPLETE
+ADVISOR_FORECAST_STAGE_9=COMPLETE
+ADVISOR_FORECAST_STAGE_10=COMPLETE
+ADVISOR_FORECAST_STAGE_11=COMPLETE
+ADVISOR_FORECAST_STAGE_12=COMPLETE
+ADVISOR_FORECAST_STAGE_13=COMPLETE
+ADVISOR_FORECAST_RUNTIME_ACCEPTANCE=IMPLEMENTED
+ADVISOR_FORECAST_COMPLETE=PENDING_CI_PAGES_AND_MERGE
 ```
-
-## Stage 11 deliverables
-
-- Reverse-funnel Activity Requirement Engine.
-- Converts residual expected-policy gap into minimum whole policies, applications, presentations, appointments and prospecting contacts.
-- Conversion source priority:
-  1. fresh advisor historical conversion;
-  2. fresh advisor recent conversion;
-  3. governed benchmark supplied by an authorized source.
-- A missing or unevidenced rate returns `INSUFFICIENT_DATA` and never becomes an invented benchmark.
-- Requirements use ceiling integers as planning minima, not guarantees.
-- Safety ceiling blocks extreme outputs for human review.
-
-## Stage 12 deliverables
-
-- `forge.advisor-forecast-activity-handoff.v1` read-only handoff.
-- Produces one activity-plan draft from Stage 11 recommendations.
-- Requires explicit advisor identity, confirmation timestamp, selected recommendations and human-scheduled due dates.
-- Only an injected Activity runtime callback can receive the confirmed draft.
-- The handoff itself does not create tasks, calendar events, CRM writes, database writes or FES truth.
-- `DUE_ACTION_CREATED` remains owned by the FES Activity runtime after its own acceptance boundary.
-
-## Stage 13 deliverables
-
-- Immutable `ADVISOR_FORECAST_ISSUED_SNAPSHOT_V1` with SHA-256 digest verification.
-- Forecast snapshots cannot be retroactively changed after actual results are known.
-- Reconciles unique `POLICY_SOLD_CONFIRMED` actual production after period close.
-- Measures pace projection and weighted-Pipeline expected close as separate historical views.
-- Produces absolute error and optimistic/conservative/exact bias without monetary accuracy claims.
-- Explicit zero actual production requires direct evidence.
-- Reports aggregate reconciliations but own neither Forecast truth nor production truth.
-
-## Remaining runtime acceptance
-
-- Promote the stacked PR chain in order.
-- Bind productive source loaders and authenticated session context.
-- Mount the single Forecast SmartWidget through the existing Home orchestrator.
-- Route Forecast detail and Activity plan views in the productive Material 3 runtime.
-- Validate human-confirmed Activity handoff against the productive FES runtime.
-- Capture issued snapshots and reconcile closed periods in Reports.
-- Verify logout scrub, late-result rejection, mobile, tablet, desktop and Pages.
 
 ## Gates
 
@@ -116,16 +93,21 @@ READ_MODEL_V1=PASS
 READ_MODEL_V2=PASS
 READ_MODEL_V3=PASS
 HOME_SMARTWIDGET_CONTRACT=PASS
+SINGLE_MONTHLY_SMARTWIDGET=LOCKED
+PRODUCTIVE_HOME_MOUNT=IMPLEMENTED
 CONTEXTUAL_NAVIGATION=PASS
 DETAIL_SCREEN=PASS
+PIPELINE_BITACORA_RUNTIME_BINDING=IMPLEMENTED
 OPPORTUNITY_WEIGHTING=POLICY_EQUIVALENT_ONLY
 GOAL_GAP_ENGINE=PASS
 ACTIVITY_REQUIREMENT_ENGINE=PASS
 HISTORICAL_CONVERSION_PRIORITY=LOCKED
 FALSE_PRECISION=REJECTED
 ACTIVITY_HANDOFF=HUMAN_CONFIRMED_ONLY
+ACTIVITY_REVIEW_INBOX=IMPLEMENTED
 AUTOMATIC_TASK_CREATION=BLOCKED
 AUTOMATIC_CALENDAR_CREATION=BLOCKED
+AUTOMATIC_FES_EVENT=BLOCKED
 FORECAST_ISSUED_SNAPSHOT=IMMUTABLE
 FORECAST_ACTUAL_RECONCILIATION=PASS
 RETROACTIVE_FORECAST_MUTATION=BLOCKED
@@ -135,7 +117,10 @@ AMOUNT_WEIGHTING=BLOCKED
 UNKNOWN_ZERO_SEMANTICS=PASS
 DATE_TIMEZONE=AMERICA_MEXICO_CITY
 CROSS_ADVISOR_SCOPE=PASS
+LOGOUT_SCRUB=IMPLEMENTED
+LATE_RESULT_REJECTION=IMPLEMENTED
+MOBILE_SAFE_AREA=IMPLEMENTED
 REVENUE_TRUTH_CREATED=NO
 DATABASE_MUTATION=NO
-PRODUCTIVE_UI_AUTOMOUNT=NO
+CI_AND_PAGES_ACCEPTANCE=PENDING
 ```
