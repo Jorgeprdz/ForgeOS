@@ -12,7 +12,8 @@ test('030D SQL exposes owner-scoped sanitized 7/30/90 calendar projection', asyn
     assert.match(sql, /'NEXT_30_DAYS'/i);
     assert.match(sql, /'NEXT_90_DAYS'/i);
     assert.match(sql, /'CONFIRMATION_REQUIRED'/i);
-    assert.match(sql, /'paymentTruthAuthority', 'CONFIRMED_PAYMENT_EVENT_ONLYIËÚJNÂˆ\ÜÙ\›X]Ú
-Ü[ÉÛ\ÙR[™™\™[˜ÙIË˜[ÙKÚJNÂˆ\ÜÙ\™Ù\Ó›İX]Ú
-Ü[ÜÛİ\˜ÙWÙ]šY[˜ÙWÜ™Y™\™[˜Ù\ËÚJNÂˆ\ÜÙ\™Ù\Ó›İX]Ú
-Ü[ÛX]ÚYÜ^[Y[Ù]™[Ü™Y™\™[˜Ù\É×ËÚJNÂŸJNÂ
+    assert.match(sql, /'paymentTruthAuthority', 'CONFIRMED_PAYMENT_EVENT_ONLY'/i);
+    assert.match(sql, /'lapseInference', false/i);
+    assert.doesNotMatch(sql, /source_evidence_references/i);
+    assert.doesNotMatch(sql, /matched_payment_event_references'\s*,/i);
+});
