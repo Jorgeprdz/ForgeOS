@@ -15,7 +15,7 @@ def replace_once(text, old, new, label):
 def sub_once(text, pattern, replacement, label):
     updated, count = re.subn(
         pattern,
-        replacement,
+        lambda _match: replacement,
         text,
         count=1,
         flags=re.MULTILINE | re.DOTALL,
