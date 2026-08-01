@@ -5,6 +5,10 @@ const workflow = fs.readFileSync(
   ".github/workflows/smart-widget-monthly-goal-deployment.yml",
   "utf8",
 );
+const bootstrap = fs.readFileSync(
+  "scripts/bootstrap-smart-widget-monthly-goal-migration.mjs",
+  "utf8",
+);
 const script = fs.readFileSync(
   "scripts/deploy-smart-widget-monthly-goal-migration.mjs",
   "utf8",
@@ -18,6 +22,7 @@ assert.match(workflow, /name: Smart Widget Monthly Goal Deployment/);
 assert.match(workflow, /github\.actor == 'Jorgeprdz'/);
 assert.match(workflow, /github\.ref_name == 'main'/);
 assert.match(workflow, /SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv/);
+assert.match(workflow, /bootstrap-smart-widget-monthly-goal-migration\.mjs/);
 assert.match(workflow, /deploy-smart-widget-monthly-goal-migration\.mjs/);
 assert.match(workflow, /smart-widget-monthly-goal-deployment-contract-test\.mjs/);
 assert.match(workflow, /statuses:\s*write/);
@@ -25,6 +30,13 @@ assert.match(workflow, /smart-widgets\/monthly-goal-authority/);
 assert.match(workflow, /steps\.deploy_authority\.outcome/);
 assert.doesNotMatch(workflow, /supabase\s+db\s+push/i);
 assert.doesNotMatch(workflow, /supabase\/migrations\/\*\*/);
+
+assert.match(bootstrap, /MIGRATION_VERSION = "20260801000400"/);
+assert.match(bootstrap, /to_regclass\('public\.advisor_monthly_policy_goals'\)/);
+assert.match(bootstrap, /MONTHLY_GOAL_AUTHORITY_BOOTSTRAP=APPLIED/);
+assert.match(bootstrap, /PARTIAL_MONTHLY_GOAL_AUTHORITY_REQUIRES_RECONCILIATION/);
+assert.match(bootstrap, /deploy-smart-widget-monthly-goal-migration\.mjs/);
+assert.doesNotMatch(bootstrap, /\b(?:drop\s+table|truncate)\b/i);
 
 assert.match(script, /MIGRATION_VERSION = "20260801000400"/);
 assert.match(script, /MIGRATION_NAME = "smart_widget_monthly_policy_goals"/);
@@ -43,4 +55,4 @@ assert.match(migration, /grant execute on function public\.forge_set_monthly_pol
 assert.doesNotMatch(migration, /\b(?:drop\s+table|truncate)\b/i);
 assert.doesNotMatch(migration, /grant\s+(?:insert|update|delete)[^;]*authenticated/i);
 
-console.log("Smart Widget Monthly Goal Deployment Contract PASS 27/27");
+console.log("Smart Widget Monthly Goal Deployment Contract PASS 34/34");
