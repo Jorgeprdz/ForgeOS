@@ -1,0 +1,110 @@
+name: CARTERA 030A Policy Payment Calendar Scope Acceptance
+
+on:
+  push:
+    branches:
+      - docs/cartera-030a-policy-payment-calendar-scope
+  pull_request:
+    branches:
+      - feature/cartera-020c-identity-policy-confirmation-review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-030a-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy-payment-calendar-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify source ancestry and documentation-only paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT=87c1fde90954b1ce7be37652bd103a4fe7544162
+          git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
+          git diff --check "$SOURCE_COMMIT"...HEAD
+
+          mapfile -t changed < <(git diff --name-only "$SOURCE_COMMIT"...HEAD)
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+
+          allowed='^(docs/architecture/source-truth/FORGE_CARTERA_030A_POLICY_PAYMENT_CALENDAR_SCOPE_001\.md|tests/cartera-030a-policy-payment-calendar-scope-test\.mjs|\.github/workflows/cartera-030a-scope-acceptance\.yml)$'
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "UNAUTHORIZED_030A_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo 'SOURCE_COMMIT_VERIFIED=YES'
+          echo 'DOCUMENTATION_ONLY_PATHS=PASS'
+          echo 'SCHEMA_MUTATION=NO'
+          echo 'SUPABASE_REMOTE_MUTATION=NO'
+          echo 'RUNTIME_MUTATION=NO'
+          echo 'PRODUCT_UI_MUTATION=NO'
+
+      - name: Execute CARTERA 030A scope acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tests/cartera-030a-policy-payment-calendar-scope-test.mjs
+          node --test tests/cartera-030a-policy-payment-calendar-scope-test.mjs
+
+      - name: Verify inherited authorities and locked markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          scope=docs/architecture/source-truth/FORGE_CARTERA_030A_POLICY_PAYMENT_CALENDAR_SCOPE_001.md
+          closure=docs/evidence/FORGE_CARTERA_020C_REMOTE_ACCEPTANCE_CLOSURE_001.md
+
+          for path in \
+            supabase/migrations/20260731000200_cartera010b_identity_policy_foundation.sql \
+            policy-operations/evidence/payment-evidence-packet.js \
+            policy-operations/payment-event-engine.js \
+            payment-frequency-engine.js \
+            policy-operations/renewals/policy-renewal-engine.js \
+            platform/policy-intelligence/cartera-010c-policy-detail-timeline.js; do
+            test -f "$path"
+          done
+
+          grep -q 'CARTERA_020C_REMOTE_ACCEPTANCE=PASS' "$closure"
+          grep -q 'CARTERA_020C_COMPLETE=YES' "$closure"
+          grep -q 'PAYMENT_OBLIGATION_NOT_PAYMENT_EVENT=LOCKED' "$scope"
+          grep -q 'CONFIRMED_PAYMENT_EVIDENCE_BOUNDARY=LOCKED' "$scope"
+          grep -q 'DETERMINISTIC_RECURRENCE_BOUNDARY=LOCKED' "$scope"
+          grep -q 'CORRECTION_AND_REPLAY_BOUNDARY=LOCKED' "$scope"
+          grep -q 'CALENDAR_IS_PROJECTION_NOT_TRUTH=LOCKED' "$scope"
+          grep -q 'GRACE_PERIOD_RULE_PROVENANCE=LOCKED' "$scope"
+          grep -q 'COMPENSATION_AND_PAYOUT_TRUTH=FORBIDDEN' "$scope"
+          grep -q 'BENEFICIARY_PRIVACY_BOUNDARY=LOCKED' "$scope"
+          grep -q 'PAYMENT_INSTRUMENT_DATA_PROJECTION=FORBIDDEN' "$scope"
+          grep -q 'ACCOUNT_MUTATION=NOT_AUTHORIZED' "$scope"
+          grep -q 'CARTERA_030A_COMPLETE=YES' "$scope"
+          grep -q 'NEXT=CARTERA_030B_EXPECTED_PAYMENT_OBLIGATION_LEDGER_AND_POLICY_CALENDAR' "$scope"
+
+      - name: Emit closure markers
+        run: |
+          echo 'CARTERA_030A_SCOPE=LOCKED'
+          echo 'POLICY_TRUTH_SOURCE=LOCKED'
+          echo 'PAYMENT_OBLIGATION_NOT_PAYMENT_EVENT=LOCKED'
+          echo 'CONFIRMED_PAYMENT_EVIDENCE_BOUNDARY=LOCKED'
+          echo 'DETERMINISTIC_RECURRENCE_BOUNDARY=LOCKED'
+          echo 'CALENDAR_IS_PROJECTION_NOT_TRUTH=LOCKED'
+          echo 'COMPENSATION_AND_PAYOUT_TRUTH=FORBIDDEN'
+          echo 'NEGATIVE_TESTS=PASS'
+          echo 'UNAUTHORIZED_EFFECTS=NONE'
+          echo 'CARTERA_030A_COMPLETE=YES'
+          echo 'NEXT=CARTERA_030B_EXPECTED_PAYMENT_OBLIGATION_LEDGER_AND_POLICY_CALENDAR'
