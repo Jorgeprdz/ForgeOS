@@ -38,6 +38,7 @@ import { renderProspeccion, bindProspeccionEvents  } from './prospeccion.js';
 import { renderReferidos,   bindReferidosEvents    } from './referidos.js';
 import { renderActividad,   bindActividadEvents    } from './actividad.js';
 import { renderCartera,     bindCarteraEvents      } from './cartera.js';
+import { bindCartera030dPolicyPaymentCalendar } from './advisor-os/cartera/cartera-030d-policy-payment-calendar-enhancement.js';
 import { renderComisiones,  bindComisionesEvents   } from './comisiones.js';
 
 import { EventBus }     from './event-system.js';
@@ -56,6 +57,11 @@ import {
     renderCrmAddlifeLogin,
     renderCrmAddlifeFatalError,
 } from './legacy/crmaddlife/ui-shell.js';
+
+function bindCarteraProductEvents() {
+    bindCartera030dPolicyPaymentCalendar();
+    return bindCarteraEvents();
+}
 
 // ═══════════════════════════════════════════════════════════════
 // APP MANAGER
@@ -77,7 +83,7 @@ class AppManager {
                 renderActividad,
                 bindActividadEvents,
                 renderCartera,
-                bindCarteraEvents,
+                bindCarteraEvents: bindCarteraProductEvents,
                 renderComisiones,
                 bindComisionesEvents,
             }),
