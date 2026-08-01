@@ -1,4 +1,5 @@
 const VERSION = "M05E-003";
+const LOOP_CLOSURE_VERSION = "M05Q-001";
 const MAX_CACHE_AGE_HOURS = 18;
 const MAX_SOURCE_AGE_DAYS = 7;
 
@@ -9,7 +10,17 @@ const state = {
   bridgeSource: null,
   wrappedBridge: null,
   refreshTimer: null,
+  enhancing: false,
+  printableReady: false,
 };
+
+let observer = null;
+const observerOptions = Object.freeze({
+  childList: true,
+  subtree: true,
+  attributes: true,
+  attributeFilter: ["hidden", "disabled", "data-forge-state"],
+});
 
 function isRecord(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -29,6 +40,34 @@ function deepFreeze(value, seen = new WeakSet()) {
   seen.add(value);
   Object.values(value).forEach((item) => deepFreeze(item, seen));
   return Object.freeze(value);
+}
+
+function setTextOnce(node, value) {
+  const next = String(value ?? "");
+  if (!node || node.textContent === next) return false;
+  node.textContent = next;
+  return true;
+}
+
+function setAttributeOnce(node, name, value) {
+  const next = String(value);
+  if (!node || node.getAttribute(name) === next) return false;
+  node.setAttribute(name, next);
+  return true;
+}
+
+function setDisabledOnce(node, disabled) {
+  const next = Boolean(disabled);
+  if (!node || node.disabled === next) return false;
+  node.disabled = next;
+  return true;
+}
+
+function setHiddenOnce(node, hidden) {
+  const next = Boolean(hidden);
+  if (!node || node.hidden === next) return false;
+  node.hidden = next;
+  return true;
 }
 
 function parseSourceDate(value) {
@@ -184,7 +223,9 @@ function patchCandidate(candidate, clientName) {
   if (!isRecord(candidate) || !hasText(clientName)) return candidate;
   try {
     if (!isRecord(candidate.context)) candidate.context = {};
-    candidate.context.clientName = clientName.trim();
+    if (candidate.context.clientName !== clientName.trim()) {
+      candidate.context.clientName = clientName.trim();
+    }
     if (isRecord(candidate.nativeResult) && !hasText(candidate.nativeResult.clientName)) {
       candidate.nativeResult.clientName = clientName.trim();
     }
@@ -279,6 +320,9 @@ function ensureAnnualContributionMxn(projection) {
       blocked.className = "quotes-value-line quotes-value-line--conversion";
       blocked.textContent = "MXN bloqueado: actualiza la UDI vigente";
       strong.append(blocked);
+    } else {
+      setAttributeOnce(old, "data-current-annual-contribution-mxn", "blocked");
+      setTextOnce(old, "MXN bloqueado: actualiza la UDI vigente");
     }
     return;
   }
@@ -286,8 +330,8 @@ function ensureAnnualContributionMxn(projection) {
   if (!Number.isFinite(udi)) return;
   const text = formatMxn(udi * rate.value);
   if (old) {
-    old.textContent = text;
-    old.dataset.currentAnnualContributionMxn = "ready";
+    setTextOnce(old, text);
+    setAttributeOnce(old, "data-current-annual-contribution-mxn", "ready");
     return;
   }
   const line = strong.ownerDocument.createElement("span");
@@ -307,10 +351,13 @@ function ensureRateEvidence(projection) {
     status.dataset.liveUdiRateEvidence = "true";
     section.append(status);
   }
-  status.textContent = rate.valid
-    ? `UDI vigente: ${rate.value} MXN · ${rate.date} · BANXICO SIE`
-    : "UDI vigente no disponible. Las equivalencias MXN permanecen bloqueadas.";
-  status.dataset.tone = rate.valid ? "success" : "error";
+  setTextOnce(
+    status,
+    rate.valid
+      ? `UDI vigente: ${rate.value} MXN · ${rate.date} · BANXICO SIE`
+      : "UDI vigente no disponible. Las equivalencias MXN permanecen bloqueadas.",
+  );
+  setAttributeOnce(status, "data-tone", rate.valid ? "success" : "error");
 }
 
 function ensureReviewForm(projection) {
@@ -371,12 +418,13 @@ function configureActionState(projection, reviewSection) {
   const review = projection.querySelector('[data-quote-next-action="review_pending"]');
   const status = reviewSection?.querySelector("[data-quote-human-review-status]");
   const input = reviewSection?.querySelector("[data-quote-human-review-client]");
+  const quotesRoot = projection.closest("[data-forge-quotes-module]");
 
   ensureClientPendingEvidence(projection, Boolean(clientName));
 
   if (review) {
-    review.disabled = false;
-    review.removeAttribute("aria-disabled");
+    setDisabledOnce(review, false);
+    if (review.hasAttribute("aria-disabled")) review.removeAttribute("aria-disabled");
     if (!review.dataset.m05e003Bound) {
       review.dataset.m05e003Bound = "true";
       review.addEventListener("click", () => input?.focus(), { capture: true });
@@ -390,26 +438,35 @@ function configureActionState(projection, reviewSection) {
       event.preventDefault();
       event.stopImmediatePropagation();
       input?.focus();
-      if (status) status.textContent = "Captura el nombre antes de confirmar.";
+      setTextOnce(status, "Captura el nombre antes de confirmar.");
     }, { capture: true });
   }
 
   if (!confirm) return;
   if (accepted && clientName) {
-    confirm.disabled = true;
-    confirm.textContent = "Cotización confirmada";
-    projection.closest("[data-forge-quotes-module]")?.setAttribute("data-quote-accepted", "true");
-    if (status) status.textContent = "Cotización confirmada y lista para imprimir.";
-    globalThis.ForgeQuotePrintableEntrypointQPD06?.refresh?.();
-  } else {
-    confirm.disabled = false;
-    if (!clientName) confirm.textContent = "Captura cliente para confirmar";
-    else if (/Captura cliente|Cotización confirmada/.test(confirm.textContent)) {
-      confirm.textContent = "Confirmar cotización";
+    const transitioned = quotesRoot?.getAttribute("data-quote-accepted") !== "true";
+    setDisabledOnce(confirm, true);
+    setTextOnce(confirm, "Cotización confirmada");
+    setAttributeOnce(quotesRoot, "data-quote-accepted", "true");
+    setTextOnce(status, "Cotización confirmada y lista para imprimir.");
+    if (transitioned || !state.printableReady) {
+      state.printableReady = true;
+      globalThis.ForgeQuotePrintableEntrypointQPD06?.refresh?.();
     }
-    if (status) status.textContent = clientName
-      ? "Datos completos. Confirma la cotización."
-      : "Falta el nombre del cliente o asegurado.";
+  } else {
+    state.printableReady = false;
+    setDisabledOnce(confirm, false);
+    if (!clientName) {
+      setTextOnce(confirm, "Captura cliente para confirmar");
+    } else if (/Captura cliente|Cotización confirmada/.test(confirm.textContent || "")) {
+      setTextOnce(confirm, "Confirmar cotización");
+    }
+    setTextOnce(
+      status,
+      clientName
+        ? "Datos completos. Confirma la cotización."
+        : "Falta el nombre del cliente o asegurado.",
+    );
   }
 }
 
@@ -423,8 +480,8 @@ function configurePrintableActions(projection, reviewSection) {
 
   const history = actions.querySelector('[data-forge-qpd06-action="history"]');
   if (history) {
-    history.hidden = qpdState.durableIdentityReady !== true;
-    history.setAttribute("aria-hidden", String(history.hidden));
+    setHiddenOnce(history, qpdState.durableIdentityReady !== true);
+    setAttributeOnce(history, "aria-hidden", String(history.hidden));
   }
 
   let note = actions.querySelector("[data-qpd-history-purpose]");
@@ -433,15 +490,19 @@ function configurePrintableActions(projection, reviewSection) {
     note.dataset.qpdHistoryPurpose = "true";
     actions.append(note);
   }
-  note.textContent = qpdState.durableIdentityReady
-    ? "Historial conserva versiones imprimibles de esta cotización."
-    : "Historial disponible al abrir la cotización desde un prospecto.";
+  setTextOnce(
+    note,
+    qpdState.durableIdentityReady
+      ? "Historial conserva versiones imprimibles de esta cotización."
+      : "Historial disponible al abrir la cotización desde un prospecto.",
+  );
 
   for (const action of ["preview", "download"]) {
     const button = actions.querySelector(`[data-forge-qpd06-action="${action}"]`);
     if (!button) continue;
-    button.disabled = !clientReady || qpdState.acceptedQuoteReady !== true;
-    button.setAttribute("aria-disabled", String(button.disabled));
+    const disabled = !clientReady || qpdState.acceptedQuoteReady !== true;
+    setDisabledOnce(button, disabled);
+    setAttributeOnce(button, "aria-disabled", String(disabled));
     if (!button.dataset.m05e003Bound) {
       button.dataset.m05e003Bound = "true";
       button.addEventListener("click", (event) => {
@@ -454,21 +515,45 @@ function configurePrintableActions(projection, reviewSection) {
   }
 }
 
+function observerRoot() {
+  return document.querySelector("[data-forge-quotes-module]");
+}
+
+function startObserver() {
+  const root = observerRoot();
+  if (!observer || !root || state.enhancing) return false;
+  observer.observe(root, observerOptions);
+  return true;
+}
+
 function enhance() {
-  installBridgeWrapper();
-  const projection = document.querySelector("[data-material3-quotes-projection]");
-  if (!projection || projection.hidden) return;
-  projection.dataset.quoteCalculatorRuntime = VERSION;
-  ensureAnnualContributionMxn(projection);
-  ensureRateEvidence(projection);
-  const reviewSection = ensureReviewForm(projection);
-  configureActionState(projection, reviewSection);
-  configurePrintableActions(projection, reviewSection);
+  if (state.enhancing) return false;
+  state.enhancing = true;
+  observer?.disconnect();
+  try {
+    installBridgeWrapper();
+    const projection = document.querySelector("[data-material3-quotes-projection]");
+    if (!projection || projection.hidden) return false;
+    setAttributeOnce(projection, "data-quote-calculator-runtime", VERSION);
+    ensureAnnualContributionMxn(projection);
+    ensureRateEvidence(projection);
+    const reviewSection = ensureReviewForm(projection);
+    configureActionState(projection, reviewSection);
+    configurePrintableActions(projection, reviewSection);
+    document.documentElement.dataset.quoteEnhancementLoopClosure = LOOP_CLOSURE_VERSION;
+    return true;
+  } finally {
+    state.enhancing = false;
+    startObserver();
+  }
 }
 
 function scheduleEnhance() {
-  clearTimeout(state.refreshTimer);
-  state.refreshTimer = setTimeout(enhance, 40);
+  if (state.refreshTimer !== null) return;
+  state.refreshTimer = globalThis.setTimeout(() => {
+    state.refreshTimer = null;
+    enhance();
+  }, 40);
 }
 
 for (const eventName of [
@@ -481,22 +566,23 @@ for (const eventName of [
   globalThis.addEventListener(eventName, scheduleEnhance);
 }
 
-const observer = new MutationObserver(scheduleEnhance);
-observer.observe(document.documentElement, {
-  childList: true,
-  subtree: true,
-  attributes: true,
-  attributeFilter: ["hidden", "disabled", "data-forge-state"],
+observer = new MutationObserver((mutations) => {
+  if (state.enhancing) return;
+  if (!mutations.some((mutation) => mutation.target?.isConnected !== false)) return;
+  scheduleEnhance();
 });
+startObserver();
 
 await initializeRateAuthority();
 scheduleEnhance();
 
 globalThis.ForgeQuoteRuntimeHotfixM05E003 = Object.freeze({
   version: VERSION,
+  loopClosureVersion: LOOP_CLOSURE_VERSION,
   currentClientName,
   enhance,
   getRateState: () => Object.freeze({ state: state.cacheState, cache: state.cache }),
 });
 
 document.documentElement.dataset.quoteCalculatorRuntime = VERSION;
+document.documentElement.dataset.quoteEnhancementLoopClosure = LOOP_CLOSURE_VERSION;

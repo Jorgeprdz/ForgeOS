@@ -1,0 +1,194 @@
+name: UI M05P Real Vida Mujer PDF
+
+on:
+  push:
+    branches:
+      - test/vida-mujer-real-pdf-visual-acceptance
+    paths:
+      - .github/workflows/ui-m05p-real-vida-mujer-pdf.yml
+      - playwright.ui-m05p.config.mjs
+      - scripts/assemble-ui-m05p-real-pdf.mjs
+      - scripts/serve-ui-m05p-acceptance.mjs
+      - scripts/summarize-ui-m05p-acceptance.mjs
+      - tests/e2e/ui-m05p-real-vida-mujer-pdf.spec.mjs
+      - tests/fixtures/ui-m05p-real-vida-mujer-pdf/**
+      - docs/static-preview/forge-alive-material3/**
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/ui-m05p-real-vida-mujer-pdf.yml
+      - playwright.ui-m05p.config.mjs
+      - scripts/assemble-ui-m05p-real-pdf.mjs
+      - scripts/serve-ui-m05p-acceptance.mjs
+      - scripts/summarize-ui-m05p-acceptance.mjs
+      - tests/e2e/ui-m05p-real-vida-mujer-pdf.spec.mjs
+      - tests/fixtures/ui-m05p-real-vida-mujer-pdf/**
+      - docs/static-preview/forge-alive-material3/**
+  workflow_dispatch:
+    inputs:
+      target_mode:
+        description: Surface to exercise with the exact uploaded PDF
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - candidate
+  workflow_run:
+    workflows:
+      - Deploy ForgeOS to GitHub Pages
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  real-pdf-browser-acceptance:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+    env:
+      CI: "true"
+      FORGE_M05P_PDF_PATH: artifacts/ui-m05p/fixture/Solucionline_20260711_16_05.PDF
+
+    steps:
+      - name: Checkout acceptance source
+        uses: actions/checkout@v4
+        with:
+          ref: >-
+            ${{ github.event_name == 'workflow_run' &&
+                github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Install repository dependencies
+        run: npm ci
+
+      - name: Resolve diagnostic target
+        shell: bash
+        run: |
+          set -euo pipefail
+          mode="production"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            mode="candidate"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            mode="${{ inputs.target_mode }}"
+          fi
+
+          if [ "$mode" = "candidate" ]; then
+            target="http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/"
+          else
+            target="https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/"
+          fi
+
+          echo "FORGE_M05P_TARGET_MODE=$mode" >> "$GITHUB_ENV"
+          echo "FORGE_M05P_TARGET_URL=$target" >> "$GITHUB_ENV"
+          echo "TARGET_MODE=$mode"
+          echo "TARGET_URL=$target"
+
+      - name: Generate governed local public environment
+        shell: bash
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_ANON_KEY:-}" ]; then
+            echo "UI_M05P_PUBLIC_ENV=FAIL"
+            exit 1
+          fi
+          node - <<'EOF'
+          const fs = require('fs');
+          const env = {
+            SUPABASE_URL: process.env.SUPABASE_URL,
+            SUPABASE_KEY: process.env.SUPABASE_ANON_KEY,
+            DEMO_MODE: "false",
+            ENABLE_TEST_ADVISOR_LOGIN: "false",
+          };
+          fs.writeFileSync(
+            'env.js',
+            `window.__ENV__ = Object.freeze(${JSON.stringify(env, null, 2)});\n`,
+          );
+          EOF
+          echo "UI_M05P_PUBLIC_ENV=READY"
+
+      - name: Assemble and validate exact uploaded PDF
+        run: node scripts/assemble-ui-m05p-real-pdf.mjs
+
+      - name: Render the two source PDF pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          apt-get update -qq
+          apt-get install -y --no-install-recommends poppler-utils >/dev/null
+          mkdir -p artifacts/ui-m05p/source-pages
+          pdftoppm \
+            -png \
+            -r 120 \
+            "$FORGE_M05P_PDF_PATH" \
+            artifacts/ui-m05p/source-pages/source-page
+          count="$(find artifacts/ui-m05p/source-pages -maxdepth 1 -type f -name '*.png' | wc -l)"
+          test "$count" -eq 2
+          echo "UI_M05P_SOURCE_PAGE_CAPTURES=$count"
+
+      - name: Exercise Forge with the real PDF in five browser profiles
+        id: browser
+        shell: bash
+        run: |
+          set +e
+          npx playwright test --config=playwright.ui-m05p.config.mjs
+          code=$?
+          echo "PLAYWRIGHT_EXIT_CODE=$code" >> "$GITHUB_ENV"
+          echo "playwright_exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Build acceptance evidence summary
+        if: always()
+        run: node scripts/summarize-ui-m05p-acceptance.mjs
+
+      - name: Publish acceptance summary
+        if: always()
+        shell: bash
+        run: |
+          node - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require('fs');
+          const path = 'artifacts/ui-m05p/acceptance-summary.json';
+          if (!fs.existsSync(path)) {
+            console.log('## UI M05P — sin resumen disponible');
+            process.exit(0);
+          }
+          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+          console.log('## UI M05P — PDF real de Vida Mujer');
+          console.log('');
+          console.log(`- Estado: **${data.status}**`);
+          console.log(`- Superficie: **${data.targetMode}**`);
+          console.log(`- Capturas de Forge: **${data.screenshotCount}/10**`);
+          console.log(`- Páginas fuente renderizadas: **${data.sourcePageCount}/2**`);
+          console.log(`- Perfiles: **${data.stateCount}/5**`);
+          console.log(`- PDF: **${data.fixture.fileName}** (${data.fixture.byteLength.toLocaleString('en-US')} bytes)`);
+          if (data.failures.length) {
+            console.log('');
+            console.log('### Fallas reproducidas');
+            for (const failure of data.failures) console.log(`- ${failure}`);
+          }
+          EOF
+
+      - name: Upload screenshots, source pages, downloads and state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-m05p-real-vida-mujer-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ui-m05p
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce browser acceptance after evidence upload
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          FORGE_M05P_ENFORCE=true node scripts/summarize-ui-m05p-acceptance.mjs
+          test "${PLAYWRIGHT_EXIT_CODE:-1}" -eq 0
+          echo "UI_M05P_REAL_VIDA_MUJER=PASS"

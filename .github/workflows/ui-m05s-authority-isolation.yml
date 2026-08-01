@@ -1,0 +1,133 @@
+name: UI M05S Quote Authority Isolation
+
+on:
+  push:
+    branches:
+      - test/vida-mujer-real-pdf-visual-acceptance
+    paths:
+      - .github/workflows/ui-m05s-authority-isolation.yml
+      - playwright.ui-m05s.config.mjs
+      - tests/e2e/ui-m05s-authority-isolation.spec.mjs
+      - scripts/assemble-ui-m05p-real-pdf.mjs
+      - scripts/serve-ui-m05p-acceptance.mjs
+      - tests/fixtures/ui-m05p-real-vida-mujer-pdf/**
+      - docs/static-preview/forge-alive-material3/**
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/ui-m05s-authority-isolation.yml
+      - playwright.ui-m05s.config.mjs
+      - tests/e2e/ui-m05s-authority-isolation.spec.mjs
+      - scripts/assemble-ui-m05p-real-pdf.mjs
+      - scripts/serve-ui-m05p-acceptance.mjs
+      - tests/fixtures/ui-m05p-real-vida-mujer-pdf/**
+      - docs/static-preview/forge-alive-material3/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolate-authority-stage:
+    name: isolate-${{ matrix.stage }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        stage:
+          - core
+          - printable
+          - rate-bridge
+          - rate-runtime
+          - vida-handoff
+          - composition
+          - visual
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+    env:
+      CI: "true"
+      FORGE_M05S_STAGE: ${{ matrix.stage }}
+      FORGE_M05S_TARGET_URL: http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/
+      FORGE_M05P_PDF_PATH: artifacts/ui-m05p/fixture/Solucionline_20260711_16_05.PDF
+
+    steps:
+      - name: Checkout isolation source
+        uses: actions/checkout@v4
+
+      - name: Install repository dependencies
+        run: npm ci
+
+      - name: Generate governed public environment
+        shell: bash
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "${SUPABASE_URL:-}"
+          test -n "${SUPABASE_ANON_KEY:-}"
+          node - <<'EOF'
+          const fs = require('fs');
+          fs.writeFileSync(
+            'env.js',
+            `window.__ENV__ = Object.freeze(${JSON.stringify({
+              SUPABASE_URL: process.env.SUPABASE_URL,
+              SUPABASE_KEY: process.env.SUPABASE_ANON_KEY,
+              DEMO_MODE: "false",
+              ENABLE_TEST_ADVISOR_LOGIN: "false",
+            }, null, 2)});\n`,
+          );
+          EOF
+
+      - name: Assemble exact uploaded PDF
+        run: node scripts/assemble-ui-m05p-real-pdf.mjs
+
+      - name: Probe stage responsiveness
+        id: probe
+        shell: bash
+        run: |
+          set +e
+          npx playwright test --config=playwright.ui-m05s.config.mjs
+          code=$?
+          echo "PROBE_EXIT_CODE=$code" >> "$GITHUB_ENV"
+          exit 0
+
+      - name: Record stage conclusion
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "artifacts/ui-m05s/${FORGE_M05S_STAGE}"
+          status="PASS"
+          if [ "${PROBE_EXIT_CODE:-1}" -ne 0 ]; then
+            status="BLOCKED"
+          fi
+          cat > "artifacts/ui-m05s/${FORGE_M05S_STAGE}/conclusion.json" <<EOF
+          {
+            "schema": "forge.ui.m05s.stage-conclusion.v1",
+            "stage": "${FORGE_M05S_STAGE}",
+            "status": "${status}",
+            "playwrightExitCode": ${PROBE_EXIT_CODE:-1}
+          }
+          EOF
+          echo "## M05S — ${FORGE_M05S_STAGE}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Estado: **${status}**" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload stage evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-m05s-${{ matrix.stage }}-${{ github.run_id }}
+          path: artifacts/ui-m05s/${{ matrix.stage }}
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce responsive stage
+        if: always()
+        shell: bash
+        run: |
+          test "${PROBE_EXIT_CODE:-1}" -eq 0
+          echo "UI_M05S_${FORGE_M05S_STAGE}=PASS"
