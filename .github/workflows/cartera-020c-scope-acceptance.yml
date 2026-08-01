@@ -30,7 +30,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE_COMMIT=4c274a377f1b91fb176304f84008c1b42c781951
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            SOURCE_COMMIT="${{ github.event.pull_request.base.sha }}"
+          else
+            SOURCE_COMMIT=528533e5ba6e060a844e5facbc127eea145542b9
+          fi
           git merge-base --is-ancestor "$SOURCE_COMMIT" HEAD
           git diff --check "$SOURCE_COMMIT"...HEAD
 
@@ -44,6 +48,7 @@ jobs:
             fi
           done
 
+          echo "SOURCE_COMMIT=$SOURCE_COMMIT"
           echo 'SOURCE_ANCESTRY=PASS'
           echo 'BOUNDED_PATHS=PASS'
           echo 'PRODUCT_UI_DIFF=NONE'
