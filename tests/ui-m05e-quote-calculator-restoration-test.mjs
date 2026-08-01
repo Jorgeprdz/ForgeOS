@@ -93,7 +93,7 @@ assert.match(
 );
 assert.match(
   productiveApp,
-  /quote-runtime-printable-closure-m05e006\.js\?v=m05e-010-landscape/,
+  /quote-runtime-printable-closure-m05e006\.js\?v=m05e-011-eager-print-actions/,
 );
 assert.doesNotMatch(productiveApp, /quote-runtime-printable-closure-m05e005\.js/);
 assert.doesNotMatch(
@@ -102,6 +102,10 @@ assert.doesNotMatch(
 );
 assert.match(productiveApp, /dataset\.quoteCalculatorRuntime = "M05E-006"/);
 assert.match(productiveApp, /dataset\.vidaMujerVisualClosure = "M05E-010"/);
+assert.ok(
+  productiveApp.indexOf("void startPrintableAuthority();") <
+  productiveApp.indexOf('await loadAuthority(envBase, "env.js")'),
+);
 assert.ok(
   productiveApp.indexOf('await loadAuthority(envBase, "env.js")') <
   productiveApp.indexOf("quote-runtime-pages-rate-fetch-bridge-m05e010.js"),
