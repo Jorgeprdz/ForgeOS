@@ -1,0 +1,94 @@
+name: SeguBeca Calculation Authority
+
+on:
+  pull_request:
+    paths:
+      - "advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js"
+      - "tests/segubeca-calculation-authority-restoration-test.mjs"
+      - "docs/architecture/source-truth/FORGE_SEGUBECA_CALCULATION_AUTHORITY_001.md"
+      - "docs/evidence/FORGE_SEGUBECA_CALCULATION_AUTHORITY_CLOSURE_001.md"
+      - ".github/workflows/segubeca-calculation-authority.yml"
+  push:
+    branches: [main]
+    paths:
+      - "advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  segubeca-authority:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+          allowed='^(advisor-os/quotes/products/segubeca/segubeca-calculation-authority\.js|tests/segubeca-calculation-authority-restoration-test\.mjs|docs/architecture/source-truth/FORGE_SEGUBECA_CALCULATION_AUTHORITY_001\.md|docs/evidence/FORGE_SEGUBECA_CALCULATION_AUTHORITY_CLOSURE_001\.md|\.github/workflows/segubeca-calculation-authority\.yml)$'
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "SEGUBECA_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'SEGUBECA_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        run: node --check advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js
+
+      - name: Accepted authority restoration
+        run: node --test tests/segubeca-calculation-authority-restoration-test.mjs
+
+      - name: Preserve historical parser and projection behavior
+        run: |
+          node tests/segubeca-solucionline-parser-test.mjs
+          node tests/segubeca-projected-mxn-runtime-test.mjs
+
+      - name: Enforce source and calculation boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          module='advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js'
+          source='docs/architecture/source-truth/FORGE_SEGUBECA_CALCULATION_AUTHORITY_001.md'
+
+          grep -q 'CONTRACTUAL_VALUE_AUTHORITY = "SOLUCIONLINE_SOURCE_DOCUMENT"' "$module"
+          grep -q 'CURRENCY_PROJECTION_AUTHORITY = "FORGE_UDI_MXN_RUNTIME"' "$module"
+          grep -q 'productCalculationReimplemented: false' "$module"
+          grep -q 'flatTotalContributionConversionAuthorized: false' "$module"
+          grep -q 'projectionGuaranteed: false' "$module"
+          grep -q 'ANNUAL_UDI_GROWTH_RATE=0.045' "$source"
+          grep -q 'TOTAL_CONTRIBUTED_MXN=Σ' "$source"
+          grep -q 'LEGACY_CURRENT_RATE_FIELDS_AUTHORITATIVE=NO' "$source"
+          grep -q 'AUTOMATIC_QUOTE_ACCEPTANCE=FORBIDDEN' "$source"
+
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\(' "$module"
+          ! grep -Eq 'localStorage|sessionStorage|indexedDB|XMLHttpRequest' "$module"
+          ! grep -Eq 'create table|alter table' "$module" "$source"
+
+          echo 'SEGUBECA_SOURCE_DOCUMENT_AUTHORITY=PASS'
+          echo 'SEGUBECA_PRODUCT_CALCULATION_REIMPLEMENTED=NO'
+          echo 'SEGUBECA_TOTAL_CONTRIBUTED_YEAR_AWARE=PASS'
+          echo 'SEGUBECA_FLAT_TOTAL_CONVERSION=BLOCKED'
+          echo 'SEGUBECA_DATABASE_MUTATION=NO'
+          echo 'SEGUBECA_PRODUCT_UI_MUTATION=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
