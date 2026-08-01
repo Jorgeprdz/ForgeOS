@@ -17,6 +17,7 @@ const outputPath = path.resolve(
     || "artifacts/ui-m05p/fixture/Solucionline_20260711_16_05.PDF",
 );
 const expectedSize = 69_973;
+const expectedEncodedLength = Math.ceil(expectedSize / 3) * 4;
 const expectedSha256 =
   "16be81ab3d912c919bb60b504d711fa09f5534b3cf7db2874843a4c12ca66a2a";
 
@@ -35,25 +36,82 @@ for (const name of partNames) {
   );
 }
 
-const payload = Buffer.from(encodedParts.join(""), "base64");
-const sha256 = crypto.createHash("sha256").update(payload).digest("hex");
+function digest(payload) {
+  return crypto.createHash("sha256").update(payload).digest("hex");
+}
 
-if (payload.length !== expectedSize) {
-  throw new Error(
-    `UI_M05P_FIXTURE_SIZE_INVALID=${payload.length};EXPECTED=${expectedSize}`,
-  );
+function validateEncoded(encoded) {
+  if (encoded.length !== expectedEncodedLength) return null;
+  const payload = Buffer.from(encoded, "base64");
+  if (payload.length !== expectedSize) return null;
+  const sha256 = digest(payload);
+  if (sha256 !== expectedSha256) return null;
+  if (payload.subarray(0, 5).toString("ascii") !== "%PDF-") return null;
+  return { encoded, payload, sha256 };
 }
-if (sha256 !== expectedSha256) {
-  throw new Error(
-    `UI_M05P_FIXTURE_SHA_INVALID=${sha256};EXPECTED=${expectedSha256}`,
-  );
+
+const rawEncoded = encodedParts.join("");
+let recovered = validateEncoded(rawEncoded);
+let recovery = {
+  mode: recovered ? "DIRECT" : "UNRESOLVED",
+  removedEncodedCharacters: 0,
+  deletionStart: null,
+  boundaryIndex: null,
+};
+
+if (!recovered && rawEncoded.length > expectedEncodedLength) {
+  const removeCount = rawEncoded.length - expectedEncodedLength;
+  const boundaries = [];
+  let cumulative = 0;
+  for (let index = 0; index < encodedParts.length - 1; index += 1) {
+    cumulative += encodedParts[index].length;
+    boundaries.push({ index, offset: cumulative });
+  }
+
+  const attemptedStarts = new Set();
+  for (const boundary of boundaries) {
+    const minimum = Math.max(0, boundary.offset - removeCount - 96);
+    const maximum = Math.min(
+      rawEncoded.length - removeCount,
+      boundary.offset + 96,
+    );
+    for (let start = minimum; start <= maximum; start += 1) {
+      if (start % 4 !== 0 || attemptedStarts.has(start)) continue;
+      attemptedStarts.add(start);
+      const candidate =
+        rawEncoded.slice(0, start)
+        + rawEncoded.slice(start + removeCount);
+      const exact = validateEncoded(candidate);
+      if (!exact) continue;
+      recovered = exact;
+      recovery = {
+        mode: "BOUNDARY_OVERLAP_REMOVED",
+        removedEncodedCharacters: removeCount,
+        deletionStart: start,
+        boundaryIndex: boundary.index,
+      };
+      break;
+    }
+    if (recovered) break;
+  }
 }
-if (payload.subarray(0, 5).toString("ascii") !== "%PDF-") {
-  throw new Error("UI_M05P_FIXTURE_MAGIC_INVALID");
+
+if (!recovered) {
+  const decoded = Buffer.from(rawEncoded, "base64");
+  throw new Error(
+    [
+      "UI_M05P_FIXTURE_RECOVERY_FAILED",
+      `ENCODED=${rawEncoded.length}`,
+      `EXPECTED_ENCODED=${expectedEncodedLength}`,
+      `BYTES=${decoded.length}`,
+      `EXPECTED_BYTES=${expectedSize}`,
+      `SHA256=${digest(decoded)}`,
+    ].join(";"),
+  );
 }
 
 await mkdir(path.dirname(outputPath), { recursive: true });
-await writeFile(outputPath, payload);
+await writeFile(outputPath, recovered.payload);
 await writeFile(
   `${outputPath}.metadata.json`,
   `${JSON.stringify({
@@ -62,13 +120,18 @@ await writeFile(
     product: "Vida Mujer",
     insured: "Alejandra Moleres",
     pageCount: 2,
-    byteLength: payload.length,
-    sha256,
+    byteLength: recovered.payload.length,
+    sha256: recovered.sha256,
     partNames,
+    partLengths: encodedParts.map((part) => part.length),
+    rawEncodedLength: rawEncoded.length,
+    recovery,
   }, null, 2)}\n`,
 );
 
 console.log("UI_M05P_REAL_PDF_ASSEMBLY=PASS");
 console.log(`PDF_PATH=${outputPath}`);
-console.log(`PDF_BYTES=${payload.length}`);
-console.log(`PDF_SHA256=${sha256}`);
+console.log(`PDF_BYTES=${recovered.payload.length}`);
+console.log(`PDF_SHA256=${recovered.sha256}`);
+console.log(`PDF_RECOVERY_MODE=${recovery.mode}`);
+console.log(`PDF_REMOVED_ENCODED_CHARACTERS=${recovery.removedEncodedCharacters}`);
