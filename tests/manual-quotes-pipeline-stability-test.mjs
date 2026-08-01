@@ -173,7 +173,7 @@ test("application loads the complete Quotes module and Pipeline stability layer"
 
   assert.match(app, /quotes-module\.js\?v=quote-calculator-parity-006/);
   assert.match(app, /pipeline-ui-stability\.js\?v=manual-pipeline-stability-001/);
-  assert.match(quotesModule, /quotes-result-adapter\.js\?v=quote-calculator-parity-006/);
+  assert.match(quotesModule, /quotes-result-adapter\.js\?v=quote-calculator-parity-001/);
   assert.match(quoteAdapter, /premiumTable/);
   assert.match(pipelineStability, /windowRef\.innerWidth - documentRef\.documentElement\.clientWidth/);
   assert.match(pipelineStability, /data-productive-stage-label/);
