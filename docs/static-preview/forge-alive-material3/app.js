@@ -6,6 +6,7 @@ import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";
+import "../quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-os.local/schemas/commercial-account-v1.schema.json",
+  "title": "Forge Commercial Account V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractType",
+    "schemaVersion",
+    "accountReference",
+    "advisorId",
+    "accountType",
+    "displayLabel",
+    "lifecycleState",
+    "privacyClassification",
+    "evidenceReferences",
+    "createdAt",
+    "createdBy",
+    "updatedAt",
+    "version"
+  ],
+  "properties": {
+    "contractType": { "const": "FORGE_COMMERCIAL_ACCOUNT" },
+    "schemaVersion": { "const": "1.0.0" },
+    "accountReference": { "$ref": "#/$defs/opaqueReference" },
+    "advisorId": { "$ref": "#/$defs/opaqueReference" },
+    "accountType": {
+      "enum": ["INDIVIDUAL", "HOUSEHOLD", "BUSINESS", "CORPORATE", "FAMILY_BUSINESS", "GROUP_AFFINITY"]
+    },
+    "displayLabel": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "lifecycleState": { "enum": ["CANDIDATE", "CONFIRMED", "DISPUTED", "ARCHIVED"] },
+    "privacyClassification": { "enum": ["PRIVATE", "SENSITIVE", "RESTRICTED"] },
+    "evidenceReferences": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/opaqueReference" },
+      "uniqueItems": true
+    },
+    "createdAt": { "$ref": "#/$defs/isoDateTime" },
+    "createdBy": { "$ref": "#/$defs/opaqueReference" },
+    "updatedAt": { "$ref": "#/$defs/isoDateTime" },
+    "version": { "type": "integer", "minimum": 1 },
+    "archivedAt": { "type": ["string", "null"], "format": "date-time" },
+    "archivedBy": { "type": ["string", "null"], "minLength": 1, "maxLength": 240 },
+    "archiveReason": { "type": ["string", "null"], "maxLength": 500 }
+  },
+  "$defs": {
+    "opaqueReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@/-]*$"
+    },
+    "isoDateTime": { "type": "string", "format": "date-time" }
+  }
+}
