@@ -35,8 +35,18 @@ const canonicalRemotePush = [
   "assert.ok(result && [\"ACKNOWLEDGED\", \"IDEMPOTENT_REPLAY\"].includes(result.status));",
 ].join("\n    ");
 
-const unsupportedPaymentState = 'confirmationState: "CONFIRMED",';
-const canonicalPaymentState = 'confirmationState: "confirmed",';
+const unsupportedPaymentState = [
+  'paymentSource: "policy_receipt",',
+  'evidenceReferences: ["demo:evidence:payment:a:imagina-ser:2026"],',
+  'confirmationState: "CONFIRMED",',
+  'idempotencyKey: "demo:payment:a:imagina-ser:2026",',
+].join("\n    ");
+const canonicalPaymentState = [
+  'paymentSource: "policy_receipt",',
+  'evidenceReferences: ["demo:evidence:payment:a:imagina-ser:2026"],',
+  'confirmationState: "confirmed",',
+  'idempotencyKey: "demo:payment:a:imagina-ser:2026",',
+].join("\n    ");
 
 const source = await readFile(sourcePath, "utf8");
 assert.equal(
@@ -65,11 +75,14 @@ assert.match(runtime, /observation_code:\s*spec\.scenario/);
 assert.match(runtime, /confirmation_actor_type:/);
 assert.match(runtime, /forge_fes02_append_activity_event/);
 assert.doesNotMatch(runtime, /gateway\.pushMutation\(mutation\)/);
-assert.match(runtime, /confirmationState:\s*"confirmed"/);
+assert.match(
+  runtime,
+  /paymentEvidenceReference:[\s\S]+confirmationState:\s*"confirmed"/,
+);
 
 try {
   await writeFile(runtimePath, runtime, { flag: "wx", mode: 0o600 });
-  await import(`${pathToFileURL(runtimePath).href}?v=canonical-fes-payment-004`);
+  await import(`${pathToFileURL(runtimePath).href}?v=canonical-fes-payment-005`);
 } finally {
   await rm(runtimePath, { force: true });
 }
