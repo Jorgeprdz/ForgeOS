@@ -3,7 +3,7 @@ import { chromium } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 
 const runtimeEntryContract = Object.freeze({
-  appEntry: "app.js?v=ui-m04-shell-008&fix=pipeline-stage-runtime-003",
+  appEntry: "app.js?v=ui-m05m-print-actions-eager-001&rep=16e-002",
   pipelineModule: "pipeline-module.js?v=ui-m06-pipeline-012",
   stageHotfix: "pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003",
 });

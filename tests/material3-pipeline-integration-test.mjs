@@ -14,6 +14,7 @@ test("Material 3 Pipeline uses the canonical route, viewport and lifecycle", asy
   assert.deepEqual(items.map((item) => item.label), [
     "Inicio",
     "Pipeline",
+    "Actividad",
     "Cotizaciones",
   ]);
   assert.equal(

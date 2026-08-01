@@ -153,17 +153,21 @@ test("stage presentation changes card border authority immediately and can roll 
   assert.equal(select.value, "referred_new");
 });
 
-test("application loads the complete Quotes module and Pipeline stability layer", async () => {
+test("application loads the current Quotes presenter and Pipeline stability layer", async () => {
   const app = await readFile(
     "docs/static-preview/forge-alive-material3/app.js",
     "utf8",
   );
   const quotesModule = await readFile(
-    "docs/static-preview/forge-alive-material3/quotes-module-complete.js",
+    "docs/static-preview/forge-alive-material3/quotes-module.js",
     "utf8",
   );
   const quoteAdapter = await readFile(
-    "docs/static-preview/forge-alive-material3/quotes-result-adapter-complete.js",
+    "docs/static-preview/forge-alive-material3/quotes-result-adapter.js",
+    "utf8",
+  );
+  const quotePresenter = await readFile(
+    "docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js",
     "utf8",
   );
   const pipelineStability = await readFile(
@@ -171,10 +175,16 @@ test("application loads the complete Quotes module and Pipeline stability layer"
     "utf8",
   );
 
-  assert.match(app, /quotes-module-complete\.js\?v=manual-quotes-complete-001/);
+  assert.match(app, /quotes-module\.js\?v=quote-calculator-parity-006/);
   assert.match(app, /pipeline-ui-stability\.js\?v=manual-pipeline-stability-001/);
-  assert.match(quotesModule, /quotes-result-adapter-complete\.js\?v=manual-quotes-complete-001/);
-  assert.match(quoteAdapter, /premiumTable/);
+  assert.match(quotesModule, /quotes-result-adapter\.js\?v=quote-calculator-parity-001/);
+  assert.match(quoteAdapter, /quote-product-intelligence-presenter\.js\?v=quote-calculator-parity-002/);
+  assert.match(quoteAdapter, /createQuoteResultSnapshot/);
+  assert.match(quoteAdapter, /renderQuoteResultSnapshot/);
+  assert.match(quoteAdapter, /data-quote-product-intelligence-host/);
+  assert.match(quotePresenter, /dataset\.quoteMandatoryMetric/);
+  assert.match(quotePresenter, /quotes-mandatory-metric/);
+  assert.match(quotePresenter, /missingInformation/);
   assert.match(pipelineStability, /windowRef\.innerWidth - documentRef\.documentElement\.clientWidth/);
   assert.match(pipelineStability, /data-productive-stage-label/);
   assert.match(pipelineStability, /border-color:\s*color-mix/);

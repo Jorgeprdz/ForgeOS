@@ -116,22 +116,24 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Start repository Vite server
+      - name: Start repository static server
+        if: github.event_name != 'workflow_run'
         shell: bash
         run: |
-          nohup npm run serve:e2e > /tmp/forge-vite.log 2>&1 &
-          echo $! > /tmp/forge-vite.pid
+          nohup python3 -m http.server 4173 --bind 127.0.0.1 \
+            > /tmp/forge-static-server.log 2>&1 &
+          echo $! > /tmp/forge-static-server.pid
           for attempt in $(seq 1 60); do
             if curl --fail --silent --show-error \
               http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/ \
               > /dev/null; then
-              echo "FORGE_LOCAL_SERVER=READY"
+              echo "FORGE_LOCAL_STATIC_SERVER=READY"
               exit 0
             fi
             sleep 1
           done
-          cat /tmp/forge-vite.log
-          echo "FORGE_LOCAL_SERVER=FAILED"
+          cat /tmp/forge-static-server.log
+          echo "FORGE_LOCAL_STATIC_SERVER=FAILED"
           false
 
       - name: Wait for Pages propagation
