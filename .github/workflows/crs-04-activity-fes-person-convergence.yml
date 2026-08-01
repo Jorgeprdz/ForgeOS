@@ -1,0 +1,121 @@
+name: CRS 04 Activity FES Person Convergence
+
+on:
+  pull_request:
+    paths:
+      - "platform/shared-commercial-model/crs-04-activity-person-convergence-contract.js"
+      - "platform/event-evidence/crs-04-activity-person-convergence-service.js"
+      - "docs/architecture/source-truth/FORGE_CRS_04_ACTIVITY_FES_PERSON_CONVERGENCE_001.md"
+      - "docs/evidence/FORGE_CRS_04_ABCD_CLOSURE_001.md"
+      - "tests/crs-04-activity-person-convergence-contract-test.mjs"
+      - "tests/crs-04-activity-person-convergence-service-test.mjs"
+      - ".github/workflows/crs-04-activity-fes-person-convergence.yml"
+  push:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-04-activity-person-convergence-contract.js"
+      - "platform/event-evidence/crs-04-activity-person-convergence-service.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  activity-fes-person-convergence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+          allowed='^(platform/shared-commercial-model/crs-04-activity-person-convergence-contract\.js|platform/event-evidence/crs-04-activity-person-convergence-service\.js|docs/architecture/source-truth/FORGE_CRS_04_ACTIVITY_FES_PERSON_CONVERGENCE_001\.md|docs/evidence/FORGE_CRS_04_ABCD_CLOSURE_001\.md|tests/crs-04-activity-person-convergence-contract-test\.mjs|tests/crs-04-activity-person-convergence-service-test\.mjs|\.github/workflows/crs-04-activity-fes-person-convergence\.yml)$'
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_04_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'CRS_04_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        run: |
+          node --check platform/shared-commercial-model/crs-04-activity-person-convergence-contract.js
+          node --check platform/event-evidence/crs-04-activity-person-convergence-service.js
+
+      - name: CRS 04 targeted acceptance
+        run: |
+          node --test tests/crs-04-activity-person-convergence-contract-test.mjs
+          node --test tests/crs-04-activity-person-convergence-service-test.mjs
+
+      - name: Preserve FES canonical event and ledger authorities
+        run: |
+          node --test tests/fes-01-canonical-activity-event-contract-test.mjs
+          node --test tests/fes-02a-activity-ledger-local-foundation-test.mjs
+          node --test tests/fes-02c-activity-ledger-supabase-gateway-test.mjs
+
+      - name: Preserve FES productive projections
+        run: |
+          node --test tests/fes-03c-activity-projection-test.mjs
+          node --test tests/fes-03d-prospect-detail-projection-test.mjs
+          node --test tests/fes-03e-pipeline-card-projection-test.mjs
+          node --test tests/fes-03f-mi-dia-projection-test.mjs
+
+      - name: Preserve CRS and Cartera foundations
+        run: |
+          node --test tests/crs-02-domain-link-envelope-contract-test.mjs
+          node --test tests/crs-02-authoritative-domain-link-adapters-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-service-test.mjs
+          node --test tests/cartera-010b-contract-foundation-test.mjs
+
+      - name: Enforce authority and no-effect boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract='platform/shared-commercial-model/crs-04-activity-person-convergence-contract.js'
+          service='platform/event-evidence/crs-04-activity-person-convergence-service.js'
+          source='docs/architecture/source-truth/FORGE_CRS_04_ACTIVITY_FES_PERSON_CONVERGENCE_001.md'
+
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\(' "$contract" "$service"
+          ! grep -Eq 'create table|alter table|localStorage|sessionStorage|indexedDB|XMLHttpRequest|fetch\(' "$contract" "$service"
+          grep -q 'commercial_source_identity_links' "$service"
+          grep -q 'identity_resolution_decisions' "$service"
+          grep -q 'commercial_people' "$service"
+          grep -q 'FES_ACTIVITY_EVENT_LEDGER' "$contract" "$service"
+          grep -q 'FES_CANONICAL_ACTIVITY_TIMELINE' "$contract" "$service"
+          grep -q 'legacyCorrelationReinterpretedAsCommercialMovement: false' "$contract" "$service"
+          grep -q 'automaticIdentityResolution: false' "$contract"
+          grep -q 'automaticTimelineMutation: false' "$contract"
+          grep -q 'automaticTaskCreation: false' "$contract"
+          grep -q 'AUTOMATIC_BUSINESS_ACTION=NO' "$source"
+          grep -q 'NEW_PERSON_TIMELINE_LEDGER=NO' "$source"
+          grep -q 'LEGACY_FES_CORRELATION_REINTERPRETED_AS_COMMERCIAL_MOVEMENT=NO' "$source"
+
+          echo 'CRS_04A_ACTIVITY_FES_SCOPE_AND_AUTHORITY_DISCOVERY=PASS'
+          echo 'CRS_04B_ACTIVITY_PERSON_CONVERGENCE_CONTRACT=PASS'
+          echo 'CRS_04C_PRODUCTIVE_READ_CONVERGENCE_SERVICE=PASS'
+          echo 'CRS_04D_ACCEPTANCE_EVIDENCE_AND_CLOSURE=PASS'
+          echo 'CRS_04_LEDGER_MUTATION=NO'
+          echo 'CRS_04_IDENTITY_MUTATION=NO'
+          echo 'CRS_04_TIMELINE_MUTATION=NO'
+          echo 'CRS_04_DATABASE_MIGRATION=NO'
+          echo 'CRS_04_PRODUCT_UI_MUTATION=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
