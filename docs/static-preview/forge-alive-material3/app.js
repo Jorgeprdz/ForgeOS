@@ -262,6 +262,10 @@ async function loadQuoteAuthorities() {
       "quote-client-identity-persistence",
     );
     await startOptionalQuoteAuthority(
+      "quote-runtime-printable-state-handoff-m05z001.js?v=m05z-001-productive-mount",
+      "quote-printable-state-handoff",
+    );
+    await startOptionalQuoteAuthority(
       "quote-runtime-vida-mujer-visual-m05e010.js?v=m05t-001-coalesced",
       "vida-mujer-visual",
     );
