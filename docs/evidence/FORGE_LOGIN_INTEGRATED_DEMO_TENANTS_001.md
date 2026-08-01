@@ -151,13 +151,70 @@ SERVICE_ROLE_IN_BROWSER=NO
 
 The public broker returns only a one-time Supabase action link after validating origin, redirect path, public key and request rate. The control account is never offered in the UI.
 
+## Native remote acceptance
+
+The productive deployment and seed were accepted against the existing public Supabase project without a database password.
+
+```text
+IMPLEMENTATION_ACCEPTANCE_HEAD=8a0b3140385243220e661a37106d0d5e4906f2f1
+WORKFLOW_RUN=30722152581
+CONTRACT_JOB=91427575629
+REMOTE_JOB=91427594442
+CONTRACT_VALIDATION=SUCCESS
+DEPLOY_SEED_AND_SEAL=SUCCESS
+ARTIFACT_ID=8825207008
+ARTIFACT_DIGEST=sha256:9f29223044eb15ada6a784a1a3a17582bcb46fddf0ec8de11facc499be3794d4
+```
+
+Accepted remote inventory:
+
+```text
+PUBLIC_A_PIPELINE_PROSPECTS=8
+CONTROL_B_PIPELINE_PROSPECTS=7
+PUBLIC_A_COMMERCIAL_PEOPLE=3
+PUBLIC_A_POLICIES=2
+PUBLIC_A_QUOTES=3
+PUBLIC_A_JOURNAL_ENTRIES=9
+PUBLIC_A_FES_ACTIVITY_EVENTS=5
+CONTROL_B_FES_ACTIVITY_EVENTS=3
+PUBLIC_A_POLICY_ROLES=6
+PUBLIC_A_OBLIGATION_BATCHES=2
+PUBLIC_A_RELATIONSHIP_MEMORY=3
+```
+
+The seed ledger reported zero newly inserted journal rows on the final run because nine deterministic demo entries already existed from earlier idempotent attempts. The independent remote inventory confirmed all nine authoritative journal rows.
+
+Accepted boundaries:
+
+```text
+MIGRATION_ALREADY_SATISFIED=PASS
+DEMO_READ_ONLY_GUARD_TRIGGERS=26
+SESSION_CLASSIFICATION=PASS
+PUBLIC_A_CLASS=PUBLIC_A
+CONTROL_B_CLASS=CONTROL_B
+DATA_CLASS=SYNTHETIC
+PUBLIC_DEMO_READ_ONLY=PASS
+A_CANNOT_READ_B=PASS
+B_CANNOT_READ_A=PASS
+RLS_PARTITION=PASS
+PUBLIC_LOGIN_BROKER=PASS
+CREDENTIALS_PERSISTED=NO
+REAL_CLIENT_DATA_USED=NO
+```
+
+The successful acceptance sealed both A and B read-only after seeding. No reset window remains open.
+
 ## Delivery state
 
 ```text
 TASK_2=LOGIN_INTEGRATED_PRODUCTIVE_DEMO_ACCOUNT
 IMPLEMENTATION_BRANCH=feature/login-integrated-demo-tenants
 STACKED_BASE=fix/cartera-pages-runtime-assets
+PR=150
 PR_STATE=DRAFT_REQUIRED
+IMPLEMENTATION=COMPLETE
+REMOTE_ACCEPTANCE=PASS
+MERGED=NO
 MERGE_AUTHORIZATION=NOT_GRANTED
 ```
 
