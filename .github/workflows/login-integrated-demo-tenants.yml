@@ -13,6 +13,7 @@ on:
       - supabase/functions/forge-demo-admin/**
       - supabase/migrations/20260801000500_login_integrated_demo_tenants.sql
       - scripts/deploy-login-integrated-demo-migration.mjs
+      - scripts/run-login-integrated-demo-seed.mjs
       - scripts/seed-login-integrated-demo-tenants.mjs
       - scripts/verify-login-integrated-demo-remote.mjs
       - tests/login-integrated-demo-tenants-test.mjs
@@ -28,6 +29,7 @@ on:
       - supabase/functions/forge-demo-admin/**
       - supabase/migrations/20260801000500_login_integrated_demo_tenants.sql
       - scripts/deploy-login-integrated-demo-migration.mjs
+      - scripts/run-login-integrated-demo-seed.mjs
       - scripts/seed-login-integrated-demo-tenants.mjs
       - scripts/verify-login-integrated-demo-remote.mjs
       - tests/login-integrated-demo-tenants-test.mjs
@@ -70,6 +72,7 @@ jobs:
           node --check docs/static-preview/forge-alive-material3/app.js
           node --check docs/static-preview/forge-alive-material3/login-integrated-demo.js
           node --check scripts/deploy-login-integrated-demo-migration.mjs
+          node --check scripts/run-login-integrated-demo-seed.mjs
           node --check scripts/seed-login-integrated-demo-tenants.mjs
           node --check scripts/verify-login-integrated-demo-remote.mjs
           node --check tests/login-integrated-demo-tenants-test.mjs
@@ -220,7 +223,7 @@ jobs:
           echo 'DEMO_SEED_WINDOW=OPEN'
 
       - name: Seed the productive A and B tenants
-        run: node scripts/seed-login-integrated-demo-tenants.mjs
+        run: node scripts/run-login-integrated-demo-seed.mjs
 
       - name: Seal demo tenants read-only
         if: always() && env.FORGE_DEMO_ADMIN_TOKEN != ''
