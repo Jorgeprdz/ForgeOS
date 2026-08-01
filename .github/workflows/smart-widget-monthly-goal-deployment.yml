@@ -5,7 +5,7 @@ on:
     paths:
       - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
       - "scripts/deploy-smart-widget-monthly-goal-migration.mjs"
-      - "tests/smart-widget-monthly-goal-authority-test.mjs"
+      - "tests/smart-widget-monthly-policy-goal-authority-test.mjs"
       - "tests/smart-widget-monthly-goal-deployment-contract-test.mjs"
       - ".github/workflows/smart-widget-monthly-goal-deployment.yml"
   push:
@@ -14,13 +14,14 @@ on:
     paths:
       - "supabase/migrations/20260801000400_smart_widget_monthly_policy_goals.sql"
       - "scripts/deploy-smart-widget-monthly-goal-migration.mjs"
-      - "tests/smart-widget-monthly-goal-authority-test.mjs"
+      - "tests/smart-widget-monthly-policy-goal-authority-test.mjs"
       - "tests/smart-widget-monthly-goal-deployment-contract-test.mjs"
       - ".github/workflows/smart-widget-monthly-goal-deployment.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
+  statuses: write
 
 concurrency:
   group: smart-widget-monthly-goal-deployment-${{ github.ref_name }}
@@ -86,10 +87,11 @@ jobs:
           test -n "$SUPABASE_ACCESS_TOKEN"
           test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
           node --check scripts/deploy-smart-widget-monthly-goal-migration.mjs
-          node tests/smart-widget-monthly-goal-authority-test.mjs
+          node tests/smart-widget-monthly-policy-goal-authority-test.mjs
           node tests/smart-widget-monthly-goal-deployment-contract-test.mjs
 
       - name: Apply and rollback-test exact monthly goal migration
+        id: deploy_authority
         run: node scripts/deploy-smart-widget-monthly-goal-migration.mjs
 
       - name: Ensure redacted evidence exists
@@ -112,3 +114,27 @@ jobs:
           path: artifacts/smart-widget-monthly-goal-migration/ledger.jsonl
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish commit deployment status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEPLOY_OUTCOME: ${{ steps.deploy_authority.outcome }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          state="failure"
+          description="Monthly policy goal authority deployment failed"
+          if [ "$DEPLOY_OUTCOME" = "success" ]; then
+            state="success"
+            description="Monthly policy goal authority deployed and rollback-tested"
+          fi
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -f state="$state" \
+            -f context="smart-widgets/monthly-goal-authority" \
+            -f description="$description" \
+            -f target_url="$RUN_URL" \
+            > /dev/null
+          echo "SMART_WIDGET_MONTHLY_GOAL_STATUS=$state"
