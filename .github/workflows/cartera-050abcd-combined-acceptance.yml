@@ -1,0 +1,76 @@
+name: CARTERA 050A + 050B + 050C + 050D Combined Acceptance
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  combined-delivery:
+    if: github.event.pull_request.head.ref == 'feature/cartera-050abcd-future-radar-conservation'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      CARTERA_050ABCD_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_050ABCD_REMOTE_MUTATION
+      CARTERA_050ABCD_EXPECTED_SOURCE_HEAD: 19091b873b900f79e586f43149b89130dbe7a099
+      CARTERA_050ABCD_ACCEPTANCE_BRANCH: feature/cartera-050abcd-future-radar-conservation
+    steps:
+      - name: Checkout exact combined branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize complete 050A–050D delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cartera-050abcd-remote-acceptance
+          echo 'CARTERA_050ABCD_WORKFLOW=STARTED' > artifacts/cartera-050abcd-remote-acceptance/bootstrap.log
+          shopt -s nullglob
+          fragments=(.forge-bootstrap/cartera050.bundle.*.b64)
+          if (( ${#fragments[@]} > 0 )); then
+            printf '%s\n' "${fragments[@]}" | sort > /tmp/cartera050-fragments
+            while IFS= read -r fragment; do cat "$fragment"; done < /tmp/cartera050-fragments \
+              | base64 --decode > /tmp/cartera050-bundle.tar.gz
+            tar -xzf /tmp/cartera050-bundle.tar.gz
+            rm -rf .forge-bootstrap
+            node scripts/ci/cartera-050abcd-materialize-app.mjs
+            test -f supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql
+            test -f supabase/migrations/20260801000281_cartera050_future_radar_read.sql
+            test -x scripts/ci/cartera-050abcd-combined-acceptance.sh
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -A
+            git commit -m 'feat(cartera): materialize combined 050A through 050D delivery'
+            git push origin HEAD:feature/cartera-050abcd-future-radar-conservation
+            echo 'CARTERA_050ABCD_BUNDLE=MATERIALIZED'
+          else
+            test -f supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql
+            test -f supabase/migrations/20260801000281_cartera050_future_radar_read.sql
+            test -x scripts/ci/cartera-050abcd-combined-acceptance.sh
+            echo 'CARTERA_050ABCD_BUNDLE=ALREADY_MATERIALIZED'
+          fi
+          echo "CARTERA_050ABCD_ACCEPTANCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Execute combined gates and remote acceptance
+        run: scripts/ci/cartera-050abcd-combined-acceptance.sh
+
+      - name: Upload combined evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-050abcd-combined-remote-acceptance
+          path: artifacts/cartera-050abcd-remote-acceptance
+          if-no-files-found: error
+          retention-days: 30
