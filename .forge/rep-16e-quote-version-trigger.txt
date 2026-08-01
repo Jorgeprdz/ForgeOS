@@ -1,0 +1,3 @@
+REP-16E exact quote adapter version trigger
+TARGET=promotion/rep-16e-activity-reporting
+RUNTIME_MUTATION=NO
