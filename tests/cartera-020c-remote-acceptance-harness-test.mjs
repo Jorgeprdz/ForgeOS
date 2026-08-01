@@ -34,13 +34,16 @@ test('remote workflow is manual-only and requires exact authorization and heads'
   assert.match(workflow, new RegExp(projectRef));
 });
 
-test('preparation gate runs without remote mutation and locks bounded paths', () => {
+test('closed preparation gate is static, non-mutating and locks accepted closure', () => {
   assert.match(gate, /pull_request:/);
   assert.match(gate, /feature\/cartera-020c-identity-policy-confirmation-review/);
   assert.match(gate, /SUPABASE_REMOTE_MUTATION=NONE/);
-  assert.match(gate, /UNAUTHORIZED_020C_REMOTE_PATH/);
   assert.match(gate, /REMOTE_EXECUTION_FROM_PR=IMPOSSIBLE/);
-  assert.match(gate, /AUTHORIZATION_DIGEST_HARDENING=REPOSITORY_READY/);
+  assert.match(gate, /REMOTE_CLOSURE=LOCKED/);
+  assert.match(gate, /CARTERA_020C_REMOTE_ACCEPTANCE=PASS/);
+  assert.match(gate, /CARTERA_020C_COMPLETE=YES/);
+  assert.doesNotMatch(gate, /AUTHORIZATION_DIGEST_HARDENING=REPOSITORY_READY/);
+  assert.doesNotMatch(gate, /CARTERA_020C_REMOTE_ACCEPTANCE=PENDING/);
 });
 
 test('harness deploys exact 00230 through 00238 migration sequence', () => {
