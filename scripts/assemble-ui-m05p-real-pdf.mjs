@@ -32,7 +32,10 @@ const chunkSpecs = [
   { name: "solucionline.pdf.b64.tail-01-0", length: 775, sha256: "bf66af1522ded47d05166b7ec587b473f161ee694c03648decaba75abcf13041" },
   { name: "solucionline.pdf.b64.tail-01-1", length: 775, sha256: "32ec8762932e9269c8aad0c39ffd4eacfefd36684fcbd7a1db6e905e19114e51" },
   { name: "solucionline.pdf.b64.tail-01-2", length: 775, sha256: "346af587c227b7673ea2e8d9b26793f86aef26360492f67f92eddfdcf0ff0c31" },
-  { name: "solucionline.pdf.b64.tail-01-3", length: 775, sha256: "2df9eb4cb0ce71d0c6f92327dd8a2cdb16e104ba1530edc5699fe1d241d9d14d" },
+  { name: "solucionline.pdf.b64.tail-01-3-0", length: 200, sha256: "b603f87733097e6431fc3d3f34e5fe3098ef2ba4a92cdc034d84c9ddc9643c02" },
+  { name: "solucionline.pdf.b64.tail-01-3-1", length: 200, sha256: "aa452ff8e490dc67e1b20b96e6301f9de1e8fb10e047fc093da78f276223783b" },
+  { name: "solucionline.pdf.b64.tail-01-3-2", length: 200, sha256: "ed49b28dc0067286539aa802b3b73bb5ad491856a1c77e34fda4e198d038b748" },
+  { name: "solucionline.pdf.b64.tail-01-3-3", length: 175, sha256: "704b38a3d9198f1793c9322b04430c08541a32f04d36e0b8ecc62de3e7b6059b" },
   { name: "solucionline.pdf.b64.tail-02", length: 3_100, sha256: "54a3205637e672181b24a501e26b68b7999f415287b2c1789871b6dbffd800b3" },
 ];
 
@@ -101,7 +104,7 @@ await writeFile(outputPath, payload);
 await writeFile(
   `${outputPath}.metadata.json`,
   `${JSON.stringify({
-    schema: "forge.ui.m05p.real-pdf-fixture.v3",
+    schema: "forge.ui.m05p.real-pdf-fixture.v4",
     sourceFileName: "Solucionline_20260711_16_05.PDF",
     product: "Vida Mujer",
     insured: "Alejandra Moleres",
