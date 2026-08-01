@@ -1,0 +1,3 @@
+REP-16E governed contract reconciliation trigger
+TARGET=promotion/rep-16e-activity-reporting
+RUNTIME_MUTATION=NO
