@@ -1,0 +1,92 @@
+name: CRS 00 Commercial Relationship Spine Roadmap
+
+on:
+  pull_request:
+    paths:
+      - "docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001.md"
+      - "docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_CORRECTION_ANNEX_001.md"
+      - "docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001.md"
+      - "docs/evidence/FORGE_CRS_00_ABCD_CLOSURE_001.md"
+      - "tests/crs-00-commercial-relationship-spine-roadmap-test.mjs"
+      - ".github/workflows/crs-00-commercial-relationship-spine-roadmap.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  roadmap-lock:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Documentation-only path boundary
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+
+          allowed='^(docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001\.md|docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_CORRECTION_ANNEX_001\.md|docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001\.md|docs/evidence/FORGE_CRS_00_ABCD_CLOSURE_001\.md|tests/crs-00-commercial-relationship-spine-roadmap-test\.mjs|\.github/workflows/crs-00-commercial-relationship-spine-roadmap\.yml)$'
+
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_00_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+
+          echo "CRS_00_DOCUMENTATION_ONLY_PATH_BOUNDARY=PASS"
+
+      - name: Roadmap and source-truth acceptance
+        run: node --test tests/crs-00-commercial-relationship-spine-roadmap-test.mjs
+
+      - name: Locked acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          roadmap='docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001.md'
+          annex='docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_CORRECTION_ANNEX_001.md'
+          source='docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001.md'
+
+          grep -q 'STAGES=12' "$roadmap"
+          grep -q 'SUBSTAGES=48' "$roadmap"
+          grep -q 'CANONICAL_ROOT=CommercialPerson' "$roadmap"
+          grep -q 'CENTRAL_DUPLICATE_TRUTH_STORE=FORBIDDEN' "$roadmap"
+
+          grep -q 'AMENDS=FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001' "$annex"
+          grep -q 'EXECUTION_PRECEDENCE=THIS_ANNEX_OVER_ORIGINAL_STAGE_BUILD_LANGUAGE' "$annex"
+          grep -q 'CANONICAL_PERSON_AUTHORITY=REUSE_CARTERA_010B_COMMERCIAL_PERSON' "$annex"
+          grep -q 'NEW_ADVISOR_COMMERCIAL_RELATIONSHIP_PERSISTENCE=NOT_AUTHORIZED_WITHOUT_PROVEN_GAP' "$annex"
+          grep -q 'PERSON_HISTORY_FOUNDATION=EXTEND_CARTERA_040B' "$annex"
+          grep -q 'PERSON_WORKSPACE_FOUNDATION=PROMOTE_CARTERA_040D' "$annex"
+          grep -q 'RELATIONSHIP_INTELLIGENCE_FOUNDATION=REUSE_CARTERA_050_TO_100' "$annex"
+          grep -q 'APPLICATION_AND_SIGNATURE_AUTHORITY=NEW_REQUIRED_CAPABILITY' "$annex"
+          grep -q 'NEXT=CRS_01A_EXISTING_CARTERA_AUTHORITY_PROMOTION_AND_GAP_LOCK' "$annex"
+
+          grep -q 'GAP_06=APPLICATION_AND_SIGNATURE_AUTHORITY' "$source"
+          grep -q 'CRS_TIMELINE_PARALLEL_TRUTH=FORBIDDEN' "$source"
+
+          echo 'CRS_00A_REPOSITORY_DISCOVERY=PASS'
+          echo 'CRS_00B_SOURCE_TRUTH_LOCK=PASS'
+          echo 'CRS_00C_ROADMAP_GOVERNANCE=PASS'
+          echo 'CRS_CORRECTION_ANNEX=PASS'
+          echo 'CARTERA_EXISTING_AUTHORITY_REUSE=PASS'
+          echo 'CRS_STAGES=12'
+          echo 'CRS_SUBSTAGES=48'
+          echo 'RUNTIME_MUTATION=NO'
+          echo 'PRODUCT_UI_MUTATION=NO'
+          echo 'SCHEMA_MUTATION=NO'
+          echo 'SUPABASE_MUTATION=NO'
