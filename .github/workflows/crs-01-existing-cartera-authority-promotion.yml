@@ -70,8 +70,7 @@ jobs:
         run: |
           node --test tests/cartera-010a-identity-policy-persistence-scope-test.mjs
           node --test tests/cartera-010b-contract-foundation-test.mjs
-          node --test tests/cartera-010b-conflict-ambiguity-hardening-test.mjs
-          node --test tests/cartera-010b-precedence-hardening-test.mjs
+          node --test tests/cartera-010b-governed-command-rpc-test.mjs
 
       - name: Preserve directory, portfolio and relationship brief
         run: |
