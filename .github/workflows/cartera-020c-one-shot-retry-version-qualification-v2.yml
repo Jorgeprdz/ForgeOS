@@ -1,0 +1,252 @@
+name: CARTERA 020C One-Shot Retry Version Qualification V2
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened]
+    paths:
+      - docs/evidence/CARTERA_020C_RETRY_VERSION_QUALIFICATION_V2_AUTHORIZATION_20260731T1823-0600.md
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cartera-020c-one-shot-retry-version-qualification-v2
+  cancel-in-progress: false
+
+jobs:
+  qualify-and-resume:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      github.event.action == 'opened' &&
+      github.event.pull_request.head.ref == 'run/cartera-020c-retry-version-qualification-v2-20260731-1823' &&
+      github.event.pull_request.head.sha == 'ca3ab858a23578cb859cfb172637c852995833bc' &&
+      github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      CARTERA_020C_REMOTE_MUTATION_AUTHORIZED: YES:CARTERA_020C_REMOTE_MUTATION
+      CARTERA_020C_EXPECTED_SOURCE_HEAD: 0daaccd556659b997f2086e12b09481281d1b019
+      CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD: 3723500f8b3058c69a6f7308a10f8fb6dcb3dd0a
+      CARTERA_020C_ACCEPTANCE_BRANCH: feature/cartera-020c-remote-acceptance
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      AUTHORIZATION_MARKER: docs/evidence/CARTERA_020C_RETRY_VERSION_QUALIFICATION_V2_AUTHORIZATION_20260731T1823-0600.md
+
+    steps:
+      - name: Checkout exact V2 authorization
+        uses: actions/checkout@v4
+        with:
+          ref: ca3ab858a23578cb859cfb172637c852995833bc
+          fetch-depth: 0
+
+      - name: Validate exact V2 authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_RUN_ATTEMPT" = '1'
+          test "$GITHUB_HEAD_REF" = 'run/cartera-020c-retry-version-qualification-v2-20260731-1823'
+          test -f "$AUTHORIZATION_MARKER"
+          grep -qx 'USER_AUTHORIZATION=QUALIFY_RETRY_REVIEW_AND_USE_DURABLE_STATE_VERSION_V2' "$AUTHORIZATION_MARKER"
+          grep -qx 'PRIOR_RUN=30675188757' "$AUTHORIZATION_MARKER"
+          grep -qx 'PRIOR_FAILURE=AUTOMATED_EDITOR_INDENTATION_PATTERN_MISMATCH' "$AUTHORIZATION_MARKER"
+          grep -qx 'ACCEPTANCE_HEAD=3723500f8b3058c69a6f7308a10f8fb6dcb3dd0a' "$AUTHORIZATION_MARKER"
+          grep -qx 'EDITOR_STRATEGY=RETRY_REFERENCE_ANCHORED_INDENTATION_TOLERANT_REGEX' "$AUTHORIZATION_MARKER"
+          test "$(git diff --name-only HEAD^ HEAD)" = "$AUTHORIZATION_MARKER"
+          echo 'ONE_SHOT_RETRY_VERSION_QUALIFICATION_V2_AUTHORIZATION=PASS'
+
+      - name: Checkout exact acceptance head
+        uses: actions/checkout@v4
+        with:
+          ref: feature/cartera-020c-remote-acceptance
+          fetch-depth: 0
+
+      - name: Qualify retry fixture structurally
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '3723500f8b3058c69a6f7308a10f8fb6dcb3dd0a'
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/ci/cartera-020c-remote-acceptance.sql')
+          lines = path.read_text(encoding='utf-8').splitlines()
+
+          qualified_updates = 0
+          qualified_wheres = 0
+          for index, line in enumerate(lines):
+              if line.strip() == 'update public.cartera020c_confirmation_reviews':
+                  window = '\n'.join(lines[index:index + 8])
+                  if 'retry_review_reference' in window:
+                      indent = line[:len(line) - len(line.lstrip())]
+                      lines[index] = f'{indent}update public.cartera020c_confirmation_reviews r'
+                      qualified_updates += 1
+              if line.strip() == 'where advisor_id=user_a and review_reference=retry_review_reference;':
+                  indent = line[:len(line) - len(line.lstrip())]
+                  lines[index] = f'{indent}where r.advisor_id=user_a and r.review_reference=retry_review_reference;'
+                  qualified_wheres += 1
+
+          if qualified_updates != 3 or qualified_wheres != 3:
+              raise SystemExit(
+                  f'UNEXPECTED_RETRY_QUALIFICATION_COUNTS:UPDATES={qualified_updates}:WHERES={qualified_wheres}'
+              )
+
+          call_indexes = [
+              index for index, line in enumerate(lines)
+              if 'retry_review_reference,3,clock_timestamp()' in line
+          ]
+          if len(call_indexes) != 2:
+              raise SystemExit(f'UNEXPECTED_RETRY_CALL_COUNT:{len(call_indexes)}')
+
+          labels = [
+              'CARTERA020C_RETRY_WAIT_FIXTURE_INVALID',
+              'CARTERA020C_DUE_RETRY_FIXTURE_INVALID',
+          ]
+          for call_index, error_code in reversed(list(zip(call_indexes, labels))):
+              call_line = lines[call_index]
+              lines[call_index] = call_line.replace(
+                  'retry_review_reference,3,clock_timestamp()',
+                  "retry_review_reference,(retry_status ->> 'stateVersion')::integer,clock_timestamp()",
+              )
+              role_index = None
+              for candidate in range(call_index - 1, max(-1, call_index - 12), -1):
+                  if lines[candidate].strip() == "execute 'set local role authenticated';":
+                      role_index = candidate
+                      break
+              if role_index is None:
+                  raise SystemExit(f'RETRY_ROLE_BOUNDARY_NOT_FOUND:{call_index}')
+              indent = lines[role_index][:len(lines[role_index]) - len(lines[role_index].lstrip())]
+              injected = [
+                  f"{indent}retry_status := public.forge_cartera020c_get_confirmation_status(retry_review_reference);",
+                  f"{indent}if retry_status ->> 'state' <> 'RETRY_WAIT'",
+                  f"{indent}   or (retry_status ->> 'stateVersion')::integer <> 3 then",
+                  f"{indent}  raise exception '{error_code}';",
+                  f'{indent}end if;',
+              ]
+              lines[role_index + 1:role_index + 1] = injected
+
+          repaired = '\n'.join(lines) + '\n'
+          if repaired.count('forge_cartera020c_get_confirmation_status(retry_review_reference)') != 2:
+              raise SystemExit('DURABLE_RETRY_STATUS_READ_COUNT_INVALID')
+          if 'retry_review_reference,3,clock_timestamp()' in repaired:
+              raise SystemExit('MAGIC_RETRY_STATE_VERSION_REMAINS')
+          path.write_text(repaired, encoding='utf-8')
+
+          Path('tests/cartera-020c-retry-version-qualification-test.mjs').write_text("""import test from 'node:test';
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+
+          const sql = readFileSync(
+            new URL('../scripts/ci/cartera-020c-remote-acceptance.sql', import.meta.url),
+            'utf8',
+          );
+
+          test('retry fixture qualifies all three Review updates under use_variable mode', () => {
+            const updates = sql.match(/update public\\.cartera020c_confirmation_reviews r/g) || [];
+            assert.ok(updates.length >= 3);
+            const qualified = sql.match(/where r\\.advisor_id=user_a and r\\.review_reference=retry_review_reference/g) || [];
+            assert.equal(qualified.length, 3);
+            assert.doesNotMatch(sql, /where advisor_id=user_a and review_reference=retry_review_reference/);
+          });
+
+          test('retry RPC consumes durable status stateVersion for early and due calls', () => {
+            const reads = sql.match(/forge_cartera020c_get_confirmation_status\\(retry_review_reference\\)/g) || [];
+            assert.equal(reads.length, 2);
+            const dynamicVersions = sql.match(/retry_review_reference,\\(retry_status ->> 'stateVersion'\\)::integer,clock_timestamp\\(\\)/g) || [];
+            assert.equal(dynamicVersions.length, 2);
+            assert.doesNotMatch(sql, /retry_review_reference,3,clock_timestamp\\(\\)/);
+            assert.match(sql, /CARTERA020C_RETRY_WAIT_FIXTURE_INVALID/);
+            assert.match(sql, /CARTERA020C_DUE_RETRY_FIXTURE_INVALID/);
+          });
+          """, encoding='utf-8')
+          PY
+
+          mapfile -t changed < <({ git diff --name-only; git ls-files --others --exclude-standard; } | sort -u)
+          expected=$'scripts/ci/cartera-020c-remote-acceptance.sql\ntests/cartera-020c-retry-version-qualification-test.mjs'
+          test "$(printf '%s\n' "${changed[@]}")" = "$expected"
+          git diff --check
+          echo 'RETRY_VERSION_QUALIFICATION_V2=PASS'
+
+      - name: Commit qualified acceptance harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'forge-cartera-remote-acceptance'
+          git config user.email 'forge-cartera-remote-acceptance@users.noreply.github.com'
+          git add scripts/ci/cartera-020c-remote-acceptance.sql tests/cartera-020c-retry-version-qualification-test.mjs
+          git commit -m 'test(cartera): qualify retry review state versions'
+          git push origin HEAD:feature/cartera-020c-remote-acceptance
+          qualified_head="$(git rev-parse HEAD)"
+          echo "CARTERA_020C_EXPECTED_ACCEPTANCE_HEAD=$qualified_head" >> "$GITHUB_ENV"
+          echo "QUALIFIED_ACCEPTANCE_HEAD=$qualified_head" >> "$GITHUB_ENV"
+          echo "QUALIFIED_ACCEPTANCE_HEAD=$qualified_head"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Repository gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$QUALIFIED_ACCEPTANCE_HEAD"
+          git merge-base --is-ancestor "$CARTERA_020C_EXPECTED_SOURCE_HEAD" HEAD
+          node --check tests/cartera-020c-retry-version-qualification-test.mjs
+          node --test tests/cartera-020c-*.mjs
+          echo 'CARTERA020C_RETRY_VERSION_HARNESS_GATE=PASS'
+
+      - name: Verify deployed 00241 remains matched
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          mkdir -p artifacts/cartera-020c-remote-acceptance
+          node scripts/ci/cartera-020c-conflict-persistence-hardening-deploy.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+          grep -q 'MIGRATION_20260731000241=ALREADY_APPLIED_AND_MATCHED' artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+          grep -q 'CARTERA020C_CONFLICT_PERSISTENCE_RECEIPT_HARDENING=PASS' artifacts/cartera-020c-remote-acceptance/conflict-persistence-hardening-output.log
+
+      - name: Resume transactional remote acceptance
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$QUALIFIED_ACCEPTANCE_HEAD" node scripts/ci/cartera-020c-github-actions-remote-acceptance.mjs \
+            | tee artifacts/cartera-020c-remote-acceptance/workflow-output.log
+
+      - name: Verify acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/cartera-020c-remote-acceptance/workflow-output.log
+          for marker in \
+            CARTERA_020C_REMOTE_DEPLOYMENT=PASS \
+            AUTHORIZATION_DIGEST_COMPATIBILITY=PASS \
+            CARTERA_020C_TRANSACTIONAL_ACCEPTANCE=PASS \
+            AUTHORIZATION_DIGEST_BINDING=PASS \
+            IDENTITY_ORDERED_EXECUTION=PASS \
+            IDENTITY_READ_AFTER_WRITE=PASS \
+            POLICY_READ_AFTER_WRITE=PASS \
+            CHANGED_INPUT_CONFLICT=PASS \
+            RETRY_GOVERNANCE=PASS \
+            PARALLEL_STATE_VERSION_SERIALIZATION=PASS \
+            RLS_CROSS_ADVISOR=PASS \
+            DIRECT_WRITES=BLOCKED \
+            SANITIZED_STATUS=PASS \
+            TEST_FIXTURES_ROLLED_BACK=YES \
+            CONCURRENCY_FIXTURES_CLEANED=YES \
+            RESIDUAL_FIXTURES=0 \
+            CARTERA_020C_REMOTE_ACCEPTANCE=PASS; do
+            grep -q "$marker" "$log"
+          done
+
+      - name: Upload V2 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-020c-remote-acceptance-retry-version-qualification-v2
+          path: artifacts/cartera-020c-remote-acceptance
+          if-no-files-found: warn
+          retention-days: 30
