@@ -7,13 +7,20 @@ on:
     paths:
       - tests/e2e/pr150-postmerge-public-demo.spec.mjs
       - .github/workflows/pr150-postmerge-public-demo-acceptance.yml
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths:
+      - tests/e2e/pr150-postmerge-public-demo.spec.mjs
+      - .github/workflows/pr150-postmerge-public-demo-acceptance.yml
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: pr150-postmerge-public-demo-acceptance
+  group: pr150-postmerge-public-demo-acceptance-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -27,7 +34,7 @@ jobs:
       - name: Checkout exact acceptance candidate
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
 
       - name: Use Node 22
