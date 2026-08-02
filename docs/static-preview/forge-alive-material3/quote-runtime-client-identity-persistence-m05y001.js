@@ -22,6 +22,8 @@ function visibleClientName() {
   return cleanName(
     document.querySelector("[data-quote-human-review-client]")?.value,
   ) || cleanName(
+    document.querySelector("[data-m05e005-client-input]")?.value,
+  ) || cleanName(
     document.querySelector('[data-quote-preview-value="name"]')?.textContent,
   );
 }
@@ -82,22 +84,56 @@ function schedule() {
   enqueue(persistIdentity);
 }
 
-document.addEventListener("input", (event) => {
-  if (event.target?.matches?.("[data-quote-human-review-client]")) schedule();
-}, true);
+function persistBeforeGovernedAction(event) {
+  const target = event.target;
+  if (!target?.closest) return;
 
-document.addEventListener("click", (event) => {
-  if (event.target?.closest?.('[data-quote-preview-action="accept"]')) {
+  const confirmsQuote = target.closest(
+    '[data-quote-next-action="confirm_quote"]',
+  );
+  const acceptsPreview = target.closest(
+    '[data-quote-preview-action="accept"]',
+  );
+  const printableAction = target.closest(
+    '[data-m05e005-action="preview"], [data-m05e005-action="download"]',
+  );
+
+  if (confirmsQuote || acceptsPreview || printableAction) {
+    persistIdentity();
+  }
+
+  if (acceptsPreview) {
     globalThis.setTimeout(schedule, 40);
   }
+}
+
+document.addEventListener("input", (event) => {
+  if (event.target?.matches?.(
+    "[data-quote-human-review-client], [data-m05e005-client-input]",
+  )) {
+    schedule();
+  }
 }, true);
+
+document.addEventListener("change", (event) => {
+  if (event.target?.matches?.(
+    "[data-quote-human-review-client], [data-m05e005-client-input]",
+  )) {
+    persistIdentity();
+  }
+}, true);
+
+document.addEventListener("click", persistBeforeGovernedAction, true);
 
 for (const eventName of [
   "forge:quote-human-review-updated",
   "forge:accepted-quote-confirmed",
   "forge:qpd06-state",
 ]) {
-  globalThis.addEventListener?.(eventName, schedule);
+  globalThis.addEventListener?.(eventName, () => {
+    persistIdentity();
+    schedule();
+  });
 }
 
 globalThis.ForgeQuoteClientIdentityPersistenceM05Y001 = Object.freeze({

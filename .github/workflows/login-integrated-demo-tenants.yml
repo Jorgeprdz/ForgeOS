@@ -1,0 +1,284 @@
+name: Login Integrated Demo Tenants
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - fix/cartera-pages-runtime-assets
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/login-integrated-demo.js
+      - supabase/functions/forge-demo-login/**
+      - supabase/functions/forge-demo-admin/**
+      - supabase/migrations/20260801000500_login_integrated_demo_tenants.sql
+      - scripts/deploy-login-integrated-demo-migration.mjs
+      - scripts/run-login-integrated-demo-seed.mjs
+      - scripts/seed-login-integrated-demo-tenants.mjs
+      - scripts/verify-login-integrated-demo-remote.mjs
+      - tests/login-integrated-demo-tenants-test.mjs
+      - docs/evidence/FORGE_LOGIN_INTEGRATED_DEMO_TENANTS_001.md
+      - .github/workflows/login-integrated-demo-tenants.yml
+  push:
+    branches:
+      - feature/login-integrated-demo-tenants
+    paths:
+      - docs/static-preview/forge-alive-material3/app.js
+      - docs/static-preview/forge-alive-material3/login-integrated-demo.js
+      - supabase/functions/forge-demo-login/**
+      - supabase/functions/forge-demo-admin/**
+      - supabase/migrations/20260801000500_login_integrated_demo_tenants.sql
+      - scripts/deploy-login-integrated-demo-migration.mjs
+      - scripts/run-login-integrated-demo-seed.mjs
+      - scripts/seed-login-integrated-demo-tenants.mjs
+      - scripts/verify-login-integrated-demo-remote.mjs
+      - tests/login-integrated-demo-tenants-test.mjs
+      - docs/evidence/FORGE_LOGIN_INTEGRATED_DEMO_TENANTS_001.md
+      - .github/workflows/login-integrated-demo-tenants.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: login-integrated-demo-tenants-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  contract-validation:
+    if: >-
+      (github.event_name == 'push' && github.ref_name == 'feature/login-integrated-demo-tenants') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'feature/login-integrated-demo-tenants') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax gates
+        run: |
+          node --check docs/static-preview/forge-alive-material3/app.js
+          node --check docs/static-preview/forge-alive-material3/login-integrated-demo.js
+          node --check scripts/deploy-login-integrated-demo-migration.mjs
+          node --check scripts/run-login-integrated-demo-seed.mjs
+          node --check scripts/seed-login-integrated-demo-tenants.mjs
+          node --check scripts/verify-login-integrated-demo-remote.mjs
+          node --check tests/login-integrated-demo-tenants-test.mjs
+
+      - name: Productive demo contracts
+        run: node --test tests/login-integrated-demo-tenants-test.mjs
+
+      - name: Preserve Task 1 dependency closure
+        run: node --test tests/cartera-pages-runtime-assets-test.mjs
+
+      - name: Credential and model separation gate
+        run: |
+          node --input-type=module - <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+
+          const read = (path) => readFileSync(path, 'utf8');
+          const browser = [
+            'docs/static-preview/forge-alive-material3/app.js',
+            'docs/static-preview/forge-alive-material3/login-integrated-demo.js',
+          ].map(read).join('\n');
+          const server = [
+            'supabase/functions/forge-demo-login/index.ts',
+            'supabase/functions/forge-demo-admin/index.ts',
+          ].map(read).join('\n');
+          const migration = read(
+            'supabase/migrations/20260801000500_login_integrated_demo_tenants.sql',
+          );
+
+          assert.doesNotMatch(
+            browser,
+            /ADVISOR_[AB]_(?:EMAIL|PASSWORD)|signInWithPassword/i,
+            'DEMO_CREDENTIAL_REFERENCE_IN_BROWSER',
+          );
+          assert.doesNotMatch(
+            server,
+            /ADVISOR_[AB]_(?:EMAIL|PASSWORD)\s*[:=]\s*["'][^"'$]/i,
+            'HARDCODED_DEMO_CREDENTIAL_IN_SERVER_SOURCE',
+          );
+          assert.doesNotMatch(
+            migration,
+            /create\s+table[^;]*demo_(?:prospects|policies|quotes)/i,
+            'PARALLEL_DEMO_DOMAIN_MODEL_CREATED',
+          );
+          console.log('DEMO_CREDENTIALS_IN_BROWSER=NO');
+          console.log('PARALLEL_DEMO_DOMAIN_MODEL=NO');
+          NODE
+
+  deploy-seed-and-seal:
+    needs: contract-validation
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/login-integrated-demo-tenants'
+    runs-on: ubuntu-24.04
+    environment: 067g17a1-remote-acceptance
+    env:
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
+      FORGE_DEMO_SEED_EVIDENCE: artifacts/login-integrated-demo/seed-summary.json
+      FORGE_DEMO_REMOTE_EVIDENCE: artifacts/login-integrated-demo/remote-verification.json
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate required protected inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in \
+            SUPABASE_URL SUPABASE_ANON_KEY SUPABASE_ACCESS_TOKEN \
+            ADVISOR_A_EMAIL ADVISOR_A_PASSWORD \
+            ADVISOR_B_EMAIL ADVISOR_B_PASSWORD; do
+            [[ -n "${!name:-}" ]] || { echo "MISSING_PROTECTED_INPUT=$name" >&2; exit 1; }
+          done
+          [[ "$(node -p "new URL(process.env.SUPABASE_URL).hostname")" == "${SUPABASE_PROJECT_REF}.supabase.co" ]]
+          echo 'PROTECTED_INPUTS=READY'
+
+      - name: Deploy additive demo registry migration
+        run: node scripts/deploy-login-integrated-demo-migration.mjs
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Generate one-run admin seal token
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="$(openssl rand -hex 32)"
+          echo "::add-mask::$token"
+          echo "FORGE_DEMO_ADMIN_TOKEN=$token" >> "$GITHUB_ENV"
+
+      - name: Configure protected Edge Function secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase secrets set \
+            FORGE_DEMO_ADVISOR_A_EMAIL="$ADVISOR_A_EMAIL" \
+            FORGE_DEMO_ADVISOR_B_EMAIL="$ADVISOR_B_EMAIL" \
+            FORGE_DEMO_ADMIN_TOKEN="$FORGE_DEMO_ADMIN_TOKEN" \
+            --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Deploy demo login and admin functions
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase functions deploy forge-demo-login \
+            --project-ref "$SUPABASE_PROJECT_REF" \
+            --no-verify-jwt
+          supabase functions deploy forge-demo-admin \
+            --project-ref "$SUPABASE_PROJECT_REF" \
+            --no-verify-jwt
+          sleep 5
+
+      - name: Temporarily unlock only A and B for controlled idempotent seeding
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 30 \
+            -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-demo-admin" \
+            -H "Content-Type: application/json" \
+            -H "x-forge-demo-admin-token: ${FORGE_DEMO_ADMIN_TOKEN}" \
+            --data '{"action":"PREPARE"}' \
+            > /tmp/forge-demo-prepare.json
+          node -e "const p=require('/tmp/forge-demo-prepare.json');if(p.ok!==true||p.action!=='PREPARE')throw new Error('DEMO_PREPARE_FAILED')"
+          rm -f /tmp/forge-demo-prepare.json
+          echo 'DEMO_SEED_WINDOW=OPEN'
+
+      - name: Seed the productive A and B tenants
+        run: node scripts/run-login-integrated-demo-seed.mjs
+
+      - name: Seal demo tenants read-only
+        if: always() && env.FORGE_DEMO_ADMIN_TOKEN != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 30 \
+            -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-demo-admin" \
+            -H "Content-Type: application/json" \
+            -H "x-forge-demo-admin-token: ${FORGE_DEMO_ADMIN_TOKEN}" \
+            --data '{"action":"SEAL"}' \
+            > /tmp/forge-demo-seal.json
+          node -e "const p=require('/tmp/forge-demo-seal.json');if(p.ok!==true||p.action!=='SEAL'||p.accountsSealed!==2)throw new Error('DEMO_SEAL_FAILED')"
+          rm -f /tmp/forge-demo-seal.json
+          echo 'DEMO_SEED_WINDOW=CLOSED'
+          echo 'DEMO_ACCOUNTS=READ_ONLY'
+
+      - name: Verify live productive inventory, RLS and read-only boundary
+        run: node scripts/verify-login-integrated-demo-remote.mjs
+
+      - name: Smoke public login broker without exposing its action link
+        run: |
+          node --input-type=module - <<'NODE'
+          import assert from 'node:assert/strict';
+          const endpoint = `${process.env.SUPABASE_URL}/functions/v1/forge-demo-login`;
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              Origin: 'https://jorgeprdz.github.io',
+              apikey: process.env.SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              redirectTo: 'https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=inicio',
+              requestedNav: 'inicio',
+            }),
+          });
+          const payload = await response.json();
+          assert.equal(response.status, 200);
+          assert.equal(payload.ok, true);
+          assert.equal(payload.runtime, 'PRODUCTIVE');
+          assert.equal(payload.dataClass, 'SYNTHETIC');
+          const action = new URL(payload.actionLink);
+          assert.equal(action.hostname, `${process.env.SUPABASE_PROJECT_REF}.supabase.co`);
+          assert.ok(action.pathname.startsWith('/auth/v1/'));
+          console.log('PUBLIC_DEMO_LOGIN_BROKER=PASS');
+          NODE
+
+      - name: Upload redacted acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: login-integrated-demo-tenants
+          path: artifacts/login-integrated-demo
+          if-no-files-found: error
+          retention-days: 30

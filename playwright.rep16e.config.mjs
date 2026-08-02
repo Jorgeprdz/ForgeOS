@@ -3,7 +3,7 @@ import {
   devices,
 } from "@playwright/test";
 
-const port = 4174;
+const port = 4173;
 const baseURL =
   process.env.FORGE_REP16E_BASE_URL ||
   `http://127.0.0.1:${port}`;
