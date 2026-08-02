@@ -85,6 +85,60 @@ jobs:
           test -f "$FORGE_CHROMIUM_PATH"
           node tests/segubeca-material3-real-pdf-acceptance-test.mjs
 
+      - name: Verify deployed SHA and public Pages real-PDF acceptance
+        shell: bash
+        env:
+          EXPECTED_PAGES_SHA: dd10e5d13e693669f728e590a7132dda9f6d976b
+          BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
+          FORGE_SEGUBECA_TARGET_URL: "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones&cb=dd10e5d13e693669f728e590a7132dda9f6d976b"
+        run: |
+          set -euo pipefail
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          test -f "$FORGE_CHROMIUM_PATH"
+
+          node - <<'NODE'
+          const response = await fetch(`${process.env.BUILD_INFO_URL}?cb=${Date.now()}`, {
+            cache: 'no-store',
+            headers: { 'cache-control': 'no-cache' },
+          });
+          if (!response.ok) throw new Error(`SEGUBECA_PUBLIC_BUILD_INFO_HTTP_${response.status}`);
+          const build = await response.json();
+          if (build.commitSha !== process.env.EXPECTED_PAGES_SHA) {
+            throw new Error(`SEGUBECA_PUBLIC_SHA_MISMATCH expected=${process.env.EXPECTED_PAGES_SHA} actual=${build.commitSha}`);
+          }
+          console.log(`SEGUBECA_PUBLIC_PAGES_SHA=PASS sha=${build.commitSha}`);
+          NODE
+
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const sourcePath = 'tests/segubeca-material3-real-pdf-acceptance-test.mjs';
+          const targetPath = '/tmp/segubeca-public-pages-real-pdf.mjs';
+          let source = fs.readFileSync(sourcePath, 'utf8');
+          source = source.replace(
+            /await new Promise\(\(resolveServer\) => server\.listen\(0, "127\.0\.0\.1", resolveServer\)\);\nconst \{ port \} = server\.address\(\);/,
+            'const port = null;',
+          );
+          source = source.replace(
+            /`http:\/\/127\.0\.0\.1:\$\{port\}\/docs\/static-preview\/forge-alive-material3\/\?nav=cotizaciones`/,
+            'process.env.FORGE_SEGUBECA_TARGET_URL',
+          );
+          source = source.replace(
+            /\n  await new Promise\(\(resolveServer\) => server\.close\(resolveServer\)\);/,
+            '',
+          );
+          if (source.includes('server.listen(0') || source.includes('server.close(resolveServer)')) {
+            throw new Error('SEGUBECA_PUBLIC_TEST_TRANSFORM_FAILED');
+          }
+          if (!source.includes('process.env.FORGE_SEGUBECA_TARGET_URL')) {
+            throw new Error('SEGUBECA_PUBLIC_TARGET_NOT_INJECTED');
+          }
+          fs.writeFileSync(targetPath, source);
+          NODE
+
+          node /tmp/segubeca-public-pages-real-pdf.mjs
+          echo 'SEGUBECA_PUBLIC_PAGES_REAL_PDF=PASS'
+
       - name: Preserve accepted SeguBeca authorities
         shell: bash
         run: |
