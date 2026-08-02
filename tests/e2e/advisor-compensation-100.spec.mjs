@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const fixture = "/tests/e2e/fixtures/advisor-compensation-100/index.html";
+const lateAuthFixture = "/tests/e2e/fixtures/advisor-compensation-auth-retry/index.html";
 const shell = (state) =>
   `[data-advisor-compensation-ui="070"][data-compensation-state="${state}"]`;
 
@@ -69,4 +70,38 @@ test("mobile tablet and desktop keep safe bottom space without overflow", async 
     expect(layout.overflow).toBeLessThanOrEqual(1);
     expect(layout.paddingBottom).toBeGreaterThanOrEqual(100);
   }
+});
+
+test("Android late auth runtime recovers without a permanent compensation block", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.goto(lateAuthFixture, { waitUntil: "domcontentloaded" });
+
+  await expect(page.locator("[data-forge-compensation-module]")).toHaveAttribute(
+    "data-compensation-state",
+    "BLOCKED",
+  );
+  await expect(page.locator(shell("BLOCKED"))).toContainText(
+    "ADVISOR_COMPENSATION_AUTH_RUNTIME_UNAVAILABLE",
+  );
+
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-advisor-compensation-auth-recovery",
+    "recovered",
+    { timeout: 10_000 },
+  );
+  await expect(page.locator("[data-forge-compensation-module]")).toHaveAttribute(
+    "data-compensation-state",
+    "ERROR",
+  );
+  await expect(page.locator(shell("ERROR"))).toContainText(
+    "ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_NOT_MATERIALIZED",
+  );
+  await expect(page.locator(shell("ERROR"))).not.toContainText(
+    "ADVISOR_COMPENSATION_AUTH_RUNTIME_UNAVAILABLE",
+  );
+
+  const overflow = await page.evaluate(() => (
+    document.documentElement.scrollWidth - document.documentElement.clientWidth
+  ));
+  expect(overflow).toBeLessThanOrEqual(1);
 });
