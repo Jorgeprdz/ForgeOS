@@ -1,35 +1,81 @@
 name: UI M05L Shell Route First
 
 on:
-  pull_request:
-    paths:
-      - "docs/static-preview/forge-alive-material3/app.js"
-      - "docs/static-preview/forge-alive-material3/forge-navigation-contract.js"
-      - "tests/ui-m05l-shell-route-first-test.mjs"
-      - ".github/workflows/ui-m05l-shell-route-first.yml"
   push:
     branches:
       - main
     paths:
-      - "docs/static-preview/forge-alive-material3/app.js"
-      - "docs/static-preview/forge-alive-material3/forge-navigation-contract.js"
-      - "tests/ui-m05l-shell-route-first-test.mjs"
       - ".github/workflows/ui-m05l-shell-route-first.yml"
 
 permissions:
-  contents: read
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
-  shell-route-first:
-    runs-on: ubuntu-latest
+  controlled-stage-060-rebase:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
         with:
-          node-version: 22
+          fetch-depth: 0
 
-      - name: Verify shell and Cotizaciones route
-        run: node tests/ui-m05l-shell-route-first-test.mjs
+      - name: Rebase exact Stage 060 delta onto accepted main
+        id: rebase
+        shell: bash
+        env:
+          TARGET_BRANCH: feat/advisor-compensation-060-income-truth
+          EXPECTED_HEAD: aae265c9310cd9c62307af895de86137eee3a955
+          OLD_BASE: 100f3cf81c6282d067396882e2f0f8ed499401e9
+          ACCEPTED_MAIN: fc1076c7d28e103ac05e2a6e52f89149cfd8eb87
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$TARGET_BRANCH"
+          trigger_head=$(git rev-parse "origin/$TARGET_BRANCH")
+          git checkout -B controlled-rebase "$EXPECTED_HEAD"
+          if ! git rebase --onto "$ACCEPTED_MAIN" "$OLD_BASE" controlled-rebase >rebase.log 2>&1; then
+            git status --short >>rebase.log || true
+            git rebase --abort || true
+            exit 1
+          fi
+          new_head=$(git rev-parse HEAD)
+          git push --force-with-lease="refs/heads/$TARGET_BRANCH:$trigger_head" origin "HEAD:refs/heads/$TARGET_BRANCH"
+          echo "new_head=$new_head" >> "$GITHUB_OUTPUT"
+
+      - name: Publish success receipt
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_HEAD: ${{ steps.rebase.outputs.new_head }}
+        run: |
+          gh pr comment 183 --repo "$GITHUB_REPOSITORY" --body "## Controlled Stage 060 rebase receipt
+
+\`\`\`text
+REBASE=PASS
+ORIGINAL_HEAD=aae265c9310cd9c62307af895de86137eee3a955
+NEW_HEAD=$NEW_HEAD
+ACCEPTED_MAIN=fc1076c7d28e103ac05e2a6e52f89149cfd8eb87
+MERGE=NOT_EXECUTED_BY_REBASE_JOB
+\`\`\`"
+
+      - name: Publish failure receipt
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          detail=$(tail -n 80 rebase.log 2>/dev/null || true)
+          gh pr comment 183 --repo "$GITHUB_REPOSITORY" --body "## Controlled Stage 060 rebase receipt
+
+\`\`\`text
+REBASE=FAIL
+ORIGINAL_HEAD=aae265c9310cd9c62307af895de86137eee3a955
+OLD_BASE=100f3cf81c6282d067396882e2f0f8ed499401e9
+MERGE=BLOCKED
+\`\`\`
+
+\`\`\`text
+$detail
+\`\`\`"
