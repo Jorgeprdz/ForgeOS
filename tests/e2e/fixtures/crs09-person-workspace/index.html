@@ -46,7 +46,7 @@
       "/platform/shared-commercial-model/crs-09-person-workspace-contract.js",
       "/advisor-os/person-workspace/crs-09-person-workspace-service.js"
     ];
-    for (const path of authorityPaths) await import(path);
+    for (const path of authorityPaths) await import(/* @vite-ignore */ path);
 
     const item = (reference, recordType, label, authority, options = {}) => Object.freeze({
       reference,
@@ -135,15 +135,28 @@
       localMutationControls: false,
     });
 
-    globalThis.ForgeCrs08UnifiedPersonTimelineService = Object.freeze({ createService: () => Object.freeze({}) });
-    globalThis.ForgeCrs07ApplicationPolicyLineageService = Object.freeze({ createService: () => Object.freeze({}) });
-    globalThis.ForgeCrs09PersonWorkspaceService = Object.freeze({
+    const lockAuthority = (name, value) => {
+      Object.defineProperty(globalThis, name, {
+        configurable: true,
+        enumerable: true,
+        get: () => value,
+        set: () => {},
+      });
+    };
+
+    lockAuthority("ForgeCrs08UnifiedPersonTimelineService", Object.freeze({
+      createService: () => Object.freeze({}),
+    }));
+    lockAuthority("ForgeCrs07ApplicationPolicyLineageService", Object.freeze({
+      createService: () => Object.freeze({}),
+    }));
+    lockAuthority("ForgeCrs09PersonWorkspaceService", Object.freeze({
       createService: () => Object.freeze({ getPersonWorkspace: async () => workspace }),
-    });
-    globalThis.ForgeProductiveProspectBootstrap067G17B = Object.freeze({
+    }));
+    lockAuthority("ForgeProductiveProspectBootstrap067G17B", Object.freeze({
       getUser: async () => ({ data: { user: { id: "advisor-visual" } }, error: null }),
       getClient: async () => Object.freeze({}),
-    });
+    }));
 
     const { createPersonWorkspaceModule } = await import(
       "/docs/static-preview/forge-alive-material3/person-workspace-module.js"
