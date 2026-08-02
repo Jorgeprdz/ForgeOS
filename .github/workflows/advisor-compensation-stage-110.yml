@@ -1,0 +1,82 @@
+name: Advisor Compensation Stage 110
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "compensation/advisor/materialization/**"
+      - "compensation/advisor/tests/advisor-compensation-stage-110-master-test.js"
+      - "scripts/materialize-advisor-compensation-product-read-model.mjs"
+      - "docs/05-truth/ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_MATERIALIZATION_001.md"
+      - "docs/evidence/FORGE_ADVISOR_COMPENSATION_STAGE_110_CLOSURE_001.md"
+      - ".github/workflows/advisor-compensation-stage-110.yml"
+  push:
+    branches:
+      - "feat/advisor-compensation-110-product-read-model-materialization"
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax
+        run: |
+          node --check compensation/advisor/materialization/advisor-compensation-product-read-model-materializer.js
+          node --check compensation/advisor/tests/advisor-compensation-stage-110-master-test.js
+          node --check scripts/materialize-advisor-compensation-product-read-model.mjs
+
+      - name: Stage 110 master contract
+        run: node compensation/advisor/tests/advisor-compensation-stage-110-master-test.js
+
+      - name: Stage 060 income truth regression
+        run: node compensation/advisor/tests/advisor-compensation-stage-060-master-test.js
+
+      - name: Stage 090 payout reconciliation regression
+        run: node compensation/advisor/tests/advisor-compensation-stage-090-master-test.js
+
+      - name: Validate guarded materialization plan
+        run: node scripts/materialize-advisor-compensation-product-read-model.mjs --validate-only
+
+      - name: Prove remote materialization remains gated
+        shell: bash
+        run: |
+          set -euo pipefail
+          if node scripts/materialize-advisor-compensation-product-read-model.mjs --apply > /tmp/stage110-negative.log 2>&1; then
+            cat /tmp/stage110-negative.log
+            echo "REMOTE_MATERIALIZATION_GATE_BYPASSED" >&2
+            exit 1
+          fi
+          grep -q "EXPLICIT_REMOTE_MATERIALIZATION_AUTHORIZATION_REQUIRED" /tmp/stage110-negative.log
+          echo "REMOTE_MATERIALIZATION_NEGATIVE_GATE=PASS"
+
+      - name: Boundary assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "MATERIALIZE_ADVISOR_COMPENSATION_PRODUCT_READ_MODEL" scripts/materialize-advisor-compensation-product-read-model.mjs
+          grep -q "APPEND_NEW_REVISION" compensation/advisor/materialization/advisor-compensation-product-read-model-materializer.js
+          grep -q "directBrowserMutation: false" compensation/advisor/materialization/advisor-compensation-product-read-model-materializer.js
+          grep -q "unknownAsZero: false" compensation/advisor/materialization/advisor-compensation-product-read-model-materializer.js
+          grep -q "automaticPayoutConfirmation: false" compensation/advisor/materialization/advisor-compensation-product-read-model-materializer.js
+          test "$(git diff --name-only origin/main...HEAD | grep -Ec '^docs/static-preview/' || true)" -eq 0
+          test "$(git diff --name-only origin/main...HEAD | grep -Ec '^supabase/migrations/' || true)" -eq 0
+
+      - name: Upload Stage 110 plan evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-stage-110-${{ github.sha }}
+          path: artifacts/advisor-compensation-stage-110-materialization
+          if-no-files-found: warn
+          retention-days: 30
