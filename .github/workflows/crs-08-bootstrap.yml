@@ -8,6 +8,7 @@ on:
       - '.crs08-payload/**'
       - '.github/workflows/crs-08-bootstrap.yml'
       - 'docs/evidence/FORGE_CRS_08_BOOTSTRAP_NOTE.tmp'
+      - 'docs/evidence/FORGE_CRS_08_PR_TRIGGER.tmp'
 
 permissions:
   contents: write
@@ -30,6 +31,7 @@ jobs:
           rm -rf .crs08-payload
           rm -f .github/workflows/crs-08-bootstrap.yml
           rm -f docs/evidence/FORGE_CRS_08_BOOTSTRAP_NOTE.tmp
+          rm -f docs/evidence/FORGE_CRS_08_PR_TRIGGER.tmp
           node --check platform/shared-commercial-model/crs-08-unified-person-timeline-contract.js
           node --check platform/shared-commercial-model/crs-08-unified-person-timeline-adapters.js
           node --check advisor-os/timeline/crs-08-unified-person-timeline-service.js
