@@ -70,6 +70,8 @@ jobs:
           GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           EXPECTED_DEMO_MODE: "false"
         run: |
+          git reset --hard "$GITHUB_SHA"
+
           cat > env.js <<'EOF'
           window.__ENV__ = Object.freeze({
             "SUPABASE_URL": "https://rmlxigxysujsuwzgoimv.supabase.co",
