@@ -11,6 +11,7 @@ on:
       - "docs/static-preview/forge-alive-material3/person-intelligence-module.css"
       - "docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.js"
       - "docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.css"
+      - "docs/static-preview/forge-alive-material3/pipeline-ui-stability.js"
       - "scripts/prepare-forge-alive-pages-runtime-closure.mjs"
       - "tests/pages-public-demo-runtime-closure-test.mjs"
       - "tests/crs-10-*.mjs"
@@ -60,7 +61,7 @@ jobs:
         run: |
           set -euo pipefail
           git diff --name-only "origin/${BASE_REF}...HEAD" > /tmp/crs10-paths
-          if grep -Ev '^(platform/shared-commercial-model/crs-10-relationship-intelligence-contract\.js|advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service\.js|docs/static-preview/forge-alive-material3/person-intelligence-module\.(js|css)|docs/static-preview/forge-alive-material3/person-workspace-entry-bridge\.(js|css)|scripts/prepare-forge-alive-pages-runtime-closure\.mjs|tests/pages-public-demo-runtime-closure-test\.mjs|tests/crs-10-[^/]+\.mjs|tests/e2e/crs-10-[^/]+\.mjs|tests/e2e/fixtures/crs10-relationship-intelligence/[^/]+|playwright\.crs10\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_10_EXISTING_RELATIONSHIP_INTELLIGENCE_001\.md|docs/evidence/FORGE_CRS_10_[^/]+\.md|\.github/workflows/crs-09-productive-person-workspace\.yml|\.github/workflows/crs-10-[^/]+\.yml)$' /tmp/crs10-paths; then
+          if grep -Ev '^(platform/shared-commercial-model/crs-10-relationship-intelligence-contract\.js|advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service\.js|docs/static-preview/forge-alive-material3/person-intelligence-module\.(js|css)|docs/static-preview/forge-alive-material3/person-workspace-entry-bridge\.(js|css)|docs/static-preview/forge-alive-material3/pipeline-ui-stability\.js|scripts/prepare-forge-alive-pages-runtime-closure\.mjs|tests/pages-public-demo-runtime-closure-test\.mjs|tests/crs-10-[^/]+\.mjs|tests/e2e/crs-10-[^/]+\.mjs|tests/e2e/fixtures/crs10-relationship-intelligence/[^/]+|playwright\.crs10\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_10_EXISTING_RELATIONSHIP_INTELLIGENCE_001\.md|docs/evidence/FORGE_CRS_10_[^/]+\.md|\.github/workflows/crs-09-productive-person-workspace\.yml|\.github/workflows/crs-10-[^/]+\.yml)$' /tmp/crs10-paths; then
             echo "CRS10_BOUNDED_PATHS=FAIL"
             cat /tmp/crs10-paths
             exit 1
@@ -74,6 +75,7 @@ jobs:
           node --check advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js
           node --check docs/static-preview/forge-alive-material3/person-intelligence-module.js
           node --check docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.js
+          node --check docs/static-preview/forge-alive-material3/pipeline-ui-stability.js
           node --check scripts/prepare-forge-alive-pages-runtime-closure.mjs
           node --check playwright.crs10.config.mjs
           node --check tests/e2e/crs-10-relationship-intelligence-visual.spec.mjs
@@ -85,6 +87,7 @@ jobs:
             tests/crs-09-person-workspace-service-test.mjs \
             tests/crs-09-person-workspace-ui-test.mjs \
             tests/crs-09-person-workspace-entry-bridge-test.mjs \
+            tests/manual-quotes-pipeline-stability-test.mjs \
             tests/pages-public-demo-runtime-closure-test.mjs
 
       - name: Preserve accepted Cartera 040 to 100 intelligence
@@ -124,7 +127,8 @@ jobs:
           grep -q 'generation !== state.generation' docs/static-preview/forge-alive-material3/person-intelligence-module.js
           grep -q 'forge:auth-state-changed' docs/static-preview/forge-alive-material3/person-intelligence-module.js
           grep -q 'forge:person-workspace-mounted' docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.js
-          grep -q 'transition-property: box-shadow, opacity' docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.css
+          grep -q 'transition: box-shadow .16s ease, opacity .16s ease' docs/static-preview/forge-alive-material3/pipeline-ui-stability.js
+          ! grep -q 'transition: border-color' docs/static-preview/forge-alive-material3/pipeline-ui-stability.js
           echo "CRS10_COMPOSITION_BOUNDARIES=PASS"
 
   responsive-visual-acceptance:
