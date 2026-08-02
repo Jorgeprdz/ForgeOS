@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "supabase/migrations/20260801000610_crs07_application_policy_lineage_reconciliation.sql"
+      - "supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql"
+      - "scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs"
       - "scripts/ci/crs-07-remote-application-policy-lineage.mjs"
       - "tests/crs-07-remote-application-policy-lineage-test.mjs"
       - "docs/evidence/FORGE_CRS_07_ABCD_PREPARATION_001.md"
@@ -43,11 +45,20 @@ jobs:
           test -n "$SUPABASE_ACCESS_TOKEN"
           test "$SUPABASE_PROJECT_REF" = rmlxigxysujsuwzgoimv
           grep -q 'OWNER_REMOTE_DEPLOYMENT_AUTHORIZATION=YES' docs/evidence/FORGE_CRS_07_ABCD_PREPARATION_001.md
+          node --check scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs
+          node --check scripts/ci/crs-07-remote-application-policy-lineage.mjs
           node --test tests/crs-07-remote-application-policy-lineage-test.mjs
-      - name: Deploy and run rollback-clean acceptance
+      - name: Deploy append-only lineage guard hardening
         run: |
           set -euo pipefail
           mkdir -p artifacts/crs-07-application-policy-lineage
+          node scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs \
+            | tee artifacts/crs-07-application-policy-lineage/guard-hardening.log
+          grep -q 'CRS_07_GUARD_HARDENING_DEPLOYMENT=PASS' \
+            artifacts/crs-07-application-policy-lineage/guard-hardening.log
+      - name: Run rollback-clean acceptance
+        run: |
+          set -euo pipefail
           node scripts/ci/crs-07-remote-application-policy-lineage.mjs \
             | tee artifacts/crs-07-application-policy-lineage/workflow-output.log
       - name: Verify closure markers
@@ -62,10 +73,13 @@ jobs:
             CRS_07_ONE_APPLICATION_ONE_POLICY=PASS \
             CRS_07_CROSS_ADVISOR_ISOLATION=PASS \
             TEST_FIXTURES_ROLLED_BACK=YES \
-            RESIDUAL_POLICIES=0
+            RESIDUAL_POLICIES=0 \
+            RESIDUAL_PREREQUISITES=0
           do
             grep -q "$marker" "$log"
           done
+          grep -q 'CRS_07_GUARD_HARDENING_DEPLOYMENT=PASS' \
+            artifacts/crs-07-application-policy-lineage/guard-hardening.log
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4
