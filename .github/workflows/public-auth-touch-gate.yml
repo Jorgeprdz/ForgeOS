@@ -1,0 +1,54 @@
+name: Public Auth Touch Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-alive-material3/public-auth-touch-gate.js"
+      - "docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js"
+      - "docs/static-preview/forge-alive-material3/authenticated-route-guard.js"
+      - "docs/static-preview/forge-alive-material3/login-integrated-demo.js"
+      - "docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.js"
+      - "tests/public-auth-touch-gate-test.mjs"
+      - "tests/e2e/public-auth-touch-gate.spec.mjs"
+      - "tests/e2e/fixtures/public-auth-touch/**"
+      - "playwright.public-auth-touch.config.mjs"
+      - ".github/workflows/public-auth-touch-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-auth-touch-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mobile-touch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Static contract
+        run: node --test tests/public-auth-touch-gate-test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Pixel mobile taps
+        run: npx playwright test --config=playwright.public-auth-touch.config.mjs
+
+      - name: Diff integrity
+        run: git diff --check
