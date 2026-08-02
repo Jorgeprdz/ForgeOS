@@ -1,0 +1,62 @@
+name: Advisor Compensation Stage 070
+
+on:
+  pull_request:
+    branches:
+      - feat/advisor-compensation-060-income-truth
+      - main
+    paths:
+      - "comisiones.js"
+      - "advisor-os/compensation/advisor-compensation-070-source.js"
+      - "platform/compensation/advisor-compensation-070-view.js"
+      - "tests/advisor-compensation-stage-070-master-test.mjs"
+      - "tests/e2e/advisor-compensation-070.spec.mjs"
+      - "tests/e2e/fixtures/advisor-compensation-070/**"
+      - "playwright.advisor-compensation-070.config.mjs"
+      - ".github/workflows/advisor-compensation-stage-070.yml"
+      - "docs/05-truth/ADVISOR_COMPENSATION_PRODUCT_UI_CONNECTION_001.md"
+      - "docs/evidence/FORGE_ADVISOR_COMPENSATION_STAGE_070_CLOSURE_001.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: advisor-compensation-070-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: |
+          node --check comisiones.js
+          node --check advisor-os/compensation/advisor-compensation-070-source.js
+          node --check platform/compensation/advisor-compensation-070-view.js
+          node --check tests/advisor-compensation-stage-070-master-test.mjs
+      - name: Master contract
+        run: node --test tests/advisor-compensation-stage-070-master-test.mjs
+      - name: Diff integrity
+        run: git diff --check
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Responsive and session acceptance
+        run: npx playwright test --config=playwright.advisor-compensation-070.config.mjs
