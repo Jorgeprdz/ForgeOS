@@ -1,0 +1,75 @@
+name: CRS 08 Unified Person Timeline
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-08-unified-person-timeline-contract.js"
+      - "platform/shared-commercial-model/crs-08-unified-person-timeline-adapters.js"
+      - "advisor-os/timeline/crs-08-unified-person-timeline-service.js"
+      - "scripts/ci/crs-08-remote-read-model-inventory.mjs"
+      - "tests/crs-08-*.mjs"
+      - "docs/architecture/source-truth/FORGE_CRS_08_UNIFIED_PERSON_TIMELINE_READ_MODEL_001.md"
+      - "docs/evidence/FORGE_CRS_08_*.md"
+      - ".github/workflows/crs-08-*.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  crs-08:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Bounded paths
+        run: |
+          set -euo pipefail
+          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > /tmp/crs08-paths
+          if grep -Ev '^(platform/shared-commercial-model/crs-08-unified-person-timeline-(contract|adapters)\.js|advisor-os/timeline/crs-08-unified-person-timeline-service\.js|scripts/ci/crs-08-remote-read-model-inventory\.mjs|tests/crs-08-[^/]+\.mjs|docs/architecture/source-truth/FORGE_CRS_08_UNIFIED_PERSON_TIMELINE_READ_MODEL_001\.md|docs/evidence/FORGE_CRS_08_[^/]+\.md|\.github/workflows/crs-08-[^/]+\.yml)$' /tmp/crs08-paths; then
+            echo "CRS08_BOUNDED_PATHS=FAIL"
+            exit 1
+          fi
+          echo "CRS08_BOUNDED_PATHS=PASS"
+      - name: Syntax and targeted tests
+        run: |
+          set -euo pipefail
+          node --check platform/shared-commercial-model/crs-08-unified-person-timeline-contract.js
+          node --check platform/shared-commercial-model/crs-08-unified-person-timeline-adapters.js
+          node --check advisor-os/timeline/crs-08-unified-person-timeline-service.js
+          node --check scripts/ci/crs-08-remote-read-model-inventory.mjs
+          node --test \
+            tests/crs-08-unified-person-timeline-contract-test.mjs \
+            tests/crs-08-unified-person-timeline-adapters-test.mjs \
+            tests/crs-08-unified-person-timeline-service-test.mjs \
+            tests/crs-08-remote-read-model-inventory-test.mjs
+      - name: Preserve accepted authorities
+        run: |
+          set -euo pipefail
+          node --test \
+            tests/crs-03-pipeline-person-convergence-contract-test.mjs \
+            tests/crs-03-pipeline-person-convergence-service-test.mjs \
+            tests/crs-04-activity-person-convergence-contract-test.mjs \
+            tests/crs-04-activity-person-convergence-service-test.mjs \
+            tests/crs-05-quote-person-convergence-contract-test.mjs \
+            tests/crs-05-quote-person-convergence-service-test.mjs \
+            tests/crs-06-application-signature-authority-contract-test.mjs \
+            tests/crs-06-application-signature-authority-service-test.mjs \
+            tests/crs-07-application-policy-lineage-contract-test.mjs \
+            tests/crs-07-application-policy-lineage-service-test.mjs \
+            tests/cartera-040b-relationship-memory-projection-test.mjs
+      - name: Read-model boundaries
+        run: |
+          set -euo pipefail
+          test ! -e supabase/migrations/20260801000620_crs08_unified_person_timeline.sql
+          ! grep -Eq '\.(insert|update|delete|upsert)\(' advisor-os/timeline/crs-08-unified-person-timeline-service.js
+          grep -q 'CARTERA_040B_PERSON_RELATIONSHIP_BRIEF' advisor-os/timeline/crs-08-unified-person-timeline-service.js
+          grep -q 'secondLedger: false' advisor-os/timeline/crs-08-unified-person-timeline-service.js
+          grep -q 'timelinePersistence: false' advisor-os/timeline/crs-08-unified-person-timeline-service.js
+          grep -q 'CRS_08_REMOTE_MUTATION=NO' scripts/ci/crs-08-remote-read-model-inventory.mjs
+          echo "CRS08_READ_MODEL_BOUNDARIES=PASS"
