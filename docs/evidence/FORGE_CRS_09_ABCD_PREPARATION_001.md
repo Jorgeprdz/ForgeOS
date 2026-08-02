@@ -14,7 +14,7 @@
 - Discovery: CRS 08 closure, CRS roadmap, existing Material 3 shell, Pipeline, Activity, Quotes, Cartera, Pages runtime closure.
 - Miranda alignment: one productive person surface; no parallel CRM truth, no hidden fallback, no automatic identity or business mutation.
 - Board signal: owner authorization received as `NEXT=CRS_09ABCD_PRODUCTIVE_PERSON_WORKSPACE`.
-- Scope: CRS 09A, 09B, CRS 09C, and CRS 09D in one controlled pass.
+- Scope: CRS 09A, CRS 09B, CRS 09C, and CRS 09D in one controlled pass.
 
 ## Implemented scope
 
