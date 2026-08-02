@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es-MX" data-forge-auth-runtime="ready" data-forge-auth-boundary="authenticated">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Compensation late auth runtime</title>
+  <style>
+    :root{background:#07111f;color:#eef4ff;font-family:system-ui,sans-serif}
+    body{margin:0;min-height:100vh}
+    main{min-height:100vh;padding:24px 16px 140px;box-sizing:border-box}
+  </style>
+</head>
+<body data-forge-application>
+  <main data-forge-module-viewport></main>
+  <script type="module">
+    history.replaceState(history.state, "", "?nav=comisiones");
+    const SHELL_STATE = Symbol.for("forge.ui-m04.shell.state");
+    const modules = new Map();
+    const application = document.body;
+    const shell = {
+      registerRouteModule(id, module) {
+        modules.set(id, module);
+      },
+      reconcile() {
+        const module = modules.get("comisiones");
+        if (!module) return;
+        if (new URL(location.href).searchParams.get("nav") === "comisiones") module.mount();
+        else module.unmount();
+      },
+    };
+    application[SHELL_STATE] = { api: shell };
+    document.documentElement.dataset.forgeShellReady = "true";
+
+    await import("/docs/static-preview/forge-alive-material3/compensation-route-bootstrap-100b.js?fixture=late-auth-runtime");
+
+    const client = {
+      async rpc(name) {
+        if (name === "forge_advisor_compensation_authority_inventory") {
+          return { data: { ready: true }, error: null };
+        }
+        if (name === "forge_advisor_compensation_read_product") {
+          return {
+            data: {
+              errorCode: "ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_NOT_MATERIALIZED",
+            },
+            error: null,
+          };
+        }
+        return { data: null, error: { code: "PGRST202", message: `Unknown RPC ${name}` } };
+      },
+    };
+
+    globalThis.setTimeout(() => {
+      globalThis.ForgeProductiveProspectBootstrap067G17B = {
+        async getClient() { return client; },
+        async getSession() {
+          return {
+            data: {
+              session: {
+                user: { id: "00000000-0000-4000-8000-000000000100" },
+              },
+            },
+            error: null,
+          };
+        },
+      };
+      globalThis.dispatchEvent(new CustomEvent("forge:auth-state-changed", {
+        detail: { status: "authenticated" },
+      }));
+    }, 900);
+  </script>
+</body>
+</html>
