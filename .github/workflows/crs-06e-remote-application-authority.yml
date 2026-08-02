@@ -1,0 +1,115 @@
+name: CRS 06E Remote Application Authority
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crs-06e-remote-application-authority
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-accept:
+    if: github.repository == 'Jorgeprdz/ForgeOS' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+
+    steps:
+      - name: Checkout dispatched head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Authorization and secret gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          git diff --check
+          mkdir -p artifacts/crs-06e-remote-application-authority
+          echo 'CRS_06E_MANUAL_DISPATCH=PASS'
+          echo 'CRS_06E_OWNER_AUTHORIZATION_REQUIRED=YES'
+          echo 'PRODUCT_UI_MUTATION=NO'
+          echo 'PAGES_DEPLOYMENT=NO'
+
+      - name: Syntax and repository acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/ci/crs-06e-pgcrypto-compatibility-deploy.mjs
+          node --check scripts/ci/crs-06e-remote-application-authority.mjs
+          node --check scripts/ci/crs-06e-remote-runtime-acceptance.mjs
+          node --check tests/crs-06e-remote-application-authority-test.mjs
+          node --test tests/crs-06e-remote-application-authority-test.mjs
+          node --test tests/crs-06-application-signature-authority-contract-test.mjs
+          node --test tests/crs-06-application-signature-authority-service-test.mjs
+          node --test tests/crs-06-application-signature-migration-security-test.mjs
+          node --test tests/crs-02-domain-link-envelope-contract-test.mjs
+          node --test tests/crs-05-quote-person-convergence-contract-test.mjs
+          node --test tests/cartera-001b-quote-lifecycle-event-contract-test.mjs
+          node --test tests/cartera-010b-governed-command-rpc-test.mjs
+
+      - name: Prepare bounded pgcrypto compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/crs-06e-pgcrypto-compatibility-deploy.mjs prepare \
+            | tee artifacts/crs-06e-remote-application-authority/pgcrypto-prepare.log
+          grep -q 'CRS_06E_PGCRYPTO_COMPATIBILITY_PREPARED=PASS' \
+            artifacts/crs-06e-remote-application-authority/pgcrypto-prepare.log
+          grep -q 'CRS_06E_INTERNAL_FUNCTION_GRANT_HARDENING=PASS' \
+            artifacts/crs-06e-remote-application-authority/pgcrypto-prepare.log
+
+      - name: Verify deployment inventory and execute rollback-clean acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/crs-06e-remote-runtime-acceptance.mjs \
+            | tee artifacts/crs-06e-remote-application-authority/workflow-output.log
+
+      - name: Retire pgcrypto compatibility bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci/crs-06e-pgcrypto-compatibility-deploy.mjs retire \
+            | tee artifacts/crs-06e-remote-application-authority/pgcrypto-retire.log
+          grep -q 'CRS_06E_PGCRYPTO_COMPATIBILITY_RETIRED=PASS' \
+            artifacts/crs-06e-remote-application-authority/pgcrypto-retire.log
+
+      - name: Verify explicit closure markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/crs-06e-remote-application-authority/workflow-output.log
+          grep -q 'CRS_06E_REMOTE_SUPABASE_DEPLOYMENT=PASS' "$log"
+          grep -q 'CRS_06E_REMOTE_RLS_ACCEPTANCE=PASS' "$log"
+          grep -q 'CRS_06E_REMOTE_RPC_ACCEPTANCE=PASS' "$log"
+          grep -q 'CRS_06E_CHANGED_INPUT_CONFLICT=PASS' "$log"
+          grep -q 'CRS_06E_CROSS_ADVISOR_ISOLATION=PASS' "$log"
+          grep -q 'CRS_06E_POLICY_BOUNDARY=PASS' "$log"
+          grep -q 'TEST_FIXTURES_ROLLED_BACK=YES' "$log"
+          grep -q 'RESIDUAL_FIXTURES=0' "$log"
+          grep -q 'CRS_06E_REMOTE_APPLICATION_AUTHORITY=PASS' "$log"
+          grep -q 'CRS_06E_PGCRYPTO_COMPATIBILITY_RETIRED=PASS' \
+            artifacts/crs-06e-remote-application-authority/pgcrypto-retire.log
+
+      - name: Upload remote acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crs-06e-remote-application-authority
+          path: artifacts/crs-06e-remote-application-authority
+          if-no-files-found: error
+          retention-days: 30
