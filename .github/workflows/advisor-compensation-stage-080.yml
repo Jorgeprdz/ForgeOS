@@ -1,0 +1,59 @@
+name: Advisor Compensation Stage 080
+
+on:
+  pull_request:
+    branches:
+      - feat/advisor-compensation-070-commissions-ui
+    paths:
+      - "advisor-os/forge-alive/smart-widgets/**"
+      - "tests/advisor-compensation-stage-080-master-test.mjs"
+      - "tests/productive-smart-widget-source-adapters-test.mjs"
+      - "tests/e2e/advisor-compensation-080.spec.mjs"
+      - "tests/e2e/fixtures/advisor-compensation-080/**"
+      - "playwright.advisor-compensation-080.config.mjs"
+      - ".github/workflows/advisor-compensation-stage-080.yml"
+      - "docs/05-truth/ADVISOR_COMPENSATION_INCOME_SMART_WIDGET_CONNECTION_001.md"
+      - "docs/evidence/FORGE_ADVISOR_COMPENSATION_STAGE_080_CLOSURE_001.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: |
+          node --check advisor-os/forge-alive/smart-widgets/advisor-compensation-income-widget-source-080.mjs
+          node --check advisor-os/forge-alive/smart-widgets/advisor-compensation-income-widget-provider-080.mjs
+          node --check advisor-os/forge-alive/smart-widgets/productive-smart-widget-source-adapters.mjs
+          node --check advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs
+          node --check tests/advisor-compensation-stage-080-master-test.mjs
+      - name: Stage 080 master contract
+        run: node tests/advisor-compensation-stage-080-master-test.mjs
+      - name: Source adapter regression
+        run: node tests/productive-smart-widget-source-adapters-test.mjs
+      - name: Existing productive orchestrator regression
+        run: node tests/productive-smart-widget-orchestrator-master-test.mjs
+      - name: Diff integrity
+        run: git diff --check
+
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Income Smart Widget browser acceptance
+        run: npx playwright test --config=playwright.advisor-compensation-080.config.mjs
