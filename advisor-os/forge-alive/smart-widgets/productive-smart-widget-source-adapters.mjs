@@ -1,3 +1,7 @@
+import {
+  createAdvisorCompensationIncomeWidgetLoader080,
+} from "./advisor-compensation-income-widget-source-080.mjs";
+
 function requireFunction(value, label) {
   if (typeof value !== "function") throw new TypeError(`${label} must be a function`);
   return value;
@@ -128,8 +132,15 @@ export function createOpportunityBitacoraSourceAdapter({ loadOpportunities } = {
   });
 }
 
-export function createIncomeCompensationSourceAdapter({ loadCompensationSnapshot, connected = false } = {}) {
-  if (!connected) {
+export function createIncomeCompensationSourceAdapter({
+  loadCompensationSnapshot = null,
+  connected,
+  provider = null,
+  providerResolver,
+  now,
+  maxAgeMs,
+} = {}) {
+  if (connected === false) {
     return Object.freeze({
       sourceId: "INCOME_COMPENSATION_SOURCE_ADAPTER",
       authority: ["COMPENSATION_INTELLIGENCE"],
@@ -138,22 +149,47 @@ export function createIncomeCompensationSourceAdapter({ loadCompensationSnapshot
         return {
           sourceConnected: false,
           sourceComplete: false,
-          blockedReason: "WAITING_FOR_COMPENSATION_INCOME_TRUTH_MINIMUM",
+          sourceUnavailable: false,
+          blockedByMissingEvidence: false,
+          compensationSnapshot: null,
+          blockedReason: "COMPENSATION_PRODUCT_SOURCE_EXPLICITLY_DISABLED",
+          deepLink: "?nav=comisiones",
+          uncertainty: ["income_must_not_be_derived_from_quotes_premium_pipeline_or_cartera"],
         };
       },
     });
   }
-  const loader = requireFunction(loadCompensationSnapshot, "loadCompensationSnapshot");
+
+  const defaultLoader = createAdvisorCompensationIncomeWidgetLoader080({
+    provider,
+    providerResolver,
+    now,
+    maxAgeMs,
+  });
+  const loader = typeof loadCompensationSnapshot === "function"
+    ? { load: loadCompensationSnapshot }
+    : defaultLoader;
+
   return Object.freeze({
     sourceId: "INCOME_COMPENSATION_SOURCE_ADAPTER",
-    authority: ["COMPENSATION_INTELLIGENCE"],
+    authority: [
+      "COMPENSATION_INTELLIGENCE",
+      "ADVISOR_COMPENSATION_PERIOD_SNAPSHOT_001",
+      "ADVISOR_COMPENSATION_HISTORY_SERIES_001",
+    ],
     async load(contextInput) {
       const context = assertContext(contextInput);
-      const compensationSnapshot = scopedResult(context, await loader(context));
+      const result = await loader.load(context);
+      if (context.signal?.aborted) {
+        throw new DOMException("Smart widget source load aborted", "AbortError");
+      }
+      const normalized = result && typeof result === "object" ? result : {};
+      if (normalized.compensationSnapshot) {
+        scopedResult(context, normalized.compensationSnapshot);
+      }
       return {
-        compensationSnapshot,
-        sourceConnected: true,
-        sourceComplete: true,
+        ...normalized,
+        deepLink: normalized.deepLink || "?nav=comisiones",
       };
     },
   });
