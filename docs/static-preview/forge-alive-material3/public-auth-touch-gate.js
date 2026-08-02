@@ -183,6 +183,17 @@ async function startDemo(button) {
   }
 }
 
+function openAvatarProfile(control) {
+  const api = authApi();
+  const authenticated = control?.getAttribute("data-forge-auth-state") === "authenticated";
+  const original = api?.__forgeAuthenticatedSessionSource;
+  if (!authenticated && typeof original?.openAuthPanel === "function") {
+    original.openAuthPanel();
+    return;
+  }
+  api?.openAuthPanel?.();
+}
+
 async function activate(control, inputType) {
   if (!control || control.disabled) return;
   if (control.matches("[data-forge-auth-google]")) {
@@ -202,7 +213,7 @@ async function activate(control, inputType) {
   }
   if (control.matches("[data-forge-auth-avatar]")) {
     emitActivation("OPEN_PROFILE", inputType);
-    authApi()?.openAuthPanel?.();
+    openAvatarProfile(control);
     return;
   }
   if (control.matches("[data-forge-auth-open]")) {
@@ -344,6 +355,7 @@ export {
   CONTRACT_ID,
   CONTROL_SELECTOR,
   activate,
+  openAvatarProfile,
   requiredGateActive,
   syncGateUi,
 };
