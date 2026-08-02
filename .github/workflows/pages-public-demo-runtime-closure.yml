@@ -1,0 +1,64 @@
+name: Pages Public Demo Runtime Closure
+
+on:
+  push:
+    branches:
+      - fix/pages-public-demo-runtime-closure
+    paths:
+      - scripts/prepare-forge-alive-pages-runtime-closure.mjs
+      - scripts/validate-pages-public-config.mjs
+      - tests/pages-public-demo-runtime-closure-test.mjs
+      - .github/workflows/pages-public-demo-runtime-closure.yml
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths:
+      - scripts/prepare-forge-alive-pages-runtime-closure.mjs
+      - scripts/validate-pages-public-config.mjs
+      - tests/pages-public-demo-runtime-closure-test.mjs
+      - .github/workflows/pages-public-demo-runtime-closure.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-public-demo-runtime-closure-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  contract-and-artifact:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax gates
+        run: |
+          node --check scripts/prepare-forge-alive-pages-runtime-closure.mjs
+          node --check scripts/validate-pages-public-config.mjs
+          node --check tests/pages-public-demo-runtime-closure-test.mjs
+
+      - name: Validate dependency-closed public runtime
+        run: node --test tests/pages-public-demo-runtime-closure-test.mjs
+
+      - name: Preserve inherited Pages and authentication contracts
+        run: |
+          node --test tests/cartera-pages-runtime-assets-test.mjs
+          node --test tests/forge-067g17b1-auth-entry-static-test.mjs
+          node --test tests/login-integrated-demo-tenants-test.mjs
