@@ -1,4 +1,4 @@
-import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-100";
+import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-100-auth-retry-001";
 
 const LEGACY_CACHE_NAMES = new Set([
   "static-v7-pages-1",
