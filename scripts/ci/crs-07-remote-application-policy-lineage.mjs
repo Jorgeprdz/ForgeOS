@@ -108,6 +108,18 @@ for (const key of [
 }
 record("remote_inventory", "PASS", inventory);
 
+const demoGuard = (await query(`
+select coalesce(pg_get_functiondef(to_regprocedure('public.forge_demo_read_only_guard()')), '') as definition
+`, "demo_guard_discovery"))[0]?.definition || "";
+const demoAdvisorIds = [...new Set(
+  [...demoGuard.matchAll(/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi)]
+    .map(match => match[0].toLowerCase()),
+)];
+const literalDemoExclusion = demoAdvisorIds.length
+  ? `and cp.advisor_id not in (${demoAdvisorIds.map(id => `${literal(id)}::uuid`).join(",")})`
+  : "";
+record("demo_guard_discovery", "PASS", { protectedLiteralAdvisorCount: demoAdvisorIds.length });
+
 const fixture = (await query(`
 select
   cp.advisor_id::text as advisor_id,
@@ -117,15 +129,22 @@ select
   q.prospect_id::text as prospect_reference,
   q.product_reference
 from public.commercial_people cp
+join auth.users au on au.id=cp.advisor_id
 join public.quote_lifecycle_quotes q on q.advisor_id=cp.advisor_id
 join public.quote_lifecycle_versions v on v.advisor_id=q.advisor_id and v.quote_id=q.id
 where cp.lifecycle_state='CONFIRMED'
   and cp.archived_at is null
   and v.confirmation_state='CONFIRMED'
+  and lower(coalesce(au.email,'')) not like '%demo%'
+  and lower(coalesce(au.raw_app_meta_data ->> 'provider','')) <> 'demo'
+  and lower(coalesce(au.raw_app_meta_data ->> 'demo','false')) <> 'true'
+  and lower(coalesce(au.raw_user_meta_data ->> 'demo','false')) <> 'true'
+  ${literalDemoExclusion}
 order by q.updated_at desc,v.version_number desc
 limit 1
 `, "fixture_discovery"))[0];
-assert.ok(fixture, "CRS07_ELIGIBLE_PERSON_QUOTE_FIXTURE_MISSING");
+assert.ok(fixture, "CRS07_NON_DEMO_PERSON_QUOTE_FIXTURE_MISSING");
+record("fixture_discovery", "PASS", { protectedDemoExcluded: true });
 
 const actor = fixture.advisor_id;
 const other = actor.toLowerCase() === "00000000-0000-4000-8000-000000000001"
