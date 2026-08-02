@@ -58,9 +58,19 @@ test("private-runtime scrub unmounts Commissions instead of leaving a blocked ro
 
 test("no parallel route-restoration runtime is mounted", () => {
   assert.ok(retirement.startsWith(
-    'import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-100";\n',
+    'import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-100-auth-retry-001";\n',
   ));
   assert.doesNotMatch(retirement, /demo-auth-route-restoration/);
+});
+
+test("Commissions retries a late authenticated runtime with bounded recovery", () => {
+  assert.match(compensationBootstrap, /AUTH_RECOVERY_RETRY_LIMIT = 120/);
+  assert.match(compensationBootstrap, /AUTH_RECOVERY_RETRY_MS = 250/);
+  assert.match(compensationBootstrap, /async function authenticatedBootstrap\(\)/);
+  assert.match(compensationBootstrap, /await module\.refresh\(\)/);
+  assert.match(compensationBootstrap, /"forge:auth-state-changed"/);
+  assert.match(compensationBootstrap, /"android-tab-resume"/);
+  assert.match(compensationBootstrap, /advisorCompensationAuthRecovery = "recovered"/);
 });
 
 test("broker source recognizes Commissions without triggering a remote deployment", () => {
