@@ -1,0 +1,129 @@
+name: Advisor Compensation Public Authenticated Acceptance
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/advisor-compensation-public-authenticated-acceptance.yml"
+      - "docs/static-preview/forge-alive-material3/authenticated-route-guard.js"
+      - "docs/static-preview/forge-alive-material3/compensation-route-bootstrap-100b.js"
+      - "supabase/functions/forge-demo-login/index.ts"
+      - "tests/demo-auth-route-restoration-test.mjs"
+      - "tests/e2e/advisor-compensation-public-authenticated*.spec.mjs"
+      - "playwright.advisor-compensation-public-authenticated.config.mjs"
+      - "docs/evidence/FORGE_ADVISOR_COMPENSATION_PUBLIC_AUTHENTICATED_ACCEPTANCE_001.md"
+  push:
+    branches:
+      - "accept/advisor-compensation-public-authenticated"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  statuses: read
+
+concurrency:
+  group: advisor-compensation-public-authenticated-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  public-authenticated:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      FORGE_PUBLIC_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=comisiones
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout acceptance branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve main and wait for its Pages deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --depth=1
+          expected_main_sha="$(git rev-parse origin/main)"
+          echo "EXPECTED_MAIN_SHA=$expected_main_sha" >> "$GITHUB_ENV"
+          echo "PUBLIC_ACCEPTANCE_MAIN_SHA=$expected_main_sha"
+
+          page_state="missing"
+          for attempt in $(seq 1 60); do
+            page_state="$(gh api "repos/$GITHUB_REPOSITORY/commits/$expected_main_sha/status" \
+              --jq '[.statuses[] | select(.context == "pages/canonical")][0].state // "missing"')"
+            echo "PAGES_CANONICAL_ATTEMPT_${attempt}=$page_state"
+            if [ "$page_state" = "success" ]; then
+              break
+            fi
+            if [ "$page_state" = "failure" ] || [ "$page_state" = "error" ]; then
+              echo "Pages failed for captured main $expected_main_sha" >&2
+              exit 1
+            fi
+            sleep 10
+          done
+
+          test "$page_state" = "success"
+          test "$(git rev-parse origin/main)" = "$expected_main_sha"
+          echo "PAGES_CANONICAL=success"
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax and boundary contract
+        run: |
+          node --check docs/static-preview/forge-alive-material3/authenticated-route-guard.js
+          node --check docs/static-preview/forge-alive-material3/compensation-route-bootstrap-100b.js
+          node --check tests/e2e/advisor-compensation-public-authenticated.spec.mjs
+          node --check tests/e2e/advisor-compensation-public-authenticated-candidate.spec.mjs
+          node --check playwright.advisor-compensation-public-authenticated.config.mjs
+          node --test tests/demo-auth-route-restoration-test.mjs
+          node --test tests/login-integrated-demo-tenants-test.mjs
+          node --test tests/authenticated-route-guard-test.mjs
+          node --test tests/public-auth-required-login-gate-test.mjs
+          node --test tests/public-auth-touch-gate-test.mjs
+          node --test tests/authenticated-session-controls-test.mjs
+          node scripts/advisor-compensation-stage-100-pages-acceptance.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Authenticate publicly with candidate runtime
+        run: npx playwright test --config=playwright.advisor-compensation-public-authenticated.config.mjs
+
+      - name: Upload public acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-public-authenticated-${{ github.sha }}
+          path: artifacts/advisor-compensation-public-authenticated
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish job summary
+        if: success()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ## Advisor Compensation Public Authenticated Candidate Acceptance
+
+          \`\`\`text
+          EXPECTED_MAIN_SHA=$EXPECTED_MAIN_SHA
+          PAGES_CANONICAL=SUCCESS
+          PUBLIC_DEMO_AUTHENTICATION=PASS
+          CANONICAL_GUARD_COMMISSIONS_ROUTE=PASS
+          COMMISSIONS_DEEP_LINK=PASS
+          OWNER_SCOPED_AUTHORITY=PASS
+          SESSION_RELOAD=PASS
+          LOGOUT_SCRUB=PASS
+          PRIVATE_ROUTE_UNMOUNT=PASS
+          UNKNOWN_IS_NOT_ZERO=PASS
+          REMOTE_FUNCTION_REDEPLOYED=NO
+          PUBLIC_DEPLOYMENT_OF_FIX=PENDING_CONTROLLED_MERGE
+          \`\`\`
+          EOF

@@ -88,8 +88,10 @@ async function boot() {
     attributeFilter: ["data-forge-auth-runtime"],
   });
 
-  globalThis.addEventListener("forge:session-required", () => module.scrub("session-required"));
-  globalThis.addEventListener("forge:logout", () => module.scrub("logout"));
+  const unmountPrivateCompensation = () => module.unmount();
+  globalThis.addEventListener("forge:private-runtime-scrub", unmountPrivateCompensation);
+  globalThis.addEventListener("forge:session-required", unmountPrivateCompensation);
+  globalThis.addEventListener("forge:logout", unmountPrivateCompensation);
   return true;
 }
 

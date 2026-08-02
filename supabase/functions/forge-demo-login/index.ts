@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const FUNCTION_VERSION = "FORGE-DEMO-LOGIN-001";
+const FUNCTION_VERSION = "FORGE-DEMO-LOGIN-002";
 const PROJECT_REF = "rmlxigxysujsuwzgoimv";
 const ALLOWED_NAV = new Set([
   "inicio",
@@ -8,6 +8,7 @@ const ALLOWED_NAV = new Set([
   "quotes",
   "cartera",
   "actividad",
+  "comisiones",
 ]);
 const ALLOWED_ORIGINS = new Set([
   "https://jorgeprdz.github.io",
