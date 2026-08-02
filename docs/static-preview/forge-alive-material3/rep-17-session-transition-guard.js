@@ -1,3 +1,5 @@
+import "./public-auth-touch-gate.js?v=public-auth-touch-gate-001";
+
 const VERSION = "REP-17C-SESSION-TRANSITION-GUARD-V2";
 const BOOTSTRAP_KEY = "ForgeProductiveProspectBootstrap067G17B";
 
