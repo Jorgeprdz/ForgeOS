@@ -2,7 +2,7 @@ import {
   createAdvisorCompensationProductSource,
   installAdvisorCompensationSupabaseProvider100,
   renderAdvisorCompensationProduct,
-} from "./compensation-runtime-distribution-100.js?v=advisor-compensation-100";
+} from "./compensation-runtime-renderer-120.js?v=advisor-compensation-120-false-zero-safe-area-001";
 
 const TIME_ZONE = "America/Mexico_City";
 const MODULE_STATE = Symbol.for("forge.advisor-compensation.material3.100.distribution");

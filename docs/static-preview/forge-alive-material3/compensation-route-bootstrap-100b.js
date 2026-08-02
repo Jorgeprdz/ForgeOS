@@ -15,13 +15,13 @@ function moduleViewport() {
 
 async function loadCompensationModule() {
   return sourceTree
-    ? import("./compensation-module.js?v=advisor-compensation-100-auth-retry-001")
-    : import("./compensation-module-distribution-100.js?v=advisor-compensation-100-auth-retry-001");
+    ? import("./compensation-module.js?v=advisor-compensation-120-false-zero-safe-area-001")
+    : import("./compensation-module-distribution-100.js?v=advisor-compensation-120-false-zero-safe-area-001");
 }
 
 async function loadProviderModule() {
   if (!sourceTree) {
-    return import("./compensation-runtime-distribution-100.js?v=advisor-compensation-100-auth-retry-001");
+    return import("./compensation-runtime-distribution-100.js?v=advisor-compensation-120-false-zero-safe-area-001");
   }
   return import(new URL(
     "../../../advisor-os/compensation/advisor-compensation-supabase-provider-100.js",
@@ -46,7 +46,7 @@ function ensureRoot(viewport) {
 function ensureMobileLayoutGuard() {
   if (document.querySelector("[data-advisor-compensation-mobile-guard]")) return;
   const style = document.createElement("style");
-  style.dataset.advisorCompensationMobileGuard = "100-auth-retry-001";
+  style.dataset.advisorCompensationMobileGuard = "120-false-zero-safe-area-001";
   style.textContent = `
     [data-forge-compensation-module],
     [data-forge-compensation-module] .comp-shell,

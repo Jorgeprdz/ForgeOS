@@ -43,6 +43,40 @@ test("disconnected remote authority never becomes zero income", async ({ page })
   expect(calls).toBeGreaterThanOrEqual(1);
 });
 
+test("materialized partial values remain unavailable and clear floating mobile controls", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.goto(`${fixture}?mode=partial`, { waitUntil: "networkidle" });
+
+  const partialShell = page.locator(shell("PARTIAL"));
+  await expect(partialShell).toBeVisible();
+  await expect(partialShell).toHaveAttribute("data-compensation-renderer", "120");
+  await expect(partialShell).toContainText("No disponible");
+  await expect(partialShell).not.toContainText("$0.00");
+  await expect(page.locator('[data-compensation-card][data-compensation-value-state="unavailable"]')).toHaveCount(7);
+  await expect(page.locator('.comp-hero[data-compensation-value-state="unavailable"]')).toBeVisible();
+  await expect(page.locator('[data-compensation-history-period][data-compensation-value-state="unavailable"]')).toHaveCount(6);
+
+  const values = await page.locator("[data-compensation-value]").allTextContents();
+  expect(values.length).toBe(14);
+  expect(values.every((value) => value.trim() === "No disponible")).toBeTruthy();
+
+  const layout = await page.evaluate(async () => {
+    const shellNode = document.querySelector(".comp-shell");
+    const finalSection = document.querySelector(".comp-simulator");
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const finalRect = finalSection.getBoundingClientRect();
+    return {
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      paddingBottom: Number.parseFloat(getComputedStyle(shellNode).paddingBottom),
+      finalSectionClearance: window.innerHeight - finalRect.bottom,
+    };
+  });
+  expect(layout.overflow).toBeLessThanOrEqual(1);
+  expect(layout.paddingBottom).toBeGreaterThanOrEqual(232);
+  expect(layout.finalSectionClearance).toBeGreaterThanOrEqual(200);
+});
+
 test("authenticated session survives a browser reload", async ({ page }) => {
   await page.goto(`${fixture}?mode=ready`, { waitUntil: "networkidle" });
   await page.evaluate(() => localStorage.setItem("comp100-session", "AUTHENTICATED"));
@@ -68,7 +102,7 @@ test("mobile tablet and desktop keep safe bottom space without overflow", async 
       };
     });
     expect(layout.overflow).toBeLessThanOrEqual(1);
-    expect(layout.paddingBottom).toBeGreaterThanOrEqual(100);
+    expect(layout.paddingBottom).toBeGreaterThanOrEqual(viewport.width <= 620 ? 232 : 100);
   }
 });
 
