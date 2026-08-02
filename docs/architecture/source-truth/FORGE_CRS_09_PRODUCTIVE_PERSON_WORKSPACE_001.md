@@ -1,9 +1,9 @@
 # FORGE CRS 09 — Productive Person Workspace
 
-**Document ID:** `FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001`  
-**Stage:** `CRS_09ABCD_PRODUCTIVE_PERSON_WORKSPACE`  
-**Status:** `IMPLEMENTED_PENDING_ACCEPTANCE`  
-**Canonical UI route:** `?nav=persona`  
+**Document ID:** `FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001`
+**Stage:** `CRS_09ABCD_PRODUCTIVE_PERSON_WORKSPACE`
+**Status:** `IMPLEMENTED_PENDING_ACCEPTANCE`
+**Canonical UI route:** `?nav=persona`
 **Route class:** contextual, authenticated, not a primary navigation destination
 
 ## 1. Purpose
