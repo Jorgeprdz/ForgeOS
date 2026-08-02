@@ -94,19 +94,23 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
     { timeout: 12_000 },
   );
 
-  const card = page.locator("[data-m05e005-printable-card]");
-  const preview = page.locator('[data-m05e005-action="preview"]');
-  const download = page.locator('[data-m05e005-action="download"]');
-  const history = page.locator('[data-m05e005-action="history"]');
+  const card = page.locator("[data-m05e005-printable-card]:visible").last();
   await expect(card).toBeVisible({ timeout: 8_000 });
+  const preview = card.locator('[data-m05e005-action="preview"]');
+  const download = card.locator('[data-m05e005-action="download"]');
+  const history = card.locator('[data-m05e005-action="history"]');
   for (const action of [preview, download, history]) {
     await expect(action).toBeVisible({ timeout: 8_000 });
     await expect(action).toBeEnabled({ timeout: 8_000 });
   }
 
   const beforePreview = await page.evaluate(() => {
-    const trigger = document.querySelector('[data-m05e005-action="preview"]');
-    const modal = document.querySelector("[data-m05e005-printable-modal]");
+    const trigger = document.querySelector(
+      '[data-m05e005-printable-card]:not([hidden]) [data-m05e005-action="preview"]',
+    );
+    const modals = Array.from(document.querySelectorAll(
+      "[data-m05e005-printable-modal]",
+    ));
     const describe = (element) => {
       if (!(element instanceof HTMLElement)) return null;
       const style = getComputedStyle(element);
@@ -123,16 +127,23 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
         box: { x: box.x, y: box.y, width: box.width, height: box.height },
       };
     };
-    return { trigger: describe(trigger), modal: describe(modal) };
+    return {
+      trigger: describe(trigger),
+      modals: modals.map(describe),
+    };
   });
 
   await preview.click({ timeout: 4_000 });
-  const modal = page.locator("[data-m05e005-printable-modal]");
+  const modal = page.locator(
+    "[data-m05e005-printable-modal]:visible",
+  ).last();
   await expect(modal).toBeVisible({ timeout: 8_000 });
   await expect(modal.locator("#m05e005-modal-title")).toContainText(/Vista previa/i);
 
   const afterPreview = await page.evaluate(() => {
-    const modal = document.querySelector("[data-m05e005-printable-modal]");
+    const modal = Array.from(document.querySelectorAll(
+      "[data-m05e005-printable-modal]",
+    )).find((candidate) => candidate instanceof HTMLElement && !candidate.hidden);
     if (!(modal instanceof HTMLElement)) return null;
     const style = getComputedStyle(modal);
     const box = modal.getBoundingClientRect();
@@ -151,7 +162,9 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
   const close = modal.locator("[data-m05e005-close]").last();
   await expect(close).toBeEnabled();
   await close.click({ timeout: 4_000 });
-  await expect(modal).toBeHidden();
+  await expect(
+    page.locator("[data-m05e005-printable-modal]:visible"),
+  ).toHaveCount(0);
 
   const downloadEvent = page.waitForEvent("download", { timeout: 12_000 });
   await download.click({ timeout: 4_000 });
@@ -163,8 +176,11 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
   expect(downloadedBytes.length).toBeGreaterThan(1_000);
 
   await history.click({ timeout: 4_000 });
-  await expect(modal).toBeVisible({ timeout: 8_000 });
-  await expect(modal.locator("#m05e005-modal-title")).toContainText(
+  const historyModal = page.locator(
+    "[data-m05e005-printable-modal]:visible",
+  ).last();
+  await expect(historyModal).toBeVisible({ timeout: 8_000 });
+  await expect(historyModal.locator("#m05e005-modal-title")).toContainText(
     /Historial de versiones/i,
   );
 
@@ -184,7 +200,7 @@ test("PDF real completa confirmación e impresión sin bloquear el hilo", async 
   await writeFile(
     path.join(artifactRoot, "state.json"),
     `${JSON.stringify({
-      schema: "forge.ui.m05u.real-pdf-smoke.v4",
+      schema: "forge.ui.m05u.real-pdf-smoke.v5",
       status: "PASS",
       fixtureBytes: fixture.length,
       intakeProbeMs,
