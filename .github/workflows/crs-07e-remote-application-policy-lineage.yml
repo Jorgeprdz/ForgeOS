@@ -1,0 +1,76 @@
+name: CRS 07E Remote Application Policy Lineage
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "supabase/migrations/20260801000610_crs07_application_policy_lineage_reconciliation.sql"
+      - "scripts/ci/crs-07-remote-application-policy-lineage.mjs"
+      - "tests/crs-07-remote-application-policy-lineage-test.mjs"
+      - "docs/evidence/FORGE_CRS_07_ABCD_PREPARATION_001.md"
+      - ".github/workflows/crs-07e-remote-application-policy-lineage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crs-07e-remote-application-policy-lineage
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-accept:
+    if: >-
+      github.repository == 'Jorgeprdz/ForgeOS' &&
+      (github.event_name == 'workflow_dispatch' ||
+       github.head_ref == 'feat/crs-07-application-policy-lineage-reconciliation')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Authorization and exact scope
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = rmlxigxysujsuwzgoimv
+          grep -q 'OWNER_REMOTE_DEPLOYMENT_AUTHORIZATION=YES' docs/evidence/FORGE_CRS_07_ABCD_PREPARATION_001.md
+          node --test tests/crs-07-remote-application-policy-lineage-test.mjs
+      - name: Deploy and run rollback-clean acceptance
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/crs-07-application-policy-lineage
+          node scripts/ci/crs-07-remote-application-policy-lineage.mjs \
+            | tee artifacts/crs-07-application-policy-lineage/workflow-output.log
+      - name: Verify closure markers
+        run: |
+          set -euo pipefail
+          log=artifacts/crs-07-application-policy-lineage/workflow-output.log
+          for marker in \
+            CRS_07_REMOTE_SUPABASE_DEPLOYMENT=PASS \
+            CRS_07_REMOTE_APPLICATION_POLICY_LINEAGE=PASS \
+            CRS_07_DIRECT_BASE_RPC_LINEAGE=BLOCKED \
+            CRS_07_ISSUANCE_EVIDENCE_GATE=PASS \
+            CRS_07_ONE_APPLICATION_ONE_POLICY=PASS \
+            CRS_07_CROSS_ADVISOR_ISOLATION=PASS \
+            TEST_FIXTURES_ROLLED_BACK=YES \
+            RESIDUAL_POLICIES=0
+          do
+            grep -q "$marker" "$log"
+          done
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crs-07-application-policy-lineage
+          path: artifacts/crs-07-application-policy-lineage
+          if-no-files-found: error
+          retention-days: 30
