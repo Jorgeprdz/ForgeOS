@@ -80,3 +80,30 @@ jobs:
           path: artifacts/advisor-compensation-stage-110-materialization
           if-no-files-found: warn
           retention-days: 30
+
+  remote-apply:
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[MATERIALIZE_ADVISOR_COMPENSATION_PRODUCT_READ_MODEL]')
+    needs: contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      ADVISOR_COMPENSATION_READ_MODEL_MATERIALIZATION: MATERIALIZE_ADVISOR_COMPENSATION_PRODUCT_READ_MODEL
+      ADVISOR_COMPENSATION_ADVISOR_EMAIL: jorgepalaciosrodriguez@gmail.com
+      ADVISOR_COMPENSATION_PERIOD_KEY: 2026-08
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply append-only read-model materialization
+        run: node scripts/materialize-advisor-compensation-product-read-model.mjs --apply
+      - name: Upload remote materialization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-stage-110-remote-${{ github.sha }}
+          path: artifacts/advisor-compensation-stage-110-materialization
+          if-no-files-found: warn
+          retention-days: 30
