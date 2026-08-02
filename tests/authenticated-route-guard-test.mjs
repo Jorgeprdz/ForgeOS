@@ -20,7 +20,7 @@ test("guard loads before productive shell and demo adapter", () => {
 });
 
 test("resolving and anonymous sessions keep viewport and navigation fail-closed", () => {
-  assert.match(guard, /FORGE_AUTHENTICATED_ROUTE_GUARD_V3/);
+  assert.match(guard, /FORGE_AUTHENTICATED_ROUTE_GUARD_V4/);
   assert.match(guard, /FORGE_AUTH_FAIL_CLOSED_V1/);
   assert.match(guard, /\[data-forge-module-viewport\]/);
   assert.match(guard, /\[data-forge-shell-controls\]/);

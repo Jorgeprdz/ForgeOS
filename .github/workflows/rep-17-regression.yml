@@ -34,6 +34,7 @@ jobs:
           node --check docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js
           node --check docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js
           node --check tests/authenticated-route-guard-test.mjs
+          node --check tests/public-auth-required-login-gate-test.mjs
           node --check tests/rep-17-unified-runtime-regression-test.mjs
 
       - name: REP-17 integrated contract
@@ -42,6 +43,7 @@ jobs:
       - name: Current shell and auth regressions
         run: |
           node --test tests/authenticated-route-guard-test.mjs
+          node --test tests/public-auth-required-login-gate-test.mjs
           node --test tests/ui-m05l-shell-route-first-test.mjs
           node --test tests/ui-m05n-public-config-boot-order-test.mjs
 
