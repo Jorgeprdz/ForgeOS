@@ -1,14 +1,9 @@
 const FIP_HOME_STATE = Symbol.for("forge.fip.productive-home.v1");
 
-function moduleUrl(path) {
-  const sourceTree = import.meta.url.includes("/docs/static-preview/");
-  return new URL(sourceTree ? `../../../${path}` : `../../${path}`, import.meta.url);
-}
-
 let composerPromise = null;
 async function loadComposer() {
   if (!composerPromise) {
-    composerPromise = import(moduleUrl("advisor-os/alfred/fip-pack-07-productive-experience-service.js"));
+    composerPromise = import("./fip-pack-07-productive-experience-service-distribution.js?v=fip-pages-runtime-001");
   }
   return composerPromise;
 }
