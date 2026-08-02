@@ -19,14 +19,35 @@ test("guard loads before productive shell and demo adapter", () => {
   assert.ok(guardImport < shellImport);
 });
 
-test("anonymous sessions cannot expose private route surfaces", () => {
+test("resolving and anonymous sessions keep viewport and navigation fail-closed", () => {
+  assert.match(guard, /FORGE_AUTHENTICATED_ROUTE_GUARD_V3/);
+  assert.match(guard, /FORGE_AUTH_FAIL_CLOSED_V1/);
+  assert.match(guard, /\[data-forge-module-viewport\]/);
+  assert.match(guard, /\[data-forge-shell-controls\]/);
+  assert.match(
+    guard,
+    /html:not\(\[data-forge-auth-boundary="authenticated"\]\)/,
+  );
+  assert.match(guard, /display:\s*none\s*!important/);
+  assert.match(guard, /visibility:\s*hidden\s*!important/);
+  assert.match(guard, /pointer-events:\s*none\s*!important/);
+  assert.match(guard, /forgeAuthFailClosed\s*=\s*"armed"/);
+  assert.match(guard, /setBooleanPropertyOnce\(root,\s*"hidden",\s*unavailable\)/);
+  assert.match(guard, /setBooleanPropertyOnce\(root,\s*"inert",\s*unavailable\)/);
+  assert.match(guard, /attributes:\s*true/);
+  assert.match(
+    guard,
+    /attributeFilter:\s*\["hidden",\s*"inert",\s*"aria-hidden"\]/,
+  );
+});
+
+test("anonymous sessions cannot navigate or retain private route surfaces", () => {
   assert.match(guard, /status:\s*"resolving"/);
-  assert.match(guard, /root\.hidden\s*=\s*!available/);
-  assert.match(guard, /root\.inert\s*=\s*!available/);
   assert.match(guard, /canonicalizeAnonymousLocation/);
   assert.match(guard, /searchParams\.set\("nav",\s*"inicio"\)/);
   assert.match(guard, /scrubPrivateSurfaces/);
   assert.match(guard, /forge:auth-state-changed/);
+  assert.match(guard, /stopImmediatePropagation/);
 });
 
 test("deep links restore only after authentication", () => {
