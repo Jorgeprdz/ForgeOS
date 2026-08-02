@@ -1,0 +1,166 @@
+name: SeguBeca Productive UI Real PDF
+
+on:
+  pull_request:
+    paths:
+      - "docs/static-preview/forge-alive-material3/index.html"
+      - "docs/static-preview/forge-alive-material3/quotes-module.js"
+      - "docs/static-preview/forge-alive-material3/segubeca-productive-ui-binding.js"
+      - "docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js"
+      - "tests/segubeca-material3-real-pdf-acceptance-test.mjs"
+      - "tests/segubeca-browser-render-integration-test.mjs"
+      - "docs/architecture/source-truth/FORGE_SEGUBECA_PRODUCTIVE_UI_BINDING_001.md"
+      - "docs/evidence/FORGE_SEGUBECA_PRODUCTIVE_UI_REAL_PDF_ACCEPTANCE_001.md"
+      - ".github/workflows/segubeca-productive-ui-real-pdf.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/static-preview/forge-alive-material3/index.html"
+      - "docs/static-preview/forge-alive-material3/quotes-module.js"
+      - "docs/static-preview/forge-alive-material3/segubeca-productive-ui-binding.js"
+      - "docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js"
+      - "tests/segubeca-browser-render-integration-test.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  segubeca-productive-real-pdf:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          merge_base="$(git merge-base "$base_sha" "$head_sha")"
+          mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
+          allowed='^(docs/static-preview/forge-alive-material3/index\.html|docs/static-preview/forge-alive-material3/quotes-module\.js|docs/static-preview/forge-alive-material3/segubeca-productive-ui-binding\.js|docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint\.js|tests/segubeca-material3-real-pdf-acceptance-test\.mjs|tests/segubeca-browser-render-integration-test\.mjs|docs/architecture/source-truth/FORGE_SEGUBECA_PRODUCTIVE_UI_BINDING_001\.md|docs/evidence/FORGE_SEGUBECA_PRODUCTIVE_UI_REAL_PDF_ACCEPTANCE_001\.md|\.github/workflows/segubeca-productive-ui-real-pdf\.yml)$'
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "SEGUBECA_PRODUCTIVE_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          if printf '%s\n' "${changed[@]}" | grep -Eqi '\.pdf$'; then
+            echo 'SEGUBECA_PDF_BINARY_COMMIT=FORBIDDEN' >&2
+            exit 1
+          fi
+          echo 'SEGUBECA_PRODUCTIVE_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        run: |
+          node --check docs/static-preview/forge-alive-material3/quotes-module.js
+          node --check docs/static-preview/forge-alive-material3/segubeca-productive-ui-binding.js
+          node --check docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js
+          node --check tests/segubeca-material3-real-pdf-acceptance-test.mjs
+          node --check tests/segubeca-browser-render-integration-test.mjs
+
+      - name: Install browser acceptance runtime
+        shell: bash
+        run: npm install --no-save --no-package-lock puppeteer@24.16.0
+
+      - name: Material 3 real-PDF acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          test -f "$FORGE_CHROMIUM_PATH"
+          node tests/segubeca-material3-real-pdf-acceptance-test.mjs
+
+      - name: Preserve accepted SeguBeca authorities
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/segubeca-calculation-authority-restoration-test.mjs
+          node tests/segubeca-solucionline-parser-test.mjs
+          node tests/segubeca-projected-mxn-runtime-test.mjs
+
+      - name: Preserve governed historical browser render
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          node tests/segubeca-browser-render-integration-test.mjs
+
+      - name: Enforce authority route isolation and no-mutation boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          index='docs/static-preview/forge-alive-material3/index.html'
+          entrypoint='docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js'
+          binding='docs/static-preview/forge-alive-material3/segubeca-productive-ui-binding.js'
+          mount='docs/static-preview/forge-alive-material3/quotes-module.js'
+          test_file='tests/segubeca-material3-real-pdf-acceptance-test.mjs'
+          historical_test='tests/segubeca-browser-render-integration-test.mjs'
+          source='docs/architecture/source-truth/FORGE_SEGUBECA_PRODUCTIVE_UI_BINDING_001.md'
+
+          grep -q 'alignCandidateForAuthority' "$binding"
+          grep -q 'calculateSegubecaAcceptedR14E' "$binding"
+          grep -q 'calculateFromAcceptedPacket' "$binding"
+          grep -q 'CANONICAL_AUTHORITY_FILE_CHANGED=NO' "$source"
+          grep -q 'SEGUBECA_ACCEPTED_PRODUCT_CALCULATION' "$source"
+          grep -q 'segubeca-productive-ui-binding.js' "$mount" "$entrypoint"
+          grep -q 'async function loadBinding' "$entrypoint"
+          grep -q 'quotesRouteRequested' "$entrypoint"
+          grep -q 'forge:quotes-module-ready' "$entrypoint"
+          grep -q 'bindingLoaded: Boolean(bindingModule)' "$entrypoint"
+          ! grep -Eq '^import .*segubeca-productive-ui-binding' "$entrypoint"
+          grep -q 'ENTRYPOINT_STATIC_PRODUCT_BINDING_IMPORT=NO' "$source"
+          grep -q 'PRODUCT_BINDING_LOAD_MODE=DYNAMIC' "$source"
+          grep -q 'NON_QUOTES_ROUTE_BINDING_LOAD=NO' "$source"
+          grep -q 'ACTIVITY_ROUTE_PDF_RUNTIME_LOAD=NO' "$source"
+          grep -q 'segubeca-productive-ui-entrypoint.js?v=segubeca-productive-ui-001' "$index"
+          grep -q 'app.js?v=ui-m05x-quote-intake-ready-001&rep=16e-002&segubeca=productive-ui-001' "$index"
+          grep -q 'forge:segubeca-productive-calculation-ready' "$mount" "$binding" "$entrypoint"
+          grep -q 'forge:quote-preview-calculated' "$entrypoint"
+          grep -q 'PDFJS_DOCUMENT_OPEN_REQUIRED=YES' "$source"
+          grep -q 'JSON_UPLOAD_USED_FOR_ACCEPTANCE=NO' "$source"
+          grep -q 'FLAT_TOTAL_CONTRIBUTION_CONVERSION=FORBIDDEN' "$source"
+          grep -q 'AUTOMATIC_QUOTE_ACCEPTANCE=FORBIDDEN' "$source"
+          grep -q 'QUOTE_MUTATION=NOT_AUTHORIZED' "$source"
+          grep -q 'CRM_MUTATION=NOT_AUTHORIZED' "$source"
+          grep -q '%PDF-1.4' "$test_file"
+          grep -q 'uploadFile(pdfPath)' "$test_file"
+          grep -q 'acceptedBeforeClick, false' "$test_file"
+          grep -q 'Cotización confirmada y guardada durante esta sesión' "$historical_test"
+          ! grep -q 'accepted-quote.json' "$test_file"
+
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\(' "$binding" "$entrypoint"
+          ! grep -Eq 'localStorage|sessionStorage|indexedDB|XMLHttpRequest' "$binding" "$entrypoint"
+          ! grep -Eq 'create table|alter table' "$binding" "$entrypoint" "$source"
+
+          echo 'SEGUBECA_CANONICAL_AUTHORITY_FILE_CHANGED=NO'
+          echo 'SEGUBECA_CONTRACTUAL_ALIGNMENT_IN_BINDING=PASS'
+          echo 'SEGUBECA_PRODUCTIVE_AUTHORITY_BINDING=PASS'
+          echo 'SEGUBECA_PRODUCTIVE_DEPENDENCY_LOAD=QUOTES_ONLY'
+          echo 'SEGUBECA_ACTIVITY_ROUTE_DEPENDENCY_ISOLATION=PASS'
+          echo 'SEGUBECA_PUBLIC_ENTRYPOINT_CACHE_BUST=PASS'
+          echo 'SEGUBECA_REAL_PDF_TRANSPORT=PASS'
+          echo 'SEGUBECA_HISTORICAL_CONFIRMATION_SEMANTICS=PASS'
+          echo 'SEGUBECA_JSON_SHORTCUT=NO'
+          echo 'SEGUBECA_AUTOMATIC_ACCEPTANCE=NO'
+          echo 'SEGUBECA_FORMULA_REIMPLEMENTATION=NO'
+          echo 'SEGUBECA_DATABASE_MUTATION=NO'
+          echo 'SEGUBECA_PIPELINE_MUTATION=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
