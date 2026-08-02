@@ -31,7 +31,7 @@ assert.match(files.smartCss, /\.productive-smart-widget\.is-followup/);
 assert.match(files.smartCss, /data-canonical-action-cards/);
 assert.match(files.smartCss, /productive-smart-widget-why-toggle/);
 assert.match(files.smartCss, /productive-smart-widget-reason\[hidden\]/);
-assert.match(files.smartCss, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+assert.match(files.smartCss, /grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
 
 assert.match(files.bridge, /composeAlfredProductiveExperience/);
 assert.match(files.bridge, /generation \+= 1/);
