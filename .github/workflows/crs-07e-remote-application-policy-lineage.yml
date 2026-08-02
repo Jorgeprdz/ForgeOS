@@ -1,20 +1,6 @@
 name: CRS 07E Remote Application Policy Lineage
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "supabase/migrations/20260801000610_crs07_application_policy_lineage_reconciliation.sql"
-      - "supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql"
-      - "supabase/migrations/20260801000612_crs07_application_policy_wrapper_qualification.sql"
-      - "supabase/migrations/20260801000613_crs07_internal_trigger_privilege_hardening.sql"
-      - "scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs"
-      - "scripts/ci/crs-07-wrapper-qualification-deploy.mjs"
-      - "scripts/ci/crs-07-internal-trigger-hardening-deploy.mjs"
-      - "scripts/ci/crs-07-remote-application-policy-lineage.mjs"
-      - "tests/crs-07-remote-application-policy-lineage-test.mjs"
-      - "docs/evidence/FORGE_CRS_07_ABCD_PREPARATION_001.md"
-      - ".github/workflows/crs-07e-remote-application-policy-lineage.yml"
   workflow_dispatch:
 
 permissions:
@@ -26,10 +12,7 @@ concurrency:
 
 jobs:
   deploy-and-accept:
-    if: >-
-      github.repository == 'Jorgeprdz/ForgeOS' &&
-      (github.event_name == 'workflow_dispatch' ||
-       github.head_ref == 'feat/crs-07-application-policy-lineage-reconciliation')
+    if: github.repository == 'Jorgeprdz/ForgeOS' && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
@@ -38,12 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Authorization and exact scope
+      - name: Explicit authorization and exact scope
         run: |
           set -euo pipefail
           test -n "$SUPABASE_ACCESS_TOKEN"
@@ -54,28 +37,22 @@ jobs:
           node --check scripts/ci/crs-07-internal-trigger-hardening-deploy.mjs
           node --check scripts/ci/crs-07-remote-application-policy-lineage.mjs
           node --test tests/crs-07-remote-application-policy-lineage-test.mjs
-      - name: Deploy append-only lineage guard hardening
+      - name: Verify append-only lineage guard hardening
         run: |
           set -euo pipefail
           mkdir -p artifacts/crs-07-application-policy-lineage
           node scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs \
             | tee artifacts/crs-07-application-policy-lineage/guard-hardening.log
-          grep -q 'CRS_07_GUARD_HARDENING_DEPLOYMENT=PASS' \
-            artifacts/crs-07-application-policy-lineage/guard-hardening.log
-      - name: Deploy append-only wrapper qualification
+      - name: Verify append-only wrapper qualification
         run: |
           set -euo pipefail
           node scripts/ci/crs-07-wrapper-qualification-deploy.mjs \
             | tee artifacts/crs-07-application-policy-lineage/wrapper-qualification.log
-          grep -q 'CRS_07_WRAPPER_QUALIFICATION_DEPLOYMENT=PASS' \
-            artifacts/crs-07-application-policy-lineage/wrapper-qualification.log
-      - name: Deploy owner-only internal trigger hardening
+      - name: Verify owner-only internal trigger hardening
         run: |
           set -euo pipefail
           node scripts/ci/crs-07-internal-trigger-hardening-deploy.mjs \
             | tee artifacts/crs-07-application-policy-lineage/internal-trigger-hardening.log
-          grep -q 'CRS_07_INTERNAL_TRIGGER_HARDENING_DEPLOYMENT=PASS' \
-            artifacts/crs-07-application-policy-lineage/internal-trigger-hardening.log
       - name: Run rollback-clean acceptance
         run: |
           set -euo pipefail
@@ -98,12 +75,9 @@ jobs:
           do
             grep -q "$marker" "$log"
           done
-          grep -q 'CRS_07_GUARD_HARDENING_DEPLOYMENT=PASS' \
-            artifacts/crs-07-application-policy-lineage/guard-hardening.log
-          grep -q 'CRS_07_WRAPPER_QUALIFICATION_DEPLOYMENT=PASS' \
-            artifacts/crs-07-application-policy-lineage/wrapper-qualification.log
-          grep -q 'CRS_07_INTERNAL_TRIGGER_HARDENING_DEPLOYMENT=PASS' \
-            artifacts/crs-07-application-policy-lineage/internal-trigger-hardening.log
+          grep -q 'CRS_07_GUARD_HARDENING_DEPLOYMENT=PASS' artifacts/crs-07-application-policy-lineage/guard-hardening.log
+          grep -q 'CRS_07_WRAPPER_QUALIFICATION_DEPLOYMENT=PASS' artifacts/crs-07-application-policy-lineage/wrapper-qualification.log
+          grep -q 'CRS_07_INTERNAL_TRIGGER_HARDENING_DEPLOYMENT=PASS' artifacts/crs-07-application-policy-lineage/internal-trigger-hardening.log
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4
