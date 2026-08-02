@@ -36,6 +36,8 @@ export const ROOT_RUNTIME_ENTRYPOINTS = Object.freeze([
   "advisor-os/timeline/crs-08-unified-person-timeline-service.js",
   "platform/shared-commercial-model/crs-09-person-workspace-contract.js",
   "advisor-os/person-workspace/crs-09-person-workspace-service.js",
+  "platform/shared-commercial-model/crs-10-relationship-intelligence-contract.js",
+  "advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js",
 ]);
 
 const QPD_CANONICAL_ASSETS = Object.freeze([
@@ -236,10 +238,14 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     "platform/event-evidence/prospect-quote-detail-projection.js",
     "platform/shared-commercial-model/crs-09-person-workspace-contract.js",
     "advisor-os/person-workspace/crs-09-person-workspace-service.js",
+    "platform/shared-commercial-model/crs-10-relationship-intelligence-contract.js",
+    "advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js",
     "static-preview/forge-alive/person-workspace-module.js",
     "static-preview/forge-alive/person-workspace-module.css",
     "static-preview/forge-alive/person-workspace-entry-bridge.js",
     "static-preview/forge-alive/person-workspace-entry-bridge.css",
+    "static-preview/forge-alive/person-intelligence-module.js",
+    "static-preview/forge-alive/person-intelligence-module.css",
     "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
     "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css",
   ];

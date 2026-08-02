@@ -1,4 +1,5 @@
 const BRIDGE_VERSION = "CRS-09-PERSON-WORKSPACE-ENTRY-BRIDGE-001";
+const INTELLIGENCE_VERSION = "CRS-10-EXISTING-RELATIONSHIP-INTELLIGENCE-001";
 const SELECTORS = Object.freeze({
   pipelineCard: "[data-productive-prospect-card]",
   pipelineActions: "[data-productive-card-actions]",
@@ -9,6 +10,8 @@ const SELECTORS = Object.freeze({
     ["cartera", "#cartera-root > .glass-widget:first-child"],
   ]),
 });
+
+let intelligenceModulePromise;
 
 function ensureStylesheet() {
   if (document.querySelector("[data-person-workspace-entry-styles]")) return;
@@ -63,6 +66,7 @@ function injectContextualHeaders() {
 }
 
 function reconcileEntries() {
+  ensureStylesheet();
   injectPipeline();
   injectCartera();
   injectContextualHeaders();
@@ -82,6 +86,48 @@ function openFromTrigger(trigger) {
   }));
 }
 
+function loadIntelligenceModule() {
+  intelligenceModulePromise ||= import(
+    "./person-intelligence-module.js?v=crs-10-001"
+  ).catch((error) => {
+    intelligenceModulePromise = null;
+    throw error;
+  });
+  return intelligenceModulePromise;
+}
+
+async function mountIntelligence(event) {
+  const personReference = event?.detail?.personReference;
+  const root = document.querySelector("[data-forge-person-workspace-module]");
+  if (!personReference || !root) return;
+  document.documentElement.dataset.personIntelligenceRuntime = "preparing";
+  try {
+    const module = await loadIntelligenceModule();
+    await module.mountPersonIntelligence({ root, personReference });
+  } catch (error) {
+    document.documentElement.dataset.personIntelligenceRuntime = "failed";
+    console.error("[CRS10 PERSON INTELLIGENCE BRIDGE]", error);
+  }
+}
+
+async function scrubIntelligence(reason = "route-unmounted") {
+  if (!intelligenceModulePromise) {
+    document.documentElement.dataset.personIntelligenceRuntime = reason;
+    return;
+  }
+  try {
+    const module = await intelligenceModulePromise;
+    module.scrubPersonIntelligence(reason);
+  } catch {
+    document.documentElement.dataset.personIntelligenceRuntime = reason;
+  }
+}
+
+function reconcileIntelligenceRoute() {
+  const route = document.querySelector("[data-forge-application]")?.dataset.forgeRoute;
+  if (route !== "persona") void scrubIntelligence("route-unmounted");
+}
+
 ensureStylesheet();
 
 document.addEventListener("click", (event) => {
@@ -91,12 +137,20 @@ document.addEventListener("click", (event) => {
     openFromTrigger(trigger);
     return;
   }
-  if (event.target.closest("[data-route-id]")) window.setTimeout(reconcileEntries, 0);
+  if (event.target.closest("[data-route-id]")) {
+    window.setTimeout(() => {
+      reconcileEntries();
+      reconcileIntelligenceRoute();
+    }, 0);
+  }
 }, true);
 
 const observer = new MutationObserver(() => {
   window.clearTimeout(observer.reconcileTimer);
-  observer.reconcileTimer = window.setTimeout(reconcileEntries, 20);
+  observer.reconcileTimer = window.setTimeout(() => {
+    reconcileEntries();
+    reconcileIntelligenceRoute();
+  }, 20);
 });
 observer.observe(document.documentElement, {
   childList: true,
@@ -105,13 +159,32 @@ observer.observe(document.documentElement, {
   attributeFilter: ["hidden", "data-forge-route", "data-person-reference"],
 });
 
-globalThis.addEventListener("popstate", reconcileEntries);
-globalThis.addEventListener("forge:person-workspace-mounted", reconcileEntries);
+globalThis.addEventListener("popstate", () => {
+  reconcileEntries();
+  reconcileIntelligenceRoute();
+});
+globalThis.addEventListener("forge:person-workspace-mounted", (event) => {
+  reconcileEntries();
+  void mountIntelligence(event);
+});
+globalThis.addEventListener("forge:auth-state-changed", (event) => {
+  const status = String(event.detail?.status || "").toLowerCase();
+  if (["anonymous", "auth_error"].includes(status)) void scrubIntelligence("signed-out");
+});
 queueMicrotask(reconcileEntries);
 
 globalThis.ForgeCrs09PersonWorkspaceEntryBridge = Object.freeze({
   version: BRIDGE_VERSION,
+  intelligenceVersion: INTELLIGENCE_VERSION,
   reconcile: reconcileEntries,
+  mountIntelligence,
+  scrubIntelligence,
 });
 
-export { BRIDGE_VERSION, reconcileEntries };
+export {
+  BRIDGE_VERSION,
+  INTELLIGENCE_VERSION,
+  reconcileEntries,
+  mountIntelligence,
+  scrubIntelligence,
+};
