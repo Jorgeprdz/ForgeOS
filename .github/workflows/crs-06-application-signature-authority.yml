@@ -1,0 +1,116 @@
+name: CRS 06 Application Signature Authority
+
+on:
+  pull_request:
+    paths:
+      - "platform/application-authority/application-signature-authority-contract.js"
+      - "advisor-os/applications/application-signature-authority-service.js"
+      - "supabase/migrations/20260801000600_crs06_application_signature_authority.sql"
+      - "tests/crs-06-application-signature-authority-contract-test.mjs"
+      - "tests/crs-06-application-signature-authority-service-test.mjs"
+      - "tests/crs-06-application-signature-migration-security-test.mjs"
+      - "docs/architecture/source-truth/FORGE_CRS_06_APPLICATION_AND_SIGNATURE_AUTHORITY_001.md"
+      - "docs/evidence/FORGE_CRS_06_ABCD_CLOSURE_001.md"
+      - ".github/workflows/crs-06-application-signature-authority.yml"
+  push:
+    branches: [main]
+    paths:
+      - "platform/application-authority/application-signature-authority-contract.js"
+      - "advisor-os/applications/application-signature-authority-service.js"
+      - "supabase/migrations/20260801000600_crs06_application_signature_authority.sql"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  application-signature-authority:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git diff --name-only "$base_sha" "$head_sha")
+          allowed='^(platform/application-authority/application-signature-authority-contract\.js|advisor-os/applications/application-signature-authority-service\.js|supabase/migrations/20260801000600_crs06_application_signature_authority\.sql|tests/crs-06-application-signature-authority-contract-test\.mjs|tests/crs-06-application-signature-authority-service-test\.mjs|tests/crs-06-application-signature-migration-security-test\.mjs|docs/architecture/source-truth/FORGE_CRS_06_APPLICATION_AND_SIGNATURE_AUTHORITY_001\.md|docs/evidence/FORGE_CRS_06_ABCD_CLOSURE_001\.md|\.github/workflows/crs-06-application-signature-authority\.yml)$'
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "CRS_06_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          echo 'CRS_06_BOUNDED_PATHS=PASS'
+
+      - name: Syntax validation
+        run: |
+          node --check platform/application-authority/application-signature-authority-contract.js
+          node --check advisor-os/applications/application-signature-authority-service.js
+
+      - name: CRS 06 targeted acceptance
+        run: |
+          node --test tests/crs-06-application-signature-authority-contract-test.mjs
+          node --test tests/crs-06-application-signature-authority-service-test.mjs
+          node --test tests/crs-06-application-signature-migration-security-test.mjs
+
+      - name: Preserve person, domain-link and Quote foundations
+        run: |
+          node --test tests/crs-02-domain-link-envelope-contract-test.mjs
+          node --test tests/crs-05-quote-person-convergence-contract-test.mjs
+          node --test tests/crs-05-quote-person-convergence-service-test.mjs
+          node --test tests/cartera-001b-quote-lifecycle-event-contract-test.mjs
+          node --test tests/cartera-010b-contract-foundation-test.mjs
+
+      - name: Enforce Application and Policy authority boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract='platform/application-authority/application-signature-authority-contract.js'
+          service='advisor-os/applications/application-signature-authority-service.js'
+          migration='supabase/migrations/20260801000600_crs06_application_signature_authority.sql'
+          source='docs/architecture/source-truth/FORGE_CRS_06_APPLICATION_AND_SIGNATURE_AUTHORITY_001.md'
+
+          grep -q 'APPLICATION_AUTHORITY' "$contract" "$migration"
+          grep -q 'SIGNED_APPLICATION_IS_POLICY=NO' "$source"
+          grep -q 'SUBMITTED_APPLICATION_IS_POLICY=NO' "$source"
+          grep -q 'APPROVED_APPLICATION_IS_POLICY=NO' "$source"
+          grep -q 'ISSUANCE_EVIDENCE_REQUIRED_FOR_POLICY=YES' "$source"
+          grep -q 'REMOTE_SUPABASE_DEPLOYMENT=NO' "$source"
+          grep -q 'automaticApplicationCreation: false' "$contract" "$service"
+          grep -q 'automaticSignatureRequest: false' "$contract" "$service"
+          grep -q 'automaticSubmission: false' "$contract" "$service"
+          grep -q 'automaticPolicyCreation: false' "$contract" "$service"
+          grep -q 'providerMutation: false' "$contract" "$service"
+          grep -q 'CRS06_HUMAN_CONFIRMATION_REQUIRED' "$service" "$migration"
+          grep -q 'CRS06_IDEMPOTENCY_CONFLICT' "$migration"
+          grep -q 'force row level security' "$migration"
+          grep -q 'CRS06_APPEND_ONLY_MUTATION_DENIED' "$migration"
+
+          ! grep -Eiq 'insert into public\.(polic(y|ies)|policy_)|update public\.(polic(y|ies)|policy_)' "$migration"
+          ! grep -Eiq 'docusign|adobe_sign|hellosign|dropbox_sign|http_request|net\.http' "$contract" "$service" "$migration"
+          ! grep -Eiq 'signature_image|raw_signature|biometric_template|pdf_bytes|provider_payload' "$contract" "$service" "$migration"
+
+          echo 'CRS_06A_APPLICATION_SIGNATURE_SCOPE=PASS'
+          echo 'CRS_06B_APPLICATION_SIGNATURE_CONTRACTS=PASS'
+          echo 'CRS_06C_PRODUCTIVE_INTEGRATION_IMPLEMENTATION=PASS'
+          echo 'CRS_06D_REPOSITORY_ACCEPTANCE=PASS'
+          echo 'CRS_06_REMOTE_DEPLOYMENT=NOT_PERFORMED'
+          echo 'CRS_06_POLICY_CREATION=NO'
+
+      - name: REP-17 cross-module regression
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
