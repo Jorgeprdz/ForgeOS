@@ -66,6 +66,7 @@ function injectContextualHeaders() {
 }
 
 function reconcileEntries() {
+  ensureStylesheet();
   injectPipeline();
   injectCartera();
   injectContextualHeaders();
