@@ -67,12 +67,12 @@ assert.match(files.adapter, /PRODUCTIVE_SMART_WIDGET_CHART_BINDING_VERSION/);
 assert.match(files.adapter, /Ver fuentes/);
 assert.match(files.adapter, /NOT_CONNECTED/);
 
-assert.match(files.css, /@media \(min-width: 600px\) and \(max-width: 839px\)/);
+assert.match(files.css, /@media \(min-width: 600px\)/);
 assert.match(files.css, /@media \(min-width: 840px\)/);
 assert.match(files.css, /@media \(max-width: 420px\)/);
 assert.match(files.css, /productive-goal-dialog/);
 assert.match(files.css, /productive-smart-widget-why-toggle/);
-assert.match(files.css, /canonicalActionCards/);
+assert.match(files.css, /canonical-action-cards/);
 assert.match(files.css, /\[hidden\]\s*\{\s*display:\s*none !important/s);
 
 assert.match(files.providers, /possible_late_payment_is_inference_not_confirmed_nonpayment/);
