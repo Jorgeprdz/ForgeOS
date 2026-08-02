@@ -10,6 +10,7 @@ on:
       - "supabase/migrations/20260801000601_crs06_application_integrity_grant_hardening.sql"
       - "supabase/migrations/20260801000602_crs06_application_rpc_lifecycle_hardening.sql"
       - "supabase/migrations/20260801000603_crs06_pgcrypto_digest_schema_hardening.sql"
+      - "supabase/migrations/20260801000604_crs06_internal_function_grant_hardening.sql"
       - "scripts/ci/crs-06e-pgcrypto-compatibility-deploy.mjs"
       - "scripts/ci/crs-06e-remote-application-authority.mjs"
       - "tests/crs-06e-remote-application-authority-test.mjs"
@@ -60,7 +61,7 @@ jobs:
 
           mapfile -t changed < <(git diff --name-only origin/main...HEAD)
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
-          allowed='^(\.github/workflows/crs-06e-remote-application-authority\.yml|docs/evidence/FORGE_CRS_06E_REMOTE_APPLICATION_AUTHORITY_(PREPARATION|CLOSURE)_001\.md|scripts/ci/crs-06e-(pgcrypto-compatibility-deploy|remote-application-authority)\.mjs|supabase/migrations/20260801000(598_crs06_pgcrypto_digest_compatibility|599_crs06_application_dependency_compatibility|601_crs06_application_integrity_grant_hardening|602_crs06_application_rpc_lifecycle_hardening|603_crs06_pgcrypto_digest_schema_hardening)\.sql|tests/crs-06e-remote-application-authority-test\.mjs)$'
+          allowed='^(\.github/workflows/crs-06e-remote-application-authority\.yml|docs/evidence/FORGE_CRS_06E_REMOTE_APPLICATION_AUTHORITY_(PREPARATION|CLOSURE)_001\.md|scripts/ci/crs-06e-(pgcrypto-compatibility-deploy|remote-application-authority)\.mjs|supabase/migrations/20260801000(598_crs06_pgcrypto_digest_compatibility|599_crs06_application_dependency_compatibility|601_crs06_application_integrity_grant_hardening|602_crs06_application_rpc_lifecycle_hardening|603_crs06_pgcrypto_digest_schema_hardening|604_crs06_internal_function_grant_hardening)\.sql|tests/crs-06e-remote-application-authority-test\.mjs)$'
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then
               echo "CRS_06E_UNAUTHORIZED_PATH=$path" >&2
@@ -97,6 +98,8 @@ jobs:
           node scripts/ci/crs-06e-pgcrypto-compatibility-deploy.mjs prepare \
             | tee artifacts/crs-06e-remote-application-authority/pgcrypto-prepare.log
           grep -q 'CRS_06E_PGCRYPTO_COMPATIBILITY_PREPARED=PASS' \
+            artifacts/crs-06e-remote-application-authority/pgcrypto-prepare.log
+          grep -q 'CRS_06E_INTERNAL_FUNCTION_GRANT_HARDENING=PASS' \
             artifacts/crs-06e-remote-application-authority/pgcrypto-prepare.log
 
       - name: Deploy and execute rollback-clean remote acceptance
