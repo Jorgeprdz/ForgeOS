@@ -1,0 +1,28 @@
+name: FIP Final Productive Mount Validation
+
+on:
+  pull_request:
+    paths:
+      - "docs/static-preview/forge-alive-material3/home-module.js"
+      - "docs/static-preview/forge-alive-material3/fip-productive-home-bridge.js"
+      - "docs/static-preview/forge-alive-material3/fip-productive-home-bridge.css"
+      - "advisor-os/alfred/fip-pack-07-productive-experience-service.js"
+      - "platform/alfred/fip-pack-07-productive-experience-contract.js"
+      - "tests/fip-final-productive-mount-test.mjs"
+      - ".github/workflows/fip-final-productive-mount-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tests/fip-pack-07-productive-experience-and-acceptance-test.mjs
+      - run: node tests/smart-widgets-home-productive-mount-test.mjs
+      - run: node tests/fip-final-productive-mount-test.mjs
