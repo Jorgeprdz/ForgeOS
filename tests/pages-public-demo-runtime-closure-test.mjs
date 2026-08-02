@@ -10,7 +10,7 @@ import {
 
 const root = process.cwd();
 
-test("Pages runtime closure publishes demo, lifecycle, printable and CRS 09 dependencies", async () => {
+test("Pages runtime closure publishes demo, printable and CRS 09-10 dependencies", async () => {
   const temporaryRoot = await mkdtemp(join(tmpdir(), "forge-pages-runtime-"));
   const siteDir = join(temporaryRoot, "_site");
 
@@ -28,6 +28,8 @@ test("Pages runtime closure publishes demo, lifecycle, printable and CRS 09 depe
       "person-workspace-module.css",
       "person-workspace-entry-bridge.js",
       "person-workspace-entry-bridge.css",
+      "person-intelligence-module.js",
+      "person-intelligence-module.css",
     ]) {
       await cp(
         join(root, "docs/static-preview/forge-alive-material3", file),
@@ -37,7 +39,7 @@ test("Pages runtime closure publishes demo, lifecycle, printable and CRS 09 depe
 
     const manifest = await prepareForgeAlivePagesRuntimeClosure({ siteDir });
     assert.equal(manifest.contractId, FORGE_ALIVE_PAGES_RUNTIME_CLOSURE_ID);
-    assert.ok(manifest.runtimeFiles.length >= 16);
+    assert.ok(manifest.runtimeFiles.length >= 30);
     assert.ok(manifest.rewrittenProxies.length >= 3);
 
     const required = [
@@ -47,10 +49,19 @@ test("Pages runtime closure publishes demo, lifecycle, printable and CRS 09 depe
       "platform/event-evidence/prospect-quote-detail-projection.js",
       "platform/shared-commercial-model/crs-09-person-workspace-contract.js",
       "advisor-os/person-workspace/crs-09-person-workspace-service.js",
+      "platform/shared-commercial-model/crs-10-relationship-intelligence-contract.js",
+      "advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js",
+      "advisor-os/cartera/cartera-050a-future-radar-service.js",
+      "advisor-os/cartera/cartera-060c-relationship-growth-service.js",
+      "advisor-os/cartera/cartera-070c-relational-activation-service.js",
+      "advisor-os/cartera/cartera-090c-relationship-capital-service.js",
+      "advisor-os/cartera/cartera-100c-productivity-proof-service.js",
       "static-preview/forge-alive/person-workspace-module.js",
       "static-preview/forge-alive/person-workspace-module.css",
       "static-preview/forge-alive/person-workspace-entry-bridge.js",
       "static-preview/forge-alive/person-workspace-entry-bridge.css",
+      "static-preview/forge-alive/person-intelligence-module.js",
+      "static-preview/forge-alive/person-intelligence-module.css",
       "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
       "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css",
       "forge-alive-pages-runtime-closure.json",
@@ -87,6 +98,21 @@ test("Pages runtime closure publishes demo, lifecycle, printable and CRS 09 depe
     );
     assert.match(workspace, /CRS_09_PRODUCTIVE_PERSON_WORKSPACE_MATERIAL3_V1/);
     assert.match(workspace, /lateResultRejectCount/);
+
+    const intelligence = await readFile(
+      join(siteDir, "static-preview/forge-alive/person-intelligence-module.js"),
+      "utf8",
+    );
+    assert.match(intelligence, /CRS_10_EXISTING_RELATIONSHIP_INTELLIGENCE_MATERIAL3_V1/);
+    assert.match(intelligence, /Productividad se muestra como contexto del asesor/);
+    assert.match(intelligence, /lateResultRejectCount/);
+
+    const service = await readFile(
+      join(siteDir, "advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js"),
+      "utf8",
+    );
+    assert.match(service, /existingCarteraServicesReused/);
+    assert.match(service, /secondScoreEngine: false/);
   } finally {
     await rm(temporaryRoot, { recursive: true, force: true });
   }
