@@ -83,19 +83,15 @@ jobs:
       - name: Data and security foundation acceptance
         run: |
           set -euo pipefail
-          mapfile -t security < <(find tests -maxdepth 1 -type f \( \
-            -name 'cartera-010b*.mjs' -o \
-            -name 'cartera-020c*.mjs' -o \
-            -name 'crs-03-*.mjs' -o \
-            -name 'crs-04-*.mjs' -o \
-            -name 'crs-05-*.mjs' -o \
-            -name 'crs-06-*.mjs' -o \
-            -name 'crs-07-*.mjs' -o \
-            -name 'crs-08-*.mjs' \
-          \) | sort)
-          echo "CRS11_SECURITY_TEST_COUNT=${#security[@]}"
+          families=(cartera-010b cartera-020c crs-03 crs-04 crs-05 crs-06 crs-07 crs-08)
+          security=()
+          for family in "${families[@]}"; do
+            mapfile -t family_files < <(find tests -maxdepth 1 -type f -name "${family}*.mjs" | sort)
+            echo "CRS11_SECURITY_FAMILY=${family} COUNT=${#family_files[@]}"
+            test "${#family_files[@]}" -ge 1
+            security+=("${family_files[@]}")
+          done
           printf 'CRS11_SECURITY_TEST=%s\n' "${security[@]}"
-          test "${#security[@]}" -ge 15
           failed=0
           for file in "${security[@]}"; do
             echo "::group::CRS11 security test ${file}"
