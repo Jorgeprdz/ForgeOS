@@ -1,0 +1,185 @@
+name: SeguBeca Pages Transitive Import Bridges
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/segubeca-pages-transitive-import-bridges.yml"
+      - "docs/docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js"
+      - "docs/docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js"
+      - "docs/docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js"
+      - "tests/segubeca-pages-transitive-import-bridge-test.mjs"
+      - "docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001.md"
+
+permissions:
+  contents: read
+
+jobs:
+  pages-transitive-import-bridges:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          merge_base="$(git merge-base "$base_sha" "$head_sha")"
+          mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
+          allowed='^(\.github/workflows/segubeca-pages-transitive-import-bridges\.yml|docs/docs/static-preview/quote-preview-live/(forge-pdf-browser-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime)\.js|tests/segubeca-pages-transitive-import-bridge-test\.mjs|docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001\.md)$'
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 6
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "SEGUBECA_TRANSITIVE_BRIDGE_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          if printf '%s\n' "${changed[@]}" \
+            | grep -E '(^|/)(segubeca-calculation-authority|segubeca-productive-ui-binding|forge-pdf-browser-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime)\.js$' \
+            | grep -v '^docs/docs/' > /dev/null; then
+            echo 'SEGUBECA_TRANSITIVE_BRIDGE_SOURCE_MUTATION=FORBIDDEN' >&2
+            exit 1
+          fi
+          echo 'SEGUBECA_TRANSITIVE_BRIDGE_BOUNDED_PATHS=PASS'
+
+      - name: Syntax and static URL contract
+        run: |
+          set -euo pipefail
+          node --check tests/segubeca-pages-transitive-import-bridge-test.mjs
+          node --test tests/segubeca-pages-transitive-import-bridge-test.mjs
+
+      - name: Build generated Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > env.js <<'EOF'
+          window.__ENV__ = Object.freeze({
+            SUPABASE_URL: "https://rmlxigxysujsuwzgoimv.supabase.co",
+            SUPABASE_KEY: "segubeca-pages-bridge-test-placeholder",
+            DEMO_MODE: "false",
+            ENABLE_TEST_ADVISOR_LOGIN: "false"
+          });
+          EOF
+          FORGE_PAGES_RUNTIME_MODE=pages \
+          FORGE_CARTERA_PAGES_RUNTIME_MODE=pages \
+            node scripts/build-advisor-presentation-pages-runtime.mjs
+          GITHUB_SHA='${{ github.event.pull_request.head.sha || github.sha }}' \
+            node scripts/build-quotes-preview-pages.mjs
+
+          root='_site/docs/static-preview/quote-preview-live'
+          test -f "$root/forge-pdf-browser-parser.js"
+          test -f "$root/forge-accepted-quote-adapter.js"
+          test -f "$root/forge-udi-mxn-runtime.js"
+          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-pdf-browser-parser.js";' \
+            "$root/forge-pdf-browser-parser.js"
+          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-accepted-quote-adapter.js";' \
+            "$root/forge-accepted-quote-adapter.js"
+          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-udi-mxn-runtime.js";' \
+            "$root/forge-udi-mxn-runtime.js"
+          echo 'SEGUBECA_TRANSITIVE_BRIDGE_PAGES_ARTIFACT=PASS'
+          echo 'SEGUBECA_COMPLETE_PAGES_RUNTIME_BUILD=PASS'
+
+      - name: Install browser acceptance runtime
+        run: npm install --no-save --no-package-lock puppeteer@24.16.0
+
+      - name: Start generated Pages server
+        shell: bash
+        run: |
+          set -euo pipefail
+          nohup python3 -m http.server 4173 --bind 127.0.0.1 --directory _site \
+            > /tmp/segubeca-pages-bridge-server.log 2>&1 &
+          echo $! > /tmp/segubeca-pages-bridge-server.pid
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --show-error \
+              'http://127.0.0.1:4173/static-preview/forge-alive/?nav=cotizaciones' \
+              > /dev/null; then
+              echo 'SEGUBECA_GENERATED_PAGES_SERVER=READY'
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/segubeca-pages-bridge-server.log
+          echo 'SEGUBECA_GENERATED_PAGES_SERVER=FAIL'
+          exit 1
+
+      - name: Accept real PDF through generated Pages artifact
+        shell: bash
+        env:
+          FORGE_SEGUBECA_TARGET_URL: http://127.0.0.1:4173/static-preview/forge-alive/?nav=cotizaciones
+        run: |
+          set -euo pipefail
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          test -f "$FORGE_CHROMIUM_PATH"
+
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const sourcePath = 'tests/segubeca-material3-real-pdf-acceptance-test.mjs';
+          const targetPath = '/tmp/segubeca-generated-pages-real-pdf.mjs';
+          let source = fs.readFileSync(sourcePath, 'utf8');
+          source = source.replace(
+            /await new Promise\(\(resolveServer\) => server\.listen\(0, "127\.0\.0\.1", resolveServer\)\);\nconst \{ port \} = server\.address\(\);/,
+            'const port = null;',
+          );
+          source = source.replace(
+            /`http:\/\/127\.0\.0\.1:\$\{port\}\/docs\/static-preview\/forge-alive-material3\/\?nav=cotizaciones`/,
+            'process.env.FORGE_SEGUBECA_TARGET_URL',
+          );
+          source = source.replace(
+            /\n  await new Promise\(\(resolveServer\) => server\.close\(resolveServer\)\);/,
+            '',
+          );
+          if (source.includes('server.listen(0') || source.includes('server.close(resolveServer)')) {
+            throw new Error('SEGUBECA_GENERATED_PAGES_TEST_TRANSFORM_FAILED');
+          }
+          if (!source.includes('process.env.FORGE_SEGUBECA_TARGET_URL')) {
+            throw new Error('SEGUBECA_GENERATED_PAGES_TARGET_NOT_INJECTED');
+          }
+          fs.writeFileSync(targetPath, source);
+          NODE
+
+          node /tmp/segubeca-generated-pages-real-pdf.mjs
+          echo 'SEGUBECA_GENERATED_PAGES_REAL_PDF=PASS'
+
+      - name: Preserve accepted SeguBeca authorities
+        run: |
+          set -euo pipefail
+          node --test tests/segubeca-calculation-authority-restoration-test.mjs
+          node tests/segubeca-solucionline-parser-test.mjs
+          node tests/segubeca-projected-mxn-runtime-test.mjs
+
+      - name: Preserve cross-module runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Enforce bridge-only boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          source='docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001.md'
+          grep -q 'CALCULATION_AUTHORITY_CHANGED=NO' "$source"
+          grep -q 'PRODUCT_FORMULA_CHANGED=NO' "$source"
+          grep -q 'PRODUCTIVE_BINDING_CHANGED=NO' "$source"
+          grep -q 'PDF_PARSER_CHANGED=NO' "$source"
+          grep -q 'ACCEPTED_QUOTE_ADAPTER_CHANGED=NO' "$source"
+          grep -q 'UDI_MODEL_CHANGED=NO' "$source"
+          grep -q 'PRODUCT_UI_CHANGED=NO' "$source"
+          grep -q 'PAGES_BUILDER_CHANGED=NO' "$source"
+          grep -q 'DATABASE_CHANGED=NO' "$source"
+          grep -q 'BRIDGE_LOGIC=REEXPORT_ONLY' "$source"
+          echo 'SEGUBECA_TRANSITIVE_BRIDGE_FORMULA_MUTATION=NO'
+          echo 'SEGUBECA_TRANSITIVE_BRIDGE_SOURCE_MUTATION=NO'
+          echo 'SEGUBECA_TRANSITIVE_BRIDGE_DATABASE_MUTATION=NO'
