@@ -69,6 +69,7 @@ if (!buildSha) {
     const path = join(runtimeDir, target.file);
     let source = await readFile(path, "utf8");
     for (const [needle, replacement] of target.replacements) {
+      if (source.includes(replacement)) continue;
       if (!source.includes(needle)) {
         throw new Error(`FORGE_PAGES_CACHE_VERSIONING_SOURCE_MISSING=${target.file}:${needle}`);
       }
