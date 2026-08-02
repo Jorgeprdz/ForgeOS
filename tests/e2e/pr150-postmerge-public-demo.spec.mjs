@@ -23,34 +23,43 @@ test("public demo login reaches the productive read-only runtime", async ({ page
     timeout: 45_000,
   });
 
-  await page.waitForURL(/\/ForgeOS\/static-preview\/forge-alive-material3\//, {
-    timeout: 30_000,
-  });
+  await expect(page).toHaveURL(
+    /\/ForgeOS\/static-preview\/forge-alive\/\?nav=inicio/,
+    { timeout: 30_000 },
+  );
 
   const loginView = page.locator("[data-forge-auth-login-view]");
   const demoButton = page.locator("[data-forge-demo-login]");
+  const privateViewport = page.locator("[data-forge-module-viewport]");
+  const shellControls = page.locator("[data-forge-shell-controls]");
+
   await expect(loginView).toBeVisible({ timeout: 30_000 });
   await expect(demoButton).toBeVisible({ timeout: 30_000 });
   await expect(demoButton).toHaveText(/Explorar ForgeOS con datos demo/i);
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-forge-private-navigation",
+    "blocked",
+    { timeout: 30_000 },
+  );
+  await expect(privateViewport).toBeHidden({ timeout: 30_000 });
+  await expect(shellControls).toBeHidden({ timeout: 30_000 });
 
   await demoButton.click();
 
-  await page.waitForURL(
-    (url) =>
-      url.origin === "https://jorgeprdz.github.io" &&
-      url.pathname.includes("/ForgeOS/static-preview/forge-alive"),
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-forge-auth-boundary",
+    "authenticated",
     { timeout: 75_000 },
   );
-  await page.waitForURL(/\/ForgeOS\/static-preview\/forge-alive-material3\//, {
-    timeout: 30_000,
-  });
-
-  const banner = page.locator("[data-forge-demo-banner]");
   await expect(page.locator("html")).toHaveAttribute(
     "data-forge-demo-session",
     "active",
     { timeout: 45_000 },
   );
+  await expect(privateViewport).toBeVisible({ timeout: 45_000 });
+  await expect(shellControls).toBeVisible({ timeout: 45_000 });
+
+  const banner = page.locator("[data-forge-demo-banner]");
   await expect(banner).toBeVisible({ timeout: 45_000 });
   await expect(banner).toContainText(/Modo demostración/i);
   await expect(banner).toContainText(/Datos ficticios/i);
@@ -91,7 +100,7 @@ test("public demo login reaches the productive read-only runtime", async ({ page
       await routeButton.click();
     }
     await expect(page.locator(moduleSelector)).toBeVisible({ timeout: 30_000 });
-    await expect(page.locator("[data-forge-module-viewport]")).toHaveAttribute(
+    await expect(privateViewport).toHaveAttribute(
       "data-active-route",
       routeId,
     );
@@ -114,6 +123,7 @@ test("public demo login reaches the productive read-only runtime", async ({ page
   expect(pageErrors).toEqual([]);
 
   console.log("POSTMERGE_PAGES_HTTP=PASS");
+  console.log("PUBLIC_ANONYMOUS_FAIL_CLOSED=PASS");
   console.log("PUBLIC_DEMO_LOGIN=PASS");
   console.log("PUBLIC_DEMO_SESSION_CLASSIFICATION=PASS");
   console.log("PUBLIC_DEMO_READ_ONLY=PASS");
