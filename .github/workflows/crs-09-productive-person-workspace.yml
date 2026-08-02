@@ -1,0 +1,113 @@
+name: CRS 09 Productive Person Workspace
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-09-person-workspace-contract.js"
+      - "advisor-os/person-workspace/crs-09-person-workspace-service.js"
+      - "docs/static-preview/forge-alive-material3/person-workspace-*.js"
+      - "docs/static-preview/forge-alive-material3/person-workspace-*.css"
+      - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/forge-navigation-contract.js"
+      - "scripts/prepare-forge-alive-pages-runtime-closure.mjs"
+      - "tests/pages-public-demo-runtime-closure-test.mjs"
+      - "tests/crs-09-*.mjs"
+      - "docs/architecture/source-truth/FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001.md"
+      - "docs/evidence/FORGE_CRS_09_*.md"
+      - ".github/workflows/crs-09-*.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  crs-09:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bounded paths
+        run: |
+          set -euo pipefail
+          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > /tmp/crs09-paths
+          if grep -Ev '^(platform/shared-commercial-model/crs-09-person-workspace-contract\.js|advisor-os/person-workspace/crs-09-person-workspace-service\.js|docs/static-preview/forge-alive-material3/person-workspace-[^/]+\.(js|css)|docs/static-preview/forge-alive-material3/app\.js|docs/static-preview/forge-alive-material3/forge-navigation-contract\.js|scripts/prepare-forge-alive-pages-runtime-closure\.mjs|tests/pages-public-demo-runtime-closure-test\.mjs|tests/crs-09-[^/]+\.mjs|docs/architecture/source-truth/FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001\.md|docs/evidence/FORGE_CRS_09_[^/]+\.md|\.github/workflows/crs-09-[^/]+\.yml)$' /tmp/crs09-paths; then
+            echo "CRS09_BOUNDED_PATHS=FAIL"
+            cat /tmp/crs09-paths
+            exit 1
+          fi
+          echo "CRS09_BOUNDED_PATHS=PASS"
+
+      - name: Syntax and targeted tests
+        run: |
+          set -euo pipefail
+          node --check platform/shared-commercial-model/crs-09-person-workspace-contract.js
+          node --check advisor-os/person-workspace/crs-09-person-workspace-service.js
+          node --check docs/static-preview/forge-alive-material3/person-workspace-module.js
+          node --check docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.js
+          node --check docs/static-preview/forge-alive-material3/app.js
+          node --check docs/static-preview/forge-alive-material3/forge-navigation-contract.js
+          node --check scripts/prepare-forge-alive-pages-runtime-closure.mjs
+          node --test \
+            tests/crs-09-person-workspace-contract-test.mjs \
+            tests/crs-09-person-workspace-service-test.mjs \
+            tests/crs-09-person-workspace-ui-test.mjs \
+            tests/crs-09-person-workspace-entry-bridge-test.mjs \
+            tests/pages-public-demo-runtime-closure-test.mjs
+
+      - name: Preserve accepted CRS authorities
+        run: |
+          set -euo pipefail
+          node --test \
+            tests/crs-03-pipeline-person-convergence-contract-test.mjs \
+            tests/crs-03-pipeline-person-convergence-service-test.mjs \
+            tests/crs-04-activity-person-convergence-contract-test.mjs \
+            tests/crs-04-activity-person-convergence-service-test.mjs \
+            tests/crs-05-quote-person-convergence-contract-test.mjs \
+            tests/crs-05-quote-person-convergence-service-test.mjs \
+            tests/crs-06-application-signature-authority-contract-test.mjs \
+            tests/crs-06-application-signature-authority-service-test.mjs \
+            tests/crs-07-application-policy-lineage-contract-test.mjs \
+            tests/crs-07-application-policy-lineage-service-test.mjs \
+            tests/crs-08-unified-person-timeline-contract-test.mjs \
+            tests/crs-08-unified-person-timeline-adapters-test.mjs \
+            tests/crs-08-unified-person-timeline-service-test.mjs \
+            tests/cartera-040b-relationship-memory-projection-test.mjs
+
+      - name: Workspace authority boundaries
+        run: |
+          set -euo pipefail
+          test ! -e supabase/migrations/20260801000900_crs09_productive_person_workspace.sql
+          ! grep -Eq '\.(insert|update|delete|upsert)\(' advisor-os/person-workspace/crs-09-person-workspace-service.js
+          ! grep -Eq '(localStorage|sessionStorage|indexedDB)' docs/static-preview/forge-alive-material3/person-workspace-module.js
+          grep -q 'secondTruthStore: false' advisor-os/person-workspace/crs-09-person-workspace-service.js
+          grep -q 'workspacePersistence: false' advisor-os/person-workspace/crs-09-person-workspace-service.js
+          grep -q 'localMutationControls: false' advisor-os/person-workspace/crs-09-person-workspace-service.js
+          grep -q 'selectedGeneration !== generation' docs/static-preview/forge-alive-material3/person-workspace-module.js
+          grep -q 'lateResultRejectCount' docs/static-preview/forge-alive-material3/person-workspace-module.js
+          grep -q 'forge:auth-state-changed' docs/static-preview/forge-alive-material3/person-workspace-module.js
+          grep -q 'new Set(\["persona"\])' docs/static-preview/forge-alive-material3/forge-navigation-contract.js
+          node --input-type=module - <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const source = readFileSync(
+            'docs/static-preview/forge-alive-material3/forge-navigation-contract.js',
+            'utf8',
+          );
+          const items = source.slice(
+            source.indexOf('FORGE_NAVIGATION_ITEMS'),
+            source.indexOf('const CONTEXTUAL_ROUTES'),
+          );
+          if (/routeId:\s*"persona"/.test(items)) process.exit(1);
+          console.log('CRS09_CONTEXTUAL_ROUTE_NOT_PRIMARY_NAV=PASS');
+          NODE
+          echo "CRS09_WORKSPACE_BOUNDARIES=PASS"
