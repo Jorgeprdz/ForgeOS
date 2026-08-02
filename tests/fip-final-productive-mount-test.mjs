@@ -27,10 +27,12 @@ assert.match(files.bridge, /activeAdvisorId !== advisorId/);
 assert.match(files.bridge, /sessionAdvisorId\(currentSession\) !== advisorId/);
 assert.match(files.bridge, /root\.replaceChildren\(\)/);
 assert.match(files.bridge, /root\.hidden = true/);
-assert.match(files.bridge, /WIDGET_PRESENTATION/);
-assert.match(files.bridge, /variant: "hero"/);
+assert.match(files.bridge, /CANONICAL_ACTION_WIDGET_IDS/);
+assert.match(files.bridge, /"home-daily-priority"/);
+assert.match(files.bridge, /experience\.widgets\.filter\(\(widget\) => !CANONICAL_ACTION_WIDGET_IDS\.has\(widget\.id\)\)/);
+assert.doesNotMatch(files.bridge, /"home-daily-priority": Object\.freeze/);
 assert.match(files.bridge, /variant: "wide"/);
-assert.match(files.bridge, /Mosaico de inteligencia/);
+assert.match(files.bridge, /Inteligencia complementaria/);
 assert.match(files.bridge, /Alfred seguirá aprendiendo sin inventar datos/);
 assert.match(files.bridge, /ORQUESTADOR · NO AUTORIDAD/);
 assert.doesNotMatch(files.bridge, /automaticMessage\s*:\s*true|automaticTask\s*:\s*true|automaticPipelineAdvance\s*:\s*true/);
@@ -44,7 +46,6 @@ assert.match(files.distributionContract, /humanApprovalRequired: true/);
 
 assert.match(files.css, /padding-bottom:calc\(188px \+ env\(safe-area-inset-bottom/);
 assert.match(files.css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-assert.match(files.css, /data-variant="hero"/);
 assert.match(files.css, /data-variant="wide"/);
 assert.match(files.css, /grid-column:1\/-1/);
 assert.match(files.css, /min-height:140px/);
@@ -64,10 +65,14 @@ const experience = distribution.composeAlfredProductiveExperience({
 });
 assert.equal(experience.contractType, "FORGE_FIP_PACK_07_PRODUCTIVE_EXPERIENCE");
 assert.ok(experience.widgets.some(widget => widget.id === "home-nash" && widget.state === "READY"));
+assert.ok(experience.widgets.some(widget => widget.id === "home-daily-priority"));
 
 console.log("FIP_FINAL_PRODUCTIVE_MOUNT=PASS");
 console.log("FIP_PAGES_RUNTIME_ASSET_PUBLICATION=PASS");
 console.log("FIP_HOME_INTELLIGENCE_MOSAIC=PASS");
+console.log("FIP_CANONICAL_ACTION_CARD_DEDUPLICATION=PASS");
+console.log("FIP_LARGE_PLAN_CARD_CANONICAL=PASS");
+console.log("FIP_LARGE_FOLLOWUP_CARD_CANONICAL=PASS");
 console.log("FIP_MOBILE_VISUAL_CONTRAST=PASS");
 console.log("FIP_MOBILE_SOURCE_WRAP=PASS");
 console.log("FIP_MOBILE_SAFE_ZONE=PASS");

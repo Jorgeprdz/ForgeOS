@@ -1,7 +1,10 @@
 const FIP_HOME_STATE = Symbol.for("forge.fip.productive-home.v1");
 
+const CANONICAL_ACTION_WIDGET_IDS = Object.freeze(new Set([
+  "home-daily-priority",
+]));
+
 const WIDGET_PRESENTATION = Object.freeze({
-  "home-daily-priority": Object.freeze({ variant: "hero", icon: "✦", empty: "Preparando tu prioridad con actividad real." }),
   "home-nash": Object.freeze({ variant: "small", icon: "◈", empty: "Nash necesita más conversaciones para recomendar." }),
   "person-context": Object.freeze({ variant: "small", icon: "◎", empty: "Aún no hay suficiente contexto de relación." }),
   "activity-mick": Object.freeze({ variant: "small", icon: "↗", empty: "Mick está esperando patrones de actividad." }),
@@ -23,7 +26,8 @@ function sessionAdvisorId(session) {
 
 function render(root, experience) {
   const sourceStatus = new Map(experience.sources.map((source) => [source.id, source.status]));
-  const cards = experience.widgets.map((widget) => {
+  const supportingWidgets = experience.widgets.filter((widget) => !CANONICAL_ACTION_WIDGET_IDS.has(widget.id));
+  const cards = supportingWidgets.map((widget) => {
     const presentation = WIDGET_PRESENTATION[widget.id] || { variant: "small", icon: "•", empty: "Sin señales suficientes todavía." };
     const insights = widget.insightIds
       .map((id) => experience.insights.find((item) => item.id === id))
@@ -48,7 +52,7 @@ function render(root, experience) {
   <div class="fip-source-strip" aria-label="Estado de fuentes">
     ${["relationship", "advisor", "mick", "nash", "operation", "business"].map((id) => `<span data-source="${id}" data-status="${sourceStatus.get(id) || "UNAVAILABLE"}">${id}</span>`).join("")}
   </div>
-  <div class="fip-widget-grid" aria-label="Mosaico de inteligencia">${cards}</div>`;
+  <div class="fip-widget-grid" aria-label="Inteligencia complementaria">${cards}</div>`;
   root.hidden = false;
   root.dataset.fipProductiveState = "ready";
 }
