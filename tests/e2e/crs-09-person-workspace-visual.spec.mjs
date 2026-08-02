@@ -27,17 +27,29 @@ for (const viewport of viewports) {
     const metrics = await page.evaluate(() => {
       const workspaceNode = document.querySelector(".person-workspace");
       const sectionNav = document.querySelector(".person-workspace-section-nav");
+      const workspaceRect = workspaceNode.getBoundingClientRect();
+      const navRect = sectionNav.getBoundingClientRect();
+      const scrollingElement = document.scrollingElement;
+      scrollingElement.scrollLeft = 1000;
       return {
-        bodyWidth: document.body.scrollWidth,
-        documentWidth: document.documentElement.scrollWidth,
         viewportWidth: window.innerWidth,
+        documentClientWidth: document.documentElement.clientWidth,
+        pageScrollLeft: scrollingElement.scrollLeft,
+        workspaceLeft: workspaceRect.left,
+        workspaceRight: workspaceRect.right,
+        navLeft: navRect.left,
+        navRight: navRect.right,
         bottomPadding: Number.parseFloat(getComputedStyle(workspaceNode).paddingBottom),
         navScrollWidth: sectionNav.scrollWidth,
         navClientWidth: sectionNav.clientWidth,
       };
     });
-    expect(metrics.bodyWidth).toBeLessThanOrEqual(metrics.viewportWidth + 1);
-    expect(metrics.documentWidth).toBeLessThanOrEqual(metrics.viewportWidth + 1);
+    expect(metrics.documentClientWidth).toBe(metrics.viewportWidth);
+    expect(metrics.pageScrollLeft).toBe(0);
+    expect(metrics.workspaceLeft).toBeGreaterThanOrEqual(-1);
+    expect(metrics.workspaceRight).toBeLessThanOrEqual(metrics.viewportWidth + 1);
+    expect(metrics.navLeft).toBeGreaterThanOrEqual(metrics.workspaceLeft - 1);
+    expect(metrics.navRight).toBeLessThanOrEqual(metrics.workspaceRight + 1);
     expect(metrics.bottomPadding).toBeGreaterThanOrEqual(viewport.expectedBottomPadding);
     expect(metrics.navScrollWidth).toBeGreaterThanOrEqual(metrics.navClientWidth);
 
