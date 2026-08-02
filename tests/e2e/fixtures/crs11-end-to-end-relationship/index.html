@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es" data-fixture-ready="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CRS 11 — Aceptación end-to-end</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #071018; color: #eef7ff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 0; background: radial-gradient(circle at top right, rgba(65, 142, 255, .18), transparent 36%), #071018; }
+    main { width: min(1180px, 100%); margin: 0 auto; padding: 24px 22px 18px; overflow: clip; }
+    .hero, .panel, .stage, .metric { border: 1px solid rgba(180, 218, 255, .15); background: rgba(12, 27, 40, .92); box-shadow: 0 18px 50px rgba(0, 0, 0, .22); }
+    .hero { border-radius: 28px; padding: 28px; display: grid; gap: 18px; }
+    .eyebrow { margin: 0; color: #8ad7ff; font-size: .78rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 4.2rem); line-height: .98; max-width: 800px; }
+    .subtitle { margin: 0; max-width: 760px; color: #b9c9d6; font-size: 1rem; line-height: 1.6; }
+    .hero-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip { border: 1px solid rgba(138, 215, 255, .28); border-radius: 999px; padding: 8px 12px; background: rgba(29, 93, 133, .22); font-size: .82rem; }
+    .chip strong { color: #9be7ff; }
+    .status { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: #a9ffd4; }
+    .status::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #5ef0a6; box-shadow: 0 0 18px #5ef0a6; }
+    .layout { display: grid; gap: 18px; margin-top: 18px; }
+    .panel { border-radius: 24px; padding: 22px; min-width: 0; }
+    .panel h2 { margin: 0 0 6px; font-size: 1.25rem; }
+    .panel-intro { margin: 0 0 18px; color: #99afbf; line-height: 1.5; }
+    .journey { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .stage { border-radius: 18px; padding: 16px; min-width: 0; position: relative; }
+    .stage::after { content: attr(data-order); position: absolute; top: 12px; right: 12px; color: rgba(255,255,255,.26); font-weight: 900; }
+    .stage-domain { color: #8ad7ff; font-size: .72rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .stage h3 { margin: 8px 0 6px; font-size: 1rem; }
+    .stage p { margin: 0; color: #9fb1be; font-size: .84rem; line-height: 1.45; }
+    .stage small { display: block; margin-top: 14px; color: #6fe6b0; font-weight: 700; }
+    .metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+    .metric { border-radius: 16px; padding: 15px; min-width: 0; }
+    .metric strong { display: block; font-size: 1.65rem; }
+    .metric span { color: #96abba; font-size: .76rem; }
+    .timeline { display: grid; gap: 10px; }
+    .event { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 13px 14px; border-radius: 16px; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.06); min-width: 0; }
+    .event time { color: #7dcdf6; font-size: .78rem; }
+    .event strong { min-width: 0; overflow-wrap: anywhere; }
+    .event span { color: #9bb0bf; font-size: .78rem; }
+    .security { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .security-item { border-radius: 16px; padding: 14px; background: rgba(35, 94, 72, .18); border: 1px solid rgba(94, 240, 166, .18); min-width: 0; }
+    .security-item strong { display: block; color: #a9ffd4; margin-bottom: 5px; }
+    .security-item span { color: #9fb4aa; font-size: .78rem; line-height: 1.4; }
+    .boundary { margin-top: 16px; padding: 14px 16px; border-radius: 16px; background: rgba(111, 72, 169, .16); border: 1px solid rgba(191, 145, 255, .17); color: #d9c3ff; font-weight: 700; }
+    footer { padding: 18px 4px 0; color: #8296a4; font-size: .75rem; }
+    @media (max-width: 1040px) { .journey { grid-template-columns: repeat(2, minmax(0, 1fr)); } .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } .security { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px) { main { padding: 14px 12px 132px; } .hero, .panel { border-radius: 20px; padding: 18px; } .journey, .metrics, .security { grid-template-columns: 1fr; } .event { grid-template-columns: 1fr; gap: 4px; } .event span { justify-self: start; } h1 { font-size: 2.15rem; } }
+  </style>
+</head>
+<body>
+  <main data-crs11-ready>
+    <section class="hero">
+      <p class="eyebrow">CRS 11 · aceptación end-to-end</p>
+      <h1>Juan Pérez, una sola relación comercial</h1>
+      <p class="subtitle">Pipeline, Bitácora, Cotizaciones, Solicitudes y Cartera conservan su autoridad. ForgeOS compone el recorrido sin duplicar a la persona, inventar hitos ni ejecutar acciones automáticas.</p>
+      <div class="hero-row">
+        <span class="chip"><strong>1</strong> CommercialPerson</span>
+        <span class="chip" data-movement-chip><strong>2</strong> movimientos</span>
+        <span class="chip" data-quote-chip><strong>2</strong> cotizaciones</span>
+        <span class="chip" data-policy-chip><strong>2</strong> pólizas</span>
+        <span class="status" data-promotion-state>PASS · promotion candidate</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>Recorrido productivo completo</h2>
+        <p class="panel-intro">Cada paso muestra su autoridad de origen. La composición no sustituye ningún dominio.</p>
+        <div class="journey" data-journey-grid>
+          <article class="stage" data-domain="PIPELINE" data-order="01"><span class="stage-domain">Pipeline</span><h3>Contacto y oportunidad</h3><p>Prospecto vinculado a la persona y movimiento de retiro.</p><small>PIPELINE_STAGE_RPC</small></article>
+          <article class="stage" data-domain="ACTIVITY" data-order="02"><span class="stage-domain">Bitácora</span><h3>Cita y compromisos</h3><p>Interacción, contexto y corrección append-only.</p><small>FES_ACTIVITY_EVENT_LEDGER</small></article>
+          <article class="stage" data-domain="QUOTE" data-order="03"><span class="stage-domain">Cotizaciones</span><h3>Versiones y aceptación</h3><p>Dos cotizaciones, tres versiones y cálculo en su autoridad.</p><small>QUOTE_PERSISTENCE_AUTHORITY</small></article>
+          <article class="stage" data-domain="APPLICATION" data-order="04"><span class="stage-domain">Solicitud</span><h3>Firma evidenciada</h3><p>La solicitud firmada sigue sin ser una póliza.</p><small>APPLICATION_SIGNATURE_AUTHORITY</small></article>
+          <article class="stage" data-domain="CARTERA" data-order="05"><span class="stage-domain">Cartera</span><h3>Emisión y servicio</h3><p>Dos pólizas con evidencia de emisión y roles propios.</p><small>CARTERA_POLICY_AUTHORITY</small></article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Matriz aceptada</h2>
+        <p class="panel-intro">Conteos del fixture canónico, no métricas inventadas.</p>
+        <div class="metrics">
+          <div class="metric"><strong>1</strong><span>persona canónica</span></div>
+          <div class="metric"><strong>2</strong><span>movimientos</span></div>
+          <div class="metric"><strong>4</strong><span>actividades</span></div>
+          <div class="metric"><strong>2</strong><span>quotes</span></div>
+          <div class="metric"><strong>1</strong><span>solicitud</span></div>
+          <div class="metric"><strong>2</strong><span>pólizas</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Timeline unificado</h2>
+        <p class="panel-intro">Proyección cronológica y atribuida; no es un segundo ledger.</p>
+        <div class="timeline" data-timeline>
+          <div class="event"><time>01 JUL</time><strong>Prospecto creado y contacto inicial</strong><span>Pipeline + Activity</span></div>
+          <div class="event"><time>08 JUL</time><strong>Cotización Vida Mujer presentada</strong><span>Quote</span></div>
+          <div class="event"><time>10 JUL</time><strong>Cita de cierre y solicitud firmada</strong><span>Activity + Application</span></div>
+          <div class="event"><time>20 JUL</time><strong>Póliza emitida con evidencia</strong><span>Cartera</span></div>
+          <div class="event"><time>01 AGO</time><strong>Revisión anual, corrección y nueva necesidad</strong><span>Activity + Quote</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Datos, seguridad y gobierno</h2>
+        <p class="panel-intro">La promoción sólo es válida si todos los bloqueos permanecen activos.</p>
+        <div class="security">
+          <div class="security-item"><strong>RLS</strong><span>Aislamiento productivo por asesor.</span></div>
+          <div class="security-item"><strong>Replay estable</strong><span>Misma evidencia, misma aceptación.</span></div>
+          <div class="security-item"><strong>Conflicto rechazado</strong><span>El mismo key no acepta inputs distintos.</span></div>
+          <div class="security-item"><strong>Correcciones</strong><span>Lineage append-only y fuente visible.</span></div>
+          <div class="security-item"><strong>Privacidad</strong><span>Contexto minimizado, no trigger sensible.</span></div>
+          <div class="security-item"><strong>Human decides</strong><span>Alfred explica, NBA recomienda, Nash redacta.</span></div>
+          <div class="security-item"><strong>Sin duplicado</strong><span>Una persona, muchas relaciones de dominio.</span></div>
+          <div class="security-item"><strong>Rollback</strong><span>Head moved o autoridad rota cancela promoción.</span></div>
+        </div>
+        <div class="boundary" data-automation-boundary>Sin merge automático de identidad, sin avance automático, sin contacto, mensaje, tarea, calendario, solicitud o póliza automáticos.</div>
+      </section>
+    </div>
+    <footer>CRS_11_END_TO_END_RELATIONSHIP_ACCEPTANCE · fixture read-only · no product mutation</footer>
+  </main>
+</body>
+</html>
