@@ -220,9 +220,14 @@ function dependencyUnlocked(dependency, related) {
     case "ADVISOR_MONTHLY_POLICY_GOAL_PERSISTENCE":
       return Number.isFinite(widget.payload?.target);
     case "COMPENSATION_INCOME_TRUTH_MINIMUM":
-      return widget.payload?.sourceContract ===
-        "ADVISOR_COMPENSATION_INCOME_WIDGET_SNAPSHOT_001"
-        && authorityAvailable(widget);
+      return authorityAvailable(widget) && (
+        widget.payload?.sourceContract ===
+          "ADVISOR_COMPENSATION_INCOME_WIDGET_SNAPSHOT_001" ||
+        (
+          widget.payload?.sourceContract == null &&
+          widget.sourceAuthorities?.includes("COMPENSATION_INTELLIGENCE")
+        )
+      );
     default:
       return related.some(authorityAvailable);
   }
