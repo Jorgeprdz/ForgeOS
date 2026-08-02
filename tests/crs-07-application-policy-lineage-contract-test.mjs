@@ -63,7 +63,7 @@ test("PolicyRole must be confirmed and permitted", () => {
   code(() => contract.normalizePersonRole(role({ roleType: "BENEFICIARY" })), "CRS07_ROLE_TYPE_NOT_PERMITTED");
 });
 test("PolicyRole must point to Application person", () => code(() => contract.createApplicationPolicyLineage(valid({ personRole: role({ personReference: "person:2" }) })), "CRS07_PERSON_ROLE_LINEAGE_MISMATCH"));
-test("domain link must be Cartera Policy authority", () => code(() => contract.createApplicationPolicyLineage(valid({ domainLink: link({ domain: "QUOTE" }) })), "CRS07_POLICY_DOMAIN_LINK_INVALID"));
+test("domain link must be Cartera Policy authority", () => code(() => contract.createApplicationPolicyLineage(valid({ domainLink: link({ domain: "QUOTE", recordType: "QUOTE", authority: "QUOTE_PERSISTENCE_AUTHORITY" }) })), "CRS07_POLICY_DOMAIN_LINK_INVALID"));
 test("initial Policy version must prove issuance", () => code(() => contract.createApplicationPolicyLineage(valid({ policy: policy({ statusValue: "PENDING" }) })), "CRS07_INITIAL_POLICY_NOT_ISSUED"));
 test("evidence cannot postdate confirmation", () => code(() => contract.createApplicationPolicyLineage(valid({ issuanceEvidence: evidence({ observedAt: "2026-08-01T02:00:00Z" }) })), "CRS07_EVIDENCE_AFTER_CONFIRMATION"));
 test("missing lineage remains explicit", () => {
