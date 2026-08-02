@@ -20,7 +20,7 @@ on:
 
 permissions:
   contents: read
-  statuses: read
+  statuses: write
 
 concurrency:
   group: advisor-compensation-public-authenticated-${{ github.event.pull_request.number || github.ref }}
@@ -67,6 +67,15 @@ jobs:
           test "$(git rev-parse origin/main)" = "$expected_main_sha"
           echo "PAGES_CANONICAL=success"
 
+      - name: Publish pending public Android acceptance
+        shell: bash
+        run: |
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$EXPECTED_MAIN_SHA" \
+            -f state="pending" \
+            -f context="advisor-compensation/public-android-acceptance" \
+            -f description="Running authenticated Android acceptance on deployed Pages" \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
       - name: Use Node 22
         uses: actions/setup-node@v4
         with:
@@ -106,6 +115,22 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      - name: Publish public Android acceptance result
+        if: always() && env.EXPECTED_MAIN_SHA != ''
+        shell: bash
+        run: |
+          state="${{ job.status }}"
+          description="Authenticated Android acceptance passed on deployed Pages"
+          if [ "$state" != "success" ]; then
+            state="failure"
+            description="Authenticated Android acceptance failed on deployed Pages"
+          fi
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$EXPECTED_MAIN_SHA" \
+            -f state="$state" \
+            -f context="advisor-compensation/public-android-acceptance" \
+            -f description="$description" \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
       - name: Publish final job summary
         if: success()
         run: |
@@ -126,5 +151,6 @@ jobs:
           ASSET_OVERRIDES=NO
           REMOTE_FUNCTION_REDEPLOYED=NO
           PUBLIC_AUTHENTICATED_ACCEPTANCE=PASS
+          PUBLIC_ANDROID_STATUS_CONTEXT=advisor-compensation/public-android-acceptance
           \`\`\`
           EOF
