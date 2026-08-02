@@ -2,7 +2,9 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const root = process.cwd();
-const buildSha = String(process.env.GITHUB_SHA || "").trim();
+const buildSha = String(
+  process.env.FORGE_BUILD_SHA || process.env.GITHUB_SHA || "",
+).trim();
 
 if (!buildSha) {
   console.log("FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=SKIPPED_NO_GITHUB_SHA");
