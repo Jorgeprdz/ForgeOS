@@ -1,0 +1,115 @@
+name: SeguBeca Pages Authority Asset
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/pages.yml"
+      - ".github/workflows/segubeca-pages-authority-asset.yml"
+      - "scripts/build-quotes-preview-pages.mjs"
+      - "tests/segubeca-pages-authority-asset-test.mjs"
+      - "docs/evidence/FORGE_SEGUBECA_PAGES_AUTHORITY_ASSET_HOTFIX_001.md"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/pages.yml"
+      - "scripts/build-quotes-preview-pages.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pages-authority-asset:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Bounded path verification
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          merge_base="$(git merge-base "$base_sha" "$head_sha")"
+          mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
+          allowed='^(\.github/workflows/pages\.yml|\.github/workflows/segubeca-pages-authority-asset\.yml|scripts/build-quotes-preview-pages\.mjs|tests/segubeca-pages-authority-asset-test\.mjs|docs/evidence/FORGE_SEGUBECA_PAGES_AUTHORITY_ASSET_HOTFIX_001\.md)$'
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            if [[ ! "$path" =~ $allowed ]]; then
+              echo "SEGUBECA_PAGES_UNAUTHORIZED_PATH=$path" >&2
+              exit 1
+            fi
+          done
+          if printf '%s\n' "${changed[@]}" | grep -Eq '(^|/)(segubeca-calculation-authority|segubeca-productive-ui-binding|forge-pdf-browser-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime)\.js$'; then
+            echo 'SEGUBECA_PAGES_AUTHORITY_OR_FORMULA_MUTATION=FORBIDDEN' >&2
+            exit 1
+          fi
+          echo 'SEGUBECA_PAGES_BOUNDED_PATHS=PASS'
+
+      - name: Syntax and contract validation
+        run: |
+          node --check scripts/build-quotes-preview-pages.mjs
+          node --check tests/segubeca-pages-authority-asset-test.mjs
+          node --test tests/segubeca-pages-authority-asset-test.mjs
+
+      - name: Build alternate Quotes Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > env.js <<'EOF'
+          window.__ENV__ = Object.freeze({
+            SUPABASE_URL: "https://rmlxigxysujsuwzgoimv.supabase.co",
+            SUPABASE_KEY: "segubeca-pages-asset-test-placeholder",
+            DEMO_MODE: "false",
+            ENABLE_TEST_ADVISOR_LOGIN: "false"
+          });
+          EOF
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          GITHUB_SHA='${{ github.event.pull_request.head.sha || github.sha }}' \
+            node scripts/build-quotes-preview-pages.mjs
+          authority='_site/advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js'
+          binding='_site/static-preview/forge-alive/segubeca-productive-ui-binding.js'
+          test -f "$authority"
+          test -f "$binding"
+          grep -q 'SEGUBECA_ACCEPTED_PRODUCT_CALCULATION' "$authority"
+          grep -q 'calculateFromAcceptedPacket' "$authority"
+          grep -q '../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js' "$binding"
+          ! grep -q '../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js' "$binding"
+          echo 'SEGUBECA_PAGES_PREVIEW_AUTHORITY_ASSET=PASS'
+          echo 'SEGUBECA_PAGES_PREVIEW_AUTHORITY_IMPORT=PASS'
+
+      - name: Preserve accepted calculation authority
+        run: |
+          node --test tests/segubeca-calculation-authority-restoration-test.mjs
+          node tests/segubeca-solucionline-parser-test.mjs
+          node tests/segubeca-projected-mxn-runtime-test.mjs
+
+      - name: Preserve cross-module runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Enforce no product or database mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          source='docs/evidence/FORGE_SEGUBECA_PAGES_AUTHORITY_ASSET_HOTFIX_001.md'
+          grep -q 'PRODUCT_FORMULA_CHANGED=NO' "$source"
+          grep -q 'CALCULATION_AUTHORITY_CHANGED=NO' "$source"
+          grep -q 'PRODUCTIVE_BINDING_SOURCE_CHANGED=NO' "$source"
+          grep -q 'GENERATED_ARTIFACT_IMPORT_REWRITTEN=YES' "$source"
+          grep -q 'DATABASE_CHANGED=NO' "$source"
+          grep -q 'POST_MERGE_PUBLIC_REAL_PDF=PASS_REQUIRED' "$source"
+          echo 'SEGUBECA_PAGES_FORMULA_MUTATION=NO'
+          echo 'SEGUBECA_PAGES_SOURCE_BINDING_MUTATION=NO'
+          echo 'SEGUBECA_PAGES_DATABASE_MUTATION=NO'
