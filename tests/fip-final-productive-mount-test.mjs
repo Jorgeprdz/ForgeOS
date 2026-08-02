@@ -38,7 +38,12 @@ assert.match(files.distributionContract, /FORGE_FIP_PACK_07_PRODUCTIVE_EXPERIENC
 assert.match(files.distributionContract, /unknownAsZero: false/);
 assert.match(files.distributionContract, /humanApprovalRequired: true/);
 
-assert.match(files.css, /padding-bottom:calc\(96px \+ env\(safe-area-inset-bottom/);
+assert.match(files.css, /padding-bottom:calc\(188px \+ env\(safe-area-inset-bottom/);
+assert.match(files.css, /background:linear-gradient\(145deg,rgba\(20,42,68,.98\),rgba\(11,25,44,.98\)\)/);
+assert.match(files.css, /color:#f7f8ff/);
+assert.match(files.css, /\.fip-source-strip\{[^}]*flex-wrap:wrap[^}]*overflow:visible/s);
+assert.match(files.css, /\.fip-widget\[data-state="EMPTY"\]\{[^}]*padding-block:13px/s);
+assert.doesNotMatch(files.css, /var\(--md-sys-color-surface-container,#fff\)/);
 assert.match(files.css, /@media\(min-width:600px\) and \(max-width:839px\)/);
 assert.match(files.css, /@media\(min-width:840px\)/);
 assert.match(files.css, /@media\(max-width:420px\)/);
@@ -55,6 +60,9 @@ assert.ok(experience.widgets.some(widget => widget.id === "home-nash" && widget.
 
 console.log("FIP_FINAL_PRODUCTIVE_MOUNT=PASS");
 console.log("FIP_PAGES_RUNTIME_ASSET_PUBLICATION=PASS");
+console.log("FIP_MOBILE_VISUAL_CONTRAST=PASS");
+console.log("FIP_MOBILE_SOURCE_WRAP=PASS");
+console.log("FIP_MOBILE_SAFE_ZONE=PASS");
 console.log("FIP_ALFRED_ORCHESTRATION=PASS");
 console.log("FIP_UNKNOWN_STATE_HONESTY=PASS");
 console.log("FIP_LOGOUT_SCRUB=PASS");
