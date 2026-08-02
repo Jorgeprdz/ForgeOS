@@ -7,6 +7,8 @@ on:
       - "platform/shared-commercial-model/crs-07-application-policy-lineage-contract.js"
       - "advisor-os/cartera/crs-07-application-policy-lineage-service.js"
       - "supabase/migrations/20260801000610_crs07_application_policy_lineage_reconciliation.sql"
+      - "supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql"
+      - "scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs"
       - "scripts/ci/crs-07-remote-application-policy-lineage.mjs"
       - "tests/crs-07-*.mjs"
       - "docs/architecture/source-truth/FORGE_CRS_07_APPLICATION_POLICY_LINEAGE_RECONCILIATION_001.md"
@@ -36,7 +38,7 @@ jobs:
           head='${{ github.event.pull_request.head.sha }}'
           merge_base="$(git merge-base "$base" "$head")"
           mapfile -t changed < <(git diff --name-only "$merge_base" "$head")
-          allowed='^(platform/shared-commercial-model/crs-07-application-policy-lineage-contract\.js|advisor-os/cartera/crs-07-application-policy-lineage-service\.js|supabase/migrations/20260801000610_crs07_application_policy_lineage_reconciliation\.sql|scripts/ci/crs-07-remote-application-policy-lineage\.mjs|tests/crs-07-[a-z0-9-]+\.mjs|docs/architecture/source-truth/FORGE_CRS_07_APPLICATION_POLICY_LINEAGE_RECONCILIATION_001\.md|docs/evidence/FORGE_CRS_07_ABCD_(PREPARATION|CLOSURE)_001\.md|\.github/workflows/crs-07(e-remote)?-application-policy-lineage\.yml)$'
+          allowed='^(platform/shared-commercial-model/crs-07-application-policy-lineage-contract\.js|advisor-os/cartera/crs-07-application-policy-lineage-service\.js|supabase/migrations/2026080100061(0_crs07_application_policy_lineage_reconciliation|1_crs07_application_policy_lineage_guard_hardening)\.sql|scripts/ci/crs-07-(lineage-guard-hardening-deploy|remote-application-policy-lineage)\.mjs|tests/crs-07-[a-z0-9-]+\.mjs|docs/architecture/source-truth/FORGE_CRS_07_APPLICATION_POLICY_LINEAGE_RECONCILIATION_001\.md|docs/evidence/FORGE_CRS_07_ABCD_(PREPARATION|CLOSURE)_001\.md|\.github/workflows/crs-07(e-remote)?-application-policy-lineage\.yml)$'
           printf 'CHANGED_FILE=%s\n' "${changed[@]}"
           for path in "${changed[@]}"; do
             [[ "$path" =~ $allowed ]] || { echo "CRS07_UNAUTHORIZED_PATH=$path"; exit 1; }
@@ -47,6 +49,7 @@ jobs:
           set -euo pipefail
           node --check platform/shared-commercial-model/crs-07-application-policy-lineage-contract.js
           node --check advisor-os/cartera/crs-07-application-policy-lineage-service.js
+          node --check scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs
           node --check scripts/ci/crs-07-remote-application-policy-lineage.mjs
           node --test tests/crs-07-application-policy-lineage-contract-test.mjs
           node --test tests/crs-07-application-policy-lineage-service-test.mjs
@@ -72,4 +75,5 @@ jobs:
           grep -q 'AUTOMATIC_POLICY_CREATION=NO' "$doc"
           grep -q 'QUOTE_AS_POLICY_AUTHORITY=NO' "$doc"
           grep -q 'PRODUCT_UI_MUTATION=NO' "$doc"
+          grep -q "is distinct from 'on'" supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql
           echo 'CRS_07_REPOSITORY_ACCEPTANCE=PASS'
