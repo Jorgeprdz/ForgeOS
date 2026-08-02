@@ -1,0 +1,110 @@
+name: Advisor Compensation Stack Rebase
+
+on:
+  push:
+    branches:
+      - ops/advisor-compensation-stack-rebase
+    paths:
+      - ops/advisor-compensation-stack-rebase.json
+      - .github/workflows/advisor-compensation-stack-rebase.yml
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  rebase:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Load controlled target
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          config=ops/advisor-compensation-stack-rebase.json
+          echo "pr=$(jq -r '.pr' "$config")" >> "$GITHUB_OUTPUT"
+          echo "branch=$(jq -r '.targetBranch' "$config")" >> "$GITHUB_OUTPUT"
+          echo "expected=$(jq -r '.expectedHead' "$config")" >> "$GITHUB_OUTPUT"
+          echo "old_base=$(jq -r '.oldBase' "$config")" >> "$GITHUB_OUTPUT"
+
+      - name: Rebase exact stage delta onto current main
+        id: rebase
+        shell: bash
+        env:
+          TARGET_BRANCH: ${{ steps.target.outputs.branch }}
+          EXPECTED_HEAD: ${{ steps.target.outputs.expected }}
+          OLD_BASE: ${{ steps.target.outputs.old_base }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main "$TARGET_BRANCH"
+          git checkout -B controlled-rebase "origin/$TARGET_BRANCH"
+          old_head=$(git rev-parse HEAD)
+          main_head=$(git rev-parse origin/main)
+          test "$old_head" = "$EXPECTED_HEAD"
+          if ! git rebase --onto origin/main "$OLD_BASE" controlled-rebase >rebase.log 2>&1; then
+            git status --short >>rebase.log || true
+            git rebase --abort || true
+            echo "status=FAIL" >> "$GITHUB_OUTPUT"
+            echo "old_head=$old_head" >> "$GITHUB_OUTPUT"
+            echo "main_head=$main_head" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          new_head=$(git rev-parse HEAD)
+          git push --force-with-lease="refs/heads/$TARGET_BRANCH:$old_head" origin "HEAD:refs/heads/$TARGET_BRANCH"
+          echo "status=PASS" >> "$GITHUB_OUTPUT"
+          echo "old_head=$old_head" >> "$GITHUB_OUTPUT"
+          echo "new_head=$new_head" >> "$GITHUB_OUTPUT"
+          echo "main_head=$main_head" >> "$GITHUB_OUTPUT"
+
+      - name: Publish success receipt
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ steps.target.outputs.pr }}
+          TARGET_BRANCH: ${{ steps.target.outputs.branch }}
+          OLD_HEAD: ${{ steps.rebase.outputs.old_head }}
+          NEW_HEAD: ${{ steps.rebase.outputs.new_head }}
+          MAIN_HEAD: ${{ steps.rebase.outputs.main_head }}
+        run: |
+          gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "## Controlled stack rebase receipt
+
+\`\`\`text
+REBASE=PASS
+TARGET_BRANCH=$TARGET_BRANCH
+OLD_HEAD=$OLD_HEAD
+NEW_HEAD=$NEW_HEAD
+MAIN_HEAD=$MAIN_HEAD
+MERGE=NOT_EXECUTED_BY_REBASE_JOB
+\`\`\`"
+
+      - name: Publish failure receipt
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ steps.target.outputs.pr }}
+          TARGET_BRANCH: ${{ steps.target.outputs.branch }}
+          EXPECTED_HEAD: ${{ steps.target.outputs.expected }}
+          OLD_BASE: ${{ steps.target.outputs.old_base }}
+        run: |
+          detail=$(tail -n 80 rebase.log 2>/dev/null || true)
+          gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "## Controlled stack rebase receipt
+
+\`\`\`text
+REBASE=FAIL
+TARGET_BRANCH=$TARGET_BRANCH
+EXPECTED_HEAD=$EXPECTED_HEAD
+OLD_BASE=$OLD_BASE
+MERGE=BLOCKED
+\`\`\`
+
+\`\`\`text
+$detail
+\`\`\`"
