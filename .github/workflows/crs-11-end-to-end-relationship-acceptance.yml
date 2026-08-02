@@ -80,32 +80,61 @@ jobs:
           test "${#inherited[@]}" -ge 25
           node --test "${inherited[@]}"
 
-      - name: Data and security foundation acceptance
+      - name: Security authority CARTERA 010B
         run: |
           set -euo pipefail
-          families=(cartera-010b cartera-020c crs-03 crs-04 crs-05 crs-06 crs-07 crs-08)
-          security=()
-          for family in "${families[@]}"; do
-            mapfile -t family_files < <(find tests -maxdepth 1 -type f -name "${family}*.mjs" | sort)
-            echo "CRS11_SECURITY_FAMILY=${family} COUNT=${#family_files[@]}"
-            test "${#family_files[@]}" -ge 1
-            security+=("${family_files[@]}")
-          done
-          printf 'CRS11_SECURITY_TEST=%s\n' "${security[@]}"
-          failed=0
-          for file in "${security[@]}"; do
-            echo "::group::CRS11 security test ${file}"
-            if node --test --test-concurrency=1 "$file"; then
-              echo "CRS11_SECURITY_FILE_PASS=${file}"
-            else
-              echo "::error file=${file}::CRS11 security foundation test failed"
-              echo "CRS11_SECURITY_FILE_FAIL=${file}"
-              failed=1
-            fi
-            echo "::endgroup::"
-          done
-          test "$failed" -eq 0
-          echo "CRS11_SECURITY_FOUNDATION=PASS"
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'cartera-010b*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+
+      - name: Security authority CARTERA 020C
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'cartera-020c*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+
+      - name: Security authority CRS 03 Pipeline
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'crs-03*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+
+      - name: Security authority CRS 04 Activity
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'crs-04*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+
+      - name: Security authority CRS 05 Quote
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'crs-05*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+
+      - name: Security authority CRS 06 Application
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'crs-06*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+
+      - name: Security authority CRS 07 Policy lineage
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'crs-07*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+
+      - name: Security authority CRS 08 Timeline
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'crs-08*.mjs' | sort)
+          test "${#files[@]}" -ge 1
+          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
 
       - name: Program authority and no-effect boundaries
         run: |
