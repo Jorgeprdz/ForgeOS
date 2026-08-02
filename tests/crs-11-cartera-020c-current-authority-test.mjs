@@ -49,12 +49,15 @@ test("020C retains immutable accepted remote evidence", () => {
 
 test("020C closure proves conflicts, RLS, replay safety and cleanup", () => {
   requireMarkers(closure, [
-    "RLS",
-    "CHANGED_INPUT",
-    "CONFLICT",
-    "IDEMPOT",
+    "AUTHORIZATION_DIGEST_BINDING=PASS",
+    "CHANGED_INPUT_CONFLICT=PASS",
+    "RETRY_GOVERNANCE=PASS",
+    "PARALLEL_STATE_VERSION_SERIALIZATION=PASS",
+    "RLS_CROSS_ADVISOR=PASS",
+    "DIRECT_WRITES=BLOCKED",
+    "TEST_FIXTURES_ROLLED_BACK=YES",
+    "RESIDUAL_FIXTURES=0",
     "ACCOUNT_MUTATION=NOT_AUTHORIZED",
-    "CARTERA_020C_COMPLETE=YES",
   ]);
 });
 
