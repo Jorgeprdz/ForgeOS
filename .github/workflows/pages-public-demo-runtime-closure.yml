@@ -67,10 +67,11 @@ jobs:
 
       - name: Build and validate complete Pages artifact
         env:
-          GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           EXPECTED_DEMO_MODE: "false"
         run: |
-          git reset --hard "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git reset --hard HEAD
 
           cat > env.js <<'EOF'
           window.__ENV__ = Object.freeze({
@@ -81,9 +82,10 @@ jobs:
           });
           EOF
 
+          GITHUB_SHA="$EXPECTED_HEAD" \
           GITHUB_WORKFLOW="Deploy ForgeOS to GitHub Pages" \
             node scripts/build-advisor-presentation-pages-runtime.mjs
-          node scripts/build-quotes-preview-pages.mjs
+          GITHUB_SHA="$EXPECTED_HEAD" node scripts/build-quotes-preview-pages.mjs
           node scripts/validate-pages-public-config.mjs _site/env.js
 
           node --input-type=module - <<'NODE'
