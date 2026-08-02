@@ -8,6 +8,7 @@ on:
       - "platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract.js"
       - "advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js"
       - "tests/crs-11-*.mjs"
+      - "tests/cartera-010b-precedence-hardening-test.mjs"
       - "tests/e2e/crs-11-*.mjs"
       - "tests/e2e/fixtures/crs11-end-to-end-relationship/**"
       - "playwright.crs11.config.mjs"
@@ -55,7 +56,7 @@ jobs:
         run: |
           set -euo pipefail
           git diff --name-only "origin/${BASE_REF}...HEAD" > /tmp/crs11-paths
-          if grep -Ev '^(platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract\.js|advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service\.js|tests/crs-11-[^/]+\.mjs|tests/e2e/crs-11-[^/]+\.mjs|tests/e2e/fixtures/crs11-end-to-end-relationship/[^/]+|playwright\.crs11\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_11_[^/]+\.md|docs/evidence/FORGE_CRS_11_[^/]+\.md|docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001\.md|docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001\.md|\.github/workflows/crs-11-[^/]+\.yml)$' /tmp/crs11-paths; then
+          if grep -Ev '^(platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract\.js|advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service\.js|tests/crs-11-[^/]+\.mjs|tests/cartera-010b-precedence-hardening-test\.mjs|tests/e2e/crs-11-[^/]+\.mjs|tests/e2e/fixtures/crs11-end-to-end-relationship/[^/]+|playwright\.crs11\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_11_[^/]+\.md|docs/evidence/FORGE_CRS_11_[^/]+\.md|docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001\.md|docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001\.md|\.github/workflows/crs-11-[^/]+\.yml)$' /tmp/crs11-paths; then
             echo "CRS11_BOUNDED_PATHS=FAIL"
             cat /tmp/crs11-paths
             exit 1
