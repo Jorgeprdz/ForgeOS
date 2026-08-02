@@ -1,0 +1,6 @@
+{
+  "pr": 183,
+  "targetBranch": "feat/advisor-compensation-060-income-truth",
+  "expectedHead": "aae265c9310cd9c62307af895de86137eee3a955",
+  "oldBase": "100f3cf81c6282d067396882e2f0f8ed499401e9"
+}
