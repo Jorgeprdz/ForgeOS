@@ -73,7 +73,12 @@ const checks = [
   ["canonical_bootstrap_loaded", /compensation-route-bootstrap-100b/.test(retirement)],
   ["shell_registration", /registerRouteModule\("comisiones"/.test(bootstrap)],
   ["private_surface", /forgePrivateSurface\s*=\s*"advisor-compensation"/.test(bootstrap)],
-  ["session_scrub", /module\.scrub\("logout"\)/.test(bootstrap)],
+  [
+    "session_scrub",
+    /forge:private-runtime-scrub/.test(bootstrap)
+      && /module\.unmount\(\)/.test(bootstrap)
+      && !/module\.scrub\("logout"\)/.test(bootstrap),
+  ],
   ["canonical_source_contract", /ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001/.test(productSource)],
   ["canonical_source_no_indexeddb", !/DB\.obtenerTodos|IndexedDB|TASAS_VIDA|TASAS_GMM/.test(route)],
   ["provider_owner_scope", /PRODUCTIVE_OWNER_MISMATCH/.test(provider)],

@@ -13,6 +13,7 @@ const PRIVATE_ROUTES = new Set([
   "reportes",
   "forecast",
   "persona",
+  "comisiones",
 ]);
 const PRIVATE_SURFACE_SELECTORS = Object.freeze([
   "[data-forge-module-viewport]",
@@ -89,11 +90,18 @@ function setPrivateSurfaceAvailable(available) {
     : "blocked";
 }
 
+function requiredLoginAuthEntry() {
+  const entry = globalThis.ForgeAliveAuthEntry067G17B1;
+  if (!entry || typeof entry !== "object") return null;
+  if (state.status === "authenticated") return entry;
+  return entry.__forgeAuthenticatedSessionSource || entry;
+}
+
 function openRequiredLoginGate() {
   if (state.acceptanceHarness || state.status === "authenticated") return;
   if (state.loginGateForced) return;
 
-  const authEntry = globalThis.ForgeAliveAuthEntry067G17B1;
+  const authEntry = requiredLoginAuthEntry();
   if (typeof authEntry?.openAuthPanel === "function") {
     state.loginGateForced = true;
     state.loginGateAttempts = 0;
@@ -276,5 +284,6 @@ export {
   applyStatus,
   isLoopbackAcceptanceHarness,
   openRequiredLoginGate,
+  requiredLoginAuthEntry,
   scrubPrivateSurfaces,
 };
