@@ -1,0 +1,149 @@
+name: CRS 11 End-to-End Relationship Acceptance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract.js"
+      - "advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js"
+      - "tests/crs-11-*.mjs"
+      - "tests/e2e/crs-11-*.mjs"
+      - "tests/e2e/fixtures/crs11-end-to-end-relationship/**"
+      - "playwright.crs11.config.mjs"
+      - "docs/architecture/source-truth/FORGE_CRS_11_*.md"
+      - "docs/evidence/FORGE_CRS_11_*.md"
+      - "docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001.md"
+      - "docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001.md"
+      - ".github/workflows/crs-11-*.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crs11-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  plan-data-security-and-journey:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact candidate
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bounded program-closure paths
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          set -euo pipefail
+          git diff --name-only "origin/${BASE_REF}...HEAD" > /tmp/crs11-paths
+          if grep -Ev '^(platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract\.js|advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service\.js|tests/crs-11-[^/]+\.mjs|tests/e2e/crs-11-[^/]+\.mjs|tests/e2e/fixtures/crs11-end-to-end-relationship/[^/]+|playwright\.crs11\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_11_[^/]+\.md|docs/evidence/FORGE_CRS_11_[^/]+\.md|docs/roadmap/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_ROADMAP_001\.md|docs/architecture/source-truth/FORGE_COMMERCIAL_RELATIONSHIP_SPINE_SOURCE_TRUTH_001\.md|\.github/workflows/crs-11-[^/]+\.yml)$' /tmp/crs11-paths; then
+            echo "CRS11_BOUNDED_PATHS=FAIL"
+            cat /tmp/crs11-paths
+            exit 1
+          fi
+          echo "CRS11_BOUNDED_PATHS=PASS"
+
+      - name: Syntax and CRS 11 targeted tests
+        run: |
+          set -euo pipefail
+          node --check platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract.js
+          node --check advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js
+          node --check tests/e2e/crs-11-end-to-end-relationship-visual.spec.mjs
+          node --check playwright.crs11.config.mjs
+          node --test \
+            tests/crs-11-end-to-end-acceptance-contract-test.mjs \
+            tests/crs-11-end-to-end-journey-service-test.mjs
+
+      - name: Preserve CRS 01 through CRS 10 contracts and services
+        run: |
+          set -euo pipefail
+          mapfile -t inherited < <(find tests -maxdepth 1 -type f -name 'crs-*.mjs' ! -name 'crs-11-*.mjs' | sort)
+          test "${#inherited[@]}" -ge 25
+          node --test "${inherited[@]}"
+
+      - name: Data and security foundation acceptance
+        run: |
+          set -euo pipefail
+          mapfile -t security < <(find tests -maxdepth 1 -type f \( \
+            -name 'cartera-010b*.mjs' -o \
+            -name 'cartera-020c*.mjs' -o \
+            -name 'crs-03-*.mjs' -o \
+            -name 'crs-04-*.mjs' -o \
+            -name 'crs-05-*.mjs' -o \
+            -name 'crs-06-*.mjs' -o \
+            -name 'crs-07-*.mjs' -o \
+            -name 'crs-08-*.mjs' \
+          \) | sort)
+          test "${#security[@]}" -ge 15
+          node --test "${security[@]}"
+
+      - name: Program authority and no-effect boundaries
+        run: |
+          set -euo pipefail
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\s*\(' advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js
+          ! grep -Eq '(localStorage|sessionStorage|indexedDB|fetch\s*\()' advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js
+          ! grep -Eq '(registerRouteModule|history\.pushState|location\.assign)' advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js
+          grep -q 'automaticProgramPromotion: false' advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js
+          grep -q 'centralDuplicateTruthStore: false' platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract.js
+          grep -q 'unifiedTimelineIsReadModel: true' platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract.js
+          grep -q 'humanConfirmationRequired: true' platform/shared-commercial-model/crs-11-end-to-end-acceptance-contract.js
+          git diff --check
+          echo "CRS11_PROGRAM_BOUNDARIES=PASS"
+
+  productive-journey-responsive-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Verify exact candidate
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Mobile tablet and desktop journey acceptance
+        run: npx playwright test --config=playwright.crs11.config.mjs
+
+      - name: Upload exact-head CRS 11 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: crs11-end-to-end-relationship-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            artifacts/crs11-screenshots
+            artifacts/crs11-playwright-results.json
+            artifacts/crs11-playwright-test-results
+          if-no-files-found: error
+          retention-days: 30
