@@ -6,6 +6,7 @@ on:
       - acceptance/pr150-postmerge-public-demo
     paths:
       - tests/e2e/pr150-postmerge-public-demo.spec.mjs
+      - playwright.pr150-postmerge-public-demo.config.mjs
       - .github/workflows/pr150-postmerge-public-demo-acceptance.yml
   pull_request:
     types: [opened, synchronize, reopened]
@@ -13,6 +14,7 @@ on:
       - main
     paths:
       - tests/e2e/pr150-postmerge-public-demo.spec.mjs
+      - playwright.pr150-postmerge-public-demo.config.mjs
       - .github/workflows/pr150-postmerge-public-demo-acceptance.yml
   workflow_dispatch:
 
@@ -52,16 +54,13 @@ jobs:
       - name: Accept public demo end to end
         run: >-
           npx playwright test
-          tests/e2e/pr150-postmerge-public-demo.spec.mjs
-          --browser=chromium
-          --workers=1
-          --reporter=line
+          -c playwright.pr150-postmerge-public-demo.config.mjs
 
       - name: Upload failure evidence
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: pr150-postmerge-public-demo-failure
-          path: test-results
+          path: artifacts/pr150-postmerge-public-demo-test-results
           if-no-files-found: ignore
           retention-days: 14
