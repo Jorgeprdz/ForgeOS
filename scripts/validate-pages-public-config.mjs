@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import path from 'node:path';
 import vm from 'node:vm';
+import {
+  prepareForgeAlivePagesRuntimeClosure,
+} from './prepare-forge-alive-pages-runtime-closure.mjs';
 
 export const REQUIRED_PUBLIC_KEYS = ['DEMO_MODE', 'ENABLE_TEST_ADVISOR_LOGIN', 'SUPABASE_KEY', 'SUPABASE_URL'];
 export const FORBIDDEN_KEY_PATTERN = /(ACCESS_TOKEN|SERVICE_ROLE|DATABASE_PASSWORD|ADVISOR_[AB]_(EMAIL|PASSWORD)|REFRESH_TOKEN|SESSION_TOKEN|PRIVATE_KEY)/i;
@@ -28,6 +32,15 @@ export function evaluatePublicEnv(source, filename = 'env.js') {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const configPath = process.argv[2];
   assert.ok(configPath, 'CONFIG_PATH_REQUIRED');
+
+  const siteDir = path.dirname(path.resolve(configPath));
+  if (
+    path.basename(siteDir) === '_site'
+    && process.env.FORGE_SKIP_PAGES_RUNTIME_PREPARATION !== 'true'
+  ) {
+    await prepareForgeAlivePagesRuntimeClosure({ siteDir });
+  }
+
   const { publicEnv } = evaluatePublicEnv(fs.readFileSync(configPath, 'utf8'), configPath);
   const expectedDemoMode = process.env.EXPECTED_DEMO_MODE ?? 'false';
   assert.equal(publicEnv.DEMO_MODE, expectedDemoMode);
