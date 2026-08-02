@@ -1,0 +1,49 @@
+name: Pages Transitive Asset Cache Validation
+
+on:
+  pull_request:
+    paths:
+      - "scripts/build-advisor-presentation-pages-runtime.mjs"
+      - "scripts/build-advisor-presentation-pages-runtime-base.mjs"
+      - "scripts/forge-pages-transitive-cache-versioning.mjs"
+      - "tests/pages-transitive-asset-cache-invalidation-test.mjs"
+      - ".github/workflows/pages-transitive-cache-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run contract
+        run: node tests/pages-transitive-asset-cache-invalidation-test.mjs
+      - name: Generate Pages runtime with simulated build SHA
+        env:
+          FORGE_BUILD_SHA: 0123456789abcdef0123456789abcdef01234567
+          FORGE_PAGES_RUNTIME_MODE: pages
+          FORGE_CARTERA_PAGES_RUNTIME_MODE: pages
+        run: node scripts/build-advisor-presentation-pages-runtime.mjs
+      - name: Verify generated Home asset graph
+        env:
+          EXPECTED_SHA: 0123456789abcdef0123456789abcdef01234567
+        run: |
+          node - <<'EOF'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const path = 'docs/static-preview/forge-alive-material3';
+          const read = file => fs.readFileSync(`${path}/${file}`, 'utf8');
+          const sha = process.env.EXPECTED_SHA;
+          assert.match(read('app.js'), new RegExp(`home-module\\.js\\?v=${sha}`));
+          assert.match(read('home-module.js'), new RegExp(`home-productive-orchestrator\\.js\\?v=${sha}`));
+          assert.match(read('home-productive-orchestrator.js'), new RegExp(`activity-ledger-reporting-bridge\\.js\\?v=${sha}`));
+          assert.match(read('home-productive-orchestrator.js'), new RegExp(`smart-widget-productive-home-adapter\\.js\\?v=${sha}`));
+          assert.match(read('home-productive-orchestrator.js'), new RegExp(`smart-widget-productive-home-adapter\\.css\\?v=${sha}`));
+          assert.match(read('smart-widget-productive-home-adapter.js'), new RegExp(`advisor-forecast-runtime-acceptance\\.js\\?v=${sha}`));
+          console.log('PAGES_TRANSITIVE_HOME_ASSET_GRAPH=PASS');
+          EOF
