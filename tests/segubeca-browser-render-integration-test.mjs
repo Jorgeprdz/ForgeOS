@@ -103,7 +103,7 @@ Todas las cantidades están expresadas en Unidades de Inversión (UDI).`;
   assert.deepEqual(result.calculation, { totalContributed: 35339, totalRecovery: 30000, paymentMode: "Anual", currency: "UDI", coveragePeriod: "14 años" });
   assert.match(result.dashboardText, /35,339 UDI/);
   assert.match(result.dashboardText, /30,000 UDI/);
-  assert.match(result.status, /Cotización calculada y guardada/);
+  assert.match(result.status, /Cotización confirmada y guardada durante esta sesión/);
   console.log("PASS SeguBeca accepted-render real browser integration R14H");
 } finally {
   await browser.close();
