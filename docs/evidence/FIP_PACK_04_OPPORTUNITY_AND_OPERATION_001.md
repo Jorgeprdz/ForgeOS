@@ -45,7 +45,7 @@ HUMAN_APPROVAL_REQUIRED=YES
 
 ## Attention governance
 
-Daily priority must be limited by available minutes, declared maximum actions and explicit constraints. The system may rank candidate actions but may not force execution or interpret non-execution as falta de disciplina.
+Daily priority must be limited by available minutes, declared maximum actions and explicit constraints. The system may rank candidate actions but may not force execution or interpret non-execution as lack of discipline.
 
 ## Forecast governance
 
