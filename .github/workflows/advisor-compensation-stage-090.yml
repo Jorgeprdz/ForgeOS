@@ -1,0 +1,54 @@
+name: Advisor Compensation Stage 090
+
+on:
+  pull_request:
+    paths:
+      - "compensation/advisor/payout/**"
+      - "compensation/advisor/tests/advisor-compensation-stage-090-master-test.js"
+      - "compensation/advisor/tests/advisor-compensation-stage-060-master-test.js"
+      - "tests/advisor-compensation-stage-080-master-test.mjs"
+      - "docs/05-truth/ADVISOR_COMPENSATION_PAYOUT_EVIDENCE_AND_RECONCILIATION_001.md"
+      - "docs/evidence/FORGE_ADVISOR_COMPENSATION_STAGE_090_CLOSURE_001.md"
+      - ".github/workflows/advisor-compensation-stage-090.yml"
+  push:
+    branches:
+      - "feat/advisor-compensation-090-payout-reconciliation"
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax
+        run: |
+          node --check compensation/advisor/payout/advisor-compensation-payout-evidence-contract.js
+          node --check compensation/advisor/payout/advisor-compensation-payout-matcher.js
+          node --check compensation/advisor/payout/advisor-compensation-payout-confirmation.js
+          node --check compensation/advisor/payout/advisor-compensation-payout-reconciliation.js
+          node --check compensation/advisor/payout/advisor-compensation-payout-authority.js
+          node --check compensation/advisor/tests/advisor-compensation-stage-090-master-test.js
+
+      - name: Stage 090 master contract
+        run: node compensation/advisor/tests/advisor-compensation-stage-090-master-test.js
+
+      - name: Stage 060 income truth regression
+        run: node compensation/advisor/tests/advisor-compensation-stage-060-master-test.js
+
+      - name: Stage 080 Smart Widget regression
+        run: node tests/advisor-compensation-stage-080-master-test.mjs
+
+      - name: Boundary assertions
+        run: |
+          grep -R "automaticPaidPromotion: false" compensation/advisor/payout
+          grep -R "automaticConfirmation: false" compensation/advisor/payout
+          grep -R "unknownIsNotZero: true" compensation/advisor/payout
+          grep -R "externalMutationAuthorized: false" compensation/advisor/payout
+          test "$(git diff --name-only HEAD^ HEAD | grep -Ec '^(supabase/|migrations/|docs/static-preview/|advisor-os/forge-alive/)' || true)" -eq 0
