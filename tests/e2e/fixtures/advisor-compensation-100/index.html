@@ -35,18 +35,19 @@
 
     function payload(periodKey, periodKeys) {
       const advisorReference = "00000000-0000-4000-8000-000000000100";
+      const partial = mode === "partial";
       const points = periodKeys.map((key, index) => ({
         periodKey: key,
-        real: 5000 + index * 800,
-        realBasis: index === periodKeys.length - 1 ? "PAID" : "EARNED",
-        paid: index === periodKeys.length - 1 ? 9000 : null,
-        earnedNet: 5200 + index * 800,
-        estimated: 0,
-        potential: 12000,
-        atRisk: index === periodKeys.length - 1 ? 1000 : 0,
+        real: partial ? null : 5000 + index * 800,
+        realBasis: partial ? "UNAVAILABLE" : (index === periodKeys.length - 1 ? "PAID" : "EARNED"),
+        paid: partial ? null : (index === periodKeys.length - 1 ? 9000 : null),
+        earnedNet: partial ? null : 5200 + index * 800,
+        estimated: partial ? null : 0,
+        potential: partial ? null : 12000,
+        atRisk: partial ? null : (index === periodKeys.length - 1 ? 1000 : 0),
       }));
       return {
-        sourceState: mode === "stale" ? "STALE" : "READY",
+        sourceState: partial ? "PARTIAL" : (mode === "stale" ? "STALE" : "READY"),
         snapshot: {
           contractVersion: "ADVISOR_COMPENSATION_PERIOD_SNAPSHOT_001",
           snapshotId: `snapshot:${advisorReference}:${periodKey}`,
@@ -54,20 +55,31 @@
           advisorReference,
           periodKey,
           currency: "MXN",
-          status: "READY",
+          status: partial ? "PARTIAL" : "READY",
           capturedAt: "2026-08-02T14:00:00.000Z",
           amounts: {
-            estimated: 0,
-            earned: { gross: 11000, adjustments: 500, reversals: -500, net: 11000 },
-            paid: { sourceState: "AVAILABLE", value: 9000, knownZero: false },
-            real: { basis: "PAID", value: 9000 },
-            potential: 12000,
-            atRisk: 1000,
+            estimated: partial ? null : 0,
+            earned: {
+              gross: partial ? null : 11000,
+              adjustments: partial ? null : 500,
+              reversals: partial ? null : -500,
+              net: partial ? null : 11000,
+            },
+            paid: {
+              sourceState: partial ? "DISCONNECTED" : "AVAILABLE",
+              value: partial ? null : 9000,
+              knownZero: false,
+            },
+            real: { basis: partial ? "UNAVAILABLE" : "PAID", value: partial ? null : 9000 },
+            potential: partial ? null : 12000,
+            atRisk: partial ? null : 1000,
           },
-          counts: { earnedAggregates: 1, events: 4 },
-          sourceHealth: { compensationEvents: "AVAILABLE", payoutTruth: "AVAILABLE" },
+          counts: { earnedAggregates: partial ? 0 : 1, events: partial ? 0 : 4 },
+          sourceHealth: partial
+            ? { compensationEvents: "AVAILABLE", payoutTruth: "DISCONNECTED", forwardSignals: "DISCONNECTED" }
+            : { compensationEvents: "AVAILABLE", payoutTruth: "AVAILABLE" },
           details: {
-            aggregates: [{
+            aggregates: partial ? [] : [{
               aggregateKey: "agg-life-initial",
               concept: "LIFE_INITIAL",
               latestEventId: "earned-life-1",
@@ -75,7 +87,7 @@
               rulePackDigest: "r".repeat(64),
             }],
             forwardSignals: [],
-            payoutRecords: [{ payoutRecordId: "payout-1", evidenceReference: "statement-1" }],
+            payoutRecords: partial ? [] : [{ payoutRecordId: "payout-1", evidenceReference: "statement-1" }],
           },
         },
         history: {
@@ -87,7 +99,9 @@
           capturedAt: "2026-08-02T14:00:00.000Z",
           points,
         },
-        sourceHealth: { canonicalSnapshot: "READY", historicalSeries: "AVAILABLE" },
+        sourceHealth: partial
+          ? { canonicalSnapshot: "PARTIAL", historicalSeries: "PARTIAL" }
+          : { canonicalSnapshot: "READY", historicalSeries: "AVAILABLE" },
         metadata: { providerId: "fixture-stage-100" },
       };
     }

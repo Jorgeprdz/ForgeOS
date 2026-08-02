@@ -58,8 +58,9 @@ test("private-runtime scrub unmounts Commissions instead of leaving a blocked ro
 
 test("no parallel route-restoration runtime is mounted", () => {
   assert.ok(retirement.startsWith(
-    'import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-100-auth-retry-001";\n',
+    'import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-120-false-zero-safe-area-001";\n',
   ));
+  assert.doesNotMatch(retirement, /advisor-compensation-100-auth-retry-001/);
   assert.doesNotMatch(retirement, /demo-auth-route-restoration/);
 });
 
