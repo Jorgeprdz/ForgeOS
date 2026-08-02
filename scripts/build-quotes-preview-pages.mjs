@@ -10,6 +10,18 @@ const segubecaSourceAuthorityImport =
   "../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js";
 const segubecaPublicAuthorityImport =
   "../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js";
+const sourceAppUrl =
+  "./app.js?v=ui-m05x-quote-intake-ready-001&rep=16e-002&segubeca=productive-ui-001";
+const publicAppUrl =
+  "./app.js?v=ui-m05x-quote-intake-ready-001&rep=16e-002&segubeca=productive-ui-001&layout=progressive-001&print=shared-presence-001";
+const sourceSegubecaEntrypointUrl =
+  "./segubeca-productive-ui-entrypoint.js?v=segubeca-productive-ui-001";
+const publicSegubecaEntrypointUrl =
+  "./segubeca-productive-ui-entrypoint.js?v=segubeca-progressive-layout-001";
+const sourcePrintableModalImport =
+  './quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001';
+const publicPrintableModalImport =
+  './quote-runtime-printable-modal-layer-m05w001.js?v=m05w-002-shared-presence';
 
 fs.rmSync(siteDir, { recursive: true, force: true });
 fs.mkdirSync(siteDir, { recursive: true });
@@ -69,6 +81,14 @@ function isPublicFile(file) {
   if (/\.(pdf|xlsx|zip)$/i.test(file)) return false;
   if (publicRootFiles.has(file)) return true;
   return publicExtensions.has(path.extname(file).toLowerCase());
+}
+
+function replaceRequired(source, search, replacement, label) {
+  const output = source.replace(search, replacement);
+  if (output === source) {
+    throw new Error(`Required Pages rewrite missing: ${label}`);
+  }
+  return output;
 }
 
 const publicFiles = trackedFiles.filter(isPublicFile);
@@ -135,6 +155,32 @@ if (segubecaPublicBinding === segubecaPublicBindingSource) {
 }
 fs.writeFileSync(segubecaPublicBindingPath, segubecaPublicBinding);
 
+const canonicalIndexPath = path.join(canonicalForgeAliveTarget, "index.html");
+let canonicalIndex = fs.readFileSync(canonicalIndexPath, "utf8");
+canonicalIndex = replaceRequired(
+  canonicalIndex,
+  sourceAppUrl,
+  publicAppUrl,
+  "Material 3 app cache version",
+);
+canonicalIndex = replaceRequired(
+  canonicalIndex,
+  sourceSegubecaEntrypointUrl,
+  publicSegubecaEntrypointUrl,
+  "SeguBeca progressive entrypoint cache version",
+);
+fs.writeFileSync(canonicalIndexPath, canonicalIndex);
+
+const canonicalAppPath = path.join(canonicalForgeAliveTarget, "app.js");
+const canonicalAppSource = fs.readFileSync(canonicalAppPath, "utf8");
+const canonicalApp = replaceRequired(
+  canonicalAppSource,
+  sourcePrintableModalImport,
+  publicPrintableModalImport,
+  "shared printable presence guard cache version",
+);
+fs.writeFileSync(canonicalAppPath, canonicalApp);
+
 for (const file of trackedFiles.filter(
   (item) => item.startsWith("docs/") && item.endsWith(".html"),
 )) {
@@ -170,6 +216,8 @@ const required = [
   "static-preview/forge-alive/index-quote-calculator-parity.html",
   "static-preview/forge-alive/quote-runtime-pages-rate-fetch-bridge-m05e010.js",
   "static-preview/forge-alive/quote-runtime-vida-mujer-visual-m05e010.js",
+  "static-preview/forge-alive/segubeca-progressive-layout.js",
+  "static-preview/forge-alive/quote-runtime-printable-presence-guard-m05w002.js",
   "static-preview/forge-alive-runtime/nueva-cotizacion/index.html",
   segubecaAuthorityAsset,
   "env.js",
@@ -187,6 +235,18 @@ if (!builtSegubecaBinding.includes(segubecaPublicAuthorityImport)) {
 }
 if (builtSegubecaBinding.includes(segubecaSourceAuthorityImport)) {
   throw new Error("SeguBeca source-layout authority import leaked into Pages");
+}
+
+const builtCanonicalIndex = fs.readFileSync(canonicalIndexPath, "utf8");
+if (!builtCanonicalIndex.includes(publicAppUrl)) {
+  throw new Error("Pages app cache version does not include layout and print gates");
+}
+if (!builtCanonicalIndex.includes(publicSegubecaEntrypointUrl)) {
+  throw new Error("Pages SeguBeca entrypoint cache version is stale");
+}
+const builtCanonicalApp = fs.readFileSync(canonicalAppPath, "utf8");
+if (!builtCanonicalApp.includes(publicPrintableModalImport)) {
+  throw new Error("Pages printable presence guard cache version is stale");
 }
 
 const forbidden = [];
@@ -215,4 +275,6 @@ if (forbidden.length > 0) {
 console.log(`PAGES_PREVIEW_ARTIFACT=PASS files=${publicFiles.length + 2}`);
 console.log(`PAGES_PREVIEW_SEGUBECA_AUTHORITY=PASS path=${segubecaAuthorityAsset}`);
 console.log(`PAGES_PREVIEW_SEGUBECA_IMPORT=PASS import=${segubecaPublicAuthorityImport}`);
+console.log("PAGES_PREVIEW_SEGUBECA_PROGRESSIVE_LAYOUT=PASS");
+console.log("PAGES_PREVIEW_SHARED_PRINT_PRESENCE=PASS");
 console.log(`PAGES_PREVIEW_SHA=${buildSha}`);

@@ -11,7 +11,7 @@ import {
   createAcceptedQuoteReviewSnapshotBoundary,
 } from "../quote-preview-live/forge-accepted-quote-review-snapshot.js?v=segubeca-productive-ui-001";
 
-const BINDING_VERSION = "SEGUBECA-PRODUCTIVE-UI-BINDING-001.3";
+const BINDING_VERSION = "SEGUBECA-PRODUCTIVE-UI-BINDING-001.8";
 const bindingStateKey = Symbol.for("forge.segubeca.productive.ui.binding");
 const reviewBoundary = createAcceptedQuoteReviewSnapshotBoundary();
 
@@ -86,6 +86,27 @@ function alignCandidateForAuthority(candidate) {
   };
 }
 
+function clearAcceptedReviewSnapshot(reason = "authority-reset") {
+  if (
+    reason === "quote-candidate-ready" &&
+    reviewBoundary.getSnapshot()
+  ) {
+    document.documentElement.dataset.segubecaAcceptedSnapshot = "preserved";
+    document.documentElement.dataset.segubecaAcceptedSnapshotReason =
+      "duplicate-quote-candidate-ready";
+    return false;
+  }
+
+  reviewBoundary.clear();
+  document.documentElement.dataset.segubecaAcceptedSnapshot = "cleared";
+  document.documentElement.dataset.segubecaAcceptedSnapshotReason = reason;
+  return true;
+}
+
+function getAcceptedReviewSnapshot() {
+  return reviewBoundary.getSnapshot();
+}
+
 function clearAuthorityState() {
   currentCandidate = null;
   currentCalculation = null;
@@ -93,7 +114,7 @@ function clearAuthorityState() {
   currentPromise = null;
   currentError = null;
   currentState = "IDLE";
-  reviewBoundary.clear();
+  clearAcceptedReviewSnapshot("quote-candidate-cleared");
   document.documentElement.dataset.segubecaCalculationAuthority = "idle";
 }
 
@@ -148,7 +169,7 @@ function authorityState() {
     calculation: currentCalculation,
     error: currentError,
     automaticCalculation: true,
-    accepted: Boolean(reviewBoundary.getSnapshot()),
+    accepted: Boolean(getAcceptedReviewSnapshot()),
     humanConfirmationRequired: true,
     calculationAuthority: AUTHORITY,
     calculationAuthorityVersion: AUTHORITY_VERSION,
@@ -266,6 +287,86 @@ async function calculateSegubecaPreview(options = {}) {
   return operation;
 }
 
+function setAcceptedSegubecaSnapshot(candidate, calculation, source) {
+  if (
+    !candidate ||
+    !isSegubecaCandidate(candidate) ||
+    calculation?.calculationAuthority !== AUTHORITY
+  ) {
+    return null;
+  }
+
+  const existing = getAcceptedReviewSnapshot();
+  if (existing) return existing;
+
+  const snapshot = reviewBoundary.setSnapshot({
+    acceptedQuote: candidate,
+    calculation,
+  });
+  currentState = "ACCEPTED";
+  document.documentElement.dataset.segubecaAcceptedSnapshot = "ready";
+  document.documentElement.dataset.segubecaAcceptedSnapshotSource = source;
+  return snapshot;
+}
+
+function dispatchSegubecaConfirmed(source) {
+  globalThis.dispatchEvent(new CustomEvent(
+    "forge:segubeca-productive-quote-confirmed",
+    {
+      detail: Object.freeze({
+        version: BINDING_VERSION,
+        authority: AUTHORITY,
+        authorityVersion: AUTHORITY_VERSION,
+        accepted: true,
+        automatic: false,
+        humanConfirmationRequired: true,
+        source,
+      }),
+    },
+  ));
+}
+
+function dispatchCanonicalConfirmation(source) {
+  globalThis.dispatchEvent(new CustomEvent(
+    "forge:accepted-quote-confirmed",
+    {
+      detail: Object.freeze({
+        version: BINDING_VERSION,
+        authority: AUTHORITY,
+        authorityVersion: AUTHORITY_VERSION,
+        accepted: true,
+        automatic: false,
+        previewCalculationAutomatic: true,
+        humanConfirmationRequired: true,
+        quoteMutationAllowed: false,
+        crmMutationAllowed: false,
+        source,
+      }),
+    },
+  ));
+}
+
+function reconcileHumanConfirmation(event) {
+  if (
+    event?.detail?.automatic === true ||
+    !currentCandidate ||
+    !currentCalculation
+  ) {
+    return false;
+  }
+
+  const existed = Boolean(getAcceptedReviewSnapshot());
+  const snapshot = setAcceptedSegubecaSnapshot(
+    currentCandidate,
+    currentCalculation,
+    "forge:accepted-quote-confirmed",
+  );
+  if (!snapshot) return false;
+  decorateProjection();
+  if (!existed) dispatchSegubecaConfirmed("generic-human-confirmation");
+  return true;
+}
+
 async function confirmSegubecaCandidate() {
   const candidate = originalBridge?.getCurrentQuoteCandidate?.() || null;
   if (!candidate || !isSegubecaCandidate(candidate)) {
@@ -277,28 +378,19 @@ async function confirmSegubecaCandidate() {
     throw new Error("SEGUBECA_PRODUCTIVE_CALCULATION_REQUIRED");
   }
 
-  await originalBridge?.confirmCurrentQuoteCandidate?.();
-  const snapshot = reviewBoundary.setSnapshot({
-    acceptedQuote: candidate,
+  const existed = Boolean(getAcceptedReviewSnapshot());
+  const snapshot = setAcceptedSegubecaSnapshot(
+    candidate,
     calculation,
-  });
-  currentState = "ACCEPTED";
+    "segubeca-human-confirmation",
+  );
+  if (!snapshot) {
+    throw new Error("SEGUBECA_ACCEPTED_REVIEW_SNAPSHOT_REQUIRED");
+  }
+
   decorateProjection();
-
-  globalThis.dispatchEvent(new CustomEvent(
-    "forge:segubeca-productive-quote-confirmed",
-    {
-      detail: Object.freeze({
-        version: BINDING_VERSION,
-        authority: AUTHORITY,
-        authorityVersion: AUTHORITY_VERSION,
-        accepted: true,
-        automatic: false,
-        humanConfirmationRequired: true,
-      }),
-    },
-  ));
-
+  dispatchCanonicalConfirmation("segubeca-confirm-delegate");
+  if (!existed) dispatchSegubecaConfirmed("segubeca-confirm-delegate");
   return snapshot;
 }
 
@@ -321,9 +413,11 @@ function createWrappedBridge(bridge) {
     calculateCurrentQuoteCandidatePreview: calculateSegubecaPreview,
     confirmCurrentQuoteCandidate: confirmSegubecaCandidate,
     getAcceptedQuoteReviewSnapshot() {
+      const accepted = getAcceptedReviewSnapshot();
+      if (accepted) return accepted;
       const candidate = bridge.getCurrentQuoteCandidate?.();
       return isSegubecaCandidate(candidate)
-        ? reviewBoundary.getSnapshot()
+        ? null
         : bridge.getAcceptedQuoteReviewSnapshot?.();
     },
     segubecaProductiveBindingVersion: BINDING_VERSION,
@@ -332,18 +426,25 @@ function createWrappedBridge(bridge) {
 
 function patchAcceptanceEntrypoint() {
   const entrypoint = globalThis.ForgeQuoteAcceptanceEntrypointR16J0A;
-  if (!entrypoint || entrypoint[bindingStateKey]) return;
+  if (!entrypoint) return false;
+  if (
+    entrypoint[bindingStateKey] === true &&
+    entrypoint.confirm === confirmSegubecaCandidate
+  ) {
+    return true;
+  }
+
   globalThis.ForgeQuoteAcceptanceEntrypointR16J0A = Object.freeze({
     ...entrypoint,
     [bindingStateKey]: true,
     confirm: confirmSegubecaCandidate,
     getSnapshot() {
-      const candidate = originalBridge?.getCurrentQuoteCandidate?.();
-      return isSegubecaCandidate(candidate)
-        ? reviewBoundary.getSnapshot()
-        : entrypoint.getSnapshot?.();
+      return getAcceptedReviewSnapshot()
+        || entrypoint.getSnapshot?.()
+        || null;
     },
   });
+  return true;
 }
 
 function install() {
@@ -351,6 +452,8 @@ function install() {
   if (!bridge) return false;
   if (bridge[bindingStateKey]) {
     wrappedBridge = bridge;
+    globalThis.ForgeSegubecaProductiveUiBinding = api;
+    patchAcceptanceEntrypoint();
     return true;
   }
 
@@ -373,13 +476,21 @@ const api = Object.freeze({
   alignCandidateForAuthority,
   calculateCurrentQuoteCandidatePreview: calculateSegubecaPreview,
   confirmCurrentQuoteCandidate: confirmSegubecaCandidate,
+  clearAcceptedReviewSnapshot,
+  getAcceptedQuoteReviewSnapshot: getAcceptedReviewSnapshot,
   getAuthorityResult: () => currentAuthorityResult,
   getCalculation: () => currentCalculation,
   getState: authorityState,
+  patchAcceptanceEntrypoint,
+  reconcileHumanConfirmation,
 });
 
+globalThis.addEventListener("forge:accepted-quote-confirmed", reconcileHumanConfirmation);
+
 globalThis.addEventListener("forge:quote-candidate-ready", () => {
+  clearAcceptedReviewSnapshot("quote-candidate-ready");
   install();
+  patchAcceptanceEntrypoint();
   const candidate = originalBridge?.getCurrentQuoteCandidate?.();
   if (isSegubecaCandidate(candidate)) {
     void calculateSegubecaPreview().catch(() => {});
@@ -392,8 +503,25 @@ globalThis.addEventListener("forge:quotes-module-ready", () => {
   patchAcceptanceEntrypoint();
 });
 globalThis.addEventListener("forge:quote-preview-calculated", () => {
-  if (currentCalculation) queueMicrotask(decorateProjection);
+  if (currentCalculation) {
+    patchAcceptanceEntrypoint();
+    queueMicrotask(decorateProjection);
+  }
 });
+
+document.addEventListener(
+  "click",
+  (event) => {
+    const button = event.target?.closest?.(
+      '[data-quote-next-action="confirm_quote"]',
+    );
+    if (!button || !isSegubecaCandidate(originalBridge?.getCurrentQuoteCandidate?.())) {
+      return;
+    }
+    patchAcceptanceEntrypoint();
+  },
+  true,
+);
 
 install();
 queueMicrotask(patchAcceptanceEntrypoint);
@@ -404,7 +532,11 @@ export {
   BINDING_VERSION,
   alignCandidateForAuthority,
   calculateSegubecaPreview,
+  clearAcceptedReviewSnapshot,
   confirmSegubecaCandidate,
+  getAcceptedReviewSnapshot,
   install,
   isSegubecaCandidate,
+  patchAcceptanceEntrypoint,
+  reconcileHumanConfirmation,
 };

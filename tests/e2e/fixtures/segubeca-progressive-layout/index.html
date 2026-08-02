@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SeguBeca progressive layout fixture</title>
+  <style>
+    body { margin: 0; background: #06101f; color: white; font-family: system-ui; }
+    [data-material3-quotes-projection] { padding: 24px; }
+    .fq-benefit-dashboard-107z15p2 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+    .fq-benefit-card-107z15p2 { padding: 16px; border: 1px solid rgba(255,255,255,.15); }
+    .fq-benefit-card-title-107z15p2 { color: var(--fq-r11m-title); }
+    .quotes-mandatory-metric { padding: 12px; }
+    .quotes-value-line { display: block; }
+  </style>
+</head>
+<body>
+  <main data-material3-quotes-projection data-product-dashboard="segubeca">
+    <section data-quote-mandatory-metrics="true">
+      <article class="quotes-mandatory-metric" data-quote-mandatory-metric="sum-assured">
+        <span>Suma asegurada</span>
+        <strong>
+          <span class="quotes-value-line">60,000 UDI</span>
+          <span class="quotes-value-line">≈ $527,865 MXN</span>
+        </strong>
+      </article>
+    </section>
+
+    <div class="fq-benefit-dashboard-107z15p2" data-forge-product-type="segubeca">
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="protection">
+        <h4 class="fq-benefit-card-title-107z15p2">Lo que proteges</h4>
+        <p>Protección por fallecimiento e invalidez</p>
+      </section>
+
+      <section class="fq-benefit-card-107z15p2 fq-benefit-hero-metric-r16b" data-forge-hero-metric="true" data-forge-product-section="hero">
+        <h4 class="fq-benefit-hero-label-r16b">Beneficio de Pago de Suma Asegurada por Invalidez Total y Permanente</h4>
+        <div class="fq-benefit-hero-value-r16b">60,000 UDI · ≈ $527,865 MXN</div>
+      </section>
+
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="payout"><h4 class="fq-benefit-card-title-107z15p2">Cómo se entrega</h4><p>48 meses</p></section>
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="summary"><h4 class="fq-benefit-card-title-107z15p2">Resumen del plan</h4><p>SeguBeca 18</p></section>
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="additional_coverages"><h4 class="fq-benefit-card-title-107z15p2">Coberturas u opciones adicionales</h4><p>ADAPTA</p></section>
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="participants"><h4 class="fq-benefit-card-title-107z15p2">Quiénes quedan protegidos</h4><p>Juan Perez</p></section>
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="secondary_details"><h4 class="fq-benefit-card-title-107z15p2">Otros detalles</h4><p>Recuperación total final</p></section>
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="education_goal"><h4 class="fq-benefit-card-title-107z15p2">Meta educativa</h4><p>30,000 UDI</p></section>
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="contribution"><h4 class="fq-benefit-card-title-107z15p2">Lo que aportas</h4><p>35,339 UDI</p></section>
+      <section class="fq-benefit-card-107z15p2" data-forge-product-section="included_benefits"><h4 class="fq-benefit-card-title-107z15p2">Beneficios incluidos</h4><p>Amparado</p></section>
+    </div>
+  </main>
+
+  <script type="module">
+    await import("../../../../docs/static-preview/forge-alive-material3/segubeca-progressive-layout.js");
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    document.documentElement.dataset.segubecaProgressiveFixtureReady = "true";
+  </script>
+</body>
+</html>
