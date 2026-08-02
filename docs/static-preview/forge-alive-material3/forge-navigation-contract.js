@@ -64,10 +64,13 @@ export const FORGE_NAVIGATION_ITEMS = Object.freeze([
   }),
 ]);
 
+const CONTEXTUAL_ROUTES = Object.freeze(new Set(["persona"]));
+
 export function resolveForgeRoute(location = window.location) {
   const url = new URL(location.href);
   const requested = url.searchParams.get("nav")?.toLowerCase();
   const normalized = requested === "cotizaciones" ? "quotes" : requested;
+  if (CONTEXTUAL_ROUTES.has(normalized)) return normalized;
   const matched = FORGE_NAVIGATION_ITEMS.find(
     (item) => item.routeId === normalized,
   );
