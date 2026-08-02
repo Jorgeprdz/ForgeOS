@@ -238,9 +238,9 @@
     });
   }
 
-  const valueOf = (row, camel, snake) => row?.[camel] ?? row?.[snake] ?? null;
   async function one(query, fallback) {
-    const { data, error } = await query.single();
+    const response = typeof query?.single === "function" ? await query.single() : await query;
+    const { data, error } = response || {};
     queryError(error, fallback);
     return data;
   }
