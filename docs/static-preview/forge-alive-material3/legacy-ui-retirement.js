@@ -1,3 +1,5 @@
+import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-100";
+
 const LEGACY_CACHE_NAMES = new Set([
   "static-v7-pages-1",
   "runtime-v7-pages-1",

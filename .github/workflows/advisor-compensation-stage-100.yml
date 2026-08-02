@@ -1,0 +1,113 @@
+name: Advisor Compensation Stage 100
+
+on:
+  pull_request:
+    paths:
+      - "compensation/advisor/**"
+      - "advisor-os/compensation/**"
+      - "advisor-os/forge-alive/smart-widgets/**"
+      - "platform/compensation/**"
+      - "docs/static-preview/forge-alive-material3/**"
+      - "supabase/migrations/20260802090000_advisor_compensation_productive_authority.sql"
+      - "scripts/advisor-compensation-stage-100-*.mjs"
+      - "scripts/deploy-advisor-compensation-stage-100.mjs"
+      - "tests/advisor-compensation-stage-0*.mjs"
+      - "tests/e2e/advisor-compensation-*.spec.mjs"
+      - "tests/e2e/fixtures/advisor-compensation-*/**"
+      - "playwright.advisor-compensation-*.config.mjs"
+      - "docs/05-truth/ADVISOR_COMPENSATION_PRODUCTIVE_DEPLOYMENT_AND_ACCEPTANCE_001.md"
+      - "docs/evidence/FORGE_ADVISOR_COMPENSATION_STAGE_100_CLOSURE_001.md"
+      - ".github/workflows/advisor-compensation-stage-100.yml"
+  push:
+    branches:
+      - "feat/advisor-compensation-100-productive-acceptance"
+
+permissions:
+  contents: read
+
+jobs:
+  repository:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Complete repository acceptance
+        run: node scripts/advisor-compensation-stage-100-repository-acceptance.mjs
+
+      - name: Pages distribution acceptance
+        run: node scripts/advisor-compensation-stage-100-pages-acceptance.mjs
+
+      - name: Diff integrity
+        run: git diff --check
+
+      - name: Upload repository evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-stage-100-repository
+          path: artifacts/advisor-compensation-stage-100
+          if-no-files-found: error
+
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+
+      - name: Stage 070 Commissions regression
+        run: npx playwright test --config=playwright.advisor-compensation-070.config.mjs
+
+      - name: Stage 080 Income Widget regression
+        run: npx playwright test --config=playwright.advisor-compensation-080.config.mjs
+
+      - name: Stage 100 productive browser acceptance
+        run: npx playwright test --config=playwright.advisor-compensation-100.config.mjs
+
+      - name: Upload browser evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-stage-100-browser-failure
+          path: |
+            artifacts/advisor-compensation-070
+            artifacts/advisor-compensation-080
+            artifacts/advisor-compensation-100
+          if-no-files-found: ignore
+
+  remote-plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate guarded remote deployment plan
+        run: node scripts/deploy-advisor-compensation-stage-100.mjs --validate-only
+
+      - name: Prove remote mutation remains gated
+        run: |
+          ! node scripts/deploy-advisor-compensation-stage-100.mjs 2> remote-gate-error.log
+          grep -q "EXPLICIT_REMOTE_DEPLOYMENT_AUTHORIZATION_REQUIRED" remote-gate-error.log
+          test -z "${ADVISOR_COMPENSATION_REMOTE_DEPLOYMENT:-}"
+
+      - name: Upload remote plan evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-stage-100-remote-plan
+          path: artifacts/advisor-compensation-stage-100-remote
+          if-no-files-found: error

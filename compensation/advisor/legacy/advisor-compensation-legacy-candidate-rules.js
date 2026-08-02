@@ -120,6 +120,7 @@ const LEGACY_PREMIUM_WEIGHTS = deepFreeze({
   "Mio": 1.30,
   "Imagina Ser": 1.10,
   "Nuevo Plenitud": 1.00,
+  "Plenitud": 1.00,
   "Respaldo Educativo": 1.00,
   "Respaldo Negocio": 1.00,
   "Vida Mujer": 1.00,

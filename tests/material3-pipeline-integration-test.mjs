@@ -17,6 +17,7 @@ test("Material 3 Pipeline uses the canonical route, viewport and lifecycle", asy
     "Actividad",
     "Cotizaciones",
     "Cartera",
+    "Comisiones",
   ]);
   assert.equal(
     navigation.resolveForgeRoute({ href: "https://forge.test/?nav=pipeline" }),
