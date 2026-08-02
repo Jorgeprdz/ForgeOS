@@ -50,11 +50,11 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Bounded paths
+      - name: Bounded workspace extension paths
         run: |
           set -euo pipefail
           git diff --name-only "origin/${{ github.base_ref }}...HEAD" > /tmp/crs09-paths
-          if grep -Ev '^(platform/shared-commercial-model/crs-09-person-workspace-contract\.js|advisor-os/person-workspace/crs-09-person-workspace-service\.js|docs/static-preview/forge-alive-material3/person-workspace-[^/]+\.(js|css)|docs/static-preview/forge-alive-material3/app\.js|docs/static-preview/forge-alive-material3/authenticated-route-guard\.js|docs/static-preview/forge-alive-material3/forge-navigation-contract\.js|scripts/prepare-forge-alive-pages-runtime-closure\.mjs|tests/pages-public-demo-runtime-closure-test\.mjs|tests/crs-09-[^/]+\.mjs|tests/e2e/crs-09-[^/]+\.mjs|tests/e2e/fixtures/crs09-person-workspace/[^/]+|playwright\.crs09\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001\.md|docs/evidence/FORGE_CRS_09_[^/]+\.md|\.github/workflows/crs-09-[^/]+\.yml)$' /tmp/crs09-paths; then
+          if grep -Ev '^(platform/shared-commercial-model/crs-09-person-workspace-contract\.js|advisor-os/person-workspace/crs-09-person-workspace-service\.js|docs/static-preview/forge-alive-material3/person-workspace-[^/]+\.(js|css)|docs/static-preview/forge-alive-material3/app\.js|docs/static-preview/forge-alive-material3/authenticated-route-guard\.js|docs/static-preview/forge-alive-material3/forge-navigation-contract\.js|scripts/prepare-forge-alive-pages-runtime-closure\.mjs|tests/pages-public-demo-runtime-closure-test\.mjs|tests/crs-09-[^/]+\.mjs|tests/e2e/crs-09-[^/]+\.mjs|tests/e2e/fixtures/crs09-person-workspace/[^/]+|playwright\.crs09\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001\.md|docs/evidence/FORGE_CRS_09_[^/]+\.md|\.github/workflows/crs-09-[^/]+\.yml|platform/shared-commercial-model/crs-10-relationship-intelligence-contract\.js|advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service\.js|docs/static-preview/forge-alive-material3/person-intelligence-module\.(js|css)|tests/crs-10-[^/]+\.mjs|tests/e2e/crs-10-[^/]+\.mjs|tests/e2e/fixtures/crs10-relationship-intelligence/[^/]+|playwright\.crs10\.config\.mjs|docs/architecture/source-truth/FORGE_CRS_10_EXISTING_RELATIONSHIP_INTELLIGENCE_001\.md|docs/evidence/FORGE_CRS_10_[^/]+\.md|\.github/workflows/crs-10-[^/]+\.yml)$' /tmp/crs09-paths; then
             echo "CRS09_BOUNDED_PATHS=FAIL"
             cat /tmp/crs09-paths
             exit 1
