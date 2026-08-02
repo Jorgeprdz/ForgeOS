@@ -25,7 +25,7 @@ jobs:
         run: node tests/pages-transitive-asset-cache-invalidation-test.mjs
       - name: Generate Pages runtime with simulated build SHA
         env:
-          GITHUB_SHA: 0123456789abcdef0123456789abcdef01234567
+          FORGE_BUILD_SHA: 0123456789abcdef0123456789abcdef01234567
           FORGE_PAGES_RUNTIME_MODE: pages
           FORGE_CARTERA_PAGES_RUNTIME_MODE: pages
         run: node scripts/build-advisor-presentation-pages-runtime.mjs
