@@ -93,8 +93,23 @@ jobs:
             -name 'crs-07-*.mjs' -o \
             -name 'crs-08-*.mjs' \
           \) | sort)
+          echo "CRS11_SECURITY_TEST_COUNT=${#security[@]}"
+          printf 'CRS11_SECURITY_TEST=%s\n' "${security[@]}"
           test "${#security[@]}" -ge 15
-          node --test --test-concurrency=1 "${security[@]}"
+          failed=0
+          for file in "${security[@]}"; do
+            echo "::group::CRS11 security test ${file}"
+            if node --test --test-concurrency=1 "$file"; then
+              echo "CRS11_SECURITY_FILE_PASS=${file}"
+            else
+              echo "::error file=${file}::CRS11 security foundation test failed"
+              echo "CRS11_SECURITY_FILE_FAIL=${file}"
+              failed=1
+            fi
+            echo "::endgroup::"
+          done
+          test "$failed" -eq 0
+          echo "CRS11_SECURITY_FOUNDATION=PASS"
 
       - name: Program authority and no-effect boundaries
         run: |
