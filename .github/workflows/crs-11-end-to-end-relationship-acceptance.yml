@@ -69,9 +69,7 @@ jobs:
           node --check advisor-os/relationship-spine/crs-11-end-to-end-acceptance-service.js
           node --check tests/e2e/crs-11-end-to-end-relationship-visual.spec.mjs
           node --check playwright.crs11.config.mjs
-          node --test \
-            tests/crs-11-end-to-end-acceptance-contract-test.mjs \
-            tests/crs-11-end-to-end-journey-service-test.mjs
+          node --test tests/crs-11-end-to-end-acceptance-contract-test.mjs tests/crs-11-end-to-end-journey-service-test.mjs
 
       - name: Preserve CRS 01 through CRS 10 contracts and services
         run: |
@@ -80,12 +78,23 @@ jobs:
           test "${#inherited[@]}" -ge 25
           node --test "${inherited[@]}"
 
-      - name: Security authority CARTERA 010B
-        run: |
-          set -euo pipefail
-          mapfile -t files < <(find tests -maxdepth 1 -type f -name 'cartera-010b*.mjs' | sort)
-          test "${#files[@]}" -ge 1
-          for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+      - name: CARTERA 010B contract foundation
+        run: node --test tests/cartera-010b-contract-foundation-test.mjs
+
+      - name: CARTERA 010B governed command RPC
+        run: node --test tests/cartera-010b-governed-command-rpc-test.mjs
+
+      - name: CARTERA 010B precedence hardening
+        run: node --test tests/cartera-010b-precedence-hardening-test.mjs
+
+      - name: CARTERA 010B conflict ambiguity hardening
+        run: node --test tests/cartera-010b-conflict-ambiguity-hardening-test.mjs
+
+      - name: CARTERA 010B general role read authority
+        run: node --test tests/cartera-010b-general-role-read-authority-test.mjs
+
+      - name: CARTERA 010B remote acceptance harness
+        run: node --test tests/cartera-010b-remote-acceptance-harness-test.mjs
 
       - name: Security authority CARTERA 020C
         run: |
