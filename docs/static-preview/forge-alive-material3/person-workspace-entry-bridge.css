@@ -33,6 +33,15 @@
   order: -10;
 }
 
+/*
+ * Pipeline stage authority commits the new data-productive-stage before the
+ * persistence receipt is surfaced. Keep that visible color change immediate;
+ * otherwise a browser may expose the stale mixed border during the transition.
+ */
+.pipeline-module__productive-card {
+  transition-property: box-shadow, opacity !important;
+}
+
 .quotes-module__header > .person-workspace-launcher,
 .activity-hero > .person-workspace-launcher {
   align-self: start;
