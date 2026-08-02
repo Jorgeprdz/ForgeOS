@@ -1,0 +1,89 @@
+name: CRS 07 Application Policy Lineage
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "platform/shared-commercial-model/crs-07-application-policy-lineage-contract.js"
+      - "advisor-os/cartera/crs-07-application-policy-lineage-service.js"
+      - "supabase/migrations/20260801000610_crs07_application_policy_lineage_reconciliation.sql"
+      - "supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql"
+      - "supabase/migrations/20260801000612_crs07_application_policy_wrapper_qualification.sql"
+      - "supabase/migrations/20260801000613_crs07_internal_trigger_privilege_hardening.sql"
+      - "scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs"
+      - "scripts/ci/crs-07-wrapper-qualification-deploy.mjs"
+      - "scripts/ci/crs-07-internal-trigger-hardening-deploy.mjs"
+      - "scripts/ci/crs-07-remote-application-policy-lineage.mjs"
+      - "tests/crs-07-*.mjs"
+      - "docs/architecture/source-truth/FORGE_CRS_07_APPLICATION_POLICY_LINEAGE_RECONCILIATION_001.md"
+      - "docs/evidence/FORGE_CRS_07_ABCD_*.md"
+      - ".github/workflows/crs-07-application-policy-lineage.yml"
+      - ".github/workflows/crs-07e-remote-application-policy-lineage.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  crs-07:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Bounded paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          head='${{ github.event.pull_request.head.sha }}'
+          merge_base="$(git merge-base "$base" "$head")"
+          mapfile -t changed < <(git diff --name-only "$merge_base" "$head")
+          allowed='^(platform/shared-commercial-model/crs-07-application-policy-lineage-contract\.js|advisor-os/cartera/crs-07-application-policy-lineage-service\.js|supabase/migrations/2026080100061(0_crs07_application_policy_lineage_reconciliation|1_crs07_application_policy_lineage_guard_hardening|2_crs07_application_policy_wrapper_qualification|3_crs07_internal_trigger_privilege_hardening)\.sql|scripts/ci/crs-07-(lineage-guard-hardening-deploy|wrapper-qualification-deploy|internal-trigger-hardening-deploy|remote-application-policy-lineage)\.mjs|tests/crs-07-[a-z0-9-]+\.mjs|docs/architecture/source-truth/FORGE_CRS_07_APPLICATION_POLICY_LINEAGE_RECONCILIATION_001\.md|docs/evidence/FORGE_CRS_07_ABCD_(PREPARATION|CLOSURE)_001\.md|\.github/workflows/crs-07(e-remote)?-application-policy-lineage\.yml)$'
+          printf 'CHANGED_FILE=%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            [[ "$path" =~ $allowed ]] || { echo "CRS07_UNAUTHORIZED_PATH=$path"; exit 1; }
+          done
+          git diff --check "$merge_base" "$head"
+      - name: Syntax and targeted tests
+        run: |
+          set -euo pipefail
+          node --check platform/shared-commercial-model/crs-07-application-policy-lineage-contract.js
+          node --check advisor-os/cartera/crs-07-application-policy-lineage-service.js
+          node --check scripts/ci/crs-07-lineage-guard-hardening-deploy.mjs
+          node --check scripts/ci/crs-07-wrapper-qualification-deploy.mjs
+          node --check scripts/ci/crs-07-internal-trigger-hardening-deploy.mjs
+          node --check scripts/ci/crs-07-remote-application-policy-lineage.mjs
+          node --test tests/crs-07-application-policy-lineage-contract-test.mjs
+          node --test tests/crs-07-application-policy-lineage-service-test.mjs
+          node --test tests/crs-07-application-policy-lineage-migration-test.mjs
+          node --test tests/crs-07-remote-application-policy-lineage-test.mjs
+      - name: Preserve accepted authorities
+        run: |
+          set -euo pipefail
+          node --test tests/crs-02-domain-link-envelope-contract-test.mjs
+          node --test tests/crs-05-quote-person-convergence-contract-test.mjs
+          node --test tests/crs-06-application-signature-authority-contract-test.mjs
+          node --test tests/crs-06-application-signature-authority-service-test.mjs
+          node --test tests/crs-06-application-signature-migration-security-test.mjs
+          node --test tests/cartera-010b-contract-foundation-test.mjs
+          node --test tests/cartera-010b-governed-command-rpc-test.mjs
+          node --test tests/cartera-020c-governed-command-composer-test.mjs
+          node tests/rep-17-unified-runtime-regression-test.mjs
+      - name: Boundary markers
+        run: |
+          set -euo pipefail
+          doc=docs/architecture/source-truth/FORGE_CRS_07_APPLICATION_POLICY_LINEAGE_RECONCILIATION_001.md
+          grep -q 'SECOND_POLICY_STORE=FORBIDDEN' "$doc"
+          grep -q 'AUTOMATIC_POLICY_CREATION=NO' "$doc"
+          grep -q 'QUOTE_AS_POLICY_AUTHORITY=NO' "$doc"
+          grep -q 'PRODUCT_UI_MUTATION=NO' "$doc"
+          grep -q "is distinct from 'on'" supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql
+          grep -q '#variable_conflict error' supabase/migrations/20260801000612_crs07_application_policy_wrapper_qualification.sql
+          grep -q 'v_application_reference' supabase/migrations/20260801000612_crs07_application_policy_wrapper_qualification.sql
+          grep -q 'security definer' supabase/migrations/20260801000613_crs07_internal_trigger_privilege_hardening.sql
+          ! grep -qi 'grant select on public.policy_roles to authenticated' supabase/migrations/20260801000613_crs07_internal_trigger_privilege_hardening.sql
+          echo 'CRS_07_REPOSITORY_ACCEPTANCE=PASS'
