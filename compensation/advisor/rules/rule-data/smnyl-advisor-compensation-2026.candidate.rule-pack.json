@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "metadata": {
+    "rulePackId": "smnyl-advisor-compensation-2026-candidate",
+    "rulePackVersion": "0.1.0-candidate",
+    "rulePackHash": "candidate:not-sealed",
+    "carrierId": "SMNYL",
+    "distributionChannel": "ADVISOR_DIRECT",
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": "2026-12-31",
+    "governanceStatus": "candidate",
+    "sourceState": "LEGACY_RUNTIME_NOT_OFFICIAL_SOURCE_TRUTH",
+    "sourceEvidenceRefs": [
+      "comisiones.js — FULL SAFE RECOVERY BUILD v16 (RLS Safe)",
+      "docs/05-truth/ADVISOR_COMPENSATION_LEGACY_ASSET_INVENTORY_001.md"
+    ],
+    "candidateAssumptions": [
+      "2026 effective window is a candidate governance envelope and is not official carrier evidence",
+      "legacy runtime rates remain unverified until an official commission source is attached"
+    ]
+  },
+  "globalRules": {
+    "currency": "MXN",
+    "payoutTruth": false,
+    "calculatedCandidateIsPayoutTruth": false,
+    "earnedTruthRequiresConfirmedPaymentEvent": true,
+    "paidTruthRequiresCompensationStatement": true,
+    "unknownProductBehavior": "BLOCKED",
+    "unknownVariantBehavior": "BLOCKED",
+    "missingMaterialInputBehavior": "BLOCKED",
+    "defaultCommissionRateAllowed": false,
+    "automaticPayoutConfirmationAllowed": false,
+    "productRecommendationByCommissionAllowed": false
+  },
+  "migration": {
+    "sourceModule": "compensation/advisor/legacy/advisor-compensation-legacy-candidate-rules.js",
+    "effectiveFrom": "2026-01-01",
+    "effectiveTo": "2026-12-31",
+    "commissionBasis": "ANNUAL_PREMIUM_WITH_PAYMENT_FREQUENCY_FACTOR",
+    "lifePolicyYearBands": [
+      "YEAR_1",
+      "YEAR_2",
+      "YEAR_3",
+      "YEARS_4_5",
+      "YEARS_6_10",
+      "YEARS_11_PLUS"
+    ],
+    "gmmAgeBands": [
+      "AGE_0_4",
+      "AGE_5_54",
+      "AGE_55_59",
+      "AGE_60_PLUS"
+    ]
+  },
+  "trainingAllowanceReference": {
+    "rulePackRef": "compensation/advisor-development/rule-data/smnyl-advisor-development-2026.rule-pack.json",
+    "conceptRef": "training-allowance",
+    "reconciliationStatus": "REQUIRED"
+  }
+}
