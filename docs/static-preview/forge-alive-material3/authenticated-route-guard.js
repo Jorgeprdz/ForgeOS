@@ -1,5 +1,4 @@
-const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V3";
-const FAIL_CLOSED_CONTRACT = "FORGE_AUTH_FAIL_CLOSED_V1";
+const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V2";
 const PRIVATE_ROUTES = new Set([
   "inicio",
   "pipeline",
@@ -10,10 +9,6 @@ const PRIVATE_ROUTES = new Set([
   "reportes",
   "forecast",
   "persona",
-]);
-const PRIVATE_SURFACE_SELECTORS = Object.freeze([
-  "[data-forge-module-viewport]",
-  "[data-forge-shell-controls]",
 ]);
 
 function isLoopbackAcceptanceHarness() {
@@ -33,51 +28,16 @@ function currentRoute() {
   return PRIVATE_ROUTES.has(value) ? value : "inicio";
 }
 
-function ensureFailClosedStyle() {
-  const marker = "data-forge-auth-fail-closed-style";
-  if (document.querySelector(`[${marker}]`)) return;
-
-  const style = document.createElement("style");
-  style.setAttribute(marker, FAIL_CLOSED_CONTRACT);
-  style.textContent = `
-    html:not([data-forge-auth-boundary="authenticated"])
-      [data-forge-module-viewport],
-    html:not([data-forge-auth-boundary="authenticated"])
-      [data-forge-shell-controls] {
-      display: none !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-  `;
-  (document.head || document.documentElement).append(style);
-  document.documentElement.dataset.forgeAuthFailClosed = "armed";
-}
-
-function privateSurfaces() {
-  return PRIVATE_SURFACE_SELECTORS.flatMap((selector) =>
-    [...document.querySelectorAll(selector)]
-  );
-}
-
-function setBooleanPropertyOnce(node, property, value) {
-  if (!node || node[property] === value) return false;
-  node[property] = value;
-  return true;
-}
-
-function setAttributeOnce(node, name, value) {
-  if (!node || node.getAttribute(name) === value) return false;
-  node.setAttribute(name, value);
-  return true;
+function viewport() {
+  return document.querySelector("[data-forge-module-viewport]");
 }
 
 function setPrivateSurfaceAvailable(available) {
-  const unavailable = !available;
-  for (const root of privateSurfaces()) {
-    setBooleanPropertyOnce(root, "hidden", unavailable);
-    setBooleanPropertyOnce(root, "inert", unavailable);
-    setAttributeOnce(root, "aria-hidden", available ? "false" : "true");
-  }
+  const root = viewport();
+  if (!root) return;
+  root.hidden = !available;
+  root.inert = !available;
+  root.setAttribute("aria-hidden", available ? "false" : "true");
   document.documentElement.dataset.forgePrivateNavigation = available
     ? "available"
     : "blocked";
@@ -166,7 +126,6 @@ if (state.requestedRoute !== "inicio") {
   sessionStorage.setItem("forge.auth.requested-route.v1", state.requestedRoute);
 }
 
-ensureFailClosedStyle();
 document.documentElement.dataset.forgeAuthBoundary = "resolving";
 document.addEventListener("click", blockAnonymousNavigation, true);
 globalThis.addEventListener("popstate", () => {
@@ -184,12 +143,7 @@ globalThis.addEventListener("forge:auth-state-changed", (event) => {
 const observer = new MutationObserver(() => {
   setPrivateSurfaceAvailable(state.status === "authenticated");
 });
-observer.observe(document.documentElement, {
-  childList: true,
-  subtree: true,
-  attributes: true,
-  attributeFilter: ["hidden", "inert", "aria-hidden"],
-});
+observer.observe(document.documentElement, { childList: true, subtree: true });
 
 if (state.acceptanceHarness) {
   document.documentElement.dataset.forgeAuthAcceptanceHarness = "loopback-only";
@@ -202,16 +156,13 @@ Object.defineProperty(globalThis, "ForgeAuthenticatedRouteGuard", {
   configurable: true,
   value: Object.freeze({
     version: VERSION,
-    failClosedContract: FAIL_CLOSED_CONTRACT,
     diagnostics: () => Object.freeze({ ...state }),
     scrubPrivateSurfaces,
   }),
 });
 
 export {
-  FAIL_CLOSED_CONTRACT,
   PRIVATE_ROUTES,
-  PRIVATE_SURFACE_SELECTORS,
   VERSION,
   applyStatus,
   isLoopbackAcceptanceHarness,
