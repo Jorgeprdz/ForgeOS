@@ -60,5 +60,5 @@ jobs:
       - name: Preserve inherited Pages and authentication contracts
         run: |
           node --test tests/cartera-pages-runtime-assets-test.mjs
-          node --test tests/forge-067g17b1-auth-entry-static-test.mjs
+          node --test tests/authenticated-route-guard-test.mjs
           node --test tests/login-integrated-demo-tenants-test.mjs
