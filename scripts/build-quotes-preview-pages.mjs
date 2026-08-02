@@ -4,6 +4,12 @@ import { execFileSync } from "node:child_process";
 
 const siteDir = "_site";
 const buildSha = process.env.GITHUB_SHA || "local-preview";
+const segubecaAuthorityAsset =
+  "advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js";
+const segubecaSourceAuthorityImport =
+  "../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js";
+const segubecaPublicAuthorityImport =
+  "../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js";
 
 fs.rmSync(siteDir, { recursive: true, force: true });
 fs.mkdirSync(siteDir, { recursive: true });
@@ -32,6 +38,7 @@ const publicExtensions = new Set([
 
 const publicRootFiles = new Set([".nojekyll", "_redirects", "manifest.json"]);
 const publicConversationRuntimeFiles = new Set([
+  segubecaAuthorityAsset,
   "nash-intent-engine.js",
   "nash-combat-orchestrator.js",
   "nash-next-best-action-engine.js",
@@ -111,6 +118,23 @@ fs.cpSync(cleanForgeAliveSource, canonicalForgeAliveTarget, {
   recursive: true,
 });
 
+const segubecaPublicBindingPath = path.join(
+  canonicalForgeAliveTarget,
+  "segubeca-productive-ui-binding.js",
+);
+const segubecaPublicBindingSource = fs.readFileSync(
+  segubecaPublicBindingPath,
+  "utf8",
+);
+const segubecaPublicBinding = segubecaPublicBindingSource.replace(
+  segubecaSourceAuthorityImport,
+  segubecaPublicAuthorityImport,
+);
+if (segubecaPublicBinding === segubecaPublicBindingSource) {
+  throw new Error("SeguBeca public authority import was not rewritten");
+}
+fs.writeFileSync(segubecaPublicBindingPath, segubecaPublicBinding);
+
 for (const file of trackedFiles.filter(
   (item) => item.startsWith("docs/") && item.endsWith(".html"),
 )) {
@@ -147,6 +171,7 @@ const required = [
   "static-preview/forge-alive/quote-runtime-pages-rate-fetch-bridge-m05e010.js",
   "static-preview/forge-alive/quote-runtime-vida-mujer-visual-m05e010.js",
   "static-preview/forge-alive-runtime/nueva-cotizacion/index.html",
+  segubecaAuthorityAsset,
   "env.js",
   "build-info.json",
 ];
@@ -154,6 +179,14 @@ for (const file of required) {
   if (!fs.existsSync(path.join(siteDir, file))) {
     throw new Error(`Missing Pages preview artifact: ${file}`);
   }
+}
+
+const builtSegubecaBinding = fs.readFileSync(segubecaPublicBindingPath, "utf8");
+if (!builtSegubecaBinding.includes(segubecaPublicAuthorityImport)) {
+  throw new Error("SeguBeca public authority import is not project-relative");
+}
+if (builtSegubecaBinding.includes(segubecaSourceAuthorityImport)) {
+  throw new Error("SeguBeca source-layout authority import leaked into Pages");
 }
 
 const forbidden = [];
@@ -180,4 +213,6 @@ if (forbidden.length > 0) {
 }
 
 console.log(`PAGES_PREVIEW_ARTIFACT=PASS files=${publicFiles.length + 2}`);
+console.log(`PAGES_PREVIEW_SEGUBECA_AUTHORITY=PASS path=${segubecaAuthorityAsset}`);
+console.log(`PAGES_PREVIEW_SEGUBECA_IMPORT=PASS import=${segubecaPublicAuthorityImport}`);
 console.log(`PAGES_PREVIEW_SHA=${buildSha}`);

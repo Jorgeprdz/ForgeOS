@@ -76,6 +76,12 @@ jobs:
           const { execFileSync } = require('child_process');
 
           const siteDir = '_site';
+          const segubecaAuthorityAsset =
+            'advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+          const segubecaSourceAuthorityImport =
+            '../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+          const segubecaPublicAuthorityImport =
+            '../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
           fs.rmSync(siteDir, { recursive: true, force: true });
           fs.mkdirSync(siteDir, { recursive: true });
 
@@ -107,6 +113,7 @@ jobs:
             'service-worker.js'
           ]);
           const publicConversationRuntimeFiles = new Set([
+            segubecaAuthorityAsset,
             'nash-intent-engine.js',
             'nash-combat-orchestrator.js',
             'nash-next-best-action-engine.js',
@@ -196,6 +203,23 @@ jobs:
             { recursive: true },
           );
 
+          const segubecaPublicBindingPath = path.join(
+            canonicalForgeAliveTarget,
+            'segubeca-productive-ui-binding.js',
+          );
+          const segubecaPublicBindingSource = fs.readFileSync(
+            segubecaPublicBindingPath,
+            'utf8',
+          );
+          const segubecaPublicBinding = segubecaPublicBindingSource.replace(
+            segubecaSourceAuthorityImport,
+            segubecaPublicAuthorityImport,
+          );
+          if (segubecaPublicBinding === segubecaPublicBindingSource) {
+            throw new Error('SeguBeca public authority import was not rewritten');
+          }
+          fs.writeFileSync(segubecaPublicBindingPath, segubecaPublicBinding);
+
           const canonicalIndexPath = path.join(canonicalForgeAliveTarget, 'index.html');
           const canonicalIndex = fs.readFileSync(canonicalIndexPath, 'utf8');
           const versionedCanonicalIndex = canonicalIndex.replace(
@@ -241,6 +265,12 @@ jobs:
           const canonical = '_site/static-preview/forge-alive';
           const legacyRuntime = '_site/static-preview/forge-alive-runtime';
           const quotesRuntime = path.join(legacyRuntime, 'nueva-cotizacion/index.html');
+          const segubecaAuthorityAsset =
+            'advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+          const segubecaSourceAuthorityImport =
+            '../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+          const segubecaPublicAuthorityImport =
+            '../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
 
           assert.ok(
             fs.existsSync(quotesRuntime),
@@ -273,6 +303,7 @@ jobs:
             );
           }
           const requiredConversationRuntime = [
+            segubecaAuthorityAsset,
             'nash-intent-engine.js',
             'nash-combat-orchestrator.js',
             'nash-next-best-action-engine.js',
@@ -302,6 +333,10 @@ jobs:
           const quotesCss = fs.readFileSync(path.join(canonical, 'quotes-module.css'), 'utf8');
           const pipelineModule = fs.readFileSync(path.join(canonical, 'pipeline-module.js'), 'utf8');
           const workspaceCss = fs.readFileSync(path.join(canonical, 'pipeline-referral-modal.css'), 'utf8');
+          const segubecaBinding = fs.readFileSync(
+            path.join(canonical, 'segubeca-productive-ui-binding.js'),
+            'utf8',
+          );
 
           assert.match(rootIndex, /FORGE_LEGACY_UI_RETIRED/);
           assert.match(rootIndex, /static-preview\/forge-alive/);
@@ -337,6 +372,14 @@ jobs:
             pipelineModule,
             /pipeline-referral-modal\.css\?v=ui-m06-referral-004/,
           );
+          assert.ok(
+            segubecaBinding.includes(segubecaPublicAuthorityImport),
+            'SeguBeca public authority import is not project-relative',
+          );
+          assert.ok(
+            !segubecaBinding.includes(segubecaSourceAuthorityImport),
+            'SeguBeca source-layout import leaked into Pages',
+          );
           for (const selector of [
             '.referral-sheet-layer',
             '.referral-sheet',
@@ -352,6 +395,13 @@ jobs:
               `missing productive workspace style: ${selector}`,
             );
           }
+
+          const segubecaAuthority = fs.readFileSync(
+            path.join('_site', segubecaAuthorityAsset),
+            'utf8',
+          );
+          assert.match(segubecaAuthority, /SEGUBECA_ACCEPTED_PRODUCT_CALCULATION/);
+          assert.match(segubecaAuthority, /calculateFromAcceptedPacket/);
 
           const buildInfo = JSON.parse(
             fs.readFileSync('_site/build-info.json', 'utf8'),
@@ -393,6 +443,8 @@ jobs:
           console.log('PAGES_LEGACY_UI_RETIRED=PASS');
           console.log('PAGES_LEGACY_SERVICE_WORKER_RETIRED=PASS');
           console.log('PAGES_CANONICAL_RUNTIME_SHA_VERSIONED=PASS');
+          console.log('PAGES_SEGUBECA_AUTHORITY_ASSET=PASS');
+          console.log('PAGES_SEGUBECA_AUTHORITY_IMPORT=PASS');
           EOF
 
       - name: Upload Pages artifact
