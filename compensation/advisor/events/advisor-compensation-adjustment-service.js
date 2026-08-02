@@ -23,6 +23,18 @@ function validateBaseEvent(baseEvent) {
   }
 }
 
+function resolveCurrentNetAmount(baseEvent) {
+  validateBaseEvent(baseEvent);
+  if (baseEvent.state === ADVISOR_COMPENSATION_EVENT_STATES.EARNED) {
+    return baseEvent.amount.value;
+  }
+  const currentNetAmount = Number(baseEvent.metadata?.resultingNetAmount);
+  if (!Number.isFinite(currentNetAmount)) {
+    fail("ADVISOR_COMPENSATION_ADJUSTED_NET_AMOUNT_REQUIRED");
+  }
+  return Math.round(currentNetAmount * 100) / 100;
+}
+
 function createAdvisorCompensationAdjustmentEvent({
   baseEvent,
   amountDelta,
@@ -44,7 +56,8 @@ function createAdvisorCompensationAdjustmentEvent({
   if (!present(actorId)) fail("ADVISOR_COMPENSATION_ADJUSTMENT_ACTOR_REQUIRED");
 
   const delta = Math.round(Number(amountDelta) * 100) / 100;
-  const resultingNetAmount = Math.round((baseEvent.amount.value + delta) * 100) / 100;
+  const baseNetAmount = resolveCurrentNetAmount(baseEvent);
+  const resultingNetAmount = Math.round((baseNetAmount + delta) * 100) / 100;
   return createAdvisorCompensationEvent({
     eventId: `advisor-compensation-event:adjustment:${baseEvent.eventDigest}:${String(idempotencyKey)}`,
     aggregateKey: baseEvent.aggregateKey,
@@ -82,7 +95,7 @@ function createAdvisorCompensationAdjustmentEvent({
     },
     metadata: {
       ...metadata,
-      baseAmount: baseEvent.amount.value,
+      baseAmount: baseNetAmount,
       adjustmentDelta: delta,
       resultingNetAmount,
       payoutTruth: false
@@ -103,7 +116,11 @@ function createAdvisorCompensationReversalEvent({
   validateBaseEvent(baseEvent);
   if (!present(reason)) fail("ADVISOR_COMPENSATION_REVERSAL_REASON_REQUIRED");
   if (!present(actorId)) fail("ADVISOR_COMPENSATION_REVERSAL_ACTOR_REQUIRED");
-  if (baseEvent.amount.value <= 0) fail("ADVISOR_COMPENSATION_REVERSAL_POSITIVE_BASE_REQUIRED");
+
+  const currentNetAmount = resolveCurrentNetAmount(baseEvent);
+  if (currentNetAmount <= 0) {
+    fail("ADVISOR_COMPENSATION_REVERSAL_POSITIVE_BASE_REQUIRED");
+  }
 
   return createAdvisorCompensationEvent({
     eventId: `advisor-compensation-event:reversal:${baseEvent.eventDigest}:${String(idempotencyKey)}`,
@@ -117,7 +134,7 @@ function createAdvisorCompensationReversalEvent({
     policyReference: baseEvent.policyReference,
     paymentEventId: baseEvent.paymentEventId,
     periodKey: baseEvent.periodKey,
-    amount: -Math.abs(baseEvent.amount.value),
+    amount: -Math.abs(currentNetAmount),
     currency: baseEvent.amount.currency,
     calculation: baseEvent.calculation,
     ruleSnapshot: baseEvent.ruleSnapshot,
@@ -142,7 +159,7 @@ function createAdvisorCompensationReversalEvent({
     },
     metadata: {
       ...metadata,
-      reversedAmount: baseEvent.amount.value,
+      reversedAmount: currentNetAmount,
       resultingNetAmount: 0,
       payoutTruth: false
     }
@@ -150,6 +167,7 @@ function createAdvisorCompensationReversalEvent({
 }
 
 module.exports = {
+  resolveCurrentNetAmount,
   createAdvisorCompensationAdjustmentEvent,
   createAdvisorCompensationReversalEvent
 };
