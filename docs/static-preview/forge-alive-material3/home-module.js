@@ -24,12 +24,80 @@ export function createHomeModule({ root, shell }) {
   const abortController = new AbortController();
   const { signal } = abortController;
   const input = document.querySelector(".alfred-input input");
+  const toast = document.querySelector(".toast");
   const productiveRoot = prepareProductiveRoot(root);
   const productiveHome = createAuthenticatedProductiveHome({
     root: productiveRoot,
     shell,
   });
   let mounted = false;
+  let toastTimer = null;
+
+  function announce(message) {
+    if (!toast) return;
+    if (toastTimer !== null) window.clearTimeout(toastTimer);
+    toast.textContent = message;
+    toast.classList.add("show");
+    toastTimer = window.setTimeout(() => {
+      toast.classList.remove("show");
+      toastTimer = null;
+    }, 2400);
+  }
+
+  function navigate(routeId) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("nav", routeId);
+    for (const key of ["person", "sourceType", "sourceRef", "from"]) {
+      url.searchParams.delete(key);
+    }
+    window.history.pushState(
+      { forgeRoute: routeId, source: "home" },
+      "",
+      `${url.pathname}${url.search}${url.hash}`,
+    );
+    shell.reconcile();
+  }
+
+  function bindClick(target, handler) {
+    if (!target || target.dataset.forgeHomeActionBound === "true") return;
+    target.dataset.forgeHomeActionBound = "true";
+    target.addEventListener("click", handler, { signal });
+  }
+
+  function bindStaticHomeActions() {
+    bindClick(root.querySelector(".plan-card .mini-action"), () => {
+      navigate("actividad");
+    });
+
+    bindClick(root.querySelector(".next-card .primary-action"), () => {
+      navigate("pipeline");
+    });
+
+    bindClick(root.querySelector(".next-card .save-action"), () => {
+      announce("Guardar para después se habilitará cuando esta acción esté vinculada a una persona real.");
+    });
+
+    bindClick(root.querySelector(".opportunities .section-heading button"), () => {
+      navigate("pipeline");
+    });
+
+    root.querySelectorAll(".opportunity-list .opportunity").forEach((button) => {
+      bindClick(button, () => navigate("pipeline"));
+    });
+
+    const alfredSend = document.querySelector(
+      '.alfred-input button[aria-label="Enviar a Alfred"]',
+    );
+    bindClick(alfredSend, () => {
+      if (!input?.value.trim()) {
+        input?.focus({ preventScroll: true });
+        announce("Escribe una instrucción para Alfred.");
+        return;
+      }
+      shell.setAlfredState("action", "action");
+      announce("Alfred aún no tiene ejecución productiva conectada; tu instrucción permanece sin enviar.");
+    });
+  }
 
   function mount() {
     if (mounted) return;
@@ -47,6 +115,7 @@ export function createHomeModule({ root, shell }) {
     input?.addEventListener("blur", () => {
       window.setTimeout(shell.syncVisualViewport, 120);
     }, { signal });
+    bindStaticHomeActions();
     productiveHome.mount();
   }
 
