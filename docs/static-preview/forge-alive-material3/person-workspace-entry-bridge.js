@@ -14,12 +14,23 @@ const SELECTORS = Object.freeze({
 let intelligenceModulePromise;
 
 function ensureStylesheet() {
-  if (document.querySelector("[data-person-workspace-entry-styles]")) return;
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = new URL("person-workspace-entry-bridge.css?v=crs-09-001", import.meta.url).href;
-  link.dataset.personWorkspaceEntryStyles = "true";
-  document.head.append(link);
+  if (!document.querySelector("[data-person-workspace-entry-styles]")) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = new URL("person-workspace-entry-bridge.css?v=crs-09-001", import.meta.url).href;
+    link.dataset.personWorkspaceEntryStyles = "true";
+    document.head.append(link);
+  }
+  if (!document.querySelector("[data-person-workspace-stage-compatibility]")) {
+    const style = document.createElement("style");
+    style.dataset.personWorkspaceStageCompatibility = "true";
+    style.textContent = `
+      .pipeline-module__productive-card {
+        transition-property: box-shadow, opacity !important;
+      }
+    `;
+    document.head.append(style);
+  }
 }
 
 function button({ personReference = null, sourceType = null, sourceReference = null, compact = false } = {}) {
