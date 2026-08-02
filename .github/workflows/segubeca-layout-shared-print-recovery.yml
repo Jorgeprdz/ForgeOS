@@ -1,0 +1,318 @@
+name: SeguBeca Progressive Layout and Shared Print Recovery
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/segubeca-layout-shared-print-recovery.yml"
+      - "docs/static-preview/forge-alive-material3/quotes-module.js"
+      - "docs/static-preview/forge-alive-material3/segubeca-productive-ui-binding.js"
+      - "docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js"
+      - "docs/static-preview/forge-alive-material3/segubeca-progressive-layout.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-printable-presence-guard-m05w002.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-printable-modal-layer-m05w001.js"
+      - "scripts/build-quotes-preview-pages.mjs"
+      - "tests/e2e/fixtures/segubeca-progressive-layout/index.html"
+      - "tests/e2e/fixtures/m05e006/index.html"
+      - "tests/e2e/segubeca-progressive-layout.spec.mjs"
+      - "tests/e2e/m05e006-responsiveness.spec.mjs"
+      - "playwright.segubeca-layout-print.config.mjs"
+      - "docs/evidence/FORGE_SEGUBECA_PROGRESSIVE_LAYOUT_SHARED_PRINT_RECOVERY_001.md"
+
+permissions:
+  contents: read
+
+jobs:
+  layout-and-shared-print:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Enforce bounded UI and accepted-snapshot paths
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          merge_base="$(git merge-base "$base_sha" "$head_sha")"
+          mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
+          allowed='^(\.github/workflows/segubeca-layout-shared-print-recovery\.yml|docs/static-preview/forge-alive-material3/(quotes-module|segubeca-productive-ui-binding|segubeca-productive-ui-entrypoint|segubeca-progressive-layout|quote-runtime-printable-presence-guard-m05w002|quote-runtime-printable-modal-layer-m05w001)\.js|scripts/build-quotes-preview-pages\.mjs|tests/e2e/fixtures/(segubeca-progressive-layout/index|m05e006/index)\.html|tests/e2e/(segubeca-progressive-layout|m05e006-responsiveness)\.spec\.mjs|playwright\.segubeca-layout-print\.config\.mjs|docs/evidence/FORGE_SEGUBECA_PROGRESSIVE_LAYOUT_SHARED_PRINT_RECOVERY_001\.md)$'
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 14
+          for file in "${changed[@]}"; do
+            if [[ ! "$file" =~ $allowed ]]; then
+              echo "SEGUBECA_LAYOUT_PRINT_UNAUTHORIZED_PATH=$file" >&2
+              exit 1
+            fi
+          done
+          if printf '%s\n' "${changed[@]}" | grep -Eq '(^|/)(segubeca-calculation-authority|forge-segubeca-solucionline-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime|forge-quote-calculators)\.js$'; then
+            echo 'SEGUBECA_LAYOUT_PRINT_CALCULATION_SOURCE_MUTATION=FORBIDDEN' >&2
+            exit 1
+          fi
+          echo 'SEGUBECA_LAYOUT_PRINT_BOUNDED_PATHS=PASS'
+
+      - name: Syntax and single-instance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check docs/static-preview/forge-alive-material3/quotes-module.js
+          node --check docs/static-preview/forge-alive-material3/segubeca-productive-ui-binding.js
+          node --check docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js
+          node --check docs/static-preview/forge-alive-material3/segubeca-progressive-layout.js
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-presence-guard-m05w002.js
+          node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-modal-layer-m05w001.js
+          node --check scripts/build-quotes-preview-pages.mjs
+          node --check tests/e2e/segubeca-progressive-layout.spec.mjs
+          node --check tests/e2e/m05e006-responsiveness.spec.mjs
+          node --check playwright.segubeca-layout-print.config.mjs
+
+          binding_url='./segubeca-productive-ui-binding.js?v=segubeca-productive-ui-001-4'
+          test "$(grep -RhoF "$binding_url" \
+            docs/static-preview/forge-alive-material3/quotes-module.js \
+            docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js \
+            | wc -l)" -eq 2
+          if grep -RFn 'segubeca-productive-ui-binding.js?v=segubeca-productive-ui-001"' \
+            docs/static-preview/forge-alive-material3/quotes-module.js \
+            docs/static-preview/forge-alive-material3/segubeca-productive-ui-entrypoint.js; then
+            echo 'SEGUBECA_DUPLICATE_BINDING_MODULE_INSTANCE=FORBIDDEN' >&2
+            exit 1
+          fi
+          echo 'SEGUBECA_SINGLE_BINDING_MODULE_INSTANCE=PASS'
+
+      - name: Install browser dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm install --no-save --no-package-lock puppeteer@24.16.0
+
+      - name: Progressive layout and shared print browser acceptance
+        run: npx playwright test --config=playwright.segubeca-layout-print.config.mjs
+
+      - name: Preserve SeguBeca dashboard model
+        run: node tests/segubeca-product-dashboard-adapter-test.mjs
+
+      - name: Accept productive real PDF and human confirmation
+        id: real_pdf_acceptance
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          test -f "$FORGE_CHROMIUM_PATH"
+          node tests/segubeca-material3-real-pdf-acceptance-test.mjs
+
+      - name: Diagnose productive confirmation boundary
+        if: steps.real_pdf_acceptance.outcome == 'failure'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const sourcePath = "tests/segubeca-material3-real-pdf-acceptance-test.mjs";
+          const targetPath = "/tmp/segubeca-confirmation-boundary-diagnostic.mjs";
+          let source = fs.readFileSync(sourcePath, "utf8");
+
+          const clickNeedle = "    button.click();";
+          if (!source.includes(clickNeedle)) {
+            throw new Error("SEGUBECA_DIAGNOSTIC_CLICK_TARGET_MISSING");
+          }
+          source = source.replace(clickNeedle, `    globalThis.__segubecaDiagnosticEvents = [];
+            for (const eventName of [
+              "forge:accepted-quote-confirmed",
+              "forge:segubeca-productive-quote-confirmed",
+              "forge:quote-candidate-ready",
+              "forge:quote-candidate-cleared",
+              "forge:material3-quote-confirmed",
+            ]) {
+              globalThis.addEventListener(eventName, (event) => {
+                globalThis.__segubecaDiagnosticEvents.push({
+                  name: eventName,
+                  detail: event.detail || null,
+                  at: performance.now(),
+                });
+              });
+            }
+            button.click();`);
+
+          const clickIndex = source.indexOf("button.click();");
+          const waitStart = source.indexOf("  await page.waitForFunction(", clickIndex);
+          const finallyStart = source.indexOf("\n} finally {", waitStart);
+          if (clickIndex < 0 || waitStart < 0 || finallyStart < 0) {
+            throw new Error(
+              `SEGUBECA_DIAGNOSTIC_BOUNDARY_MISSING click=${clickIndex} wait=${waitStart} finally=${finallyStart}`,
+            );
+          }
+
+          const diagnostic = `  await new Promise((resolve) => setTimeout(resolve, 1800));
+          const diagnostic = await page.evaluate(() => {
+            const binding = globalThis.ForgeSegubecaProductiveUiBinding || null;
+            const productEntrypoint = globalThis.ForgeSegubecaProductiveUiEntrypoint || null;
+            const acceptanceEntrypoint = globalThis.ForgeQuoteAcceptanceEntrypointR16J0A || null;
+            const bridge = globalThis.ForgeAcceptedQuoteBridge || null;
+            const button = document.querySelector('[data-quote-next-action="confirm_quote"]');
+            const root = document.querySelector('[data-forge-quotes-module]');
+            const bindingSymbol = Symbol.for("forge.segubeca.productive.ui.binding");
+            const state = binding?.getState?.() || null;
+            const bindingSnapshot = binding?.getAcceptedQuoteReviewSnapshot?.() || null;
+            const bridgeSnapshot = bridge?.getAcceptedQuoteReviewSnapshot?.() || null;
+            const underlying = bridge?.__m05e006UnderlyingBridge || null;
+            const candidate = bridge?.getCurrentQuoteCandidate?.() || null;
+            return {
+              scripts: [...document.querySelectorAll("script[src]")]
+                .map((node) => node.src)
+                .filter((src) => /segubeca|quotes-module|app\.js/i.test(src)),
+              versions: {
+                productEntrypoint: productEntrypoint?.version || null,
+                binding: binding?.version || null,
+                acceptanceEntrypoint: acceptanceEntrypoint?.version || null,
+                acceptanceConfirmName: acceptanceEntrypoint?.confirm?.name || null,
+                bindingConfirmName: binding?.confirmCurrentQuoteCandidate?.name || null,
+              },
+              button: {
+                exists: Boolean(button),
+                connected: Boolean(button?.isConnected),
+                disabled: button?.disabled ?? null,
+                text: button?.textContent?.replace(/\\s+/g, " ").trim() || null,
+                capture: button?.dataset?.segubecaHumanConfirmationCapture || null,
+                captureError: button?.dataset?.segubecaHumanConfirmationError || null,
+              },
+              binding: {
+                state: state?.state || null,
+                accepted: state?.accepted ?? null,
+                candidateReady: state?.candidateReady ?? null,
+                calculationAuthority:
+                  state?.calculation?.calculationAuthority || null,
+                snapshotAuthority:
+                  bindingSnapshot?.calculation?.calculationAuthority || null,
+                snapshotPacketType: bindingSnapshot?.packetType || null,
+              },
+              bridge: {
+                hasSegubecaMarker: bridge?.[bindingSymbol] === true,
+                optionalClient: bridge?.__m05e006OptionalClient === true,
+                hasUnderlying: Boolean(underlying),
+                underlyingHasSegubecaMarker: underlying?.[bindingSymbol] === true,
+                candidateProduct:
+                  candidate?.product
+                  || candidate?.productName
+                  || candidate?.nativeResult?.product
+                  || null,
+                snapshotAuthority:
+                  bridgeSnapshot?.calculation?.calculationAuthority || null,
+                snapshotPacketType: bridgeSnapshot?.packetType || null,
+              },
+              dom: {
+                quoteAccepted: root?.dataset?.quoteAccepted || null,
+                acceptedDataset:
+                  document.documentElement.dataset.segubecaAcceptedSnapshot || null,
+                acceptedSource:
+                  document.documentElement.dataset.segubecaAcceptedSnapshotSource || null,
+                acceptedReason:
+                  document.documentElement.dataset.segubecaAcceptedSnapshotReason || null,
+                acceptanceDelegate:
+                  document.documentElement.dataset.segubecaAcceptanceDelegate || null,
+                printablePresenceStatus:
+                  document.documentElement.dataset.printablePresenceStatus || null,
+                messages: [...document.querySelectorAll(".quote-result__unknown")]
+                  .map((node) => node.textContent?.replace(/\\s+/g, " ").trim())
+                  .filter(Boolean),
+              },
+              events: globalThis.__segubecaDiagnosticEvents || [],
+            };
+          });
+          console.log("SEGUBECA_CONFIRMATION_DIAGNOSTIC=" + JSON.stringify(diagnostic));`;
+
+          source = source.slice(0, waitStart) + diagnostic + source.slice(finallyStart);
+          fs.writeFileSync(targetPath, source);
+          NODE
+
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          node /tmp/segubeca-confirmation-boundary-diagnostic.mjs
+          exit 1
+
+      - name: Build and verify Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > env.js <<'EOF'
+          window.__ENV__ = Object.freeze({
+            SUPABASE_URL: "https://rmlxigxysujsuwzgoimv.supabase.co",
+            SUPABASE_KEY: "segubeca-layout-print-placeholder",
+            DEMO_MODE: "false",
+            ENABLE_TEST_ADVISOR_LOGIN: "false"
+          });
+          EOF
+          FORGE_PAGES_RUNTIME_MODE=pages FORGE_CARTERA_PAGES_RUNTIME_MODE=pages \
+            node scripts/build-advisor-presentation-pages-runtime.mjs
+          GITHUB_SHA='${{ github.event.pull_request.head.sha || github.sha }}' \
+            node scripts/build-quotes-preview-pages.mjs
+
+          root='_site/static-preview/forge-alive'
+          test -f "$root/segubeca-progressive-layout.js"
+          test -f "$root/quote-runtime-printable-presence-guard-m05w002.js"
+          grep -q 'segubeca=productive-ui-001&layout=progressive-001&print=shared-presence-001' "$root/index.html"
+          grep -q 'segubeca-progressive-layout-001' "$root/index.html"
+          grep -q 'm05w-002-shared-presence' "$root/app.js"
+          grep -q 'segubeca-productive-ui-001-4' "$root/segubeca-productive-ui-entrypoint.js"
+          grep -q 'segubeca-productive-ui-001-4' "$root/quotes-module.js"
+          if grep -q 'segubeca-productive-ui-binding.js?v=segubeca-productive-ui-001"' "$root/quotes-module.js"; then
+            echo 'SEGUBECA_PAGES_DUPLICATE_BINDING_MODULE_INSTANCE=FORBIDDEN' >&2
+            exit 1
+          fi
+          echo 'SEGUBECA_LAYOUT_PRINT_PAGES_ARTIFACT=PASS'
+
+      - name: Preserve cross-module runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Enforce owner and safety boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence='docs/evidence/FORGE_SEGUBECA_PROGRESSIVE_LAYOUT_SHARED_PRINT_RECOVERY_001.md'
+          grep -q 'SEGUBECA_CALCULATION_AUTHORITY_CHANGED=NO' "$evidence"
+          grep -q 'SEGUBECA_PRODUCT_FORMULA_CHANGED=NO' "$evidence"
+          grep -q 'SEGUBECA_UDI_RATE_CHANGED=NO' "$evidence"
+          grep -q 'SEGUBECA_UDI_PROJECTION_CHANGED=NO' "$evidence"
+          grep -q 'SEGUBECA_CONTRACTUAL_VALUES_CHANGED=NO' "$evidence"
+          grep -q 'SEGUBECA_PDF_PARSER_CHANGED=NO' "$evidence"
+          grep -q 'DUPLICATE_BINDING_MODULE_INSTANCE=FORBIDDEN' "$evidence"
+          grep -q 'SEGUBECA_BINDING_MODULE_INSTANCE_COUNT=1' "$evidence"
+          grep -q 'AUTOMATIC_PREVIEW=NO' "$evidence"
+          grep -q 'AUTOMATIC_DOWNLOAD=NO' "$evidence"
+          grep -q 'QUOTE_MUTATION=NOT_AUTHORIZED' "$evidence"
+          grep -q 'CRM_MUTATION=NOT_AUTHORIZED' "$evidence"
+          grep -q 'DATABASE_MUTATION=NO' "$evidence"
+          echo 'SEGUBECA_LAYOUT_PRINT_SAFETY=PASS'
+
+      - name: Diff integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          git diff --check "$(git merge-base "$base_sha" "$head_sha")" "$head_sha"
+
+      - name: Upload focused browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: segubeca-layout-shared-print-browser
+          path: |
+            artifacts/segubeca-layout-print-report
+            artifacts/segubeca-layout-print-results.json
+            artifacts/segubeca-layout-print-test-results
+          if-no-files-found: warn
+          retention-days: 14

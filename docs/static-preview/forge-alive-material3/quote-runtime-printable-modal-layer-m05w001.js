@@ -1,3 +1,5 @@
+import "./quote-runtime-printable-presence-guard-m05w002.js?v=m05w-002-shared-presence";
+
 const VERSION = "M05W-001";
 const STYLE_MARKER = "data-m05w001-printable-modal-layer";
 

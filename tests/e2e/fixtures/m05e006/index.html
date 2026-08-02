@@ -47,9 +47,12 @@
         errors: [...errors],
         review: { ...review },
         runtime: globalThis.ForgeQuotePrintableEntrypointQPD06?.version || null,
+        presenceGuard:
+          globalThis.ForgeQuotePrintablePresenceGuardM05W002?.version || null,
       }),
     };
 
+    await import("../../../../docs/static-preview/forge-alive-material3/quote-runtime-printable-modal-layer-m05w001.js");
     await import("../../../../docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
 
     snapshot = {

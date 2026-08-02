@@ -207,7 +207,7 @@ async function materializeRuntime(root, engineHost, surface) {
     }
 
     await import(
-      "./segubeca-productive-ui-binding.js?v=segubeca-productive-ui-001"
+      "./segubeca-productive-ui-binding.js?v=segubeca-productive-ui-001-4"
     );
     globalThis.ForgeSegubecaProductiveUiBinding?.install?.();
 
