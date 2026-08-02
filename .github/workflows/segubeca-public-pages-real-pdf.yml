@@ -1,0 +1,135 @@
+name: SeguBeca Public Pages Real PDF Acceptance
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/segubeca-public-pages-real-pdf.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  public-real-pdf:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout acceptance source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Enforce temporary acceptance boundary
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_sha='${{ github.event.pull_request.base.sha }}'
+          head_sha='${{ github.event.pull_request.head.sha }}'
+          merge_base="$(git merge-base "$base_sha" "$head_sha")"
+          mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = ".github/workflows/segubeca-public-pages-real-pdf.yml"
+          echo 'SEGUBECA_PUBLIC_ACCEPTANCE_MAIN_MUTATION=NO'
+
+      - name: Install browser acceptance runtime
+        run: npm install --no-save --no-package-lock puppeteer@24.16.0
+
+      - name: Preserve local real-PDF control
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          test -f "$FORGE_CHROMIUM_PATH"
+          node tests/segubeca-material3-real-pdf-acceptance-test.mjs
+          echo 'SEGUBECA_LOCAL_REAL_PDF_CONTROL=PASS'
+
+      - name: Verify public artifact and accept real PDF
+        shell: bash
+        env:
+          EXPECTED_PAGES_SHA: 62509638c625790b72eac2ea26c325fb6f75c688
+          BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
+          FORGE_SEGUBECA_TARGET_URL: "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones&cb=62509638c625790b72eac2ea26c325fb6f75c688"
+          PUBLIC_AUTHORITY_URL: https://jorgeprdz.github.io/ForgeOS/advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js
+          PUBLIC_BINDING_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/segubeca-productive-ui-binding.js
+        run: |
+          set -euo pipefail
+          export FORGE_PUPPETEER_CORE_PATH="$(node -p "require.resolve('puppeteer-core')")"
+          export FORGE_CHROMIUM_PATH="$(node -e "const p=require('puppeteer'); process.stdout.write(p.executablePath())")"
+          test -f "$FORGE_CHROMIUM_PATH"
+
+          node - <<'NODE'
+          const options = {
+            cache: 'no-store',
+            headers: { 'cache-control': 'no-cache' },
+          };
+          const cacheBust = `${Date.now()}-${Math.random()}`;
+          const buildResponse = await fetch(`${process.env.BUILD_INFO_URL}?cb=${cacheBust}`, options);
+          if (!buildResponse.ok) throw new Error(`SEGUBECA_PUBLIC_BUILD_INFO_HTTP_${buildResponse.status}`);
+          const build = await buildResponse.json();
+          if (build.commitSha !== process.env.EXPECTED_PAGES_SHA) {
+            throw new Error(`SEGUBECA_PUBLIC_SHA_MISMATCH expected=${process.env.EXPECTED_PAGES_SHA} actual=${build.commitSha}`);
+          }
+
+          const authorityResponse = await fetch(`${process.env.PUBLIC_AUTHORITY_URL}?cb=${cacheBust}`, options);
+          if (!authorityResponse.ok) throw new Error(`SEGUBECA_PUBLIC_AUTHORITY_HTTP_${authorityResponse.status}`);
+          const authority = await authorityResponse.text();
+          if (!authority.includes('SEGUBECA_ACCEPTED_PRODUCT_CALCULATION')) {
+            throw new Error('SEGUBECA_PUBLIC_AUTHORITY_MARKER_MISSING');
+          }
+          if (!authority.includes('calculateFromAcceptedPacket')) {
+            throw new Error('SEGUBECA_PUBLIC_AUTHORITY_ENTRYPOINT_MISSING');
+          }
+
+          const bindingResponse = await fetch(`${process.env.PUBLIC_BINDING_URL}?cb=${cacheBust}`, options);
+          if (!bindingResponse.ok) throw new Error(`SEGUBECA_PUBLIC_BINDING_HTTP_${bindingResponse.status}`);
+          const binding = await bindingResponse.text();
+          const expectedImport = '../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+          const escapedImport = '../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+          if (!binding.includes(expectedImport)) throw new Error('SEGUBECA_PUBLIC_PROJECT_IMPORT_MISSING');
+          if (binding.includes(escapedImport)) throw new Error('SEGUBECA_PUBLIC_ESCAPED_IMPORT_PRESENT');
+
+          console.log(`SEGUBECA_PUBLIC_PAGES_SHA=PASS sha=${build.commitSha}`);
+          console.log('SEGUBECA_PUBLIC_AUTHORITY_ASSET=PASS');
+          console.log('SEGUBECA_PUBLIC_PROJECT_RELATIVE_IMPORT=PASS');
+          NODE
+
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const sourcePath = 'tests/segubeca-material3-real-pdf-acceptance-test.mjs';
+          const targetPath = '/tmp/segubeca-public-pages-real-pdf.mjs';
+          let source = fs.readFileSync(sourcePath, 'utf8');
+          source = source.replace(
+            /await new Promise\(\(resolveServer\) => server\.listen\(0, "127\.0\.0\.1", resolveServer\)\);\nconst \{ port \} = server\.address\(\);/,
+            'const port = null;',
+          );
+          source = source.replace(
+            /`http:\/\/127\.0\.0\.1:\$\{port\}\/docs\/static-preview\/forge-alive-material3\/\?nav=cotizaciones`/,
+            'process.env.FORGE_SEGUBECA_TARGET_URL',
+          );
+          source = source.replace(
+            /\n  await new Promise\(\(resolveServer\) => server\.close\(resolveServer\)\);/,
+            '',
+          );
+          if (source.includes('server.listen(0') || source.includes('server.close(resolveServer)')) {
+            throw new Error('SEGUBECA_PUBLIC_TEST_TRANSFORM_FAILED');
+          }
+          if (!source.includes('process.env.FORGE_SEGUBECA_TARGET_URL')) {
+            throw new Error('SEGUBECA_PUBLIC_TARGET_NOT_INJECTED');
+          }
+          fs.writeFileSync(targetPath, source);
+          NODE
+
+          node /tmp/segubeca-public-pages-real-pdf.mjs
+          echo 'SEGUBECA_PUBLIC_PAGES_REAL_PDF=PASS'
+          echo 'SEGUBECA_AUTOMATIC_ACCEPTANCE=NO'
+          echo 'SEGUBECA_QUOTE_MUTATION=NOT_AUTHORIZED'
+          echo 'SEGUBECA_CRM_MUTATION=NOT_AUTHORIZED'
