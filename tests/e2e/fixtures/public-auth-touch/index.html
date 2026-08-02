@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es-MX">
+<html lang="es-MX" data-forge-auth-boundary="anonymous" data-forge-auth-login-gate="visible">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="/docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.css">
   <style>
     html,body{min-height:100%;margin:0;background:#06101f;color:#fff;font-family:system-ui,sans-serif}
-    [data-forge-module-viewport]{min-height:100vh}
   </style>
   <script>
     window.__ENV__ = Object.freeze({
@@ -16,44 +15,52 @@
       DEMO_MODE: "false",
       ENABLE_TEST_ADVISOR_LOGIN: "false"
     });
-    window.__AUTH_TOUCH_FIXTURE__ = { googleCalls: 0, authCallback: null };
-    window.ForgeAlivePublicConfig067G17A1 = Object.freeze({
-      allowsPublicClientInitialization: () => true,
-      allowsProductiveProspectCrud: () => true,
-      allowsTestAdvisorLogin: () => false,
-      current: () => ({
-        state: "READY",
-        demoMode: false,
-        publicConfig: {
-          SUPABASE_URL: window.__ENV__.SUPABASE_URL,
-          SUPABASE_KEY: window.__ENV__.SUPABASE_KEY
-        }
-      })
-    });
+    window.__AUTH_TOUCH_FIXTURE__ = {
+      googleCalls: 0,
+      closeCalls: 0,
+      openCalls: 0,
+      signOutCalls: 0
+    };
     window.ForgeProductiveProspectBootstrap067G17B = Object.freeze({
-      getSession: async () => ({ data: { session: null }, error: null }),
-      getUser: async () => ({ data: { user: null }, error: null }),
-      onAuthStateChange: async (callback) => {
-        window.__AUTH_TOUCH_FIXTURE__.authCallback = callback;
-        return { data: { subscription: { unsubscribe() {} } } };
-      },
       signInWithGoogle: async (options) => {
         window.__AUTH_TOUCH_FIXTURE__.googleCalls += 1;
         window.__AUTH_TOUCH_FIXTURE__.googleOptions = options;
         return { data: {}, error: null };
-      },
-      signOut: async () => ({ error: null })
+      }
+    });
+    window.ForgeAliveAuthEntry067G17B1 = Object.freeze({
+      canonicalRedirectUrl: () => new URL("?nav=inicio", location.href).href,
+      openAuthPanel: () => { window.__AUTH_TOUCH_FIXTURE__.openCalls += 1; },
+      closeAuthPanel: () => { window.__AUTH_TOUCH_FIXTURE__.closeCalls += 1; },
+      signOut: async () => { window.__AUTH_TOUCH_FIXTURE__.signOutCalls += 1; }
     });
   </script>
 </head>
-<body data-forge-application>
-  <main data-forge-module-viewport aria-label="Superficie privada"></main>
-  <div data-forge-shell-controls aria-label="Controles privados"></div>
-  <script src="/docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.js"></script>
-  <script type="module">
-    await import("/docs/static-preview/forge-alive-material3/authenticated-route-guard.js");
-    await import("/docs/static-preview/forge-alive-material3/login-integrated-demo.js");
-    await import("/docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js");
-  </script>
+<body>
+  <div class="forge-auth-backdrop-067g17b1" data-forge-auth-panel="067g17b1">
+    <section class="forge-auth-panel-067g17b1" role="dialog" aria-modal="true" aria-labelledby="fixture-title">
+      <header>
+        <div>
+          <h2 id="fixture-title" data-forge-auth-title>Iniciar sesión en Forge</h2>
+          <p>Accede para consultar tu Pipeline y administrar tus prospectos.</p>
+        </div>
+        <button type="button" class="forge-auth-close-067g17b1" data-forge-auth-close aria-label="Cerrar">×</button>
+      </header>
+      <div class="forge-auth-login-067g17b1">
+        <div class="forge-auth-actions-067g17b1">
+          <button type="button" class="forge-auth-primary-067g17b1" data-forge-auth-google>Continuar con Google</button>
+        </div>
+        <section class="forge-demo-login-section">
+          <p>Explorar sin usar datos reales</p>
+          <button type="button" class="forge-auth-secondary-067g17b1" data-forge-demo-login>Explorar ForgeOS con datos demo</button>
+        </section>
+      </div>
+      <p class="forge-auth-error-067g17b1" data-forge-auth-error role="alert" hidden></p>
+      <footer>
+        <button type="button" class="forge-auth-secondary-067g17b1" data-forge-auth-close>Cancelar</button>
+      </footer>
+    </section>
+  </div>
+  <script type="module" src="/docs/static-preview/forge-alive-material3/public-auth-touch-gate.js"></script>
 </body>
 </html>
