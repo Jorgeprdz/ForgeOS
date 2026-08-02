@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Advisor Compensation 080</title>
+</head>
+<body>
+  <main id="result" aria-live="polite"></main>
+  <script type="module">
+    import {
+      buildProductiveSmartWidgetStack,
+    } from "../../../../advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs";
+
+    const query = new URLSearchParams(location.search);
+    const mode = query.get("mode") || "paid";
+    const advisorId = "advisor-080-browser";
+    const periodKey = "2026-08";
+    const periodKeys = ["2026-03","2026-04","2026-05","2026-06","2026-07","2026-08"];
+    const hex = (character) => character.repeat(64);
+    const providerCalls = [];
+
+    function riskSignal(amount) {
+      return {
+        contractVersion: "ADVISOR_COMPENSATION_FORWARD_SIGNAL_001",
+        signalId: "risk-080-browser",
+        kind: "AT_RISK",
+        state: "ACTIVE",
+        advisorReference: advisorId,
+        periodKey,
+        amount: { value: amount, currency: "MXN" },
+        source: {
+          authority: "CARTERA_FUTURE_RADAR",
+          reference: "risk-browser",
+          snapshotReference: "radar-browser",
+        },
+        signalDigest: hex("c"),
+        safeguards: {
+          incomeTruth: false,
+          earnedTruth: false,
+          paidTruth: false,
+          includedInRealIncome: false,
+        },
+      };
+    }
+
+    function snapshot() {
+      const earnedMode = mode === "earned";
+      const atRiskMode = mode === "at-risk";
+      const paid = earnedMode ? null : 9000;
+      const realBasis = earnedMode ? "EARNED" : "PAID";
+      const real = earnedMode ? 11000 : 9000;
+      const atRisk = atRiskMode ? 3000 : 0;
+      return {
+        contractVersion: "ADVISOR_COMPENSATION_PERIOD_SNAPSHOT_001",
+        snapshotId: `snapshot:${advisorId}:${periodKey}`,
+        snapshotDigest: hex("a"),
+        advisorReference: advisorId,
+        periodKey,
+        currency: "MXN",
+        status: "READY",
+        capturedAt: "2026-08-02T12:00:00.000Z",
+        amounts: {
+          estimated: 4000,
+          earned: { gross: 10000, adjustments: 2000, reversals: -1000, net: 11000 },
+          paid: {
+            sourceState: earnedMode ? "DISCONNECTED" : "AVAILABLE",
+            value: paid,
+            knownZero: false,
+          },
+          real: { basis: realBasis, value: real },
+          potential: 50000,
+          atRisk,
+        },
+        counts: { earnedAggregates: 1 },
+        sourceHealth: {
+          compensationEvents: "AVAILABLE",
+          payoutTruth: earnedMode ? "DISCONNECTED" : "AVAILABLE",
+          forwardSignals: "AVAILABLE",
+        },
+        details: {
+          aggregates: [{
+            latestEventId: "event-browser",
+            sourceCalculationDigest: hex("d"),
+            rulePackDigest: hex("e"),
+          }],
+          payoutRecords: paid === null ? [] : [{
+            payoutRecordId: "payout-browser",
+            evidenceReference: "statement-browser",
+          }],
+          forwardSignals: atRiskMode ? [riskSignal(atRisk)] : [],
+        },
+        explanation: {},
+        safeguards: {
+          quoteAsIncome: false,
+          issuedPremiumAsIncome: false,
+          potentialAsRealIncome: false,
+          estimatedAsEarnedIncome: false,
+          earnedAsPaidIncome: false,
+          unknownAsZero: false,
+        },
+      };
+    }
+
+    function history() {
+      return {
+        contractVersion: "ADVISOR_COMPENSATION_HISTORY_SERIES_001",
+        advisorReference: advisorId,
+        seriesDigest: hex("b"),
+        capturedAt: "2026-08-02T12:00:00.000Z",
+        points: periodKeys.map((key, index) => ({
+          periodKey: key,
+          real: index === 5 ? 9000 : 1000 + index,
+          realBasis: index === 5 ? "PAID" : "EARNED",
+          paid: index === 5 ? 9000 : null,
+          earnedNet: 1000 + index,
+          estimated: 0,
+          potential: 5000,
+          atRisk: 0,
+        })),
+      };
+    }
+
+    if (mode !== "disconnected" && mode !== "anonymous") {
+      globalThis.ForgeAdvisorCompensationProductSource070 = {
+        async loadCompensationProduct(context) {
+          providerCalls.push(context);
+          return {
+            snapshot: snapshot(),
+            history: history(),
+            sourceState: "READY",
+            metadata: { fixture: "080" },
+          };
+        },
+      };
+    }
+
+    const session = mode === "anonymous"
+      ? { status: "ANONYMOUS", advisorId: null }
+      : { status: "AUTHENTICATED", advisorId };
+
+    const stack = await buildProductiveSmartWidgetStack({
+      now: "2026-08-02T07:27:00-06:00",
+      timeZone: "America/Mexico_City",
+      session,
+      sources: {
+        activity: { sourceConnected: false, sourceComplete: false },
+        monthlyGoal: { sourceConnected: false, sourceComplete: false },
+        policyService: { sourceConnected: false, sourceComplete: false },
+        opportunities: { sourceConnected: false, sourceComplete: false },
+        income: {
+          sourceConnected: false,
+          sourceComplete: false,
+          blockedReason: "COMPENSATION_INCOME_TRUTH_NOT_CONNECTED",
+        },
+      },
+    });
+
+    const income = stack.inventory.find((item) => item.widgetFamily === "INCOME_PROGRESS_WIDGET") || null;
+    document.getElementById("result").innerHTML = `
+      <section data-stack-status="${stack.stackStatus}">
+        <div data-income-state="${income?.state || "ABSENT"}"></div>
+        <div data-income-value="${income?.primaryMetric?.value ?? "NULL"}"></div>
+        <div data-income-basis="${income?.payload?.actualBasis || "UNAVAILABLE"}"></div>
+        <div data-income-deep-link="${income?.deepLink || ""}"></div>
+        <div data-income-priority="${income?.hardPriority || "NONE"}"></div>
+        <div data-provider-calls="${providerCalls.length}"></div>
+      </section>
+    `;
+    globalThis.__COMP_080__ = { stack, income, providerCalls };
+  </script>
+</body>
+</html>
