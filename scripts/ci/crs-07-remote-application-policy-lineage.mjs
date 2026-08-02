@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const PROJECT_REF = "rmlxigxysujsuwzgoimv";
@@ -108,40 +109,85 @@ for (const key of [
 }
 record("remote_inventory", "PASS", inventory);
 
-const fixture = (await query(`
-select
-  cp.advisor_id::text as advisor_id,
-  cp.person_reference,
-  q.quote_reference,
-  v.quote_version_reference,
-  q.prospect_id::text as prospect_reference,
-  q.product_reference
-from public.commercial_people cp
-join public.quote_lifecycle_quotes q on q.advisor_id=cp.advisor_id
-join public.quote_lifecycle_versions v on v.advisor_id=q.advisor_id and v.quote_id=q.id
-left join public.forge_demo_advisors demo on demo.advisor_id=cp.advisor_id
-where cp.lifecycle_state='CONFIRMED'
-  and cp.archived_at is null
-  and v.confirmation_state='CONFIRMED'
-  and demo.advisor_id is null
-order by q.updated_at desc,v.version_number desc
+const actorRow = (await query(`
+select u.id::text as advisor_id
+from auth.users u
+left join public.forge_demo_advisors demo on demo.advisor_id = u.id
+where demo.advisor_id is null
+order by u.created_at, u.id
 limit 1
-`, "fixture_discovery"))[0];
-assert.ok(fixture, "CRS07_NON_DEMO_PERSON_QUOTE_FIXTURE_MISSING");
-record("fixture_discovery", "PASS", { protectedDemoRegistryExcluded: true });
+`, "non_demo_actor_discovery"))[0];
+assert.ok(actorRow?.advisor_id, "CRS07_NON_DEMO_ADVISOR_MISSING");
+const actor = actorRow.advisor_id;
+record("non_demo_actor_discovery", "PASS", { protectedDemoRegistryExcluded: true });
 
-const actor = fixture.advisor_id;
 const other = actor.toLowerCase() === "00000000-0000-4000-8000-000000000001"
   ? "00000000-0000-4000-8000-000000000002"
   : "00000000-0000-4000-8000-000000000001";
+const prospectId = randomUUID();
+const personId = randomUUID();
+const quoteId = randomUUID();
+const quoteVersionId = randomUUID();
+const personReference = `person:${randomUUID()}`;
+const quoteReference = `quote:${randomUUID()}`;
+const quoteVersionReference = `quote-version:${randomUUID()}`;
+const productReference = `product:crs07:${randomUUID()}`;
 const base = Date.now() - 15 * 60 * 1000;
 const at = seconds => new Date(base + seconds * 1000).toISOString();
-const t = { create: at(0), signed: at(30), captured: at(35), submitted: at(60), approved: at(90), issued: at(120) };
+const t = { fixture: at(-30), create: at(0), signed: at(30), captured: at(35), submitted: at(60), approved: at(90), issued: at(120) };
 
 const acceptanceSql = `
 begin;
 select set_config('request.jwt.claim.sub',${literal(actor)},true);
 select set_config('request.jwt.claim.role','authenticated',true);
+
+-- Privileged, rollback-only prerequisites for a real non-demo owner. These rows
+-- exist solely inside this transaction; productive Application/Policy commands
+-- below still execute as authenticated and through their governed RPCs.
+insert into public.prospects (
+  id, advisor_id, alias, display_name, full_name, phone_normalized,
+  source, initial_context, status, created_by, updated_by, created_at, updated_at
+) values (
+  ${literal(prospectId)}::uuid, ${literal(actor)}::uuid,
+  'CRS07 fixture', 'CRS07 fixture', 'CRS07 fixture', '+525500000001',
+  'crs07_remote_acceptance', 'Rollback-only CRS07 prerequisite', 'referred_new',
+  ${literal(actor)}::uuid, ${literal(actor)}::uuid,
+  ${literal(t.fixture)}::timestamptz, ${literal(t.fixture)}::timestamptz
+);
+
+insert into public.commercial_people (
+  id, advisor_id, person_reference, display_name, preferred_name,
+  normalized_name, lifecycle_state, privacy_classification,
+  evidence_references, created_at, created_by, updated_at, version
+) values (
+  ${literal(personId)}::uuid, ${literal(actor)}::uuid, ${literal(personReference)},
+  'CRS07 Fixture Person', 'CRS07', 'crs07 fixture person',
+  'CONFIRMED', 'SENSITIVE', jsonb_build_array(${literal(`${RUN}:person-evidence`)}),
+  ${literal(t.fixture)}::timestamptz, ${literal(actor)}::uuid,
+  ${literal(t.fixture)}::timestamptz, 1
+);
+
+insert into public.quote_lifecycle_quotes (
+  id, quote_reference, advisor_id, prospect_id, product_reference,
+  current_version, lifecycle_state, created_at, updated_at
+) values (
+  ${literal(quoteId)}::uuid, ${literal(quoteReference)}, ${literal(actor)}::uuid,
+  ${literal(prospectId)}::uuid, ${literal(productReference)}, 1, 'REVIEWED',
+  ${literal(t.fixture)}::timestamptz, ${literal(t.fixture)}::timestamptz
+);
+
+insert into public.quote_lifecycle_versions (
+  id, quote_id, advisor_id, quote_version_reference, version_number,
+  review_snapshot, snapshot_digest, source_record_reference,
+  source_evidence_references, freshness_metadata, confirmation_state, created_at
+) values (
+  ${literal(quoteVersionId)}::uuid, ${literal(quoteId)}::uuid, ${literal(actor)}::uuid,
+  ${literal(quoteVersionReference)}, 1,
+  jsonb_build_object('authority','CRS07_ROLLBACK_FIXTURE'), repeat('9',64),
+  ${literal(`${RUN}:quote-source`)}, jsonb_build_array(${literal(`${RUN}:quote-evidence`)}),
+  jsonb_build_object('status','CURRENT'), 'CONFIRMED', ${literal(t.fixture)}::timestamptz
+);
+
 set local role authenticated;
 
 do $$
@@ -168,9 +214,9 @@ begin
   select count(*) into policy_before from public.canonical_policies;
 
   created := public.forge_crs06_create_application(
-    ${literal(fixture.person_reference)}, ${literal(fixture.quote_reference)},
-    ${literal(fixture.quote_version_reference)}, ${literal(fixture.prospect_reference)},
-    ${literal(fixture.product_reference)}, ${literal(`${RUN}:document`)}, repeat('a',64),
+    ${literal(personReference)}, ${literal(quoteReference)},
+    ${literal(quoteVersionReference)}, ${literal(prospectId)},
+    ${literal(productReference)}, ${literal(`${RUN}:document`)}, repeat('a',64),
     jsonb_build_array(${literal(`${RUN}:quote-evidence`)}),
     jsonb_build_array(jsonb_build_object(
       'signerReference',${literal(`${RUN}:signer`)},'role','APPLICANT','required',true,'signatureState','PENDING'
@@ -216,7 +262,7 @@ begin
       'contractType','FORGE_CANONICAL_POLICY','schemaVersion','2.0.0',
       'policyReference',policy_ref,'advisorId',${literal(actor)},
       'carrierReference','carrier:crs07','policyNumber',policy_number,
-      'productReference',${literal(fixture.product_reference)},
+      'productReference',${literal(productReference)},
       'issueDate',substring(${literal(t.issued)},1,10),
       'effectiveFrom',${literal(t.issued)},'effectiveTo',null,
       'status',jsonb_build_object('value','ISSUED','source','CARRIER_ADMIN','asOf',${literal(t.issued)}),
@@ -229,7 +275,7 @@ begin
     'roles',jsonb_build_array(jsonb_build_object(
       'contractType','FORGE_POLICY_ROLE','schemaVersion','1.0.0',
       'policyRoleReference',role_ref,'policyReference',policy_ref,'advisorId',${literal(actor)},
-      'participantPersonReference',${literal(fixture.person_reference)},'participantAccountReference',null,
+      'participantPersonReference',${literal(personReference)},'participantAccountReference',null,
       'roleType','INSURED','confirmationState','CONFIRMED','privacyClassification','SENSITIVE',
       'visibilityScope','POLICY_TEAM','evidenceReferences',jsonb_build_array(evidence_ref),
       'effectiveFrom',${literal(t.issued)},'effectiveTo',null,
@@ -246,7 +292,7 @@ begin
       )
     ),
     'lineage',jsonb_build_object(
-      'quoteReference',${literal(fixture.quote_reference)},
+      'quoteReference',${literal(quoteReference)},
       'applicationReference',app_ref,'previousPolicyVersionReference',null
     ),
     'commandDigest',repeat('0',64)
@@ -345,11 +391,20 @@ await query(acceptanceSql, "runtime_acceptance");
 const residual = (await query(`
 select
   (select count(*) from public.canonical_policies where policy_reference like ${literal(`${RUN}%`)}) as policies,
-  (select count(*) from public.policy_versions where application_reference like ${literal(`${RUN}%`)}) as versions
+  (select count(*) from public.policy_versions where application_reference like ${literal(`${RUN}%`)}) as versions,
+  (select count(*) from public.prospects where id=${literal(prospectId)}::uuid) as prospects,
+  (select count(*) from public.commercial_people where id=${literal(personId)}::uuid) as people,
+  (select count(*) from public.quote_lifecycle_quotes where id=${literal(quoteId)}::uuid) as quotes
 `, "residual_check"))[0];
-assert.equal(Number(residual?.policies || 0), 0);
-assert.equal(Number(residual?.versions || 0), 0);
-record("runtime_acceptance", "PASS", { fixturesRolledBack: true, residualPolicies: 0, residualVersions: 0 });
+for (const key of ["policies", "versions", "prospects", "people", "quotes"]) {
+  assert.equal(Number(residual?.[key] || 0), 0, `CRS07_RESIDUAL_${key.toUpperCase()}`);
+}
+record("runtime_acceptance", "PASS", {
+  fixturesRolledBack: true,
+  residualPolicies: 0,
+  residualVersions: 0,
+  residualPrerequisites: 0,
+});
 
 for (const marker of [
   "CRS_07_REMOTE_SUPABASE_DEPLOYMENT=PASS",
@@ -362,7 +417,9 @@ for (const marker of [
   "CRS_07_ONE_APPLICATION_ONE_POLICY=PASS",
   "CRS_07_CROSS_ADVISOR_ISOLATION=PASS",
   "CRS_07_POLICY_AUTHORITY=PRESERVED",
+  "ROLLBACK_ONLY_PREREQUISITES=PASS",
   "TEST_FIXTURES_ROLLED_BACK=YES",
   "RESIDUAL_POLICIES=0",
   "RESIDUAL_POLICY_VERSIONS=0",
+  "RESIDUAL_PREREQUISITES=0",
 ]) console.log(marker);
