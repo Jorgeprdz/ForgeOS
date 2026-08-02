@@ -166,6 +166,8 @@ async function materializeRuntime(root, engineHost, surface) {
       "forge:quote-preview-calculated",
       "forge:accepted-quote-confirmed",
       "forge:quote-candidate-ready",
+      "forge:segubeca-productive-calculation-ready",
+      "forge:segubeca-productive-quote-confirmed",
     ]) {
       window.addEventListener(eventName, () => {
         window.setTimeout(() => void refreshProjection(), 120);
@@ -203,6 +205,11 @@ async function materializeRuntime(root, engineHost, surface) {
         });
       }
     }
+
+    await import(
+      "./segubeca-productive-ui-binding.js?v=segubeca-productive-ui-001"
+    );
+    globalThis.ForgeSegubecaProductiveUiBinding?.install?.();
 
     await refreshProjection();
     root.dataset.runtimeMounted = "true";
