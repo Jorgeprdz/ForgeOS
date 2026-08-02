@@ -54,3 +54,16 @@ test("application registers the contextual route and bridge without adding a nav
   );
   assert.doesNotMatch(navigationItemsBlock, /routeId: "persona"/);
 });
+
+test("fail-closed auth preserves and scrubs the contextual person route", async () => {
+  const guard = await read("docs/static-preview/forge-alive-material3/authenticated-route-guard.js");
+  const privateRoutes = guard.slice(
+    guard.indexOf("const PRIVATE_ROUTES"),
+    guard.indexOf("const PRIVATE_SURFACE_SELECTORS"),
+  );
+  assert.match(privateRoutes, /"persona"/);
+  assert.match(guard, /\[data-forge-person-workspace-module\]/);
+  assert.match(guard, /FORGE_AUTH_FAIL_CLOSED_V1/);
+  assert.match(guard, /restoreAuthenticatedRoute/);
+  assert.match(guard, /scrubPrivateSurfaces/);
+});
