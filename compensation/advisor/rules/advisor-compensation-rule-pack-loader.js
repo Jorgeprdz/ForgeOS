@@ -8,6 +8,9 @@ const {
 const {
   createAdvisorCompensationRuleSnapshot
 } = require("./advisor-compensation-rule-snapshot");
+const {
+  buildAdvisorCompensationCandidateRulePack
+} = require("./advisor-compensation-candidate-rule-pack-builder");
 
 const DEFAULT_RULE_PACK_PATH = path.join(
   __dirname,
@@ -33,13 +36,24 @@ function loadAdvisorCompensationRulePack(options = {}) {
     );
   }
 
-  let rulePack;
+  let seed;
   try {
-    rulePack = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    seed = JSON.parse(fs.readFileSync(filePath, "utf8"));
   } catch (error) {
     throw new AdvisorCompensationRulePackLoadError(
       `Advisor Compensation rule pack JSON is invalid: ${filePath}`,
       "ADVISOR_COMPENSATION_RULE_PACK_INVALID_JSON",
+      error
+    );
+  }
+
+  let rulePack;
+  try {
+    rulePack = buildAdvisorCompensationCandidateRulePack(seed);
+  } catch (error) {
+    throw new AdvisorCompensationRulePackLoadError(
+      `Advisor Compensation rule pack seed could not be migrated: ${filePath}`,
+      "ADVISOR_COMPENSATION_RULE_PACK_BUILD_FAILED",
       error
     );
   }
