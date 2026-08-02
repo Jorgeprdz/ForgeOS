@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Public auth touch gate fixture</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.css">
+  <style>
+    html,body{min-height:100%;margin:0;background:#06101f;color:#fff;font-family:system-ui,sans-serif}
+    [data-forge-module-viewport]{min-height:100vh}
+  </style>
+  <script>
+    window.__ENV__ = Object.freeze({
+      SUPABASE_URL: "https://rmlxigxysujsuwzgoimv.supabase.co",
+      SUPABASE_KEY: "public-anon-touch-fixture",
+      DEMO_MODE: "false",
+      ENABLE_TEST_ADVISOR_LOGIN: "false"
+    });
+    window.__AUTH_TOUCH_FIXTURE__ = { googleCalls: 0, authCallback: null };
+    window.ForgeAlivePublicConfig067G17A1 = Object.freeze({
+      allowsPublicClientInitialization: () => true,
+      allowsProductiveProspectCrud: () => true,
+      allowsTestAdvisorLogin: () => false,
+      current: () => ({
+        state: "READY",
+        demoMode: false,
+        publicConfig: {
+          SUPABASE_URL: window.__ENV__.SUPABASE_URL,
+          SUPABASE_KEY: window.__ENV__.SUPABASE_KEY
+        }
+      })
+    });
+    window.ForgeProductiveProspectBootstrap067G17B = Object.freeze({
+      getSession: async () => ({ data: { session: null }, error: null }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      onAuthStateChange: async (callback) => {
+        window.__AUTH_TOUCH_FIXTURE__.authCallback = callback;
+        return { data: { subscription: { unsubscribe() {} } } };
+      },
+      signInWithGoogle: async (options) => {
+        window.__AUTH_TOUCH_FIXTURE__.googleCalls += 1;
+        window.__AUTH_TOUCH_FIXTURE__.googleOptions = options;
+        return { data: {}, error: null };
+      },
+      signOut: async () => ({ error: null })
+    });
+  </script>
+</head>
+<body data-forge-application>
+  <main data-forge-module-viewport aria-label="Superficie privada"></main>
+  <div data-forge-shell-controls aria-label="Controles privados"></div>
+  <script src="/docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.js"></script>
+  <script type="module">
+    await import("/docs/static-preview/forge-alive-material3/authenticated-route-guard.js");
+    await import("/docs/static-preview/forge-alive-material3/login-integrated-demo.js");
+    await import("/docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js");
+  </script>
+</body>
+</html>
