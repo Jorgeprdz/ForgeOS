@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Advisor Compensation 070 Fixture</title>
+  <style>
+    :root{--card-bg:#fff;--text:#162033;--muted:#667085;--accent:#6255d9;--separator:#dfe3eb}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#f5f7fb;font-family:Inter,system-ui,sans-serif}
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    import { AppState } from "/state-manager.js";
+    import { EventBus } from "/event-system.js";
+    import { Memory } from "/memory-manager.js";
+    import { renderComisiones, bindComisionesEvents } from "/comisiones.js";
+
+    const params = new URL(location.href).searchParams;
+    const mode = params.get("mode") || "ready";
+    const delay = Number(params.get("delay") || 0);
+    const events = [];
+    EventBus.on("advisor-compensation:late-result-rejected", event => {
+      events.push({ type: "late", detail: event });
+    });
+
+    function hash(char) { return char.repeat(64); }
+    function snapshot(context, status = "READY") {
+      return {
+        contractVersion: "ADVISOR_COMPENSATION_PERIOD_SNAPSHOT_001",
+        snapshotId: `snapshot:${context.advisorReference}:${context.periodKey}`,
+        snapshotDigest: hash("a"),
+        advisorReference: context.advisorReference,
+        periodKey: context.periodKey,
+        currency: "MXN",
+        status,
+        capturedAt: "2026-08-02T06:00:00.000Z",
+        amounts: {
+          estimated: 4200,
+          earned: { gross: 18400, adjustments: 900, reversals: -1200, net: 18100 },
+          paid: { sourceState: status === "PARTIAL" ? "DISCONNECTED" : "AVAILABLE", value: status === "PARTIAL" ? null : 16750, knownZero: false },
+          real: { basis: status === "PARTIAL" ? "EARNED" : "PAID", value: status === "PARTIAL" ? 18100 : 16750 },
+          potential: 9200,
+          atRisk: 3100
+        },
+        counts: { events: 8 },
+        sourceHealth: { compensationEvents: "AVAILABLE", payoutTruth: status === "PARTIAL" ? "DISCONNECTED" : "AVAILABLE" },
+        details: {
+          aggregates: [{
+            aggregateKey: "agg-life-1",
+            policyReference: "POL-1001",
+            concept: "LIFE_INITIAL",
+            latestState: "ADJUSTED",
+            estimatedAmount: 0,
+            earnedGrossAmount: 18400,
+            adjustmentAmount: 900,
+            reversalAmount: -1200,
+            earnedNetAmount: 18100,
+            earnedEventId: "earned-1",
+            sourceCalculationDigest: hash("c"),
+            rulePackDigest: hash("d")
+          }]
+        },
+        explanation: { realReason: status === "PARTIAL" ? "paid_truth_unavailable_using_earned_truth" : "confirmed_payout_truth_available" },
+        safeguards: { unknownAsZero: false }
+      };
+    }
+    function history(context) {
+      return {
+        contractVersion: "ADVISOR_COMPENSATION_HISTORY_SERIES_001",
+        seriesId: "history-fixture",
+        seriesDigest: hash("b"),
+        advisorReference: context.advisorReference,
+        currency: "MXN",
+        capturedAt: "2026-08-02T06:00:00.000Z",
+        points: context.periodKeys.map((periodKey, index) => ({
+          periodKey, status: "READY", estimated: 500 + index * 350,
+          earnedGross: 9000 + index * 1800, adjustments: index * 100,
+          reversals: index === 3 ? -800 : 0, earnedNet: 9000 + index * 1800 + index * 100 - (index === 3 ? 800 : 0),
+          paid: index === 0 ? null : 8200 + index * 1700,
+          paidSourceState: index === 0 ? "DISCONNECTED" : "AVAILABLE",
+          real: 8200 + index * 1700, realBasis: index === 0 ? "EARNED" : "PAID",
+          potential: 4000 + index * 700, atRisk: 500 + index * 120,
+          snapshotDigest: hash(String((index % 9) + 1))
+        }))
+      };
+    }
+
+    let call = 0;
+    const source = {
+      async load(context) {
+        call += 1;
+        const thisCall = call;
+        const wait = mode === "race" ? (thisCall === 1 ? 260 : 20) : delay;
+        if (wait) await new Promise(resolve => setTimeout(resolve, wait));
+        if (mode === "throw") throw Object.assign(new Error("FIXTURE_ERROR"), { code: "FIXTURE_ERROR" });
+        if (mode === "disconnected") return {
+          contractVersion: "ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001",
+          state: "DISCONNECTED", advisorReference: context.advisorReference,
+          periodKey: context.periodKey, periodKeys: context.periodKeys,
+          snapshot: null, history: null,
+          sourceHealth: { canonicalSnapshot: "DISCONNECTED", historicalSeries: "DISCONNECTED" },
+          errorCode: null
+        };
+        if (mode === "empty" || mode === "blocked" || mode === "error") return {
+          contractVersion: "ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001",
+          state: mode.toUpperCase(), advisorReference: context.advisorReference,
+          periodKey: context.periodKey, periodKeys: context.periodKeys,
+          snapshot: null, history: null,
+          sourceHealth: { canonicalSnapshot: mode.toUpperCase(), historicalSeries: mode.toUpperCase() },
+          errorCode: mode === "error" ? "FIXTURE_ERROR" : null
+        };
+        const status = mode === "partial" ? "PARTIAL" : "READY";
+        return {
+          contractVersion: "ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001",
+          state: mode === "stale" ? "STALE" : status,
+          advisorReference: context.advisorReference,
+          periodKey: context.periodKey,
+          periodKeys: context.periodKeys,
+          snapshot: snapshot(context, status),
+          history: history(context),
+          sourceHealth: { canonicalSnapshot: status, historicalSeries: "AVAILABLE" },
+          errorCode: null,
+          stale: mode === "stale",
+          metadata: { thisCall }
+        };
+      }
+    };
+
+    AppState.set("user", { id: "advisor-fixture", email: "fixture@forge.local" });
+    document.getElementById("app").innerHTML = renderComisiones();
+    const bindPromise = bindComisionesEvents({ source });
+
+    window.__COMP_070__ = {
+      AppState, EventBus, Memory, events, source, bindPromise,
+      setUser(id) { AppState.set("user", id ? { id } : null); },
+      cleanup() { Memory.cleanup(); },
+      state() { return AppState.get("advisor-compensation:product"); }
+    };
+  </script>
+</body>
+</html>
