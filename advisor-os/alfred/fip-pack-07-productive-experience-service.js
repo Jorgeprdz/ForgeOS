@@ -46,7 +46,7 @@ export function composeAlfredProductiveExperience({ advisorReference, generatedA
     { id: "person-context", surface: "PERSON", title: "Contexto de relación", state: idsByKind("FACT").length ? "READY" : "EMPTY", insightIds: idsByKind("FACT"), deepLink: "?nav=cartera" },
     { id: "activity-mick", surface: "ACTIVITY", title: "Patrones de ejecución", state: insights.some(item => item.id.startsWith("mick-")) ? "READY" : "EMPTY", insightIds: insights.filter(item => item.id.startsWith("mick-")).map(item => item.id), deepLink: "?nav=actividad" },
     { id: "reports-business", surface: "REPORTS", title: "Inteligencia del negocio", state: idsByKind("ESTIMATE").length ? "READY" : "EMPTY", insightIds: idsByKind("ESTIMATE"), deepLink: "?nav=reportes" },
-    { id: "alfred-brief", surface: "ALFRED", title: "Resumen operativo", state: insights.length ? "READY" : "EMPTY", insightIds: insights.slice(0, 8), deepLink: "?nav=home" },
+    { id: "alfred-brief", surface: "ALFRED", title: "Resumen operativo", state: insights.length ? "READY" : "EMPTY", insightIds: insights.slice(0, 8).map(item => item.id), deepLink: "?nav=home" },
   ];
 
   return createAlfredProductiveExperience({

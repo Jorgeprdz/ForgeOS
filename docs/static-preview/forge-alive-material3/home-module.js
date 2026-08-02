@@ -1,4 +1,5 @@
 import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js";
+import { createFipProductiveHomeBridge } from "./fip-productive-home-bridge.js";
 
 const homeStateKey = Symbol.for("forge.ui-m04.home.state");
 
@@ -15,7 +16,24 @@ function prepareProductiveRoot(root) {
   productiveRoot.hidden = true;
   productiveRoot.setAttribute("aria-label", "Resumen productivo del día");
   summary.appendChild(productiveRoot);
-  return productiveRoot;
+
+  const fipRoot = document.createElement("section");
+  fipRoot.className = "fip-productive-surface";
+  fipRoot.dataset.forgeFipProductiveRoot = "true";
+  fipRoot.dataset.forgePrivateSurface = "home-fip-intelligence";
+  fipRoot.hidden = true;
+  fipRoot.setAttribute("aria-label", "Advisor Intelligence y Alfred");
+  summary.appendChild(fipRoot);
+  return { productiveRoot, fipRoot };
+}
+
+function injectFipStyles() {
+  if (document.querySelector("[data-fip-productive-styles]")) return;
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = new URL("./fip-productive-home-bridge.css?v=fip-final-mount-001", import.meta.url);
+  link.dataset.fipProductiveStyles = "true";
+  document.head.appendChild(link);
 }
 
 export function createHomeModule({ root, shell }) {
@@ -25,10 +43,22 @@ export function createHomeModule({ root, shell }) {
   const { signal } = abortController;
   const input = document.querySelector(".alfred-input input");
   const toast = document.querySelector(".toast");
-  const productiveRoot = prepareProductiveRoot(root);
-  const productiveHome = createAuthenticatedProductiveHome({
-    root: productiveRoot,
-    shell,
+  const { productiveRoot, fipRoot } = prepareProductiveRoot(root);
+  injectFipStyles();
+  const productiveHome = createAuthenticatedProductiveHome({ root: productiveRoot, shell });
+  const fipHome = createFipProductiveHomeBridge({
+    root: fipRoot,
+    async getPacks() {
+      const diagnostics = productiveHome.diagnostics?.() || {};
+      return Object.freeze({
+        relationship: null,
+        advisor: null,
+        mick: diagnostics.activity ? { generatedAt: new Date().toISOString(), adjustments: [] } : null,
+        nash: null,
+        operation: null,
+        business: diagnostics ? { generatedAt: new Date().toISOString(), estimates: [] } : null,
+      });
+    },
   });
   let mounted = false;
   let toastTimer = null;
@@ -47,14 +77,8 @@ export function createHomeModule({ root, shell }) {
   function navigate(routeId) {
     const url = new URL(window.location.href);
     url.searchParams.set("nav", routeId);
-    for (const key of ["person", "sourceType", "sourceRef", "from"]) {
-      url.searchParams.delete(key);
-    }
-    window.history.pushState(
-      { forgeRoute: routeId, source: "home" },
-      "",
-      `${url.pathname}${url.search}${url.hash}`,
-    );
+    for (const key of ["person", "sourceType", "sourceRef", "from"]) url.searchParams.delete(key);
+    window.history.pushState({ forgeRoute: routeId, source: "home" }, "", `${url.pathname}${url.search}${url.hash}`);
     shell.reconcile();
   }
 
@@ -65,29 +89,13 @@ export function createHomeModule({ root, shell }) {
   }
 
   function bindStaticHomeActions() {
-    bindClick(root.querySelector(".plan-card .mini-action"), () => {
-      navigate("actividad");
-    });
+    bindClick(root.querySelector(".plan-card .mini-action"), () => navigate("actividad"));
+    bindClick(root.querySelector(".next-card .primary-action"), () => navigate("pipeline"));
+    bindClick(root.querySelector(".next-card .save-action"), () => announce("Guardar para después se habilitará cuando esta acción esté vinculada a una persona real."));
+    bindClick(root.querySelector(".opportunities .section-heading button"), () => navigate("pipeline"));
+    root.querySelectorAll(".opportunity-list .opportunity").forEach((button) => bindClick(button, () => navigate("pipeline")));
 
-    bindClick(root.querySelector(".next-card .primary-action"), () => {
-      navigate("pipeline");
-    });
-
-    bindClick(root.querySelector(".next-card .save-action"), () => {
-      announce("Guardar para después se habilitará cuando esta acción esté vinculada a una persona real.");
-    });
-
-    bindClick(root.querySelector(".opportunities .section-heading button"), () => {
-      navigate("pipeline");
-    });
-
-    root.querySelectorAll(".opportunity-list .opportunity").forEach((button) => {
-      bindClick(button, () => navigate("pipeline"));
-    });
-
-    const alfredSend = document.querySelector(
-      '.alfred-input button[aria-label="Enviar a Alfred"]',
-    );
+    const alfredSend = document.querySelector('.alfred-input button[aria-label="Enviar a Alfred"]');
     bindClick(alfredSend, () => {
       if (!input?.value.trim()) {
         input?.focus({ preventScroll: true });
@@ -95,7 +103,7 @@ export function createHomeModule({ root, shell }) {
         return;
       }
       shell.setAlfredState("action", "action");
-      announce("Alfred aún no tiene ejecución productiva conectada; tu instrucción permanece sin enviar.");
+      announce("Alfred conserva la instrucción como propuesta; tu instrucción permanece sin enviar y ninguna acción se ejecuta sin aprobación humana.");
     });
   }
 
@@ -112,11 +120,10 @@ export function createHomeModule({ root, shell }) {
       }, { signal });
     });
     input?.addEventListener("focus", shell.syncVisualViewport, { signal });
-    input?.addEventListener("blur", () => {
-      window.setTimeout(shell.syncVisualViewport, 120);
-    }, { signal });
+    input?.addEventListener("blur", () => window.setTimeout(shell.syncVisualViewport, 120), { signal });
     bindStaticHomeActions();
     productiveHome.mount();
+    fipHome.mount();
   }
 
   const api = Object.freeze({
@@ -127,13 +134,17 @@ export function createHomeModule({ root, shell }) {
       root.hidden = false;
       root.dataset.moduleActive = "true";
       productiveHome.reconcile();
+      fipHome.reconcile().catch(() => fipHome.scrub("fip-reconcile-failed"));
     },
     unmount() {
       root.hidden = true;
       root.dataset.moduleActive = "false";
       productiveHome.scrub("home-route-unmounted");
+      fipHome.scrub("home-route-unmounted");
     },
-    diagnostics: productiveHome.diagnostics,
+    diagnostics() {
+      return Object.freeze({ productiveHome: productiveHome.diagnostics?.(), fipHome: fipHome.diagnostics() });
+    },
   });
   root[homeStateKey] = api;
   return api;
