@@ -4,6 +4,7 @@ import "./rep-17-session-transition-guard.js?v=rep-17c-001";
 import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";
 import "./quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001";
 import "./quote-runtime-intake-readiness-m05x001.js?v=m05x-001";
+import "./person-workspace-entry-bridge.js?v=crs-09-001";
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
