@@ -12,7 +12,6 @@ on:
       - "scripts/advisor-compensation-stage-100-*.mjs"
       - "scripts/deploy-advisor-compensation-stage-100.mjs"
       - "tests/advisor-compensation-stage-0*.mjs"
-      - "tests/material3-pipeline-integration-test.mjs"
       - "tests/e2e/advisor-compensation-*.spec.mjs"
       - "tests/e2e/fixtures/advisor-compensation-*/**"
       - "playwright.advisor-compensation-*.config.mjs"
@@ -24,7 +23,7 @@ on:
       - "feat/advisor-compensation-100-productive-acceptance"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   repository:
@@ -112,34 +111,3 @@ jobs:
           name: advisor-compensation-stage-100-remote-plan
           path: artifacts/advisor-compensation-stage-100-remote
           if-no-files-found: error
-
-  reconcile-navigation-test-once:
-    if: github.event_name == 'pull_request' && github.head_ref == 'feat/advisor-compensation-100-productive-acceptance'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: feat/advisor-compensation-100-productive-acceptance
-          fetch-depth: 2
-
-      - name: Reconcile canonical navigation expectation and retire this job
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          path = Path('tests/material3-pipeline-integration-test.mjs')
-          text = path.read_text()
-          old = '    "Cartera",\n  ]);'
-          new = '    "Cartera",\n    "Comisiones",\n  ]);'
-          if text.count(old) != 1:
-              raise SystemExit('NAVIGATION_EXPECTATION_ANCHOR_NOT_UNIQUE')
-          path.write_text(text.replace(old, new, 1))
-          PY
-          git checkout HEAD^ -- .github/workflows/advisor-compensation-stage-100.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tests/material3-pipeline-integration-test.mjs .github/workflows/advisor-compensation-stage-100.yml
-          git commit -m "test(navigation): include Commissions in canonical modules"
-          git push origin HEAD:feat/advisor-compensation-100-productive-acceptance
