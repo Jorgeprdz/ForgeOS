@@ -1,0 +1,53 @@
+name: CRS 08 Remote Read Model Inventory
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/ci/crs-08-remote-read-model-inventory.mjs"
+      - "tests/crs-08-remote-read-model-inventory-test.mjs"
+      - ".github/workflows/crs-08-remote-read-model-inventory.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crs-08-remote-read-model-inventory-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  read-only-inventory:
+    if: github.repository == 'Jorgeprdz/ForgeOS' && github.head_ref == 'feat/crs-08-unified-person-timeline-read-model'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Prove read-only gate
+        run: |
+          set -euo pipefail
+          node --check scripts/ci/crs-08-remote-read-model-inventory.mjs
+          node --test tests/crs-08-remote-read-model-inventory-test.mjs
+      - name: Run remote read-only inventory
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/crs-08-unified-person-timeline
+          node scripts/ci/crs-08-remote-read-model-inventory.mjs \
+            | tee artifacts/crs-08-unified-person-timeline/workflow-output.log
+          grep -q 'CRS_08_REMOTE_READ_INVENTORY=PASS' artifacts/crs-08-unified-person-timeline/workflow-output.log
+          grep -q 'CRS_08_CARTERA_040B_HISTORY_FOUNDATION=PASS' artifacts/crs-08-unified-person-timeline/workflow-output.log
+          grep -q 'CRS_08_SECOND_TIMELINE_STORE=NO' artifacts/crs-08-unified-person-timeline/workflow-output.log
+          grep -q 'CRS_08_REMOTE_MUTATION=NO' artifacts/crs-08-unified-person-timeline/workflow-output.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: crs-08-unified-person-timeline-read-inventory
+          path: artifacts/crs-08-unified-person-timeline
+          if-no-files-found: error
+          retention-days: 30
