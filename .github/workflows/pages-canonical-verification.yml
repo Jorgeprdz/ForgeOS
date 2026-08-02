@@ -27,6 +27,11 @@ jobs:
           PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones
           BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
           APP_JS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/app.js
+          QPD_JS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js
+          QPD_CSS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css
+          PRINTABLE_READ_MODEL_URL: https://jorgeprdz.github.io/ForgeOS/advisor-os/quotes/printable/quote-printable-read-model-m05e005.js
+          QUOTE_LIFECYCLE_URL: https://jorgeprdz.github.io/ForgeOS/platform/event-evidence/quote-lifecycle-supabase-service.js
+          CLOSURE_MANIFEST_URL: https://jorgeprdz.github.io/ForgeOS/forge-alive-pages-runtime-closure.json
         run: |
           set -euo pipefail
 
@@ -59,19 +64,23 @@ jobs:
             headers: { 'cache-control': 'no-cache' },
           };
 
+          async function text(url, marker) {
+            const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}cb=${cb}`, options);
+            if (!response.ok) process.exit(1);
+            const body = await response.text();
+            if (marker && !body.includes(marker)) process.exit(1);
+            return body;
+          }
+
           const buildResponse = await fetch(`${process.env.BUILD_INFO_URL}?cb=${cb}`, options);
           if (!buildResponse.ok) process.exit(1);
           const build = await buildResponse.json();
           if (build.commitSha !== expected) process.exit(1);
 
-          const pageResponse = await fetch(`${process.env.PAGE_URL}&cb=${cb}`, options);
-          if (!pageResponse.ok) process.exit(1);
-          const pageHtml = await pageResponse.text();
-          if (!pageHtml.includes('Forge Alive')) process.exit(1);
+          const pageHtml = await text(process.env.PAGE_URL, 'Forge Alive');
+          if (!pageHtml.includes('data-forge-application')) process.exit(1);
 
-          const appResponse = await fetch(`${process.env.APP_JS_URL}?cb=${cb}`, options);
-          if (!appResponse.ok) process.exit(1);
-          const appJs = await appResponse.text();
+          const appJs = await text(process.env.APP_JS_URL);
           for (const required of [
             'quote-runtime-pages-rate-fetch-bridge-m05e010.js',
             'quote-runtime-vida-mujer-handoff-m05e009.js',
@@ -82,10 +91,45 @@ jobs:
             if (!appJs.includes(required)) process.exit(1);
           }
 
+          await text(
+            process.env.QPD_JS_URL,
+            'QPD06_PRODUCTIVE_ROUTE_BINDING_V1',
+          );
+          await text(
+            process.env.QPD_CSS_URL,
+            'data-forge-qpd06-actions',
+          );
+          await text(
+            process.env.PRINTABLE_READ_MODEL_URL,
+            'M05E005_OPTIONAL_CLIENT_READ_MODEL_V1',
+          );
+          await text(
+            process.env.QUOTE_LIFECYCLE_URL,
+            'ForgeQuoteLifecycleSupabaseServiceCartera001B',
+          );
+
+          const manifestResponse = await fetch(
+            `${process.env.CLOSURE_MANIFEST_URL}?cb=${cb}`,
+            options,
+          );
+          if (!manifestResponse.ok) process.exit(1);
+          const manifest = await manifestResponse.json();
+          if (manifest.contractId !== 'FORGE_ALIVE_PAGES_RUNTIME_CLOSURE_V1') {
+            process.exit(1);
+          }
+          for (const required of [
+            'advisor-os/quotes/printable/quote-printable-read-model-m05e005.js',
+            'platform/event-evidence/quote-lifecycle-supabase-service.js',
+            'static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js',
+          ]) {
+            if (!manifest.requiredPublishedFiles?.includes(required)) process.exit(1);
+          }
+
           console.log(`PAGES_CANONICAL_HTTP=PASS sha=${build.commitSha}`);
+          console.log(`PAGES_RUNTIME_CLOSURE=PASS files=${manifest.runtimeFiles.length}`);
           NODE
             then
-              post_status success "Canonical Forge Alive published and verified"
+              post_status success "Canonical Forge Alive runtime closure verified"
               echo "PAGES_CANONICAL=PASS"
               echo "PAGES_SHA=$EXPECTED_SHA"
               echo "PAGES_URL=$PAGE_URL"
@@ -94,6 +138,6 @@ jobs:
             sleep 5
           done
 
-          post_status failure "Canonical Pages did not publish expected SHA" "$RUN_URL"
-          echo "PAGES_CANONICAL=FAIL_STALE_OR_MISSING"
+          post_status failure "Canonical Pages runtime closure incomplete" "$RUN_URL"
+          echo "PAGES_CANONICAL=FAIL_STALE_OR_MISSING_RUNTIME"
           exit 1
