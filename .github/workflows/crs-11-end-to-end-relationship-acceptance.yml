@@ -94,7 +94,7 @@ jobs:
             -name 'crs-08-*.mjs' \
           \) | sort)
           test "${#security[@]}" -ge 15
-          node --test "${security[@]}"
+          node --test --test-concurrency=1 "${security[@]}"
 
       - name: Program authority and no-effect boundaries
         run: |
