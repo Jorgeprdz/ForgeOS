@@ -47,8 +47,8 @@ if (!buildSha) {
           '`advisor-monthly-policy-goal-repository${layout.extension}?v=${buildSha}`',
         ],
         [
-          '"smart-widget-productive-home-adapter.css"',
-          `"smart-widget-productive-home-adapter.css?v=${buildSha}"`,
+          '"./smart-widget-productive-home-adapter.css?v=home-productive-mount-001"',
+          `"./smart-widget-productive-home-adapter.css?v=${buildSha}"`,
         ],
       ],
     },
