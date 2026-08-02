@@ -76,3 +76,21 @@ test("Pages validator activates closure only for the real _site artifact", async
   assert.match(validator, /prepareForgeAlivePagesRuntimeClosure/);
   assert.match(validator, /FORGE_SKIP_PAGES_RUNTIME_PREPARATION/);
 });
+
+test("canonical verification rejects a false-green artifact with missing runtime assets", async () => {
+  const workflow = await readFile(
+    join(root, ".github/workflows/pages-canonical-verification.yml"),
+    "utf8",
+  );
+  for (const required of [
+    "QPD_JS_URL",
+    "QPD_CSS_URL",
+    "PRINTABLE_READ_MODEL_URL",
+    "QUOTE_LIFECYCLE_URL",
+    "CLOSURE_MANIFEST_URL",
+    "FORGE_ALIVE_PAGES_RUNTIME_CLOSURE_V1",
+    "PAGES_CANONICAL=FAIL_STALE_OR_MISSING_RUNTIME",
+  ]) {
+    assert.match(workflow, new RegExp(required));
+  }
+});
