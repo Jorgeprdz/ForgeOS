@@ -2,6 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
+const pgcryptoPrepare = readFileSync(
+  "supabase/migrations/20260801000598_crs06_pgcrypto_digest_compatibility.sql",
+  "utf8",
+);
 const dependency = readFileSync(
   "supabase/migrations/20260801000599_crs06_application_dependency_compatibility.sql",
   "utf8",
@@ -14,10 +18,40 @@ const lifecycle = readFileSync(
   "supabase/migrations/20260801000602_crs06_application_rpc_lifecycle_hardening.sql",
   "utf8",
 );
+const pgcryptoRetire = readFileSync(
+  "supabase/migrations/20260801000603_crs06_pgcrypto_digest_schema_hardening.sql",
+  "utf8",
+);
+const compatibilityRunner = readFileSync(
+  "scripts/ci/crs-06e-pgcrypto-compatibility-deploy.mjs",
+  "utf8",
+);
 const runner = readFileSync(
   "scripts/ci/crs-06e-remote-application-authority.mjs",
   "utf8",
 );
+
+test("temporary digest compatibility is private and bounded", () => {
+  assert.match(pgcryptoPrepare, /create or replace function public\.digest\(p_data bytea, p_algorithm text\)/);
+  assert.match(pgcryptoPrepare, /extensions\.digest/);
+  assert.match(pgcryptoPrepare, /revoke all on function public\.digest\(bytea, text\)/);
+  assert.doesNotMatch(pgcryptoPrepare, /grant execute/);
+});
+
+test("digest compatibility is retired after durable rebinding", () => {
+  assert.match(pgcryptoRetire, /create or replace function public\.forge_crs06_event_digest/);
+  assert.match(pgcryptoRetire, /extensions\.digest/);
+  assert.match(pgcryptoRetire, /drop function if exists public\.digest\(bytea, text\)/);
+  assert.match(pgcryptoRetire, /revoke execute on function public\.forge_crs06_event_digest/);
+});
+
+test("compatibility deployer validates schema, history and wrapper retirement", () => {
+  assert.match(compatibilityRunner, /CRS06E_PGCRYPTO_EXTENSIONS_SCHEMA_REQUIRED/);
+  assert.match(compatibilityRunner, /CRS_06E_PGCRYPTO_COMPATIBILITY_PREPARED=PASS/);
+  assert.match(compatibilityRunner, /CRS_06E_PGCRYPTO_COMPATIBILITY_RETIRED=PASS/);
+  assert.match(compatibilityRunner, /public_digest_wrapper/);
+  assert.match(compatibilityRunner, /application_digest_bound_to_extensions/);
+});
 
 test("dependency migration aligns the owner-first CommercialPerson key", () => {
   assert.match(dependency, /create unique index if not exists commercial_people_owner_id_uq/);
