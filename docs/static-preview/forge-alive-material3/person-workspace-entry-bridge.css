@@ -1,0 +1,57 @@
+.person-workspace-launcher {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 0 14px;
+  border: 1px solid rgba(82, 230, 223, .32);
+  border-radius: 15px 21px 14px 19px;
+  background: rgba(82, 230, 223, .09);
+  color: var(--aqua-soft, #bafbf6);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.person-workspace-launcher::before {
+  content: "◎";
+  color: var(--aqua, #52e6df);
+  font-size: 15px;
+}
+
+.person-workspace-launcher--compact {
+  min-height: 40px;
+  margin-top: 0;
+  padding-inline: 11px;
+  font-size: 10px;
+}
+
+[data-productive-card-actions] .person-workspace-launcher {
+  order: -10;
+}
+
+.quotes-module__header > .person-workspace-launcher,
+.activity-hero > .person-workspace-launcher {
+  align-self: start;
+  justify-self: end;
+}
+
+.person-workspace-launcher:hover {
+  border-color: rgba(82, 230, 223, .58);
+  background: rgba(82, 230, 223, .15);
+}
+
+.person-workspace-launcher:focus-visible {
+  outline: 2px solid var(--aqua, #52e6df);
+  outline-offset: 3px;
+}
+
+@media (max-width: 620px) {
+  .quotes-module__header > .person-workspace-launcher,
+  .activity-hero > .person-workspace-launcher {
+    justify-self: start;
+  }
+}

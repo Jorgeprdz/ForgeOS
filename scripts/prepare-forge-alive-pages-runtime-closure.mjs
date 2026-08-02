@@ -27,6 +27,15 @@ export const ROOT_RUNTIME_ENTRYPOINTS = Object.freeze([
   "advisor-os/quotes/printable/quote-printable-read-model-m05e005.js",
   "advisor-os/quotes/printable/quote-printable-pdf-generator-m05e005.js",
   "advisor-os/quotes/printable/quote-printable-document-composer-m05e005.js",
+  "platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js",
+  "platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js",
+  "platform/shared-commercial-model/crs-07-application-policy-lineage-contract.js",
+  "advisor-os/cartera/crs-07-application-policy-lineage-service.js",
+  "platform/shared-commercial-model/crs-08-unified-person-timeline-contract.js",
+  "platform/shared-commercial-model/crs-08-unified-person-timeline-adapters.js",
+  "advisor-os/timeline/crs-08-unified-person-timeline-service.js",
+  "platform/shared-commercial-model/crs-09-person-workspace-contract.js",
+  "advisor-os/person-workspace/crs-09-person-workspace-service.js",
 ]);
 
 const QPD_CANONICAL_ASSETS = Object.freeze([
@@ -225,6 +234,12 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     "advisor-os/quotes/printable/quote-printable-read-model-m05e005.js",
     "platform/event-evidence/quote-lifecycle-supabase-service.js",
     "platform/event-evidence/prospect-quote-detail-projection.js",
+    "platform/shared-commercial-model/crs-09-person-workspace-contract.js",
+    "advisor-os/person-workspace/crs-09-person-workspace-service.js",
+    "static-preview/forge-alive/person-workspace-module.js",
+    "static-preview/forge-alive/person-workspace-module.css",
+    "static-preview/forge-alive/person-workspace-entry-bridge.js",
+    "static-preview/forge-alive/person-workspace-entry-bridge.css",
     "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
     "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css",
   ];

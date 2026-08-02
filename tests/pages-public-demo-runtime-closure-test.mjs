@@ -10,22 +10,34 @@ import {
 
 const root = process.cwd();
 
-test("Pages runtime closure publishes demo, lifecycle and printable dependencies", async () => {
+test("Pages runtime closure publishes demo, lifecycle, printable and CRS 09 dependencies", async () => {
   const temporaryRoot = await mkdtemp(join(tmpdir(), "forge-pages-runtime-"));
   const siteDir = join(temporaryRoot, "_site");
 
   try {
-    await mkdir(join(siteDir, "static-preview/forge-alive"), { recursive: true });
+    const canonicalRoot = join(siteDir, "static-preview/forge-alive");
+    await mkdir(canonicalRoot, { recursive: true });
     await mkdir(join(siteDir, "static-preview"), { recursive: true });
     await cp(
       join(root, "docs/static-preview/quote-printable-runtime"),
       join(siteDir, "static-preview/quote-printable-runtime"),
       { recursive: true },
     );
+    for (const file of [
+      "person-workspace-module.js",
+      "person-workspace-module.css",
+      "person-workspace-entry-bridge.js",
+      "person-workspace-entry-bridge.css",
+    ]) {
+      await cp(
+        join(root, "docs/static-preview/forge-alive-material3", file),
+        join(canonicalRoot, file),
+      );
+    }
 
     const manifest = await prepareForgeAlivePagesRuntimeClosure({ siteDir });
     assert.equal(manifest.contractId, FORGE_ALIVE_PAGES_RUNTIME_CLOSURE_ID);
-    assert.ok(manifest.runtimeFiles.length >= 7);
+    assert.ok(manifest.runtimeFiles.length >= 16);
     assert.ok(manifest.rewrittenProxies.length >= 3);
 
     const required = [
@@ -33,6 +45,12 @@ test("Pages runtime closure publishes demo, lifecycle and printable dependencies
       "advisor-os/quotes/printable/quote-printable-read-model-m05e005.js",
       "platform/event-evidence/quote-lifecycle-supabase-service.js",
       "platform/event-evidence/prospect-quote-detail-projection.js",
+      "platform/shared-commercial-model/crs-09-person-workspace-contract.js",
+      "advisor-os/person-workspace/crs-09-person-workspace-service.js",
+      "static-preview/forge-alive/person-workspace-module.js",
+      "static-preview/forge-alive/person-workspace-module.css",
+      "static-preview/forge-alive/person-workspace-entry-bridge.js",
+      "static-preview/forge-alive/person-workspace-entry-bridge.css",
       "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
       "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css",
       "forge-alive-pages-runtime-closure.json",
@@ -62,6 +80,13 @@ test("Pages runtime closure publishes demo, lifecycle and printable dependencies
       "utf8",
     );
     assert.match(lifecycle, /ForgeQuoteLifecycleSupabaseServiceCartera001B/);
+
+    const workspace = await readFile(
+      join(siteDir, "static-preview/forge-alive/person-workspace-module.js"),
+      "utf8",
+    );
+    assert.match(workspace, /CRS_09_PRODUCTIVE_PERSON_WORKSPACE_MATERIAL3_V1/);
+    assert.match(workspace, /lateResultRejectCount/);
   } finally {
     await rm(temporaryRoot, { recursive: true, force: true });
   }
