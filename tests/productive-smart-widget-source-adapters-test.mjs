@@ -20,8 +20,30 @@ assert.equal((await goal.load(context)).sourceComplete, true);
 const cartera = createCarteraFutureRadarSourceAdapter({ connected: false });
 assert.equal((await cartera.load(context)).sourceConnected, false);
 
-const income = createIncomeCompensationSourceAdapter({ connected: false });
-assert.equal((await income.load(context)).blockedReason, "WAITING_FOR_COMPENSATION_INCOME_TRUTH_MINIMUM");
+const explicitlyDisabledIncome = createIncomeCompensationSourceAdapter({ connected: false });
+assert.equal(
+  (await explicitlyDisabledIncome.load(context)).blockedReason,
+  "COMPENSATION_PRODUCT_SOURCE_EXPLICITLY_DISABLED",
+);
+
+const disconnectedIncome = createIncomeCompensationSourceAdapter({
+  providerResolver: () => null,
+});
+const disconnected = await disconnectedIncome.load(context);
+assert.equal(disconnected.sourceConnected, false);
+assert.equal(disconnected.compensationSnapshot, null);
+
+const customIncome = createIncomeCompensationSourceAdapter({
+  loadCompensationSnapshot: async () => ({
+    sourceConnected: true,
+    sourceComplete: true,
+    compensationSnapshot: {
+      advisorId: "advisor-1",
+      contractVersion: "ADVISOR_COMPENSATION_INCOME_WIDGET_SNAPSHOT_001",
+    },
+  }),
+});
+assert.equal((await customIncome.load(context)).sourceConnected, true);
 
 await assert.rejects(
   () => goal.load({ ...context, signal: { aborted: true } }),
@@ -36,4 +58,15 @@ await assert.rejects(
   /cross-advisor/,
 );
 
-console.log("Productive Smart Widget Source Adapters PASS 5/5");
+await assert.rejects(
+  () => createIncomeCompensationSourceAdapter({
+    loadCompensationSnapshot: async () => ({
+      sourceConnected: true,
+      sourceComplete: true,
+      compensationSnapshot: { advisorId: "another-advisor" },
+    }),
+  }).load(context),
+  /cross-advisor/,
+);
+
+console.log("Productive Smart Widget Source Adapters PASS 8/8");
