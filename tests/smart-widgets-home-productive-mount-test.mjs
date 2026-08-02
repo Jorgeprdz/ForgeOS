@@ -13,6 +13,22 @@ assert.match(files.home, /createAuthenticatedProductiveHome/);
 assert.match(files.home, /summary\.replaceChildren\(\)/);
 assert.match(files.home, /forgeProductiveSmartWidgetRoot/);
 
+assert.match(files.home, /function bindStaticHomeActions/);
+assert.match(files.home, /\.plan-card \.mini-action/);
+assert.match(files.home, /navigate\("actividad"\)/);
+assert.match(files.home, /\.next-card \.primary-action/);
+assert.match(files.home, /navigate\("pipeline"\)/);
+assert.match(files.home, /\.next-card \.save-action/);
+assert.match(files.home, /persona real/);
+assert.match(files.home, /\.opportunities \.section-heading button/);
+assert.match(files.home, /\.opportunity-list \.opportunity/);
+assert.match(files.home, /Enviar a Alfred/);
+assert.match(files.home, /tu instrucción permanece sin enviar/);
+assert.match(files.home, /forgeHomeActionBound/);
+assert.match(files.home, /window\.history\.pushState/);
+assert.match(files.home, /shell\.reconcile\(\)/);
+assert.doesNotMatch(files.home, /location\.assign|window\.open|fetch\(/);
+
 assert.match(files.orchestrator, /ForgeProductiveProspectBootstrap067G17B/);
 assert.match(files.orchestrator, /createProductiveActivityReportingBridge/);
 assert.match(files.orchestrator, /period:\s*\{\s*kind:\s*"WEEK_TO_DATE"/s);
@@ -51,6 +67,8 @@ assert.match(files.providers, /possible_late_payment_is_inference_not_confirmed_
 assert.match(files.providers, /ONE_CONFIRMED_SOLD_POLICY/);
 
 console.log("SMART_WIDGETS_HOME_PRODUCTIVE_MOUNT=PASS");
+console.log("HOME_STATIC_BUTTON_WIRING=PASS");
+console.log("HOME_DEAD_ACTIONS=0");
 console.log("AUTHENTICATED_HOME_ORCHESTRATOR=PASS");
 console.log("REP_ACTIVITY_CHART_BINDING=PASS");
 console.log("MONTHLY_GOAL_EDITOR=PASS");
