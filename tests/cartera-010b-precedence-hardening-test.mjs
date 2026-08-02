@@ -9,9 +9,9 @@ const migration = readFileSync(
   ),
   "utf8",
 );
-const deployer = readFileSync(
+const remoteClosure = readFileSync(
   new URL(
-    "../scripts/ci/cartera-010b-precedence-hardening-deploy.mjs",
+    "../docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_CLOSURE_001.md",
     import.meta.url,
   ),
   "utf8",
@@ -28,10 +28,13 @@ test("precedence hardening is additive and targets only the broken expression", 
   assert.doesNotMatch(migration, /alter table|create table|drop table/i);
 });
 
-test("remote deployer records and verifies migration 00213", () => {
-  assert.match(deployer, /20260731000213/);
-  assert.match(deployer, /supabase_migrations\.schema_migrations/);
-  assert.match(deployer, /REMOTE_CONTENT_MISMATCH/);
-  assert.match(deployer, /CARTERA010B_IDENTITY_PRECEDENCE_HARDENING=PASS/);
-  assert.doesNotMatch(deployer, /service_role|database password/i);
+test("remote closure records migration 00213 and the retired deployment trigger", () => {
+  assert.match(
+    remoteClosure,
+    /20260731000213_cartera010b_identity_resolution_precedence_hardening\.sql/,
+  );
+  assert.match(remoteClosure, /IDENTITY_PRECEDENCE_HARDENING=PASS/);
+  assert.match(remoteClosure, /CARTERA_010B_REMOTE_ACCEPTANCE=PASS/);
+  assert.match(remoteClosure, /REMOTE_WORKFLOW_AUTOMATIC_TRIGGER=RETIRED/);
+  assert.match(remoteClosure, /ARTIFACT_ID=8796172953/);
 });
