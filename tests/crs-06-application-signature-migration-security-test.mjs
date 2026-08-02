@@ -108,8 +108,8 @@ test("replays are idempotent and changed keys conflict", () => {
 test("Application lifecycle never creates or mutates Policy", () => {
   assert.doesNotMatch(sql, /insert into public\.polic(?:y|ies)/i);
   assert.doesNotMatch(sql, /update public\.polic(?:y|ies)/i);
-  assert.match(sql, /'policyCreated', false/);
-  assert.match(sql, /'issuanceEvidenceRequiredForPolicy', true/);
+  assert.match(sql, /'policyCreated',\s*false/);
+  assert.match(sql, /'issuanceEvidenceRequiredForPolicy',\s*true/);
 });
 
 test("the migration does not integrate an external signature provider", () => {
