@@ -1,10 +1,10 @@
 # FORGE CRS 09ABCD — Preparation Evidence
 
-**Evidence ID:** `FORGE_CRS_09_ABCD_PREPARATION_001`  
-**Requested next:** `CRS_09ABCD_PRODUCTIVE_PERSON_WORKSPACE`  
-**Branch:** `feat/crs-09-productive-person-workspace`  
-**Base at intake:** `0fb32fd397878dec6c2e1dbe3b10a88b47202204`  
-**Status:** `IMPLEMENTED_PENDING_PR_CI`  
+**Evidence ID:** `FORGE_CRS_09_ABCD_PREPARATION_001`
+**Requested next:** `CRS_09ABCD_PRODUCTIVE_PERSON_WORKSPACE`
+**Branch:** `feat/crs-09-productive-person-workspace`
+**Base at intake:** `0fb32fd397878dec6c2e1dbe3b10a88b47202204`
+**Status:** `IMPLEMENTED_PENDING_PR_CI`
 **Automatic merge:** `FORBIDDEN`
 
 ## Constitutional gate
@@ -14,7 +14,7 @@
 - Discovery: CRS 08 closure, CRS roadmap, existing Material 3 shell, Pipeline, Activity, Quotes, Cartera, Pages runtime closure.
 - Miranda alignment: one productive person surface; no parallel CRM truth, no hidden fallback, no automatic identity or business mutation.
 - Board signal: owner authorization received as `NEXT=CRS_09ABCD_PRODUCTIVE_PERSON_WORKSPACE`.
-- Scope: CRS 09A, 09B, 09C, and 09D in one controlled pass.
+- Scope: CRS 09A, 09B, CRS 09C, and CRS 09D in one controlled pass.
 
 ## Implemented scope
 
