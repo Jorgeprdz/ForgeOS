@@ -10,18 +10,30 @@ const hardening = await readFile(new URL(
   "../supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql",
   import.meta.url,
 ), "utf8");
+const qualification = await readFile(new URL(
+  "../supabase/migrations/20260801000612_crs07_application_policy_wrapper_qualification.sql",
+  import.meta.url,
+), "utf8");
 
-test("migration is transactional and creates no second Policy store", () => {
-  assert.match(sql, /begin;/i);
-  assert.match(sql, /commit;\s*$/i);
-  assert.match(hardening, /begin;[\s\S]*commit;/i);
-  assert.doesNotMatch(`${sql}\n${hardening}`, /create\s+table/i);
+const allSql = `${sql}\n${hardening}\n${qualification}`;
+
+test("migration sequence is transactional and creates no second Policy store", () => {
+  for (const migration of [sql, hardening, qualification]) {
+    assert.match(migration, /begin;[\s\S]*commit;\s*$/i);
+  }
+  assert.doesNotMatch(allSql, /create\s+table/i);
 });
 test("adds Application lineage index to existing PolicyVersion", () => assert.match(sql, /policy_versions_application_lineage_idx[\s\S]*application_reference/i));
 test("direct lineage requires NULL-safe governed command context", () => {
   assert.match(sql, /CRS07_APPLICATION_LINEAGE_REQUIRES_GOVERNED_COMMAND/);
   assert.match(hardening, /forge\.crs07_application_policy_lineage_command/);
   assert.match(hardening, /is\s+distinct\s+from\s+'on'/i);
+});
+test("wrapper rejects ambiguous PLpgSQL references", () => {
+  assert.match(qualification, /#variable_conflict\s+error/i);
+  assert.match(qualification, /v_application_reference/);
+  assert.match(qualification, /a\.application_reference = v_application_reference/);
+  assert.doesNotMatch(qualification, /a\.application_reference = application_reference/);
 });
 test("requires an approved Application in the same owner scope", () => {
   assert.match(hardening, /commercial_applications/);
@@ -50,22 +62,21 @@ test("lineage is immutable across later versions", () => {
   assert.match(hardening, /CRS07_PREVIOUS_POLICY_VERSION_REQUIRED/);
   assert.match(hardening, /CRS07_POLICY_LINEAGE_IMMUTABLE/);
 });
-test("wrapper delegates to existing Cartera authority", () => {
-  assert.match(sql, /forge_crs07_confirm_issued_policy_from_application/);
-  assert.match(sql, /forge_cartera010b_confirm_policy_with_parties\(p_command\)/);
+test("qualified wrapper delegates to existing Cartera authority", () => {
+  assert.match(qualification, /forge_crs07_confirm_issued_policy_from_application/);
+  assert.match(qualification, /forge_cartera010b_confirm_policy_with_parties\(p_command\)/);
 });
 test("wrapper returns no-automation boundaries", () => {
-  assert.match(sql, /'policyCreatedByApplication', false/);
-  assert.match(sql, /'quoteUsedAsPolicyAuthority', false/);
-  assert.match(sql, /'automaticPolicyCreation', false/);
+  assert.match(qualification, /'policyCreatedByApplication', false/);
+  assert.match(qualification, /'quoteUsedAsPolicyAuthority', false/);
+  assert.match(qualification, /'automaticPolicyCreation', false/);
 });
 test("trigger helpers are owner-only and wrapper is authenticated-only", () => {
   assert.match(hardening, /forge_crs07_application_policy_lineage_insert_guard\(\)[\s\S]*from public, anon, authenticated/);
-  assert.match(sql, /forge_crs07_confirm_issued_policy_from_application\(jsonb\)[\s\S]*to authenticated/);
+  assert.match(qualification, /forge_crs07_confirm_issued_policy_from_application\(jsonb\)[\s\S]*to authenticated/);
 });
 test("does not mutate Application, Quote, Pipeline, payment or service", () => {
-  const combined = `${sql}\n${hardening}`;
-  assert.doesNotMatch(combined, /update\s+public\.commercial_applications/i);
-  assert.doesNotMatch(combined, /update\s+public\.quote_lifecycle/i);
-  assert.doesNotMatch(combined, /insert\s+into\s+public\.(?:pipeline|policy_payment|service)/i);
+  assert.doesNotMatch(allSql, /update\s+public\.commercial_applications/i);
+  assert.doesNotMatch(allSql, /update\s+public\.quote_lifecycle/i);
+  assert.doesNotMatch(allSql, /insert\s+into\s+public\.(?:pipeline|policy_payment|service)/i);
 });
