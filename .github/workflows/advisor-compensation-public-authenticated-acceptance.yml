@@ -34,7 +34,7 @@ jobs:
       FORGE_PUBLIC_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=comisiones
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout acceptance branch
+      - name: Checkout post-merge acceptance runner
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -94,23 +94,23 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Authenticate publicly with candidate runtime
+      - name: Authenticate against deployed Pages without asset overrides
         run: npx playwright test --config=playwright.advisor-compensation-public-authenticated.config.mjs
 
-      - name: Upload public acceptance evidence
+      - name: Upload final public acceptance evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: advisor-compensation-public-authenticated-${{ github.sha }}
+          name: advisor-compensation-public-authenticated-final-${{ github.sha }}
           path: artifacts/advisor-compensation-public-authenticated
           if-no-files-found: warn
           retention-days: 30
 
-      - name: Publish job summary
+      - name: Publish final job summary
         if: success()
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<EOF
-          ## Advisor Compensation Public Authenticated Candidate Acceptance
+          ## Advisor Compensation Final Public Authenticated Acceptance
 
           \`\`\`text
           EXPECTED_MAIN_SHA=$EXPECTED_MAIN_SHA
@@ -123,7 +123,8 @@ jobs:
           LOGOUT_SCRUB=PASS
           PRIVATE_ROUTE_UNMOUNT=PASS
           UNKNOWN_IS_NOT_ZERO=PASS
+          ASSET_OVERRIDES=NO
           REMOTE_FUNCTION_REDEPLOYED=NO
-          PUBLIC_DEPLOYMENT_OF_FIX=PENDING_CONTROLLED_MERGE
+          PUBLIC_AUTHENTICATED_ACCEPTANCE=PASS
           \`\`\`
           EOF
