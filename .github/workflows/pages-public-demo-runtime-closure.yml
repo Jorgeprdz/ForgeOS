@@ -59,6 +59,12 @@ jobs:
       - name: Validate dependency-closed public runtime
         run: node --test tests/pages-public-demo-runtime-closure-test.mjs
 
+      - name: Preserve inherited Pages and authentication contracts
+        run: |
+          node --test tests/cartera-pages-runtime-assets-test.mjs
+          node --test tests/authenticated-route-guard-test.mjs
+          node --test tests/login-integrated-demo-tenants-test.mjs
+
       - name: Build and validate complete Pages artifact
         env:
           GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -107,9 +113,3 @@ jobs:
           assert.doesNotMatch(proxy, /\.\.\/\.\.\/\.\.\/advisor-os\//);
           console.log('COMPLETE_PAGES_ARTIFACT_RUNTIME_CLOSURE=PASS');
           NODE
-
-      - name: Preserve inherited Pages and authentication contracts
-        run: |
-          node --test tests/cartera-pages-runtime-assets-test.mjs
-          node --test tests/authenticated-route-guard-test.mjs
-          node --test tests/login-integrated-demo-tenants-test.mjs
