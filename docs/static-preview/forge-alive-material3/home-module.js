@@ -1,9 +1,17 @@
 import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js";
-import { createFipProductiveHomeBridge } from "./fip-productive-home-bridge.js";
 
 const homeStateKey = Symbol.for("forge.ui-m04.home.state");
 
 function prepareProductiveRoot(root) {
+  const staticPlan = root.querySelector(".plan-card");
+  const staticFollowup = root.querySelector(".next-card");
+  for (const node of [staticPlan, staticFollowup]) {
+    if (!node) continue;
+    node.hidden = true;
+    node.dataset.replacedByProductiveSmartWidgets = "true";
+    node.setAttribute("aria-hidden", "true");
+  }
+
   const summary = root.querySelector(".summary-section") || document.createElement("section");
   if (!summary.isConnected) root.appendChild(summary);
   summary.className = "summary-section productive-home-section";
@@ -13,27 +21,73 @@ function prepareProductiveRoot(root) {
   const productiveRoot = document.createElement("section");
   productiveRoot.dataset.forgeProductiveSmartWidgetRoot = "true";
   productiveRoot.dataset.forgePrivateSurface = "home-smart-widgets";
+  productiveRoot.dataset.canonicalHomeActions = "true";
   productiveRoot.hidden = true;
-  productiveRoot.setAttribute("aria-label", "Resumen productivo del día");
+  productiveRoot.setAttribute("aria-label", "Plan de hoy y seguimiento prioritario");
   summary.appendChild(productiveRoot);
-
-  const fipRoot = document.createElement("section");
-  fipRoot.className = "fip-productive-surface";
-  fipRoot.dataset.forgeFipProductiveRoot = "true";
-  fipRoot.dataset.forgePrivateSurface = "home-fip-intelligence";
-  fipRoot.hidden = true;
-  fipRoot.setAttribute("aria-label", "Advisor Intelligence y Alfred");
-  summary.appendChild(fipRoot);
-  return { productiveRoot, fipRoot };
+  return { productiveRoot };
 }
 
-function injectFipStyles() {
-  if (document.querySelector("[data-fip-productive-styles]")) return;
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = new URL("./fip-productive-home-bridge.css?v=fip-final-mount-001", import.meta.url);
-  link.dataset.fipProductiveStyles = "true";
-  document.head.appendChild(link);
+function createHonestEmptyCard(role) {
+  const article = document.createElement("article");
+  article.className = `productive-smart-widget is-${role} productive-smart-widget-canonical-empty`;
+  article.dataset.canonicalRole = role;
+  article.dataset.widgetState = "EMPTY";
+  article.innerHTML = `
+    <p class="productive-smart-widget-eyebrow">${role === "plan" ? "PLAN DE HOY" : "SIGUIENTE MEJOR ACCIÓN"}</p>
+    <h3 class="productive-smart-widget-title">${role === "plan" ? "Sin una prioridad confiable todavía" : "Sin seguimiento prioritario calculable"}</h3>
+    <p class="productive-smart-widget-subtitle">Forge esperará señales reales antes de recomendar una acción.</p>
+    <div class="productive-smart-widget-footer"><span class="productive-smart-widget-confidence">Sin datos inventados</span></div>`;
+  return article;
+}
+
+function makeReasonExpandable(card) {
+  const reason = card.querySelector(".productive-smart-widget-reason");
+  if (!reason || reason.dataset.expandableReason === "true") return;
+  reason.dataset.expandableReason = "true";
+  reason.hidden = true;
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "productive-smart-widget-why-toggle";
+  toggle.textContent = "¿Por qué?";
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.addEventListener("click", () => {
+    reason.hidden = !reason.hidden;
+    toggle.setAttribute("aria-expanded", String(!reason.hidden));
+    toggle.textContent = reason.hidden ? "¿Por qué?" : "Ocultar explicación";
+  });
+  reason.before(toggle);
+}
+
+function canonicalizeSmartWidgets(productiveRoot) {
+  const heading = productiveRoot.querySelector(".productive-smart-widget-heading");
+  if (heading) heading.hidden = true;
+  const cards = productiveRoot.querySelector(".productive-smart-widget-cards");
+  if (!cards) return;
+
+  const rendered = [...cards.querySelectorAll(":scope > .productive-smart-widget")];
+  const plan = rendered[0] || createHonestEmptyCard("plan");
+  const followup = rendered[1] || createHonestEmptyCard("followup");
+
+  plan.dataset.canonicalRole = "plan";
+  plan.classList.add("is-plan");
+  const planEyebrow = plan.querySelector(".productive-smart-widget-eyebrow");
+  if (planEyebrow) planEyebrow.textContent = "PLAN DE HOY";
+
+  followup.dataset.canonicalRole = "followup";
+  followup.classList.remove("is-primary");
+  followup.classList.add("is-followup");
+  const followupEyebrow = followup.querySelector(".productive-smart-widget-eyebrow");
+  if (followupEyebrow) followupEyebrow.textContent = "✦ SIGUIENTE MEJOR ACCIÓN";
+
+  makeReasonExpandable(plan);
+  makeReasonExpandable(followup);
+  cards.replaceChildren(plan, followup);
+  cards.dataset.canonicalActionCards = "true";
+
+  const inventory = productiveRoot.querySelector(".productive-smart-widget-inventory");
+  if (inventory) inventory.dataset.supportingIntelligence = "true";
+  productiveRoot.dataset.intelligenceAbsorbed = "true";
 }
 
 export function createHomeModule({ root, shell }) {
@@ -43,23 +97,8 @@ export function createHomeModule({ root, shell }) {
   const { signal } = abortController;
   const input = document.querySelector(".alfred-input input");
   const toast = document.querySelector(".toast");
-  const { productiveRoot, fipRoot } = prepareProductiveRoot(root);
-  injectFipStyles();
+  const { productiveRoot } = prepareProductiveRoot(root);
   const productiveHome = createAuthenticatedProductiveHome({ root: productiveRoot, shell });
-  const fipHome = createFipProductiveHomeBridge({
-    root: fipRoot,
-    async getPacks() {
-      const diagnostics = productiveHome.diagnostics?.() || {};
-      return Object.freeze({
-        relationship: null,
-        advisor: null,
-        mick: diagnostics.activity ? { generatedAt: new Date().toISOString(), adjustments: [] } : null,
-        nash: null,
-        operation: null,
-        business: diagnostics ? { generatedAt: new Date().toISOString(), estimates: [] } : null,
-      });
-    },
-  });
   let mounted = false;
   let toastTimer = null;
 
@@ -89,9 +128,6 @@ export function createHomeModule({ root, shell }) {
   }
 
   function bindStaticHomeActions() {
-    bindClick(root.querySelector(".plan-card .mini-action"), () => navigate("actividad"));
-    bindClick(root.querySelector(".next-card .primary-action"), () => navigate("pipeline"));
-    bindClick(root.querySelector(".next-card .save-action"), () => announce("Guardar para después se habilitará cuando esta acción esté vinculada a una persona real."));
     bindClick(root.querySelector(".opportunities .section-heading button"), () => navigate("pipeline"));
     root.querySelectorAll(".opportunity-list .opportunity").forEach((button) => bindClick(button, () => navigate("pipeline")));
 
@@ -123,7 +159,6 @@ export function createHomeModule({ root, shell }) {
     input?.addEventListener("blur", () => window.setTimeout(shell.syncVisualViewport, 120), { signal });
     bindStaticHomeActions();
     productiveHome.mount();
-    fipHome.mount();
   }
 
   const api = Object.freeze({
@@ -133,17 +168,18 @@ export function createHomeModule({ root, shell }) {
     reconcile() {
       root.hidden = false;
       root.dataset.moduleActive = "true";
-      productiveHome.reconcile();
-      fipHome.reconcile().catch(() => fipHome.scrub("fip-reconcile-failed"));
+      Promise.resolve(productiveHome.reconcile()).then(() => canonicalizeSmartWidgets(productiveRoot));
     },
     unmount() {
       root.hidden = true;
       root.dataset.moduleActive = "false";
       productiveHome.scrub("home-route-unmounted");
-      fipHome.scrub("home-route-unmounted");
     },
     diagnostics() {
-      return Object.freeze({ productiveHome: productiveHome.diagnostics?.(), fipHome: fipHome.diagnostics() });
+      return Object.freeze({
+        productiveHome: productiveHome.diagnostics?.(),
+        canonicalActionCards: productiveRoot.dataset.canonicalActionCards === "true" || productiveRoot.dataset.intelligenceAbsorbed === "true",
+      });
     },
   });
   root[homeStateKey] = api;
