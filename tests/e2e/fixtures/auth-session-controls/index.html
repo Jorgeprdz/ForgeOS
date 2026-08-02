@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es-MX" data-forge-auth-boundary="authenticated">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Authenticated session controls fixture</title>
+  <style>
+    html,body{min-height:100%;margin:0;background:#06101f;color:#fff;font-family:system-ui,sans-serif}
+    body{display:grid;place-items:start end;padding:16px;box-sizing:border-box}
+    [data-forge-auth-avatar]{border:0;border-radius:999px;inline-size:48px;block-size:48px;padding:0;overflow:hidden}
+    [data-forge-auth-avatar] img{inline-size:100%;block-size:100%;object-fit:cover}
+  </style>
+  <script>
+    localStorage.removeItem("forge.auth.last_activity.v1");
+    const user = Object.freeze({
+      id: "advisor-fixture",
+      email: "jorge@example.com",
+      app_metadata: { provider: "google" },
+      user_metadata: {
+        full_name: "Jorge Palacios",
+        avatar_url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='32' fill='%23f5c75c'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='24' fill='%23081225'%3EJP%3C/text%3E%3C/svg%3E"
+      }
+    });
+    window.__AUTH_SESSION_FIXTURE__ = {
+      signOutCalls: 0,
+      legacyPanelCalls: 0,
+      user
+    };
+    window.ForgeProductiveProspectBootstrap067G17B = Object.freeze({
+      getUser: async () => ({ data: { user }, error: null }),
+      getSession: async () => ({ data: { session: { user } }, error: null })
+    });
+    window.ForgeAliveAuthEntry067G17B1 = Object.freeze({
+      contractId: "FIXTURE_AUTH_ENTRY",
+      openAuthPanel() {
+        window.__AUTH_SESSION_FIXTURE__.legacyPanelCalls += 1;
+      },
+      async signOut() {
+        window.__AUTH_SESSION_FIXTURE__.signOutCalls += 1;
+        document.documentElement.dataset.forgeAuthBoundary = "anonymous";
+        window.dispatchEvent(new CustomEvent("forge:auth-state-changed", {
+          detail: {
+            event: "SIGNED_OUT",
+            status: "anonymous",
+            advisorId: null
+          }
+        }));
+      }
+    });
+  </script>
+</head>
+<body>
+  <button type="button" data-forge-auth-avatar="067g17b1" data-forge-auth-state="authenticated" aria-label="Abrir perfil de Forge">
+    <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='32' fill='%23f5c75c'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='24' fill='%23081225'%3EJP%3C/text%3E%3C/svg%3E">
+  </button>
+  <script type="module">
+    await import("/docs/static-preview/forge-alive-material3/public-auth-touch-gate.js");
+    await import("/docs/static-preview/forge-alive-material3/authenticated-session-controls.js");
+    window.dispatchEvent(new CustomEvent("forge:auth-state-changed", {
+      detail: {
+        event: "INITIAL_SESSION",
+        status: "authenticated",
+        advisorId: "advisor-fixture"
+      }
+    }));
+  </script>
+</body>
+</html>
