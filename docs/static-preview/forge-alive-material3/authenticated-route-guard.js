@@ -12,6 +12,7 @@ const PRIVATE_ROUTES = new Set([
   "actividad",
   "reportes",
   "forecast",
+  "persona",
 ]);
 const PRIVATE_SURFACE_SELECTORS = Object.freeze([
   "[data-forge-module-viewport]",
@@ -144,6 +145,7 @@ function scrubPrivateSurfaces() {
     "[data-forge-quotes-module]",
     "[data-forge-cartera-module]",
     "[data-forge-activity-module]",
+    "[data-forge-person-workspace-module]",
   ]) {
     const root = document.querySelector(selector);
     if (!root) continue;

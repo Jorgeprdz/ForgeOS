@@ -4,10 +4,12 @@ import "./rep-17-session-transition-guard.js?v=rep-17c-001";
 import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";
 import "./quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001";
 import "./quote-runtime-intake-readiness-m05x001.js?v=m05x-001";
+import "./person-workspace-entry-bridge.js?v=crs-09-001";
 import { createForgeShell } from "./forge-shell.js";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";
+import { createPersonWorkspaceModule } from "./person-workspace-module.js?v=crs-09-001";
 import "../quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002";
@@ -69,6 +71,7 @@ const homeRoot = document.querySelector("[data-forge-home-module]");
 const quotesRoot = document.querySelector("[data-forge-quotes-module]");
 const pipelineRoot = document.querySelector("[data-forge-pipeline-module]");
 let activityRoot = document.querySelector("[data-forge-activity-module]");
+let personWorkspaceRoot = document.querySelector("[data-forge-person-workspace-module]");
 
 if (moduleViewport && !activityRoot) {
   activityRoot = document.createElement("section");
@@ -80,6 +83,16 @@ if (moduleViewport && !activityRoot) {
   moduleViewport.append(activityRoot);
 }
 
+if (moduleViewport && !personWorkspaceRoot) {
+  personWorkspaceRoot = document.createElement("section");
+  personWorkspaceRoot.className = "person-workspace-module";
+  personWorkspaceRoot.dataset.forgePersonWorkspaceModule = "true";
+  personWorkspaceRoot.dataset.routeModule = "persona";
+  personWorkspaceRoot.hidden = true;
+  personWorkspaceRoot.setAttribute("aria-label", "Workspace productivo de persona");
+  moduleViewport.append(personWorkspaceRoot);
+}
+
 if (
   !application
   || !moduleViewport
@@ -87,6 +100,7 @@ if (
   || !quotesRoot
   || !pipelineRoot
   || !activityRoot
+  || !personWorkspaceRoot
 ) {
   throw new Error("UI-M04 canonical shell boundary is incomplete");
 }
@@ -115,12 +129,17 @@ const activity = createActivityModule({
   root: activityRoot,
   shell,
 });
+const personWorkspace = createPersonWorkspaceModule({
+  root: personWorkspaceRoot,
+  shell,
+});
 
 shell
   .registerRouteModule("inicio", home)
   .registerRouteModule("pipeline", pipeline)
   .registerRouteModule("quotes", quotes)
-  .registerRouteModule("actividad", activity);
+  .registerRouteModule("actividad", activity)
+  .registerRouteModule("persona", personWorkspace);
 shell.initialize();
 
 document.documentElement.dataset.forgeCleanHomeReady = "true";
@@ -129,6 +148,7 @@ document.documentElement.dataset.forgeShellBoot = "route-first";
 document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
 document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
 document.documentElement.dataset.activityReportingRuntime = "REP-18";
+document.documentElement.dataset.personWorkspaceContract = "CRS-09-001";
 
 function authorityDatasetKey(name) {
   return `forgeAuthority${name

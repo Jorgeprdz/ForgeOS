@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>CRS 09 Productive Person Workspace</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --outline: rgba(170,199,255,.18);
+      --shadow: 0 24px 70px rgba(0,0,0,.34);
+      --aqua: #52e6df;
+      --aqua-soft: #b8fffb;
+      --gold-soft: #f0c66c;
+      --muted: #aab7cf;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; overflow-x: clip; }
+    body {
+      margin: 0;
+      padding: clamp(12px, 3vw, 32px);
+      color: #f4f7ff;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(40,89,136,.52), transparent 42rem),
+        linear-gradient(155deg, #07111f, #0c1b32 55%, #07111f);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    [data-forge-application], [data-forge-module-viewport] { width: 100%; min-width: 0; }
+  </style>
+</head>
+<body>
+  <div data-forge-application data-forge-route="persona">
+    <main data-forge-module-viewport>
+      <section class="person-workspace-module" data-forge-person-workspace-module></section>
+    </main>
+  </div>
+  <script type="module">
+    const authorityPaths = [
+      "/platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js",
+      "/platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js",
+      "/platform/shared-commercial-model/crs-07-application-policy-lineage-contract.js",
+      "/advisor-os/cartera/crs-07-application-policy-lineage-service.js",
+      "/platform/shared-commercial-model/crs-08-unified-person-timeline-contract.js",
+      "/platform/shared-commercial-model/crs-08-unified-person-timeline-adapters.js",
+      "/advisor-os/timeline/crs-08-unified-person-timeline-service.js",
+      "/platform/shared-commercial-model/crs-09-person-workspace-contract.js",
+      "/advisor-os/person-workspace/crs-09-person-workspace-service.js"
+    ];
+    for (const path of authorityPaths) await import(/* @vite-ignore */ path);
+
+    const item = (reference, recordType, label, authority, options = {}) => Object.freeze({
+      reference,
+      recordType,
+      label,
+      summary: options.summary || null,
+      state: options.state || "CONFIRMED",
+      authority,
+      occurredAt: options.occurredAt || "2026-08-01T18:00:00.000Z",
+      effectiveAt: options.effectiveAt || null,
+      privacyClassification: "PRIVATE",
+      confirmationState: "CONFIRMED",
+      attentionRequired: options.attentionRequired === true,
+      deepLink: options.deepLink || "?nav=cartera&person=PERSON%3AALEJANDRA",
+      sourceDomain: options.sourceDomain || "CARTERA",
+      sourceEventReference: options.sourceEventReference || null,
+      correlationId: options.correlationId || null,
+      facts: Object.freeze({ personReference: "PERSON:ALEJANDRA" }),
+    });
+    const section = (id, authority, items, status = "AVAILABLE", reason = null) => Object.freeze({
+      id,
+      authority,
+      status,
+      reason,
+      count: items.length,
+      attentionCount: items.filter(entry => entry.attentionRequired).length,
+      items: Object.freeze(items),
+      mutationOwner: id === "TIMELINE" ? "NONE" : "DOMAIN_AUTHORITY",
+      localMutationControls: false,
+    });
+
+    const sections = Object.freeze({
+      IDENTITY: section("IDENTITY", "CARTERA_010B_COMMERCIAL_PERSON", [
+        item("PERSON:ALEJANDRA", "COMMERCIAL_PERSON", "Alejandra Moleres", "CARTERA_010B_COMMERCIAL_PERSON", { summary: "Identidad comercial canónica confirmada." }),
+      ]),
+      OPPORTUNITIES: section("OPPORTUNITIES", "PIPELINE_PROSPECT_AUTHORITY", [
+        item("PROSPECT:001", "PROSPECT", "Propuesta en seguimiento", "PIPELINE_PROSPECT_AUTHORITY", { state: "proposal", summary: "Referida por una clienta activa.", deepLink: "?nav=pipeline&prospect=PROSPECT%3A001" }),
+      ]),
+      COMMITMENTS: section("COMMITMENTS", "FES_ACTIVITY_EVENT_LEDGER", [
+        item("ACTIVITY:FOLLOWUP:001", "DUE_ACTION_CREATED", "Enviar propuesta final", "FES_ACTIVITY_EVENT_LEDGER", { attentionRequired: true, summary: "Compromiso abierto para el siguiente contacto.", deepLink: "?nav=actividad&person=PERSON%3AALEJANDRA" }),
+      ]),
+      INTERACTIONS: section("INTERACTIONS", "FES_ACTIVITY_EVENT_LEDGER", [
+        item("ACTIVITY:MEETING:001", "APPOINTMENT_HELD", "Cita realizada", "FES_ACTIVITY_EVENT_LEDGER", { summary: "Descubrimiento y prioridades confirmadas.", deepLink: "?nav=actividad&person=PERSON%3AALEJANDRA" }),
+      ]),
+      QUOTES: section("QUOTES", "QUOTE_LIFECYCLE_AUTHORITY", [
+        item("QUOTE:VM:001", "QUOTE", "Vida Mujer", "QUOTE_LIFECYCLE_AUTHORITY", { state: "CONFIRMED", summary: "Versión vigente 3.", deepLink: "?nav=cotizaciones&quote=QUOTE%3AVM%3A001" }),
+      ]),
+      APPLICATIONS: section("APPLICATIONS", "APPLICATION_AUTHORITY", [
+        item("APP:001", "APPLICATION", "Solicitud Vida Mujer", "APPLICATION_AUTHORITY", { state: "SIGNED", summary: "Solicitud firmada y pendiente de emisión." }),
+      ]),
+      POLICIES: section("POLICIES", "CARTERA_POLICY_AUTHORITY", [], "DEGRADED", "CRS07_REMOTE_POLICY_READER_UNAVAILABLE"),
+      TIMELINE: section("TIMELINE", "CRS_08_UNIFIED_PERSON_TIMELINE_READ_MODEL", [
+        item("TL:001", "PIPELINE_STAGE", "Prospecto en propuesta", "PIPELINE_STAGE_EVENT_AUTHORITY", { sourceDomain: "PIPELINE" }),
+        item("TL:002", "APPOINTMENT_HELD", "Cita realizada", "FES_ACTIVITY_EVENT_LEDGER", { sourceDomain: "ACTIVITY" }),
+        item("TL:003", "QUOTE_CONFIRMED", "Cotización confirmada", "QUOTE_LIFECYCLE_AUTHORITY", { sourceDomain: "QUOTE" }),
+        item("TL:004", "APPLICATION_SIGNED", "Solicitud firmada", "APPLICATION_AUTHORITY", { sourceDomain: "APPLICATION" }),
+      ]),
+    });
+
+    const sourceHealth = Object.freeze(Object.fromEntries(
+      Object.entries(sections).map(([id, value]) => [id, Object.freeze({ status: value.status, reason: value.reason, count: value.count })]),
+    ));
+    const workspace = Object.freeze({
+      contractType: "FORGE_PRODUCTIVE_PERSON_WORKSPACE",
+      contractVersion: "CRS-09-PRODUCTIVE-PERSON-WORKSPACE-001.1",
+      schemaVersion: "forge.productive_person_workspace.v1",
+      workspaceReference: "pws_visual_fixture",
+      advisorReference: "advisor-visual",
+      person: Object.freeze({
+        personReference: "PERSON:ALEJANDRA",
+        displayName: "Alejandra Moleres",
+        lifecycleState: "CONFIRMED",
+        privacyClassification: "PRIVATE",
+      }),
+      relationshipReference: "REL:ADVISOR:ALEJANDRA",
+      builtAt: "2026-08-02T04:45:00.000Z",
+      itemCount: Object.values(sections).reduce((sum, current) => sum + current.count, 0),
+      attentionCount: 1,
+      sections,
+      sourceHealth,
+      workspaceDigest: "visual-fixture",
+      readOnlyComposition: true,
+      secondTruthStore: false,
+      truthMutation: false,
+      automaticBusinessAction: false,
+      localMutationControls: false,
+    });
+
+    const lockAuthority = (name, value) => {
+      Object.defineProperty(globalThis, name, {
+        configurable: true,
+        enumerable: true,
+        get: () => value,
+        set: () => {},
+      });
+    };
+
+    lockAuthority("ForgeCrs08UnifiedPersonTimelineService", Object.freeze({
+      createService: () => Object.freeze({}),
+    }));
+    lockAuthority("ForgeCrs07ApplicationPolicyLineageService", Object.freeze({
+      createService: () => Object.freeze({}),
+    }));
+    lockAuthority("ForgeCrs09PersonWorkspaceService", Object.freeze({
+      createService: () => Object.freeze({ getPersonWorkspace: async () => workspace }),
+    }));
+    lockAuthority("ForgeProductiveProspectBootstrap067G17B", Object.freeze({
+      getUser: async () => ({ data: { user: { id: "advisor-visual" } }, error: null }),
+      getClient: async () => Object.freeze({}),
+    }));
+
+    const { createPersonWorkspaceModule } = await import(
+      "/docs/static-preview/forge-alive-material3/person-workspace-module.js"
+    );
+    const root = document.querySelector("[data-forge-person-workspace-module]");
+    const shell = Object.freeze({ syncVisualViewport() {}, reconcile() {} });
+    const runtime = createPersonWorkspaceModule({ root, shell });
+    globalThis.addEventListener("forge:person-workspace-mounted", () => {
+      document.documentElement.dataset.fixtureReady = "true";
+    }, { once: true });
+    runtime.mount();
+  </script>
+</body>
+</html>
