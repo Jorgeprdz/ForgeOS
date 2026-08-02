@@ -9,9 +9,9 @@ const migration = readFileSync(
   ),
   "utf8",
 );
-const deployer = readFileSync(
+const remoteClosure = readFileSync(
   new URL(
-    "../scripts/ci/cartera-010b-conflict-ambiguity-hardening-deploy.mjs",
+    "../docs/evidence/FORGE_CARTERA_010B_REMOTE_ACCEPTANCE_CLOSURE_001.md",
     import.meta.url,
   ),
   "utf8",
@@ -28,13 +28,13 @@ test("conflict ambiguity hardening targets both helper functions", () => {
   assert.doesNotMatch(migration, /alter table|create table|drop table/i);
 });
 
-test("remote deployer records and verifies migration 00214", () => {
-  assert.match(deployer, /20260731000214/);
-  assert.match(deployer, /supabase_migrations\.schema_migrations/);
-  assert.match(deployer, /REMOTE_CONTENT_MISMATCH/);
+test("remote closure records migration 00214 and the retired deployment trigger", () => {
   assert.match(
-    deployer,
-    /CARTERA010B_CONFLICT_INSERT_AMBIGUITY_HARDENING=PASS/,
+    remoteClosure,
+    /20260731000214_cartera010b_conflict_insert_ambiguity_hardening\.sql/,
   );
-  assert.doesNotMatch(deployer, /service_role|database password/i);
+  assert.match(remoteClosure, /CONFLICT_INSERT_AMBIGUITY_HARDENING=PASS/);
+  assert.match(remoteClosure, /CARTERA_010B_REMOTE_ACCEPTANCE=PASS/);
+  assert.match(remoteClosure, /REMOTE_WORKFLOW_AUTOMATIC_TRIGGER=RETIRED/);
+  assert.match(remoteClosure, /ARTIFACT_ID=8796172953/);
 });
