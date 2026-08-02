@@ -32,7 +32,7 @@ concurrency:
 jobs:
   contract-and-artifact:
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 10
 
     steps:
       - name: Checkout exact candidate
@@ -58,6 +58,55 @@ jobs:
 
       - name: Validate dependency-closed public runtime
         run: node --test tests/pages-public-demo-runtime-closure-test.mjs
+
+      - name: Build and validate complete Pages artifact
+        env:
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_DEMO_MODE: "false"
+        run: |
+          cat > env.js <<'EOF'
+          window.__ENV__ = Object.freeze({
+            "SUPABASE_URL": "https://rmlxigxysujsuwzgoimv.supabase.co",
+            "SUPABASE_KEY": "public-anon-fixture",
+            "DEMO_MODE": "false",
+            "ENABLE_TEST_ADVISOR_LOGIN": "false"
+          });
+          EOF
+
+          GITHUB_WORKFLOW="Deploy ForgeOS to GitHub Pages" \
+            node scripts/build-advisor-presentation-pages-runtime.mjs
+          node scripts/build-quotes-preview-pages.mjs
+          node scripts/validate-pages-public-config.mjs _site/env.js
+
+          node --input-type=module - <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+
+          const read = (path) => readFileSync(`_site/${path}`, 'utf8');
+          const manifest = JSON.parse(read('forge-alive-pages-runtime-closure.json'));
+          assert.equal(
+            manifest.contractId,
+            'FORGE_ALIVE_PAGES_RUNTIME_CLOSURE_V1',
+          );
+          assert.match(
+            read('static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js'),
+            /QPD06_PRODUCTIVE_ROUTE_BINDING_V1/,
+          );
+          assert.match(
+            read('platform/event-evidence/quote-lifecycle-supabase-service.js'),
+            /ForgeQuoteLifecycleSupabaseServiceCartera001B/,
+          );
+          assert.match(
+            read('advisor-os/quotes/printable/quote-printable-read-model-m05e005.js'),
+            /M05E005_OPTIONAL_CLIENT_READ_MODEL_V1/,
+          );
+          const proxy = read(
+            'static-preview/quote-printable-runtime/quote-printable-read-model-m05e005.js',
+          );
+          assert.match(proxy, /\.\.\/\.\.\/advisor-os\/quotes\/printable\//);
+          assert.doesNotMatch(proxy, /\.\.\/\.\.\/\.\.\/advisor-os\//);
+          console.log('COMPLETE_PAGES_ARTIFACT_RUNTIME_CLOSURE=PASS');
+          NODE
 
       - name: Preserve inherited Pages and authentication contracts
         run: |
