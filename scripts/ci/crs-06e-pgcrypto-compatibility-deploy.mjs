@@ -69,15 +69,22 @@ limit 1
 `);
 assert.equal(extensionRows[0]?.digest_schema, "extensions", "CRS06E_PGCRYPTO_EXTENSIONS_SCHEMA_REQUIRED");
 
-const recordedRows = await query(`
-select exists (
-  select 1 from supabase_migrations.schema_migrations
-  where version = ${literal(deployment.version)}
-) as recorded
-`);
-const alreadyRecorded = recordedRows[0]?.recorded === true;
+const stateBefore = (await query(`
+select
+  exists (
+    select 1 from supabase_migrations.schema_migrations
+    where version = ${literal(deployment.version)}
+  ) as deployment_recorded,
+  exists (
+    select 1 from supabase_migrations.schema_migrations
+    where version = '20260801000600'
+  ) as core_application_migration_recorded
+`))[0];
 
-if (!alreadyRecorded) {
+const alreadyRecorded = stateBefore?.deployment_recorded === true;
+const coreAlreadyRecorded = stateBefore?.core_application_migration_recorded === true;
+
+if (!alreadyRecorded && !(mode === "prepare" && coreAlreadyRecorded)) {
   const sql = readFileSync(deployment.path, "utf8");
   assert.match(sql, /begin;[\s\S]*commit;/i, "CRS06E_PGCRYPTO_TRANSACTION_REQUIRED");
   assert.doesNotMatch(sql, /\b(?:drop\s+table|truncate\s+table)\b/i, "CRS06E_PGCRYPTO_DESTRUCTIVE_SQL_REJECTED");
@@ -117,10 +124,15 @@ on conflict (version) do nothing
 }
 
 const confirmation = (await query(`
-select exists (
-  select 1 from supabase_migrations.schema_migrations
-  where version = ${literal(deployment.version)}
-) as history_recorded,
+select
+  exists (
+    select 1 from supabase_migrations.schema_migrations
+    where version = ${literal(deployment.version)}
+  ) as history_recorded,
+  exists (
+    select 1 from supabase_migrations.schema_migrations
+    where version = '20260801000600'
+  ) as core_application_migration_recorded,
   to_regprocedure('public.digest(bytea,text)') is not null as public_digest_wrapper,
   to_regprocedure('public.forge_crs06_event_digest(jsonb)') is not null as application_digest_authority,
   coalesce((
@@ -129,10 +141,16 @@ select exists (
   ), false) as application_digest_bound_to_extensions
 `))[0];
 
-assert.equal(confirmation?.history_recorded, true, "CRS06E_PGCRYPTO_HISTORY_MISSING");
+if (!(mode === "prepare" && confirmation?.core_application_migration_recorded === true)) {
+  assert.equal(confirmation?.history_recorded, true, "CRS06E_PGCRYPTO_HISTORY_MISSING");
+}
+
 if (mode === "prepare") {
-  assert.equal(confirmation?.public_digest_wrapper, true, "CRS06E_TEMPORARY_DIGEST_WRAPPER_MISSING");
+  if (confirmation?.core_application_migration_recorded !== true) {
+    assert.equal(confirmation?.public_digest_wrapper, true, "CRS06E_TEMPORARY_DIGEST_WRAPPER_MISSING");
+  }
 } else {
+  assert.equal(confirmation?.history_recorded, true, "CRS06E_PGCRYPTO_RETIREMENT_HISTORY_MISSING");
   assert.equal(confirmation?.public_digest_wrapper, false, "CRS06E_TEMPORARY_DIGEST_WRAPPER_NOT_RETIRED");
   assert.equal(confirmation?.application_digest_authority, true, "CRS06E_APPLICATION_DIGEST_AUTHORITY_MISSING");
   assert.equal(confirmation?.application_digest_bound_to_extensions, true, "CRS06E_APPLICATION_DIGEST_NOT_BOUND_TO_EXTENSIONS");
@@ -140,4 +158,5 @@ if (mode === "prepare") {
 
 console.log(deployment.marker);
 console.log(`CRS_06E_PGCRYPTO_MIGRATION=${deployment.version}`);
-console.log(`CRS_06E_PGCRYPTO_HISTORY_RECORDED=YES`);
+console.log(`CRS_06E_PGCRYPTO_HISTORY_RECORDED=${confirmation?.history_recorded ? "YES" : "NOT_REQUIRED_CORE_ALREADY_DEPLOYED"}`);
+console.log(`CRS_06E_CORE_APPLICATION_MIGRATION_RECORDED=${confirmation?.core_application_migration_recorded ? "YES" : "NO"}`);
