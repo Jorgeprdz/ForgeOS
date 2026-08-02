@@ -14,9 +14,16 @@ import {
   createMonthlyPolicyGoalWidget,
   createPolicyServiceRiskWidget,
   createOpportunityCloseLikelihoodWidget,
-  createIncomeProgressWidget,
   PRODUCTIVE_SMART_WIDGET_PENDING_DEPENDENCIES,
 } from "./productive-smart-widget-providers.mjs";
+
+import {
+  createIncomeCompensationSourceAdapter,
+} from "./productive-smart-widget-source-adapters.mjs";
+
+import {
+  createIncomeProgressWidget080,
+} from "./advisor-compensation-income-widget-provider-080.mjs";
 
 const HARD_PRIORITY_SCORES = Object.freeze({
   CONFIRMED_OVERDUE_POLICY: 1000,
@@ -47,6 +54,11 @@ const AUTHORITY_UNAVAILABLE_STATES = Object.freeze(new Set([
   SMART_WIDGET_STATES.NOT_CONNECTED,
   SMART_WIDGET_STATES.SESSION_REQUIRED,
   SMART_WIDGET_STATES.HIDDEN_BY_SCOPE,
+]));
+
+const LEGACY_INCOME_PLACEHOLDER_REASONS = Object.freeze(new Set([
+  "COMPENSATION_INCOME_TRUTH_NOT_CONNECTED",
+  "WAITING_FOR_COMPENSATION_INCOME_TRUTH_MINIMUM",
 ]));
 
 function parseTime(value) {
@@ -207,6 +219,15 @@ function dependencyUnlocked(dependency, related) {
         && Number.isFinite(widget.payload?.dailyTarget);
     case "ADVISOR_MONTHLY_POLICY_GOAL_PERSISTENCE":
       return Number.isFinite(widget.payload?.target);
+    case "COMPENSATION_INCOME_TRUTH_MINIMUM":
+      return authorityAvailable(widget) && (
+        widget.payload?.sourceContract ===
+          "ADVISOR_COMPENSATION_INCOME_WIDGET_SNAPSHOT_001" ||
+        (
+          widget.payload?.sourceContract == null &&
+          widget.sourceAuthorities?.includes("COMPENSATION_INTELLIGENCE")
+        )
+      );
     default:
       return related.some(authorityAvailable);
   }
@@ -226,6 +247,12 @@ function dependencyStatus(inventory) {
       })),
     };
   });
+}
+
+function shouldActivateProductiveIncomeSource(source) {
+  if (!source || typeof source !== "object") return true;
+  return source.sourceConnected === false
+    && LEGACY_INCOME_PLACEHOLDER_REASONS.has(source.blockedReason);
 }
 
 export function rankProductiveSmartWidgets({ widgets = [], now, timeZone = "America/Mexico_City", previousSelection = null, limits = DEFAULT_LIMITS, stickyWindowMs = DEFAULT_STICKY_WINDOW_MS, challengerMargin = DEFAULT_CHALLENGER_MARGIN } = {}) {
@@ -283,12 +310,15 @@ export async function buildProductiveSmartWidgetStack(input = {}) {
   const monthEndWindow = daysInMonth(now, timeZone) - dayOfMonth(now, timeZone) <= 5;
   const sources = input.sources || {};
   const sourceContext = { advisorId: session.advisorId, now, timeZone, signal: input.signal };
+  const incomeCandidate = shouldActivateProductiveIncomeSource(sources.income)
+    ? createIncomeCompensationSourceAdapter()
+    : sources.income;
   const [activitySource, monthlyGoalSource, policyServiceSource, opportunitySource, incomeSource] = await Promise.all([
     materializeSource(sources.activity, sourceContext),
     materializeSource(sources.monthlyGoal, sourceContext),
     materializeSource(sources.policyService, sourceContext),
     materializeSource(sources.opportunities, sourceContext),
-    materializeSource(sources.income, sourceContext),
+    materializeSource(incomeCandidate, sourceContext),
   ]);
 
   const activityReportResult = typeof activitySource.loadReportResult === "function"
@@ -309,7 +339,7 @@ export async function buildProductiveSmartWidgetStack(input = {}) {
     }),
     createPolicyServiceRiskWidget(policyServiceSource),
     createOpportunityCloseLikelihoodWidget(opportunitySource),
-    createIncomeProgressWidget(incomeSource),
+    createIncomeProgressWidget080(incomeSource),
   ];
 
   for (const supplied of Array.isArray(input.additionalWidgets) ? input.additionalWidgets : []) {
@@ -376,8 +406,13 @@ export const PRODUCTIVE_SMART_WIDGET_RANKING_POLICY = Object.freeze({
   rules: [
     "Confirmed overdue policy outranks informational metrics.",
     "Payment confirmation required outranks activity and goal context.",
+    "Confirmed income-at-risk evidence outranks informational metrics.",
     "Unknown is never normalized to zero.",
     "Only one primary and at most two supporting widgets are visible.",
     "The previous primary remains sticky unless a hard priority preempts it or a challenger clears the margin.",
   ],
 });
+
+export {
+  shouldActivateProductiveIncomeSource,
+};
