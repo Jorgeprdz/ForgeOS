@@ -6,32 +6,38 @@ const sql = await readFile(new URL(
   "../supabase/migrations/20260801000610_crs07_application_policy_lineage_reconciliation.sql",
   import.meta.url,
 ), "utf8");
+const hardening = await readFile(new URL(
+  "../supabase/migrations/20260801000611_crs07_application_policy_lineage_guard_hardening.sql",
+  import.meta.url,
+), "utf8");
 
 test("migration is transactional and creates no second Policy store", () => {
   assert.match(sql, /begin;/i);
   assert.match(sql, /commit;\s*$/i);
-  assert.doesNotMatch(sql, /create\s+table/i);
+  assert.match(hardening, /begin;[\s\S]*commit;/i);
+  assert.doesNotMatch(`${sql}\n${hardening}`, /create\s+table/i);
 });
 test("adds Application lineage index to existing PolicyVersion", () => assert.match(sql, /policy_versions_application_lineage_idx[\s\S]*application_reference/i));
-test("direct lineage requires governed command context", () => {
+test("direct lineage requires NULL-safe governed command context", () => {
   assert.match(sql, /CRS07_APPLICATION_LINEAGE_REQUIRES_GOVERNED_COMMAND/);
-  assert.match(sql, /forge\.crs07_application_policy_lineage_command/);
+  assert.match(hardening, /forge\.crs07_application_policy_lineage_command/);
+  assert.match(hardening, /is\s+distinct\s+from\s+'on'/i);
 });
 test("requires an approved Application in the same owner scope", () => {
-  assert.match(sql, /commercial_applications/);
-  assert.match(sql, /lifecycle_state <> 'APPROVED'/);
-  assert.match(sql, /a\.advisor_id = new\.advisor_id/);
+  assert.match(hardening, /commercial_applications/);
+  assert.match(hardening, /lifecycle_state <> 'APPROVED'/);
+  assert.match(hardening, /a\.advisor_id = new\.advisor_id/);
 });
 test("requires exact Quote and product lineage", () => {
-  assert.match(sql, /CRS07_QUOTE_LINEAGE_MISMATCH/);
-  assert.match(sql, /CRS07_PRODUCT_LINEAGE_MISMATCH/);
+  assert.match(hardening, /CRS07_QUOTE_LINEAGE_MISMATCH/);
+  assert.match(hardening, /CRS07_PRODUCT_LINEAGE_MISMATCH/);
 });
 test("requires confirmed strong issuance evidence", () => {
-  assert.match(sql, /verification_state <> 'CONFIRMED'/);
-  assert.match(sql, /POLICY_ADMIN_RECORD/);
-  assert.match(sql, /CARRIER_ISSUANCE_RECEIPT/);
-  assert.match(sql, /issuanceConfirmed/);
-  assert.match(sql, /sourceAuthority/);
+  assert.match(hardening, /verification_state <> 'CONFIRMED'/);
+  assert.match(hardening, /POLICY_ADMIN_RECORD/);
+  assert.match(hardening, /CARRIER_ISSUANCE_RECEIPT/);
+  assert.match(hardening, /issuanceConfirmed/);
+  assert.match(hardening, /sourceAuthority/);
 });
 test("first PolicyVersion must be ISSUED or ACTIVE", () => assert.match(sql, /version_number = 1[\s\S]*status_value not in \('ISSUED', 'ACTIVE'\)/));
 test("requires confirmed permitted PolicyRole for Application person", () => {
@@ -39,10 +45,10 @@ test("requires confirmed permitted PolicyRole for Application person", () => {
   assert.match(sql, /POLICY_OWNER.*INSURED.*ADDITIONAL_INSURED.*PAYOR/s);
   assert.match(sql, /confirmation_state = 'CONFIRMED'/);
 });
-test("one Application cannot create multiple Policies", () => assert.match(sql, /CRS07_APPLICATION_MULTIPLE_POLICY_CONFLICT/));
+test("one Application cannot create multiple Policies", () => assert.match(hardening, /CRS07_APPLICATION_MULTIPLE_POLICY_CONFLICT/));
 test("lineage is immutable across later versions", () => {
-  assert.match(sql, /CRS07_PREVIOUS_POLICY_VERSION_REQUIRED/);
-  assert.match(sql, /CRS07_POLICY_LINEAGE_IMMUTABLE/);
+  assert.match(hardening, /CRS07_PREVIOUS_POLICY_VERSION_REQUIRED/);
+  assert.match(hardening, /CRS07_POLICY_LINEAGE_IMMUTABLE/);
 });
 test("wrapper delegates to existing Cartera authority", () => {
   assert.match(sql, /forge_crs07_confirm_issued_policy_from_application/);
@@ -54,11 +60,12 @@ test("wrapper returns no-automation boundaries", () => {
   assert.match(sql, /'automaticPolicyCreation', false/);
 });
 test("trigger helpers are owner-only and wrapper is authenticated-only", () => {
-  assert.match(sql, /forge_crs07_application_policy_lineage_insert_guard\(\)[\s\S]*from public, anon, authenticated/);
+  assert.match(hardening, /forge_crs07_application_policy_lineage_insert_guard\(\)[\s\S]*from public, anon, authenticated/);
   assert.match(sql, /forge_crs07_confirm_issued_policy_from_application\(jsonb\)[\s\S]*to authenticated/);
 });
 test("does not mutate Application, Quote, Pipeline, payment or service", () => {
-  assert.doesNotMatch(sql, /update\s+public\.commercial_applications/i);
-  assert.doesNotMatch(sql, /update\s+public\.quote_lifecycle/i);
-  assert.doesNotMatch(sql, /insert\s+into\s+public\.(?:pipeline|policy_payment|service)/i);
+  const combined = `${sql}\n${hardening}`;
+  assert.doesNotMatch(combined, /update\s+public\.commercial_applications/i);
+  assert.doesNotMatch(combined, /update\s+public\.quote_lifecycle/i);
+  assert.doesNotMatch(combined, /insert\s+into\s+public\.(?:pipeline|policy_payment|service)/i);
 });
