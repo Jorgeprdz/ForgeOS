@@ -1,0 +1,44 @@
+name: Authenticated Session Controls
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: auth-session-controls-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mobile-session-controls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax and static contract
+        run: |
+          node --check docs/static-preview/forge-alive-material3/authenticated-session-controls.js
+          node --test tests/authenticated-session-controls-test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Pixel avatar and idle acceptance
+        run: npx playwright test --config=playwright.auth-session-controls.config.mjs
+
+      - name: Diff integrity
+        run: git diff --check
