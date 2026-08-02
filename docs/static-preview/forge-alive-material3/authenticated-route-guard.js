@@ -1,5 +1,8 @@
-const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V3";
+const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V4";
 const FAIL_CLOSED_CONTRACT = "FORGE_AUTH_FAIL_CLOSED_V1";
+const REQUIRED_LOGIN_GATE_CONTRACT = "FORGE_AUTH_REQUIRED_LOGIN_GATE_V1";
+const LOGIN_GATE_RETRY_LIMIT = 120;
+const LOGIN_GATE_RETRY_MS = 50;
 const PRIVATE_ROUTES = new Set([
   "inicio",
   "pipeline",
@@ -25,6 +28,9 @@ const state = {
   revision: 0,
   requestedRoute: null,
   acceptanceHarness: isLoopbackAcceptanceHarness(),
+  loginGateForced: false,
+  loginGateAttempts: 0,
+  loginGateTimer: null,
 };
 
 function currentRoute() {
@@ -82,6 +88,47 @@ function setPrivateSurfaceAvailable(available) {
     : "blocked";
 }
 
+function openRequiredLoginGate() {
+  if (state.acceptanceHarness || state.status === "authenticated") return;
+  if (state.loginGateForced) return;
+
+  const authEntry = globalThis.ForgeAliveAuthEntry067G17B1;
+  if (typeof authEntry?.openAuthPanel === "function") {
+    state.loginGateForced = true;
+    state.loginGateAttempts = 0;
+    authEntry.openAuthPanel({ nav: state.requestedRoute || currentRoute() });
+    document.documentElement.dataset.forgeAuthLoginGate = "visible";
+    return;
+  }
+
+  if (
+    state.loginGateTimer !== null
+    || state.loginGateAttempts >= LOGIN_GATE_RETRY_LIMIT
+  ) {
+    return;
+  }
+
+  state.loginGateAttempts += 1;
+  state.loginGateTimer = globalThis.setTimeout(() => {
+    state.loginGateTimer = null;
+    openRequiredLoginGate();
+  }, LOGIN_GATE_RETRY_MS);
+}
+
+function releaseRequiredLoginGate() {
+  if (state.loginGateTimer !== null) {
+    globalThis.clearTimeout(state.loginGateTimer);
+    state.loginGateTimer = null;
+  }
+  state.loginGateAttempts = 0;
+
+  if (state.loginGateForced) {
+    state.loginGateForced = false;
+    globalThis.ForgeAliveAuthEntry067G17B1?.closeAuthPanel?.();
+  }
+  document.documentElement.dataset.forgeAuthLoginGate = "released";
+}
+
 function scrubPrivateSurfaces() {
   document.querySelectorAll(
     "[data-nash-prospect-workspace]," +
@@ -136,6 +183,7 @@ function applyStatus(status) {
   document.documentElement.dataset.forgeAuthBoundary = status;
 
   if (status === "authenticated") {
+    releaseRequiredLoginGate();
     setPrivateSurfaceAvailable(true);
     restoreAuthenticatedRoute();
     return;
@@ -144,6 +192,7 @@ function applyStatus(status) {
   setPrivateSurfaceAvailable(false);
   canonicalizeAnonymousLocation();
   if (status === "anonymous" || status === "auth_error") scrubPrivateSurfaces();
+  openRequiredLoginGate();
 }
 
 function blockAnonymousNavigation(event) {
@@ -156,7 +205,7 @@ function blockAnonymousNavigation(event) {
   event.preventDefault();
   event.stopImmediatePropagation();
   canonicalizeAnonymousLocation();
-  document.querySelector("[data-forge-auth-open]")?.click();
+  openRequiredLoginGate();
 }
 
 state.requestedRoute = currentRoute();
@@ -178,9 +227,16 @@ globalThis.addEventListener("forge:auth-state-changed", (event) => {
   if (status === "authenticated") applyStatus("authenticated");
   else if (["anonymous", "auth_error"].includes(status)) applyStatus(status);
 });
+globalThis.addEventListener("forge:auth-panel-closed", () => {
+  if (state.acceptanceHarness || state.status === "authenticated") return;
+  state.loginGateForced = false;
+  document.documentElement.dataset.forgeAuthLoginGate = "reopening";
+  globalThis.setTimeout(openRequiredLoginGate, 0);
+});
 
 const observer = new MutationObserver(() => {
   setPrivateSurfaceAvailable(state.status === "authenticated");
+  if (state.status !== "authenticated") openRequiredLoginGate();
 });
 observer.observe(document.documentElement, {
   childList: true,
@@ -194,6 +250,7 @@ if (state.acceptanceHarness) {
   applyStatus("authenticated");
 } else {
   setPrivateSurfaceAvailable(false);
+  openRequiredLoginGate();
 }
 
 Object.defineProperty(globalThis, "ForgeAuthenticatedRouteGuard", {
@@ -201,7 +258,9 @@ Object.defineProperty(globalThis, "ForgeAuthenticatedRouteGuard", {
   value: Object.freeze({
     version: VERSION,
     failClosedContract: FAIL_CLOSED_CONTRACT,
+    requiredLoginGateContract: REQUIRED_LOGIN_GATE_CONTRACT,
     diagnostics: () => Object.freeze({ ...state }),
+    openRequiredLoginGate,
     scrubPrivateSurfaces,
   }),
 });
@@ -210,8 +269,10 @@ export {
   FAIL_CLOSED_CONTRACT,
   PRIVATE_ROUTES,
   PRIVATE_SURFACE_SELECTORS,
+  REQUIRED_LOGIN_GATE_CONTRACT,
   VERSION,
   applyStatus,
   isLoopbackAcceptanceHarness,
+  openRequiredLoginGate,
   scrubPrivateSurfaces,
 };
