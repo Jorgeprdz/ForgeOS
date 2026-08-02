@@ -32,6 +32,17 @@ test("required gate removes fake close controls instead of reopening invisibly",
   assert.match(touchGate, /!requiredGateActive\(\)/);
 });
 
+test("avatar routing trusts its explicit rendered auth state", () => {
+  assert.match(touchGate, /function openAvatarProfile\(control\)/);
+  assert.match(
+    touchGate,
+    /control\?\.getAttribute\("data-forge-auth-state"\) === "authenticated"/,
+  );
+  assert.match(touchGate, /__forgeAuthenticatedSessionSource/);
+  assert.match(touchGate, /original\.openAuthPanel\(\)/);
+  assert.match(touchGate, /openAvatarProfile\(control\)/);
+});
+
 test("REP-17 loads touch gate before wrapping session transitions", () => {
   assert.match(
     transitionGuard,
