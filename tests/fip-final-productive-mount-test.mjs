@@ -27,7 +27,11 @@ assert.match(files.bridge, /activeAdvisorId !== advisorId/);
 assert.match(files.bridge, /sessionAdvisorId\(currentSession\) !== advisorId/);
 assert.match(files.bridge, /root\.replaceChildren\(\)/);
 assert.match(files.bridge, /root\.hidden = true/);
-assert.match(files.bridge, /Sin señales suficientes todavía\. No se inventaron datos/);
+assert.match(files.bridge, /WIDGET_PRESENTATION/);
+assert.match(files.bridge, /variant: "hero"/);
+assert.match(files.bridge, /variant: "wide"/);
+assert.match(files.bridge, /Mosaico de inteligencia/);
+assert.match(files.bridge, /Alfred seguirá aprendiendo sin inventar datos/);
 assert.match(files.bridge, /ORQUESTADOR · NO AUTORIDAD/);
 assert.doesNotMatch(files.bridge, /automaticMessage\s*:\s*true|automaticTask\s*:\s*true|automaticPipelineAdvance\s*:\s*true/);
 
@@ -39,10 +43,13 @@ assert.match(files.distributionContract, /unknownAsZero: false/);
 assert.match(files.distributionContract, /humanApprovalRequired: true/);
 
 assert.match(files.css, /padding-bottom:calc\(188px \+ env\(safe-area-inset-bottom/);
-assert.match(files.css, /background:linear-gradient\(145deg,rgba\(20,42,68,.98\),rgba\(11,25,44,.98\)\)/);
+assert.match(files.css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+assert.match(files.css, /data-variant="hero"/);
+assert.match(files.css, /data-variant="wide"/);
+assert.match(files.css, /grid-column:1\/-1/);
+assert.match(files.css, /min-height:140px/);
 assert.match(files.css, /color:#f7f8ff/);
 assert.match(files.css, /\.fip-source-strip\{[^}]*flex-wrap:wrap[^}]*overflow:visible/s);
-assert.match(files.css, /\.fip-widget\[data-state="EMPTY"\]\{[^}]*padding-block:13px/s);
 assert.doesNotMatch(files.css, /var\(--md-sys-color-surface-container,#fff\)/);
 assert.match(files.css, /@media\(min-width:600px\) and \(max-width:839px\)/);
 assert.match(files.css, /@media\(min-width:840px\)/);
@@ -60,6 +67,7 @@ assert.ok(experience.widgets.some(widget => widget.id === "home-nash" && widget.
 
 console.log("FIP_FINAL_PRODUCTIVE_MOUNT=PASS");
 console.log("FIP_PAGES_RUNTIME_ASSET_PUBLICATION=PASS");
+console.log("FIP_HOME_INTELLIGENCE_MOSAIC=PASS");
 console.log("FIP_MOBILE_VISUAL_CONTRAST=PASS");
 console.log("FIP_MOBILE_SOURCE_WRAP=PASS");
 console.log("FIP_MOBILE_SAFE_ZONE=PASS");
