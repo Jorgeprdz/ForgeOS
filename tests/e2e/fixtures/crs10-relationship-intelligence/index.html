@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es" data-fixture-ready="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>CRS 10 Existing Relationship Intelligence</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive-material3/person-workspace-module.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive-material3/person-intelligence-module.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --md-sys-color-primary: #8fd8ff;
+      --md-sys-color-primary-container: #164a67;
+      --md-sys-color-on-primary-container: #d9f2ff;
+      --md-sys-color-secondary-container: #273e55;
+      --md-sys-color-on-secondary-container: #d9eaff;
+      --md-sys-color-surface: #0d1826;
+      --md-sys-color-surface-container: #132338;
+      --md-sys-color-on-surface: #f4f7ff;
+      --md-sys-color-on-surface-variant: #b8c6d8;
+      --md-sys-color-outline-variant: #73849a;
+      --md-sys-color-error: #ffb4ab;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; overflow-x: clip; }
+    body {
+      margin: 0;
+      padding: clamp(12px, 3vw, 32px);
+      color: var(--md-sys-color-on-surface);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(40,89,136,.52), transparent 42rem),
+        linear-gradient(155deg, #07111f, #0c1b32 55%, #07111f);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .section-kicker { margin: 0; font-size: .72rem; letter-spacing: .09em; font-weight: 800; }
+    .accent { color: var(--md-sys-color-primary); }
+    [data-forge-application], [data-forge-module-viewport] { width: 100%; min-width: 0; }
+    .person-workspace-module { max-width: 1320px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div data-forge-application data-forge-route="persona">
+    <main data-forge-module-viewport>
+      <section class="person-workspace-module" data-forge-person-workspace-module>
+        <section class="person-workspace" data-person-workspace-ready data-person-reference="PERSON:ALEJANDRA">
+          <header class="person-workspace-hero">
+            <button type="button" class="person-workspace-back" aria-label="Volver">←</button>
+            <div class="person-workspace-identity">
+              <p class="section-kicker accent">PERSONA · CONFIRMED</p>
+              <h1>Alejandra Moleres</h1>
+              <p>PERSON:ALEJANDRA · REL:ADVISOR:ALEJANDRA</p>
+            </div>
+            <div class="person-workspace-truth">
+              <strong>17</strong>
+              <span>hechos compuestos</span>
+              <small>6 señales relacionales visibles</small>
+            </div>
+          </header>
+
+          <nav class="person-workspace-section-nav" aria-label="Secciones de la persona">
+            <a href="#identity">Identidad</a>
+            <a href="#timeline">Timeline</a>
+            <a href="#person-intelligence" data-person-intelligence-nav>Inteligencia</a>
+          </nav>
+
+          <section id="person-intelligence" class="person-intelligence-shell" data-person-intelligence-host data-person-intelligence-state="ready">
+            <header class="person-intelligence-header">
+              <div>
+                <p class="section-kicker accent">CRS 10 · CARTERA 050–100</p>
+                <h2>Inteligencia relacional existente</h2>
+                <p>Señales explicables para revisión. Productividad se muestra como contexto del asesor y nunca como atributo de la persona.</p>
+              </div>
+              <div class="person-intelligence-summary">
+                <strong>6</strong>
+                <span>señales visibles</span>
+                <small>4 requieren revisión</small>
+              </div>
+            </header>
+
+            <div class="person-intelligence-scope-note">
+              <strong>Sin score oculto ni acción automática.</strong>
+              <span>Cada dominio conserva su autoridad, alcance, evidencia, incertidumbre y control humano.</span>
+            </div>
+
+            <div class="person-intelligence-grid">
+              <section class="person-intelligence-domain" data-person-intelligence-domain="FUTURE_RADAR" data-source-status="AVAILABLE">
+                <header><div><p>CARTERA050_FUTURE_RADAR_READ_MODEL</p><h3>Radar futuro</h3></div><div class="person-intelligence-domain-meta"><span>Persona</span><strong>Conectada</strong></div></header>
+                <div class="person-intelligence-items"><article class="person-intelligence-item"><div><div class="person-intelligence-item-title"><strong>Revisión anual</strong><span>REVIEW_REQUIRED</span></div><p>Existe una revisión confirmada · la fecha está próxima.</p><small><b>Límite:</b> No implica prioridad final.</small><small><b>Siguiente revisión:</b> Revisar contexto y confirmar vigencia.</small></div><footer><span>2 evidencia(s)</span><a href="?nav=cartera">Abrir en Cartera</a></footer></article></div>
+              </section>
+
+              <section class="person-intelligence-domain" data-person-intelligence-domain="RELATIONSHIP_GROWTH" data-source-status="AVAILABLE">
+                <header><div><p>CARTERA060_RELATIONSHIP_GROWTH_REVIEW_READ_MODEL</p><h3>Crecimiento responsable</h3></div><div class="person-intelligence-domain-meta"><span>Persona</span><strong>Conectada</strong></div></header>
+                <div class="person-intelligence-items"><article class="person-intelligence-item"><div><div class="person-intelligence-item-title"><strong>Revisión de protección</strong><span>REVIEW_REQUIRED</span></div><p>Existe una brecha revisable sin afirmar intención de compra.</p><small><b>Límite:</b> No constituye oportunidad creada.</small><small><b>Siguiente revisión:</b> Preparar revisión humana.</small></div><footer><span>3 evidencia(s)</span><a href="?nav=cartera">Abrir en Cartera</a></footer></article></div>
+              </section>
+
+              <section class="person-intelligence-domain" data-person-intelligence-domain="RELATIONAL_ACTIVATION" data-source-status="DEGRADED">
+                <header><div><p>CARTERA070_RELATIONAL_ACTIVATION_READ_MODEL</p><h3>Activación relacional</h3></div><div class="person-intelligence-domain-meta"><span>Persona</span><strong>Degradada</strong></div></header>
+                <div class="person-intelligence-items"><div class="person-intelligence-empty"><strong>Fuente no disponible</strong><p>La fuente permanece visible y no se sustituye con inferencias. CARTERA070_SOURCE_TEMPORARILY_UNAVAILABLE</p></div></div>
+              </section>
+
+              <section class="person-intelligence-domain" data-person-intelligence-domain="ECONOMIC_CONNECTION" data-source-status="UNAVAILABLE">
+                <header><div><p>CARTERA080_ECONOMIC_CONNECTION_PROJECTION</p><h3>Conexión económica</h3></div><div class="person-intelligence-domain-meta"><span>Persona</span><strong>No disponible</strong></div></header>
+                <div class="person-intelligence-items"><div class="person-intelligence-empty"><strong>Fuente no disponible</strong><p>La bandeja de claims no está conectada en esta sesión. No se interpreta como ausencia de pagos.</p></div></div>
+              </section>
+
+              <section class="person-intelligence-domain" data-person-intelligence-domain="RELATIONSHIP_CAPITAL" data-source-status="AVAILABLE">
+                <header><div><p>CARTERA090_RELATIONSHIP_CAPITAL_READ_MODEL</p><h3>Capital relacional</h3></div><div class="person-intelligence-domain-meta"><span>Persona</span><strong>Conectada</strong></div></header>
+                <div class="person-intelligence-items"><article class="person-intelligence-item"><div><div class="person-intelligence-item-title"><strong>Continuidad de relación</strong><span>REVIEW_REQUIRED</span></div><p>Existe contexto profesional confirmado alrededor de la relación.</p><small><b>Límite:</b> No prueba influencia ni disposición a introducir.</small><small><b>Siguiente revisión:</b> Confirmar que los roles siguen vigentes.</small></div><footer><span>2 evidencia(s)</span><a href="?nav=cartera">Abrir en Cartera</a></footer></article></div>
+              </section>
+
+              <section class="person-intelligence-domain" data-person-intelligence-domain="PRODUCTIVITY_PROOF" data-source-status="AVAILABLE">
+                <header><div><p>CARTERA100_PRODUCTIVITY_PROOF_READ_MODEL</p><h3>Evidencia de productividad</h3></div><div class="person-intelligence-domain-meta"><span>Asesor</span><strong>Conectada</strong></div></header>
+                <div class="person-intelligence-items"><article class="person-intelligence-item"><div><div class="person-intelligence-item-title"><strong>Evidencia de productividad del asesor</strong><span>OBSERVED</span></div><p>No atribuida a Alejandra Moleres. Dos acciones mínimas útiles fueron completadas en el periodo.</p><small><b>Límite:</b> Describe actividad observable; no prueba causalidad ni valor humano.</small><small><b>Siguiente revisión:</b> Abrir Productividad para revisar fuentes y limitaciones.</small></div><footer><span>4 evidencia(s)</span><a href="?nav=cartera">Abrir en Cartera</a></footer></article></div>
+              </section>
+            </div>
+          </section>
+
+          <div class="person-workspace-grid">
+            <section class="person-workspace-section" id="identity"><header><div><p class="section-kicker accent">CARTERA_010B_COMMERCIAL_PERSON</p><h2>Identidad</h2></div><span>1</span></header><div class="person-workspace-items"><div class="person-workspace-empty"><strong>Identidad confirmada</strong><p>CommercialPerson canónica y activa.</p></div></div></section>
+            <section class="person-workspace-section" id="timeline"><header><div><p class="section-kicker accent">CRS_08_UNIFIED_PERSON_TIMELINE_READ_MODEL</p><h2>Timeline</h2></div><span>4</span></header><div class="person-workspace-items"><div class="person-workspace-empty"><strong>Timeline autoritativo visible</strong><p>Pipeline, Actividad, Quote y Application permanecen atribuidos.</p></div></div></section>
+          </div>
+
+          <footer class="person-workspace-boundary"><strong>Composición de sólo lectura</strong><span>Las acciones permanecen en sus dominios propietarios.</span></footer>
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -58,7 +58,7 @@ function installStabilityStyles(documentRef) {
     .pipeline-module__productive-card {
       border-color: color-mix(in srgb, var(--pipeline-stage-accent) 42%, transparent) !important;
       border-left-color: var(--pipeline-stage-accent) !important;
-      transition: border-color .16s ease, box-shadow .16s ease, opacity .16s ease;
+      transition: box-shadow .16s ease, opacity .16s ease;
     }
     .pipeline-module__productive-card[data-stage-persistence="saving"] {
       box-shadow:
