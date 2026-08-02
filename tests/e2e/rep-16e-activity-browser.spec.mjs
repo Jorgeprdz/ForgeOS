@@ -223,8 +223,14 @@ test("productive FES ledger reaches chart-ready Material 3 Activity", async ({ p
   const viewport = page.viewportSize();
   if (viewport && viewport.width <= 640) {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    const noteBox = await page.locator("[data-activity-authority-note]").boundingBox();
-    const navBox = await page.locator("[data-forge-nav-pill]").boundingBox();
+    const note = page.locator(
+      "[data-activity-operational]:visible [data-activity-authority-note]:visible",
+    ).last();
+    const nav = page.locator("[data-forge-nav-pill]:visible").last();
+    await expect(note).toBeVisible();
+    await expect(nav).toBeVisible();
+    const noteBox = await note.boundingBox();
+    const navBox = await nav.boundingBox();
     expect(noteBox).not.toBeNull();
     expect(navBox).not.toBeNull();
     expect(noteBox.y + noteBox.height).toBeLessThanOrEqual(navBox.y + 2);
