@@ -1,0 +1,308 @@
+-- CRS 07 Application-to-Policy lineage reconciliation
+-- Adds no second Policy store. It hardens the existing Cartera Policy authority.
+
+begin;
+
+create index if not exists policy_versions_application_lineage_idx
+  on public.policy_versions (advisor_id, application_reference, version_number desc)
+  where application_reference is not null;
+
+create or replace function public.forge_crs07_application_policy_lineage_insert_guard()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public, pg_temp
+as $$
+declare
+  application_row public.commercial_applications%rowtype;
+  policy_row public.canonical_policies%rowtype;
+  evidence_row public.policy_evidence_versions%rowtype;
+  previous_row public.policy_versions%rowtype;
+  distinct_policy_count integer;
+begin
+  if new.application_reference is null then
+    return new;
+  end if;
+
+  if current_setting('forge.crs07_application_policy_lineage_command', true) <> 'on' then
+    raise exception 'CRS07_APPLICATION_LINEAGE_REQUIRES_GOVERNED_COMMAND';
+  end if;
+
+  select * into application_row
+  from public.commercial_applications a
+  where a.advisor_id = new.advisor_id
+    and a.application_reference = new.application_reference;
+  if not found then
+    raise exception 'CRS07_APPLICATION_LINEAGE_NOT_FOUND';
+  end if;
+  if application_row.lifecycle_state <> 'APPROVED' then
+    raise exception 'CRS07_APPROVED_APPLICATION_REQUIRED';
+  end if;
+  if new.quote_reference is null
+     or new.quote_reference <> application_row.quote_reference then
+    raise exception 'CRS07_QUOTE_LINEAGE_MISMATCH';
+  end if;
+
+  select * into policy_row
+  from public.canonical_policies p
+  where p.advisor_id = new.advisor_id
+    and p.id = new.policy_id;
+  if not found then
+    raise exception 'CRS07_POLICY_REQUIRED';
+  end if;
+  if policy_row.product_reference <> application_row.product_reference then
+    raise exception 'CRS07_PRODUCT_LINEAGE_MISMATCH';
+  end if;
+
+  select * into evidence_row
+  from public.policy_evidence_versions e
+  where e.advisor_id = new.advisor_id
+    and e.id = new.evidence_version_id;
+  if not found then
+    raise exception 'CRS07_ISSUANCE_EVIDENCE_REQUIRED';
+  end if;
+  if evidence_row.verification_state <> 'CONFIRMED' then
+    raise exception 'CRS07_ISSUANCE_EVIDENCE_NOT_CONFIRMED';
+  end if;
+  if evidence_row.source_type not in (
+    'CARTERA020B_POLICY_PACKET',
+    'POLICY_CONTRACT',
+    'POLICY_SCHEDULE',
+    'POLICY_ADMIN_RECORD',
+    'ISSUANCE_CONFIRMATION',
+    'CARRIER_ISSUANCE_RECEIPT'
+  ) then
+    raise exception 'CRS07_ISSUANCE_EVIDENCE_SOURCE_WEAK';
+  end if;
+  if coalesce(evidence_row.provenance ->> 'issuanceConfirmed', 'false') <> 'true'
+     or evidence_row.provenance ->> 'applicationReference' <> new.application_reference
+     or nullif(btrim(evidence_row.provenance ->> 'sourceAuthority'), '') is null then
+    raise exception 'CRS07_ISSUANCE_PROVENANCE_INVALID';
+  end if;
+
+  if new.version_number > 1 then
+    select * into previous_row
+    from public.policy_versions v
+    where v.advisor_id = new.advisor_id
+      and v.policy_id = new.policy_id
+      and v.version_number = new.version_number - 1;
+    if not found then
+      raise exception 'CRS07_PREVIOUS_POLICY_VERSION_REQUIRED';
+    end if;
+    if previous_row.application_reference is distinct from new.application_reference
+       or previous_row.quote_reference is distinct from new.quote_reference then
+      raise exception 'CRS07_POLICY_LINEAGE_IMMUTABLE';
+    end if;
+  end if;
+
+  select count(distinct v.policy_id) into distinct_policy_count
+  from public.policy_versions v
+  where v.advisor_id = new.advisor_id
+    and v.application_reference = new.application_reference
+    and v.policy_id <> new.policy_id;
+  if distinct_policy_count > 0 then
+    raise exception 'CRS07_APPLICATION_MULTIPLE_POLICY_CONFLICT';
+  end if;
+
+  return new;
+end;
+$$;
+
+create or replace function public.forge_crs07_application_policy_lineage_commit_guard()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public, pg_temp
+as $$
+declare
+  application_row public.commercial_applications%rowtype;
+  policy_row public.canonical_policies%rowtype;
+begin
+  if new.application_reference is null then
+    return null;
+  end if;
+
+  select * into application_row
+  from public.commercial_applications a
+  where a.advisor_id = new.advisor_id
+    and a.application_reference = new.application_reference;
+  if not found then
+    raise exception 'CRS07_APPLICATION_LINEAGE_NOT_FOUND';
+  end if;
+
+  select * into policy_row
+  from public.canonical_policies p
+  where p.advisor_id = new.advisor_id
+    and p.id = new.policy_id;
+  if not found then
+    raise exception 'CRS07_POLICY_REQUIRED';
+  end if;
+
+  if new.version_number = 1
+     and policy_row.status_value not in ('ISSUED', 'ACTIVE') then
+    raise exception 'CRS07_INITIAL_POLICY_NOT_ISSUED';
+  end if;
+
+  if not exists (
+    select 1
+    from public.policy_roles r
+    where r.advisor_id = new.advisor_id
+      and r.policy_id = new.policy_id
+      and r.policy_version_id = new.id
+      and r.participant_person_id = application_row.person_id
+      and r.role_type in ('POLICY_OWNER', 'INSURED', 'ADDITIONAL_INSURED', 'PAYOR')
+      and r.confirmation_state = 'CONFIRMED'
+      and r.archived_at is null
+  ) then
+    raise exception 'CRS07_APPLICATION_PERSON_POLICY_ROLE_REQUIRED';
+  end if;
+
+  return null;
+end;
+$$;
+
+drop trigger if exists forge_crs07_application_lineage_insert_guard
+  on public.policy_versions;
+create trigger forge_crs07_application_lineage_insert_guard
+before insert on public.policy_versions
+for each row execute function public.forge_crs07_application_policy_lineage_insert_guard();
+
+drop trigger if exists forge_crs07_application_lineage_commit_guard
+  on public.policy_versions;
+create constraint trigger forge_crs07_application_lineage_commit_guard
+after insert on public.policy_versions
+deferrable initially deferred
+for each row execute function public.forge_crs07_application_policy_lineage_commit_guard();
+
+create or replace function public.forge_crs07_confirm_issued_policy_from_application(
+  p_command jsonb
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, extensions, pg_temp
+as $$
+declare
+  actor_id uuid := auth.uid();
+  application_reference text;
+  quote_reference text;
+  product_reference text;
+  source_type text;
+  application_row public.commercial_applications%rowtype;
+  person_row public.commercial_people%rowtype;
+  response jsonb;
+begin
+  if actor_id is null then
+    raise exception 'CRS07_AUTH_REQUIRED';
+  end if;
+  if p_command is null
+     or jsonb_typeof(p_command) <> 'object'
+     or p_command ->> 'contractType' <> 'FORGE_CONFIRMED_POLICY_COMMAND'
+     or p_command ->> 'advisorId' <> actor_id::text
+     or p_command ->> 'actorReference' <> actor_id::text then
+    raise exception 'CRS07_CONFIRMED_POLICY_COMMAND_INVALID';
+  end if;
+
+  application_reference := nullif(btrim(p_command -> 'lineage' ->> 'applicationReference'), '');
+  quote_reference := nullif(btrim(p_command -> 'lineage' ->> 'quoteReference'), '');
+  product_reference := nullif(btrim(p_command -> 'policy' ->> 'productReference'), '');
+  source_type := nullif(btrim(p_command -> 'evidence' ->> 'sourceType'), '');
+
+  if application_reference is null then
+    raise exception 'CRS07_APPLICATION_REFERENCE_REQUIRED';
+  end if;
+
+  select * into application_row
+  from public.commercial_applications a
+  where a.advisor_id = actor_id
+    and a.application_reference = application_reference
+  for update;
+  if not found then
+    raise exception 'CRS07_APPLICATION_REQUIRED';
+  end if;
+  if application_row.lifecycle_state <> 'APPROVED' then
+    raise exception 'CRS07_APPROVED_APPLICATION_REQUIRED';
+  end if;
+
+  select * into person_row
+  from public.commercial_people p
+  where p.advisor_id = actor_id
+    and p.id = application_row.person_id
+    and p.lifecycle_state = 'CONFIRMED'
+    and p.archived_at is null;
+  if not found then
+    raise exception 'CRS07_CONFIRMED_PERSON_REQUIRED';
+  end if;
+
+  if quote_reference is null
+     or quote_reference <> application_row.quote_reference then
+    raise exception 'CRS07_QUOTE_LINEAGE_MISMATCH';
+  end if;
+  if product_reference is null
+     or product_reference <> application_row.product_reference then
+    raise exception 'CRS07_PRODUCT_LINEAGE_MISMATCH';
+  end if;
+  if p_command -> 'evidence' ->> 'verificationState' <> 'CONFIRMED' then
+    raise exception 'CRS07_ISSUANCE_EVIDENCE_NOT_CONFIRMED';
+  end if;
+  if source_type not in (
+    'CARTERA020B_POLICY_PACKET',
+    'POLICY_CONTRACT',
+    'POLICY_SCHEDULE',
+    'POLICY_ADMIN_RECORD',
+    'ISSUANCE_CONFIRMATION',
+    'CARRIER_ISSUANCE_RECEIPT'
+  ) then
+    raise exception 'CRS07_ISSUANCE_EVIDENCE_SOURCE_WEAK';
+  end if;
+  if coalesce(p_command -> 'evidence' -> 'provenance' ->> 'issuanceConfirmed', 'false') <> 'true'
+     or p_command -> 'evidence' -> 'provenance' ->> 'applicationReference' <> application_reference
+     or nullif(btrim(p_command -> 'evidence' -> 'provenance' ->> 'sourceAuthority'), '') is null then
+    raise exception 'CRS07_ISSUANCE_PROVENANCE_INVALID';
+  end if;
+
+  if not exists (
+    select 1
+    from jsonb_array_elements(p_command -> 'roles') role
+    where role ->> 'participantPersonReference' = person_row.person_reference
+      and role ->> 'roleType' in ('POLICY_OWNER', 'INSURED', 'ADDITIONAL_INSURED', 'PAYOR')
+      and role ->> 'confirmationState' = 'CONFIRMED'
+  ) then
+    raise exception 'CRS07_APPLICATION_PERSON_POLICY_ROLE_REQUIRED';
+  end if;
+
+  perform set_config('forge.crs07_application_policy_lineage_command', 'on', true);
+  response := public.forge_cartera010b_confirm_policy_with_parties(p_command);
+
+  if response ->> 'status' <> 'CONFIRMED' then
+    return response || jsonb_build_object(
+      'applicationReference', application_reference,
+      'applicationPolicyLineageVerified', false,
+      'policyCreatedByApplication', false,
+      'quoteUsedAsPolicyAuthority', false,
+      'issuanceEvidenceRequired', true,
+      'automaticPolicyCreation', false
+    );
+  end if;
+
+  return response || jsonb_build_object(
+    'applicationReference', application_reference,
+    'applicationPolicyLineageVerified', true,
+    'policyCreatedByApplication', false,
+    'quoteUsedAsPolicyAuthority', false,
+    'issuanceEvidenceRequired', true,
+    'automaticPolicyCreation', false
+  );
+end;
+$$;
+
+revoke all on function public.forge_crs07_application_policy_lineage_insert_guard()
+  from public, anon, authenticated;
+revoke all on function public.forge_crs07_application_policy_lineage_commit_guard()
+  from public, anon, authenticated;
+revoke all on function public.forge_crs07_confirm_issued_policy_from_application(jsonb)
+  from public, anon;
+grant execute on function public.forge_crs07_confirm_issued_policy_from_application(jsonb)
+  to authenticated;
+
+commit;
