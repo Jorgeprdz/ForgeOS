@@ -9,6 +9,7 @@ on:
       - "docs/static-preview/forge-alive-material3/person-workspace-*.js"
       - "docs/static-preview/forge-alive-material3/person-workspace-*.css"
       - "docs/static-preview/forge-alive-material3/app.js"
+      - "docs/static-preview/forge-alive-material3/authenticated-route-guard.js"
       - "docs/static-preview/forge-alive-material3/forge-navigation-contract.js"
       - "scripts/prepare-forge-alive-pages-runtime-closure.mjs"
       - "tests/pages-public-demo-runtime-closure-test.mjs"
@@ -41,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           git diff --name-only "origin/${{ github.base_ref }}...HEAD" > /tmp/crs09-paths
-          if grep -Ev '^(platform/shared-commercial-model/crs-09-person-workspace-contract\.js|advisor-os/person-workspace/crs-09-person-workspace-service\.js|docs/static-preview/forge-alive-material3/person-workspace-[^/]+\.(js|css)|docs/static-preview/forge-alive-material3/app\.js|docs/static-preview/forge-alive-material3/forge-navigation-contract\.js|scripts/prepare-forge-alive-pages-runtime-closure\.mjs|tests/pages-public-demo-runtime-closure-test\.mjs|tests/crs-09-[^/]+\.mjs|docs/architecture/source-truth/FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001\.md|docs/evidence/FORGE_CRS_09_[^/]+\.md|\.github/workflows/crs-09-[^/]+\.yml)$' /tmp/crs09-paths; then
+          if grep -Ev '^(platform/shared-commercial-model/crs-09-person-workspace-contract\.js|advisor-os/person-workspace/crs-09-person-workspace-service\.js|docs/static-preview/forge-alive-material3/person-workspace-[^/]+\.(js|css)|docs/static-preview/forge-alive-material3/app\.js|docs/static-preview/forge-alive-material3/authenticated-route-guard\.js|docs/static-preview/forge-alive-material3/forge-navigation-contract\.js|scripts/prepare-forge-alive-pages-runtime-closure\.mjs|tests/pages-public-demo-runtime-closure-test\.mjs|tests/crs-09-[^/]+\.mjs|docs/architecture/source-truth/FORGE_CRS_09_PRODUCTIVE_PERSON_WORKSPACE_001\.md|docs/evidence/FORGE_CRS_09_[^/]+\.md|\.github/workflows/crs-09-[^/]+\.yml)$' /tmp/crs09-paths; then
             echo "CRS09_BOUNDED_PATHS=FAIL"
             cat /tmp/crs09-paths
             exit 1
@@ -56,6 +57,7 @@ jobs:
           node --check docs/static-preview/forge-alive-material3/person-workspace-module.js
           node --check docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.js
           node --check docs/static-preview/forge-alive-material3/app.js
+          node --check docs/static-preview/forge-alive-material3/authenticated-route-guard.js
           node --check docs/static-preview/forge-alive-material3/forge-navigation-contract.js
           node --check scripts/prepare-forge-alive-pages-runtime-closure.mjs
           node --test \
@@ -63,6 +65,7 @@ jobs:
             tests/crs-09-person-workspace-service-test.mjs \
             tests/crs-09-person-workspace-ui-test.mjs \
             tests/crs-09-person-workspace-entry-bridge-test.mjs \
+            tests/authenticated-route-guard-test.mjs \
             tests/pages-public-demo-runtime-closure-test.mjs
 
       - name: Preserve accepted CRS authorities
@@ -96,6 +99,8 @@ jobs:
           grep -q 'selectedGeneration !== generation' docs/static-preview/forge-alive-material3/person-workspace-module.js
           grep -q 'lateResultRejectCount' docs/static-preview/forge-alive-material3/person-workspace-module.js
           grep -q 'forge:auth-state-changed' docs/static-preview/forge-alive-material3/person-workspace-module.js
+          grep -q '"persona"' docs/static-preview/forge-alive-material3/authenticated-route-guard.js
+          grep -q '\[data-forge-person-workspace-module\]' docs/static-preview/forge-alive-material3/authenticated-route-guard.js
           grep -q 'new Set(\["persona"\])' docs/static-preview/forge-alive-material3/forge-navigation-contract.js
           node --input-type=module - <<'NODE'
           import { readFileSync } from 'node:fs';
