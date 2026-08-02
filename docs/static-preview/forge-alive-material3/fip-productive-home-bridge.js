@@ -1,5 +1,14 @@
 const FIP_HOME_STATE = Symbol.for("forge.fip.productive-home.v1");
 
+const WIDGET_PRESENTATION = Object.freeze({
+  "home-daily-priority": Object.freeze({ variant: "hero", icon: "✦", empty: "Preparando tu prioridad con actividad real." }),
+  "home-nash": Object.freeze({ variant: "small", icon: "◈", empty: "Nash necesita más conversaciones para recomendar." }),
+  "person-context": Object.freeze({ variant: "small", icon: "◎", empty: "Aún no hay suficiente contexto de relación." }),
+  "activity-mick": Object.freeze({ variant: "small", icon: "↗", empty: "Mick está esperando patrones de actividad." }),
+  "reports-business": Object.freeze({ variant: "small", icon: "▥", empty: "El negocio aún no tiene señales suficientes." }),
+  "alfred-brief": Object.freeze({ variant: "wide", icon: "⌁", empty: "Alfred seguirá aprendiendo sin inventar datos." }),
+});
+
 let composerPromise = null;
 async function loadComposer() {
   if (!composerPromise) {
@@ -15,15 +24,20 @@ function sessionAdvisorId(session) {
 function render(root, experience) {
   const sourceStatus = new Map(experience.sources.map((source) => [source.id, source.status]));
   const cards = experience.widgets.map((widget) => {
+    const presentation = WIDGET_PRESENTATION[widget.id] || { variant: "small", icon: "•", empty: "Sin señales suficientes todavía." };
     const insights = widget.insightIds
       .map((id) => experience.insights.find((item) => item.id === id))
       .filter(Boolean);
-    const body = insights.length
-      ? insights.map((item) => `<li><strong>${item.title}</strong><span>${item.summary}</span></li>`).join("")
-      : `<li class="fip-empty">Sin señales suficientes todavía. No se inventaron datos.</li>`;
-    return `<article class="fip-widget" data-fip-widget="${widget.id}" data-state="${widget.state}">
-      <header><span>${widget.surface}</span><h3>${widget.title}</h3></header>
-      <ul>${body}</ul>
+    const primary = insights[0] || null;
+    const body = primary
+      ? `<strong>${primary.title}</strong><span>${primary.summary}</span>`
+      : `<span class="fip-empty">${presentation.empty}</span>`;
+    const count = insights.length > 1 ? `<span class="fip-count">+${insights.length - 1}</span>` : "";
+    return `<article class="fip-widget" data-fip-widget="${widget.id}" data-state="${widget.state}" data-variant="${presentation.variant}" tabindex="0">
+      <header><span class="fip-widget-icon" aria-hidden="true">${presentation.icon}</span><span class="fip-widget-surface">${widget.surface}</span>${count}</header>
+      <h3>${widget.title}</h3>
+      <div class="fip-widget-body">${body}</div>
+      <span class="fip-widget-chevron" aria-hidden="true">›</span>
     </article>`;
   }).join("");
 
@@ -34,7 +48,7 @@ function render(root, experience) {
   <div class="fip-source-strip" aria-label="Estado de fuentes">
     ${["relationship", "advisor", "mick", "nash", "operation", "business"].map((id) => `<span data-source="${id}" data-status="${sourceStatus.get(id) || "UNAVAILABLE"}">${id}</span>`).join("")}
   </div>
-  <div class="fip-widget-grid">${cards}</div>`;
+  <div class="fip-widget-grid" aria-label="Mosaico de inteligencia">${cards}</div>`;
   root.hidden = false;
   root.dataset.fipProductiveState = "ready";
 }
