@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Advisor Compensation Stage 100</title>
+  <style>
+    :root{--text:#eaf2ff;--muted:#9aabc2;--card-bg:#111b2b;--separator:#33415a;--accent:#9be8ff;background:#07111f;color:var(--text);font-family:system-ui,sans-serif}
+    body{margin:0;min-height:100vh}.fixture-header{padding:10px;display:flex;gap:8px}.fixture-header button{min-height:44px}.fixture-nav{display:flex;gap:8px;padding:8px;overflow-x:auto}.fixture-nav a{color:inherit}.host{width:100%;min-width:0}.marker{position:fixed;inline-size:1px;block-size:1px;overflow:hidden;clip-path:inset(50%)}
+  </style>
+</head>
+<body>
+  <header class="fixture-header">
+    <button data-login>Login</button>
+    <button data-logout>Logout</button>
+    <button data-expire>Expire</button>
+  </header>
+  <nav class="fixture-nav"><a href="?nav=comisiones">Comisiones</a></nav>
+  <main class="host" data-forge-compensation-module></main>
+  <div class="marker" data-provider-calls="0"></div>
+  <script type="module">
+    import { createCompensationModule } from "/docs/static-preview/forge-alive-material3/compensation-module-distribution-100.js";
+
+    const params = new URLSearchParams(location.search);
+    const mode = params.get("mode") || "ready";
+    let authenticated = mode !== "anonymous" && mode !== "disconnected-anonymous";
+    if (mode === "reload") authenticated = localStorage.getItem("comp100-session") === "AUTHENTICATED";
+    let providerCalls = 0;
+
+    const monthShift = (periodKey, offset) => {
+      const [year, month] = periodKey.split("-").map(Number);
+      const value = new Date(Date.UTC(year, month - 1 + offset, 1));
+      return `${value.getUTCFullYear()}-${String(value.getUTCMonth() + 1).padStart(2, "0")}`;
+    };
+
+    function payload(periodKey, periodKeys) {
+      const advisorReference = "00000000-0000-4000-8000-000000000100";
+      const points = periodKeys.map((key, index) => ({
+        periodKey: key,
+        real: 5000 + index * 800,
+        realBasis: index === periodKeys.length - 1 ? "PAID" : "EARNED",
+        paid: index === periodKeys.length - 1 ? 9000 : null,
+        earnedNet: 5200 + index * 800,
+        estimated: 0,
+        potential: 12000,
+        atRisk: index === periodKeys.length - 1 ? 1000 : 0,
+      }));
+      return {
+        sourceState: mode === "stale" ? "STALE" : "READY",
+        snapshot: {
+          contractVersion: "ADVISOR_COMPENSATION_PERIOD_SNAPSHOT_001",
+          snapshotId: `snapshot:${advisorReference}:${periodKey}`,
+          snapshotDigest: "a".repeat(64),
+          advisorReference,
+          periodKey,
+          currency: "MXN",
+          status: "READY",
+          capturedAt: "2026-08-02T14:00:00.000Z",
+          amounts: {
+            estimated: 0,
+            earned: { gross: 11000, adjustments: 500, reversals: -500, net: 11000 },
+            paid: { sourceState: "AVAILABLE", value: 9000, knownZero: false },
+            real: { basis: "PAID", value: 9000 },
+            potential: 12000,
+            atRisk: 1000,
+          },
+          counts: { earnedAggregates: 1, events: 4 },
+          sourceHealth: { compensationEvents: "AVAILABLE", payoutTruth: "AVAILABLE" },
+          details: {
+            aggregates: [{
+              aggregateKey: "agg-life-initial",
+              concept: "LIFE_INITIAL",
+              latestEventId: "earned-life-1",
+              sourceCalculationDigest: "c".repeat(64),
+              rulePackDigest: "r".repeat(64),
+            }],
+            forwardSignals: [],
+            payoutRecords: [{ payoutRecordId: "payout-1", evidenceReference: "statement-1" }],
+          },
+        },
+        history: {
+          contractVersion: "ADVISOR_COMPENSATION_HISTORY_SERIES_001",
+          seriesId: `history:${advisorReference}:${periodKey}`,
+          seriesDigest: "b".repeat(64),
+          advisorReference,
+          currency: "MXN",
+          capturedAt: "2026-08-02T14:00:00.000Z",
+          points,
+        },
+        sourceHealth: { canonicalSnapshot: "READY", historicalSeries: "AVAILABLE" },
+        metadata: { providerId: "fixture-stage-100" },
+      };
+    }
+
+    const client = {
+      async rpc(name, args = {}) {
+        providerCalls += 1;
+        document.querySelector("[data-provider-calls]").dataset.providerCalls = String(providerCalls);
+        if (mode === "disconnected" || mode === "disconnected-anonymous") {
+          return { data: null, error: { code: "PGRST202", message: `Could not find ${name}` } };
+        }
+        if (name === "forge_advisor_compensation_authority_inventory") {
+          return { data: { ready: true }, error: null };
+        }
+        if (name === "forge_advisor_compensation_read_product") {
+          return { data: payload(args.p_period_key, args.p_period_keys), error: null };
+        }
+        return { data: null, error: { code: "PGRST202", message: "unknown rpc" } };
+      },
+    };
+
+    const bootstrap = {
+      async getClient() { return client; },
+      async getSession() {
+        return {
+          data: {
+            session: authenticated
+              ? { user: { id: "00000000-0000-4000-8000-000000000100" } }
+              : null,
+          },
+          error: null,
+        };
+      },
+    };
+    globalThis.ForgeProductiveProspectBootstrap067G17B = bootstrap;
+
+    const root = document.querySelector("[data-forge-compensation-module]");
+    const module = createCompensationModule({
+      root,
+      bootstrap,
+      clock: () => new Date("2026-08-02T14:00:00.000Z"),
+    });
+    module.mount();
+
+    document.querySelector("[data-login]").addEventListener("click", async () => {
+      authenticated = true;
+      localStorage.setItem("comp100-session", "AUTHENTICATED");
+      await module.refresh();
+    });
+    document.querySelector("[data-logout]").addEventListener("click", () => {
+      authenticated = false;
+      localStorage.removeItem("comp100-session");
+      module.scrub("logout");
+    });
+    document.querySelector("[data-expire]").addEventListener("click", async () => {
+      authenticated = false;
+      localStorage.removeItem("comp100-session");
+      module.scrub("expired-session");
+      module.mount();
+      await module.refresh();
+    });
+
+    globalThis.__COMP_100__ = {
+      module,
+      bootstrap,
+      get authenticated() { return authenticated; },
+      get providerCalls() { return providerCalls; },
+      monthShift,
+    };
+  </script>
+</body>
+</html>
