@@ -131,6 +131,7 @@ jobs:
           FORGE_EXPECTED_RELEASE_SHA: 0974378c699b513f4800e6eec2d88acb05a076c4
           FORGE_RELEASE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
           FORGE_BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
+          FORGE_RELEASE_METADATA_ONLY: 'true'
         run: npx playwright test --config=playwright.advisor-os-1.0-release.config.mjs
 
   finalize-release:
