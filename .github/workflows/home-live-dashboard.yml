@@ -1,0 +1,70 @@
+name: Home Live Dashboard
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-alive-material3/home-live-dashboard.js'
+      - 'docs/static-preview/forge-alive-material3/home-live-dashboard.css'
+      - 'docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
+      - 'tests/home-live-dashboard-test.mjs'
+      - 'tests/e2e/home-live-dashboard.spec.mjs'
+      - 'tests/e2e/fixtures/home-live-dashboard/**'
+      - 'playwright.home-live-dashboard.config.mjs'
+      - '.github/workflows/home-live-dashboard.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-live-dashboard-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  home-live-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax and focused contracts
+        run: |
+          node --check docs/static-preview/forge-alive-material3/home-live-dashboard.js
+          node --check tests/home-live-dashboard-test.mjs
+          node --check tests/e2e/home-live-dashboard.spec.mjs
+          node --check playwright.home-live-dashboard.config.mjs
+          node --test tests/home-live-dashboard-test.mjs
+          git diff --check
+
+      - name: Preserve productive authorities
+        run: |
+          node tests/productive-smart-widget-orchestrator-master-test.mjs
+          node tests/smart-widgets-home-productive-mount-test.mjs
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/material3-pipeline-productive-ui-test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser acceptance
+        run: npx playwright test --config=playwright.home-live-dashboard.config.mjs
+
+      - name: Safety and truth boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -E '\.(insert|update|delete|upsert)\(' docs/static-preview/forge-alive-material3/home-live-dashboard.js
+          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' docs/static-preview/forge-alive-material3/home-live-dashboard.js
+          ! grep -E 'Lariza|Octavio|María|72%|65%|40%|Math\.random|opportunityScore' docs/static-preview/forge-alive-material3/home-live-dashboard.js
+          grep -q 'PRODUCTIVE_PIPELINE_AND_TIMELINE' docs/static-preview/forge-alive-material3/home-live-dashboard.js
+          grep -q 'display: none !important' docs/static-preview/forge-alive-material3/home-live-dashboard.css
