@@ -6,25 +6,29 @@ const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root), 'utf8');
 
 test('recovery stylesheet is loaded from the canonical public shell', async () => {
-  const [legacy, css] = await Promise.all([
+  const [legacy, loader, css] = await Promise.all([
     read('docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'),
+    read('docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js'),
     read('docs/static-preview/forge-alive-material3/forge-ui-recovery.css'),
   ]);
 
   assert.match(legacy, /forge-ui-recovery\.css\?v=forge-ui-recovery-001/);
-  assert.match(legacy, /dataset\.forgeUiRecoveryStyles/);
-  assert.match(legacy, /MutationObserver\(keepRecoveryLast\)/);
+  assert.match(loader, /new URL\(import\.meta\.url\)/);
+  assert.match(loader, /forge-ui-recovery\.css\?v=\$\{encodeURIComponent\(version\)\}/);
+  assert.match(loader, /dataset\.forgeUiRecoveryStyles/);
+  assert.match(loader, /MutationObserver\(keepRecoveryLast\)/);
   assert.match(css, /Forge UI Recovery \+ Editorial Type/);
 });
 
-test('Pages versions the recovery loader against the deployed SHA', async () => {
+test('Pages preserves the historical legacy import and versions the dedicated recovery loader', async () => {
   const [builder, versioner] = await Promise.all([
     read('scripts/build-advisor-presentation-pages-runtime.mjs'),
     read('scripts/forge-ui-recovery-cache-versioning.mjs'),
   ]);
   assert.match(builder, /forge-ui-recovery-cache-versioning\.mjs/);
   assert.match(versioner, /process\.env\.GITHUB_SHA/);
-  assert.match(versioner, /legacy-ui-retirement\.js/);
+  assert.match(versioner, /legacy-ui-retirement\.js\?v=legacy-ui-retirement-001/);
+  assert.match(versioner, /forge-ui-recovery-loader\.js\?v=\$\{version\}/);
   assert.match(versioner, /FORGE_UI_RECOVERY_LOADER_VERSIONING_FAILED/);
 });
 

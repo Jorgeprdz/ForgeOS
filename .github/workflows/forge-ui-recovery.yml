@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'docs/static-preview/forge-alive-material3/forge-ui-recovery.css'
+      - 'docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js'
       - 'docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
       - 'scripts/forge-ui-recovery-cache-versioning.mjs'
       - 'scripts/build-advisor-presentation-pages-runtime.mjs'
@@ -44,6 +45,7 @@ jobs:
       - name: Syntax and static recovery contracts
         run: |
           node --check docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          node --check docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js
           node --check scripts/forge-ui-recovery-cache-versioning.mjs
           node --check tests/forge-ui-recovery-test.mjs
           node --check tests/e2e/forge-ui-recovery.spec.mjs
@@ -65,9 +67,11 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
         run: |
           node scripts/build-advisor-presentation-pages-runtime.mjs
-          grep -q "legacy-ui-retirement.js?v=${GITHUB_SHA}" docs/static-preview/forge-alive-material3/app.js
+          grep -q 'legacy-ui-retirement.js?v=legacy-ui-retirement-001' docs/static-preview/forge-alive-material3/app.js
+          grep -q "forge-ui-recovery-loader.js?v=${GITHUB_SHA}" docs/static-preview/forge-alive-material3/app.js
           test -s docs/static-preview/forge-alive-material3/forge-ui-recovery.css
-          grep -q 'dataset.forgeUiRecoveryStyles' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          test -s docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js
+          grep -q 'dataset.forgeUiRecoveryStyles' docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -89,7 +93,9 @@ jobs:
         run: |
           set -euo pipefail
           ! grep -E '\.(insert|update|delete|upsert)\(' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          ! grep -E '\.(insert|update|delete|upsert)\(' docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js
           ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js
           ! find docs/static-preview/forge-alive-material3 -maxdepth 1 -type f \( -name '*.woff' -o -name '*.woff2' -o -name '*.ttf' -o -name '*.otf' \) | grep .
           grep -q 'grid-column: 1 / -1 !important' docs/static-preview/forge-alive-material3/forge-ui-recovery.css
           grep -q -- '--forge-font-display' docs/static-preview/forge-alive-material3/forge-ui-recovery.css
