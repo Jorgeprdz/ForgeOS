@@ -5,7 +5,7 @@ const baseURL = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testMatch: /crs-10-relationship-intelligence-visual\.spec\.mjs/,
+  testMatch: /crs-10-(relationship-intelligence-visual|command-os-person-route)\.spec\.mjs/,
   fullyParallel: false,
   forbidOnly: true,
   retries: 0,
