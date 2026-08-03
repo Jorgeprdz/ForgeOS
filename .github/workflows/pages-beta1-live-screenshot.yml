@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
-      FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive-material3/
+      FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
       FORGE_PAGES_EVIDENCE: artifacts/pages-beta1-live
       FORGE_BETA_TEST_EMAIL: ${{ secrets.FORGE_BETA_TEST_EMAIL }}
       FORGE_BETA_TEST_PASSWORD: ${{ secrets.FORGE_BETA_TEST_PASSWORD }}
@@ -60,23 +60,23 @@ jobs:
           google-chrome --version
           echo "SCREENSHOT_BROWSER=RUNNER_PREINSTALLED_GOOGLE_CHROME"
 
-      - name: Wait for the real Pages deployment
+      - name: Wait for the canonical Pages deployment
         shell: bash
         run: |
           set -euo pipefail
           target="$FORGE_PAGES_URL"
           for attempt in $(seq 1 36); do
-            status=$(curl -L -sS -o /tmp/forge-pages.html -w '%{http_code}' "${target}?live_probe=$(date +%s)")
+            status=$(curl -L -sS -o /tmp/forge-pages.html -w '%{http_code}' "${target}?nav=pipeline&live_probe=$(date +%s)")
             if [ "$status" = "200" ] && grep -q "Forge" /tmp/forge-pages.html; then
-              echo "LIVE_PAGES_READY=YES"
+              echo "CANONICAL_PAGES_READY=YES"
               exit 0
             fi
             sleep 5
           done
-          echo "LIVE_PAGES_READY=NO"
+          echo "CANONICAL_PAGES_READY=NO"
           exit 1
 
-      - name: Capture screenshots from live Pages
+      - name: Capture screenshots from canonical live Pages
         run: node tools/pages-beta1-live-screenshot.mjs
 
       - name: Publish review summary
