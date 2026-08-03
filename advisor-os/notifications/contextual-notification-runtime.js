@@ -38,7 +38,7 @@ export function createContextualNotificationRuntime({ clock = () => Date.now(), 
       .map(normalizeNotificationSignal)
       .filter(result => result.ok)
       .map(result => result.signal)
-      .filter(signal => now - Number(seen.get(signal.id) || 0) >= cooldownMs)
+      .filter(signal => !seen.has(signal.id) || now - Number(seen.get(signal.id)) >= cooldownMs)
       .sort((a, b) => b.priority - a.priority || String(a.id).localeCompare(String(b.id)));
     const notification = candidates[0] || null;
     if (!notification) return freeze({ status: 'NONE', notification: null });
