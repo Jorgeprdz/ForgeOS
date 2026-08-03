@@ -39,10 +39,10 @@ jobs:
       FORGE_BETA_TEST_PASSWORD: ${{ secrets.FORGE_BETA_TEST_PASSWORD }}
 
     steps:
-      - name: Checkout main tools
+      - name: Checkout screenshot tools
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.pull_request.head.sha || github.event.workflow_run.head_sha || github.sha }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
