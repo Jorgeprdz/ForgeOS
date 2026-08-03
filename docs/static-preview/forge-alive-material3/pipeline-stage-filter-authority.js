@@ -1,4 +1,6 @@
 import "./pipeline-bulk-import-mount.js?v=beta1-repair-001";
+import "./whatsapp-ai-composer.js?v=beta1-repair-001";
+import "./cartera-document-intake.js?v=beta1-repair-001";
 
 const ROOT_SELECTOR = "[data-forge-pipeline-module]";
 const CARD_SELECTOR = "[data-productive-prospect-card]";
