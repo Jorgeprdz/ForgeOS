@@ -17,6 +17,10 @@ import { Navigation } from '../navigation-runtime.js';
 let activeIndex = 0;
 let cleanup = null;
 
+function signalSuccessfulUse(kind) {
+  window.dispatchEvent(new CustomEvent('command-os:successful-use', { detail: { kind } }));
+}
+
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -28,10 +32,9 @@ function escapeHtml(value) {
 
 function renderCommands(resultsElement, commands) {
   if (!commands.length) {
-    resultsElement.innerHTML = '<div class="command-empty">No encontré un comando.</div>';
+    resultsElement.innerHTML = '<div class="command-empty">No encontré un comando. Prueba con “pipeline”, “cartera” o “seguimiento”.</div>';
     return;
   }
-
   resultsElement.innerHTML = commands.map((command, index) => `
     <button type="button" class="command-item${index === activeIndex ? ' is-active' : ''}"
       data-command-id="${escapeHtml(command.id)}" role="option" aria-selected="${index === activeIndex}">
@@ -49,7 +52,6 @@ function renderEntities(resultsElement, resolution) {
     resultsElement.innerHTML = '<div class="command-empty">Escribe un nombre, póliza o cotización.</div>';
     return;
   }
-
   resultsElement.innerHTML = resolution.candidates.map((entity, index) => `
     <button type="button" class="command-item${index === activeIndex ? ' is-active' : ''}"
       data-entity-index="${index}" role="option" aria-selected="${index === activeIndex}">
@@ -72,8 +74,7 @@ function renderWritePreview(resultsElement, preview) {
         <button type="button" data-write-confirm>Confirmar</button>
         <button type="button" data-write-cancel>Cancelar</button>
       </div>
-    </section>
-  `;
+    </section>`;
 }
 
 function renderWriteResult(resultsElement, result) {
@@ -87,6 +88,7 @@ async function executeEntity(entity) {
   if (!target.ok) return false;
   cerrarCommandPalette();
   await Navigation.navigate(target.route, target.params);
+  signalSuccessfulUse('ENTITY');
   return true;
 }
 
@@ -109,12 +111,10 @@ export function bindCommandController(root) {
         status: visibleEntities.length ? (visibleEntities.length === 1 ? 'RESOLVED' : 'AMBIGUOUS') : 'NOT_FOUND',
         candidates: visibleEntities,
       });
-    } else {
-      renderCommands(resultsElement, visibleCommands);
-    }
+    } else renderCommands(resultsElement, visibleCommands);
   };
 
-  const executeCommand = async (command) => {
+  const executeCommand = async command => {
     if (!command) return false;
     const result = await ejecutarComando({ command, context: getCurrentCommandContext() });
     if (result.status === 'PREVIEW_REQUIRED') {
@@ -127,6 +127,7 @@ export function bindCommandController(root) {
       renderWriteResult(resultsElement, result);
       return false;
     }
+    signalSuccessfulUse(command.intent || 'COMMAND');
     cerrarCommandPalette();
     return true;
   };
@@ -136,7 +137,6 @@ export function bindCommandController(root) {
     pendingPreview = null;
     const parsed = parsearComando({ input: input.value });
     activeIndex = 0;
-
     if (parsed.type === 'ENTITY_HINT') {
       mode = 'ENTITIES';
       resultsElement.innerHTML = '<div class="command-empty">Buscando…</div>';
@@ -147,14 +147,13 @@ export function bindCommandController(root) {
       else refresh();
       return;
     }
-
     mode = 'COMMANDS';
     visibleEntities = [];
     visibleCommands = buscarComandos({ query: input.value, commands: COMMANDS });
     refresh();
   };
 
-  const onKeydown = async (event) => {
+  const onKeydown = async event => {
     if (mode === 'WRITE_PREVIEW') return;
     const visible = mode === 'ENTITIES' ? visibleEntities : visibleCommands;
     if (event.key === 'ArrowDown') {
@@ -172,7 +171,7 @@ export function bindCommandController(root) {
     }
   };
 
-  const onClick = async (event) => {
+  const onClick = async event => {
     if (event.target.closest('[data-write-confirm]') && pendingPreview) {
       const result = await confirmarComandoEscritura({
         previewId: pendingPreview.previewId,
@@ -180,6 +179,7 @@ export function bindCommandController(root) {
       });
       pendingPreview = null;
       renderWriteResult(resultsElement, result);
+      if (result.ok) signalSuccessfulUse('WRITE');
       return;
     }
     if (event.target.closest('[data-write-cancel]') && pendingPreview) {
@@ -211,7 +211,6 @@ export function bindCommandController(root) {
     resultsElement.removeEventListener('click', onClick);
     cleanup = null;
   };
-
   return cleanup;
 }
 
