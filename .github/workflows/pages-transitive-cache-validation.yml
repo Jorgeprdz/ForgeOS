@@ -3,6 +3,7 @@ name: Pages Transitive Asset Cache Validation
 on:
   pull_request:
     paths:
+      - "docs/static-preview/forge-alive-material3/cartera-policy-entry-route-gate.js"
       - "scripts/build-advisor-presentation-pages-runtime.mjs"
       - "scripts/build-advisor-presentation-pages-runtime-base.mjs"
       - "scripts/prepare-cartera-canonical-pages-runtime.mjs"
@@ -50,8 +51,16 @@ jobs:
           assert.match(read('smart-widget-productive-home-adapter.js'), new RegExp(`advisor-forecast-runtime-acceptance\\.js\\?v=${sha}`));
 
           assert.match(read('forge-shell.js'), new RegExp(`cartera-module\\.js\\?v=${sha}`));
-          assert.match(read('cartera-module.js'), new RegExp(`cartera-document-intake\\.js\\?v=${sha}`));
+          assert.match(read('cartera-module.js'), new RegExp(`cartera-policy-entry-route-gate\\.js\\?v=${sha}`));
+          assert.doesNotMatch(read('cartera-module.js'), /cartera-document-intake\.js\?v=beta1-repair-001/);
           assert.match(read('cartera-module.js'), new RegExp(`\\./cartera-runtime-${sha}/`));
+
+          const gate = read('cartera-policy-entry-route-gate.js');
+          assert.match(gate, /\[data-forge-cartera-module\]/);
+          assert.match(gate, /MutationObserver/);
+          assert.match(gate, /import\(intakeUrl\)/);
+          assert.match(gate, /cartera-document-intake\.js\?v=/);
+
           assert.ok(fs.existsSync(`${carteraRuntime}/supabase-runtime.js`));
           assert.ok(fs.existsSync(`${carteraRuntime}/memory-manager.js`));
           assert.ok(fs.existsSync(`${carteraRuntime}/state-manager.js`));
@@ -66,4 +75,5 @@ jobs:
 
           console.log('PAGES_TRANSITIVE_HOME_ASSET_GRAPH=PASS');
           console.log('PAGES_CANONICAL_CARTERA_ASSET_GRAPH=PASS');
+          console.log('PAGES_CARTERA_POLICY_ENTRY_ROUTE_GATE=PASS');
           EOF
