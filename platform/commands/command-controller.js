@@ -1,7 +1,11 @@
 import { COMMANDS, getCommandById } from './command-registry.js';
 import { buscarComandos } from './command-search-engine.js';
 import { cerrarCommandPalette } from './command-palette-ui.js';
-import { ejecutarComando } from './command-execution-engine.js';
+import {
+  cancelarComandoEscritura,
+  confirmarComandoEscritura,
+  ejecutarComando,
+} from './command-execution-engine.js';
 import { parsearComando } from './command-parser-engine.js';
 import {
   buildEntityNavigation,
@@ -55,12 +59,27 @@ function renderEntities(resultsElement, resolution) {
   `).join('');
 }
 
-async function executeCommand(command) {
-  if (!command) return false;
-  const result = await ejecutarComando({ command, context: getCurrentCommandContext() });
-  if (!result.ok) return false;
-  cerrarCommandPalette();
-  return true;
+function renderWritePreview(resultsElement, preview) {
+  const changes = Object.entries(preview.changes || {})
+    .map(([key, value]) => `<li><strong>${escapeHtml(key)}</strong>: ${escapeHtml(value)}</li>`)
+    .join('');
+  resultsElement.innerHTML = `
+    <section class="command-write-preview" data-write-preview-id="${escapeHtml(preview.previewId)}">
+      <p><strong>${escapeHtml(preview.summary)}</strong></p>
+      ${changes ? `<ul>${changes}</ul>` : ''}
+      <p><small>Nada se guardará hasta confirmar.</small></p>
+      <div class="command-write-actions">
+        <button type="button" data-write-confirm>Confirmar</button>
+        <button type="button" data-write-cancel>Cancelar</button>
+      </div>
+    </section>
+  `;
+}
+
+function renderWriteResult(resultsElement, result) {
+  resultsElement.innerHTML = result.ok
+    ? `<div class="command-empty" data-write-receipt="${escapeHtml(result.receiptId)}">Guardado y confirmado.</div>`
+    : `<div class="command-empty">No se pudo guardar: ${escapeHtml(result.reason)}</div>`;
 }
 
 async function executeEntity(entity) {
@@ -79,6 +98,7 @@ export function bindCommandController(root) {
   let mode = 'COMMANDS';
   let visibleCommands = [...COMMANDS];
   let visibleEntities = [];
+  let pendingPreview = null;
   let queryRevision = 0;
 
   const refresh = () => {
@@ -94,8 +114,26 @@ export function bindCommandController(root) {
     }
   };
 
+  const executeCommand = async (command) => {
+    if (!command) return false;
+    const result = await ejecutarComando({ command, context: getCurrentCommandContext() });
+    if (result.status === 'PREVIEW_REQUIRED') {
+      pendingPreview = result;
+      mode = 'WRITE_PREVIEW';
+      renderWritePreview(resultsElement, result);
+      return true;
+    }
+    if (!result.ok) {
+      renderWriteResult(resultsElement, result);
+      return false;
+    }
+    cerrarCommandPalette();
+    return true;
+  };
+
   const onInput = async () => {
     const revision = ++queryRevision;
+    pendingPreview = null;
     const parsed = parsearComando({ input: input.value });
     activeIndex = 0;
 
@@ -117,6 +155,7 @@ export function bindCommandController(root) {
   };
 
   const onKeydown = async (event) => {
+    if (mode === 'WRITE_PREVIEW') return;
     const visible = mode === 'ENTITIES' ? visibleEntities : visibleCommands;
     if (event.key === 'ArrowDown') {
       event.preventDefault();
@@ -134,6 +173,22 @@ export function bindCommandController(root) {
   };
 
   const onClick = async (event) => {
+    if (event.target.closest('[data-write-confirm]') && pendingPreview) {
+      const result = await confirmarComandoEscritura({
+        previewId: pendingPreview.previewId,
+        confirmationToken: pendingPreview.confirmationToken,
+      });
+      pendingPreview = null;
+      renderWriteResult(resultsElement, result);
+      return;
+    }
+    if (event.target.closest('[data-write-cancel]') && pendingPreview) {
+      cancelarComandoEscritura({ previewId: pendingPreview.previewId });
+      pendingPreview = null;
+      mode = 'COMMANDS';
+      refresh();
+      return;
+    }
     const entityButton = event.target.closest('[data-entity-index]');
     if (entityButton) {
       await executeEntity(visibleEntities[Number(entityButton.dataset.entityIndex)]);
@@ -150,6 +205,7 @@ export function bindCommandController(root) {
 
   cleanup = () => {
     queryRevision += 1;
+    if (pendingPreview) cancelarComandoEscritura({ previewId: pendingPreview.previewId });
     input.removeEventListener('input', onInput);
     input.removeEventListener('keydown', onKeydown);
     resultsElement.removeEventListener('click', onClick);
