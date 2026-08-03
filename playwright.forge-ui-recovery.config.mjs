@@ -23,7 +23,7 @@ export default defineConfig({
   },
   projects: [{ name: 'forge-ui-recovery-chromium' }],
   webServer: {
-    command: 'npx http-server . -p 4184 -c-1',
+    command: 'npx vite --host 0.0.0.0 --port 4184 --strictPort',
     url: `${baseURL}/tests/e2e/fixtures/forge-ui-recovery/index.html`,
     reuseExistingServer: false,
     timeout: 30_000,
