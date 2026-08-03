@@ -80,7 +80,7 @@ if (!buildSha) {
       replacements: [
         [
           './cartera-document-intake.js?v=beta1-repair-001',
-          `./cartera-document-intake.js?v=${buildSha}`,
+          `./cartera-policy-entry-route-gate.js?v=${buildSha}`,
         ],
         [
           'const repositoryBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);',
@@ -103,13 +103,14 @@ if (!buildSha) {
     await writeFile(path, source);
   }
 
-  const [app, home, orchestrator, adapter, shell, cartera] = await Promise.all([
+  const [app, home, orchestrator, adapter, shell, cartera, policyEntryGate] = await Promise.all([
     readFile(join(runtimeDir, "app.js"), "utf8"),
     readFile(join(runtimeDir, "home-module.js"), "utf8"),
     readFile(join(runtimeDir, "home-productive-orchestrator.js"), "utf8"),
     readFile(join(runtimeDir, "smart-widget-productive-home-adapter.js"), "utf8"),
     readFile(join(runtimeDir, "forge-shell.js"), "utf8"),
     readFile(join(runtimeDir, "cartera-module.js"), "utf8"),
+    readFile(join(runtimeDir, "cartera-policy-entry-route-gate.js"), "utf8"),
   ]);
 
   for (const [name, source] of Object.entries({ app, home, orchestrator, adapter, shell, cartera })) {
@@ -127,6 +128,12 @@ if (!buildSha) {
   if (cartera.includes("cartera-document-intake.js?v=beta1-repair-001")) {
     throw new Error("FORGE_PAGES_STALE_CARTERA_INTAKE_VERSION=cartera-module.js");
   }
+  if (!cartera.includes(`cartera-policy-entry-route-gate.js?v=${buildSha}`)) {
+    throw new Error("FORGE_PAGES_CARTERA_POLICY_ENTRY_GATE_BINDING_MISSING");
+  }
+  if (!policyEntryGate.includes("MutationObserver") || !policyEntryGate.includes("import(intakeUrl)")) {
+    throw new Error("FORGE_PAGES_CARTERA_POLICY_ENTRY_GATE_INVALID");
+  }
   if (!cartera.includes(`./${carteraRuntimeDirectory}/`)) {
     throw new Error("FORGE_PAGES_CARTERA_CANONICAL_RUNTIME_BINDING_MISSING");
   }
@@ -137,5 +144,6 @@ if (!buildSha) {
   console.log(`FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=PASS SHA=${buildSha}`);
   console.log("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE");
   console.log("FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS");
+  console.log("FORGE_PAGES_CARTERA_POLICY_ENTRY_ROUTE_GATE=PASS");
   console.log(`FORGE_PAGES_CARTERA_CANONICAL_RUNTIME=${carteraRuntimeDirectory}`);
 }
