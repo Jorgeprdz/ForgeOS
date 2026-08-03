@@ -16,6 +16,7 @@ const report = {
   capturedAt: new Date().toISOString(),
   browserAuthority: "RUNNER_PREINSTALLED_GOOGLE_CHROME",
   authenticated: false,
+  authenticationAuthority: null,
   routes: {},
   consoleErrors: [],
   pageErrors: [],
@@ -28,7 +29,7 @@ page.on("console", message => {
 });
 page.on("pageerror", error => report.pageErrors.push(error.message));
 page.on("response", response => {
-  if (response.status() >= 400) {
+  if (response.status() >= 400 && ["script", "stylesheet"].includes(response.request().resourceType())) {
     report.failedResponses.push({
       status: response.status(),
       url: response.url(),
@@ -37,6 +38,7 @@ page.on("response", response => {
   }
 });
 page.on("requestfailed", request => {
+  if (!["script", "stylesheet"].includes(request.resourceType())) return;
   report.failedRequests.push({
     url: request.url(),
     resourceType: request.resourceType(),
@@ -44,7 +46,7 @@ page.on("requestfailed", request => {
   });
 });
 
-async function openRoute(nav, fileName) {
+async function openRoute(nav, fileName, key = nav) {
   const url = new URL(baseUrl);
   url.searchParams.set("nav", nav);
   url.searchParams.set("live_acceptance", Date.now().toString());
@@ -53,54 +55,122 @@ async function openRoute(nav, fileName) {
   await page.screenshot({ path: `${outputDir}/${fileName}`, fullPage: true });
   const bodyText = (await page.locator("body").innerText()).slice(0, 12000);
   const loadedScripts = await page.locator("script[src]").evaluateAll(nodes => nodes.map(node => node.src));
-  report.routes[nav] = {
+  report.routes[key] = {
+    requestedNav: nav,
     url: page.url(),
     status: response?.status() || null,
     title: await page.title(),
     bodyText,
     loadedScripts,
-    navbarVisible: await page.locator("nav, [data-forge-nav], [data-material3-nav], [data-bottom-nav]").first().isVisible().catch(() => false),
+    navbarVisible: await page.locator("nav, [data-forge-nav], [data-material3-nav], [data-bottom-nav], .bottom-shell").first().isVisible().catch(() => false),
   };
 }
 
-async function tryLogin() {
-  if (!email || !password) return false;
-  const openAuth = page.locator("[data-forge-auth-open], [data-open-auth], button", { hasText: /iniciar sesión|entrar/i }).first();
-  if (await openAuth.isVisible().catch(() => false)) await openAuth.click();
+async function inspectAuthPresentation() {
+  report.authPresentation = await page.evaluate(() => {
+    const panel = document.querySelector(".forge-auth-panel-067g17b1");
+    const google = document.querySelector("[data-forge-auth-google]");
+    const panelStyle = panel ? getComputedStyle(panel) : null;
+    const buttonStyle = google ? getComputedStyle(google) : null;
+    const stylesheets = [...document.styleSheets].map(sheet => sheet.href).filter(Boolean);
+    const borderRadius = Number.parseFloat(panelStyle?.borderRadius || "0");
+    const buttonRadius = Number.parseFloat(buttonStyle?.borderRadius || "0");
+    const buttonHeight = Number.parseFloat(buttonStyle?.height || "0");
+    const buttonBackground = buttonStyle?.backgroundColor || "";
+    return {
+      panelVisible: Boolean(panel && !panel.closest("[hidden]") && panel.getClientRects().length),
+      borderRadius,
+      buttonRadius,
+      buttonHeight,
+      buttonBackground,
+      styled: borderRadius >= 12 && buttonRadius >= 8 && buttonHeight >= 38 && !["", "rgba(0, 0, 0, 0)", "transparent"].includes(buttonBackground),
+      authStylesheetLoaded: stylesheets.some(href => href.includes("forge-alive-auth-entry-067g17b1.css")),
+      recoveryStylesheetLoaded: stylesheets.some(href => href.includes("forge-ui-recovery.css")),
+      recoveryStylesheetState: document.documentElement.dataset.forgeUiRecoveryStyles || null,
+      authBoundary: document.documentElement.dataset.forgeAuthBoundary || null,
+    };
+  });
+}
 
+async function tryPasswordLogin() {
+  if (!email || !password) return false;
   const emailInput = page.locator('input[type="email"], input[name="email"], [data-auth-email]').first();
   const passwordInput = page.locator('input[type="password"], input[name="password"], [data-auth-password]').first();
   if (!await emailInput.isVisible().catch(() => false) || !await passwordInput.isVisible().catch(() => false)) return false;
-
   await emailInput.fill(email);
   await passwordInput.fill(password);
-  const submit = page.locator('button[type="submit"], [data-auth-submit], button', { hasText: /iniciar sesión|entrar/i }).first();
-  await submit.click();
+  await page.locator('button[type="submit"], [data-auth-submit], button', { hasText: /iniciar sesión|entrar/i }).first().click();
+  await page.waitForFunction(() => document.documentElement.dataset.forgeAuthBoundary === "authenticated", null, { timeout: 45000 });
+  report.authenticationAuthority = "BETA_TEST_CREDENTIALS";
+  return true;
+}
+
+async function tryDemoLogin() {
+  const button = page.locator("[data-forge-demo-login]").first();
+  if (!await button.isVisible().catch(() => false)) return false;
+  const firstNavigation = page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 45000 }).catch(() => null);
+  await button.click();
+  await firstNavigation;
+  await page.waitForURL(url => (
+    url.hostname === "jorgeprdz.github.io"
+    && url.pathname.endsWith("/ForgeOS/static-preview/forge-alive/")
+  ), { timeout: 90000 });
+  await page.waitForFunction(() => document.documentElement.dataset.forgeAuthBoundary === "authenticated", null, { timeout: 45000 });
   await page.waitForTimeout(5000);
-  return !await passwordInput.isVisible().catch(() => false);
+  report.authenticationAuthority = "INTEGRATED_DEMO_SESSION";
+  return true;
+}
+
+async function inspectProductiveHome() {
+  report.productiveHome = await page.evaluate(() => {
+    const root = document.querySelector("[data-forge-home-module]");
+    const staticMocks = [...(root?.querySelectorAll("[data-home-static-mock-retired]") || [])];
+    const heading = root?.querySelector(".hero h1")?.textContent?.trim() || "";
+    const navbar = document.querySelector("nav, [data-forge-nav], [data-material3-nav], [data-bottom-nav], .bottom-shell");
+    return {
+      contract: root?.dataset.homeLiveDashboard || null,
+      heading,
+      navbarVisible: Boolean(navbar && navbar.getClientRects().length && getComputedStyle(navbar).visibility !== "hidden"),
+      staticMockCount: staticMocks.length,
+      staticMocksRetired: staticMocks.length >= 2 && staticMocks.every(node => node.hidden && node.getAttribute("aria-hidden") === "true"),
+      productiveRootPresent: Boolean(root?.querySelector("[data-forge-productive-smart-widget-root]")),
+      recoveryStylesheetState: document.documentElement.dataset.forgeUiRecoveryStyles || null,
+      demoBannerVisible: Boolean(document.querySelector("[data-forge-demo-banner]")),
+    };
+  });
 }
 
 try {
-  await openRoute("pipeline", "01-pipeline-public.png");
-  report.authenticated = await tryLogin();
+  await openRoute("pipeline", "01-auth-gate.png", "anonymous");
+  await inspectAuthPresentation();
+  report.anonymousNavbarHidden = !report.routes.anonymous.navbarVisible;
+
+  report.authenticated = await tryPasswordLogin().catch(() => false);
+  if (!report.authenticated) report.authenticated = await tryDemoLogin().catch(error => {
+    report.demoLoginError = error?.message || String(error);
+    return false;
+  });
 
   if (report.authenticated) {
-    await openRoute("pipeline", "02-pipeline-authenticated.png");
+    await page.screenshot({ path: `${outputDir}/02-home-authenticated.png`, fullPage: true });
+    await inspectProductiveHome();
+
+    await openRoute("pipeline", "03-pipeline-authenticated.png", "pipelineAuthenticated");
     report.pipelineBulkImportVisible = await page.locator("[data-pipeline-bulk-import]").isVisible().catch(() => false);
 
-    await openRoute("cartera", "03-cartera-authenticated.png");
+    await openRoute("cartera", "04-cartera-authenticated.png", "carteraAuthenticated");
     report.carteraPdfInputVisible = await page.locator("[data-cartera-pdf-input], input[type=file][accept*=pdf]").isVisible().catch(() => false);
     report.carteraDropzoneVisible = await page.locator("[data-cartera-pdf-dropzone]").isVisible().catch(() => false);
 
-    await openRoute("pipeline", "04-pipeline-composer-surface.png");
+    await openRoute("pipeline", "05-pipeline-composer-surface.png", "composerAuthenticated");
     report.whatsappComposerTriggerCount = await page.locator("[data-prepare-productive-message]").count();
   } else {
-    report.authenticatedCapture = "SKIPPED_MISSING_OR_INVALID_CREDENTIALS";
+    report.authenticatedCapture = "FAILED_NO_PRODUCTIVE_OR_DEMO_SESSION";
   }
 
   report.canonicalShell = {
-    pipelineNavbarVisible: report.routes.pipeline?.navbarVisible || false,
-    legacyMaterial3ShellDetected: /forge-alive-material3/.test(report.routes.pipeline?.url || ""),
+    legacyMaterial3ShellDetected: Object.values(report.routes).some(route => /forge-alive-material3/.test(route?.url || "")),
+    authenticatedNavbarVisible: report.productiveHome?.navbarVisible || report.routes.pipelineAuthenticated?.navbarVisible || false,
   };
 
   await writeFile(`${outputDir}/report.json`, JSON.stringify(report, null, 2));
@@ -109,26 +179,35 @@ try {
     "",
     `- Target: ${baseUrl}`,
     `- Browser: ${report.browserAuthority}`,
-    `- Canonical navbar visible: ${report.canonicalShell.pipelineNavbarVisible ? "PASS" : "FAIL"}`,
-    `- Legacy material3 shell detected: ${report.canonicalShell.legacyMaterial3ShellDetected ? "YES" : "NO"}`,
-    `- Authenticated capture: ${report.authenticated ? "PASS" : "SKIPPED"}`,
+    `- Auth gate styled first paint: ${report.authPresentation?.styled ? "PASS" : "FAIL"}`,
+    `- Auth stylesheet loaded: ${report.authPresentation?.authStylesheetLoaded ? "PASS" : "FAIL"}`,
+    `- Anonymous navbar hidden: ${report.anonymousNavbarHidden ? "PASS" : "FAIL"}`,
+    `- Authenticated/demo capture: ${report.authenticated ? `PASS (${report.authenticationAuthority})` : "FAIL"}`,
+    `- Productive Home contract: ${report.productiveHome?.contract || "NOT_TESTED"}`,
+    `- Static Home mock retired: ${report.productiveHome?.staticMocksRetired ?? "NOT_TESTED"}`,
+    `- Authenticated navbar visible: ${report.canonicalShell.authenticatedNavbarVisible ? "PASS" : "FAIL"}`,
+    `- Legacy material3 URL detected: ${report.canonicalShell.legacyMaterial3ShellDetected ? "YES" : "NO"}`,
     `- Pipeline bulk import visible: ${report.pipelineBulkImportVisible ?? "NOT_TESTED"}`,
     `- Cartera PDF input visible: ${report.carteraPdfInputVisible ?? "NOT_TESTED"}`,
     `- Cartera dropzone visible: ${report.carteraDropzoneVisible ?? "NOT_TESTED"}`,
     `- WhatsApp composer triggers: ${report.whatsappComposerTriggerCount ?? "NOT_TESTED"}`,
     `- Console errors: ${report.consoleErrors.length}`,
     `- Page errors: ${report.pageErrors.length}`,
-    `- HTTP failures: ${report.failedResponses.length}`,
-    `- Network failures: ${report.failedRequests.length}`,
+    `- HTTP asset failures: ${report.failedResponses.length}`,
+    `- Network asset failures: ${report.failedRequests.length}`,
     ...report.failedResponses.map(item => `  - ${item.status} ${item.resourceType}: ${item.url}`),
     ...report.failedRequests.map(item => `  - ${item.failure} ${item.resourceType}: ${item.url}`),
   ].join("\n");
   await writeFile(`${outputDir}/summary.md`, summary);
   console.log(summary);
 
-  if (!report.canonicalShell.pipelineNavbarVisible) process.exitCode = 1;
-  if (report.canonicalShell.legacyMaterial3ShellDetected) process.exitCode = 1;
-  if (report.authenticated && (!report.pipelineBulkImportVisible || !report.carteraPdfInputVisible || !report.carteraDropzoneVisible)) process.exitCode = 1;
+  if (!report.authPresentation?.styled || !report.authPresentation?.authStylesheetLoaded) process.exitCode = 1;
+  if (!report.anonymousNavbarHidden) process.exitCode = 1;
+  if (!report.authenticated) process.exitCode = 1;
+  if (!report.productiveHome?.contract || !report.productiveHome?.staticMocksRetired) process.exitCode = 1;
+  if (!report.canonicalShell.authenticatedNavbarVisible || report.canonicalShell.legacyMaterial3ShellDetected) process.exitCode = 1;
+  if (!report.pipelineBulkImportVisible || !report.carteraPdfInputVisible || !report.carteraDropzoneVisible) process.exitCode = 1;
+  if (report.consoleErrors.length || report.pageErrors.length || report.failedResponses.length || report.failedRequests.length) process.exitCode = 1;
 } finally {
   await browser.close();
 }
