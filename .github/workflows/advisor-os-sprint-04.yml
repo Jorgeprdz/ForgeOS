@@ -1,0 +1,38 @@
+name: Advisor OS Sprint 04
+
+on:
+  pull_request:
+    paths:
+      - 'advisor-os/notifications/**'
+      - 'platform/commands/contextual-clippy-runtime.js'
+      - 'platform/commands/command-runtime.js'
+      - 'tests/advisor-os-sprint-04-test.mjs'
+      - '.github/workflows/advisor-os-sprint-04.yml'
+      - 'docs/roadmaps/advisor-os-1-0-sprint-04/**'
+
+jobs:
+  sprint-04-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: |
+          node --check advisor-os/notifications/contextual-notification-runtime.js
+          node --check platform/commands/contextual-clippy-runtime.js
+          node --check platform/commands/command-runtime.js
+      - name: Sprint 04 contracts
+        run: node --test tests/advisor-os-sprint-04-test.mjs
+      - name: Preserve Command OS experience and write governance
+        run: |
+          node --test tests/command-os-pack-08-test.mjs
+          node --test tests/command-os-pack-09-test.mjs
+          node --test tests/command-os-pack-06-test.mjs
+      - name: Safety boundary scan
+        run: |
+          ! grep -R -E 'confirmWritePreview|confirmarComandoEscritura|\.from\([^)]*\)\.(insert|update|upsert|delete)' advisor-os/notifications platform/commands/contextual-clippy-runtime.js
+          git diff --check
