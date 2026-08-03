@@ -11,7 +11,8 @@ STATUS=RELEASE_CANDIDATE
 | Scope lock | `docs/roadmaps/advisor-os-1-0-sprint-00/` | Sprint 00 authority |
 | Benvenù and low-friction input | Command OS Pack 08 contracts | `b79667f3991fdb14789be58b1c7339885c1b4403` |
 | Command OS end-to-end | `docs/evidence/COMMAND_OS_PACK_09_END_TO_END_ACCEPTANCE.md` | PR #222 · `15195ad4de528e813e87d033e0ea394490df2815` |
-| Next Action and Agenda | `docs/evidence/ADVISOR_OS_SPRINT_03_ONE_PASS.md` | PRs #223–224 · `3130cef0a83b52fdbc87a991f975eb4ac0ba4ba5` |
+| Next Action and Agenda authority | Sprint 03 Pack 01 evidence | PR #223 · `fa54861347562ef1190e4f50036d06f6de929a58` |
+| Next Action and Agenda implementation | `docs/evidence/ADVISOR_OS_SPRINT_03_ONE_PASS.md` | PR #224 · `3130cef0a83b52fdbc87a991f975eb4ac0ba4ba5` |
 | Notifications and Clippy | Sprint 04 runtime/contracts | PR #225 · `a10fdb673daf25013170b6ec383d07b4f2c76d0f` |
 | Person Workspace and intelligence | CRS-09/CRS-10 composition evidence | PR #226 · `de67d28804bc35aabde6b71538b6c2397b544cdc` |
 | Bulk intake and Books | Sprint 06 runtime/contracts | PR #227 · `cc4d510a9b20b8e1ba7f061eaee2e7a277a8da0e` |
