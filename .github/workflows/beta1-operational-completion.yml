@@ -1,0 +1,52 @@
+name: Beta 1 Operational Completion
+
+on:
+  pull_request:
+    paths:
+      - "docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.*"
+      - "docs/static-preview/forge-alive-material3/cartera-document-intake.js"
+      - "docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js"
+      - "docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js"
+      - "supabase/functions/whatsapp-draft/**"
+      - "supabase/functions/cartera-pdf-intake/**"
+      - "tests/beta1-operational-completion-test.mjs"
+      - ".github/workflows/beta1-operational-completion.yml"
+      - ".github/workflows/deploy-supabase.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract-and-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run Beta 1 contract tests
+        run: |
+          node tests/pipeline-bulk-import-mount-test.mjs
+          node tests/beta1-operational-completion-test.mjs
+      - name: Validate browser JavaScript syntax
+        run: |
+          for file in \
+            docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js \
+            docs/static-preview/forge-alive-material3/cartera-document-intake.js \
+            docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js \
+            docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js; do
+            node --check "$file"
+          done
+      - name: Reject browser secrets and false automation
+        run: |
+          ! grep -RIE 'AIza[0-9A-Za-z_-]{20,}|GEMINI_API_KEY\s*=' docs/static-preview/forge-alive-material3
+          grep -q 'sent: false' docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
+          grep -q 'persisted: false' supabase/functions/cartera-pdf-intake/index.ts
+          grep -q 'automaticPolicyCreation: false' supabase/functions/cartera-pdf-intake/index.ts
+      - name: Validate responsive and accessibility contracts
+        run: |
+          grep -q 'safe-area-inset-bottom' docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.css
+          grep -q 'aria-modal="true"' docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
+          grep -q 'data-cartera-document-dropzone' docs/static-preview/forge-alive-material3/cartera-document-intake.js
+          grep -q 'accept="application/pdf,.pdf"' docs/static-preview/forge-alive-material3/cartera-document-intake.js
