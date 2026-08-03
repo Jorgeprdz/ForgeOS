@@ -14,13 +14,14 @@ if (!version) throw new Error('FORGE_UI_RECOVERY_VERSION_REQUIRED');
 
 await readFile(recoveryPath, 'utf8');
 const source = await readFile(appPath, 'utf8');
-const versioned = source.replace(
-  /\.\/legacy-ui-retirement\.js\?v=[^"']+/,
-  `./legacy-ui-retirement.js?v=${version}`,
-);
+const importPattern = /\.\/legacy-ui-retirement\.js(?:\?[^"']*)?/;
+const expectedImport = `./legacy-ui-retirement.js?v=${version}`;
 
-if (versioned === source) {
+if (!importPattern.test(source)) {
   throw new Error('FORGE_UI_RECOVERY_LOADER_VERSIONING_FAILED');
 }
 
-await writeFile(appPath, versioned);
+const versioned = source.replace(importPattern, expectedImport);
+if (versioned !== source) {
+  await writeFile(appPath, versioned);
+}
