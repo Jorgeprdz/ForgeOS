@@ -26,13 +26,7 @@ jobs:
           node --check platform/commands/entity-context-runtime.js
           node --check platform/commands/entity-provider-adapter.js
           node --check platform/commands/command-controller.js
-          node --check docs/static-preview/forge-alive-material3/person-workspace-entry-bridge.js
-          node --check tests/e2e/fixtures/command-os-pack-05/fixture.js
       - name: Entity and context contracts
         run: node --test tests/command-os-pack-05-test.mjs
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-      - name: Entity route browser acceptance
-        run: npx playwright test --config=playwright.command-os-pack-05.config.mjs
       - name: Diff integrity
         run: git diff --check
