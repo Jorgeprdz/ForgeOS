@@ -1,0 +1,39 @@
+name: Advisor OS Sprint 06
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'advisor-os/contact-books/**'
+      - 'tests/advisor-os-sprint-06-test.mjs'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_06_BULK_INTAKE_AND_BOOKS.md'
+      - '.github/workflows/advisor-os-sprint-06.yml'
+
+jobs:
+  sprint-06-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: |
+          node --check advisor-os/contact-books/contact-books-runtime.js
+          node --check advisor-os/contact-books/bulk-import-engine.js
+          node --check advisor-os/contact-books/contact-books-ui-model.js
+      - name: Sprint 06 contracts
+        run: node --test tests/advisor-os-sprint-06-test.mjs
+      - name: Preserve Person and Pipeline boundaries
+        run: |
+          node --test tests/crs-09-person-workspace-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+      - name: Safety boundary scan
+        run: |
+          ! grep -RE '\.(insert|update|delete|upsert|rpc)\s*\(' advisor-os/contact-books
+          ! grep -RE '(eval\(|new Function|macro|executeFormula)' advisor-os/contact-books
+          grep -q 'secondPersonStore: false' advisor-os/contact-books/contact-books-runtime.js
+          grep -q 'personDuplication: false' advisor-os/contact-books/bulk-import-engine.js
+          grep -q "defaultSort: 'CREATED_AT_DESC'" advisor-os/contact-books/contact-books-ui-model.js
