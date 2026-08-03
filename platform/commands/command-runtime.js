@@ -7,6 +7,10 @@ import {
     initCommandShortcuts,
     destroyCommandShortcuts,
 } from './command-shortcuts-engine.js';
+import {
+    bindCommandController,
+    destroyCommandController,
+} from './command-controller.js';
 
 const RUNTIME_ROOT_ID = 'command-os-runtime-root';
 const MOBILE_BUTTON_ID = 'command-os-mobile-trigger';
@@ -62,6 +66,7 @@ export function mountCommandRuntime() {
     document.body.appendChild(root);
 
     bindPaletteLifecycle(root);
+    bindCommandController(root);
     initCommandShortcuts();
     mounted = true;
 }
@@ -78,6 +83,7 @@ export function scrubCommandRuntime() {
 
 export function unmountCommandRuntime() {
     scrubCommandRuntime();
+    destroyCommandController();
     destroyCommandShortcuts();
     document.getElementById(RUNTIME_ROOT_ID)?.remove();
     document.getElementById(STYLE_ID)?.remove();
