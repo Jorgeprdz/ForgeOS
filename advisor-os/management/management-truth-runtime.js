@@ -4,7 +4,10 @@ const freeze = value => {
   return Object.freeze(value);
 };
 const text = value => String(value ?? '').trim();
-const finite = value => Number.isFinite(Number(value)) ? Number(value) : null;
+const finite = value => {
+  if (value === null || value === undefined || value === '') return null;
+  return Number.isFinite(Number(value)) ? Number(value) : null;
+};
 const array = value => Array.isArray(value) ? value : [];
 
 export class ManagementTruthError extends Error {
