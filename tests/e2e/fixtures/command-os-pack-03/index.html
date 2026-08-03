@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Command OS Pack 03</title>
+</head>
+<body>
+  <main id="app">Command OS acceptance fixture</main>
+  <output id="route-receipt" data-route=""></output>
+  <script type="module">
+    import { Navigation } from '/platform/navigation-runtime.js';
+    import { mountCommandRuntime } from '/platform/commands/command-runtime.js';
+
+    Navigation.setNavigator((route) => {
+      const receipt = document.getElementById('route-receipt');
+      receipt.dataset.route = route;
+      receipt.textContent = route;
+      return true;
+    });
+
+    mountCommandRuntime();
+  </script>
+</body>
+</html>
