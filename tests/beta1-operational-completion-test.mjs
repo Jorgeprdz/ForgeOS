@@ -14,13 +14,45 @@ test("Pipeline supports CSV, XLSX and productive persistence", async () => {
   assert.match(source, /DUPLICATE_PROSPECT/);
 });
 
-test("Cartera exposes PDF picker, desktop dropzone and staging-only review", async () => {
+test("Cartera exposes PDF picker, manual entry and desktop drag and drop", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
+  assert.match(source, /data-select-policy-pdf/);
+  assert.match(source, /data-add-policy-manual/);
+  assert.match(source, /data-cartera-policy-dropzone/);
   assert.match(source, /accept=\"application\/pdf,\.pdf\"/);
   assert.match(source, /dragover/);
   assert.match(source, /cartera-pdf-intake/);
-  assert.match(source, /Nada se guardó automáticamente/);
-  assert.match(source, /data-confirm-cartera-staging disabled/);
+  assert.match(source, /Confirmar alta/);
+  assert.doesNotMatch(source, /data-confirm-cartera-staging disabled/);
+});
+
+test("Cartera policy entry persists only after explicit human confirmation", async () => {
+  const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
+  assert.match(source, /verificationState:\s*"CONFIRMED"/);
+  assert.match(source, /humanConfirmed:\s*true/);
+  assert.match(source, /forge_cartera010b_confirm_identity_resolution/);
+  assert.match(source, /forge_cartera010b_confirm_policy_with_parties/);
+  assert.match(source, /buildIdentityResolutionCommand/);
+  assert.match(source, /buildConfirmedPolicyCommand/);
+  assert.match(source, /La cuenta demo es de solo lectura/);
+  assert.match(source, /location\.replace\(url\.href\)/);
+});
+
+test("Cartera policy entry mount cannot recurse through its own dialog mutations", async () => {
+  const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
+  assert.match(source, /observer\.observe\(root, \{ childList: true, attributes: true/);
+  assert.doesNotMatch(source, /observer\.observe\(root, \{[^}]*subtree:\s*true/);
+  assert.match(source, /panel\.nextElementSibling !== frame/);
+});
+
+test("Pages publishes the governed Cartera command validator", async () => {
+  const [builder, publisher] = await Promise.all([
+    read("scripts/build-advisor-presentation-pages-runtime.mjs"),
+    read("scripts/prepare-cartera-policy-entry-pages-runtime.mjs"),
+  ]);
+  assert.match(builder, /prepare-cartera-policy-entry-pages-runtime\.mjs/);
+  assert.match(publisher, /cartera-010b-contract-validator\.js/);
+  assert.match(publisher, /CARTERA_POLICY_ENTRY_VALIDATOR_PAGES_RUNTIME=READY/);
 });
 
 test("WhatsApp composer calls authenticated backend and remains human-controlled", async () => {
