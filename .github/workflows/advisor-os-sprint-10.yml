@@ -1,0 +1,60 @@
+name: Advisor OS Sprint 10
+
+on:
+  pull_request:
+    paths:
+      - 'advisor-os/management/**'
+      - 'tests/advisor-os-sprint-10-test.mjs'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_10_ACTIVITY_FORECAST_REPORTS_COMPENSATION_001.md'
+      - '.github/workflows/advisor-os-sprint-10.yml'
+      - 'docs/static-preview/forge-alive-material3/activity-reports-productivity-runtime.js'
+      - 'docs/static-preview/forge-alive-material3/advisor-forecast-runtime-acceptance.js'
+      - 'compensation/advisor/**'
+
+permissions:
+  contents: read
+
+jobs:
+  sprint-10-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax
+        run: node --check advisor-os/management/management-truth-runtime.js
+
+      - name: Sprint 10 contracts
+        run: node --test tests/advisor-os-sprint-10-test.mjs
+
+      - name: Preserve Activity and Reports authority
+        run: node --test tests/activity-reports-productive-ui-completion-test.mjs
+
+      - name: Preserve Forecast authority
+        run: node --test tests/advisor-forecast-runtime-acceptance-test.mjs
+
+      - name: Preserve Compensation authority
+        run: node scripts/advisor-compensation-stage-100-repository-acceptance.mjs
+
+      - name: Safety boundary scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          file='advisor-os/management/management-truth-runtime.js'
+          ! grep -E '\.(insert|update|delete|upsert)\(' "$file"
+          ! grep -E 'client\.rpc|supabase\.rpc|from\(' "$file"
+          ! grep -E 'QUOTE.*(INCOME|PAID)|PREMIUM.*PAID' "$file"
+          grep -q "truthType: 'FORECAST'" "$file"
+          grep -q "truthType: 'EARNED'" "$file"
+          grep -q "truthType: 'PAID'" "$file"
+          grep -q 'unknownAsZero: false' "$file"
+          grep -q 'combinedTotal: null' "$file"
