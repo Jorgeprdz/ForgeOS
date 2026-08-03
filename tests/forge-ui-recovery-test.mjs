@@ -83,6 +83,9 @@ test('floating navigation and safe bottom reservation remain intact', async () =
   assert.match(css, /--forge-mobile-nav-height/);
   assert.match(css, /--forge-mobile-nav-clearance/);
   assert.match(css, /--forge-mobile-floating-gap/);
+  assert.match(css, /--forge-mobile-content-runway:\s*clamp\(210px, 24dvh, 250px\)/);
+  assert.match(css, /\[data-forge-pipeline-module\][\s\S]*padding-bottom:[\s\S]*var\(--forge-mobile-content-runway\)/);
+  assert.match(css, /scroll-padding-bottom:[\s\S]*var\(--forge-mobile-content-runway\)/);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.doesNotMatch(css, /\.bottom-shell\s*\{[^}]*position:\s*(static|relative)/s);
 });
