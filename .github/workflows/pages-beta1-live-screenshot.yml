@@ -1,6 +1,6 @@
 name: Beta 1 Live Pages Screenshot
 
-# Canonical deploy under review: 83c28846ecf812cf453362eedb00996948933db5
+# Canonical deploy under review: 1ae2c03ddc1063ef25b87339d20456414e8c6f2f
 on:
   push:
     branches:
