@@ -1,3 +1,5 @@
+import "./pipeline-bulk-import-mount.js?v=beta1-repair-001";
+
 const ROOT_SELECTOR = "[data-forge-pipeline-module]";
 const CARD_SELECTOR = "[data-productive-prospect-card]";
 const GRID_SELECTOR = "[data-productive-pipeline-cards]";
