@@ -50,7 +50,7 @@ test("opportunities are ranked from real operational evidence without probabilit
 
 test("canonical shell schedules a route gate only after initial page load", async () => {
   const [runtime, routeGate, authorityEntry, legacy] = await Promise.all([
-    read("docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js"),
+    read("docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js"),
     read("docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js"),
     read("docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js"),
     read("docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"),
@@ -61,7 +61,7 @@ test("canonical shell schedules a route gate only after initial page load", asyn
   assert.match(routeGate, /routeAllowsHome/);
   assert.match(routeGate, /!root\.hidden/);
   assert.match(routeGate, /root\.dataset\.moduleActive !== "false"/);
-  assert.match(routeGate, /home-live-dashboard-runtime\.js\?v=home-live-dashboard-005/);
+  assert.match(routeGate, /home-live-dashboard-active-runtime\.js\?v=home-live-dashboard-006/);
   assert.doesNotMatch(runtime, /\bimport\s*(?:\(|\{)/);
   assert.match(runtime, /home-opportunity-authority-entry\.js\?v=home-live-dashboard-003/);
   assert.match(runtime, /PRODUCTIVE_PIPELINE_AND_TIMELINE/);
@@ -69,8 +69,15 @@ test("canonical shell schedules a route gate only after initial page load", asyn
   assert.match(authorityEntry, /pipeline-productive-intelligence-adapter\.js\?v=home-live-dashboard-003/);
 });
 
+test("productive-state observer cannot observe its own subtitle writes", async () => {
+  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js");
+  assert.match(runtime, /function observeProductiveState/);
+  assert.match(runtime, /stateObserver\.observe\(node,[\s\S]*attributeFilter:\s*\["data-productive-home-state", "data-smart-widget-stack-state"\]/);
+  assert.doesNotMatch(runtime, /observer\.observe\(root, \{ subtree: true, childList: true, attributes: true \}\)/);
+});
+
 test("runtime retires static mock content and never invents percentages", async () => {
-  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js");
+  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js");
   assert.match(runtime, /dataset\.homeStaticMockRetired/);
   assert.match(runtime, /user_metadata/);
   assert.match(runtime, /Buenos días/);
@@ -81,7 +88,7 @@ test("runtime retires static mock content and never invents percentages", async 
 });
 
 test("focus refresh preserves the current authenticated identity", async () => {
-  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js");
+  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js");
   assert.match(runtime, /const onFocus = \(\) => \{[\s\S]*updateIdentity\(root, currentUser\)/);
   assert.doesNotMatch(runtime, /addEventListener\("focus", \(\) => \{\s*updateIdentity\(root, null\)/s);
 });
