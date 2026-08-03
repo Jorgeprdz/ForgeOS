@@ -10,15 +10,17 @@ test("canonical Pipeline runtime loads the bulk import mount", async () => {
   assert.match(authority, /pipeline-bulk-import-mount\.js\?v=beta1-repair-001/);
 });
 
-test("bulk import mount reuses Sprint 06 domain contracts", async () => {
+test("bulk import mount reuses Sprint 06 domain contracts and productive authorities", async () => {
   const runtime = await read("docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js");
   assert.match(runtime, /parseCsv/);
   assert.match(runtime, /mapRows/);
   assert.match(runtime, /detectPlan200/);
   assert.match(runtime, /reconcileDuplicates/);
   assert.match(runtime, /ForgeBulkImportProductiveAuthority/);
-  assert.match(runtime, /SAFE_WORKBOOK_DECODER_REQUIRED/);
-  assert.match(runtime, /No se guardó ningún contacto/);
+  assert.match(runtime, /xlsx@0\.18\.5/);
+  assert.match(runtime, /service\.createProspect/);
+  assert.match(runtime, /persisted: true/);
+  assert.doesNotMatch(runtime, /No se guardó ningún contacto/);
 });
 
 test("visible entry and file picker remain mounted through Pipeline rerenders", async () => {
