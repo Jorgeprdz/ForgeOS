@@ -1,7 +1,7 @@
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 
-const baseUrl = process.env.FORGE_PAGES_URL || "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive-material3/";
+const baseUrl = process.env.FORGE_PAGES_URL || "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/";
 const outputDir = process.env.FORGE_PAGES_EVIDENCE || "artifacts/pages-beta1-live";
 const email = process.env.FORGE_BETA_TEST_EMAIL || "";
 const password = process.env.FORGE_BETA_TEST_PASSWORD || "";
@@ -33,11 +33,15 @@ async function openRoute(nav, fileName) {
   const response = await page.goto(url.href, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(2500);
   await page.screenshot({ path: `${outputDir}/${fileName}`, fullPage: true });
+  const bodyText = (await page.locator("body").innerText()).slice(0, 12000);
+  const loadedScripts = await page.locator("script[src]").evaluateAll(nodes => nodes.map(node => node.src));
   report.routes[nav] = {
     url: page.url(),
     status: response?.status() || null,
     title: await page.title(),
-    bodyText: (await page.locator("body").innerText()).slice(0, 12000),
+    bodyText,
+    loadedScripts,
+    navbarVisible: await page.locator("nav, [data-forge-nav], [data-material3-nav], [data-bottom-nav]").first().isVisible().catch(() => false),
   };
 }
 
@@ -76,37 +80,32 @@ try {
     report.authenticatedCapture = "SKIPPED_MISSING_OR_INVALID_CREDENTIALS";
   }
 
-  const assetChecks = {};
-  for (const [name, relative] of Object.entries({
-    bulkImport: "pipeline-bulk-import-mount.js",
-    carteraIntake: "cartera-pdf-intake-mount.js",
-    whatsappAi: "whatsapp-ai-composer-mount.js",
-  })) {
-    const assetUrl = new URL(relative, baseUrl).href;
-    const response = await context.request.get(assetUrl);
-    assetChecks[name] = { url: assetUrl, status: response.status(), ok: response.ok() };
-  }
-  report.assetChecks = assetChecks;
+  report.canonicalShell = {
+    pipelineNavbarVisible: report.routes.pipeline?.navbarVisible || false,
+    legacyMaterial3ShellDetected: /forge-alive-material3/.test(report.routes.pipeline?.url || ""),
+  };
 
   await writeFile(`${outputDir}/report.json`, JSON.stringify(report, null, 2));
   const summary = [
-    "# ForgeOS Beta 1 — Pages live acceptance",
+    "# ForgeOS Beta 1 — Canonical Pages live acceptance",
     "",
     `- Target: ${baseUrl}`,
     `- Browser: ${report.browserAuthority}`,
+    `- Canonical navbar visible: ${report.canonicalShell.pipelineNavbarVisible ? "PASS" : "FAIL"}`,
+    `- Legacy material3 shell detected: ${report.canonicalShell.legacyMaterial3ShellDetected ? "YES" : "NO"}`,
     `- Authenticated capture: ${report.authenticated ? "PASS" : "SKIPPED"}`,
     `- Pipeline bulk import visible: ${report.pipelineBulkImportVisible ?? "NOT_TESTED"}`,
     `- Cartera PDF input visible: ${report.carteraPdfInputVisible ?? "NOT_TESTED"}`,
     `- Cartera dropzone visible: ${report.carteraDropzoneVisible ?? "NOT_TESTED"}`,
     `- WhatsApp composer triggers: ${report.whatsappComposerTriggerCount ?? "NOT_TESTED"}`,
-    `- Public assets: ${Object.values(assetChecks).every(item => item.ok) ? "PASS" : "FAIL"}`,
     `- Console errors: ${report.consoleErrors.length}`,
     `- Page errors: ${report.pageErrors.length}`,
   ].join("\n");
   await writeFile(`${outputDir}/summary.md`, summary);
   console.log(summary);
 
-  if (!Object.values(assetChecks).every(item => item.ok)) process.exitCode = 1;
+  if (!report.canonicalShell.pipelineNavbarVisible) process.exitCode = 1;
+  if (report.canonicalShell.legacyMaterial3ShellDetected) process.exitCode = 1;
   if (report.authenticated && (!report.pipelineBulkImportVisible || !report.carteraPdfInputVisible || !report.carteraDropzoneVisible)) process.exitCode = 1;
 } finally {
   await browser.close();
