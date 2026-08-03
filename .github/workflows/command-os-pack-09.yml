@@ -1,0 +1,39 @@
+name: Command OS Pack 09
+
+on:
+  pull_request:
+    paths:
+      - 'platform/commands/**'
+      - 'app.js'
+      - 'tests/command-os-pack-0*-test.mjs'
+      - 'tests/e2e/command-os-pack-03.spec.mjs'
+      - 'tests/e2e/fixtures/command-os-pack-03/**'
+      - '.github/workflows/command-os-pack-09.yml'
+      - 'docs/evidence/COMMAND_OS_PACK_09_END_TO_END_ACCEPTANCE.md'
+
+jobs:
+  end-to-end-acceptance:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Command OS contracts Pack 03 through Pack 09
+        run: |
+          node --test tests/command-os-pack-04-test.mjs
+          node --test tests/command-os-pack-05-test.mjs
+          node --test tests/command-os-pack-06-test.mjs
+          node --test tests/command-os-pack-07-test.mjs
+          node --test tests/command-os-pack-08-test.mjs
+          node --test tests/command-os-pack-09-test.mjs
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Desktop and mobile Command Bar acceptance
+        run: npx playwright test tests/e2e/command-os-pack-03.spec.mjs --project=chromium
+      - name: Safety boundary scan
+        run: |
+          ! grep -R -E 'AUTO_CONFIRM|AUTO_EXECUTE|AUTO_SELECT' platform/commands
+          ! grep -R -E '\.from\([^)]*\)\.(insert|update|upsert|delete)' platform/commands
