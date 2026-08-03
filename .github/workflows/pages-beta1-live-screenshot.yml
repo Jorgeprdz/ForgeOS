@@ -1,6 +1,6 @@
 name: Beta 1 Live Pages Screenshot
 
-# Canonical deploy under review: 1ae2c03ddc1063ef25b87339d20456414e8c6f2f
+# Canonical deploy under review: 7220089419b0df2a43dc2a81e4d8fa63a5bf5b35
 on:
   push:
     branches:
@@ -8,12 +8,14 @@ on:
     paths:
       - .github/workflows/pages-beta1-live-screenshot.yml
       - tools/pages-beta1-live-screenshot.mjs
+      - tools/pages-cartera-live-diagnostic.mjs
   pull_request:
     branches:
       - main
     paths:
       - .github/workflows/pages-beta1-live-screenshot.yml
       - tools/pages-beta1-live-screenshot.mjs
+      - tools/pages-cartera-live-diagnostic.mjs
   workflow_dispatch:
   workflow_run:
     workflows:
@@ -36,6 +38,7 @@ jobs:
     env:
       FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
       FORGE_PAGES_EVIDENCE: artifacts/pages-beta1-live
+      FORGE_CARTERA_DIAGNOSTIC: artifacts/pages-cartera-diagnostic
       FORGE_BETA_TEST_EMAIL: ${{ secrets.FORGE_BETA_TEST_EMAIL }}
       FORGE_BETA_TEST_PASSWORD: ${{ secrets.FORGE_BETA_TEST_PASSWORD }}
 
@@ -80,13 +83,24 @@ jobs:
       - name: Capture screenshots from canonical live Pages
         run: node tools/pages-beta1-live-screenshot.mjs
 
+      - name: Capture isolated Cartera diagnostic
+        if: always()
+        run: node tools/pages-cartera-live-diagnostic.mjs
+
       - name: Publish review summary
         if: always()
         run: |
           if [ -f artifacts/pages-beta1-live/summary.md ]; then
             cat artifacts/pages-beta1-live/summary.md >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "No se generó evidencia." >> "$GITHUB_STEP_SUMMARY"
+            echo "No se generó evidencia general." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f artifacts/pages-cartera-diagnostic/report.json ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Cartera terminal state" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat artifacts/pages-cartera-diagnostic/report.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload live evidence
@@ -94,6 +108,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: beta1-live-pages-screenshots-${{ github.run_id }}
-          path: artifacts/pages-beta1-live
+          path: |
+            artifacts/pages-beta1-live
+            artifacts/pages-cartera-diagnostic
           if-no-files-found: error
           retention-days: 14
