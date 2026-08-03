@@ -51,7 +51,8 @@ jobs:
           node tests/productive-smart-widget-orchestrator-master-test.mjs
           node tests/smart-widgets-home-productive-mount-test.mjs
           node --test tests/authenticated-session-controls-test.mjs
-          node --test tests/material3-pipeline-productive-ui-test.mjs
+          node --test tests/material3-pipeline-integration-test.mjs
+          node tests/forge-067g17b-pipeline-productive-source-test.js
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
