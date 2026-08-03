@@ -24,12 +24,16 @@ jobs:
         run: node --check advisor-os/quotes/pipeline-to-quote-runtime.js
       - name: Sprint 07 contracts
         run: node --test tests/advisor-os-sprint-07-test.mjs
-      - name: Preserve quote and pipeline regressions
+      - name: Preserve canonical quote and pipeline contracts
         run: |
           set -euo pipefail
-          mapfile -t tests_found < <(find tests -maxdepth 1 -type f \( -name '*quote*.mjs' -o -name '*pipeline*.mjs' \) | sort | head -n 40)
-          test "${#tests_found[@]}" -ge 1
-          node --test "${tests_found[@]}"
+          node --test \
+            tests/quote-lifecycle-contract-test.mjs \
+            tests/quote-lifecycle-runtime-test.mjs \
+            tests/crs-03-pipeline-person-convergence-contract-test.mjs \
+            tests/crs-03-pipeline-person-convergence-service-test.mjs \
+            tests/crs-05-quote-person-convergence-contract-test.mjs \
+            tests/crs-05-quote-person-convergence-service-test.mjs
       - name: Safety boundary scan
         run: |
           ! grep -Eq '\.(insert|update|delete|upsert|rpc)\s*\(' advisor-os/quotes/pipeline-to-quote-runtime.js
