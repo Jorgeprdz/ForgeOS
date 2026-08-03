@@ -1,9 +1,3 @@
-import {
-  parseCsv,
-  mapRows,
-  detectPlan200,
-  reconcileDuplicates,
-} from "../../../advisor-os/contact-books/bulk-import-engine.js";
 import { createProductiveIntelligenceAdapter } from "./pipeline-productive-intelligence-adapter.js?v=beta1-repair-001";
 
 const ROOT_SELECTOR = "[data-forge-pipeline-module]";
@@ -12,6 +6,7 @@ const LAYER_SELECTOR = "[data-pipeline-bulk-import-layer]";
 const ACCEPTED_EXTENSIONS = ["csv", "xlsx"];
 let servicePromise;
 let xlsxPromise;
+let enginePromise;
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -21,6 +16,29 @@ function escapeHtml(value) {
 
 function extension(file) {
   return String(file?.name || "").split(".").pop().toLowerCase();
+}
+
+async function getBulkEngine() {
+  if (!enginePromise) {
+    const sourceLayout = import.meta.url.includes("/docs/static-preview/");
+    const path = sourceLayout
+      ? "../../../advisor-os/contact-books/bulk-import-engine.js"
+      : "./bulk-import-engine-pages.js";
+    enginePromise = import(new URL(path, import.meta.url)).then(engine => {
+      for (const name of ["parseCsv", "mapRows", "detectPlan200", "reconcileDuplicates"]) {
+        if (typeof engine[name] !== "function") {
+          throw Object.assign(new Error(`BULK_ENGINE_EXPORT_REQUIRED_${name}`), {
+            code: "BULK_ENGINE_INVALID",
+          });
+        }
+      }
+      return engine;
+    }).catch(error => {
+      enginePromise = undefined;
+      throw error;
+    });
+  }
+  return enginePromise;
 }
 
 async function getService() {
@@ -51,6 +69,7 @@ async function getWorkbookDecoder() {
 }
 
 async function importPrepared(payload) {
+  const { reconcileDuplicates } = await getBulkEngine();
   const service = await getService();
   const existing = await service.listProspects();
   const prepared = reconcileDuplicates(payload.contacts, existing);
@@ -122,6 +141,7 @@ async function inspectFile(file, stateNode, previewNode, confirmButton) {
   const ext = extension(file);
   if (!ACCEPTED_EXTENSIONS.includes(ext)) throw Object.assign(new Error("Sólo se aceptan archivos CSV o XLSX."), { code: "FILE_TYPE_INVALID" });
 
+  const { parseCsv, mapRows, detectPlan200, reconcileDuplicates } = await getBulkEngine();
   let rows;
   let sheetNames = [];
   if (ext === "csv") {
