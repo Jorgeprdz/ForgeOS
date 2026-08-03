@@ -127,9 +127,11 @@ async function resolveOpportunityAdapterFactory() {
   const injected = globalThis.__FORGE_HOME_OPPORTUNITY_ADAPTER_FACTORY__;
   if (typeof injected === "function") return injected;
 
-  productiveOpportunityFactoryPromise ||= import(
-    "./pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-002"
-  ).then((module) => {
+  const authorityUrl = new URL(
+    "./pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-002",
+    import.meta.url,
+  ).href;
+  productiveOpportunityFactoryPromise ||= import(/* @vite-ignore */ authorityUrl).then((module) => {
     if (typeof module.createProductiveIntelligenceAdapter !== "function") {
       throw new Error("HOME_PRODUCTIVE_OPPORTUNITY_AUTHORITY_INVALID");
     }
