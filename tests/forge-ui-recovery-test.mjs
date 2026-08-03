@@ -5,14 +5,16 @@ import { readFile } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root), 'utf8');
 
-test('recovery stylesheet is loaded from the canonical public shell', async () => {
+test('recovery stylesheet has one canonical loader authority', async () => {
   const [legacy, loader, css] = await Promise.all([
     read('docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'),
     read('docs/static-preview/forge-alive-material3/forge-ui-recovery-loader.js'),
     read('docs/static-preview/forge-alive-material3/forge-ui-recovery.css'),
   ]);
 
-  assert.match(legacy, /forge-ui-recovery\.css\?v=forge-ui-recovery-001/);
+  assert.doesNotMatch(legacy, /forge-ui-recovery\.css/);
+  assert.doesNotMatch(legacy, /installRecoveryStylesheet/);
+  assert.match(legacy, /Recovery CSS is owned exclusively by forge-ui-recovery-loader\.js/);
   assert.match(loader, /new URL\(import\.meta\.url\)/);
   assert.match(loader, /forge-ui-recovery\.css\?v=\$\{encodeURIComponent\(version\)\}/);
   assert.match(loader, /dataset\.forgeUiRecoveryStyles/);
