@@ -24,13 +24,7 @@ test("Google identity uses the authenticated given name", () => {
 
 test("opportunities are ranked from real operational evidence without probabilities", () => {
   const rows = rankOpportunityCards([
-    {
-      id: "new",
-      fullName: "Prospecto nuevo",
-      status: "referred_new",
-      stageLabel: "Nuevo",
-      latestActivity: null,
-    },
+    { id: "new", fullName: "Prospecto nuevo", status: "referred_new", stageLabel: "Nuevo", latestActivity: null },
     {
       id: "overdue",
       fullName: "Seguimiento vencido",
@@ -39,12 +33,7 @@ test("opportunities are ranked from real operational evidence without probabilit
       latestActivity: { label: "Conversación registrada", occurredAt: "2026-07-25T12:00:00.000Z" },
       nextCommitment: { dueAt: "2026-08-01T12:00:00.000Z" },
     },
-    {
-      id: "client",
-      fullName: "Cliente confirmado",
-      status: "client",
-      stageLabel: "Cliente",
-    },
+    { id: "client", fullName: "Cliente confirmado", status: "client", stageLabel: "Cliente" },
     {
       id: "decision",
       fullName: "Decisión pendiente",
@@ -59,33 +48,36 @@ test("opportunities are ranked from real operational evidence without probabilit
   assert.ok(rows.every((row) => !("score" in row) && !("probability" in row)));
 });
 
-test("runtime retires static mock content and connects Productive Pipeline plus Timeline", async () => {
-  const [runtime, legacy] = await Promise.all([
-    read("docs/static-preview/forge-alive-material3/home-live-dashboard.js"),
+test("canonical shell loads the non-blocking Home runtime", async () => {
+  const [runtime, authorityEntry, legacy] = await Promise.all([
+    read("docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js"),
+    read("docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js"),
     read("docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"),
   ]);
-  assert.match(legacy, /home-live-dashboard\.js\?v=home-live-dashboard-001/);
+  assert.match(legacy, /home-live-dashboard-runtime\.js\?v=home-live-dashboard-003/);
+  assert.doesNotMatch(legacy, /import "\.\/home-live-dashboard\.js/);
+  assert.doesNotMatch(runtime, /\bimport\s*(?:\(|\{)/);
+  assert.match(runtime, /home-opportunity-authority-entry\.js\?v=home-live-dashboard-003/);
   assert.match(runtime, /PRODUCTIVE_PIPELINE_AND_TIMELINE/);
-  assert.match(runtime, /createProductiveIntelligenceAdapter/);
+  assert.match(authorityEntry, /createProductiveIntelligenceAdapter/);
+  assert.match(authorityEntry, /pipeline-productive-intelligence-adapter\.js\?v=home-live-dashboard-003/);
+});
+
+test("runtime retires static mock content and never invents percentages", async () => {
+  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js");
   assert.match(runtime, /dataset\.homeStaticMockRetired/);
+  assert.match(runtime, /user_metadata/);
+  assert.match(runtime, /Buenos días/);
+  assert.match(runtime, /Buenas tardes/);
+  assert.match(runtime, /Buenas noches/);
   assert.doesNotMatch(runtime, /Lariza|Octavio|María|72%|65%|40%/);
   assert.doesNotMatch(runtime, /Math\.random|probability|opportunityScore/);
 });
 
-test("Pipeline intelligence is loaded only after authenticated Home boot", async () => {
-  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard.js");
-  assert.doesNotMatch(runtime, /^import\s+\{\s*createProductiveIntelligenceAdapter/m);
-  assert.match(runtime, /async function resolveOpportunityAdapterFactory/);
-  assert.match(runtime, /pipeline-productive-intelligence-adapter\.js\?v=home-live-dashboard-002/);
-  assert.match(runtime, /import\(\/\* @vite-ignore \*\/ authorityUrl\)/);
-  assert.match(runtime, /const factory = await resolveOpportunityAdapterFactory\(\)/);
-  assert.match(runtime, /if \(!authenticated\)[\s\S]*return;[\s\S]*resolveOpportunityAdapterFactory/s);
-});
-
 test("focus refresh preserves the current authenticated identity", async () => {
-  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard.js");
-  assert.match(runtime, /const handleFocus = \(\) => \{[\s\S]*updateGreeting\(root, currentUser\)/);
-  assert.doesNotMatch(runtime, /addEventListener\("focus", \(\) => \{\s*updateGreeting\(root, null\)/s);
+  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js");
+  assert.match(runtime, /const onFocus = \(\) => \{[\s\S]*updateIdentity\(root, currentUser\)/);
+  assert.doesNotMatch(runtime, /addEventListener\("focus", \(\) => \{\s*updateIdentity\(root, null\)/s);
 });
 
 test("dashboard layout creates one coherent primary row", async () => {
