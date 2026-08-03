@@ -1,0 +1,26 @@
+name: Auth Relogin Canonical Return
+
+on:
+  pull_request:
+    paths:
+      - "docs/static-preview/forge-alive/index.html"
+      - "docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js"
+      - "tests/auth-relogin-canonical-return-test.mjs"
+      - ".github/workflows/auth-relogin-canonical-return.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-return:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate canonical second-login return
+        run: node tests/auth-relogin-canonical-return-test.mjs
+      - name: Validate browser guard syntax
+        run: node --check docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js

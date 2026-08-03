@@ -5,23 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#06101f">
   <meta name="robots" content="noindex">
-  <title>ForgeOS — interfaz retirada</title>
+  <title>ForgeOS</title>
   <script>
-    /* FORGE_LEGACY_UI_RETIRED: legacy preview entry */
+    /* FORGE_LEGACY_UI_RETIRED · FORGE_CANONICAL_ENTRY_BRIDGE_V2 */
     (() => {
-      const pathname = window.location.pathname;
-      const targetPath = pathname.includes('/forge-alive-runtime/')
+      const current = new URL(window.location.href);
+      const targetPath = current.pathname.includes('/forge-alive-runtime/')
         ? '../forge-alive/'
         : '../forge-alive-material3/';
-      const target = new URL(targetPath, window.location.href);
-      const parameters = new URLSearchParams(window.location.search);
-      target.searchParams.set('nav', parameters.get('nav') || 'inicio');
-      target.searchParams.set('v', 'legacy-retired-20260731');
+      const target = new URL(targetPath, current);
+
+      for (const [key, value] of current.searchParams.entries()) {
+        target.searchParams.append(key, value);
+      }
+
+      target.searchParams.set('nav', current.searchParams.get('nav') || 'inicio');
+      const authReturn = current.searchParams.get('auth_return');
+      const cacheAuthority = authReturn
+        ? `auth-${authReturn}`
+        : current.searchParams.get('v') || 'canonical-entry-20260803';
+      target.searchParams.set('v', cacheAuthority);
+      target.hash = current.hash;
       window.location.replace(target.href);
     })();
   </script>
 </head>
 <body>
-  <p>Esta interfaz fue retirada. Abriendo la versión vigente de ForgeOS…</p>
+  <p>Abriendo ForgeOS…</p>
 </body>
 </html>
