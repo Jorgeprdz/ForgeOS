@@ -17,6 +17,10 @@ test('recovery stylesheet is loaded from the canonical public shell', async () =
   assert.match(loader, /forge-ui-recovery\.css\?v=\$\{encodeURIComponent\(version\)\}/);
   assert.match(loader, /dataset\.forgeUiRecoveryStyles/);
   assert.match(loader, /MutationObserver\(keepRecoveryLast\)/);
+  assert.match(loader, /stylesheetReady/);
+  assert.match(loader, /addEventListener\('load', markReady/);
+  assert.match(loader, /if \(\s*!stylesheetReady/);
+  assert.match(loader, /dataset\.forgeUiRecoveryStyles = 'ready'/);
   assert.match(css, /Forge UI Recovery \+ Editorial Type/);
 });
 

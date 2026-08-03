@@ -7,18 +7,13 @@ const expectedHref = new URL(
 ).href;
 
 let stylesheet = document.querySelector(selector);
-if (!stylesheet) {
-  stylesheet = document.createElement('link');
-  stylesheet.rel = 'stylesheet';
-  stylesheet.dataset.forgeUiRecoveryStyles = 'true';
-  document.head.append(stylesheet);
-}
-stylesheet.href = expectedHref;
-
+let stylesheetReady = Boolean(stylesheet?.sheet);
 let moving = false;
+
 const keepRecoveryLast = () => {
   if (
-    moving
+    !stylesheetReady
+    || moving
     || !stylesheet.isConnected
     || stylesheet === document.head.lastElementChild
   ) {
@@ -31,9 +26,31 @@ const keepRecoveryLast = () => {
   });
 };
 
+const markReady = () => {
+  stylesheetReady = true;
+  document.documentElement.dataset.forgeUiRecoveryStyles = 'ready';
+  queueMicrotask(keepRecoveryLast);
+};
+
+const markFailed = () => {
+  stylesheetReady = false;
+  document.documentElement.dataset.forgeUiRecoveryStyles = 'failed';
+};
+
+if (!stylesheet) {
+  stylesheet = document.createElement('link');
+  stylesheet.rel = 'stylesheet';
+  stylesheet.dataset.forgeUiRecoveryStyles = 'true';
+}
+
+stylesheet.addEventListener('load', markReady, { once: true });
+stylesheet.addEventListener('error', markFailed, { once: true });
+if (stylesheet.href !== expectedHref) stylesheet.href = expectedHref;
+if (!stylesheet.isConnected) document.head.append(stylesheet);
+if (stylesheet.sheet) markReady();
+
 const observer = new MutationObserver(keepRecoveryLast);
 observer.observe(document.head, { childList: true });
-queueMicrotask(keepRecoveryLast);
 globalThis.addEventListener('pagehide', () => observer.disconnect(), { once: true });
 
 document.documentElement.dataset.forgeUiRecoveryLoader = version;
