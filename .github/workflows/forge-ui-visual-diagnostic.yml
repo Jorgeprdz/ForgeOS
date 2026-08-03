@@ -102,16 +102,33 @@ jobs:
       - name: Install repository dependencies
         run: npm ci
 
-      - name: Generate browser diagnostic public configuration
+      - name: Generate hermetic browser diagnostic configuration
         run: |
           cat > env.js <<'EOF'
           window.__ENV__ = Object.freeze({
-            "SUPABASE_URL": "https://rmlxigxysujsuwzgoimv.supabase.co",
+            "SUPABASE_URL": "http://127.0.0.1:4173",
             "SUPABASE_KEY": "forge-browser-diagnostic-public-anon-placeholder",
             "DEMO_MODE": "false",
             "ENABLE_TEST_ADVISOR_LOGIN": "false"
           });
           EOF
+          mkdir -p functions/v1
+          cat > functions/v1/banxico-rates <<'EOF'
+          {
+            "ok": true,
+            "fetchedAt": "2026-08-03T12:00:00.000Z",
+            "functionVersion": "FORGE_DIAGNOSTIC_BANXICO_V1",
+            "rates": {
+              "UDI_MXN": {
+                "value": 8.53,
+                "asOfDate": "2026-08-03",
+                "source": "DIAGNOSTIC_FIXTURE"
+              }
+            }
+          }
+          EOF
+          grep -F '"SUPABASE_URL": "http://127.0.0.1:4173"' env.js
+          grep -F '"functionVersion": "FORGE_DIAGNOSTIC_BANXICO_V1"' functions/v1/banxico-rates
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -125,6 +142,9 @@ jobs:
             if curl --fail --silent --show-error \
               http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/ \
               > /dev/null; then
+              curl --fail --silent --show-error \
+                http://127.0.0.1:4173/functions/v1/banxico-rates \
+                | grep -F 'FORGE_DIAGNOSTIC_BANXICO_V1'
               echo "FORGE_LOCAL_SERVER=READY"
               exit 0
             fi

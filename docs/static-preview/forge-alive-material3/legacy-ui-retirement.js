@@ -10,6 +10,11 @@ const RECOVERY_STYLESHEET_HREF = new URL(
   "./forge-ui-recovery.css?v=forge-ui-recovery-001",
   import.meta.url,
 ).href;
+const HOME_ROUTE_GATE_SELECTOR = "[data-home-live-dashboard-route-gate-entry]";
+const HOME_ROUTE_GATE_HREF = new URL(
+  "./home-live-dashboard-route-gate.js?v=home-live-dashboard-005",
+  import.meta.url,
+).href;
 
 function installRecoveryStylesheet() {
   let stylesheet = document.querySelector(RECOVERY_STYLESHEET_SELECTOR);
@@ -37,6 +42,23 @@ function installRecoveryStylesheet() {
   observer.observe(document.head, { childList: true });
   queueMicrotask(keepRecoveryLast);
   globalThis.addEventListener("pagehide", () => observer.disconnect(), { once: true });
+}
+
+function installHomeRouteGateAfterLoad() {
+  if (document.querySelector(HOME_ROUTE_GATE_SELECTOR)) return;
+  const script = document.createElement("script");
+  script.type = "module";
+  script.src = HOME_ROUTE_GATE_HREF;
+  script.dataset.homeLiveDashboardRouteGateEntry = "true";
+  document.head.append(script);
+}
+
+function scheduleHomeRouteGate() {
+  if (document.readyState === "complete") {
+    queueMicrotask(installHomeRouteGateAfterLoad);
+    return;
+  }
+  globalThis.addEventListener("load", installHomeRouteGateAfterLoad, { once: true });
 }
 
 async function retireLegacyServiceWorkers() {
@@ -72,6 +94,7 @@ async function clearLegacyCaches() {
 }
 
 installRecoveryStylesheet();
+scheduleHomeRouteGate();
 
 await Promise.allSettled([
   retireLegacyServiceWorkers(),
