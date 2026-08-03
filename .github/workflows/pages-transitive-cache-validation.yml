@@ -5,6 +5,7 @@ on:
     paths:
       - "scripts/build-advisor-presentation-pages-runtime.mjs"
       - "scripts/build-advisor-presentation-pages-runtime-base.mjs"
+      - "scripts/prepare-cartera-canonical-pages-runtime.mjs"
       - "scripts/forge-pages-transitive-cache-versioning.mjs"
       - "tests/pages-transitive-asset-cache-invalidation-test.mjs"
       - ".github/workflows/pages-transitive-cache-validation.yml"
@@ -29,21 +30,40 @@ jobs:
           FORGE_PAGES_RUNTIME_MODE: pages
           FORGE_CARTERA_PAGES_RUNTIME_MODE: pages
         run: node scripts/build-advisor-presentation-pages-runtime.mjs
-      - name: Verify generated Home asset graph
+      - name: Verify generated Home and Cartera asset graphs
         env:
           EXPECTED_SHA: 0123456789abcdef0123456789abcdef01234567
         run: |
           node - <<'EOF'
           const assert = require('node:assert/strict');
           const fs = require('node:fs');
-          const path = 'docs/static-preview/forge-alive-material3';
-          const read = file => fs.readFileSync(`${path}/${file}`, 'utf8');
+          const root = 'docs/static-preview/forge-alive-material3';
+          const read = file => fs.readFileSync(`${root}/${file}`, 'utf8');
           const sha = process.env.EXPECTED_SHA;
+          const carteraRuntime = `${root}/cartera-runtime-${sha}`;
+
           assert.match(read('app.js'), new RegExp(`home-module\\.js\\?v=${sha}`));
           assert.match(read('home-module.js'), new RegExp(`home-productive-orchestrator\\.js\\?v=${sha}`));
           assert.match(read('home-productive-orchestrator.js'), new RegExp(`activity-ledger-reporting-bridge\\.js\\?v=${sha}`));
           assert.match(read('home-productive-orchestrator.js'), new RegExp(`smart-widget-productive-home-adapter\\.js\\?v=${sha}`));
           assert.match(read('home-productive-orchestrator.js'), new RegExp(`smart-widget-productive-home-adapter\\.css\\?v=${sha}`));
           assert.match(read('smart-widget-productive-home-adapter.js'), new RegExp(`advisor-forecast-runtime-acceptance\\.js\\?v=${sha}`));
+
+          assert.match(read('forge-shell.js'), new RegExp(`cartera-module\\.js\\?v=${sha}`));
+          assert.match(read('cartera-module.js'), new RegExp(`cartera-document-intake\\.js\\?v=${sha}`));
+          assert.match(read('cartera-module.js'), new RegExp(`\\./cartera-runtime-${sha}/`));
+          assert.ok(fs.existsSync(`${carteraRuntime}/supabase-runtime.js`));
+          assert.ok(fs.existsSync(`${carteraRuntime}/memory-manager.js`));
+          assert.ok(fs.existsSync(`${carteraRuntime}/state-manager.js`));
+          assert.ok(fs.existsSync(`${carteraRuntime}/cartera.js`));
+          assert.ok(fs.existsSync(`${carteraRuntime}/advisor-os/cartera/cartera-030d-policy-payment-calendar-enhancement.js`));
+          assert.ok(fs.existsSync(`${carteraRuntime}/advisor-os/cartera/cartera-100d-productivity-proof-enhancement.js`));
+
+          const manifest = JSON.parse(fs.readFileSync(`${carteraRuntime}/manifest.json`, 'utf8'));
+          assert.equal(manifest.contractId, 'CARTERA_CANONICAL_PAGES_RUNTIME_V1');
+          assert.equal(manifest.buildSha, sha);
+          assert.ok(manifest.files.length >= 40);
+
           console.log('PAGES_TRANSITIVE_HOME_ASSET_GRAPH=PASS');
+          console.log('PAGES_CANONICAL_CARTERA_ASSET_GRAPH=PASS');
           EOF
