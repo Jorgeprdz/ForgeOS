@@ -52,9 +52,24 @@ test('Home, Activity and Cartera recover hierarchy in five responsive profiles',
 
         const metrics = await page.evaluate((selectedSurface) => {
           const app = document.querySelector('.forge-module-viewport');
-          const root = selectedSurface === 'home'
-            ? document.querySelector('[data-surface="home"] .hero')
-            : document.querySelector(`[data-surface="${selectedSurface}"]`);
+          const surfaceRoot = document.querySelector(`[data-surface="${selectedSurface}"]`);
+          const extentOf = elements => {
+            const rects = elements
+              .map(element => element.getBoundingClientRect())
+              .filter(rect => rect.width > 0 && rect.height > 0);
+            if (!rects.length) return { left: 0, right: 0, width: 0 };
+            const left = Math.min(...rects.map(rect => rect.left));
+            const right = Math.max(...rects.map(rect => rect.right));
+            return { left, right, width: right - left };
+          };
+          // Home intentionally uses display: contents so its own box is zero-width.
+          // Measure the union of its visible composition instead of one headline.
+          const rootRect = selectedSurface === 'home'
+            ? extentOf([...surfaceRoot.children].filter(element => getComputedStyle(element).display !== 'none'))
+            : (() => {
+                const rect = surfaceRoot.getBoundingClientRect();
+                return { left: rect.left, right: rect.right, width: rect.width };
+              })();
           const heading = selectedSurface === 'cartera'
             ? document.querySelector('#cartera-title')
             : selectedSurface === 'activity'
@@ -66,7 +81,6 @@ test('Home, Activity and Cartera recover hierarchy in five responsive profiles',
               ? document.querySelector('.activity-period')
               : document.querySelector('.acceptance-rail button');
           const appRect = app.getBoundingClientRect();
-          const rootRect = root.getBoundingClientRect();
           const headingStyle = getComputedStyle(heading);
           const controlStyle = getComputedStyle(control);
           const scrollWidth = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
