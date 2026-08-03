@@ -1,5 +1,3 @@
-import { createProductiveIntelligenceAdapter } from "./pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-001";
-
 const CONTRACT_ID = "FORGE_HOME_LIVE_DASHBOARD_V1";
 const TIME_ZONE = "America/Mexico_City";
 const HOME_SELECTOR = "[data-forge-home-module]";
@@ -11,6 +9,8 @@ const STAGE_ORDER = Object.freeze({
   contacted: 50,
   referred_new: 60,
 });
+
+let productiveOpportunityFactoryPromise = null;
 
 function validDate(value) {
   const date = value instanceof Date ? value : new Date(value);
@@ -74,7 +74,13 @@ function opportunityReason(card, nowMs) {
   const dueAt = timestamp(card?.nextCommitment?.dueAt);
   if (dueAt !== null) {
     const days = dayDistance(dueAt, nowMs);
-    if (dueAt < nowMs) return Object.freeze({ rank: 0, label: "Seguimiento vencido", badge: `${Math.max(1, Math.abs(days))} d vencido` });
+    if (dueAt < nowMs) {
+      return Object.freeze({
+        rank: 0,
+        label: "Seguimiento vencido",
+        badge: `${Math.max(1, Math.abs(days))} d vencido`,
+      });
+    }
     if (days <= 0) return Object.freeze({ rank: 8, label: "Compromiso para hoy", badge: "Hoy" });
     if (days <= 3) return Object.freeze({ rank: 12 + days, label: "Compromiso próximo", badge: `En ${days} d` });
   }
@@ -102,13 +108,13 @@ export function rankOpportunityCards(cards = [], { now = new Date() } = {}) {
     .map((card) => {
       const reason = opportunityReason(card, nowMs);
       const activityAt = timestamp(card?.latestActivity?.occurredAt);
-      return Object.freeze({
-        card,
-        reason,
-        activityAt: activityAt ?? 0,
-      });
+      return Object.freeze({ card, reason, activityAt: activityAt ?? 0 });
     })
-    .sort((left, right) => left.reason.rank - right.reason.rank || left.activityAt - right.activityAt || String(left.card.fullName).localeCompare(String(right.card.fullName), "es"))
+    .sort((left, right) => (
+      left.reason.rank - right.reason.rank
+      || left.activityAt - right.activityAt
+      || String(left.card.fullName).localeCompare(String(right.card.fullName), "es")
+    ))
     .slice(0, 5);
 }
 
@@ -117,11 +123,26 @@ function liveClock() {
   return typeof injected === "function" ? validDate(injected()) || new Date() : new Date();
 }
 
+async function resolveOpportunityAdapterFactory() {
+  const injected = globalThis.__FORGE_HOME_OPPORTUNITY_ADAPTER_FACTORY__;
+  if (typeof injected === "function") return injected;
+
+  productiveOpportunityFactoryPromise ||= import(
+    "./pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-002"
+  ).then((module) => {
+    if (typeof module.createProductiveIntelligenceAdapter !== "function") {
+      throw new Error("HOME_PRODUCTIVE_OPPORTUNITY_AUTHORITY_INVALID");
+    }
+    return module.createProductiveIntelligenceAdapter;
+  });
+  return productiveOpportunityFactoryPromise;
+}
+
 function injectStyles() {
   if (document.querySelector("[data-home-live-dashboard-styles]")) return;
   const link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = new URL("./home-live-dashboard.css?v=home-live-dashboard-001", import.meta.url).href;
+  link.href = new URL("./home-live-dashboard.css?v=home-live-dashboard-002", import.meta.url).href;
   link.dataset.homeLiveDashboardStyles = CONTRACT_ID;
   document.head.append(link);
 }
@@ -222,6 +243,7 @@ function updateProfile(root, user) {
   profile.dataset.forgeAuthAvatar = "true";
   profile.dataset.forgeAuthState = user?.id ? "authenticated" : "anonymous";
   profile.setAttribute("aria-label", user?.id ? `Abrir perfil de ${firstNameFor(user)}` : "Abrir perfil");
+
   const status = document.createElement("i");
   status.setAttribute("aria-hidden", "true");
   const source = avatarUrlFor(user);
@@ -236,11 +258,12 @@ function updateProfile(root, user) {
       profile.replaceChildren(initials, status);
     }, { once: true });
     profile.replaceChildren(image, status);
-  } else {
-    const initials = document.createElement("span");
-    initials.textContent = initialsFor(user);
-    profile.replaceChildren(initials, status);
+    return;
   }
+
+  const initials = document.createElement("span");
+  initials.textContent = initialsFor(user);
+  profile.replaceChildren(initials, status);
 }
 
 function updateGreeting(root, user) {
@@ -265,6 +288,7 @@ function syncMiDiaStatus(root, authenticated) {
     subtitle.dataset.homeMiDiaState = "SESSION_REQUIRED";
     return;
   }
+
   const state = productiveState(root);
   const labels = Object.freeze({
     ready: "Mi día · actividad, cartera y meta conectadas",
@@ -288,7 +312,9 @@ function retireStaticMocks(root) {
     node.setAttribute("aria-hidden", "true");
   }
   const safePill = root.querySelector(".safe-pill");
-  if (safePill) safePill.innerHTML = "<span>Sesión protegida</span><span aria-hidden=\"true\">•</span><span>Datos productivos</span>";
+  if (safePill) {
+    safePill.innerHTML = "<span>Sesión protegida</span><span aria-hidden=\"true\">•</span><span>Datos productivos</span>";
+  }
 }
 
 function ensureHonestMiDiaFallback(root) {
@@ -312,6 +338,7 @@ function install(root) {
   if (!root || root[ROOT_STATE]) return root?.[ROOT_STATE] || null;
   injectStyles();
   retireStaticMocks(root);
+
   const opportunities = ensureOpportunitySurface(root);
   renderOpportunityState(opportunities, "Leyendo prospectos y Timeline…", "LOADING");
   opportunities.querySelector("[data-home-open-pipeline]")?.addEventListener("click", () => navigateToPipeline());
@@ -320,9 +347,15 @@ function install(root) {
   let adapter = null;
   let advisorId = null;
   let authenticated = false;
+  let currentUser = globalThis.__FORGE_HOME_CURRENT_USER__ || null;
 
   const observer = new MutationObserver(() => syncMiDiaStatus(root, authenticated));
-  observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-productive-home-state", "data-smart-widget-stack-state"] });
+  observer.observe(root, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ["data-productive-home-state", "data-smart-widget-stack-state"],
+  });
 
   async function refresh(reason = "refresh") {
     const revision = ++generation;
@@ -334,9 +367,13 @@ function install(root) {
       const session = sessionResult?.data?.session || null;
       const user = session?.user || null;
       if (revision !== generation) return;
+
       authenticated = Boolean(user?.id);
+      currentUser = user;
+      globalThis.__FORGE_HOME_CURRENT_USER__ = user;
       updateGreeting(root, user);
       syncMiDiaStatus(root, authenticated);
+
       if (!authenticated) {
         advisorId = null;
         adapter = null;
@@ -344,12 +381,15 @@ function install(root) {
         root.dataset.homeLiveDashboardState = "session-required";
         return;
       }
+
       if (advisorId && advisorId !== user.id) adapter = null;
       advisorId = user.id;
-      const factory = globalThis.__FORGE_HOME_OPPORTUNITY_ADAPTER_FACTORY__ || createProductiveIntelligenceAdapter;
+      const factory = await resolveOpportunityAdapterFactory();
+      if (revision !== generation || advisorId !== user.id) return;
       adapter ||= await factory();
       const cards = await adapter.reload();
       if (revision !== generation || advisorId !== user.id) return;
+
       renderOpportunities(opportunities, Array.isArray(cards) ? cards : []);
       root.dataset.homeLiveDashboardState = "ready";
       root.dataset.homeOpportunityAuthority = "PRODUCTIVE_PIPELINE_AND_TIMELINE";
@@ -357,7 +397,11 @@ function install(root) {
     } catch (error) {
       if (revision !== generation) return;
       console.error("Forge Home live dashboard failed", error);
-      renderOpportunityState(opportunities, "Pipeline no disponible. No se mostrarán oportunidades de ejemplo.", "SOURCE_UNAVAILABLE");
+      renderOpportunityState(
+        opportunities,
+        "Pipeline no disponible. No se mostrarán oportunidades de ejemplo.",
+        "SOURCE_UNAVAILABLE",
+      );
       root.dataset.homeLiveDashboardState = "source-unavailable";
       syncMiDiaStatus(root, authenticated);
     }
@@ -370,35 +414,35 @@ function install(root) {
       authenticated = false;
       advisorId = null;
       adapter = null;
+      currentUser = null;
+      globalThis.__FORGE_HOME_CURRENT_USER__ = null;
       updateGreeting(root, null);
       syncMiDiaStatus(root, false);
       renderOpportunityState(opportunities, "Inicia sesión para ver tus oportunidades reales.", "SESSION_REQUIRED");
+      root.dataset.homeLiveDashboardState = "session-required";
       return;
     }
     void refresh(`auth:${detail.event || "authenticated"}`);
   }
 
-  globalThis.addEventListener("forge:auth-state-changed", handleAuth);
-  globalThis.addEventListener("focus", () => {
-    updateGreeting(root, null);
+  const handleFocus = () => {
+    updateGreeting(root, currentUser);
     void refresh("window-focus");
-  });
-  const greetingTimer = globalThis.setInterval(() => updateGreeting(root, globalThis.__FORGE_HOME_CURRENT_USER__ || null), 60_000);
+  };
+
+  globalThis.addEventListener("forge:auth-state-changed", handleAuth);
+  globalThis.addEventListener("focus", handleFocus);
+  const greetingTimer = globalThis.setInterval(() => updateGreeting(root, currentUser), 60_000);
   globalThis.addEventListener("pagehide", () => {
     generation += 1;
     observer.disconnect();
     globalThis.clearInterval(greetingTimer);
     globalThis.removeEventListener("forge:auth-state-changed", handleAuth);
+    globalThis.removeEventListener("focus", handleFocus);
   }, { once: true });
 
   ensureHonestMiDiaFallback(root);
-  void refresh("mount").then(async () => {
-    const bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B;
-    const session = await bootstrap?.getSession?.().catch?.(() => null);
-    const user = session?.data?.session?.user || null;
-    if (user?.id) globalThis.__FORGE_HOME_CURRENT_USER__ = user;
-    updateGreeting(root, user);
-  });
+  void refresh("mount");
 
   const api = Object.freeze({ refresh, contractId: CONTRACT_ID });
   root[ROOT_STATE] = api;
