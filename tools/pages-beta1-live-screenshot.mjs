@@ -73,7 +73,7 @@ async function openInitialRoute(nav, fileName, key = nav) {
   await captureCurrentRoute(nav, fileName, key, response?.status() || null);
 }
 
-async function clickSpaRoute(routeId, fileName, key = routeId) {
+async function clickSpaRoute(routeId, fileName, key = routeId, beforeCapture = null) {
   const button = page.locator(`[data-route-id="${routeId}"]:visible`).first();
   await button.waitFor({ state: "visible", timeout: 30000 });
   const availability = await button.getAttribute("data-route-availability");
@@ -87,6 +87,7 @@ async function clickSpaRoute(routeId, fileName, key = routeId) {
     return application?.dataset.forgeRoute === expectedRoute
       || viewport?.dataset.activeRoute === expectedRoute;
   }, routeId, { timeout: 30000 });
+  if (typeof beforeCapture === "function") await beforeCapture();
   await captureCurrentRoute(routeId, fileName, key, 200);
 }
 
@@ -168,6 +169,44 @@ async function inspectProductiveHome() {
   });
 }
 
+async function waitForCarteraReady() {
+  await page.waitForFunction(() => {
+    const root = document.querySelector("[data-forge-cartera-module]");
+    return root?.dataset.carteraMaterial3State === "ready"
+      && Boolean(root.querySelector("[data-cartera-policy-entry]"));
+  }, null, { timeout: 60000 });
+}
+
+async function inspectCarteraPolicyEntry() {
+  const pdfButton = page.locator("[data-select-policy-pdf]").first();
+  const manualButton = page.locator("[data-add-policy-manual]").first();
+  const dropzone = page.locator("[data-cartera-policy-dropzone]").first();
+  const fileInput = page.locator("[data-cartera-policy-pdf-input]").first();
+  const panel = page.locator("[data-cartera-policy-entry]").first();
+
+  report.carteraPolicyEntry = {
+    routeState: await page.locator("[data-forge-cartera-module]").getAttribute("data-cartera-material3-state"),
+    panelVisible: await panel.isVisible().catch(() => false),
+    pdfButtonVisible: await pdfButton.isVisible().catch(() => false),
+    manualButtonVisible: await manualButton.isVisible().catch(() => false),
+    dropzoneVisible: await dropzone.isVisible().catch(() => false),
+    fileInputPresent: await fileInput.count() === 1,
+    pdfButtonDisabled: await pdfButton.isDisabled().catch(() => null),
+    manualButtonDisabled: await manualButton.isDisabled().catch(() => null),
+    demoReadOnlyCopyVisible: await page.getByText(/cuenta demo es de solo lectura/i).isVisible().catch(() => false),
+    manualDialogOpened: false,
+  };
+
+  if (report.authenticationAuthority === "BETA_TEST_CREDENTIALS" && !report.carteraPolicyEntry.manualButtonDisabled) {
+    await manualButton.click();
+    const dialog = page.locator("[data-cartera-policy-dialog]").first();
+    await dialog.waitFor({ state: "visible", timeout: 15000 });
+    report.carteraPolicyEntry.manualDialogOpened = true;
+    await page.screenshot({ path: `${outputDir}/05-cartera-manual-entry.png`, fullPage: true });
+    await dialog.locator("[data-close-policy-dialog]").first().click();
+  }
+}
+
 try {
   await openInitialRoute("pipeline", "01-auth-gate.png", "anonymous");
   await inspectAuthPresentation();
@@ -187,10 +226,8 @@ try {
     report.pipelineBulkImportVisible = await page.locator("[data-pipeline-bulk-import]").isVisible().catch(() => false);
     report.whatsappComposerTriggerCount = await page.locator("[data-prepare-productive-message]").count();
 
-    await clickSpaRoute("cartera", "04-cartera-authenticated.png", "carteraAuthenticated");
-    report.carteraPdfInputVisible = await page.locator("[data-cartera-pdf-input], input[type=file][accept*=pdf]").isVisible().catch(() => false);
-    report.carteraDropzoneVisible = await page.locator("[data-cartera-pdf-dropzone]").isVisible().catch(() => false);
-    report.carteraMutationControlsExpected = report.authenticationAuthority !== "INTEGRATED_DEMO_SESSION";
+    await clickSpaRoute("cartera", "04-cartera-authenticated.png", "carteraAuthenticated", waitForCarteraReady);
+    await inspectCarteraPolicyEntry();
   } else {
     report.authenticatedCapture = "FAILED_NO_PRODUCTIVE_OR_DEMO_SESSION";
   }
@@ -200,10 +237,24 @@ try {
     authenticatedNavbarVisible: report.productiveHome?.navbarVisible || report.routes.pipelineAuthenticated?.navbarVisible || false,
   };
 
+  const entry = report.carteraPolicyEntry || {};
+  const visibleEntry = Boolean(
+    entry.routeState === "ready"
+    && entry.panelVisible
+    && entry.pdfButtonVisible
+    && entry.manualButtonVisible
+    && entry.dropzoneVisible
+    && entry.fileInputPresent
+  );
+  const correctEntryAuthority = report.authenticationAuthority === "INTEGRATED_DEMO_SESSION"
+    ? entry.pdfButtonDisabled === true
+      && entry.manualButtonDisabled === true
+      && entry.demoReadOnlyCopyVisible === true
+    : entry.pdfButtonDisabled === false
+      && entry.manualButtonDisabled === false
+      && entry.manualDialogOpened === true;
+
   await writeFile(`${outputDir}/report.json`, JSON.stringify(report, null, 2));
-  const carteraStatus = report.carteraMutationControlsExpected === false
-    ? "NOT_APPLICABLE_READ_ONLY_DEMO"
-    : `${Boolean(report.carteraPdfInputVisible && report.carteraDropzoneVisible) ? "PASS" : "FAIL"}`;
   const summary = [
     "# ForgeOS Beta 1 — Canonical Pages live acceptance",
     "",
@@ -219,7 +270,12 @@ try {
     `- Authenticated navbar visible: ${report.canonicalShell.authenticatedNavbarVisible ? "PASS" : "FAIL"}`,
     `- Legacy material3 URL detected: ${report.canonicalShell.legacyMaterial3ShellDetected ? "YES" : "NO"}`,
     `- Pipeline bulk import visible: ${report.pipelineBulkImportVisible ?? "NOT_TESTED"}`,
-    `- Cartera mutation controls: ${carteraStatus}`,
+    `- Cartera loaded state: ${entry.routeState || "NOT_TESTED"}`,
+    `- Cartera policy-entry panel: ${visibleEntry ? "PASS" : "FAIL"}`,
+    `- Cartera PDF button visible: ${entry.pdfButtonVisible ?? "NOT_TESTED"}`,
+    `- Cartera manual button visible: ${entry.manualButtonVisible ?? "NOT_TESTED"}`,
+    `- Cartera drag-and-drop visible: ${entry.dropzoneVisible ?? "NOT_TESTED"}`,
+    `- Cartera entry authority: ${correctEntryAuthority ? "PASS" : "FAIL"}`,
     `- WhatsApp composer triggers: ${report.whatsappComposerTriggerCount ?? "NOT_TESTED"}`,
     `- Console errors: ${report.consoleErrors.length}`,
     `- Page errors: ${report.pageErrors.length}`,
@@ -237,7 +293,7 @@ try {
   if (!report.productiveHome?.contract || !report.productiveHome?.staticMocksRetired) process.exitCode = 1;
   if (!report.canonicalShell.authenticatedNavbarVisible || report.canonicalShell.legacyMaterial3ShellDetected) process.exitCode = 1;
   if (!report.pipelineBulkImportVisible) process.exitCode = 1;
-  if (report.carteraMutationControlsExpected && (!report.carteraPdfInputVisible || !report.carteraDropzoneVisible)) process.exitCode = 1;
+  if (!visibleEntry || !correctEntryAuthority) process.exitCode = 1;
   if (report.consoleErrors.length || report.pageErrors.length || report.failedResponses.length || report.failedRequests.length) process.exitCode = 1;
 } finally {
   await browser.close();
