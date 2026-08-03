@@ -1,0 +1,44 @@
+name: Advisor OS Sprint 05
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'advisor-os/person-workspace/person-relationship-workspace-runtime.js'
+      - 'tests/advisor-os-sprint-05-test.mjs'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_05_PERSON_RELATIONSHIP_ACCEPTANCE.md'
+      - '.github/workflows/advisor-os-sprint-05.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sprint-05-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: node --check advisor-os/person-workspace/person-relationship-workspace-runtime.js
+      - name: Sprint 05 contracts
+        run: node --test tests/advisor-os-sprint-05-test.mjs
+      - name: Preserve CRS 09 and CRS 10
+        run: |
+          node --test \
+            tests/crs-09-person-workspace-contract-test.mjs \
+            tests/crs-09-person-workspace-service-test.mjs \
+            tests/crs-09-person-workspace-ui-test.mjs \
+            tests/crs-09-person-workspace-entry-bridge-test.mjs \
+            tests/crs-10-relationship-intelligence-contract-test.mjs \
+            tests/crs-10-existing-relationship-intelligence-service-test.mjs \
+            tests/crs-10-person-intelligence-ui-test.mjs
+      - name: Safety boundary scan
+        run: |
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\s*\(' advisor-os/person-workspace/person-relationship-workspace-runtime.js
+          ! grep -Eq '(localStorage|sessionStorage|indexedDB)' advisor-os/person-workspace/person-relationship-workspace-runtime.js
+          ! grep -Eq '(AUTO_CONFIRM|AUTO_EXECUTE|AUTO_WRITE)' advisor-os/person-workspace/person-relationship-workspace-runtime.js
