@@ -5,6 +5,7 @@ on:
     paths:
       - "docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.*"
       - "docs/static-preview/forge-alive-material3/cartera-document-intake.js"
+      - "docs/static-preview/forge-alive-material3/cartera-module.js"
       - "docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js"
       - "docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js"
       - "scripts/prepare-cartera-policy-entry-pages-runtime.mjs"
@@ -36,6 +37,7 @@ jobs:
           for file in \
             docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js \
             docs/static-preview/forge-alive-material3/cartera-document-intake.js \
+            docs/static-preview/forge-alive-material3/cartera-module.js \
             docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js \
             docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js \
             scripts/prepare-cartera-policy-entry-pages-runtime.mjs; do
