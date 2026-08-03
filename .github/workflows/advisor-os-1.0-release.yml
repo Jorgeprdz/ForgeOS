@@ -96,8 +96,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          critical=$(gh api search/issues -f q="repo:${GITHUB_REPOSITORY} is:issue is:open label:critical" --jq '.total_count')
-          high=$(gh api search/issues -f q="repo:${GITHUB_REPOSITORY} is:issue is:open label:high" --jq '.total_count')
+          critical=$(gh api -X GET /search/issues -f q="repo:${GITHUB_REPOSITORY} is:issue is:open label:critical" --jq '.total_count')
+          high=$(gh api -X GET /search/issues -f q="repo:${GITHUB_REPOSITORY} is:issue is:open label:high" --jq '.total_count')
           echo "CRITICAL_DEFECTS=$critical"
           echo "HIGH_DEFECTS=$high"
           test "$critical" = "0"
