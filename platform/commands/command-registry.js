@@ -32,10 +32,10 @@ const navigationCommands = NAVIGATION_COMMANDS.map(([
 
 const writeCommands = [Object.freeze({
   id: 'record-follow-up',
-  label: 'Registrar seguimiento',
+  label: 'Programar seguimiento mañana a las 9',
   command: '/seguimiento',
   aliases: Object.freeze(['/seguimiento', '/follow-up']),
-  keywords: Object.freeze(['seguimiento', 'nota', 'contacto', 'resultado']),
+  keywords: Object.freeze(['seguimiento', 'mañana', 'contacto', 'próxima acción']),
   intent: 'WRITE',
   domain: 'person',
   handlerId: 'person-follow-up-authority',
@@ -43,7 +43,7 @@ const writeCommands = [Object.freeze({
   requiresConfirmation: true,
   availability: 'enabled',
   source: 'core',
-  payload: Object.freeze({ action: 'RECORD_FOLLOW_UP' }),
+  payload: Object.freeze({ action: 'SCHEDULE_FOLLOW_UP', schedule: 'TOMORROW_09_LOCAL' }),
 })];
 
 export const COMMANDS = Object.freeze([...navigationCommands, ...writeCommands]);
