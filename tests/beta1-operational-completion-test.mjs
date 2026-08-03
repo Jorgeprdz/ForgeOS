@@ -38,11 +38,11 @@ test("Cartera policy entry persists only after explicit human confirmation", asy
   assert.match(source, /location\.replace\(url\.href\)/);
 });
 
-test("Cartera owns its policy-entry mount instead of relying on Pipeline evaluation", async () => {
+test("Cartera owns policy-entry mounting while preserving the read-only directory boundary", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/cartera-module.js");
   assert.match(source, /^import "\.\/cartera-document-intake\.js\?v=beta1-repair-001";/);
   assert.match(source, /governedPolicyEntry:\s*true/);
-  assert.match(source, /productiveMutationAuthorized:\s*true/);
+  assert.match(source, /productiveMutationAuthorized:\s*false/);
   assert.match(source, /refresh:\s*api\.refresh/);
 });
 
