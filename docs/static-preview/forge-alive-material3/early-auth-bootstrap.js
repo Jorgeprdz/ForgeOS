@@ -7,7 +7,17 @@ async function load(path, base) {
   return import(new URL(path, base));
 }
 
+function ensureAuthStyles() {
+  if (document.querySelector('[data-forge-auth-entry-styles]')) return;
+  const stylesheet = document.createElement('link');
+  stylesheet.rel = 'stylesheet';
+  stylesheet.href = new URL('forge-alive-auth-entry-067g17b1.css', legacyBase).href;
+  stylesheet.dataset.forgeAuthEntryStyles = 'true';
+  document.head.append(stylesheet);
+}
+
 try {
+  ensureAuthStyles();
   await load('env.js', envBase);
   await load('forge-alive-public-config-067g17a1.js', legacyBase);
   await load('productive-prospect-bootstrap.js', advisorBase);
