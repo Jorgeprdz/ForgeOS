@@ -16,6 +16,9 @@ assert.match(versioner, /home-productive-orchestrator\.js\?v=\$\{buildSha\}/);
 assert.match(versioner, /activity-ledger-reporting-bridge\.js\?v=\$\{buildSha\}/);
 assert.match(versioner, /smart-widget-productive-home-adapter\.js\?v=\$\{buildSha\}/);
 assert.match(versioner, /smart-widget-productive-home-adapter\.css\?v=\$\{buildSha\}/);
+assert.match(versioner, /cartera-module\.js\?v=\$\{buildSha\}/);
+assert.match(versioner, /cartera-document-intake\.js\?v=\$\{buildSha\}/);
+assert.match(versioner, /FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS/);
 assert.match(versioner, /dynamicModuleUrl/);
 assert.match(versioner, /FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK/);
 assert.match(versioner, /FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=PASS/);
@@ -37,6 +40,8 @@ try {
       '',
     ].join("\n")),
     writeFile(join(runtime, "smart-widget-productive-home-adapter.js"), 'const source = "advisor-forecast-runtime-acceptance.js?v=af-runtime-acceptance-001";\n'),
+    writeFile(join(runtime, "forge-shell.js"), 'import { createCarteraModule } from "./cartera-module.js?v=cartera-material3-productive-001";\n'),
+    writeFile(join(runtime, "cartera-module.js"), 'import "./cartera-document-intake.js?v=beta1-repair-001";\n'),
   ]);
 
   const buildSha = "0123456789abcdef0123456789abcdef01234567";
@@ -46,15 +51,25 @@ try {
     encoding: "utf8",
   });
   assert.match(output, /FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE/);
+  assert.match(output, /FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS/);
 
-  const generated = await readFile(join(runtime, "home-productive-orchestrator.js"), "utf8");
-  assert.match(generated, new RegExp(`productive-smart-widget-orchestrator\\$\\{layout\\.extension\\}\\?v=${buildSha}`));
-  assert.match(generated, new RegExp(`advisor-monthly-policy-goal-repository\\$\\{layout\\.extension\\}\\?v=${buildSha}`));
-  assert.doesNotMatch(generated, /\?v=\$\{buildSha\}/);
+  const [orchestrator, shell, cartera] = await Promise.all([
+    readFile(join(runtime, "home-productive-orchestrator.js"), "utf8"),
+    readFile(join(runtime, "forge-shell.js"), "utf8"),
+    readFile(join(runtime, "cartera-module.js"), "utf8"),
+  ]);
+  assert.match(orchestrator, new RegExp(`productive-smart-widget-orchestrator\\$\\{layout\\.extension\\}\\?v=${buildSha}`));
+  assert.match(orchestrator, new RegExp(`advisor-monthly-policy-goal-repository\\$\\{layout\\.extension\\}\\?v=${buildSha}`));
+  assert.doesNotMatch(orchestrator, /\?v=\$\{buildSha\}/);
+  assert.match(shell, new RegExp(`cartera-module\\.js\\?v=${buildSha}`));
+  assert.doesNotMatch(shell, /cartera-material3-productive-001/);
+  assert.match(cartera, new RegExp(`cartera-document-intake\\.js\\?v=${buildSha}`));
+  assert.doesNotMatch(cartera, /beta1-repair-001/);
 } finally {
   await rm(fixture, { recursive: true, force: true });
 }
 
 console.log("FORGE_PAGES_TRANSITIVE_ASSET_CACHE_INVALIDATION=PASS");
 console.log("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE");
+console.log("FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS");
 console.log("SESSION_AND_LOCAL_DATA_PRESERVATION=PASS");
