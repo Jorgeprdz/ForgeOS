@@ -1,0 +1,533 @@
+FORGEOS BETA 1 - RECORRIDO DE CODIGO Y CONSISTENCIA VISUAL
+======================================================================
+
+FECHA=2026-08-03
+PHASE=BETA1_010_CONSTITUTIONAL_RECONCILIATION_AND_SYSTEM_SWEEP
+BRANCH=audit/beta1-010-constitutional-system-sweep
+CONSTITUTION_AUTHORITY=ENFORCED
+BUILD_TREE_COMPARISON=REQUIRED
+MIRANDA_APPROVAL=GRANTED_FOR_S1_CONTROLLED_REPAIR
+BOARD_APPROVAL=GRANTED_FOR_S1_CONTROLLED_REPAIR
+MERGE_AUTHORIZED=NO
+PRODUCTION_MUTATION_AUTHORIZED=NO
+
+RESUMEN EJECUTIVO
+----------------------------------------------------------------------
+
+BETA1_GENERAL_STATUS=FAIL
+CODE_SWEEP=PARTIAL_BUT_ACTIONABLE
+VISIBLE_ROUTE_SWEEP=COMPLETE_FOR_ANONYMOUS_STATE
+AUTHENTICATED_ROUTE_SWEEP=BLOCKED_MISSING_PRODUCTIVE_CREDENTIALS
+DESKTOP_ACCEPTANCE=FAIL
+TABLET_ACCEPTANCE=FAIL
+MOBILE_ACCEPTANCE=PARTIAL
+GITHUB_PAGES_ACCEPTANCE=BLOCKED_NOT_DEPLOYED
+SCREENSHOTS_CAPTURED=18
+S0_OPEN=0
+S1_OPEN=3
+S2_OPEN=5
+S3_OPEN=4
+S4_OPEN=3
+PHASE_COMPLETE=NO
+READY_FOR_CONTROLLED_REVIEW=YES
+
+La Beta 1 no puede considerarse visualmente coherente. Las seis rutas
+canónicas fueron recorridas sin sesión en tres viewports. Inicio, Actividad y
+Comisiones sufren una regresión estructural en escritorio: el viewport se
+convierte en una cuadrícula de doce columnas, pero esos módulos no abarcan la
+cuadrícula completa. Comisiones también presenta contraste incorrecto y
+contenido truncado. Móvil es considerablemente más estable, aunque conserva
+inconsistencias de identidad, navegación y autenticación.
+
+No se modificó UI ni lógica de negocio durante este recorrido porque la
+autorización vigente cubre exclusivamente la reparación S1 de autoridad Pages
+ya implementada. No se hizo commit, push, merge, despliegue ni mutación remota.
+
+
+1. ESTADO REAL DE BETA 1
+----------------------------------------------------------------------
+
+PRODUCTIVE_ENTRYPOINT_IDENTIFIED=YES
+ENTRYPOINT=docs/static-preview/forge-alive-material3/index.html
+VISIBLE_PRIMARY_ROUTES=6
+CONTEXTUAL_ROUTES=1
+LEGACY_BRIDGE_PRESENT=YES
+LEGACY_REPUBLISH_WORKFLOW_LOCAL_STATE=RETIRED_BY_PENDING_S1_PATCH
+
+Rutas principales encontradas:
+
+  inicio        Home / Mi Dia
+  pipeline      Pipeline
+  actividad     Actividad y Reportes
+  cotizaciones  alias publico de quotes
+  cartera       Cartera
+  comisiones    Compensation Intelligence
+
+Ruta contextual:
+
+  persona       workspace contextual de persona
+
+La app carga un shell común con navegación, Alfred y módulos registrados.
+Pipeline, Quotes, Actividad y Persona se registran desde app.js. Cartera se
+crea desde forge-shell.js. Comisiones se inserta y registra posteriormente
+desde compensation-route-bootstrap-100b.js.
+
+
+2. METODO Y EVIDENCIA
+----------------------------------------------------------------------
+
+Fuente local:
+  http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/
+
+Navegador:
+  Chromium 149.0.7827.155, headless CLI nativo de Termux.
+
+Viewports:
+  desktop  1440 x 1000
+  tablet    820 x 1180
+  mobile    390 x 844
+
+Rutas por viewport:
+  inicio, pipeline, actividad, cotizaciones, cartera, comisiones
+
+Total:
+  18 capturas PNG.
+
+Ubicación:
+  ForgeGemini/screenshots/desktop/
+  ForgeGemini/screenshots/tablet/
+  ForgeGemini/screenshots/mobile/
+
+Integridad:
+  ForgeGemini/screenshot-manifest.txt contiene SHA-256 por captura.
+
+Inventario:
+  ForgeGemini/code-inventory.txt contiene rutas, conteos y observaciones.
+
+Limitaciones honestas:
+
+  - No había credenciales productivas de prueba autorizadas.
+  - env.js local declara DEMO_MODE=true pero URL/key de Supabase vacíos.
+  - La demo gobernada necesita la Edge Function forge-demo-login y no pudo
+    abrirse desde este entorno.
+  - Playwright rechaza Android con Unsupported platform: android.
+  - npm run serve:e2e no encuentra vite; el entrypoint directo de Vite falla
+    al cargar el binding nativo Android de rolldown.
+  - Se utilizó el servidor local ya activo y Chromium nativo.
+  - No se ejecutaron escrituras funcionales ni se inventaron datos.
+
+
+3. RECORRIDO POR MODULO
+----------------------------------------------------------------------
+
+3.1 INICIO
+
+MOBILE=PARTIAL
+TABLET=PARTIAL
+DESKTOP=FAIL
+
+Móvil muestra encabezado, estado sin sesión, oportunidades vacías y navegación
+inferior. Tablet conserva una composición razonable. En escritorio, Home se
+reduce a una columna angosta: el saludo se parte en varias líneas y la tarjeta
+de oportunidades queda comprimida hasta perder legibilidad.
+
+La pantalla presenta una identidad visual con inicial U y punto verde incluso
+sin sesión autenticada. El mensaje pide iniciar sesión, pero el estado parece
+simultáneamente conectado. El HTML inicial conserva contenido estático como
+Buenos días, Jorge, métricas, nombres y una fecha fija; el runtime posterior lo
+retira o sustituye, pero la doble representación sigue siendo deuda y riesgo de
+primer render deshonesto.
+
+Evidencia principal:
+  screenshots/desktop/inicio.png
+  screenshots/tablet/inicio.png
+  screenshots/mobile/inicio.png
+
+3.2 PIPELINE
+
+MOBILE=PASS_ANONYMOUS_SURFACE
+TABLET=PASS_ANONYMOUS_SURFACE
+DESKTOP=PASS_ANONYMOUS_SURFACE
+
+Pipeline mantiene ancho y jerarquía en los tres tamaños. Protege los prospectos
+y Timeline con un gate visible. Sin embargo, Carga masiva permanece visible y
+con apariencia habilitada antes de autenticar. Debe comprobarse en sesión real
+si el clic falla cerrado y si no monta datos o diálogos privados antes del gate.
+
+El código contiene acciones honestamente deshabilitadas para Calendar y estados
+NOT_CONNECTED para Calendar y Mi Dia. Es preferible a simular integración, pero
+confirma capacidades incompletas de Beta 1.
+
+Evidencia principal:
+  screenshots/desktop/pipeline.png
+  screenshots/tablet/pipeline.png
+  screenshots/mobile/pipeline.png
+
+3.3 ACTIVIDAD Y REPORTES
+
+MOBILE=PASS_ANONYMOUS_SURFACE
+TABLET=PARTIAL
+DESKTOP=FAIL
+
+Móvil muestra tabs, periodos, estado de sesión requerido y botón Reintentar.
+En escritorio el módulo queda atrapado en una sola columna de la cuadrícula y
+el mensaje se fragmenta. El problema afecta tanto Actividad como la entrada a
+Reportes porque comparten root y workspace.
+
+El estado distingue error de sesión, pero Reintentar no puede validarse sin
+autoridad productiva. El código declara lectura directa del ledger FES y afirma
+no crear ni corregir actividad, lo cual respeta la frontera de autoridad.
+
+Evidencia principal:
+  screenshots/desktop/actividad.png
+  screenshots/tablet/actividad.png
+  screenshots/mobile/actividad.png
+
+3.4 COTIZACIONES
+
+MOBILE=PASS_VISUAL
+TABLET=PASS_VISUAL
+DESKTOP=PASS_VISUAL
+AUTH_BOUNDARY=REQUIRES_DECISION
+
+La superficie es la más consistente entre viewports. Permite seleccionar un
+PDF y presenta un estado Sin información suficiente. El copy declara
+procesamiento local y revisión humana.
+
+La ruta queda operable sin sesión mientras Pipeline y Cartera están protegidos.
+Esto puede ser intencional por offline-first y procesamiento local, pero no se
+encontró en el recorrido una declaración clara que diferencie una herramienta
+pública local de un módulo productivo autenticado. Debe ratificarse el contrato
+de acceso y verificar que PDF, preview, impresión y datos derivados nunca se
+persistan o mezclen con otra identidad sin consentimiento.
+
+Evidencia principal:
+  screenshots/desktop/cotizaciones.png
+  screenshots/tablet/cotizaciones.png
+  screenshots/mobile/cotizaciones.png
+
+3.5 CARTERA
+
+MOBILE=PASS_ANONYMOUS_SURFACE
+TABLET=PASS_ANONYMOUS_SURFACE
+DESKTOP=PASS_ANONYMOUS_SURFACE
+
+Cartera presenta un gate explícito y coherente en los tres tamaños. No expone
+personas, cuentas, pólizas ni señales relacionales. La acción Iniciar sesión es
+visible y el estado no se presenta como vacío productivo.
+
+Queda pendiente probar con sesión real: carga PDF, captura manual, confirmación
+humana, persistencia, relectura, Timeline, aislamiento por usuario, logout y
+rechazo de resultados tardíos.
+
+Evidencia principal:
+  screenshots/desktop/cartera.png
+  screenshots/tablet/cartera.png
+  screenshots/mobile/cartera.png
+
+3.6 COMISIONES
+
+MOBILE=FAIL
+TABLET=FAIL
+DESKTOP=FAIL
+
+Es la ruta más degradada. En escritorio y tablet el contenido se comprime a una
+columna mínima y el texto se dibuja carácter por carácter. En móvil la tarjeta
+es legible, pero el título usa color casi negro sobre fondo oscuro. El módulo
+muestra chips BLOCKED y el error ADVISOR_COMPENSATION_AUTH_RUNTIME_UNAVAILABLE.
+
+La lógica inicia una recuperación de autenticación de hasta 120 intentos por
+250 ms, es decir hasta 30 segundos, incluso cuando no existe sesión productiva.
+Aunque termina en estado bloqueado, el comportamiento genera trabajo tardío y
+puede contaminar navegación o producir transiciones fuera de contexto si no se
+cancela al cambiar de módulo. El código desmonta en logout/session-required,
+pero el bucle no recibe AbortSignal; sólo comparte recoveryPromise.
+
+Evidencia principal:
+  screenshots/desktop/comisiones.png
+  screenshots/tablet/comisiones.png
+  screenshots/mobile/comisiones.png
+
+3.7 ALFRED, NAVEGACION Y PERFIL
+
+Alfred se mantiene separado del contenido y visible en todos los módulos. No se
+abrió el sheet porque el recorrido CLI no ejecutó una sesión interactiva CDP.
+La navegación cambia de rail lateral a dock inferior. En móvil, Comisiones deja
+visibles sólo los últimos elementos del dock en la captura, señal de solapamiento
+o desplazamiento que requiere prueba táctil real.
+
+La identidad visual es inconsistente: Inicio muestra U y otras rutas muestran F,
+ambas con apariencia de usuario activo aun sin autenticación. Esto contradice la
+regla de que la identidad activa provenga de autoridad verificable.
+
+
+4. HALLAZGOS CLASIFICADOS
+----------------------------------------------------------------------
+
+ID=BETA1-GEM-001
+SEVERITY=S1_CRITICAL
+MODULE=Inicio
+FINDING=Home colapsa a una sola columna en escritorio.
+REPRODUCTION=Abrir ?nav=inicio a 1440x1000.
+ROOT_CAUSE=La app usa grid de 12 columnas; home live dashboard no declara
+grid-column 1 / -1 como hijo del viewport.
+REPAIR=Crear regla común para roots de ruta o declarar span en Home; validar
+que no rompa display contents ni el layout tablet/móvil.
+STATE=OPEN_UI_AUTHORIZATION_REQUIRED
+
+ID=BETA1-GEM-002
+SEVERITY=S1_CRITICAL
+MODULE=Actividad/Reportes
+FINDING=Actividad colapsa y fragmenta texto en escritorio.
+REPRODUCTION=Abrir ?nav=actividad a 1440x1000.
+ROOT_CAUSE=activity-module no abarca la cuadrícula de 12 columnas del viewport.
+REPAIR=Aplicar contrato de ancho de route root y probar ambos tabs.
+STATE=OPEN_UI_AUTHORIZATION_REQUIRED
+
+ID=BETA1-GEM-003
+SEVERITY=S1_CRITICAL
+MODULE=Comisiones
+FINDING=Comisiones es inutilizable en escritorio/tablet y tiene contraste roto.
+REPRODUCTION=Abrir ?nav=comisiones en los tres viewports.
+ROOT_CAUSE=Root dinámico sin span de cuadrícula; estilos de texto no heredan
+tokens correctos para fondo oscuro.
+REPAIR=Aplicar contrato full-span, tokens de color y regresión responsive.
+STATE=OPEN_UI_AUTHORIZATION_REQUIRED
+
+ID=BETA1-GEM-004
+SEVERITY=S2_HIGH
+MODULE=Identidad/Sesión
+FINDING=Iniciales U y F con indicador online aparecen sin sesión verificable.
+ROOT_CAUSE=Fallback visual del shell no está ligado al estado de auth.
+REPAIR=Mostrar identidad anónima inequívoca o esconder avatar hasta autoridad.
+STATE=OPEN_UI_AND_AUTH_CONTRACT_REQUIRED
+
+ID=BETA1-GEM-005
+SEVERITY=S2_HIGH
+MODULE=Cotizaciones
+FINDING=Cotizaciones opera sin sesión mientras otros módulos están protegidos.
+ROOT_CAUSE=Quotes está registrado como ruta disponible fuera del gate global.
+REPAIR=Ratificar herramienta local pública o exigir auth antes de cualquier
+persistencia/handoff. Agregar contrato explícito y prueba de aislamiento.
+STATE=DECISION_REQUIRED
+
+ID=BETA1-GEM-006
+SEVERITY=S2_HIGH
+MODULE=Comisiones/Sesión
+FINDING=Recuperación tardía de hasta 30 segundos sin AbortSignal.
+ROOT_CAUSE=Bucle de 120 reintentos comparte promise pero no generación/cancelación.
+REPAIR=Atar recuperación a generación de sesión/ruta y cancelar al desmontar.
+STATE=OPEN_BUSINESS_LOGIC_AUTHORIZATION_REQUIRED
+
+ID=BETA1-GEM-007
+SEVERITY=S2_HIGH
+MODULE=Home
+FINDING=HTML contiene datos estáticos productivos aparentes y runtime los retira.
+ROOT_CAUSE=La maqueta original sigue embebida en el entrypoint productivo.
+REPAIR=Eliminar representación estática o convertirla en skeleton honesto sin
+personas, métricas ni fechas inventadas.
+STATE=OPEN_UI_AUTHORIZATION_REQUIRED
+
+ID=BETA1-GEM-008
+SEVERITY=S2_HIGH
+MODULE=Pipeline
+FINDING=Carga masiva parece disponible antes de iniciar sesión.
+ROOT_CAUSE=CTA se renderiza fuera del estado autenticado aunque los datos estén gated.
+REPAIR=Probar clic anónimo; ocultar, deshabilitar con explicación o abrir auth.
+STATE=OPEN_NEEDS_INTERACTIVE_CONFIRMATION
+
+ID=BETA1-GEM-009
+SEVERITY=S3_MEDIUM
+MODULE=Pipeline
+FINDING=Calendar y Mi Dia permanecen NOT_CONNECTED.
+ROOT_CAUSE=Integraciones declaradas pero no cableadas.
+REPAIR=Mantener estado honesto; conectar sólo contra autoridad vigente.
+STATE=OPEN
+
+ID=BETA1-GEM-010
+SEVERITY=S3_MEDIUM
+MODULE=Home
+FINDING=Bitácora Pipeline y verdad de ingresos de Compensation no conectadas.
+ROOT_CAUSE=home-productive-orchestrator devuelve blockedReason explícito.
+REPAIR=Completar adaptadores de lectura o retirar promesa visual correspondiente.
+STATE=OPEN
+
+ID=BETA1-GEM-011
+SEVERITY=S3_MEDIUM
+MODULE=Navegación móvil
+FINDING=Dock aparece incompleto/solapado en Comisiones móvil.
+ROOT_CAUSE=Interacción entre safe area, contenido de Compensation y shell.
+REPAIR=Prueba táctil real 320/390/430px y corrección sin ocultar rutas.
+STATE=OPEN_UI_AUTHORIZATION_REQUIRED
+
+ID=BETA1-GEM-012
+SEVERITY=S3_MEDIUM
+MODULE=Autenticación local
+FINDING=No existe local productive equivalent usable con env actual.
+ROOT_CAUSE=DEMO_MODE true con Supabase URL/key vacíos.
+REPAIR=Proveer configuración pública gobernada o fixture de auth aislada sólo para
+CI; nunca reemplazar datos productivos con mocks.
+STATE=BLOCKED_BY_ENVIRONMENT
+
+ID=BETA1-GEM-013
+SEVERITY=S4_LOW
+MODULE=Pipeline CSS
+FINDING=Fallback hexadecimal #f2cf75 viola contrato de tokens responsive.
+STATE=OPEN_UI_AUTHORIZATION_REQUIRED
+
+ID=BETA1-GEM-014
+SEVERITY=S4_LOW
+MODULE=Runtime
+FINDING=26 coincidencias de botones disabled requieren revisión individual.
+NOTE=Muchas son protecciones correctas de doble envío; no deben agruparse como bug.
+STATE=INVENTORY_REQUIRED
+
+ID=BETA1-GEM-015
+SEVERITY=S4_LOW
+MODULE=Tooling
+FINDING=Vite/Playwright no son ejecutables de forma normal en Android.
+STATE=OPEN_DEVELOPER_EXPERIENCE
+
+
+5. CABLES SUELTOS Y CONEXIONES LEGACY
+----------------------------------------------------------------------
+
+- El puente docs/static-preview/forge-alive/index.html sigue existiendo como
+  redirección de compatibilidad. No debe volver a ser runtime productivo.
+- El workflow legacy de restauración automática fue retirado localmente por la
+  reparación S1 pendiente; la URL pública seguirá sin confirmar hasta desplegar.
+- Home conserva markup estático de maqueta debajo del runtime productivo.
+- Pipeline declara Calendar y Mi Dia como NOT_CONNECTED.
+- Home declara bitácora Pipeline y truth de ingresos como NOT_CONNECTED.
+- Tests antiguos todavía esperan assets dentro del entrypoint legacy retirado.
+- La ruta de Comisiones se registra tarde y posee recuperación propia, aumentando
+  riesgo de resultados fuera de orden respecto al shell y la sesión.
+
+
+6. CORRECCIONES IMPLEMENTADAS EN ESTA EJECUCION
+----------------------------------------------------------------------
+
+CODE_REPAIRS=0
+UI_REPAIRS=0
+SCHEMA_REPAIRS=0
+PRODUCTION_MUTATIONS=0
+
+Sólo se crearon artefactos de auditoría bajo ForgeGemini. La reparación S1 de
+Pages existente antes de este recorrido permanece en el working tree y no fue
+ampliada. La decisión es deliberada: las nuevas correcciones afectan UI, auth
+y lógica de sesión, superficies que requieren autorización explícita conforme
+al Constitutional Gate.
+
+
+7. PRUEBAS Y VALIDACION
+----------------------------------------------------------------------
+
+TEST=Anonymous direct route traversal
+ENVIRONMENT=LOCAL_CHROMIUM_149
+RESULT=PASS
+EVIDENCE=18 PNG files plus SHA-256 manifest
+
+TEST=Desktop responsive acceptance
+ENVIRONMENT=1440x1000
+RESULT=FAIL
+EVIDENCE=Inicio, Actividad and Comisiones broken
+
+TEST=Tablet responsive acceptance
+ENVIRONMENT=820x1180
+RESULT=FAIL
+EVIDENCE=Comisiones broken; other modules require authenticated continuation
+
+TEST=Mobile responsive acceptance
+ENVIRONMENT=390x844
+RESULT=PARTIAL
+EVIDENCE=Comisiones contrast/navigation defects; remaining anonymous surfaces usable
+
+TEST=Authenticated functional walkthrough
+ENVIRONMENT=LOCAL_PRODUCTIVE_EQUIVALENT
+RESULT=BLOCKED
+EVIDENCE=No governed credentials; local env has no Supabase connection
+
+TEST=GitHub Pages public acceptance
+ENVIRONMENT=PUBLIC
+RESULT=BLOCKED
+EVIDENCE=Pending S1 patch not pushed/deployed; remote mutation forbidden
+
+TEST=Playwright interaction suite
+ENVIRONMENT=ANDROID
+RESULT=BLOCKED
+EVIDENCE=Unsupported platform: android
+
+TEST=Code pattern inventory
+ENVIRONMENT=REPOSITORY
+RESULT=PASS
+EVIDENCE=ForgeGemini/code-inventory.txt
+
+
+8. DECISIONES QUE REQUIEREN AUTORIZACION
+----------------------------------------------------------------------
+
+DECISION_REQUIRED=Autorizar reparación UI responsive S1 para Home, Actividad y
+Comisiones.
+SAFE_OPTIONS=
+  A. Regla común full-span para todo [data-route-module] visible, acompañada de
+     tests por cada ruta.
+  B. Reglas explícitas por módulo para menor radio de cambio.
+RECOMMENDED_OPTION=A, porque formaliza un contrato de shell único y evita que
+futuros módulos dinámicos repitan el defecto. Debe probarse contra Persona,
+Quotes, Pipeline y Cartera antes de aceptar.
+
+DECISION_REQUIRED=Definir si Cotizaciones es pública/offline o autenticada.
+SAFE_OPTIONS=
+  A. Pública y local, con copy explícito y cero persistencia/handoff privado.
+  B. Auth requerida antes de seleccionar/procesar documentos.
+RECOMMENDED_OPTION=A sólo si la Constitución/ADR ratifica que el procesamiento
+es enteramente local y no persiste; de lo contrario B.
+
+DECISION_REQUIRED=Autorizar hardening de recuperación tardía de Comisiones.
+RECOMMENDED_OPTION=AbortController más generation token de sesión/ruta.
+
+DECISION_REQUIRED=Proporcionar mecanismo gobernado de prueba autenticada.
+RECOMMENDED_OPTION=Cuenta de aceptación dedicada, datos sintéticos aislados,
+RLS real y secretos únicamente en CI/entorno seguro.
+
+
+9. RECOMENDACION DE SIGUIENTE FASE
+----------------------------------------------------------------------
+
+NEXT=BETA1_011_RESPONSIVE_ROUTE_ROOT_AND_SESSION_AUTHORITY_REPAIR
+
+Orden recomendado:
+
+  1. Autorizar y reparar el contrato full-span del shell.
+  2. Corregir contraste y navegación de Comisiones.
+  3. Atar reintentos de Comisiones a sesión y ruta cancelables.
+  4. Resolver contrato público/privado de Cotizaciones.
+  5. Retirar el contenido mock embebido del Home productivo.
+  6. Ejecutar recorrido autenticado con cuenta gobernada.
+  7. Probar creación, persistencia, relectura, logout y late-result rejection.
+  8. Desplegar sólo con autorización y repetir las 18 capturas en Pages.
+
+
+10. VEREDICTO FINAL
+----------------------------------------------------------------------
+
+PHASE=BETA1_010_CONSTITUTIONAL_RECONCILIATION_AND_SYSTEM_SWEEP
+BETA1_GENERAL_STATUS=FAIL
+BUILD_TREE_RECONCILIATION=PARTIAL
+CONSTITUTIONAL_COMPLIANCE=PARTIAL
+END_TO_END_WALKTHROUGH=PARTIAL
+LEGACY_FALLBACKS_REMAINING=1_COMPATIBILITY_BRIDGE_PLUS_STATIC_HOME_MARKUP
+S0_OPEN=0
+S1_OPEN=3
+S2_OPEN=5
+S3_OPEN=4
+S4_OPEN=3
+REPAIRS_COMPLETED_THIS_SWEEP=0
+REPAIRS_BLOCKED=15
+MERGE_AUTHORIZED=NO
+READY_FOR_CONTROLLED_REVIEW=YES
+PHASE_COMPLETE=NO
+NEXT=AUTHORIZE_TARGETED_UI_AND_SESSION_REPAIR_THEN_RUN_AUTHENTICATED_ACCEPTANCE
+
+======================================================================
+FIN DEL INFORME

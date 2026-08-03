@@ -1,82 +1,47 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
-import {
-  existsSync,
-  mkdtempSync,
-  mkdirSync,
-  readFileSync,
-  rmSync,
-} from "node:fs";
-import os from "node:os";
-import path from "node:path";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const workflowPath =
-  ".github/workflows/restore-productive-forge-alive-authority.yml";
-const scriptPath = "scripts/prepare-productive-canonical-pages.mjs";
+const guardWorkflow = readFileSync(
+  ".github/workflows/restore-productive-forge-alive-authority.yml",
+  "utf8",
+);
+const pagesWorkflow = readFileSync(".github/workflows/pages.yml", "utf8");
+const liveAcceptance = readFileSync(
+  ".github/workflows/pages-beta1-live-screenshot.yml",
+  "utf8",
+);
+const liveAcceptanceTool = readFileSync(
+  "tools/pages-beta1-live-screenshot.mjs",
+  "utf8",
+);
 
-test("the corrective deploy runs only after the canonical Pages deploy", () => {
-  const workflow = readFileSync(workflowPath, "utf8");
-  assert.match(workflow, /workflow_run:/);
-  assert.match(workflow, /Deploy ForgeOS to GitHub Pages/);
-  assert.match(workflow, /github\.event\.workflow_run\.conclusion == 'success'/);
-  assert.match(workflow, /github\.event\.workflow_run\.head_branch == 'main'/);
-  assert.match(workflow, /actions\/artifacts\/\$\{artifact_id\}\/zip/);
-  assert.match(workflow, /prepare-productive-canonical-pages\.mjs/);
-  assert.match(workflow, /actions\/deploy-pages@v4/);
+test("legacy canonical republishing is retired", () => {
+  assert.doesNotMatch(guardWorkflow, /workflow_run:/);
+  assert.doesNotMatch(guardWorkflow, /actions\/deploy-pages/);
+  assert.doesNotMatch(guardWorkflow, /upload-pages-artifact/);
+  assert.doesNotMatch(guardWorkflow, /prepare-productive-canonical-pages\.mjs/);
+  assert.doesNotMatch(guardWorkflow, /pages:\s*write/);
 });
 
-test("the final canonical artifact restores the productive UI and rejects MD3", () => {
-  const temporaryRoot = mkdtempSync(
-    path.join(os.tmpdir(), "forge-productive-canonical-"),
+test("the primary Pages workflow is the single canonical publisher", () => {
+  assert.match(pagesWorkflow, /cleanForgeAliveSource/);
+  assert.match(pagesWorkflow, /forge-alive-material3/);
+  assert.match(pagesWorkflow, /canonicalForgeAliveTarget/);
+  assert.match(pagesWorkflow, /actions\/deploy-pages@v4/);
+});
+
+test("Beta 1 live acceptance exercises the stable canonical route", () => {
+  assert.match(
+    liveAcceptance,
+    /https:\/\/jorgeprdz\.github\.io\/ForgeOS\/static-preview\/forge-alive\//,
   );
-  const siteDir = path.join(temporaryRoot, "_site");
-  mkdirSync(siteDir, { recursive: true });
-
-  try {
-    execFileSync(
-      process.execPath,
-      [scriptPath, siteDir, "TEST_PRODUCTIVE_AUTHORITY_SHA"],
-      {
-        cwd: process.cwd(),
-        env: {
-          ...process.env,
-          PRODUCTIVE_INDEX_COMMIT:
-            "5e7974152aee9bbe7256a6396ece42cabe934df9",
-        },
-        stdio: "pipe",
-      },
-    );
-
-    const canonical = path.join(
-      siteDir,
-      "static-preview",
-      "forge-alive",
-    );
-    const index = readFileSync(path.join(canonical, "index.html"), "utf8");
-    const authority = JSON.parse(
-      readFileSync(path.join(canonical, "productive-authority.json"), "utf8"),
-    );
-
-    assert.match(index, /Forge Alive Vista Estática/);
-    assert.match(index, /forge-alive-auth-entry-067g17b1\.js/);
-    assert.match(index, /phone-shell/);
-    assert.match(index, /forge-alive-saas-router-r16c5l\.js/);
-    assert.doesNotMatch(index, /forge-alive-material3/);
-    assert.doesNotMatch(index, /FORGE_CANONICAL_ENTRY_BRIDGE/);
-    assert.doesNotMatch(index, /Inicio MD3 \+ Alfred/);
-    assert.ok(
-      existsSync(path.join(canonical, "forge-alive-auth-entry-067g17b1.js")),
-      "productive auth entry must remain in the canonical surface",
-    );
-    assert.equal(authority.authority, "FORGE_ALIVE_PRODUCTIVE_CANONICAL");
-    assert.equal(authority.material3Canonical, false);
-    assert.equal(authority.buildSha, "TEST_PRODUCTIVE_AUTHORITY_SHA");
-    assert.equal(
-      authority.canonicalPath,
-      "/ForgeOS/static-preview/forge-alive/",
-    );
-  } finally {
-    rmSync(temporaryRoot, { recursive: true, force: true });
-  }
+  assert.doesNotMatch(liveAcceptance, /forge-alive-material3/);
+  assert.match(liveAcceptanceTool, /signInWithPassword/);
+  assert.match(liveAcceptanceTool, /unauthenticatedProtectedNavigationRejected/);
+  assert.match(liveAcceptanceTool, /if \(!report\.authenticated\) process\.exitCode = 1/);
+  assert.match(
+    liveAcceptanceTool,
+    /if \(!report\.unauthenticatedProtectedNavigationRejected\) process\.exitCode = 1/,
+  );
 });

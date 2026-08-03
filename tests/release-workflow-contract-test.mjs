@@ -3,12 +3,13 @@ import fs from 'node:fs';
 import { evaluatePublicEnv } from '../scripts/validate-pages-public-config.mjs';
 import { EXPECTED_FUNCTION_VERSION, validateSemanticSmoke } from '../scripts/validate-semantic-extract-smoke.mjs';
 
-const validEnv = "window.__ENV__ = Object.freeze({SUPABASE_URL:'https://rmlxigxysujsuwzgoimv.supabase.co',SUPABASE_KEY:'public-test-key',DEMO_MODE:'false'});";
+const validEnv = "window.__ENV__ = Object.freeze({SUPABASE_URL:'https://rmlxigxysujsuwzgoimv.supabase.co',SUPABASE_KEY:'public-test-key',DEMO_MODE:'false',ENABLE_TEST_ADVISOR_LOGIN:'false'});";
 const evaluated = evaluatePublicEnv(validEnv, 'valid-env.js');
 assert.equal(evaluated.sandbox.window, evaluated.sandbox);
 assert.equal(evaluated.sandbox.globalThis, evaluated.sandbox);
 assert.equal(evaluated.sandbox.self, evaluated.sandbox);
 assert.equal(evaluated.publicEnv.DEMO_MODE, 'false');
+assert.equal(evaluated.publicEnv.ENABLE_TEST_ADVISOR_LOGIN, 'false');
 assert.throws(() => evaluatePublicEnv('const nothing = true;'), /PUBLIC_ENV_OBJECT_REQUIRED/);
 assert.throws(
   () => evaluatePublicEnv('window.__ENV__ = {'),

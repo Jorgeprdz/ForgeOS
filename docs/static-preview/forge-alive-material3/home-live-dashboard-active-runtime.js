@@ -91,12 +91,24 @@ function retireStaticContent(root) {
 
 function updateIdentity(root, user) {
   const heading = root.querySelector(".hero h1");
-  if (heading) heading.textContent = `${daypart()}, ${firstName(user)}`;
+  const authenticated = Boolean(user?.id);
+  if (heading) {
+    heading.textContent = authenticated
+      ? `${daypart()}, ${firstName(user)}`
+      : `${daypart()}, inicia sesión`;
+  }
 
   const profile = root.querySelector(".profile");
   if (!profile) return;
-  profile.dataset.forgeAuthState = user?.id ? "authenticated" : "anonymous";
-  profile.setAttribute("aria-label", user?.id ? `Abrir perfil de ${firstName(user)}` : "Abrir perfil");
+  profile.dataset.forgeAuthState = authenticated ? "authenticated" : "anonymous";
+  profile.setAttribute("aria-label", authenticated
+    ? `Abrir perfil de ${firstName(user)}`
+    : "Perfil disponible después de iniciar sesión");
+  profile.hidden = !authenticated;
+  if (!authenticated) {
+    profile.replaceChildren();
+    return;
+  }
 
   const status = document.createElement("i");
   status.setAttribute("aria-hidden", "true");
@@ -155,6 +167,7 @@ function ensureOpportunities(root) {
     section.className = "opportunities organic-card";
     root.append(section);
   }
+  section.removeAttribute("data-home-static-placeholder");
   section.dataset.homeLiveOpportunities = "true";
   section.setAttribute("aria-labelledby", "opportunities-title");
   section.innerHTML = `

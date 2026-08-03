@@ -39,7 +39,7 @@ test("required login bypasses the authenticated menu wrapper after logout", () =
 test("private-runtime scrub unmounts Commissions instead of leaving a blocked route mounted", () => {
   assert.match(
     compensationBootstrap,
-    /const unmountPrivateCompensation = \(\) => module\.unmount\(\)/,
+    /const unmountPrivateCompensation = \(\) => \{[\s\S]*cancelRecovery\("private-runtime-scrub"\);[\s\S]*module\.unmount\(\);[\s\S]*\}/,
   );
   assert.match(
     compensationBootstrap,
@@ -64,10 +64,12 @@ test("no parallel route-restoration runtime is mounted", () => {
   assert.doesNotMatch(retirement, /demo-auth-route-restoration/);
 });
 
-test("Commissions retries a late authenticated runtime with bounded recovery", () => {
-  assert.match(compensationBootstrap, /AUTH_RECOVERY_RETRY_LIMIT = 120/);
-  assert.match(compensationBootstrap, /AUTH_RECOVERY_RETRY_MS = 250/);
+test("Commissions recovers only from a verified late authenticated runtime", () => {
   assert.match(compensationBootstrap, /async function authenticatedBootstrap\(\)/);
+  assert.match(compensationBootstrap, /verified-session-required/);
+  assert.match(compensationBootstrap, /recoveryController\.abort\(reason\)/);
+  assert.match(compensationBootstrap, /generation === recoveryGeneration/);
+  assert.doesNotMatch(compensationBootstrap, /AUTH_RECOVERY_RETRY_LIMIT/);
   assert.match(compensationBootstrap, /await module\.refresh\(\)/);
   assert.match(compensationBootstrap, /"forge:auth-state-changed"/);
   assert.match(compensationBootstrap, /"android-tab-resume"/);

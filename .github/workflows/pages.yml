@@ -288,13 +288,17 @@ jobs:
             'index.html',
             'app.css',
             'app.js',
+            'cartera-document-intake.js',
             'legacy-ui-retirement.js',
+            'pipeline-bulk-import-mount.css',
+            'pipeline-bulk-import-mount.js',
             'pipeline-module.js',
             'pipeline-referral-modal.css',
             'quotes-module.js',
             'quotes-module.css',
             'manifest.json',
             'tokens.css',
+            'whatsapp-ai-composer.js',
           ];
           for (const file of required) {
             assert.ok(

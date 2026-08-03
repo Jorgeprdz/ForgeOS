@@ -132,6 +132,29 @@ function closeLayer() {
   document.documentElement.removeAttribute("data-pipeline-bulk-import-open");
 }
 
+async function hasAuthenticatedIdentity() {
+  if (document.documentElement.dataset.forgeAuthBoundary !== "authenticated") return false;
+  const bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B;
+  if (typeof bootstrap?.getSession !== "function") return false;
+  try {
+    const result = await bootstrap.getSession();
+    return Boolean(result?.data?.session?.user?.id) && !result?.error;
+  } catch {
+    return false;
+  }
+}
+
+async function requireAuthenticatedIdentity() {
+  if (await hasAuthenticatedIdentity()) return true;
+  closeLayer();
+  document.documentElement.dataset.pipelineBulkImportAuthGate = "required";
+  globalThis.ForgeAliveAuthEntry067G17B1?.openAuthPanel?.({ nav: "pipeline" });
+  globalThis.dispatchEvent(new CustomEvent("forge:session-required", {
+    detail: Object.freeze({ source: "pipeline-bulk-import", nav: "pipeline" }),
+  }));
+  return false;
+}
+
 function renderRows(rows) {
   return rows.slice(0, 8).map(contact => `
     <tr><td>${escapeHtml(contact.displayName || "Sin nombre")}</td><td>${escapeHtml(contact.phone || "—")}</td><td>${escapeHtml(contact.email || "—")}</td></tr>`).join("");
@@ -173,7 +196,8 @@ async function inspectFile(file, stateNode, previewNode, confirmButton) {
   });
 }
 
-function openLayer(trigger) {
+async function openLayer(trigger) {
+  if (!await requireAuthenticatedIdentity()) return false;
   closeLayer();
   const layer = document.createElement("div");
   layer.dataset.pipelineBulkImportLayer = "true";
@@ -232,6 +256,7 @@ function openLayer(trigger) {
   document.body.append(layer);
   document.documentElement.dataset.pipelineBulkImportOpen = "true";
   fileInput.focus();
+  return true;
 }
 
 function mount(root) {
@@ -242,7 +267,7 @@ function mount(root) {
   button.className = "pipeline-module__bulk-import";
   button.dataset.pipelineBulkImport = "true";
   button.textContent = "Carga masiva";
-  button.addEventListener("click", () => openLayer(button));
+  button.addEventListener("click", () => void openLayer(button));
   header.append(button);
   root.dataset.pipelineBulkImportMounted = "true";
 }

@@ -1,0 +1,50 @@
+FORGEOS BETA 1 CODE INVENTORY
+DATE=2026-08-03
+BRANCH=audit/beta1-010-constitutional-system-sweep
+MODE=READ_ONLY_CODE_AND_RUNTIME_SWEEP
+
+AUTHORITIES
+CONSTITUTION=FORGE_CONSTITUTION_V3.md plus docs/01-constitution authority map
+BUILD_TREE=FORGE_MASTER_BUILD_TREE.md
+GOVERNANCE=docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md
+ROBOCOP=docs/00-governance/FORGE_ROBOCOP_DIRECTIVES.md
+PRODUCTIVE_SOURCE=docs/static-preview/forge-alive-material3/
+
+VISIBLE_CANONICAL_ROUTES
+inicio
+pipeline
+actividad
+quotes (public alias cotizaciones)
+cartera
+comisiones
+persona (contextual, not primary navigation)
+
+REPOSITORY_COUNTS
+JAVASCRIPT_AND_MJS_FILES=2454
+TEST_FILES_MATCHING_TEST_MJS=379
+TODO_OR_FIXME_CODE_MATCHES=5
+NOT_CONNECTED_REPOSITORY_MATCHES=54
+NOT_IMPLEMENTED_REPOSITORY_MATCHES=1
+COMING_SOON_REPOSITORY_MATCHES=3
+
+MATERIAL3_RUNTIME_COUNTS
+FILES_USING_LOCAL_STORAGE=4
+FILES_USING_SESSION_STORAGE=4
+FILES_MATCHING_MOCK_OR_FIXTURE=2
+EMPTY_CATCH_PATTERN_MATCHES=0
+DISABLED_BUTTON_PATTERN_MATCHES=26
+CONSOLE_LOG_MATCHES=0
+DIRECT_FROM_OR_RPC_CALL_MATCHES=17
+FILES_USING_ABORT_CONTROLLER=11
+
+IMPORTANT_CODE OBSERVATIONS
+1. app.css changes .app into a 12-column grid at >=1200px.
+2. Pipeline and Quotes explicitly span all columns; built-in Cartera receives a full-width surface.
+3. Home live dashboard, Activity and dynamically inserted Compensation roots do not share a universal full-span route rule.
+4. Home source HTML still contains productive-looking static example content, while later runtime retirement code hides or replaces portions of it.
+5. Pipeline contains explicit Calendar and Mi Dia NOT_CONNECTED states.
+6. Home productive orchestrator declares Pipeline bitacora and Compensation income truth as NOT_CONNECTED.
+7. Compensation auth recovery retries 120 times at 250ms, allowing a 30-second unavailable cycle.
+8. Local env declares DEMO_MODE=true but has blank Supabase URL/key, so authenticated or governed demo traversal cannot complete locally.
+9. Playwright package rejects Android; native Chromium CLI was used for screenshots.
+10. npm serve:e2e cannot resolve the vite binary on this filesystem; direct Vite then fails loading the Android rolldown native binding.

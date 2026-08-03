@@ -1,0 +1,41 @@
+PHASE=BETA1_011_RESPONSIVE_ROUTE_ROOT_AND_SESSION_AUTHORITY_REPAIR
+
+MODIFIED_RUNTIME_FILES=
+- docs/static-preview/forge-alive-material3/app.css
+- docs/static-preview/forge-alive-material3/compensation-route-bootstrap-100b.js
+- docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js
+- docs/static-preview/forge-alive-material3/home-module.js
+- docs/static-preview/forge-alive-material3/index.html
+- docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js
+
+MODIFIED_TEST_FILES=
+- tests/demo-auth-route-restoration-test.mjs
+- tests/beta1-011-responsive-session-authority-repair-test.mjs (new)
+
+EVIDENCE_FILES=
+- ForgeGemini/BETA1_011/runtime-acceptance.mjs
+- ForgeGemini/BETA1_011/runtime-acceptance.json
+- ForgeGemini/BETA1_011/before/ (18 inherited BETA1_010 captures)
+- ForgeGemini/BETA1_011/after/ (18 regenerated captures)
+- ForgeGemini/BETA1_011/test-results.txt
+- ForgeGemini/BETA1_011/screenshot-manifest.txt
+- ForgeGemini/BETA1_011/INFORME_BETA1_011.txt
+
+ROOT_CAUSES_AND_REPAIRS=
+1. Route modules were direct children of a 12-column viewport but lacked an explicit full-span contract. Added a scoped, visible direct-child contract with grid-column 1/-1, width 100% and min-width 0; [hidden] and display:contents semantics remain isolated.
+2. Home first paint embedded advisor initials, online presence and business-looking static cards before authority resolution. Replaced with neutral session loading, hidden static placeholders and an explicit anonymous greeting/profile state.
+3. Activity/Reports inherited the route-root column collapse. The shared root contract restores desktop width without changing FES authority or mutations.
+4. Compensation inherited the collapse and incompatible light tokens. Added scoped dark Material tokens, wrapping/safe sizing, and full-width behavior.
+5. Compensation recovery used long polling not owned by a verified session. Replaced with verified-session, event-driven recovery bound to AbortController and generation; cancellation occurs on route exit, logout/private scrub and non-authenticated state.
+6. Pipeline bulk import trusted a DOM boundary that the local acceptance harness can set authenticated without a user. It now requires getSession().data.session.user.id before creating any file input or layer and otherwise fails closed explicitly.
+
+OUT_OF_SCOPE_PRESERVED=
+- Existing BETA1_010 workflow and canonical-authority repairs.
+- Quote engine, calculation, persistence and authentication frontier.
+- Supabase, schema, RLS, production, deployment and legacy runtime.
+
+APP_JS_MODIFIED=NO
+PRODUCTION_MUTATION=NONE
+COMMIT_CREATED=NO
+PUSH_PERFORMED=NO
+MERGE_PERFORMED=NO

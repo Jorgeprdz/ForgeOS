@@ -1,7 +1,7 @@
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 
-const baseUrl = process.env.FORGE_PAGES_URL || "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive-material3/";
+const baseUrl = process.env.FORGE_PAGES_URL || "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/";
 const outputDir = process.env.FORGE_PAGES_EVIDENCE || "artifacts/pages-beta1-live";
 const email = process.env.FORGE_BETA_TEST_EMAIL || "";
 const password = process.env.FORGE_BETA_TEST_PASSWORD || "";
@@ -42,6 +42,24 @@ async function openRoute(nav, fileName) {
 
 async function tryLogin() {
   if (!email || !password) return false;
+
+  const productiveLogin = await page.evaluate(async ({ email, password }) => {
+    const bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B;
+    if (!bootstrap?.getClient) return { available: false };
+    const client = await bootstrap.getClient();
+    const { error } = await client.auth.signInWithPassword({ email, password });
+    return { available: true, error: error?.message || null };
+  }, { email, password }).catch(() => ({ available: false }));
+
+  if (productiveLogin.available) {
+    if (productiveLogin.error) return false;
+    await page.reload({ waitUntil: "networkidle", timeout: 60000 });
+    await page.waitForTimeout(2500);
+    return page.evaluate(() =>
+      document.documentElement.dataset.forgeAuthBoundary === "authenticated"
+    );
+  }
+
   const openAuth = page.locator("[data-forge-auth-open], [data-open-auth], button", { hasText: /iniciar sesión|entrar/i }).first();
   if (await openAuth.isVisible().catch(() => false)) await openAuth.click();
 
@@ -59,27 +77,36 @@ async function tryLogin() {
 
 try {
   await openRoute("pipeline", "01-pipeline-public.png");
+  report.unauthenticatedProtectedNavigationRejected = await page.evaluate(() => {
+    const application = document.querySelector("[data-forge-application]");
+    const panel = document.querySelector("[data-forge-auth-panel]");
+    return document.documentElement.dataset.forgeAuthBoundary !== "authenticated"
+      && Boolean(panel && !panel.hidden)
+      && Boolean(application && application.getClientRects().length === 0);
+  });
   report.authenticated = await tryLogin();
 
   if (report.authenticated) {
     await openRoute("pipeline", "02-pipeline-authenticated.png");
-    report.pipelineBulkImportVisible = await page.locator("[data-pipeline-bulk-import]").isVisible().catch(() => false);
+    report.pipelineBulkImportVisible = await page.locator("[data-open-pipeline-bulk-import], [data-pipeline-bulk-import]").first().isVisible().catch(() => false);
 
     await openRoute("cartera", "03-cartera-authenticated.png");
-    report.carteraPdfInputVisible = await page.locator("[data-cartera-pdf-input], input[type=file][accept*=pdf]").isVisible().catch(() => false);
-    report.carteraDropzoneVisible = await page.locator("[data-cartera-pdf-dropzone]").isVisible().catch(() => false);
+    report.carteraPdfInputVisible = await page.locator("[data-cartera-policy-file], [data-cartera-pdf-input], input[type=file][accept*=pdf]").first().isVisible().catch(() => false);
+    report.carteraDropzoneVisible = await page.locator("[data-cartera-policy-dropzone], [data-cartera-pdf-dropzone]").first().isVisible().catch(() => false);
 
     await openRoute("pipeline", "04-pipeline-composer-surface.png");
     report.whatsappComposerTriggerCount = await page.locator("[data-prepare-productive-message]").count();
   } else {
-    report.authenticatedCapture = "SKIPPED_MISSING_OR_INVALID_CREDENTIALS";
+    report.authenticatedCapture = email && password
+      ? "FAIL_INVALID_CREDENTIALS_OR_AUTH_RUNTIME"
+      : "BLOCKED_MISSING_CREDENTIALS";
   }
 
   const assetChecks = {};
   for (const [name, relative] of Object.entries({
     bulkImport: "pipeline-bulk-import-mount.js",
-    carteraIntake: "cartera-pdf-intake-mount.js",
-    whatsappAi: "whatsapp-ai-composer-mount.js",
+    carteraIntake: "cartera-document-intake.js",
+    whatsappAi: "whatsapp-ai-composer.js",
   })) {
     const assetUrl = new URL(relative, baseUrl).href;
     const response = await context.request.get(assetUrl);
@@ -92,7 +119,8 @@ try {
     "# ForgeOS Beta 1 — Pages live acceptance",
     "",
     `- Target: ${baseUrl}`,
-    `- Authenticated capture: ${report.authenticated ? "PASS" : "SKIPPED"}`,
+    `- Authenticated capture: ${report.authenticated ? "PASS" : report.authenticatedCapture}`,
+    `- Unauthenticated protected navigation rejected: ${report.unauthenticatedProtectedNavigationRejected ? "PASS" : "FAIL"}`,
     `- Pipeline bulk import visible: ${report.pipelineBulkImportVisible ?? "NOT_TESTED"}`,
     `- Cartera PDF input visible: ${report.carteraPdfInputVisible ?? "NOT_TESTED"}`,
     `- Cartera dropzone visible: ${report.carteraDropzoneVisible ?? "NOT_TESTED"}`,
@@ -105,6 +133,8 @@ try {
   console.log(summary);
 
   if (!Object.values(assetChecks).every(item => item.ok)) process.exitCode = 1;
+  if (!report.unauthenticatedProtectedNavigationRejected) process.exitCode = 1;
+  if (!report.authenticated) process.exitCode = 1;
   if (report.authenticated && (!report.pipelineBulkImportVisible || !report.carteraPdfInputVisible || !report.carteraDropzoneVisible)) process.exitCode = 1;
 } finally {
   await browser.close();

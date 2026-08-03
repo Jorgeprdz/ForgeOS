@@ -1,0 +1,96 @@
+PHASE=BETA1_011_RESPONSIVE_ROUTE_ROOT_AND_SESSION_AUTHORITY_REPAIR
+
+1. GATE CONSTITUCIONAL
+
+APPLICABLE_CONSTITUTION=Article 0; Forge Constitution V3; Architectural Constitution V3; truth, authority, UX honesty and economic evidence boundaries
+APPLICABLE_ADRS=ADR-017 Compensation Evidence Boundary; ADR-019 Home/Alfred Material 3; ADR-020 Canonical Forge Shell; ADR-021 Quotes visual migration; ADR-022 Quotes functional baseline repair
+BUILD_TREE_AREA=UI-M03, UI-M04, UI-M05/UI-M05A, Advisor OS execution modules, Compensation Intelligence
+DISCOVERY_STATUS=COMPLETE_FOR_AUTHORIZED_REPAIR_SCOPE
+IMPLEMENTATION_READINESS=READY_WITH_CONDITIONS
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+SCOPE_BOUNDARY=Material3 shell/root CSS, honest anonymous Home identity/first paint, Compensation route cancellation, Pipeline anonymous bulk-import gate, targeted tests/evidence
+PROHIBITED_SURFACES=Quote behavior/access decision, quote engines/calculations/persistence, economic rules, schemas, RLS, Supabase mutation, legacy source, deployment, main
+VALIDATION_EXPECTATION=Targeted contracts, runtime Chromium evidence, responsive before/after, session late-result tests, regressions
+ROBOCOP_LOCK_001=SATISFIED
+
+2. ESTADO Y CAUSA RAIZ
+
+S1-011-01 Route-root desktop collapse: direct route roots inherited one column of the shell's 12-column grid. Fixed with a scoped direct-child visible route contract.
+S1-011-02 Compensation session recovery: recovery trusted an authenticated DOM marker and continued timed polling. Fixed with verified getSession user identity, event-driven recovery, AbortController and generation ownership.
+S2-011-01 Home anonymous identity: first paint exposed initials, online dot and business-looking static content without authority. Fixed with neutral loading, hidden placeholders and an unequivocal anonymous state.
+S2-011-02 Activity/Reports desktop fragmentation: same route-root cause. Fixed by common contract; FES read authority unchanged.
+S2-011-03 Compensation responsive/contrast: inherited root collapse and light semantic tokens on dark surface. Fixed with scoped Material tokens, wrapping and safe sizing.
+S2-011-04 Pipeline bulk import anonymous gate: DOM boundary was insufficient proof of identity. Fixed by requiring a verified session user before any file input or layer is created.
+
+3. REPARACIONES Y REGRESION
+
+The shared root rule is limited to visible direct [data-route-module] children; it does not override hidden modules or display:contents. Runtime screenshots cover Inicio, Pipeline, Actividad, Cotizaciones, Cartera and Comisiones at all three required viewports. Pipeline, Cotizaciones and Cartera remained visually mounted; navigation contracts passed. Persona has static regression coverage through the canonical shell tests but was not one of the six requested screenshot routes.
+
+Home now removes the placeholder marker only when productive summary/opportunity mounts prepare. No mock was substituted. Anonymous identity is not rendered as an advisor.
+
+Compensation preserves BLOCKED/UNKNOWN semantics. In the anonymous acceptance harness it rendered BLOCKED, no economic zero, and no residual recovery-attempt marker. Provider results are rejected when aborted, generation-stale, off-route or no longer authenticated.
+
+Pipeline anonymous bulk import produced data-pipeline-bulk-import-auth-gate=required, no modal layer and no file input. The local harness exposed an important inconsistency: its DOM boundary reported authenticated without a verifiable user; the repaired gate rejected it correctly.
+
+4. COTIZACIONES - DECISION NO AUTOMATICA
+
+QUOTES_ACCESS_CURRENT=PRIVATE_ROUTE_IN_CANONICAL_AUTHENTICATED_ROUTE_GUARD
+QUOTES_ACCESS_AUTHORITY=ADR-021_AND_ADR-022_PROTECT_EXISTING_FUNCTIONALITY_AND_EXPLICITLY_FORBID_AUTHENTICATION_CHANGE
+PUBLIC_LOCAL_PROCESSING_RATIFIED=NO
+PERSISTENCE_PRESENT=NOT_REDETERMINED_IN_THIS_PROTECTED_PHASE
+PRIVATE_HANDOFF_PRESENT=NOT_RATIFIED_AS_ACCESS_BOUNDARY
+RECOMMENDATION=Preserve current private guard until a dedicated ADR distinguishes public local calculation, productive persistence and authenticated handoff.
+DECISION_REQUIRED=YES
+QUOTES_ACCESS_DECISION=BLOCKED
+
+5. EVIDENCIA
+
+Before: ForgeGemini/BETA1_011/before/ (18 screenshots inherited from BETA1_010).
+After: ForgeGemini/BETA1_011/after/ (18 freshly generated screenshots).
+Runtime: ForgeGemini/BETA1_011/runtime-acceptance.json (4/4 assertions true).
+Tests: ForgeGemini/BETA1_011/test-results.txt.
+Hashes: ForgeGemini/BETA1_011/screenshot-manifest.txt.
+
+Chromium native was used because Playwright remains unsupported in Android/Termux. This limitation is recorded and was not converted into Playwright PASS.
+
+6. ACCEPTANCE
+
+HOME_DESKTOP=PASS
+ACTIVITY_DESKTOP=PASS
+REPORTS_DESKTOP=PASS
+COMPENSATION_MOBILE=PASS
+COMPENSATION_TABLET=PASS
+COMPENSATION_DESKTOP=PASS
+ANONYMOUS_IDENTITY_HONEST=PASS
+PIPELINE_ANONYMOUS_BULK_IMPORT=PASS
+COMPENSATION_LATE_RESULT_REJECTION=PASS
+LOGOUT_SCRUB=BLOCKED
+QUOTES_ACCESS_DECISION=BLOCKED
+LEGACY_RUNTIME_FALLBACK=ABSENT
+REGRESSION_TESTS=PASS
+
+LOGOUT_SCRUB is BLOCKED only for real authenticated production-backed browser proof: no credential or production mutation was authorized. Static session/logout tests and local cancellation contracts pass, but are not mislabeled as real-session acceptance.
+
+7. WORKING TREE AND GOVERNANCE
+
+The working tree remains intentionally dirty with preserved BETA1_010 changes plus BETA1_011 repairs and evidence. No existing BETA1_010 change was discarded. app.js was not modified. No production/Supabase/schema/RLS mutation occurred. No commit, push, merge or deploy occurred.
+
+8. RESUMEN
+
+PHASE=BETA1_011_RESPONSIVE_ROUTE_ROOT_AND_SESSION_AUTHORITY_REPAIR
+GENERAL_STATUS=PARTIAL
+S1_REPAIRED=2
+S1_OPEN=0
+S2_REPAIRED=4
+S2_OPEN=0
+RESPONSIVE_ACCEPTANCE=PASS
+SESSION_AUTHORITY_ACCEPTANCE=PARTIAL
+QUOTES_DECISION_REQUIRED=YES
+PRODUCTION_MUTATION=NONE
+COMMIT_CREATED=NO
+PUSH_PERFORMED=NO
+MERGE_PERFORMED=NO
+READY_FOR_CONTROLLED_REVIEW=YES
+PHASE_COMPLETE=NO
+NEXT=Controlled review plus authorized real authenticated logout/session-switch acceptance; separately ratify the Cotizaciones public/private boundary.

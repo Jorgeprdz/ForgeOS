@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive-material3/
+      FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
       FORGE_PAGES_EVIDENCE: artifacts/pages-beta1-live
       FORGE_BETA_TEST_EMAIL: ${{ secrets.FORGE_BETA_TEST_EMAIL }}
       FORGE_BETA_TEST_PASSWORD: ${{ secrets.FORGE_BETA_TEST_PASSWORD }}

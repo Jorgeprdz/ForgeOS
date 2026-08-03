@@ -1,0 +1,67 @@
+PHASE=BETA1_011_RESPONSIVE_ROUTE_ROOT_AND_SESSION_AUTHORITY_REPAIR
+CAPTURED_AT=2026-08-03T23:50:51.170Z
+ENVIRONMENT=Android/Termux; Chromium native; local governed static preview at 127.0.0.1:4173
+PLAYWRIGHT=BLOCKED_ANDROID_PLATFORM
+
+TEST=JavaScript syntax checks: pipeline bulk import and compensation route bootstrap
+RESULT=PASS
+
+TEST=tests/beta1-011-responsive-session-authority-repair-test.mjs
+RESULT=PASS
+EVIDENCE=BETA1_011_RESPONSIVE_SESSION_AUTHORITY_REPAIR=PASS
+
+TEST=tests/demo-auth-route-restoration-test.mjs
+RESULT=PASS
+EVIDENCE=7/7
+
+TEST=ForgeGemini/BETA1_011/runtime-acceptance.mjs
+RESULT=PASS
+EVIDENCE=runtime-acceptance.json; 4/4 assertions true
+
+TEST=tests/material3-auth-first-paint-test.mjs
+RESULT=PASS
+
+TEST=tests/authenticated-route-guard-test.mjs
+RESULT=PASS
+EVIDENCE=5/5
+
+TEST=tests/public-auth-required-login-gate-test.mjs
+RESULT=PASS
+EVIDENCE=1/1
+
+TEST=tests/authenticated-session-controls-test.mjs
+RESULT=PASS
+EVIDENCE=4/4
+
+TEST=tests/auth-relogin-canonical-return-test.mjs
+RESULT=PASS
+EVIDENCE=3/3
+
+TEST=tests/beta1-operational-completion-test.mjs
+RESULT=PASS
+EVIDENCE=9/9
+
+TEST=tests/advisor-compensation-stage-070-master-test.mjs
+RESULT=PASS
+EVIDENCE=78/78
+
+TEST=tests/advisor-compensation-stage-080-master-test.mjs
+RESULT=PASS
+EVIDENCE=86/86
+
+TEST=tests/advisor-os-sprint-11-test.mjs
+RESULT=PASS
+EVIDENCE=12/12; includes logout/advisor-switch late-result rejection
+
+TEST=Responsive screenshots
+RESULT=PASS
+EVIDENCE=18 PNG files with exact dimensions: 390x844, 820x1180, 1440x1000
+
+TEST=git diff --check
+RESULT=PASS
+
+TEST=Real authenticated logout scrub against Supabase
+RESULT=BLOCKED
+EVIDENCE=No production mutation or test credential was authorized/provided; static and local runtime contracts pass, but this is not promoted to real-session PASS.
+
+HARNESS_NOTE=Two initially invoked shorthand filenames did not exist. They were replaced by canonical public-auth-required-login-gate-test.mjs and auth-relogin-canonical-return-test.mjs; both passed.

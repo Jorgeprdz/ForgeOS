@@ -14,6 +14,7 @@ function prepareProductiveRoot(root) {
 
   const summary = root.querySelector(".summary-section") || document.createElement("section");
   if (!summary.isConnected) root.appendChild(summary);
+  summary.removeAttribute("data-home-static-placeholder");
   summary.className = "summary-section productive-home-section";
   summary.removeAttribute("aria-labelledby");
   summary.replaceChildren();

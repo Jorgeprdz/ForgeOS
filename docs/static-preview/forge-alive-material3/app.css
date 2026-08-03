@@ -68,6 +68,15 @@ body::before {
   display: none !important;
 }
 
+/* UI-M04 route-root contract: every mounted module owns the complete shell
+   viewport. This is intentionally limited to direct route children so nested
+   route metadata cannot change grid geometry. */
+.forge-module-viewport > [data-route-module]:not([hidden]) {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+}
+
 .home-module:not([hidden]) {
   display: contents;
 }
@@ -721,6 +730,26 @@ h1 {
   border: 3px solid var(--canvas);
   border-radius: 50%;
   background: #5de2b7;
+}
+
+.profile[data-forge-auth-state="anonymous"] {
+  display: none !important;
+}
+
+/* The compatibility auth entry still owns the login trigger, but an anonymous
+   trigger must look like an action rather than a verified person identity. */
+.forge-auth-floating-avatar-067g17b1[data-forge-auth-state="anonymous"] {
+  inline-size: auto;
+  min-width: 64px;
+  padding-inline: 14px;
+  font-size: 0;
+}
+
+.forge-auth-floating-avatar-067g17b1[data-forge-auth-state="anonymous"]::before {
+  content: "Entrar";
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
 .organic-card {

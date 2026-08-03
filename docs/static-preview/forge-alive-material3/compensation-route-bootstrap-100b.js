@@ -1,9 +1,9 @@
 const SHELL_STATE = Symbol.for("forge.ui-m04.shell.state");
 const BOOT_STATE = Symbol.for("forge.advisor-compensation.route-bootstrap.100b");
 const sourceTree = import.meta.url.includes("/docs/static-preview/");
-const AUTH_RECOVERY_RETRY_LIMIT = 120;
-const AUTH_RECOVERY_RETRY_MS = 250;
 let recoveryPromise = null;
+let recoveryController = null;
+let recoveryGeneration = 0;
 
 function applicationRoot() {
   return document.querySelector("[data-forge-application]");
@@ -58,6 +58,11 @@ function ensureMobileLayoutGuard() {
     }
     [data-forge-compensation-module] .comp-shell {
       width: 100%;
+      --text: var(--forge-sys-color-on-surface, var(--ink));
+      --muted: var(--forge-sys-color-on-surface-variant, var(--muted));
+      --card-bg: var(--forge-sys-color-surface-container, var(--surface));
+      --separator: var(--forge-sys-color-outline-variant, var(--outline));
+      --accent: var(--forge-sys-color-primary, var(--aqua));
     }
     [data-forge-compensation-module] .comp-state h2,
     [data-forge-compensation-module] .comp-state p,
@@ -71,8 +76,19 @@ function ensureMobileLayoutGuard() {
   document.head.append(style);
 }
 
-function delay(ms) {
-  return new Promise((resolve) => globalThis.setTimeout(resolve, ms));
+function activeCompensationRoute() {
+  return new URL(globalThis.location.href).searchParams.get("nav") === "comisiones";
+}
+
+function cancelRecovery(reason = "compensation-recovery-cancelled") {
+  recoveryGeneration += 1;
+  if (recoveryController && !recoveryController.signal.aborted) {
+    recoveryController.abort(reason);
+  }
+  recoveryController = null;
+  recoveryPromise = null;
+  document.documentElement.dataset.advisorCompensationAuthRecovery = "cancelled";
+  document.documentElement.dataset.advisorCompensationAuthRecoveryReason = reason;
 }
 
 function sessionUserId(result) {
@@ -96,13 +112,19 @@ async function authenticatedBootstrap() {
   }
 }
 
-async function installProvider(shell, { bootstrap = null } = {}) {
+async function installProvider(shell, {
+  bootstrap = null,
+  signal = null,
+  isCurrent = () => true,
+} = {}) {
   if (document.documentElement.dataset.forgeAuthRuntime !== "ready") return false;
   try {
     const provider = await loadProviderModule();
     const installation = await provider.installAdvisorCompensationSupabaseProvider100({
       bootstrap,
+      signal,
     });
+    if (signal?.aborted || !isCurrent()) return false;
     document.documentElement.dataset.advisorCompensationAuthority = installation.installed
       ? "ready"
       : "disconnected";
@@ -111,6 +133,7 @@ async function installProvider(shell, { bootstrap = null } = {}) {
     shell.reconcile();
     return installation.installed;
   } catch (error) {
+    if (signal?.aborted || !isCurrent()) return false;
     document.documentElement.dataset.advisorCompensationAuthority = "failed";
     document.documentElement.dataset.advisorCompensationAuthorityReason =
       error?.code || error?.message || "provider-install-failed";
@@ -121,30 +144,53 @@ async function installProvider(shell, { bootstrap = null } = {}) {
 }
 
 async function recoverCompensation(shell, module, reason = "auth-runtime-late-ready") {
+  if (
+    !activeCompensationRoute()
+    || document.documentElement.dataset.forgeAuthBoundary !== "authenticated"
+  ) return false;
   if (recoveryPromise) return recoveryPromise;
+  const generation = ++recoveryGeneration;
+  const controller = new AbortController();
+  recoveryController = controller;
   const html = document.documentElement;
   recoveryPromise = (async () => {
     html.dataset.advisorCompensationAuthRecovery = "waiting";
     html.dataset.advisorCompensationAuthRecoveryReason = reason;
-    for (let attempt = 1; attempt <= AUTH_RECOVERY_RETRY_LIMIT; attempt += 1) {
-      html.dataset.advisorCompensationAuthRecoveryAttempt = String(attempt);
-      const bootstrap = document.documentElement.dataset.forgeAuthRuntime === "ready"
-        ? await authenticatedBootstrap()
-        : null;
-      if (bootstrap) {
-        await installProvider(shell, { bootstrap });
-        shell.reconcile();
-        await module.refresh();
-        html.dataset.advisorCompensationAuthRecovery = "recovered";
-        html.dataset.advisorCompensationAuthRecoveryReason = reason;
-        return true;
-      }
-      await delay(AUTH_RECOVERY_RETRY_MS);
+    const isCurrent = () => (
+      !controller.signal.aborted
+      && generation === recoveryGeneration
+      && activeCompensationRoute()
+      && html.dataset.forgeAuthBoundary === "authenticated"
+    );
+    if (!isCurrent()) return false;
+    html.dataset.advisorCompensationAuthRecoveryAttempt = "1";
+    const bootstrap = document.documentElement.dataset.forgeAuthRuntime === "ready"
+      ? await authenticatedBootstrap()
+      : null;
+    if (!isCurrent()) return false;
+    if (!bootstrap) {
+      html.dataset.advisorCompensationAuthRecovery = "blocked";
+      html.dataset.advisorCompensationAuthRecoveryReason = "verified-session-required";
+      html.removeAttribute("data-advisor-compensation-auth-recovery-attempt");
+      return false;
     }
-    html.dataset.advisorCompensationAuthRecovery = "timed-out";
-    return false;
+    const installed = await installProvider(shell, {
+      bootstrap,
+      signal: controller.signal,
+      isCurrent,
+    });
+    if (!installed || !isCurrent()) return false;
+    shell.reconcile();
+    await module.refresh();
+    if (!isCurrent()) return false;
+    html.dataset.advisorCompensationAuthRecovery = "recovered";
+    html.dataset.advisorCompensationAuthRecoveryReason = reason;
+    return true;
   })().finally(() => {
-    recoveryPromise = null;
+    if (generation === recoveryGeneration) {
+      recoveryPromise = null;
+      recoveryController = null;
+    }
   });
   return recoveryPromise;
 }
@@ -164,10 +210,15 @@ async function boot() {
   application[BOOT_STATE] = Object.freeze({ module, root });
   document.documentElement.dataset.advisorCompensationRoute = "registered";
   shell.reconcile();
-  void recoverCompensation(shell, module, "boot");
+  if (document.documentElement.dataset.forgeAuthBoundary === "authenticated") {
+    void recoverCompensation(shell, module, "boot");
+  }
 
   const authObserver = new MutationObserver(() => {
-    if (document.documentElement.dataset.forgeAuthRuntime === "ready") {
+    if (
+      document.documentElement.dataset.forgeAuthRuntime === "ready"
+      && document.documentElement.dataset.forgeAuthBoundary === "authenticated"
+    ) {
       void recoverCompensation(shell, module, "auth-runtime-ready");
     }
   });
@@ -179,11 +230,15 @@ async function boot() {
   globalThis.addEventListener("forge:auth-state-changed", (event) => {
     if (String(event?.detail?.status || "").toLowerCase() === "authenticated") {
       void recoverCompensation(shell, module, "authenticated-event");
+    } else {
+      cancelRecovery("auth-state-not-authenticated");
     }
   });
   globalThis.addEventListener("popstate", () => {
     if (new URL(location.href).searchParams.get("nav") === "comisiones") {
       void recoverCompensation(shell, module, "route-reentry");
+    } else {
+      cancelRecovery("compensation-route-left");
     }
   });
   document.addEventListener("visibilitychange", () => {
@@ -195,7 +250,10 @@ async function boot() {
     }
   });
 
-  const unmountPrivateCompensation = () => module.unmount();
+  const unmountPrivateCompensation = () => {
+    cancelRecovery("private-runtime-scrub");
+    module.unmount();
+  };
   globalThis.addEventListener("forge:private-runtime-scrub", unmountPrivateCompensation);
   globalThis.addEventListener("forge:session-required", unmountPrivateCompensation);
   globalThis.addEventListener("forge:logout", unmountPrivateCompensation);

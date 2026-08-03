@@ -1,0 +1,39 @@
+{
+  "capturedAt": "2026-08-03T23:54:32.346Z",
+  "bulkImport": {
+    "before": {
+      "authBoundary": "authenticated",
+      "buttonVisible": true,
+      "layerPresent": false,
+      "fileInputPresent": false
+    },
+    "after": {
+      "authGate": "required",
+      "layerPresent": false,
+      "fileInputPresent": false,
+      "authPanelVisible": false
+    }
+  },
+  "activity": {
+    "viewportWidth": 1440,
+    "activityRootWidth": 1258,
+    "reportsRootWidth": 1096,
+    "routeRootWidthAfterTab": 1258,
+    "reportsSelected": true
+  },
+  "compensation": {
+    "viewportWidth": 1440,
+    "routeRootWidth": 1258,
+    "shellWidth": 1258,
+    "headingColor": "rgb(226, 226, 233)",
+    "recoveryState": "blocked",
+    "recoveryAttempt": null,
+    "compensationState": "BLOCKED"
+  },
+  "assertions": {
+    "anonymousBulkImportFailsClosed": true,
+    "activityAndReportsFullWidth": true,
+    "compensationFullWidthAndReadable": true,
+    "anonymousCompensationDoesNotPoll": true
+  }
+}
