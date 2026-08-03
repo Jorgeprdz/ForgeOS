@@ -1,210 +1,49 @@
 # FORGE_WHATSAPP_CONTEXT_HUMANIZER_FIX_001
 
-## Estado
+## Execution authority
 
 ```text
 PROGRAM=FORGE_WHATSAPP_CONTEXT_HUMANIZER_FIX
 VERSION=001
-CURRENT_IMPLEMENTATION=AI_WRITES_FROM_CONTEXT
-TARGET_IMPLEMENTATION=FORGE_BUILDS_CONTENT_AI_HUMANIZES
+EXECUTION=WSP_000_TO_WSP_100_ONE_CONTROLLED_PASS
+MERGE_ONLY_IF_ALL_P0_GATES_PASS=YES
+AUTOMATIC_MERGE=NO
+HUMAN_REVIEW_REQUIRED=YES
 AUTOMATIC_SEND=NO
 AUTOMATIC_PIPELINE_MUTATION=NO
-AUTOMATIC_TIMELINE_MUTATION=NO
-HUMAN_REVIEW_REQUIRED=YES
+AUTOMATIC_TIMELINE_SENT_EVENT=NO
 ```
 
-## Problema confirmado
+## Confirmed behavior change
 
-El compositor actual toma datos visibles de la tarjeta de Pipeline, una intención y una instrucción opcional; después envía ese contexto a `supabase/functions/whatsapp-draft`, donde Gemini redacta el mensaje completo.
+```text
+CURRENT=AI_WRITES_COMPLETE_MESSAGE_FROM_CONTEXT
+TARGET=FORGE_BUILDS_CONTENT_AI_ONLY_HUMANIZES
+```
 
-La conducta objetivo es distinta:
+ForgeOS must resolve and govern who the person is, who referred them, why they were referred, what the advisor does, how the advisor may help, the certainty of that help statement, and the exact CTA. ForgeOS then creates a complete deterministic base message. AI receives that base and may only improve naturalness. A semantic validator rejects new facts, entities, products, dates, quantities, promises, certainty changes or CTA changes.
 
-1. ForgeOS reúne y valida el contexto comercial.
-2. ForgeOS construye el contenido lógico del mensaje sin IA.
-3. La IA recibe un mensaje base ya completo.
-4. La IA sólo mejora naturalidad, ritmo y tono.
-5. Un validador rechaza cualquier hecho nuevo o cambio de intención.
-6. El asesor revisa, edita y decide abrir WhatsApp.
+## Existing authorities to consolidate
 
-## Contexto mínimo obligatorio
+- CommercialPerson and advisor relationship: CARTERA 010B, CRS 01 and CRS 02.
+- Pipeline and stage: CRS 03.
+- Activity and attribution: CRS 04 / FES.
+- Quote, Application and Policy lineage: CRS 05–07.
+- Unified person history: CRS 08.
+- Productive Person Workspace: CRS 09.
+- Existing relationship intelligence: CRS 10 and FIP Pack 01.
+- Advisor Intelligence and Mick: FIP Pack 02.
+- Nash conversation preparation: FIP Pack 03.
+- Opportunity and operation: FIP Pack 04.
+- Next Action and Agenda: NFAST-09.
+- Entity ambiguity, preview and confirmation: Command OS.
+- Advisor identity and communication profile: authenticated profile projection.
+- Orchestration only: Alfred.
+- Existing WhatsApp session, Edge Function, editable draft and wa.me handoff.
 
-### Persona
+No second person, relationship, Timeline, intelligence, task or message authority may be created.
 
-- nombre confirmado;
-- quién es;
-- ocupación, actividad o empresa cuando exista;
-- relación actual con el asesor;
-- temperatura del vínculo;
-- etapa comercial;
-- última actividad confirmada;
-- compromisos abiertos;
-- notas relevantes con procedencia.
-
-### Recomendación
-
-- quién lo recomendó;
-- relación del recomendador con la persona;
-- por qué lo recomendó;
-- qué dijo exactamente o resumen atribuido;
-- autorización para mencionar al recomendador;
-- fecha y fuente de la recomendación.
-
-### Asesor
-
-- nombre autenticado;
-- a qué se dedica;
-- especialidad relevante;
-- propuesta de valor permitida;
-- límites de promesa;
-- presentación corta aprobada.
-
-### Ayuda potencial
-
-- cómo puede ayudar a esa persona;
-- necesidad observada o hipótesis explícita;
-- evidencia disponible;
-- limitaciones;
-- productos o soluciones autorizados para mencionarse;
-- beneficios que no pueden afirmarse todavía.
-
-### Movimiento
-
-- objetivo del mensaje;
-- resultado esperado;
-- CTA exacto;
-- canal;
-- urgencia;
-- tono;
-- longitud máxima;
-- información obligatoria y prohibida.
-
-## Autoridades y motores existentes que deben reutilizarse
-
-### 1. Commercial Relationship Spine
-
-Reutilizar:
-
-- `CARTERA_010B_COMMERCIAL_PERSON` como autoridad de persona;
-- `CRS_01_ADVISOR_COMMERCIAL_RELATIONSHIP` como relación asesor-persona;
-- `CRS_02` como contrato de vínculos de dominio;
-- `CRS_03` para contexto de Pipeline y stage;
-- `CRS_04` para actividad atribuida a persona;
-- `CRS_05` para cotizaciones vinculadas;
-- `CRS_06` y `CRS_07` para Application y Policy cuando sean relevantes;
-- `CRS_08_UNIFIED_PERSON_TIMELINE_READ_MODEL` para historia unificada;
-- `CRS_09_PRODUCTIVE_PERSON_WORKSPACE` como composición contextual;
-- `CRS_10` para inteligencia relacional existente.
-
-No crear una segunda persona, Timeline, relación o memoria comercial.
-
-### 2. FIP Relationship Intelligence
-
-Reutilizar Pack 01 para:
-
-- salud y momentum de relación;
-- enfriamiento;
-- objeciones;
-- riesgo de pérdida;
-- compromisos vencidos;
-- mapa de relación;
-- evidencia y limitaciones.
-
-Los scores no se convierten en hechos ni se muestran como valor humano.
-
-### 3. Nash and Conversation Intelligence
-
-Reutilizar Pack 03 para:
-
-- Next Best Action;
-- por qué esta persona;
-- por qué esta acción;
-- por qué ahora;
-- alternativas;
-- preparación de conversación;
-- instrucción contextual de mensaje.
-
-La instrucción contextual no es el mensaje final. Debe alimentar al constructor determinístico.
-
-### 4. Advisor Intelligence y Mick
-
-Reutilizar Pack 02 para:
-
-- patrones de mercado y canal;
-- fricción de seguimiento;
-- detección de cotización prematura;
-- omisión de solicitud de referidos;
-- límites por muestra y confianza.
-
-No usar hipótesis del asesor como hechos del prospecto.
-
-### 5. Opportunity and Operation
-
-Reutilizar Pack 04 para:
-
-- oportunidad oculta;
-- momento de referido;
-- revisión anual;
-- prioridad explicable;
-- siguiente acción y alternativas.
-
-Una oportunidad propuesta no autoriza producto, promesa ni contacto automático.
-
-### 6. Next Action / Agenda / NFAST-09
-
-Reutilizar:
-
-- autoridad de siguiente acción;
-- compromisos vencidos o próximos;
-- resolución activa;
-- semántica de completar, cancelar y reprogramar.
-
-El CTA del mensaje debe poder alinearse con la siguiente acción sin crearla ni completarla automáticamente.
-
-### 7. Command OS
-
-Reutilizar:
-
-- resolución de entidad;
-- contexto de pantalla;
-- ambigüedad explícita;
-- preview inmutable;
-- confirmación gobernada;
-- receipts y replay protection.
-
-WhatsApp no debe resolver automáticamente dos personas homónimas ni ejecutar acciones por lenguaje natural.
-
-### 8. Perfil y sesión autenticada
-
-Reutilizar identidad Supabase/Google para nombre y perfil del asesor. Crear una proyección específica de comunicación con:
-
-- presentación corta aprobada;
-- actividad profesional;
-- especialidad;
-- propuesta de valor;
-- tono preferido;
-- claims prohibidos.
-
-No extraer la presentación profesional de texto libre cada vez.
-
-### 9. Smart Widgets / Alfred
-
-Alfred puede orquestar las fuentes y explicar por qué se propone el contacto. No es una nueva autoridad de hechos ni puede enviar el mensaje.
-
-### 10. Implementación actual de WhatsApp
-
-Conservar:
-
-- sesión autenticada;
-- Edge Function;
-- borrador editable;
-- apertura por `wa.me`;
-- teléfono normalizado;
-- evento `forge:whatsapp-draft-opened` con `sent:false`;
-- separación entre abrir y enviar.
-
-Reemplazar la responsabilidad del modelo: de redactor completo a humanizador restringido.
-
-## Arquitectura objetivo
+## Architecture
 
 ```text
 CommercialPerson + Relationship + Timeline + Referral + AdvisorProfile
@@ -224,245 +63,60 @@ CommercialPerson + Relationship + Timeline + Referral + AdvisorProfile
                          OpenWhatsApp
 ```
 
-## Contratos nuevos
-
-### `FORGE_WHATSAPP_CONTEXT_ENVELOPE_001`
-
-Debe incluir:
+## Controlled stages
 
 ```text
-person
-relationship
-referral
-advisor
-helpHypothesis
-commercialIntent
-nextAction
-sourceEvidence
-missingContext
-prohibitedClaims
+WSP_000=EXACT_REUSE_INVENTORY_AND_ADAPTER_MAP
+WSP_010=REFERRAL_CONTEXT_AUTHORITY
+WSP_020=ADVISOR_COMMUNICATION_PROFILE
+WSP_030=WHATSAPP_CONTEXT_COMPOSER
+WSP_040=DETERMINISTIC_MESSAGE_PLANNER
+WSP_050=BASE_MESSAGE_RENDERER
+WSP_060=RESTRICTED_AI_HUMANIZER
+WSP_070=SEMANTIC_DIFF_VALIDATOR
+WSP_080=PRODUCTIVE_UI
+WSP_090=TIMELINE_AND_SENT_FALSE_BOUNDARY
+WSP_100=FULL_PRODUCTIVE_ACCEPTANCE
 ```
 
-Cada dato debe guardar:
-
-- valor;
-- fuente;
-- autoridad;
-- estado de confirmación;
-- timestamp;
-- nivel de disponibilidad.
-
-### `FORGE_WHATSAPP_MESSAGE_PLAN_001`
-
-Estructura lógica, no texto creativo:
+## P0 gates
 
 ```text
-GREETING
-IDENTITY_BRIDGE
-REFERRAL_REASON
-ADVISOR_RELEVANCE
-HELP_VALUE
-CTA
-CLOSE
+P0_01_EXACT_ADAPTER_MAP=REQUIRED
+P0_02_NO_SECOND_AUTHORITY=REQUIRED
+P0_03_CONFIRMED_PERSON_CONTEXT=REQUIRED
+P0_04_REFERRAL_PERMISSION_AND_REASON=REQUIRED
+P0_05_GOVERNED_ADVISOR_PROFILE=REQUIRED
+P0_06_DETERMINISTIC_BASE_WITHOUT_AI=REQUIRED
+P0_07_RESTRICTED_HUMANIZER=REQUIRED
+P0_08_SEMANTIC_DIFF_PASS=REQUIRED
+P0_09_AI_FAILURE_FALLBACK=REQUIRED
+P0_10_SENT_FALSE_BOUNDARY=REQUIRED
+P0_11_SESSION_SCRUB_AND_LATE_RESULT_REJECTION=REQUIRED
+P0_12_MOBILE_TABLET_DESKTOP=REQUIRED
+P0_13_EXACT_HEAD_CI=REQUIRED
+P0_14_PUBLIC_PAGES_ACCEPTANCE=REQUIRED_BEFORE_MERGE
 ```
 
-Cada bloque puede estar `INCLUDED`, `OMITTED` o `BLOCKED`, con razón explícita.
-
-### `FORGE_WHATSAPP_BASE_MESSAGE_001`
-
-Mensaje determinístico generado con plantillas versionadas. Debe funcionar cuando la IA no esté disponible.
-
-### `FORGE_WHATSAPP_HUMANIZATION_REQUEST_001`
-
-Entrada cerrada:
-
-- mensaje base;
-- tono permitido;
-- longitud;
-- hechos bloqueados;
-- CTA bloqueado;
-- nombres bloqueados;
-- idioma y región.
-
-### `FORGE_WHATSAPP_HUMANIZATION_RESULT_001`
-
-Debe devolver:
-
-- texto humanizado;
-- modelo;
-- versión del prompt;
-- transformaciones declaradas;
-- validación;
-- requiere revisión humana.
-
-## Roadmap de ejecución
-
-### WSP-000 — Auditoría y mapa de reutilización
-
-- localizar contratos, servicios y adapters reales de CRS, FIP, NFAST, Command OS y perfil;
-- registrar rutas exactas y estados `PRODUCTIVE`, `READ_ONLY`, `CONTRACT_ONLY` o `UNAVAILABLE`;
-- prohibir integración por nombre sin adapter real.
-
-**Salida:** inventario ejecutable de dependencias.
-
-### WSP-010 — Referral Context Authority
-
-Agregar al modelo comercial gobernado:
-
-- referrer person reference;
-- referrer display name;
-- referral reason;
-- referral quote/summary;
-- permission to mention;
-- source and date;
-- confirmation state.
-
-No guardar estos datos únicamente dentro de `card.innerText`.
-
-### WSP-020 — Advisor Communication Profile
-
-Crear proyección autenticada del asesor con versión y confirmación humana.
-
-Debe ser reutilizable por WhatsApp, correo, scripts y presentaciones sin convertirse en una segunda identidad.
-
-### WSP-030 — WhatsApp Context Composer
-
-Construir el envelope usando adapters de autoridades existentes.
-
-Estados obligatorios:
+## Current candidate implementation
 
 ```text
-READY
-PARTIAL
-BLOCKED_AMBIGUOUS_PERSON
-BLOCKED_MISSING_REFERRAL_REASON
-BLOCKED_UNCONFIRMED_CLAIM
-SOURCE_UNAVAILABLE
-SESSION_REQUIRED
+WSP_030_CONTEXT_CONTRACT=IMPLEMENTED_CANDIDATE
+WSP_040_DETERMINISTIC_PLANNER=IMPLEMENTED_CANDIDATE
+WSP_050_BASE_RENDERER=IMPLEMENTED_CANDIDATE
+WSP_070_SEMANTIC_VALIDATOR=IMPLEMENTED_CANDIDATE
+P0_CORE_CONTRACT_WORKFLOW=ADDED
+WSP_000_EXACT_ADAPTER_MAP=PENDING
+WSP_010_REFERRAL_PERSISTENCE=PENDING
+WSP_020_ADVISOR_PROFILE=PENDING
+WSP_060_EDGE_HUMANIZER=PENDING
+WSP_080_PRODUCT_UI=PENDING
+WSP_090_TIMELINE_BOUNDARY=PENDING
+WSP_100_FULL_ACCEPTANCE=PENDING
+MERGE=FORBIDDEN
 ```
 
-### WSP-040 — Deterministic Message Planner
-
-Crear el plan de bloques según intención y datos disponibles.
-
-Reglas iniciales:
-
-- no mencionar referido sin permiso;
-- no afirmar una necesidad cuando sólo existe hipótesis;
-- no mencionar producto sin contexto autorizado;
-- no inventar conversación previa;
-- no ofrecer resultado garantizado;
-- CTA proviene de la intención gobernada.
-
-### WSP-050 — Base Message Renderer
-
-Crear plantillas versionadas para:
-
-- primer contacto referido;
-- primer contacto no referido;
-- retomar conversación;
-- seguimiento;
-- confirmar cita;
-- solicitar documentos;
-- seguimiento de propuesta.
-
-La salida debe ser utilizable sin IA.
-
-### WSP-060 — Restricted Humanizer
-
-Modificar `whatsapp-draft` o crear una función versionada nueva.
-
-El prompt debe ordenar:
-
-```text
-NO_ESCRIBAS_UN_MENSAJE_NUEVO
-NO_AGREGUES_HECHOS
-NO_CAMBIES_NOMBRES
-NO_CAMBIES_CTA
-NO_CAMBIES_OBJETIVO
-NO_CAMBIES_NIVEL_DE_CERTEZA
-SOLO_MEJORA_NATURALIDAD
-```
-
-Temperatura baja y respuesta JSON estructurada.
-
-### WSP-070 — Semantic Diff Validator
-
-Validar base contra humanizado:
-
-- nombres;
-- personas;
-- empresas;
-- productos;
-- cantidades;
-- fechas;
-- CTA;
-- negaciones;
-- nivel de certeza;
-- hechos nuevos.
-
-Resultado:
-
-```text
-PASS
-REJECT_NEW_FACT
-REJECT_CHANGED_CTA
-REJECT_CHANGED_CERTAINTY
-REJECT_ENTITY_MUTATION
-REJECT_UNSUPPORTED_PROMISE
-```
-
-Si falla, mostrar el mensaje base y no el resultado de IA.
-
-### WSP-080 — UI Productiva
-
-Cambios:
-
-- `Generar con IA` → `Hacerlo sonar natural`;
-- `Borrador editable` → `Mensaje propuesto`;
-- mostrar `Contexto utilizado`;
-- mostrar campos faltantes antes de humanizar;
-- permitir editar el mensaje base;
-- conservar original y humanizado;
-- restaurar versión base;
-- abrir WhatsApp sólo con acción humana.
-
-Texto de límite:
-
-> ForgeOS define el contenido. La IA sólo mejora cómo suena. No agrega información ni envía el mensaje.
-
-### WSP-090 — Timeline y aprendizaje de resultado
-
-Registrar únicamente hechos confirmados:
-
-- borrador abierto;
-- WhatsApp abierto;
-- enviado sólo con confirmación humana futura;
-- respuesta sólo mediante captura o integración autorizada.
-
-No inferir envío por abrir `wa.me`.
-
-El Learning Loop puede comparar resultados observados, pero no atribuir causalidad al texto sin evidencia.
-
-### WSP-100 — Aceptación productiva
-
-Pruebas obligatorias:
-
-- referido con permiso;
-- referido sin permiso;
-- motivo ausente;
-- persona homónima;
-- contexto parcial;
-- IA no disponible;
-- intento de añadir producto;
-- intento de cambiar CTA;
-- intento de convertir hipótesis en hecho;
-- móvil, tablet y escritorio;
-- logout scrub;
-- late-result rejection;
-- `sent:false` al abrir WhatsApp.
-
-## Criterios de aceptación
+## Final acceptance
 
 ```text
 AI_STARTS_FROM_BLANK=NO
@@ -479,19 +133,5 @@ AUTOMATIC_SEND=0
 AUTOMATIC_TIMELINE_SENT_EVENT=0
 AUTOMATIC_PIPELINE_MUTATION=0
 HUMAN_REVIEW_REQUIRED=YES
+MERGE_ONLY_IF_ALL_P0_GATES_PASS=YES
 ```
-
-## Orden recomendado
-
-```text
-NEXT=WSP_000_REUSE_INVENTORY_AND_EXACT_ADAPTER_MAP
-THEN=WSP_010_REFERRAL_CONTEXT_AUTHORITY
-THEN=WSP_020_ADVISOR_COMMUNICATION_PROFILE
-THEN=WSP_030_TO_WSP_070_CORE_PIPELINE
-THEN=WSP_080_UI
-THEN=WSP_090_TO_WSP_100_ACCEPTANCE
-```
-
-## Límite de este documento
-
-Este cambio documenta el programa y consolida las capacidades reutilizables identificadas en el repositorio. No modifica todavía el runtime, la base de datos, la Edge Function ni la UI productiva.
