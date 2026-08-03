@@ -1,0 +1,70 @@
+#command-palette {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: max(12vh, 72px) 16px 24px;
+    background: rgba(15, 23, 42, 0.48);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+}
+
+#command-palette .command-wrapper {
+    width: min(680px, 100%);
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 24px;
+    background: var(--surface, #ffffff);
+    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.28);
+}
+
+#universal-command-input {
+    width: 100%;
+    min-height: 64px;
+    padding: 0 22px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 1rem;
+}
+
+#command-results {
+    max-height: min(52vh, 440px);
+    overflow-y: auto;
+}
+
+.command-os-mobile-trigger {
+    position: fixed;
+    right: 18px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+    width: 48px;
+    height: 48px;
+    display: none;
+    place-items: center;
+    border: 0;
+    border-radius: 16px;
+    background: var(--primary, #2563eb);
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.28);
+    z-index: 9000;
+}
+
+@media (max-width: 900px) {
+    #command-palette {
+        align-items: flex-end;
+        padding: 16px 12px calc(env(safe-area-inset-bottom, 0px) + 96px);
+    }
+
+    #command-palette .command-wrapper {
+        border-radius: 22px;
+    }
+
+    .command-os-mobile-trigger {
+        display: grid;
+    }
+}
