@@ -1,0 +1,27 @@
+name: Command OS Pack 08
+
+on:
+  pull_request:
+    paths:
+      - 'platform/commands/**'
+      - 'tests/command-os-pack-08-test.mjs'
+      - '.github/workflows/command-os-pack-08.yml'
+
+jobs:
+  advisor-experience-contracts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: |
+          node --check platform/commands/advisor-experience-runtime.js
+          node --check platform/commands/command-palette-ui.js
+          node --check platform/commands/command-controller.js
+          node --check platform/commands/command-runtime.js
+      - name: Benvenu Clippy and low-friction input contracts
+        run: node --test tests/command-os-pack-08-test.mjs
