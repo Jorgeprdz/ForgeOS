@@ -67,7 +67,7 @@ test("runtime retires static mock content and connects Productive Pipeline plus 
   assert.match(legacy, /home-live-dashboard\.js\?v=home-live-dashboard-001/);
   assert.match(runtime, /PRODUCTIVE_PIPELINE_AND_TIMELINE/);
   assert.match(runtime, /createProductiveIntelligenceAdapter/);
-  assert.match(runtime, /data-home-static-mock-retired/);
+  assert.match(runtime, /dataset\.homeStaticMockRetired/);
   assert.doesNotMatch(runtime, /Lariza|Octavio|María|72%|65%|40%/);
   assert.doesNotMatch(runtime, /Math\.random|probability|opportunityScore/);
 });
