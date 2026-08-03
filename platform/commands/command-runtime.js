@@ -11,6 +11,10 @@ import {
     bindCommandController,
     destroyCommandController,
 } from './command-controller.js';
+import {
+    mountPersonFollowUpAuthority,
+    unmountPersonFollowUpAuthority,
+} from './person-follow-up-authority.js';
 
 const RUNTIME_ROOT_ID = 'command-os-runtime-root';
 const MOBILE_BUTTON_ID = 'command-os-mobile-trigger';
@@ -57,6 +61,7 @@ export function mountCommandRuntime() {
     if (mounted || document.getElementById(RUNTIME_ROOT_ID)) return;
 
     ensureStylesheet();
+    mountPersonFollowUpAuthority();
 
     const root = document.createElement('div');
     root.id = RUNTIME_ROOT_ID;
@@ -85,6 +90,7 @@ export function unmountCommandRuntime() {
     scrubCommandRuntime();
     destroyCommandController();
     destroyCommandShortcuts();
+    void unmountPersonFollowUpAuthority();
     document.getElementById(RUNTIME_ROOT_ID)?.remove();
     document.getElementById(STYLE_ID)?.remove();
     mounted = false;

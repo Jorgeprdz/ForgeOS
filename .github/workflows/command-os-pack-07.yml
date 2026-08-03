@@ -1,0 +1,29 @@
+name: Command OS Pack 07
+
+on:
+  pull_request:
+    paths:
+      - 'platform/commands/**'
+      - 'advisor-os/sales-pipeline/**'
+      - 'tests/command-os-pack-07-test.mjs'
+      - '.github/workflows/command-os-pack-07.yml'
+
+jobs:
+  productive-write-authority:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: |
+          node --check platform/commands/person-follow-up-authority.js
+          node --check platform/commands/command-runtime.js
+          node --check platform/commands/command-registry.js
+      - name: Productive authority contracts
+        run: node --test tests/command-os-pack-07-test.mjs
+      - name: Preserve governed write contracts
+        run: node --test tests/command-os-pack-06-test.mjs
