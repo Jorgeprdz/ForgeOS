@@ -1,4 +1,5 @@
 import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-120-false-zero-safe-area-001";
+import "./home-live-dashboard.js?v=home-live-dashboard-001";
 
 const LEGACY_CACHE_NAMES = new Set([
   "static-v7-pages-1",
