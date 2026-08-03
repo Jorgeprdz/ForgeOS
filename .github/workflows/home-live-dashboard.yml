@@ -70,11 +70,14 @@ jobs:
           set -euo pipefail
           runtime='docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js'
           entry='docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
+          legacy='docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
           ! grep -E '\.(insert|update|delete|upsert)\(' "$runtime"
           ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' "$runtime"
           ! grep -E '\bimport[[:space:]]*(\(|\{)' "$runtime"
+          ! grep -E '^import "\.\/home-live-dashboard' "$legacy"
           ! grep -E 'Lariza|Octavio|María|72%|65%|40%|Math\.random|opportunityScore' "$runtime"
           grep -q 'PRODUCTIVE_PIPELINE_AND_TIMELINE' "$runtime"
           grep -q 'pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-003' "$entry"
-          grep -q 'home-live-dashboard-runtime.js?v=home-live-dashboard-003' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          grep -q 'home-live-dashboard-runtime.js?v=home-live-dashboard-004' "$legacy"
+          grep -q 'addEventListener("load", installHomeRuntimeAfterLoad' "$legacy"
           grep -q 'display: none !important' docs/static-preview/forge-alive-material3/home-live-dashboard.css
