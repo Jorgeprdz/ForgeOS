@@ -1,7 +1,7 @@
 const HOME_SELECTOR = "[data-forge-home-module]";
 const RUNTIME_SELECTOR = "[data-home-live-dashboard-runtime-entry]";
 const RUNTIME_HREF = new URL(
-  "./home-live-dashboard-runtime.js?v=home-live-dashboard-005",
+  "./home-live-dashboard-active-runtime.js?v=home-live-dashboard-006",
   import.meta.url,
 ).href;
 
