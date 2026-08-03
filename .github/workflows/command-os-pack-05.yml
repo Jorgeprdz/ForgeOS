@@ -1,0 +1,32 @@
+name: Command OS Pack 05
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  entity-context-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Syntax
+        run: |
+          node --check platform/commands/entity-context-runtime.js
+          node --check platform/commands/entity-provider-adapter.js
+          node --check platform/commands/command-controller.js
+      - name: Entity and context contracts
+        run: node --test tests/command-os-pack-05-test.mjs
+      - name: Diff integrity
+        run: git diff --check
