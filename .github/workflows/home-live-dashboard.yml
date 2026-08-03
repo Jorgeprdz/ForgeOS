@@ -7,6 +7,7 @@ on:
     paths:
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard.js'
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js'
+      - 'docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js'
       - 'docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard.css'
       - 'docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
@@ -43,6 +44,7 @@ jobs:
         run: |
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard.js
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js
+          node --check docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js
           node --check docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js
           node --check tests/home-live-dashboard-test.mjs
           node --check tests/e2e/home-live-dashboard.spec.mjs
@@ -69,6 +71,7 @@ jobs:
         run: |
           set -euo pipefail
           runtime='docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js'
+          gate='docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js'
           entry='docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
           legacy='docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
           ! grep -E '\.(insert|update|delete|upsert)\(' "$runtime"
@@ -78,6 +81,7 @@ jobs:
           ! grep -E 'Lariza|Octavio|María|72%|65%|40%|Math\.random|opportunityScore' "$runtime"
           grep -q 'PRODUCTIVE_PIPELINE_AND_TIMELINE' "$runtime"
           grep -q 'pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-003' "$entry"
-          grep -q 'home-live-dashboard-runtime.js?v=home-live-dashboard-004' "$legacy"
-          grep -q 'addEventListener("load", installHomeRuntimeAfterLoad' "$legacy"
+          grep -q 'home-live-dashboard-route-gate.js?v=home-live-dashboard-005' "$legacy"
+          grep -q 'home-live-dashboard-runtime.js?v=home-live-dashboard-005' "$gate"
+          grep -q 'root.dataset.moduleActive !== "false"' "$gate"
           grep -q 'display: none !important' docs/static-preview/forge-alive-material3/home-live-dashboard.css
