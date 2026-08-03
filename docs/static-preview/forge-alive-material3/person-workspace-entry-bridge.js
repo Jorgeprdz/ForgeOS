@@ -82,6 +82,10 @@ function reconcileEntries() {
   document.documentElement.dataset.personWorkspaceEntryBridge = BRIDGE_VERSION;
 }
 
+function currentMaterialRoute() {
+  return document.querySelector("[data-forge-application]")?.dataset.forgeRoute || null;
+}
+
 function openPersonWorkspace(detail = {}) {
   globalThis.dispatchEvent(new CustomEvent("forge:open-person-workspace", {
     detail: Object.freeze({ ...detail }),
@@ -92,7 +96,7 @@ function openFromTrigger(trigger) {
   const personReference = trigger.dataset.openPersonWorkspacePerson;
   const sourceType = trigger.dataset.openPersonWorkspaceSource;
   const sourceReference = trigger.dataset.openPersonWorkspaceReference;
-  const origin = document.querySelector("[data-forge-application]")?.dataset.forgeRoute || "inicio";
+  const origin = currentMaterialRoute() || "inicio";
   const detail = personReference
     ? { personReference, origin }
     : { sourceIdentity: { type: sourceType, reference: sourceReference }, origin };
@@ -113,7 +117,7 @@ function navigateShellRoute(route, params = {}) {
       section: params.section || null,
       event: params.event || null,
       record: params.record || null,
-      origin: params.origin || document.querySelector("[data-forge-application]")?.dataset.forgeRoute || "inicio",
+      origin: currentMaterialRoute() || params.origin || "inicio",
     });
     return true;
   }
@@ -128,18 +132,18 @@ function navigateShellRoute(route, params = {}) {
 }
 
 function bindCommandNavigationBridge() {
-  commandNavigationBridgePromise ||= import(
-    new URL("platform/navigation-runtime.js", repositoryBase)
-  ).then(({ Navigation }) => {
-    Navigation.setNavigator((route, params = {}) => navigateShellRoute(route, params));
-    document.documentElement.dataset.commandOsMaterial3NavigationBridge = "ready";
-    return Navigation;
-  }).catch((error) => {
-    commandNavigationBridgePromise = null;
-    document.documentElement.dataset.commandOsMaterial3NavigationBridge = "failed";
-    console.error("[COMMAND OS MATERIAL3 NAVIGATION BRIDGE]", error);
-    throw error;
-  });
+  const navigationUrl = new URL("platform/navigation-runtime.js", repositoryBase);
+  commandNavigationBridgePromise ||= import(/* @vite-ignore */ navigationUrl.href)
+    .then(({ Navigation }) => {
+      Navigation.setNavigator((route, params = {}) => navigateShellRoute(route, params));
+      document.documentElement.dataset.commandOsMaterial3NavigationBridge = "ready";
+      return Navigation;
+    }).catch((error) => {
+      commandNavigationBridgePromise = null;
+      document.documentElement.dataset.commandOsMaterial3NavigationBridge = "failed";
+      console.error("[COMMAND OS MATERIAL3 NAVIGATION BRIDGE]", error);
+      throw error;
+    });
   return commandNavigationBridgePromise;
 }
 
@@ -181,7 +185,7 @@ async function scrubIntelligence(reason = "route-unmounted") {
 }
 
 function reconcileIntelligenceRoute() {
-  const route = document.querySelector("[data-forge-application]")?.dataset.forgeRoute;
+  const route = currentMaterialRoute();
   if (route !== "persona") void scrubIntelligence("route-unmounted");
 }
 
