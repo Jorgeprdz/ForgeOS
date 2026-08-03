@@ -316,7 +316,7 @@ export function createCarteraModule({ root, shell } = {}) {
         state: root.dataset.carteraMaterial3State || "idle",
         authenticated: Boolean(activeAdvisorId),
         capturedCleanerCount: sessionCleaners.length,
-        productiveMutationAuthorized: true,
+        productiveMutationAuthorized: false,
       });
     },
     destroy() {
