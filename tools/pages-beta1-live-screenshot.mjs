@@ -77,13 +77,17 @@ async function inspectAuthPresentation() {
     const buttonRadius = Number.parseFloat(buttonStyle?.borderRadius || "0");
     const buttonHeight = Number.parseFloat(buttonStyle?.height || "0");
     const buttonBackground = buttonStyle?.backgroundColor || "";
+    const buttonBackgroundImage = buttonStyle?.backgroundImage || "none";
+    const hasVisibleBackground = !["", "rgba(0, 0, 0, 0)", "transparent"].includes(buttonBackground)
+      || buttonBackgroundImage !== "none";
     return {
       panelVisible: Boolean(panel && !panel.closest("[hidden]") && panel.getClientRects().length),
       borderRadius,
       buttonRadius,
       buttonHeight,
       buttonBackground,
-      styled: borderRadius >= 12 && buttonRadius >= 8 && buttonHeight >= 38 && !["", "rgba(0, 0, 0, 0)", "transparent"].includes(buttonBackground),
+      buttonBackgroundImage,
+      styled: borderRadius >= 12 && buttonRadius >= 8 && buttonHeight >= 38 && hasVisibleBackground,
       authStylesheetLoaded: stylesheets.some(href => href.includes("forge-alive-auth-entry-067g17b1.css")),
       recoveryStylesheetLoaded: stylesheets.some(href => href.includes("forge-ui-recovery.css")),
       recoveryStylesheetState: document.documentElement.dataset.forgeUiRecoveryStyles || null,
@@ -152,7 +156,7 @@ try {
   });
 
   if (report.authenticated) {
-    await page.screenshot({ path: `${outputDir}/02-home-authenticated.png`, fullPage: true });
+    await openRoute("inicio", "02-home-authenticated.png", "homeAuthenticated");
     await inspectProductiveHome();
 
     await openRoute("pipeline", "03-pipeline-authenticated.png", "pipelineAuthenticated");
@@ -161,6 +165,7 @@ try {
     await openRoute("cartera", "04-cartera-authenticated.png", "carteraAuthenticated");
     report.carteraPdfInputVisible = await page.locator("[data-cartera-pdf-input], input[type=file][accept*=pdf]").isVisible().catch(() => false);
     report.carteraDropzoneVisible = await page.locator("[data-cartera-pdf-dropzone]").isVisible().catch(() => false);
+    report.carteraMutationControlsExpected = report.authenticationAuthority !== "INTEGRATED_DEMO_SESSION";
 
     await openRoute("pipeline", "05-pipeline-composer-surface.png", "composerAuthenticated");
     report.whatsappComposerTriggerCount = await page.locator("[data-prepare-productive-message]").count();
@@ -174,6 +179,9 @@ try {
   };
 
   await writeFile(`${outputDir}/report.json`, JSON.stringify(report, null, 2));
+  const carteraStatus = report.carteraMutationControlsExpected === false
+    ? "NOT_APPLICABLE_READ_ONLY_DEMO"
+    : `${Boolean(report.carteraPdfInputVisible && report.carteraDropzoneVisible) ? "PASS" : "FAIL"}`;
   const summary = [
     "# ForgeOS Beta 1 — Canonical Pages live acceptance",
     "",
@@ -188,8 +196,7 @@ try {
     `- Authenticated navbar visible: ${report.canonicalShell.authenticatedNavbarVisible ? "PASS" : "FAIL"}`,
     `- Legacy material3 URL detected: ${report.canonicalShell.legacyMaterial3ShellDetected ? "YES" : "NO"}`,
     `- Pipeline bulk import visible: ${report.pipelineBulkImportVisible ?? "NOT_TESTED"}`,
-    `- Cartera PDF input visible: ${report.carteraPdfInputVisible ?? "NOT_TESTED"}`,
-    `- Cartera dropzone visible: ${report.carteraDropzoneVisible ?? "NOT_TESTED"}`,
+    `- Cartera mutation controls: ${carteraStatus}`,
     `- WhatsApp composer triggers: ${report.whatsappComposerTriggerCount ?? "NOT_TESTED"}`,
     `- Console errors: ${report.consoleErrors.length}`,
     `- Page errors: ${report.pageErrors.length}`,
@@ -206,7 +213,8 @@ try {
   if (!report.authenticated) process.exitCode = 1;
   if (!report.productiveHome?.contract || !report.productiveHome?.staticMocksRetired) process.exitCode = 1;
   if (!report.canonicalShell.authenticatedNavbarVisible || report.canonicalShell.legacyMaterial3ShellDetected) process.exitCode = 1;
-  if (!report.pipelineBulkImportVisible || !report.carteraPdfInputVisible || !report.carteraDropzoneVisible) process.exitCode = 1;
+  if (!report.pipelineBulkImportVisible) process.exitCode = 1;
+  if (report.carteraMutationControlsExpected && (!report.carteraPdfInputVisible || !report.carteraDropzoneVisible)) process.exitCode = 1;
   if (report.consoleErrors.length || report.pageErrors.length || report.failedResponses.length || report.failedRequests.length) process.exitCode = 1;
 } finally {
   await browser.close();
