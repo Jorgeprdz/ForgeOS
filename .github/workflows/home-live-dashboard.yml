@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard.js'
+      - 'docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js'
+      - 'docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard.css'
       - 'docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
       - 'tests/home-live-dashboard-test.mjs'
@@ -40,6 +42,8 @@ jobs:
       - name: Syntax and focused contracts
         run: |
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard.js
+          node --check docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js
+          node --check docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js
           node --check tests/home-live-dashboard-test.mjs
           node --check tests/e2e/home-live-dashboard.spec.mjs
           node --check playwright.home-live-dashboard.config.mjs
@@ -64,8 +68,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -E '\.(insert|update|delete|upsert)\(' docs/static-preview/forge-alive-material3/home-live-dashboard.js
-          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' docs/static-preview/forge-alive-material3/home-live-dashboard.js
-          ! grep -E 'Lariza|Octavio|María|72%|65%|40%|Math\.random|opportunityScore' docs/static-preview/forge-alive-material3/home-live-dashboard.js
-          grep -q 'PRODUCTIVE_PIPELINE_AND_TIMELINE' docs/static-preview/forge-alive-material3/home-live-dashboard.js
+          runtime='docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js'
+          entry='docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
+          ! grep -E '\.(insert|update|delete|upsert)\(' "$runtime"
+          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' "$runtime"
+          ! grep -E '\bimport[[:space:]]*(\(|\{)' "$runtime"
+          ! grep -E 'Lariza|Octavio|María|72%|65%|40%|Math\.random|opportunityScore' "$runtime"
+          grep -q 'PRODUCTIVE_PIPELINE_AND_TIMELINE' "$runtime"
+          grep -q 'pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-003' "$entry"
+          grep -q 'home-live-dashboard-runtime.js?v=home-live-dashboard-003' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
           grep -q 'display: none !important' docs/static-preview/forge-alive-material3/home-live-dashboard.css
