@@ -15,6 +15,10 @@ import {
     mountPersonFollowUpAuthority,
     unmountPersonFollowUpAuthority,
 } from './person-follow-up-authority.js';
+import {
+    mountAdvisorExperience,
+    unmountAdvisorExperience,
+} from './advisor-experience-runtime.js';
 
 const RUNTIME_ROOT_ID = 'command-os-runtime-root';
 const MOBILE_BUTTON_ID = 'command-os-mobile-trigger';
@@ -24,7 +28,6 @@ let mounted = false;
 
 function ensureStylesheet() {
     if (document.getElementById(STYLE_ID)) return;
-
     const link = document.createElement('link');
     link.id = STYLE_ID;
     link.rel = 'stylesheet';
@@ -47,19 +50,16 @@ function createMobileTrigger() {
 function bindPaletteLifecycle(root) {
     const palette = root.querySelector('#command-palette');
     if (!palette) return;
-
     palette.setAttribute('role', 'dialog');
     palette.setAttribute('aria-modal', 'true');
     palette.setAttribute('aria-label', 'Command Bar');
-
-    palette.addEventListener('click', (event) => {
+    palette.addEventListener('click', event => {
         if (event.target === palette) cerrarCommandPalette();
     });
 }
 
 export function mountCommandRuntime() {
     if (mounted || document.getElementById(RUNTIME_ROOT_ID)) return;
-
     ensureStylesheet();
     mountPersonFollowUpAuthority();
 
@@ -72,22 +72,22 @@ export function mountCommandRuntime() {
 
     bindPaletteLifecycle(root);
     bindCommandController(root);
+    mountAdvisorExperience(root);
     initCommandShortcuts();
     mounted = true;
 }
 
 export function scrubCommandRuntime() {
     cerrarCommandPalette();
-
     const input = document.getElementById('universal-command-input');
     if (input) input.value = '';
-
     const results = document.getElementById('command-results');
     if (results) results.replaceChildren();
 }
 
 export function unmountCommandRuntime() {
     scrubCommandRuntime();
+    unmountAdvisorExperience();
     destroyCommandController();
     destroyCommandShortcuts();
     void unmountPersonFollowUpAuthority();
