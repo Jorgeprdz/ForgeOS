@@ -10,6 +10,7 @@ const [
   retirementRuntime,
   serviceWorker,
   pagesAcceptance,
+  recoveryVersioner,
 ] = await Promise.all([
   read("index.html"),
   read("docs/static-preview/forge-alive/index.html"),
@@ -17,6 +18,7 @@ const [
   read("docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"),
   read("service-worker.js"),
   read(".github/workflows/pages-public-acceptance.yml"),
+  read("scripts/forge-ui-recovery-cache-versioning.mjs"),
 ]);
 
 assert.match(rootIndex, /FORGE_LEGACY_UI_RETIRED/);
@@ -33,6 +35,12 @@ assert.match(retirementRuntime, /getRegistrations\(\)/);
 assert.match(retirementRuntime, /registration\.unregister\(\)/);
 assert.match(retirementRuntime, /static-v7-pages-1/);
 assert.match(retirementRuntime, /runtime-v7-pages-1/);
+assert.match(retirementRuntime, /DOMContentLoaded/);
+assert.match(retirementRuntime, /runLegacyCleanupInBackground/);
+assert.match(retirementRuntime, /Promise\.race\(\[cleanup, timeout\]\)/);
+assert.doesNotMatch(retirementRuntime, /addEventListener\("load"/);
+assert.doesNotMatch(retirementRuntime, /^await\s+Promise\.allSettled/m);
+assert.match(recoveryVersioner, /rescue=white-screen-002/);
 
 assert.match(serviceWorker, /FORGEOS_LEGACY_SERVICE_WORKER_RETIRED/);
 assert.match(serviceWorker, /self\.registration\.unregister\(\)/);
@@ -44,6 +52,7 @@ assert.match(pagesAcceptance, /FORGE_LEGACY_UI_RETIRED/);
 assert.match(pagesAcceptance, /FORGEOS_LEGACY_SERVICE_WORKER_RETIRED/);
 
 console.log("FORGE_LEGACY_UI_PUBLIC_ENTRY=RETIRED");
-console.log("FORGE_LEGACY_SERVICE_WORKER=RETIRED");
-console.log("FORGE_LEGACY_CACHES=PURGED");
+console.log("FORGE_LEGACY_SERVICE_WORKER=BACKGROUND_RETIREMENT");
+console.log("FORGE_LEGACY_CACHES=BACKGROUND_PURGE");
+console.log("FORGE_WHITE_SCREEN_RESCUE=ENFORCED");
 console.log("FORGE_MATERIAL3_CANONICAL_ENTRY=ENFORCED");

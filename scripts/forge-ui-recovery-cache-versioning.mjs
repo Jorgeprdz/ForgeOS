@@ -23,7 +23,7 @@ await Promise.all([
 
 const source = await readFile(appPath, 'utf8');
 const legacyPattern = /import ["']\.\/legacy-ui-retirement\.js(?:\?[^"']*)?["'];/;
-const legacyImport = 'import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001";';
+const legacyImport = 'import "./legacy-ui-retirement.js?v=legacy-ui-retirement-001&rescue=white-screen-002";';
 const loaderPattern = /import ["']\.\/forge-ui-recovery-loader\.js(?:\?[^"']*)?["'];\n?/;
 const loaderImport = `import "./forge-ui-recovery-loader.js?v=${version}";\n`;
 
@@ -40,6 +40,9 @@ if (loaderPattern.test(versioned)) {
 
 if (!versioned.includes(loaderImport.trim())) {
   throw new Error('FORGE_UI_RECOVERY_LOADER_VERSIONING_FAILED');
+}
+if (!versioned.includes('rescue=white-screen-002')) {
+  throw new Error('FORGE_WHITE_SCREEN_RESCUE_VERSIONING_FAILED');
 }
 
 if (versioned !== source) {

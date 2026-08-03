@@ -15,6 +15,7 @@ const HOME_ROUTE_GATE_HREF = new URL(
   "./home-live-dashboard-route-gate.js?v=home-live-dashboard-005",
   import.meta.url,
 ).href;
+const LEGACY_CLEANUP_TIMEOUT_MS = 2_500;
 
 function installRecoveryStylesheet() {
   let stylesheet = document.querySelector(RECOVERY_STYLESHEET_SELECTOR);
@@ -44,7 +45,7 @@ function installRecoveryStylesheet() {
   globalThis.addEventListener("pagehide", () => observer.disconnect(), { once: true });
 }
 
-function installHomeRouteGateAfterLoad() {
+function installHomeRouteGate() {
   if (document.querySelector(HOME_ROUTE_GATE_SELECTOR)) return;
   const script = document.createElement("script");
   script.type = "module";
@@ -54,11 +55,11 @@ function installHomeRouteGateAfterLoad() {
 }
 
 function scheduleHomeRouteGate() {
-  if (document.readyState === "complete") {
-    queueMicrotask(installHomeRouteGateAfterLoad);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", installHomeRouteGate, { once: true });
     return;
   }
-  globalThis.addEventListener("load", installHomeRouteGateAfterLoad, { once: true });
+  queueMicrotask(installHomeRouteGate);
 }
 
 async function retireLegacyServiceWorkers() {
@@ -93,13 +94,22 @@ async function clearLegacyCaches() {
   );
 }
 
+function runLegacyCleanupInBackground() {
+  const cleanup = Promise.allSettled([
+    retireLegacyServiceWorkers(),
+    clearLegacyCaches(),
+  ]);
+  const timeout = new Promise((resolve) => {
+    globalThis.setTimeout(resolve, LEGACY_CLEANUP_TIMEOUT_MS);
+  });
+
+  void Promise.race([cleanup, timeout]).catch(() => undefined);
+}
+
 installRecoveryStylesheet();
 scheduleHomeRouteGate();
 
-await Promise.allSettled([
-  retireLegacyServiceWorkers(),
-  clearLegacyCaches(),
-]);
-
 document.documentElement.dataset.forgeLegacyUiRetired = "true";
-document.documentElement.dataset.forgeUiRecovery = "001";
+document.documentElement.dataset.forgeUiRecovery = "002";
+
+runLegacyCleanupInBackground();

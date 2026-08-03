@@ -20,16 +20,26 @@ test('recovery stylesheet is loaded from the canonical public shell', async () =
   assert.match(css, /Forge UI Recovery \+ Editorial Type/);
 });
 
-test('Pages preserves the historical legacy import and versions the dedicated recovery loader', async () => {
+test('Pages preserves the historical legacy prefix and cache-busts the rescue runtime', async () => {
   const [builder, versioner] = await Promise.all([
     read('scripts/build-advisor-presentation-pages-runtime.mjs'),
     read('scripts/forge-ui-recovery-cache-versioning.mjs'),
   ]);
   assert.match(builder, /forge-ui-recovery-cache-versioning\.mjs/);
   assert.match(versioner, /process\.env\.GITHUB_SHA/);
-  assert.match(versioner, /legacy-ui-retirement\.js\?v=legacy-ui-retirement-001/);
+  assert.match(versioner, /legacy-ui-retirement\.js\?v=legacy-ui-retirement-001&rescue=white-screen-002/);
   assert.match(versioner, /forge-ui-recovery-loader\.js\?v=\$\{version\}/);
   assert.match(versioner, /FORGE_UI_RECOVERY_LOADER_VERSIONING_FAILED/);
+  assert.match(versioner, /FORGE_WHITE_SCREEN_RESCUE_VERSIONING_FAILED/);
+});
+
+test('legacy cleanup cannot block application module evaluation', async () => {
+  const legacy = await read('docs/static-preview/forge-alive-material3/legacy-ui-retirement.js');
+  assert.match(legacy, /DOMContentLoaded/);
+  assert.match(legacy, /runLegacyCleanupInBackground/);
+  assert.match(legacy, /Promise\.race\(\[cleanup, timeout\]\)/);
+  assert.doesNotMatch(legacy, /addEventListener\("load"/);
+  assert.doesNotMatch(legacy, /^await\s+Promise\.allSettled/m);
 });
 
 test('every productive route spans the full 12-column workspace', async () => {
@@ -73,6 +83,9 @@ test('floating navigation and safe bottom reservation remain intact', async () =
   assert.match(css, /--forge-mobile-nav-height/);
   assert.match(css, /--forge-mobile-nav-clearance/);
   assert.match(css, /--forge-mobile-floating-gap/);
+  assert.match(css, /--forge-mobile-content-runway:\s*clamp\(210px, 24dvh, 250px\)/);
+  assert.match(css, /\[data-forge-pipeline-module\][\s\S]*padding-bottom:[\s\S]*var\(--forge-mobile-content-runway\)/);
+  assert.match(css, /scroll-padding-bottom:[\s\S]*var\(--forge-mobile-content-runway\)/);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.doesNotMatch(css, /\.bottom-shell\s*\{[^}]*position:\s*(static|relative)/s);
 });
