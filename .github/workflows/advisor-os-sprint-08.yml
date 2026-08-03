@@ -1,0 +1,41 @@
+name: Advisor OS Sprint 08
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'advisor-os/cartera/prospect-to-client-policy-runtime.js'
+      - 'tests/advisor-os-sprint-08-test.mjs'
+      - '.github/workflows/advisor-os-sprint-08.yml'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_08_PROSPECT_TO_CLIENT_AND_POLICY.md'
+permissions:
+  contents: read
+jobs:
+  sprint-08-one-pass:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: node --check advisor-os/cartera/prospect-to-client-policy-runtime.js
+      - name: Sprint 08 contracts
+        run: node --test tests/advisor-os-sprint-08-test.mjs
+      - name: Preserve Application and Policy authorities
+        run: |
+          node --test \
+            tests/crs-06-application-signature-authority-contract-test.mjs \
+            tests/crs-06-application-signature-authority-service-test.mjs \
+            tests/crs-07-application-policy-lineage-contract-test.mjs \
+            tests/crs-07-application-policy-lineage-service-test.mjs
+      - name: Safety boundary scan
+        run: |
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\s*\(' advisor-os/cartera/prospect-to-client-policy-runtime.js
+          ! grep -Eq '(localStorage|sessionStorage|indexedDB|eval\(|new Function)' advisor-os/cartera/prospect-to-client-policy-runtime.js
+          grep -q 'CONVERSION_PREVIEW_REQUIRED' advisor-os/cartera/prospect-to-client-policy-runtime.js
+          grep -q 'ACCOUNT_CREATION_FORBIDDEN' advisor-os/cartera/prospect-to-client-policy-runtime.js
+          grep -q 'POLICY_NOT_VISIBLE_IN_PORTFOLIO' advisor-os/cartera/prospect-to-client-policy-runtime.js
+          grep -q "clientRowCreated: false" advisor-os/cartera/prospect-to-client-policy-runtime.js
