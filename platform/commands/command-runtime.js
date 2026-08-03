@@ -19,6 +19,10 @@ import {
     mountAdvisorExperience,
     unmountAdvisorExperience,
 } from './advisor-experience-runtime.js';
+import {
+    mountContextualClippy,
+    unmountContextualClippy,
+} from './contextual-clippy-runtime.js';
 
 const RUNTIME_ROOT_ID = 'command-os-runtime-root';
 const MOBILE_BUTTON_ID = 'command-os-mobile-trigger';
@@ -73,6 +77,7 @@ export function mountCommandRuntime() {
     bindPaletteLifecycle(root);
     bindCommandController(root);
     mountAdvisorExperience(root);
+    mountContextualClippy();
     initCommandShortcuts();
     mounted = true;
 }
@@ -87,6 +92,7 @@ export function scrubCommandRuntime() {
 
 export function unmountCommandRuntime() {
     scrubCommandRuntime();
+    unmountContextualClippy();
     unmountAdvisorExperience();
     destroyCommandController();
     destroyCommandShortcuts();
