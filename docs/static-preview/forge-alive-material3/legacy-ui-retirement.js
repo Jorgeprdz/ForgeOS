@@ -5,45 +5,12 @@ const LEGACY_CACHE_NAMES = new Set([
   "runtime-v7-pages-1",
 ]);
 
-const RECOVERY_STYLESHEET_SELECTOR = "[data-forge-ui-recovery-styles]";
-const RECOVERY_STYLESHEET_HREF = new URL(
-  "./forge-ui-recovery.css?v=forge-ui-recovery-001",
-  import.meta.url,
-).href;
 const HOME_ROUTE_GATE_SELECTOR = "[data-home-live-dashboard-route-gate-entry]";
 const HOME_ROUTE_GATE_HREF = new URL(
   "./home-live-dashboard-route-gate.js?v=home-live-dashboard-005",
   import.meta.url,
 ).href;
 const LEGACY_CLEANUP_TIMEOUT_MS = 2_500;
-
-function installRecoveryStylesheet() {
-  let stylesheet = document.querySelector(RECOVERY_STYLESHEET_SELECTOR);
-  if (!stylesheet) {
-    stylesheet = document.createElement("link");
-    stylesheet.rel = "stylesheet";
-    stylesheet.href = RECOVERY_STYLESHEET_HREF;
-    stylesheet.dataset.forgeUiRecoveryStyles = "true";
-    document.head.append(stylesheet);
-  }
-
-  let moving = false;
-  const keepRecoveryLast = () => {
-    if (moving || !stylesheet.isConnected || stylesheet === document.head.lastElementChild) {
-      return;
-    }
-    moving = true;
-    document.head.append(stylesheet);
-    queueMicrotask(() => {
-      moving = false;
-    });
-  };
-
-  const observer = new MutationObserver(keepRecoveryLast);
-  observer.observe(document.head, { childList: true });
-  queueMicrotask(keepRecoveryLast);
-  globalThis.addEventListener("pagehide", () => observer.disconnect(), { once: true });
-}
 
 function installHomeRouteGate() {
   if (document.querySelector(HOME_ROUTE_GATE_SELECTOR)) return;
@@ -63,9 +30,7 @@ function scheduleHomeRouteGate() {
 }
 
 async function retireLegacyServiceWorkers() {
-  if (!("serviceWorker" in navigator)) {
-    return;
-  }
+  if (!("serviceWorker" in navigator)) return;
 
   const registrations = await navigator.serviceWorker.getRegistrations();
   await Promise.all(
@@ -82,9 +47,7 @@ async function retireLegacyServiceWorkers() {
 }
 
 async function clearLegacyCaches() {
-  if (!("caches" in globalThis)) {
-    return;
-  }
+  if (!("caches" in globalThis)) return;
 
   const names = await caches.keys();
   await Promise.all(
@@ -106,7 +69,8 @@ function runLegacyCleanupInBackground() {
   void Promise.race([cleanup, timeout]).catch(() => undefined);
 }
 
-installRecoveryStylesheet();
+// Recovery CSS is owned exclusively by forge-ui-recovery-loader.js.
+// Keeping a second loader here caused Chrome to abort the first stylesheet request.
 scheduleHomeRouteGate();
 
 document.documentElement.dataset.forgeLegacyUiRetired = "true";
