@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Advisor OS Sprint 11 Acceptance</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --forge-mobile-nav-height: 76px;
+      --forge-mobile-nav-clearance: 44px;
+      --forge-mobile-floating-gap: 12px;
+      --surface: #0d1b31;
+      --surface-high: #12243f;
+      --ink: #f5f2ff;
+      --muted: #aeb8d0;
+      --aqua: #52e6df;
+      --outline: rgba(170,199,255,.2);
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; overflow-x: hidden; }
+    body {
+      background: linear-gradient(180deg,#050d1b,#071122);
+      color: var(--ink);
+      font-family: Inter, system-ui, sans-serif;
+    }
+    button, input, select { font: inherit; }
+    .shell { width: min(100%, 1120px); margin: 0 auto; padding: 20px 16px 0; }
+    header { display: grid; gap: 6px; margin-bottom: 18px; }
+    h1, h2, p { margin: 0; }
+    header p, .muted { color: var(--muted); }
+    main {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      padding-bottom: calc(var(--forge-mobile-nav-height) + var(--forge-mobile-nav-clearance) + var(--forge-mobile-floating-gap) + env(safe-area-inset-bottom));
+    }
+    .card {
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid var(--outline);
+      border-radius: 24px;
+      background: linear-gradient(145deg,rgba(20,38,68,.96),rgba(8,22,42,.98));
+    }
+    .status-card { display: grid; gap: 8px; }
+    .status-pill {
+      width: fit-content;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(82,230,223,.12);
+      color: var(--aqua);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .form-grid { display: grid; gap: 12px; margin-top: 14px; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: 12px; }
+    input, select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--outline);
+      border-radius: 14px;
+      background: rgba(5,18,35,.9);
+      color: var(--ink);
+      padding: 9px 12px;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    button {
+      min-height: 44px;
+      border: 1px solid var(--outline);
+      border-radius: 999px;
+      padding: 9px 16px;
+      background: rgba(255,255,255,.05);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    button[data-primary-action="true"] {
+      border-color: rgba(82,230,223,.5);
+      background: rgba(82,230,223,.16);
+      color: #bafaf6;
+      font-weight: 850;
+    }
+    button[hidden], section[hidden] { display: none !important; }
+    .source-grid { display: grid; gap: 10px; margin-top: 12px; }
+    .source-item { padding: 12px; border-radius: 16px; background: rgba(5,18,35,.68); }
+    .source-item strong { display: block; }
+    .demo-banner {
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: #f2c94c;
+      color: #16130a;
+      font-weight: 900;
+      text-align: center;
+    }
+    .floating-nav {
+      position: fixed;
+      z-index: 50;
+      left: 50%;
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      translate: -50% 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: min(430px, calc(100vw - 24px));
+      min-height: var(--forge-mobile-nav-height);
+      border: 1px solid rgba(170,199,255,.25);
+      border-radius: 999px;
+      background: rgba(9,22,42,.96);
+      box-shadow: 0 18px 48px rgba(0,0,0,.4);
+    }
+    .floating-nav span { color: var(--muted); font-size: 13px; }
+    .last-content { min-height: 48px; display: grid; place-items: center; }
+    [data-raw-error] { white-space: pre-wrap; overflow-wrap: anywhere; }
+    @media (min-width: 720px) {
+      .shell { padding-inline: 28px; }
+      .form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      main { padding-bottom: max(110px, env(safe-area-inset-bottom)); }
+    }
+    @media (min-width: 1024px) {
+      .shell { padding-top: 34px; }
+      main { grid-template-columns: minmax(0,1.2fr) minmax(300px,.8fr); }
+      .status-card, .last-content { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <p>Advisor OS 1.0</p>
+      <h1>Tu operación, sin captura pesada</h1>
+      <p>Configura sólo lo que Forge todavía no sabe.</p>
+    </header>
+
+    <main data-public-surface>
+      <section class="card status-card" data-surface-state="READY">
+        <span class="status-pill" data-state-pill>READY</span>
+        <h2 data-state-title>Todo listo</h2>
+        <p class="muted" data-state-message>La superficie está disponible.</p>
+        <div class="source-grid" data-source-items></div>
+      </section>
+
+      <section class="card" data-preferences-card>
+        <h2>Preferencias mínimas</h2>
+        <p class="muted" data-setup-summary></p>
+        <div class="form-grid">
+          <label>Nombre visible<input data-pref-name autocomplete="name"></label>
+          <label>Zona horaria<input data-pref-timezone value="America/Mexico_City"></label>
+          <label>Meta mensual<input data-pref-goal type="number" min="1" max="999"></label>
+          <label>Notificaciones
+            <select data-pref-notification>
+              <option value="HYBRID">Híbridas</option>
+              <option value="REAL_TIME">Tiempo real</option>
+              <option value="DIGEST">Resumen</option>
+              <option value="MUTED">Silenciadas</option>
+            </select>
+          </label>
+          <label>Captura
+            <select data-pref-capture>
+              <option value="REAL_TIME">En el momento</option>
+              <option value="DIGEST">Por lote</option>
+              <option value="HYBRID">Híbrida</option>
+            </select>
+          </label>
+        </div>
+        <div class="actions">
+          <button type="button" data-preview-preferences data-primary-action="true">Revisar preferencias</button>
+          <button type="button" data-confirm-preferences data-primary-action="true" hidden>Confirmar y guardar</button>
+          <button type="button" data-cancel-preview hidden>Cancelar</button>
+        </div>
+        <p class="muted" data-preference-feedback></p>
+      </section>
+
+      <section class="card" data-session-card>
+        <h2>Sesión</h2>
+        <p class="muted" data-session-summary></p>
+        <div class="actions">
+          <button type="button" data-logout>Salir</button>
+          <button type="button" data-login hidden>Volver a entrar</button>
+        </div>
+      </section>
+
+      <section class="demo-banner" data-demo-banner>
+        Modo demostración · Datos ficticios · Solo lectura
+      </section>
+
+      <section class="card last-content" data-last-content>
+        <span>El último contenido puede desplazarse por encima de la navegación flotante.</span>
+      </section>
+    </main>
+  </div>
+
+  <nav class="floating-nav" data-floating-nav aria-label="Navegación principal flotante">
+    <span>Inicio · Pipeline · Actividad · Cartera</span>
+  </nav>
+
+  <script type="module">
+    import {
+      assertExplicitDemoBoundary,
+      createAdvisorExperienceRuntime,
+      evaluateAdvisorSetup,
+      normalizeExperienceSurfaceState,
+    } from '/advisor-os/experience/advisor-experience-runtime.js';
+
+    const STORAGE_KEY = 'forge.sprint11.preferences.v1';
+    const sessionState = { advisorId: 'ADVISOR-1', active: true };
+    let mutationCount = 0;
+    let currentPreview = null;
+
+    const authority = {
+      async savePreferences({ advisorId, preferences }) {
+        mutationCount += 1;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ advisorId, preferences }));
+        return { mutationId: `PREF-${mutationCount}`, advisorId };
+      },
+    };
+    const runtime = createAdvisorExperienceRuntime({ preferencesAuthority: authority });
+    runtime.beginSession(sessionState.advisorId);
+
+    const nodes = {
+      stateCard: document.querySelector('[data-surface-state]'),
+      statePill: document.querySelector('[data-state-pill]'),
+      stateTitle: document.querySelector('[data-state-title]'),
+      stateMessage: document.querySelector('[data-state-message]'),
+      sourceItems: document.querySelector('[data-source-items]'),
+      setupSummary: document.querySelector('[data-setup-summary]'),
+      feedback: document.querySelector('[data-preference-feedback]'),
+      sessionSummary: document.querySelector('[data-session-summary]'),
+      preview: document.querySelector('[data-preview-preferences]'),
+      confirm: document.querySelector('[data-confirm-preferences]'),
+      cancel: document.querySelector('[data-cancel-preview]'),
+      logout: document.querySelector('[data-logout]'),
+      login: document.querySelector('[data-login]'),
+      name: document.querySelector('[data-pref-name]'),
+      timezone: document.querySelector('[data-pref-timezone]'),
+      goal: document.querySelector('[data-pref-goal]'),
+      notification: document.querySelector('[data-pref-notification]'),
+      capture: document.querySelector('[data-pref-capture]'),
+    };
+
+    function storedPreferences() {
+      try {
+        const payload = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        return payload?.advisorId === sessionState.advisorId ? payload.preferences : null;
+      } catch { return null; }
+    }
+
+    function readForm() {
+      return {
+        profile: { displayName: nodes.name.value },
+        timeZone: nodes.timezone.value,
+        goal: { monthlyPolicyGoal: nodes.goal.value },
+        notificationMode: nodes.notification.value,
+        captureMode: nodes.capture.value,
+      };
+    }
+
+    function fillForm(preferences) {
+      if (!preferences) return;
+      nodes.name.value = preferences.profile?.displayName || '';
+      nodes.timezone.value = preferences.timeZone || 'America/Mexico_City';
+      nodes.goal.value = preferences.goal?.monthlyPolicyGoal ?? '';
+      nodes.notification.value = preferences.notificationMode || 'HYBRID';
+      nodes.capture.value = preferences.captureMode || 'REAL_TIME';
+    }
+
+    function renderSetup() {
+      const result = evaluateAdvisorSetup(readForm());
+      nodes.setupSummary.textContent = result.status === 'COMPLETE'
+        ? 'Configuración completa. Puedes cambiarla sin interrumpir tu trabajo.'
+        : `Faltan: ${result.missing.join(', ')}. Esto no bloquea el primer valor.`;
+      document.documentElement.dataset.setupStatus = result.status;
+    }
+
+    function renderSession() {
+      nodes.sessionSummary.textContent = sessionState.active
+        ? `Sesión activa: ${sessionState.advisorId}`
+        : 'La sesión está cerrada y el estado privado fue limpiado.';
+      nodes.logout.hidden = !sessionState.active;
+      nodes.login.hidden = sessionState.active;
+      nodes.preview.disabled = !sessionState.active;
+    }
+
+    function renderState(input) {
+      const state = normalizeExperienceSurfaceState(input);
+      nodes.stateCard.dataset.surfaceState = state.state;
+      nodes.statePill.textContent = state.state;
+      const copy = {
+        LOADING: ['Cargando', 'Conservamos el contexto mientras llega la información.'],
+        READY: ['Todo listo', 'La superficie está disponible.'],
+        EMPTY: ['Todavía no hay registros', 'Agrega o importa el primer elemento cuando te convenga.'],
+        PARTIAL: ['Información parcial', 'Puedes continuar; una fuente todavía no está disponible.'],
+        UNAVAILABLE: ['No pudimos conectar una fuente', 'Reintenta sin perder el trabajo que ya tienes.'],
+        INVALID: ['Revisa la información', 'Hay un dato que necesita corrección.'],
+        SESSION_REQUIRED: ['Inicia sesión', 'Tus datos privados permanecen ocultos.'],
+      }[state.state];
+      nodes.stateTitle.textContent = copy[0];
+      nodes.stateMessage.textContent = copy[1];
+      nodes.sourceItems.replaceChildren(...state.items.map(item => {
+        const div = document.createElement('div');
+        div.className = 'source-item';
+        div.innerHTML = `<strong>${item.label || item.id || 'Elemento'}</strong><span class="muted">${item.summary || ''}</span>`;
+        return div;
+      }));
+      return state;
+    }
+
+    function resetPreview() {
+      currentPreview = null;
+      nodes.preview.hidden = false;
+      nodes.preview.dataset.primaryAction = 'true';
+      nodes.confirm.hidden = true;
+      nodes.confirm.removeAttribute('data-primary-action');
+      nodes.cancel.hidden = true;
+    }
+
+    nodes.preview.addEventListener('click', () => {
+      try {
+        currentPreview = runtime.preparePreferencesUpdate({ current: readForm() });
+        nodes.feedback.textContent = `Revisa: ${currentPreview.preferences.profile.displayName}, meta ${currentPreview.preferences.goal.monthlyPolicyGoal}.`;
+        nodes.preview.hidden = true;
+        nodes.preview.removeAttribute('data-primary-action');
+        nodes.confirm.hidden = false;
+        nodes.confirm.dataset.primaryAction = 'true';
+        nodes.cancel.hidden = false;
+      } catch (error) {
+        nodes.feedback.textContent = error.message;
+      }
+    });
+
+    nodes.confirm.addEventListener('click', async () => {
+      try {
+        const receipt = await runtime.confirmPreferencesUpdate({
+          preview: currentPreview,
+          confirmedByAdvisor: true,
+          confirmationReference: `UI-${Date.now()}`,
+        });
+        nodes.feedback.textContent = `Guardado con recibo ${receipt.receipt.mutationId}.`;
+        resetPreview();
+        renderSetup();
+      } catch (error) {
+        nodes.feedback.textContent = error.message;
+      }
+    });
+
+    nodes.cancel.addEventListener('click', () => {
+      nodes.feedback.textContent = 'Cambios descartados.';
+      resetPreview();
+    });
+
+    nodes.logout.addEventListener('click', () => {
+      sessionState.active = false;
+      runtime.scrub('logout');
+      currentPreview = null;
+      nodes.feedback.textContent = '';
+      nodes.sourceItems.replaceChildren();
+      renderState({ status: 'SESSION_REQUIRED' });
+      resetPreview();
+      renderSession();
+    });
+
+    nodes.login.addEventListener('click', () => {
+      sessionState.active = true;
+      runtime.beginSession(sessionState.advisorId);
+      fillForm(storedPreferences());
+      renderState({ status: 'READY', items: [{ id: 'HOME', label: 'Prioridad del día', summary: 'Una acción útil antes de cualquier configuración adicional.' }] });
+      renderSetup();
+      renderSession();
+    });
+
+    for (const field of [nodes.name, nodes.timezone, nodes.goal, nodes.notification, nodes.capture]) {
+      field.addEventListener('input', renderSetup);
+      field.addEventListener('change', renderSetup);
+    }
+
+    assertExplicitDemoBoundary({
+      isDemo: true,
+      label: document.querySelector('[data-demo-banner]').textContent,
+      dataClass: 'SYNTHETIC',
+      externalEffectsBlocked: true,
+    });
+
+    fillForm(storedPreferences());
+    renderSetup();
+    renderSession();
+    renderState({ status: 'READY', items: [{ id: 'HOME', label: 'Prioridad del día', summary: 'Una acción útil antes de cualquier configuración adicional.' }] });
+
+    globalThis.__SPRINT11__ = Object.freeze({
+      runtime,
+      renderState,
+      getSession: () => ({ ...sessionState }),
+      getStoredPreferences: storedPreferences,
+      simulateSlowLoad(delay = 250) {
+        renderState({ status: 'LOADING' });
+        return new Promise(resolve => setTimeout(() => resolve(renderState({ status: 'READY', items: [{ id: 'SLOW', label: 'Fuente recuperada' }] })), delay));
+      },
+      simulatePartial() {
+        return renderState({ status: 'PARTIAL', items: [{ id: 'KNOWN', label: 'Dato disponible' }], sourceStates: [{ state: 'UNAVAILABLE' }] });
+      },
+      simulateUnavailable() {
+        return renderState({ status: 'UNAVAILABLE', reason: 'SOURCE_OFFLINE', error: new Error('private stack') });
+      },
+      beginLateLoad() {
+        let resolve;
+        const promise = runtime.runSurfaceLoad({
+          surfaceId: 'HOME',
+          loader: () => new Promise(done => { resolve = done; }),
+        });
+        return { promise, resolve };
+      },
+    });
+  </script>
+</body>
+</html>
