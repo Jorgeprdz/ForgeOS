@@ -366,19 +366,25 @@ textarea,
 }
 
 .cartera-material3-frame section:has(#cartera-radar-title) > div:nth-child(2) {
+  align-items: center !important;
   gap: 2px !important;
   padding-block: 10px 2px !important;
   border-bottom: 1px solid rgba(170, 199, 255, 0.09);
 }
 
 .cartera-material3-frame section:has(#cartera-radar-title) [data-radar-horizon] {
+  flex: 0 0 auto !important;
+  height: 34px !important;
   min-height: 34px !important;
-  padding: 6px 10px !important;
+  max-height: 34px !important;
+  padding: 0 10px !important;
   border: 0 !important;
   border-radius: 8px !important;
   background: transparent !important;
   color: var(--muted) !important;
   font-size: 0.78rem !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
 }
 
 .cartera-material3-frame section:has(#cartera-radar-title) [data-radar-horizon][aria-pressed="true"] {
