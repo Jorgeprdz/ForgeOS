@@ -13,6 +13,7 @@
   --forge-panel-bg: rgba(12, 28, 50, 0.78);
   --forge-panel-bg-soft: rgba(7, 20, 38, 0.48);
   --forge-shadow-soft: 0 14px 38px rgba(0, 0, 0, 0.18);
+  --forge-mobile-content-runway: clamp(210px, 24dvh, 250px);
 }
 
 /* --------------------------------------------------------------------------
@@ -440,6 +441,19 @@ textarea,
       + var(--forge-mobile-floating-gap)
       + env(safe-area-inset-bottom)
     ) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .forge-module-viewport > [data-forge-pipeline-module] {
+    padding-bottom: calc(
+      var(--forge-mobile-content-runway)
+      + env(safe-area-inset-bottom)
+    ) !important;
+    scroll-padding-bottom: calc(
+      var(--forge-mobile-content-runway)
+      + env(safe-area-inset-bottom)
+    );
   }
 }
 
