@@ -8,6 +8,7 @@ on:
       - 'tests/command-os-pack-0*-test.mjs'
       - 'tests/e2e/command-os-pack-03.spec.mjs'
       - 'tests/e2e/fixtures/command-os-pack-03/**'
+      - 'playwright.command-os-pack-03.config.mjs'
       - '.github/workflows/command-os-pack-09.yml'
       - 'docs/evidence/COMMAND_OS_PACK_09_END_TO_END_ACCEPTANCE.md'
 
@@ -21,7 +22,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Command OS contracts Pack 03 through Pack 09
+      - name: Command OS contracts Pack 04 through Pack 09
         run: |
           node --test tests/command-os-pack-04-test.mjs
           node --test tests/command-os-pack-05-test.mjs
@@ -32,7 +33,7 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Desktop and mobile Command Bar acceptance
-        run: npx playwright test tests/e2e/command-os-pack-03.spec.mjs --project=chromium
+        run: npx playwright test --config=playwright.command-os-pack-03.config.mjs
       - name: Safety boundary scan
         run: |
           ! grep -R -E 'AUTO_CONFIRM|AUTO_EXECUTE|AUTO_SELECT' platform/commands
