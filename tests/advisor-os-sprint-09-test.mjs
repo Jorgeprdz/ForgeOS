@@ -121,7 +121,7 @@ test('client 360 composes canonical authorities and service signals', async () =
   assert.equal(snapshot.automaticAction, false);
   assert.deepEqual(
     snapshot.serviceSignals.map(item => item.type),
-    ['PAYMENT_OVERDUE', 'PAYMENT_DUE', 'RENEWAL_REVIEW', 'POLICY_ANNIVERSARY', 'CLIENT_WITHOUT_RECENT_CONTACT'],
+    ['PAYMENT_OVERDUE', 'PAYMENT_DUE', 'RENEWAL_REVIEW', 'CLIENT_WITHOUT_RECENT_CONTACT', 'POLICY_ANNIVERSARY'],
   );
   assert.equal(snapshot.serviceSignals[0].severity, 'CRITICAL');
 });
