@@ -8,12 +8,13 @@ const password = process.env.FORGE_BETA_TEST_PASSWORD || "";
 
 await mkdir(outputDir, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, channel: "chrome" });
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
 const page = await context.newPage();
 const report = {
   target: baseUrl,
   capturedAt: new Date().toISOString(),
+  browserAuthority: "RUNNER_PREINSTALLED_GOOGLE_CHROME",
   authenticated: false,
   routes: {},
   consoleErrors: [],
@@ -92,6 +93,7 @@ try {
     "# ForgeOS Beta 1 — Pages live acceptance",
     "",
     `- Target: ${baseUrl}`,
+    `- Browser: ${report.browserAuthority}`,
     `- Authenticated capture: ${report.authenticated ? "PASS" : "SKIPPED"}`,
     `- Pipeline bulk import visible: ${report.pipelineBulkImportVisible ?? "NOT_TESTED"}`,
     `- Cartera PDF input visible: ${report.carteraPdfInputVisible ?? "NOT_TESTED"}`,
