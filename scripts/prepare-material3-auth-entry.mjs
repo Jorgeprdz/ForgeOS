@@ -59,6 +59,7 @@ index = index.replaceAll('Solo lectura', 'Sesión requerida');
 index = index.replace('Miércoles, 26 de julio', 'Cargando agenda actual…');
 index = index.replace('Buenos días, Jorge', 'Bienvenido a ForgeOS');
 index = index.replace('<span>JP</span>', '<span aria-hidden="true">—</span>');
+index = index.replace(/[\t ]+\n/g, '\n');
 
 await writeFile(indexPath, index);
 console.log('MATERIAL3_AUTH_FIRST_PAINT_FAIL_CLOSED=PASS');
