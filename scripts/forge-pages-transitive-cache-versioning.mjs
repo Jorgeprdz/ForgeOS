@@ -65,6 +65,24 @@ if (!buildSha) {
         ],
       ],
     },
+    {
+      file: "forge-shell.js",
+      replacements: [
+        [
+          './cartera-module.js?v=cartera-material3-productive-001',
+          `./cartera-module.js?v=${buildSha}`,
+        ],
+      ],
+    },
+    {
+      file: "cartera-module.js",
+      replacements: [
+        [
+          './cartera-document-intake.js?v=beta1-repair-001',
+          `./cartera-document-intake.js?v=${buildSha}`,
+        ],
+      ],
+    },
   ];
 
   for (const target of targets) {
@@ -80,14 +98,16 @@ if (!buildSha) {
     await writeFile(path, source);
   }
 
-  const [app, home, orchestrator, adapter] = await Promise.all([
+  const [app, home, orchestrator, adapter, shell, cartera] = await Promise.all([
     readFile(join(runtimeDir, "app.js"), "utf8"),
     readFile(join(runtimeDir, "home-module.js"), "utf8"),
     readFile(join(runtimeDir, "home-productive-orchestrator.js"), "utf8"),
     readFile(join(runtimeDir, "smart-widget-productive-home-adapter.js"), "utf8"),
+    readFile(join(runtimeDir, "forge-shell.js"), "utf8"),
+    readFile(join(runtimeDir, "cartera-module.js"), "utf8"),
   ]);
 
-  for (const [name, source] of Object.entries({ app, home, orchestrator, adapter })) {
+  for (const [name, source] of Object.entries({ app, home, orchestrator, adapter, shell, cartera })) {
     if (!source.includes(`v=${buildSha}`)) {
       throw new Error(`FORGE_PAGES_CACHE_VERSIONING_VALIDATION_FAILED=${name}`);
     }
@@ -96,7 +116,14 @@ if (!buildSha) {
   if (orchestrator.includes("?v=${buildSha}")) {
     throw new Error("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=home-productive-orchestrator.js");
   }
+  if (shell.includes("cartera-module.js?v=cartera-material3-productive-001")) {
+    throw new Error("FORGE_PAGES_STALE_CARTERA_MODULE_VERSION=forge-shell.js");
+  }
+  if (cartera.includes("cartera-document-intake.js?v=beta1-repair-001")) {
+    throw new Error("FORGE_PAGES_STALE_CARTERA_INTAKE_VERSION=cartera-module.js");
+  }
 
   console.log(`FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=PASS SHA=${buildSha}`);
   console.log("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE");
+  console.log("FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS");
 }
