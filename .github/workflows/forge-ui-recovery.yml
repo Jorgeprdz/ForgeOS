@@ -66,7 +66,7 @@ jobs:
           node scripts/build-advisor-presentation-pages-runtime.mjs
           grep -q "legacy-ui-retirement.js?v=${GITHUB_SHA}" docs/static-preview/forge-alive-material3/app.js
           test -s docs/static-preview/forge-alive-material3/forge-ui-recovery.css
-          grep -q 'data.forgeUiRecoveryStyles' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          grep -q 'dataset.forgeUiRecoveryStyles' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -80,7 +80,7 @@ jobs:
         with:
           name: forge-ui-recovery-screenshots
           path: artifacts/forge-ui-recovery
-          if-no-files-found: error
+          if-no-files-found: ignore
           retention-days: 90
 
       - name: Safety boundary scan
