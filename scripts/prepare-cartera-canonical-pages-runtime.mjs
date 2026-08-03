@@ -10,12 +10,14 @@ import {
 import { dirname, join, relative } from "node:path";
 
 const root = process.cwd();
-const pagesRuntimeMode =
-  process.env.FORGE_PAGES_RUNTIME_MODE === "pages"
-  || process.env.GITHUB_WORKFLOW === "Deploy ForgeOS to GitHub Pages";
+const pagesDeploymentWorkflow =
+  process.env.GITHUB_WORKFLOW === "Deploy ForgeOS to GitHub Pages";
+const carteraPagesRuntimeMode =
+  process.env.FORGE_CARTERA_PAGES_RUNTIME_MODE === "pages"
+  || pagesDeploymentWorkflow;
 
-if (!pagesRuntimeMode) {
-  console.log("CARTERA_CANONICAL_PAGES_RUNTIME=SKIPPED_NON_PAGES_BUILD");
+if (!carteraPagesRuntimeMode) {
+  console.log("CARTERA_CANONICAL_PAGES_RUNTIME=SKIPPED_CARTERA_RUNTIME_DISABLED");
 } else {
   const buildSha = String(
     process.env.FORGE_BUILD_SHA || process.env.GITHUB_SHA || "",
