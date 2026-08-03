@@ -51,9 +51,10 @@ jobs:
           node --test tests/forge-ui-recovery-test.mjs
           git diff --check
 
-      - name: Preserve productive module contracts
+      - name: Preserve current productive module contracts
         run: |
-          node --test tests/ui-m03-clean-home-rewrite-test.mjs
+          node tests/productive-smart-widget-orchestrator-master-test.mjs
+          node tests/smart-widgets-home-productive-mount-test.mjs
           node --test tests/activity-reports-productive-ui-completion-test.mjs
           node --test tests/cartera-material3-productive-ui-mount-test.mjs
           node --test tests/authenticated-session-controls-test.mjs
