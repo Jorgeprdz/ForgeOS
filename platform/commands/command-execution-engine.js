@@ -1,4 +1,9 @@
 import { Navigation } from '../navigation-runtime.js';
+import {
+  cancelWritePreview,
+  confirmWritePreview,
+  prepareWritePreview,
+} from './write-preview-engine.js';
 
 const HANDLERS = Object.freeze({
   'navigate-route': async ({ command }) => {
@@ -16,13 +21,13 @@ const HANDLERS = Object.freeze({
   },
 });
 
-export async function ejecutarComando({ command, context = {} }) {
+export async function ejecutarComando({ command, context = {}, input = {} }) {
   if (!command || command.availability !== 'enabled') {
     return { ok: false, reason: 'COMMAND_UNAVAILABLE' };
   }
 
   if (command.intent === 'WRITE') {
-    return { ok: false, reason: 'WRITE_REQUIRES_GOVERNED_PREVIEW' };
+    return prepareWritePreview({ command, context, input });
   }
 
   const handler = HANDLERS[command.handlerId];
@@ -31,4 +36,12 @@ export async function ejecutarComando({ command, context = {} }) {
   }
 
   return handler({ command, context });
+}
+
+export async function confirmarComandoEscritura({ previewId, confirmationToken }) {
+  return confirmWritePreview({ previewId, confirmationToken });
+}
+
+export function cancelarComandoEscritura({ previewId }) {
+  return cancelWritePreview({ previewId });
 }
