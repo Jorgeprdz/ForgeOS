@@ -1,0 +1,33 @@
+name: Command OS Pack 06
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  write-preview-confirmation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Syntax
+        run: |
+          node --check platform/commands/write-preview-engine.js
+          node --check platform/commands/command-execution-engine.js
+          node --check platform/commands/command-controller.js
+          node --check platform/commands/command-registry.js
+      - name: Governed write contracts
+        run: node --test tests/command-os-pack-06-test.mjs
+      - name: Diff integrity
+        run: git diff --check
