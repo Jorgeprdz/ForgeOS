@@ -1,0 +1,42 @@
+name: Advisor OS Sprint 07
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'advisor-os/quotes/**'
+      - 'tests/advisor-os-sprint-07-test.mjs'
+      - '.github/workflows/advisor-os-sprint-07.yml'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_07_PIPELINE_TO_QUOTES.md'
+permissions:
+  contents: read
+jobs:
+  sprint-07-one-pass:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: node --check advisor-os/quotes/pipeline-to-quote-runtime.js
+      - name: Sprint 07 contracts
+        run: node --test tests/advisor-os-sprint-07-test.mjs
+      - name: Preserve canonical quote and pipeline contracts
+        run: |
+          set -euo pipefail
+          node --test \
+            tests/quote-lifecycle-contract-test.mjs \
+            tests/quote-lifecycle-runtime-test.mjs \
+            tests/crs-03-pipeline-person-convergence-contract-test.mjs \
+            tests/crs-03-pipeline-person-convergence-service-test.mjs \
+            tests/crs-05-quote-person-convergence-contract-test.mjs \
+            tests/crs-05-quote-person-convergence-service-test.mjs
+      - name: Safety boundary scan
+        run: |
+          ! grep -Eq '\.(insert|update|delete|upsert|rpc)\s*\(' advisor-os/quotes/pipeline-to-quote-runtime.js
+          ! grep -Eq '(localStorage|sessionStorage|indexedDB|eval\(|new Function)' advisor-os/quotes/pipeline-to-quote-runtime.js
+          grep -q 'QUOTE_PREVIEW_REQUIRED' advisor-os/quotes/pipeline-to-quote-runtime.js
+          grep -q 'PROSPECT_PERSON_MISMATCH' advisor-os/quotes/pipeline-to-quote-runtime.js
