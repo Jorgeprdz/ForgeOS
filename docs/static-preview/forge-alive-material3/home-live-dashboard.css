@@ -1,0 +1,234 @@
+/* Forge Home Live Dashboard — productive hierarchy, no static mock geometry. */
+
+.home-module[data-home-live-dashboard]:not([hidden]) {
+  display: grid !important;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(16px, 1.7vw, 24px);
+  width: 100%;
+  min-width: 0;
+}
+
+.home-module[data-home-live-dashboard] > .hero {
+  grid-column: 1 / -1 !important;
+  width: 100%;
+  padding: 0 4px clamp(8px, 1vw, 14px) !important;
+}
+
+.home-module[data-home-live-dashboard] .hero-row {
+  align-items: end !important;
+  min-height: 0 !important;
+  gap: 20px !important;
+}
+
+.home-module[data-home-live-dashboard] .hero h1 {
+  max-width: none !important;
+  margin: 8px 0 5px !important;
+  font-size: clamp(2.65rem, 4.3vw, 4.7rem) !important;
+}
+
+.home-module[data-home-live-dashboard] .hero .subtitle {
+  margin: 0;
+  color: var(--muted);
+}
+
+.home-module[data-home-live-dashboard] .safe-pill svg {
+  display: none;
+}
+
+.home-module[data-home-live-dashboard] > .plan-card,
+.home-module[data-home-live-dashboard] > .next-card,
+.home-module[data-home-live-dashboard] > [data-home-static-mock-retired="true"] {
+  display: none !important;
+}
+
+.home-module[data-home-live-dashboard] > .summary-section.productive-home-section {
+  grid-column: 1 / 9 !important;
+  grid-row: 2;
+  width: 100%;
+  margin: 0 !important;
+  align-self: start;
+}
+
+.home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities] {
+  grid-column: 9 / -1 !important;
+  grid-row: 2;
+  width: 100%;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: clamp(18px, 1.8vw, 24px) !important;
+  align-self: start;
+  border-radius: 24px !important;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18) !important;
+}
+
+.home-module[data-home-live-dashboard] [data-forge-productive-smart-widget-root] {
+  gap: 16px;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-cards[data-canonical-action-cards="true"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 1.4vw, 20px);
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget {
+  min-height: 248px;
+  border-radius: 24px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18);
+}
+
+.home-module[data-home-live-dashboard] .profile {
+  width: clamp(52px, 5vw, 72px) !important;
+  height: clamp(52px, 5vw, 72px) !important;
+  overflow: hidden;
+}
+
+.home-module[data-home-live-dashboard] .profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-module[data-home-live-dashboard] .opportunity-list {
+  display: grid;
+  gap: 0;
+  margin-top: 10px;
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 64px;
+  padding: 11px 2px;
+  border: 0;
+  border-bottom: 1px solid rgba(170, 199, 255, 0.10);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity:last-child {
+  border-bottom: 0;
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity:hover,
+.home-module[data-home-live-dashboard] .home-live-opportunity:focus-visible {
+  background: rgba(82, 230, 223, 0.06);
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity__avatar {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgba(82, 230, 223, 0.24);
+  border-radius: 50%;
+  background: rgba(82, 230, 223, 0.10);
+  color: var(--aqua-soft);
+  font-weight: 800;
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity .opportunity-copy {
+  min-width: 0;
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity .opportunity-copy strong,
+.home-module[data-home-live-dashboard] .home-live-opportunity .opportunity-copy small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity .opportunity-copy small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.home-module[data-home-live-dashboard] .home-live-opportunity__badge {
+  max-width: 92px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 201, 95, 0.20);
+  border-radius: 999px;
+  background: rgba(255, 201, 95, 0.08);
+  color: var(--gold-soft);
+  font-size: 0.69rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.home-module[data-home-live-dashboard] .home-opportunity-state {
+  display: grid;
+  min-height: 132px;
+  place-items: center;
+  padding: 18px;
+  border: 1px dashed rgba(170, 199, 255, 0.16);
+  border-radius: 16px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.home-module[data-home-live-dashboard] .home-opportunity-state[data-state="SOURCE_UNAVAILABLE"] {
+  border-color: rgba(255, 180, 171, 0.22);
+}
+
+@media (max-width: 1199px) {
+  .home-module[data-home-live-dashboard]:not([hidden]) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-module[data-home-live-dashboard] > .hero,
+  .home-module[data-home-live-dashboard] > .summary-section.productive-home-section,
+  .home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities] {
+    grid-column: 1 !important;
+    grid-row: auto;
+  }
+
+  .home-module[data-home-live-dashboard] > .summary-section.productive-home-section {
+    order: 2;
+  }
+
+  .home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities] {
+    order: 3;
+  }
+}
+
+@media (max-width: 720px) {
+  .home-module[data-home-live-dashboard] .productive-smart-widget-cards[data-canonical-action-cards="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-module[data-home-live-dashboard] .hero-row {
+    align-items: center !important;
+  }
+
+  .home-module[data-home-live-dashboard] .hero h1 {
+    font-size: clamp(2.35rem, 12vw, 3.5rem) !important;
+  }
+
+  .home-module[data-home-live-dashboard] .profile {
+    width: 52px !important;
+    height: 52px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .home-module[data-home-live-dashboard] .home-live-opportunity {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .home-module[data-home-live-dashboard] .home-live-opportunity__badge {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
