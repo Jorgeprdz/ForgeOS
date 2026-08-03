@@ -8,10 +8,21 @@ const profiles = [
 
 for (const profile of profiles) {
   test(`${profile.name}: identity, real opportunities and hierarchy`, async ({ page }) => {
+    const pageErrors = [];
+    const failedRequests = [];
+    page.on("pageerror", (error) => pageErrors.push(error.message));
+    page.on("requestfailed", (request) => failedRequests.push(`${request.url()} :: ${request.failure()?.errorText || "failed"}`));
+
     await page.setViewportSize({ width: profile.width, height: profile.height });
-    await page.goto("/tests/e2e/fixtures/home-live-dashboard/index.html");
+    const startedAt = Date.now();
+    await page.goto("/tests/e2e/fixtures/home-live-dashboard/index.html", {
+      waitUntil: "domcontentloaded",
+      timeout: 15_000,
+    });
+    expect(Date.now() - startedAt).toBeLessThan(15_000);
+
     const home = page.locator("[data-forge-home-module]");
-    await expect(home).toHaveAttribute("data-home-live-dashboard-state", "ready");
+    await expect(home).toHaveAttribute("data-home-live-dashboard-state", "ready", { timeout: 10_000 });
 
     await expect(page.locator(".hero h1")).toHaveText("Buenos días, Alejandra");
     await expect(page.locator(".hero .subtitle")).toContainText("actividad, cartera y meta conectadas");
@@ -53,5 +64,8 @@ for (const profile of profiles) {
       expect(layout.opportunities.y).toBeGreaterThan(layout.summary.y);
       expect(Math.abs(layout.summary.x - layout.opportunities.x)).toBeLessThanOrEqual(3);
     }
+
+    expect(pageErrors).toEqual([]);
+    expect(failedRequests).toEqual([]);
   });
 }
