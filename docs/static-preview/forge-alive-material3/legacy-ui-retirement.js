@@ -5,6 +5,40 @@ const LEGACY_CACHE_NAMES = new Set([
   "runtime-v7-pages-1",
 ]);
 
+const RECOVERY_STYLESHEET_SELECTOR = "[data-forge-ui-recovery-styles]";
+const RECOVERY_STYLESHEET_HREF = new URL(
+  "./forge-ui-recovery.css?v=forge-ui-recovery-001",
+  import.meta.url,
+).href;
+
+function installRecoveryStylesheet() {
+  let stylesheet = document.querySelector(RECOVERY_STYLESHEET_SELECTOR);
+  if (!stylesheet) {
+    stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = RECOVERY_STYLESHEET_HREF;
+    stylesheet.dataset.forgeUiRecoveryStyles = "true";
+    document.head.append(stylesheet);
+  }
+
+  let moving = false;
+  const keepRecoveryLast = () => {
+    if (moving || !stylesheet.isConnected || stylesheet === document.head.lastElementChild) {
+      return;
+    }
+    moving = true;
+    document.head.append(stylesheet);
+    queueMicrotask(() => {
+      moving = false;
+    });
+  };
+
+  const observer = new MutationObserver(keepRecoveryLast);
+  observer.observe(document.head, { childList: true });
+  queueMicrotask(keepRecoveryLast);
+  globalThis.addEventListener("pagehide", () => observer.disconnect(), { once: true });
+}
+
 async function retireLegacyServiceWorkers() {
   if (!("serviceWorker" in navigator)) {
     return;
@@ -37,9 +71,12 @@ async function clearLegacyCaches() {
   );
 }
 
+installRecoveryStylesheet();
+
 await Promise.allSettled([
   retireLegacyServiceWorkers(),
   clearLegacyCaches(),
 ]);
 
 document.documentElement.dataset.forgeLegacyUiRetired = "true";
+document.documentElement.dataset.forgeUiRecovery = "001";

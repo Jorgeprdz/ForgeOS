@@ -1,0 +1,96 @@
+name: Forge UI Recovery
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-alive-material3/forge-ui-recovery.css'
+      - 'docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
+      - 'scripts/forge-ui-recovery-cache-versioning.mjs'
+      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
+      - 'tests/forge-ui-recovery-test.mjs'
+      - 'tests/e2e/forge-ui-recovery.spec.mjs'
+      - 'tests/e2e/fixtures/forge-ui-recovery/**'
+      - 'playwright.forge-ui-recovery.config.mjs'
+      - 'docs/evidence/FORGE_UI_RECOVERY_EDITORIAL_TYPE_ACCEPTANCE.md'
+      - '.github/workflows/forge-ui-recovery.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-ui-recovery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recovery-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax and static recovery contracts
+        run: |
+          node --check docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          node --check scripts/forge-ui-recovery-cache-versioning.mjs
+          node --check tests/forge-ui-recovery-test.mjs
+          node --check tests/e2e/forge-ui-recovery.spec.mjs
+          node --check playwright.forge-ui-recovery.config.mjs
+          node --test tests/forge-ui-recovery-test.mjs
+          git diff --check
+
+      - name: Preserve current productive module contracts
+        run: |
+          node tests/productive-smart-widget-orchestrator-master-test.mjs
+          node tests/smart-widgets-home-productive-mount-test.mjs
+          node --test tests/activity-reports-productive-ui-completion-test.mjs
+          node --test tests/cartera-material3-productive-ui-mount-test.mjs
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/login-integrated-demo-tenants-test.mjs
+
+      - name: Verify Pages cache-busted public candidate
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          grep -q "legacy-ui-retirement.js?v=${GITHUB_SHA}" docs/static-preview/forge-alive-material3/app.js
+          test -s docs/static-preview/forge-alive-material3/forge-ui-recovery.css
+          grep -q 'dataset.forgeUiRecoveryStyles' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Responsive visual acceptance
+        run: npx playwright test --config=playwright.forge-ui-recovery.config.mjs
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-ui-recovery-screenshots
+          path: artifacts/forge-ui-recovery
+          if-no-files-found: ignore
+          retention-days: 90
+
+      - name: Safety boundary scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -E '\.(insert|update|delete|upsert)\(' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          ! find docs/static-preview/forge-alive-material3 -maxdepth 1 -type f \( -name '*.woff' -o -name '*.woff2' -o -name '*.ttf' -o -name '*.otf' \) | grep .
+          grep -q 'grid-column: 1 / -1 !important' docs/static-preview/forge-alive-material3/forge-ui-recovery.css
+          grep -q -- '--forge-font-display' docs/static-preview/forge-alive-material3/forge-ui-recovery.css
+          grep -q 'env(safe-area-inset-bottom)' docs/static-preview/forge-alive-material3/forge-ui-recovery.css

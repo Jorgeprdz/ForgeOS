@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es-MX" data-forge-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Forge UI Recovery Acceptance</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive-material3/app.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive-material3/activity-module.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive-material3/cartera-module.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive-material3/forge-ui-recovery.css">
+  <style>
+    body { min-height: 100vh; }
+    .acceptance-rail {
+      position: fixed;
+      z-index: 20;
+      left: 24px;
+      top: 50%;
+      translate: 0 -50%;
+      width: 104px;
+      padding: 10px;
+      border: 1px solid var(--outline-strong);
+      border-radius: 34px;
+      background: rgba(24,43,77,.94);
+    }
+    .acceptance-rail button {
+      width: 100%;
+      min-height: 58px;
+      margin: 3px 0;
+      border: 0;
+      border-radius: 16px;
+      background: transparent;
+      color: var(--muted);
+    }
+    .acceptance-rail button[aria-current="page"] {
+      color: var(--gold-soft);
+      background: rgba(134,152,200,.34);
+    }
+    .acceptance-app { min-height: 100vh; }
+    .acceptance-app > [data-route-module][hidden] { display: none !important; }
+    .acceptance-home { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 20px; }
+    .acceptance-home .hero { grid-column: 1 / -1; }
+    .acceptance-home .plan-card { grid-column: 1 / 6; }
+    .acceptance-home .next-card { grid-column: 6 / 13; }
+    .acceptance-home .summary-section { grid-column: 1 / 9; }
+    .acceptance-home .opportunities { grid-column: 9 / 13; }
+    .acceptance-metric-copy { color: var(--muted); }
+    .acceptance-cartera > section { margin-bottom: 18px; }
+    .acceptance-safe-tail { height: 32px; }
+    @media (max-width: 1199px) {
+      .acceptance-rail {
+        left: 50%; top: auto; bottom: 12px; translate: -50% 0;
+        width: min(520px,calc(100% - 24px));
+        display: grid; grid-template-columns: repeat(3,1fr);
+      }
+      .acceptance-rail button { min-height: 54px; }
+      .acceptance-home { display: block; }
+      .acceptance-home > * { margin-bottom: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="acceptance-rail" aria-label="Superficies de aceptación">
+    <button type="button" data-show="home">Inicio</button>
+    <button type="button" data-show="activity">Actividad</button>
+    <button type="button" data-show="cartera">Cartera</button>
+  </nav>
+
+  <main class="app forge-module-viewport acceptance-app" data-forge-module-viewport>
+    <section class="home-module acceptance-home" data-route-module="inicio" data-surface="home">
+      <header class="hero">
+        <div class="safe-pill" aria-label="Vista productiva segura">
+          <span>Vista productiva</span>
+          <span aria-hidden="true">•</span>
+          <span>Sin acciones automáticas</span>
+        </div>
+        <div class="hero-row">
+          <div>
+            <p class="eyebrow">FORGE ALIVE</p>
+            <h1>Buenos días, Jorge</h1>
+            <p class="subtitle">Una prioridad clara antes de cualquier otra cosa.</p>
+          </div>
+          <button class="profile" type="button" aria-label="Abrir perfil">
+            <span>JP</span><i aria-hidden="true"></i>
+          </button>
+        </div>
+      </header>
+      <section class="plan-card organic-card">
+        <div class="plan-copy"><div><p class="section-kicker">PLAN DE HOY</p><h2>Tu jornada comercial</h2><p>Revisa lo urgente y continúa con una sola acción útil.</p></div></div>
+      </section>
+      <section class="next-card organic-card">
+        <p class="section-kicker accent">SIGUIENTE MEJOR ACCIÓN</p>
+        <h2>Seguimiento prioritario</h2>
+        <p class="acceptance-metric-copy">Una conversación concreta, sin saturar la pantalla.</p>
+      </section>
+      <section class="summary-section">
+        <div class="section-heading"><p class="section-kicker accent">RESUMEN</p></div>
+        <div class="metrics">
+          <article class="metric"><p>Actividad</p><strong>18 / 25</strong><span>Faltan 7 puntos hoy</span></article>
+          <article class="metric"><p>Cotizaciones</p><strong>$142k</strong><span>Proyección mensual</span></article>
+        </div>
+      </section>
+      <section class="opportunities organic-card"><div class="section-heading"><p class="section-kicker accent">OPORTUNIDADES</p></div><div class="opportunity-list"><div class="opportunity"><span class="avatar avatar-teal">L</span><span class="opportunity-copy"><strong>Lariza</strong><small>Revisar opciones</small></span><span class="score">72%</span></div></div></section>
+    </section>
+
+    <section class="activity-module" data-route-module="actividad" data-surface="activity" hidden>
+      <div class="activity-workspace" data-activity-workspace>
+        <div class="activity-view-tabs"><button class="active">Actividad</button><button>Reportes</button></div>
+        <section class="activity-operational" data-activity-surface>
+          <header class="activity-hero"><div><p class="section-kicker accent">ACTIVIDAD</p><h1>Tu trabajo comercial, respaldado por hechos</h1><p class="activity-subtitle">Lectura directa del ledger FES · sin captura paralela</p></div><button class="activity-refresh" aria-label="Actualizar">↻</button></header>
+          <div class="activity-periods"><button class="activity-period">Hoy</button><button class="activity-period active">Semana</button><button class="activity-period">Mes</button><button class="activity-period">30 días</button></div>
+          <section class="activity-status-card organic-card"><div class="activity-state activity-state--empty"><span class="activity-state-icon">✓</span><div><strong>No hay actividad confirmada en este periodo</strong><span>Ausencia de hechos, no cero inventado.</span></div></div></section>
+          <p class="activity-authority-note">Forge representa eventos canónicos de FES. Esta vista no crea ni corrige actividad.</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="cartera-module acceptance-cartera" data-route-module="cartera" data-surface="cartera" hidden>
+      <div class="cartera-material3-frame"><section id="cartera-root">
+        <div class="glass-widget" style="padding:18px;margin-bottom:18px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><h2 id="cartera-title" style="margin:0;font-size:22px;font-weight:800;">Cartera</h2><p style="margin:5px 0 0;color:var(--text-secondary);font-size:12px;">Directorio canónico de personas, cuentas y pólizas</p></div><span style="font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px;background:var(--surface-variant);">SOLO LECTURA</span></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;">
+            <div class="glass-widget" style="padding:13px;"><span>PERSONAS</span><div id="kpi-total-personas" style="font-size:22px;font-weight:800;margin-top:7px;">0</div></div>
+            <div class="glass-widget" style="padding:13px;"><span>CUENTAS</span><div style="font-size:22px;font-weight:800;margin-top:7px;">0</div></div>
+            <div class="glass-widget" style="padding:13px;"><span>PÓLIZAS</span><div style="font-size:22px;font-weight:800;margin-top:7px;">0</div></div>
+            <div class="glass-widget" style="padding:13px;"><span>DIRECTORIO</span><div style="font-size:22px;font-weight:800;margin-top:7px;">0</div></div>
+          </div>
+        </div>
+
+        <section class="glass-widget" data-cartera-payment-calendar="PORTFOLIO" style="padding:16px;">
+          <div style="display:flex;justify-content:space-between;gap:12px;"><div><h3 style="margin:0;">Próximos movimientos de cartera</h3><p style="color:var(--text-secondary);">Lo que requiere atención hoy y en los próximos días.</p></div><span>SOLO LECTURA</span></div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:13px;">
+            <div class="glass-widget" data-calendar-summary="today" style="padding:11px;"><div>HOY</div><div>0</div></div>
+            <div class="glass-widget" data-calendar-summary="next7Days" style="padding:11px;"><div>7 DÍAS</div><div>0</div></div>
+            <div class="glass-widget" data-calendar-summary="next30Days" style="padding:11px;"><div>30 DÍAS</div><div>0</div></div>
+            <div class="glass-widget" data-calendar-summary="next90Days" style="padding:11px;"><div>90 DÍAS</div><div>0</div></div>
+            <div class="glass-widget" data-calendar-summary="overdue" style="padding:11px;"><div>VENCIDOS</div><div>0</div></div>
+            <div class="glass-widget" data-calendar-summary="confirmationRequired" style="padding:11px;"><div>REVISIÓN</div><div>0</div></div>
+          </div>
+          <p style="color:var(--text-secondary);">Sin obligaciones visibles en este horizonte.</p>
+        </section>
+
+        <section class="glass-widget" style="padding:18px;margin-bottom:18px;" aria-labelledby="cartera-radar-title">
+          <div style="display:flex;justify-content:space-between;gap:12px;"><div><h3 id="cartera-radar-title" style="margin:0;font-size:18px;font-weight:900;">Radar futuro</h3><p style="color:var(--text-secondary);">Lo que viene y por qué importa.</p></div><button data-radar-refresh>Actualizar</button></div>
+          <div style="display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;"><button data-radar-horizon="ALL" aria-pressed="true">Foco · 0</button><button data-radar-horizon="TODAY">Hoy · 0</button><button data-radar-horizon="NEXT_7_DAYS">7 días · 0</button><button data-radar-horizon="NEXT_30_DAYS">30 días · 0</button><button data-radar-horizon="NEXT_90_DAYS">90 días · 0</button><button data-radar-horizon="CONFIRMATION_REQUIRED">Confirmar · 0</button><button data-radar-horizon="OVERDUE">Atrasado · 0</button></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:10px;"><span>Pólizas/pagos: Disponible</span><span>Memoria: Disponible</span><span>Conversación: No conectado</span></div>
+          <div style="margin-top:14px;display:grid;gap:10px;"><div class="glass-widget" style="padding:14px;color:var(--text-secondary);">No hay señales visibles en este horizonte.</div></div>
+        </section>
+      </section></div>
+    </section>
+    <div class="acceptance-safe-tail"></div>
+  </main>
+
+  <script>
+    const params = new URL(location.href).searchParams;
+    const initial = params.get('surface') || 'home';
+    function show(id) {
+      document.querySelectorAll('[data-surface]').forEach(surface => surface.hidden = surface.dataset.surface !== id);
+      document.querySelectorAll('[data-show]').forEach(button => button.setAttribute('aria-current', button.dataset.show === id ? 'page' : 'false'));
+      document.body.dataset.surface = id;
+    }
+    document.querySelectorAll('[data-show]').forEach(button => button.addEventListener('click', () => show(button.dataset.show)));
+    show(initial);
+  </script>
+</body>
+</html>
