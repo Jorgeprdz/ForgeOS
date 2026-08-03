@@ -12,7 +12,7 @@ test('recovery stylesheet is loaded from the canonical public shell', async () =
   ]);
 
   assert.match(legacy, /forge-ui-recovery\.css\?v=forge-ui-recovery-001/);
-  assert.match(legacy, /data\.forgeUiRecoveryStyles/);
+  assert.match(legacy, /dataset\.forgeUiRecoveryStyles/);
   assert.match(legacy, /MutationObserver\(keepRecoveryLast\)/);
   assert.match(css, /Forge UI Recovery \+ Editorial Type/);
 });
