@@ -75,7 +75,7 @@ export function scrubCommandRuntime() {
     cerrarCommandPalette();
 
     const input = document.getElementById('universal-command-input');
-    if (input) value = '';
+    if (input) input.value = '';
 
     const results = document.getElementById('command-results');
     if (results) results.replaceChildren();
