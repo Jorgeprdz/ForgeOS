@@ -38,6 +38,14 @@ test("Cartera policy entry persists only after explicit human confirmation", asy
   assert.match(source, /location\.replace\(url\.href\)/);
 });
 
+test("Cartera owns its policy-entry mount instead of relying on Pipeline evaluation", async () => {
+  const source = await read("docs/static-preview/forge-alive-material3/cartera-module.js");
+  assert.match(source, /^import "\.\/cartera-document-intake\.js\?v=beta1-repair-001";/);
+  assert.match(source, /governedPolicyEntry:\s*true/);
+  assert.match(source, /productiveMutationAuthorized:\s*true/);
+  assert.match(source, /refresh:\s*api\.refresh/);
+});
+
 test("Cartera policy entry mount cannot recurse through its own dialog mutations", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
   assert.match(source, /observer\.observe\(root, \{ childList: true, attributes: true/);
@@ -77,9 +85,8 @@ test("Edge functions require authentication and keep secrets server-side", async
   assert.match(intake, /automaticPolicyCreation: false/);
 });
 
-test("canonical runtime mounts all three Beta 1 repairs", async () => {
+test("canonical runtime mounts Pipeline repairs", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js");
   assert.match(source, /pipeline-bulk-import-mount\.js/);
   assert.match(source, /whatsapp-ai-composer\.js/);
-  assert.match(source, /cartera-document-intake\.js/);
 });
