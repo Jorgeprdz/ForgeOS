@@ -1,8 +1,21 @@
 import "./public-auth-touch-gate.js?v=public-auth-touch-gate-001";
 import "./authenticated-session-controls.js?v=auth-session-controls-001";
 
-const VERSION = "REP-17C-SESSION-TRANSITION-GUARD-V2";
+const VERSION = "REP-17C-SESSION-TRANSITION-GUARD-V3";
 const BOOTSTRAP_KEY = "ForgeProductiveProspectBootstrap067G17B";
+const CANONICAL_ENTRY_PATH = "/ForgeOS/static-preview/forge-alive/";
+const PRIVATE_ROUTES = new Set([
+  "inicio",
+  "pipeline",
+  "quotes",
+  "cotizaciones",
+  "cartera",
+  "actividad",
+  "reportes",
+  "forecast",
+  "persona",
+  "comisiones",
+]);
 
 const state = {
   revision: 0,
@@ -72,6 +85,30 @@ function anonymousSessionResult(result) {
   };
 }
 
+function requestedRoute(options = {}) {
+  const current = new URL(globalThis.location.href);
+  let supplied = null;
+  try {
+    supplied = typeof options?.redirectTo === "string"
+      ? new URL(options.redirectTo, current)
+      : null;
+  } catch {
+    supplied = null;
+  }
+  const candidate = supplied?.searchParams.get("nav")
+    || current.searchParams.get("nav")
+    || "inicio";
+  return PRIVATE_ROUTES.has(candidate) ? candidate : "inicio";
+}
+
+function canonicalAuthRedirect(options = {}, now = Date.now()) {
+  const current = new URL(globalThis.location.href);
+  const target = new URL(CANONICAL_ENTRY_PATH, current.origin);
+  target.searchParams.set("nav", requestedRoute(options));
+  target.searchParams.set("auth_return", String(now));
+  return target.href;
+}
+
 function wrapBootstrap(source) {
   if (!source || typeof source !== "object") return source;
   if (source.__rep17SessionGuard === true) return source;
@@ -97,6 +134,16 @@ function wrapBootstrap(source) {
       return source.onAuthStateChange((event, session) => {
         if (!acceptProviderTransition(event, session)) return;
         callback(event, session);
+      });
+    },
+
+    signInWithGoogle(options = {}) {
+      if (typeof source.signInWithGoogle !== "function") {
+        throw new Error("CANONICAL_AUTH_CLIENT_UNAVAILABLE");
+      }
+      return source.signInWithGoogle({
+        ...options,
+        redirectTo: canonicalAuthRedirect(options),
       });
     },
 
@@ -237,6 +284,7 @@ document.documentElement.dataset.rep17SessionTransitionGuard = VERSION;
 
 globalThis.ForgeRep17SessionTransitionGuard = Object.freeze({
   version: VERSION,
+  canonicalEntryPath: CANONICAL_ENTRY_PATH,
   diagnostics: () => Object.freeze({
     revision: state.revision,
     status: state.status,
@@ -248,10 +296,13 @@ globalThis.ForgeRep17SessionTransitionGuard = Object.freeze({
 });
 
 export {
+  CANONICAL_ENTRY_PATH,
   VERSION,
   acceptProviderTransition,
+  canonicalAuthRedirect,
   installBootstrapGuard,
   providerSignature,
+  requestedRoute,
   scrubPrivatePipeline,
   sessionVersion,
   wrapBootstrap,
