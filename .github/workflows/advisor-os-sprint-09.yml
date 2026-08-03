@@ -1,0 +1,57 @@
+name: Advisor OS Sprint 09
+
+on:
+  pull_request:
+    paths:
+      - 'advisor-os/cartera/portfolio-service-runtime.js'
+      - 'tests/advisor-os-sprint-09-test.mjs'
+      - '.github/workflows/advisor-os-sprint-09.yml'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_09_PORTFOLIO_SERVICE_001.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sprint-09-one-pass:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax
+        run: node --check advisor-os/cartera/portfolio-service-runtime.js
+
+      - name: Sprint 09 contracts
+        run: node --test tests/advisor-os-sprint-09-test.mjs
+
+      - name: Preserve Portfolio authorities
+        run: |
+          node --test tests/crs-09-person-workspace-service-test.mjs
+          node --test tests/cartera-010c-policy-detail-timeline-projection-test.mjs
+          node --test tests/cartera-030d-policy-payment-calendar-service-test.mjs
+          node --test tests/cartera-050a-future-radar-service-test.mjs
+          node --test tests/crs-08-unified-person-timeline-service-test.mjs
+
+      - name: Safety boundary scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='advisor-os/cartera/portfolio-service-runtime.js'
+          ! grep -En '\.(from|rpc)\(' "$target"
+          ! grep -En '\b(insert|update|upsert|delete)\b' "$target"
+          ! grep -En 'Number\((null|undefined)\)' "$target"
+          grep -Fq 'secondServiceLedger: false' "$target"
+          grep -Fq 'directDatabaseWrite: false' "$target"
+          grep -Fq 'unknownAsZero: false' "$target"
+          grep -Fq 'automaticContact: false' "$target"
