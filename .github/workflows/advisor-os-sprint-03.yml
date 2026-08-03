@@ -1,0 +1,44 @@
+name: Advisor OS Sprint 03
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'advisor-os/next-action/**'
+      - 'tests/sprint-03-next-action-agenda-test.mjs'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_03_ONE_PASS.md'
+      - '.github/workflows/advisor-os-sprint-03.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  sprint-03-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: |
+          node --check advisor-os/next-action/next-action-state-model.js
+          node --check advisor-os/next-action/agenda-read-model.js
+          node --check advisor-os/next-action/next-action-continuity-runtime.js
+          node --check advisor-os/next-action/google-calendar-handoff.js
+          node --check advisor-os/next-action/next-action-agenda-runtime.js
+          node --check advisor-os/next-action/sprint-03-command-contract.js
+      - name: Sprint 03 contracts
+        run: node --test tests/sprint-03-next-action-agenda-test.mjs
+      - name: Preserve Command OS governance
+        run: |
+          node --test tests/command-os-pack-06-test.mjs
+          node --test tests/command-os-pack-07-test.mjs
+          node --test tests/command-os-pack-09-test.mjs
+      - name: Safety boundary scan
+        run: |
+          ! grep -R -E '\.from\([^)]*\)\.(insert|update|upsert|delete)' advisor-os/next-action
+          ! grep -R -E 'eventSaved:[[:space:]]*(true|YES)' advisor-os/next-action
+          git diff --check
