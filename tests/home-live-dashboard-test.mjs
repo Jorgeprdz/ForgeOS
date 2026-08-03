@@ -76,7 +76,8 @@ test("Pipeline intelligence is loaded only after authenticated Home boot", async
   const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard.js");
   assert.doesNotMatch(runtime, /^import\s+\{\s*createProductiveIntelligenceAdapter/m);
   assert.match(runtime, /async function resolveOpportunityAdapterFactory/);
-  assert.match(runtime, /import\(\s*"\.\/pipeline-productive-intelligence-adapter\.js\?v=home-live-dashboard-002"\s*\)/s);
+  assert.match(runtime, /pipeline-productive-intelligence-adapter\.js\?v=home-live-dashboard-002/);
+  assert.match(runtime, /import\(\/\* @vite-ignore \*\/ authorityUrl\)/);
   assert.match(runtime, /const factory = await resolveOpportunityAdapterFactory\(\)/);
   assert.match(runtime, /if \(!authenticated\)[\s\S]*return;[\s\S]*resolveOpportunityAdapterFactory/s);
 });
