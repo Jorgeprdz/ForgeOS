@@ -3,7 +3,10 @@ import {
     abrirCommandPalette,
     cerrarCommandPalette,
 } from './command-palette-ui.js';
-import { initCommandShortcuts } from './command-shortcuts-engine.js';
+import {
+    initCommandShortcuts,
+    destroyCommandShortcuts,
+} from './command-shortcuts-engine.js';
 
 const RUNTIME_ROOT_ID = 'command-os-runtime-root';
 const MOBILE_BUTTON_ID = 'command-os-mobile-trigger';
@@ -33,6 +36,19 @@ function createMobileTrigger() {
     return button;
 }
 
+function bindPaletteLifecycle(root) {
+    const palette = root.querySelector('#command-palette');
+    if (!palette) return;
+
+    palette.setAttribute('role', 'dialog');
+    palette.setAttribute('aria-modal', 'true');
+    palette.setAttribute('aria-label', 'Command Bar');
+
+    palette.addEventListener('click', (event) => {
+        if (event.target === palette) cerrarCommandPalette();
+    });
+}
+
 export function mountCommandRuntime() {
     if (mounted || document.getElementById(RUNTIME_ROOT_ID)) return;
 
@@ -45,6 +61,7 @@ export function mountCommandRuntime() {
     root.appendChild(createMobileTrigger());
     document.body.appendChild(root);
 
+    bindPaletteLifecycle(root);
     initCommandShortcuts();
     mounted = true;
 }
@@ -61,6 +78,7 @@ export function scrubCommandRuntime() {
 
 export function unmountCommandRuntime() {
     scrubCommandRuntime();
+    destroyCommandShortcuts();
     document.getElementById(RUNTIME_ROOT_ID)?.remove();
     document.getElementById(STYLE_ID)?.remove();
     mounted = false;
