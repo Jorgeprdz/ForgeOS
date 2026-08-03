@@ -1,0 +1,88 @@
+name: Beta 1 Live Pages Screenshot
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pages-beta1-live-screenshot.yml
+      - tools/pages-beta1-live-screenshot.mjs
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Deploy ForgeOS to GitHub Pages
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta1-live-pages-screenshot
+  cancel-in-progress: true
+
+jobs:
+  capture-live-pages:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive-material3/
+      FORGE_PAGES_EVIDENCE: artifacts/pages-beta1-live
+      FORGE_BETA_TEST_EMAIL: ${{ secrets.FORGE_BETA_TEST_EMAIL }}
+      FORGE_BETA_TEST_PASSWORD: ${{ secrets.FORGE_BETA_TEST_PASSWORD }}
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install screenshot browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Wait for the real Pages deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$FORGE_PAGES_URL"
+          for attempt in $(seq 1 60); do
+            status=$(curl -L -sS -o /tmp/forge-pages.html -w '%{http_code}' "${target}?live_probe=$(date +%s)")
+            if [ "$status" = "200" ] && grep -q "Forge" /tmp/forge-pages.html; then
+              echo "LIVE_PAGES_READY=YES"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "LIVE_PAGES_READY=NO"
+          exit 1
+
+      - name: Capture screenshots from live Pages
+        run: node tools/pages-beta1-live-screenshot.mjs
+
+      - name: Publish review summary
+        if: always()
+        run: |
+          if [ -f artifacts/pages-beta1-live/summary.md ]; then
+            cat artifacts/pages-beta1-live/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No se generó evidencia." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload live evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: beta1-live-pages-screenshots-${{ github.run_id }}
+          path: artifacts/pages-beta1-live
+          if-no-files-found: error
+          retention-days: 14
