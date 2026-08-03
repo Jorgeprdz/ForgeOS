@@ -1,0 +1,100 @@
+name: Advisor OS Sprint 11
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'advisor-os/experience/**'
+      - 'tests/advisor-os-sprint-11-test.mjs'
+      - 'tests/e2e/advisor-os-sprint-11.spec.mjs'
+      - 'tests/e2e/fixtures/advisor-os-sprint-11/**'
+      - 'playwright.advisor-os-sprint-11.config.mjs'
+      - 'docs/evidence/ADVISOR_OS_SPRINT_11_UX_ONBOARDING_PUBLIC_ACCEPTANCE_001.md'
+      - '.github/workflows/advisor-os-sprint-11.yml'
+      - 'docs/static-preview/forge-alive-material3/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: advisor-os-sprint-11-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sprint-11-one-pass:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax
+        run: |
+          node --check advisor-os/experience/advisor-experience-runtime.js
+          node --check tests/advisor-os-sprint-11-test.mjs
+          node --check tests/e2e/advisor-os-sprint-11.spec.mjs
+          node --check playwright.advisor-os-sprint-11.config.mjs
+
+      - name: Sprint 11 contracts
+        run: node --test tests/advisor-os-sprint-11-test.mjs
+
+      - name: Preserve authenticated public shell
+        run: |
+          node --test tests/authenticated-route-guard-test.mjs
+          node --test tests/public-auth-required-login-gate-test.mjs
+          node --test tests/public-auth-touch-gate-test.mjs
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/login-integrated-demo-tenants-test.mjs
+
+      - name: Preserve productive responsive modules
+        run: |
+          node --test tests/material3-pipeline-integration-test.mjs
+          node --test tests/crs-09-person-workspace-ui-test.mjs
+          node --test tests/activity-reports-productive-ui-completion-test.mjs
+          node --test tests/advisor-forecast-runtime-responsive-contract-test.mjs
+          node --test tests/cartera-material3-productive-ui-mount-test.mjs
+
+      - name: Build candidate public runtime
+        env:
+          FORGE_PAGES_RUNTIME: 'true'
+        run: |
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node --test tests/rep-16f-pages-runtime-generator-test.mjs
+          node --test tests/pages-public-demo-runtime-closure-test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Mobile tablet desktop public acceptance
+        run: npx playwright test --config=playwright.advisor-os-sprint-11.config.mjs
+
+      - name: Logout reload and session acceptance
+        run: npx playwright test --config=playwright.auth-session-controls.config.mjs
+
+      - name: Safety boundary scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          runtime='advisor-os/experience/advisor-experience-runtime.js'
+          fixture='tests/e2e/fixtures/advisor-os-sprint-11/index.html'
+          ! grep -E '\.(insert|update|delete|upsert)\(' "$runtime"
+          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' "$runtime"
+          grep -q 'PREVIEW_REQUIRED' "$runtime"
+          grep -q 'ADVISOR_PREFERENCES_CONFIRMATION_REQUIRED' "$runtime"
+          grep -q 'ADVISOR_EXPERIENCE_LATE_RESULT_REJECTED' "$runtime"
+          grep -q 'UNLABELED_DEMO_LEAKAGE_REJECTED' "$runtime"
+          grep -q 'unknownAsZero: false' "$runtime"
+          grep -q 'env(safe-area-inset-bottom)' "$fixture"
+          grep -q 'Datos ficticios' "$fixture"
+          git diff --check
