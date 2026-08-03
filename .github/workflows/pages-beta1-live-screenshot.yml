@@ -7,6 +7,12 @@ on:
     paths:
       - .github/workflows/pages-beta1-live-screenshot.yml
       - tools/pages-beta1-live-screenshot.mjs
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pages-beta1-live-screenshot.yml
+      - tools/pages-beta1-live-screenshot.mjs
   workflow_dispatch:
   workflow_run:
     workflows:
@@ -18,7 +24,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: beta1-live-pages-screenshot
+  group: beta1-live-pages-screenshot-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
@@ -33,7 +39,7 @@ jobs:
       FORGE_BETA_TEST_PASSWORD: ${{ secrets.FORGE_BETA_TEST_PASSWORD }}
 
     steps:
-      - name: Checkout main
+      - name: Checkout main tools
         uses: actions/checkout@v4
         with:
           ref: main
