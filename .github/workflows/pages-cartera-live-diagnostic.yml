@@ -1,0 +1,38 @@
+name: Pages Cartera Live Diagnostic
+
+on:
+  push:
+    branches:
+      - audit/live-pages-screenshot-artifact
+    paths:
+      - tools/pages-cartera-live-diagnostic.mjs
+      - .github/workflows/pages-cartera-live-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/
+      FORGE_CARTERA_DIAGNOSTIC: artifacts/pages-cartera-diagnostic
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Capture terminal Cartera state
+        run: node tools/pages-cartera-live-diagnostic.mjs
+      - name: Upload diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-cartera-live-diagnostic-${{ github.run_id }}
+          path: artifacts/pages-cartera-diagnostic
+          if-no-files-found: error
+          retention-days: 7
