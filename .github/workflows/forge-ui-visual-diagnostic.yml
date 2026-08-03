@@ -106,12 +106,13 @@ jobs:
         run: |
           cat > env.js <<'EOF'
           window.__ENV__ = Object.freeze({
-            "SUPABASE_URL": "https://rmlxigxysujsuwzgoimv.supabase.co",
+            "SUPABASE_URL": "http://127.0.0.1:4173",
             "SUPABASE_KEY": "forge-browser-diagnostic-public-anon-placeholder",
             "DEMO_MODE": "false",
             "ENABLE_TEST_ADVISOR_LOGIN": "false"
           });
           EOF
+          grep -F '"SUPABASE_URL": "http://127.0.0.1:4173"' env.js
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
