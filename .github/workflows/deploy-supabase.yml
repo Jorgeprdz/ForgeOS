@@ -28,8 +28,11 @@ jobs:
           grep -n "FUNCTION_VERSION\|MODEL_VERSION" supabase/functions/semantic-extract/index.ts
           echo "banxico-rates source version:"
           grep -n "FUNCTION_VERSION" supabase/functions/banxico-rates/logic.mjs
+          echo "Beta 1 function versions:"
+          grep -n "FUNCTION_VERSION\|MODEL_VERSION" supabase/functions/whatsapp-draft/index.ts
+          grep -n "FUNCTION_VERSION\|MODEL_VERSION" supabase/functions/cartera-pdf-intake/index.ts
           echo "Function directories:"
-          find supabase/functions/semantic-extract supabase/functions/banxico-rates -maxdepth 2 -type f -print
+          find supabase/functions/semantic-extract supabase/functions/banxico-rates supabase/functions/whatsapp-draft supabase/functions/cartera-pdf-intake -maxdepth 2 -type f -print
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -39,30 +42,34 @@ jobs:
       - name: Supabase CLI version
         run: supabase --version
 
-      - name: Test Banxico Edge Function contract
-        run: node tests/banxico-rates-edge-function-test.mjs
+      - name: Test Edge Function contracts
+        run: |
+          node tests/banxico-rates-edge-function-test.mjs
+          node tests/beta1-operational-completion-test.mjs
 
       - name: Deploy semantic-extract
-        run: |
-          supabase functions deploy semantic-extract \
-            --project-ref "$SUPABASE_PROJECT_REF" \
-            --debug
+        run: supabase functions deploy semantic-extract --project-ref "$SUPABASE_PROJECT_REF" --debug
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy banxico-rates
-        run: |
-          supabase functions deploy banxico-rates \
-            --project-ref "$SUPABASE_PROJECT_REF" \
-            --no-verify-jwt \
-            --debug
+        run: supabase functions deploy banxico-rates --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt --debug
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy whatsapp-draft
+        run: supabase functions deploy whatsapp-draft --project-ref "$SUPABASE_PROJECT_REF" --debug
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy cartera-pdf-intake
+        run: supabase functions deploy cartera-pdf-intake --project-ref "$SUPABASE_PROJECT_REF" --debug
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Smoke test semantic-extract
         run: |
           sleep 5
-
           curl --max-time 30 -s -L -X POST \
             "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/semantic-extract" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
@@ -70,11 +77,6 @@ jobs:
             -H "Content-Type: application/json" \
             --data '{"note":"Pidió 6 cotizaciones para el martes"}' \
             | tee response.json
-
-          echo
-          echo "Smoke response:"
-          cat response.json
-
           node scripts/validate-semantic-extract-smoke.mjs response.json
 
       - name: Smoke test banxico-rates
@@ -82,21 +84,28 @@ jobs:
           curl --fail --max-time 30 -sS -L \
             "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/banxico-rates" \
             | tee banxico-response.json
-
           node - <<'NODE'
           const fs = require('fs');
           const payload = JSON.parse(fs.readFileSync('banxico-response.json', 'utf8'));
           if (payload?.ok !== true) throw new Error(`BANXICO_SMOKE_NOT_OK: ${JSON.stringify(payload)}`);
           for (const [key, seriesId] of Object.entries({ UDI_MXN: 'SP68257', USD_MXN_FIX: 'SF43718' })) {
             const rate = payload?.rates?.[key];
-            if (!rate || rate.seriesId !== seriesId || !Number.isFinite(rate.value) || !rate.date) {
-              throw new Error(`BANXICO_SMOKE_INVALID_${key}`);
-            }
-            if (rate.source !== 'BANXICO_SIE_API' || rate.mode !== 'LATEST_VERIFIED') {
-              throw new Error(`BANXICO_SMOKE_PROVENANCE_${key}`);
-            }
+            if (!rate || rate.seriesId !== seriesId || !Number.isFinite(rate.value) || !rate.date) throw new Error(`BANXICO_SMOKE_INVALID_${key}`);
+            if (rate.source !== 'BANXICO_SIE_API' || rate.mode !== 'LATEST_VERIFIED') throw new Error(`BANXICO_SMOKE_PROVENANCE_${key}`);
           }
           console.log('BANXICO_EDGE_SMOKE=PASS');
-          console.log(`UDI_MXN=${payload.rates.UDI_MXN.value}`);
-          console.log(`UDI_DATE=${payload.rates.UDI_MXN.date}`);
           NODE
+
+      - name: Verify protected Beta 1 functions are reachable
+        run: |
+          for function_name in whatsapp-draft cartera-pdf-intake; do
+            status="$(curl --max-time 30 -sS -o "${function_name}.json" -w '%{http_code}' -X POST \
+              "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/${function_name}" \
+              -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+              -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+              -H "Content-Type: application/json" \
+              --data '{}')"
+            test "$status" = "401"
+            grep -q 'auth_required' "${function_name}.json"
+            echo "${function_name}=DEPLOYED_AND_AUTH_PROTECTED"
+          done
