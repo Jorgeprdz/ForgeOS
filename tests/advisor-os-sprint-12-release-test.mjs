@@ -80,8 +80,20 @@ test('operational guide and demo cover the continuous advisor loop', async () =>
 
 test('evidence index binds all closure sprints', async () => {
   const evidence = await read('docs/evidence/ADVISOR_OS_1_0_EVIDENCE_INDEX.md');
-  for (const pr of ['#222', '#224', '#225', '#226', '#227', '#228', '#229', '#230', '#231', '#232']) {
+  for (const pr of ['#222', '#223', '#224', '#225', '#226', '#227', '#228', '#229', '#230', '#231', '#232']) {
     assert.match(evidence, new RegExp(pr.replace('#', '\\#')));
   }
   assert.match(evidence, /PAGES_CANONICAL_DEPLOYMENT/);
+});
+
+test('Pages navigation runtime mirror remains byte-identical to canonical authority', async () => {
+  const [canonical, publicMirror, builder] = await Promise.all([
+    read('platform/navigation-runtime.js'),
+    read('docs/platform/navigation-runtime.js'),
+    read('scripts/build-advisor-presentation-pages-runtime.mjs'),
+  ]);
+  assert.equal(publicMirror, canonical);
+  assert.match(builder, /platform\/navigation-runtime\.js/);
+  assert.match(builder, /docs\/platform\/navigation-runtime\.js/);
+  assert.match(builder, /copyFile\(navigationSource, navigationTarget\)/);
 });
