@@ -5,6 +5,7 @@ on:
     paths:
       - "docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.*"
       - "docs/static-preview/forge-alive-material3/cartera-document-intake.js"
+      - "docs/static-preview/forge-alive-material3/cartera-policy-entry-route-gate.js"
       - "docs/static-preview/forge-alive-material3/cartera-module.js"
       - "docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js"
       - "docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js"
@@ -37,6 +38,7 @@ jobs:
           for file in \
             docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js \
             docs/static-preview/forge-alive-material3/cartera-document-intake.js \
+            docs/static-preview/forge-alive-material3/cartera-policy-entry-route-gate.js \
             docs/static-preview/forge-alive-material3/cartera-module.js \
             docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js \
             docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js \
@@ -49,7 +51,7 @@ jobs:
           grep -q 'sent: false' docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
           grep -q 'persisted: false' supabase/functions/cartera-pdf-intake/index.ts
           grep -q 'automaticPolicyCreation: false' supabase/functions/cartera-pdf-intake/index.ts
-      - name: Validate responsive and accessibility contracts
+      - name: Validate responsive, accessibility and route-gate contracts
         run: |
           grep -q 'safe-area-inset-bottom' docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.css
           grep -q 'aria-modal="true"' docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
@@ -57,3 +59,6 @@ jobs:
           grep -q 'data-cartera-policy-dialog' docs/static-preview/forge-alive-material3/cartera-document-intake.js
           grep -q 'accept="application/pdf,.pdf"' docs/static-preview/forge-alive-material3/cartera-document-intake.js
           grep -q 'safe-area-inset-bottom' docs/static-preview/forge-alive-material3/cartera-document-intake.js
+          grep -q 'MutationObserver' docs/static-preview/forge-alive-material3/cartera-policy-entry-route-gate.js
+          grep -q 'import(intakeUrl)' docs/static-preview/forge-alive-material3/cartera-policy-entry-route-gate.js
+          grep -q '\[data-forge-cartera-module\]' docs/static-preview/forge-alive-material3/cartera-policy-entry-route-gate.js
