@@ -1,5 +1,7 @@
-const BRIDGE_VERSION = "CRS-09-PERSON-WORKSPACE-ENTRY-BRIDGE-001";
+const BRIDGE_VERSION = "CRS-09-PERSON-WORKSPACE-ENTRY-BRIDGE-002";
 const INTELLIGENCE_VERSION = "CRS-10-EXISTING-RELATIONSHIP-INTELLIGENCE-001";
+const sourceLayout = import.meta.url.includes("/docs/static-preview/");
+const repositoryBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
 const SELECTORS = Object.freeze({
   pipelineCard: "[data-productive-prospect-card]",
   pipelineActions: "[data-productive-card-actions]",
@@ -10,8 +12,15 @@ const SELECTORS = Object.freeze({
     ["cartera", "#cartera-root > .glass-widget:first-child"],
   ]),
 });
+const COMMAND_ROUTE_ALIASES = Object.freeze({
+  dashboard: "inicio",
+  "advisor-sales-pipeline": "pipeline",
+  prospeccion: "pipeline",
+  referidos: "pipeline",
+});
 
 let intelligenceModulePromise;
+let commandNavigationBridgePromise;
 
 function ensureStylesheet() {
   if (document.querySelector("[data-person-workspace-entry-styles]")) return;
@@ -73,6 +82,12 @@ function reconcileEntries() {
   document.documentElement.dataset.personWorkspaceEntryBridge = BRIDGE_VERSION;
 }
 
+function openPersonWorkspace(detail = {}) {
+  globalThis.dispatchEvent(new CustomEvent("forge:open-person-workspace", {
+    detail: Object.freeze({ ...detail }),
+  }));
+}
+
 function openFromTrigger(trigger) {
   const personReference = trigger.dataset.openPersonWorkspacePerson;
   const sourceType = trigger.dataset.openPersonWorkspaceSource;
@@ -81,9 +96,51 @@ function openFromTrigger(trigger) {
   const detail = personReference
     ? { personReference, origin }
     : { sourceIdentity: { type: sourceType, reference: sourceReference }, origin };
-  globalThis.dispatchEvent(new CustomEvent("forge:open-person-workspace", {
-    detail: Object.freeze(detail),
+  openPersonWorkspace(detail);
+}
+
+function normalizeCommandRoute(route) {
+  const value = String(route || "").trim();
+  return COMMAND_ROUTE_ALIASES[value] || value;
+}
+
+function navigateShellRoute(route, params = {}) {
+  const normalizedRoute = normalizeCommandRoute(route);
+  if (normalizedRoute === "persona") {
+    openPersonWorkspace({
+      personReference: params.personReference || null,
+      sourceIdentity: params.sourceIdentity || null,
+      section: params.section || null,
+      event: params.event || null,
+      record: params.record || null,
+      origin: params.origin || document.querySelector("[data-forge-application]")?.dataset.forgeRoute || "inicio",
+    });
+    return true;
+  }
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("nav", normalizedRoute);
+  window.history.pushState({ forgeRoute: normalizedRoute }, "", url);
+  globalThis.dispatchEvent(new PopStateEvent("popstate", {
+    state: { forgeRoute: normalizedRoute },
   }));
+  return true;
+}
+
+function bindCommandNavigationBridge() {
+  commandNavigationBridgePromise ||= import(
+    new URL("platform/navigation-runtime.js", repositoryBase)
+  ).then(({ Navigation }) => {
+    Navigation.setNavigator((route, params = {}) => navigateShellRoute(route, params));
+    document.documentElement.dataset.commandOsMaterial3NavigationBridge = "ready";
+    return Navigation;
+  }).catch((error) => {
+    commandNavigationBridgePromise = null;
+    document.documentElement.dataset.commandOsMaterial3NavigationBridge = "failed";
+    console.error("[COMMAND OS MATERIAL3 NAVIGATION BRIDGE]", error);
+    throw error;
+  });
+  return commandNavigationBridgePromise;
 }
 
 function loadIntelligenceModule() {
@@ -129,6 +186,7 @@ function reconcileIntelligenceRoute() {
 }
 
 ensureStylesheet();
+void bindCommandNavigationBridge();
 
 document.addEventListener("click", (event) => {
   const trigger = event.target.closest("[data-person-workspace-launcher]");
@@ -179,6 +237,8 @@ globalThis.ForgeCrs09PersonWorkspaceEntryBridge = Object.freeze({
   reconcile: reconcileEntries,
   mountIntelligence,
   scrubIntelligence,
+  bindCommandNavigationBridge,
+  navigateShellRoute,
 });
 
 export {
@@ -187,4 +247,6 @@ export {
   reconcileEntries,
   mountIntelligence,
   scrubIntelligence,
+  bindCommandNavigationBridge,
+  navigateShellRoute,
 };
