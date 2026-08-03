@@ -10,6 +10,8 @@ if (!buildSha) {
   console.log("FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=SKIPPED_NO_GITHUB_SHA");
 } else {
   const runtimeDir = join(root, "docs/static-preview/forge-alive-material3");
+  const dynamicModuleUrl = (name) =>
+    `\`${name}\${layout.extension}?v=${buildSha}\``;
   const targets = [
     {
       file: "app.js",
@@ -42,11 +44,11 @@ if (!buildSha) {
         ],
         [
           '`productive-smart-widget-orchestrator${layout.extension}`',
-          '`productive-smart-widget-orchestrator${layout.extension}?v=${buildSha}`',
+          dynamicModuleUrl("productive-smart-widget-orchestrator"),
         ],
         [
           '`advisor-monthly-policy-goal-repository${layout.extension}`',
-          '`advisor-monthly-policy-goal-repository${layout.extension}?v=${buildSha}`',
+          dynamicModuleUrl("advisor-monthly-policy-goal-repository"),
         ],
         [
           '"./smart-widget-productive-home-adapter.css?v=home-productive-mount-001"',
@@ -91,5 +93,10 @@ if (!buildSha) {
     }
   }
 
+  if (orchestrator.includes("?v=${buildSha}")) {
+    throw new Error("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=home-productive-orchestrator.js");
+  }
+
   console.log(`FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=PASS SHA=${buildSha}`);
+  console.log("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE");
 }
