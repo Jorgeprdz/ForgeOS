@@ -48,7 +48,7 @@ test("opportunities are ranked from real operational evidence without probabilit
   assert.ok(rows.every((row) => !("score" in row) && !("probability" in row)));
 });
 
-test("canonical shell schedules a route gate only after initial page load", async () => {
+test("canonical shell schedules the route gate without coupling to window load", async () => {
   const [runtime, routeGate, authorityEntry, legacy] = await Promise.all([
     read("docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js"),
     read("docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js"),
@@ -57,7 +57,10 @@ test("canonical shell schedules a route gate only after initial page load", asyn
   ]);
   assert.doesNotMatch(legacy, /^import "\.\/home-live-dashboard/m);
   assert.match(legacy, /home-live-dashboard-route-gate\.js\?v=home-live-dashboard-005/);
-  assert.match(legacy, /addEventListener\("load", installHomeRouteGateAfterLoad/);
+  assert.match(legacy, /addEventListener\("DOMContentLoaded", installHomeRouteGate/);
+  assert.match(legacy, /runLegacyCleanupInBackground/);
+  assert.doesNotMatch(legacy, /addEventListener\("load"/);
+  assert.doesNotMatch(legacy, /^await\s+Promise\.allSettled/m);
   assert.match(routeGate, /routeAllowsHome/);
   assert.match(routeGate, /!root\.hidden/);
   assert.match(routeGate, /root\.dataset\.moduleActive !== "false"/);
