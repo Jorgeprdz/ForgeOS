@@ -23,6 +23,22 @@ test("bulk import mount reuses Sprint 06 domain contracts and productive authori
   assert.doesNotMatch(runtime, /No se guardó ningún contacto/);
 });
 
+test("bulk engine is lazy and project-relative in the published runtime", async () => {
+  const runtime = await read("docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js");
+  const builder = await read("scripts/prepare-material3-auth-entry.mjs");
+  assert.match(runtime, /async function getBulkEngine/);
+  assert.match(runtime, /sourceLayout/);
+  assert.match(runtime, /\.\/bulk-import-engine-pages\.js/);
+  assert.match(runtime, /\.\.\/\.\.\/\.\.\/advisor-os\/contact-books\/bulk-import-engine\.js/);
+  assert.match(runtime, /await getBulkEngine\(\)/);
+  assert.doesNotMatch(
+    runtime,
+    /^import[\s\S]{0,160}from ["']\.\.\/\.\.\/\.\.\/advisor-os\/contact-books\/bulk-import-engine\.js["'];/m,
+  );
+  assert.match(builder, /bulk-import-engine-pages\.js/);
+  assert.match(builder, /advisor-os\/contact-books\/bulk-import-engine\.js/);
+});
+
 test("visible entry and file picker remain mounted through Pipeline rerenders", async () => {
   const runtime = await read("docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js");
   assert.match(runtime, /data-pipeline-bulk-import/);
