@@ -17,6 +17,17 @@ test('recovery stylesheet is loaded from the canonical public shell', async () =
   assert.match(css, /Forge UI Recovery \+ Editorial Type/);
 });
 
+test('Pages versions the recovery loader against the deployed SHA', async () => {
+  const [builder, versioner] = await Promise.all([
+    read('scripts/build-advisor-presentation-pages-runtime.mjs'),
+    read('scripts/forge-ui-recovery-cache-versioning.mjs'),
+  ]);
+  assert.match(builder, /forge-ui-recovery-cache-versioning\.mjs/);
+  assert.match(versioner, /process\.env\.GITHUB_SHA/);
+  assert.match(versioner, /legacy-ui-retirement\.js/);
+  assert.match(versioner, /FORGE_UI_RECOVERY_LOADER_VERSIONING_FAILED/);
+});
+
 test('every productive route spans the full 12-column workspace', async () => {
   const css = await read('docs/static-preview/forge-alive-material3/forge-ui-recovery.css');
   assert.match(css, /\.forge-module-viewport > \[data-route-module\]/);
