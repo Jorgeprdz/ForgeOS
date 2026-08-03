@@ -1,0 +1,45 @@
+name: Command OS Pack 03
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: command-os-pack-03-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax
+        run: |
+          node --check platform/commands/command-controller.js
+          node --check platform/commands/command-runtime.js
+          node --check platform/commands/command-registry.js
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Command Bar browser acceptance
+        run: npx playwright test --config=playwright.command-os-pack-03.config.mjs
+
+      - name: Diff integrity
+        run: git diff --check
