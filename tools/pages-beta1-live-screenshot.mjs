@@ -19,12 +19,30 @@ const report = {
   routes: {},
   consoleErrors: [],
   pageErrors: [],
+  failedResponses: [],
+  failedRequests: [],
 };
 
 page.on("console", message => {
   if (message.type() === "error") report.consoleErrors.push(message.text());
 });
 page.on("pageerror", error => report.pageErrors.push(error.message));
+page.on("response", response => {
+  if (response.status() >= 400) {
+    report.failedResponses.push({
+      status: response.status(),
+      url: response.url(),
+      resourceType: response.request().resourceType(),
+    });
+  }
+});
+page.on("requestfailed", request => {
+  report.failedRequests.push({
+    url: request.url(),
+    resourceType: request.resourceType(),
+    failure: request.failure()?.errorText || "REQUEST_FAILED",
+  });
+});
 
 async function openRoute(nav, fileName) {
   const url = new URL(baseUrl);
@@ -100,6 +118,10 @@ try {
     `- WhatsApp composer triggers: ${report.whatsappComposerTriggerCount ?? "NOT_TESTED"}`,
     `- Console errors: ${report.consoleErrors.length}`,
     `- Page errors: ${report.pageErrors.length}`,
+    `- HTTP failures: ${report.failedResponses.length}`,
+    `- Network failures: ${report.failedRequests.length}`,
+    ...report.failedResponses.map(item => `  - ${item.status} ${item.resourceType}: ${item.url}`),
+    ...report.failedRequests.map(item => `  - ${item.failure} ${item.resourceType}: ${item.url}`),
   ].join("\n");
   await writeFile(`${outputDir}/summary.md`, summary);
   console.log(summary);
