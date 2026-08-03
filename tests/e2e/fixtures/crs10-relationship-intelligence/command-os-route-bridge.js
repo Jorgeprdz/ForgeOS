@@ -16,8 +16,13 @@ addEventListener('forge:open-person-workspace', (event) => {
   url.searchParams.set('nav', 'persona');
   if (detail.personReference) url.searchParams.set('person', detail.personReference);
   history.pushState({ forgeRoute: 'persona' }, '', url);
-  document.querySelector('[data-forge-application]').dataset.forgeRoute = 'persona';
-  document.querySelector('[data-forge-person-workspace-module]').hidden = false;
+
+  const application = document.querySelector('[data-forge-application]');
+  const workspace = document.querySelector('[data-forge-person-workspace-module]');
+  application.dataset.forgeRoute = 'persona';
+  workspace.hidden = false;
+  workspace.style.display = 'block';
+  workspace.innerHTML = `<h1>Persona seleccionada</h1><p>${detail.personReference || 'sin referencia'}</p>`;
   document.querySelector('#receipt').textContent = JSON.stringify(detail);
 });
 
