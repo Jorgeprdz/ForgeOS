@@ -1,0 +1,37 @@
+{
+  "product": "Advisor OS",
+  "version": "1.0.0",
+  "tag": "advisor-os-v1.0.0",
+  "releaseCandidateBaseSha": "0974378c699b513f4800e6eec2d88acb05a076c4",
+  "canonicalUrl": "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/",
+  "buildInfoUrl": "https://jorgeprdz.github.io/ForgeOS/build-info.json",
+  "releaseDate": "2026-08-02",
+  "timezone": "America/Mexico_City",
+  "requiredGates": [
+    "BENVENU",
+    "COMMAND_BAR",
+    "AGENDA",
+    "NOTIFICATIONS",
+    "CLIPPY",
+    "LOW_FRICTION_INPUT",
+    "BULK_INTAKE",
+    "BOOKS",
+    "PIPELINE",
+    "QUOTES",
+    "CONVERSION",
+    "PORTFOLIO",
+    "ACTIVITY",
+    "FORECAST",
+    "REPORTS",
+    "COMPENSATION",
+    "PUBLIC_ACCEPTANCE"
+  ],
+  "stopConditions": {
+    "criticalDefects": 0,
+    "highDefects": 0,
+    "unapprovedMutations": 0,
+    "unknownAsZero": 0,
+    "publicAssetOverrides": false,
+    "logoutPrivateDataRemains": false
+  }
+}
