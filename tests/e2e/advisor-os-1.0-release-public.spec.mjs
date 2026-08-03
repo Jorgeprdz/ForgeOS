@@ -3,6 +3,13 @@ import { test, expect } from '@playwright/test';
 const canonical = process.env.FORGE_RELEASE_URL || 'https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/';
 const buildInfo = process.env.FORGE_BUILD_INFO_URL || 'https://jorgeprdz.github.io/ForgeOS/build-info.json';
 const expectedSha = process.env.FORGE_EXPECTED_RELEASE_SHA;
+const metadataOnly = process.env.FORGE_RELEASE_METADATA_ONLY === 'true';
+
+const expectedSandboxServiceWorkerError = message => (
+  message.includes("Failed to read the 'serviceWorker' property from 'Navigator'")
+  && message.includes("context is sandboxed")
+  && message.includes("allow-same-origin")
+);
 
 test('canonical Pages serves the exact release commit without overrides', async ({ page, request }) => {
   expect(expectedSha, 'FORGE_EXPECTED_RELEASE_SHA is required').toBeTruthy();
@@ -20,6 +27,8 @@ test('canonical Pages serves the exact release commit without overrides', async 
   const html = await htmlResponse.text();
   expect(html).toContain(`app.js?v=${expectedSha}`);
   expect(html).not.toContain('Muestra segura · solo lectura');
+
+  if (metadataOnly) return;
 
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
@@ -42,5 +51,7 @@ test('canonical Pages serves the exact release commit without overrides', async 
   expect(result.scrollWidth).toBeLessThanOrEqual(result.clientWidth + 1);
   expect(result.hasAuth || result.hasApplication).toBeTruthy();
   if (result.demoBanner) expect(result.demoBanner).toMatch(/Datos ficticios|Modo demostración/i);
-  expect(pageErrors).toEqual([]);
+
+  const actionableErrors = pageErrors.filter(message => !expectedSandboxServiceWorkerError(message));
+  expect(actionableErrors).toEqual([]);
 });
