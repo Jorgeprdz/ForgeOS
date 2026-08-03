@@ -1,5 +1,4 @@
 import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-120-false-zero-safe-area-001";
-import "./home-live-dashboard-runtime.js?v=home-live-dashboard-003";
 
 const LEGACY_CACHE_NAMES = new Set([
   "static-v7-pages-1",
@@ -9,6 +8,11 @@ const LEGACY_CACHE_NAMES = new Set([
 const RECOVERY_STYLESHEET_SELECTOR = "[data-forge-ui-recovery-styles]";
 const RECOVERY_STYLESHEET_HREF = new URL(
   "./forge-ui-recovery.css?v=forge-ui-recovery-001",
+  import.meta.url,
+).href;
+const HOME_RUNTIME_SELECTOR = "[data-home-live-dashboard-entry]";
+const HOME_RUNTIME_HREF = new URL(
+  "./home-live-dashboard-runtime.js?v=home-live-dashboard-004",
   import.meta.url,
 ).href;
 
@@ -38,6 +42,23 @@ function installRecoveryStylesheet() {
   observer.observe(document.head, { childList: true });
   queueMicrotask(keepRecoveryLast);
   globalThis.addEventListener("pagehide", () => observer.disconnect(), { once: true });
+}
+
+function installHomeRuntimeAfterLoad() {
+  if (document.querySelector(HOME_RUNTIME_SELECTOR)) return;
+  const script = document.createElement("script");
+  script.type = "module";
+  script.src = HOME_RUNTIME_HREF;
+  script.dataset.homeLiveDashboardEntry = "true";
+  document.head.append(script);
+}
+
+function scheduleHomeRuntime() {
+  if (document.readyState === "complete") {
+    queueMicrotask(installHomeRuntimeAfterLoad);
+    return;
+  }
+  globalThis.addEventListener("load", installHomeRuntimeAfterLoad, { once: true });
 }
 
 async function retireLegacyServiceWorkers() {
@@ -73,6 +94,7 @@ async function clearLegacyCaches() {
 }
 
 installRecoveryStylesheet();
+scheduleHomeRuntime();
 
 await Promise.allSettled([
   retireLegacyServiceWorkers(),
