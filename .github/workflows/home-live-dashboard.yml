@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard.js'
-      - 'docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js'
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js'
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js'
       - 'docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
@@ -44,7 +43,6 @@ jobs:
       - name: Syntax and focused contracts
         run: |
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard.js
-          node --check docs/static-preview/forge-alive-material3/home-live-dashboard-runtime.js
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js
           node --check docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js
