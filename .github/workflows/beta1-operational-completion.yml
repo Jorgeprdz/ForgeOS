@@ -7,6 +7,8 @@ on:
       - "docs/static-preview/forge-alive-material3/cartera-document-intake.js"
       - "docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js"
       - "docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js"
+      - "scripts/prepare-cartera-policy-entry-pages-runtime.mjs"
+      - "scripts/build-advisor-presentation-pages-runtime.mjs"
       - "supabase/functions/whatsapp-draft/**"
       - "supabase/functions/cartera-pdf-intake/**"
       - "tests/beta1-operational-completion-test.mjs"
@@ -35,7 +37,8 @@ jobs:
             docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.js \
             docs/static-preview/forge-alive-material3/cartera-document-intake.js \
             docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js \
-            docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js; do
+            docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js \
+            scripts/prepare-cartera-policy-entry-pages-runtime.mjs; do
             node --check "$file"
           done
       - name: Reject browser secrets and false automation
@@ -48,5 +51,7 @@ jobs:
         run: |
           grep -q 'safe-area-inset-bottom' docs/static-preview/forge-alive-material3/pipeline-bulk-import-mount.css
           grep -q 'aria-modal="true"' docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
-          grep -q 'data-cartera-document-dropzone' docs/static-preview/forge-alive-material3/cartera-document-intake.js
+          grep -q 'data-cartera-policy-dropzone' docs/static-preview/forge-alive-material3/cartera-document-intake.js
+          grep -q 'data-cartera-policy-dialog' docs/static-preview/forge-alive-material3/cartera-document-intake.js
           grep -q 'accept="application/pdf,.pdf"' docs/static-preview/forge-alive-material3/cartera-document-intake.js
+          grep -q 'safe-area-inset-bottom' docs/static-preview/forge-alive-material3/cartera-document-intake.js
