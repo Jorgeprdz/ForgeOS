@@ -1,0 +1,446 @@
+/*
+ * Forge UI Recovery + Editorial Type
+ * Structural and visual recovery only. No business authority or runtime mutation.
+ */
+
+:root {
+  --forge-font-display: "Iowan Old Style", "Baskerville", "Times New Roman", Georgia, serif;
+  --forge-font-ui: Inter, Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --forge-page-max: 1320px;
+  --forge-panel-radius: 24px;
+  --forge-subpanel-radius: 14px;
+  --forge-panel-border: rgba(170, 199, 255, 0.13);
+  --forge-panel-bg: rgba(12, 28, 50, 0.78);
+  --forge-panel-bg-soft: rgba(7, 20, 38, 0.48);
+  --forge-shadow-soft: 0 14px 38px rgba(0, 0, 0, 0.18);
+}
+
+/* --------------------------------------------------------------------------
+   1. Canonical route width recovery
+   The shell is a 12-column grid on landscape tablet and desktop. Every route
+   module must span the entire workspace; otherwise it collapses into one grid
+   column and appears clipped at the left edge.
+   -------------------------------------------------------------------------- */
+
+.forge-module-viewport > [data-route-module],
+.forge-module-viewport > .activity-module,
+.forge-module-viewport > .cartera-module,
+.forge-module-viewport > .person-workspace-module {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  justify-self: stretch !important;
+}
+
+.forge-module-viewport > [data-route-module]:not(.home-module) {
+  align-self: start;
+}
+
+.forge-module-viewport [data-route-module] *,
+.forge-module-viewport .activity-module *,
+.forge-module-viewport .cartera-module * {
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. Editorial display typography
+   Serif is restricted to page and major section headings. Controls, metrics,
+   filters, labels and data remain in the UI sans-serif.
+   -------------------------------------------------------------------------- */
+
+.hero h1,
+.plan-card h2,
+.next-card > h2,
+.pipeline-module__header h1,
+.pipeline-module__empty h2,
+.quotes-module h1,
+.activity-hero h1,
+.activity-reports-hero h1,
+.activity-card-heading h2,
+.activity-report-card > h2,
+.person-workspace-module h1,
+.cartera-material3-frame #cartera-title,
+.cartera-material3-frame #cartera-radar-title,
+.cartera-m3-state h1,
+[data-route-module] [data-page-title],
+[data-route-module] > header h1 {
+  font-family: var(--forge-font-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.035em !important;
+  text-wrap: balance;
+}
+
+button,
+input,
+select,
+textarea,
+.nav-item,
+.section-kicker,
+.eyebrow,
+.status-pill,
+.activity-period,
+.cartera-material3-frame button,
+.cartera-material3-frame input,
+.cartera-material3-frame select {
+  font-family: var(--forge-font-ui) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Global visual restraint
+   -------------------------------------------------------------------------- */
+
+.organic-card,
+.pipeline-module__stage,
+.pipeline-module__empty,
+.pipeline-module__productive-card,
+.activity-status-card,
+.activity-summary,
+.activity-chart-card,
+.activity-report-status,
+.activity-report-kpis article,
+.activity-report-card,
+.activity-report-sources {
+  border-radius: var(--forge-panel-radius) !important;
+  border-color: var(--forge-panel-border) !important;
+  box-shadow: var(--forge-shadow-soft) !important;
+}
+
+.plan-card::after,
+.next-card::after {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   4. Home recovery
+   -------------------------------------------------------------------------- */
+
+.hero h1 {
+  max-width: 16ch;
+  font-size: clamp(2.7rem, 4.6vw, 4.8rem) !important;
+  line-height: 0.96 !important;
+}
+
+.plan-card,
+.next-card {
+  overflow: hidden;
+}
+
+.plan-card h2,
+.next-card > h2 {
+  line-height: 1.02 !important;
+}
+
+.metric {
+  min-height: 164px !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+}
+
+.opportunities {
+  border-radius: var(--forge-panel-radius) !important;
+}
+
+@media (min-width: 1200px) {
+  .plan-card,
+  .next-card {
+    min-height: 350px !important;
+  }
+
+  .plan-card {
+    grid-column: 1 / 6 !important;
+  }
+
+  .next-card {
+    grid-column: 6 / 13 !important;
+  }
+
+  .summary-section {
+    grid-column: 1 / 9 !important;
+  }
+
+  .opportunities {
+    grid-column: 9 / 13 !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Activity density and hierarchy
+   -------------------------------------------------------------------------- */
+
+.activity-module {
+  overflow: visible;
+}
+
+.activity-workspace,
+.activity-operational,
+.activity-reports {
+  width: min(100%, var(--forge-page-max)) !important;
+  max-width: var(--forge-page-max) !important;
+}
+
+.activity-workspace {
+  padding-inline: clamp(18px, 3vw, 42px) !important;
+}
+
+.activity-hero,
+.activity-reports-hero {
+  align-items: center !important;
+}
+
+.activity-hero h1,
+.activity-reports-hero h1 {
+  max-width: 21ch !important;
+  margin-block: 4px 6px !important;
+  font-size: clamp(2.35rem, 3.6vw, 4.25rem) !important;
+  line-height: 0.96 !important;
+}
+
+.activity-subtitle,
+.activity-reports-hero p {
+  max-width: 62ch !important;
+  font-size: 0.95rem;
+}
+
+.activity-refresh {
+  flex-basis: 42px !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 13px !important;
+  box-shadow: none !important;
+}
+
+.activity-view-tabs {
+  width: min(100%, 360px) !important;
+  box-shadow: none !important;
+}
+
+.activity-periods {
+  gap: 5px !important;
+}
+
+.activity-period {
+  min-height: 36px !important;
+  padding-inline: 14px !important;
+  box-shadow: none !important;
+}
+
+.activity-status-card,
+.activity-report-status {
+  min-height: 82px !important;
+  padding: 17px 19px !important;
+}
+
+.activity-state-icon {
+  flex-basis: 34px !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 11px !important;
+}
+
+.activity-summary {
+  padding: clamp(19px, 3vw, 28px) !important;
+}
+
+.activity-chart-card,
+.activity-report-card,
+.activity-report-sources {
+  padding: clamp(18px, 3vw, 28px) !important;
+}
+
+@media (min-width: 900px) {
+  .activity-hero,
+  .activity-reports-hero {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .activity-hero h1,
+  .activity-reports-hero h1 {
+    max-width: 17ch !important;
+    font-size: clamp(2rem, 10vw, 2.85rem) !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Cartera de-militarization
+   Preserve every source and datum while flattening nested control chrome.
+   -------------------------------------------------------------------------- */
+
+.cartera-material3-frame {
+  width: min(100%, var(--forge-page-max)) !important;
+  max-width: var(--forge-page-max) !important;
+  margin-inline: auto;
+  padding-inline: clamp(0px, 1vw, 12px) !important;
+}
+
+.cartera-material3-frame .glass-widget {
+  border-radius: var(--forge-panel-radius) !important;
+  border-color: var(--forge-panel-border) !important;
+  background: var(--forge-panel-bg) !important;
+  box-shadow: var(--forge-shadow-soft) !important;
+}
+
+.cartera-material3-frame .glass-widget .glass-widget {
+  border-radius: var(--forge-subpanel-radius) !important;
+  background: var(--forge-panel-bg-soft) !important;
+  box-shadow: none !important;
+}
+
+.cartera-material3-frame button {
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  background: rgba(82, 230, 223, 0.045) !important;
+}
+
+.cartera-material3-frame button:hover {
+  border-color: rgba(82, 230, 223, 0.32) !important;
+  background: rgba(82, 230, 223, 0.09) !important;
+}
+
+.cartera-material3-frame #cartera-title {
+  font-size: clamp(2rem, 3.2vw, 3.4rem) !important;
+  line-height: 0.98 !important;
+}
+
+/* Compact canonical portfolio summary into one readable band. */
+.cartera-material3-frame .glass-widget:has(#kpi-total-personas) {
+  padding: 20px 22px !important;
+}
+
+.cartera-material3-frame .glass-widget:has(#kpi-total-personas) > div:nth-child(2) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0 !important;
+  margin-top: 15px !important;
+  overflow: hidden;
+  border-top: 1px solid rgba(170, 199, 255, 0.10);
+}
+
+.cartera-material3-frame .glass-widget:has(#kpi-total-personas) > div:nth-child(2) > .glass-widget {
+  flex: 1 1 150px !important;
+  min-height: 68px;
+  padding: 12px 16px !important;
+  border: 0 !important;
+  border-right: 1px solid rgba(170, 199, 255, 0.10) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.cartera-material3-frame .glass-widget:has(#kpi-total-personas) > div:nth-child(2) > .glass-widget:last-child {
+  border-right: 0 !important;
+}
+
+/* Payment horizons remain visible, but cease looking like six primary buttons. */
+.cartera-material3-frame [data-cartera-payment-calendar="PORTFOLIO"] {
+  padding: 20px 22px !important;
+}
+
+.cartera-material3-frame [data-cartera-payment-calendar="PORTFOLIO"] > div:nth-child(2) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0 !important;
+  overflow: hidden;
+  border-block: 1px solid rgba(170, 199, 255, 0.09);
+}
+
+.cartera-material3-frame [data-calendar-summary] {
+  flex: 1 1 110px !important;
+  padding: 10px 12px !important;
+  border: 0 !important;
+  border-right: 1px solid rgba(170, 199, 255, 0.09) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.cartera-material3-frame [data-calendar-summary] > div:last-child {
+  font-size: 1.25rem !important;
+}
+
+/* Radar filters read as tabs, not command-console controls. */
+.cartera-material3-frame section:has(#cartera-radar-title) {
+  padding: 20px 22px !important;
+}
+
+.cartera-material3-frame section:has(#cartera-radar-title) > div:nth-child(2) {
+  gap: 2px !important;
+  padding-block: 10px 2px !important;
+  border-bottom: 1px solid rgba(170, 199, 255, 0.09);
+}
+
+.cartera-material3-frame [data-radar-horizon] {
+  min-height: 34px !important;
+  padding: 6px 10px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  font-size: 0.78rem !important;
+}
+
+.cartera-material3-frame [data-radar-horizon][aria-pressed="true"] {
+  background: rgba(82, 230, 223, 0.10) !important;
+  color: var(--aqua-soft) !important;
+}
+
+.cartera-material3-frame [data-radar-refresh] {
+  min-height: 34px !important;
+  padding-inline: 10px !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+}
+
+.cartera-material3-frame section:has(#cartera-radar-title) > div:nth-child(3) {
+  gap: 6px 12px !important;
+  margin-top: 8px !important;
+  opacity: 0.72;
+}
+
+.cartera-material3-frame section:has(#cartera-radar-title) > div:nth-child(4) > .glass-widget:only-child {
+  border: 0 !important;
+  background: transparent !important;
+  padding-inline: 0 !important;
+}
+
+/* Read-only labels should not compete with page titles. */
+.cartera-material3-frame span {
+  max-width: 100%;
+}
+
+.cartera-material3-frame [style*="SOLO LECTURA"] {
+  opacity: 0.72;
+}
+
+@media (max-width: 720px) {
+  .cartera-material3-frame .glass-widget:has(#kpi-total-personas) > div:nth-child(2) > .glass-widget,
+  .cartera-material3-frame [data-calendar-summary] {
+    flex-basis: 50% !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Safe area remains mandatory; floating navigation remains intentional.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1199px) {
+  .forge-module-viewport {
+    padding-bottom: calc(
+      var(--forge-mobile-nav-height)
+      + var(--forge-mobile-nav-clearance)
+      + var(--forge-mobile-floating-gap)
+      + env(safe-area-inset-bottom)
+    ) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forge-module-viewport *,
+  .forge-module-viewport *::before,
+  .forge-module-viewport *::after {
+    scroll-behavior: auto !important;
+  }
+}
