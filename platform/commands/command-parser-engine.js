@@ -1,73 +1,30 @@
-/*
-|--------------------------------------------------------------------------
-| MODULE: command-parser-engine.js
-|--------------------------------------------------------------------------
-|
-| Command parser engine.
-|
-|--------------------------------------------------------------------------
-*/
+export function parsearComando({ input = '' }) {
+  const raw = String(input);
+  const normalized = raw.trim();
 
-export function parsearComando({
+  if (!normalized) {
+    return { type: 'UNKNOWN', value: '', raw };
+  }
 
-    input = ''
-
-}) {
-
-    /*
-    |--------------------------------------------------------------------------
-    | Slash command
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-
-        input.startsWith('/')
-    ) {
-
-        return {
-
-            type:
-                'COMMAND',
-
-            value:
-                input.slice(1)
-        };
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Entity command
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-
-        input.startsWith('@')
-    ) {
-
-        return {
-
-            type:
-                'ENTITY',
-
-            value:
-                input.slice(1)
-        };
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Natural language
-    |--------------------------------------------------------------------------
-    */
-
+  if (normalized.startsWith('/')) {
     return {
-
-        type:
-            'TEXT',
-
-        value:
-            input
+      type: 'EXPLICIT_COMMAND_HINT',
+      value: normalized.slice(1).trim(),
+      raw,
     };
+  }
+
+  if (normalized.startsWith('@')) {
+    return {
+      type: 'ENTITY_HINT',
+      value: normalized.slice(1).trim(),
+      raw,
+    };
+  }
+
+  return {
+    type: 'NATURAL_LANGUAGE_OR_SEARCH',
+    value: normalized,
+    raw,
+  };
 }

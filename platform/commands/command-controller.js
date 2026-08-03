@@ -1,7 +1,7 @@
-import { COMMANDS } from './command-registry.js';
+import { COMMANDS, getCommandById } from './command-registry.js';
 import { buscarComandos } from './command-search-engine.js';
 import { cerrarCommandPalette } from './command-palette-ui.js';
-import { Navigation } from '../navigation-runtime.js';
+import { ejecutarComando } from './command-execution-engine.js';
 
 let activeIndex = 0;
 let cleanup = null;
@@ -36,9 +36,10 @@ function render(resultsElement, commands) {
 }
 
 async function execute(command) {
-    if (!command || command.intent !== 'NAVIGATION' || !command.route) return false;
+    if (!command) return false;
+    const result = await ejecutarComando({ command });
+    if (!result.ok) return false;
     cerrarCommandPalette();
-    await Navigation.navigate(command.route);
     return true;
 }
 
@@ -78,7 +79,7 @@ export function bindCommandController(root) {
     const onClick = async (event) => {
         const button = event.target.closest('[data-command-id]');
         if (!button) return;
-        await execute(COMMANDS.find(command => command.id === button.dataset.commandId));
+        await execute(getCommandById(button.dataset.commandId));
     };
 
     input.addEventListener('input', onInput);

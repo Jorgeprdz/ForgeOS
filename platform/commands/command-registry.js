@@ -1,58 +1,35 @@
-export const COMMANDS = [
-    {
-        id: 'open-dashboard',
-        label: 'Ir a Inicio',
-        command: '/dashboard',
-        keywords: ['inicio', 'home', 'dashboard'],
-        intent: 'NAVIGATION',
-        route: 'dashboard',
-    },
-    {
-        id: 'open-pipeline',
-        label: 'Abrir Pipeline',
-        command: '/pipeline',
-        keywords: ['pipeline', 'prospectos', 'oportunidades'],
-        intent: 'NAVIGATION',
-        route: 'advisor-sales-pipeline',
-    },
-    {
-        id: 'open-prospeccion',
-        label: 'Abrir Prospectos',
-        command: '/prospeccion',
-        keywords: ['prospeccion', 'prospectos', 'contactos'],
-        intent: 'NAVIGATION',
-        route: 'prospeccion',
-    },
-    {
-        id: 'open-referidos',
-        label: 'Abrir Referidos',
-        command: '/referidos',
-        keywords: ['referidos', 'recomendaciones'],
-        intent: 'NAVIGATION',
-        route: 'referidos',
-    },
-    {
-        id: 'open-actividad',
-        label: 'Abrir Actividad',
-        command: '/actividad',
-        keywords: ['actividad', 'puntos', 'productividad'],
-        intent: 'NAVIGATION',
-        route: 'actividad',
-    },
-    {
-        id: 'open-cartera',
-        label: 'Abrir Cartera',
-        command: '/cartera',
-        keywords: ['cartera', 'clientes', 'polizas'],
-        intent: 'NAVIGATION',
-        route: 'cartera',
-    },
-    {
-        id: 'open-comisiones',
-        label: 'Abrir Comisiones',
-        command: '/comisiones',
-        keywords: ['comisiones', 'compensacion', 'ingresos'],
-        intent: 'NAVIGATION',
-        route: 'comisiones',
-    },
+const NAVIGATION_COMMANDS = [
+  ['open-dashboard', 'Ir a Inicio', '/dashboard', ['inicio', 'home', 'dashboard'], 'dashboard'],
+  ['open-pipeline', 'Abrir Pipeline', '/pipeline', ['pipeline', 'prospectos', 'oportunidades'], 'advisor-sales-pipeline'],
+  ['open-prospeccion', 'Abrir Prospectos', '/prospeccion', ['prospeccion', 'prospectos', 'contactos'], 'prospeccion'],
+  ['open-referidos', 'Abrir Referidos', '/referidos', ['referidos', 'recomendaciones'], 'referidos'],
+  ['open-actividad', 'Abrir Actividad', '/actividad', ['actividad', 'puntos', 'productividad'], 'actividad'],
+  ['open-cartera', 'Abrir Cartera', '/cartera', ['cartera', 'clientes', 'polizas'], 'cartera'],
+  ['open-comisiones', 'Abrir Comisiones', '/comisiones', ['comisiones', 'compensacion', 'ingresos'], 'comisiones'],
 ];
+
+export const COMMANDS = Object.freeze(NAVIGATION_COMMANDS.map(([
+  id,
+  label,
+  command,
+  keywords,
+  route,
+]) => Object.freeze({
+  id,
+  label,
+  command,
+  aliases: Object.freeze([command]),
+  keywords: Object.freeze(keywords),
+  intent: 'NAVIGATION',
+  domain: 'platform',
+  handlerId: 'navigate-route',
+  requiresContext: Object.freeze([]),
+  requiresConfirmation: false,
+  availability: 'enabled',
+  source: 'core',
+  payload: Object.freeze({ route }),
+})));
+
+export function getCommandById(commandId) {
+  return COMMANDS.find(command => command.id === commandId) || null;
+}
