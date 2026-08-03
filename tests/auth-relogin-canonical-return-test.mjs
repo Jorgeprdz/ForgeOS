@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
 
@@ -65,4 +65,22 @@ test("canonical entry no longer presents itself as a retired interface", () => {
   assert.match(entry, /<title>ForgeOS<\/title>/);
   assert.match(entry, /Abriendo ForgeOS/);
   assert.doesNotMatch(entry, /interfaz retirada/i);
+  assert.doesNotMatch(entry, /Forge Alive Vista Estática/i);
+});
+
+test("retired pre-redesign authority cannot republish over the current Beta 1 shell", () => {
+  assert.equal(
+    existsSync(
+      ".github/workflows/restore-productive-forge-alive-authority.yml",
+    ),
+    false,
+  );
+  assert.equal(
+    existsSync("scripts/prepare-productive-canonical-pages.mjs"),
+    false,
+  );
+  assert.equal(
+    existsSync("tests/restore-productive-canonical-authority-test.mjs"),
+    false,
+  );
 });
