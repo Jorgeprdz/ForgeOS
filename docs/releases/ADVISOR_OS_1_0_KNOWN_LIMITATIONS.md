@@ -26,6 +26,12 @@ When any adapter is absent, Forge returns an unavailable or review-required stat
 
 ## Data truth
 
+```text
+UNKNOWN≠ZERO
+FORECAST≠FACT
+EARNED≠PAID
+```
+
 - Unknown amounts, goals, compensation, payments and source states remain `null`/unknown; they are never converted to zero.
 - Forecast values remain estimates and probabilities, not facts.
 - Compensation `EARNED` and `PAID` remain separate.
