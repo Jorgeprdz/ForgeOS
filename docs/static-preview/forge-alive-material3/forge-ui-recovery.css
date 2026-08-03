@@ -346,7 +346,7 @@ textarea,
   border-block: 1px solid rgba(170, 199, 255, 0.09);
 }
 
-.cartera-material3-frame [data-calendar-summary] {
+.cartera-material3-frame [data-cartera-payment-calendar="PORTFOLIO"] [data-calendar-summary].glass-widget {
   flex: 1 1 110px !important;
   padding: 10px 12px !important;
   border: 0 !important;
@@ -356,7 +356,7 @@ textarea,
   box-shadow: none !important;
 }
 
-.cartera-material3-frame [data-calendar-summary] > div:last-child {
+.cartera-material3-frame [data-cartera-payment-calendar="PORTFOLIO"] [data-calendar-summary] > div:last-child {
   font-size: 1.25rem !important;
 }
 
@@ -371,7 +371,7 @@ textarea,
   border-bottom: 1px solid rgba(170, 199, 255, 0.09);
 }
 
-.cartera-material3-frame [data-radar-horizon] {
+.cartera-material3-frame section:has(#cartera-radar-title) [data-radar-horizon] {
   min-height: 34px !important;
   padding: 6px 10px !important;
   border: 0 !important;
@@ -381,12 +381,12 @@ textarea,
   font-size: 0.78rem !important;
 }
 
-.cartera-material3-frame [data-radar-horizon][aria-pressed="true"] {
+.cartera-material3-frame section:has(#cartera-radar-title) [data-radar-horizon][aria-pressed="true"] {
   background: rgba(82, 230, 223, 0.10) !important;
   color: var(--aqua-soft) !important;
 }
 
-.cartera-material3-frame [data-radar-refresh] {
+.cartera-material3-frame section:has(#cartera-radar-title) [data-radar-refresh] {
   min-height: 34px !important;
   padding-inline: 10px !important;
   border-color: transparent !important;
@@ -417,7 +417,7 @@ textarea,
 
 @media (max-width: 720px) {
   .cartera-material3-frame .glass-widget:has(#kpi-total-personas) > div:nth-child(2) > .glass-widget,
-  .cartera-material3-frame [data-calendar-summary] {
+  .cartera-material3-frame [data-cartera-payment-calendar="PORTFOLIO"] [data-calendar-summary].glass-widget {
     flex-basis: 50% !important;
   }
 }
