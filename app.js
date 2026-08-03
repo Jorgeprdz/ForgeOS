@@ -8,7 +8,7 @@
 //   - Enrutamiento SPA (EnterpriseRouter)
 //   - Bootstrap del ciclo de vida de la app (AppManager)
 //   - Hidratación del header tras auth
-//   - Listeners globales: navegación, logout, tema, chat
+//   - Listeners globales: navegación, logout, tema, chat y Command OS
 //
 // FLUJO DE ARRANQUE:
 //   DOMContentLoaded
@@ -57,6 +57,10 @@ import { createRouteRegistry } from './platform/routing/route-registry.js';
 import { Navigation } from './platform/navigation-runtime.js';
 import { Logger }       from './logger.js';
 import { bindPlatformRuntimeListeners } from './platform/app/runtime-listeners.js';
+import {
+    mountCommandRuntime,
+    unmountCommandRuntime,
+} from './platform/commands/command-runtime.js';
 import { bindCrmAddlifeChatShell } from './legacy/crmaddlife/chat-shell.js';
 import { bindCrmAddlifeThemeToggle } from './legacy/crmaddlife/ui-listeners.js';
 import {
@@ -135,6 +139,7 @@ class AppManager {
     // ─────────────────────────────────────────────────────────
 
     _showLogin() {
+        unmountCommandRuntime();
         renderCrmAddlifeLogin({
             onLogin: () => this.auth.login(),
         });
@@ -145,6 +150,7 @@ class AppManager {
     // ─────────────────────────────────────────────────────────
 
     _showFatalError(err) {
+        unmountCommandRuntime();
         renderCrmAddlifeFatalError(err);
     }
 
@@ -156,6 +162,8 @@ class AppManager {
     // ─────────────────────────────────────────────────────────
 
     _bindGlobalListeners() {
+
+        mountCommandRuntime();
 
         // ── Navegación inferior — delegación sobre el contenedor nav
         const nav = document.getElementById('main-sidebar');
@@ -172,6 +180,7 @@ class AppManager {
         const btnLogout = document.getElementById('btn-cerrar-sesion');
         if (btnLogout) {
             btnLogout.addEventListener('click', () => {
+                unmountCommandRuntime();
                 this.auth.logout();
             });
         }
