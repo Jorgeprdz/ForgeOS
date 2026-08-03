@@ -8,7 +8,7 @@ const NAVIGATION_COMMANDS = [
   ['open-comisiones', 'Abrir Comisiones', '/comisiones', ['comisiones', 'compensacion', 'ingresos'], 'comisiones'],
 ];
 
-export const COMMANDS = Object.freeze(NAVIGATION_COMMANDS.map(([
+const navigationCommands = NAVIGATION_COMMANDS.map(([
   id,
   label,
   command,
@@ -28,7 +28,25 @@ export const COMMANDS = Object.freeze(NAVIGATION_COMMANDS.map(([
   availability: 'enabled',
   source: 'core',
   payload: Object.freeze({ route }),
-})));
+}));
+
+const writeCommands = [Object.freeze({
+  id: 'record-follow-up',
+  label: 'Registrar seguimiento',
+  command: '/seguimiento',
+  aliases: Object.freeze(['/seguimiento', '/follow-up']),
+  keywords: Object.freeze(['seguimiento', 'nota', 'contacto', 'resultado']),
+  intent: 'WRITE',
+  domain: 'person',
+  handlerId: 'person-follow-up-authority',
+  requiresContext: Object.freeze(['personReference']),
+  requiresConfirmation: true,
+  availability: 'enabled',
+  source: 'core',
+  payload: Object.freeze({ action: 'RECORD_FOLLOW_UP' }),
+})];
+
+export const COMMANDS = Object.freeze([...navigationCommands, ...writeCommands]);
 
 export function getCommandById(commandId) {
   return COMMANDS.find(command => command.id === commandId) || null;
