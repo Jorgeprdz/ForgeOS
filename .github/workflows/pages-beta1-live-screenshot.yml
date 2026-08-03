@@ -31,7 +31,7 @@ jobs:
   capture-live-pages:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 12
     env:
       FORGE_PAGES_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive-material3/
       FORGE_PAGES_EVIDENCE: artifacts/pages-beta1-live
@@ -53,15 +53,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install screenshot browser
-        run: npx playwright install --with-deps chromium
+      - name: Verify runner Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          google-chrome --version
+          echo "SCREENSHOT_BROWSER=RUNNER_PREINSTALLED_GOOGLE_CHROME"
 
       - name: Wait for the real Pages deployment
         shell: bash
         run: |
           set -euo pipefail
           target="$FORGE_PAGES_URL"
-          for attempt in $(seq 1 60); do
+          for attempt in $(seq 1 36); do
             status=$(curl -L -sS -o /tmp/forge-pages.html -w '%{http_code}' "${target}?live_probe=$(date +%s)")
             if [ "$status" = "200" ] && grep -q "Forge" /tmp/forge-pages.html; then
               echo "LIVE_PAGES_READY=YES"
