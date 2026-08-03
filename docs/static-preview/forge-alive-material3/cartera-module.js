@@ -1,3 +1,5 @@
+import "./cartera-document-intake.js?v=beta1-repair-001";
+
 const CONTRACT_ID = "CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_V1";
 const moduleStateKey = Symbol.for("forge.cartera.material3.productive.state");
 
@@ -246,6 +248,7 @@ export function createCarteraModule({ root, shell } = {}) {
           authenticated: true,
           routeId: "cartera",
           readOnlyDirectory: true,
+          governedPolicyEntry: true,
           automaticPolicyCreation: false,
         }),
       }));
@@ -313,7 +316,7 @@ export function createCarteraModule({ root, shell } = {}) {
         state: root.dataset.carteraMaterial3State || "idle",
         authenticated: Boolean(activeAdvisorId),
         capturedCleanerCount: sessionCleaners.length,
-        productiveMutationAuthorized: false,
+        productiveMutationAuthorized: true,
       });
     },
     destroy() {
@@ -327,6 +330,7 @@ export function createCarteraModule({ root, shell } = {}) {
   globalThis.ForgeCarteraMaterial3ProductiveMount = Object.freeze({
     contractId: CONTRACT_ID,
     diagnostics: api.diagnostics,
+    refresh: api.refresh,
   });
   return api;
 }
