@@ -1,6 +1,20 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { copyFile, readFile, writeFile } from 'node:fs/promises';
 
 const indexPath = new URL('../docs/static-preview/forge-alive-material3/index.html', import.meta.url);
+const material3Root = new URL('../docs/static-preview/forge-alive-material3/', import.meta.url);
+const productiveRoot = new URL('../docs/static-preview/forge-alive/', import.meta.url);
+
+await Promise.all([
+  copyFile(
+    new URL('forge-alive-auth-entry-067g17b1.css', productiveRoot),
+    new URL('forge-alive-auth-entry-067g17b1.css', material3Root),
+  ),
+  copyFile(
+    new URL('../advisor-os/contact-books/bulk-import-engine.js', import.meta.url),
+    new URL('bulk-import-engine-pages.js', material3Root),
+  ),
+]);
+
 let index = await readFile(indexPath, 'utf8');
 
 for (const required of [
@@ -15,6 +29,14 @@ index = index.replace(
   '<html lang="es-MX" data-forge-theme="dark">',
   '<html lang="es-MX" data-forge-theme="dark" data-forge-auth-boundary="resolving">',
 );
+
+const authStylesheet = '  <link rel="stylesheet" href="./forge-alive-auth-entry-067g17b1.css?v=067g17b1-1" data-forge-auth-entry-styles="first-paint">';
+if (!index.includes('data-forge-auth-entry-styles')) {
+  index = index.replace(
+    '  <link rel="stylesheet" href="./app.css?v=ui-m03-approved-004">',
+    `  <link rel="stylesheet" href="./app.css?v=ui-m03-approved-004">\n${authStylesheet}`,
+  );
+}
 
 const failClosed = `
   <style data-forge-auth-first-paint="FORGE_AUTH_FIRST_PAINT_FAIL_CLOSED_V1">
@@ -52,8 +74,7 @@ if (!index.includes('early-auth-bootstrap.js')) {
   index = index.replace(appTag, `${authScripts}\n  $&`);
 }
 
-// Static fallback content may remain as an authenticated hydration skeleton, but it
-// must never advertise itself as a valid anonymous/read-only experience.
+// Static fallback content remains only as an authenticated hydration skeleton.
 index = index.replaceAll('Vista estática segura', 'Acceso protegido');
 index = index.replaceAll('Solo lectura', 'Sesión requerida');
 index = index.replace('Miércoles, 26 de julio', 'Cargando agenda actual…');
@@ -61,5 +82,15 @@ index = index.replace('Buenos días, Jorge', 'Bienvenido a ForgeOS');
 index = index.replace('<span>JP</span>', '<span aria-hidden="true">—</span>');
 index = index.replace(/[\t ]+\n/g, '\n');
 
+for (const required of [
+  'data-forge-auth-entry-styles="first-paint"',
+  'authenticated-route-guard.js',
+  'early-auth-bootstrap.js',
+]) {
+  if (!index.includes(required)) throw new Error(`MATERIAL3_AUTH_ENTRY_REQUIRED_${required}`);
+}
+
 await writeFile(indexPath, index);
 console.log('MATERIAL3_AUTH_FIRST_PAINT_FAIL_CLOSED=PASS');
+console.log('MATERIAL3_AUTH_FIRST_PAINT_STYLED=PASS');
+console.log('MATERIAL3_BULK_ENGINE_PAGES_ASSET=STAGED');
