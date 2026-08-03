@@ -1,30 +1,13 @@
-import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, writeFile } from "node:fs/promises";
 
 const productive = new URL("../docs/static-preview/forge-alive/", import.meta.url);
 const staging = new URL("../docs/static-preview/forge-alive-material3/", import.meta.url);
 const productiveIndexAuthority =
   "https://raw.githubusercontent.com/Jorgeprdz/ForgeOS/5e7974152aee9bbe7256a6396ece42cabe934df9/docs/static-preview/forge-alive/index.html";
 
-const betaAssets = [
-  "pipeline-bulk-import-mount.css",
-  "pipeline-bulk-import-mount.js",
-  "pipeline-stage-filter-authority.js",
-  "cartera-document-intake.js",
-  "whatsapp-ai-composer.js",
-];
-
-const preserved = new Map();
-for (const file of betaAssets) {
-  preserved.set(file, await readFile(new URL(file, staging)));
-}
-
-await rm(staging, { recursive: true, force: true });
-await mkdir(staging, { recursive: true });
+// Overlay the productive shell and its navigation/auth assets without deleting
+// modern Material 3 modules, recovery assets, or Beta 1 intake/AI files.
 await cp(productive, staging, { recursive: true, force: true });
-
-for (const [file, content] of preserved) {
-  await writeFile(new URL(file, staging), content);
-}
 
 const response = await fetch(productiveIndexAuthority, {
   headers: { "user-agent": "ForgeOS-Pages-Builder" },
