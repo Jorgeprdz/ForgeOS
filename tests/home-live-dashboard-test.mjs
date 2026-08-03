@@ -72,6 +72,21 @@ test("runtime retires static mock content and connects Productive Pipeline plus 
   assert.doesNotMatch(runtime, /Math\.random|probability|opportunityScore/);
 });
 
+test("Pipeline intelligence is loaded only after authenticated Home boot", async () => {
+  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard.js");
+  assert.doesNotMatch(runtime, /^import\s+\{\s*createProductiveIntelligenceAdapter/m);
+  assert.match(runtime, /async function resolveOpportunityAdapterFactory/);
+  assert.match(runtime, /import\(\s*"\.\/pipeline-productive-intelligence-adapter\.js\?v=home-live-dashboard-002"\s*\)/s);
+  assert.match(runtime, /const factory = await resolveOpportunityAdapterFactory\(\)/);
+  assert.match(runtime, /if \(!authenticated\)[\s\S]*return;[\s\S]*resolveOpportunityAdapterFactory/s);
+});
+
+test("focus refresh preserves the current authenticated identity", async () => {
+  const runtime = await read("docs/static-preview/forge-alive-material3/home-live-dashboard.js");
+  assert.match(runtime, /const handleFocus = \(\) => \{[\s\S]*updateGreeting\(root, currentUser\)/);
+  assert.doesNotMatch(runtime, /addEventListener\("focus", \(\) => \{\s*updateGreeting\(root, null\)/s);
+});
+
 test("dashboard layout creates one coherent primary row", async () => {
   const css = await read("docs/static-preview/forge-alive-material3/home-live-dashboard.css");
   assert.match(css, /grid-template-columns:\s*repeat\(12, minmax\(0, 1fr\)\)/);
