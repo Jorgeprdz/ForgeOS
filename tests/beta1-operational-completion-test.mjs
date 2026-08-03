@@ -46,6 +46,18 @@ test("Cartera owns policy-entry mounting while preserving the read-only director
   assert.match(source, /refresh:\s*api\.refresh/);
 });
 
+test("Pages defers policy-entry evaluation until the dynamically-created Cartera route exists", async () => {
+  const gate = await read("docs/static-preview/forge-alive-material3/cartera-policy-entry-route-gate.js");
+  assert.match(gate, /ROOT_SELECTOR = "\[data-forge-cartera-module\]"/);
+  assert.match(gate, /ENTRY_SELECTOR = "\[data-cartera-policy-entry\]"/);
+  assert.match(gate, /MutationObserver/);
+  assert.match(gate, /observer\.observe\(document\.documentElement/);
+  assert.match(gate, /subtree:\s*true/);
+  assert.match(gate, /import\(intakeUrl\)/);
+  assert.match(gate, /forge:auth-state-changed/);
+  assert.match(gate, /forge:route-changed/);
+});
+
 test("Cartera policy entry mount cannot recurse through its own dialog mutations", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
   assert.match(source, /observer\.observe\(root, \{ childList: true, attributes: true/);
