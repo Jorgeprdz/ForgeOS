@@ -17,6 +17,7 @@ const report = {
   browserAuthority: "RUNNER_PREINSTALLED_GOOGLE_CHROME",
   authenticated: false,
   authenticationAuthority: null,
+  navigationAuthority: "FORGE_SPA_NAVBAR",
   routes: {},
   consoleErrors: [],
   pageErrors: [],
@@ -46,11 +47,7 @@ page.on("requestfailed", request => {
   });
 });
 
-async function openRoute(nav, fileName, key = nav) {
-  const url = new URL(baseUrl);
-  url.searchParams.set("nav", nav);
-  url.searchParams.set("live_acceptance", Date.now().toString());
-  const response = await page.goto(url.href, { waitUntil: "networkidle", timeout: 60000 });
+async function captureCurrentRoute(nav, fileName, key = nav, status = null) {
   await page.waitForTimeout(2500);
   await page.screenshot({ path: `${outputDir}/${fileName}`, fullPage: true });
   const bodyText = (await page.locator("body").innerText()).slice(0, 12000);
@@ -58,12 +55,39 @@ async function openRoute(nav, fileName, key = nav) {
   report.routes[key] = {
     requestedNav: nav,
     url: page.url(),
-    status: response?.status() || null,
+    status,
     title: await page.title(),
     bodyText,
     loadedScripts,
     navbarVisible: await page.locator("nav, [data-forge-nav], [data-material3-nav], [data-bottom-nav], .bottom-shell").first().isVisible().catch(() => false),
+    applicationRoute: await page.locator("[data-forge-application]").getAttribute("data-forge-route").catch(() => null),
+    viewportRoute: await page.locator("[data-forge-module-viewport]").getAttribute("data-active-route").catch(() => null),
   };
+}
+
+async function openInitialRoute(nav, fileName, key = nav) {
+  const url = new URL(baseUrl);
+  url.searchParams.set("nav", nav);
+  url.searchParams.set("live_acceptance", Date.now().toString());
+  const response = await page.goto(url.href, { waitUntil: "networkidle", timeout: 60000 });
+  await captureCurrentRoute(nav, fileName, key, response?.status() || null);
+}
+
+async function clickSpaRoute(routeId, fileName, key = routeId) {
+  const button = page.locator(`[data-route-id="${routeId}"]:visible`).first();
+  await button.waitFor({ state: "visible", timeout: 30000 });
+  const availability = await button.getAttribute("data-route-availability");
+  if (availability !== "available") {
+    throw new Error(`SPA_ROUTE_NOT_AVAILABLE=${routeId}:${availability || "missing"}`);
+  }
+  await button.click();
+  await page.waitForFunction(expectedRoute => {
+    const application = document.querySelector("[data-forge-application]");
+    const viewport = document.querySelector("[data-forge-module-viewport]");
+    return application?.dataset.forgeRoute === expectedRoute
+      || viewport?.dataset.activeRoute === expectedRoute;
+  }, routeId, { timeout: 30000 });
+  await captureCurrentRoute(routeId, fileName, key, 200);
 }
 
 async function inspectAuthPresentation() {
@@ -145,7 +169,7 @@ async function inspectProductiveHome() {
 }
 
 try {
-  await openRoute("pipeline", "01-auth-gate.png", "anonymous");
+  await openInitialRoute("pipeline", "01-auth-gate.png", "anonymous");
   await inspectAuthPresentation();
   report.anonymousNavbarHidden = !report.routes.anonymous.navbarVisible;
 
@@ -156,19 +180,17 @@ try {
   });
 
   if (report.authenticated) {
-    await openRoute("inicio", "02-home-authenticated.png", "homeAuthenticated");
+    await clickSpaRoute("inicio", "02-home-authenticated.png", "homeAuthenticated");
     await inspectProductiveHome();
 
-    await openRoute("pipeline", "03-pipeline-authenticated.png", "pipelineAuthenticated");
+    await clickSpaRoute("pipeline", "03-pipeline-authenticated.png", "pipelineAuthenticated");
     report.pipelineBulkImportVisible = await page.locator("[data-pipeline-bulk-import]").isVisible().catch(() => false);
+    report.whatsappComposerTriggerCount = await page.locator("[data-prepare-productive-message]").count();
 
-    await openRoute("cartera", "04-cartera-authenticated.png", "carteraAuthenticated");
+    await clickSpaRoute("cartera", "04-cartera-authenticated.png", "carteraAuthenticated");
     report.carteraPdfInputVisible = await page.locator("[data-cartera-pdf-input], input[type=file][accept*=pdf]").isVisible().catch(() => false);
     report.carteraDropzoneVisible = await page.locator("[data-cartera-pdf-dropzone]").isVisible().catch(() => false);
     report.carteraMutationControlsExpected = report.authenticationAuthority !== "INTEGRATED_DEMO_SESSION";
-
-    await openRoute("pipeline", "05-pipeline-composer-surface.png", "composerAuthenticated");
-    report.whatsappComposerTriggerCount = await page.locator("[data-prepare-productive-message]").count();
   } else {
     report.authenticatedCapture = "FAILED_NO_PRODUCTIVE_OR_DEMO_SESSION";
   }
@@ -187,6 +209,7 @@ try {
     "",
     `- Target: ${baseUrl}`,
     `- Browser: ${report.browserAuthority}`,
+    `- Navigation: ${report.navigationAuthority}`,
     `- Auth gate styled first paint: ${report.authPresentation?.styled ? "PASS" : "FAIL"}`,
     `- Auth stylesheet loaded: ${report.authPresentation?.authStylesheetLoaded ? "PASS" : "FAIL"}`,
     `- Anonymous navbar hidden: ${report.anonymousNavbarHidden ? "PASS" : "FAIL"}`,
