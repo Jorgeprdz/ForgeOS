@@ -30,7 +30,8 @@ index = index.replace(
 );
 index = index.replace(
   "</body>",
-  '  <script type="module" src="./pipeline-stage-filter-authority.js"></script>\n</body>',
+  '  <script type="module" src="./app.js?v=canonical-runtime-authority"></script>\n' +
+    '  <script type="module" src="./pipeline-stage-filter-authority.js"></script>\n</body>',
 );
 index = index.replace(
   "<title>Forge Alive Vista Estática</title>",
@@ -50,4 +51,5 @@ index = index.replace(
 
 await writeFile(new URL("index.html", staging), index);
 console.log("FORGE_CANONICAL_RUNTIME_AUTHORITY=PRODUCTIVE");
+console.log("FORGE_MODERN_APP_ENTRY_BOUND=YES");
 console.log("FORGE_MATERIAL3_STATIC_SHELL_REPLACED=YES");
