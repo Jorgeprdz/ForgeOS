@@ -476,8 +476,8 @@ async function capture(page, directory, label, options = {}) {
         document.querySelector("[data-nash-approval-status]") !== null,
       automaticSendPerformed: false,
       authJpVisible:
-        visibleCount("[data-forge-auth-open]") > 0
-        || visibleCount(".hero .profile[data-forge-auth-avatar]") > 0,
+        visibleCount("[data-forge-auth-avatar]") > 0
+        || visibleCount("[data-forge-auth-open]") > 0,
       authPanelVisible: visibleCount("[data-forge-auth-panel]") > 0,
       googleAvatarVisible: visibleCount('.hero .profile[data-forge-auth-avatar] img') > 0,
       privateDataPurged:
@@ -906,7 +906,7 @@ async function captureViewport(browser, viewport, fixture) {
       "01-home-full",
     );
     const authEntry = page.locator(
-      "[data-forge-auth-open]:visible, .hero .profile[data-forge-auth-avatar]:visible",
+      "[data-forge-auth-fallback]:visible, [data-forge-auth-avatar]:visible, [data-forge-auth-open]:visible",
     ).first();
     await authEntry.waitFor({ state: "visible", timeout: 10_000 });
     await authEntry.click();
