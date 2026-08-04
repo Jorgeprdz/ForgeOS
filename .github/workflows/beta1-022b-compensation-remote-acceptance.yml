@@ -1,0 +1,117 @@
+name: BETA1 022B Compensation Remote Acceptance
+
+on:
+  workflow_call:
+    inputs:
+      validated_sha: { required: true, type: string }
+      run_id: { required: true, type: string }
+  workflow_dispatch:
+    inputs:
+      validated_sha: { description: Exact SHA to validate, required: true, type: string }
+      run_id: { description: Authorized synthetic RUN_ID, required: true, default: '20260803_213631', type: string }
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta1-022b-compensation-remote-acceptance
+  cancel-in-progress: false
+
+jobs:
+  compensation-acceptance:
+    runs-on: ubuntu-24.04
+    environment: 067g17a1-remote-acceptance
+    env:
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
+      FORGE_BETA1022B_MIGRATION_EVIDENCE: artifacts/beta1-022b/migration.jsonl
+      FORGE_BETA1022B_ACCEPTANCE_EVIDENCE: artifacts/beta1-022b/acceptance.json
+      FORGE_BETA1022B_VERIFY_EVIDENCE: artifacts/beta1-022b/verification.json
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ inputs.validated_sha }}', fetch-depth: 0 }
+      - name: Verify exact SHA and governed target
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ inputs.validated_sha }}"
+          test "${{ inputs.run_id }}" = "20260803_213631"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          test "$(node -p "new URL(process.env.SUPABASE_URL).hostname")" = "${SUPABASE_PROJECT_REF}.supabase.co"
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_ANON_KEY ADVISOR_A_EMAIL ADVISOR_A_PASSWORD ADVISOR_B_EMAIL ADVISOR_B_PASSWORD; do
+            test -n "${!name:-}" || { echo "$name=UNSET"; exit 1; }
+            echo "$name=SET"
+          done
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Local contracts
+        run: |
+          node --check scripts/deploy-beta1-022b-compensation-migration.mjs
+          node --check scripts/run-beta1-022b-compensation-acceptance.mjs
+          node --check scripts/verify-beta1-022b-compensation-acceptance.mjs
+          node --test tests/beta1-022b-compensation-synthetic-authority-test.mjs
+          git diff --check
+      - name: Apply exact additive migration
+        run: node scripts/deploy-beta1-022b-compensation-migration.mjs
+      - uses: supabase/setup-cli@v1
+        with: { version: latest }
+      - name: Configure one-run controller
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="$(openssl rand -hex 32)"; echo "::add-mask::$token"; echo "FORGE_DEMO_ADMIN_TOKEN=$token" >> "$GITHUB_ENV"
+          supabase secrets set FORGE_DEMO_ADVISOR_A_EMAIL="$ADVISOR_A_EMAIL" FORGE_DEMO_ADVISOR_B_EMAIL="$ADVISOR_B_EMAIL" FORGE_DEMO_ADMIN_TOKEN="$token" --project-ref "$SUPABASE_PROJECT_REF"
+          supabase functions deploy forge-demo-admin --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
+      - name: Open synthetic window
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error -X POST "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-demo-admin" -H 'Content-Type: application/json' -H "x-forge-demo-admin-token: ${FORGE_DEMO_ADMIN_TOKEN}" --data '{"action":"PREPARE"}' > /tmp/prepare.json
+          node -e "const p=require('/tmp/prepare.json');if(p.ok!==true||p.accountsUnlocked!==2)throw Error('PREPARE_FAILED')"
+          rm -f /tmp/prepare.json
+      - name: Run authenticated A/B evidence acceptance
+        run: node scripts/run-beta1-022b-compensation-acceptance.mjs
+      - name: Seal A/B regardless of prior result
+        if: always() && env.FORGE_DEMO_ADMIN_TOKEN != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error -X POST "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-demo-admin" -H 'Content-Type: application/json' -H "x-forge-demo-admin-token: ${FORGE_DEMO_ADMIN_TOKEN}" --data '{"action":"SEAL"}' > /tmp/seal.json
+          node -e "const p=require('/tmp/seal.json');if(p.ok!==true||p.accountsSealed!==2)throw Error('SEAL_FAILED')"
+          rm -f /tmp/seal.json
+      - name: Materialize canonical read models
+        env:
+          ADVISOR_COMPENSATION_READ_MODEL_MATERIALIZATION: MATERIALIZE_ADVISOR_COMPENSATION_PRODUCT_READ_MODEL
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADVISOR_COMPENSATION_ADVISOR_EMAIL="$ADVISOR_A_EMAIL" ADVISOR_COMPENSATION_PERIOD_KEY=2026-08 node scripts/materialize-advisor-compensation-product-read-model.mjs --apply
+          ADVISOR_COMPENSATION_ADVISOR_EMAIL="$ADVISOR_A_EMAIL" ADVISOR_COMPENSATION_PERIOD_KEY=2026-04 node scripts/materialize-advisor-compensation-product-read-model.mjs --apply
+          ADVISOR_COMPENSATION_ADVISOR_EMAIL="$ADVISOR_B_EMAIL" ADVISOR_COMPENSATION_PERIOD_KEY=2026-07 node scripts/materialize-advisor-compensation-product-read-model.mjs --apply
+          ADVISOR_COMPENSATION_ADVISOR_EMAIL="$ADVISOR_B_EMAIL" ADVISOR_COMPENSATION_PERIOD_KEY=2026-03 node scripts/materialize-advisor-compensation-product-read-model.mjs --apply
+      - name: Verify reload, truth separation, RLS and seal
+        run: node scripts/verify-beta1-022b-compensation-acceptance.mjs
+      - name: Scan sanitized evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d artifacts/beta1-022b
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path');const files=[];const walk=d=>fs.readdirSync(d,{withFileTypes:true}).forEach(e=>e.isDirectory()?walk(path.join(d,e.name)):files.push(path.join(d,e.name)));walk('artifacts/beta1-022b');
+          const forbidden=['SUPABASE_ACCESS_TOKEN','ADVISOR_A_PASSWORD','ADVISOR_B_PASSWORD',process.env.SUPABASE_ACCESS_TOKEN,process.env.ADVISOR_A_PASSWORD,process.env.ADVISOR_B_PASSWORD,process.env.ADVISOR_A_EMAIL,process.env.ADVISOR_B_EMAIL].filter(Boolean);
+          for(const file of files){const body=fs.readFileSync(file,'utf8');for(const value of forbidden)if(body.includes(value))throw Error('SECRET_OR_EMAIL_IN_ARTIFACT:'+path.basename(file));}
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: beta1-022b-${{ inputs.run_id }}-${{ inputs.validated_sha }}
+          path: artifacts/beta1-022b/
+          if-no-files-found: error

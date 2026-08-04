@@ -20,10 +20,18 @@ on:
         required: true
         type: string
       validated_sha:
-        description: Exact Contact Books SHA; leave empty for BETA1 022A
+        description: Exact SHA; leave empty for original BETA1 022A
         required: false
         default: ''
         type: string
+      acceptance_phase:
+        description: Remote acceptance route
+        required: false
+        default: CONTACT_BOOKS_001
+        type: choice
+        options:
+          - CONTACT_BOOKS_001
+          - BETA1_022B
 
 permissions:
   contents: read
@@ -34,7 +42,7 @@ concurrency:
 
 jobs:
   validate-seed-and-seal:
-    if: inputs.validated_sha == ''
+    if: github.event_name == 'workflow_dispatch' && inputs.validated_sha == ''
     runs-on: ubuntu-24.04
     environment: 067g17a1-remote-acceptance
     env:
@@ -106,8 +114,16 @@ jobs:
           if-no-files-found: error
 
   contact-books-remote-acceptance:
-    if: inputs.validated_sha != ''
+    if: inputs.validated_sha != '' && inputs.acceptance_phase != 'BETA1_022B'
     uses: ./.github/workflows/contact-books-001-remote-acceptance.yml
+    with:
+      validated_sha: ${{ inputs.validated_sha }}
+      run_id: ${{ inputs.run_id }}
+    secrets: inherit
+
+  compensation-remote-acceptance:
+    if: inputs.validated_sha != '' && inputs.acceptance_phase == 'BETA1_022B'
+    uses: ./.github/workflows/beta1-022b-compensation-remote-acceptance.yml
     with:
       validated_sha: ${{ inputs.validated_sha }}
       run_id: ${{ inputs.run_id }}
