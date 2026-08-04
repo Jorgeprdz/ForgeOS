@@ -1,0 +1,73 @@
+name: Canonical Pages Artifact Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/canonical-pages-artifact-validation.yml'
+      - 'index.html'
+      - 'service-worker.js'
+      - 'docs/static-preview/forge-alive-material3/**'
+      - 'docs/static-preview/forge-alive/**'
+      - 'docs/static-preview/quote-preview-live/**'
+      - 'advisor-os/**'
+      - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canonical-pages-artifact-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+      EXPECTED_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+      DEMO_MODE: 'true'
+      ENABLE_TEST_ADVISOR_LOGIN: 'false'
+      SUPABASE_URL: ''
+      SUPABASE_ANON_KEY: ''
+    steps:
+      - name: Checkout pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Extract canonical build and validation programs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import textwrap
+
+          workflow = Path('.github/workflows/pages.yml').read_text()
+          blocks = re.findall(r"node - <<'EOF'\n(.*?)\n\s+EOF", workflow, re.S)
+          if len(blocks) != 3:
+              raise SystemExit(f'EXPECTED_3_NODE_BLOCKS_OBSERVED_{len(blocks)}')
+          names = ('generate-env.cjs', 'build-canonical.cjs', 'validate-canonical.cjs')
+          for name, block in zip(names, blocks):
+              Path('/tmp', name).write_text(textwrap.dedent(block))
+          PY
+
+      - name: Generate validation environment
+        run: node /tmp/generate-env.cjs
+
+      - name: Generate productive presentation runtimes
+        run: node scripts/build-advisor-presentation-pages-runtime.mjs
+
+      - name: Build canonical-only artifact
+        run: node /tmp/build-canonical.cjs
+
+      - name: Validate canonical-only artifact
+        run: node /tmp/validate-canonical.cjs
