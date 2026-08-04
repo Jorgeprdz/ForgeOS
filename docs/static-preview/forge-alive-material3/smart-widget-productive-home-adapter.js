@@ -137,10 +137,22 @@ function renderPending(root, message, state = "LOADING") {
   root.hidden = false;
   root.dataset.smartWidgetStackState = state;
   const card = element("article", "productive-smart-widget productive-smart-widget-status");
+  card.dataset.widgetState = state;
   card.append(
     element("p", "productive-smart-widget-eyebrow", "RESUMEN DEL DÍA"),
     element("h3", "productive-smart-widget-title", message),
   );
+  if (state === "EMPTY") {
+    const action = element("button", "productive-smart-widget-action", "Abrir Pipeline");
+    action.type = "button";
+    action.addEventListener("click", () => {
+      const url = new URL(globalThis.location.href);
+      url.searchParams.set("nav", "pipeline");
+      url.searchParams.set("from", "home-empty-state");
+      globalThis.location.assign(url.href);
+    });
+    card.appendChild(action);
+  }
   root.appendChild(card);
 }
 
@@ -194,6 +206,7 @@ export function createProductiveSmartWidgetHomeAdapter({
     }
 
     const cards = element("div", "productive-smart-widget-cards");
+    cards.dataset.workspaceGrid = "4-column";
     visible.forEach((widget, index) => cards.appendChild(renderWidget(widget, {
       primary: index === 0,
       onAction,
@@ -224,6 +237,15 @@ export function createProductiveSmartWidgetHomeAdapter({
     const revision = ++requestRevision;
     const reconcileNow = now();
     renderPending(root, "Leyendo las señales que importan ahora…");
+    const deadline = globalThis.setTimeout(() => {
+      if (revision !== requestRevision || activeController.signal.aborted) return;
+      renderPending(
+        root,
+        "Las fuentes tardaron demasiado. Puedes reintentar sin perder contexto.",
+        "DISCONNECTED",
+      );
+      activeController.abort("smart-widget-source-timeout");
+    }, 25_000);
 
     try {
       const runtimeContext = await prepareAdvisorForecastRuntimeSources({
@@ -272,8 +294,10 @@ export function createProductiveSmartWidgetHomeAdapter({
     } catch (error) {
       if (error?.name === "AbortError" || activeController.signal.aborted || revision !== requestRevision) return null;
       console.error("Forge productive Smart Widgets reconcile failed", error);
-      renderPending(root, "Las señales no están disponibles. Forge no mostrará datos inventados.", "SOURCE_UNAVAILABLE");
+      renderPending(root, "Las señales no están disponibles. Forge no mostrará datos inventados.", "DISCONNECTED");
       return null;
+    } finally {
+      globalThis.clearTimeout(deadline);
     }
   }
 

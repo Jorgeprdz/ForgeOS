@@ -28,6 +28,11 @@ function renderNavigation(nav, routeId) {
   if (nav.dataset.navigationMarkup !== markup) {
     nav.innerHTML = markup;
     nav.dataset.navigationMarkup = markup;
+    nav.querySelector('[aria-current="page"]')?.scrollIntoView?.({
+      block: "nearest",
+      inline: "center",
+      behavior: "instant",
+    });
   }
 }
 

@@ -100,8 +100,9 @@ function card({ key, title, value, currency, caption, truth }) {
 }
 
 function pointValue(point) {
+  if (!point || !["PAID", "EARNED"].includes(point.realBasis)) return null;
   const candidates = [point.real, point.paid, point.earnedNet, point.estimated];
-  return candidates.find((value) => Number.isFinite(value)) ?? 0;
+  return candidates.find((value) => Number.isFinite(value)) ?? null;
 }
 
 function renderHistory(history, currency) {
@@ -109,17 +110,18 @@ function renderHistory(history, currency) {
   if (!points.length) {
     return `<div class="comp-history__empty">No hay meses disponibles para graficar.</div>`;
   }
-  const max = Math.max(1, ...points.map((point) => Math.abs(pointValue(point))));
+  const max = Math.max(1, ...points.map((point) => Math.abs(pointValue(point) ?? 0)));
   return `
     <div class="comp-history__chart" role="img"
       aria-label="Histórico de compensación de seis meses">
       ${points.map((point) => {
         const amount = pointValue(point);
-        const height = Math.max(4, Math.round(Math.abs(amount) / max * 100));
+        const available = amount !== null;
+        const height = available ? Math.max(4, Math.round(Math.abs(amount) / max * 100)) : 0;
         return `
-          <div class="comp-history__column" data-compensation-history-period="${escapeHtml(point.periodKey)}">
+          <div class="comp-history__column" data-compensation-history-period="${escapeHtml(point.periodKey)}" data-comp-history-state="${available ? "AVAILABLE" : "UNAVAILABLE"}">
             <span class="comp-history__value">${escapeHtml(formatCurrency(amount, currency))}</span>
-            <span class="comp-history__bar" style="--comp-bar:${height}%"></span>
+            <span class="comp-history__bar" style="--comp-bar:${height}%" ${available ? "" : "hidden"}></span>
             <span class="comp-history__label">${escapeHtml(point.periodKey.slice(5))}</span>
             <span class="comp-truth comp-truth--${escapeHtml(String(point.realBasis || "unavailable").toLowerCase())}">
               ${escapeHtml(truthLabel(point.realBasis))}
@@ -137,7 +139,7 @@ function renderEvidence(snapshot, currency) {
     return `<p class="comp-detail__empty">No hay movimientos detallables en el periodo.</p>`;
   }
   return aggregates.map((aggregate) => `
-    <details class="comp-detail" data-compensation-aggregate="${escapeHtml(aggregate.aggregateKey)}">
+    <details class="comp-detail" data-compensation-aggregate="${escapeHtml(aggregate.aggregateKey)}" data-comp-search="${escapeHtml(`${aggregate.concept || ""} ${aggregate.policyReference || ""} ${aggregate.latestState || ""}`.toLowerCase())}">
       <summary>
         <span>
           <strong>${escapeHtml(aggregate.concept || "Compensación")}</strong>
@@ -164,6 +166,27 @@ function renderEvidence(snapshot, currency) {
     </details>`).join("");
 }
 
+function renderAttentionQueue(snapshot, currency) {
+  const aggregates = Array.isArray(snapshot?.details?.aggregates) ? snapshot.details.aggregates : [];
+  const attention = aggregates.filter(aggregate => (
+    !["PAID", "CONFIRMED_PAID"].includes(String(aggregate.latestState || "").toUpperCase())
+    || !aggregate.policyReference
+    || !aggregate.rulePackDigest
+  )).slice(0, 8);
+  if (!attention.length) {
+    const noEvidence = aggregates.length === 0;
+    return `<div class="comp-attention__empty" data-comp-attention-state="${noEvidence ? "UNAVAILABLE" : "EMPTY"}">
+      <p>${noEvidence ? "La fuente no entregó movimientos explicables para este periodo." : "No hay movimientos con revisión pendiente en este snapshot."}</p>
+      ${noEvidence ? '<button type="button" data-comp-refresh>Reintentar lectura productiva</button>' : ""}
+    </div>`;
+  }
+  return `<div class="comp-attention" data-comp-attention-state="READY">${attention.map(aggregate => `
+    <button type="button" class="comp-attention__item" data-comp-open-policy="${escapeHtml(aggregate.policyReference || "")}" ${aggregate.policyReference ? "" : "disabled"}>
+      <span><strong>${escapeHtml(aggregate.concept || "Movimiento de comisión")}</strong><small>${escapeHtml(aggregate.policyReference || "Sin póliza relacionada")}</small></span>
+      <span><b>${escapeHtml(formatCurrency(aggregate.earnedEventId ? aggregate.earnedNetAmount : aggregate.estimatedAmount, currency))}</b><small>${escapeHtml(aggregate.latestState || "UNKNOWN")}</small></span>
+    </button>`).join("")}</div>`;
+}
+
 function renderSourceHealth(sourceHealth = {}) {
   const entries = Object.entries(sourceHealth);
   if (!entries.length) return "";
@@ -183,6 +206,9 @@ function renderProduct(readModel) {
   const currency = snapshot.currency || "MXN";
   const real = amounts.real;
   const paid = amounts.paid;
+  const hasEconomicEvidence = Array.isArray(snapshot?.details?.aggregates)
+    && snapshot.details.aggregates.length > 0;
+  const evidenced = value => hasEconomicEvidence ? value : null;
   const tone = sourceTone(readModel.state);
   const partialBanner = readModel.state === "PARTIAL"
     ? `<div class="comp-banner comp-banner--warning">La vista es parcial: las cifras desconocidas permanecen como “No disponible”.</div>`
@@ -213,35 +239,40 @@ function renderProduct(readModel) {
         truth: "PAID",
       })}
       ${card({
-        key: "earned", title: "Devengado neto", value: amounts.earned.net, currency,
+        key: "earned", title: "Devengado neto", value: evidenced(amounts.earned.net), currency,
         caption: "Regla oficial más ajustes y reversiones append-only.",
         truth: "EARNED",
       })}
       ${card({
-        key: "estimated", title: "Estimado", value: amounts.estimated, currency,
+        key: "estimated", title: "Estimado", value: evidenced(amounts.estimated), currency,
         caption: "Cálculo todavía no promovido a devengado.",
         truth: "ESTIMATED",
       })}
       ${card({
-        key: "potential", title: "Potencial", value: amounts.potential, currency,
+        key: "potential", title: "Potencial", value: evidenced(amounts.potential), currency,
         caption: "Señal futura; no forma parte del ingreso real.",
         truth: "POTENTIAL",
       })}
       ${card({
-        key: "at-risk", title: "En riesgo", value: amounts.atRisk, currency,
+        key: "at-risk", title: "En riesgo", value: evidenced(amounts.atRisk), currency,
         caption: "Señal explícita; no se descuenta silenciosamente.",
         truth: "AT_RISK",
       })}
       ${card({
-        key: "adjustments", title: "Ajustes", value: amounts.earned.adjustments, currency,
+        key: "adjustments", title: "Ajustes", value: evidenced(amounts.earned.adjustments), currency,
         caption: "Deltas documentados sobre compensación devengada.",
         truth: "ADJUSTED",
       })}
       ${card({
-        key: "reversals", title: "Reversiones", value: amounts.earned.reversals, currency,
+        key: "reversals", title: "Reversiones", value: evidenced(amounts.earned.reversals), currency,
         caption: "Eventos negativos que preservan la historia original.",
         truth: "REVERSED",
       })}
+    </section>
+
+    <section class="comp-section comp-section--attention">
+      <header><div><span class="comp-eyebrow">COLA OPERATIVA</span><h2>Movimientos que requieren atención</h2><p>Abre la póliza de origen sin perder el periodo actual.</p></div></header>
+      ${renderAttentionQueue(snapshot, currency)}
     </section>
 
     <section class="comp-section">
@@ -250,7 +281,7 @@ function renderProduct(readModel) {
     </section>
 
     <section class="comp-section">
-      <header><div><span class="comp-eyebrow">Explicabilidad</span><h2>Movimientos y evidencia</h2></div></header>
+      <header class="comp-evidence-header"><div><span class="comp-eyebrow">Explicabilidad</span><h2>Movimientos y evidencia</h2></div><label class="comp-search"><span>Buscar</span><input type="search" data-comp-search-input placeholder="Póliza, concepto o estado"></label></header>
       <div class="comp-details">${renderEvidence(snapshot, currency)}</div>
     </section>
 
@@ -305,12 +336,14 @@ export const ADVISOR_COMPENSATION_070_STYLES = `<style data-advisor-compensation
   .comp-card{padding:17px;min-height:148px;min-width:0}.comp-card__heading{display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:760;min-width:0}.comp-card strong{display:block;font-size:clamp(1.35rem,3vw,2rem);margin:17px 0 7px;overflow-wrap:anywhere}.comp-card p{margin:0;color:var(--muted,#657085);font-size:.84rem;line-height:1.4}
   .comp-truth{display:inline-flex;align-items:center;max-width:max-content;border-radius:999px;padding:4px 8px;font-size:.66rem;font-weight:850;letter-spacing:.04em;background:#edf0f6;color:#43506a}.comp-truth--paid{background:#dff7e8;color:#126437}.comp-truth--earned{background:#e4efff;color:#154f96}.comp-truth--estimated{background:#f0e8ff;color:#6736a5}.comp-truth--potential{background:#e4f7f7;color:#176268}.comp-truth--at_risk,.comp-truth--at-risk{background:#fff0dd;color:#8a4b00}.comp-truth--adjusted{background:#eaf1ff;color:#345a9b}.comp-truth--reversed{background:#ffe6e8;color:#9c2c38}.comp-truth--unavailable{background:#edf0f6;color:#657085}.comp-truth--simulation{background:#161b2a;color:white}
   .comp-section{padding:20px;overflow:hidden}.comp-section header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;min-width:0}
+  .comp-section header p{margin:5px 0 0;color:var(--muted,#657085)}.comp-attention{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.comp-attention__item{display:flex;justify-content:space-between;gap:12px;min-height:72px;padding:13px 14px;border:1px solid var(--separator,#d7dce5);border-radius:14px;background:color-mix(in srgb,var(--accent,#5b5bd6) 5%,var(--comp-surface));color:inherit;text-align:left;cursor:pointer}.comp-attention__item span{display:grid;gap:3px;min-width:0}.comp-attention__item span:last-child{text-align:right}.comp-attention__item small{color:var(--muted,#657085);overflow-wrap:anywhere}.comp-attention__item:disabled{cursor:not-allowed;opacity:.68}.comp-attention__empty{padding:18px;border-radius:14px;background:color-mix(in srgb,var(--comp-surface) 85%,var(--separator,#d7dce5));color:var(--muted,#657085)}.comp-attention__empty p{margin:0 0 10px}.comp-attention__empty button{min-height:42px;border:1px solid var(--separator,#d7dce5);border-radius:12px;background:var(--comp-surface);color:inherit;padding:0 14px;font-weight:750;cursor:pointer}
+  .comp-search{display:grid;gap:4px;min-width:min(280px,100%);color:var(--muted,#657085);font-size:.7rem;font-weight:800;text-transform:uppercase}.comp-search input{min-height:42px;border:1px solid var(--separator,#d7dce5);border-radius:12px;padding:8px 11px;background:var(--comp-surface);color:inherit;font:inherit;text-transform:none}
   .comp-history__chart{display:grid;grid-template-columns:repeat(6,minmax(78px,1fr));gap:10px;min-height:250px;align-items:end;width:100%;max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-inline:contain;padding:14px 2px 4px}.comp-history__column{display:grid;grid-template-rows:auto 150px auto auto;gap:7px;justify-items:center;min-width:78px}.comp-history__value{font-size:.69rem;font-weight:750;white-space:nowrap}.comp-history__bar{width:min(48px,70%);height:var(--comp-bar);align-self:end;border-radius:12px 12px 4px 4px;background:linear-gradient(180deg,var(--accent,#5b5bd6),color-mix(in srgb,var(--accent,#5b5bd6) 45%,#70d6ff));min-height:4px}.comp-history__label{font-size:.75rem;font-weight:850}
   .comp-details{display:grid;gap:10px}.comp-detail{border:1px solid var(--separator,#d7dce5);border-radius:16px;padding:0 14px;overflow:hidden}.comp-detail summary{display:flex;justify-content:space-between;gap:12px;align-items:center;cursor:pointer;padding:14px 0;min-width:0}.comp-detail summary span{min-width:0;overflow-wrap:anywhere}.comp-detail summary span:first-child{display:grid;gap:3px}.comp-detail small{color:var(--muted,#657085)}.comp-detail dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 12px;min-width:0}.comp-detail dl div{padding:9px;border-radius:10px;background:color-mix(in srgb,var(--comp-surface) 80%,var(--separator,#d7dce5));min-width:0}.comp-detail dt{font-size:.68rem;text-transform:uppercase;color:var(--muted,#657085)}.comp-detail dd{margin:4px 0 0;overflow-wrap:anywhere;min-width:0}.comp-detail code{word-break:break-all}.comp-detail__explanation{font-size:.82rem;color:var(--muted,#657085)}
   .comp-simulator{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px;border-style:dashed}.comp-simulator p{margin:4px 0 0;color:var(--muted,#657085)}
   .comp-state{display:flex;gap:16px;align-items:center;padding:28px;min-height:220px;min-width:0}.comp-state>div{min-width:0}.comp-state__icon{font-size:2.3rem}.comp-state h2{margin:0 0 6px}.comp-state p{margin:0;color:var(--muted,#657085);overflow-wrap:anywhere}.comp-state code{display:block;margin-top:10px;overflow-wrap:anywhere}
-  @media(max-width:980px){.comp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.comp-hero{grid-template-columns:1fr}.comp-detail dl{grid-template-columns:1fr}}
-  @media(max-width:620px){.comp-shell{padding:14px;padding-bottom:calc(112px + env(safe-area-inset-bottom))}.comp-header{align-items:flex-start;flex-direction:column}.comp-period-nav{width:100%}.comp-period-nav button{flex:1;min-width:0}.comp-grid{grid-template-columns:1fr}.comp-card{min-height:auto}.comp-simulator{align-items:flex-start;flex-direction:column}.comp-hero strong{width:100%}}
+  @media(max-width:980px){.comp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.comp-hero{grid-template-columns:1fr}.comp-detail dl{grid-template-columns:1fr}.comp-attention{grid-template-columns:1fr}}
+  @media(max-width:620px){.comp-shell{padding:14px;padding-bottom:calc(112px + env(safe-area-inset-bottom))}.comp-header{align-items:flex-start;flex-direction:column}.comp-period-nav{width:100%}.comp-period-nav button{flex:1;min-width:0}.comp-grid{grid-template-columns:1fr}.comp-card{min-height:auto}.comp-simulator{align-items:flex-start;flex-direction:column}.comp-hero strong{width:100%}.comp-evidence-header{align-items:stretch!important;display:grid!important}.comp-search{width:100%}.comp-attention__item{align-items:flex-start}.comp-attention__item span:last-child{max-width:42%}}
 </style>`;
 
 export {
@@ -320,4 +353,5 @@ export {
   truthLabel,
   renderHistory,
   renderEvidence,
+  renderAttentionQueue,
 };

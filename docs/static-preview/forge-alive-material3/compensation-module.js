@@ -209,6 +209,15 @@ export function createCompensationModule({
   }
 
   function handleClick(event) {
+    const policyButton = event.target.closest("[data-comp-open-policy]");
+    if (policyButton?.dataset.compOpenPolicy) {
+      const url = new URL(globalThis.location.href);
+      url.searchParams.set("nav", "cartera");
+      url.searchParams.set("policy", policyButton.dataset.compOpenPolicy);
+      url.searchParams.set("from", "comisiones");
+      globalThis.location.assign(url.href);
+      return;
+    }
     const periodButton = event.target.closest("[data-comp-period-offset]");
     if (periodButton) {
       const offset = Number(periodButton.dataset.compPeriodOffset);
@@ -225,6 +234,13 @@ export function createCompensationModule({
   root.addEventListener("click", handleClick, {
     signal: lifetimeController.signal,
   });
+  root.addEventListener("input", (event) => {
+    if (!event.target.matches("[data-comp-search-input]")) return;
+    const query = String(event.target.value || "").trim().toLowerCase();
+    root.querySelectorAll("[data-comp-search]").forEach(detail => {
+      detail.hidden = Boolean(query) && !detail.dataset.compSearch.includes(query);
+    });
+  }, { signal: lifetimeController.signal });
 
   const api = Object.freeze({
     id: "comisiones",

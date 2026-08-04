@@ -566,6 +566,57 @@
   animation: activity-spin 0.8s linear infinite;
 }
 
+.activity-manual-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  border: 1px solid color-mix(in srgb, var(--forge-sys-color-primary) 24%, transparent);
+  border-radius: var(--forge-shape-corner-extra-large, 24px);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--forge-sys-color-primary) 12%, var(--forge-sys-color-surface-container)),
+    var(--forge-sys-color-surface-container));
+}
+
+.activity-manual-entry h2,
+.activity-manual-entry p { margin: 0; }
+.activity-manual-entry > div > p:last-child { margin-top: 5px; color: var(--forge-sys-color-on-surface-variant); }
+.activity-manual-entry > button,
+.activity-entry-dialog button {
+  min-height: 44px;
+  border: 1px solid var(--forge-sys-color-outline-variant);
+  border-radius: var(--forge-shape-corner-large, 16px);
+  padding: 0 16px;
+  background: var(--forge-sys-color-primary);
+  color: var(--forge-sys-color-on-primary);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.activity-entry-dialog {
+  width: min(620px, calc(100vw - 28px));
+  max-height: 90dvh;
+  padding: 0;
+  border: 1px solid var(--forge-sys-color-outline-variant);
+  border-radius: var(--forge-shape-corner-extra-large, 24px);
+  background: var(--forge-sys-color-surface-container-high);
+  color: var(--forge-sys-color-on-surface);
+}
+.activity-entry-dialog::backdrop { background: rgba(0, 0, 0, .72); backdrop-filter: blur(8px); }
+.activity-entry-dialog header,
+.activity-entry-dialog footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; }
+.activity-entry-dialog header { border-bottom: 1px solid var(--forge-sys-color-outline-variant); }
+.activity-entry-dialog footer { border-top: 1px solid var(--forge-sys-color-outline-variant); }
+.activity-entry-dialog header h2,
+.activity-entry-dialog header p { margin: 0; }
+.activity-entry-dialog__body { display: grid; gap: 14px; padding: 18px; }
+.activity-entry-dialog label { display: grid; gap: 6px; color: var(--forge-sys-color-on-surface-variant); font-size: .78rem; font-weight: 800; }
+.activity-entry-dialog input,
+.activity-entry-dialog select { min-height: 46px; width: 100%; border: 1px solid var(--forge-sys-color-outline); border-radius: var(--forge-shape-corner-medium, 12px); padding: 9px 12px; background: var(--forge-sys-color-surface-container); color: var(--forge-sys-color-on-surface); font: inherit; }
+.activity-entry-dialog [data-close-manual-activity] { background: transparent; color: var(--forge-sys-color-on-surface); }
+.activity-entry-error { margin: 0; color: var(--forge-sys-color-error); }
+
 @media (max-width: 920px) {
   .activity-report-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -587,6 +638,11 @@
   .activity-view-tabs {
     width: 100%;
   }
+
+  .activity-manual-entry { align-items: stretch; display: grid; }
+  .activity-manual-entry > button { width: 100%; }
+  .activity-entry-dialog { width: 100%; max-height: 94dvh; margin: auto 0 0; border-radius: 24px 24px 0 0; }
+  .activity-entry-dialog footer { display: grid; grid-template-columns: 1fr 1fr; padding-bottom: calc(18px + env(safe-area-inset-bottom)); }
 
   .activity-hero,
   .activity-reports-hero,

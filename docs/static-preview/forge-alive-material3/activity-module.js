@@ -1,5 +1,6 @@
 import { createActivityOperationalModule } from "./activity-operational-module.js?v=rep-18-001";
 import { createActivityReportsProductivityRuntime } from "./activity-reports-productivity-runtime.js?v=rep-18-001";
+import { createManualActivityEntry } from "./activity-manual-entry.js?v=beta1-020-001";
 
 const STATE = Symbol.for("forge.activity-reports.productive-ui.v1");
 const REPORT_PERIODS = Object.freeze([
@@ -69,6 +70,7 @@ function renderWorkspace(root) {
         <button type="button" role="tab" data-activity-view-tab="actividad" aria-selected="true">Actividad</button>
         <button type="button" role="tab" data-activity-view-tab="reportes" aria-selected="false">Reportes</button>
       </div>
+      <section data-activity-manual-entry-root></section>
       <section data-activity-operational-root></section>
       <section class="activity-reports" data-activity-reports-root hidden aria-live="polite"></section>
     </div>
@@ -223,8 +225,10 @@ export function createActivityModule({
   renderWorkspace(root);
 
   const operationalRoot = root.querySelector("[data-activity-operational-root]");
+  const manualRoot = root.querySelector("[data-activity-manual-entry-root]");
   const reportsRoot = root.querySelector("[data-activity-reports-root]");
   const operational = operationalFactory({ root: operationalRoot, shell });
+  const manualEntry = createManualActivityEntry({ root: manualRoot });
   const reportsRuntime = reportsRuntimeFactory();
   let view = selectedView();
   let reportPeriod = "MONTH_TO_DATE";
@@ -264,6 +268,7 @@ export function createActivityModule({
     syncTabs();
     if (view === "reportes") {
       operational.unmount();
+      manualEntry.unmount();
       operationalRoot.hidden = true;
       reportsRoot.hidden = false;
       await loadReports();
@@ -272,6 +277,7 @@ export function createActivityModule({
       controller?.abort();
       reportsRoot.hidden = true;
       operationalRoot.hidden = false;
+      manualEntry.mount();
       operational.mount();
     }
   }
@@ -281,6 +287,7 @@ export function createActivityModule({
     controller?.abort();
     await Promise.allSettled([
       operational.scrub?.(),
+      manualEntry.scrub?.(reason),
       reportsRuntime.scrub?.(reason),
     ]);
     reportsRoot.replaceChildren();
@@ -322,6 +329,7 @@ export function createActivityModule({
       controller?.abort();
       events?.abort();
       operational.unmount();
+      manualEntry.unmount();
       root.hidden = true;
       void reportsRuntime.scrub?.("route-unmount");
     },
@@ -338,7 +346,7 @@ export function createActivityModule({
       mounted = false;
       events?.abort();
       controller?.abort();
-      await Promise.allSettled([operational.destroy?.(), reportsRuntime.scrub?.("destroy")]);
+      await Promise.allSettled([manualEntry.destroy?.(), operational.destroy?.(), reportsRuntime.scrub?.("destroy")]);
       delete root[STATE];
     },
   });

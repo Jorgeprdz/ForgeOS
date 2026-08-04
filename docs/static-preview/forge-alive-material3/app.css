@@ -2875,3 +2875,39 @@ body.keyboard-open .sheet-note {
     );
   }
 }
+
+/* BETA1_020: the mobile navigation is one stable row. Overflow is controlled
+   inside the pill and the active route is centered by ForgeShell. */
+@media (max-width: 759px) {
+  .bottom-shell {
+    grid-template-columns: minmax(0, 1fr) 76px;
+    align-items: end;
+  }
+
+  .nav-pill {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    min-height: 70px;
+    max-height: 70px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+
+  .nav-pill::-webkit-scrollbar { display: none; }
+
+  .nav-item {
+    flex: 1 0 44px;
+    min-width: 44px;
+    min-height: 58px;
+    padding: 5px 3px;
+    scroll-snap-align: center;
+  }
+
+  .nav-item svg { width: 21px; }
+  .nav-item span { max-width: 58px; overflow: hidden; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+  .alfred-launcher { width: 76px; height: 76px; }
+}

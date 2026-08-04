@@ -145,6 +145,35 @@ await test("source contract exported", () => {
     "ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001",
   );
 });
+await test("unavailable history never normalizes unknown truth to zero", () => {
+  const html = view.renderHistory({
+    points: [{ periodKey: "2026-08", real: null, paid: null, earnedNet: 0, estimated: 0, realBasis: "UNAVAILABLE" }],
+  }, "MXN");
+  assert.match(html, /data-comp-history-state="UNAVAILABLE"/);
+  assert.match(html, /No disponible/);
+  assert.doesNotMatch(html, /\$0\.00/);
+});
+await test("partial snapshot without aggregates does not present zero cards as evidence", () => {
+  const html = view.renderAdvisorCompensationProduct({
+    state: "PARTIAL",
+    periodKey: "2026-08",
+    snapshot: snapshot({
+      status: "PARTIAL",
+      realBasis: "UNAVAILABLE",
+      real: null,
+      paid: null,
+      estimated: 0,
+      earnedNet: 0,
+      potential: 0,
+      atRisk: 0,
+      aggregates: [],
+    }),
+    history: history({ periods: ["2026-08"] }),
+  });
+  assert.match(html, /data-comp-attention-state="UNAVAILABLE"/);
+  assert.match(html, /Reintentar lectura productiva/);
+  assert.doesNotMatch(html, /<strong>\$0\.00<\/strong>/);
+});
 await test("all eight UI states", () => {
   assert.deepEqual(Object.values(source.ADVISOR_COMPENSATION_UI_STATES), [
     "LOADING", "READY", "PARTIAL", "EMPTY", "BLOCKED", "STALE", "ERROR", "DISCONNECTED",

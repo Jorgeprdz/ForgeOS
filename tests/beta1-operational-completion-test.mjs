@@ -14,12 +14,12 @@ test("Pipeline supports CSV, XLSX and productive persistence", async () => {
   assert.match(source, /DUPLICATE_PROSPECT/);
 });
 
-test("Cartera exposes PDF picker, manual entry and desktop drag and drop", async () => {
+test("Cartera exposes PDF/CSV/XLSX picker, manual entry and desktop drag and drop", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
   assert.match(source, /data-select-policy-pdf/);
   assert.match(source, /data-add-policy-manual/);
   assert.match(source, /data-cartera-policy-dropzone/);
-  assert.match(source, /accept=\"application\/pdf,\.pdf\"/);
+  assert.match(source, /application\/pdf,\.pdf,\.csv,\.xlsx/);
   assert.match(source, /dragover/);
   assert.match(source, /cartera-pdf-intake/);
   assert.match(source, /Confirmar alta/);

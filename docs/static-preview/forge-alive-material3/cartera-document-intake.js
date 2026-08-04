@@ -119,7 +119,8 @@ function ensureStyles() {
     .cartera-policy-entry button{min-height:44px;padding:10px 14px;border:1px solid rgba(170,199,255,.24);border-radius:13px;background:rgba(255,255,255,.07);color:inherit;font:800 13px/1.1 Inter,system-ui,sans-serif;cursor:pointer}.cartera-policy-entry button[data-primary]{border-color:rgba(82,230,223,.46);background:linear-gradient(135deg,rgba(82,230,223,.2),rgba(80,130,255,.2));color:#c0fffa}.cartera-policy-entry button:disabled{opacity:.48;cursor:not-allowed}
     .cartera-policy-entry__drop{display:grid;place-items:center;gap:7px;min-height:128px;margin-top:16px;padding:20px;border:1px dashed rgba(82,230,223,.48);border-radius:16px;background:rgba(82,230,223,.045);text-align:center;cursor:pointer}.cartera-policy-entry__drop[data-drag-active=true]{border-style:solid;background:rgba(82,230,223,.14)}.cartera-policy-entry__drop span{color:#aabbd0;font-size:12px}.cartera-policy-entry input[type=file]{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.cartera-policy-entry__status{margin-top:11px!important;color:#bac8db;font-size:12px}.cartera-policy-entry__error{margin-top:8px!important;color:#ffb4ab;font-size:12px}.cartera-policy-entry__demo{margin-top:11px;padding:10px 12px;border-radius:12px;background:rgba(242,201,76,.12);color:#ffe69a;font-size:12px;font-weight:750}
     .cartera-policy-dialog{width:min(760px,calc(100vw - 28px));max-height:88dvh;padding:0;border:1px solid rgba(170,199,255,.22);border-radius:24px;background:#0b192d;color:#f7f4ff;box-shadow:0 28px 90px rgba(0,0,0,.58)}.cartera-policy-dialog::backdrop{background:rgba(2,8,18,.78);backdrop-filter:blur(10px)}.cartera-policy-dialog__header{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:14px;padding:19px;border-bottom:1px solid rgba(170,199,255,.14);background:rgba(11,25,45,.97)}.cartera-policy-dialog__header h3{margin:4px 0 0;font-size:1.45rem}.cartera-policy-dialog__header p{margin:7px 0 0;color:#aebbd0;font-size:12px}.cartera-policy-dialog form{margin:0}.cartera-policy-dialog__body{display:grid;gap:16px;padding:19px}.cartera-policy-dialog fieldset{display:grid;gap:12px;margin:0;padding:15px;border:1px solid rgba(170,199,255,.14);border-radius:17px}.cartera-policy-dialog legend{padding:0 7px;color:#92efe9;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.cartera-policy-dialog__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cartera-policy-dialog label{display:grid;gap:6px;color:#c0ccdc;font-size:11px;font-weight:800}.cartera-policy-dialog input,.cartera-policy-dialog select{width:100%;min-height:44px;padding:10px 12px;border:1px solid rgba(170,199,255,.22);border-radius:12px;background:#101f35;color:#fff;font:600 14px/1.2 Inter,system-ui,sans-serif}.cartera-policy-dialog__notice{padding:11px 13px;border-radius:12px;background:rgba(82,230,223,.08);color:#bbf8f4;font-size:12px;line-height:1.45}.cartera-policy-dialog__footer{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:10px;padding:15px 19px;border-top:1px solid rgba(170,199,255,.14);background:rgba(11,25,45,.98)}.cartera-policy-dialog__footer [type=submit]{min-width:170px;border:0;background:linear-gradient(135deg,#54ddd5,#73a7ff);color:#07111f}
-    @media(max-width:720px){.cartera-policy-entry__top{display:grid}.cartera-policy-entry__actions{display:grid;grid-template-columns:1fr 1fr}.cartera-policy-entry__drop{min-height:104px}.cartera-policy-dialog{width:100%;max-height:94dvh;margin:auto 0 0;border-radius:24px 24px 0 0}.cartera-policy-dialog__grid{grid-template-columns:1fr}.cartera-policy-dialog__footer{display:grid;grid-template-columns:1fr 1fr;padding-bottom:calc(15px + env(safe-area-inset-bottom))}}
+    .cartera-policy-bulk-table{max-width:100%;overflow:auto;border:1px solid rgba(170,199,255,.14);border-radius:14px}.cartera-policy-bulk-table table{width:100%;border-collapse:collapse;min-width:650px}.cartera-policy-bulk-table th,.cartera-policy-bulk-table td{padding:10px;text-align:left;border-bottom:1px solid rgba(170,199,255,.1);font-size:12px}.cartera-policy-bulk-table td:last-child{display:grid;gap:3px}.cartera-policy-bulk-table small{color:#b9c7db}.cartera-policy-bulk-table [data-policy-import-state=READY_TO_IMPORT] strong,.cartera-policy-bulk-table [data-policy-import-state=IMPORTED] strong{color:#92efe9}.cartera-policy-bulk-table [data-policy-import-state=INVALID] strong,.cartera-policy-bulk-table [data-policy-import-state=FAILED] strong{color:#ffb4ab}.cartera-policy-bulk-table [data-policy-import-state=DUPLICATE_SUSPECTED] strong{color:#ffe69a}
+    @media(max-width:720px){.cartera-policy-entry__top{display:grid}.cartera-policy-entry__actions{display:grid;grid-template-columns:1fr}.cartera-policy-entry__drop{min-height:104px}.cartera-policy-dialog{width:100%;max-height:94dvh;margin:auto 0 0;border-radius:24px 24px 0 0}.cartera-policy-dialog__grid{grid-template-columns:1fr}.cartera-policy-dialog__footer{display:grid;grid-template-columns:1fr 1fr;padding-bottom:calc(15px + env(safe-area-inset-bottom))}}
   `;
   document.head.append(style);
 }
@@ -149,17 +150,18 @@ function panelMarkup() {
       <div>
         <p class="section-kicker accent">ALTA DE PÓLIZAS</p>
         <h2>Agregar póliza a Cartera</h2>
-        <p>Sube un PDF, arrástralo aquí o captura los datos manualmente. Siempre revisas antes de guardar.</p>
+        <p>Sube PDF, CSV o XLSX, arrástralo aquí o captura los datos manualmente. Siempre revisas antes de guardar.</p>
       </div>
       <div class="cartera-policy-entry__actions">
         <button type="button" data-primary data-select-policy-pdf ${demo ? "disabled" : ""}>Subir PDF</button>
+        <button type="button" data-select-policy-bulk ${demo ? "disabled" : ""}>Carga masiva</button>
         <button type="button" data-add-policy-manual ${demo ? "disabled" : ""}>Agregar manual</button>
       </div>
     </div>
     <label class="cartera-policy-entry__drop" data-cartera-policy-dropzone tabindex="${demo ? "-1" : "0"}">
-      <strong>Arrastra y suelta aquí el PDF de la póliza</strong>
-      <span>PDF de hasta 8 MB · nada se incorpora sin tu confirmación</span>
-      <input type="file" accept="application/pdf,.pdf" data-cartera-policy-pdf-input ${demo ? "disabled" : ""}>
+      <strong>Arrastra y suelta aquí pólizas PDF, CSV o XLSX</strong>
+      <span>Un archivo por revisión · nada se incorpora sin tu confirmación</span>
+      <input type="file" accept="application/pdf,.pdf,.csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-cartera-policy-pdf-input ${demo ? "disabled" : ""}>
     </label>
     <p class="cartera-policy-entry__status" data-cartera-entry-status role="status">Selecciona un PDF o captura una póliza manualmente.</p>
     <p class="cartera-policy-entry__error" data-cartera-entry-error role="alert" hidden></p>
@@ -407,11 +409,29 @@ function createPolicyCommand(validator, userId, draft, personReference, evidence
   });
 }
 
-async function persistDraft(draft) {
+async function rejectKnownDuplicate(client, draft) {
+  const carrierReference = draft.carrierLabel === "Seguros Monterrey New York Life"
+    ? "carrier:smnyl"
+    : opaqueReference("carrier", draft.carrierLabel, "carrier");
+  const result = await client
+    .from("canonical_policies")
+    .select("policy_reference")
+    .eq("carrier_reference", carrierReference)
+    .eq("policy_number", draft.policyNumber)
+    .is("archived_at", null)
+    .limit(1);
+  if (result.error) throw new Error("No pudimos verificar duplicados antes de guardar.");
+  if (result.data?.length) {
+    throw new Error("DUPLICATE_SUSPECTED · ya existe una póliza con la misma compañía y número.");
+  }
+}
+
+export async function persistDraft(draft) {
   validateDraft(draft);
   if (demoSession()) throw new Error("La cuenta demo es de solo lectura.");
   const { user, client } = await productiveContext();
   const validator = await loadValidator();
+  await rejectKnownDuplicate(client, draft);
   const at = new Date().toISOString();
   const evidenceReference = `policy-evidence:cartera:${draft.draftId}`;
   const documentHash = draft.documentHash || await digest(draft);
@@ -536,11 +556,22 @@ function bindPanel(panel) {
   panel.dataset.bound = "true";
   const input = panel.querySelector("[data-cartera-policy-pdf-input]");
   const dropzone = panel.querySelector("[data-cartera-policy-dropzone]");
+  const bulkImport = mountPolicyBulkImport(panel, { persistDraft });
+  const processSelectedFile = file => {
+    const ext = String(file?.name || "").split(".").pop().toLowerCase();
+    return ["csv", "xlsx"].includes(ext)
+      ? bulkImport.processFile(file)
+      : handlePdf(panel, file);
+  };
   panel.querySelector("[data-select-policy-pdf]")?.addEventListener("click", () => input.click());
   panel.querySelector("[data-add-policy-manual]")?.addEventListener("click", () => {
     openEditor(panel).catch(error => setStatus(panel, "No pudimos abrir la captura manual.", error.message));
   });
-  input?.addEventListener("change", () => handlePdf(panel, input.files?.[0]));
+  input?.addEventListener("change", async () => {
+    const file = input.files?.[0];
+    if (file) await processSelectedFile(file);
+    input.value = "";
+  });
   dropzone?.addEventListener("keydown", event => {
     if (["Enter", " "].includes(event.key) && !demoSession()) {
       event.preventDefault();
@@ -560,7 +591,7 @@ function bindPanel(panel) {
       dropzone.dataset.dragActive = "false";
     });
   }
-  dropzone?.addEventListener("drop", event => handlePdf(panel, event.dataTransfer?.files?.[0]));
+  dropzone?.addEventListener("drop", event => processSelectedFile(event.dataTransfer?.files?.[0]));
 }
 
 function mount(root) {
@@ -602,3 +633,4 @@ function boot() {
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
 else boot();
+import { mountPolicyBulkImport } from "./cartera-policy-bulk-import.js?v=beta1-020-001";
