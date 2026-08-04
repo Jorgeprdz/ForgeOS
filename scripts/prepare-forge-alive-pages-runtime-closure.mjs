@@ -53,7 +53,11 @@ const QPD_CANONICAL_ASSETS = Object.freeze([
 ]);
 const QPD_SOURCE_ROOT = "docs/static-preview/quote-printable-entry";
 const QPD_PUBLIC_ROOT = "static-preview/quote-printable-entry";
-const ALFRED_PUBLIC_RUNTIME = "static-preview/forge-alive/alfred-command-runtime.js";
+const ALFRED_SOURCE_ROOT = "docs/static-preview/forge-alive-material3";
+const ALFRED_PUBLIC_ROOT = "static-preview/forge-alive";
+const ALFRED_RUNTIME_FILE = "alfred-command-runtime.js";
+const ALFRED_STYLE_FILE = "alfred-command-runtime.css";
+const ALFRED_PUBLIC_RUNTIME = `${ALFRED_PUBLIC_ROOT}/${ALFRED_RUNTIME_FILE}`;
 
 const QUOTE_PRINTABLE_PROXY_REWRITES = Object.freeze([
   Object.freeze({
@@ -207,6 +211,19 @@ async function rewriteQuotePrintableProxies(siteDir) {
 }
 
 async function rewriteAlfredCommandRuntime(siteDir) {
+  const sourceRoot = join(root, ALFRED_SOURCE_ROOT);
+  const publicRoot = join(siteDir, ALFRED_PUBLIC_ROOT);
+  await Promise.all([
+    copyExact(
+      join(sourceRoot, ALFRED_RUNTIME_FILE),
+      join(publicRoot, ALFRED_RUNTIME_FILE),
+    ),
+    copyExact(
+      join(sourceRoot, ALFRED_STYLE_FILE),
+      join(publicRoot, ALFRED_STYLE_FILE),
+    ),
+  ]);
+
   const target = join(siteDir, ALFRED_PUBLIC_RUNTIME);
   const source = await readFile(target, "utf8");
   const output = source.replaceAll("../../../platform/", "../../platform/");
@@ -234,6 +251,7 @@ async function rewriteAlfredCommandRuntime(siteDir) {
   }
   return Object.freeze({
     file: ALFRED_PUBLIC_RUNTIME,
+    style: `${ALFRED_PUBLIC_ROOT}/${ALFRED_STYLE_FILE}`,
     rewrite: "../../../platform/=>../../platform/",
     requiredImports,
   });
