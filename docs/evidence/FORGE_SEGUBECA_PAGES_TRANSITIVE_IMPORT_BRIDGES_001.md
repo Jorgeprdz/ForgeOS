@@ -87,6 +87,14 @@ M05E005_OBSERVED_WRITES=IDEMPOTENT
 MUTATION_MICROTASK_STARVATION=REMOVED
 ```
 
+A further rerun kept failing before the asynchronous confirmation handler could return. M05Y was still traversing the accepted-quote bridge synchronously from the capture phase of the same click. Review 4 now persists identity from input/change state and defers final reconciliation outside the confirmation event stack.
+
+```text
+M05Y_CONFIRMATION_CAPTURE_WRITE=REMOVED
+M05Y_IDENTITY_RECONCILIATION=ANIMATION_FRAME
+M05Y_ACCEPTED_EVENT_PERSISTENCE=DEFERRED
+```
+
 No calculation, contractual value, PDF extraction, projection, persistence or mutation authority changed.
 
 ## Boundaries
