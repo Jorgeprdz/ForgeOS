@@ -166,6 +166,14 @@ jobs:
               '  console.log("SEGUBECA_GENERATED_PAGES_PROJECTION=READY");\n  const preview = await page.evaluate(() => {',
             ],
             [
+              '    const bodyText = document.body.innerText;',
+              '    const bodyText = projection?.innerText || "";',
+            ],
+            [
+              '  assert.deepEqual(preview.candidate, {',
+              '  console.log("SEGUBECA_GENERATED_PAGES_PREVIEW=READ");\n  assert.deepEqual(preview.candidate, {',
+            ],
+            [
               '  const confirmation = await page.evaluate(() => {',
               '  console.log("SEGUBECA_GENERATED_PAGES_CONFIRMATION=READY");\n  const confirmation = await page.evaluate(() => {',
             ],
@@ -188,6 +196,9 @@ jobs:
           }
           if (!source.includes('protocolTimeout: 600000')) {
             throw new Error('SEGUBECA_REVIEW3_PROTOCOL_TIMEOUT_NOT_APPLIED');
+          }
+          if (source.includes('document.body.innerText')) {
+            throw new Error('SEGUBECA_REVIEW3_UNBOUNDED_DOCUMENT_INSPECTION');
           }
           fs.writeFileSync(targetPath, source);
           NODE
