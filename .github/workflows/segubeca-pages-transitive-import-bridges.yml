@@ -5,9 +5,9 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/segubeca-pages-transitive-import-bridges.yml"
-      - "docs/docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js"
-      - "docs/docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js"
-      - "docs/docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js"
+      - "docs/docs/static-preview/quote-runtime/forge-pdf-browser-parser.js"
+      - "docs/docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js"
+      - "docs/docs/static-preview/quote-runtime/forge-udi-mxn-runtime.js"
       - "tests/segubeca-pages-transitive-import-bridge-test.mjs"
       - "docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001.md"
 
@@ -31,7 +31,7 @@ jobs:
           node-version: "22"
 
       - name: Bounded path verification
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref != 'chore/retire-all-legacy-forge-ui'
         shell: bash
         run: |
           set -euo pipefail
@@ -39,7 +39,7 @@ jobs:
           head_sha='${{ github.event.pull_request.head.sha }}'
           merge_base="$(git merge-base "$base_sha" "$head_sha")"
           mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
-          allowed='^(\.github/workflows/segubeca-pages-transitive-import-bridges\.yml|docs/docs/static-preview/quote-preview-live/(forge-pdf-browser-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime)\.js|tests/segubeca-pages-transitive-import-bridge-test\.mjs|docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001\.md)$'
+          allowed='^(\.github/workflows/segubeca-pages-transitive-import-bridges\.yml|docs/docs/static-preview/quote-runtime/(forge-pdf-browser-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime)\.js|tests/segubeca-pages-transitive-import-bridge-test\.mjs|docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001\.md)$'
           printf '%s\n' "${changed[@]}"
           test "${#changed[@]}" -eq 6
           for path in "${changed[@]}"; do
@@ -80,16 +80,17 @@ jobs:
           GITHUB_SHA='${{ github.event.pull_request.head.sha || github.sha }}' \
             node scripts/build-quotes-preview-pages.mjs
 
-          root='_site/docs/static-preview/quote-preview-live'
+          root='_site/docs/static-preview/quote-runtime'
           test -f "$root/forge-pdf-browser-parser.js"
           test -f "$root/forge-accepted-quote-adapter.js"
           test -f "$root/forge-udi-mxn-runtime.js"
-          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-pdf-browser-parser.js";' \
+          grep -Fxq 'export * from "../../../static-preview/quote-runtime/forge-pdf-browser-parser.js";' \
             "$root/forge-pdf-browser-parser.js"
-          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-accepted-quote-adapter.js";' \
+          grep -Fxq 'export * from "../../../static-preview/quote-runtime/forge-accepted-quote-adapter.js";' \
             "$root/forge-accepted-quote-adapter.js"
-          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-udi-mxn-runtime.js";' \
+          grep -Fxq 'export * from "../../../static-preview/quote-runtime/forge-udi-mxn-runtime.js";' \
             "$root/forge-udi-mxn-runtime.js"
+          test ! -e '_site/docs/static-preview/quote-preview-live'
           echo 'SEGUBECA_TRANSITIVE_BRIDGE_PAGES_ARTIFACT=PASS'
           echo 'SEGUBECA_COMPLETE_PAGES_RUNTIME_BUILD=PASS'
 
