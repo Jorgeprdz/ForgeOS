@@ -96,6 +96,7 @@
       "TEXT",
       "IMPORT",
       "SYSTEM_DERIVED",
+      "MANUAL_CONFIRMED",
     ]);
 
     const EVENT_KEYS = Object.freeze([
@@ -289,7 +290,11 @@
           "context_reference",
           "capture_mode",
         ]),
-        optional: Object.freeze([]),
+        optional: Object.freeze([
+          "related_reference", "activity_type", "channel", "occurred_at",
+          "outcome_code", "notes", "commercial_stage", "next_action",
+          "follow_up_at",
+        ]),
       }),
       DUE_ACTION_CREATED: Object.freeze({
         required: Object.freeze([
@@ -775,6 +780,7 @@
     }
 
     function normalizePayloadField(eventType, key, value) {
+      const schema = PAYLOAD_SCHEMAS[eventType];
       const opaqueFields = new Set([
         "profile_reference",
         "prospect_reference",
@@ -788,6 +794,16 @@
         "activity_reference",
         "due_action_reference",
         "action_type",
+        "related_reference",
+        "activity_type",
+        "channel",
+        "outcome_code",
+      ]);
+
+      const boundedTextFields = new Set([
+        "notes",
+        "commercial_stage",
+        "next_action",
       ]);
 
       const isoFields = new Set([
@@ -798,7 +814,18 @@
         "due_at",
         "previous_due_at",
         "completed_at",
+        "occurred_at",
+        "follow_up_at",
       ]);
+
+      if (boundedTextFields.has(key)) {
+        if (value === undefined || value === null || value === "") return null;
+        const normalized = String(value).trim();
+        if (!normalized || normalized.length > (key === "notes" ? 500 : 180)) {
+          error("PAYLOAD_TEXT_INVALID", `El campo ${key} no es válido.`);
+        }
+        return normalized;
+      }
 
       if (key === "capture_mode") {
         return requireEnum(
@@ -817,19 +844,23 @@
           return null;
         }
 
-        return requireOpaque(
-          value,
-          "PAYLOAD_FIELD_INVALID",
-          `El campo ${key}`,
-        );
+        return schema.optional.includes(key)
+          ? optionalOpaque(value, "PAYLOAD_FIELD_INVALID", `El campo ${key}`)
+          : requireOpaque(
+            value,
+            "PAYLOAD_FIELD_INVALID",
+            `El campo ${key}`,
+          );
       }
 
       if (isoFields.has(key)) {
-        return normalizeRequiredIso(
-          value,
-          "PAYLOAD_TIME_INVALID",
-          `El campo ${key}`,
-        );
+        return schema.optional.includes(key)
+          ? normalizeOptionalIso(value, "PAYLOAD_TIME_INVALID", `El campo ${key}`)
+          : normalizeRequiredIso(
+            value,
+            "PAYLOAD_TIME_INVALID",
+            `El campo ${key}`,
+          );
       }
 
       error(
