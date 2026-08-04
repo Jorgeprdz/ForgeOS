@@ -16,7 +16,7 @@ function bootQuotePrintableRouteQpd06() {
   if (typeof document === "undefined") return;
 
   const styleHref = new URL(
-    "../forge-alive/forge-quote-printable-entrypoint-qpd06.css?v=qpd06_productive_route_20260730_1",
+    "../quote-printable-entry/forge-quote-printable-entrypoint-qpd06.css?v=qpd06_productive_route_20260730_1",
     import.meta.url,
   ).href;
   const existingStyle = [...document.querySelectorAll(
@@ -32,7 +32,7 @@ function bootQuotePrintableRouteQpd06() {
   }
 
   void import(
-    "../forge-alive/forge-quote-printable-entrypoint-qpd06.js?v=qpd06_productive_route_20260730_1"
+    "../quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js?v=qpd06_productive_route_20260730_1"
   ).catch((error) => {
     globalThis.__FORGE_QPD06_LOAD_ERROR__ = Object.freeze({
       message: error?.message || String(error),
