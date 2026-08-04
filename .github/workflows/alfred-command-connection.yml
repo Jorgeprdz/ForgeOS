@@ -1,0 +1,51 @@
+name: Alfred Command Connection
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-alive-material3/alfred-command-runtime.js"
+      - "docs/static-preview/forge-alive-material3/alfred-command-runtime.css"
+      - "docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"
+      - "supabase/functions/alfred-command/**"
+      - "tests/alfred-command-*.mjs"
+      - ".github/workflows/alfred-command-connection.yml"
+      - ".github/workflows/deploy-supabase.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-alive-material3/alfred-command-runtime.js"
+      - "docs/static-preview/forge-alive-material3/alfred-command-runtime.css"
+      - "docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"
+      - "supabase/functions/alfred-command/**"
+      - "tests/alfred-command-*.mjs"
+      - ".github/workflows/alfred-command-connection.yml"
+      - ".github/workflows/deploy-supabase.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate Alfred connection contracts
+        run: |
+          node --check docs/static-preview/forge-alive-material3/alfred-command-runtime.js
+          node --check supabase/functions/alfred-command/logic.mjs
+          node --check tests/alfred-command-edge-function-test.mjs
+          node --check tests/alfred-command-browser-runtime-test.mjs
+          node --test tests/alfred-command-edge-function-test.mjs
+          node --test tests/alfred-command-browser-runtime-test.mjs
+          git diff --check
