@@ -107,7 +107,7 @@ globalThis.ForgeQuoteLifecycleBrowserBridgeCartera001B = Object.freeze({
 });
 
 await import(
-  "/docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js?v=qpd06-e2e"
+  "/docs/static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js?v=qpd06-e2e"
 );
 
 globalThis.ForgeQuotePrintableEntrypointQPD06?.refresh?.();
