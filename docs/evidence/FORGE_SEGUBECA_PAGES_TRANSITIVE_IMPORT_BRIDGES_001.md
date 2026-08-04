@@ -95,6 +95,15 @@ M05Y_IDENTITY_RECONCILIATION=ANIMATION_FRAME
 M05Y_ACCEPTED_EVENT_PERSISTENCE=DEFERRED
 ```
 
+The remaining feedback loop was isolated in M05W-002. When accepted actions were absent, the presence guard called `QPD.refresh()`. That refresh synchronously emitted `forge:qpd06-state`, which scheduled another microtask and repeated indefinitely when the printable authority could not mount. Review 4 now ignores self-generated QPD feedback during recovery, coalesces checks on animation frames, and uses bounded timer retries.
+
+```text
+M05W_QPD_REFRESH_REENTRY=FORBIDDEN
+M05W_SCHEDULER=ANIMATION_FRAME
+M05W_RETRY=BOUNDED_TIMER
+UNBOUNDED_QPD_MICROTASK_LOOP=REMOVED
+```
+
 No calculation, contractual value, PDF extraction, projection, persistence or mutation authority changed.
 
 ## Boundaries
