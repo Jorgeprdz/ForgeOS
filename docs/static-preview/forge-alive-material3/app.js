@@ -6,6 +6,7 @@ import "./quote-runtime-printable-modal-layer-m05w001.js?v=m05w-001";
 import "./quote-runtime-intake-readiness-m05x001.js?v=m05x-001";
 import "./person-workspace-entry-bridge.js?v=crs-09-001";
 import { createForgeShell } from "./forge-shell.js";
+import { createAlfredCommandRuntime } from "./alfred-command-runtime.js?v=alfred-command-runtime-002";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";
@@ -137,6 +138,13 @@ shell
   .registerRouteModule("actividad", activity)
   .registerRouteModule("persona", personWorkspace);
 shell.initialize();
+
+const alfred = createAlfredCommandRuntime({
+  root: application,
+  shell,
+});
+alfred.initialize();
+globalThis.ForgeAlfredCommandRuntimeV2 = alfred;
 
 document.documentElement.dataset.forgeCleanHomeReady = "true";
 document.documentElement.dataset.forgeShellReady = "true";
@@ -331,6 +339,7 @@ async function loadAuthAuthorities() {
 
     document.documentElement.dataset.forgeAuthRuntime = "ready";
     shell.reconcile();
+    alfred.syncSuggestions();
     refreshActivityIfActive();
   } catch (error) {
     markAuthority("auth-runtime", "failed", error);
