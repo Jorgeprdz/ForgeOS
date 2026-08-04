@@ -6,7 +6,7 @@ const app = fs.readFileSync(
   "utf8",
 );
 const publicConfig = fs.readFileSync(
-  "docs/static-preview/forge-alive/forge-alive-public-config-067g17a1.js",
+  "docs/static-preview/forge-alive-material3/forge-alive-public-config-067g17a1.js",
   "utf8",
 );
 
@@ -50,11 +50,13 @@ assert.equal(
 assert.match(publicConfig, /const result = resolveConfig\(global\.__ENV__\)/);
 assert.match(publicConfig, /state: 'BLOCKED'/);
 assert.match(publicConfig, /reason: !supabaseUrl && !supabaseKey \? 'PUBLIC_CONFIG_MISSING'/);
+assert.doesNotMatch(app, /forge-alive-runtime|\.\.\/forge-alive\//);
 
 console.log("PASS UI-M05N public config boot order", {
   eagerPrintActions: true,
   sharedEnvironmentAuthority: true,
   publicConfigAfterEnvironment: true,
   authRaceRemoved: true,
+  canonicalAuthorityOnly: true,
   routeFirstBootContractPreserved: true,
 });
