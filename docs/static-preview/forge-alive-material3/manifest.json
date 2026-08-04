@@ -24,7 +24,7 @@
     "canonicalForgeShell": true,
     "homeModuleSeparated": true,
     "quotesModuleIntegrated": true,
-    "quotesRuntimeAuthority": "../forge-alive/nueva-cotizacion/index.html",
+    "quotesRuntimeAuthority": "./nueva-cotizacion/index.html",
     "quotesRoute": "?nav=cotizaciones",
     "quotesPersistence": "not_applicable_by_existing_contract",
     "canonicalNavigationContract": true,

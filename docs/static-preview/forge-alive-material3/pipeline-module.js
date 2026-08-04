@@ -9,12 +9,7 @@ const pipelineRuntimeBase = new URL(
   import.meta.url,
 );
 
-const legacyRuntimeBase = new URL(
-  import.meta.url.includes("/docs/static-preview/")
-    ? "../forge-alive/"
-    : "../forge-alive-runtime/",
-  import.meta.url,
-);
+const moduleBase = new URL("./", import.meta.url);
 
 const envUrl = new URL(
   import.meta.url.includes("/docs/static-preview/")
@@ -316,7 +311,7 @@ async function ensureReferralRuntime() {
   referralRuntimePromise = (async () => {
     if (!globalThis.__ENV__) await importRuntimeAsset(envUrl);
     if (!globalThis.ForgeAlivePublicConfig067G17A1) {
-      await importRuntimeAsset(new URL("forge-alive-public-config-067g17a1.js", legacyRuntimeBase));
+      await importRuntimeAsset(new URL("forge-alive-public-config-067g17a1.js", moduleBase));
     }
     return createProductiveIntelligenceAdapter();
   })().catch((error) => {
