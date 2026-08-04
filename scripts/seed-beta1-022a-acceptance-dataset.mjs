@@ -44,7 +44,7 @@ function prospectSpec(owner, index) {
   return {
     display_name: `Persona Sintética ${owner}-${serial} · ${RUN_ID}`,
     full_name: `Persona Sintética ${owner}-${serial} · ${RUN_ID}`,
-    phone_normalized: hasWhatsapp ? `+52558${owner === "A" ? "1" : "2"}${String(index).padStart(6, "0")}` : null,
+    phone_normalized: `+52558${owner === "A" ? "1" : "2"}${String(index).padStart(6, "0")}`,
     whatsapp_normalized: hasWhatsapp ? `+52558${owner === "A" ? "1" : "2"}${String(index).padStart(6, "0")}` : null,
     email_normalized: hasWhatsapp ? null : `synthetic-${RUN_ID.toLowerCase()}-${owner.toLowerCase()}-${serial}@example.invalid`,
     source: SOURCE,
