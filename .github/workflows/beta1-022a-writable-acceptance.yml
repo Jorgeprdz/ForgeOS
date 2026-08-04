@@ -6,6 +6,13 @@ on:
       - audit/beta1-020-productive-workspaces
     paths:
       - .github/workflows/beta1-022a-writable-acceptance.yml
+      - scripts/deploy-beta1-022a-migration.mjs
+      - scripts/seed-beta1-022a-acceptance-dataset.mjs
+      - scripts/verify-beta1-022a-acceptance.mjs
+      - supabase/functions/forge-demo-admin/index.ts
+      - supabase/migrations/20260803000001_cartera010b_atomic_policy_entry_wrapper.sql
+      - tests/beta1-022-policy-persistence-contract-test.mjs
+      - tests/beta1-022a-synthetic-dataset-contract-test.mjs
   workflow_dispatch:
     inputs:
       run_id:
