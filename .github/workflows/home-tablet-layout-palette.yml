@@ -1,0 +1,37 @@
+name: Home Tablet Layout Palette
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"
+      - "docs/static-preview/forge-alive-material3/home-tablet-layout-palette.js"
+      - "docs/static-preview/forge-alive-material3/home-tablet-layout-palette.css"
+      - "tests/home-tablet-layout-palette-test.mjs"
+      - ".github/workflows/home-tablet-layout-palette.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          node --check docs/static-preview/forge-alive-material3/home-tablet-layout-palette.js
+          node --check tests/home-tablet-layout-palette-test.mjs
+
+      - name: Validate tablet layout and palette contract
+        run: node --test tests/home-tablet-layout-palette-test.mjs
