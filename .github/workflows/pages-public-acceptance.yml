@@ -59,7 +59,7 @@ jobs:
           printf '%s\n' "$build_json" > /tmp/forge-pages-build-info.json
           echo "deployed_sha=$deployed_sha" >> "$GITHUB_OUTPUT"
 
-      - name: Verify canonical Material 3 and retired legacy surfaces
+      - name: Verify canonical UI and absent retired surfaces
         shell: bash
         run: |
           set -euo pipefail
@@ -86,8 +86,8 @@ jobs:
             -o /tmp/forge-pages-stage-filter.js
           curl --fail --silent --show-error --location \
             -H 'Cache-Control: no-cache' \
-            "${PUBLIC_BASE_URL}/static-preview/forge-alive-runtime/?v=${EXPECTED_SHA}" \
-            -o /tmp/forge-pages-legacy-runtime.html
+            "${PUBLIC_BASE_URL}/static-preview/quote-engine/nueva-cotizacion/index.html?v=${EXPECTED_SHA}" \
+            -o /tmp/forge-pages-quote-engine.html
           curl --fail --silent --show-error --location \
             -H 'Cache-Control: no-cache' \
             "${PUBLIC_BASE_URL}/service-worker.js?v=${EXPECTED_SHA}" \
@@ -120,13 +120,29 @@ jobs:
           grep -Fq 'grid.replaceChildren(...matching)' /tmp/forge-pages-stage-filter.js
           ! grep -Fq 'MutationObserver' /tmp/forge-pages-stage-filter.js
 
-          grep -Fq 'FORGE_LEGACY_UI_RETIRED' /tmp/forge-pages-legacy-runtime.html
-          ! grep -Fq 'Muestra segura · solo lectura' /tmp/forge-pages-legacy-runtime.html
-          ! grep -Fq 'phone-shell' /tmp/forge-pages-legacy-runtime.html
+          grep -Fq 'data-forge-engine-standalone-guard' /tmp/forge-pages-quote-engine.html
+          grep -Fq '../../forge-alive/?nav=cotizaciones' /tmp/forge-pages-quote-engine.html
 
           grep -Fq 'FORGEOS_LEGACY_SERVICE_WORKER_RETIRED' /tmp/forge-pages-service-worker.js
           grep -Fq 'self.registration.unregister()' /tmp/forge-pages-service-worker.js
           ! grep -Fq 'respondWith' /tmp/forge-pages-service-worker.js
+
+          for retired_route in \
+            'static-preview/forge-alive-runtime/' \
+            'static-preview/templates/forge-mobile/' \
+            '10-gui/mobile-daily/' \
+            'quote-preview-live/'
+          do
+            status="$(curl --silent --show-error \
+              --output /dev/null \
+              --write-out '%{http_code}' \
+              -H 'Cache-Control: no-cache' \
+              "${PUBLIC_BASE_URL}/${retired_route}?v=${EXPECTED_SHA}" || true)"
+            if [ "$status" != '404' ]; then
+              echo "Retired route is still published: ${retired_route} status=${status}"
+              exit 1
+            fi
+          done
 
       - name: Build deployment evidence
         shell: bash
@@ -154,7 +170,8 @@ jobs:
               canonicalMaterial3Entry: true,
               rootRedirectsToCanonical: true,
               legacyUiAbsent: true,
-              internalRuntimeNotNavigable: true,
+              retiredRoutesReturn404: true,
+              internalQuoteEngineGuarded: true,
               legacyServiceWorkerRetired: true
             },
             workflowRun: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
