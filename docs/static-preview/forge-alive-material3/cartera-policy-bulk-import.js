@@ -1,6 +1,6 @@
 const ACCEPTED = new Set(["csv", "xlsx"]);
 const MAX_ROWS = 500;
-let workbookDecoderPromise = null;
+const SESSION_BOOTSTRAP = "ForgeProductiveProspectBootstrap067G17B";
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -66,15 +66,14 @@ function parseCsv(text) {
 }
 
 async function workbookRows(file) {
-  workbookDecoderPromise ||= import("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm")
-    .catch(error => { workbookDecoderPromise = null; throw error; });
-  const XLSX = await workbookDecoderPromise;
-  const workbook = XLSX.read(await file.arrayBuffer(), {
-    type: "array", cellDates: false, cellFormula: false,
+  const decoder = globalThis.ForgeSafeWorkbookDecoder;
+  if (!decoder || typeof decoder.readFirstSheetRows !== "function") {
+    throw new Error("La lectura de Excel no está disponible sin conexión. Puedes guardar el archivo como CSV e intentarlo de nuevo.");
+  }
+  return decoder.readFirstSheetRows(await file.arrayBuffer(), {
+    formulas: false,
+    macros: false,
   });
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  if (!sheet) throw new Error("El libro XLSX no contiene hojas legibles.");
-  return XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: "" });
 }
 
 const ALIASES = Object.freeze({
@@ -94,6 +93,9 @@ const ALIASES = Object.freeze({
 
 function mapRows(rows, fileName) {
   if (!Array.isArray(rows) || rows.length < 2) return [];
+  if (rows.length - 1 > MAX_ROWS) {
+    throw new Error(`El archivo contiene ${rows.length - 1} filas. El máximo permitido es ${MAX_ROWS}; ninguna fila fue importada.`);
+  }
   const headers = rows[0].map(normalized);
   const indexes = Object.fromEntries(Object.entries(ALIASES).map(([key, aliases]) => [
     key, headers.findIndex(header => aliases.includes(header)),
@@ -140,19 +142,51 @@ function mapRows(rows, fileName) {
   });
 }
 
-function renderPreview(dialog, records) {
+function validateRecord(record) {
+  const errors = [];
+  if (!record.draft.holderName) errors.push("Titular requerido");
+  if (!record.draft.policyNumber) errors.push("Número de póliza requerido");
+  if (!record.draft.productLabel) errors.push("Producto requerido");
+  record.errors = errors;
+  record.state = errors.length ? "INVALID" : "READY_TO_IMPORT";
+  return record;
+}
+
+function validateRecords(records) {
+  const seen = new Set();
+  for (const record of records) {
+    if (["IMPORTED", "IMPORTING"].includes(record.state)) continue;
+    validateRecord(record);
+    const key = `${normalized(record.draft.carrierLabel)}:${normalized(record.draft.policyNumber)}`;
+    if (record.draft.policyNumber && seen.has(key)) {
+      record.errors.push("Posible duplicado dentro del archivo");
+      record.state = "DUPLICATE_SUSPECTED";
+    }
+    if (record.draft.policyNumber) seen.add(key);
+  }
+  return records;
+}
+
+async function authenticatedUserId() {
+  const session = await globalThis[SESSION_BOOTSTRAP]?.getSession?.();
+  return session?.data?.session?.user?.id || null;
+}
+
+function renderPreview(dialog, records, { importing = false } = {}) {
   const ready = records.filter(record => record.state === "READY_TO_IMPORT").length;
   const invalid = records.filter(record => record.state === "INVALID").length;
   const duplicate = records.filter(record => record.state === "DUPLICATE_SUSPECTED").length;
   dialog.querySelector("[data-policy-bulk-summary]").textContent = `${ready} listas · ${invalid} inválidas · ${duplicate} duplicados sospechosos`;
   dialog.querySelector("[data-policy-bulk-rows]").innerHTML = records.slice(0, 100).map(record => `
     <tr data-policy-import-state="${record.state}">
-      <td>${record.row}</td><td>${escapeHtml(record.draft.holderName || "—")}</td>
-      <td>${escapeHtml(record.draft.policyNumber || "—")}</td><td>${escapeHtml(record.draft.productLabel || "—")}</td>
+      <td>${record.row}</td><td><input data-policy-bulk-field="holderName" data-policy-bulk-row="${record.row}" value="${escapeHtml(record.draft.holderName)}" aria-label="Titular de la fila ${record.row}" ${importing ? "disabled" : ""}></td>
+      <td><input data-policy-bulk-field="policyNumber" data-policy-bulk-row="${record.row}" value="${escapeHtml(record.draft.policyNumber)}" aria-label="Número de póliza de la fila ${record.row}" ${importing ? "disabled" : ""}></td>
+      <td><input data-policy-bulk-field="productLabel" data-policy-bulk-row="${record.row}" value="${escapeHtml(record.draft.productLabel)}" aria-label="Producto de la fila ${record.row}" ${importing ? "disabled" : ""}></td>
       <td><strong>${record.state}</strong>${record.errors.length ? `<small>${escapeHtml(record.errors.join(" · "))}</small>` : ""}</td>
     </tr>`).join("");
   const confirm = dialog.querySelector("[data-confirm-policy-bulk]");
-  confirm.disabled = ready === 0;
+  confirm.disabled = importing || ready === 0;
+  confirm.dataset.importing = importing ? "true" : "false";
   confirm.__records = records;
 }
 
@@ -161,6 +195,7 @@ export function mountPolicyBulkImport(panel, { persistDraft } = {}) {
   if (typeof persistDraft !== "function") throw new TypeError("POLICY_BULK_PERSIST_AUTHORITY_REQUIRED");
   panel.dataset.policyBulkBound = "true";
   let generation = 0;
+  let importing = false;
   const input = document.createElement("input");
   input.type = "file";
   input.accept = ".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -176,7 +211,24 @@ export function mountPolicyBulkImport(panel, { persistDraft } = {}) {
     <div class="cartera-policy-dialog__body"><p class="cartera-policy-dialog__notice">Sólo se importan filas válidas después de tu confirmación. Los duplicados sospechosos permanecen bloqueados.</p><div class="cartera-policy-bulk-table"><table><thead><tr><th>Fila</th><th>Titular</th><th>Póliza</th><th>Producto</th><th>Estado</th></tr></thead><tbody data-policy-bulk-rows></tbody></table></div><p data-policy-bulk-progress role="status"></p><p class="cartera-policy-entry__error" data-policy-bulk-error role="alert" hidden></p></div>
     <footer class="cartera-policy-dialog__footer"><button type="button" data-close-policy-bulk>Cancelar</button><button type="button" data-confirm-policy-bulk disabled>Confirmar válidas</button></footer>`;
   panel.append(dialog);
-  dialog.querySelectorAll("[data-close-policy-bulk]").forEach(button => button.addEventListener("click", () => dialog.close()));
+  const cancelImport = () => {
+    generation += 1;
+    importing = false;
+    dialog.close();
+  };
+  dialog.querySelectorAll("[data-close-policy-bulk]").forEach(button => button.addEventListener("click", cancelImport));
+  dialog.querySelector("[data-policy-bulk-rows]").addEventListener("input", event => {
+    if (importing) return;
+    const inputNode = event.target.closest("[data-policy-bulk-field]");
+    if (!inputNode) return;
+    const records = dialog.querySelector("[data-confirm-policy-bulk]").__records || [];
+    const record = records.find(item => item.row === Number(inputNode.dataset.policyBulkRow));
+    if (!record || ["IMPORTED", "IMPORTING"].includes(record.state)) return;
+    record.draft[inputNode.dataset.policyBulkField] = String(inputNode.value || "").trim();
+    validateRecords(records);
+    renderPreview(dialog, records);
+    dialog.querySelector(`[data-policy-bulk-field="${inputNode.dataset.policyBulkField}"][data-policy-bulk-row="${record.row}"]`)?.focus();
+  });
 
   async function processFile(file) {
     if (!file) return;
@@ -203,11 +255,15 @@ export function mountPolicyBulkImport(panel, { persistDraft } = {}) {
 
   dialog.querySelector("[data-confirm-policy-bulk]").addEventListener("click", async event => {
     const button = event.currentTarget;
-    if (button.disabled) return;
+    if (button.disabled || importing || button.dataset.importing === "true") return;
     const selectedGeneration = ++generation;
+    const sessionUserId = await authenticatedUserId();
+    if (!sessionUserId || selectedGeneration !== generation || !dialog.open) return;
     const records = button.__records || [];
     const ready = records.filter(record => record.state === "READY_TO_IMPORT");
     const progress = dialog.querySelector("[data-policy-bulk-progress]");
+    importing = true;
+    renderPreview(dialog, records, { importing: true });
     button.disabled = true;
     button.setAttribute("aria-busy", "true");
     let imported = 0;
@@ -216,19 +272,24 @@ export function mountPolicyBulkImport(panel, { persistDraft } = {}) {
       record.state = "IMPORTING";
       progress.textContent = `IMPORTING · ${index + 1} de ${ready.length}`;
       try {
-        record.policyReference = await persistDraft(record.draft);
+        record.policyReference = await persistDraft(record.draft, { expectedUserId: sessionUserId });
+        const currentUserId = await authenticatedUserId();
+        if (selectedGeneration !== generation || currentUserId !== sessionUserId || !dialog.open) return;
         record.state = "IMPORTED";
         imported += 1;
       } catch (error) {
         record.state = "FAILED";
         record.errors = [error?.message || "IMPORT_FAILED"];
       }
-      renderPreview(dialog, records);
+      renderPreview(dialog, records, { importing: true });
     }
+    if (selectedGeneration !== generation || !dialog.open) { importing = false; return; }
     const failed = ready.length - imported;
     progress.textContent = failed
       ? `PARTIALLY_IMPORTED · ${imported} importadas · ${failed} fallidas`
       : `IMPORTED · ${imported} pólizas confirmadas`;
+    importing = false;
+    renderPreview(dialog, records);
     button.removeAttribute("aria-busy");
     button.textContent = failed ? "Reintentar fallidas" : "Importación completada";
     button.disabled = failed === 0;
@@ -245,6 +306,7 @@ export function mountPolicyBulkImport(panel, { persistDraft } = {}) {
   globalThis.addEventListener("forge:auth-state-changed", event => {
     if (event.detail?.status !== "authenticated") {
       generation += 1;
+      importing = false;
       dialog.close();
       input.value = "";
     }
@@ -252,8 +314,8 @@ export function mountPolicyBulkImport(panel, { persistDraft } = {}) {
   return Object.freeze({
     select: () => input.click(),
     processFile,
-    cancel: () => { generation += 1; dialog.close(); input.value = ""; },
+    cancel: () => { cancelImport(); input.value = ""; },
   });
 }
 
-export { parseCsv, mapRows };
+export { parseCsv, mapRows, validateRecord, validateRecords };

@@ -6,7 +6,7 @@ const UI_STATES = new Set([
 const STATE_COPY = Object.freeze({
   LOADING: {
     title: "Cargando compensación",
-    body: "Estamos leyendo el snapshot mensual y su historial canónico.",
+    body: "Estamos consultando la información disponible para este mes.",
   },
   EMPTY: {
     title: "Sin movimientos en este periodo",
@@ -22,7 +22,7 @@ const STATE_COPY = Object.freeze({
   },
   DISCONNECTED: {
     title: "Fuente de compensación desconectada",
-    body: "Comisiones ya no calcula desde Cartera ni IndexedDB. Hace falta conectar el snapshot canónico.",
+    body: "No pudimos consultar la información de Comisiones en este momento.",
   },
 });
 
@@ -69,6 +69,20 @@ function sourceTone(state) {
   return "danger";
 }
 
+function humanState(value) {
+  const states = {
+    PAID: "Pagado",
+    CONFIRMED_PAID: "Pago confirmado",
+    EARNED: "Devengado",
+    ESTIMATED: "Estimado",
+    ADJUSTED: "Con ajustes",
+    REVERSED: "Con reversión",
+    PENDING: "Pendiente",
+    UNKNOWN: "Sin confirmar",
+  };
+  return states[String(value || "UNKNOWN").toUpperCase()] || "Requiere revisión";
+}
+
 function renderStatePanel(state, errorCode = null) {
   const copy = STATE_COPY[state] || STATE_COPY.ERROR;
   return `
@@ -92,7 +106,7 @@ function card({ key, title, value, currency, caption, truth }) {
     <article class="comp-card" data-compensation-card="${escapeHtml(key)}">
       <div class="comp-card__heading">
         <span>${escapeHtml(title)}</span>
-        ${truth ? `<span class="comp-truth comp-truth--${escapeHtml(truth.toLowerCase())}">${escapeHtml(truth)}</span>` : ""}
+        ${truth ? `<span class="comp-truth comp-truth--${escapeHtml(truth.toLowerCase())}">${escapeHtml(humanState(truth))}</span>` : ""}
       </div>
       <strong>${escapeHtml(formatCurrency(value, currency))}</strong>
       <p>${escapeHtml(caption)}</p>
@@ -151,17 +165,17 @@ function renderEvidence(snapshot, currency) {
         ))}</span>
       </summary>
       <dl>
-        <div><dt>Estado</dt><dd>${escapeHtml(aggregate.latestState)}</dd></div>
+        <div><dt>Estado</dt><dd>${escapeHtml(humanState(aggregate.latestState))}</dd></div>
         <div><dt>Estimado</dt><dd>${escapeHtml(formatCurrency(aggregate.estimatedAmount, currency))}</dd></div>
         <div><dt>Devengado bruto</dt><dd>${escapeHtml(formatCurrency(aggregate.earnedGrossAmount, currency))}</dd></div>
         <div><dt>Ajustes</dt><dd>${escapeHtml(formatCurrency(aggregate.adjustmentAmount, currency))}</dd></div>
         <div><dt>Reversiones</dt><dd>${escapeHtml(formatCurrency(aggregate.reversalAmount, currency))}</dd></div>
         <div><dt>Devengado neto</dt><dd>${escapeHtml(formatCurrency(aggregate.earnedNetAmount, currency))}</dd></div>
-        <div><dt>Calculation digest</dt><dd><code>${escapeHtml(aggregate.sourceCalculationDigest || "No disponible")}</code></dd></div>
-        <div><dt>Rule Pack digest</dt><dd><code>${escapeHtml(aggregate.rulePackDigest || "No disponible")}</code></dd></div>
+        <div><dt>Cálculo verificable</dt><dd>${aggregate.sourceCalculationDigest ? "Disponible" : "No disponible"}</dd></div>
+        <div><dt>Reglas verificables</dt><dd>${aggregate.rulePackDigest ? "Disponibles" : "No disponibles"}</dd></div>
       </dl>
       <p class="comp-detail__explanation">
-        El importe proviene del timeline append-only. Los ajustes suman como delta y las reversiones restan; nunca reemplazan el evento original.
+        El importe conserva su historial. Los ajustes y las reversiones se muestran por separado para que puedas revisar cómo cambió.
       </p>
     </details>`).join("");
 }
@@ -176,14 +190,14 @@ function renderAttentionQueue(snapshot, currency) {
   if (!attention.length) {
     const noEvidence = aggregates.length === 0;
     return `<div class="comp-attention__empty" data-comp-attention-state="${noEvidence ? "UNAVAILABLE" : "EMPTY"}">
-      <p>${noEvidence ? "La fuente no entregó movimientos explicables para este periodo." : "No hay movimientos con revisión pendiente en este snapshot."}</p>
+      <p>${noEvidence ? "Todavía no hay movimientos disponibles para este periodo." : "No hay movimientos pendientes de revisión para este periodo."}</p>
       ${noEvidence ? '<button type="button" data-comp-refresh>Reintentar lectura productiva</button>' : ""}
     </div>`;
   }
   return `<div class="comp-attention" data-comp-attention-state="READY">${attention.map(aggregate => `
     <button type="button" class="comp-attention__item" data-comp-open-policy="${escapeHtml(aggregate.policyReference || "")}" ${aggregate.policyReference ? "" : "disabled"}>
       <span><strong>${escapeHtml(aggregate.concept || "Movimiento de comisión")}</strong><small>${escapeHtml(aggregate.policyReference || "Sin póliza relacionada")}</small></span>
-      <span><b>${escapeHtml(formatCurrency(aggregate.earnedEventId ? aggregate.earnedNetAmount : aggregate.estimatedAmount, currency))}</b><small>${escapeHtml(aggregate.latestState || "UNKNOWN")}</small></span>
+      <span><b>${escapeHtml(formatCurrency(aggregate.earnedEventId ? aggregate.earnedNetAmount : aggregate.estimatedAmount, currency))}</b><small>${escapeHtml(humanState(aggregate.latestState))}</small></span>
     </button>`).join("")}</div>`;
 }
 
@@ -206,15 +220,24 @@ function renderProduct(readModel) {
   const currency = snapshot.currency || "MXN";
   const real = amounts.real;
   const paid = amounts.paid;
-  const hasEconomicEvidence = Array.isArray(snapshot?.details?.aggregates)
-    && snapshot.details.aggregates.length > 0;
-  const evidenced = value => hasEconomicEvidence ? value : null;
+  const aggregates = Array.isArray(snapshot?.details?.aggregates) ? snapshot.details.aggregates : [];
+  const explicitEvidence = snapshot?.amountEvidence || snapshot?.evidenceStates || {};
+  const evidenceAvailable = (key, predicate) => {
+    const state = String(explicitEvidence[key] || "").toUpperCase();
+    if (["AVAILABLE", "CONFIRMED", "KNOWN_ZERO"].includes(state)) return true;
+    return aggregates.some(predicate);
+  };
+  const evidenced = (key, value, predicate) => evidenceAvailable(key, predicate) ? value : null;
+  const hasEarnedEvent = aggregate => Boolean(aggregate?.earnedEventId);
+  const hasEstimatedEvent = aggregate => Boolean(aggregate)
+    && !aggregate.earnedEventId
+    && Number.isFinite(Number(aggregate.estimatedAmount));
   const tone = sourceTone(readModel.state);
   const partialBanner = readModel.state === "PARTIAL"
     ? `<div class="comp-banner comp-banner--warning">La vista es parcial: las cifras desconocidas permanecen como “No disponible”.</div>`
     : "";
   const staleBanner = readModel.state === "STALE"
-    ? `<div class="comp-banner comp-banner--warning">El último snapshot es antiguo. Se muestra con etiqueta de información desactualizada.</div>`
+    ? `<div class="comp-banner comp-banner--warning">La información disponible puede no estar actualizada.</div>`
     : "";
 
   return `
@@ -227,7 +250,7 @@ function renderProduct(readModel) {
           ${escapeHtml(truthLabel(real.basis))}
         </span>
       </div>
-      <p>${escapeHtml(snapshot.explanation?.realReason || "Base económica explícita del snapshot.")}</p>
+      <p>Esta cifra se muestra únicamente cuando existe información suficiente para respaldarla.</p>
     </section>
 
     <section class="comp-grid" aria-label="Resumen mensual de compensación">
@@ -239,32 +262,32 @@ function renderProduct(readModel) {
         truth: "PAID",
       })}
       ${card({
-        key: "earned", title: "Devengado neto", value: evidenced(amounts.earned.net), currency,
-        caption: "Regla oficial más ajustes y reversiones append-only.",
+        key: "earned", title: "Devengado neto", value: evidenced("earned", amounts.earned.net, hasEarnedEvent), currency,
+        caption: "Cifra respaldada por las reglas y movimientos del periodo.",
         truth: "EARNED",
       })}
       ${card({
-        key: "estimated", title: "Estimado", value: evidenced(amounts.estimated), currency,
+        key: "estimated", title: "Estimado", value: evidenced("estimated", amounts.estimated, hasEstimatedEvent), currency,
         caption: "Cálculo todavía no promovido a devengado.",
         truth: "ESTIMATED",
       })}
       ${card({
-        key: "potential", title: "Potencial", value: evidenced(amounts.potential), currency,
+        key: "potential", title: "Potencial", value: evidenced("potential", amounts.potential, aggregate => Number.isFinite(Number(aggregate?.potentialAmount))), currency,
         caption: "Señal futura; no forma parte del ingreso real.",
         truth: "POTENTIAL",
       })}
       ${card({
-        key: "at-risk", title: "En riesgo", value: evidenced(amounts.atRisk), currency,
+        key: "at-risk", title: "En riesgo", value: evidenced("atRisk", amounts.atRisk, aggregate => Number.isFinite(Number(aggregate?.atRiskAmount))), currency,
         caption: "Señal explícita; no se descuenta silenciosamente.",
         truth: "AT_RISK",
       })}
       ${card({
-        key: "adjustments", title: "Ajustes", value: evidenced(amounts.earned.adjustments), currency,
+        key: "adjustments", title: "Ajustes", value: evidenced("adjustments", amounts.earned.adjustments, aggregate => hasEarnedEvent(aggregate) && Number.isFinite(Number(aggregate.adjustmentAmount))), currency,
         caption: "Deltas documentados sobre compensación devengada.",
         truth: "ADJUSTED",
       })}
       ${card({
-        key: "reversals", title: "Reversiones", value: evidenced(amounts.earned.reversals), currency,
+        key: "reversals", title: "Reversiones", value: evidenced("reversals", amounts.earned.reversals, aggregate => hasEarnedEvent(aggregate) && Number.isFinite(Number(aggregate.reversalAmount))), currency,
         caption: "Eventos negativos que preservan la historia original.",
         truth: "REVERSED",
       })}
@@ -291,7 +314,7 @@ function renderProduct(readModel) {
         <h2>Simulador de comisiones</h2>
         <p>Una simulación nunca modifica ni se suma a Pagado, Devengado o Ingreso real.</p>
       </div>
-      <span class="comp-truth comp-truth--simulation">SIMULATION ≠ TRUTH</span>
+      <span class="comp-truth comp-truth--simulation">Escenario, no ingreso confirmado</span>
     </aside>`;
 }
 
@@ -307,7 +330,7 @@ export function renderAdvisorCompensationProduct(readModel = { state: "LOADING" 
       data-compensation-state="${escapeHtml(state)}">
       <header class="comp-header">
         <div>
-          <span class="comp-eyebrow">Compensation Intelligence</span>
+          <span class="comp-eyebrow">Resumen del periodo</span>
           <h1>Comisiones</h1>
           <p>${escapeHtml(monthLabel(periodKey))}</p>
         </div>

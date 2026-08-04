@@ -190,6 +190,7 @@ const productiveWorkspaceController = (() => {
   let active;
   let openingToken;
   let escapeListener;
+  let lifecycleRevision = 0;
 
   const restorationTarget = (trigger) => {
     if (trigger?.isConnected) return trigger;
@@ -233,15 +234,16 @@ const productiveWorkspaceController = (() => {
       return;
     }
     const token = Symbol(kind);
+    const revision = lifecycleRevision;
     openingToken = token;
     trigger.setAttribute("aria-busy", "true");
 
     try {
       await ensureReferralStyles();
-      if (openingToken !== token) return;
+      if (openingToken !== token || revision !== lifecycleRevision) return;
 
       const layer = await createLayer();
-      if (openingToken !== token) {
+      if (openingToken !== token || revision !== lifecycleRevision) {
         layer.remove();
         return;
       }
@@ -293,8 +295,20 @@ const productiveWorkspaceController = (() => {
     }
   };
 
-  return Object.freeze({ open, close });
+  const invalidate = () => {
+    lifecycleRevision += 1;
+    openingToken = undefined;
+    close({ restoreFocus: false });
+  };
+
+  return Object.freeze({ open, close, invalidate });
 })();
+
+globalThis.addEventListener("forge:auth-state-changed", event => {
+  if (String(event.detail?.status || "").toLowerCase() !== "authenticated") {
+    productiveWorkspaceController.invalidate();
+  }
+});
 
 async function ensureReferralRuntime() {
   if (referralRuntimePromise) return referralRuntimePromise;
@@ -449,12 +463,11 @@ async function openNashWorkspace({ card, adapter, trigger }) {
     <button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar mensaje"></button>
     <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="nash-workspace-title">
       <div class="referral-sheet__header">
-        <div><p>NASH · REVISIÓN HUMANA</p><h2 id="nash-workspace-title">Preparar mensaje</h2></div>
+        <div><p>MENSAJE SUGERIDO</p><h2 id="nash-workspace-title">Preparar mensaje</h2></div>
         <button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button>
       </div>
       <div class="referral-sheet__body">
-        <p data-nash-source-mode>${escapeHtml(prepared.sourceMode)}</p>
-        <p>Conversation Brief: ${prepared.conversationBriefProduced ? "Disponible" : "Contexto gobernado bloqueado"}</p>
+        <p data-nash-source-mode>${prepared.conversationBriefProduced ? "Forge revisó el contexto disponible para esta conversación." : "Forge preparó una opción segura con la información disponible."}</p>
         <label><span>Mensaje editable</span><textarea data-nash-draft>${escapeHtml(prepared.candidate.rawText || prepared.candidate.text || "")}</textarea></label>
         <p data-nash-approval-status>Revisión y aprobación humana requeridas.</p>
       </div>
@@ -501,7 +514,7 @@ async function openNashWorkspace({ card, adapter, trigger }) {
         layer.dataset.nashApprovalState = url ? "approved" : "blocked";
         approveButton.disabled = Boolean(url);
         approveButton.textContent = url ? "Texto exacto aprobado" : "Revisar y aprobar texto exacto";
-        status.textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El mensaje no pasó la validación.";
+        status.textContent = url ? "Mensaje aprobado. Ya puedes abrir WhatsApp." : "Revisa el mensaje antes de continuar.";
       });
       return layer;
     },

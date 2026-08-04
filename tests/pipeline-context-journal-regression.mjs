@@ -4,7 +4,13 @@ import { chromium } from "@playwright/test";
 const baseUrl = process.env.FORGE_PIPELINE_BASE_URL
   || "http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/";
 
-const browser = await chromium.launch({ headless: true });
+const browser = process.env.FORGE_CDP_ENDPOINT
+  ? await chromium.connectOverCDP(process.env.FORGE_CDP_ENDPOINT)
+  : await chromium.launch({
+      headless: true,
+      executablePath: process.env.FORGE_CHROMIUM_EXECUTABLE || undefined,
+      args: process.env.FORGE_CHROMIUM_EXECUTABLE ? ["--no-sandbox", "--disable-dev-shm-usage"] : [],
+    });
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 const page = await context.newPage();
 page.setDefaultTimeout(10000);

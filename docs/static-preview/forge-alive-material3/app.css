@@ -2908,6 +2908,6 @@ body.keyboard-open .sheet-note {
   }
 
   .nav-item svg { width: 21px; }
-  .nav-item span { max-width: 58px; overflow: hidden; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-item span { max-width: 64px; overflow: hidden; font-size: 11px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
   .alfred-launcher { width: 76px; height: 76px; }
 }

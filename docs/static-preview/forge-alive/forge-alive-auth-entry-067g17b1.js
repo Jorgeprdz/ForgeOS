@@ -284,7 +284,7 @@
 
   function canonicalRedirectUrl() {
     const url = new URL(global.location.href);
-    const redirect = new URL(url.pathname || '/ForgeOS/static-preview/forge-alive/', url.origin);
+    const redirect = new URL('/ForgeOS/static-preview/forge-alive/', url.origin);
     redirect.searchParams.set('nav', currentNav());
     if (url.searchParams.get('v')) redirect.searchParams.set('v', url.searchParams.get('v'));
     if (url.hash) redirect.hash = url.hash;

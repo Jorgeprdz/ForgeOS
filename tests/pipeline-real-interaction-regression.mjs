@@ -13,7 +13,13 @@ const adapterUrl = new URL(
   "pipeline-productive-intelligence-adapter.js?v=pipeline-real-interaction",
   baseUrl,
 ).href;
-const browser = await chromium.launch({ headless: true });
+const browser = process.env.FORGE_CDP_ENDPOINT
+  ? await chromium.connectOverCDP(process.env.FORGE_CDP_ENDPOINT)
+  : await chromium.launch({
+      headless: true,
+      executablePath: process.env.FORGE_CHROMIUM_EXECUTABLE || undefined,
+      args: process.env.FORGE_CHROMIUM_EXECUTABLE ? ["--no-sandbox", "--disable-dev-shm-usage"] : [],
+    });
 const context = await browser.newContext({
   viewport: { width: 412, height: 915 },
   deviceScaleFactor: 2.625,
@@ -191,6 +197,10 @@ try {
     "proposal",
     "STAGE_DID_NOT_CHANGE_IMMEDIATELY",
   );
+  await page.waitForFunction(() => {
+    const node = document.querySelector('[data-productive-prospect-card="prospect-1"]');
+    return Boolean(node && getComputedStyle(node).borderLeftColor);
+  });
   const proposalBorder = await card.evaluate(
     node => getComputedStyle(node).borderLeftColor,
   );

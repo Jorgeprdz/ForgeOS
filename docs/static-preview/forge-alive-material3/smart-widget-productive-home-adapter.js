@@ -132,7 +132,7 @@ function clearSurface(root, { scrubDialog = false } = {}) {
   root.replaceChildren(...dialogs);
 }
 
-function renderPending(root, message, state = "LOADING") {
+function renderPending(root, message, state = "LOADING", onRetry = null) {
   clearSurface(root);
   root.hidden = false;
   root.dataset.smartWidgetStackState = state;
@@ -151,6 +151,12 @@ function renderPending(root, message, state = "LOADING") {
       url.searchParams.set("from", "home-empty-state");
       globalThis.location.assign(url.href);
     });
+    card.appendChild(action);
+  }
+  if (state === "DISCONNECTED" && typeof onRetry === "function") {
+    const action = element("button", "productive-smart-widget-action", "Intentar nuevamente");
+    action.type = "button";
+    action.addEventListener("click", onRetry, { once: true });
     card.appendChild(action);
   }
   root.appendChild(card);
@@ -243,6 +249,7 @@ export function createProductiveSmartWidgetHomeAdapter({
         root,
         "Las fuentes tardaron demasiado. Puedes reintentar sin perder contexto.",
         "DISCONNECTED",
+        () => void reconcile({ session, sources, additionalWidgets }),
       );
       activeController.abort("smart-widget-source-timeout");
     }, 25_000);

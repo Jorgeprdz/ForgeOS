@@ -157,7 +157,7 @@
       return `<option value="${value}" ${disabled ? "disabled" : ""}>${esc(label)}${disabled ? " · requiere evidencia" : ""}</option>`;
     }).join("");
     const styleOptions = MESSAGE_STYLES.map(([value, label]) => `<option value="${value}" ${value === "professional" ? "selected" : ""}>${esc(label)}</option>`).join("");
-    return `<aside class="forge-action-workspace forge-message-workspace" data-action-workspace data-workspace-type="whatsapp" aria-labelledby="forge-message-workspace-title"><header><div><p class="forge-pipeline-product">NASH · BORRADOR</p><h2 id="forge-message-workspace-title">Mensaje para ${esc(prospect.fullName)}</h2><p>Forge prepara. Tú revisas y decides si abres WhatsApp.</p></div><button type="button" data-close-action-workspace aria-label="Cerrar preparación">×</button></header><div class="forge-message-controls"><label>Objetivo<select data-message-goal>${goalOptions}</select></label><label>Estilo<select data-message-style>${styleOptions}</select></label></div><div class="forge-message-chat" aria-live="polite"><div class="forge-message-avatar" aria-hidden="true">F</div><div class="forge-message-bubble"><div class="forge-message-loading" data-message-loading><span></span><span></span><span></span><em>Preparando sugerencia…</em></div><p data-message-preview hidden></p><textarea data-message-editor aria-label="Editar mensaje" hidden></textarea><p class="forge-message-error" data-message-error role="status" hidden></p></div></div><div class="forge-message-meta"><span data-message-source>Generando con NASH</span><span>Sin envío automático</span></div><footer><button type="button" class="forge-workspace-secondary" data-edit-message disabled>✏️ Editar</button><button type="button" class="forge-workspace-secondary" data-regenerate-message disabled>↻ Otra sugerencia</button><button type="button" class="forge-workspace-secondary" data-approve-whatsapp-draft disabled>Revisé y apruebo</button><a class="forge-workspace-primary is-disabled" data-open-whatsapp aria-disabled="true" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></footer></aside>`;
+    return `<aside class="forge-action-workspace forge-message-workspace" data-action-workspace data-workspace-type="whatsapp" aria-labelledby="forge-message-workspace-title"><header><div><p class="forge-pipeline-product">MENSAJE SUGERIDO</p><h2 id="forge-message-workspace-title">Mensaje para ${esc(prospect.fullName)}</h2><p>Forge propone el mensaje. Tú lo revisas y decides si abres WhatsApp.</p></div><button type="button" data-close-action-workspace aria-label="Cerrar preparación">×</button></header><div class="forge-message-controls"><label>Objetivo<select data-message-goal>${goalOptions}</select></label><label>Estilo<select data-message-style>${styleOptions}</select></label></div><div class="forge-message-chat" aria-live="polite"><div class="forge-message-avatar" aria-hidden="true">F</div><div class="forge-message-bubble"><div class="forge-message-loading" data-message-loading><span></span><span></span><span></span><em>Preparando sugerencia…</em></div><p data-message-preview hidden></p><textarea data-message-editor aria-label="Editar mensaje" hidden></textarea><p class="forge-message-error" data-message-error role="status" hidden></p></div></div><div class="forge-message-meta"><span data-message-source>Forge está preparando una sugerencia</span><span>El mensaje no se envía solo</span></div><footer><button type="button" class="forge-workspace-secondary" data-edit-message disabled>✏️ Editar</button><button type="button" class="forge-workspace-secondary" data-regenerate-message disabled>↻ Otra sugerencia</button><button type="button" class="forge-workspace-secondary" data-approve-whatsapp-draft disabled>Revisé y apruebo</button><a class="forge-workspace-primary is-disabled" data-open-whatsapp aria-disabled="true" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a></footer></aside>`;
   }
 
   function calendarWorkspaceTemplate(prospect) {
@@ -395,7 +395,7 @@
       editor.value = text;
       errorNode.hidden = !error;
       errorNode.textContent = error;
-      workspace.querySelector("[data-message-source]").textContent = source || "NASH";
+      workspace.querySelector("[data-message-source]").textContent = source || "Sugerencia preparada por Forge";
       edit.disabled = loading || !text;
       edit.textContent = "✏️ Editar";
       regenerate.disabled = loading;
@@ -486,7 +486,7 @@
       const requestId = ++draftRequestId;
       currentDraftCandidate = null;
       currentDraftApproval = null;
-      setMessageState({ loading: true, source: "Generando con Gemini" });
+      setMessageState({ loading: true, source: "Forge está preparando una sugerencia" });
       try {
         const orchestration = governedDraftOrchestrator
           ? await governedDraftOrchestrator.requestDraft({
@@ -526,25 +526,25 @@
           currentDraftCandidate = intake.draftCandidateSnapshot;
           setMessageState({
             text: intake.draftCandidateSnapshot.rawText,
-            source: "Sugerencia gobernada de Gemini",
+            source: "Sugerencia preparada con ayuda de IA",
           });
           return;
         }
 
         if (intake.state === DRAFT_INTAKE_STATES.NO_DRAFT) {
           setMessageState({
-            error: "NASH no encontró contexto suficiente para preparar un mensaje.",
+            error: "No hay suficiente información para preparar un mensaje confiable.",
             source: "Sin sugerencia segura",
           });
           return;
         }
 
         currentDraftCandidate = draftCandidate(actionProspect, style, goal, draftVariation);
-        setMessageState({ text: currentDraftCandidate.rawText, source: "Sugerencia determinística segura" });
+        setMessageState({ text: currentDraftCandidate.rawText, source: "Sugerencia preparada por Forge" });
       } catch (_error) {
         if (requestId !== draftRequestId || !workspace.isConnected) return;
         currentDraftCandidate = draftCandidate(actionProspect, style, goal, draftVariation);
-        setMessageState({ text: currentDraftCandidate.rawText, source: "Sugerencia determinística segura" });
+        setMessageState({ text: currentDraftCandidate.rawText, source: "Sugerencia preparada por Forge" });
       }
     }
 

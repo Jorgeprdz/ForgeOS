@@ -409,7 +409,7 @@ await test("renders stale warning", () => {
     state: "STALE", periodKey: "2026-08", snapshot: snapshot(),
     history: history(), sourceHealth: {},
   });
-  assert.match(html, /información desactualizada/);
+  assert.match(html, /puede no estar actualizada/);
 });
 await test("renders all truth cards", () => {
   const html = view.renderAdvisorCompensationProduct({
@@ -442,6 +442,26 @@ await test("risk not silently deducted", () => {
   });
   assert.match(html, /no se descuenta silenciosamente/);
 });
+await test("one earned aggregate does not authorize unsupported potential or risk", () => {
+  const html = view.renderAdvisorCompensationProduct({
+    state: "PARTIAL",
+    periodKey: "2026-08",
+    snapshot: snapshot({ potential: 0, atRisk: 0 }),
+    history: history(),
+    sourceHealth: {},
+  });
+  assert.match(html, /data-compensation-card="potential"[\s\S]*?No disponible/);
+  assert.match(html, /data-compensation-card="at-risk"[\s\S]*?No disponible/);
+});
+await test("explicit metric evidence preserves a known zero", () => {
+  const item = snapshot({ potential: 0, atRisk: 0 });
+  item.amountEvidence = { potential: "KNOWN_ZERO", atRisk: "KNOWN_ZERO" };
+  const html = view.renderAdvisorCompensationProduct({
+    state: "READY", periodKey: "2026-08", snapshot: item, history: history(), sourceHealth: {},
+  });
+  assert.match(html, /data-compensation-card="potential"[\s\S]*?\$0\.00/);
+  assert.match(html, /data-compensation-card="at-risk"[\s\S]*?\$0\.00/);
+});
 await test("six history points rendered", () => {
   const html = view.renderHistory(history(), "MXN");
   assert.equal((html.match(/data-compensation-history-period=/g) || []).length, 6);
@@ -455,10 +475,10 @@ await test("empty history state", () => {
 await test("detail aggregate rendered", () => {
   assert.match(view.renderEvidence(snapshot(), "MXN"), /data-compensation-aggregate="agg-1"/);
 });
-await test("detail digests rendered", () => {
+await test("detail evidence availability rendered in human language", () => {
   const html = view.renderEvidence(snapshot(), "MXN");
-  assert.match(html, /Calculation digest/);
-  assert.match(html, /Rule Pack digest/);
+  assert.match(html, /Cálculo verificable/);
+  assert.match(html, /Reglas verificables/);
 });
 await test("empty detail state", () => {
   assert.match(view.renderEvidence(snapshot({ aggregates: [] }), "MXN"), /No hay movimientos/);
@@ -469,7 +489,7 @@ await test("simulator separated", () => {
     sourceHealth: {},
   });
   assert.match(html, /data-compensation-simulator-boundary="separate"/);
-  assert.match(html, /SIMULATION ≠ TRUTH/);
+  assert.match(html, /Escenario, no ingreso confirmado/);
 });
 await test("safe bottom space", () => {
   assert.match(view.ADVISOR_COMPENSATION_070_STYLES, /safe-area-inset-bottom/);

@@ -13,6 +13,7 @@ const VALIDATOR_URL = new URL(
 
 let validatorPromise = null;
 let activeGeneration = 0;
+let activePdfController = null;
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -296,7 +297,11 @@ function createIdentityCommand(validator, userId, draft, evidenceReference, at) 
     outcome: existing ? "LINK_CONFIRMED" : "CREATE_CONFIRMED",
     sourceIdentity: {
       sourceDomain: "CARTERA_POLICY_ENTRY",
-      sourceIdentityType: draft.inputMode === "pdf" ? "ISSUED_POLICY_PDF" : "MANUAL_POLICY_ENTRY",
+      sourceIdentityType: draft.inputMode === "pdf"
+        ? "ISSUED_POLICY_PDF"
+        : draft.inputMode === "bulk"
+          ? "BULK_POLICY_IMPORT"
+          : "MANUAL_POLICY_ENTRY",
       sourceRecordReference: `cartera-entry:${draft.draftId}`,
       prospectReference: null,
     },
@@ -382,7 +387,13 @@ function createPolicyCommand(validator, userId, draft, personReference, evidence
     evidence: {
       evidenceVersionReference: evidenceReference,
       documentHash,
-      sourceType: draft.inputMode === "pdf" ? "ISSUED_POLICY_DOCUMENT" : "MANUAL_POLICY_ENTRY",
+      sourceType: draft.inputMode === "pdf"
+        ? "ISSUED_POLICY_DOCUMENT"
+        : draft.inputMode === "bulk" && String(draft.fileName || "").toLowerCase().endsWith(".xlsx")
+          ? "BULK_XLSX_POLICY_IMPORT"
+          : draft.inputMode === "bulk"
+            ? "BULK_CSV_POLICY_IMPORT"
+            : "MANUAL_POLICY_ENTRY",
       observedAt: at,
       verificationState: "CONFIRMED",
       fieldClaims: {
@@ -427,18 +438,33 @@ async function rejectKnownDuplicate(client, draft) {
   }
 }
 
-export async function persistDraft(draft) {
+async function currentUserId() {
+  const session = await globalThis.ForgeProductiveProspectBootstrap067G17B?.getSession?.();
+  return session?.data?.session?.user?.id || null;
+}
+
+async function assertOperationOwner(expectedUserId) {
+  if (!expectedUserId || await currentUserId() !== expectedUserId) {
+    throw new DOMException("La sesión cambió antes de terminar la operación.", "AbortError");
+  }
+}
+
+export async function persistDraft(draft, { expectedUserId = null } = {}) {
   validateDraft(draft);
   if (demoSession()) throw new Error("La cuenta demo es de solo lectura.");
   const { user, client } = await productiveContext();
+  const operationUserId = expectedUserId || user.id;
+  if (operationUserId !== user.id) throw new DOMException("La sesión cambió antes de guardar.", "AbortError");
   const validator = await loadValidator();
   await rejectKnownDuplicate(client, draft);
+  await assertOperationOwner(operationUserId);
   const at = new Date().toISOString();
   const evidenceReference = `policy-evidence:cartera:${draft.draftId}`;
   const documentHash = draft.documentHash || await digest(draft);
   const identity = createIdentityCommand(validator, user.id, draft, evidenceReference, at);
 
   const identityResult = await client.rpc("forge_cartera010b_confirm_identity_resolution", { p_command: identity.command });
+  await assertOperationOwner(operationUserId);
   if (identityResult.error) throw new Error(identityResult.error.message || "No pudimos confirmar al titular.");
   const identityStatus = identityResult.data?.status || identityResult.data?.outcome || "";
   if (["CONFLICT", "REJECTED", "UNRESOLVED"].includes(identityStatus)) {
@@ -455,6 +481,7 @@ export async function persistDraft(draft) {
     at,
   );
   const policyResult = await client.rpc("forge_cartera010b_confirm_policy_with_parties", { p_command: policyCommand });
+  await assertOperationOwner(operationUserId);
   if (policyResult.error) throw new Error(policyResult.error.message || "No pudimos guardar la póliza.");
   const policyStatus = policyResult.data?.status || "";
   if (["CONFLICT", "REJECTED"].includes(policyStatus)) {
@@ -511,23 +538,33 @@ async function sessionHeaders() {
 }
 
 async function processPdf(panel, file) {
+  activeGeneration += 1;
+  activePdfController?.abort("pdf-replaced");
+  activePdfController = null;
   if (demoSession()) throw new Error("La cuenta demo es de solo lectura.");
-  if (!file || file.type !== "application/pdf" || !file.name.toLowerCase().endsWith(".pdf")) {
+  if (!file || (file.type && file.type !== "application/pdf") || !file.name.toLowerCase().endsWith(".pdf")) {
     throw new Error("Selecciona un archivo PDF válido.");
   }
   if (file.size > MAX_PDF_BYTES) throw new Error("El PDF supera el límite de 8 MB.");
 
-  const generation = ++activeGeneration;
+  const generation = activeGeneration;
+  const controller = new AbortController();
+  activePdfController = controller;
+  const operationUserId = await currentUserId();
+  if (!operationUserId) throw new Error("Inicia sesión para revisar el documento.");
   setBusy(panel, true);
   setStatus(panel, "Cargando y extrayendo el PDF…");
   const buffer = await file.arrayBuffer();
+  if (new TextDecoder("latin1").decode(buffer.slice(0, 5)) !== "%PDF-") throw new Error("El archivo seleccionado no parece ser un PDF válido.");
+  if (controller.signal.aborted || generation !== activeGeneration) return;
   const response = await fetch(PDF_FUNCTION_URL, {
     method: "POST",
     headers: await sessionHeaders(),
-    body: JSON.stringify({ fileName: file.name, mimeType: file.type, base64: arrayBufferToBase64(buffer) }),
+    body: JSON.stringify({ fileName: file.name, mimeType: "application/pdf", base64: arrayBufferToBase64(buffer) }),
+    signal: controller.signal,
   });
   const payload = await response.json().catch(() => ({}));
-  if (generation !== activeGeneration || !panel.isConnected) return;
+  if (generation !== activeGeneration || controller.signal.aborted || !panel.isConnected || await currentUserId() !== operationUserId) return;
   if (!response.ok || payload?.ok !== true) {
     throw new Error(payload?.message || payload?.error || "No pudimos procesar el PDF.");
   }
@@ -540,12 +577,14 @@ async function processPdf(panel, file) {
     modelVersion: payload.modelVersion,
     documentHash: await digest(buffer),
   });
+  if (activePdfController === controller) activePdfController = null;
 }
 
 async function handlePdf(panel, file) {
   try {
     await processPdf(panel, file);
   } catch (error) {
+    if (error?.name === "AbortError") return;
     setStatus(panel, "La carga no se completó.", error?.message || "No pudimos procesar el PDF.");
   } finally {
     setBusy(panel, false);
@@ -628,14 +667,23 @@ function boot() {
   const observer = new MutationObserver(() => mount(root));
   observer.observe(root, { childList: true, attributes: true, attributeFilter: ["data-cartera-material3-state"] });
   globalThis.addEventListener("forge:auth-state-changed", event => {
-    if (event.detail?.status === "anonymous") activeGeneration += 1;
+    if (event.detail?.status !== "authenticated") {
+      activeGeneration += 1;
+      activePdfController?.abort("session-ended");
+      activePdfController = null;
+    }
     mount(root);
   });
   globalThis.addEventListener("forge:demo-session-classified", () => {
     root.querySelector(PANEL_SELECTOR)?.remove();
     mount(root);
   });
-  globalThis.addEventListener("pagehide", () => observer.disconnect(), { once: true });
+  globalThis.addEventListener("pagehide", () => {
+    activeGeneration += 1;
+    activePdfController?.abort("page-hidden");
+    activePdfController = null;
+    observer.disconnect();
+  }, { once: true });
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });

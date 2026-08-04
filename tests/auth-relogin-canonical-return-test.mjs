@@ -11,6 +11,14 @@ const entry = readFileSync(
   "docs/static-preview/forge-alive/index.html",
   "utf8",
 );
+const authEntry = readFileSync(
+  "docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.js",
+  "utf8",
+);
+const touchGate = readFileSync(
+  "docs/static-preview/forge-alive-material3/public-auth-touch-gate.js",
+  "utf8",
+);
 
 test("second Google login cannot inherit the internal material3 pathname", () => {
   assert.match(
@@ -83,4 +91,11 @@ test("retired pre-redesign authority cannot republish over the current Beta 1 sh
     existsSync("tests/restore-productive-canonical-authority-test.mjs"),
     false,
   );
+});
+
+test("every login path returns through the canonical public entry", () => {
+  assert.match(authEntry, /new URL\('\/ForgeOS\/static-preview\/forge-alive\/'/);
+  assert.match(touchGate, /new URL\("\/ForgeOS\/static-preview\/forge-alive\/"/);
+  assert.doesNotMatch(authEntry, /new URL\(url\.pathname/);
+  assert.doesNotMatch(touchGate, /new URL\(current\.pathname/);
 });

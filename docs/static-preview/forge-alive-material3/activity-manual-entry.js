@@ -60,11 +60,11 @@ function applyDemoBoundary(root) {
 function render(root) {
   root.innerHTML = `
     <section class="activity-manual-entry organic-card" data-activity-manual-entry>
-      <div><p class="section-kicker accent">ACCIÓN RÁPIDA</p><h2>Registrar actividad</h2><p>Crea un hecho estructurado en FES. Las notas libres no forman parte del contrato vigente.</p></div>
+      <div><p class="section-kicker accent">ACCIÓN RÁPIDA</p><h2>Registrar actividad</h2><p>Guarda una actividad confirmada y relaciónala con la persona, oportunidad o póliza correcta.</p></div>
       <button type="button" data-open-manual-activity>+ Registrar</button>
       <dialog class="activity-entry-dialog" data-manual-activity-dialog>
         <form method="dialog" data-manual-activity-form>
-          <header><div><p class="section-kicker accent">FES · CAPTURA MANUAL</p><h2>Registrar actividad confirmada</h2></div><button type="button" data-close-manual-activity aria-label="Cerrar">×</button></header>
+          <header><div><p class="section-kicker accent">NUEVA ACTIVIDAD</p><h2>Registrar actividad confirmada</h2></div><button type="button" data-close-manual-activity aria-label="Cerrar">×</button></header>
           <div class="activity-entry-dialog__body">
             <label>Tipo<select name="kind"><option value="ACTIVITY_CONTEXT_ADDED">Interacción</option><option value="APPOINTMENT_SCHEDULED">Cita agendada</option><option value="DUE_ACTION_CREATED">Seguimiento pendiente</option></select></label>
             <label>Persona, prospecto o póliza relacionada<input name="relatedReference" list="forge-activity-related-options" required maxlength="180" placeholder="Busca o escribe una referencia gobernada"><datalist id="forge-activity-related-options" data-manual-activity-related-options></datalist></label>
@@ -94,17 +94,18 @@ function fields(form) {
   form.querySelectorAll("[data-activity-appointment-field]").forEach(node => { node.hidden = kind !== "APPOINTMENT_SCHEDULED"; });
 }
 
-async function loadRelatedOptions(root) {
+async function loadRelatedOptions(root, { signal, selectedGeneration, currentGeneration, allowedReferences } = {}) {
   const list = root.querySelector("[data-manual-activity-related-options]");
   if (!list || list.dataset.loaded === "true") return;
   const bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B;
   const client = await bootstrap?.getClient?.();
   if (!client) throw new Error("No pudimos abrir el directorio relacionado.");
   const [people, policies, prospects] = await Promise.all([
-    client.from("commercial_people").select("person_reference,display_name").is("archived_at", null).limit(50),
-    client.from("canonical_policies").select("policy_reference,policy_number").is("archived_at", null).limit(50),
-    client.from("prospects").select("id,display_name").is("archived_at", null).limit(50),
+    client.from("commercial_people").select("person_reference,display_name").is("archived_at", null).limit(50).abortSignal(signal),
+    client.from("canonical_policies").select("policy_reference,policy_number").is("archived_at", null).limit(50).abortSignal(signal),
+    client.from("prospects").select("id,display_name").is("archived_at", null).limit(50).abortSignal(signal),
   ]);
+  if (signal?.aborted || selectedGeneration !== currentGeneration?.()) return;
   const failed = [people, policies, prospects].find(result => result.error);
   if (failed) throw new Error("No pudimos leer todas las entidades relacionadas.");
   const values = [
@@ -112,6 +113,8 @@ async function loadRelatedOptions(root) {
     ...(policies.data || []).map(item => [item.policy_reference, `Póliza ${item.policy_number}`]),
     ...(prospects.data || []).map(item => [`prospect:${item.id}`, item.display_name]),
   ].filter(([reference]) => reference);
+  allowedReferences.clear();
+  values.forEach(([reference]) => allowedReferences.add(reference));
   list.replaceChildren(...values.map(([reference, label]) => {
     const option = document.createElement("option");
     option.value = reference;
@@ -157,6 +160,8 @@ export function createManualActivityEntry({ root } = {}) {
   let generation = 0;
   let runtime = null;
   let events = new AbortController();
+  let relatedController = null;
+  const allowedReferences = new Set();
 
   async function save() {
     const selectedGeneration = ++generation;
@@ -166,7 +171,7 @@ export function createManualActivityEntry({ root } = {}) {
     errorNode.hidden = true;
     saveButton.disabled = true;
     saveButton.setAttribute("aria-busy", "true");
-    statusNode.textContent = "Guardando en FES…";
+    statusNode.textContent = "Guardando actividad…";
     try {
       if (demoSession()) throw new Error("La cuenta demo es de solo lectura.");
       const { canonical, browser } = await loadAuthority();
@@ -180,6 +185,7 @@ export function createManualActivityEntry({ root } = {}) {
       const kind = form.elements.kind.value;
       const reference = String(form.elements.relatedReference.value || "").trim();
       if (!/^[A-Za-z0-9._:@/-]{1,180}$/.test(reference)) throw new Error("Usa una referencia gobernada válida.");
+      if (!allowedReferences.has(reference)) throw new Error("Selecciona una persona, póliza o prospecto de la lista.");
       const evidenceReference = opaque("evidence:user-confirmation");
       const identity = opaque("manual-activity");
       const specific = eventPayload(kind, form, reference);
@@ -218,7 +224,7 @@ export function createManualActivityEntry({ root } = {}) {
       });
       const receipt = await runtime.syncOnce();
       if (selectedGeneration !== generation || !dialog.open) return;
-      statusNode.textContent = receipt?.push_failed ? "FAILED · el evento permanece pendiente de sincronización." : "IMPORTED · actividad confirmada en FES.";
+      statusNode.textContent = receipt?.push_failed ? "No pudimos completar el envío. La actividad queda pendiente para reintentar." : "Actividad guardada correctamente.";
       if (!receipt?.push_failed) {
         globalThis.dispatchEvent(new CustomEvent("forge:manual-activity-created", { detail: Object.freeze({ eventId: event.event_id, kind }) }));
         globalThis.setTimeout(() => { if (dialog.open) dialog.close(); }, 650);
@@ -240,8 +246,16 @@ export function createManualActivityEntry({ root } = {}) {
       fields(form);
       dialog.showModal();
       const status = form.querySelector("[data-manual-activity-status]");
-      status.textContent = "Cargando relaciones gobernadas…";
-      loadRelatedOptions(root).then(() => { if (dialog.open) status.textContent = "Listo para registrar."; })
+      status.textContent = "Buscando personas y pólizas…";
+      relatedController?.abort("related-options-replaced");
+      relatedController = new AbortController();
+      const selectedGeneration = generation;
+      loadRelatedOptions(root, {
+        signal: relatedController.signal,
+        selectedGeneration,
+        currentGeneration: () => generation,
+        allowedReferences,
+      }).then(() => { if (dialog.open && selectedGeneration === generation) status.textContent = "Listo para registrar."; })
         .catch(error => { if (dialog.open) status.textContent = error.message; });
     }
     if (event.target.closest("[data-close-manual-activity]")) dialog.close();
@@ -254,8 +268,8 @@ export function createManualActivityEntry({ root } = {}) {
 
   const api = Object.freeze({
     mount() { mounted = true; root.hidden = false; },
-    unmount() { mounted = false; generation += 1; dialog.close(); root.hidden = true; },
-    async scrub() { generation += 1; dialog.close(); form.reset(); root.querySelector("[data-manual-activity-related-options]")?.replaceChildren(); root.querySelector("[data-manual-activity-related-options]")?.removeAttribute("data-loaded"); await runtime?.close?.(); runtime = null; },
+    unmount() { mounted = false; generation += 1; relatedController?.abort("activity-unmounted"); allowedReferences.clear(); dialog.close(); root.hidden = true; },
+    async scrub() { generation += 1; relatedController?.abort("activity-scrubbed"); relatedController = null; allowedReferences.clear(); dialog.close(); form.reset(); root.querySelector("[data-manual-activity-related-options]")?.replaceChildren(); root.querySelector("[data-manual-activity-related-options]")?.removeAttribute("data-loaded"); await runtime?.close?.(); runtime = null; },
     async destroy() { await api.scrub(); events.abort(); delete root[STATE]; },
     diagnostics() { return Object.freeze({ mounted, productiveAuthority: "FES02", rawNotesAllowed: false }); },
   });

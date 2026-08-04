@@ -49,7 +49,7 @@ function setPanelError(message) {
 
 function canonicalRedirect() {
   const current = new URL(location.href);
-  const redirect = new URL(current.pathname, current.origin);
+  const redirect = new URL("/ForgeOS/static-preview/forge-alive/", current.origin);
   redirect.searchParams.set("nav", current.searchParams.get("nav") || "inicio");
   if (current.searchParams.get("v")) {
     redirect.searchParams.set("v", current.searchParams.get("v"));

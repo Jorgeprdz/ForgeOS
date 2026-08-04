@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { parseCsv, mapRows } from "../docs/static-preview/forge-alive-material3/cartera-policy-bulk-import.js";
+import { parseCsv, mapRows, validateRecords } from "../docs/static-preview/forge-alive-material3/cartera-policy-bulk-import.js";
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -19,6 +19,26 @@ test("policy CSV ingestion classifies valid, invalid and duplicate rows before p
   assert.equal(records[2].state, "INVALID");
 });
 
+test("policy import rejects oversized files instead of silently truncating them", () => {
+  const rows = [["Titular", "Número de póliza", "Producto"]];
+  for (let index = 0; index < 501; index += 1) rows.push([`Persona ${index}`, `P-${index}`, "Vida"]);
+  assert.throws(() => mapRows(rows, "grande.csv"), /501 filas.*máximo permitido es 500/);
+});
+
+test("editing a bulk row revalidates required fields and duplicates", () => {
+  const records = mapRows([
+    ["Titular", "Número de póliza", "Producto"],
+    ["Ana", "P-1", "Vida"],
+    ["Luis", "P-2", "Vida"],
+  ], "polizas.csv");
+  records[1].draft.policyNumber = "P-1";
+  validateRecords(records);
+  assert.equal(records[1].state, "DUPLICATE_SUSPECTED");
+  records[1].draft.policyNumber = "P-3";
+  validateRecords(records);
+  assert.equal(records[1].state, "READY_TO_IMPORT");
+});
+
 test("Cartera exposes governed manual, multi-PDF and CSV/XLSX flows", async () => {
   const [intake, bulk] = await Promise.all([
     read("docs/static-preview/forge-alive-material3/cartera-document-intake.js"),
@@ -33,7 +53,10 @@ test("Cartera exposes governed manual, multi-PDF and CSV/XLSX flows", async () =
   assert.match(bulk, /DUPLICATE_SUSPECTED/);
   assert.match(bulk, /PARTIALLY_IMPORTED/);
   assert.match(bulk, /Reintentar fallidas/);
-  assert.match(bulk, /xlsx@0\.18\.5/);
+  assert.match(bulk, /ForgeSafeWorkbookDecoder/);
+  assert.doesNotMatch(bulk, /cdn\.jsdelivr\.net|https:\/\//);
+  assert.match(bulk, /button\.dataset\.importing/);
+  assert.match(bulk, /currentUserId !== sessionUserId/);
   assert.doesNotMatch(bulk, /\.from\(|\.insert\(|\.upsert\(/);
 });
 
