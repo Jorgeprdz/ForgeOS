@@ -475,7 +475,9 @@ async function capture(page, directory, label, options = {}) {
       humanApprovalRequired:
         document.querySelector("[data-nash-approval-status]") !== null,
       automaticSendPerformed: false,
-      authJpVisible: visibleCount(".hero .profile[data-forge-auth-avatar]") > 0,
+      authJpVisible:
+        visibleCount("[data-forge-auth-open]") > 0
+        || visibleCount(".hero .profile[data-forge-auth-avatar]") > 0,
       authPanelVisible: visibleCount("[data-forge-auth-panel]") > 0,
       googleAvatarVisible: visibleCount('.hero .profile[data-forge-auth-avatar] img') > 0,
       privateDataPurged:
@@ -903,9 +905,11 @@ async function captureViewport(browser, viewport, fixture) {
       directory,
       "01-home-full",
     );
-    const jp = page.locator(".hero .profile[data-forge-auth-avatar]").first();
-    await jp.waitFor({ state: "visible", timeout: 10_000 });
-    await jp.click();
+    const authEntry = page.locator(
+      "[data-forge-auth-open]:visible, .hero .profile[data-forge-auth-avatar]:visible",
+    ).first();
+    await authEntry.waitFor({ state: "visible", timeout: 10_000 });
+    await authEntry.click();
     await page.locator("[data-forge-auth-google]").waitFor({ state: "visible", timeout: 10_000 });
     result.routes.authAnonymous = await capture(page, directory, "01a-auth-anonymous");
     await page.locator("[data-forge-auth-google]").click();
