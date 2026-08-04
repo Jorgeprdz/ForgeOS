@@ -40,12 +40,12 @@ async function materializeRuntime(root, engineHost, surface) {
     const sourceUrl = new URL(
       import.meta.url.includes("/docs/static-preview/")
         ? "../forge-alive/nueva-cotizacion/index.html"
-        : "../forge-alive-runtime/nueva-cotizacion/index.html",
+        : "../quote-engine/nueva-cotizacion/index.html",
       import.meta.url,
     );
     const response = await fetch(sourceUrl);
     if (!response.ok) {
-      throw new Error(`Quotes source unavailable: ${response.status}`);
+      throw new Error(`Quotes engine unavailable: ${response.status}`);
     }
 
     const source = await response.text();
@@ -176,6 +176,7 @@ async function materializeRuntime(root, engineHost, surface) {
 
     for (const script of documentSource.querySelectorAll("script")) {
       if (
+        script.hasAttribute("data-forge-engine-standalone-guard") ||
         script.src.includes("forge-alive-mobile-nav-r16c5j")
       ) {
         continue;
