@@ -19,6 +19,11 @@ on:
         description: Stable evidence RUN_ID (YYYYMMDD_HHMMSS)
         required: true
         type: string
+      validated_sha:
+        description: Exact Contact Books SHA; leave empty for BETA1 022A
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -29,6 +34,7 @@ concurrency:
 
 jobs:
   validate-seed-and-seal:
+    if: inputs.validated_sha == ''
     runs-on: ubuntu-24.04
     environment: 067g17a1-remote-acceptance
     env:
@@ -98,3 +104,11 @@ jobs:
           name: beta1-022a-${{ inputs.run_id }}
           path: artifacts/beta1-022a/
           if-no-files-found: error
+
+  contact-books-remote-acceptance:
+    if: inputs.validated_sha != ''
+    uses: ./.github/workflows/contact-books-001-remote-acceptance.yml
+    with:
+      validated_sha: ${{ inputs.validated_sha }}
+      run_id: ${{ inputs.run_id }}
+    secrets: inherit

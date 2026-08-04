@@ -12,6 +12,33 @@ on:
         required: true
         default: '20260803_213631'
         type: string
+  workflow_call:
+    inputs:
+      validated_sha:
+        description: Exact commit SHA to validate
+        required: true
+        type: string
+      run_id:
+        description: Synthetic dataset RUN_ID
+        required: true
+        type: string
+    secrets:
+      SUPABASE_PROJECT_REF:
+        required: false
+      SUPABASE_URL:
+        required: false
+      SUPABASE_ANON_KEY:
+        required: false
+      SUPABASE_ACCESS_TOKEN:
+        required: false
+      ADVISOR_A_EMAIL:
+        required: false
+      ADVISOR_A_PASSWORD:
+        required: false
+      ADVISOR_B_EMAIL:
+        required: false
+      ADVISOR_B_PASSWORD:
+        required: false
 
 permissions:
   contents: read
