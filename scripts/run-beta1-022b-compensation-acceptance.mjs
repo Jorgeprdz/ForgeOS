@@ -45,7 +45,7 @@ for (const [owner, item] of Object.entries(config)) {
     paymentEvidenceReference: `payment-evidence:beta1022b:${RUN_ID}:${owner}`,
     paymentAmount: 1200 + (owner === 'A' ? 10 : 20), currency: 'MXN', paymentDate: `${item.period}-01`,
     periodCoveredStart: `${item.period}-01`, periodCoveredEnd: `${item.period}-28`, paymentSource: 'payment_proof',
-    evidenceReferences: [`evidence:beta1022b:${RUN_ID}:${owner}:confirmed-payment`], confirmationState: 'CONFIRMED',
+    evidenceReferences: [`evidence:beta1022b:${RUN_ID}:${owner}:confirmed-payment`], confirmationState: 'confirmed',
     idempotencyKey: `payment:beta1022b:${RUN_ID}:${owner}`,
   });
   assert.ok(payment.paymentEventReference, `${owner}_CONFIRMED_PAYMENT_EVENT_MISSING`);
