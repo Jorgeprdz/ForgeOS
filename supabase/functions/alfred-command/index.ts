@@ -5,12 +5,13 @@ import {
   buildDeterministicResponse,
   buildEnvelope,
   buildPrompt,
+  isExplicitChatbotRequest,
   normalizeModelResponse,
   normalizeRequest,
   parseJsonObject,
 } from "./logic.mjs";
 
-const FUNCTION_VERSION = "alfred-command-v1";
+const FUNCTION_VERSION = "alfred-chatbot-entry-v2";
 const MODEL_VERSION = "gemini-3.1-flash-lite";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -57,6 +58,16 @@ serve(async (request) => {
     const requestBody = normalizeRequest(await request.json());
     if (!requestBody.command) {
       return response({ error: "command_required" }, 400);
+    }
+    if (!isExplicitChatbotRequest(requestBody)) {
+      return response({
+        error: "command_os_required",
+        executionPath: "COMMAND_OS_REQUIRED",
+        commandAuthority: "COMMAND_OS",
+        finalAuthority: "HUMAN",
+        requiresHumanApproval: true,
+        mutationsPerformed: false,
+      }, 409);
     }
 
     const fallback = buildDeterministicResponse({
@@ -110,7 +121,10 @@ serve(async (request) => {
     }
   } catch (_error) {
     return response({
-      error: "alfred_unavailable",
+      error: "alfred_chatbot_unavailable",
+      executionPath: "ALFRED_CHATBOT_ENTRY_FAILED_SAFE",
+      commandAuthority: "COMMAND_OS",
+      finalAuthority: "HUMAN",
       requiresHumanApproval: true,
       mutationsPerformed: false,
     }, 503);
