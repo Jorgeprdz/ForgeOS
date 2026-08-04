@@ -13,7 +13,7 @@ const {
   formatUdiWithMxn,
   resolveAcceptedRateMetadata,
 } = await import(
-  "../docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js"
+  "../docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js"
 );
 
 const verifiedCalculation = {
@@ -65,7 +65,7 @@ for (const invalidMetadata of [
 
 const rendererSource = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js",
+    "../docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js",
     import.meta.url,
   ),
   "utf8",

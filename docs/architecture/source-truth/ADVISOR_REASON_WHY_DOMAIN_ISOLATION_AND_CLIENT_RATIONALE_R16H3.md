@@ -47,7 +47,7 @@ Forbidden uses:
 
 Owner:
 
-`docs/static-preview/quote-preview-live/forge-client-recommendation-rationale-boundary.js`
+`docs/static-preview/quote-runtime/forge-client-recommendation-rationale-boundary.js`
 
 Subject:
 

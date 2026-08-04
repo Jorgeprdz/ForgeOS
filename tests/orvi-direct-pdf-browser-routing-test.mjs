@@ -8,7 +8,7 @@ import {
   parseOrviPdfTextToAcceptedQuotePacket,
   parsePdfFileToAcceptedQuotePacket,
   parsePdfTextToAcceptedQuotePacket,
-} from "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js";
+} from "../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js";
 import {
   validateOrviPdfParserEnvelope,
 } from "../product-intelligence/quotes/orvi-pdf-parser-contract.js";
@@ -31,7 +31,7 @@ const page = await readFile(
   "utf8",
 );
 const browserParserSource = await readFile(
-  new URL("../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js", import.meta.url),
+  new URL("../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js", import.meta.url),
   "utf8",
 );
 

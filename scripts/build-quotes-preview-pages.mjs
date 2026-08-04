@@ -101,24 +101,6 @@ for (const file of publicFiles) {
   fs.copyFileSync(file, target);
 }
 
-const legacyForgeAlivePublished = path.join(
-  siteDir,
-  "static-preview",
-  "forge-alive",
-);
-const legacyForgeAliveRuntimeTarget = path.join(
-  siteDir,
-  "static-preview",
-  "forge-alive-runtime",
-);
-if (!fs.existsSync(legacyForgeAlivePublished)) {
-  throw new Error("legacy Forge Alive public runtime was not prepared");
-}
-fs.rmSync(legacyForgeAliveRuntimeTarget, { recursive: true, force: true });
-fs.cpSync(legacyForgeAlivePublished, legacyForgeAliveRuntimeTarget, {
-  recursive: true,
-});
-
 const cleanForgeAliveSource = path.join(
   "docs",
   "static-preview",
@@ -213,12 +195,11 @@ const required = [
   "static-preview/forge-alive/index.html",
   "static-preview/forge-alive/app.js",
   "static-preview/forge-alive/quotes-module.js",
-  "static-preview/forge-alive/index-quote-calculator-parity.html",
   "static-preview/forge-alive/quote-runtime-pages-rate-fetch-bridge-m05e010.js",
   "static-preview/forge-alive/quote-runtime-vida-mujer-visual-m05e010.js",
   "static-preview/forge-alive/segubeca-progressive-layout.js",
   "static-preview/forge-alive/quote-runtime-printable-presence-guard-m05w002.js",
-  "static-preview/forge-alive-runtime/nueva-cotizacion/index.html",
+  "static-preview/quote-engine/nueva-cotizacion/index.html",
   segubecaAuthorityAsset,
   "env.js",
   "build-info.json",

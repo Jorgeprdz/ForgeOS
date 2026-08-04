@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { parseSolucionlineSegubecaQuote } from "../docs/static-preview/quote-preview-live/forge-segubeca-solucionline-parser.js";
-import { parseSegubecaPdfTextToAcceptedQuotePacket, parsePdfTextToAcceptedQuotePacket } from "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js";
-import { buildSegubecaDashboardModel } from "../docs/static-preview/quote-preview-live/forge-segubeca-product-dashboard-adapter.js";
+import { parseSolucionlineSegubecaQuote } from "../docs/static-preview/quote-runtime/forge-segubeca-solucionline-parser.js";
+import { parseSegubecaPdfTextToAcceptedQuotePacket, parsePdfTextToAcceptedQuotePacket } from "../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js";
+import { buildSegubecaDashboardModel } from "../docs/static-preview/quote-runtime/forge-segubeca-product-dashboard-adapter.js";
 
 const sampleText = `
 ESTUDIO DE VIDA INDIVIDUAL GENERAR ESTUDIO

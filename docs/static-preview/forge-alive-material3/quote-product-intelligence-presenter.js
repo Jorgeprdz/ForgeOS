@@ -1,15 +1,15 @@
 import {
   buildImaginaSerDashboardModel,
   isImaginaSerProduct,
-} from "../quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js";
+} from "../quote-runtime/forge-imagina-ser-product-dashboard-adapter.js";
 import {
   buildSegubecaDashboardModel,
   isSegubecaProduct,
-} from "../quote-preview-live/forge-segubeca-product-dashboard-adapter.js";
+} from "../quote-runtime/forge-segubeca-product-dashboard-adapter.js";
 import {
   buildOrviDashboardModel,
   isOrviProduct,
-} from "../quote-preview-live/forge-orvi-product-dashboard-adapter.js";
+} from "../quote-runtime/forge-orvi-product-dashboard-adapter.js";
 import {
   buildVidaMujerDashboardModel,
   isVidaMujerProduct,

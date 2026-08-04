@@ -15,8 +15,8 @@ const moduleSource = read(
 const productiveApp = read(
   "../docs/static-preview/forge-alive-material3/app.js",
 );
-const cacheProofEntrypoint = read(
-  "../docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html",
+const productiveIndex = read(
+  "../docs/static-preview/forge-alive-material3/index.html",
 );
 const runtimeHotfix = read(
   "../docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js",
@@ -74,6 +74,8 @@ assert.match(adapter, /metadata\.stale === true/);
 assert.doesNotMatch(adapter, /const\s+CURRENT_UDI\s*=\s*\d/);
 
 assert.match(moduleSource, /quotes-result-adapter\.js\?v=quote-calculator-parity-001/);
+assert.match(moduleSource, /quote-engine\/nueva-cotizacion\/index\.html/);
+assert.doesNotMatch(moduleSource, /forge-alive-runtime/);
 assert.match(productiveApp, /quotes-module\.js\?v=quote-calculator-parity-006/);
 assert.match(
   productiveApp,
@@ -114,11 +116,13 @@ assert.ok(
   productiveApp.indexOf("quote-runtime-pages-rate-fetch-bridge-m05e010.js") <
   productiveApp.indexOf("quote-runtime-hotfix-m05e003.js"),
 );
-assert.match(cacheProofEntrypoint, /app\.js\?v=quote-calculator-parity-009/);
-assert.match(cacheProofEntrypoint, /source=quote-calculator-parity-009/);
-assert.match(cacheProofEntrypoint, /vidaMujerHandoff = "M05E-009"/);
-assert.match(cacheProofEntrypoint, /CALCULADORAS M05E-006/);
-assert.match(cacheProofEntrypoint, /cache: "no-store"/);
+
+assert.match(productiveIndex, /data-forge-application/);
+assert.match(productiveIndex, /data-forge-quotes-module/);
+assert.match(productiveIndex, /app\.js\?v=/);
+assert.doesNotMatch(productiveIndex, /quote-calculator-parity-009/);
+assert.doesNotMatch(productiveIndex, /CALCULADORAS M05E-006/);
+
 assert.match(runtimeHotfix, /MXN hoy/);
 assert.match(pagesRateBridge, /functions\/v1\/banxico-rates/);
 assert.match(pagesRateBridge, /cacheStatus: "LIVE_REFRESHED"/);
@@ -154,7 +158,7 @@ console.log("PASS UI-M05E quote calculator Product Intelligence restoration", {
   actionsWired: true,
   printableRefreshWired: true,
   productiveEntrypointWired: true,
-  cacheProofEntrypoint: true,
+  canonicalEntrypointOnly: true,
   optionalClientUx: true,
   compactPrintableActions: true,
   printableHistoryRestored: true,

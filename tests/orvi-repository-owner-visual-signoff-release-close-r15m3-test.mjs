@@ -18,9 +18,9 @@ const [
   read("docs/architecture/source-truth/ORVI_REPOSITORY_OWNER_VISUAL_SIGNOFF_AND_RELEASE_CLOSE_R15M3.md"),
   read("docs/evidence/r15m3-orvi-repository-owner-visual-signoff-and-release-close.md"),
   read("docs/evidence/r15m3-orvi-repository-owner-visual-signoff.json"),
-  read("docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js"),
-  read("docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js"),
-  read("docs/static-preview/quote-preview-live/forge-orvi-product-dashboard-adapter.js"),
+  read("docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js"),
+  read("docs/static-preview/quote-runtime/forge-benefit-summary-layout.js"),
+  read("docs/static-preview/quote-runtime/forge-orvi-product-dashboard-adapter.js"),
 ]);
 
 const evidence = JSON.parse(evidenceJson);

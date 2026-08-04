@@ -2,13 +2,18 @@ import { copyFile, readFile, writeFile } from 'node:fs/promises';
 
 const indexPath = new URL('../docs/static-preview/forge-alive-material3/index.html', import.meta.url);
 const material3Root = new URL('../docs/static-preview/forge-alive-material3/', import.meta.url);
-const productiveRoot = new URL('../docs/static-preview/forge-alive/', import.meta.url);
+
+const canonicalAuthorities = [
+  'forge-alive-auth-entry-067g17b1.css',
+  'forge-alive-auth-entry-067g17b1.js',
+  'forge-alive-public-config-067g17a1.js',
+];
 
 await Promise.all([
-  copyFile(
-    new URL('forge-alive-auth-entry-067g17b1.css', productiveRoot),
-    new URL('forge-alive-auth-entry-067g17b1.css', material3Root),
-  ),
+  ...canonicalAuthorities.map(async (name) => {
+    const source = await readFile(new URL(name, material3Root), 'utf8');
+    if (!source.trim()) throw new Error(`MATERIAL3_CANONICAL_AUTHORITY_EMPTY_${name}`);
+  }),
   copyFile(
     new URL('../advisor-os/contact-books/bulk-import-engine.js', import.meta.url),
     new URL('bulk-import-engine-pages.js', material3Root),
@@ -93,4 +98,5 @@ for (const required of [
 await writeFile(indexPath, index);
 console.log('MATERIAL3_AUTH_FIRST_PAINT_FAIL_CLOSED=PASS');
 console.log('MATERIAL3_AUTH_FIRST_PAINT_STYLED=PASS');
+console.log('MATERIAL3_CANONICAL_AUTHORITY=PASS');
 console.log('MATERIAL3_BULK_ENGINE_PAGES_ASSET=STAGED');

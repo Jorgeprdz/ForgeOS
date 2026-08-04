@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import {
   SNAPSHOT_TYPE,
   createAcceptedQuoteReviewSnapshotBoundary,
-} from "../../docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js";
+} from "../../docs/static-preview/quote-runtime/forge-accepted-quote-review-snapshot.js";
 
 function pass(index, label) {
   console.log(`PASS ${index} - ${label}`);
@@ -212,7 +212,7 @@ pass(9, "both accepted quote and calculation are required");
 
 const bridgeSource = readFileSync(
   new URL(
-    "../../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+    "../../docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     import.meta.url,
   ),
   "utf8",

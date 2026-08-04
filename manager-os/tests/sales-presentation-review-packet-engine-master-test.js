@@ -63,7 +63,7 @@ assert.throws(
 pass(5, "review authorization is immutable");
 
 const bridge = readFileSync(
-  new URL("../../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js", import.meta.url),
+  new URL("../../docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js", import.meta.url),
   "utf8",
 );
 assert.match(bridge, /buildSalesPresentationCoreReviewBundle/);

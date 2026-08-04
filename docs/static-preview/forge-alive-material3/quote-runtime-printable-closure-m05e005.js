@@ -179,13 +179,28 @@ function icon(name) {
   return icons[name] || "";
 }
 
+function setAttributeIfChanged(element, name, value) {
+  if (!element || element.getAttribute(name) === value) return false;
+  element.setAttribute(name, value);
+  return true;
+}
+
 function hideLegacySurfaces() {
-  document.querySelector('[data-quote-human-review-m05e003]')
-    ?.setAttribute("hidden", "");
-  document.querySelector('[data-forge-qpd06-actions="true"]')
-    ?.setAttribute("data-m05e005-legacy-hidden", "true");
-  document.querySelector('[data-forge-qpd06-modal="true"]')
-    ?.setAttribute("data-m05e005-legacy-hidden", "true");
+  const humanReview = document.querySelector(
+    '[data-quote-human-review-m05e003]',
+  );
+  if (humanReview && !humanReview.hidden) humanReview.hidden = true;
+
+  setAttributeIfChanged(
+    document.querySelector('[data-forge-qpd06-actions="true"]'),
+    "data-m05e005-legacy-hidden",
+    "true",
+  );
+  setAttributeIfChanged(
+    document.querySelector('[data-forge-qpd06-modal="true"]'),
+    "data-m05e005-legacy-hidden",
+    "true",
+  );
   document.querySelector("[data-client-review-pending]")?.remove();
 }
 
@@ -502,11 +517,15 @@ function refresh() {
   const card = ensureCard();
   const state = getController().state();
   if (card) {
-    card.hidden = !state.acceptedQuoteReady;
+    const shouldHide = !state.acceptedQuoteReady;
+    if (card.hidden !== shouldHide) card.hidden = shouldHide;
     card.querySelectorAll("[data-m05e005-action]").forEach((button) => {
       const action = button.dataset.m05e005Action;
       button.disabled = action !== "history" && !state.acceptedQuoteReady;
-      button.setAttribute("aria-disabled", String(button.disabled));
+      const ariaDisabled = String(button.disabled);
+      if (button.getAttribute("aria-disabled") !== ariaDisabled) {
+        button.setAttribute("aria-disabled", ariaDisabled);
+      }
     });
     if (!card.querySelector("[data-m05e005-status]")?.textContent) {
       status("Documento A4 vertical listo para generar.");
@@ -522,7 +541,10 @@ function refresh() {
 function scheduleRefresh() {
   if (scheduled) return;
   scheduled = true;
-  queueMicrotask(() => {
+  const enqueue = globalThis.requestAnimationFrame
+    ? globalThis.requestAnimationFrame.bind(globalThis)
+    : (callback) => globalThis.setTimeout(callback, 0);
+  enqueue(() => {
     scheduled = false;
     refresh();
   });

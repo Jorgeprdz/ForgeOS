@@ -1,4 +1,4 @@
-const ENTRYPOINT_VERSION = "SEGUBECA-PRODUCTIVE-UI-ENTRYPOINT-001.16";
+const ENTRYPOINT_VERSION = "SEGUBECA-PRODUCTIVE-UI-ENTRYPOINT-001.17";
 const AUTHORITY = "SEGUBECA_ACCEPTED_PRODUCT_CALCULATION";
 const AUTHORITY_VERSION = "SEGUBECA-CALCULATION-AUTHORITY-001.1";
 
@@ -227,6 +227,12 @@ globalThis.addEventListener(
   () => {
     ensureAcceptanceDelegate();
     ensureAuthorityNote();
+    const button = document.querySelector(
+      '[data-quote-next-action="confirm_quote"]',
+    );
+    if (button?.dataset.segubecaHumanConfirmationCapture === "delegated") {
+      button.dataset.segubecaHumanConfirmationCapture = "confirmed";
+    }
     layoutRuntime()?.schedule?.("segubeca-quote-confirmed");
   },
 );
@@ -252,20 +258,11 @@ globalThis.addEventListener(
     );
     if (!button || projection?.dataset?.productDashboard !== "segubeca") return;
 
+    // Material 3 owns the click and calls the governed delegate exactly once.
+    // This capture listener only guarantees that the delegate is installed;
+    // invoking confirmation here as well would create two concurrent transitions.
     ensureAcceptanceDelegate();
-    button.dataset.segubecaHumanConfirmationCapture = "pending";
-    void confirmHumanSegubeca()
-      .then((snapshot) => {
-        if (!snapshot) {
-          throw new Error("SEGUBECA_ACCEPTED_REVIEW_SNAPSHOT_REQUIRED");
-        }
-        button.dataset.segubecaHumanConfirmationCapture = "confirmed";
-      })
-      .catch((error) => {
-        button.dataset.segubecaHumanConfirmationCapture = "error";
-        button.dataset.segubecaHumanConfirmationError =
-          error?.message || String(error);
-      });
+    button.dataset.segubecaHumanConfirmationCapture = "delegated";
   },
   true,
 );

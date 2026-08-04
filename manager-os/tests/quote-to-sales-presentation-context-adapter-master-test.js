@@ -8,7 +8,7 @@ import {
 
 import {
   buildClientRecommendationRationaleBoundary,
-} from "../../docs/static-preview/quote-preview-live/forge-client-recommendation-rationale-boundary.js";
+} from "../../docs/static-preview/quote-runtime/forge-client-recommendation-rationale-boundary.js";
 
 function pass(message) {
   console.log(`PASS ${message}`);

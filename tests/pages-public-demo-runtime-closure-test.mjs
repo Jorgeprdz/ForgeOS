@@ -62,8 +62,8 @@ test("Pages runtime closure publishes demo, printable and CRS 09-10 dependencies
       "static-preview/forge-alive/person-workspace-entry-bridge.css",
       "static-preview/forge-alive/person-intelligence-module.js",
       "static-preview/forge-alive/person-intelligence-module.css",
-      "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
-      "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css",
+      "static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js",
+      "static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.css",
       "forge-alive-pages-runtime-closure.json",
     ];
     for (const path of required) {
@@ -81,10 +81,22 @@ test("Pages runtime closure publishes demo, printable and CRS 09-10 dependencies
     assert.doesNotMatch(proxy, /\.\.\/\.\.\/\.\.\/advisor-os\//);
 
     const qpd = await readFile(
-      join(siteDir, "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js"),
+      join(
+        siteDir,
+        "static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js",
+      ),
       "utf8",
     );
     assert.match(qpd, /QPD06_PRODUCTIVE_ROUTE_BINDING_V1/);
+    await assert.rejects(
+      readFile(
+        join(
+          siteDir,
+          "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
+        ),
+      ),
+      { code: "ENOENT" },
+    );
 
     const lifecycle = await readFile(
       join(siteDir, "platform/event-evidence/quote-lifecycle-supabase-service.js"),
@@ -136,6 +148,7 @@ test("canonical verification rejects a false-green artifact with missing runtime
   for (const required of [
     "QPD_JS_URL",
     "QPD_CSS_URL",
+    "static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js",
     "PRINTABLE_READ_MODEL_URL",
     "QUOTE_LIFECYCLE_URL",
     "CLOSURE_MANIFEST_URL",
@@ -144,4 +157,8 @@ test("canonical verification rejects a false-green artifact with missing runtime
   ]) {
     assert.match(workflow, new RegExp(required));
   }
+  assert.doesNotMatch(
+    workflow,
+    /static-preview\/forge-alive\/forge-quote-printable-entrypoint-qpd06/,
+  );
 });

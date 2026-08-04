@@ -51,6 +51,61 @@ export * from "../../../static-preview/quote-preview-live/<module>.js";
 
 This preserves the authority's canonical repository imports while making the same imports resolvable in the GitHub Pages project-root layout.
 
+## Review 4 confirmation ownership closure
+
+The generated Pages artifact reached the productive SeguBeca projection and enabled the human confirmation control, but the same click was being handled twice:
+
+```text
+CAPTURE_LISTENER_CONFIRMATION=ACTIVE
+MATERIAL3_BUTTON_CONFIRMATION=ACTIVE
+RESULT=CONCURRENT_CONFIRMATION_TRANSITIONS
+```
+
+Review 4 leaves the Material 3 button as the single owner of the governed confirmation. The capture listener now only installs the accepted confirmation delegate and records delegation evidence; it does not execute a second confirmation.
+
+```text
+SEGUBECA_CONFIRMATION_OWNER=MATERIAL3_QUOTE_RESULT_ADAPTER
+SEGUBECA_CAPTURE_LISTENER=DELEGATE_ONLY
+DUPLICATE_CONFIRMATION_TRANSITION=REMOVED
+HUMAN_CONFIRMATION=REQUIRED
+AUTOMATIC_ACCEPTANCE=NO
+```
+
+The first rerun proved that a second synchronous boundary remained inside the accepted-event stack. The printable-state handoff was traversing bridge wrappers and refreshing printable state while `forge:accepted-quote-confirmed` was still being dispatched. Review 4 now defers that reconciliation to the next animation frame.
+
+```text
+PRINTABLE_HANDOFF_RECONCILIATION=DEFERRED
+ACCEPTED_EVENT_STACK_REENTRY=FORBIDDEN
+PRINTABLE_REFRESH_AFTER_CONFIRMATION=ASYNC_FRAME
+```
+
+The next rerun proved that the click still starved the browser main thread. M05E-005 used a document-wide MutationObserver whose callback scheduled `refresh()` through `queueMicrotask()`, while `refresh()` rewrote attributes observed by that same observer. Review 4 now coalesces refreshes on animation frames and makes observed attribute writes idempotent.
+
+```text
+M05E005_REFRESH_SCHEDULER=ANIMATION_FRAME
+M05E005_OBSERVED_WRITES=IDEMPOTENT
+MUTATION_MICROTASK_STARVATION=REMOVED
+```
+
+A further rerun kept failing before the asynchronous confirmation handler could return. M05Y was still traversing the accepted-quote bridge synchronously from the capture phase of the same click. Review 4 now persists identity from input/change state and defers final reconciliation outside the confirmation event stack.
+
+```text
+M05Y_CONFIRMATION_CAPTURE_WRITE=REMOVED
+M05Y_IDENTITY_RECONCILIATION=ANIMATION_FRAME
+M05Y_ACCEPTED_EVENT_PERSISTENCE=DEFERRED
+```
+
+The remaining feedback loop was isolated in M05W-002. When accepted actions were absent, the presence guard called `QPD.refresh()`. That refresh synchronously emitted `forge:qpd06-state`, which scheduled another microtask and repeated indefinitely when the printable authority could not mount. Review 4 now ignores self-generated QPD feedback during recovery, coalesces checks on animation frames, and uses bounded timer retries.
+
+```text
+M05W_QPD_REFRESH_REENTRY=FORBIDDEN
+M05W_SCHEDULER=ANIMATION_FRAME
+M05W_RETRY=BOUNDED_TIMER
+UNBOUNDED_QPD_MICROTASK_LOOP=REMOVED
+```
+
+No calculation, contractual value, PDF extraction, projection, persistence or mutation authority changed.
+
 ## Boundaries
 
 ```text

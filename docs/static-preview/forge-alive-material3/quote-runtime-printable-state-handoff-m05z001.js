@@ -1,8 +1,8 @@
 import {
   createAcceptedQuoteReviewSnapshotBoundary,
-} from "../quote-preview-live/forge-accepted-quote-review-snapshot.js";
+} from "../quote-runtime/forge-accepted-quote-review-snapshot.js";
 
-const VERSION = "M05Z-001";
+const VERSION = "M05Z-002";
 const UNDERLYING_KEYS = Object.freeze([
   "__m05z001UnderlyingBridge",
   "__m05e006UnderlyingBridge",
@@ -239,9 +239,12 @@ globalThis.addEventListener?.("forge:accepted-quote-confirmed", (event) => {
       || event?.detail?.acceptedQuoteReviewSnapshot,
     "accepted-event",
   );
-  reconcile("accepted-event");
-  globalThis.setTimeout(() => reconcile("accepted-event-retry-1"), 60);
-  globalThis.setTimeout(() => reconcile("accepted-event-retry-2"), 220);
+  // Never traverse or refresh the printable bridge inside the confirmation
+  // dispatch stack. Doing so can re-enter wrappers while the accepted
+  // snapshot is still being published. Reconcile on the next frame instead.
+  schedule("accepted-event");
+  globalThis.setTimeout(() => schedule("accepted-event-retry-1"), 60);
+  globalThis.setTimeout(() => schedule("accepted-event-retry-2"), 220);
 });
 
 globalThis.addEventListener?.("forge:quote-candidate-cleared", clear);

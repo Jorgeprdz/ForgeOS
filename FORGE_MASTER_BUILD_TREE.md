@@ -13787,8 +13787,8 @@ Miranda approval:
 
 Discovery findings:
 
-- the current Vida Mujer dashboard is rendered by `docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js`;
-- its visual tokens and desktop layout are installed by `docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js`;
+- the current Vida Mujer dashboard is rendered by `docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js`;
+- its visual tokens and desktop layout are installed by `docs/static-preview/quote-runtime/forge-benefit-summary-layout.js`;
 - both modules are loaded by `docs/static-preview/forge-alive/nueva-cotizacion/index.html`;
 - Vida Mujer is the approved visual reference, not the universal product logic;
 - the reusable pattern may include primary cards, chips, metric rows, color hierarchy, compact sections, recommended-benefit cards, secondary details, and explicit missing-information presentation;
@@ -13808,8 +13808,8 @@ Implementation boundaries:
 
 Candidate implementation surfaces for later review:
 
-- `docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js`;
-- `docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js`;
+- `docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js`;
+- `docs/static-preview/quote-runtime/forge-benefit-summary-layout.js`;
 - a new reusable product-dashboard template module named consistently with the existing quote-preview modules;
 - product-specific adapter/config modules only when separately authorized.
 
@@ -13949,7 +13949,7 @@ Miranda approval:
 
 Root cause:
 
-- `docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js` currently routes every direct PDF through `parseVidaMujerPdfTextToAcceptedQuotePacket()`;
+- `docs/static-preview/quote-runtime/forge-pdf-browser-parser.js` currently routes every direct PDF through `parseVidaMujerPdfTextToAcceptedQuotePacket()`;
 - non-Vida Mujer PDFs therefore receive the Vida Mujer-specific missing message even when the text identifies Imagina Ser;
 - the accepted JSON flow is separate and already reaches the R13C Imagina Ser dashboard adapter;
 - `product-intelligence/evidence/solucionline-retirement-parser.js` already provides the canonical candidate parser for Imagina Ser/Solucionline retirement quote text.
@@ -14069,10 +14069,10 @@ Required R13G visual implementation:
 
 R13G implementation allowlist:
 
-- `docs/static-preview/quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js`;
-- `docs/static-preview/quote-preview-live/forge-product-dashboard-template.js` only for a neutral reusable primitive;
-- `docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js` only for scoped reusable desktop CSS with Vida Mujer regression proof;
-- `docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js` only if strictly required for clean routing;
+- `docs/static-preview/quote-runtime/forge-imagina-ser-product-dashboard-adapter.js`;
+- `docs/static-preview/quote-runtime/forge-product-dashboard-template.js` only for a neutral reusable primitive;
+- `docs/static-preview/quote-runtime/forge-benefit-summary-layout.js` only for scoped reusable desktop CSS with Vida Mujer regression proof;
+- `docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js` only if strictly required for clean routing;
 - relevant files under `tests/`;
 - `docs/evidence/r13f-imagina-ser-desktop-visual-polish-and-real-pdf-qa.md` for final execution evidence.
 
@@ -14801,7 +14801,7 @@ Status: `PASS_AUTHORITY_RECONCILIATION`
 
 ### Reconciled repository surfaces
 
-- Verified-rate cache candidate: `docs/static-preview/quote-preview-live/forge-rate-cache.json`.
+- Verified-rate cache candidate: `docs/static-preview/quote-runtime/forge-rate-cache.json`.
 - Verified UDI calculator candidate: `docs/quote-preview-live/forge-quote-calculators.mjs`.
 - Generic projection math candidate: `orvi-mxn-conversion-engine.js`.
 - Legacy ORVI MXN converter: `orvi-client-report-test.js`, authority `NO`.
@@ -14929,8 +14929,8 @@ Status: `PASS_ORCHESTRATION_READINESS / REUSABLE_TEMPLATE_AUTHORITY_LOCKED`
 
 - ORVI must reuse the established Vida Mujer product-dashboard system.
 - Canonical template test: `tests/product-dashboard-template-test.mjs`.
-- Shared layout: `docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js`.
-- Shared renderer: `docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js`.
+- Shared layout: `docs/static-preview/quote-runtime/forge-benefit-summary-layout.js`.
+- Shared renderer: `docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js`.
 - Imagina Ser and SeguBeca remain existing consumers of the same dashboard system.
 - Creating a separate ORVI dashboard system is forbidden.
 

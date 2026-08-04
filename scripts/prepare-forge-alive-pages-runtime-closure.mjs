@@ -44,6 +44,8 @@ const QPD_CANONICAL_ASSETS = Object.freeze([
   "forge-quote-printable-entrypoint-qpd06.js",
   "forge-quote-printable-entrypoint-qpd06.css",
 ]);
+const QPD_SOURCE_ROOT = "docs/static-preview/quote-printable-entry";
+const QPD_PUBLIC_ROOT = "static-preview/quote-printable-entry";
 
 const QUOTE_PRINTABLE_PROXY_REWRITES = Object.freeze([
   Object.freeze({
@@ -197,12 +199,12 @@ async function rewriteQuotePrintableProxies(siteDir) {
 }
 
 async function publishCanonicalQpdAssets(siteDir) {
-  const sourceRoot = join(root, "docs/static-preview/forge-alive");
-  const canonicalRoot = join(siteDir, "static-preview/forge-alive");
-  await access(canonicalRoot);
+  const sourceRoot = join(root, QPD_SOURCE_ROOT);
+  const publicRoot = join(siteDir, QPD_PUBLIC_ROOT);
+  await access(sourceRoot);
 
   for (const file of QPD_CANONICAL_ASSETS) {
-    await copyExact(join(sourceRoot, file), join(canonicalRoot, file));
+    await copyExact(join(sourceRoot, file), join(publicRoot, file));
   }
 
   await access(join(siteDir, "static-preview/quote-printable-runtime/forge-quote-printable-route-controller.js"));
@@ -246,8 +248,8 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     "static-preview/forge-alive/person-workspace-entry-bridge.css",
     "static-preview/forge-alive/person-intelligence-module.js",
     "static-preview/forge-alive/person-intelligence-module.css",
-    "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
-    "static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css",
+    "static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js",
+    "static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.css",
   ];
   for (const file of requiredPublishedFiles) {
     await access(join(resolvedSiteDir, file));

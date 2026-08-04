@@ -27,8 +27,8 @@ jobs:
           PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones
           BUILD_INFO_URL: https://jorgeprdz.github.io/ForgeOS/build-info.json
           APP_JS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/app.js
-          QPD_JS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js
-          QPD_CSS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css
+          QPD_JS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js
+          QPD_CSS_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.css
           PRINTABLE_READ_MODEL_URL: https://jorgeprdz.github.io/ForgeOS/advisor-os/quotes/printable/quote-printable-read-model-m05e005.js
           QUOTE_LIFECYCLE_URL: https://jorgeprdz.github.io/ForgeOS/platform/event-evidence/quote-lifecycle-supabase-service.js
           CLOSURE_MANIFEST_URL: https://jorgeprdz.github.io/ForgeOS/forge-alive-pages-runtime-closure.json
@@ -120,7 +120,7 @@ jobs:
           for (const required of [
             'advisor-os/quotes/printable/quote-printable-read-model-m05e005.js',
             'platform/event-evidence/quote-lifecycle-supabase-service.js',
-            'static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js',
+            'static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js',
           ]) {
             if (!manifest.requiredPublishedFiles?.includes(required)) process.exit(1);
           }

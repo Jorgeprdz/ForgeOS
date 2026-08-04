@@ -10,7 +10,7 @@ import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
 import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";
 import { createPersonWorkspaceModule } from "./person-workspace-module.js?v=crs-09-001";
-import "../quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";
+import "../quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";
 import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
 import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002";
 import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
@@ -25,10 +25,6 @@ import "./pipeline-stage-filter-authority.js?v=pipeline-stage-filter-001";
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
 const moduleBase = new URL("./", import.meta.url);
-const legacyBase = new URL(
-  sourceLayout ? "../forge-alive/" : "../forge-alive-runtime/",
-  import.meta.url,
-);
 const advisorBase = new URL(
   sourceLayout
     ? "../../../advisor-os/sales-pipeline/"
@@ -299,7 +295,7 @@ function showAuthRuntimeError() {
 async function loadAuthAuthorities() {
   ensureStylesheet({
     selector: "[data-forge-auth-entry-styles]",
-    href: new URL("forge-alive-auth-entry-067g17b1.css", legacyBase).href,
+    href: new URL("forge-alive-auth-entry-067g17b1.css", moduleBase).href,
     datasetKey: "forgeAuthEntryStyles",
   });
 
@@ -310,7 +306,7 @@ async function loadAuthAuthorities() {
     }
 
     await startAuthority(
-      legacyBase,
+      moduleBase,
       "forge-alive-public-config-067g17a1.js",
       "public-config",
     );
@@ -320,7 +316,7 @@ async function loadAuthAuthorities() {
       "productive-bootstrap",
     );
     await startAuthority(
-      legacyBase,
+      moduleBase,
       "forge-alive-auth-entry-067g17b1.js",
       "auth-entry",
     );

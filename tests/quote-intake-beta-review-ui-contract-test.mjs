@@ -10,14 +10,14 @@ const page = await readFile(
 );
 const ui = await readFile(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-quote-intake-ui-simplification-r16j1c1.js",
+    "../docs/static-preview/quote-runtime/forge-quote-intake-ui-simplification-r16j1c1.js",
     import.meta.url,
   ),
   "utf8",
 );
 const css = await readFile(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-quote-intake-ui-simplification-r16j1c1.css",
+    "../docs/static-preview/quote-runtime/forge-quote-intake-ui-simplification-r16j1c1.css",
     import.meta.url,
   ),
   "utf8",

@@ -81,10 +81,10 @@ const registry = [
       "buildClientRecommendationRationaleBoundary",
     ],
     runtime_location:
-      "docs/static-preview/quote-preview-live/forge-client-recommendation-rationale-boundary.js",
+      "docs/static-preview/quote-runtime/forge-client-recommendation-rationale-boundary.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-browser-context-adapter.js",
     ],
     allowed_consumers: [
       "ForgeAcceptedQuoteBridge",
@@ -121,10 +121,10 @@ const registry = [
       "createAcceptedQuoteReviewSnapshotBoundary",
     ],
     runtime_location:
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-review-snapshot.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-browser-context-adapter.js",
     ],
     allowed_consumers: [
       "ForgeAcceptedQuoteBridge",
@@ -163,7 +163,7 @@ const registry = [
       "updateSalesPresentationReviewSlide",
     ],
     runtime_location:
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     current_consumers: [],
     allowed_consumers: [
       "quote preview UI",
@@ -197,10 +197,10 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-browser-context-adapter.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-prompt-builder.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-review-packet-builder.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-slide-plan-generator.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-prompt-builder.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-review-packet-builder.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-slide-plan-generator.js",
     ],
     allowed_consumers: [
       "dedicated presentation prompt builder",
@@ -233,9 +233,9 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-prompt-builder.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-review-packet-builder.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-slide-plan-generator.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-review-packet-builder.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-slide-plan-generator.js",
     ],
     allowed_consumers: [
       "slide plan generator",
@@ -267,8 +267,8 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-slide-plan-generator.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-review-packet-builder.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-review-packet-builder.js",
     ],
     allowed_consumers: [
       "review packet builder",
@@ -301,8 +301,8 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-review-packet-builder.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-review-state-store.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-review-state-store.js",
     ],
     allowed_consumers: [
       "review state store",
@@ -343,10 +343,10 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-review-state-store.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-editable-preview.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-export-adapter.js",
-      "docs/static-preview/quote-preview-live/forge-sales-presentation-human-approval-gate.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-editable-preview.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-export-adapter.js",
+      "docs/static-preview/quote-runtime/forge-sales-presentation-human-approval-gate.js",
     ],
     allowed_consumers: [
       "editable preview",
@@ -383,7 +383,7 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-editable-preview.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     ],
     allowed_consumers: [
       "quote preview browser UI",
@@ -416,7 +416,7 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-human-approval-gate.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     ],
     allowed_consumers: [
       "export adapter",
@@ -451,7 +451,7 @@ const registry = [
     runtime_location:
       "advisor-os/presentation/browser/forge-sales-presentation-export-adapter.js",
     current_consumers: [
-      "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+      "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     ],
     allowed_consumers: [
       "ForgeAcceptedQuoteBridge",

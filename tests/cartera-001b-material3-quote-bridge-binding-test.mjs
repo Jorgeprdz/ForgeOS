@@ -8,7 +8,7 @@ const app = readFileSync(
 );
 const browserBridge = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js",
+    "../docs/static-preview/quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js",
     import.meta.url,
   ),
   "utf8",

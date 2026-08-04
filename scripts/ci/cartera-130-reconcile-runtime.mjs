@@ -65,7 +65,7 @@ if (output !== source) {
 
 const material3Source = readFileSync(MATERIAL3_APP_PATH, 'utf8');
 let material3Output = material3Source;
-const bridgeImport = 'import "../quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";';
+const bridgeImport = 'import "../quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";';
 const material3Anchor = 'import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";';
 
 if (!material3Output.includes(bridgeImport)) {

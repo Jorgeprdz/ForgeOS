@@ -1,6 +1,6 @@
 const sourceLayout = import.meta.url.includes('/docs/static-preview/');
 const envBase = new URL(sourceLayout ? '../../../' : '../../', import.meta.url);
-const legacyBase = new URL(sourceLayout ? '../forge-alive/' : '../forge-alive-runtime/', import.meta.url);
+const moduleBase = new URL('./', import.meta.url);
 const advisorBase = new URL(sourceLayout ? '../../../advisor-os/sales-pipeline/' : '../../advisor-os/sales-pipeline/', import.meta.url);
 
 async function load(path, base) {
@@ -9,9 +9,9 @@ async function load(path, base) {
 
 try {
   await load('env.js', envBase);
-  await load('forge-alive-public-config-067g17a1.js', legacyBase);
+  await load('forge-alive-public-config-067g17a1.js', moduleBase);
   await load('productive-prospect-bootstrap.js', advisorBase);
-  await load('forge-alive-auth-entry-067g17b1.js', legacyBase);
+  await load('forge-alive-auth-entry-067g17b1.js', moduleBase);
 
   if (!globalThis.ForgeAliveAuthEntry067G17B1) {
     throw new Error('EARLY_AUTH_ENTRY_REQUIRED');

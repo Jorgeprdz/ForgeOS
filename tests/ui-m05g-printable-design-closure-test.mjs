@@ -21,7 +21,8 @@ const root = new URL("../", import.meta.url);
 const read = (path) => readFileSync(new URL(path, root), "utf8");
 
 const app = read("docs/static-preview/forge-alive-material3/app.js");
-const proof = read("docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html");
+const index = read("docs/static-preview/forge-alive-material3/index.html");
+const moduleSource = read("docs/static-preview/forge-alive-material3/quotes-module.js");
 const runtime = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
 const styles = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.css");
 const controller = read("docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e007.js");
@@ -116,6 +117,13 @@ assert.ok(pdf.pageWidth < pdf.pageHeight);
 assert.ok(pdf.pageCount >= 2);
 assert.ok(pdf.byteLength > 1000);
 
+assert.match(index, /data-forge-application/);
+assert.match(index, /data-forge-quotes-module/);
+assert.match(index, /app\.js\?v=/);
+assert.doesNotMatch(index, /quote-calculator-parity-009/);
+assert.match(moduleSource, /quote-engine\/nueva-cotizacion\/index\.html/);
+assert.doesNotMatch(moduleSource, /forge-alive-runtime/);
+
 assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-011-eager-print-actions/);
 assert.match(app, /quote-runtime-vida-mujer-handoff-m05e009\.js\?v=m05r-001-bridge-composition/);
 assert.match(app, /quote-runtime-vida-mujer-visual-m05e010\.js\?v=m05t-001-coalesced/);
@@ -127,9 +135,6 @@ assert.ok(
   app.indexOf("void startPrintableAuthority();") <
   app.indexOf('await loadAuthority(envBase, "env.js")'),
 );
-assert.match(proof, /CALCULADORAS M05E-006/);
-assert.match(proof, /quote-calculator-parity-009/);
-assert.match(proof, /vidaMujerHandoff = "M05E-009"/);
 assert.match(controller, /normalizePrintableReviewSnapshot/);
 assert.match(controller, /pageOrientation: "PORTRAIT"/);
 
@@ -164,6 +169,7 @@ console.log("PASS UI-M05G printable design and UX closure", {
   productiveRuntime: "M05E-006",
   vidaMujerHandoff: "M05E-009",
   vidaMujerVisualClosure: "M05E-010",
+  canonicalEntrypointOnly: true,
   optionalClientIsNonBlocking: true,
   obsoleteUxLayersRemoved: ["M05E-004", "M05E-005"],
   compactDocumentActions: ["printer", "pdf", "history"],

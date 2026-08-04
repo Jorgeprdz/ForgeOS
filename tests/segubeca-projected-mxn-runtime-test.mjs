@@ -4,7 +4,7 @@ import {
   SEGUBECA_UDI_GROWTH_RATE,
   SEGUBECA_MXN_INTEGRATION_VERSION,
   createForgeUdiMxnRuntime
-} from "../docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js";
+} from "../docs/static-preview/quote-runtime/forge-udi-mxn-runtime.js";
 
 const verifiedRate = {
   cacheStatus: "CACHE_HIT",

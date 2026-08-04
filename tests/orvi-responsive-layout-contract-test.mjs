@@ -3,21 +3,21 @@ import { readFileSync } from "node:fs";
 
 const layout = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js",
+    "../docs/static-preview/quote-runtime/forge-benefit-summary-layout.js",
     import.meta.url,
   ),
   "utf8",
 );
 const renderer = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js",
+    "../docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js",
     import.meta.url,
   ),
   "utf8",
 );
 const bridge = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+    "../docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     import.meta.url,
   ),
   "utf8",

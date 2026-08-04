@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-import { buildImaginaSerDashboardModel } from "../docs/static-preview/quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js";
-import { buildSegubecaDashboardModel } from "../docs/static-preview/quote-preview-live/forge-segubeca-product-dashboard-adapter.js";
+import { buildImaginaSerDashboardModel } from "../docs/static-preview/quote-runtime/forge-imagina-ser-product-dashboard-adapter.js";
+import { buildSegubecaDashboardModel } from "../docs/static-preview/quote-runtime/forge-segubeca-product-dashboard-adapter.js";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 const [renderer, layout, orviAdapter, intakeState] = await Promise.all([
-  read("docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js"),
-  read("docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js"),
-  read("docs/static-preview/quote-preview-live/forge-orvi-product-dashboard-adapter.js"),
-  read("docs/static-preview/quote-preview-live/forge-quote-intake-state.js"),
+  read("docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js"),
+  read("docs/static-preview/quote-runtime/forge-benefit-summary-layout.js"),
+  read("docs/static-preview/quote-runtime/forge-orvi-product-dashboard-adapter.js"),
+  read("docs/static-preview/quote-runtime/forge-quote-intake-state.js"),
 ]);
 
 const segubecaGoal = buildSegubecaDashboardModel([

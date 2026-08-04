@@ -60,6 +60,8 @@ jobs:
         run: node --test tests/pages-public-demo-runtime-closure-test.mjs
 
       - name: Preserve inherited Pages and authentication contracts
+        env:
+          FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           node --test tests/cartera-pages-runtime-assets-test.mjs
           node --test tests/authenticated-route-guard-test.mjs
@@ -99,7 +101,7 @@ jobs:
             'FORGE_ALIVE_PAGES_RUNTIME_CLOSURE_V1',
           );
           assert.match(
-            read('static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js'),
+            read('static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js'),
             /QPD06_PRODUCTIVE_ROUTE_BINDING_V1/,
           );
           assert.match(

@@ -7,7 +7,7 @@ const read = async (relative) =>
   readFile(new URL(relative, root), "utf8");
 
 const parser = await read(
-  "docs/static-preview/quote-preview-live/" +
+  "docs/static-preview/quote-runtime/" +
   "forge-pdf-browser-parser.js",
 );
 const loader = await read(
@@ -19,23 +19,23 @@ const page = await read(
 );
 const packageJson = JSON.parse(
   await read(
-    "docs/static-preview/quote-preview-live/" +
+    "docs/static-preview/quote-runtime/" +
     "forge-pdfjs-4.10.38.package.json",
   ),
 );
 
 const pdfModuleUrl = new URL(
-  "docs/static-preview/quote-preview-live/" +
+  "docs/static-preview/quote-runtime/" +
   "forge-pdfjs-4.10.38.js",
   root,
 );
 const workerUrl = new URL(
-  "docs/static-preview/quote-preview-live/" +
+  "docs/static-preview/quote-runtime/" +
   "forge-pdfjs-worker-4.10.38.js",
   root,
 );
 const licenseUrl = new URL(
-  "docs/static-preview/quote-preview-live/" +
+  "docs/static-preview/quote-runtime/" +
   "forge-pdfjs-4.10.38.LICENSE",
   root,
 );

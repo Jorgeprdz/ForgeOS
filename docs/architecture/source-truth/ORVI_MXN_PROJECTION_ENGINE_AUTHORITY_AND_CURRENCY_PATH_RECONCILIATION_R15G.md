@@ -91,7 +91,7 @@ This matches the existing UDI timeline convention and prevents a one-year forwar
 - `orvi-client-report-test.js` is a legacy scenario surface, not source or Product Intelligence authority.
 - `orvi-mxn-conversion-engine.js` is mathematical utility only.
 - `UNRESOLVED` is product-specific and has no ORVI authority.
-- `docs/static-preview/quote-preview-live/forge-rate-cache.json` is a current-rate cache candidate, not a future forecast.
+- `docs/static-preview/quote-runtime/forge-rate-cache.json` is a current-rate cache candidate, not a future forecast.
 - `docs/quote-preview-live/forge-quote-calculators.mjs` is a verified UDI metadata and scenario-math candidate.
 
 ## Authorized fields for the next adapter

@@ -11400,7 +11400,7 @@ docs/static-preview/forge-alive/nueva-cotizacion/index.html
 ├─ writeRuntimeGrid
 └─ setReadiness
 
-docs/static-preview/quote-preview-live/
+docs/static-preview/quote-runtime/
 ├─ forge-accepted-quote-adapter.js
 │  ├─ Normalizes accepted quote packets
 │  ├─ Preserves nativeResult
@@ -12085,7 +12085,7 @@ Do not resume this branch unless the owner explicitly reactivates Mobile UI.
 The current functional integration is authoritative:
 
 - PDF input ID: `fq-solution-online-pdf-105dr`;
-- 10 external scripts from `docs/static-preview/quote-preview-live`;
+- 10 external scripts from `docs/static-preview/quote-runtime`;
 - exact script order inherited from the standalone fixture;
 - exact inline runtime hash:
   `dfe17fd28bbd07b69ce06f19a56eb3b62290d8077de4c739a57c2c2aa61e9cb2`;

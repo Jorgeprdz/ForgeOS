@@ -6,7 +6,7 @@ import {
   formatImaginaSerNumber,
   isImaginaSerProduct,
   renderImaginaSerDashboard
-} from "../docs/static-preview/quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js";
+} from "../docs/static-preview/quote-runtime/forge-imagina-ser-product-dashboard-adapter.js";
 import { buildQuoteBenefitSummary } from "../quote-benefit-summary-engine.js";
 
 class TestElement {
@@ -160,7 +160,7 @@ assert.ok(integratedModel.missingInformation.includes("Faltan datos de aportaci√
 assert.ok(integratedModel.missingInformation.includes("Faltan datos de protecci√≥n"));
 
 const layoutSource = fs.readFileSync(
-  new URL("../docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js", import.meta.url),
+  new URL("../docs/static-preview/quote-runtime/forge-benefit-summary-layout.js", import.meta.url),
   "utf8"
 );
 assert.match(layoutSource, /data-forge-product-type=\\?"imagina_ser\\?"/);

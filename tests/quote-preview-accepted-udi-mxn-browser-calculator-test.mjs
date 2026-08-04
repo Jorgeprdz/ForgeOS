@@ -8,7 +8,7 @@ const calculators = await import(
 );
 
 const runtimeModule = await import(
-  pathToFileURL(path.resolve("docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js")).href
+  pathToFileURL(path.resolve("docs/static-preview/quote-runtime/forge-udi-mxn-runtime.js")).href
 );
 
 const verifiedRate = {
@@ -122,11 +122,11 @@ const hostHtml = fs.readFileSync(
   "utf8"
 );
 const acceptedAdapter = fs.readFileSync(
-  "docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js",
+  "docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js",
   "utf8"
 );
 const benefitRenderer = fs.readFileSync(
-  "docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js",
+  "docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js",
   "utf8"
 );
 

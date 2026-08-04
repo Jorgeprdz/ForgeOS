@@ -1,6 +1,6 @@
 import {
   buildQuoteBenefitSummary,
-} from "../quote-preview-live/quote-benefit-summary-engine.js";
+} from "../quote-runtime/quote-benefit-summary-engine.js";
 
 const VERSION = "M05E-009";
 const PRODUCT_FAMILY = "vida_mujer";

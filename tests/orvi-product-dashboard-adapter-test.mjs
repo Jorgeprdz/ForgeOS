@@ -9,7 +9,7 @@ import {
   isOrviProduct,
   renderOrviDashboard,
   resolveOrviDashboardViewModel,
-} from "../docs/static-preview/quote-preview-live/forge-orvi-product-dashboard-adapter.js";
+} from "../docs/static-preview/quote-runtime/forge-orvi-product-dashboard-adapter.js";
 
 function createFakeDocument() {
   return {

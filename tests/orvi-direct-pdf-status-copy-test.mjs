@@ -3,14 +3,14 @@ import { readFile } from "node:fs/promises";
 
 const parser = await readFile(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js",
+    "../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js",
     import.meta.url,
   ),
   "utf8",
 );
 const bridge = await readFile(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+    "../docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     import.meta.url,
   ),
   "utf8",

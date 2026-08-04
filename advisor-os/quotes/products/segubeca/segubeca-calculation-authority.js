@@ -1,16 +1,16 @@
 import {
   parseSegubecaPdfTextToAcceptedQuotePacket,
-} from "../../../../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js";
+} from "../../../../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js";
 import {
   buildAcceptedNativeResult107z15p2R9C,
   calculateSegubecaAcceptedR14E,
   isSegubecaAcceptedR14E,
-} from "../../../../docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js";
+} from "../../../../docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js";
 import {
   SEGUBECA_UDI_GROWTH_RATE,
   SEGUBECA_MXN_INTEGRATION_VERSION,
   createForgeUdiMxnRuntime,
-} from "../../../../docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js";
+} from "../../../../docs/static-preview/quote-runtime/forge-udi-mxn-runtime.js";
 
 const AUTHORITY_VERSION = "SEGUBECA-CALCULATION-AUTHORITY-001.1";
 const AUTHORITY = "SEGUBECA_ACCEPTED_PRODUCT_CALCULATION";

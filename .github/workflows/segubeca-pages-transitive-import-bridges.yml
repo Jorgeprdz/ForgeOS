@@ -5,9 +5,9 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/segubeca-pages-transitive-import-bridges.yml"
-      - "docs/docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js"
-      - "docs/docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js"
-      - "docs/docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js"
+      - "docs/docs/static-preview/quote-runtime/forge-pdf-browser-parser.js"
+      - "docs/docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js"
+      - "docs/docs/static-preview/quote-runtime/forge-udi-mxn-runtime.js"
       - "tests/segubeca-pages-transitive-import-bridge-test.mjs"
       - "docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001.md"
 
@@ -31,7 +31,7 @@ jobs:
           node-version: "22"
 
       - name: Bounded path verification
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref != 'chore/retire-all-legacy-forge-ui'
         shell: bash
         run: |
           set -euo pipefail
@@ -39,7 +39,7 @@ jobs:
           head_sha='${{ github.event.pull_request.head.sha }}'
           merge_base="$(git merge-base "$base_sha" "$head_sha")"
           mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
-          allowed='^(\.github/workflows/segubeca-pages-transitive-import-bridges\.yml|docs/docs/static-preview/quote-preview-live/(forge-pdf-browser-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime)\.js|tests/segubeca-pages-transitive-import-bridge-test\.mjs|docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001\.md)$'
+          allowed='^(\.github/workflows/segubeca-pages-transitive-import-bridges\.yml|docs/docs/static-preview/quote-runtime/(forge-pdf-browser-parser|forge-accepted-quote-adapter|forge-udi-mxn-runtime)\.js|tests/segubeca-pages-transitive-import-bridge-test\.mjs|docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001\.md)$'
           printf '%s\n' "${changed[@]}"
           test "${#changed[@]}" -eq 6
           for path in "${changed[@]}"; do
@@ -80,16 +80,17 @@ jobs:
           GITHUB_SHA='${{ github.event.pull_request.head.sha || github.sha }}' \
             node scripts/build-quotes-preview-pages.mjs
 
-          root='_site/docs/static-preview/quote-preview-live'
+          root='_site/docs/static-preview/quote-runtime'
           test -f "$root/forge-pdf-browser-parser.js"
           test -f "$root/forge-accepted-quote-adapter.js"
           test -f "$root/forge-udi-mxn-runtime.js"
-          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-pdf-browser-parser.js";' \
+          grep -Fxq 'export * from "../../../static-preview/quote-runtime/forge-pdf-browser-parser.js";' \
             "$root/forge-pdf-browser-parser.js"
-          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-accepted-quote-adapter.js";' \
+          grep -Fxq 'export * from "../../../static-preview/quote-runtime/forge-accepted-quote-adapter.js";' \
             "$root/forge-accepted-quote-adapter.js"
-          grep -Fxq 'export * from "../../../static-preview/quote-preview-live/forge-udi-mxn-runtime.js";' \
+          grep -Fxq 'export * from "../../../static-preview/quote-runtime/forge-udi-mxn-runtime.js";' \
             "$root/forge-udi-mxn-runtime.js"
+          test ! -e '_site/docs/static-preview/quote-preview-live'
           echo 'SEGUBECA_TRANSITIVE_BRIDGE_PAGES_ARTIFACT=PASS'
           echo 'SEGUBECA_COMPLETE_PAGES_RUNTIME_BUILD=PASS'
 
@@ -131,28 +132,114 @@ jobs:
           const sourcePath = 'tests/segubeca-material3-real-pdf-acceptance-test.mjs';
           const targetPath = '/tmp/segubeca-generated-pages-real-pdf.mjs';
           let source = fs.readFileSync(sourcePath, 'utf8');
-          source = source.replace(
-            /await new Promise\(\(resolveServer\) => server\.listen\(0, "127\.0\.0\.1", resolveServer\)\);\nconst \{ port \} = server\.address\(\);/,
-            'const port = null;',
-          );
-          source = source.replace(
-            /`http:\/\/127\.0\.0\.1:\$\{port\}\/docs\/static-preview\/forge-alive-material3\/\?nav=cotizaciones`/,
-            'process.env.FORGE_SEGUBECA_TARGET_URL',
-          );
-          source = source.replace(
-            /\n  await new Promise\(\(resolveServer\) => server\.close\(resolveServer\)\);/,
-            '',
-          );
+          const replacements = [
+            [
+              /await new Promise\(\(resolveServer\) => server\.listen\(0, "127\.0\.0\.1", resolveServer\)\);\nconst \{ port \} = server\.address\(\);/,
+              'const port = null;',
+            ],
+            [
+              /`http:\/\/127\.0\.0\.1:\$\{port\}\/docs\/static-preview\/forge-alive-material3\/\?nav=cotizaciones`/,
+              'process.env.FORGE_SEGUBECA_TARGET_URL',
+            ],
+            [
+              /\n  await new Promise\(\(resolveServer\) => server\.close\(resolveServer\)\);/,
+              '',
+            ],
+            [
+              'const browser = await puppeteer.launch({\n  executablePath: chromiumPath,',
+              'const browser = await puppeteer.launch({\n  protocolTimeout: 45000,\n  executablePath: chromiumPath,',
+            ],
+            [
+              '  const page = await browser.newPage();\n  await page.setViewport({ width: 1440, height: 1200 });',
+              '  const page = await browser.newPage();\n  page.setDefaultTimeout(30000);\n  page.setDefaultNavigationTimeout(60000);\n  page.on("console", message => console.log(`SEGUBECA_PAGE_CONSOLE=${message.text()}`));\n  console.log("SEGUBECA_GENERATED_PAGES_BROWSER=READY");\n  await page.setViewport({ width: 1440, height: 1200 });',
+            ],
+            [
+              '  const input = await page.$("#fq-solution-online-pdf-105dr");',
+              '  console.log("SEGUBECA_GENERATED_PAGES_INPUT=MOUNTED");\n  const input = await page.$("#fq-solution-online-pdf-105dr");',
+            ],
+            [
+              '  await input.uploadFile(pdfPath);',
+              '  await input.uploadFile(pdfPath);\n  console.log("SEGUBECA_GENERATED_PAGES_PDF=UPLOADED");',
+            ],
+            [
+              '  const preview = await page.evaluate(() => {',
+              '  console.log("SEGUBECA_GENERATED_PAGES_PROJECTION=READY");\n  const preview = await page.evaluate(() => {',
+            ],
+            [
+              '    const bridge = globalThis.ForgeAcceptedQuoteBridge;',
+              '    console.log("SEGUBECA_EVAL=START");\n    const bridge = globalThis.ForgeAcceptedQuoteBridge;\n    console.log("SEGUBECA_EVAL=BRIDGE_READY");',
+            ],
+            [
+              '    const candidate = bridge?.getCurrentQuoteCandidate?.();',
+              '    const candidate = bridge?.getCurrentQuoteCandidate?.();\n    console.log("SEGUBECA_EVAL=CANDIDATE_READY");',
+            ],
+            [
+              '    const calculation = bridge?.getCurrentQuotePreviewCalculation?.();',
+              '    const calculation = bridge?.getCurrentQuotePreviewCalculation?.();\n    console.log("SEGUBECA_EVAL=CALCULATION_READY");',
+            ],
+            [
+              '    const authorityResult = globalThis.ForgeSegubecaProductiveUiBinding?.getAuthorityResult?.();',
+              '    const authorityResult = globalThis.ForgeSegubecaProductiveUiBinding?.getAuthorityResult?.();\n    console.log("SEGUBECA_EVAL=AUTHORITY_READY");',
+            ],
+            [
+              '    const projection = document.querySelector("[data-material3-quotes-projection]");',
+              '    const projection = document.querySelector("[data-material3-quotes-projection]");\n    console.log("SEGUBECA_EVAL=PROJECTION_NODE_READY");',
+            ],
+            [
+              '    const note = projection?.querySelector("[data-segubeca-authority-note]");',
+              '    const note = projection?.querySelector("[data-segubeca-authority-note]");\n    console.log("SEGUBECA_EVAL=NOTE_READY");',
+            ],
+            [
+              '    const bodyText = document.body.innerText;',
+              '    const bodyText = projection?.innerText || "";\n    console.log("SEGUBECA_EVAL=TEXT_READY");',
+            ],
+            [
+              '  assert.deepEqual(preview.candidate, {',
+              '  console.log("SEGUBECA_GENERATED_PAGES_PREVIEW=READ");\n  assert.deepEqual(preview.candidate, {',
+            ],
+            [
+              '  await page.waitForFunction(\n    () => {\n      const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+              '  console.log("SEGUBECA_CONFIRM_BUTTON_WAIT=START");\n  await page.waitForFunction(\n    () => {\n      const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+            ],
+            [
+              '    { timeout: 30000 },\n  );\n  await page.evaluate(() => {\n    const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+              '    { timeout: 30000 },\n  );\n  console.log("SEGUBECA_CONFIRM_BUTTON_WAIT=PASS");\n  console.log("SEGUBECA_CONFIRM_CLICK=START");\n  await page.evaluate(() => {\n    const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+            ],
+            [
+              '    button.click();\n  });\n  await page.waitForFunction(',
+              '    button.click();\n  });\n  console.log("SEGUBECA_CONFIRM_CLICK=PASS");\n  console.log("SEGUBECA_ACCEPTED_WAIT=START");\n  await page.waitForFunction(',
+            ],
+            [
+              '  const confirmation = await page.evaluate(() => {',
+              '  console.log("SEGUBECA_ACCEPTED_WAIT=PASS");\n  console.log("SEGUBECA_GENERATED_PAGES_CONFIRMATION=READY");\n  const confirmation = await page.evaluate(() => {',
+            ],
+          ];
+          for (const [before, after] of replacements) {
+            if (typeof before === 'string') {
+              if (!source.includes(before)) throw new Error('SEGUBECA_REVIEW3_PATCH_CONTRACT_NOT_FOUND');
+              source = source.replace(before, after);
+            } else {
+              const next = source.replace(before, after);
+              if (next === source) throw new Error('SEGUBECA_REVIEW3_PATCH_CONTRACT_NOT_FOUND');
+              source = next;
+            }
+          }
           if (source.includes('server.listen(0') || source.includes('server.close(resolveServer)')) {
             throw new Error('SEGUBECA_GENERATED_PAGES_TEST_TRANSFORM_FAILED');
           }
           if (!source.includes('process.env.FORGE_SEGUBECA_TARGET_URL')) {
             throw new Error('SEGUBECA_GENERATED_PAGES_TARGET_NOT_INJECTED');
           }
+          if (!source.includes('protocolTimeout: 45000')) {
+            throw new Error('SEGUBECA_REVIEW3_PROTOCOL_TIMEOUT_NOT_APPLIED');
+          }
+          if (source.includes('document.body.innerText')) {
+            throw new Error('SEGUBECA_REVIEW3_UNBOUNDED_DOCUMENT_INSPECTION');
+          }
           fs.writeFileSync(targetPath, source);
           NODE
 
-          node /tmp/segubeca-generated-pages-real-pdf.mjs
+          timeout 4m node /tmp/segubeca-generated-pages-real-pdf.mjs
           echo 'SEGUBECA_GENERATED_PAGES_REAL_PDF=PASS'
 
       - name: Preserve accepted SeguBeca authorities

@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 
 import {
   calculateAcceptedQuote,
-} from "../docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js";
+} from "../docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js";
 import {
   buildOrviDashboardModel,
   renderOrviDashboard,
-} from "../docs/static-preview/quote-preview-live/forge-orvi-product-dashboard-adapter.js";
+} from "../docs/static-preview/quote-runtime/forge-orvi-product-dashboard-adapter.js";
 
 function money(value, currency) {
   return {

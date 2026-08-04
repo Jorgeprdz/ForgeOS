@@ -162,11 +162,11 @@ assert.equal(
 );
 assert.equal(
   udi.template_contract.layout_surface,
-  "docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js",
+  "docs/static-preview/quote-runtime/forge-benefit-summary-layout.js",
 );
 assert.equal(
   udi.template_contract.renderer_surface,
-  "docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js",
+  "docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js",
 );
 assert.equal(
   udi.readiness.status,
