@@ -34,6 +34,10 @@ function formatMoney(value) {
   }).format(value);
 }
 
+function setText(node, value) {
+  if (node && node.textContent !== value) node.textContent = value;
+}
+
 function authenticatedAdvisorId(sessionResult) {
   const advisorId = sessionResult?.data?.session?.user?.id || null;
   if (!advisorId) throw new Error("MONTHLY_GOAL_SESSION_REQUIRED");
@@ -176,14 +180,17 @@ export function createHomeMonthlyGoalEditor({
       const title = card.querySelector(".productive-smart-widget-title");
       const subtitle = card.querySelector(".productive-smart-widget-subtitle");
       const action = card.querySelector("button.productive-smart-widget-action");
-      if (title) title.textContent = "Metas del mes";
+      setText(title, "Metas del mes");
       if (subtitle && card.dataset.widgetState === "BLOCKED_BY_MISSING_EVIDENCE") {
-        subtitle.textContent = "Define cuánto quieres ganar y cuántas pólizas quieres vender.";
+        setText(subtitle, "Define cuánto quieres ganar y cuántas pólizas quieres vender.");
       }
       if (action) {
-        action.textContent = card.dataset.widgetState === "BLOCKED_BY_MISSING_EVIDENCE"
-          ? "Definir metas del mes"
-          : "Editar metas del mes";
+        setText(
+          action,
+          card.dataset.widgetState === "BLOCKED_BY_MISSING_EVIDENCE"
+            ? "Definir metas del mes"
+            : "Editar metas del mes",
+        );
       }
 
       let summary = card.querySelector("[data-forge-monthly-goals-summary]");
@@ -194,10 +201,10 @@ export function createHomeMonthlyGoalEditor({
         card.querySelector(".productive-smart-widget-footer")?.before(summary);
       }
       if (currentSnapshot?.targetMonthlyIncomeMxn) {
-        summary.textContent = `Meta de ingreso: ${formatMoney(currentSnapshot.targetMonthlyIncomeMxn)} · Meta de pólizas: ${currentSnapshot.targetPolicyCount}`;
+        setText(summary, `Meta de ingreso: ${formatMoney(currentSnapshot.targetMonthlyIncomeMxn)} · Meta de pólizas: ${currentSnapshot.targetPolicyCount}`);
         summary.hidden = false;
       } else {
-        summary.textContent = "Falta definir la meta económica del mes.";
+        setText(summary, "Falta definir la meta económica del mes.");
         summary.hidden = false;
       }
     }
