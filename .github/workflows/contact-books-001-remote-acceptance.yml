@@ -1,0 +1,160 @@
+name: Contact Books 001 Remote Acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      validated_sha:
+        description: Exact commit SHA to validate
+        required: true
+        type: string
+      run_id:
+        description: Synthetic dataset RUN_ID
+        required: true
+        default: '20260803_213631'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contact-books-001-remote-acceptance
+  cancel-in-progress: false
+
+jobs:
+  remote-acceptance:
+    runs-on: ubuntu-24.04
+    environment: 067g17a1-remote-acceptance
+    env:
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF || secrets.SUPABASE_PROJECT_REF || 'rmlxigxysujsuwzgoimv' }}
+      SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
+      FORGE_CONTACT_BOOKS_RUN_ID: ${{ inputs.run_id }}
+      FORGE_CONTACT_BOOKS_MIGRATION_EVIDENCE: artifacts/contact-books-001/migration-ledger.jsonl
+      FORGE_CONTACT_BOOKS_ACCEPTANCE_EVIDENCE: artifacts/contact-books-001/acceptance.json
+      FORGE_CONTACT_BOOKS_VERIFY_EVIDENCE: artifacts/contact-books-001/verification.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.validated_sha }}
+          fetch-depth: 0
+
+      - name: Verify exact SHA and target
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ inputs.validated_sha }}"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          node -e "const u=new URL(process.env.SUPABASE_URL);if(u.hostname!==process.env.SUPABASE_PROJECT_REF+'.supabase.co')throw Error('SUPABASE_TARGET_MISMATCH')"
+          for key in SUPABASE_PROJECT_REF SUPABASE_URL SUPABASE_ANON_KEY SUPABASE_ACCESS_TOKEN ADVISOR_A_EMAIL ADVISOR_A_PASSWORD ADVISOR_B_EMAIL ADVISOR_B_PASSWORD; do
+            test -n "${!key:-}" || { echo "$key=UNSET"; exit 1; }
+            echo "$key=SET"
+          done
+          echo "VALIDATED_SHA=$(git rev-parse HEAD)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Local constitutional and contract gates
+        run: |
+          node --check scripts/deploy-contact-books-001-migration.mjs
+          node --check scripts/seed-contact-books-001-acceptance.mjs
+          node --check scripts/verify-contact-books-001-acceptance.mjs
+          node --test tests/contact-books-001-productive-authority-test.mjs tests/advisor-os-sprint-06-test.mjs
+          git diff --check
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Confirm governed Supabase project link
+        shell: bash
+        run: |
+          set -euo pipefail
+          supabase projects list --output json > /tmp/projects.json
+          node -e "const p=require('/tmp/projects.json');if(!p.some(x=>(x.id||x.ref)===process.env.SUPABASE_PROJECT_REF))throw Error('PROJECT_NOT_ACCESSIBLE')"
+          rm -f /tmp/projects.json
+
+      - name: Apply exact additive migration
+        run: node scripts/deploy-contact-books-001-migration.mjs
+
+      - name: Configure one-run synthetic window controller
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="$(openssl rand -hex 32)"
+          echo "::add-mask::$token"
+          echo "FORGE_DEMO_ADMIN_TOKEN=$token" >> "$GITHUB_ENV"
+          supabase secrets set FORGE_DEMO_ADVISOR_A_EMAIL="$ADVISOR_A_EMAIL" FORGE_DEMO_ADVISOR_B_EMAIL="$ADVISOR_B_EMAIL" FORGE_DEMO_ADMIN_TOKEN="$token" --project-ref "$SUPABASE_PROJECT_REF"
+          supabase functions deploy forge-demo-admin --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
+
+      - name: Open authorized synthetic mutation window
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error -X POST "${SUPABASE_URL}/functions/v1/forge-demo-admin" -H "Content-Type: application/json" -H "x-forge-demo-admin-token: ${FORGE_DEMO_ADMIN_TOKEN}" --data '{"action":"PREPARE"}' > /tmp/prepare.json
+          node -e "const p=require('/tmp/prepare.json');if(p.ok!==true||p.accountsUnlocked!==2)throw Error('PREPARE_FAILED')"
+          rm -f /tmp/prepare.json
+
+      - name: Execute authenticated A/B commands and 30/40 runner
+        run: node scripts/seed-contact-books-001-acceptance.mjs
+
+      - name: Seal synthetic users regardless of acceptance result
+        if: always() && env.FORGE_DEMO_ADMIN_TOKEN != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error -X POST "${SUPABASE_URL}/functions/v1/forge-demo-admin" -H "Content-Type: application/json" -H "x-forge-demo-admin-token: ${FORGE_DEMO_ADMIN_TOKEN}" --data '{"action":"SEAL"}' > /tmp/seal.json
+          node -e "const p=require('/tmp/seal.json');if(p.ok!==true||p.accountsSealed!==2)throw Error('SEAL_FAILED')"
+          rm -f /tmp/seal.json
+
+      - name: Verify reload, counts, isolation and sealed state
+        run: node scripts/verify-contact-books-001-acceptance.mjs
+
+      - name: Reject secret-bearing evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d artifacts/contact-books-001
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const secrets=['SUPABASE_ACCESS_TOKEN','SUPABASE_ANON_KEY','ADVISOR_A_EMAIL','ADVISOR_A_PASSWORD','ADVISOR_B_EMAIL','ADVISOR_B_PASSWORD'].map(k=>process.env[k]).filter(Boolean);
+          const files=[];const walk=d=>fs.readdirSync(d,{withFileTypes:true}).forEach(e=>e.isDirectory()?walk(path.join(d,e.name)):files.push(path.join(d,e.name)));walk('artifacts/contact-books-001');
+          for(const file of files){const value=fs.readFileSync(file,'utf8');if(secrets.some(secret=>value.includes(secret)))throw Error('SECRET_FOUND_IN_ARTIFACT');}
+          console.log('SANITIZED_EVIDENCE=PASS');
+          NODE
+
+      - name: Sanitized job summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '## Contact Books 001 Remote Acceptance'
+            echo
+            echo "- Validated SHA: \`${{ inputs.validated_sha }}\`"
+            echo "- Synthetic RUN_ID: \`${{ inputs.run_id }}\`"
+            echo "- Secret values exposed: NO"
+            if test -f artifacts/contact-books-001/verification.json; then
+              node -e "const r=require('./artifacts/contact-books-001/verification.json');console.log('- Remote acceptance: '+r.status);console.log('- User A: '+r.users.A.topCount+'/30 and '+r.users.A.friendsCount+'/40');console.log('- User B: '+r.users.B.topCount+'/30 and '+r.users.B.friendsCount+'/40');console.log('- Synthetic data sealed: '+(r.syntheticDataSealed?'YES':'NO'))"
+            else
+              echo '- Remote acceptance: FAIL_OR_INCOMPLETE'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: contact-books-001-${{ inputs.run_id }}-${{ inputs.validated_sha }}
+          path: artifacts/contact-books-001/
+          if-no-files-found: error
+          retention-days: 14
