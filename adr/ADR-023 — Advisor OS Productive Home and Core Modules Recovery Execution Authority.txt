@@ -1,0 +1,141 @@
+ADR-023 — Advisor OS Productive Home and Core Modules Recovery Execution Authority
+
+Status
+
+RATIFIED
+
+Ratification Source
+
+AUTHORIZATION_DATE=2026-08-04
+AUTHORIZATION_ID=ADVISOR_OS_PRODUCTIVE_RECOVERY_001
+AUTHORIZATION_SOURCE=EXPLICIT_HUMAN_OWNER_AND_BOARD_DECISION
+HUMAN_OWNER=JORGE_IGNACIO_PALACIOS_RODRIGUEZ
+
+Decision
+
+PHASE=ADVISOR_OS_PRODUCTIVE_RECOVERY_001
+PHASE_STATUS=EXECUTION_AUTHORIZED
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+BOARD_SCOPE_SELECTION=HOME_CARTERA_POLICY_ENTRY_COMMISSIONS_ACTIVITY_PRODUCTIVE_RECOVERY
+IMPLEMENTATION_READINESS=AUTHORIZED_AFTER_RECOVERY_AUDIT
+VISUAL_REDESIGN=AUTHORIZED_FOR_SCOPED_MODULES
+ROUTE_MUTATION=AUTHORIZED_FOR_CANONICAL_MOUNTING
+UI_MUTATION=AUTHORIZED_FOR_SCOPED_MODULES
+READ_MODEL_MUTATION=AUTHORIZED
+POLICY_PERSISTENCE_INTEGRATION=AUTHORIZED
+ACTIVITY_PERSISTENCE_INTEGRATION=AUTHORIZED
+ADDITIVE_SCHEMA_MIGRATION=AUTHORIZED_WITH_CONDITIONS
+RLS_CHANGE=AUTHORIZED_ONLY_IF_REQUIRED_AND_NON_WEAKENING
+LEGACY_BEHAVIOR_RECOVERY=AUTHORIZED
+LEGACY_RUNTIME_MOUNTING=FORBIDDEN
+DIRECT_MAIN_MUTATION=FORBIDDEN
+AUTOMATIC_MAIN_MERGE=FORBIDDEN
+
+Scope
+
+This ADR authorizes recovery and repair of the existing authenticated Advisor OS
+productive Home, canonical Smart Widgets, Cartera information hierarchy,
+governed manual Policy entry, Advisor Commissions presentation, and governed
+manual Activity flow for ADVISOR_OS_PRODUCTIVE_RECOVERY_001.
+
+Recovery before rewrite is mandatory. Existing canonical mounts, writers,
+read models, evidence owners, metric owners, session boundaries, and productive
+Supabase authorities must be reused where they satisfy the required contract.
+Parallel productive Homes and duplicate Policy or Activity writers are
+forbidden.
+
+This ADR prospectively expands and partially supersedes the execution
+restrictions of ADR-019 and ADR-020 only for the scoped modules and phase named
+above. ADR-019 and ADR-020 remain unchanged as historical and architectural
+authority. Their canonical Forge Shell, Home boundary, responsive identity,
+human-authority, and legacy-runtime separation continue to apply.
+
+Authorized Surfaces
+
+- scoped Home, Smart Widget, Cartera, Policy entry, Commissions, and Activity UI;
+- canonical Forge Shell mounting and route registration when source evidence
+  proves mutation is necessary;
+- scoped app.js mutation when source evidence proves it is the canonical mount;
+- read models, view models, adapters, and owner-preserving projections;
+- existing Policy and Activity productive persistence integration;
+- Timeline and official Activity metric consumption through their owners;
+- additive, versioned, non-destructive, tenant-aware schema migration only when
+  an evidenced gap cannot be satisfied by the existing authority;
+- non-weakening RLS repair only when required by an evidenced productive gap;
+- scoped tests, CI, browser evidence, Pages acceptance, Build Tree evidence,
+  working-branch commits, push, and pull-request preparation.
+
+Truth and Authority Boundaries
+
+- Evidence Ownership and source validity remain governed by ADR-001.
+- Official metric ownership remains governed by ADR-002 and ADR-014.
+- Human decision authority remains governed by ADR-003 and Article 0.
+- Missing facts remain unknown under ADR-004.
+- Product Truth remains outside this phase and protected by ADR-005.
+- Policy Truth remains owned by Policy Intelligence under ADR-006.
+- Forecast Truth remains outside this phase and protected by ADR-007.
+- Economic presentation remains evidence-bound under ADR-008.
+- NBA remains voluntary, explained, and non-executing under ADR-009.
+- NASH may explain but may not invent or execute under ADR-010.
+- Relationship context remains non-manipulative under ADR-011.
+- Mick may interpret observable activity but may not infer human worth,
+  discipline, motivation, or character under ADR-013.
+- Advisor Experience remains capability-building and non-dependent under
+  ADR-016 and ADR-016A.
+- Compensation presentation remains governed by ADR-017 and ADR-018; this phase
+  does not authorize compensation calculation or Rule Pack changes.
+- Quotes and Product boundaries ratified by ADR-021 and ADR-022 remain protected.
+
+Policy Entry Boundary
+
+Manual advisor entry is provenance-bearing evidence, not automatic official
+carrier evidence. Missing documentary verification must remain provisional or
+incomplete. A successful UI state requires authenticated, tenant-scoped,
+read-after-write verified persistence through the canonical Policy authority.
+
+Activity Boundary
+
+Manual Activity entry must require human confirmation, actor and tenant scope,
+source provenance, and deterministic idempotency. Persisted Activity may feed
+Timeline and official derived metrics only through their owners. It must not
+execute the next action, create calendar events automatically, infer human
+judgment, or mount ADDLIFE runtime.
+
+Compensation Boundary
+
+The presentation may distinguish estimated, projected, earned, confirmed,
+paid, pending, stale, conflicting, and unknown states. It may not create payout
+truth, modify calculation engines, rewrite Rule Packs, or present estimates as
+paid income.
+
+Prohibited Surfaces
+
+- direct mutation or automatic merge of main;
+- force push, destructive migration, user-work deletion, or production-data
+  deletion;
+- weakened RLS, exposed secrets, cross-tenant access, or unverified frontend
+  success;
+- legacy ADDLIFE runtime mounting or new imports from quarantined runtime;
+- parallel Home, duplicate Policy writer, or duplicate Activity writer;
+- retrospective rewrite of existing ADRs or Constitution;
+- Product Truth, Quote Truth, Forecast Truth, compensation calculations, or
+  compensation Rule Pack mutation;
+- Manager OS, human ranking, punishment, promotion, selection, or RODI mutation;
+- automatic CRM action, task creation, calendar creation, or next-action
+  execution;
+- referral-domain mutation.
+
+Validation and Closure
+
+Implementation requires owner-specific unit and master tests, authenticated
+runtime proof, real persistence proof where persistence is claimed, tenant and
+RLS isolation, idempotency, Timeline projection, session logout scrub,
+late-result rejection, responsive browser acceptance, protected-route
+regression, Pages acceptance, and evidence that no legacy runtime or duplicate
+writer is mounted.
+
+Mocks, fixtures, or screenshots alone cannot prove productive persistence.
+The phase must stop at a pushed working branch and review-ready pull request.
+Human merge remains required.
