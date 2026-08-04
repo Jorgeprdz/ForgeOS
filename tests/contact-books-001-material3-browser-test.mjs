@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict';
+import { mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { chromium } from '@playwright/test';
 
 const baseUrl = process.env.FORGE_CONTACT_BOOKS_BASE_URL || 'http://127.0.0.1:4173/docs/static-preview/forge-alive-material3/';
 const browser = process.env.FORGE_CDP_ENDPOINT ? await chromium.connectOverCDP(process.env.FORGE_CDP_ENDPOINT) : await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 const page = await context.newPage();
+const consoleErrors = [];
+page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
 
 try {
   await page.goto(new URL('manifest.json?contact-books-001=1', baseUrl).href, { waitUntil: 'domcontentloaded' });
@@ -29,12 +33,17 @@ try {
   await page.waitForSelector('[data-contact-books-material3]');
   const permanent = await page.locator('[data-contact-books-material3] .contact-books-m3__actions button').allTextContents();
   assert.deepEqual(permanent, ['Carga masiva', '+ Nuevo libro']);
+  assert.equal(await page.getByRole('button', { name: 'Carga masiva' }).count(), 1);
+  assert.equal(await page.getByRole('button', { name: '+ Nuevo libro', exact: true }).count(), 1);
+  assert.equal(await page.getByRole('status').count(), 1);
   await page.evaluate(() => {
     document.documentElement.dataset.forgeDemoSession = 'active';
     globalThis.dispatchEvent(new CustomEvent('forge:demo-session-classified', { detail: { isDemo: true, readOnly: false } }));
   });
   await page.waitForSelector('[data-contact-books-create]:not(:disabled)');
   await page.click('[data-contact-books-create]');
+  assert.equal(await page.getByRole('dialog', { name: 'Nuevo libro' }).count(), 1);
+  assert.equal(await page.getByRole('textbox', { name: 'Nombre' }).count(), 1);
   await page.fill('[data-contact-books-form] input[name="name"]', 'Mis amigos');
   await page.click('[data-contact-books-form] button[data-primary]');
   await page.waitForSelector('[data-contact-books-list] >> text=Mis amigos');
@@ -42,6 +51,11 @@ try {
   const geometry = await page.evaluate(() => ({ width: innerWidth, documentWidth: document.documentElement.scrollWidth, bodyWidth: document.body.scrollWidth }));
   assert.ok(geometry.documentWidth <= geometry.width + 1);
   assert.ok(geometry.bodyWidth <= geometry.width + 1);
+  if (process.env.FORGE_CONTACT_BOOKS_SCREENSHOT) {
+    await mkdir(dirname(process.env.FORGE_CONTACT_BOOKS_SCREENSHOT), { recursive: true });
+    await page.screenshot({ path: process.env.FORGE_CONTACT_BOOKS_SCREENSHOT, fullPage: true });
+  }
+  assert.deepEqual(consoleErrors, []);
   await page.evaluate(() => globalThis.dispatchEvent(new CustomEvent('forge:demo-session-classified', { detail: { isDemo: true, readOnly: true } })));
   await page.waitForSelector('[data-contact-books-create]:disabled');
   await page.evaluate(() => globalThis.dispatchEvent(new CustomEvent('forge:auth-state-changed', { detail: { status: 'signed-out' } })));
