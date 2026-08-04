@@ -18,10 +18,10 @@ const report={contractId:'BETA1_022B_REMOTE_VERIFICATION_V1',runId:RUN_ID,status
 for (const [owner,item] of Object.entries(config)) {
   const state=await item.api.rpc('forge_demo_current_session'); assert.ifError(state.error); assert.equal(state.data?.readOnly,true); assert.equal(state.data?.dataClass,'SYNTHETIC');
   const read=await item.api.rpc('forge_advisor_compensation_read_product',{p_period_key:item.period,p_period_keys:[item.period]}); assert.ifError(read.error);
-  assert.equal(read.data?.snapshot?.earnedNetAmount,item.earned); assert.equal(read.data?.snapshot?.paidAmount,item.paid);
-  assert.equal(read.data?.snapshot?.safeguards?.estimatedAsEarned,false); assert.equal(read.data?.snapshot?.safeguards?.earnedAsPaid,false);
+  assert.equal(read.data?.snapshot?.amounts?.earned?.net,item.earned); assert.equal(read.data?.snapshot?.amounts?.paid?.value,item.paid);
+  assert.equal(read.data?.snapshot?.safeguards?.estimatedAsEarnedIncome,false); assert.equal(read.data?.snapshot?.safeguards?.earnedAsPaidIncome,false);
   const unknown=await item.api.rpc('forge_advisor_compensation_read_product',{p_period_key:item.unknown,p_period_keys:[item.unknown]}); assert.ifError(unknown.error);
-  assert.equal(unknown.data?.snapshot?.paidAmount,null); assert.equal(unknown.data?.snapshot?.realAmount,null);
+  assert.equal(unknown.data?.snapshot?.amounts?.paid?.value,null); assert.equal(unknown.data?.snapshot?.amounts?.real?.value,null);
   const closed=await item.api.rpc('forge_advisor_compensation_accept_synthetic_evidence',{p_command:{ownerId:item.id,runId:RUN_ID,dataClass:'NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA',idempotencyKey:`sealed:${owner}`,state:'UNKNOWN',periodKey:'2026-02',amount:null}});
   assert.ok(closed.error, `${owner}_SEALED_MUTATION_NOT_BLOCKED`);
   const other=owner==='A'?B.id:A.id;
