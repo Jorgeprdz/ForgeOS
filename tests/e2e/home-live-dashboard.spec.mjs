@@ -96,9 +96,9 @@ for (const profile of profiles) {
           widgets: widgets.map(bounds),
           widgetOverflow: widgets.map((node) => node.scrollWidth - node.clientWidth),
           recovery: recovery.map(bounds),
-          widgetBackground: style(widgets[0]).backgroundImage,
+          supportingBackground: style(widgets[1]).backgroundImage,
           recoveryBackground: style(recovery[0]).backgroundImage,
-          widgetBorder: style(widgets[0]).borderColor,
+          supportingBorder: style(widgets[1]).borderColor,
           recoveryBorder: style(recovery[0]).borderColor,
           metricFontSize: Number.parseFloat(style(widgets[1].querySelector(".productive-smart-widget-metric")).fontSize),
         };
@@ -112,8 +112,8 @@ for (const profile of profiles) {
       expect(tablet.widgetOverflow.every((value) => value <= 1)).toBe(true);
       expect(tablet.recovery[0].width).toBeGreaterThan(tablet.recovery[1].width * 1.8);
       expect(Math.abs(tablet.recovery[1].width - tablet.recovery[2].width)).toBeLessThanOrEqual(2);
-      expect(tablet.widgetBackground).toBe(tablet.recoveryBackground);
-      expect(tablet.widgetBorder).toBe(tablet.recoveryBorder);
+      expect(tablet.supportingBackground).toBe(tablet.recoveryBackground);
+      expect(tablet.supportingBorder).toBe(tablet.recoveryBorder);
       expect(tablet.metricFontSize).toBeLessThanOrEqual(44.1);
     }
 
