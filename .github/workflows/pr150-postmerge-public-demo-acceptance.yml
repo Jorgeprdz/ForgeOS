@@ -1,0 +1,66 @@
+name: PR 150 Postmerge Public Demo Acceptance
+
+on:
+  push:
+    branches:
+      - acceptance/pr150-postmerge-public-demo
+    paths:
+      - tests/e2e/pr150-postmerge-public-demo.spec.mjs
+      - playwright.pr150-postmerge-public-demo.config.mjs
+      - .github/workflows/pr150-postmerge-public-demo-acceptance.yml
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths:
+      - tests/e2e/pr150-postmerge-public-demo.spec.mjs
+      - playwright.pr150-postmerge-public-demo.config.mjs
+      - .github/workflows/pr150-postmerge-public-demo-acceptance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr150-postmerge-public-demo-acceptance-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  public-demo-browser-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      FORGE_PUBLIC_DEMO_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=inicio
+
+    steps:
+      - name: Checkout exact acceptance candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Accept public demo end to end
+        run: >-
+          npx playwright test
+          -c playwright.pr150-postmerge-public-demo.config.mjs
+
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr150-postmerge-public-demo-failure
+          path: artifacts/pr150-postmerge-public-demo-test-results
+          if-no-files-found: ignore
+          retention-days: 14
