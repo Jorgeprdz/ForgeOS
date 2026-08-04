@@ -12,12 +12,12 @@ on:
       - 'docs/static-preview/forge-alive-material3/**'
       - 'docs/static-preview/forge-alive/**'
       - 'docs/static-preview/quote-engine/**'
-      - 'docs/static-preview/quote-preview-live/**'
+      - 'docs/static-preview/quote-runtime/**'
       - 'advisor-os/**'
       - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: canonical-pages-artifact-${{ github.event.pull_request.number }}
@@ -82,63 +82,3 @@ jobs:
 
       - name: Validate canonical-only artifact
         run: node /tmp/validate-canonical.cjs
-
-  beta11-final-review2-closure:
-    needs: validate
-    if: github.event.pull_request.head.ref == 'chore/retire-all-legacy-forge-ui' && github.actor != 'github-actions[bot]'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout mutable review branch
-        uses: actions/checkout@v4
-        with:
-          ref: chore/retire-all-legacy-forge-ui
-          fetch-depth: 0
-
-      - name: Execute audited closure block
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-
-          source = Path('.github/workflows/temporary-beta11-final-review2.yml').read_text().splitlines()
-          step = next(i for i, line in enumerate(source) if 'Relocate productive quote runtime and reconcile visual acceptance' in line)
-          run_line = next(i for i in range(step, len(source)) if source[i].strip() == 'run: |')
-          end_line = next(i for i in range(run_line + 1, len(source)) if source[i].strip() == '- name: Commit final review 2 closure')
-          output = []
-          for line in source[run_line + 1:end_line]:
-              output.append(line[10:] if line.startswith('          ') else line)
-          script = '\n'.join(output) + '\n'
-          move_anchor = 'git mv docs/static-preview/quote-preview-live docs/static-preview/quote-runtime\n'
-          if script.count(move_anchor) != 1:
-              raise SystemExit('QUOTE_RUNTIME_MOVE_ANCHOR_NOT_UNIQUE')
-          script = script.replace(
-              move_anchor,
-              move_anchor + 'rm -f tests/forge-alive-runtime-lazy-loader-contract-test.mjs\n',
-              1,
-          )
-          old_scan = "':!docs/evidence/**' ':!tests/legacy-ui-retirement-regression.mjs';"
-          new_scan = "':!docs/evidence/**' ':!tests/**' ':!.github/workflows/temporary-beta11-final-review2.yml' ':!.github/workflows/temporary-beta11-final-review2-launcher.yml';"
-          if script.count(old_scan) != 1:
-              raise SystemExit('LIVE_IMPORT_SCAN_ANCHOR_NOT_UNIQUE')
-          script = script.replace(old_scan, new_scan, 1)
-          if 'git mv docs/static-preview/quote-preview-live' not in script:
-              raise SystemExit('AUDITED_CLOSURE_BLOCK_EXTRACTION_FAILED')
-          Path('/tmp/beta11-final-review2-closure.sh').write_text(script)
-          PY
-          bash -n /tmp/beta11-final-review2-closure.sh
-          bash /tmp/beta11-final-review2-closure.sh
-
-      - name: Commit validated non-workflow closure
-        shell: bash
-        run: |
-          set -euo pipefail
-          git restore --staged .github/workflows 2>/dev/null || true
-          git restore .github/workflows
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- ':!.github/workflows'
-          git diff --cached --check
-          git commit -m "fix: close Beta 1.1 final review 2 product gates"
-          git push origin HEAD:chore/retire-all-legacy-forge-ui
