@@ -1,0 +1,44 @@
+name: Mobile Bottom Nav Resize
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"
+      - "docs/static-preview/forge-alive-material3/mobile-bottom-nav-resize.js"
+      - "docs/static-preview/forge-alive-material3/mobile-bottom-nav-resize.css"
+      - "tests/mobile-bottom-nav-resize-test.mjs"
+      - ".github/workflows/mobile-bottom-nav-resize.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-alive-material3/legacy-ui-retirement.js"
+      - "docs/static-preview/forge-alive-material3/mobile-bottom-nav-resize.js"
+      - "docs/static-preview/forge-alive-material3/mobile-bottom-nav-resize.css"
+      - "tests/mobile-bottom-nav-resize-test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate syntax and geometry contract
+        run: |
+          node --check docs/static-preview/forge-alive-material3/legacy-ui-retirement.js
+          node --check docs/static-preview/forge-alive-material3/mobile-bottom-nav-resize.js
+          node --check tests/mobile-bottom-nav-resize-test.mjs
+          node --test tests/mobile-bottom-nav-resize-test.mjs
+          git diff --check
