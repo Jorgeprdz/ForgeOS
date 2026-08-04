@@ -76,13 +76,21 @@ jobs:
           const siteDir = '_site';
           const canonicalSource = 'docs/static-preview/forge-alive-material3';
           const canonicalTarget = path.join(siteDir, 'static-preview', 'forge-alive');
-          const quoteEngineSource = 'docs/static-preview/forge-alive/nueva-cotizacion/index.html';
+          const quoteEngineSource = 'docs/static-preview/quote-engine/nueva-cotizacion/index.html';
           const quoteEngineTarget = path.join(
             siteDir,
             'static-preview',
             'quote-engine',
             'nueva-cotizacion',
             'index.html',
+          );
+          const quoteEngineEntrypointSource =
+            'docs/static-preview/quote-engine/forge-sales-presentation-entrypoint-r16j0.js';
+          const quoteEngineEntrypointTarget = path.join(
+            siteDir,
+            'static-preview',
+            'quote-engine',
+            'forge-sales-presentation-entrypoint-r16j0.js',
           );
           const quoteRuntimeSource = 'docs/static-preview/quote-preview-live';
           const quoteRuntimeTarget = path.join(siteDir, 'static-preview', 'quote-preview-live');
@@ -127,6 +135,7 @@ jobs:
           const blockedPublicPrefixes = [
             'docs/static-preview/forge-alive/',
             'docs/static-preview/forge-alive-material3/',
+            'docs/static-preview/quote-engine/',
             'docs/static-preview/quote-preview-live/',
             'docs/static-preview/templates/',
             'docs/quote-preview-live/',
@@ -177,6 +186,9 @@ jobs:
           if (!fs.existsSync(quoteEngineSource)) {
             throw new Error('Quotes engine source is missing');
           }
+          if (!fs.existsSync(quoteEngineEntrypointSource)) {
+            throw new Error('Quotes presentation entrypoint source is missing');
+          }
           fs.mkdirSync(path.dirname(quoteEngineTarget), { recursive: true });
           const standaloneGuard = [
             '<script data-forge-engine-standalone-guard>',
@@ -189,10 +201,32 @@ jobs:
           if (!quoteEngine.includes('<head>')) {
             throw new Error('Quotes engine head boundary is missing');
           }
+          const sanitizedQuoteEngine = quoteEngine
+            .replace(
+              '<title>Nueva cotización · Forge Alive</title>',
+              '<title>Motor de cotización · ForgeOS</title>',
+            )
+            .replace(
+              /\n<nav\s+class="bottom-nav forge-mobile-nav-r16c5j"[\s\S]*?<\/nav>\s*/,
+              '\n',
+            )
+            .replace(
+              /\s*<script defer src="\.\.\/forge-alive-mobile-nav-r16c5j\.js[^>]*><\/script>/,
+              '',
+            );
+          if (
+            /data-forge-mobile-nav-r16c5j|forge-alive-mobile-nav-r16c5j\.js/.test(
+              sanitizedQuoteEngine,
+            )
+          ) {
+            throw new Error('retired Quotes navigation survived engine isolation');
+          }
           fs.writeFileSync(
             quoteEngineTarget,
-            quoteEngine.replace('<head>', `<head>\n${standaloneGuard}`),
+            sanitizedQuoteEngine.replace('<head>', `<head>\n${standaloneGuard}`),
           );
+          fs.mkdirSync(path.dirname(quoteEngineEntrypointTarget), { recursive: true });
+          fs.copyFileSync(quoteEngineEntrypointSource, quoteEngineEntrypointTarget);
 
           function copyRuntimeFiles(sourceDir, targetDir) {
             for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
@@ -312,6 +346,7 @@ jobs:
             path.join(canonical, 'app.js'),
             path.join(canonical, 'quotes-module.js'),
             quoteEngine,
+            '_site/static-preview/quote-engine/forge-sales-presentation-entrypoint-r16j0.js',
             '_site/static-preview/quote-preview-live/forge-quote-preview-bundle.js',
           ]) {
             assert.ok(fs.existsSync(required), `missing productive artifact: ${required}`);
@@ -347,9 +382,14 @@ jobs:
             /Muestra segura · solo lectura|phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime/,
           );
           assert.match(quotesModule, /quote-engine\/nueva-cotizacion\/index\.html/);
-          assert.doesNotMatch(quotesModule, /forge-alive-runtime/);
+          assert.doesNotMatch(quotesModule, /forge-alive-runtime|\.\.\/forge-alive\//);
           assert.match(engineSource, /data-forge-engine-standalone-guard/);
           assert.match(engineSource, /data-forge-module="dedicated-new-quote-static-route"/);
+          assert.match(engineSource, /Motor de cotización · ForgeOS/);
+          assert.doesNotMatch(
+            engineSource,
+            /data-forge-mobile-nav-r16c5j|forge-alive-mobile-nav-r16c5j\.js/,
+          );
 
           const forbidden = [];
           function walk(directory) {
