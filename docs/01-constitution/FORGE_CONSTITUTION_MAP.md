@@ -288,6 +288,35 @@ ADR-0019
 
 ---
 
+# RATIFIED EXECUTION AUTHORITIES
+
+These canonical ADRs authorize bounded implementation. They do not amend the
+constitutional doctrine above and do not convert working ADR candidates into
+canonical authority.
+
+### ADR-019
+UI-M03 Home and Alfred Material 3 Execution Authority
+
+### ADR-020
+UI-M04 Canonical Forge Shell Execution Authority
+
+### ADR-021
+UI-M05 Quotes Visual Migration Execution Authority
+
+### ADR-022
+UI-M05A Quotes Functional Baseline Repair Authority
+
+### ADR-023
+Advisor OS Productive Home and Core Modules Recovery Execution Authority
+
+ADR-023 is ratified only for `ADVISOR_OS_PRODUCTIVE_RECOVERY_001`. It
+prospectively expands ADR-019 and ADR-020 for the named Home, Smart Widget,
+Cartera, Policy entry, Commissions and Activity recovery scope while preserving
+their historical text and all constitutional truth and human-authority
+boundaries.
+
+---
+
 # CANONICAL OPERATIONAL DOCS NAMESPACES
 
 These namespaces are operational governance surfaces. They are not canonical ADR sets.

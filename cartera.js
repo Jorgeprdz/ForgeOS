@@ -204,27 +204,23 @@ export function renderCartera() {
                             Directorio canónico de personas, cuentas y pólizas
                         </p>
                     </div>
-                    <span
-                        style="font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px;background:var(--surface-variant,rgba(255,255,255,.08));"
-                    >
-                        SOLO LECTURA
-                    </span>
+                    <span class="cartera-truth-badge">DIRECTORIO VERIFICADO</span>
                 </div>
 
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:10px;margin-top:16px;">
-                    <div class="glass-widget" style="padding:13px;">
+                <div class="cartera-summary-strip" aria-label="Resumen de Cartera">
+                    <div>
                         <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Personas</span>
                         <div id="kpi-total-personas" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
                     </div>
-                    <div class="glass-widget" style="padding:13px;">
+                    <div>
                         <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Cuentas</span>
                         <div id="kpi-total-cuentas" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
                     </div>
-                    <div class="glass-widget" style="padding:13px;">
+                    <div>
                         <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Pólizas</span>
                         <div id="kpi-total-polizas" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
                     </div>
-                    <div class="glass-widget" style="padding:13px;">
+                    <div>
                         <span style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">Directorio</span>
                         <div id="kpi-total-directorio" style="font-size:22px;font-weight:800;margin-top:7px;">—</div>
                     </div>

@@ -73,11 +73,16 @@ function humanState(value) {
   const states = {
     PAID: "Pagado",
     CONFIRMED_PAID: "Pago confirmado",
+    CONFIRMED: "Confirmado",
     EARNED: "Devengado",
     ESTIMATED: "Estimado",
+    PROJECTED: "Proyectado",
+    POTENTIAL: "Potencial",
     ADJUSTED: "Con ajustes",
     REVERSED: "Con reversión",
     PENDING: "Pendiente",
+    STALE: "Desactualizado",
+    CONFLICTING: "En conflicto",
     UNKNOWN: "Sin confirmar",
   };
   return states[String(value || "UNKNOWN").toUpperCase()] || "Requiere revisión";
@@ -271,26 +276,16 @@ function renderProduct(readModel) {
         caption: "Cálculo todavía no promovido a devengado.",
         truth: "ESTIMATED",
       })}
-      ${card({
-        key: "potential", title: "Potencial", value: evidenced("potential", amounts.potential, aggregate => Number.isFinite(Number(aggregate?.potentialAmount))), currency,
-        caption: "Señal futura; no forma parte del ingreso real.",
-        truth: "POTENTIAL",
-      })}
-      ${card({
-        key: "at-risk", title: "En riesgo", value: evidenced("atRisk", amounts.atRisk, aggregate => Number.isFinite(Number(aggregate?.atRiskAmount))), currency,
-        caption: "Señal explícita; no se descuenta silenciosamente.",
-        truth: "AT_RISK",
-      })}
-      ${card({
-        key: "adjustments", title: "Ajustes", value: evidenced("adjustments", amounts.earned.adjustments, aggregate => hasEarnedEvent(aggregate) && Number.isFinite(Number(aggregate.adjustmentAmount))), currency,
-        caption: "Deltas documentados sobre compensación devengada.",
-        truth: "ADJUSTED",
-      })}
-      ${card({
-        key: "reversals", title: "Reversiones", value: evidenced("reversals", amounts.earned.reversals, aggregate => hasEarnedEvent(aggregate) && Number.isFinite(Number(aggregate.reversalAmount))), currency,
-        caption: "Eventos negativos que preservan la historia original.",
-        truth: "REVERSED",
-      })}
+    </section>
+
+    <section class="comp-secondary-summary" data-compensation-secondary-summary aria-labelledby="comp-secondary-title">
+      <h2 id="comp-secondary-title">Potencial, riesgo, ajustes y reversiones</h2>
+      <div class="comp-grid comp-grid--secondary">
+        ${card({ key: "potential", title: "Proyectado / potencial", value: evidenced("potential", amounts.potential, aggregate => Number.isFinite(Number(aggregate?.potentialAmount))), currency, caption: "Escenario futuro; no forma parte del ingreso real y no es ingreso garantizado.", truth: "PROJECTED" })}
+        ${card({ key: "at-risk", title: "En riesgo", value: evidenced("atRisk", amounts.atRisk, aggregate => Number.isFinite(Number(aggregate?.atRiskAmount))), currency, caption: "Señal explícita; no se descuenta silenciosamente.", truth: "AT_RISK" })}
+        ${card({ key: "adjustments", title: "Ajustes", value: evidenced("adjustments", amounts.earned.adjustments, aggregate => hasEarnedEvent(aggregate) && Number.isFinite(Number(aggregate.adjustmentAmount))), currency, caption: "Deltas documentados sobre compensación devengada.", truth: "ADJUSTED" })}
+        ${card({ key: "reversals", title: "Reversiones", value: evidenced("reversals", amounts.earned.reversals, aggregate => hasEarnedEvent(aggregate) && Number.isFinite(Number(aggregate.reversalAmount))), currency, caption: "Eventos negativos que preservan la historia original.", truth: "REVERSED" })}
+      </div>
     </section>
 
     <section class="comp-section comp-section--attention">
@@ -355,7 +350,8 @@ export const ADVISOR_COMPENSATION_070_STYLES = `<style data-advisor-compensation
   .comp-source-health{display:flex;gap:8px;flex-wrap:wrap;min-width:0}.comp-source-health span{font-size:.74rem;padding:6px 9px;border-radius:999px;background:var(--comp-surface);border:1px solid var(--separator,#d7dce5);overflow-wrap:anywhere}
   .comp-banner{padding:12px 14px;border-radius:14px;font-weight:650}.comp-banner--warning{background:#fff4d5;color:#6d4a00}
   .comp-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.55fr);gap:18px;padding:22px;border-radius:24px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#5b5bd6) 16%,var(--comp-surface)),var(--comp-surface));border:1px solid color-mix(in srgb,var(--accent,#5b5bd6) 26%,transparent);min-width:0}.comp-hero>div{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;min-width:0}.comp-hero strong{font-size:clamp(2rem,6vw,4rem);line-height:1;overflow-wrap:anywhere}.comp-hero p{margin:auto 0;color:var(--muted,#657085);overflow-wrap:anywhere}
-  .comp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.comp-card,.comp-section,.comp-simulator,.comp-state{background:var(--comp-surface);border:1px solid var(--separator,#d7dce5);border-radius:20px;box-shadow:0 10px 28px rgba(17,24,39,.06)}
+  .comp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.comp-card,.comp-section,.comp-simulator,.comp-state{background:var(--comp-surface);border:1px solid var(--separator,#d7dce5);border-radius:20px;box-shadow:0 10px 28px rgba(17,24,39,.06)}
+  .comp-secondary-summary{margin-top:14px;padding:14px;border:1px solid var(--separator,#d7dce5);border-radius:16px;background:color-mix(in srgb,var(--comp-surface) 88%,var(--separator,#d7dce5))}.comp-secondary-summary>h2{margin:0 4px 12px;font-size:1rem}.comp-grid--secondary{grid-template-columns:repeat(2,minmax(0,1fr))}
   .comp-card{padding:17px;min-height:148px;min-width:0}.comp-card__heading{display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:760;min-width:0}.comp-card strong{display:block;font-size:clamp(1.35rem,3vw,2rem);margin:17px 0 7px;overflow-wrap:anywhere}.comp-card p{margin:0;color:var(--muted,#657085);font-size:.84rem;line-height:1.4}
   .comp-truth{display:inline-flex;align-items:center;max-width:max-content;border-radius:999px;padding:4px 8px;font-size:.66rem;font-weight:850;letter-spacing:.04em;background:#edf0f6;color:#43506a}.comp-truth--paid{background:#dff7e8;color:#126437}.comp-truth--earned{background:#e4efff;color:#154f96}.comp-truth--estimated{background:#f0e8ff;color:#6736a5}.comp-truth--potential{background:#e4f7f7;color:#176268}.comp-truth--at_risk,.comp-truth--at-risk{background:#fff0dd;color:#8a4b00}.comp-truth--adjusted{background:#eaf1ff;color:#345a9b}.comp-truth--reversed{background:#ffe6e8;color:#9c2c38}.comp-truth--unavailable{background:#edf0f6;color:#657085}.comp-truth--simulation{background:#161b2a;color:white}
   .comp-section{padding:20px;overflow:hidden}.comp-section header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;min-width:0}

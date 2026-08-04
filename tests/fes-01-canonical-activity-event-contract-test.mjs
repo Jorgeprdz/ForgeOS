@@ -268,6 +268,37 @@ function fixtureFor(eventType, index) {
   };
 }
 
+test("manual Activity preserves structured context without executing its next action", () => {
+  const event = createCanonicalActivityEvent(baseInput({
+    event_type: "ACTIVITY_CONTEXT_ADDED",
+    actor: { type: "ADVISOR", id: "advisor-001" },
+    subject: { type: "ACTIVITY", id: "activity-manual-001" },
+    source: { type: "ADVISOR_CONFIRMED", reference: "manual-activity-001", channel: "FORGE_UI" },
+    evidence_strength: "HUMAN_CONFIRMED",
+    confirmation_state: "CONFIRMED",
+    idempotency_key: "manual-activity-001",
+    payload: {
+      activity_reference: "activity-manual-001",
+      context_reference: "person-001",
+      capture_mode: "MANUAL_CONFIRMED",
+      related_reference: "person-001",
+      activity_type: "CONTACT",
+      channel: "PHONE",
+      occurred_at: "2026-08-04T15:00:00.000Z",
+      outcome_code: "COMPLETED",
+      notes: "La persona pidió revisar la propuesta el jueves.",
+      commercial_stage: "FOLLOW_UP",
+      next_action: "Revisar la propuesta con la persona",
+      follow_up_at: "2026-08-06T15:00:00.000Z",
+    },
+  }));
+  assert.equal(event.payload.next_action, "Revisar la propuesta con la persona");
+  assert.equal(event.payload.follow_up_at, "2026-08-06T15:00:00.000Z");
+  assert.equal(event.safety_flags.executes_business_action, false);
+  assert.equal(event.safety_flags.mutates_external_provider, false);
+  assert.equal(event.safety_flags.cross_tenant_data, false);
+});
+
 test("FES 01 exposes the thirteen first-vertical event types", () => {
   assert.equal(EVENT_TYPES.length, 13);
   assert.deepEqual(EVENT_TYPES, [

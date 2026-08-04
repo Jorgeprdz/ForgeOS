@@ -258,6 +258,29 @@ UI-M05 is limited to the discovered functional Cotizaciones surface,
 canonical ForgeShell mounting, route/Nav Pill integration, visual migration
 and function-preserving validation.
 
+## Advisor OS Productive Recovery Execution Authority
+
+| Field | Ratified value |
+| --- | --- |
+| Canonical ADR | `adr/ADR-023 — Advisor OS Productive Home and Core Modules Recovery Execution Authority.txt` |
+| Authorization ID | `ADVISOR_OS_PRODUCTIVE_RECOVERY_001` |
+| Status | `RATIFIED / EXECUTION_AUTHORIZED` |
+| Owner approval | `GRANTED` |
+| Miranda approval | `GRANTED` |
+| Board approval | `GRANTED` |
+| Board scope | `HOME_CARTERA_POLICY_ENTRY_COMMISSIONS_ACTIVITY_PRODUCTIVE_RECOVERY` |
+| Implementation readiness | `AUTHORIZED_AFTER_RECOVERY_AUDIT` |
+| Runtime branch | `feature/advisor-os-productive-recovery-001` |
+| Legacy runtime mounting | `FORBIDDEN` |
+| Direct main mutation | `FORBIDDEN` |
+| Automatic main merge | `FORBIDDEN` |
+
+ADR-023 prospectively expands and partially supersedes the execution
+restrictions of ADR-019 and ADR-020 only for its named recovery scope. It does
+not rewrite either historical ADR. Product Truth, Quote Truth, Forecast Truth,
+compensation calculations and Rule Packs, Manager OS, referrals, human ranking,
+automatic CRM actions and weakened RLS remain prohibited.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

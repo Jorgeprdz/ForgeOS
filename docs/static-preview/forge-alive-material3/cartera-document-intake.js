@@ -61,6 +61,7 @@ function dateInput(value) {
 
 function statusFrom(value) {
   const text = normalizeText(value);
+  if (!text) return "UNKNOWN";
   if (/emitida|issued/.test(text)) return "ISSUED";
   if (/pendiente|pending/.test(text)) return "PENDING";
   if (/suspendida|suspended/.test(text)) return "SUSPENDED";
@@ -68,7 +69,7 @@ function statusFrom(value) {
   if (/cancelada|cancelled/.test(text)) return "CANCELLED";
   if (/madur|matured|finalizada/.test(text)) return "MATURED";
   if (/reclamacion|claimed|siniestro/.test(text)) return "CLAIMED";
-  return "ACTIVE";
+  return "UNKNOWN";
 }
 
 function demoSession() {
@@ -119,7 +120,7 @@ function ensureStyles() {
     .cartera-policy-entry *{box-sizing:border-box}.cartera-policy-entry h2,.cartera-policy-entry p{margin:0}.cartera-policy-entry__top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.cartera-policy-entry__top h2{margin-top:4px;font-size:clamp(1.3rem,2vw,1.75rem)}.cartera-policy-entry__top p:last-child{margin-top:7px;color:#b9c7db;font-size:13px;line-height:1.45}.cartera-policy-entry__actions{display:flex;gap:9px;flex-wrap:wrap}
     .cartera-policy-entry button{min-height:44px;padding:10px 14px;border:1px solid rgba(170,199,255,.24);border-radius:13px;background:rgba(255,255,255,.07);color:inherit;font:800 13px/1.1 Inter,system-ui,sans-serif;cursor:pointer}.cartera-policy-entry button[data-primary]{border-color:rgba(82,230,223,.46);background:linear-gradient(135deg,rgba(82,230,223,.2),rgba(80,130,255,.2));color:#c0fffa}.cartera-policy-entry button:disabled{opacity:.48;cursor:not-allowed}
     .cartera-policy-entry__drop{display:grid;place-items:center;gap:7px;min-height:128px;margin-top:16px;padding:20px;border:1px dashed rgba(82,230,223,.48);border-radius:16px;background:rgba(82,230,223,.045);text-align:center;cursor:pointer}.cartera-policy-entry__drop[data-drag-active=true]{border-style:solid;background:rgba(82,230,223,.14)}.cartera-policy-entry__drop span{color:#aabbd0;font-size:12px}.cartera-policy-entry input[type=file]{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.cartera-policy-entry__status{margin-top:11px!important;color:#bac8db;font-size:12px}.cartera-policy-entry__error{margin-top:8px!important;color:#ffb4ab;font-size:12px}.cartera-policy-entry__demo{margin-top:11px;padding:10px 12px;border-radius:12px;background:rgba(242,201,76,.12);color:#ffe69a;font-size:12px;font-weight:750}
-    .cartera-policy-dialog{width:min(760px,calc(100vw - 28px));max-height:88dvh;padding:0;border:1px solid rgba(170,199,255,.22);border-radius:24px;background:#0b192d;color:#f7f4ff;box-shadow:0 28px 90px rgba(0,0,0,.58)}.cartera-policy-dialog::backdrop{background:rgba(2,8,18,.78);backdrop-filter:blur(10px)}.cartera-policy-dialog__header{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:14px;padding:19px;border-bottom:1px solid rgba(170,199,255,.14);background:rgba(11,25,45,.97)}.cartera-policy-dialog__header h3{margin:4px 0 0;font-size:1.45rem}.cartera-policy-dialog__header p{margin:7px 0 0;color:#aebbd0;font-size:12px}.cartera-policy-dialog form{margin:0}.cartera-policy-dialog__body{display:grid;gap:16px;padding:19px}.cartera-policy-dialog fieldset{display:grid;gap:12px;margin:0;padding:15px;border:1px solid rgba(170,199,255,.14);border-radius:17px}.cartera-policy-dialog legend{padding:0 7px;color:#92efe9;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.cartera-policy-dialog__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cartera-policy-dialog label{display:grid;gap:6px;color:#c0ccdc;font-size:11px;font-weight:800}.cartera-policy-dialog input,.cartera-policy-dialog select{width:100%;min-height:44px;padding:10px 12px;border:1px solid rgba(170,199,255,.22);border-radius:12px;background:#101f35;color:#fff;font:600 14px/1.2 Inter,system-ui,sans-serif}.cartera-policy-dialog__notice{padding:11px 13px;border-radius:12px;background:rgba(82,230,223,.08);color:#bbf8f4;font-size:12px;line-height:1.45}.cartera-policy-dialog__footer{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:10px;padding:15px 19px;border-top:1px solid rgba(170,199,255,.14);background:rgba(11,25,45,.98)}.cartera-policy-dialog__footer [type=submit]{min-width:170px;border:0;background:linear-gradient(135deg,#54ddd5,#73a7ff);color:#07111f}
+    .cartera-policy-dialog{width:min(760px,calc(100vw - 28px));max-height:88dvh;padding:0;border:1px solid rgba(170,199,255,.22);border-radius:24px;background:#0b192d;color:#f7f4ff;box-shadow:0 28px 90px rgba(0,0,0,.58)}.cartera-policy-dialog::backdrop{background:rgba(2,8,18,.78);backdrop-filter:blur(10px)}.cartera-policy-dialog__header{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:14px;padding:19px;border-bottom:1px solid rgba(170,199,255,.14);background:rgba(11,25,45,.97)}.cartera-policy-dialog__header h3{margin:4px 0 0;font-size:1.45rem}.cartera-policy-dialog__header p{margin:7px 0 0;color:#aebbd0;font-size:12px}.cartera-policy-dialog form{margin:0}.cartera-policy-dialog__body{display:grid;gap:16px;padding:19px}.cartera-policy-dialog fieldset{display:grid;gap:12px;margin:0;padding:15px;border:1px solid rgba(170,199,255,.14);border-radius:17px}.cartera-policy-dialog legend{padding:0 7px;color:#92efe9;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.cartera-policy-dialog__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cartera-policy-dialog label{display:grid;gap:6px;color:#c0ccdc;font-size:11px;font-weight:800}.cartera-policy-dialog input,.cartera-policy-dialog select{width:100%;min-height:44px;padding:10px 12px;border:1px solid rgba(170,199,255,.22);border-radius:12px;background:#101f35;color:#fff;font:600 14px/1.2 Inter,system-ui,sans-serif}.cartera-policy-dialog .cartera-policy-confirmation{display:flex;align-items:center;gap:10px;min-height:44px}.cartera-policy-dialog .cartera-policy-confirmation input{width:20px;min-height:20px;margin:0;padding:0}.cartera-policy-dialog__notice{padding:11px 13px;border-radius:12px;background:rgba(82,230,223,.08);color:#bbf8f4;font-size:12px;line-height:1.45}.cartera-policy-dialog__footer{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:10px;padding:15px 19px;border-top:1px solid rgba(170,199,255,.14);background:rgba(11,25,45,.98)}.cartera-policy-dialog__footer [type=submit]{min-width:170px;border:0;background:linear-gradient(135deg,#54ddd5,#73a7ff);color:#07111f}
     .cartera-policy-bulk-table{max-width:100%;overflow:auto;border:1px solid rgba(170,199,255,.14);border-radius:14px}.cartera-policy-bulk-table table{width:100%;border-collapse:collapse;min-width:650px}.cartera-policy-bulk-table th,.cartera-policy-bulk-table td{padding:10px;text-align:left;border-bottom:1px solid rgba(170,199,255,.1);font-size:12px}.cartera-policy-bulk-table td:last-child{display:grid;gap:3px}.cartera-policy-bulk-table small{color:#b9c7db}.cartera-policy-bulk-table [data-policy-import-state=READY_TO_IMPORT] strong,.cartera-policy-bulk-table [data-policy-import-state=IMPORTED] strong{color:#92efe9}.cartera-policy-bulk-table [data-policy-import-state=INVALID] strong,.cartera-policy-bulk-table [data-policy-import-state=FAILED] strong{color:#ffb4ab}.cartera-policy-bulk-table [data-policy-import-state=DUPLICATE_SUSPECTED] strong{color:#ffe69a}
     @media(max-width:720px){.cartera-policy-entry__top{display:grid}.cartera-policy-entry__actions{display:grid;grid-template-columns:1fr}.cartera-policy-entry__drop{min-height:104px}.cartera-policy-dialog{width:100%;max-height:94dvh;margin:auto 0 0;border-radius:24px 24px 0 0}.cartera-policy-dialog__grid{grid-template-columns:1fr}.cartera-policy-dialog__footer{display:grid;grid-template-columns:1fr 1fr;padding-bottom:calc(15px + env(safe-area-inset-bottom))}}
   `;
@@ -218,6 +219,8 @@ async function openEditor(panel, candidate = {}, metadata = {}) {
             <label>Cómo registrar al titular<select name="personMode"><option value="existing"${mode === "existing" ? " selected" : ""}>Vincular persona existente</option><option value="new"${mode === "new" ? " selected" : ""}>Crear persona nueva</option></select></label>
             <label>Persona existente<select name="existingPersonReference"><option value="">Selecciona…</option>${people.map(person => `<option value="${escapeHtml(person.reference)}"${person.reference === exact?.reference ? " selected" : ""}>${escapeHtml(person.label)}</option>`).join("")}</select></label>
             <label>Nombre del titular<input name="holderName" maxlength="180" value="${escapeHtml(candidate.person || "")}" placeholder="Nombre completo"></label>
+            <label>Asegurado<input name="insuredName" maxlength="180" value="${escapeHtml(candidate.insured || candidate.person || "")}" placeholder="Nombre del asegurado"></label>
+            <label>Contratante<input name="contractorName" maxlength="180" value="${escapeHtml(candidate.contractor || candidate.person || "")}" placeholder="Nombre del contratante"></label>
           </div>
         </fieldset>
         <fieldset>
@@ -233,8 +236,18 @@ async function openEditor(panel, candidate = {}, metadata = {}) {
             <label>Moneda<select name="currency"><option>MXN</option><option>USD</option><option>UDI</option></select></label>
             <label>Prima<input type="number" min="0" step="0.01" name="premiumAmount" value="${numberOrNull(candidate.premium) ?? ""}"></label>
             <label>Periodicidad<select name="paymentFrequency">${options([["MONTHLY","Mensual"],["QUARTERLY","Trimestral"],["SEMIANNUAL","Semestral"],["ANNUAL","Anual"],["SINGLE","Pago único"],["OTHER","Otra"]], "MONTHLY")}</select></label>
+            <label>Forma de pago<select name="paymentMethod">${options([["UNKNOWN","Desconocida"],["DIRECT_DEBIT","Domiciliación"],["BANK_TRANSFER","Transferencia"],["CARD","Tarjeta"],["CASH","Efectivo"],["OTHER","Otra"]], "UNKNOWN")}</select></label>
             <label>Suma asegurada<input type="number" min="0" step="0.01" name="sumInsured"></label>
+            <label>Fecha de la evidencia<input type="date" name="sourceDate" value="${dateInput(candidate.sourceDate)}"></label>
           </div>
+        </fieldset>
+        <fieldset>
+          <legend>Evidencia y confirmación</legend>
+          <div class="cartera-policy-dialog__grid">
+            <label>Observaciones<input name="observations" maxlength="500" placeholder="Contexto verificable; evita datos sensibles innecesarios"></label>
+            <label class="cartera-policy-confirmation"><input type="checkbox" name="officialDocumentVerified" value="yes" ${metadata.inputMode === "pdf" ? "checked" : ""}> Verifiqué un documento oficial</label>
+          </div>
+          <p class="cartera-policy-dialog__notice">Sin documento oficial, la captura queda como evidencia confirmada por el asesor y Policy Truth provisional o incompleta.</p>
         </fieldset>
         <p class="cartera-policy-entry__error" data-policy-form-error role="alert" hidden></p>
       </div>
@@ -263,6 +276,8 @@ function formDraft(form) {
     personMode: values.personMode,
     existingPersonReference: String(values.existingPersonReference || "").trim(),
     holderName: String(values.holderName || "").trim(),
+    insuredName: String(values.insuredName || "").trim(),
+    contractorName: String(values.contractorName || "").trim(),
     policyNumber: String(values.policyNumber || "").trim(),
     carrierLabel: String(values.carrierLabel || "").trim(),
     productLabel: String(values.productLabel || "").trim(),
@@ -273,7 +288,11 @@ function formDraft(form) {
     currency: values.currency || null,
     premiumAmount: numberOrNull(values.premiumAmount),
     paymentFrequency: values.paymentFrequency || null,
+    paymentMethod: values.paymentMethod || "UNKNOWN",
     sumInsured: numberOrNull(values.sumInsured),
+    sourceDate: values.sourceDate || null,
+    observations: String(values.observations || "").trim(),
+    officialDocumentVerified: form.elements.officialDocumentVerified?.checked === true,
   };
 }
 
@@ -347,7 +366,7 @@ function createPolicyCommand(validator, userId, draft, personReference, evidence
     premiumAmount: draft.premiumAmount,
     paymentFrequency: draft.paymentFrequency,
     sumInsured: draft.sumInsured,
-    completenessState: draft.effectiveDate && draft.currency ? "COMPLETE" : "PARTIAL",
+    completenessState: draft.effectiveDate && draft.currency && draft.officialDocumentVerified ? "COMPLETE" : "PARTIAL",
     freshnessState: "CURRENT",
     conflictState: "CLEAR",
     evidenceVersionReferences: [evidenceReference],
@@ -397,7 +416,7 @@ function createPolicyCommand(validator, userId, draft, personReference, evidence
             ? "BULK_CSV_POLICY_IMPORT"
             : "MANUAL_POLICY_ENTRY",
       observedAt: at,
-      verificationState: "CONFIRMED",
+      verificationState: draft.officialDocumentVerified ? "CONFIRMED" : "REVIEWED",
       fieldClaims: {
         policyNumber: draft.policyNumber,
         carrierReference,
@@ -408,10 +427,26 @@ function createPolicyCommand(validator, userId, draft, personReference, evidence
         currency: draft.currency,
         premiumAmount: draft.premiumAmount,
         paymentFrequency: draft.paymentFrequency,
+        paymentMethod: draft.paymentMethod,
         sumInsured: draft.sumInsured,
+        insuredName: draft.insuredName || null,
+        contractorName: draft.contractorName || null,
+        observations: draft.observations || null,
       },
       provenance: {
         sourceSystem: "FORGE_CARTERA_POLICY_ENTRY",
+        evidenceOrigin: draft.inputMode === "pdf"
+          ? "ADVISOR_UPLOADED_POLICY_DOCUMENT"
+          : draft.inputMode === "bulk"
+            ? "ADVISOR_POLICY_BULK_IMPORT"
+            : "MANUAL_ADVISOR_ENTRY",
+        evidenceState: draft.officialDocumentVerified ? "ADVISOR_CONFIRMED" : "PROVISIONAL",
+        officialDocumentVerified: draft.officialDocumentVerified,
+        policyTruthState: draft.officialDocumentVerified ? "ADVISOR_CONFIRMED" : "PROVISIONAL_OR_INCOMPLETE",
+        sourceDate: draft.sourceDate,
+        actorId: userId,
+        tenantId: userId,
+        createdAt: at,
         inputMode: draft.inputMode,
         fileName: draft.fileName,
         sourceSheet: draft.sourceSheet,

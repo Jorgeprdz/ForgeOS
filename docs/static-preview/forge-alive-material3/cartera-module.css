@@ -232,3 +232,34 @@
     animation-duration: 1.8s;
   }
 }
+.cartera-truth-badge {
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--forge-sys-color-tertiary) 14%, transparent);
+  color: var(--forge-sys-color-tertiary);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+}
+
+.cartera-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin-top: 16px;
+  border: 1px solid var(--forge-sys-color-outline-variant);
+  border-radius: var(--forge-shape-corner-large, 18px);
+  background: var(--forge-sys-color-outline-variant);
+}
+
+.cartera-summary-strip > div {
+  min-width: 0;
+  padding: 13px;
+  background: var(--forge-sys-color-surface-container);
+}
+
+@media (max-width: 640px) {
+  .cartera-summary-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cartera-truth-badge { align-self: flex-start; }
+}

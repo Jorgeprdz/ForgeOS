@@ -29,7 +29,8 @@ test("Cartera exposes PDF/CSV/XLSX picker, manual entry and desktop drag and dro
 
 test("Cartera policy entry persists only after explicit human confirmation", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
-  assert.match(source, /verificationState:\s*"CONFIRMED"/);
+  assert.match(source, /verificationState:\s*draft\.officialDocumentVerified \? "CONFIRMED" : "REVIEWED"/);
+  assert.match(source, /policyTruthState:\s*draft\.officialDocumentVerified \? "ADVISOR_CONFIRMED" : "PROVISIONAL_OR_INCOMPLETE"/);
   assert.match(source, /humanConfirmed:\s*true/);
   assert.match(source, /forge_cartera010b_confirm_identity_and_policy/);
   assert.match(source, /buildIdentityResolutionCommand/);

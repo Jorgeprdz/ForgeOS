@@ -33,6 +33,7 @@ const clientA = newClient();
 const clientB = newClient();
 
 const digest = value => createHash("sha256").update(String(value)).digest("hex");
+const runPhoneToken = String(parseInt(digest(RUN_ID).slice(0, 8), 16) % 1000).padStart(3, "0");
 const iso = value => new Date(value).toISOString();
 const date = value => iso(value).slice(0, 10);
 const ref = (owner, kind, index) => `${kind}:beta1022a:${RUN_ID}:${owner}:${String(index).padStart(3, "0")}`;
@@ -44,8 +45,8 @@ function prospectSpec(owner, index) {
   return {
     display_name: `Persona Sintética ${owner}-${serial} · ${RUN_ID}`,
     full_name: `Persona Sintética ${owner}-${serial} · ${RUN_ID}`,
-    phone_normalized: `+52558${owner === "A" ? "1" : "2"}${String(index).padStart(6, "0")}`,
-    whatsapp_normalized: hasWhatsapp ? `+52558${owner === "A" ? "1" : "2"}${String(index).padStart(6, "0")}` : null,
+    phone_normalized: `+5255${runPhoneToken}${owner === "A" ? "1" : "2"}${String(index).padStart(6, "0")}`,
+    whatsapp_normalized: hasWhatsapp ? `+5255${runPhoneToken}${owner === "A" ? "1" : "2"}${String(index).padStart(6, "0")}` : null,
     email_normalized: hasWhatsapp ? null : `synthetic-${RUN_ID.toLowerCase()}-${owner.toLowerCase()}-${serial}@example.invalid`,
     source: SOURCE,
     referrer_name: index % 3 === 0 ? `Referencia Sintética ${owner}-${serial}` : null,

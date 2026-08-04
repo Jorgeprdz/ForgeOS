@@ -45,17 +45,17 @@ test("partial and stale states remain visibly labeled", async ({ page }) => {
 
   await page.goto(`${fixture}?mode=stale`, { waitUntil: "networkidle" });
   await expect(page.locator(shell("STALE"))).toBeVisible();
-  await expect(page.getByText(/información desactualizada/i)).toBeVisible();
+  await expect(page.getByText(/puede no estar actualizada/i)).toBeVisible();
 });
 
 test("detail and six-month history expose evidence without mixing simulation", async ({ page }) => {
   await page.goto(`${fixture}?mode=ready`, { waitUntil: "networkidle" });
   await expect(page.locator("[data-compensation-history-period]")).toHaveCount(6);
   await page.locator("[data-compensation-aggregate]").first().click();
-  await expect(page.getByText("Calculation digest")).toBeVisible();
-  await expect(page.getByText("Rule Pack digest")).toBeVisible();
+  await expect(page.getByText("Cálculo verificable")).toBeVisible();
+  await expect(page.getByText("Reglas verificables")).toBeVisible();
   await expect(page.locator('[data-compensation-simulator-boundary="separate"]')).toContainText(
-    "SIMULATION ≠ TRUTH",
+    "Escenario, no ingreso confirmado",
   );
 });
 

@@ -13,6 +13,7 @@ const [source, admin, deploy, migration, verify, workflow] = await Promise.all([
 
 test("BETA1_022A seeder is explicit, bounded, owner-scoped and resumable", () => {
   assert.match(source, /FORGE_BETA1022A_RUN_ID/);
+  assert.match(source, /runPhoneToken/);
   assert.match(source, /\^\\d\{8\}_\\d\{6\}\$/);
   assert.match(source, /index <= 100/);
   assert.match(source, /index <= 25/);
