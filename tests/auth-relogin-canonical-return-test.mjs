@@ -7,12 +7,9 @@ const guard = readFileSync(
   "docs/static-preview/forge-alive-material3/rep-17-session-transition-guard.js",
   "utf8",
 );
-const entry = readFileSync(
-  "docs/static-preview/forge-alive/index.html",
-  "utf8",
-);
+const entry = readFileSync("index.html", "utf8");
 const authEntry = readFileSync(
-  "docs/static-preview/forge-alive/forge-alive-auth-entry-067g17b1.js",
+  "docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.js",
   "utf8",
 );
 const touchGate = readFileSync(
@@ -20,7 +17,7 @@ const touchGate = readFileSync(
   "utf8",
 );
 
-test("second Google login cannot inherit the internal material3 pathname", () => {
+test("second Google login cannot inherit a retired pathname", () => {
   assert.match(
     guard,
     /const CANONICAL_ENTRY_PATH = "\/ForgeOS\/static-preview\/forge-alive\/"/,
@@ -39,13 +36,13 @@ test("second Google login cannot inherit the internal material3 pathname", () =>
   );
 });
 
-test("canonical entry bridge preserves OAuth parameters, route and hash", () => {
+test("canonical root preserves OAuth parameters, route and hash", async () => {
   const script = entry.match(/<script>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(script, "CANONICAL_ENTRY_SCRIPT_MISSING");
 
   let replaced = "";
   const location = {
-    href: "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cartera&code=oauth-code&state=oauth-state&auth_return=1700000000000#access_token=token",
+    href: "https://jorgeprdz.github.io/ForgeOS/?nav=cartera&code=oauth-code&state=oauth-state&auth_return=1700000000000#access_token=token",
     replace(value) {
       replaced = value;
     },
@@ -53,14 +50,30 @@ test("canonical entry bridge preserves OAuth parameters, route and hash", () => 
 
   vm.runInNewContext(script, {
     URL,
-    window: { location },
+    URLSearchParams,
+    Promise,
+    navigator: {
+      serviceWorker: {
+        async getRegistrations() {
+          return [];
+        },
+      },
+    },
+    caches: {
+      async keys() {
+        return [];
+      },
+      async delete() {
+        return true;
+      },
+    },
+    window: { location, caches: true },
   });
 
+  await new Promise((resolve) => setImmediate(resolve));
+
   const target = new URL(replaced);
-  assert.equal(
-    target.pathname,
-    "/ForgeOS/static-preview/forge-alive-material3/",
-  );
+  assert.equal(target.pathname, "/ForgeOS/static-preview/forge-alive/");
   assert.equal(target.searchParams.get("nav"), "cartera");
   assert.equal(target.searchParams.get("code"), "oauth-code");
   assert.equal(target.searchParams.get("state"), "oauth-state");
@@ -69,28 +82,35 @@ test("canonical entry bridge preserves OAuth parameters, route and hash", () => 
   assert.equal(target.hash, "#access_token=token");
 });
 
-test("canonical entry no longer presents itself as a retired interface", () => {
+test("root entry exposes only current ForgeOS", () => {
   assert.match(entry, /<title>ForgeOS<\/title>/);
   assert.match(entry, /Abriendo ForgeOS/);
-  assert.doesNotMatch(entry, /interfaz retirada/i);
+  assert.match(entry, /static-preview\/forge-alive/);
+  assert.doesNotMatch(entry, /forge-alive-material3/);
   assert.doesNotMatch(entry, /Forge Alive Vista Estática/i);
+  assert.doesNotMatch(entry, /phone-shell|Muestra segura · solo lectura/);
 });
 
-test("retired pre-redesign authority cannot republish over the current Beta 1 shell", () => {
-  assert.equal(
-    existsSync(
-      ".github/workflows/restore-productive-forge-alive-authority.yml",
-    ),
-    false,
-  );
-  assert.equal(
-    existsSync("scripts/prepare-productive-canonical-pages.mjs"),
-    false,
-  );
-  assert.equal(
-    existsSync("tests/restore-productive-canonical-authority-test.mjs"),
-    false,
-  );
+test("retired pre-redesign authorities cannot republish over production", () => {
+  for (const path of [
+    ".github/workflows/restore-productive-forge-alive-authority.yml",
+    ".github/workflows/deploy-quotes-preview-pages.yml",
+    "scripts/prepare-productive-canonical-pages.mjs",
+    "tests/restore-productive-canonical-authority-test.mjs",
+    "docs/static-preview/forge-alive/index.html",
+  ]) {
+    assert.equal(existsSync(path), false, `${path} must stay deleted`);
+  }
+});
+
+test("productive authentication authorities live beside the canonical UI", () => {
+  for (const path of [
+    "docs/static-preview/forge-alive-material3/forge-alive-public-config-067g17a1.js",
+    "docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.js",
+    "docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.css",
+  ]) {
+    assert.equal(existsSync(path), true, `${path} is required`);
+  }
 });
 
 test("every login path returns through the canonical public entry", () => {
@@ -98,4 +118,5 @@ test("every login path returns through the canonical public entry", () => {
   assert.match(touchGate, /new URL\("\/ForgeOS\/static-preview\/forge-alive\/"/);
   assert.doesNotMatch(authEntry, /new URL\(url\.pathname/);
   assert.doesNotMatch(touchGate, /new URL\(current\.pathname/);
+  assert.doesNotMatch(authEntry, /forge-alive-runtime/);
 });
