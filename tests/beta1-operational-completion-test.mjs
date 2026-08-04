@@ -31,8 +31,7 @@ test("Cartera policy entry persists only after explicit human confirmation", asy
   const source = await read("docs/static-preview/forge-alive-material3/cartera-document-intake.js");
   assert.match(source, /verificationState:\s*"CONFIRMED"/);
   assert.match(source, /humanConfirmed:\s*true/);
-  assert.match(source, /forge_cartera010b_confirm_identity_resolution/);
-  assert.match(source, /forge_cartera010b_confirm_policy_with_parties/);
+  assert.match(source, /forge_cartera010b_confirm_identity_and_policy/);
   assert.match(source, /buildIdentityResolutionCommand/);
   assert.match(source, /buildConfirmedPolicyCommand/);
   assert.match(source, /La cuenta demo es de solo lectura/);
@@ -41,7 +40,7 @@ test("Cartera policy entry persists only after explicit human confirmation", asy
 
 test("Cartera owns policy-entry mounting while preserving the read-only directory boundary", async () => {
   const source = await read("docs/static-preview/forge-alive-material3/cartera-module.js");
-  assert.match(source, /^import "\.\/cartera-document-intake\.js\?v=beta1-repair-001";/);
+  assert.match(source, /^import "\.\/cartera-document-intake\.js\?v=03bca89dba800f7bd5052d6e67caa29241271be0";/);
   assert.match(source, /governedPolicyEntry:\s*true/);
   assert.match(source, /productiveMutationAuthorized:\s*false/);
   assert.match(source, /refresh:\s*api\.refresh/);
