@@ -118,14 +118,11 @@ test('020B path roots and remote boundary are bounded', async () => {
   assert.match(scope, /CARTERA_020B_SUPABASE_REMOTE_MUTATION=NO/);
 });
 
-test('completed 010D scope workflow is manual-only and bounded housekeeping is explicit', async () => {
+test('completed 010D scope keeps bounded retirement explicit without restoring its workflow', async () => {
   const scope = await read(scopePath);
-  const inherited = await read('.github/workflows/cartera-010d-scope-acceptance.yml');
 
   assert.match(scope, /INHERITED_010D_GATE_RETIREMENT=BOUNDED/);
-  assert.match(inherited, /workflow_dispatch:/);
-  assert.doesNotMatch(inherited, /^  push:/m);
-  assert.doesNotMatch(inherited, /^  pull_request:/m);
+  assert.doesNotMatch(scope, /INHERITED_010D_GATE_RETIREMENT=BLOCKED/);
 });
 
 test('020A locks negative gates and the exact next phase', async () => {

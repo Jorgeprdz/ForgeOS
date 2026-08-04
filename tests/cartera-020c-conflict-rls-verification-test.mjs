@@ -1,25 +1,29 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 const sql = readFileSync(
-  new URL('../scripts/ci/cartera-020c-remote-acceptance.sql', import.meta.url),
-  'utf8',
+  new URL("../supabase/migrations/20260731000231_cartera020c_confirmation_orchestration_guards_rls.sql", import.meta.url),
+  "utf8",
 );
 
-test('conflict persistence is verified as the owning advisor under forced RLS', () => {
-  assert.match(sql, /grant select on public\.cartera020c_confirmation_conflicts to authenticated/);
-  assert.match(sql, /set_config\('request\.jwt\.claim\.sub', user_a::text, true\)/);
-  assert.match(sql, /set local role authenticated/);
-  assert.match(sql, /conflict_reference = conflict_status ->> 'conflictReference'/);
-  assert.match(sql, /revoke select on public\.cartera020c_confirmation_conflicts from authenticated/);
+test("conflict receipts remain owner-scoped under forced RLS", () => {
+  assert.match(sql, /alter table public\.cartera020c_confirmation_conflicts enable row level security/);
+  assert.match(sql, /alter table public\.cartera020c_confirmation_conflicts force row level security/);
+  assert.match(
+    sql,
+    /create policy cartera020c_conflicts_select_own[\s\S]*using \(advisor_id = auth\.uid\(\)\)/,
+  );
 });
 
-test('temporary conflict read authority is rollback-only and cannot become product authority', () => {
-  assert.match(sql, /^begin;/m);
-  assert.match(sql, /rollback;\s*$/);
-  const grantIndex = sql.indexOf('grant select on public.cartera020c_confirmation_conflicts to authenticated');
-  const revokeIndex = sql.indexOf('revoke select on public.cartera020c_confirmation_conflicts from authenticated');
-  assert.ok(grantIndex >= 0 && revokeIndex > grantIndex);
-  assert.doesNotMatch(sql, /grant (insert|update|delete) on public\.cartera020c_confirmation_conflicts/i);
+test("authenticated clients receive no direct conflict-table authority", () => {
+  assert.match(
+    sql,
+    /revoke all on public\.cartera020c_confirmation_conflicts from public, anon, authenticated/,
+  );
+  assert.doesNotMatch(
+    sql,
+    /grant (select|insert|update|delete|all) on public\.cartera020c_confirmation_conflicts to authenticated/i,
+  );
+  assert.doesNotMatch(sql, /service_role|access[_-]?token|database\/query|fetch\(/i);
 });

@@ -6,10 +6,6 @@ const migration = readFileSync(
   new URL('../supabase/migrations/20260731000239_cartera020c_conflict_insert_ambiguity_hardening.sql', import.meta.url),
   'utf8',
 );
-const deploy = readFileSync(
-  new URL('../scripts/ci/cartera-020c-conflict-ambiguity-hardening-deploy.mjs', import.meta.url),
-  'utf8',
-);
 
 test('00239 replaces the conflict recorder without rewriting deployed history', () => {
   assert.match(migration, /^begin;/m);
@@ -28,11 +24,6 @@ test('00239 targets the exact unique constraint and removes PL/pgSQL ambiguity',
   assert.match(migration, /return generated_conflict_reference/);
 });
 
-test('hardening deploy is authorized, migration-aware and verifies installed definition', () => {
-  assert.match(deploy, /YES:CARTERA_020C_REMOTE_MUTATION/);
-  assert.match(deploy, /20260731000239/);
-  assert.match(deploy, /supabase_migrations\.schema_migrations/);
-  assert.match(deploy, /pg_get_functiondef/);
-  assert.match(deploy, /CARTERA020C_CONFLICT_INSERT_AMBIGUITY_HARDENING=PASS/);
-  assert.match(deploy, /REMOTE_CONTENT_MISMATCH/);
+test('hardening remains a transactional repository migration without remote side effects', () => {
+  assert.doesNotMatch(migration, /api\.supabase|database\/query|fetch\(/i);
 });

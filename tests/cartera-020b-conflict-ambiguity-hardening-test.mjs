@@ -6,10 +6,6 @@ const migration = await readFile(
   new URL('../supabase/migrations/20260731000228_cartera020b_conflict_insert_ambiguity_hardening.sql', import.meta.url),
   'utf8',
 );
-const deployer = await readFile(
-  new URL('../scripts/ci/cartera-020b-conflict-ambiguity-hardening-deploy.mjs', import.meta.url),
-  'utf8',
-);
 
 test('020B conflict hardening replaces only the replay helper', () => {
   assert.match(migration, /create or replace function public\.forge_cartera020b_existing_receipt_response/);
@@ -36,10 +32,6 @@ test('020B conflict hardening preserves authority and non-truth boundary', () =>
   assert.match(migration, /revoke all on function public\.forge_cartera020b_existing_receipt_response/);
 });
 
-test('020B hardening deployer records and verifies migration 00228', () => {
-  assert.match(deployer, /20260731000228/);
-  assert.match(deployer, /supabase_migrations\.schema_migrations/);
-  assert.match(deployer, /REMOTE_CONTENT_MISMATCH/);
-  assert.match(deployer, /pg_get_functiondef/);
-  assert.match(deployer, /CARTERA020B_CONFLICT_INSERT_AMBIGUITY_HARDENING=PASS/);
+test('020B hardening remains repository-owned without remote runner authority', () => {
+  assert.doesNotMatch(migration, /api\.supabase\.com|SUPABASE_ACCESS_TOKEN|database\/query/i);
 });

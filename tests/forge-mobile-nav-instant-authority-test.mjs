@@ -1,90 +1,22 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const page = await readFile(
-  new URL(
-    "../docs/static-preview/forge-alive/index.html",
-    import.meta.url,
-  ),
-  "utf8",
-);
+const [html, css, app, shell] = await Promise.all([
+  readFile("docs/static-preview/forge-alive-material3/index.html", "utf8"),
+  readFile("docs/static-preview/forge-alive-material3/app.css", "utf8"),
+  readFile("docs/static-preview/forge-alive-material3/app.js", "utf8"),
+  readFile("docs/static-preview/forge-alive-material3/forge-shell.js", "utf8"),
+]);
 
-const authority = await readFile(
-  new URL(
-    "../docs/static-preview/forge-alive/forge-mobile-nav-instant-authority-r16j1c1.js",
-    import.meta.url,
-  ),
-  "utf8",
-);
+assert.match(html, /class="nav-pill" data-forge-nav-pill/);
+assert.match(css, /\.nav-pill\s*\{/);
+assert.match(css, /flex-wrap:\s*nowrap/);
+assert.match(css, /overflow-x:\s*auto/);
+assert.match(css, /white-space:\s*nowrap/);
+assert.match(css, /font-size:\s*11px/);
+assert.match(app, /createForgeShell/);
+assert.match(shell, /data-route-id/);
+assert.match(shell, /history\.pushState/);
+assert.doesNotMatch(css, /\.nav-pill[^}]*flex-wrap:\s*wrap/s);
 
-const navCss = await readFile(
-  new URL(
-    "../docs/static-preview/forge-alive/forge-alive-mobile-nav-r16c5j.css",
-    import.meta.url,
-  ),
-  "utf8",
-);
-
-assert.match(
-  page,
-  /forge-mobile-nav-instant-authority-r16j1c1\.js\?v=r16j1c1-route-fastpath-03a5-20260715-1/,
-);
-
-for (const token of [
-  '"R16J1C1_MOBILE_NAV_INSTANT_AUTHORITY_03A4"',
-  "function onPointerDown(event)",
-  "function onClick(event)",
-  "event.detail !== 0",
-  '"pointerdown"',
-  '"forge:saas-module-opened"',
-  '"forge:saas-module-closed"',
-  "new MutationObserver(",
-  '"data-forge-active-key"',
-  '"style"',
-  '"display"',
-  '"block"',
-  '"visibility"',
-  '"visible"',
-  '"opacity"',
-  '"transform"',
-  '"transition"',
-  '"none"',
-  '"important"',
-  "queueMicrotask",
-]) {
-  assert.ok(authority.includes(token), `missing ${token}`);
-}
-
-for (const forbidden of [
-  "setTimeout(",
-  "requestIdleCallback",
-  "document.documentElement",
-  "document.body.observe",
-]) {
-  assert.ok(
-    !authority.includes(forbidden),
-    `forbidden authority work: ${forbidden}`,
-  );
-}
-
-assert.match(
-  navCss,
-  /FORGE:R16J1C1_03A4_NAV_AUTHORITY_OVERRIDE:START/,
-);
-assert.match(navCss, /transition:\s*none\s*!important/);
-assert.match(navCss, /display:\s*block\s*!important/);
-assert.match(navCss, /visibility:\s*visible\s*!important/);
-assert.match(navCss, /opacity:\s*1\s*!important/);
-assert.match(navCss, /blur\(24px\)\s+saturate\(155%\)/);
-assert.match(navCss, /blur\(10px\)\s+saturate\(150%\)/);
-
-console.log("PASS R16J1C1 single mobile nav visual authority", {
-  pointerDownFeedback: true,
-  programmaticClickFallback: true,
-  selectorAndLabelCommitTogether: true,
-  selectorTransition: "none",
-  delayedRetries: 0,
-  navLocalObserver: true,
-  globalDocumentObserver: false,
-  lazyLoaderNavControl: false,
-});
+console.log("CANONICAL_MOBILE_NAV_SINGLE_ROW_CONTRACT=PASS");

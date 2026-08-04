@@ -6,10 +6,6 @@ const migration = await readFile(
   new URL('../supabase/migrations/20260731000229_cartera020b_json_null_payload_hardening.sql', import.meta.url),
   'utf8',
 );
-const deployer = await readFile(
-  new URL('../scripts/ci/cartera-020b-json-null-hardening-deploy.mjs', import.meta.url),
-  'utf8',
-);
 
 test('00229 normalizes only optional JSON payloads', () => {
   assert.match(migration, /attempt := nullif\(result -> ''attempt'', ''null''::jsonb\)/);
@@ -30,10 +26,6 @@ test('00229 preserves RPC authority and non-truth boundary', () => {
   assert.match(migration, /grant execute on function public\.forge_cartera020b_record_processing_result/);
 });
 
-test('JSON null deployer records and verifies migration 00229', () => {
-  assert.match(deployer, /20260731000229/);
-  assert.match(deployer, /supabase_migrations\.schema_migrations/);
-  assert.match(deployer, /REMOTE_CONTENT_MISMATCH/);
-  assert.match(deployer, /ATTEMPT_JSON_NULL_HARDENING_NOT_ACTIVE/);
-  assert.match(deployer, /CARTERA020B_JSON_NULL_PAYLOAD_HARDENING=PASS/);
+test('JSON null hardening remains repository-owned without remote runner authority', () => {
+  assert.doesNotMatch(migration, /api\.supabase\.com|SUPABASE_ACCESS_TOKEN|database\/query/i);
 });

@@ -6,10 +6,6 @@ const migration = readFileSync(
   new URL('../supabase/migrations/20260731000240_cartera020c_conflict_constraint_name_hardening.sql', import.meta.url),
   'utf8',
 );
-const deploy = readFileSync(
-  new URL('../scripts/ci/cartera-020c-conflict-constraint-name-hardening-deploy.mjs', import.meta.url),
-  'utf8',
-);
 
 test('00240 discovers the conflict unique constraint by table columns', () => {
   assert.match(migration, /^begin;/m);
@@ -34,10 +30,6 @@ test('00240 recompiles conflict recording against the stable constraint', () => 
   assert.match(migration, /generated_conflict_reference/);
 });
 
-test('00240 deploy verifies migration history, catalog constraint and installed function', () => {
-  assert.match(deploy, /20260731000240/);
-  assert.match(deploy, /supabase_migrations\.schema_migrations/);
-  assert.match(deploy, /pg_constraint/);
-  assert.match(deploy, /pg_get_functiondef/);
-  assert.match(deploy, /CARTERA020C_CONFLICT_CONSTRAINT_NAME_HARDENING=PASS/);
+test('00240 keeps deployment mechanics outside the canonical migration', () => {
+  assert.doesNotMatch(migration, /api\.supabase|database\/query|fetch\(/i);
 });

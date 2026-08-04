@@ -6,10 +6,6 @@ const migration = readFileSync(
   new URL('../supabase/migrations/20260731000241_cartera020c_conflict_persistence_receipt_hardening.sql', import.meta.url),
   'utf8',
 );
-const deploy = readFileSync(
-  new URL('../scripts/ci/cartera-020c-conflict-persistence-hardening-deploy.mjs', import.meta.url),
-  'utf8',
-);
 
 test('00241 returns a conflict reference only after exact persistence', () => {
   assert.match(migration, /^begin;/m);
@@ -34,12 +30,6 @@ test('00241 serializes replay and verifies every semantic conflict field', () =>
   }
 });
 
-test('00241 deploy is migration-aware and verifies the installed invariant', () => {
-  assert.match(deploy, /20260731000241/);
-  assert.match(deploy, /supabase_migrations\.schema_migrations/);
-  assert.match(deploy, /pg_get_functiondef/);
-  assert.match(deploy, /assert\.match\(definition, \/returning/);
-  assert.match(deploy, /persisted_conflict/);
-  assert.match(deploy, /CARTERA020C_CONFLICT_PERSISTENCE_RECEIPT_HARDENING=PASS/);
-  assert.match(deploy, /MAX_QUERY_ATTEMPTS = 5/);
+test('00241 remains repository-owned and exposes no deployment credential path', () => {
+  assert.doesNotMatch(migration, /SUPABASE_ACCESS_TOKEN|service_role|database\/query/i);
 });
