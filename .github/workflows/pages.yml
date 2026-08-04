@@ -49,24 +49,22 @@ jobs:
         run: |
           node - <<'EOF'
           const fs = require('fs');
-          const isDemo = process.env.DEMO_MODE === 'true';
           const env = {
-            SUPABASE_URL: process.env.SUPABASE_URL || "",
-            SUPABASE_KEY: process.env.SUPABASE_ANON_KEY || "",
-            DEMO_MODE: isDemo ? "true" : "false",
-            ENABLE_TEST_ADVISOR_LOGIN: process.env.ENABLE_TEST_ADVISOR_LOGIN === "true" ? "true" : "false"
+            SUPABASE_URL: process.env.SUPABASE_URL || '',
+            SUPABASE_KEY: process.env.SUPABASE_ANON_KEY || '',
+            DEMO_MODE: process.env.DEMO_MODE === 'true' ? 'true' : 'false',
+            ENABLE_TEST_ADVISOR_LOGIN: process.env.ENABLE_TEST_ADVISOR_LOGIN === 'true' ? 'true' : 'false',
           };
-          console.log(`Generating env.js (DEMO_MODE: ${env.DEMO_MODE}, TEST_ADVISOR_LOGIN: ${env.ENABLE_TEST_ADVISOR_LOGIN})`);
           fs.writeFileSync('env.js', `window.__ENV__ = Object.freeze(${JSON.stringify(env, null, 2)});\n`);
           EOF
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Generate Advisor OS presentation Pages runtime
+      - name: Generate productive Pages runtimes
         run: node scripts/build-advisor-presentation-pages-runtime.mjs
 
-      - name: Build Pages artifact directory
+      - name: Build canonical Pages artifact
         env:
           GITHUB_SHA: ${{ github.sha }}
         run: |
@@ -76,41 +74,37 @@ jobs:
           const { execFileSync } = require('child_process');
 
           const siteDir = '_site';
+          const canonicalSource = 'docs/static-preview/forge-alive-material3';
+          const canonicalTarget = path.join(siteDir, 'static-preview', 'forge-alive');
+          const quoteEngineSource = 'docs/static-preview/forge-alive/nueva-cotizacion/index.html';
+          const quoteEngineTarget = path.join(
+            siteDir,
+            'static-preview',
+            'quote-engine',
+            'nueva-cotizacion',
+            'index.html',
+          );
+          const quoteRuntimeSource = 'docs/static-preview/quote-preview-live';
+          const quoteRuntimeTarget = path.join(siteDir, 'static-preview', 'quote-preview-live');
           const segubecaAuthorityAsset =
             'advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
           const segubecaSourceAuthorityImport =
             '../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
           const segubecaPublicAuthorityImport =
             '../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+
           fs.rmSync(siteDir, { recursive: true, force: true });
           fs.mkdirSync(siteDir, { recursive: true });
 
           const trackedFiles = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
             .split('\0')
             .filter(Boolean);
-
           const publicExtensions = new Set([
-            '.css',
-            '.html',
-            '.ico',
-            '.jpeg',
-            '.jpg',
-            '.js',
-            '.json',
-            '.map',
-            '.png',
-            '.svg',
-            '.txt',
-            '.webmanifest',
-            '.webp'
+            '.css', '.html', '.ico', '.jpeg', '.jpg', '.js', '.json',
+            '.map', '.png', '.svg', '.txt', '.webmanifest', '.webp',
           ]);
-
           const publicRootFiles = new Set([
-            '.nojekyll',
-            '_redirects',
-            'index.html',
-            'manifest.json',
-            'service-worker.js'
+            '.nojekyll', '_redirects', 'index.html', 'manifest.json', 'service-worker.js',
           ]);
           const publicConversationRuntimeFiles = new Set([
             segubecaAuthorityAsset,
@@ -128,12 +122,26 @@ jobs:
             'nash/draft-intake/nfast06-draft-safety-boundary.js',
             'nash/draft-intake/nfast06-deterministic-draft-renderer.js',
             'manager-os/nba/nba-reason-why-boundary-contract.js',
-            'manager-os/nba/nash-mick-nba-reconnection-engine.js'
+            'manager-os/nba/nash-mick-nba-reconnection-engine.js',
+          ]);
+          const blockedPublicPrefixes = [
+            'docs/static-preview/forge-alive/',
+            'docs/static-preview/forge-alive-material3/',
+            'docs/static-preview/quote-preview-live/',
+            'docs/static-preview/templates/',
+            'docs/quote-preview-live/',
+            'docs/10-gui/',
+            'docs/docs/',
+          ];
+          const blockedPublicFiles = new Set([
+            'docs/index.html',
           ]);
 
           function isPublicFile(file) {
             if (file.startsWith('.github/')) return false;
             if (file.startsWith('docs/evidence/')) return false;
+            if (blockedPublicFiles.has(file)) return false;
+            if (blockedPublicPrefixes.some(prefix => file.startsWith(prefix))) return false;
             if (file.startsWith('advisor-os/sales-pipeline/')) {
               return publicExtensions.has(path.extname(file).toLowerCase());
             }
@@ -153,58 +161,58 @@ jobs:
             fs.copyFileSync(file, target);
           }
 
-          const legacyForgeAlivePublished = path.join(
-            siteDir,
-            'static-preview',
-            'forge-alive',
-          );
-          const legacyForgeAliveRuntimeTarget = path.join(
-            siteDir,
-            'static-preview',
-            'forge-alive-runtime',
-          );
+          if (!fs.existsSync(canonicalSource)) {
+            throw new Error('canonical ForgeOS source is missing');
+          }
+          fs.rmSync(canonicalTarget, { recursive: true, force: true });
+          fs.cpSync(canonicalSource, canonicalTarget, { recursive: true });
 
-          if (!fs.existsSync(legacyForgeAlivePublished)) {
-            throw new Error(
-              'legacy Forge Alive public runtime was not prepared',
-            );
+          for (const obsoleteCanonicalArtifact of [
+            'index-quote-calculator-parity.html',
+            'quotes-module-complete.js',
+          ]) {
+            fs.rmSync(path.join(canonicalTarget, obsoleteCanonicalArtifact), { force: true });
           }
 
-          fs.rmSync(legacyForgeAliveRuntimeTarget, {
-            recursive: true,
-            force: true,
-          });
-          fs.cpSync(
-            legacyForgeAlivePublished,
-            legacyForgeAliveRuntimeTarget,
-            { recursive: true },
+          if (!fs.existsSync(quoteEngineSource)) {
+            throw new Error('Quotes engine source is missing');
+          }
+          fs.mkdirSync(path.dirname(quoteEngineTarget), { recursive: true });
+          const standaloneGuard = [
+            '<script data-forge-engine-standalone-guard>',
+            'if (window.top === window.self) {',
+            '  window.location.replace("../../forge-alive/?nav=cotizaciones");',
+            '}',
+            '</script>',
+          ].join('\n');
+          const quoteEngine = fs.readFileSync(quoteEngineSource, 'utf8');
+          if (!quoteEngine.includes('<head>')) {
+            throw new Error('Quotes engine head boundary is missing');
+          }
+          fs.writeFileSync(
+            quoteEngineTarget,
+            quoteEngine.replace('<head>', `<head>\n${standaloneGuard}`),
           );
 
-          const cleanForgeAliveSource = path.join(
-            'docs',
-            'static-preview',
-            'forge-alive-material3',
-          );
-          const canonicalForgeAliveTarget = path.join(
-            siteDir,
-            'static-preview',
-            'forge-alive',
-          );
-          fs.rmSync(canonicalForgeAliveTarget, {
-            recursive: true,
-            force: true,
-          });
-          fs.mkdirSync(canonicalForgeAliveTarget, {
-            recursive: true,
-          });
-          fs.cpSync(
-            cleanForgeAliveSource,
-            canonicalForgeAliveTarget,
-            { recursive: true },
-          );
+          function copyRuntimeFiles(sourceDir, targetDir) {
+            for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
+              const source = path.join(sourceDir, entry.name);
+              const target = path.join(targetDir, entry.name);
+              if (entry.isDirectory()) {
+                copyRuntimeFiles(source, target);
+                continue;
+              }
+              const extension = path.extname(entry.name).toLowerCase();
+              if (!['.js', '.json', '.map'].includes(extension)) continue;
+              fs.mkdirSync(path.dirname(target), { recursive: true });
+              fs.copyFileSync(source, target);
+            }
+          }
+          fs.rmSync(quoteRuntimeTarget, { recursive: true, force: true });
+          copyRuntimeFiles(quoteRuntimeSource, quoteRuntimeTarget);
 
           const segubecaPublicBindingPath = path.join(
-            canonicalForgeAliveTarget,
+            canonicalTarget,
             'segubeca-productive-ui-binding.js',
           );
           const segubecaPublicBindingSource = fs.readFileSync(
@@ -220,21 +228,22 @@ jobs:
           }
           fs.writeFileSync(segubecaPublicBindingPath, segubecaPublicBinding);
 
-          const canonicalIndexPath = path.join(canonicalForgeAliveTarget, 'index.html');
+          const canonicalIndexPath = path.join(canonicalTarget, 'index.html');
           const canonicalIndex = fs.readFileSync(canonicalIndexPath, 'utf8');
           const versionedCanonicalIndex = canonicalIndex.replace(
             /<script type="module" src="\.\/app\.js\?[^"]+"><\/script>/,
             `<script type="module" src="./app.js?v=${process.env.GITHUB_SHA}"></script>`,
           );
           if (versionedCanonicalIndex === canonicalIndex) {
-            throw new Error('canonical Forge Alive app entry was not versioned');
+            throw new Error('canonical ForgeOS app entry was not versioned');
           }
           fs.writeFileSync(canonicalIndexPath, versionedCanonicalIndex);
 
           for (const file of trackedFiles.filter(file => file.startsWith('docs/') && file.endsWith('.html'))) {
             const target = path.join(siteDir, file.slice('docs/'.length));
             if (!fs.existsSync(target)) continue;
-            const html = fs.readFileSync(target, 'utf8').replaceAll('__FORGE_BUILD_SHA__', process.env.GITHUB_SHA);
+            const html = fs.readFileSync(target, 'utf8')
+              .replaceAll('__FORGE_BUILD_SHA__', process.env.GITHUB_SHA);
             fs.writeFileSync(target, html);
           }
 
@@ -244,16 +253,29 @@ jobs:
             `${JSON.stringify({
               commitSha: process.env.GITHUB_SHA,
               generatedAt: new Date().toISOString(),
-              artifact: 'forge-pages',
+              artifact: 'forge-pages-canonical-only',
             }, null, 2)}\n`,
           );
-          console.log(`Prepared ${trackedFiles.filter(isPublicFile).length + 1} public file(s) in ${siteDir}`);
+          fs.writeFileSync(
+            path.join(siteDir, 'production-surface.json'),
+            `${JSON.stringify({
+              canonicalEntry: 'static-preview/forge-alive/index.html',
+              quoteEngine: 'static-preview/quote-engine/nueva-cotizacion/index.html',
+              retiredRoutes: [
+                'static-preview/forge-alive-runtime/',
+                'static-preview/templates/',
+                'quote-preview-live/',
+                '10-gui/',
+              ],
+            }, null, 2)}\n`,
+          );
+
+          console.log('PAGES_CANONICAL_UI_ONLY=PASS');
           EOF
           du -sh _site
 
-      - name: Validate Pages public configuration artifact
+      - name: Validate canonical-only Pages artifact
         env:
-          EXPECTED_DEMO_MODE: ${{ vars.DEMO_MODE || 'false' }}
           EXPECTED_COMMIT_SHA: ${{ github.sha }}
         run: |
           node scripts/validate-pages-public-config.mjs _site/env.js
@@ -263,164 +285,75 @@ jobs:
           const path = require('path');
 
           const canonical = '_site/static-preview/forge-alive';
-          const legacyRuntime = '_site/static-preview/forge-alive-runtime';
-          const quotesRuntime = path.join(legacyRuntime, 'nueva-cotizacion/index.html');
-          const segubecaAuthorityAsset =
-            'advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
-          const segubecaSourceAuthorityImport =
-            '../../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
-          const segubecaPublicAuthorityImport =
-            '../../advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
+          const quoteEngine = '_site/static-preview/quote-engine/nueva-cotizacion/index.html';
+          const forbiddenPaths = [
+            '_site/static-preview/forge-alive-runtime',
+            '_site/static-preview/templates',
+            '_site/quote-preview-live',
+            '_site/10-gui',
+            '_site/docs/static-preview',
+          ];
+          for (const forbiddenPath of forbiddenPaths) {
+            assert.equal(
+              fs.existsSync(forbiddenPath),
+              false,
+              `retired UI path was published: ${forbiddenPath}`,
+            );
+          }
 
-          assert.ok(
-            fs.existsSync(quotesRuntime),
-            'missing published Quotes functional runtime',
+          for (const required of [
+            '_site/index.html',
+            '_site/service-worker.js',
+            '_site/env.js',
+            '_site/build-info.json',
+            '_site/production-surface.json',
+            path.join(canonical, 'index.html'),
+            path.join(canonical, 'app.css'),
+            path.join(canonical, 'app.js'),
+            path.join(canonical, 'quotes-module.js'),
+            quoteEngine,
+            '_site/static-preview/quote-preview-live/forge-quote-preview-bundle.js',
+          ]) {
+            assert.ok(fs.existsSync(required), `missing productive artifact: ${required}`);
+          }
+
+          assert.equal(
+            fs.existsSync(path.join(canonical, 'index-quote-calculator-parity.html')),
+            false,
+            'obsolete alternate canonical entry was published',
           );
-
-          for (const rootFile of ['index.html', 'service-worker.js']) {
-            assert.ok(
-              fs.existsSync(path.join('_site', rootFile)),
-              `missing public retirement file: ${rootFile}`,
-            );
-          }
-
-          const required = [
-            'index.html',
-            'app.css',
-            'app.js',
-            'cartera-document-intake.js',
-            'legacy-ui-retirement.js',
-            'pipeline-bulk-import-mount.css',
-            'pipeline-bulk-import-mount.js',
-            'pipeline-module.js',
-            'pipeline-referral-modal.css',
-            'quotes-module.js',
-            'quotes-module.css',
-            'manifest.json',
-            'tokens.css',
-            'whatsapp-ai-composer.js',
-          ];
-          for (const file of required) {
-            assert.ok(
-              fs.existsSync(path.join(canonical, file)),
-              `missing clean Forge Alive artifact: ${file}`,
-            );
-          }
-          const requiredConversationRuntime = [
-            segubecaAuthorityAsset,
-            'nash-intent-engine.js',
-            'nash-combat-orchestrator.js',
-            'nash-next-best-action-engine.js',
-            'nash-combat-intelligence-report-engine.js',
-            'nash/context-intake/nash-prospect-context-intake-boundary-contract.js',
-            'nash/context-intake/nash-prospect-context-intake.js',
-            'nash/context-intake/nash-universal-prospect-context-consumer.js',
-            'nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js',
-            'nash/conversation-brief/nash-provider-request-contract.js',
-            'nash/remote-draft-provider-client-boundary.js',
-            'nash/pipeline-nash-draft-orchestrator.js',
-            'nash/draft-intake/nfast06-draft-safety-boundary.js',
-            'nash/draft-intake/nfast06-deterministic-draft-renderer.js',
-            'manager-os/nba/nba-reason-why-boundary-contract.js',
-            'manager-os/nba/nash-mick-nba-reconnection-engine.js',
-          ];
-          for (const file of requiredConversationRuntime) {
-            assert.ok(fs.existsSync(path.join('_site', file)), `missing governed runtime asset: ${file}`);
-          }
+          assert.equal(
+            fs.existsSync(path.join(canonical, 'quotes-module-complete.js')),
+            false,
+            'duplicate Quotes module was published',
+          );
 
           const rootIndex = fs.readFileSync('_site/index.html', 'utf8');
-          const serviceWorker = fs.readFileSync('_site/service-worker.js', 'utf8');
-          const legacyIndex = fs.readFileSync(path.join(legacyRuntime, 'index.html'), 'utf8');
-          const index = fs.readFileSync(path.join(canonical, 'index.html'), 'utf8');
-          const app = fs.readFileSync(path.join(canonical, 'app.js'), 'utf8');
+          const canonicalIndex = fs.readFileSync(path.join(canonical, 'index.html'), 'utf8');
           const quotesModule = fs.readFileSync(path.join(canonical, 'quotes-module.js'), 'utf8');
-          const quotesCss = fs.readFileSync(path.join(canonical, 'quotes-module.css'), 'utf8');
-          const pipelineModule = fs.readFileSync(path.join(canonical, 'pipeline-module.js'), 'utf8');
-          const workspaceCss = fs.readFileSync(path.join(canonical, 'pipeline-referral-modal.css'), 'utf8');
-          const segubecaBinding = fs.readFileSync(
-            path.join(canonical, 'segubeca-productive-ui-binding.js'),
-            'utf8',
-          );
+          const engineSource = fs.readFileSync(quoteEngine, 'utf8');
+          const serviceWorker = fs.readFileSync('_site/service-worker.js', 'utf8');
 
-          assert.match(rootIndex, /FORGE_LEGACY_UI_RETIRED/);
           assert.match(rootIndex, /static-preview\/forge-alive/);
           assert.match(serviceWorker, /FORGEOS_LEGACY_SERVICE_WORKER_RETIRED/);
           assert.match(serviceWorker, /self\.registration\.unregister\(\)/);
           assert.doesNotMatch(serviceWorker, /respondWith|importScripts|CACHE_CONFIG/);
-          assert.match(legacyIndex, /FORGE_LEGACY_UI_RETIRED/);
-          assert.doesNotMatch(legacyIndex, /Muestra segura · solo lectura|phone-shell|forge-material3-responsive-shell/);
-
-          assert.match(quotesModule, /forge-alive-runtime\/nueva-cotizacion\/index\.html/);
-          assert.match(quotesModule, /forge:quote-intake-state-change/);
-          assert.match(
-            quotesCss,
-            /\[data-forge-quotes-runtime-host\]\s*\[hidden\][^{]*\{[^}]*display:\s*none\s*!important/s,
-          );
-          assert.match(
-            quotesCss,
-            /\.fq-file-native-105dr\s*\{[^}]*inline-size:\s*1px\s*!important[^}]*opacity:\s*0\s*!important[^}]*clip-path:\s*inset\(50%\)\s*!important/s,
-          );
-          assert.match(index, /tokens\.css\?v=ui-m03-approved-001/);
-          assert.match(index, /app\.css\?v=ui-m03-approved-004/);
           assert.ok(
-            index.includes(`app.js?v=${process.env.EXPECTED_COMMIT_SHA}`),
-            'canonical app entry does not use the deployed commit SHA',
+            canonicalIndex.includes(`app.js?v=${process.env.EXPECTED_COMMIT_SHA}`),
+            'canonical app entry is not versioned with the deployed commit',
           );
-          assert.match(index, /data-forge-application/);
           assert.doesNotMatch(
-            index,
+            canonicalIndex,
             /Muestra segura · solo lectura|phone-shell|forge-m3-app-shell|forge-desktop-workspace-056y|ui-material3-runtime/,
           );
-          assert.match(app, /legacy-ui-retirement\.js\?v=legacy-ui-retirement-001/);
-          assert.match(
-            pipelineModule,
-            /pipeline-referral-modal\.css\?v=ui-m06-referral-004/,
-          );
-          assert.ok(
-            segubecaBinding.includes(segubecaPublicAuthorityImport),
-            'SeguBeca public authority import is not project-relative',
-          );
-          assert.ok(
-            !segubecaBinding.includes(segubecaSourceAuthorityImport),
-            'SeguBeca source-layout import leaked into Pages',
-          );
-          for (const selector of [
-            '.referral-sheet-layer',
-            '.referral-sheet',
-            '.referral-sheet__body',
-            '.referral-sheet__footer',
-            '.nash-combat-workspace',
-            '.nash-combat-workspace__body',
-            '.nash-combat-workspace__footer',
-            '.nba-workspace',
-          ]) {
-            assert.ok(
-              workspaceCss.includes(selector),
-              `missing productive workspace style: ${selector}`,
-            );
-          }
-
-          const segubecaAuthority = fs.readFileSync(
-            path.join('_site', segubecaAuthorityAsset),
-            'utf8',
-          );
-          assert.match(segubecaAuthority, /SEGUBECA_ACCEPTED_PRODUCT_CALCULATION/);
-          assert.match(segubecaAuthority, /calculateFromAcceptedPacket/);
-
-          const buildInfo = JSON.parse(
-            fs.readFileSync('_site/build-info.json', 'utf8'),
-          );
-          assert.equal(
-            buildInfo.commitSha,
-            process.env.EXPECTED_COMMIT_SHA,
-          );
-          assert.ok(fs.existsSync('_site/env.js'));
+          assert.match(quotesModule, /quote-engine\/nueva-cotizacion\/index\.html/);
+          assert.doesNotMatch(quotesModule, /forge-alive-runtime/);
+          assert.match(engineSource, /data-forge-engine-standalone-guard/);
+          assert.match(engineSource, /data-forge-module="dedicated-new-quote-static-route"/);
 
           const forbidden = [];
           function walk(directory) {
-            for (const entry of fs.readdirSync(directory, {
-              withFileTypes: true,
-            })) {
+            for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
               const absolute = path.join(directory, entry.name);
               if (entry.isDirectory()) {
                 walk(absolute);
@@ -437,18 +370,16 @@ jobs:
             }
           }
           walk('_site');
-          assert.deepEqual(
-            forbidden,
-            [],
-            `private evidence published: ${forbidden.join(', ')}`,
-          );
+          assert.deepEqual(forbidden, [], `private evidence published: ${forbidden.join(', ')}`);
 
-          console.log('PAGES_CLEAN_FORGE_ALIVE_ARTIFACT=PASS');
-          console.log('PAGES_LEGACY_UI_RETIRED=PASS');
+          const buildInfo = JSON.parse(fs.readFileSync('_site/build-info.json', 'utf8'));
+          assert.equal(buildInfo.commitSha, process.env.EXPECTED_COMMIT_SHA);
+          assert.equal(buildInfo.artifact, 'forge-pages-canonical-only');
+
+          console.log('PAGES_CANONICAL_UI_ONLY=PASS');
+          console.log('PAGES_LEGACY_UI_NOT_PUBLISHED=PASS');
+          console.log('PAGES_QUOTE_ENGINE_ISOLATED=PASS');
           console.log('PAGES_LEGACY_SERVICE_WORKER_RETIRED=PASS');
-          console.log('PAGES_CANONICAL_RUNTIME_SHA_VERSIONED=PASS');
-          console.log('PAGES_SEGUBECA_AUTHORITY_ASSET=PASS');
-          console.log('PAGES_SEGUBECA_AUTHORITY_IMPORT=PASS');
           EOF
 
       - name: Upload Pages artifact
