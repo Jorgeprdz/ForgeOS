@@ -1,0 +1,38 @@
+name: Pages SeguBeca Module Graph Hotfix
+
+on:
+  pull_request:
+    paths:
+      - "scripts/prepare-segubeca-pages-runtime.mjs"
+      - "scripts/validate-pages-public-config.mjs"
+      - "tests/pages-segubeca-module-graph-hotfix-test.mjs"
+      - ".github/workflows/pages-segubeca-module-graph-hotfix.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/prepare-segubeca-pages-runtime.mjs"
+      - "scripts/validate-pages-public-config.mjs"
+      - "tests/pages-segubeca-module-graph-hotfix-test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate syntax
+        run: |
+          node --check scripts/prepare-segubeca-pages-runtime.mjs
+          node --check scripts/validate-pages-public-config.mjs
+          node --check tests/pages-segubeca-module-graph-hotfix-test.mjs
+      - name: Reproduce and close SeguBeca Pages module graph
+        run: node tests/pages-segubeca-module-graph-hotfix-test.mjs
