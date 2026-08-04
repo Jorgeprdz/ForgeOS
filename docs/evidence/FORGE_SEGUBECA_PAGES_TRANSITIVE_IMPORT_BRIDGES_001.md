@@ -79,6 +79,14 @@ ACCEPTED_EVENT_STACK_REENTRY=FORBIDDEN
 PRINTABLE_REFRESH_AFTER_CONFIRMATION=ASYNC_FRAME
 ```
 
+The next rerun proved that the click still starved the browser main thread. M05E-005 used a document-wide MutationObserver whose callback scheduled `refresh()` through `queueMicrotask()`, while `refresh()` rewrote attributes observed by that same observer. Review 4 now coalesces refreshes on animation frames and makes observed attribute writes idempotent.
+
+```text
+M05E005_REFRESH_SCHEDULER=ANIMATION_FRAME
+M05E005_OBSERVED_WRITES=IDEMPOTENT
+MUTATION_MICROTASK_STARVATION=REMOVED
+```
+
 No calculation, contractual value, PDF extraction, projection, persistence or mutation authority changed.
 
 ## Boundaries
