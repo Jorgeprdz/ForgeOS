@@ -15,6 +15,9 @@ on:
       - 'docs/static-preview/quote-runtime/**'
       - 'advisor-os/**'
       - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
+      - 'scripts/prepare-mick-goal-gap-pages-runtime.mjs'
+      - 'scripts/prepare-material3-runtime-fail-closed.mjs'
+      - 'scripts/validate-pages-public-config.mjs'
 
 permissions:
   contents: read
@@ -29,6 +32,9 @@ jobs:
     timeout-minutes: 15
     env:
       FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+      FORGE_PAGES_RUNTIME_MODE: 'pages'
+      FORGE_CARTERA_PAGES_RUNTIME_MODE: 'pages'
+      GITHUB_PAGES: 'true'
       DEMO_MODE: 'true'
       ENABLE_TEST_ADVISOR_LOGIN: 'false'
       SUPABASE_URL: ''
@@ -74,11 +80,15 @@ jobs:
       - name: Generate validation environment
         run: node /tmp/generate-env.cjs
 
-      - name: Generate productive presentation runtimes
+      - name: Generate productive Pages runtimes
         run: node scripts/build-advisor-presentation-pages-runtime.mjs
 
       - name: Build canonical-only artifact
         run: node /tmp/build-canonical.cjs
 
-      - name: Validate canonical-only artifact
-        run: node /tmp/validate-canonical.cjs
+      - name: Validate canonical-only artifact and static module graph
+        env:
+          EXPECTED_DEMO_MODE: 'true'
+        run: |
+          node /tmp/validate-canonical.cjs
+          node scripts/validate-pages-public-config.mjs _site/env.js
