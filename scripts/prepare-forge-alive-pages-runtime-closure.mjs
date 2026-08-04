@@ -38,6 +38,13 @@ export const ROOT_RUNTIME_ENTRYPOINTS = Object.freeze([
   "advisor-os/person-workspace/crs-09-person-workspace-service.js",
   "platform/shared-commercial-model/crs-10-relationship-intelligence-contract.js",
   "advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js",
+  "platform/commands/command-registry.js",
+  "platform/commands/command-search-engine.js",
+  "platform/commands/command-parser-engine.js",
+  "platform/commands/entity-context-runtime.js",
+  "platform/commands/entity-provider-adapter.js",
+  "platform/commands/alfred-action-registry.js",
+  "platform/commands/alfred-review-action-packet-browser.js",
 ]);
 
 const QPD_CANONICAL_ASSETS = Object.freeze([
@@ -46,6 +53,7 @@ const QPD_CANONICAL_ASSETS = Object.freeze([
 ]);
 const QPD_SOURCE_ROOT = "docs/static-preview/quote-printable-entry";
 const QPD_PUBLIC_ROOT = "static-preview/quote-printable-entry";
+const ALFRED_PUBLIC_RUNTIME = "static-preview/forge-alive/alfred-command-runtime.js";
 
 const QUOTE_PRINTABLE_PROXY_REWRITES = Object.freeze([
   Object.freeze({
@@ -198,6 +206,39 @@ async function rewriteQuotePrintableProxies(siteDir) {
   return rewritten;
 }
 
+async function rewriteAlfredCommandRuntime(siteDir) {
+  const target = join(siteDir, ALFRED_PUBLIC_RUNTIME);
+  const source = await readFile(target, "utf8");
+  const output = source.replaceAll("../../../platform/", "../../platform/");
+  if (output === source) {
+    throw new Error("FORGE_ALIVE_PAGES_ALFRED_PLATFORM_REWRITE_MISSING");
+  }
+  if (output.includes("../../../platform/")) {
+    throw new Error("FORGE_ALIVE_PAGES_ALFRED_SOURCE_LAYOUT_LEAK");
+  }
+  await writeFile(target, output);
+  const requiredImports = [
+    "../../platform/commands/command-registry.js",
+    "../../platform/commands/command-search-engine.js",
+    "../../platform/commands/command-parser-engine.js",
+    "../../platform/commands/entity-context-runtime.js",
+    "../../platform/commands/entity-provider-adapter.js",
+    "../../platform/commands/alfred-action-registry.js",
+    "../../platform/commands/alfred-review-action-packet-browser.js",
+  ];
+  const published = await readFile(target, "utf8");
+  for (const specifier of requiredImports) {
+    if (!published.includes(specifier)) {
+      throw new Error(`FORGE_ALIVE_PAGES_ALFRED_IMPORT_MISSING=${specifier}`);
+    }
+  }
+  return Object.freeze({
+    file: ALFRED_PUBLIC_RUNTIME,
+    rewrite: "../../../platform/=>../../platform/",
+    requiredImports,
+  });
+}
+
 async function publishCanonicalQpdAssets(siteDir) {
   const sourceRoot = join(root, QPD_SOURCE_ROOT);
   const publicRoot = join(siteDir, QPD_PUBLIC_ROOT);
@@ -233,6 +274,7 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     publishCanonicalQpdAssets(resolvedSiteDir),
   ]);
   const rewrittenProxies = await rewriteQuotePrintableProxies(resolvedSiteDir);
+  const alfredRewrite = await rewriteAlfredCommandRuntime(resolvedSiteDir);
 
   const requiredPublishedFiles = [
     "advisor-os/quotes/printable/quote-printable-read-model-m05e005.js",
@@ -242,6 +284,15 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     "advisor-os/person-workspace/crs-09-person-workspace-service.js",
     "platform/shared-commercial-model/crs-10-relationship-intelligence-contract.js",
     "advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js",
+    "platform/commands/command-registry.js",
+    "platform/commands/command-search-engine.js",
+    "platform/commands/command-parser-engine.js",
+    "platform/commands/entity-context-runtime.js",
+    "platform/commands/entity-provider-adapter.js",
+    "platform/commands/alfred-action-registry.js",
+    "platform/commands/alfred-review-action-packet-browser.js",
+    "static-preview/forge-alive/alfred-command-runtime.js",
+    "static-preview/forge-alive/alfred-command-runtime.css",
     "static-preview/forge-alive/person-workspace-module.js",
     "static-preview/forge-alive/person-workspace-module.css",
     "static-preview/forge-alive/person-workspace-entry-bridge.js",
@@ -262,6 +313,7 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     runtimeFiles,
     qpdAssets,
     rewrittenProxies,
+    alfredRewrite,
     requiredPublishedFiles,
   });
   await writeFile(
@@ -272,6 +324,7 @@ export async function prepareForgeAlivePagesRuntimeClosure({
   console.log(`FORGE_ALIVE_PAGES_RUNTIME_CLOSURE=PASS files=${runtimeFiles.length}`);
   console.log(`FORGE_ALIVE_PAGES_QPD_ASSETS=${qpdAssets.length}`);
   console.log(`FORGE_ALIVE_PAGES_PROXY_REWRITES=${rewrittenProxies.length}`);
+  console.log("FORGE_ALIVE_PAGES_ALFRED_COMMAND_OS_REWRITE=PASS");
   return manifest;
 }
 
