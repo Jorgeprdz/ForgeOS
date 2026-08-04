@@ -105,10 +105,9 @@ jobs:
           source = Path('.github/workflows/temporary-beta11-final-review2.yml').read_text().splitlines()
           step = next(i for i, line in enumerate(source) if 'Relocate productive quote runtime and reconcile visual acceptance' in line)
           run_line = next(i for i in range(step, len(source)) if source[i].strip() == 'run: |')
+          end_line = next(i for i in range(run_line + 1, len(source)) if source[i].strip() == '- name: Commit final review 2 closure')
           output = []
-          for line in source[run_line + 1:]:
-              if line and len(line) - len(line.lstrip()) <= 6:
-                  break
+          for line in source[run_line + 1:end_line]:
               output.append(line[10:] if line.startswith('          ') else line)
           if not output or not any('git mv docs/static-preview/quote-preview-live' in line for line in output):
               raise SystemExit('AUDITED_CLOSURE_BLOCK_EXTRACTION_FAILED')
