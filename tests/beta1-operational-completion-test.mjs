@@ -19,6 +19,7 @@ test("Cartera exposes PDF/CSV/XLSX picker, manual entry and desktop drag and dro
   assert.match(source, /data-select-policy-pdf/);
   assert.match(source, /data-add-policy-manual/);
   assert.match(source, /data-cartera-policy-dropzone/);
+  assert.match(source, /accept=\"application\/pdf,\.pdf\"/);
   assert.match(source, /application\/pdf,\.pdf,\.csv,\.xlsx/);
   assert.match(source, /dragover/);
   assert.match(source, /cartera-pdf-intake/);

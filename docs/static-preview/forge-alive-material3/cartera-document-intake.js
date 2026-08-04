@@ -161,8 +161,9 @@ function panelMarkup() {
     <label class="cartera-policy-entry__drop" data-cartera-policy-dropzone tabindex="${demo ? "-1" : "0"}">
       <strong>Arrastra y suelta aquí pólizas PDF, CSV o XLSX</strong>
       <span>Un archivo por revisión · nada se incorpora sin tu confirmación</span>
-      <input type="file" accept="application/pdf,.pdf,.csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-cartera-policy-pdf-input ${demo ? "disabled" : ""}>
+      <input type="file" accept="application/pdf,.pdf,.csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-cartera-policy-drop-input ${demo ? "disabled" : ""}>
     </label>
+    <input type="file" accept="application/pdf,.pdf" data-cartera-policy-pdf-input ${demo ? "disabled" : ""}>
     <p class="cartera-policy-entry__status" data-cartera-entry-status role="status">Selecciona un PDF o captura una póliza manualmente.</p>
     <p class="cartera-policy-entry__error" data-cartera-entry-error role="alert" hidden></p>
     ${demo ? '<div class="cartera-policy-entry__demo">La cuenta demo es de solo lectura. En tu sesión productiva estas acciones quedan habilitadas.</div>' : ""}
@@ -555,6 +556,7 @@ function bindPanel(panel) {
   if (panel.dataset.bound === "true") return;
   panel.dataset.bound = "true";
   const input = panel.querySelector("[data-cartera-policy-pdf-input]");
+  const dropInput = panel.querySelector("[data-cartera-policy-drop-input]");
   const dropzone = panel.querySelector("[data-cartera-policy-dropzone]");
   const bulkImport = mountPolicyBulkImport(panel, { persistDraft });
   const processSelectedFile = file => {
@@ -569,13 +571,18 @@ function bindPanel(panel) {
   });
   input?.addEventListener("change", async () => {
     const file = input.files?.[0];
-    if (file) await processSelectedFile(file);
+    if (file) await handlePdf(panel, file);
     input.value = "";
+  });
+  dropInput?.addEventListener("change", async () => {
+    const file = dropInput.files?.[0];
+    if (file) await processSelectedFile(file);
+    dropInput.value = "";
   });
   dropzone?.addEventListener("keydown", event => {
     if (["Enter", " "].includes(event.key) && !demoSession()) {
       event.preventDefault();
-      input.click();
+      dropInput.click();
     }
   });
   for (const eventName of ["dragenter", "dragover"]) {
