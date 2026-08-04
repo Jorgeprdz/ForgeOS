@@ -1,6 +1,11 @@
 name: BETA1 022A Writable Acceptance
 
 on:
+  push:
+    branches:
+      - audit/beta1-020-productive-workspaces
+    paths:
+      - .github/workflows/beta1-022a-writable-acceptance.yml
   workflow_dispatch:
     inputs:
       run_id:
@@ -28,7 +33,7 @@ jobs:
       ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
       ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
       ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
-      FORGE_BETA1022A_RUN_ID: ${{ inputs.run_id }}
+      FORGE_BETA1022A_RUN_ID: ${{ inputs.run_id || '20260803_213631' }}
       FORGE_BETA1022A_EVIDENCE: artifacts/beta1-022a/dataset-seed-report.json
       FORGE_BETA1022A_VERIFY_EVIDENCE: artifacts/beta1-022a/remote-verification.json
     steps:

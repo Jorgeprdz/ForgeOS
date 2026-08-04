@@ -30,6 +30,7 @@ test("remote runner deploys only the additive wrapper and always reseals A/B", (
   assert.match(deploy, /cartera010b_atomic_policy_entry_wrapper/);
   assert.doesNotMatch(migration, /drop\s+table|truncate|delete\s+from|alter\s+table/i);
   assert.match(workflow, /workflow_dispatch:/);
+  assert.match(workflow, /push:[\s\S]*audit\/beta1-020-productive-workspaces/);
   assert.match(workflow, /Seed through authenticated A\/B product authorities/);
   assert.match(workflow, /Seal A\/B regardless of prior result[\s\S]*if: always\(\)/);
   assert.match(verify, /sealedMutationBlocked/);
