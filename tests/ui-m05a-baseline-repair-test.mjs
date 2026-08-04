@@ -30,7 +30,7 @@ test("route imports resolve from the repository root", () => {
 
 test("READY derives submit state from calculator readiness", () => {
   const intake = read(
-    "docs/static-preview/quote-preview-live/forge-quote-intake-state.js",
+    "docs/static-preview/quote-runtime/forge-quote-intake-state.js",
   );
   assert.match(intake, /calculatorReady = Boolean\(globalThis\.ForgeQuoteCalculators\)/);
   assert.match(intake, /submit\.disabled = !\(ready && calculatorReady\)/);

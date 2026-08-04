@@ -14,7 +14,7 @@ const loader = await readFile(
 
 const parser = await readFile(
   new URL(
-    "docs/static-preview/quote-preview-live/" +
+    "docs/static-preview/quote-runtime/" +
       "forge-pdf-browser-parser.js",
     root,
   ),

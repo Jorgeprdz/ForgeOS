@@ -9,7 +9,7 @@ globalThis.document = {
 };
 
 const { buildOrviConfirmationPreview } = await import(
-  "../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js"
+  "../docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js"
 );
 
 const require = createRequire(import.meta.url);
@@ -94,7 +94,7 @@ assert.equal(withoutPremiumFields.name, null);
 assert.equal(withoutPremiumFields.insured, null);
 
 for (const bundlePath of [
-  "../docs/static-preview/quote-preview-live/forge-quote-preview-bundle.js",
+  "../docs/static-preview/quote-runtime/forge-quote-preview-bundle.js",
   "../docs/quote-preview-live/forge-quote-preview-bundle.js",
 ]) {
   const bundle = readFileSync(new URL(bundlePath, import.meta.url), "utf8");

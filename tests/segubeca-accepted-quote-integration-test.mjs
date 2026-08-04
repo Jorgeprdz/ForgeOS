@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import {
   parseSegubecaPdfTextToAcceptedQuotePacket
-} from "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js";
+} from "../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js";
 import {
   buildAcceptedNativeResult107z15p2R9C,
   isSegubecaAcceptedR14E,
   calculateSegubecaAcceptedR14E
-} from "../docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js";
+} from "../docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js";
 import {
   buildSegubecaDashboardModel
-} from "../docs/static-preview/quote-preview-live/forge-segubeca-product-dashboard-adapter.js";
+} from "../docs/static-preview/quote-runtime/forge-segubeca-product-dashboard-adapter.js";
 
 const sampleText = `
 UDI SeguBeca 18

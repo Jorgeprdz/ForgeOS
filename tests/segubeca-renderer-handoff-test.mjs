@@ -67,7 +67,7 @@ globalThis.dispatchEvent ||= () => true;
 const {
   usesSegubecaStructuredDashboardR14F
 } = await import(
-  `../docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js?r14f=${Date.now()}`
+  `../docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js?r14f=${Date.now()}`
 );
 
 assert.equal(

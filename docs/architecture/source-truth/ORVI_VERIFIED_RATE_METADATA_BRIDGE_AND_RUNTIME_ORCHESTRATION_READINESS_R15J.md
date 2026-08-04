@@ -23,8 +23,8 @@ R15J explicitly locks the future ORVI dashboard to the reusable product-dashboar
 The relevant governed surfaces are:
 
 - `tests/product-dashboard-template-test.mjs`;
-- `docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js`;
-- `docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js`.
+- `docs/static-preview/quote-runtime/forge-benefit-summary-layout.js`;
+- `docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js`.
 
 R15J protects these files by hash and does not modify them.
 

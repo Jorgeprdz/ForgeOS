@@ -6,8 +6,8 @@ const read = relative =>
   readFile(new URL(relative, root), "utf8");
 
 const [parser, bridge, loader] = await Promise.all([
-  read("docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js"),
-  read("docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js"),
+  read("docs/static-preview/quote-runtime/forge-pdf-browser-parser.js"),
+  read("docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js"),
   read("docs/static-preview/forge-alive/forge-alive-runtime-lazy-loader-r16j1c1.js"),
 ]);
 const acceptance = await read(

@@ -6,7 +6,7 @@ import {
   isOrviAcceptedQuotePacket,
   resolveVerifiedOrviRateMetadataFromCache,
   validateOrviStaticPreviewCalculation,
-} from "../docs/static-preview/quote-preview-live/forge-orvi-static-preview-runtime.js";
+} from "../docs/static-preview/quote-runtime/forge-orvi-static-preview-runtime.js";
 
 function money(value, currency) {
   return {

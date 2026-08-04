@@ -140,10 +140,10 @@ export function isOrviAcceptedQuotePacket(
 function cacheUrlCandidates() {
   return [
     new URL("./forge-rate-cache.json", import.meta.url).href,
-    "../../quote-preview-live/forge-rate-cache.json",
-    "../../../quote-preview-live/forge-rate-cache.json",
+    "../../quote-runtime/forge-rate-cache.json",
+    "../../../quote-runtime/forge-rate-cache.json",
     "../../../forge-rate-cache.json",
-    "/ForgeOS/static-preview/quote-preview-live/forge-rate-cache.json",
+    "/ForgeOS/static-preview/quote-runtime/forge-rate-cache.json",
   ];
 }
 

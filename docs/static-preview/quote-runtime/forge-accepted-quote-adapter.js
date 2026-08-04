@@ -3,10 +3,7 @@ import {
   isOrviAcceptedQuotePacket
 } from "./forge-orvi-static-preview-runtime.js?v=r15l_orvi_runtime_20260712_1";
 const DEFAULT_CACHE_CANDIDATES = [
-  "../../quote-preview-live/forge-rate-cache.json",
-  "../../../quote-preview-live/forge-rate-cache.json",
-  "../../../forge-rate-cache.json",
-  "/ForgeOS/forge-rate-cache.json"
+  new URL("./forge-rate-cache.json", import.meta.url).href
 ];
 
 function hasValue(value) {

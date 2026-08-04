@@ -53,11 +53,11 @@ The authoritative PDF surfaces include, when present:
 ## Reused accepted implementation
 
 ```text
-PARSER=docs/static-preview/quote-preview-live/forge-segubeca-solucionline-parser.js
-PACKET_ADAPTER=docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js
-ACCEPTED_CALCULATION=docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js
-UDI_MXN_RUNTIME=docs/static-preview/quote-preview-live/forge-udi-mxn-runtime.js
-PRODUCT_DASHBOARD=docs/static-preview/quote-preview-live/forge-segubeca-product-dashboard-adapter.js
+PARSER=docs/static-preview/quote-runtime/forge-segubeca-solucionline-parser.js
+PACKET_ADAPTER=docs/static-preview/quote-runtime/forge-pdf-browser-parser.js
+ACCEPTED_CALCULATION=docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js
+UDI_MXN_RUNTIME=docs/static-preview/quote-runtime/forge-udi-mxn-runtime.js
+PRODUCT_DASHBOARD=docs/static-preview/quote-runtime/forge-segubeca-product-dashboard-adapter.js
 ```
 
 Historical closure lineage:

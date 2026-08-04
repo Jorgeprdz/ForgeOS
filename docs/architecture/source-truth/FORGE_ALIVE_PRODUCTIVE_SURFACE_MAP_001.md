@@ -106,8 +106,8 @@ docs/static-preview/forge-alive/styles.css
 ```text
 ../../advisor-os/sales-pipeline/pipeline-ui.css?v=067g16f-1
 ../../env.js?v=__FORGE_BUILD_SHA__
-../quote-preview-live/forge-quote-intake-ui-simplification-r16j1c1.css?v=r16j1c1-intake-ui-03a2-20260715-1
-../quote-preview-live/forge-quote-intake-ui-simplification-r16j1c1.js?v=r16j1c1-auto-calculation-03b-20260715-1
+../quote-runtime/forge-quote-intake-ui-simplification-r16j1c1.css?v=r16j1c1-intake-ui-03a2-20260715-1
+../quote-runtime/forge-quote-intake-ui-simplification-r16j1c1.js?v=r16j1c1-auto-calculation-03b-20260715-1
 ./?nav=clientes&v=r16c5k
 ./?nav=cotizaciones&v=067g16f-1
 ./?nav=inicio&v=r16c5k

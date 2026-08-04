@@ -6,10 +6,10 @@ import {
 import {
   buildAcceptedNativeResult107z15p2R9C,
   calculateSegubecaAcceptedR14E,
-} from "../quote-preview-live/forge-accepted-quote-adapter.js?v=segubeca-productive-ui-001";
+} from "../quote-runtime/forge-accepted-quote-adapter.js?v=segubeca-productive-ui-001";
 import {
   createAcceptedQuoteReviewSnapshotBoundary,
-} from "../quote-preview-live/forge-accepted-quote-review-snapshot.js?v=segubeca-productive-ui-001";
+} from "../quote-runtime/forge-accepted-quote-review-snapshot.js?v=segubeca-productive-ui-001";
 
 const BINDING_VERSION = "SEGUBECA-PRODUCTIVE-UI-BINDING-001.8";
 const bindingStateKey = Symbol.for("forge.segubeca.productive.ui.binding");

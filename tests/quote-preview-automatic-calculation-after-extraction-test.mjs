@@ -7,7 +7,7 @@ const read = async (relative) =>
   readFile(new URL(relative, root), "utf8");
 
 const bridge = await read(
-  "docs/static-preview/quote-preview-live/" +
+  "docs/static-preview/quote-runtime/" +
   "forge-accepted-quote-bridge.js",
 );
 const acceptance = await read(
@@ -15,7 +15,7 @@ const acceptance = await read(
   "forge-quote-acceptance-entrypoint-r16j0a.js",
 );
 const intakeUi = await read(
-  "docs/static-preview/quote-preview-live/" +
+  "docs/static-preview/quote-runtime/" +
   "forge-quote-intake-ui-simplification-r16j1c1.js",
 );
 const lazy = await read(

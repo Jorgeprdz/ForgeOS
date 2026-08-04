@@ -1,1 +1,1 @@
-export * from "../../../static-preview/quote-preview-live/forge-pdf-browser-parser.js";
+export * from "../../../static-preview/quote-runtime/forge-pdf-browser-parser.js";

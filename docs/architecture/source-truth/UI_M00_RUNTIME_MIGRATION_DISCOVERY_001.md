@@ -73,7 +73,7 @@ Total detectado: **10**.
 - `app.js`
 - `docs/10-gui/mobile-daily/app.js`
 - `docs/quote-preview-live/app.js`
-- `docs/static-preview/quote-preview-live/orvi-product-intelligence/views/orvi-dashboard-view-model.js`
+- `docs/static-preview/quote-runtime/orvi-product-intelligence/views/orvi-dashboard-view-model.js`
 - `platform/app/bootstrap.js`
 - `platform/app/forge-app-shell.js`
 - `platform/app/runtime-listeners.js`

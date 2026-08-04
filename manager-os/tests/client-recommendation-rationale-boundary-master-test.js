@@ -4,7 +4,7 @@ import {
   PACKET_TYPE,
   SUBJECT_TYPE,
   buildClientRecommendationRationaleBoundary,
-} from "../../docs/static-preview/quote-preview-live/forge-client-recommendation-rationale-boundary.js";
+} from "../../docs/static-preview/quote-runtime/forge-client-recommendation-rationale-boundary.js";
 
 const pass = (number, message) =>
   console.log(`PASS ${number} - ${message}`);

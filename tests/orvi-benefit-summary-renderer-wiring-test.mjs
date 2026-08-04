@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 
 const renderer = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js",
+    "../docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js",
     import.meta.url,
   ),
   "utf8",

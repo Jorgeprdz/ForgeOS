@@ -5,39 +5,39 @@ import { createHash } from "node:crypto";
 const pairs = [
   [
     "product-intelligence/quotes/orvi-pdf-parser-contract.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/quotes/orvi-pdf-parser-contract.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/quotes/orvi-pdf-parser-contract.js",
   ],
   [
     "product-intelligence/quotes/orvi-solucionline-pdf-text-parser.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/quotes/orvi-solucionline-pdf-text-parser.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/quotes/orvi-solucionline-pdf-text-parser.js",
   ],
   [
     "product-intelligence/quotes/orvi-pdf-to-product-intelligence.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/quotes/orvi-pdf-to-product-intelligence.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/quotes/orvi-pdf-to-product-intelligence.js",
   ],
   [
     "product-intelligence/knowledge/orvi-product-intelligence.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/knowledge/orvi-product-intelligence.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/knowledge/orvi-product-intelligence.js",
   ],
   [
     "product-intelligence/analytics/orvi-guaranteed-value-checkpoint-analytics.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/analytics/orvi-guaranteed-value-checkpoint-analytics.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/analytics/orvi-guaranteed-value-checkpoint-analytics.js",
   ],
   [
     "product-intelligence/currency/orvi-mxn-projection-authority.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/currency/orvi-mxn-projection-authority.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/currency/orvi-mxn-projection-authority.js",
   ],
   [
     "product-intelligence/currency/orvi-mxn-equivalence-adapter.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/currency/orvi-mxn-equivalence-adapter.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/currency/orvi-mxn-equivalence-adapter.js",
   ],
   [
     "product-intelligence/views/orvi-dashboard-view-model.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/views/orvi-dashboard-view-model.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/views/orvi-dashboard-view-model.js",
   ],
   [
     "product-intelligence/runtime/orvi-dashboard-orchestration-readiness.js",
-    "docs/static-preview/quote-preview-live/orvi-product-intelligence/runtime/orvi-dashboard-orchestration-readiness.js",
+    "docs/static-preview/quote-runtime/orvi-product-intelligence/runtime/orvi-dashboard-orchestration-readiness.js",
   ],
 ];
 

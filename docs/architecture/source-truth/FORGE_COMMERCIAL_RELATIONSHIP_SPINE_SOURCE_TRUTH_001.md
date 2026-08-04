@@ -85,7 +85,7 @@ PERSON_DUPLICATION=FORBIDDEN
 | Activity ledger | `platform/event-evidence/activity-ledger-contract.js` | Reuse |
 | Canonical Activity Timeline | `platform/event-evidence/canonical-activity-timeline-contract.js` | Reuse as timeline foundation |
 | Quote lifecycle | `platform/event-evidence/quote-lifecycle-event-contract.js` | Reuse |
-| Quote browser persistence bridge | `docs/static-preview/quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js` | Reuse bounded receipts |
+| Quote browser persistence bridge | `docs/static-preview/quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js` | Reuse bounded receipts |
 | Prospect / Quote projection | `platform/event-evidence/prospect-quote-detail-projection.js` | Reconcile into common links |
 | Pipeline prospect bootstrap | `advisor-os/sales-pipeline/productive-prospect-bootstrap.js` | Reuse; prevent local identity duplication |
 | CommercialPerson and Policy validation | `platform/shared-commercial-model/cartera-010b-contract-validator.js` | Reuse and extend relationship edge separately |

@@ -17,7 +17,7 @@ globalThis.location = { href: "https://forge.local/?nav=cotizaciones" };
 
 const source = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js",
+    "../docs/static-preview/quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js",
     import.meta.url,
   ),
   "utf8",

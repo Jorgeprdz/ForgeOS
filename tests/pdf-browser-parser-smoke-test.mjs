@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import {
   parsePdfTextToAcceptedQuotePacket,
   parseVidaMujerPdfTextToAcceptedQuotePacket
-} from "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js";
+} from "../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js";
 import { parseSolucionlineRetirementQuote as parseCanonicalRetirementQuote } from "../product-intelligence/evidence/solucionline-retirement-parser.js";
-import { parseSolucionlineRetirementQuote as parseBrowserRetirementQuote } from "../docs/static-preview/quote-preview-live/forge-solucionline-retirement-parser.js";
+import { parseSolucionlineRetirementQuote as parseBrowserRetirementQuote } from "../docs/static-preview/quote-runtime/forge-solucionline-retirement-parser.js";
 
 const solucionlineRows = `
 Nombre

@@ -3,14 +3,14 @@ import { readFileSync } from "node:fs";
 
 const adapter = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-accepted-quote-adapter.js",
+    "../docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js",
     import.meta.url,
   ),
   "utf8",
 );
 const bridge = readFileSync(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+    "../docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
     import.meta.url,
   ),
   "utf8",

@@ -14,7 +14,7 @@ import {
   createRecommendedBenefitCard,
   findCenteredGridItemIndexes,
   normalizeProductDashboardSection
-} from "../docs/static-preview/quote-preview-live/forge-product-dashboard-template.js";
+} from "../docs/static-preview/quote-runtime/forge-product-dashboard-template.js";
 
 class TestElement {
   constructor(tagName) {

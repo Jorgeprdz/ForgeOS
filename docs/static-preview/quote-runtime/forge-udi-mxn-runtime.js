@@ -57,10 +57,10 @@ function cacheUrlCandidates() {
   const moduleCacheUrl = new URL("./forge-rate-cache.json", import.meta.url).href;
   return [
     moduleCacheUrl,
-    "../../quote-preview-live/forge-rate-cache.json",
-    "../../../quote-preview-live/forge-rate-cache.json",
+    "../../quote-runtime/forge-rate-cache.json",
+    "../../../quote-runtime/forge-rate-cache.json",
     "../../../forge-rate-cache.json",
-    "/ForgeOS/static-preview/quote-preview-live/forge-rate-cache.json"
+    "/ForgeOS/static-preview/quote-runtime/forge-rate-cache.json"
   ];
 }
 

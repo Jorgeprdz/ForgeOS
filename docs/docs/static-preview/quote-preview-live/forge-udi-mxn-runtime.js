@@ -1,1 +1,1 @@
-export * from "../../../static-preview/quote-preview-live/forge-udi-mxn-runtime.js";
+export * from "../../../static-preview/quote-runtime/forge-udi-mxn-runtime.js";

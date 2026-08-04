@@ -4,7 +4,7 @@ import path from "node:path";
 
 import {
   buildClientRecommendationRationaleBoundary,
-} from "../../docs/static-preview/quote-preview-live/forge-client-recommendation-rationale-boundary.js";
+} from "../../docs/static-preview/quote-runtime/forge-client-recommendation-rationale-boundary.js";
 
 import {
   buildSalesPresentationBrowserContext,
@@ -188,10 +188,10 @@ pass(7, "advisor notes never become slide facts");
 
 for (const file of [
   "manager-os/presentation/quote-to-sales-presentation-context-adapter.js",
-  "docs/static-preview/quote-preview-live/forge-sales-presentation-browser-context-adapter.js",
-  "docs/static-preview/quote-preview-live/forge-sales-presentation-prompt-builder.js",
-  "docs/static-preview/quote-preview-live/forge-sales-presentation-slide-plan-generator.js",
-  "docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js",
+  "docs/static-preview/quote-runtime/forge-sales-presentation-browser-context-adapter.js",
+  "docs/static-preview/quote-runtime/forge-sales-presentation-prompt-builder.js",
+  "docs/static-preview/quote-runtime/forge-sales-presentation-slide-plan-generator.js",
+  "docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js",
 ]) {
   const source = read(file);
   assert.doesNotMatch(

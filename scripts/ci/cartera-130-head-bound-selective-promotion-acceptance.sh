@@ -58,7 +58,7 @@ for path in "${changed_paths[@]}"; do
     docs/architecture/source-truth/FORGE_CARTERA_*|\
     docs/evidence/FORGE_CARTERA_*|\
     docs/static-preview/forge-alive-material3/app.js|\
-    docs/static-preview/quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js|\
+    docs/static-preview/quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js|\
     scripts/ci/cartera-130-*) ;;
     *) echo "CARTERA130_UNAUTHORIZED_CHANGED_PATH=$path" >&2; exit 1 ;;
   esac

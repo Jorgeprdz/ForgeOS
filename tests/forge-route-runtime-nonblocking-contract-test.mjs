@@ -17,7 +17,7 @@ const router = await readFile(
 );
 const parser = await readFile(
   new URL(
-    "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js",
+    "../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js",
     import.meta.url,
   ),
   "utf8",

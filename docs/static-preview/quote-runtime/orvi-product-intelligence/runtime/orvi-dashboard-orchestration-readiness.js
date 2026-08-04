@@ -15,12 +15,12 @@ export const ORVI_REUSABLE_TEMPLATE_AUTHORITY = deepFreeze({
   design_line: "VIDA_MUJER_ESTABLISHED_PRODUCT_DASHBOARD_SYSTEM",
   template_test: "tests/product-dashboard-template-test.mjs",
   layout_surface:
-    "docs/static-preview/quote-preview-live/forge-benefit-summary-layout.js",
+    "docs/static-preview/quote-runtime/forge-benefit-summary-layout.js",
   renderer_surface:
-    "docs/static-preview/quote-preview-live/forge-benefit-summary-renderer.js",
+    "docs/static-preview/quote-runtime/forge-benefit-summary-renderer.js",
   existing_product_adapters: [
-    "docs/static-preview/quote-preview-live/forge-imagina-ser-product-dashboard-adapter.js",
-    "docs/static-preview/quote-preview-live/forge-segubeca-product-dashboard-adapter.js",
+    "docs/static-preview/quote-runtime/forge-imagina-ser-product-dashboard-adapter.js",
+    "docs/static-preview/quote-runtime/forge-segubeca-product-dashboard-adapter.js",
   ],
   create_new_dashboard_system: false,
   template_reuse_required: true,

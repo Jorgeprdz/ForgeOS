@@ -5,8 +5,8 @@ const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 const [page, controller, bridge] = await Promise.all([
   read("docs/static-preview/forge-alive/nueva-cotizacion/index.html"),
-  read("docs/static-preview/quote-preview-live/forge-quote-intake-state.js"),
-  read("docs/static-preview/quote-preview-live/forge-accepted-quote-bridge.js"),
+  read("docs/static-preview/quote-runtime/forge-quote-intake-state.js"),
+  read("docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js"),
 ]);
 
 assert.match(page, /data-forge-intake-state="empty"/);

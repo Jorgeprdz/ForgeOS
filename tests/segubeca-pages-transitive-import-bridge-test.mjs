@@ -24,17 +24,17 @@ const pagesWorkflow = await readFile(".github/workflows/pages.yml", "utf8");
 for (const file of dependencies) {
   test(`public bridge preserves the canonical ${file} import`, async () => {
     const canonicalSpecifier =
-      `../../../../docs/static-preview/quote-preview-live/${file}`;
+      `../../../../docs/static-preview/quote-runtime/${file}`;
     assert.ok(
       authority.includes(canonicalSpecifier),
       `canonical authority import missing: ${canonicalSpecifier}`,
     );
 
     const compatibilitySource =
-      `docs/docs/static-preview/quote-preview-live/${file}`;
+      `docs/docs/static-preview/quote-runtime/${file}`;
     const bridge = await readFile(compatibilitySource, "utf8");
     const reexportSpecifier =
-      `../../../static-preview/quote-preview-live/${file}`;
+      `../../../static-preview/quote-runtime/${file}`;
     assert.equal(
       bridge,
       `export * from "${reexportSpecifier}";\n`,
@@ -47,16 +47,16 @@ for (const file of dependencies) {
     );
     assert.equal(
       canonicalPublicDependency.pathname,
-      `/ForgeOS/docs/static-preview/quote-preview-live/${file}`,
+      `/ForgeOS/docs/static-preview/quote-runtime/${file}`,
     );
 
     const bridgePublicUrl = new URL(
-      `https://jorgeprdz.github.io/ForgeOS/docs/static-preview/quote-preview-live/${file}`,
+      `https://jorgeprdz.github.io/ForgeOS/docs/static-preview/quote-runtime/${file}`,
     );
     const publicRuntime = new URL(reexportSpecifier, bridgePublicUrl);
     assert.equal(
       publicRuntime.pathname,
-      `/ForgeOS/static-preview/quote-preview-live/${file}`,
+      `/ForgeOS/static-preview/quote-runtime/${file}`,
     );
   });
 }

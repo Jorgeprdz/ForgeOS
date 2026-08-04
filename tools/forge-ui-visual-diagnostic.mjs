@@ -4,7 +4,7 @@ import path from "node:path";
 import process from "node:process";
 import {
   parseSegubecaPdfTextToAcceptedQuotePacket,
-} from "../docs/static-preview/quote-preview-live/forge-pdf-browser-parser.js";
+} from "../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js";
 
 const DEFAULT_URL =
   "https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/";
@@ -1213,18 +1213,109 @@ async function captureViewport(browser, viewport, fixture) {
       if (!(await messageAction.isVisible()) || !(await messageAction.isEnabled())) {
         throw new Error("PREPARE_MESSAGE_BUTTON_NOT_CLICKED");
       }
-      await messageAction.click({ clickCount: 2 });
-      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
-      if (await page.locator("[data-material3-workspace]").count() !== 1) {
-        throw new Error("NASH_DOUBLE_CLICK_DUPLICATED_WORKSPACE");
-      }
-      await page.locator("[data-nash-prospect-workspace] .referral-sheet__close").click();
-      await messageAction.click();
-      await page.locator("[data-nash-prospect-workspace]").waitFor({
-        state: "visible",
-        timeout: 15_000,
+      await page.evaluate(() => {
+        if (globalThis.__FORGE_DIAGNOSTIC_WINDOW_OPEN_PATCHED__ === true) return;
+        globalThis.__FORGE_DIAGNOSTIC_WINDOW_OPEN_PATCHED__ = true;
+        globalThis.__FORGE_DIAGNOSTIC_ORIGINAL_WINDOW_OPEN__ = globalThis.open;
+        globalThis.open = (url) => {
+globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__.push(String(url));
+return null;
+        };
       });
+      await messageAction.click({ clickCount: 2 });
+      const composerLayer = page.locator("[data-whatsapp-ai-composer-layer]");
+      await composerLayer.waitFor({ state: "visible", timeout: 10_000 });
+      if (await composerLayer.count() !== 1) {
+        throw new Error("WHATSAPP_COMPOSER_DOUBLE_CLICK_DUPLICATED_LAYER");
+      }
+      if (
+        !(await composerLayer.locator("[data-whatsapp-draft]").isVisible())
+        || !(await composerLayer.locator("[data-generate-ai-draft]").isVisible())
+        || !(await composerLayer.locator("[data-open-whatsapp-draft]").isVisible())
+        || !(await composerLayer.textContent()).includes("La IA sólo redacta. No envía ni modifica Pipeline o Timeline.")
+      ) {
+        throw new Error("WHATSAPP_COMPOSER_CONTRACT_NOT_VISIBLE");
+      }
+      await composerLayer.locator("[data-close-whatsapp-ai]").first().click();
+      await composerLayer.waitFor({ state: "detached" });
+
+      await messageAction.click();
+      await composerLayer.waitFor({ state: "visible", timeout: 10_000 });
+      const composerDraft = composerLayer.locator("[data-whatsapp-draft]");
+      const composerText = "Hola Jorge, te escribo para retomar nuestra conversación. ¿Te funciona que lo revisemos esta semana?";
+      const composerAttemptsBefore = await page.evaluate(
+        () => globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__.length,
+      );
+      await composerDraft.fill(composerText);
+      await page.waitForTimeout(120);
+      if (
+        await page.evaluate(
+() => globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__.length,
+        ) !== composerAttemptsBefore
+      ) {
+        throw new Error("WHATSAPP_COMPOSER_AUTOMATIC_OPEN_DETECTED");
+      }
+      result.routes.pipelineWhatsappComposer = await capture(
+        page,
+        directory,
+        "03ca-pipeline-whatsapp-composer",
+      );
+      const composerUrlBeforeOpen = page.url();
+      await composerLayer.locator("[data-open-whatsapp-draft]").click();
+      const composerAttempts = await page.evaluate(
+        () => [...globalThis.__FORGE_DIAGNOSTIC_WHATSAPP_ATTEMPTS__],
+      );
+      const composerDestination = composerAttempts.at(-1);
+      if (
+        composerAttempts.length !== composerAttemptsBefore + 1
+        || !composerDestination?.startsWith("https://wa.me/")
+        || new URL(composerDestination).searchParams.get("text") !== composerText
+        || page.url() !== composerUrlBeforeOpen
+      ) {
+        throw new Error("WHATSAPP_COMPOSER_MANUAL_OPEN_NOT_VERIFIED");
+      }
+      result.routes.pipelineWhatsappComposerOpened = await capture(
+        page,
+        directory,
+        "03cb-pipeline-whatsapp-composer-opened",
+      );
+      await composerLayer.locator("[data-close-whatsapp-ai]").first().click();
+      await composerLayer.waitFor({ state: "detached" });
+      const composerFocusReturned = await messageAction.evaluate(
+        element => document.activeElement === element,
+      );
+
+      const openNashFromNba = async ({ captureNba = false, verifyDoubleClick = false } = {}) => {
+        const nbaAction = page.locator("[data-open-nba]").first();
+        if (!(await nbaAction.isVisible()) || !(await nbaAction.isEnabled())) {
+throw new Error("NBA_BUTTON_NOT_CLICKED");
+        }
+        await nbaAction.click(verifyDoubleClick ? { clickCount: 2 } : undefined);
+        await page.locator("[data-nba-workspace]").waitFor({ state: "visible" });
+        if (await page.locator("[data-material3-workspace]").count() !== 1) {
+throw new Error("NBA_DOUBLE_CLICK_DUPLICATED_WORKSPACE");
+        }
+        if (captureNba) {
+result.routes.pipelineNba = await capture(page, directory, "03g-pipeline-nba");
+        }
+        const nbaPrepare = page.locator("[data-nba-prepare-message]");
+        await nbaPrepare.waitFor({ state: "visible" });
+        await nbaPrepare.click();
+        await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
+        if (
+await page.locator("[data-nba-workspace]").count() !== 0
+|| await page.locator("[data-material3-workspace]").count() !== 1
+        ) {
+throw new Error("NBA_TO_NASH_TRANSITION_DUPLICATED_WORKSPACE");
+        }
+      };
+
+      await openNashFromNba({ captureNba: true, verifyDoubleClick: true });
       const draft = page.locator("[data-nash-draft]");
+      await draft.waitFor({ state: "visible", timeout: 15_000 });
+      await page.waitForFunction(() =>
+        Boolean(document.querySelector("[data-nash-draft]")?.value.trim())
+      );
       const approval = page.getByRole("button", {
         name: /Revisar y aprobar texto exacto/,
       });
@@ -1264,7 +1355,7 @@ async function captureViewport(browser, viewport, fixture) {
       if (
         attemptsAfterFirstNash.length !== attemptsBeforeNash + 1
         || new URL(attemptsAfterFirstNash.at(-1)).searchParams.get("text")
-          !== firstApprovedText
+!== firstApprovedText
       ) throw new Error("NASH_WHATSAPP_LINK_NOT_CLICKED");
       result.routes.pipelineNashWhatsappClicked = await capture(
         page,
@@ -1302,54 +1393,71 @@ async function captureViewport(browser, viewport, fixture) {
       );
       result.clickThrough = {
         combat: {
-          controlLabel: "NASH Combat",
-          selector: '[data-open-combat]',
-          visibleBeforeClick: true,
-          enabledBeforeClick: true,
-          clickPerformed: true,
-          postcondition: "one styled Combat workspace; analysis and approval visible",
-          workspaceCountBefore: 0,
-          workspaceCountAfter: 1,
-          hrefBeforeClick: null,
-          hrefAfterApproval: combatHref,
-          navigationAttemptCount: combatAttempts.length,
-          navigationDestination: combatAttempts[0],
-          approvedExactText: combatApprovedText,
-          decodedWhatsappText: new URL(combatAttempts[0]).searchParams.get("text"),
-          automaticNavigationDetected: false,
-          result: "PASS",
-          screenshotBefore: "03e-pipeline-combat-open.png",
-          screenshotAfter: "03ec-pipeline-combat-whatsapp-clicked.png",
+controlLabel: "NASH Combat",
+selector: '[data-open-combat]',
+visibleBeforeClick: true,
+enabledBeforeClick: true,
+clickPerformed: true,
+postcondition: "one styled Combat workspace; analysis and approval visible",
+workspaceCountBefore: 0,
+workspaceCountAfter: 1,
+hrefBeforeClick: null,
+hrefAfterApproval: combatHref,
+navigationAttemptCount: combatAttempts.length,
+navigationDestination: combatAttempts[0],
+approvedExactText: combatApprovedText,
+decodedWhatsappText: new URL(combatAttempts[0]).searchParams.get("text"),
+automaticNavigationDetected: false,
+result: "PASS",
+screenshotBefore: "03e-pipeline-combat-open.png",
+screenshotAfter: "03ec-pipeline-combat-whatsapp-clicked.png",
+        },
+        composer: {
+controlLabel: "Preparar mensaje",
+selector: '[data-prepare-productive-message]',
+visibleBeforeClick: true,
+enabledBeforeClick: true,
+clickPerformed: true,
+postcondition: "one editable non-mutating composer and one manual WhatsApp open",
+layerCountAfterDoubleClick: 1,
+navigationAttemptCount: 1,
+navigationDestination: composerDestination,
+approvedExactText: composerText,
+decodedWhatsappText: new URL(composerDestination).searchParams.get("text"),
+automaticNavigationDetected: false,
+result: "PASS",
+screenshotBefore: "03ca-pipeline-whatsapp-composer.png",
+screenshotAfter: "03cb-pipeline-whatsapp-composer-opened.png",
         },
         nash: {
-          controlLabel: "Preparar mensaje",
-          selector: '[data-prepare-productive-message]',
-          visibleBeforeClick: true,
-          enabledBeforeClick: true,
-          clickPerformed: true,
-          postcondition: "exact approval, click interception, invalidation and reapproval",
-          workspaceCountBefore: 0,
-          workspaceCountAfter: 1,
-          hrefBeforeClick: null,
-          hrefAfterApproval: secondNashHref,
-          navigationAttemptCount: finalAttempts.length - combatAttempts.length,
-          navigationDestination: finalAttempts.at(-1),
-          approvedExactText: secondApprovedText,
-          decodedWhatsappText: new URL(finalAttempts.at(-1)).searchParams.get("text"),
-          automaticNavigationDetected: false,
-          result: "PASS",
-          screenshotBefore: "03c-pipeline-nash-before-acceptance.png",
-          screenshotAfter: "03dc-pipeline-nash-reapproved.png",
+controlLabel: "Revisar NBA → Preparar mensaje",
+selector: '[data-nba-prepare-message]',
+visibleBeforeClick: true,
+enabledBeforeClick: true,
+clickPerformed: true,
+postcondition: "exact approval, click interception, invalidation and reapproval",
+workspaceCountBefore: 1,
+workspaceCountAfter: 1,
+hrefBeforeClick: null,
+hrefAfterApproval: secondNashHref,
+navigationAttemptCount: finalAttempts.length - attemptsBeforeNash,
+navigationDestination: finalAttempts.at(-1),
+approvedExactText: secondApprovedText,
+decodedWhatsappText: new URL(finalAttempts.at(-1)).searchParams.get("text"),
+automaticNavigationDetected: false,
+result: "PASS",
+screenshotBefore: "03c-pipeline-nash-before-acceptance.png",
+screenshotAfter: "03dc-pipeline-nash-reapproved.png",
         },
         duplication: {
-          nashWorkspaceCountMax: 1,
-          combatWorkspaceCountMax: 1,
-          nbaWorkspaceCountMax: 1,
-          totalActiveWorkspaceCountMax: 1,
-          duplicateHeadings: 0,
-          duplicateCloseButtons: 0,
-          duplicateWhatsappLinks: 0,
-          result: "PASS",
+nashWorkspaceCountMax: 1,
+combatWorkspaceCountMax: 1,
+nbaWorkspaceCountMax: 1,
+totalActiveWorkspaceCountMax: 1,
+duplicateHeadings: 0,
+duplicateCloseButtons: 0,
+duplicateWhatsappLinks: 0,
+result: "PASS",
         },
       };
       const nashBefore = await readFile(path.join(
@@ -1362,57 +1470,38 @@ async function captureViewport(browser, viewport, fixture) {
       ));
       result.nashAcceptanceVisual = {
         stateChanged:
-          result.routes.pipelineNashWorkspace.nashAcceptanceState === "pending"
-          && result.routes.pipelineNashAccepted.nashAcceptanceState === "approved",
+result.routes.pipelineNashWorkspace.nashAcceptanceState === "pending"
+&& result.routes.pipelineNashAccepted.nashAcceptanceState === "approved",
         visuallyProven: !nashBefore.equals(nashAfter),
         beforeAfterIdentical: nashBefore.equals(nashAfter),
         editedDraftInvalidatedApproval: true,
       };
       await page.locator("[data-nash-prospect-workspace] .referral-sheet__close").click();
-      const focusReturned = combatFocusReturned && await messageAction.evaluate(
-        element => document.activeElement === element,
-      );
-      await messageAction.click();
-      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
+      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "detached" });
+
+      const focusReturned = combatFocusReturned && composerFocusReturned;
+      await openNashFromNba();
       await page.keyboard.press("Escape");
       await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "detached" });
-      const escapeClose = await messageAction.evaluate(
-        element => document.activeElement === element,
-      );
-      await messageAction.click();
-      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
+      const escapeClose = await page.locator("[data-material3-workspace]").count() === 0;
+      await openNashFromNba();
       await page.waitForTimeout(400);
       await page.locator("[data-nash-prospect-workspace] .referral-sheet__scrim").click({
         position: { x: 2, y: 2 },
       });
       await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "detached" });
-      const scrimClose = await messageAction.evaluate(
-        element => document.activeElement === element,
-      );
+      const scrimClose = await page.locator("[data-material3-workspace]").count() === 0;
       await page.evaluate(({ focusReturned, escapeClose, scrimClose }) => {
         globalThis.__FORGE_DIAGNOSTIC_WORKSPACE_LIFECYCLE__ = {
-          focusReturned,
-          escapeClose,
-          scrimClose,
-          bodyScrollRestored: document.body.style.overflow !== "hidden",
-          maxWorkspaceCount: 1,
+focusReturned,
+escapeClose,
+scrimClose,
+bodyScrollRestored: document.body.style.overflow !== "hidden",
+maxWorkspaceCount: 1,
         };
       }, { focusReturned, escapeClose, scrimClose });
 
-      await page.locator("[data-open-nba]").first().click({ clickCount: 2 });
-      await page.locator("[data-nba-workspace]").waitFor({ state: "visible" });
-      if (await page.locator("[data-material3-workspace]").count() !== 1) {
-        throw new Error("NBA_DOUBLE_CLICK_DUPLICATED_WORKSPACE");
-      }
-      result.routes.pipelineNba = await capture(page, directory, "03g-pipeline-nba");
-      await page.locator("[data-nba-prepare-message]").click();
-      await page.locator("[data-nash-prospect-workspace]").waitFor({ state: "visible" });
-      if (
-        await page.locator("[data-nba-workspace]").count() !== 0
-        || await page.locator("[data-material3-workspace]").count() !== 1
-      ) {
-        throw new Error("NBA_TO_NASH_TRANSITION_DUPLICATED_WORKSPACE");
-      }
+      await openNashFromNba();
       result.routes.pipelineNbaToNash = await capture(
         page,
         directory,

@@ -14,7 +14,7 @@ const css = read(
   "docs/static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.css",
 );
 const boundary = read(
-  "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js",
+  "docs/static-preview/quote-runtime/forge-accepted-quote-review-snapshot.js",
 );
 const controller = read(
   "docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller.js",

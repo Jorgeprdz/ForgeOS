@@ -8,7 +8,7 @@ const adapter = require(
   "../platform/shared-commercial-model/accepted-quote-cartera-relationship-adapter.js",
 );
 const quoteBridgeSource = fs.readFileSync(
-  "docs/static-preview/quote-preview-live/forge-quote-lifecycle-browser-bridge-cartera001b.js",
+  "docs/static-preview/quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js",
   "utf8",
 );
 const policyValidatorSource = fs.readFileSync(

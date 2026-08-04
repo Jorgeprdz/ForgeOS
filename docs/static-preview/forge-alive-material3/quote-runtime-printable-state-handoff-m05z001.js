@@ -1,6 +1,6 @@
 import {
   createAcceptedQuoteReviewSnapshotBoundary,
-} from "../quote-preview-live/forge-accepted-quote-review-snapshot.js";
+} from "../quote-runtime/forge-accepted-quote-review-snapshot.js";
 
 const VERSION = "M05Z-001";
 const UNDERLYING_KEYS = Object.freeze([
