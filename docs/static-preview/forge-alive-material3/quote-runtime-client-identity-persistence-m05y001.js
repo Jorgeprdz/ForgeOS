@@ -10,6 +10,7 @@ const REJECTED_NAMES = new Set([
 let scheduled = false;
 let syncing = false;
 let lastPersistedName = "";
+let scheduledReason = "scheduled";
 
 function cleanName(value) {
   const name = String(value || "").trim();
@@ -34,8 +35,9 @@ function bridgeClientName(bridge) {
   );
 }
 
-function persistIdentity() {
+function persistIdentity(reason = scheduledReason) {
   scheduled = false;
+  scheduledReason = "scheduled";
   if (syncing) return false;
 
   const name = visibleClientName();
@@ -69,19 +71,21 @@ function persistIdentity() {
 
     document.documentElement.dataset.quoteClientIdentityPersistence = VERSION;
     document.documentElement.dataset.quoteClientIdentityPersisted = "true";
+    document.documentElement.dataset.quoteClientIdentityPersistenceReason = reason;
     return true;
   } finally {
     syncing = false;
   }
 }
 
-function schedule() {
+function schedule(reason = "scheduled") {
+  scheduledReason = reason;
   if (scheduled) return;
   scheduled = true;
   const enqueue = globalThis.requestAnimationFrame
     ? globalThis.requestAnimationFrame.bind(globalThis)
     : (callback) => globalThis.setTimeout(callback, 0);
-  enqueue(persistIdentity);
+  enqueue(() => persistIdentity(reason));
 }
 
 function persistBeforeGovernedAction(event) {
@@ -98,12 +102,27 @@ function persistBeforeGovernedAction(event) {
     '[data-m05e005-action="preview"], [data-m05e005-action="download"]',
   );
 
-  if (confirmsQuote || acceptsPreview || printableAction) {
-    persistIdentity();
+  if (confirmsQuote) {
+    // Never traverse the accepted-quote bridge from the capture phase of the
+    // governed confirmation click. The review data has already been updated
+    // by input/change events; any final reconciliation is safely deferred.
+    schedule("confirmation-click-deferred");
+    return;
+  }
+
+  if (acceptsPreview || printableAction) {
+    schedule(
+      acceptsPreview
+        ? "preview-accept-click-deferred"
+        : "printable-action-click-deferred",
+    );
   }
 
   if (acceptsPreview) {
-    globalThis.setTimeout(schedule, 40);
+    globalThis.setTimeout(
+      () => schedule("preview-accept-post-action"),
+      40,
+    );
   }
 }
 
@@ -111,7 +130,7 @@ document.addEventListener("input", (event) => {
   if (event.target?.matches?.(
     "[data-quote-human-review-client], [data-m05e005-client-input]",
   )) {
-    schedule();
+    schedule("identity-input");
   }
 }, true);
 
@@ -119,7 +138,7 @@ document.addEventListener("change", (event) => {
   if (event.target?.matches?.(
     "[data-quote-human-review-client], [data-m05e005-client-input]",
   )) {
-    persistIdentity();
+    schedule("identity-change");
   }
 }, true);
 
@@ -131,8 +150,9 @@ for (const eventName of [
   "forge:qpd06-state",
 ]) {
   globalThis.addEventListener?.(eventName, () => {
-    persistIdentity();
-    schedule();
+    // These events can originate while bridge wrappers are still publishing
+    // state. Coalesce persistence outside the dispatch stack.
+    schedule(eventName);
   });
 }
 
