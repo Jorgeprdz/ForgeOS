@@ -1,0 +1,47 @@
+name: Pages Mick Module Graph Hotfix
+
+on:
+  pull_request:
+    paths:
+      - "scripts/build-advisor-presentation-pages-runtime.mjs"
+      - "scripts/prepare-mick-goal-gap-pages-runtime.mjs"
+      - "scripts/prepare-material3-runtime-fail-closed.mjs"
+      - "scripts/validate-pages-public-config.mjs"
+      - "tests/pages-mick-module-graph-hotfix-test.mjs"
+      - ".github/workflows/pages-mick-module-graph-hotfix.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/build-advisor-presentation-pages-runtime.mjs"
+      - "scripts/prepare-mick-goal-gap-pages-runtime.mjs"
+      - "scripts/prepare-material3-runtime-fail-closed.mjs"
+      - "scripts/validate-pages-public-config.mjs"
+      - "tests/pages-mick-module-graph-hotfix-test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate syntax
+        run: |
+          node --check scripts/prepare-mick-goal-gap-pages-runtime.mjs
+          node --check scripts/prepare-material3-runtime-fail-closed.mjs
+          node --check scripts/validate-pages-public-config.mjs
+          node --check tests/pages-mick-module-graph-hotfix-test.mjs
+      - name: Reproduce and close published module graph regression
+        run: node tests/pages-mick-module-graph-hotfix-test.mjs
+      - name: Enforce fail-closed hydration boundary
+        run: |
+          grep -q 'FORGE_RUNTIME_HYDRATION_FAIL_CLOSED_V1' docs/static-preview/forge-alive-material3/index.html
+          grep -q 'La interfaz anterior permanecerá bloqueada' docs/static-preview/forge-alive-material3/index.html
