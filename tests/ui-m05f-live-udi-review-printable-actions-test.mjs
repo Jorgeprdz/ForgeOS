@@ -5,15 +5,23 @@ const root = new URL("../", import.meta.url);
 const read = (path) => readFileSync(new URL(path, root), "utf8");
 
 const app = read("docs/static-preview/forge-alive-material3/app.js");
+const index = read("docs/static-preview/forge-alive-material3/index.html");
+const moduleSource = read("docs/static-preview/forge-alive-material3/quotes-module.js");
 const hotfix = read("docs/static-preview/forge-alive-material3/quote-runtime-hotfix-m05e003.js");
 const pagesRateBridge = read("docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js");
 const vidaMujerHandoff = read("docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js");
 const vidaMujerVisual = read("docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js");
 const printableClosure = read("docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js");
-const proof = read("docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html");
 const server = read("tools/forge-local-live-server.cjs");
 const cacheEngine = read("exchange-rate-cache-engine.js");
 const staleCache = JSON.parse(read("forge-rate-cache.json"));
+
+assert.match(index, /data-forge-application/);
+assert.match(index, /data-forge-quotes-module/);
+assert.match(index, /app\.js\?v=/);
+assert.doesNotMatch(index, /quote-calculator-parity-009/);
+assert.match(moduleSource, /quote-engine\/nueva-cotizacion\/index\.html/);
+assert.doesNotMatch(moduleSource, /forge-alive-runtime/);
 
 assert.match(app, /quote-runtime-pages-rate-fetch-bridge-m05e010\.js\?v=m05e-010/);
 assert.match(app, /quote-runtime-hotfix-m05e003\.js\?v=m05q-001-loop-closure/);
@@ -23,9 +31,6 @@ assert.match(app, /quote-runtime-printable-closure-m05e006\.js\?v=m05e-011-eager
 assert.doesNotMatch(app, /quote-runtime-printable-closure-m05e005\.js/);
 assert.match(app, /quoteCalculatorRuntime = "M05E-006"/);
 assert.match(app, /vidaMujerVisualClosure = "M05E-010"/);
-assert.match(proof, /CALCULADORAS M05E-006/);
-assert.match(proof, /quote-calculator-parity-009/);
-assert.match(proof, /vidaMujerHandoff = "M05E-009"/);
 
 assert.ok(
   app.indexOf("void startPrintableAuthority();") <
@@ -127,6 +132,7 @@ console.log("PASS UI-M05F live UDI and printable UX closure", {
   productiveRuntime: "M05E-006",
   vidaMujerHandoff: "M05E-009",
   vidaMujerVisualClosure: "M05E-010",
+  canonicalEntrypointOnly: true,
   staleFixtureDetected: staleCache.rates.UDI_MXN.date,
   liveRateRefreshRequired: true,
   envJsSupabaseDiscovery: true,
