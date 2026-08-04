@@ -147,11 +147,11 @@ jobs:
             ],
             [
               'const browser = await puppeteer.launch({\n  executablePath: chromiumPath,',
-              'const browser = await puppeteer.launch({\n  protocolTimeout: 90000,\n  executablePath: chromiumPath,',
+              'const browser = await puppeteer.launch({\n  protocolTimeout: 45000,\n  executablePath: chromiumPath,',
             ],
             [
               '  const page = await browser.newPage();\n  await page.setViewport({ width: 1440, height: 1200 });',
-              '  const page = await browser.newPage();\n  page.setDefaultTimeout(60000);\n  page.setDefaultNavigationTimeout(90000);\n  page.on("console", message => console.log(`SEGUBECA_PAGE_CONSOLE=${message.text()}`));\n  console.log("SEGUBECA_GENERATED_PAGES_BROWSER=READY");\n  await page.setViewport({ width: 1440, height: 1200 });',
+              '  const page = await browser.newPage();\n  page.setDefaultTimeout(30000);\n  page.setDefaultNavigationTimeout(60000);\n  page.on("console", message => console.log(`SEGUBECA_PAGE_CONSOLE=${message.text()}`));\n  console.log("SEGUBECA_GENERATED_PAGES_BROWSER=READY");\n  await page.setViewport({ width: 1440, height: 1200 });',
             ],
             [
               '  const input = await page.$("#fq-solution-online-pdf-105dr");',
@@ -198,8 +198,20 @@ jobs:
               '  console.log("SEGUBECA_GENERATED_PAGES_PREVIEW=READ");\n  assert.deepEqual(preview.candidate, {',
             ],
             [
+              '  await page.waitForFunction(\n    () => {\n      const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+              '  console.log("SEGUBECA_CONFIRM_BUTTON_WAIT=START");\n  await page.waitForFunction(\n    () => {\n      const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+            ],
+            [
+              '    { timeout: 30000 },\n  );\n  await page.evaluate(() => {\n    const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+              '    { timeout: 30000 },\n  );\n  console.log("SEGUBECA_CONFIRM_BUTTON_WAIT=PASS");\n  console.log("SEGUBECA_CONFIRM_CLICK=START");\n  await page.evaluate(() => {\n    const button = document.querySelector(\'[data-quote-next-action="confirm_quote"]\');',
+            ],
+            [
+              '    button.click();\n  });\n  await page.waitForFunction(',
+              '    button.click();\n  });\n  console.log("SEGUBECA_CONFIRM_CLICK=PASS");\n  console.log("SEGUBECA_ACCEPTED_WAIT=START");\n  await page.waitForFunction(',
+            ],
+            [
               '  const confirmation = await page.evaluate(() => {',
-              '  console.log("SEGUBECA_GENERATED_PAGES_CONFIRMATION=READY");\n  const confirmation = await page.evaluate(() => {',
+              '  console.log("SEGUBECA_ACCEPTED_WAIT=PASS");\n  console.log("SEGUBECA_GENERATED_PAGES_CONFIRMATION=READY");\n  const confirmation = await page.evaluate(() => {',
             ],
           ];
           for (const [before, after] of replacements) {
@@ -218,7 +230,7 @@ jobs:
           if (!source.includes('process.env.FORGE_SEGUBECA_TARGET_URL')) {
             throw new Error('SEGUBECA_GENERATED_PAGES_TARGET_NOT_INJECTED');
           }
-          if (!source.includes('protocolTimeout: 90000')) {
+          if (!source.includes('protocolTimeout: 45000')) {
             throw new Error('SEGUBECA_REVIEW3_PROTOCOL_TIMEOUT_NOT_APPLIED');
           }
           if (source.includes('document.body.innerText')) {
@@ -227,7 +239,7 @@ jobs:
           fs.writeFileSync(targetPath, source);
           NODE
 
-          timeout 5m node /tmp/segubeca-generated-pages-real-pdf.mjs
+          timeout 4m node /tmp/segubeca-generated-pages-real-pdf.mjs
           echo 'SEGUBECA_GENERATED_PAGES_REAL_PDF=PASS'
 
       - name: Preserve accepted SeguBeca authorities
