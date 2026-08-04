@@ -1,6 +1,7 @@
 import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-120-false-zero-safe-area-001";
 import "./home-tablet-layout-palette.js?v=home-tablet-layout-palette-001";
 import "./mobile-bottom-nav-resize.js?v=mobile-bottom-nav-resize-001";
+import "./alfred-command-runtime.js?v=alfred-command-runtime-001";
 
 const LEGACY_CACHE_NAMES = new Set([
   "static-v7-pages-1",
