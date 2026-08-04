@@ -1,4 +1,4 @@
-import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js?v=66b83e282dffe1de930e8a1a22f122f58117f323";
+import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js";
 
 const homeStateKey = Symbol.for("forge.ui-m04.home.state");
 
