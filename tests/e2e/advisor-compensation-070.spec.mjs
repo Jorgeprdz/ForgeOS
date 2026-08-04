@@ -55,7 +55,7 @@ test("detail and six-month history expose evidence without mixing simulation", a
   await expect(page.getByText("Cálculo verificable")).toBeVisible();
   await expect(page.getByText("Reglas verificables")).toBeVisible();
   await expect(page.locator('[data-compensation-simulator-boundary="separate"]')).toContainText(
-    "SIMULATION ≠ TRUTH",
+    "Escenario, no ingreso confirmado",
   );
 });
 
