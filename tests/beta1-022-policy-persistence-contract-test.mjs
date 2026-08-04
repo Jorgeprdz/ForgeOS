@@ -29,6 +29,17 @@ test("manual and reviewed file entry uses one atomic canonical transaction", asy
   assert.doesNotMatch(intake, /person:cartera:\$\{uid\(\)\}|policy:cartera:\$\{uid\(\)\}/);
   assert.doesNotMatch(intake, /client\.rpc\("forge_cartera010b_confirm_identity_resolution"/);
   assert.doesNotMatch(intake, /client\.rpc\("forge_cartera010b_confirm_policy_with_parties"/);
+  assert.match(intake, /if \(!text\) return "UNKNOWN"/);
+  assert.match(intake, /name="insuredName"/);
+  assert.match(intake, /name="contractorName"/);
+  assert.match(intake, /name="paymentMethod"/);
+  assert.match(intake, /name="sourceDate"/);
+  assert.match(intake, /name="officialDocumentVerified"/);
+  assert.match(intake, /: "MANUAL_ADVISOR_ENTRY"/);
+  assert.match(intake, /"ADVISOR_UPLOADED_POLICY_DOCUMENT"/);
+  assert.match(intake, /"ADVISOR_POLICY_BULK_IMPORT"/);
+  assert.match(intake, /policyTruthState: draft\.officialDocumentVerified \? "ADVISOR_CONFIRMED" : "PROVISIONAL_OR_INCOMPLETE"/);
+  assert.match(intake, /verificationState: draft\.officialDocumentVerified \? "CONFIRMED" : "REVIEWED"/);
 });
 
 test("the local XLSX decoder is bounded and never executes formulas or macros", async () => {
