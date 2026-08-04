@@ -1,4 +1,5 @@
 import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js";
+import { createHomeMonthlyGoalEditor } from "./home-monthly-goal-editor.js";
 
 const homeStateKey = Symbol.for("forge.ui-m04.home.state");
 
@@ -112,6 +113,10 @@ export function createHomeModule({ root, shell }) {
   const toast = document.querySelector(".toast");
   const { productiveRoot } = prepareProductiveRoot(root);
   const productiveHome = createAuthenticatedProductiveHome({ root: productiveRoot, shell });
+  const monthlyGoalEditor = createHomeMonthlyGoalEditor({
+    root: productiveRoot,
+    productiveHome,
+  });
   let mounted = false;
   let toastTimer = null;
 
@@ -174,6 +179,7 @@ export function createHomeModule({ root, shell }) {
     input?.addEventListener("focus", shell.syncVisualViewport, { signal });
     input?.addEventListener("blur", () => window.setTimeout(shell.syncVisualViewport, 120), { signal });
     bindStaticHomeActions();
+    monthlyGoalEditor.mount();
     productiveHome.mount();
   }
 
@@ -184,16 +190,21 @@ export function createHomeModule({ root, shell }) {
     reconcile() {
       root.hidden = false;
       root.dataset.moduleActive = "true";
-      Promise.resolve(productiveHome.reconcile()).then(() => canonicalizeSmartWidgets(productiveRoot));
+      Promise.resolve(productiveHome.reconcile()).then(() => {
+        canonicalizeSmartWidgets(productiveRoot);
+        monthlyGoalEditor.reconcile();
+      });
     },
     unmount() {
       root.hidden = true;
       root.dataset.moduleActive = "false";
+      monthlyGoalEditor.close();
       productiveHome.scrub("home-route-unmounted");
     },
     diagnostics() {
       return Object.freeze({
         productiveHome: productiveHome.diagnostics?.(),
+        monthlyGoalEditor: monthlyGoalEditor.diagnostics?.(),
         canonicalActionCards: productiveRoot.dataset.canonicalActionCards === "true" || productiveRoot.dataset.intelligenceAbsorbed === "true",
       });
     },
