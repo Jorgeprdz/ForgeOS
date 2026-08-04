@@ -1,3 +1,5 @@
+import { readFirstSheetRows } from "./safe-xlsx-decoder.js?v=beta1-022-001";
+
 const ACCEPTED = new Set(["csv", "xlsx"]);
 const MAX_ROWS = 500;
 const SESSION_BOOTSTRAP = "ForgeProductiveProspectBootstrap067G17B";
@@ -66,14 +68,7 @@ function parseCsv(text) {
 }
 
 async function workbookRows(file) {
-  const decoder = globalThis.ForgeSafeWorkbookDecoder;
-  if (!decoder || typeof decoder.readFirstSheetRows !== "function") {
-    throw new Error("La lectura de Excel no está disponible sin conexión. Puedes guardar el archivo como CSV e intentarlo de nuevo.");
-  }
-  return decoder.readFirstSheetRows(await file.arrayBuffer(), {
-    formulas: false,
-    macros: false,
-  });
+  return readFirstSheetRows(await file.arrayBuffer());
 }
 
 const ALIASES = Object.freeze({
@@ -121,8 +116,11 @@ function mapRows(rows, fileName) {
       errors,
       draft: {
         draftId: `bulk-${crypto.randomUUID?.() || Date.now()}-${offset}`,
+        operationAt: new Date().toISOString(),
         inputMode: "bulk",
         fileName,
+        sourceSheet: rows.sourceSheet || null,
+        sourceRow: offset + 2,
         personMode: "new",
         existingPersonReference: "",
         holderName,

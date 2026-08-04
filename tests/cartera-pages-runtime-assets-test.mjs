@@ -113,7 +113,11 @@ test("Material 3 Cartera resolves published modules from the Pages project root"
   );
   assert.match(moduleSource, /moduleUrl\("supabase-runtime\.js"\)/);
   assert.match(moduleSource, /moduleUrl\("cartera\.js"\)/);
-  assert.match(moduleSource, /new URL\(sourceLayout \? "\.\.\/\.\.\/\.\.\/" : "\.\.\/\.\.\/", import\.meta\.url\)/);
+  assert.ok(
+    moduleSource.includes(`new URL(sourceLayout ? "../../../" : "./cartera-runtime-${process.env.FORGE_BUILD_SHA}/", import.meta.url)`),
+    "versioned Cartera Pages runtime binding missing",
+  );
+  assert.doesNotMatch(moduleSource, /sourceLayout \? "\.\.\/\.\.\/\.\.\/" : "\.\.\/\.\.\/"/);
 
   for (const entrypoint of manifest.entrypoints) {
     assert.ok(

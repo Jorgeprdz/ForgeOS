@@ -40,21 +40,27 @@ test("editing a bulk row revalidates required fields and duplicates", () => {
 });
 
 test("Cartera exposes governed manual, multi-PDF and CSV/XLSX flows", async () => {
-  const [intake, bulk] = await Promise.all([
+  const [intake, bulk, xlsx] = await Promise.all([
     read("docs/static-preview/forge-alive-material3/cartera-document-intake.js"),
     read("docs/static-preview/forge-alive-material3/cartera-policy-bulk-import.js"),
+    read("docs/static-preview/forge-alive-material3/safe-xlsx-decoder.js"),
   ]);
   assert.match(intake, /data-cartera-policy-pdf-input/);
   assert.match(intake, /CSV o XLSX/);
   assert.match(intake, /bulkImport\.processFile/);
-  assert.match(intake, /forge_cartera010b_confirm_policy_with_parties/);
+  assert.match(intake, /forge_cartera010b_confirm_identity_and_policy/);
   assert.match(intake, /rejectKnownDuplicate/);
   assert.match(intake, /DUPLICATE_SUSPECTED/);
   assert.match(bulk, /DUPLICATE_SUSPECTED/);
   assert.match(bulk, /PARTIALLY_IMPORTED/);
   assert.match(bulk, /Reintentar fallidas/);
-  assert.match(bulk, /ForgeSafeWorkbookDecoder/);
+  assert.match(bulk, /safe-xlsx-decoder\.js/);
   assert.doesNotMatch(bulk, /cdn\.jsdelivr\.net|https:\/\//);
+  assert.match(xlsx, /ForgeSafeWorkbookDecoder/);
+  assert.match(xlsx, /vbaProject/);
+  assert.match(xlsx, /externalLinks/);
+  assert.match(xlsx, /cell\.querySelector\("f"\)/);
+  assert.doesNotMatch(xlsx, /cdn\.jsdelivr\.net|https:\/\//);
   assert.match(bulk, /button\.dataset\.importing/);
   assert.match(bulk, /currentUserId !== sessionUserId/);
   assert.doesNotMatch(bulk, /\.from\(|\.insert\(|\.upsert\(/);

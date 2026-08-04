@@ -79,7 +79,7 @@ if (!buildSha) {
       file: "cartera-module.js",
       replacements: [
         [
-          './cartera-document-intake.js?v=beta1-repair-001',
+          './cartera-document-intake.js?v=beta1-022-001',
           `./cartera-document-intake.js?v=${buildSha}`,
         ],
         [
@@ -124,7 +124,7 @@ if (!buildSha) {
   if (shell.includes("cartera-module.js?v=cartera-material3-productive-001")) {
     throw new Error("FORGE_PAGES_STALE_CARTERA_MODULE_VERSION=forge-shell.js");
   }
-  if (cartera.includes("cartera-document-intake.js?v=beta1-repair-001")) {
+  if (cartera.includes("cartera-document-intake.js?v=beta1-022-001")) {
     throw new Error("FORGE_PAGES_STALE_CARTERA_INTAKE_VERSION=cartera-module.js");
   }
   if (!cartera.includes(`./${carteraRuntimeDirectory}/`)) {

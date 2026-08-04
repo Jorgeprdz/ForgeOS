@@ -202,9 +202,10 @@ async function openEditor(panel, candidate = {}, metadata = {}) {
   const exact = people.find(person => person.normalized && person.normalized === normalizedCandidate);
   const mode = exact ? "existing" : "new";
   const draftId = uid();
+  const operationAt = new Date().toISOString();
   const dialog = panel.querySelector("[data-cartera-policy-dialog]");
   dialog.innerHTML = `
-    <form method="dialog" data-policy-entry-form data-draft-id="${draftId}" data-input-mode="${metadata.inputMode || "manual"}" data-document-hash="${metadata.documentHash || ""}" data-file-name="${escapeHtml(metadata.fileName || "")}" data-intake-id="${escapeHtml(metadata.intakeId || "")}" data-model-version="${escapeHtml(metadata.modelVersion || "")}">
+    <form method="dialog" data-policy-entry-form data-draft-id="${draftId}" data-operation-at="${operationAt}" data-input-mode="${metadata.inputMode || "manual"}" data-document-hash="${metadata.documentHash || ""}" data-file-name="${escapeHtml(metadata.fileName || "")}" data-intake-id="${escapeHtml(metadata.intakeId || "")}" data-model-version="${escapeHtml(metadata.modelVersion || "")}">
       <header class="cartera-policy-dialog__header">
         <div><p class="section-kicker accent">REVISIÓN HUMANA</p><h3>${metadata.inputMode === "pdf" ? "Revisar póliza extraída" : "Agregar póliza manualmente"}</h3><p>${metadata.fileName ? `Archivo: ${escapeHtml(metadata.fileName)}` : "Captura manual"}</p></div>
         <button type="button" data-close-policy-dialog aria-label="Cerrar">×</button>
@@ -253,6 +254,7 @@ function formDraft(form) {
   const values = Object.fromEntries(new FormData(form));
   return {
     draftId: form.dataset.draftId,
+    operationAt: form.dataset.operationAt,
     inputMode: form.dataset.inputMode,
     documentHash: form.dataset.documentHash || null,
     fileName: form.dataset.fileName || null,
@@ -288,7 +290,7 @@ function validateDraft(draft) {
 
 function createIdentityCommand(validator, userId, draft, evidenceReference, at) {
   const existing = draft.personMode === "existing";
-  const personReference = existing ? draft.existingPersonReference : `person:cartera:${uid()}`;
+  const personReference = existing ? draft.existingPersonReference : `person:cartera:${draft.draftId}`;
   const command = validator.buildIdentityResolutionCommand({
     advisorId: userId,
     actorReference: userId,
@@ -324,7 +326,7 @@ function createIdentityCommand(validator, userId, draft, evidenceReference, at) 
 }
 
 function createPolicyCommand(validator, userId, draft, personReference, evidenceReference, documentHash, at) {
-  const policyReference = `policy:cartera:${uid()}`;
+  const policyReference = `policy:cartera:${draft.draftId}`;
   const carrierReference = draft.carrierLabel === "Seguros Monterrey New York Life"
     ? "carrier:smnyl"
     : opaqueReference("carrier", draft.carrierLabel, "carrier");
@@ -357,7 +359,7 @@ function createPolicyCommand(validator, userId, draft, personReference, evidence
   const roles = [{
     contractType: "FORGE_POLICY_ROLE",
     schemaVersion: "1.0.0",
-    policyRoleReference: `policy-role:cartera:${uid()}:owner`,
+    policyRoleReference: `policy-role:cartera:${draft.draftId}:owner`,
     policyReference,
     advisorId: userId,
     participantPersonReference: personReference,
@@ -412,6 +414,8 @@ function createPolicyCommand(validator, userId, draft, personReference, evidence
         sourceSystem: "FORGE_CARTERA_POLICY_ENTRY",
         inputMode: draft.inputMode,
         fileName: draft.fileName,
+        sourceSheet: draft.sourceSheet,
+        sourceRow: draft.sourceRow,
         intakeId: draft.intakeId,
         extractionModel: draft.modelVersion,
         humanConfirmed: true,
@@ -449,6 +453,14 @@ async function assertOperationOwner(expectedUserId) {
   }
 }
 
+function persistenceError(error) {
+  const message = String(error?.message || "");
+  if (/CARTERA010B_ATOMIC_(IDENTITY_NOT_CONFIRMED|POLICY_NOT_CONFIRMED|POLICY_PERSON_MISMATCH)/.test(message)) {
+    return new Error("CONFLICT · La identidad o la póliza requiere conciliación. No se guardó un resultado parcial.");
+  }
+  return new Error("No pudimos confirmar si la póliza quedó guardada. Conservamos tus datos; reintentar es seguro y no crea duplicados.");
+}
+
 export async function persistDraft(draft, { expectedUserId = null } = {}) {
   validateDraft(draft);
   if (demoSession()) throw new Error("La cuenta demo es de solo lectura.");
@@ -458,19 +470,10 @@ export async function persistDraft(draft, { expectedUserId = null } = {}) {
   const validator = await loadValidator();
   await rejectKnownDuplicate(client, draft);
   await assertOperationOwner(operationUserId);
-  const at = new Date().toISOString();
+  const at = draft.operationAt || (draft.operationAt = new Date().toISOString());
   const evidenceReference = `policy-evidence:cartera:${draft.draftId}`;
   const documentHash = draft.documentHash || await digest(draft);
   const identity = createIdentityCommand(validator, user.id, draft, evidenceReference, at);
-
-  const identityResult = await client.rpc("forge_cartera010b_confirm_identity_resolution", { p_command: identity.command });
-  await assertOperationOwner(operationUserId);
-  if (identityResult.error) throw new Error(identityResult.error.message || "No pudimos confirmar al titular.");
-  const identityStatus = identityResult.data?.status || identityResult.data?.outcome || "";
-  if (["CONFLICT", "REJECTED", "UNRESOLVED"].includes(identityStatus)) {
-    throw new Error("El titular requiere conciliación antes de guardar la póliza.");
-  }
-
   const policyCommand = createPolicyCommand(
     validator,
     user.id,
@@ -480,15 +483,16 @@ export async function persistDraft(draft, { expectedUserId = null } = {}) {
     documentHash,
     at,
   );
-  const policyResult = await client.rpc("forge_cartera010b_confirm_policy_with_parties", { p_command: policyCommand });
+  const result = await client.rpc("forge_cartera010b_confirm_identity_and_policy", {
+    p_identity_command: identity.command,
+    p_policy_command: policyCommand,
+  });
   await assertOperationOwner(operationUserId);
-  if (policyResult.error) throw new Error(policyResult.error.message || "No pudimos guardar la póliza.");
-  const policyStatus = policyResult.data?.status || "";
-  if (["CONFLICT", "REJECTED"].includes(policyStatus)) {
-    const conflict = policyResult.data?.conflictType || policyResult.data?.conflict_type || "POLICY_CONFLICT";
-    throw new Error(`La póliza no se guardó porque existe un conflicto: ${conflict}.`);
+  if (result.error) throw persistenceError(result.error);
+  if (result.data?.status !== "CONFIRMED" || result.data?.readAfterWriteVerified !== true) {
+    throw new Error("La operación no quedó confirmada. Conservamos tus datos para que puedas reintentar.");
   }
-  return policyCommand.policy.policyReference;
+  return result.data.policyReference;
 }
 
 async function submitPolicy(event, panel, dialog) {
@@ -688,4 +692,4 @@ function boot() {
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
 else boot();
-import { mountPolicyBulkImport } from "./cartera-policy-bulk-import.js?v=beta1-020-001";
+import { mountPolicyBulkImport } from "./cartera-policy-bulk-import.js?v=beta1-022-001";

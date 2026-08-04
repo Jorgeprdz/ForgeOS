@@ -1,10 +1,10 @@
-import "./cartera-document-intake.js?v=beta1-repair-001";
+import "./cartera-document-intake.js?v=03bca89dba800f7bd5052d6e67caa29241271be0";
 
 const CONTRACT_ID = "CARTERA_MATERIAL3_PRODUCTIVE_UI_MOUNT_V1";
 const moduleStateKey = Symbol.for("forge.cartera.material3.productive.state");
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
-const repositoryBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
+const repositoryBase = new URL(sourceLayout ? "../../../" : "./cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/", import.meta.url);
 const moduleUrl = (path) => new URL(path, repositoryBase);
 
 function ensureStylesheet() {
