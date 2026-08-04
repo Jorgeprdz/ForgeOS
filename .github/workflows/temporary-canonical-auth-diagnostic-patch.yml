@@ -1,0 +1,55 @@
+name: One-shot Canonical Auth Diagnostic Patch
+
+on:
+  push:
+    branches:
+      - chore/retire-all-legacy-forge-ui
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: chore/retire-all-legacy-forge-ui
+          fetch-depth: 0
+
+      - name: Replace retired auth selector with canonical entry control
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('tools/forge-ui-visual-diagnostic.mjs')
+          source = path.read_text()
+
+          old_capture = '''      authJpVisible: visibleCount(".hero .profile[data-forge-auth-avatar]") > 0,'''
+          new_capture = '''      authJpVisible:\n        visibleCount("[data-forge-auth-open]") > 0\n        || visibleCount(".hero .profile[data-forge-auth-avatar]") > 0,'''
+
+          old_entry = '''    const jp = page.locator(".hero .profile[data-forge-auth-avatar]").first();\n    await jp.waitFor({ state: "visible", timeout: 10_000 });\n    await jp.click();'''
+          new_entry = '''    const authEntry = page.locator(\n      "[data-forge-auth-open]:visible, .hero .profile[data-forge-auth-avatar]:visible",\n    ).first();\n    await authEntry.waitFor({ state: "visible", timeout: 10_000 });\n    await authEntry.click();'''
+
+          if old_capture not in source:
+              raise SystemExit('OLD_AUTH_CAPTURE_SELECTOR_NOT_FOUND')
+          if old_entry not in source:
+              raise SystemExit('OLD_AUTH_ENTRY_SELECTOR_NOT_FOUND')
+
+          source = source.replace(old_capture, new_capture, 1)
+          source = source.replace(old_entry, new_entry, 1)
+          path.write_text(source)
+          PY
+
+          node --check tools/forge-ui-visual-diagnostic.mjs
+          git diff --check
+
+      - name: Commit source correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/forge-ui-visual-diagnostic.mjs
+          git commit -m "fix: diagnose canonical auth entry control"
+          git push origin HEAD:chore/retire-all-legacy-forge-ui
