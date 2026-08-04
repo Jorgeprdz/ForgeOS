@@ -21,6 +21,7 @@ test("BETA1_022A seeder is explicit, bounded, owner-scoped and resumable", () =>
   assert.match(source, /forge_cartera010b_confirm_identity_and_policy/);
   assert.match(source, /readAfterWriteVerified/);
   assert.match(source, /NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA/);
+  assert.match(source, /@example\.invalid/);
   assert.match(source, /\.eq\("advisor_id", user\.id\)/);
   assert.doesNotMatch(source, /service_role|SUPABASE_SERVICE_ROLE_KEY|delete\(|truncate|drop table/i);
 });
