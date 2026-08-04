@@ -29,10 +29,20 @@
         }
       };
 
-      const target = new URL('./static-preview/forge-alive/', window.location.href);
-      const requestedNav = new URLSearchParams(window.location.search).get('nav');
-      target.searchParams.set('nav', requestedNav || 'inicio');
-      target.searchParams.set('v', 'legacy-retired-20260731');
+      const current = new URL(window.location.href);
+      const target = new URL('./static-preview/forge-alive/', current);
+      for (const [key, value] of current.searchParams) {
+        target.searchParams.append(key, value);
+      }
+      if (!target.searchParams.has('nav')) {
+        target.searchParams.set('nav', 'inicio');
+      }
+      const authReturn = target.searchParams.get('auth_return');
+      target.searchParams.set(
+        'v',
+        authReturn ? `auth-${authReturn}` : 'canonical-production-20260804',
+      );
+      target.hash = current.hash;
 
       retireBrowserState().finally(() => window.location.replace(target.href));
     })();
@@ -40,6 +50,6 @@
 </head>
 <body>
   <p>Abriendo ForgeOS…</p>
-  <p><a href="./static-preview/forge-alive/?nav=inicio&v=legacy-retired-20260731">Continuar</a></p>
+  <p><a href="./static-preview/forge-alive/?nav=inicio&v=canonical-production-20260804">Continuar</a></p>
 </body>
 </html>
