@@ -38,9 +38,7 @@ async function materializeRuntime(root, engineHost, surface) {
   if (runtimePromise) return runtimePromise;
   runtimePromise = (async () => {
     const sourceUrl = new URL(
-      import.meta.url.includes("/docs/static-preview/")
-        ? "../forge-alive/nueva-cotizacion/index.html"
-        : "../quote-engine/nueva-cotizacion/index.html",
+      "../quote-engine/nueva-cotizacion/index.html",
       import.meta.url,
     );
     const response = await fetch(sourceUrl);
