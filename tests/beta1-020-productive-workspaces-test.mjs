@@ -78,7 +78,12 @@ test("manual Activity is bounded by the canonical FES authority", async () => {
   assert.match(source, /prospects/);
   assert.match(source, /syncOnce/);
   assert.match(source, /rawNotesAllowed: false/);
-  assert.doesNotMatch(source, /name="notes"|name="note"|textarea/);
+  assert.match(source, /name="notes" maxlength="500"/);
+  assert.match(source, /name="nextAction" maxlength="180"/);
+  assert.match(source, /no se ejecuta ni crea eventos de calendario automáticamente/);
+  assert.match(source, /form\.dataset\.entryId/);
+  assert.match(source, /ACTIVITY_CONTEXT_ADDED/);
+  assert.doesNotMatch(source, /createFromForgeAlive[\s\S]*createTask|calendar\.events\.insert/);
 });
 
 test("Commissions provides evidence search, attention queue and policy drill-down", async () => {
@@ -89,12 +94,30 @@ test("Commissions provides evidence search, attention queue and policy drill-dow
   assert.match(view, /data-comp-attention-state/);
   assert.match(view, /data-comp-search-input/);
   assert.match(view, /data-comp-open-policy/);
+  assert.match(view, /data-compensation-secondary-summary/);
+  assert.match(view, /no es ingreso garantizado/);
+  assert.match(view, /CONFIRMED/);
+  assert.match(view, /PROJECTED/);
+  assert.match(view, /STALE/);
+  assert.match(view, /CONFLICTING/);
   assert.match(module, /url\.searchParams\.set\("nav", "cartera"\)/);
   assert.match(module, /data-comp-search/);
 });
 
+test("Cartera reduces summary density without duplicating metric cards", async () => {
+  const [module, css] = await Promise.all([
+    read("cartera.js"),
+    read("docs/static-preview/forge-alive-material3/cartera-module.css"),
+  ]);
+  assert.match(module, /cartera-summary-strip/);
+  assert.doesNotMatch(module, /cartera-summary-strip[\s\S]{0,1200}class="glass-widget"/);
+  assert.match(module, /DIRECTORIO VERIFICADO/);
+  assert.match(css, /\.cartera-summary-strip/);
+});
+
 test("Dashboard and mobile navigation expose productive adaptive contracts", async () => {
-  const [adapter, adapterCss, appCss, shell] = await Promise.all([
+  const [home, adapter, adapterCss, appCss, shell] = await Promise.all([
+    read("docs/static-preview/forge-alive-material3/home-module.js"),
     read("docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.js"),
     read("docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.css"),
     read("docs/static-preview/forge-alive-material3/app.css"),
@@ -105,6 +128,12 @@ test("Dashboard and mobile navigation expose productive adaptive contracts", asy
   assert.match(adapter, /smart-widget-source-timeout/);
   assert.match(adapter, /"DISCONNECTED"/);
   assert.match(adapterCss, /grid-template-columns: repeat\(4/);
+  assert.match(home, /data-home-grid-span="4x2"/);
+  assert.match(home, /data-home-grid-span="2x2"/);
+  assert.match(home, /data-home-route="cartera"/);
+  assert.match(home, /data-home-route="actividad"/);
+  assert.match(home, /data-home-route="comisiones"/);
+  assert.match(adapterCss, /\.home-recovery-access/);
   assert.match(appCss, /\.nav-pill \{[\s\S]*?flex-wrap: nowrap/);
   assert.match(appCss, /overflow-x: auto/);
   assert.match(shell, /scrollIntoView/);

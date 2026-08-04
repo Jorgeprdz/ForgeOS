@@ -1,4 +1,4 @@
-import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js";
+import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js?v=66b83e282dffe1de930e8a1a22f122f58117f323";
 
 const homeStateKey = Symbol.for("forge.ui-m04.home.state");
 
@@ -24,8 +24,20 @@ function prepareProductiveRoot(root) {
   productiveRoot.dataset.forgePrivateSurface = "home-smart-widgets";
   productiveRoot.dataset.canonicalHomeActions = "true";
   productiveRoot.hidden = true;
+  productiveRoot.dataset.homeGridSpan = "4x4";
   productiveRoot.setAttribute("aria-label", "Plan de hoy y seguimiento prioritario");
   summary.appendChild(productiveRoot);
+
+  const access = document.createElement("section");
+  access.className = "home-recovery-access";
+  access.dataset.homeRecoveryAccess = "true";
+  access.setAttribute("aria-label", "Accesos productivos");
+  access.innerHTML = `
+    <button type="button" data-home-route="cartera" data-home-grid-span="4x2"><span>CARTERA</span><strong>Revisa pólizas y evidencia</strong><small>Abre señales, vigencias y alta gobernada.</small></button>
+    <button type="button" data-home-route="actividad" data-home-grid-span="2x2"><span>ACTIVIDAD</span><strong>Registra una interacción</strong><small>Confirmación humana y Timeline.</small></button>
+    <button type="button" data-home-route="comisiones" data-home-grid-span="2x2"><span>COMISIONES</span><strong>Consulta ingreso verificable</strong><small>Pagado, devengado y desconocido separados.</small></button>
+    <button type="button" data-home-route="pipeline" data-home-grid-span="4x2"><span>PIPELINE</span><strong>Continúa el trabajo comercial</strong><small>Sin crear acciones ni seguimientos automáticamente.</small></button>`;
+  summary.appendChild(access);
   return { productiveRoot };
 }
 
@@ -131,6 +143,9 @@ export function createHomeModule({ root, shell }) {
   function bindStaticHomeActions() {
     bindClick(root.querySelector(".opportunities .section-heading button"), () => navigate("pipeline"));
     root.querySelectorAll(".opportunity-list .opportunity").forEach((button) => bindClick(button, () => navigate("pipeline")));
+    root.querySelectorAll("[data-home-route]").forEach((button) => {
+      bindClick(button, () => navigate(button.dataset.homeRoute));
+    });
 
     const alfredSend = document.querySelector('.alfred-input button[aria-label="Enviar a Alfred"]');
     bindClick(alfredSend, () => {
