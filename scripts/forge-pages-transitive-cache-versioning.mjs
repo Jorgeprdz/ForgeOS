@@ -79,11 +79,11 @@ if (!buildSha) {
       file: "cartera-module.js",
       replacements: [
         [
-          './cartera-document-intake.js?v=beta1-022-001',
+          './cartera-document-intake.js?v=03bca89dba800f7bd5052d6e67caa29241271be0',
           `./cartera-document-intake.js?v=${buildSha}`,
         ],
         [
-          'const repositoryBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);',
+          'const repositoryBase = new URL(sourceLayout ? "../../../" : "./cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/", import.meta.url);',
           `const repositoryBase = new URL(sourceLayout ? "../../../" : "./${carteraRuntimeDirectory}/", import.meta.url);`,
         ],
       ],
@@ -124,13 +124,13 @@ if (!buildSha) {
   if (shell.includes("cartera-module.js?v=cartera-material3-productive-001")) {
     throw new Error("FORGE_PAGES_STALE_CARTERA_MODULE_VERSION=forge-shell.js");
   }
-  if (cartera.includes("cartera-document-intake.js?v=beta1-022-001")) {
+  if (cartera.includes("cartera-document-intake.js?v=03bca89dba800f7bd5052d6e67caa29241271be0")) {
     throw new Error("FORGE_PAGES_STALE_CARTERA_INTAKE_VERSION=cartera-module.js");
   }
   if (!cartera.includes(`./${carteraRuntimeDirectory}/`)) {
     throw new Error("FORGE_PAGES_CARTERA_CANONICAL_RUNTIME_BINDING_MISSING");
   }
-  if (cartera.includes('sourceLayout ? "../../../" : "../../"')) {
+  if (cartera.includes('sourceLayout ? "../../../" : "./cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/"')) {
     throw new Error("FORGE_PAGES_CARTERA_ROOT_RUNTIME_BINDING_LEAK");
   }
 

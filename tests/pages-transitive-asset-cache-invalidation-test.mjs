@@ -52,9 +52,9 @@ try {
     writeFile(join(runtime, "smart-widget-productive-home-adapter.js"), 'const source = "advisor-forecast-runtime-acceptance.js?v=af-runtime-acceptance-001";\n'),
     writeFile(join(runtime, "forge-shell.js"), 'import { createCarteraModule } from "./cartera-module.js?v=cartera-material3-productive-001";\n'),
     writeFile(join(runtime, "cartera-module.js"), [
-      'import "./cartera-document-intake.js?v=beta1-repair-001";',
+      'import "./cartera-document-intake.js?v=03bca89dba800f7bd5052d6e67caa29241271be0";',
       'const sourceLayout = import.meta.url.includes("/docs/static-preview/");',
-      'const repositoryBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);',
+      'const repositoryBase = new URL(sourceLayout ? "../../../" : "./cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/", import.meta.url);',
       '',
     ].join("\n")),
   ]);
@@ -81,8 +81,8 @@ try {
   assert.doesNotMatch(shell, /cartera-material3-productive-001/);
   assert.match(cartera, new RegExp(`cartera-document-intake\\.js\\?v=${buildSha}`));
   assert.match(cartera, new RegExp(`\\./cartera-runtime-${buildSha}/`));
-  assert.doesNotMatch(cartera, /beta1-repair-001/);
-  assert.doesNotMatch(cartera, /sourceLayout \? "\.\.\/\.\.\/\.\.\/" : "\.\.\/\.\.\/"/);
+  assert.doesNotMatch(cartera, /03bca89dba800f7bd5052d6e67caa29241271be0/);
+  assert.doesNotMatch(cartera, /cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/);
 } finally {
   await rm(fixture, { recursive: true, force: true });
 }
