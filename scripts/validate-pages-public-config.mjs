@@ -5,6 +5,9 @@ import vm from 'node:vm';
 import {
   prepareForgeAlivePagesRuntimeClosure,
 } from './prepare-forge-alive-pages-runtime-closure.mjs';
+import {
+  prepareSegubecaPagesRuntime,
+} from './prepare-segubeca-pages-runtime.mjs';
 
 export const REQUIRED_PUBLIC_KEYS = ['DEMO_MODE', 'ENABLE_TEST_ADVISOR_LOGIN', 'SUPABASE_KEY', 'SUPABASE_URL'];
 export const FORBIDDEN_KEY_PATTERN = /(ACCESS_TOKEN|SERVICE_ROLE|DATABASE_PASSWORD|ADVISOR_[AB]_(EMAIL|PASSWORD)|REFRESH_TOKEN|SESSION_TOKEN|PRIVATE_KEY)/i;
@@ -27,6 +30,10 @@ export function evaluatePublicEnv(source, filename = 'env.js') {
   assert.equal(typeof publicEnv.SUPABASE_URL, 'string', 'SUPABASE_URL_STRING_REQUIRED');
   assert.equal(typeof publicEnv.SUPABASE_KEY, 'string', 'SUPABASE_KEY_STRING_REQUIRED');
   return { publicEnv, sandbox };
+}
+
+function toPosix(value) {
+  return value.split(path.sep).join('/');
 }
 
 function stripSpecifierSuffix(value) {
@@ -53,8 +60,13 @@ function stripJavaScriptComments(source) {
 function extractStaticModuleSpecifiers(source) {
   const specifiers = new Set();
   const clean = stripJavaScriptComments(source);
-  const pattern = /\b(?:import|export)\s+(?:[^;"']*?\s+from\s+)?["']([^"']+)["']/gs;
-  for (const match of clean.matchAll(pattern)) specifiers.add(match[1]);
+  const patterns = [
+    /\b(?:import|export)\s+(?:[^;"']*?\s+from\s+)?["']([^"']+)["']/gs,
+    /\bimport\s*\(\s*["']([^"']+)["']\s*\)/g,
+  ];
+  for (const pattern of patterns) {
+    for (const match of clean.matchAll(pattern)) specifiers.add(match[1]);
+  }
   return [...specifiers];
 }
 
@@ -64,6 +76,13 @@ function localSpecifier(specifier) {
 
 function resolvePublishedModule(siteDir, importerPath, specifier) {
   const clean = stripSpecifierSuffix(specifier);
+  const importerRelative = toPosix(path.relative(siteDir, importerPath));
+  assert.doesNotMatch(
+    clean,
+    /(^|\/)docs\/static-preview\//,
+    `PAGES_MODULE_SOURCE_LAYOUT_LEAK=${importerRelative}:${specifier}`,
+  );
+
   const unresolved = clean.startsWith('/')
     ? path.resolve(siteDir, clean.replace(/^\/+/, ''))
     : path.resolve(path.dirname(importerPath), clean);
@@ -73,7 +92,7 @@ function resolvePublishedModule(siteDir, importerPath, specifier) {
       && relative !== '..'
       && !relative.startsWith(`..${path.sep}`)
       && !path.isAbsolute(relative),
-    `PAGES_MODULE_IMPORT_OUTSIDE_SITE=${path.relative(siteDir, importerPath)}:${specifier}`,
+    `PAGES_MODULE_IMPORT_OUTSIDE_SITE=${importerRelative}:${specifier}`,
   );
   const extension = path.extname(unresolved);
   const candidates = extension
@@ -83,7 +102,7 @@ function resolvePublishedModule(siteDir, importerPath, specifier) {
     fs.existsSync(candidate) && fs.statSync(candidate).isFile());
   assert.ok(
     found,
-    `PAGES_MODULE_IMPORT_MISSING=${path.relative(siteDir, importerPath)}:${specifier}`,
+    `PAGES_MODULE_IMPORT_MISSING=${importerRelative}:${specifier}:${toPosix(relative)}`,
   );
   return found;
 }
@@ -102,14 +121,14 @@ export function validateCanonicalPagesStaticModuleGraph({
 
   while (pending.length > 0) {
     const current = pending.pop();
-    const currentRelative = path.relative(root, current).split(path.sep).join('/');
+    const currentRelative = toPosix(path.relative(root, current));
     if (visited.has(currentRelative)) continue;
     visited.add(currentRelative);
     const source = fs.readFileSync(current, 'utf8');
     for (const specifier of extractStaticModuleSpecifiers(source)) {
       if (!localSpecifier(specifier)) continue;
       const dependency = resolvePublishedModule(root, current, specifier);
-      const dependencyRelative = path.relative(root, dependency).split(path.sep).join('/');
+      const dependencyRelative = toPosix(path.relative(root, dependency));
       if (!visited.has(dependencyRelative)) pending.push(dependency);
     }
   }
@@ -131,6 +150,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     && process.env.FORGE_SKIP_PAGES_RUNTIME_PREPARATION !== 'true'
   ) {
     await prepareForgeAlivePagesRuntimeClosure({ siteDir });
+    await prepareSegubecaPagesRuntime({ siteDir });
   }
 
   const { publicEnv } = evaluatePublicEnv(fs.readFileSync(configPath, 'utf8'), configPath);
@@ -143,4 +163,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const graph = validateCanonicalPagesStaticModuleGraph({ siteDir });
   console.log('067G17A1 PAGES PUBLIC CONFIG ARTIFACT: PASS');
   console.log(`PAGES_CANONICAL_STATIC_MODULE_GRAPH=PASS files=${graph.files.length}`);
+  console.log('SEGUBECA_PUBLIC_ESM_GRAPH=PASS');
 }
