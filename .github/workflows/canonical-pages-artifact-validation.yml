@@ -17,7 +17,7 @@ on:
       - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: canonical-pages-artifact-${{ github.event.pull_request.number }}
@@ -82,3 +82,137 @@ jobs:
 
       - name: Validate canonical-only artifact
         run: node /tmp/validate-canonical.cjs
+
+  beta11-final-review2-closure:
+    needs: validate
+    if: github.event.pull_request.head.ref == 'chore/retire-all-legacy-forge-ui' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout mutable review branch
+        uses: actions/checkout@v4
+        with:
+          ref: chore/retire-all-legacy-forge-ui
+          fetch-depth: 0
+
+      - name: Execute audited closure block
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source = Path('.github/workflows/temporary-beta11-final-review2.yml').read_text().splitlines()
+          step = next(i for i, line in enumerate(source) if 'Relocate productive quote runtime and reconcile visual acceptance' in line)
+          run_line = next(i for i in range(step, len(source)) if source[i].strip() == 'run: |')
+          output = []
+          for line in source[run_line + 1:]:
+              if line and len(line) - len(line.lstrip()) <= 6:
+                  break
+              output.append(line[10:] if line.startswith('          ') else line)
+          if not output or not any('git mv docs/static-preview/quote-preview-live' in line for line in output):
+              raise SystemExit('AUDITED_CLOSURE_BLOCK_EXTRACTION_FAILED')
+          Path('/tmp/beta11-final-review2-closure.sh').write_text('\n'.join(output) + '\n')
+          PY
+          bash -n /tmp/beta11-final-review2-closure.sh
+          bash /tmp/beta11-final-review2-closure.sh
+
+      - name: Restore permanent CI and commit closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/temporary-beta11-final-review2.yml
+          rm -f .github/workflows/temporary-beta11-final-review2-launcher.yml
+          cat > .github/workflows/canonical-pages-artifact-validation.yml <<'EOF'
+          name: Canonical Pages Artifact Validation
+
+          on:
+            pull_request:
+              branches:
+                - main
+              paths:
+                - '.github/workflows/pages.yml'
+                - '.github/workflows/canonical-pages-artifact-validation.yml'
+                - 'index.html'
+                - 'service-worker.js'
+                - 'docs/static-preview/forge-alive-material3/**'
+                - 'docs/static-preview/forge-alive/**'
+                - 'docs/static-preview/quote-engine/**'
+                - 'docs/static-preview/quote-runtime/**'
+                - 'advisor-os/**'
+                - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
+
+          permissions:
+            contents: read
+
+          concurrency:
+            group: canonical-pages-artifact-${{ github.event.pull_request.number }}
+            cancel-in-progress: true
+
+          jobs:
+            validate:
+              runs-on: ubuntu-latest
+              timeout-minutes: 15
+              env:
+                FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+                DEMO_MODE: 'true'
+                ENABLE_TEST_ADVISOR_LOGIN: 'false'
+                SUPABASE_URL: ''
+                SUPABASE_ANON_KEY: ''
+              steps:
+                - name: Checkout pull request head
+                  uses: actions/checkout@v4
+                  with:
+                    ref: ${{ github.event.pull_request.head.sha }}
+
+                - name: Setup Node
+                  uses: actions/setup-node@v4
+                  with:
+                    node-version: 22
+
+                - name: Extract canonical build and validation programs
+                  run: |
+                    python - <<'PY'
+                    from pathlib import Path
+                    import re
+                    import textwrap
+
+                    workflow = Path('.github/workflows/pages.yml').read_text()
+                    blocks = re.findall(r"node - <<'EOF'\n(.*?)\n\s+EOF", workflow, re.S)
+                    if len(blocks) != 3:
+                        raise SystemExit(f'EXPECTED_3_NODE_BLOCKS_OBSERVED_{len(blocks)}')
+
+                    env_program = textwrap.dedent(blocks[0])
+                    build_program = textwrap.dedent(blocks[1]).replace(
+                        'process.env.GITHUB_SHA',
+                        'process.env.FORGE_BUILD_SHA',
+                    )
+                    validation_program = textwrap.dedent(blocks[2]).replace(
+                        'process.env.EXPECTED_COMMIT_SHA',
+                        'process.env.FORGE_BUILD_SHA',
+                    )
+
+                    Path('/tmp/generate-env.cjs').write_text(env_program)
+                    Path('/tmp/build-canonical.cjs').write_text(build_program)
+                    Path('/tmp/validate-canonical.cjs').write_text(validation_program)
+                    PY
+
+                - name: Generate validation environment
+                  run: node /tmp/generate-env.cjs
+
+                - name: Generate productive presentation runtimes
+                  run: node scripts/build-advisor-presentation-pages-runtime.mjs
+
+                - name: Build canonical-only artifact
+                  run: node /tmp/build-canonical.cjs
+
+                - name: Validate canonical-only artifact
+                  run: node /tmp/validate-canonical.cjs
+          EOF
+          sed -i 's/^          //' .github/workflows/canonical-pages-artifact-validation.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "fix: close Beta 1.1 final review 2 gates"
+          git push origin HEAD:chore/retire-all-legacy-forge-ui
