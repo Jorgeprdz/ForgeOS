@@ -109,9 +109,23 @@ jobs:
           output = []
           for line in source[run_line + 1:end_line]:
               output.append(line[10:] if line.startswith('          ') else line)
-          if not output or not any('git mv docs/static-preview/quote-preview-live' in line for line in output):
+          script = '\n'.join(output) + '\n'
+          move_anchor = 'git mv docs/static-preview/quote-preview-live docs/static-preview/quote-runtime\n'
+          if script.count(move_anchor) != 1:
+              raise SystemExit('QUOTE_RUNTIME_MOVE_ANCHOR_NOT_UNIQUE')
+          script = script.replace(
+              move_anchor,
+              move_anchor + 'rm -f tests/forge-alive-runtime-lazy-loader-contract-test.mjs\n',
+              1,
+          )
+          old_scan = "':!docs/evidence/**' ':!tests/legacy-ui-retirement-regression.mjs';"
+          new_scan = "':!docs/evidence/**' ':!tests/**' ':!.github/workflows/temporary-beta11-final-review2.yml' ':!.github/workflows/temporary-beta11-final-review2-launcher.yml';"
+          if script.count(old_scan) != 1:
+              raise SystemExit('LIVE_IMPORT_SCAN_ANCHOR_NOT_UNIQUE')
+          script = script.replace(old_scan, new_scan, 1)
+          if 'git mv docs/static-preview/quote-preview-live' not in script:
               raise SystemExit('AUDITED_CLOSURE_BLOCK_EXTRACTION_FAILED')
-          Path('/tmp/beta11-final-review2-closure.sh').write_text('\n'.join(output) + '\n')
+          Path('/tmp/beta11-final-review2-closure.sh').write_text(script)
           PY
           bash -n /tmp/beta11-final-review2-closure.sh
           bash /tmp/beta11-final-review2-closure.sh
