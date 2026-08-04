@@ -7,8 +7,10 @@ import { join, resolve } from "node:path";
 const buildEntry = await readFile("scripts/build-advisor-presentation-pages-runtime.mjs", "utf8");
 const versionerPath = resolve("scripts/forge-pages-transitive-cache-versioning.mjs");
 const versioner = await readFile(versionerPath, "utf8");
+const canonicalBundler = await readFile("scripts/prepare-cartera-canonical-pages-runtime.mjs", "utf8");
 
 assert.match(buildEntry, /build-advisor-presentation-pages-runtime-base\.mjs/);
+assert.match(buildEntry, /prepare-cartera-canonical-pages-runtime\.mjs/);
 assert.match(buildEntry, /forge-pages-transitive-cache-versioning\.mjs/);
 assert.match(versioner, /GITHUB_SHA/);
 assert.match(versioner, /home-module\.js\?v=\$\{buildSha\}/);
@@ -18,10 +20,18 @@ assert.match(versioner, /smart-widget-productive-home-adapter\.js\?v=\$\{buildSh
 assert.match(versioner, /smart-widget-productive-home-adapter\.css\?v=\$\{buildSha\}/);
 assert.match(versioner, /cartera-module\.js\?v=\$\{buildSha\}/);
 assert.match(versioner, /cartera-document-intake\.js\?v=\$\{buildSha\}/);
+assert.match(versioner, /cartera-runtime-\$\{buildSha\}/);
+assert.match(versioner, /FORGE_PAGES_CARTERA_CANONICAL_RUNTIME/);
+assert.match(versioner, /FORGE_PAGES_CARTERA_ROOT_RUNTIME_BINDING_LEAK/);
 assert.match(versioner, /FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS/);
 assert.match(versioner, /dynamicModuleUrl/);
 assert.match(versioner, /FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK/);
 assert.match(versioner, /FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=PASS/);
+assert.match(canonicalBundler, /CARTERA_CANONICAL_PAGES_RUNTIME_V1/);
+assert.match(canonicalBundler, /cartera-runtime-\$\{buildSha\}/);
+assert.match(canonicalBundler, /manifest\.files\.length < 40/);
+assert.match(canonicalBundler, /supabase-runtime\.js/);
+assert.match(canonicalBundler, /advisor-os\/cartera\/cartera-100d-productivity-proof-enhancement\.js/);
 assert.doesNotMatch(versioner, /localStorage\.clear|sessionStorage\.clear|indexedDB\.deleteDatabase|caches\.delete/);
 
 const fixture = await mkdtemp(join(tmpdir(), "forge-pages-versioning-"));
@@ -41,7 +51,12 @@ try {
     ].join("\n")),
     writeFile(join(runtime, "smart-widget-productive-home-adapter.js"), 'const source = "advisor-forecast-runtime-acceptance.js?v=af-runtime-acceptance-001";\n'),
     writeFile(join(runtime, "forge-shell.js"), 'import { createCarteraModule } from "./cartera-module.js?v=cartera-material3-productive-001";\n'),
-    writeFile(join(runtime, "cartera-module.js"), 'import "./cartera-document-intake.js?v=beta1-repair-001";\n'),
+    writeFile(join(runtime, "cartera-module.js"), [
+      'import "./cartera-document-intake.js?v=beta1-repair-001";',
+      'const sourceLayout = import.meta.url.includes("/docs/static-preview/");',
+      'const repositoryBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);',
+      '',
+    ].join("\n")),
   ]);
 
   const buildSha = "0123456789abcdef0123456789abcdef01234567";
@@ -52,6 +67,7 @@ try {
   });
   assert.match(output, /FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE/);
   assert.match(output, /FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS/);
+  assert.match(output, new RegExp(`FORGE_PAGES_CARTERA_CANONICAL_RUNTIME=cartera-runtime-${buildSha}`));
 
   const [orchestrator, shell, cartera] = await Promise.all([
     readFile(join(runtime, "home-productive-orchestrator.js"), "utf8"),
@@ -64,7 +80,9 @@ try {
   assert.match(shell, new RegExp(`cartera-module\\.js\\?v=${buildSha}`));
   assert.doesNotMatch(shell, /cartera-material3-productive-001/);
   assert.match(cartera, new RegExp(`cartera-document-intake\\.js\\?v=${buildSha}`));
+  assert.match(cartera, new RegExp(`\\./cartera-runtime-${buildSha}/`));
   assert.doesNotMatch(cartera, /beta1-repair-001/);
+  assert.doesNotMatch(cartera, /sourceLayout \? "\.\.\/\.\.\/\.\.\/" : "\.\.\/\.\.\/"/);
 } finally {
   await rm(fixture, { recursive: true, force: true });
 }
@@ -72,4 +90,5 @@ try {
 console.log("FORGE_PAGES_TRANSITIVE_ASSET_CACHE_INVALIDATION=PASS");
 console.log("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE");
 console.log("FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS");
+console.log("FORGE_PAGES_CARTERA_CANONICAL_RUNTIME=PASS");
 console.log("SESSION_AND_LOCAL_DATA_PRESERVATION=PASS");

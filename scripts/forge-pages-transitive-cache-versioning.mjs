@@ -10,6 +10,7 @@ if (!buildSha) {
   console.log("FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=SKIPPED_NO_GITHUB_SHA");
 } else {
   const runtimeDir = join(root, "docs/static-preview/forge-alive-material3");
+  const carteraRuntimeDirectory = `cartera-runtime-${buildSha}`;
   const dynamicModuleUrl = (name) =>
     `\`${name}\${layout.extension}?v=${buildSha}\``;
   const targets = [
@@ -81,6 +82,10 @@ if (!buildSha) {
           './cartera-document-intake.js?v=beta1-repair-001',
           `./cartera-document-intake.js?v=${buildSha}`,
         ],
+        [
+          'const repositoryBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);',
+          `const repositoryBase = new URL(sourceLayout ? "../../../" : "./${carteraRuntimeDirectory}/", import.meta.url);`,
+        ],
       ],
     },
   ];
@@ -122,8 +127,15 @@ if (!buildSha) {
   if (cartera.includes("cartera-document-intake.js?v=beta1-repair-001")) {
     throw new Error("FORGE_PAGES_STALE_CARTERA_INTAKE_VERSION=cartera-module.js");
   }
+  if (!cartera.includes(`./${carteraRuntimeDirectory}/`)) {
+    throw new Error("FORGE_PAGES_CARTERA_CANONICAL_RUNTIME_BINDING_MISSING");
+  }
+  if (cartera.includes('sourceLayout ? "../../../" : "../../"')) {
+    throw new Error("FORGE_PAGES_CARTERA_ROOT_RUNTIME_BINDING_LEAK");
+  }
 
   console.log(`FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=PASS SHA=${buildSha}`);
   console.log("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE");
   console.log("FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS");
+  console.log(`FORGE_PAGES_CARTERA_CANONICAL_RUNTIME=${carteraRuntimeDirectory}`);
 }
