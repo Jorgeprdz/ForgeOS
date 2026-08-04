@@ -51,6 +51,28 @@ export * from "../../../static-preview/quote-preview-live/<module>.js";
 
 This preserves the authority's canonical repository imports while making the same imports resolvable in the GitHub Pages project-root layout.
 
+## Review 4 confirmation ownership closure
+
+The generated Pages artifact reached the productive SeguBeca projection and enabled the human confirmation control, but the same click was being handled twice:
+
+```text
+CAPTURE_LISTENER_CONFIRMATION=ACTIVE
+MATERIAL3_BUTTON_CONFIRMATION=ACTIVE
+RESULT=CONCURRENT_CONFIRMATION_TRANSITIONS
+```
+
+Review 4 leaves the Material 3 button as the single owner of the governed confirmation. The capture listener now only installs the accepted confirmation delegate and records delegation evidence; it does not execute a second confirmation.
+
+```text
+SEGUBECA_CONFIRMATION_OWNER=MATERIAL3_QUOTE_RESULT_ADAPTER
+SEGUBECA_CAPTURE_LISTENER=DELEGATE_ONLY
+DUPLICATE_CONFIRMATION_TRANSITION=REMOVED
+HUMAN_CONFIRMATION=REQUIRED
+AUTOMATIC_ACCEPTANCE=NO
+```
+
+No calculation, contractual value, PDF extraction, projection, persistence or mutation authority changed.
+
 ## Boundaries
 
 ```text
