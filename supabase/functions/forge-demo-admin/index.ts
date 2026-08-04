@@ -110,10 +110,31 @@ Deno.serve(async (request) => {
     }
 
     if (action === "PREPARE") {
+      const now = new Date().toISOString();
       const { error } = await admin
         .from("forge_demo_advisors")
-        .delete()
-        .in("advisor_id", [advisorA, advisorB]);
+        .upsert([
+          {
+            advisor_id: advisorA,
+            demo_key: "PUBLIC_A",
+            data_class: "SYNTHETIC",
+            is_public: true,
+            read_only: false,
+            seeded_at: now,
+            sealed_at: null,
+            updated_at: now,
+          },
+          {
+            advisor_id: advisorB,
+            demo_key: "CONTROL_B",
+            data_class: "SYNTHETIC",
+            is_public: false,
+            read_only: false,
+            seeded_at: now,
+            sealed_at: null,
+            updated_at: now,
+          },
+        ], { onConflict: "advisor_id" });
       if (error) throw error;
       return json(200, {
         ok: true,
