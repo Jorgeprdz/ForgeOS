@@ -92,8 +92,8 @@ jobs:
             'quote-engine',
             'forge-sales-presentation-entrypoint-r16j0.js',
           );
-          const quoteRuntimeSource = 'docs/static-preview/quote-preview-live';
-          const quoteRuntimeTarget = path.join(siteDir, 'static-preview', 'quote-preview-live');
+          const quoteRuntimeSource = 'docs/static-preview/quote-runtime';
+          const quoteRuntimeTarget = path.join(siteDir, 'static-preview', 'quote-runtime');
           const segubecaAuthorityAsset =
             'advisor-os/quotes/products/segubeca/segubeca-calculation-authority.js';
           const segubecaSourceAuthorityImport =
@@ -136,7 +136,7 @@ jobs:
             'docs/static-preview/forge-alive/',
             'docs/static-preview/forge-alive-material3/',
             'docs/static-preview/quote-engine/',
-            'docs/static-preview/quote-preview-live/',
+            'docs/static-preview/quote-runtime/',
             'docs/static-preview/templates/',
             'docs/quote-preview-live/',
             'docs/10-gui/',
@@ -295,9 +295,11 @@ jobs:
             `${JSON.stringify({
               canonicalEntry: 'static-preview/forge-alive/index.html',
               quoteEngine: 'static-preview/quote-engine/nueva-cotizacion/index.html',
+              quoteRuntime: 'static-preview/quote-runtime/',
               retiredRoutes: [
                 'static-preview/forge-alive-runtime/',
                 'static-preview/templates/',
+                'static-preview/quote-preview-live/',
                 'quote-preview-live/',
                 '10-gui/',
               ],
@@ -323,6 +325,7 @@ jobs:
           const forbiddenPaths = [
             '_site/static-preview/forge-alive-runtime',
             '_site/static-preview/templates',
+            '_site/static-preview/quote-preview-live',
             '_site/quote-preview-live',
             '_site/10-gui',
             '_site/docs/static-preview',
@@ -347,7 +350,7 @@ jobs:
             path.join(canonical, 'quotes-module.js'),
             quoteEngine,
             '_site/static-preview/quote-engine/forge-sales-presentation-entrypoint-r16j0.js',
-            '_site/static-preview/quote-preview-live/forge-quote-preview-bundle.js',
+            '_site/static-preview/quote-runtime/forge-quote-preview-bundle.js',
           ]) {
             assert.ok(fs.existsSync(required), `missing productive artifact: ${required}`);
           }
@@ -419,6 +422,7 @@ jobs:
           console.log('PAGES_CANONICAL_UI_ONLY=PASS');
           console.log('PAGES_LEGACY_UI_NOT_PUBLISHED=PASS');
           console.log('PAGES_QUOTE_ENGINE_ISOLATED=PASS');
+          console.log('PAGES_QUOTE_RUNTIME_NEUTRAL_NAMESPACE=PASS');
           console.log('PAGES_LEGACY_SERVICE_WORKER_RETIRED=PASS');
           EOF
 
