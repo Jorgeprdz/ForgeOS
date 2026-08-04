@@ -31,8 +31,10 @@ jobs:
           echo "Beta 1 function versions:"
           grep -n "FUNCTION_VERSION\|MODEL_VERSION" supabase/functions/whatsapp-draft/index.ts
           grep -n "FUNCTION_VERSION\|MODEL_VERSION" supabase/functions/cartera-pdf-intake/index.ts
+          echo "Alfred command source version:"
+          grep -n "FUNCTION_VERSION\|MODEL_VERSION" supabase/functions/alfred-command/index.ts
           echo "Function directories:"
-          find supabase/functions/semantic-extract supabase/functions/banxico-rates supabase/functions/whatsapp-draft supabase/functions/cartera-pdf-intake -maxdepth 2 -type f -print
+          find supabase/functions/semantic-extract supabase/functions/banxico-rates supabase/functions/whatsapp-draft supabase/functions/cartera-pdf-intake supabase/functions/alfred-command -maxdepth 2 -type f -print
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -46,6 +48,7 @@ jobs:
         run: |
           node tests/banxico-rates-edge-function-test.mjs
           node tests/beta1-operational-completion-test.mjs
+          node --test tests/alfred-command-edge-function-test.mjs
 
       - name: Deploy semantic-extract
         run: supabase functions deploy semantic-extract --project-ref "$SUPABASE_PROJECT_REF" --debug
@@ -64,6 +67,11 @@ jobs:
 
       - name: Deploy cartera-pdf-intake
         run: supabase functions deploy cartera-pdf-intake --project-ref "$SUPABASE_PROJECT_REF" --debug
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy Alfred command
+        run: supabase functions deploy alfred-command --project-ref "$SUPABASE_PROJECT_REF" --debug
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
@@ -96,9 +104,9 @@ jobs:
           console.log('BANXICO_EDGE_SMOKE=PASS');
           NODE
 
-      - name: Verify protected Beta 1 functions are reachable
+      - name: Verify protected Beta 1 and Alfred functions are reachable
         run: |
-          for function_name in whatsapp-draft cartera-pdf-intake; do
+          for function_name in whatsapp-draft cartera-pdf-intake alfred-command; do
             status="$(curl --max-time 30 -sS -o "${function_name}.json" -w '%{http_code}' -X POST \
               "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/${function_name}" \
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
