@@ -5,6 +5,7 @@ const ACTION_SELECTOR = "[data-m05e005-action]";
 
 let observer = null;
 let scheduled = false;
+let ensuring = false;
 let retryTimer = null;
 let acceptanceTimer = null;
 let lastReason = "boot";
@@ -65,67 +66,79 @@ function retry(reason) {
 }
 
 function ensurePresence(reason = lastReason) {
-  if (!acceptedSignal) {
-    clearRetry();
-    mark("waiting-human-acceptance", reason);
-    return false;
-  }
+  if (ensuring) return false;
+  ensuring = true;
+  try {
+    if (!acceptedSignal) {
+      clearRetry();
+      mark("waiting-human-acceptance", reason);
+      return false;
+    }
 
-  const host = projection();
-  if (!host || host.hidden) {
-    mark("waiting-projection", reason);
+    const host = projection();
+    if (!host || host.hidden) {
+      mark("waiting-projection", reason);
+      retry(reason);
+      return false;
+    }
+
+    const runtime = authority();
+    if (!runtime?.refresh) {
+      mark("waiting-authority", reason);
+      retry(reason);
+      return false;
+    }
+
+    if (!acceptedQuoteReady(runtime)) {
+      mark("waiting-accepted-snapshot", reason);
+      retry(reason);
+      return false;
+    }
+
+    if (printableActionsReady(host)) {
+      clearRetry();
+      mark("ready", reason);
+      return true;
+    }
+
+    // QPD.refresh() can synchronously emit forge:qpd06-state. Ignore that
+    // feedback while this recovery attempt is active; otherwise a missing
+    // printable authority creates an unbounded microtask refresh loop.
+    runtime.refresh();
+    const restored = printableActionsReady(host);
+    if (restored) {
+      restoreCount += 1;
+      clearRetry();
+      mark("restored", reason);
+      globalThis.dispatchEvent(new CustomEvent(
+        "forge:quote-printable-actions-restored",
+        {
+          detail: Object.freeze({
+            version: VERSION,
+            reason,
+            restoreCount,
+          }),
+        },
+      ));
+      return true;
+    }
+
+    mark("waiting-runtime-convergence", reason);
     retry(reason);
     return false;
+  } finally {
+    ensuring = false;
   }
-
-  const runtime = authority();
-  if (!runtime?.refresh) {
-    mark("waiting-authority", reason);
-    retry(reason);
-    return false;
-  }
-
-  if (!acceptedQuoteReady(runtime)) {
-    mark("waiting-accepted-snapshot", reason);
-    retry(reason);
-    return false;
-  }
-
-  if (printableActionsReady(host)) {
-    clearRetry();
-    mark("ready", reason);
-    return true;
-  }
-
-  runtime.refresh();
-  const restored = printableActionsReady(host);
-  if (restored) {
-    restoreCount += 1;
-    clearRetry();
-    mark("restored", reason);
-    globalThis.dispatchEvent(new CustomEvent(
-      "forge:quote-printable-actions-restored",
-      {
-        detail: Object.freeze({
-          version: VERSION,
-          reason,
-          restoreCount,
-        }),
-      },
-    ));
-    return true;
-  }
-
-  mark("waiting-runtime-convergence", reason);
-  retry(reason);
-  return false;
 }
 
 function schedule(reason = "event") {
   lastReason = reason;
-  if (scheduled) return;
+  if (scheduled || ensuring) return;
   scheduled = true;
-  queueMicrotask(() => {
+  const enqueue = globalThis.requestAnimationFrame
+    ? globalThis.requestAnimationFrame.bind(globalThis)
+    : (callback) => globalThis.setTimeout(callback, 0);
+  enqueue(() => {
     scheduled = false;
     ensurePresence(lastReason);
   });
@@ -140,7 +153,7 @@ function nodeTouchesProjection(node, host) {
 }
 
 function mutationRequiresRecovery(records) {
-  if (!acceptedSignal) return false;
+  if (!acceptedSignal || ensuring) return false;
 
   const host = projection();
   if (host && printableActionsReady(host)) return false;
@@ -213,7 +226,7 @@ for (const eventName of [
   "forge:quote-runtime-ready",
 ]) {
   globalThis.addEventListener?.(eventName, () => {
-    if (acceptedSignal) schedule(eventName);
+    if (acceptedSignal && !ensuring) schedule(eventName);
   });
 }
 
@@ -224,7 +237,7 @@ globalThis.addEventListener?.("forge:quote-candidate-cleared", () => {
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", install, { once: true });
 } else {
-  queueMicrotask(install);
+  globalThis.setTimeout(install, 0);
 }
 
 globalThis.ForgeQuotePrintablePresenceGuardM05W002 = Object.freeze({
