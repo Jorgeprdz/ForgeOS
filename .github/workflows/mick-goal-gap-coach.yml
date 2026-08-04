@@ -1,0 +1,43 @@
+name: Mick Goal Gap Coach
+
+on:
+  pull_request:
+    paths:
+      - "advisor-os/forge-alive/forecast/mick-goal-gap-coach.mjs"
+      - "docs/static-preview/forge-alive-material3/home-mick-goal-coach.js"
+      - "docs/static-preview/forge-alive-material3/home-module.js"
+      - "tests/mick-goal-gap-coach-test.mjs"
+      - ".github/workflows/mick-goal-gap-coach.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check advisor-os/forge-alive/forecast/mick-goal-gap-coach.mjs
+          node --check docs/static-preview/forge-alive-material3/home-mick-goal-coach.js
+          node --check docs/static-preview/forge-alive-material3/home-module.js
+
+      - name: Validate Mick goal gap contract
+        run: node tests/mick-goal-gap-coach-test.mjs
+
+      - name: Enforce truth boundaries
+        run: |
+          grep -q 'estimatedAsReal: false' advisor-os/forge-alive/forecast/mick-goal-gap-coach.mjs
+          grep -q 'potentialAsReal: false' advisor-os/forge-alive/forecast/mick-goal-gap-coach.mjs
+          grep -q 'unknownAsZero: false' advisor-os/forge-alive/forecast/mick-goal-gap-coach.mjs
+          grep -q 'pipelineAsConfirmedPolicy: false' advisor-os/forge-alive/forecast/mick-goal-gap-coach.mjs

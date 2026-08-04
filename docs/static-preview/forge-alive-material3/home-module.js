@@ -1,5 +1,6 @@
 import { createAuthenticatedProductiveHome } from "./home-productive-orchestrator.js";
 import { createHomeMonthlyGoalEditor } from "./home-monthly-goal-editor.js";
+import { createHomeMickGoalGapCoach } from "./home-mick-goal-coach.js";
 
 const homeStateKey = Symbol.for("forge.ui-m04.home.state");
 
@@ -117,6 +118,13 @@ export function createHomeModule({ root, shell }) {
     root: productiveRoot,
     productiveHome,
   });
+  const mickGoalCoach = createHomeMickGoalGapCoach({
+    root: productiveRoot,
+    productiveHome,
+    onNavigate: (routeId) => navigate(routeId, {
+      view: routeId === "actividad" ? "advisor-forecast" : null,
+    }),
+  });
   let mounted = false;
   let toastTimer = null;
 
@@ -131,10 +139,12 @@ export function createHomeModule({ root, shell }) {
     }, 2400);
   }
 
-  function navigate(routeId) {
+  function navigate(routeId, { view = null } = {}) {
     const url = new URL(window.location.href);
     url.searchParams.set("nav", routeId);
     for (const key of ["person", "sourceType", "sourceRef", "from"]) url.searchParams.delete(key);
+    if (view) url.searchParams.set("view", view);
+    else url.searchParams.delete("view");
     window.history.pushState({ forgeRoute: routeId, source: "home" }, "", `${url.pathname}${url.search}${url.hash}`);
     shell.reconcile();
   }
@@ -180,6 +190,7 @@ export function createHomeModule({ root, shell }) {
     input?.addEventListener("blur", () => window.setTimeout(shell.syncVisualViewport, 120), { signal });
     bindStaticHomeActions();
     monthlyGoalEditor.mount();
+    mickGoalCoach.mount();
     productiveHome.mount();
   }
 
@@ -193,18 +204,21 @@ export function createHomeModule({ root, shell }) {
       Promise.resolve(productiveHome.reconcile()).then(() => {
         canonicalizeSmartWidgets(productiveRoot);
         monthlyGoalEditor.reconcile();
+        mickGoalCoach.resume("home-reconcile");
       });
     },
     unmount() {
       root.hidden = true;
       root.dataset.moduleActive = "false";
       monthlyGoalEditor.close();
+      mickGoalCoach.scrub("home-route-unmounted");
       productiveHome.scrub("home-route-unmounted");
     },
     diagnostics() {
       return Object.freeze({
         productiveHome: productiveHome.diagnostics?.(),
         monthlyGoalEditor: monthlyGoalEditor.diagnostics?.(),
+        mickGoalCoach: mickGoalCoach.diagnostics?.(),
         canonicalActionCards: productiveRoot.dataset.canonicalActionCards === "true" || productiveRoot.dataset.intelligenceAbsorbed === "true",
       });
     },
