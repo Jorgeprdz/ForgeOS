@@ -4,17 +4,15 @@ on:
   push:
     branches:
       - feature/quote-printable-document-closure
+      - chore/retire-all-legacy-forge-ui
     paths:
       - "advisor-os/quotes/**"
       - "docs/static-preview/quote-printable-runtime/**"
-      - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e00*.*"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.js"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.css"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js"
-      - "docs/static-preview/forge-alive-material3/app.js"
-      - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
+      - "docs/static-preview/quote-printable-entry/**"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-*.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-*.css"
+      - "docs/static-preview/forge-alive-material3/app.js"
       - "tests/ui-m05e-quote-calculator-restoration-test.mjs"
       - "tests/ui-m05f-live-udi-review-printable-actions-test.mjs"
       - "tests/ui-m05g-printable-design-closure-test.mjs"
@@ -34,14 +32,11 @@ on:
     paths:
       - "advisor-os/quotes/**"
       - "docs/static-preview/quote-printable-runtime/**"
-      - "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.*"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e00*.*"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.js"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-*.css"
-      - "docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js"
-      - "docs/static-preview/forge-alive-material3/app.js"
-      - "docs/static-preview/forge-alive-material3/index-quote-calculator-parity.html"
+      - "docs/static-preview/quote-printable-entry/**"
       - "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-*.js"
+      - "docs/static-preview/forge-alive-material3/quote-runtime-*.css"
+      - "docs/static-preview/forge-alive-material3/app.js"
       - "tests/ui-m05e-quote-calculator-restoration-test.mjs"
       - "tests/ui-m05f-live-udi-review-printable-actions-test.mjs"
       - "tests/ui-m05g-printable-design-closure-test.mjs"
@@ -78,76 +73,41 @@ jobs:
           node-version: "22"
 
       - name: Syntax gate
+        shell: bash
         run: |
-          node --check advisor-os/quotes/printable/quote-printable-read-model.js
-          node --check advisor-os/quotes/printable/quote-printable-document-composer.js
-          node --check advisor-os/quotes/printable/quote-printable-pdf-generator.js
-          node --check advisor-os/quotes/printable/quote-printable-product-profile.js
-          node --check advisor-os/quotes/printable/quote-printable-version-repository.js
-          node --check advisor-os/quotes/printable/quote-printable-supabase-repository.js
-          node --check advisor-os/quotes/printable/quote-printable-read-model-m05e005.js
-          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e005.js
-          node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e005.js
-          node --check advisor-os/quotes/printable/quote-printable-product-profile-m05e007.js
-          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e007.js
-          node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e007.js
-          node --check advisor-os/quotes/printable/quote-printable-product-profile-m05e008.js
-          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e008.js
-          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e008-pink.js
-          node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e008.js
-          node --check advisor-os/quotes/printable/quote-printable-product-profile-m05e010.js
-          node --check advisor-os/quotes/printable/quote-printable-document-composer-m05e010.js
-          node --check advisor-os/quotes/printable/quote-printable-pdf-generator-m05e010.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-read-model.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-product-profile.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-version-repository.js
-          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-read-model-m05e005.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e005.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e005.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-product-profile-m05e007.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e007.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e007.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-product-profile-m05e008.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e008.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e008-pink.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e008.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-product-profile-m05e010.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-document-composer-m05e010.js
-          node --check docs/static-preview/quote-printable-runtime/quote-printable-pdf-generator-m05e010.js
-          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e005.js
-          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e007.js
-          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e008.js
-          node --check docs/static-preview/quote-printable-runtime/forge-quote-printable-route-controller-m05e010.js
-          node --check docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js
-          node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js
-          node --check docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js
-          node --check docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js
-          node --check docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js
-          node --check docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js
-          node --check docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js
-          node --check advisor-os/quotes/tests/quote-printable-read-model-master-test.js
-          node --check advisor-os/quotes/tests/quote-printable-document-composer-master-test.js
-          node --check advisor-os/quotes/tests/quote-printable-pdf-generator-master-test.js
-          node --check advisor-os/quotes/tests/quote-printable-product-profile-master-test.js
-          node --check advisor-os/quotes/tests/quote-printable-version-repository-master-test.js
-          node --check advisor-os/quotes/tests/quote-printable-persistence-migration-security-test.js
-          node --check advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
-          node --check advisor-os/quotes/tests/quote-printable-browser-binding-test.js
-          node --check tests/ui-m05e-quote-calculator-restoration-test.mjs
-          node --check tests/ui-m05f-live-udi-review-printable-actions-test.mjs
-          node --check tests/ui-m05g-printable-design-closure-test.mjs
-          node --check tests/ui-m05h-orvi-commercial-document-test.mjs
-          node --check tests/ui-m05i-vida-mujer-commercial-document-test.mjs
-          node --check tests/ui-m05k-vida-mujer-pages-landscape-test.mjs
-          node --check tests/e2e/qpd06-browser-acceptance.spec.mjs
-          node --check tests/e2e/m05e006-responsiveness.spec.mjs
-          node --check tests/e2e/fixtures/qpd06/harness.js
-          node --check playwright.qpd06.config.mjs
-          node --check tools/forge-local-live-server.cjs
-          node --check exchange-rate-cache-engine.js
+          set -euo pipefail
+          while IFS= read -r file; do
+            node --check "$file"
+          done < <(
+            git ls-files \
+              'advisor-os/quotes/printable/*.js' \
+              'advisor-os/quotes/tests/*.js' \
+              'docs/static-preview/quote-printable-runtime/*.js' \
+              'docs/static-preview/quote-printable-entry/*.js'
+          )
+          for file in \
+            docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js \
+            docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e005.js \
+            docs/static-preview/forge-alive-material3/quote-runtime-printable-closure-m05e006.js \
+            docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js \
+            docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-visual-m05e010.js \
+            docs/static-preview/forge-alive-material3/quote-runtime-pages-rate-fetch-bridge-m05e010.js \
+            tests/ui-m05e-quote-calculator-restoration-test.mjs \
+            tests/ui-m05f-live-udi-review-printable-actions-test.mjs \
+            tests/ui-m05g-printable-design-closure-test.mjs \
+            tests/ui-m05h-orvi-commercial-document-test.mjs \
+            tests/ui-m05i-vida-mujer-commercial-document-test.mjs \
+            tests/ui-m05k-vida-mujer-pages-landscape-test.mjs \
+            tests/e2e/qpd06-browser-acceptance.spec.mjs \
+            tests/e2e/m05e006-responsiveness.spec.mjs \
+            tests/e2e/fixtures/qpd06/harness.js \
+            playwright.qpd06.config.mjs \
+            tools/forge-local-live-server.cjs \
+            exchange-rate-cache-engine.js
+          do
+            node --check "$file"
+          done
+          test ! -e docs/static-preview/forge-alive
 
       - name: QPD-01 canonical read model
         run: node advisor-os/quotes/tests/quote-printable-read-model-master-test.js
