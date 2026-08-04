@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 const navigation = await import(
   "../docs/static-preview/forge-alive-material3/forge-navigation-contract.js"
 );
+globalThis.addEventListener ??= () => {};
 const { createPipelineModule } = await import(
   "../docs/static-preview/forge-alive-material3/pipeline-module.js"
 );
