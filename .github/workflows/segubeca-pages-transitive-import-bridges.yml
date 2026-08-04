@@ -147,11 +147,11 @@ jobs:
             ],
             [
               'const browser = await puppeteer.launch({\n  executablePath: chromiumPath,',
-              'const browser = await puppeteer.launch({\n  protocolTimeout: 600000,\n  executablePath: chromiumPath,',
+              'const browser = await puppeteer.launch({\n  protocolTimeout: 90000,\n  executablePath: chromiumPath,',
             ],
             [
               '  const page = await browser.newPage();\n  await page.setViewport({ width: 1440, height: 1200 });',
-              '  const page = await browser.newPage();\n  page.setDefaultTimeout(60000);\n  page.setDefaultNavigationTimeout(90000);\n  console.log("SEGUBECA_GENERATED_PAGES_BROWSER=READY");\n  await page.setViewport({ width: 1440, height: 1200 });',
+              '  const page = await browser.newPage();\n  page.setDefaultTimeout(60000);\n  page.setDefaultNavigationTimeout(90000);\n  page.on("console", message => console.log(`SEGUBECA_PAGE_CONSOLE=${message.text()}`));\n  console.log("SEGUBECA_GENERATED_PAGES_BROWSER=READY");\n  await page.setViewport({ width: 1440, height: 1200 });',
             ],
             [
               '  const input = await page.$("#fq-solution-online-pdf-105dr");',
@@ -166,8 +166,32 @@ jobs:
               '  console.log("SEGUBECA_GENERATED_PAGES_PROJECTION=READY");\n  const preview = await page.evaluate(() => {',
             ],
             [
+              '    const bridge = globalThis.ForgeAcceptedQuoteBridge;',
+              '    console.log("SEGUBECA_EVAL=START");\n    const bridge = globalThis.ForgeAcceptedQuoteBridge;\n    console.log("SEGUBECA_EVAL=BRIDGE_READY");',
+            ],
+            [
+              '    const candidate = bridge?.getCurrentQuoteCandidate?.();',
+              '    const candidate = bridge?.getCurrentQuoteCandidate?.();\n    console.log("SEGUBECA_EVAL=CANDIDATE_READY");',
+            ],
+            [
+              '    const calculation = bridge?.getCurrentQuotePreviewCalculation?.();',
+              '    const calculation = bridge?.getCurrentQuotePreviewCalculation?.();\n    console.log("SEGUBECA_EVAL=CALCULATION_READY");',
+            ],
+            [
+              '    const authorityResult = globalThis.ForgeSegubecaProductiveUiBinding?.getAuthorityResult?.();',
+              '    const authorityResult = globalThis.ForgeSegubecaProductiveUiBinding?.getAuthorityResult?.();\n    console.log("SEGUBECA_EVAL=AUTHORITY_READY");',
+            ],
+            [
+              '    const projection = document.querySelector("[data-material3-quotes-projection]");',
+              '    const projection = document.querySelector("[data-material3-quotes-projection]");\n    console.log("SEGUBECA_EVAL=PROJECTION_NODE_READY");',
+            ],
+            [
+              '    const note = projection?.querySelector("[data-segubeca-authority-note]");',
+              '    const note = projection?.querySelector("[data-segubeca-authority-note]");\n    console.log("SEGUBECA_EVAL=NOTE_READY");',
+            ],
+            [
               '    const bodyText = document.body.innerText;',
-              '    const bodyText = projection?.innerText || "";',
+              '    const bodyText = projection?.innerText || "";\n    console.log("SEGUBECA_EVAL=TEXT_READY");',
             ],
             [
               '  assert.deepEqual(preview.candidate, {',
@@ -194,7 +218,7 @@ jobs:
           if (!source.includes('process.env.FORGE_SEGUBECA_TARGET_URL')) {
             throw new Error('SEGUBECA_GENERATED_PAGES_TARGET_NOT_INJECTED');
           }
-          if (!source.includes('protocolTimeout: 600000')) {
+          if (!source.includes('protocolTimeout: 90000')) {
             throw new Error('SEGUBECA_REVIEW3_PROTOCOL_TIMEOUT_NOT_APPLIED');
           }
           if (source.includes('document.body.innerText')) {
@@ -203,7 +227,7 @@ jobs:
           fs.writeFileSync(targetPath, source);
           NODE
 
-          timeout 12m node /tmp/segubeca-generated-pages-real-pdf.mjs
+          timeout 5m node /tmp/segubeca-generated-pages-real-pdf.mjs
           echo 'SEGUBECA_GENERATED_PAGES_REAL_PDF=PASS'
 
       - name: Preserve accepted SeguBeca authorities
