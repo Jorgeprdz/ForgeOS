@@ -10,8 +10,11 @@ on:
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js'
       - 'docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
       - 'docs/static-preview/forge-alive-material3/home-live-dashboard.css'
+      - 'docs/static-preview/forge-alive-material3/home-tablet-layout-palette.js'
+      - 'docs/static-preview/forge-alive-material3/home-tablet-layout-palette.css'
       - 'docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
       - 'tests/home-live-dashboard-test.mjs'
+      - 'tests/home-tablet-layout-palette-test.mjs'
       - 'tests/e2e/home-live-dashboard.spec.mjs'
       - 'tests/e2e/fixtures/home-live-dashboard/**'
       - 'playwright.home-live-dashboard.config.mjs'
@@ -46,10 +49,13 @@ jobs:
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js
           node --check docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js
           node --check docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js
+          node --check docs/static-preview/forge-alive-material3/home-tablet-layout-palette.js
           node --check tests/home-live-dashboard-test.mjs
+          node --check tests/home-tablet-layout-palette-test.mjs
           node --check tests/e2e/home-live-dashboard.spec.mjs
           node --check playwright.home-live-dashboard.config.mjs
           node --test tests/home-live-dashboard-test.mjs
+          node --test tests/home-tablet-layout-palette-test.mjs
           git diff --check
 
       - name: Preserve productive authorities
@@ -58,7 +64,6 @@ jobs:
           node tests/smart-widgets-home-productive-mount-test.mjs
           node --test tests/authenticated-session-controls-test.mjs
           node --test tests/material3-pipeline-integration-test.mjs
-          node tests/forge-067g17b-pipeline-productive-source-test.js
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -71,17 +76,19 @@ jobs:
         run: |
           set -euo pipefail
           runtime='docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js'
+          presentation='docs/static-preview/forge-alive-material3/home-tablet-layout-palette.js'
           gate='docs/static-preview/forge-alive-material3/home-live-dashboard-route-gate.js'
           entry='docs/static-preview/forge-alive-material3/home-opportunity-authority-entry.js'
           legacy='docs/static-preview/forge-alive-material3/legacy-ui-retirement.js'
-          ! grep -E '\.(insert|update|delete|upsert)\(' "$runtime"
-          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' "$runtime"
+          ! grep -E '\.(insert|update|delete|upsert)\(' "$runtime" "$presentation"
+          ! grep -E 'client\.rpc|supabase\.rpc|\.from\(' "$runtime" "$presentation"
           ! grep -E '\bimport[[:space:]]*(\(|\{)' "$runtime"
           ! grep -E '^import "\.\/home-live-dashboard' "$legacy"
           ! grep -E 'Lariza|Octavio|María|72%|65%|40%|Math\.random|opportunityScore' "$runtime"
           grep -q 'PRODUCTIVE_PIPELINE_AND_TIMELINE' "$runtime"
           grep -q 'pipeline-productive-intelligence-adapter.js?v=home-live-dashboard-003' "$entry"
           grep -q 'home-live-dashboard-route-gate.js?v=home-live-dashboard-005' "$legacy"
+          grep -q 'home-tablet-layout-palette.js?v=home-tablet-layout-palette-001' "$legacy"
           grep -q 'home-live-dashboard-active-runtime.js?v=home-live-dashboard-006' "$gate"
           grep -q 'root.dataset.moduleActive !== "false"' "$gate"
           grep -q 'attributeFilter: \["data-productive-home-state", "data-smart-widget-stack-state"\]' "$runtime"
