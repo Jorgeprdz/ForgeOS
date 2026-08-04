@@ -101,9 +101,12 @@ async function createBook(api, owner, ownerId, name, suffix, members) {
   assert.equal(replay.status,'REPLAYED');
   const added = await rpc(api,'forge_contact_books_add_members',{ ownerId,bookReference:created.bookReference,personReferences:members,source:'SYNTHETIC_ACCEPTANCE',importBatchReference:`contact-books-001:${RUN_ID}`,idempotencyKey:key(owner,`add:${suffix}`) });
   assert.ok(['UPDATED','REPLAYED'].includes(added.status));
+  assert.equal(added.readAfterWriteVerified,true);
+  const addReplay = await rpc(api,'forge_contact_books_add_members',{ ownerId,bookReference:created.bookReference,personReferences:members,source:'SYNTHETIC_ACCEPTANCE',importBatchReference:`contact-books-001:${RUN_ID}`,idempotencyKey:key(owner,`add:${suffix}`) });
+  assert.equal(addReplay.status,'REPLAYED');
   const listed = await api.rpc('forge_contact_books_list_members',{ p_book_reference:created.bookReference });
   assert.ifError(listed.error); assert.equal(listed.data.length,members.length);
-  return { bookReference:created.bookReference,count:listed.data.length,replay:replay.status };
+  return { bookReference:created.bookReference,count:listed.data.length,createReplay:replay.status,batchReplay:addReplay.status };
 }
 
 async function validateCommands(api, owner, ownerId, people) {
@@ -113,10 +116,13 @@ async function validateCommands(api, owner, ownerId, people) {
   const destinationReference = destination.bookReference;
   const renamed = await rpc(api,'forge_contact_books_rename',{ ownerId,bookReference:originReference,name:`Validación origen renombrado ${owner}`,idempotencyKey:key(owner,'validation:rename') });
   assert.ok(['UPDATED','REPLAYED'].includes(renamed.status));
+  assert.equal(renamed.readAfterWriteVerified,true);
   const archived = await rpc(api,'forge_contact_books_archive',{ ownerId,bookReference:destinationReference,idempotencyKey:key(owner,'validation:archive') });
   assert.ok(['ARCHIVED','REPLAYED'].includes(archived.status));
+  assert.equal(archived.readAfterWriteVerified,true);
   const restored = await rpc(api,'forge_contact_books_restore',{ ownerId,bookReference:destinationReference,idempotencyKey:key(owner,'validation:restore') });
   assert.ok(['RESTORED','REPLAYED'].includes(restored.status));
+  assert.equal(restored.readAfterWriteVerified,true);
   const duplicate = await rpc(api,'forge_contact_books_create',{ ownerId,name:`Validación origen renombrado ${owner}`,bookType:'CUSTOM',bookReference:`book:contact-books-001:${RUN_ID}:${owner}:duplicate`,idempotencyKey:key(owner,'validation:duplicate') });
   assert.ok(['REJECTED','REPLAYED'].includes(duplicate.status));
   await rpc(api,'forge_contact_books_add_members',{ ownerId,bookReference:originReference,personReferences:people.slice(0,3),source:'SYNTHETIC_ACCEPTANCE',idempotencyKey:key(owner,'validation:add') });
@@ -127,6 +133,10 @@ async function validateCommands(api, owner, ownerId, people) {
   await rpc(api,'forge_contact_books_add_members',{ ownerId,bookReference:originReference,personReferences:[people[0]],source:'SYNTHETIC_ACCEPTANCE',idempotencyKey:key(owner,'validation:re-add') });
   const moved = await rpc(api,'forge_contact_books_move_members',{ ownerId,originBookReference:originReference,destinationBookReference:destinationReference,personReferences:[people[0]],idempotencyKey:key(owner,'validation:move') });
   assert.ok(['UPDATED','REPLAYED'].includes(moved.status));
+  assert.equal(moved.readAfterWriteVerified,true);
+  const project = await rpc(api,'forge_contact_books_resolve_project_200',{ ownerId,idempotencyKey:key(owner,'validation:project-200') });
+  const projectReplay = await rpc(api,'forge_contact_books_resolve_project_200',{ ownerId,idempotencyKey:key(owner,'validation:project-200') });
+  assert.equal(project.readAfterWriteVerified,true); assert.equal(projectReplay.status,'REPLAYED'); assert.equal(projectReplay.bookReference,project.bookReference);
   const beforeRollback = await api.rpc('forge_contact_books_list_members',{ p_book_reference:originReference });
   assert.ifError(beforeRollback.error);
   const rollback = await api.rpc('forge_contact_books_move_members',{ p_command:{ ownerId,originBookReference:originReference,destinationBookReference:destinationReference,personReferences:[people[1],`person:missing:${RUN_ID}:${owner}`],idempotencyKey:key(owner,'validation:rollback') } });
@@ -145,7 +155,7 @@ async function validateCommands(api, owner, ownerId, people) {
   assert.deepEqual(dates,[...dates].sort((a,b)=>b-a));
   const direct = await api.from('contact_books').insert({ owner_id:ownerId,book_reference:`book:forbidden:${RUN_ID}:${owner}`,name:'Forbidden',normalized_name:'forbidden',book_type:'CUSTOM',created_by:ownerId,updated_by:ownerId });
   assert.ok(direct.error,'DIRECT_TABLE_WRITE_MUST_BE_BLOCKED');
-  return { rename:true,archiveRestore:true,removePreservesPerson:true,atomicMove:true,rollback:true,sortByName:true,sortByDate:true,directWriteBlocked:true,beforeRollbackCount:beforeRollback.data.length };
+  return { rename:true,archiveRestore:true,removePreservesPerson:true,atomicMove:true,rollback:true,project200Idempotent:true,sortByName:true,sortByDate:true,directWriteBlocked:true,beforeRollbackCount:beforeRollback.data.length };
 }
 
 const report = { runId:RUN_ID,dataClass:'NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA',users:{},isolation:{},status:'PENDING' };
@@ -162,13 +172,17 @@ try {
       friendshipLabelsAdded:classified.friendshipLabelsAdded,
       commands:await validateCommands(clients[owner],owner,ids[owner],classified.best),
     };
+    const people = await clients[owner].from('commercial_people').select('person_reference').eq('advisor_id',ids[owner]).like('person_reference',`person:beta1022a:${RUN_ID}:${owner}:%`).is('archived_at',null);
+    assert.ifError(people.error); assert.equal(people.data.length,100); assert.equal(new Set(people.data.map(item=>item.person_reference)).size,100);
+    report.users[owner].canonicalPeople = { count:100,uniqueReferences:100,duplication:'ABSENT' };
   }
   const foreignA = await rpc(clients.A,'forge_contact_books_archive',{ ownerId:ids.B,bookReference:report.users.B.amigos.bookReference,idempotencyKey:key('A','cross-owner') }).then(() => null, error => error);
-  assert.ok(foreignA);
+  const foreignB = await rpc(clients.B,'forge_contact_books_archive',{ ownerId:ids.A,bookReference:report.users.A.amigos.bookReference,idempotencyKey:key('B','cross-owner') }).then(() => null, error => error);
+  assert.ok(foreignA); assert.ok(foreignB);
   const aReadsB = await clients.A.from('contact_books').select('id').eq('book_reference',report.users.B.amigos.bookReference);
   const bReadsA = await clients.B.from('contact_books').select('id').eq('book_reference',report.users.A.amigos.bookReference);
   assert.ifError(aReadsB.error); assert.ifError(bReadsA.error); assert.equal(aReadsB.data.length,0); assert.equal(bReadsA.data.length,0);
-  report.isolation = { ACannotReadB:true,BCannotReadA:true,ACannotMutateB:true };
+  report.isolation = { ACannotReadB:true,BCannotReadA:true,ACannotMutateB:true,BCannotMutateA:true };
   report.status = 'PASS';
 } finally {
   await Promise.allSettled([clients.A.auth.signOut(),clients.B.auth.signOut()]);

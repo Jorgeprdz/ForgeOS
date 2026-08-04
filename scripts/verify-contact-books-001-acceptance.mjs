@@ -30,9 +30,11 @@ try {
     assert.ifError(topMembers.error); assert.ifError(friendMembers.error); assert.equal(topMembers.data.length,30); assert.equal(friendMembers.data.length,40);
     assert.equal(new Set(topMembers.data.map(item=>item.personReference)).size,30);
     assert.equal(new Set(friendMembers.data.map(item=>item.personReference)).size,40);
+    const people = await clients[owner].from('commercial_people').select('person_reference').eq('advisor_id',ownerId).like('person_reference',`person:beta1022a:${RUN_ID}:${owner}:%`).is('archived_at',null);
+    assert.ifError(people.error); assert.equal(people.data.length,100); assert.equal(new Set(people.data.map(item=>item.person_reference)).size,100);
     const blocked = await clients[owner].rpc('forge_contact_books_archive',{ p_command:{ ownerId,bookReference:top.bookReference,idempotencyKey:`contact-books:${RUN_ID}:${owner}:sealed-mutation` } });
     assert.ok(blocked.error,'SEALED_MUTATION_MUST_BE_BLOCKED');
-    reports[owner] = { ownerId,topReference:top.bookReference,friendsReference:friends.bookReference,topCount:30,friendsCount:40,sealedMutationBlocked:true };
+    reports[owner] = { ownerId,topReference:top.bookReference,friendsReference:friends.bookReference,topCount:30,friendsCount:40,canonicalPeopleCount:100,personDuplication:'ABSENT',sealedMutationBlocked:true };
   }
   const aReadsB = await clients.A.from('contact_books').select('id').eq('book_reference',reports.B.friendsReference);
   const bReadsA = await clients.B.from('contact_books').select('id').eq('book_reference',reports.A.friendsReference);
@@ -41,7 +43,7 @@ try {
   await Promise.allSettled([clients.A.auth.signOut(),clients.B.auth.signOut()]);
 }
 
-const sanitized = { runId:RUN_ID,dataClass:'NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA',users:{ A:{ topCount:reports.A?.topCount,friendsCount:reports.A?.friendsCount,sealedMutationBlocked:reports.A?.sealedMutationBlocked },B:{ topCount:reports.B?.topCount,friendsCount:reports.B?.friendsCount,sealedMutationBlocked:reports.B?.sealedMutationBlocked } },tenantIsolation:{ ACannotReadB:true,BCannotReadA:true },syntheticDataSealed:true,status:'PASS' };
+const sanitized = { runId:RUN_ID,dataClass:'NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA',users:{ A:{ topCount:reports.A?.topCount,friendsCount:reports.A?.friendsCount,canonicalPeopleCount:reports.A?.canonicalPeopleCount,personDuplication:reports.A?.personDuplication,sealedMutationBlocked:reports.A?.sealedMutationBlocked },B:{ topCount:reports.B?.topCount,friendsCount:reports.B?.friendsCount,canonicalPeopleCount:reports.B?.canonicalPeopleCount,personDuplication:reports.B?.personDuplication,sealedMutationBlocked:reports.B?.sealedMutationBlocked } },tenantIsolation:{ ACannotReadB:true,BCannotReadA:true,ACannotMutateB:true,BCannotMutateA:true },syntheticDataSealed:true,status:'PASS' };
 for (const name of required) assert.equal(JSON.stringify(sanitized).includes(process.env[name]),false,`SECRET_LEAK:${name}`);
 mkdirSync(dirname(OUT),{ recursive:true }); writeFileSync(OUT,`${JSON.stringify(sanitized,null,2)}\n`);
 console.log('CONTACT_BOOKS_001_REMOTE_VERIFICATION=PASS');

@@ -104,9 +104,12 @@ test('controlled deployment and A/B acceptance runners preserve synthetic and ca
   assert.match(seed, /person:beta1022a:/);
   assert.match(seed, /assert\.equal\(best\.length,30\)/);
   assert.match(seed, /assert\.equal\(friends\.length,40\)/);
-  assert.match(seed, /ACannotReadB:true,BCannotReadA:true,ACannotMutateB:true/);
+  assert.match(seed, /ACannotReadB:true,BCannotReadA:true,ACannotMutateB:true,BCannotMutateA:true/);
   assert.match(seed, /ATOMIC_MOVE_FAILURE_EXPECTED/);
   assert.match(seed, /DIRECT_TABLE_WRITE_MUST_BE_BLOCKED/);
+  assert.match(seed, /project200Idempotent:true/);
+  assert.match(seed, /duplication:'ABSENT'/);
+  assert.match(seed, /batchReplay:addReplay\.status/);
   assert.match(verify, /SEALED_MUTATION_MUST_BE_BLOCKED/);
   assert.match(verify, /syntheticDataSealed:true/);
   assert.doesNotMatch(seed, /service_role|admin\.createUser/i);
