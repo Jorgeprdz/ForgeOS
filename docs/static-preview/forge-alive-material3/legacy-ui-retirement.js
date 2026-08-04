@@ -1,4 +1,5 @@
 import "./compensation-route-bootstrap-100b.js?v=advisor-compensation-120-false-zero-safe-area-001";
+import "./home-tablet-layout-palette.js?v=home-tablet-layout-palette-001";
 
 const LEGACY_CACHE_NAMES = new Set([
   "static-v7-pages-1",

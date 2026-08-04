@@ -3,8 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/docs/static-preview/forge-alive-material3/smart-widget-productive-home-adapter.css?v=e2e">
   <style>
-    :root { --muted:#aeb8d0; --aqua-soft:#9ef2ed; --gold-soft:#ffe09c; }
+    :root {
+      --muted:#aeb8d0;
+      --aqua-soft:#9ef2ed;
+      --gold-soft:#ffe09c;
+      --md-sys-color-primary:#9be8ff;
+      --md-sys-color-on-primary:#001f29;
+      --md-sys-color-on-surface:#eff6ff;
+      --md-sys-color-on-surface-variant:#b9c7da;
+      --md-sys-color-surface-container:#142033;
+      --md-sys-color-surface-container-high:#18283e;
+      --forge-sys-color-outline-variant:rgba(170,199,255,.18);
+      --forge-sys-color-surface-container-high:#302b2d;
+      --forge-sys-color-surface-container:#211d20;
+      --forge-sys-color-on-surface:#f5f2ff;
+      --forge-sys-color-on-surface-variant:#c9c0c5;
+      --forge-sys-color-tertiary:#e8b975;
+    }
     * { box-sizing:border-box; }
     body { margin:0; padding:32px; background:#06101f; color:#f5f2ff; font-family:Inter,system-ui,sans-serif; }
     .app { width:100%; }
@@ -12,10 +29,8 @@
     .hero h1 { margin:8px 0; }
     .safe-pill { display:flex; gap:6px; }
     .profile { border:0; border-radius:50%; background:#17304f; color:white; }
-    .organic-card,.productive-smart-widget { border:1px solid rgba(170,199,255,.16); background:#10233e; }
+    .organic-card { border:1px solid rgba(170,199,255,.16); background:#10233e; }
     .summary-section { min-width:0; }
-    .productive-smart-widget-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
-    .productive-smart-widget { min-height:250px; padding:20px; border-radius:24px; }
     button { font:inherit; }
   </style>
   <script>
@@ -74,17 +89,40 @@
       <section class="next-card organic-card"><h2>Juan Martínez</h2></section>
       <section class="summary-section productive-home-section">
         <section data-forge-productive-smart-widget-root data-productive-home-state="ready">
-          <div class="productive-smart-widget-cards" data-canonical-action-cards="true">
-            <article class="productive-smart-widget"><p>PLAN DE HOY</p><h3>Revisar actividad real</h3></article>
-            <article class="productive-smart-widget"><p>SIGUIENTE MEJOR ACCIÓN</p><h3>Seguimiento confirmado</h3></article>
+          <div class="productive-smart-widget-cards" data-workspace-grid="4-column">
+            <article class="productive-smart-widget is-primary">
+              <p class="productive-smart-widget-eyebrow">LO MÁS IMPORTANTE AHORA</p>
+              <h3 class="productive-smart-widget-title">Metas del mes</h3>
+              <strong class="productive-smart-widget-metric">0%</strong>
+              <p class="productive-smart-widget-subtitle">0 de 6 familias protegidas.</p>
+            </article>
+            <article class="productive-smart-widget is-supporting">
+              <p class="productive-smart-widget-eyebrow">TAMBIÉN IMPORTA</p>
+              <h3 class="productive-smart-widget-title">Forecast mensual</h3>
+              <strong class="productive-smart-widget-metric">0 proyectadas</strong>
+              <p class="productive-smart-widget-subtitle">0 de 6 pólizas confirmadas.</p>
+            </article>
+            <article class="productive-smart-widget is-supporting">
+              <p class="productive-smart-widget-eyebrow">TAMBIÉN IMPORTA</p>
+              <h3 class="productive-smart-widget-title">Actividad</h3>
+              <p class="productive-smart-widget-subtitle">Actividad confirmada pendiente de conectar.</p>
+            </article>
           </div>
         </section>
+        <section class="home-recovery-access" aria-label="Accesos">
+          <button type="button" data-home-grid-span="4x2"><span>CARTERA</span><strong>Revisa pólizas y evidencia</strong><small>Abre señales y vigencias.</small></button>
+          <button type="button" data-home-grid-span="2x2"><span>ACTIVIDAD</span><strong>Registra una interacción</strong><small>Confirmación humana.</small></button>
+          <button type="button" data-home-grid-span="2x2"><span>COMISIONES</span><strong>Consulta ingreso verificable</strong><small>Pagado y devengado.</small></button>
+        </section>
       </section>
-      <section class="opportunities organic-card">
+      <section class="opportunities organic-card" data-home-static-placeholder hidden aria-hidden="true">
         <div class="opportunity-list"><button>Lariza 72%</button><button>Octavio 65%</button><button>María 40%</button></div>
       </section>
     </div>
   </main>
-  <script type="module" src="/docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js?v=e2e"></script>
+  <script type="module">
+    await import("/docs/static-preview/forge-alive-material3/home-tablet-layout-palette.js?v=e2e");
+    await import("/docs/static-preview/forge-alive-material3/home-live-dashboard-active-runtime.js?v=e2e");
+  </script>
 </body>
 </html>

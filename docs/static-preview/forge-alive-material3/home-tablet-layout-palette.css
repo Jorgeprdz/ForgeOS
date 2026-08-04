@@ -1,0 +1,167 @@
+/* Reparación 3 — Home tablet geometry and one coherent surface palette. */
+
+.home-module[data-home-live-dashboard],
+.home-module[data-home-tablet-layout-palette] {
+  --home-card-surface:
+    radial-gradient(circle at 100% 0%, rgb(155 232 255 / 7%), transparent 36%),
+    linear-gradient(145deg, rgb(19 35 59 / 98%), rgb(8 21 39 / 99%));
+  --home-card-surface-strong:
+    radial-gradient(circle at 92% 0%, rgb(155 232 255 / 10%), transparent 38%),
+    linear-gradient(145deg, rgb(22 41 68 / 98%), rgb(9 23 42 / 99%));
+  --home-card-outline: rgb(155 232 255 / 15%);
+  --home-card-outline-strong: rgb(155 232 255 / 23%);
+  --home-card-shadow: 0 16px 38px rgb(0 0 0 / 22%);
+  --home-accent: var(--md-sys-color-primary, #9be8ff);
+  --home-accent-soft: #d7f5ff;
+  --home-text: var(--md-sys-color-on-surface, #eff6ff);
+  --home-muted: var(--md-sys-color-on-surface-variant, #b9c7da);
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget,
+.home-module[data-home-live-dashboard] .home-recovery-access button,
+.home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities],
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget,
+.home-module[data-home-tablet-layout-palette] .home-recovery-access button,
+.home-module[data-home-tablet-layout-palette] > .opportunities[data-home-live-opportunities] {
+  border: 1px solid var(--home-card-outline) !important;
+  border-radius: 24px !important;
+  background: var(--home-card-surface) !important;
+  color: var(--home-text) !important;
+  box-shadow: var(--home-card-shadow) !important;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget.is-primary,
+.home-module[data-home-live-dashboard] .mick-goal-coach-card,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget.is-primary,
+.home-module[data-home-tablet-layout-palette] .mick-goal-coach-card {
+  border-color: var(--home-card-outline-strong) !important;
+  background: var(--home-card-surface-strong) !important;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-eyebrow,
+.home-module[data-home-live-dashboard] .productive-smart-widget-section-title,
+.home-module[data-home-live-dashboard] .home-recovery-access span,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-eyebrow,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-section-title,
+.home-module[data-home-tablet-layout-palette] .home-recovery-access span {
+  color: var(--home-accent) !important;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-subtitle,
+.home-module[data-home-live-dashboard] .productive-smart-widget-reason,
+.home-module[data-home-live-dashboard] .productive-smart-widget-confidence,
+.home-module[data-home-live-dashboard] .home-recovery-access small,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-subtitle,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-reason,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-confidence,
+.home-module[data-home-tablet-layout-palette] .home-recovery-access small {
+  color: var(--home-muted) !important;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-reason,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-reason {
+  background: rgb(255 255 255 / 4.5%) !important;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-metric,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-metric {
+  max-width: 100%;
+  font-size: clamp(2rem, 2.4vw, 2.75rem) !important;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-title,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-title {
+  font-size: clamp(1.18rem, 1.65vw, 1.45rem) !important;
+  line-height: 1.12;
+  overflow-wrap: break-word;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-footer,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-footer {
+  flex-wrap: wrap;
+}
+
+.home-module[data-home-live-dashboard] .productive-smart-widget-action,
+.home-module[data-home-tablet-layout-palette] .productive-smart-widget-action {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.home-module[data-home-live-dashboard] .home-recovery-access button,
+.home-module[data-home-tablet-layout-palette] .home-recovery-access button {
+  min-height: 132px;
+  align-content: end;
+}
+
+.home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities],
+.home-module[data-home-tablet-layout-palette] > .opportunities[data-home-live-opportunities] {
+  overflow: hidden;
+}
+
+.home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities] .section-heading button,
+.home-module[data-home-tablet-layout-palette] > .opportunities[data-home-live-opportunities] .section-heading button {
+  border-color: var(--home-card-outline) !important;
+  color: var(--home-accent-soft) !important;
+}
+
+/* Never reserve four dashboard columns for a surface that is not visible. */
+.home-module[data-home-live-dashboard]:not(:has(> .opportunities[data-home-live-opportunities]:not([hidden])))
+  > .summary-section.productive-home-section,
+.home-module[data-home-tablet-layout-palette]:not(:has(> .opportunities[data-home-live-opportunities]:not([hidden])))
+  > .summary-section.productive-home-section {
+  grid-column: 1 / -1 !important;
+}
+
+/* Tablet and compact desktop: preserve readable card widths instead of squeezing
+   four columns into the eight-column summary region. */
+@media (min-width: 760px) and (max-width: 1539px) {
+  .home-module[data-home-live-dashboard] .productive-smart-widget-cards[data-workspace-grid="4-column"],
+  .home-module[data-home-live-dashboard] .productive-smart-widget-cards[data-canonical-action-cards="true"],
+  .home-module[data-home-tablet-layout-palette] .productive-smart-widget-cards[data-workspace-grid="4-column"],
+  .home-module[data-home-tablet-layout-palette] .productive-smart-widget-cards[data-canonical-action-cards="true"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: clamp(14px, 1.5vw, 20px) !important;
+  }
+
+  .home-module[data-home-live-dashboard] .productive-smart-widget-cards[data-workspace-grid="4-column"] .is-primary,
+  .home-module[data-home-tablet-layout-palette] .productive-smart-widget-cards[data-workspace-grid="4-column"] .is-primary {
+    grid-column: 1 / -1 !important;
+  }
+
+  .home-module[data-home-live-dashboard] .home-recovery-access,
+  .home-module[data-home-tablet-layout-palette] .home-recovery-access {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: clamp(12px, 1.3vw, 18px) !important;
+  }
+
+  .home-module[data-home-live-dashboard] .home-recovery-access button[data-home-grid-span="4x2"],
+  .home-module[data-home-tablet-layout-palette] .home-recovery-access button[data-home-grid-span="4x2"] {
+    grid-column: span 2 !important;
+  }
+
+  .home-module[data-home-live-dashboard] .home-recovery-access button[data-home-grid-span="2x2"],
+  .home-module[data-home-tablet-layout-palette] .home-recovery-access button[data-home-grid-span="2x2"] {
+    grid-column: span 1 !important;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1539px) {
+  .home-module[data-home-live-dashboard] > .summary-section.productive-home-section,
+  .home-module[data-home-tablet-layout-palette] > .summary-section.productive-home-section {
+    grid-column: 1 / 9 !important;
+  }
+
+  .home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities]:not([hidden]),
+  .home-module[data-home-tablet-layout-palette] > .opportunities[data-home-live-opportunities]:not([hidden]) {
+    grid-column: 9 / -1 !important;
+  }
+}
+
+@media (max-width: 759px) {
+  .home-module[data-home-live-dashboard] .productive-smart-widget-metric,
+  .home-module[data-home-tablet-layout-palette] .productive-smart-widget-metric {
+    font-size: clamp(2rem, 10vw, 2.75rem) !important;
+  }
+}
