@@ -13,7 +13,7 @@ test("tablet repair is mounted from the canonical runtime graph", async () => {
 
   assert.match(legacy, /import "\.\/home-tablet-layout-palette\.js\?v=home-tablet-layout-palette-001"/);
   assert.match(runtime, /home-tablet-layout-palette\.css\?v=home-tablet-layout-palette-001/);
-  assert.match(runtime, /data\.homeTabletLayoutPalette = CONTRACT_ID/);
+  assert.match(runtime, /root\.dataset\.homeTabletLayoutPalette = CONTRACT_ID/);
 });
 
 test("converted opportunity surface cannot retain the static hidden state", async () => {
