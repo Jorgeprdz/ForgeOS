@@ -23,19 +23,19 @@
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget,
 .home-module[data-home-tablet-layout-palette] .home-recovery-access button,
 .home-module[data-home-tablet-layout-palette] > .opportunities[data-home-live-opportunities] {
-  border: 1px solid var(--home-card-outline);
-  border-radius: 24px;
-  background: var(--home-card-surface);
-  color: var(--home-text);
-  box-shadow: var(--home-card-shadow);
+  border: 1px solid var(--home-card-outline) !important;
+  border-radius: 24px !important;
+  background: var(--home-card-surface) !important;
+  color: var(--home-text) !important;
+  box-shadow: var(--home-card-shadow) !important;
 }
 
 .home-module[data-home-live-dashboard] .productive-smart-widget.is-primary,
 .home-module[data-home-live-dashboard] .mick-goal-coach-card,
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget.is-primary,
 .home-module[data-home-tablet-layout-palette] .mick-goal-coach-card {
-  border-color: var(--home-card-outline-strong);
-  background: var(--home-card-surface-strong);
+  border-color: var(--home-card-outline-strong) !important;
+  background: var(--home-card-surface-strong) !important;
 }
 
 .home-module[data-home-live-dashboard] .productive-smart-widget-eyebrow,
@@ -44,7 +44,7 @@
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget-eyebrow,
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget-section-title,
 .home-module[data-home-tablet-layout-palette] .home-recovery-access span {
-  color: var(--home-accent);
+  color: var(--home-accent) !important;
 }
 
 .home-module[data-home-live-dashboard] .productive-smart-widget-subtitle,
@@ -55,25 +55,25 @@
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget-reason,
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget-confidence,
 .home-module[data-home-tablet-layout-palette] .home-recovery-access small {
-  color: var(--home-muted);
+  color: var(--home-muted) !important;
 }
 
 .home-module[data-home-live-dashboard] .productive-smart-widget-reason,
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget-reason {
-  background: rgb(255 255 255 / 4.5%);
+  background: rgb(255 255 255 / 4.5%) !important;
 }
 
 .home-module[data-home-live-dashboard] .productive-smart-widget-metric,
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget-metric {
   max-width: 100%;
-  font-size: clamp(2rem, 2.4vw, 2.75rem);
+  font-size: clamp(2rem, 2.4vw, 2.75rem) !important;
   line-height: 1;
   overflow-wrap: anywhere;
 }
 
 .home-module[data-home-live-dashboard] .productive-smart-widget-title,
 .home-module[data-home-tablet-layout-palette] .productive-smart-widget-title {
-  font-size: clamp(1.18rem, 1.65vw, 1.45rem);
+  font-size: clamp(1.18rem, 1.65vw, 1.45rem) !important;
   line-height: 1.12;
   overflow-wrap: break-word;
 }
@@ -102,8 +102,8 @@
 
 .home-module[data-home-live-dashboard] > .opportunities[data-home-live-opportunities] .section-heading button,
 .home-module[data-home-tablet-layout-palette] > .opportunities[data-home-live-opportunities] .section-heading button {
-  border-color: var(--home-card-outline);
-  color: var(--home-accent-soft);
+  border-color: var(--home-card-outline) !important;
+  color: var(--home-accent-soft) !important;
 }
 
 /* Never reserve four dashboard columns for a surface that is not visible. */
@@ -121,29 +121,29 @@
   .home-module[data-home-live-dashboard] .productive-smart-widget-cards[data-canonical-action-cards="true"],
   .home-module[data-home-tablet-layout-palette] .productive-smart-widget-cards[data-workspace-grid="4-column"],
   .home-module[data-home-tablet-layout-palette] .productive-smart-widget-cards[data-canonical-action-cards="true"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(14px, 1.5vw, 20px);
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: clamp(14px, 1.5vw, 20px) !important;
   }
 
   .home-module[data-home-live-dashboard] .productive-smart-widget-cards[data-workspace-grid="4-column"] .is-primary,
   .home-module[data-home-tablet-layout-palette] .productive-smart-widget-cards[data-workspace-grid="4-column"] .is-primary {
-    grid-column: 1 / -1;
+    grid-column: 1 / -1 !important;
   }
 
   .home-module[data-home-live-dashboard] .home-recovery-access,
   .home-module[data-home-tablet-layout-palette] .home-recovery-access {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(12px, 1.3vw, 18px);
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: clamp(12px, 1.3vw, 18px) !important;
   }
 
   .home-module[data-home-live-dashboard] .home-recovery-access button[data-home-grid-span="4x2"],
   .home-module[data-home-tablet-layout-palette] .home-recovery-access button[data-home-grid-span="4x2"] {
-    grid-column: span 2;
+    grid-column: span 2 !important;
   }
 
   .home-module[data-home-live-dashboard] .home-recovery-access button[data-home-grid-span="2x2"],
   .home-module[data-home-tablet-layout-palette] .home-recovery-access button[data-home-grid-span="2x2"] {
-    grid-column: span 1;
+    grid-column: span 1 !important;
   }
 }
 
@@ -162,6 +162,6 @@
 @media (max-width: 759px) {
   .home-module[data-home-live-dashboard] .productive-smart-widget-metric,
   .home-module[data-home-tablet-layout-palette] .productive-smart-widget-metric {
-    font-size: clamp(2rem, 10vw, 2.75rem);
+    font-size: clamp(2rem, 10vw, 2.75rem) !important;
   }
 }
