@@ -71,6 +71,14 @@ HUMAN_CONFIRMATION=REQUIRED
 AUTOMATIC_ACCEPTANCE=NO
 ```
 
+The first rerun proved that a second synchronous boundary remained inside the accepted-event stack. The printable-state handoff was traversing bridge wrappers and refreshing printable state while `forge:accepted-quote-confirmed` was still being dispatched. Review 4 now defers that reconciliation to the next animation frame.
+
+```text
+PRINTABLE_HANDOFF_RECONCILIATION=DEFERRED
+ACCEPTED_EVENT_STACK_REENTRY=FORBIDDEN
+PRINTABLE_REFRESH_AFTER_CONFIRMATION=ASYNC_FRAME
+```
+
 No calculation, contractual value, PDF extraction, projection, persistence or mutation authority changed.
 
 ## Boundaries
