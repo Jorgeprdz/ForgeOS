@@ -195,7 +195,6 @@ const required = [
   "static-preview/forge-alive/index.html",
   "static-preview/forge-alive/app.js",
   "static-preview/forge-alive/quotes-module.js",
-  "static-preview/forge-alive/index-quote-calculator-parity.html",
   "static-preview/forge-alive/quote-runtime-pages-rate-fetch-bridge-m05e010.js",
   "static-preview/forge-alive/quote-runtime-vida-mujer-visual-m05e010.js",
   "static-preview/forge-alive/segubeca-progressive-layout.js",
