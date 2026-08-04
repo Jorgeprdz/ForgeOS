@@ -132,28 +132,67 @@ jobs:
           const sourcePath = 'tests/segubeca-material3-real-pdf-acceptance-test.mjs';
           const targetPath = '/tmp/segubeca-generated-pages-real-pdf.mjs';
           let source = fs.readFileSync(sourcePath, 'utf8');
-          source = source.replace(
-            /await new Promise\(\(resolveServer\) => server\.listen\(0, "127\.0\.0\.1", resolveServer\)\);\nconst \{ port \} = server\.address\(\);/,
-            'const port = null;',
-          );
-          source = source.replace(
-            /`http:\/\/127\.0\.0\.1:\$\{port\}\/docs\/static-preview\/forge-alive-material3\/\?nav=cotizaciones`/,
-            'process.env.FORGE_SEGUBECA_TARGET_URL',
-          );
-          source = source.replace(
-            /\n  await new Promise\(\(resolveServer\) => server\.close\(resolveServer\)\);/,
-            '',
-          );
+          const replacements = [
+            [
+              /await new Promise\(\(resolveServer\) => server\.listen\(0, "127\.0\.0\.1", resolveServer\)\);\nconst \{ port \} = server\.address\(\);/,
+              'const port = null;',
+            ],
+            [
+              /`http:\/\/127\.0\.0\.1:\$\{port\}\/docs\/static-preview\/forge-alive-material3\/\?nav=cotizaciones`/,
+              'process.env.FORGE_SEGUBECA_TARGET_URL',
+            ],
+            [
+              /\n  await new Promise\(\(resolveServer\) => server\.close\(resolveServer\)\);/,
+              '',
+            ],
+            [
+              'const browser = await puppeteer.launch({\n  executablePath: chromiumPath,',
+              'const browser = await puppeteer.launch({\n  protocolTimeout: 600000,\n  executablePath: chromiumPath,',
+            ],
+            [
+              '  const page = await browser.newPage();\n  await page.setViewport({ width: 1440, height: 1200 });',
+              '  const page = await browser.newPage();\n  page.setDefaultTimeout(60000);\n  page.setDefaultNavigationTimeout(90000);\n  console.log("SEGUBECA_GENERATED_PAGES_BROWSER=READY");\n  await page.setViewport({ width: 1440, height: 1200 });',
+            ],
+            [
+              '  const input = await page.$("#fq-solution-online-pdf-105dr");',
+              '  console.log("SEGUBECA_GENERATED_PAGES_INPUT=MOUNTED");\n  const input = await page.$("#fq-solution-online-pdf-105dr");',
+            ],
+            [
+              '  await input.uploadFile(pdfPath);',
+              '  await input.uploadFile(pdfPath);\n  console.log("SEGUBECA_GENERATED_PAGES_PDF=UPLOADED");',
+            ],
+            [
+              '  const preview = await page.evaluate(() => {',
+              '  console.log("SEGUBECA_GENERATED_PAGES_PROJECTION=READY");\n  const preview = await page.evaluate(() => {',
+            ],
+            [
+              '  const confirmation = await page.evaluate(() => {',
+              '  console.log("SEGUBECA_GENERATED_PAGES_CONFIRMATION=READY");\n  const confirmation = await page.evaluate(() => {',
+            ],
+          ];
+          for (const [before, after] of replacements) {
+            if (typeof before === 'string') {
+              if (!source.includes(before)) throw new Error('SEGUBECA_REVIEW3_PATCH_CONTRACT_NOT_FOUND');
+              source = source.replace(before, after);
+            } else {
+              const next = source.replace(before, after);
+              if (next === source) throw new Error('SEGUBECA_REVIEW3_PATCH_CONTRACT_NOT_FOUND');
+              source = next;
+            }
+          }
           if (source.includes('server.listen(0') || source.includes('server.close(resolveServer)')) {
             throw new Error('SEGUBECA_GENERATED_PAGES_TEST_TRANSFORM_FAILED');
           }
           if (!source.includes('process.env.FORGE_SEGUBECA_TARGET_URL')) {
             throw new Error('SEGUBECA_GENERATED_PAGES_TARGET_NOT_INJECTED');
           }
+          if (!source.includes('protocolTimeout: 600000')) {
+            throw new Error('SEGUBECA_REVIEW3_PROTOCOL_TIMEOUT_NOT_APPLIED');
+          }
           fs.writeFileSync(targetPath, source);
           NODE
 
-          node /tmp/segubeca-generated-pages-real-pdf.mjs
+          timeout 12m node /tmp/segubeca-generated-pages-real-pdf.mjs
           echo 'SEGUBECA_GENERATED_PAGES_REAL_PDF=PASS'
 
       - name: Preserve accepted SeguBeca authorities
