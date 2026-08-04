@@ -50,8 +50,16 @@ export const ALFRED_ACTIONS = Object.freeze([
     actionId: 'report.prepare_preview',
     label: 'Preparar resumen y prioridad',
     command: '/Resumen',
-    aliases: ['/resumen', 'prioriza hoy', 'qué hago hoy', 'que hago hoy'],
-    keywords: ['resumen', 'prioridad', 'hoy', 'riesgo', 'meta'],
+    aliases: [
+      '/resumen',
+      'prioriza hoy',
+      'prioriza mis seguimientos',
+      'prioriza lo más importante',
+      'prioriza lo mas importante',
+      'qué hago hoy',
+      'que hago hoy',
+    ],
+    keywords: ['resumen', 'prioridad', 'hoy', 'riesgo', 'meta', 'seguimientos'],
     kind: 'REVIEW_PACKET',
     packetType: 'UNIVERSAL_INDEX_REVIEW_PACKET',
     routeFamily: 'ALFRED_ACTION_PREP',
@@ -74,7 +82,7 @@ export const ALFRED_ACTIONS = Object.freeze([
     actionId: 'client.follow_preview',
     label: 'Preparar seguimiento',
     command: '/Follow',
-    aliases: ['/follow', '/seguimiento', 'preparar seguimiento', 'seguimiento'],
+    aliases: ['/follow', '/seguimiento', 'preparar seguimiento', 'seguimiento', 'seguimientos'],
     keywords: ['follow', 'seguimiento', 'contacto', 'próxima acción', 'proxima accion'],
     kind: 'REVIEW_PACKET',
     packetType: 'FOLLOW_UP_REVIEW_PACKET',
@@ -96,10 +104,10 @@ export const ALFRED_ACTIONS = Object.freeze([
   }),
   action({
     actionId: 'record.open_preview',
-    label: 'Buscar persona, póliza o cotización',
+    label: 'Buscar persona',
     command: '/Buscar',
-    aliases: ['/buscar', '/index', 'buscar persona', 'abrir detalle'],
-    keywords: ['buscar', 'persona', 'póliza', 'poliza', 'cotización', 'detalle'],
+    aliases: ['/buscar', '/index', 'buscar persona', 'abrir persona'],
+    keywords: ['buscar', 'persona', 'prospecto', 'cliente', 'contacto'],
     kind: 'ENTITY_SEARCH',
     packetType: 'UNIVERSAL_INDEX_REVIEW_PACKET',
     routeFamily: 'ALFRED_INDEX',
@@ -230,9 +238,13 @@ export function searchAlfredActions(query, options = {}) {
   const normalizedQuery = normalize(query).replace(/^\//, '');
   const available = getAvailableAlfredActions(options);
   if (!normalizedQuery) return available;
-  return available.filter((item) =>
-    actionTerms(item).some((term) => term.replace(/^\//, '').includes(normalizedQuery)),
-  );
+  const tokens = normalizedQuery.split(/\s+/).filter((token) => token.length > 2);
+  return available.filter((item) => {
+    const terms = actionTerms(item).map((term) => term.replace(/^\//, ''));
+    const corpus = terms.join(' ');
+    return terms.some((term) => term.includes(normalizedQuery))
+      || (tokens.length > 0 && tokens.every((token) => corpus.includes(token)));
+  });
 }
 
 export function resolveAlfredAction(input, options = {}) {
@@ -240,9 +252,9 @@ export function resolveAlfredAction(input, options = {}) {
   if (!normalizedInput) return null;
   const available = getAvailableAlfredActions(options);
   const ordered = [...available].sort((left, right) => {
-    const leftLength = Math.max(...actionTerms(left).map((term) => term.length));
-    const rightLength = Math.max(...actionTerms(right).map((term) => term.length));
-    return rightLength - leftLength;
+    const longestA = Math.max(...actionTerms(left).map((term) => term.length));
+    const longestB = Math.max(...actionTerms(right).map((term) => term.length));
+    return longestB - longestA;
   });
   for (const item of ordered) {
     for (const term of actionTerms(item)) {
