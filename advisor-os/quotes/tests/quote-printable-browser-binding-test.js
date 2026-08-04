@@ -8,10 +8,10 @@ const pass = (number, message) =>
   console.log(`PASS ${number} - ${message}`);
 
 const entry = read(
-  "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.js",
+  "docs/static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.js",
 );
 const css = read(
-  "docs/static-preview/forge-alive/forge-quote-printable-entrypoint-qpd06.css",
+  "docs/static-preview/quote-printable-entry/forge-quote-printable-entrypoint-qpd06.css",
 );
 const boundary = read(
   "docs/static-preview/quote-preview-live/forge-accepted-quote-review-snapshot.js",
@@ -37,11 +37,16 @@ pass(1, "browser-published QPD runtime mirrors are byte-identical to canonical s
 
 assert.match(
   boundary,
-  /import\(\s*"\.\.\/forge-alive\/forge-quote-printable-entrypoint-qpd06\.js/,
+  /import\(\s*"\.\.\/quote-printable-entry\/forge-quote-printable-entrypoint-qpd06\.js/,
 );
+assert.match(
+  boundary,
+  /\.\.\/quote-printable-entry\/forge-quote-printable-entrypoint-qpd06\.css/,
+);
+assert.doesNotMatch(boundary, /\.\.\/forge-alive\//);
 assert.match(boundary, /bootQuotePrintableRouteQpd06\(\)/);
 assert.match(boundary, /typeof document === "undefined"/);
-pass(2, "accepted quote boundary lazy-loads QPD only in browser runtime");
+pass(2, "accepted quote boundary lazy-loads QPD only from the neutral browser runtime");
 
 for (const label of [
   "Ver versión imprimible",
