@@ -1,0 +1,62 @@
+name: One-shot Quotes Pages Builder Patch
+
+on:
+  push:
+    branches:
+      - chore/retire-all-legacy-forge-ui
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: chore/retire-all-legacy-forge-ui
+          fetch-depth: 0
+
+      - name: Remove legacy runtime requirement from quotes Pages builder
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/build-quotes-preview-pages.mjs')
+          source = path.read_text()
+
+          old_block = '''const legacyForgeAlivePublished = path.join(\n  siteDir,\n  "static-preview",\n  "forge-alive",\n);\nconst legacyForgeAliveRuntimeTarget = path.join(\n  siteDir,\n  "static-preview",\n  "forge-alive-runtime",\n);\nif (!fs.existsSync(legacyForgeAlivePublished)) {\n  throw new Error("legacy Forge Alive public runtime was not prepared");\n}\nfs.rmSync(legacyForgeAliveRuntimeTarget, { recursive: true, force: true });\nfs.cpSync(legacyForgeAlivePublished, legacyForgeAliveRuntimeTarget, {\n  recursive: true,\n});\n\n'''
+          if old_block not in source:
+              raise SystemExit('LEGACY_RUNTIME_COPY_BLOCK_NOT_FOUND')
+          source = source.replace(old_block, '', 1)
+
+          old_required = '''  "static-preview/forge-alive-runtime/nueva-cotizacion/index.html",'''
+          new_required = '''  "static-preview/quote-engine/nueva-cotizacion/index.html",'''
+          if old_required not in source:
+              raise SystemExit('LEGACY_RUNTIME_REQUIRED_PATH_NOT_FOUND')
+          source = source.replace(old_required, new_required, 1)
+
+          legacy_tokens = [
+              'legacy Forge Alive public runtime was not prepared',
+              'forge-alive-runtime/nueva-cotizacion/index.html',
+              'legacyForgeAliveRuntimeTarget',
+          ]
+          for token in legacy_tokens:
+              if token in source:
+                  raise SystemExit(f'LEGACY_TOKEN_REMAINS={token}')
+
+          path.write_text(source)
+          PY
+
+          node --check scripts/build-quotes-preview-pages.mjs
+          git diff --check
+
+      - name: Commit source correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/build-quotes-preview-pages.mjs
+          git commit -m "fix: build quotes Pages without legacy UI runtime"
+          git push origin HEAD:chore/retire-all-legacy-forge-ui
