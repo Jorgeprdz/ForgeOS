@@ -1,13 +1,9 @@
 {
-  "schema": "forge.ui.material3.canonical-shell.v1",
-  "phase": "UI-M05_QUOTES_VISUAL_MIGRATION_AND_NAV_PILL_INTEGRATION",
-  "status": "execution_authorized",
-  "entrypoint": "docs/static-preview/forge-alive-material3/index.html",
-  "legacy": {
-    "entrypoint": "docs/static-preview/forge-alive/index.html",
-    "status": "frozen_functional_reference",
-    "assetsLoadedByCleanEntrypoint": false
-  },
+  "schema": "forge.ui.production.canonical-shell.v2",
+  "phase": "PRODUCTION_CANONICAL_ONLY",
+  "status": "production_candidate",
+  "sourceEntrypoint": "docs/static-preview/forge-alive-material3/index.html",
+  "publicEntrypoint": "/static-preview/forge-alive/",
   "responsive": {
     "mobile": "390x844",
     "tabletPortrait": "800x1280",
@@ -24,7 +20,7 @@
     "canonicalForgeShell": true,
     "homeModuleSeparated": true,
     "quotesModuleIntegrated": true,
-    "quotesRuntimeAuthority": "./nueva-cotizacion/index.html",
+    "quotesRuntimeAuthority": "isolated_quote_engine",
     "quotesRoute": "?nav=cotizaciones",
     "quotesPersistence": "not_applicable_by_existing_contract",
     "canonicalNavigationContract": true,
@@ -32,7 +28,8 @@
     "visualViewportKeyboardInset": true,
     "businessLogicConnected": true,
     "businessLogicDuplicated": false,
-    "backendConnected": false,
-    "humanVisualAcceptanceRequired": true
+    "backendConnected": true,
+    "humanVisualAcceptanceRequired": true,
+    "alternateUiEntrypointsAllowed": false
   }
 }
