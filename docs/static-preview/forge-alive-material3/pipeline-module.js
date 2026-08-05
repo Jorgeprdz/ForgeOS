@@ -1,1147 +1,362 @@
+import { createProductiveIntelligenceAdapter } from "./pipeline-productive-intelligence-adapter.js?v=aura-cleanroom-pipeline-001";
 import {
-  createProductiveIntelligenceAdapter,
-} from "./pipeline-productive-intelligence-adapter.js?v=material3-productive-002";
+  DESIGN_AUTHORITY, VIEW_STORAGE_KEY, SOURCES, STAGES, icon, escapeHtml, normalize,
+  formatDate, sourceOptions, cardMarkup, rowMarkup, humanError,
+} from "./pipeline-aura-core.js?v=aura-cleanroom-pipeline-001";
 
-const pipelineRuntimeBase = new URL(
-  import.meta.url.includes("/docs/static-preview/")
-    ? "../../../advisor-os/sales-pipeline/"
-    : "../../advisor-os/sales-pipeline/",
-  import.meta.url,
-);
+const STATE_KEY = Symbol.for("forge.aura.pipeline.clean-renderer.state");
+let stageAuthorityPromise;
 
-const moduleBase = new URL("./", import.meta.url);
-
-const envUrl = new URL(
-  import.meta.url.includes("/docs/static-preview/")
-    ? "../../../env.js"
-    : "../../env.js",
-  import.meta.url,
-);
-
-await import(
-  new URL("sales-stage-registry.js", pipelineRuntimeBase)
-);
-await import(
-  new URL("pipeline-stage-read-model.js", pipelineRuntimeBase)
-);
-
-const pipelineStateKey = Symbol.for("forge.material3.pipeline.state");
-const productiveSourceFilters = Object.freeze([
-  "Referido",
-  "Mercado cálido",
-  "Mercado frío",
-  "Redes sociales",
-  "Centro de influencia",
-]);
-const productiveStatusFilters = Object.freeze([
-  Object.freeze({ value: "referred_new", label: "Nuevo" }),
-  Object.freeze({ value: "contacted", label: "Contactado" }),
-  Object.freeze({ value: "appointment_scheduled", label: "Cita agendada" }),
-  Object.freeze({ value: "proposal", label: "Propuesta" }),
-  Object.freeze({ value: "decision", label: "En decisión" }),
-  Object.freeze({ value: "client", label: "Cliente" }),
-]);
-let referralRuntimePromise;
-let referralStylePromise;
-let activeReferralSheet;
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-    (character) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
-    })[character],
-  );
+function ensureStyles(documentRef) {
+  if (documentRef.querySelector("[data-aura-pipeline-styles]")) return;
+  const link = documentRef.createElement("link");
+  link.rel = "stylesheet";
+  link.href = new URL("./pipeline-aura-light-2026.css?v=aura-cleanroom-pipeline-001", import.meta.url).href;
+  link.dataset.auraPipelineStyles = "true";
+  documentRef.head.append(link);
 }
 
-const intelligenceLabels = Object.freeze({
-  CONTEXT_READY_FOR_HUMAN_REVIEW: "Contexto listo para revisión",
-  READY_FOR_HUMAN_REVIEW: "Listo para revisión",
-  HANDLE_OBJECTION: "Atender objeción",
-  OBJECTION_RECORDED: "Objeción registrada",
-  STALL: "Conversación estancada",
-  AVOIDING_DECISION: "Decisión aplazada",
-  CURRENT: "Vigente",
-  UNKNOWN: "Pendiente de confirmar",
-});
-
-function humanIntelligenceLabel(value) {
-  const text = String(value ?? "");
-  return Object.entries(intelligenceLabels).reduce(
-    (human, [technical, label]) =>
-      human.replace(new RegExp(`\\b${technical}\\b`, "g"), label),
-    text,
-  );
+function readView(windowRef) {
+  try { return windowRef.localStorage?.getItem(VIEW_STORAGE_KEY) === "list" ? "list" : "cards"; }
+  catch { return "cards"; }
 }
 
-function connectedData() {
-  return null;
+function writeView(windowRef, view) {
+  try { windowRef.localStorage?.setItem(VIEW_STORAGE_KEY, view); } catch { /* optional */ }
 }
 
-function renderColumn(column) {
-  const rows = column.items.map((item) => `
-    <article class="pipeline-module__prospect">
-      <div>
-        <strong>${escapeHtml(item.name)}</strong>
-        <span>${escapeHtml(item.stageLabel)}</span>
-      </div>
-      <p>${escapeHtml(
-        item.lastVerifiedActivity?.title ||
-        item.lastVerifiedActivity?.label ||
-        "Sin actividad verificada",
-      )}</p>
-    </article>
-  `).join("");
-
-  return `
-    <section class="pipeline-module__stage" data-pipeline-stage="${escapeHtml(column.stageCode)}">
-      <header>
-        <h2>${escapeHtml(column.label)}</h2>
-        <span>${column.count}</span>
-      </header>
-      ${rows || '<p class="pipeline-module__stage-empty">Sin prospectos</p>'}
-    </section>
-  `;
+async function waitForBootstrap(globalRef) {
+  for (let index = 0; index < 100; index += 1) {
+    const value = globalRef.ForgeProductiveProspectBootstrap067G17B;
+    if (value?.getSession && value?.getClient) return value;
+    await new Promise(resolve => globalRef.setTimeout(resolve, 50));
+  }
+  return globalRef.ForgeProductiveProspectBootstrap067G17B || null;
 }
 
-async function importRuntimeAsset(url) {
-  await import(`${url.href}${url.search ? "&" : "?"}v=material3-referral-001`);
+async function stageAuthority() {
+  if (!stageAuthorityPromise) {
+    globalThis.__FORGE_DISABLE_PIPELINE_STAGE_RPC_AUTHORITY_AUTO_INSTALL__ = true;
+    stageAuthorityPromise = import("./pipeline-stage-rpc-authority.js?v=aura-cleanroom-pipeline-001");
+  }
+  return stageAuthorityPromise;
 }
 
-async function ensureReferralStyles() {
-  if (referralStylePromise) return referralStylePromise;
-
-  referralStylePromise = new Promise((resolve, reject) => {
-    const existing = document.querySelector(
-      "[data-material3-referral-styles]",
-    );
-
-    if (existing) {
-      if (existing.sheet) resolve();
-      else {
-        existing.addEventListener("load", resolve, { once: true });
-        existing.addEventListener(
-          "error",
-          () => reject(new Error("MATERIAL3_WORKSPACE_STYLES_UNAVAILABLE")),
-          { once: true },
-        );
-      }
-      return;
-    }
-
-    const stylesheet = document.createElement("link");
-    stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL(
-      "./pipeline-referral-modal.css?v=ui-m06-referral-004&fix=005",
-      import.meta.url,
-    );
-    stylesheet.dataset.material3ReferralStyles = "true";
-    stylesheet.addEventListener("load", resolve, { once: true });
-    stylesheet.addEventListener(
-      "error",
-      () => reject(new Error("MATERIAL3_WORKSPACE_STYLES_UNAVAILABLE")),
-      { once: true },
-    );
-    document.head.append(stylesheet);
-  }).catch((error) => {
-    document.querySelector("[data-material3-referral-styles]")?.remove();
-    referralStylePromise = undefined;
-    throw error;
-  });
-
-  return referralStylePromise;
+function eventLabel(type) {
+  return ({
+    PROSPECT_CREATED: "Prospecto creado", CONTACT_ATTEMPTED: "Contacto intentado",
+    CONVERSATION_RECORDED: "Conversación registrada", APPOINTMENT_SCHEDULED: "Cita agendada",
+    APPOINTMENT_RESCHEDULED: "Cita reprogramada", APPOINTMENT_COMPLETED: "Cita completada",
+    OBJECTION_RECORDED: "Objeción registrada", FOLLOW_UP_PLANNED: "Seguimiento planeado",
+    PROPOSAL_PRESENTED: "Propuesta presentada", DECISION_RECORDED: "Decisión registrada",
+    STAGE_CHANGED: "Etapa actualizada", PROSPECT_ARCHIVED: "Prospecto archivado",
+  })[type] || "Actividad registrada";
 }
 
-function safelyBoundedWorkspaceError(trigger) {
-  document.querySelector("[data-material3-workspace-error]")?.remove();
-  const layer = document.createElement("div");
-  layer.dataset.material3WorkspaceError = "true";
-  layer.style.cssText =
-    "position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:24px;background:rgba(2,8,18,.72)";
-  layer.innerHTML = `
-    <section role="alertdialog" aria-modal="true" aria-labelledby="workspace-error-title"
-      style="box-sizing:border-box;width:min(420px,100%);padding:24px;border:1px solid rgba(184,211,255,.3);border-radius:24px;color:#f4f7ff;background:#0b1a30;box-shadow:0 24px 70px rgba(0,0,0,.5)">
-      <h2 id="workspace-error-title" style="margin:0 0 10px">No pudimos abrir este espacio</h2>
-      <p style="margin:0 0 18px;line-height:1.5">Los estilos de interacción no estuvieron disponibles. Reintenta en un momento.</p>
-      <button type="button" data-close-workspace
-        style="min-height:44px;border:0;border-radius:15px;padding:10px 18px;color:#07111f;background:#9be8ff;font:inherit;font-weight:800">Cerrar</button>
+export function createPipelineModule({ root, shell, adapterFactory = createProductiveIntelligenceAdapter } = {}) {
+  if (!root) throw new Error("AURA_PIPELINE_ROOT_REQUIRED");
+  if (root[STATE_KEY]) return root[STATE_KEY];
+
+  const documentRef = root.ownerDocument;
+  const windowRef = documentRef.defaultView || globalThis;
+  ensureStyles(documentRef);
+  root.className = "pipeline-module aura-pipeline";
+  root.dataset.designAuthority = DESIGN_AUTHORITY;
+  root.dataset.pipelineRenderer = "cleanroom";
+
+  const state = {
+    mounted: false, status: "loading", cards: [], adapter: null,
+    filters: { query: "", source: "", status: "" },
+    view: readView(windowRef), error: "", dialog: null, restoreFocus: null, revision: 0,
+  };
+
+  const cardById = id => state.cards.find(card => card.id === id) || null;
+
+  function visibleCards() {
+    const query = normalize(state.filters.query);
+    return state.cards.filter(card => {
+      const text = normalize([card.fullName, card.sourceSummary, card.stageLabel,
+        card.latestActivity?.label, card.nextCommitment?.type].filter(Boolean).join(" "));
+      return (!state.filters.source || card.sourceValue === state.filters.source)
+        && (!state.filters.status || card.status === state.filters.status)
+        && (!query || text.includes(query));
+    });
+  }
+
+  function announce(message, error = false) {
+    const node = root.querySelector("[data-aura-live]");
+    if (!node) return;
+    node.dataset.state = error ? "error" : "status";
+    node.textContent = "";
+    queueMicrotask(() => { node.textContent = message; });
+  }
+
+  function closeMenus({ restore = false } = {}) {
+    root.querySelectorAll("[data-aura-menu]:not([hidden])").forEach(menu => {
+      menu.hidden = true;
+      const trigger = root.querySelector(`[data-aura-action="more"][data-id="${CSS.escape(menu.dataset.auraMenu)}"]`);
+      trigger?.setAttribute("aria-expanded", "false");
+      if (restore) trigger?.focus();
+    });
+  }
+
+  function closeDialog({ restore = true } = {}) {
+    state.dialog?.remove();
+    state.dialog = null;
+    documentRef.body.classList.remove("aura-pipeline-dialog-open");
+    if (restore) state.restoreFocus?.focus?.();
+    state.restoreFocus = null;
+  }
+
+  function openDialog({ title, body, footer = "", eyebrow = "PIPELINE", trigger, ready }) {
+    closeDialog({ restore: false });
+    state.restoreFocus = trigger || documentRef.activeElement;
+    const layer = documentRef.createElement("div");
+    layer.className = "aura-pipeline__dialog-layer";
+    layer.innerHTML = `<button class="aura-pipeline__scrim" type="button" data-dialog-close aria-label="Cerrar"></button>
+      <section class="aura-pipeline__dialog" role="dialog" aria-modal="true" aria-labelledby="aura-dialog-title" tabindex="-1">
+        <header><div><p>${escapeHtml(eyebrow)}</p><h2 id="aura-dialog-title">${escapeHtml(title)}</h2></div><button type="button" data-dialog-close aria-label="Cerrar">×</button></header>
+        <div class="aura-pipeline__dialog-body">${body}</div>${footer ? `<footer>${footer}</footer>` : ""}
+      </section>`;
+    layer.addEventListener("click", event => { if (event.target.closest("[data-dialog-close]")) closeDialog(); });
+    layer.addEventListener("keydown", event => {
+      if (event.key === "Escape") { event.preventDefault(); closeDialog(); }
+    });
+    documentRef.body.append(layer);
+    documentRef.body.classList.add("aura-pipeline-dialog-open");
+    state.dialog = layer;
+    ready?.(layer);
+    windowRef.requestAnimationFrame(() => layer.querySelector("[autofocus], input, textarea, select, button")?.focus());
+    return layer;
+  }
+
+  function renderAuth() {
+    const loading = state.status === "loading";
+    root.innerHTML = `<section class="aura-pipeline__auth">
+      <span class="aura-pipeline__auth-mark">F</span><p>PIPELINE</p>
+      <h1>${loading ? "Recuperando tu operación" : state.status === "error" ? "No pudimos abrir tu Pipeline" : "Inicia sesión para ver tus prospectos"}</h1>
+      <span>${loading ? "Comprobando sesión y datos productivos." : escapeHtml(state.error || "Tus prospectos permanecen protegidos.")}</span>
+      ${loading ? '<div class="aura-pipeline__loader"></div>' : '<button class="aura-pipeline__primary" type="button" data-forge-auth-open>Iniciar sesión</button>'}
     </section>`;
-  const close = () => {
-    layer.remove();
-    trigger?.focus();
-  };
-  layer.addEventListener("click", (event) => {
-    if (event.target.closest("[data-close-workspace]")) close();
-  });
-  document.body.append(layer);
-  layer.querySelector("[data-close-workspace]")?.focus();
-}
-
-const productiveWorkspaceController = (() => {
-  let active;
-  let openingToken;
-  let escapeListener;
-  let lifecycleRevision = 0;
-
-  const restorationTarget = (trigger) => {
-    if (trigger?.isConnected) return trigger;
-    for (const attribute of [
-      "data-open-combat",
-      "data-open-nba",
-      "data-prepare-productive-message",
-      "data-view-productive-context",
-    ]) {
-      const value = trigger?.getAttribute?.(attribute);
-      if (value) {
-        return document.querySelector(
-          `[${attribute}="${CSS.escape(value)}"]`,
-        );
-      }
-    }
-    return null;
-  };
-
-  const close = ({ restoreFocus = true } = {}) => {
-    if (!active) return false;
-    const { layer, trigger, previousOverflow } = active;
-    active = undefined;
-    layer.remove();
-    document.documentElement.removeAttribute("data-forge-productive-workspace-open");
-    document.body.style.overflow = previousOverflow;
-    if (escapeListener) {
-      document.removeEventListener("keydown", escapeListener);
-      escapeListener = undefined;
-    }
-    if (restoreFocus) restorationTarget(trigger)?.focus();
-    return true;
-  };
-
-  const open = async ({ kind, trigger, createLayer }) => {
-    if (openingToken) return;
-    if (active?.kind === kind && active.trigger === trigger) {
-      active.layer.querySelector(
-        "[autofocus], textarea, button:not(.referral-sheet__scrim), [href], select, input",
-      )?.focus();
-      return;
-    }
-    const token = Symbol(kind);
-    const revision = lifecycleRevision;
-    openingToken = token;
-    trigger.setAttribute("aria-busy", "true");
-
-    try {
-      await ensureReferralStyles();
-      if (openingToken !== token || revision !== lifecycleRevision) return;
-
-      const layer = await createLayer();
-      if (openingToken !== token || revision !== lifecycleRevision) {
-        layer.remove();
-        return;
-      }
-
-      close({ restoreFocus: false });
-      const previousOverflow = document.body.style.overflow;
-      active = {
-        kind,
-        layer,
-        trigger,
-        previousOverflow,
-        openedAt: performance.now(),
-      };
-      layer.dataset.material3Workspace = kind;
-
-      layer.addEventListener("click", (event) => {
-        if (
-          event.target.matches?.(".referral-sheet__scrim")
-          && active?.layer === layer
-          && performance.now() - active.openedAt < 350
-        ) {
-          return;
-        }
-        if (event.target.closest("[data-close-workspace]")) close();
-      });
-      escapeListener = (event) => {
-        if (event.key !== "Escape") return;
-        event.preventDefault();
-        close();
-      };
-      document.addEventListener("keydown", escapeListener);
-      document.body.append(layer);
-      document.body.style.overflow = "hidden";
-      document.documentElement.setAttribute(
-        "data-forge-productive-workspace-open",
-        kind,
-      );
-      requestAnimationFrame(() => {
-        const target = layer.querySelector(
-          "[autofocus], textarea, button:not(.referral-sheet__scrim), [href], select, input",
-        );
-        target?.focus();
-      });
-    } catch {
-      if (openingToken === token) safelyBoundedWorkspaceError(trigger);
-    } finally {
-      trigger.removeAttribute("aria-busy");
-      if (openingToken === token) openingToken = undefined;
-    }
-  };
-
-  const invalidate = () => {
-    lifecycleRevision += 1;
-    openingToken = undefined;
-    close({ restoreFocus: false });
-  };
-
-  return Object.freeze({ open, close, invalidate });
-})();
-
-globalThis.addEventListener("forge:auth-state-changed", event => {
-  if (String(event.detail?.status || "").toLowerCase() !== "authenticated") {
-    productiveWorkspaceController.invalidate();
-  }
-});
-
-async function ensureReferralRuntime() {
-  if (referralRuntimePromise) return referralRuntimePromise;
-
-  referralRuntimePromise = (async () => {
-    if (!globalThis.__ENV__) await importRuntimeAsset(envUrl);
-    if (!globalThis.ForgeAlivePublicConfig067G17A1) {
-      await importRuntimeAsset(new URL("forge-alive-public-config-067g17a1.js", moduleBase));
-    }
-    return createProductiveIntelligenceAdapter();
-  })().catch((error) => {
-    referralRuntimePromise = undefined;
-    throw error;
-  });
-
-  return referralRuntimePromise;
-}
-
-function referralSheetTemplate() {
-  return `
-    <div class="referral-sheet-layer" data-referral-sheet>
-      <button
-        class="referral-sheet__scrim"
-        type="button"
-        data-close-referral="scrim"
-        aria-label="Cerrar formulario de referido"
-      ></button>
-      <section
-        class="referral-sheet"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="referral-sheet-title"
-        tabindex="-1"
-      >
-        <form data-referral-form novalidate>
-          <header class="referral-sheet__header">
-            <div>
-              <p>PIPELINE</p>
-              <h2 id="referral-sheet-title">Agregar prospecto</h2>
-            </div>
-            <button
-              class="referral-sheet__close"
-              type="button"
-              data-close-referral="button"
-              aria-label="Cerrar"
-            >×</button>
-          </header>
-          <div class="referral-sheet__body">
-            <label>
-              <span>Nombre completo *</span>
-              <input name="fullName" autocomplete="name" required autofocus>
-            </label>
-            <label>
-              <span>Teléfono o WhatsApp *</span>
-              <input name="phone" type="tel" autocomplete="tel" required>
-            </label>
-            <label>
-              <span>Fuente *</span>
-              <select name="source" required data-prospect-source>
-                <option value="">Selecciona una fuente</option>
-                <option value="Referido">Referido</option>
-                <option value="Mercado cálido">Mercado cálido</option>
-                <option value="Mercado frío">Mercado frío</option>
-                <option value="Redes sociales">Redes sociales</option>
-                <option value="Centro de influencia">Centro de influencia</option>
-              </select>
-            </label>
-            <div class="referral-sheet__source-fields" data-referral-source-fields hidden>
-              <label>
-                <span>Referido por</span>
-                <input name="referrerName" autocomplete="off">
-              </label>
-              <label>
-                <span>Relación con el referente</span>
-                <input name="referrerRelationship" autocomplete="off">
-              </label>
-            </div>
-            <label>
-              <span>Contexto inicial breve *</span>
-              <textarea name="initialContext" rows="3" required></textarea>
-            </label>
-            <details class="referral-sheet__optional">
-              <summary>Agregar más datos</summary>
-              <div>
-                <label>
-                  <span>Correo</span>
-                  <input name="email" type="email" autocomplete="email">
-                </label>
-                <label>
-                  <span>Fecha de nacimiento</span>
-                  <input name="dateOfBirth" type="date">
-                </label>
-                <label>
-                  <span>Ocupación</span>
-                  <input name="occupation" autocomplete="organization-title">
-                </label>
-              </div>
-            </details>
-            <p class="referral-sheet__error" data-referral-error role="alert" hidden></p>
-          </div>
-          <footer class="referral-sheet__footer">
-            <button type="submit" data-save-referral>Guardar referido</button>
-          </footer>
-        </form>
-      </section>
-    </div>
-  `;
-}
-
-function referralPayload(form) {
-  const values = new FormData(form);
-  const optional = (name) => String(values.get(name) || "").trim() || undefined;
-  const source = String(values.get("source") || "").trim();
-  const referred = source === "Referido";
-  return {
-    fullName: String(values.get("fullName") || "").trim(),
-    phone: String(values.get("phone") || "").trim(),
-    source,
-    status: "referred_new",
-    referrerName: referred ? optional("referrerName") : undefined,
-    referrerRelationship: referred ? optional("referrerRelationship") : undefined,
-    initialContext: String(values.get("initialContext") || "").trim(),
-    email: optional("email"),
-    dateOfBirth: optional("dateOfBirth"),
-    occupation: optional("occupation"),
-  };
-}
-
-function referralErrorMessage(error) {
-  if (error?.code === "AUTH_REQUIRED") {
-    return "Tu sesión expiró. Inicia sesión nuevamente.";
-  }
-  if (error?.code === "DUPLICATE_PROSPECT") {
-    return "Este prospecto ya existe en tu Pipeline.";
-  }
-  if (error?.code === "VALIDATION_ERROR") {
-    return error.message || "Revisa los datos del referido.";
-  }
-  return "No pudimos guardar el referido. Revisa tu conexión e intenta nuevamente.";
-}
-
-async function openNashWorkspace({ card, adapter, trigger }) {
-  return productiveWorkspaceController.open({
-    kind: "nash",
-    trigger,
-    createLayer: async () => {
-      const prepared = await adapter.prepareMessage(card.prospect);
-      const layer = document.createElement("div");
-      layer.className = "referral-sheet-layer";
-      layer.dataset.nashProspectWorkspace = "true";
-      layer.innerHTML = `
-    <button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar mensaje"></button>
-    <section class="referral-sheet" role="dialog" aria-modal="true" aria-labelledby="nash-workspace-title">
-      <div class="referral-sheet__header">
-        <div><p>MENSAJE SUGERIDO</p><h2 id="nash-workspace-title">Preparar mensaje</h2></div>
-        <button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button>
-      </div>
-      <div class="referral-sheet__body">
-        <p data-nash-source-mode>${prepared.conversationBriefProduced ? "Forge revisó el contexto disponible para esta conversación." : "Forge preparó una opción segura con la información disponible."}</p>
-        <label><span>Mensaje editable</span><textarea data-nash-draft>${escapeHtml(prepared.candidate.rawText || prepared.candidate.text || "")}</textarea></label>
-        <p data-nash-approval-status>Revisión y aprobación humana requeridas.</p>
-      </div>
-      <div class="referral-sheet__footer">
-        <button type="button" data-approve-nash-draft>Revisar y aprobar texto exacto</button>
-        <a data-manual-whatsapp hidden>Continuar manualmente a WhatsApp</a>
-      </div>
-    </section>`;
-      layer.dataset.nashApprovalState = "pending";
-      const textarea = layer.querySelector("[data-nash-draft]");
-      const link = layer.querySelector("[data-manual-whatsapp]");
-      const status = layer.querySelector("[data-nash-approval-status]");
-      const approveButton = layer.querySelector("[data-approve-nash-draft]");
-      textarea.addEventListener("input", () => {
-        layer.dataset.nashApprovalState = "pending";
-        link.hidden = true;
-        link.removeAttribute("href");
-        approveButton.disabled = false;
-        approveButton.textContent = "Revisar y aprobar texto exacto";
-        status.textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
-      });
-      approveButton.addEventListener("click", () => {
-        const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
-        const text = textarea.value;
-        const validation = safety.draftSafetyValidator({
-          draftText: text,
-          draftCandidateSnapshot: { ...prepared.candidate, sendsMessage: false },
-          humanApproval: { required: true, finalAuthority: "HUMAN" },
-        });
-        const approval = safety.approveExactDraft({
-          draftText: text,
-          validationResult: validation,
-          humanDecision: safety.EXPLICIT_DRAFT_APPROVAL,
-        });
-        const gate = safety.exactDraftHumanApprovalGate({
-          draftText: text, validationResult: validation, approvalSnapshot: approval,
-        });
-        const url = gate.exactDraftApproved
-          ? globalThis.ForgeProductiveContactNavigationBoundary067G17B
-            .whatsappUrl(card.prospect, "professional", text)
-          : null;
-        link.hidden = !url;
-        if (url) link.href = url;
-        layer.dataset.nashApprovalState = url ? "approved" : "blocked";
-        approveButton.disabled = Boolean(url);
-        approveButton.textContent = url ? "Texto exacto aprobado" : "Revisar y aprobar texto exacto";
-        status.textContent = url ? "Mensaje aprobado. Ya puedes abrir WhatsApp." : "Revisa el mensaje antes de continuar.";
-      });
-      return layer;
-    },
-  });
-}
-
-const displayValue = value => Array.isArray(value)
-  ? (value.map(humanIntelligenceLabel).join(", ") || "No disponible")
-  : value && typeof value === "object"
-    ? Object.entries(value).map(([key, item]) => `${key}: ${humanIntelligenceLabel(item)}`).join(" · ")
-    : humanIntelligenceLabel(value) || "No disponible";
-
-async function openCombatWorkspace({ card, adapter, trigger, onReconciled }) {
-  return productiveWorkspaceController.open({
-    kind: "combat",
-    trigger,
-    createLayer: async () => {
-      const layer = document.createElement("div");
-      layer.className = "referral-sheet-layer";
-      layer.dataset.nashCombatWorkspace = "true";
-      layer.innerHTML = `
-    <button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar NASH Combat"></button>
-    <section class="referral-sheet nash-combat-workspace" role="dialog" aria-modal="true" aria-labelledby="combat-title">
-      <div class="referral-sheet__header nash-combat-workspace__header"><div><p>NASH COMBAT · CANDIDATOS</p><h2 id="combat-title">${escapeHtml(card.fullName)}</h2><span data-combat-header-state>Esperando objeción</span></div><button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button></div>
-      <div class="referral-sheet__body nash-combat-workspace__body">
-        <label><span>Objeción escuchada (no se guarda)</span><textarea data-combat-objection></textarea></label>
-        <button type="button" data-analyze-combat>Analizar objeción</button>
-        <div data-combat-results hidden></div>
-      </div>
-      <div class="referral-sheet__footer nash-combat-workspace__footer" data-combat-actions hidden>
-        <button type="button" data-approve-combat>Revisar y aprobar texto exacto</button>
-        <button type="button" data-register-combat>Registrar clasificación en Timeline</button>
-        <a data-combat-whatsapp hidden>Continuar manualmente a WhatsApp</a>
-      </div>
-    </section>`;
-      let combat;
-      const results = layer.querySelector("[data-combat-results]");
-      const actions = layer.querySelector("[data-combat-actions]");
-      const body = layer.querySelector(".nash-combat-workspace__body");
-      layer.querySelector("[data-analyze-combat]").addEventListener("click", async () => {
-    const objection = layer.querySelector("[data-combat-objection]").value;
-    combat = await adapter.analyzeCombat(card.prospect, objection);
-    layer.querySelector("[data-combat-header-state]").textContent =
-      `Objeción analizada: ${objection}`;
-    results.hidden = false;
-    actions.hidden = false;
-    results.innerHTML = `
-      <p>Tipo candidato: <strong data-combat-type data-combat-type-code="${escapeHtml(combat.classification.type)}">${escapeHtml(humanIntelligenceLabel(combat.classification.type))}</strong></p>
-      <p>Intención candidata: <strong data-combat-intent data-combat-intent-code="${escapeHtml(combat.classification.intent)}">${escapeHtml(humanIntelligenceLabel(combat.classification.intent))}</strong></p>
-      <p>Confianza: ${escapeHtml(combat.classification.confidence)}</p>
-      <p>Intenciones posibles: ${escapeHtml(displayValue(combat.classification.possibleIntents))}</p>
-      <p>Interpretación posible: ${escapeHtml(combat.psychology.psychology)}</p>
-      <p>Estrategia recomendada: ${escapeHtml(combat.psychology.recommendedStrategy)}</p>
-      <p>Riesgo: ${escapeHtml(combat.psychology.risk)}</p>
-      <p>Siguiente movimiento candidato: ${escapeHtml(displayValue(combat.nextBestAction))}</p>
-      <p>Soporte: ${escapeHtml(displayValue(combat.advisorGuidance))}</p>
-      <label><span>Respuesta candidata editable</span><textarea data-combat-response>${escapeHtml(combat.objectionKillerMessage)}</textarea></label>
-      <p data-combat-approval>Revisión y aprobación humana requeridas.</p>`;
-    body.scrollTop = 0;
-    const response = results.querySelector("[data-combat-response]");
-    response.addEventListener("input", () => {
-      const link = layer.querySelector("[data-combat-whatsapp]");
-      link.hidden = true;
-      link.removeAttribute("href");
-      results.querySelector("[data-combat-approval]").textContent = "El texto cambió. Requiere una nueva aprobación exacta.";
+    root.querySelector("[data-forge-auth-open]")?.addEventListener("click", () => {
+      globalThis.ForgeAliveAuthEntry067G17B1?.openAuthPanel?.({ nav: "pipeline" });
     });
-      });
-      layer.querySelector("[data-approve-combat]").addEventListener("click", () => {
-    const text = results.querySelector("[data-combat-response]")?.value || "";
-    const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06;
-    const snapshot = { rawText: text, sendsMessage: false, sourceMutable: true };
-    const validation = safety.draftSafetyValidator({ draftText: text, draftCandidateSnapshot: snapshot, humanApproval: { required: true, finalAuthority: "HUMAN" } });
-    const approval = safety.approveExactDraft({ draftText: text, validationResult: validation, humanDecision: safety.EXPLICIT_DRAFT_APPROVAL });
-    const gate = safety.exactDraftHumanApprovalGate({ draftText: text, validationResult: validation, approvalSnapshot: approval });
-    const url = gate.exactDraftApproved
-      ? globalThis.ForgeProductiveContactNavigationBoundary067G17B.whatsappUrl(card.prospect, "professional", text)
-      : null;
-    const link = layer.querySelector("[data-combat-whatsapp]");
-    link.hidden = !url;
-    if (url) link.href = url;
-    results.querySelector("[data-combat-approval]").textContent = url ? "Texto exacto aprobado. Navegación manual habilitada." : "El texto no pasó la validación.";
-      });
-      layer.querySelector("[data-register-combat]").addEventListener("click", async () => {
-    if (!combat) return;
-    await onReconciled(await adapter.registerObjectionClassification(card, combat));
-    layer.querySelector("[data-register-combat]").disabled = true;
-    results.insertAdjacentHTML("beforeend", "<p data-combat-timeline>Clasificación registrada sin texto crudo.</p>");
-      });
-      body.scrollTop = 0;
-      return layer;
-    },
-  });
-}
-
-async function openNbaWorkspace({ card, adapter, trigger }) {
-  return productiveWorkspaceController.open({
-    kind: "nba",
-    trigger,
-    createLayer: async () => {
-      const nba = await adapter.buildNba(card);
-      const layer = document.createElement("div");
-      layer.className = "referral-sheet-layer";
-      layer.dataset.nbaWorkspace = "true";
-      const field = (label, value) => `<p>${label}: ${escapeHtml(displayValue(value))}</p>`;
-      layer.innerHTML = `
-    <button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar NBA"></button>
-    <section class="referral-sheet nba-workspace" role="dialog" aria-modal="true" aria-labelledby="nba-title">
-      <div class="referral-sheet__header"><div><p>NBA · REASON WHY</p><h2 id="nba-title">${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button></div>
-      <div class="referral-sheet__body nba-workspace__body">
-        ${field("Estado", nba.reconnectionStatus)}
-        ${field("Acción candidata", nba.recommendedAction)}
-        ${field("Reason Why", nba.reasonWhy)}
-        ${field("Por qué ahora", nba.whyNow)}
-        ${field("Por qué esta persona", nba.whyThisPerson)}
-        ${field("Por qué esta acción", nba.whyThisAction)}
-        ${field("Por qué este mensaje", nba.whyThisMessage)}
-        ${field("Ángulo", nba.conversationAngle)}
-        ${field("Soporte de objeción", nba.objectionSupport)}
-        ${field("Frescura", nba.freshness)}
-        ${field("Confianza", nba.confidence)}
-        ${field("Limitaciones", nba.confidenceLimitations)}
-        ${field("Advertencias", nba.warnings)}
-        ${field("Contexto faltante", nba.missingContext)}
-        <p data-nba-human-review>Revisión humana requerida · ejecución automática deshabilitada.</p>
-        <details class="nba-workspace__technical">
-          <summary>Evidencia técnica</summary>
-          ${field("Referencias", nba.evidenceRefs)}
-          ${field("Fuentes", nba.sourceOwners)}
-        </details>
-      </div>
-      <div class="referral-sheet__footer"><button type="button" data-nba-prepare-message>Preparar mensaje con este contexto</button></div>
-    </section>`;
-      layer.querySelector("[data-nba-prepare-message]").addEventListener("click", () => {
-        void openNashWorkspace({ card, adapter, trigger });
-      });
-      return layer;
-    },
-  });
-}
-
-async function openReferralForm({ trigger, errorNode, onCreated }) {
-  errorNode.hidden = true;
-  errorNode.textContent = "";
-  trigger.disabled = true;
-  trigger.setAttribute("aria-busy", "true");
-
-  try {
-    await ensureReferralStyles();
-    const service = await ensureReferralRuntime();
-    if (activeReferralSheet) return;
-
-    const host = document.createElement("div");
-    host.innerHTML = referralSheetTemplate().trim();
-    const layer = host.firstElementChild;
-    const sheet = layer.querySelector(".referral-sheet");
-    const form = layer.querySelector("[data-referral-form]");
-    const formError = layer.querySelector("[data-referral-error]");
-    const save = layer.querySelector("[data-save-referral]");
-    const source = form.querySelector("[data-prospect-source]");
-    const referralFields = form.querySelector("[data-referral-source-fields]");
-    const previousOverflow = document.body.style.overflow;
-    let dirty = false;
-
-    const syncReferralFields = () => {
-      const referred = source.value === "Referido";
-      referralFields.hidden = !referred;
-      if (!referred) {
-        referralFields.querySelectorAll("input").forEach(input => {
-          input.value = "";
-        });
-      }
-    };
-    source.addEventListener("change", syncReferralFields);
-    syncReferralFields();
-
-    const focusable = () => [...sheet.querySelectorAll(
-      'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
-    )];
-
-    const close = ({ requireConfirmation = true } = {}) => {
-      if (
-        dirty &&
-        requireConfirmation &&
-        !globalThis.confirm("Hay cambios sin guardar. ¿Quieres cerrar?")
-      ) {
-        return false;
-      }
-      layer.remove();
-      document.documentElement.removeAttribute(
-        "data-forge-referral-sheet-open",
-      );
-      document.body.style.overflow = previousOverflow;
-      activeReferralSheet = undefined;
-      trigger.focus();
-      return true;
-    };
-
-    layer.addEventListener("click", (event) => {
-      if (event.target.closest("[data-close-referral]")) close();
-    });
-    form.addEventListener("input", () => {
-      dirty = true;
-      form.dataset.dirty = "true";
-    });
-    layer.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        close();
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const items = focusable();
-      if (!items.length) {
-        event.preventDefault();
-        sheet.focus();
-        return;
-      }
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    });
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      formError.hidden = true;
-      save.disabled = true;
-      save.setAttribute("aria-busy", "true");
-      try {
-        const prospect = await service.createProspect(referralPayload(form));
-        dirty = false;
-        close({ requireConfirmation: false });
-        await onCreated(prospect, service);
-      } catch (error) {
-        formError.textContent = referralErrorMessage(error);
-        formError.hidden = false;
-      } finally {
-        save.disabled = false;
-        save.removeAttribute("aria-busy");
-      }
-    });
-
-    document.body.append(layer);
-    document.documentElement.setAttribute(
-      "data-forge-referral-sheet-open",
-      "true",
-    );
-    document.body.style.overflow = "hidden";
-    activeReferralSheet = layer;
-    requestAnimationFrame(() => {
-      (form.querySelector("[autofocus]") || sheet).focus();
-    });
-  } catch (error) {
-    errorNode.textContent =
-      error?.code === "AUTH_REQUIRED"
-        ? "Inicia sesión para agregar un referido."
-        : "No pudimos abrir el formulario de referido. Reintenta.";
-    errorNode.hidden = false;
-  } finally {
-    trigger.disabled = false;
-    trigger.removeAttribute("aria-busy");
-  }
-}
-
-export function createPipelineModule({ root, shell, dataProvider = connectedData }) {
-  if (root[pipelineStateKey]) return root[pipelineStateKey];
-  let mounted = false;
-  let referralStatus = "";
-  let productiveAdapter;
-  let productiveCards = [];
-  let productiveFilters = { source: "", status: "" };
-  let productiveError = "";
-  let productiveHydrated = false;
-  const usesProductiveRuntime = dataProvider === connectedData;
-  let authStatus = usesProductiveRuntime ? "AUTH_LOADING" : "AUTHENTICATED";
-
-  function clearPrivateState() {
-    productiveWorkspaceController.close({ restoreFocus: false });
-    productiveCards = [];
-    productiveFilters = { source: "", status: "" };
-    productiveAdapter = undefined;
-    productiveHydrated = false;
-    referralRuntimePromise = undefined;
-    document.querySelectorAll?.(
-      "[data-nash-prospect-workspace], [data-productive-context-workspace], [data-nash-combat-workspace], [data-nba-workspace]",
-    ).forEach(node => node.remove());
-    document.querySelectorAll?.("[data-manual-whatsapp], [data-combat-whatsapp]").forEach(link => {
-      link.hidden = true;
-      link.removeAttribute("href");
-    });
-  }
-
-  async function reconcileAuthenticatedSession() {
-    authStatus = "AUTH_LOADING";
-    render();
-    try {
-      const session = await globalThis.ForgeProductiveProspectBootstrap067G17B?.getSession?.();
-      if (!session?.data?.session?.user?.id) {
-        clearPrivateState();
-        authStatus = "ANONYMOUS";
-        render();
-        return;
-      }
-      productiveHydrated = true;
-      productiveAdapter = await ensureReferralRuntime();
-      productiveCards = await productiveAdapter.reload();
-      productiveError = "";
-      authStatus = "AUTHENTICATED";
-      render();
-    } catch {
-      clearPrivateState();
-      authStatus = "AUTH_ERROR";
-      render();
-    }
-  }
-
-  async function persistProductiveStage(prospectId, status) {
-    const current = productiveCards.find(item => item.id === prospectId);
-    if (!current || !productiveAdapter) {
-      const error = new Error("PRODUCTIVE_STAGE_AUTHORITY_UNAVAILABLE");
-      error.code = "PRODUCTIVE_STAGE_AUTHORITY_UNAVAILABLE";
-      throw error;
-    }
-    if (!status || status === current.status) return current;
-
-    productiveError = "";
-    const nextCards = await productiveAdapter.updateStage(prospectId, status);
-    const confirmed = nextCards.find(item => item.id === prospectId);
-    if (!confirmed || confirmed.status !== status) {
-      const error = new Error("PRODUCTIVE_STAGE_RENDER_CONFIRMATION_MISMATCH");
-      error.code = "PRODUCTIVE_STAGE_RENDER_CONFIRMATION_MISMATCH";
-      throw error;
-    }
-
-    productiveCards = nextCards;
-    referralStatus = `Estado actualizado a ${confirmed.stageLabel}.`;
-    render();
-    return confirmed;
   }
 
   function render() {
-    if (usesProductiveRuntime && authStatus !== "AUTHENTICATED") {
-      const loading = authStatus === "AUTH_LOADING";
-      root.innerHTML = `
-        <header class="pipeline-module__header"><p>PIPELINE</p><h1>Relaciones en movimiento</h1><span>${loading ? "Recuperando sesión" : "Datos privados protegidos"}</span></header>
-        <section class="pipeline-module__empty" data-pipeline-auth-state="${authStatus}">
-          <div class="pipeline-module__empty-copy">
-            <h2>${loading ? "Recuperando tu sesión" : authStatus === "AUTH_ERROR" ? "No pudimos recuperar tu sesión" : "Inicia sesión para abrir tu Pipeline"}</h2>
-            <p>${loading ? "Estamos verificando tu cuenta de Forge." : "Tus prospectos y Timeline sólo aparecen con tu cuenta autenticada."}</p>
-          </div>
-          ${loading ? "" : '<button type="button" class="pipeline-module__create" data-forge-auth-open>Continuar con Google</button>'}
-        </section>`;
-      root.querySelector?.("[data-forge-auth-open]")?.addEventListener("click", () => {
-        globalThis.ForgeAliveAuthEntry067G17B1?.openAuthPanel?.({ nav: "pipeline" });
-      });
-      return;
-    }
-    const data = dataProvider?.() || {};
-    const model = globalThis.ForgePipelineStageReadModel.buildPipelineStageReadModel({
-      opportunities: Array.isArray(data.opportunities) ? data.opportunities : [],
-      prospects: Array.isArray(data.prospects) ? data.prospects : [],
-      writerAvailable: false,
-    });
-    const productive = productiveCards.length > 0;
-    const filteredProductiveCards = productiveCards.filter(card =>
-      (!productiveFilters.source || card.sourceValue === productiveFilters.source)
-      && (!productiveFilters.status || card.status === productiveFilters.status)
-    );
-    const count = productive
-      ? productiveCards.length
-      : model.columns.reduce((total, column) => total + column.count, 0);
-    root.innerHTML = `
-      <header class="pipeline-module__header">
-        <p>PIPELINE</p>
-        <h1>Relaciones en movimiento</h1>
-        <span>${count} prospecto${count === 1 ? "" : "s"}</span>
-      </header>
-      <p
-        class="pipeline-module__referral-status"
-        data-referral-status
-        role="status"
-        ${referralStatus ? "" : "hidden"}
-      >${escapeHtml(referralStatus)}</p>
-      ${productiveError ? `<p class="pipeline-module__create-error" role="alert">${escapeHtml(productiveError)}</p>` : ""}
-      ${count === 0
-        ? `<section
-            class="pipeline-module__empty"
-            aria-labelledby="pipeline-empty-title"
-          >
-            <div class="pipeline-module__empty-copy">
-              <h2 id="pipeline-empty-title">Tu Pipeline está listo</h2>
-              <p>No hay prospectos conectados en este momento.</p>
-            </div>
-            <button
-              class="pipeline-module__create"
-              type="button"
-              data-pipeline-create-referral
-              data-open-referral
-              aria-label="Agregar prospecto"
-            >
-              <span aria-hidden="true">＋</span>
-              <span>Agregar prospecto</span>
-            </button>
-            <p
-              class="pipeline-module__create-error"
-              data-pipeline-create-error
-              role="alert"
-              hidden
-            ></p>
-          </section>`
-        : productive
-          ? `<section class="pipeline-module__filters" data-productive-filter-bar aria-label="Filtros del Pipeline">
-              <label>
-                <span>Fuente</span>
-                <select data-productive-filter-source>
-                  <option value="">Todas las fuentes</option>
-                  ${productiveSourceFilters.map(source => `<option value="${escapeHtml(source)}" ${productiveFilters.source === source ? "selected" : ""}>${escapeHtml(source)}</option>`).join("")}
-                </select>
-              </label>
-              <label>
-                <span>Estado</span>
-                <select data-productive-filter-status>
-                  <option value="">Todos los estados</option>
-                  ${productiveStatusFilters.map(option => `<option value="${escapeHtml(option.value)}" ${productiveFilters.status === option.value ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}
-                </select>
-              </label>
-              <p data-productive-filter-count aria-live="polite">${filteredProductiveCards.length} de ${productiveCards.length} prospectos</p>
-              <button type="button" data-clear-productive-filters ${productiveFilters.source || productiveFilters.status ? "" : "disabled"}>Limpiar filtros</button>
-            </section>
-            ${filteredProductiveCards.length
-              ? `<div class="pipeline-module__stages" data-productive-pipeline-cards>
-              ${filteredProductiveCards.map(card => `
-                <article class="pipeline-module__prospect pipeline-module__productive-card" data-productive-prospect-card="${escapeHtml(card.id)}" data-productive-source="${escapeHtml(card.sourceValue)}" data-productive-stage="${escapeHtml(card.status)}">
-                  <header class="pipeline-module__productive-identity" data-productive-card-identity>
-                    <strong>${escapeHtml(card.fullName)}</strong>
-                    <span class="pipeline-module__productive-stage" data-productive-stage-label>${escapeHtml(card.stageLabel)}</span>
-                  </header>
-                  <div class="pipeline-module__productive-meta" data-productive-card-metadata>
-                    <span>Fuente</span>
-                    <p data-productive-source-label>${escapeHtml(card.sourceSummary)}</p>
-                  </div>
-                  <label class="pipeline-module__stage-control">
-                    <span>Estado del prospecto</span>
-                    <select data-productive-stage-control="${escapeHtml(card.id)}" aria-label="Cambiar estado de ${escapeHtml(card.fullName)}">
-                      ${card.stageOptions.map(option => `<option value="${escapeHtml(option.value)}" ${option.value === card.status ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}
-                    </select>
-                  </label>
-                  <div class="pipeline-module__productive-status" data-productive-card-status>
-                    <p data-timeline-activity data-activity-source="${card.latestActivity ? "TIMELINE" : "UNKNOWN"}">
-                      <span>Última actividad</span>
-                      <strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong>
-                    </p>
-                    ${card.nextCommitment ? `<p><span>Próximo compromiso</span><strong>${escapeHtml(card.nextCommitment.type)} · ${escapeHtml(card.nextCommitment.dueAt)}</strong></p>` : ""}
-                  </div>
-                  <div class="pipeline-module__card-actions" data-productive-card-actions aria-label="Acciones del prospecto">
-                    <button class="pipeline-module__action--context" type="button" data-view-productive-context="${escapeHtml(card.id)}">Ver contexto</button>
-                    <button class="pipeline-module__action--primary" type="button" data-prepare-productive-message="${escapeHtml(card.id)}">Preparar mensaje</button>
-                    <button class="pipeline-module__action--combat" type="button" data-open-combat="${escapeHtml(card.id)}">NASH Combat</button>
-                    <button class="pipeline-module__action--nba" type="button" data-open-nba="${escapeHtml(card.id)}">Revisar NBA</button>
-                    ${card.phone ? `<a class="pipeline-module__action--call" href="tel:${escapeHtml(card.phone)}">Llamar</a>` : ""}
-                    <button class="pipeline-module__action--calendar" type="button" disabled title="NOT_CONNECTED">Agendar</button>
-                  </div>
-                </article>`).join("")}
-            </div>`
-              : `<section class="pipeline-module__filter-empty" data-productive-filter-empty>
-                  <p>No hay prospectos que coincidan con estos filtros.</p>
-                </section>`}`
-          : `<div class="pipeline-module__stages">${model.columns.map(renderColumn).join("")}</div>`}
-    `;
+    if (state.status !== "ready") return renderAuth();
+    const visible = visibleCards();
+    const filtered = state.filters.query || state.filters.source || state.filters.status;
+    root.innerHTML = `<div class="aura-pipeline__page">
+      <header class="aura-pipeline__topbar"><div><p>PIPELINE</p><h1>Prospectos</h1><span>${state.cards.length} en seguimiento</span></div>
+        <button class="aura-pipeline__primary" type="button" data-aura-action="create">${icon("add")}<span>Nuevo prospecto</span></button></header>
+      <section class="aura-pipeline__toolbar">
+        <label class="aura-pipeline__search"><span>${icon("search")}</span><input data-filter-query type="search" value="${escapeHtml(state.filters.query)}" placeholder="Buscar prospecto"></label>
+        <label><span>Fuente</span><select data-filter-source><option value="">Todas</option>${sourceOptions(state.filters.source)}</select></label>
+        <label><span>Etapa</span><select data-filter-stage><option value="">Todas</option>${STAGES.map(stage => `<option value="${stage.value}" ${stage.value === state.filters.status ? "selected" : ""}>${stage.label}</option>`).join("")}</select></label>
+        <div class="aura-pipeline__views"><button type="button" data-view="cards" aria-pressed="${state.view === "cards"}">${icon("cards")}<span>Tarjetas</span></button><button type="button" data-view="list" aria-pressed="${state.view === "list"}">${icon("list")}<span>Lista</span></button></div>
+        <button class="aura-pipeline__clear" type="button" data-clear-filters ${filtered ? "" : "disabled"}>Limpiar</button><p>${visible.length} de ${state.cards.length}</p>
+      </section>
+      <p class="aura-pipeline__live" data-aura-live aria-live="polite"></p>
+      ${state.cards.length === 0 ? `<section class="aura-pipeline__empty"><h2>Tu Pipeline está listo</h2><p>Agrega el primer prospecto para comenzar.</p><button class="aura-pipeline__primary" type="button" data-aura-action="create">${icon("add")}<span>Agregar prospecto</span></button></section>`
+        : visible.length === 0 ? `<section class="aura-pipeline__empty"><h2>No encontramos coincidencias</h2><p>Ajusta la búsqueda o limpia los filtros.</p><button class="aura-pipeline__secondary" type="button" data-clear-filters>Limpiar filtros</button></section>`
+        : state.view === "cards" ? `<section class="aura-pipeline__cards">${visible.map(cardMarkup).join("")}</section>`
+        : `<section class="aura-pipeline__list" role="table"><div class="aura-pipeline__list-head" role="row"><span>Prospecto</span><span>Etapa</span><span>Última actividad</span><span>Próximo compromiso</span><span>Acciones</span></div><div role="rowgroup">${visible.map(rowMarkup).join("")}</div></section>`}
+    </div>`;
+  }
 
-    const createReferral = root.querySelector?.(
-      "[data-pipeline-create-referral]",
-    );
-    const errorNode = root.querySelector?.(
-      "[data-pipeline-create-error]",
-    );
-
-    root.querySelector?.("[data-productive-filter-source]")?.addEventListener("change", event => {
-      productiveFilters = { ...productiveFilters, source: event.currentTarget.value };
-      render();
-    });
-    root.querySelector?.("[data-productive-filter-status]")?.addEventListener("change", event => {
-      productiveFilters = { ...productiveFilters, status: event.currentTarget.value };
-      render();
-    });
-    root.querySelector?.("[data-clear-productive-filters]")?.addEventListener("click", () => {
-      productiveFilters = { source: "", status: "" };
-      render();
-    });
-
-    createReferral?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      void openReferralForm({
-        trigger: createReferral,
-        errorNode,
-        onCreated: async (prospect, service) => {
-          void prospect;
-          productiveCards = await service.reload();
-          referralStatus = "Referido guardado.";
-          render();
-        },
-      });
-    });
-
-    root.querySelectorAll?.("[data-prepare-productive-message]").forEach(trigger => {
-      trigger.addEventListener("click", () => {
-        const card = productiveCards.find(item => item.id === trigger.dataset.prepareProductiveMessage);
-        if (card && productiveAdapter) void openNashWorkspace({ card, adapter: productiveAdapter, trigger });
-      });
-    });
-    root.querySelectorAll?.("[data-productive-stage-control]").forEach(select => {
-      select.addEventListener("change", async () => {
-        const prospectId = select.dataset.productiveStageControl;
-        const card = productiveCards.find(item => item.id === prospectId);
-        if (!card || !productiveAdapter || select.value === card.status) return;
-        const previous = card.status;
-        const requested = select.value;
-        select.disabled = true;
-        select.removeAttribute("aria-invalid");
-        try {
-          await persistProductiveStage(prospectId, requested);
-        } catch {
-          if (select.isConnected) {
-            select.value = previous;
-            select.disabled = false;
-            select.setAttribute("aria-invalid", "true");
-          }
-          productiveError = "No pudimos actualizar el estado.";
-          render();
-        }
-      });
-    });
-    root.querySelectorAll?.("[data-open-combat]").forEach(trigger => {
-      trigger.addEventListener("click", () => {
-        const card = productiveCards.find(item => item.id === trigger.dataset.openCombat);
-        if (card && productiveAdapter) void openCombatWorkspace({
-          card, adapter: productiveAdapter, trigger,
-          onReconciled: async cards => { productiveCards = cards; render(); },
-        });
-      });
-    });
-    root.querySelectorAll?.("[data-open-nba]").forEach(trigger => {
-      trigger.addEventListener("click", () => {
-        const card = productiveCards.find(item => item.id === trigger.dataset.openNba);
-        if (card && productiveAdapter) void openNbaWorkspace({ card, adapter: productiveAdapter, trigger });
-      });
-    });
-    root.querySelectorAll?.("[data-view-productive-context]").forEach(trigger => {
-      trigger.addEventListener("click", () => {
-        const card = productiveCards.find(item => item.id === trigger.dataset.viewProductiveContext);
-        if (!card) return;
-        void productiveWorkspaceController.open({
-          kind: "context",
-          trigger,
-          createLayer: async () => {
-            const layer = document.createElement("div");
-            layer.className = "referral-sheet-layer";
-            layer.dataset.productiveContextWorkspace = "true";
-            const objectionState = card.timeline.some(event => event.eventType === "OBJECTION_RECORDED")
-              ? "clasificación persistida disponible" : "sin clasificación persistida";
-            layer.innerHTML = `<button class="referral-sheet__scrim" type="button" data-close-workspace aria-label="Cerrar contexto"></button><section class="referral-sheet" role="dialog" aria-modal="true"><div class="referral-sheet__header"><div><p>CONTEXTO PRODUCTIVO</p><h2>${escapeHtml(card.fullName)}</h2></div><button class="referral-sheet__close" type="button" data-close-workspace aria-label="Cerrar">×</button></div><div class="referral-sheet__body"><p>${escapeHtml(card.stageLabel)}</p><p>${escapeHtml(card.sourceSummary)}</p><p data-context-timeline>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</p><p>NBA: disponible para revisión</p><p>Objeciones: ${objectionState}</p><p>Mi Día: NOT_CONNECTED</p><p>Calendar: NOT_CONNECTED</p></div></section>`;
-            return layer;
-          },
-        });
-      });
-    });
-
-    if (usesProductiveRuntime && !productiveHydrated) {
-      productiveHydrated = true;
-      void Promise.all([
-        ensureReferralStyles(),
-        ensureReferralRuntime(),
-      ]).then(async ([, adapter]) => {
-        productiveAdapter = adapter;
-        productiveCards = await adapter.reload();
-        render();
-      }).catch((error) => {
-        productiveError = error?.code === "AUTH_REQUIRED"
-          ? "Inicia sesión para cargar tu Pipeline."
-          : "No pudimos cargar el Pipeline productivo.";
-        render();
-      });
+  async function changeStage(select) {
+    const card = cardById(select.dataset.auraStageSelect);
+    if (!card || select.value === card.status) return;
+    const previous = card.status;
+    select.disabled = true;
+    select.setAttribute("aria-busy", "true");
+    try {
+      const bootstrap = await waitForBootstrap(windowRef);
+      const client = await bootstrap.getClient();
+      const authority = await stageAuthority();
+      const confirmed = await authority.requestStageTransition({ client, prospectId: card.id, status: select.value });
+      state.cards = await state.adapter.reload();
+      const next = cardById(card.id);
+      if (!next || next.status !== confirmed.status) throw new Error("AURA_STAGE_CONFIRMATION_MISMATCH");
+      const node = root.querySelector(`[data-aura-record="${CSS.escape(card.id)}"]`);
+      if (node) {
+        node.dataset.auraStage = next.status;
+        node.querySelector("[data-aura-stage-label]").textContent = next.stageLabel;
+        const activeSelect = node.querySelector("[data-aura-stage-select]");
+        activeSelect.value = next.status;
+        activeSelect.disabled = false;
+        activeSelect.removeAttribute("aria-busy");
+      }
+      announce(`Etapa actualizada a ${next.stageLabel}.`);
+    } catch (error) {
+      select.value = previous;
+      select.disabled = false;
+      select.removeAttribute("aria-busy");
+      select.setAttribute("aria-invalid", "true");
+      announce(humanError(error, "Supabase no confirmó el cambio de etapa."), true);
     }
   }
+
+  function createDialog(trigger) {
+    openDialog({ title: "Nuevo prospecto", trigger,
+      body: `<form class="aura-pipeline__form" data-create-form><label><span>Nombre *</span><input name="fullName" required autofocus></label><label><span>Teléfono *</span><input name="phone" type="tel" required></label><label><span>Fuente *</span><select name="source" required><option value="">Selecciona</option>${sourceOptions()}</select></label><label class="wide"><span>Contexto inicial *</span><textarea name="initialContext" rows="4" required></textarea></label><p data-form-error role="alert" hidden></p></form>`,
+      footer: '<button class="aura-pipeline__secondary" type="button" data-dialog-close>Cancelar</button><button class="aura-pipeline__primary" type="button" data-create-save>Guardar</button>',
+      ready(dialog) {
+        const form = dialog.querySelector("[data-create-form]");
+        dialog.querySelector("[data-create-save]").addEventListener("click", async () => {
+          const values = new FormData(form); const errorNode = dialog.querySelector("[data-form-error]");
+          try {
+            await state.adapter.createProspect({ fullName: String(values.get("fullName") || "").trim(), phone: String(values.get("phone") || "").trim(), source: String(values.get("source") || "").trim(), status: "referred_new", initialContext: String(values.get("initialContext") || "").trim() });
+            state.cards = await state.adapter.reload(); closeDialog({ restore: false }); render(); announce("Prospecto guardado.");
+          } catch (error) { errorNode.textContent = humanError(error, "No pudimos guardar el prospecto."); errorNode.hidden = false; }
+        });
+      },
+    });
+  }
+
+  function editDialog(card, trigger) {
+    const prospect = card.prospect || {};
+    openDialog({ title: `Editar ${card.fullName}`, trigger,
+      body: `<form class="aura-pipeline__form" data-edit-form><label><span>Nombre *</span><input name="fullName" required autofocus value="${escapeHtml(prospect.fullName || card.fullName)}"></label><label><span>Teléfono *</span><input name="phone" type="tel" required value="${escapeHtml(prospect.phone || prospect.whatsapp || card.phone || "")}"></label><label><span>Fuente *</span><select name="source">${sourceOptions(prospect.source || card.sourceValue)}</select></label><label class="wide"><span>Contexto inicial *</span><textarea name="initialContext" rows="4">${escapeHtml(prospect.initialContext || "")}</textarea></label><p data-form-error role="alert" hidden></p></form>`,
+      footer: '<button class="aura-pipeline__secondary" type="button" data-dialog-close>Cancelar</button><button class="aura-pipeline__primary" type="button" data-edit-save>Guardar cambios</button>',
+      ready(dialog) {
+        dialog.querySelector("[data-edit-save]").addEventListener("click", async () => {
+          const values = new FormData(dialog.querySelector("[data-edit-form]")); const errorNode = dialog.querySelector("[data-form-error]");
+          try {
+            const changes = { fullName: String(values.get("fullName") || "").trim(), phone: String(values.get("phone") || "").trim(), source: String(values.get("source") || "").trim(), initialContext: String(values.get("initialContext") || "").trim(), status: card.status };
+            await state.adapter.service.updateProspect(card.id, changes); const confirmed = await state.adapter.service.getProspect(card.id);
+            if (confirmed?.fullName !== changes.fullName) throw new Error("AURA_EDIT_CONFIRMATION_MISMATCH");
+            state.cards = await state.adapter.reload(); closeDialog({ restore: false }); render(); announce("Prospecto actualizado.");
+          } catch (error) { errorNode.textContent = humanError(error, "No pudimos actualizar el prospecto."); errorNode.hidden = false; }
+        });
+      },
+    });
+  }
+
+  function archiveDialog(card, trigger) {
+    openDialog({ title: `Retirar a ${card.fullName}`, eyebrow: "PIPELINE · ARCHIVO", trigger,
+      body: '<p>El prospecto saldrá del Pipeline, pero su historial se conservará.</p><label class="aura-pipeline__field"><span>Motivo</span><input data-archive-reason value="Retirado desde Pipeline"></label><p data-form-error role="alert" hidden></p>',
+      footer: '<button class="aura-pipeline__secondary" type="button" data-dialog-close>Cancelar</button><button class="aura-pipeline__danger" type="button" data-archive-confirm>Retirar</button>',
+      ready(dialog) {
+        dialog.querySelector("[data-archive-confirm]").addEventListener("click", async () => {
+          const errorNode = dialog.querySelector("[data-form-error]");
+          try {
+            await state.adapter.service.archiveProspect(card.id, dialog.querySelector("[data-archive-reason]").value.trim());
+            state.cards = await state.adapter.reload(); if (state.cards.some(item => item.id === card.id)) throw new Error("AURA_ARCHIVE_CONFIRMATION_MISMATCH");
+            closeDialog({ restore: false }); render(); announce("Prospecto retirado del Pipeline.");
+          } catch (error) { errorNode.textContent = humanError(error, "No pudimos retirar el prospecto."); errorNode.hidden = false; }
+        });
+      },
+    });
+  }
+
+  async function timelineDialog(card, trigger) {
+    const timeline = await state.adapter.timelineService.listProspectTimeline(card.id);
+    const items = timeline.length ? `<ol class="aura-pipeline__timeline">${timeline.map(item => `<li><span></span><div><strong>${escapeHtml(eventLabel(item.eventType))}</strong><time>${escapeHtml(formatDate(item.occurredAt || item.recordedAt))}</time><p>${escapeHtml(item.payload?.outcome || item.payload?.decisionCode || item.payload?.objectionCode || "Evento productivo confirmado")}</p></div></li>`).join("")}</ol>` : "<p>No hay actividad registrada.</p>";
+    openDialog({ title: card.fullName, eyebrow: "PIPELINE · TIMELINE", trigger, body: `<section class="aura-pipeline__context"><h3>Contexto inicial</h3><p>${escapeHtml(card.prospect?.initialContext || "Sin contexto inicial registrado.")}</p></section>${items}` });
+  }
+
+  function calendarDialog(card, trigger) {
+    openDialog({ title: `Cita con ${card.fullName}`, eyebrow: "PIPELINE · AGENDA", trigger,
+      body: '<div class="aura-pipeline__form"><label><span>Fecha</span><input type="date" data-calendar-date required></label><label><span>Hora</span><input type="time" data-calendar-time value="10:00" required></label><label><span>Duración</span><select data-calendar-duration><option value="30">30 min</option><option value="45" selected>45 min</option><option value="60">60 min</option></select></label><p class="wide">Forge prepara el borrador; tú lo guardas en Google Calendar.</p></div>',
+      footer: '<button class="aura-pipeline__secondary" type="button" data-dialog-close>Cancelar</button><a class="aura-pipeline__primary" data-calendar-open target="_blank" rel="noopener noreferrer">Abrir Google Calendar</a>',
+      ready(dialog) {
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10); dialog.querySelector("[data-calendar-date]").value = tomorrow;
+        const update = () => {
+          const date = dialog.querySelector("[data-calendar-date]").value; const time = dialog.querySelector("[data-calendar-time]").value; const duration = Number(dialog.querySelector("[data-calendar-duration]").value);
+          const start = new Date(`${date}T${time}:00`); if (!Number.isFinite(start.getTime())) return; const end = new Date(start.getTime() + duration * 60000);
+          const compact = value => value.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+          const params = new URLSearchParams({ action: "TEMPLATE", text: `Cita con ${card.fullName}`, dates: `${compact(start)}/${compact(end)}`, ctz: "America/Mexico_City", details: `Prospecto: ${card.fullName}\nEtapa: ${card.stageLabel}\nFuente: ${card.sourceSummary}\n\nRevisa antes de guardar.` });
+          dialog.querySelector("[data-calendar-open]").href = `https://calendar.google.com/calendar/render?${params}`;
+        };
+        dialog.querySelectorAll("input,select").forEach(control => control.addEventListener("change", update)); update();
+      },
+    });
+  }
+
+  async function whatsappDialog(card, trigger) {
+    const dialog = openDialog({ title: `WhatsApp para ${card.fullName}`, eyebrow: "PIPELINE · WHATSAPP", trigger, body: '<div class="aura-pipeline__loading"><div class="aura-pipeline__loader"></div><p>Preparando borrador gobernado.</p></div>' });
+    try {
+      const prepared = await state.adapter.prepareMessage(card.prospect); if (state.dialog !== dialog) return;
+      const text = prepared.candidate?.rawText || prepared.candidate?.text || "";
+      dialog.querySelector(".aura-pipeline__dialog-body").innerHTML = `<p class="aura-pipeline__notice">${escapeHtml(prepared.sourceMode)} · Sin envío automático.</p><label class="aura-pipeline__field"><span>Mensaje editable</span><textarea data-wa-text rows="7">${escapeHtml(text)}</textarea></label><p data-form-error role="alert" hidden></p><button class="aura-pipeline__primary" type="button" data-wa-approve>Revisar y habilitar WhatsApp</button><a class="aura-pipeline__primary" data-wa-open hidden target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a>`;
+      dialog.querySelector("[data-wa-approve]").addEventListener("click", () => {
+        const value = dialog.querySelector("[data-wa-text]").value.trim(); const safety = globalThis.ForgeDraftSafetyBoundaryNFAST06; const nav = globalThis.ForgeProductiveContactNavigationBoundary067G17B;
+        const validation = safety?.draftSafetyValidator?.({ draftText: value, draftCandidateSnapshot: { rawText: value, sendsMessage: false, sourceMutable: true }, humanApproval: { required: true, finalAuthority: "HUMAN" } });
+        const approval = safety?.approveExactDraft?.({ draftText: value, validationResult: validation, humanDecision: safety.EXPLICIT_DRAFT_APPROVAL });
+        const gate = safety?.exactDraftHumanApprovalGate?.({ draftText: value, validationResult: validation, approvalSnapshot: approval });
+        const url = gate?.exactDraftApproved ? nav?.whatsappUrl?.(card.prospect, "professional", value) : null; const link = dialog.querySelector("[data-wa-open]"); const errorNode = dialog.querySelector("[data-form-error]");
+        if (!url) { errorNode.textContent = "El mensaje no pasó la validación."; errorNode.hidden = false; return; } link.href = url; link.hidden = false; errorNode.hidden = true;
+      });
+    } catch (error) { dialog.querySelector(".aura-pipeline__dialog-body").innerHTML = `<p role="alert">${escapeHtml(humanError(error, "No pudimos preparar el mensaje."))}</p>`; }
+  }
+
+  function combatDialog(card, trigger) {
+    openDialog({ title: card.fullName, eyebrow: "NASH COMBAT", trigger, body: '<label class="aura-pipeline__field"><span>Objeción escuchada</span><textarea data-combat-text rows="4"></textarea></label><button class="aura-pipeline__primary" type="button" data-combat-run>Analizar</button><div data-combat-result></div>', ready(dialog) {
+      dialog.querySelector("[data-combat-run]").addEventListener("click", async () => {
+        const result = dialog.querySelector("[data-combat-result]");
+        try { const combat = await state.adapter.analyzeCombat(card.prospect, dialog.querySelector("[data-combat-text]").value); result.innerHTML = `<section class="aura-pipeline__context"><h3>Lectura candidata</h3><p><strong>Tipo:</strong> ${escapeHtml(combat.classification?.type || "No disponible")}</p><p><strong>Intención:</strong> ${escapeHtml(combat.classification?.intent || "No disponible")}</p><p><strong>Estrategia:</strong> ${escapeHtml(combat.psychology?.recommendedStrategy || "No disponible")}</p></section>`; }
+        catch (error) { result.innerHTML = `<p role="alert">${escapeHtml(humanError(error, "No pudimos analizar la objeción."))}</p>`; }
+      });
+    } });
+  }
+
+  async function nbaDialog(card, trigger) {
+    const dialog = openDialog({ title: card.fullName, eyebrow: "SIGUIENTE MEJOR ACCIÓN", trigger, body: '<div class="aura-pipeline__loading"><div class="aura-pipeline__loader"></div></div>' });
+    try { const nba = await state.adapter.buildNba(card); if (state.dialog !== dialog) return; const text = value => Array.isArray(value) ? value.join(", ") : value && typeof value === "object" ? Object.values(value).filter(Boolean).join(" · ") : String(value || "No disponible"); dialog.querySelector(".aura-pipeline__dialog-body").innerHTML = `<section class="aura-pipeline__context"><h3>Acción candidata</h3><p>${escapeHtml(text(nba.recommendedAction))}</p><h3>Reason Why</h3><p>${escapeHtml(text(nba.reasonWhy))}</p><h3>Por qué ahora</h3><p>${escapeHtml(text(nba.whyNow))}</p></section><p class="aura-pipeline__notice">Revisión humana requerida. No se ejecutó ninguna acción.</p>`; }
+    catch (error) { dialog.querySelector(".aura-pipeline__dialog-body").innerHTML = `<p role="alert">${escapeHtml(humanError(error, "No pudimos construir la recomendación."))}</p>`; }
+  }
+
+  async function act(action, trigger) {
+    const card = cardById(trigger.dataset.id); closeMenus();
+    if (action === "create") return createDialog(trigger); if (!card) return;
+    if (action === "edit") return editDialog(card, trigger); if (action === "archive") return archiveDialog(card, trigger);
+    if (action === "timeline") return timelineDialog(card, trigger); if (action === "calendar") return calendarDialog(card, trigger);
+    if (action === "whatsapp") return whatsappDialog(card, trigger); if (action === "combat") return combatDialog(card, trigger);
+    if (action === "nba") return nbaDialog(card, trigger);
+  }
+
+  root.addEventListener("click", event => {
+    const view = event.target.closest("[data-view]"); if (view) { state.view = view.dataset.view; writeView(windowRef, state.view); render(); return; }
+    if (event.target.closest("[data-clear-filters]")) { state.filters = { query: "", source: "", status: "" }; render(); return; }
+    const trigger = event.target.closest("[data-aura-action]"); if (!trigger) return; const action = trigger.dataset.auraAction;
+    if (action === "more") { const menu = root.querySelector(`[data-aura-menu="${CSS.escape(trigger.dataset.id)}"]`); const open = menu?.hidden !== false; closeMenus(); if (open && menu) { menu.hidden = false; trigger.setAttribute("aria-expanded", "true"); menu.querySelector("[role=menuitem]")?.focus(); } return; }
+    void act(action, trigger);
+  });
+  root.addEventListener("input", event => { if (event.target.matches("[data-filter-query]")) { state.filters.query = event.target.value; render(); } });
+  root.addEventListener("change", event => {
+    if (event.target.matches("[data-filter-source]")) { state.filters.source = event.target.value; render(); }
+    else if (event.target.matches("[data-filter-stage]")) { state.filters.status = event.target.value; render(); }
+    else if (event.target.matches("[data-aura-stage-select]")) void changeStage(event.target);
+  });
+  documentRef.addEventListener("click", event => { if (!event.target.closest("[data-aura-actions]")) closeMenus(); });
+  documentRef.addEventListener("keydown", event => { if (event.key === "Escape" && !state.dialog) closeMenus({ restore: true }); });
+
+  async function load() {
+    const revision = ++state.revision; state.status = "loading"; state.error = ""; render();
+    try {
+      const bootstrap = await waitForBootstrap(windowRef); const session = await bootstrap?.getSession?.();
+      if (!session?.data?.session?.user?.id) { state.status = "anonymous"; state.cards = []; state.adapter = null; render(); return; }
+      const adapter = await adapterFactory(); const cards = await adapter.reload(); if (revision !== state.revision) return;
+      state.adapter = adapter; state.cards = cards; state.status = "ready"; render();
+    } catch (error) { if (revision !== state.revision) return; state.status = "error"; state.error = humanError(error, "No pudimos cargar el Pipeline productivo."); render(); }
+  }
+
+  windowRef.addEventListener("forge:auth-state-changed", event => {
+    const status = String(event.detail?.status || "").toLowerCase();
+    if (status === "authenticated") void load();
+    else if (["anonymous", "auth_error"].includes(status)) { state.revision += 1; state.cards = []; state.adapter = null; state.status = status === "auth_error" ? "error" : "anonymous"; state.error = status === "auth_error" ? "No pudimos recuperar tu sesión." : ""; closeDialog({ restore: false }); render(); }
+  });
 
   const api = Object.freeze({
-    id: "pipeline",
-    root,
-    updateProductiveStage(prospectId, status) {
-      return persistProductiveStage(prospectId, status);
-    },
-    getProductiveCard(prospectId) {
-      return productiveCards.find(item => item.id === prospectId) || null;
-    },
-    mount() {
-      root.hidden = false;
-      root.dataset.moduleActive = "true";
-      if (!mounted) {
-        mounted = true;
-        render();
-        if (usesProductiveRuntime) void reconcileAuthenticatedSession();
-      }
-      shell.syncVisualViewport();
-    },
-    reconcile() {
-      root.hidden = false;
-      root.dataset.moduleActive = "true";
-    },
-    unmount() {
-      root.hidden = true;
-      root.dataset.moduleActive = "false";
-    },
+    id: "pipeline", root, designAuthority: DESIGN_AUTHORITY,
+    mount() { root.hidden = false; root.dataset.moduleActive = "true"; if (!state.mounted) { state.mounted = true; void load(); } shell?.syncVisualViewport?.(); },
+    reconcile() { root.hidden = false; root.dataset.moduleActive = "true"; },
+    unmount() { root.hidden = true; root.dataset.moduleActive = "false"; closeMenus(); closeDialog({ restore: false }); },
+    refresh: load,
+    diagnostics: () => Object.freeze({ renderer: "cleanroom", designAuthority: DESIGN_AUTHORITY, material3DesignUsed: false, view: state.view, records: state.cards.length, status: state.status }),
   });
-  root[pipelineStateKey] = api;
-  if (usesProductiveRuntime) {
-    globalThis.addEventListener("forge:auth-state-changed", event => {
-      const status = String(event.detail?.status || "").toLowerCase();
-      if (status === "authenticated") void reconcileAuthenticatedSession();
-      else if (["anonymous", "auth_error"].includes(status)) {
-        clearPrivateState();
-        authStatus = status === "auth_error" ? "AUTH_ERROR" : "ANONYMOUS";
-        render();
-      } else {
-        authStatus = "AUTH_LOADING";
-        render();
-      }
-    });
-  }
+  root[STATE_KEY] = api;
   return api;
 }
