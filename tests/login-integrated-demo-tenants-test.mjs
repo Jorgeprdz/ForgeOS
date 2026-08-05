@@ -26,9 +26,10 @@ function requireMarkers(text, markers) {
 }
 
 test("Material 3 loads the auth guard before one login-integrated demo adapter", () => {
+  const localDemoImport = 'import "./forge-demo-mode.js?v=forge-demo-mode-001";';
   const guardImport = 'import "./authenticated-route-guard.js?v=auth-route-guard-001";';
   const demoImport = 'import "./login-integrated-demo.js?v=forge-demo-login-001";';
-  assert.ok(source.app.startsWith(`${guardImport}\n${demoImport}\n`));
+  assert.ok(source.app.startsWith(`${localDemoImport}\n${guardImport}\n${demoImport}\n`));
   assert.equal(source.app.split(demoImport).length - 1, 1);
   requireMarkers(source.frontend, [
     "Explorar ForgeOS con datos demo",
