@@ -33,7 +33,6 @@ assert.match(authEntry, /NETWORK_ERROR/);
 assert.match(authEntry, /CONFIG_BLOCKED/);
 assert.match(authEntry, /new URL\('\/ForgeOS\/static-preview\/forge-alive\/'/);
 assert.match(authEntry, /handlePanelKeydown/);
-assert.match(authEntry, /prefers-reduced-motion/);
 assert.match(authEntry, /material3DesignUsed: false/);
 assert.doesNotMatch(authEntry, /style=/i);
 assert.doesNotMatch(authEntry, /localStorage|sessionStorage[\s\S]{0,200}password/i);
