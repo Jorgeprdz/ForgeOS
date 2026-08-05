@@ -139,7 +139,8 @@ begin
 end;
 $$;
 
--- Existing records are append-only.
+-- Existing records are append-only. Authenticated users have no UPDATE grant;
+-- the trigger remains defense-in-depth for privileged writers.
 do $$
 begin
   begin
@@ -148,6 +149,7 @@ begin
       where profile_reference = 'profile-advisor-a-v1';
     raise exception 'EXPECTED_APPEND_ONLY_REJECTION_NOT_RAISED';
   exception
+    when insufficient_privilege then null;
     when sqlstate '55000' then null;
   end;
 end;
