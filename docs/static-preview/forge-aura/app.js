@@ -1,4 +1,4 @@
-import { createAuraRouter } from "./aura-router.js";
+import { createAuraRouter } from "./aura-router.js?v=6500f1f3";
 import { createAuraShell } from "./aura-shell.js";
 import { createAuraAuth, renderAuraLogin } from "./aura-auth.js";
 import { createPipelineModule } from "./pipeline/pipeline-module.js";
