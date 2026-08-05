@@ -29,12 +29,12 @@ jobs:
           set -euo pipefail
           count=$(find .aura-upload -maxdepth 1 -type f -name 'chunk-*.b64' 2>/dev/null | wc -l | tr -d ' ')
           echo "count=$count" >> "$GITHUB_OUTPUT"
-          if [ "$count" -ne 12 ]; then
-            echo "Chunk set incomplete: $count/12. Nothing to reconstruct yet."
+          if [ "$count" -ne 24 ]; then
+            echo "Chunk set incomplete: $count/24. Nothing to reconstruct yet."
           fi
 
       - name: Reconstruct and verify canonical PDF
-        if: steps.chunks.outputs.count == '12'
+        if: steps.chunks.outputs.count == '24'
         shell: bash
         run: |
           set -euo pipefail
@@ -48,7 +48,7 @@ jobs:
           rm -rf .aura-upload
 
       - name: Commit reconstructed artifact
-        if: steps.chunks.outputs.count == '12'
+        if: steps.chunks.outputs.count == '24'
         shell: bash
         run: |
           set -euo pipefail
