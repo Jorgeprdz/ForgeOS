@@ -28,21 +28,27 @@ jobs:
       - name: Validate GitHub Pages public configuration
         env:
           DEMO_MODE: ${{ vars.DEMO_MODE || 'false' }}
+          FORGE_DEMO_MODE: ${{ vars.FORGE_DEMO_MODE || 'false' }}
+          FORGE_DEMO_ALLOW_AUTH_BYPASS: ${{ vars.FORGE_DEMO_ALLOW_AUTH_BYPASS || 'false' }}
           ENABLE_TEST_ADVISOR_LOGIN: ${{ vars.ENABLE_TEST_ADVISOR_LOGIN || 'false' }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          if [ "$DEMO_MODE" != "true" ]; then
-            if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
-              echo "Error: GitHub SUPABASE_URL and SUPABASE_ANON_KEY are required when DEMO_MODE is not 'true'"
-              exit 1
-            fi
+          if [ "$DEMO_MODE" = "true" ] || [ "$FORGE_DEMO_MODE" = "true" ] || [ "$FORGE_DEMO_ALLOW_AUTH_BYPASS" = "true" ]; then
+            echo "Error: FORGE_DEMO_MODE is forbidden in the production Pages deployment"
+            exit 1
           fi
-          node -e "if(process.env.DEMO_MODE!=='true'){const u=new URL(process.env.SUPABASE_URL);if(u.hostname!=='rmlxigxysujsuwzgoimv.supabase.co')throw new Error('SUPABASE_URL_PROJECT_REF_MISMATCH')}"
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Error: GitHub SUPABASE_URL and SUPABASE_ANON_KEY are required"
+            exit 1
+          fi
+          node -e "const u=new URL(process.env.SUPABASE_URL);if(u.hostname!=='rmlxigxysujsuwzgoimv.supabase.co')throw new Error('SUPABASE_URL_PROJECT_REF_MISMATCH')"
 
       - name: Generate env.js
         env:
           DEMO_MODE: ${{ vars.DEMO_MODE || 'false' }}
+          FORGE_DEMO_MODE: ${{ vars.FORGE_DEMO_MODE || 'false' }}
+          FORGE_DEMO_ALLOW_AUTH_BYPASS: ${{ vars.FORGE_DEMO_ALLOW_AUTH_BYPASS || 'false' }}
           ENABLE_TEST_ADVISOR_LOGIN: ${{ vars.ENABLE_TEST_ADVISOR_LOGIN || 'false' }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -54,6 +60,8 @@ jobs:
             SUPABASE_URL: process.env.SUPABASE_URL || "",
             SUPABASE_KEY: process.env.SUPABASE_ANON_KEY || "",
             DEMO_MODE: isDemo ? "true" : "false",
+            FORGE_DEMO_MODE: process.env.FORGE_DEMO_MODE === "true" ? "true" : "false",
+            FORGE_DEMO_ALLOW_AUTH_BYPASS: process.env.FORGE_DEMO_ALLOW_AUTH_BYPASS === "true" ? "true" : "false",
             ENABLE_TEST_ADVISOR_LOGIN: process.env.ENABLE_TEST_ADVISOR_LOGIN === "true" ? "true" : "false"
           };
           console.log(`Generating env.js (DEMO_MODE: ${env.DEMO_MODE}, TEST_ADVISOR_LOGIN: ${env.ENABLE_TEST_ADVISOR_LOGIN})`);

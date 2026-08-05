@@ -1,4 +1,6 @@
-const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V4";
+import "./forge-demo-mode.js?v=forge-demo-mode-001";
+
+const VERSION = "FORGE_AUTHENTICATED_ROUTE_GUARD_V5";
 const FAIL_CLOSED_CONTRACT = "FORGE_AUTH_FAIL_CLOSED_V1";
 const REQUIRED_LOGIN_GATE_CONTRACT = "FORGE_AUTH_REQUIRED_LOGIN_GATE_V1";
 const LOGIN_GATE_RETRY_LIMIT = 120;
@@ -47,9 +49,9 @@ function ensureFailClosedStyle() {
   const style = document.createElement("style");
   style.setAttribute(marker, FAIL_CLOSED_CONTRACT);
   style.textContent = `
-    html:not([data-forge-auth-boundary="authenticated"])
+    html:not([data-forge-auth-boundary="authenticated"]):not([data-forge-auth-boundary="demo"])
       [data-forge-module-viewport],
-    html:not([data-forge-auth-boundary="authenticated"])
+    html:not([data-forge-auth-boundary="authenticated"]):not([data-forge-auth-boundary="demo"])
       [data-forge-shell-controls] {
       display: none !important;
       visibility: hidden !important;
@@ -98,7 +100,7 @@ function requiredLoginAuthEntry() {
 }
 
 function openRequiredLoginGate() {
-  if (state.acceptanceHarness || state.status === "authenticated") return;
+  if (state.acceptanceHarness || ["authenticated", "demo"].includes(state.status)) return;
   if (state.loginGateForced) return;
 
   const authEntry = requiredLoginAuthEntry();
@@ -192,7 +194,7 @@ function applyStatus(status) {
   state.status = status;
   document.documentElement.dataset.forgeAuthBoundary = status;
 
-  if (status === "authenticated") {
+  if (status === "authenticated" || status === "demo") {
     releaseRequiredLoginGate();
     setPrivateSurfaceAvailable(true);
     restoreAuthenticatedRoute();
@@ -206,7 +208,7 @@ function applyStatus(status) {
 }
 
 function blockAnonymousNavigation(event) {
-  if (state.status === "authenticated") return;
+  if (state.status === "authenticated" || state.status === "demo") return;
   const target = event.target instanceof Element ? event.target : null;
   const routeControl = target?.closest(
     "[data-route],[data-nav],[data-forge-route],[href*='nav=']",
@@ -227,9 +229,10 @@ ensureFailClosedStyle();
 document.documentElement.dataset.forgeAuthBoundary = "resolving";
 document.addEventListener("click", blockAnonymousNavigation, true);
 globalThis.addEventListener("popstate", () => {
-  if (state.status !== "authenticated") canonicalizeAnonymousLocation();
+  if (!["authenticated", "demo"].includes(state.status)) canonicalizeAnonymousLocation();
 });
 globalThis.addEventListener("forge:auth-state-changed", (event) => {
+  if (globalThis.ForgeDemoMode?.active === true) return;
   const status = String(event?.detail?.status || "").toLowerCase();
   if (state.acceptanceHarness && ["anonymous", "auth_error"].includes(status)) {
     return;
@@ -238,15 +241,16 @@ globalThis.addEventListener("forge:auth-state-changed", (event) => {
   else if (["anonymous", "auth_error"].includes(status)) applyStatus(status);
 });
 globalThis.addEventListener("forge:auth-panel-closed", () => {
-  if (state.acceptanceHarness || state.status === "authenticated") return;
+  if (state.acceptanceHarness || ["authenticated", "demo"].includes(state.status)) return;
   state.loginGateForced = false;
   document.documentElement.dataset.forgeAuthLoginGate = "reopening";
   globalThis.setTimeout(openRequiredLoginGate, 0);
 });
 
 const observer = new MutationObserver(() => {
-  setPrivateSurfaceAvailable(state.status === "authenticated");
-  if (state.status !== "authenticated") openRequiredLoginGate();
+  const available = ["authenticated", "demo"].includes(state.status);
+  setPrivateSurfaceAvailable(available);
+  if (!available) openRequiredLoginGate();
 });
 observer.observe(document.documentElement, {
   childList: true,
@@ -255,7 +259,10 @@ observer.observe(document.documentElement, {
   attributeFilter: ["hidden", "inert", "aria-hidden"],
 });
 
-if (state.acceptanceHarness) {
+if (globalThis.ForgeDemoMode?.active === true) {
+  document.documentElement.dataset.forgeAuthAcceptance = "local-demo-only";
+  applyStatus("demo");
+} else if (state.acceptanceHarness) {
   document.documentElement.dataset.forgeAuthAcceptanceHarness = "loopback-only";
   applyStatus("authenticated");
 } else {
