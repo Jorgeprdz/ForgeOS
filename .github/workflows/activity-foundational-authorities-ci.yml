@@ -1,0 +1,96 @@
+name: Activity Foundational Authorities CI
+
+on:
+  push:
+    branches:
+      - feature/activity-foundational-authorities-closure-001
+  pull_request:
+    branches:
+      - feature/aura-clean-runtime-productive-pipeline
+    paths:
+      - "platform/event-evidence/**"
+      - "platform/operational-calendar/**"
+      - "platform/productivity/**"
+      - "supabase/migrations/20260805000100_activity_operational_calendar_authority.sql"
+      - "tests/activity-foundational-*.mjs"
+      - "tests/activity-foundational-*.sql"
+      - ".github/workflows/activity-foundational-authorities-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  foundational-authorities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: forge_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d forge_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Focused foundational tests
+        run: |
+          node tests/activity-foundational-operational-calendar-test.mjs
+          node tests/activity-foundational-fes-taxonomy-test.mjs
+          node tests/activity-foundational-productivity-conversion-test.mjs
+          node tests/activity-foundational-points-adapter-test.mjs
+      - name: PostgreSQL migration and RLS acceptance
+        env:
+          PGHOST: localhost
+          PGPORT: "5432"
+          PGDATABASE: forge_test
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: |
+          if ! command -v psql >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y postgresql-client
+          fi
+          psql --set=ON_ERROR_STOP=1 --file=tests/activity-foundational-operational-calendar-rls-test.sql
+      - name: Existing FES and Activity regressions
+        run: |
+          node tests/fes-02c-activity-ledger-browser-runtime-test.mjs
+          node tests/rep-16d-productive-activity-delivery-test.mjs
+          node tests/activity-reports-productive-ui-completion-test.mjs
+      - name: Shared constitutional regressions
+        run: |
+          node manager-os/tests/nba-reason-why-boundary-contract-master-test.js
+          node manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js
+      - name: Hard acceptance guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=cbf493409fc9ff7787ec8da60a436cbed42dd12b
+          git diff --name-only "$BASE"...HEAD > /tmp/changed-files.txt
+          while IFS= read -r file; do
+            case "$file" in
+              app.js|*/app.js|*.html|*.css|*forge-aura*|*material-3*|*material3*)
+                echo "Forbidden UI/Aura/Material file changed: $file" >&2
+                exit 1
+                ;;
+            esac
+          done < /tmp/changed-files.txt
+          if git diff --unified=0 "$BASE"...HEAD -- . ':!package-lock.json' | grep -E '^\+.*(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}|service_role[^A-Za-z0-9].{0,20}[A-Za-z0-9._-]{20,}|BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY)' ; then
+            echo 'Potential committed secret detected' >&2
+            exit 1
+          fi
+          test "$(grep -RIl --exclude='*.test.*' --exclude='*test*' 'create table.*activity.*ledger' platform supabase 2>/dev/null | grep -v '20260726000100_fes02_activity_event_ledger.sql' | wc -l)" -eq 0
+          test "$(grep -RIl --exclude='*.test.*' --exclude='*test*' 'DAILY_POINTS_RULES[[:space:]]*=' platform 2>/dev/null | wc -l)" -eq 0
+          node tests/activity-foundational-points-adapter-test.mjs >/dev/null
