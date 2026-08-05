@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es-MX" data-aura-runtime="FORGE_AURA_AUTH_V4">
+<html lang="es-MX" data-aura-runtime="FORGE_AURA_AUTH_V4_PAGES_ADAPTER_V1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,7 +10,14 @@
   <link rel="stylesheet" href="./aura-auth.css">
   <link rel="stylesheet" href="./pipeline/pipeline.css">
   <script src="./env.js?v=e0d98cba"></script>
-  <script type="module" src="./aura-bootstrap-v4.js?v=state-fix-24f2cb86"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "./pipeline/pipeline-adapter.js": "./pipeline/pipeline-adapter-pages-v1.js"
+      }
+    }
+  </script>
+  <script type="module" src="./aura-bootstrap-v4.js?v=pages-adapter-bde221a7"></script>
 </head>
 <body>
   <a class="aura-skip" href="#aura-main">Saltar al contenido</a>
