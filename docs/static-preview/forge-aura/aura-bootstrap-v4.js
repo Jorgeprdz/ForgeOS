@@ -7,4 +7,4 @@ document.documentElement.dataset.auraEnvState = hasProductiveConfig()
   ? "PRODUCTIVE_CONFIG_READY"
   : "PRODUCTIVE_CONFIG_BLOCKED";
 
-await import("./app-v4.js");
+await import("./app-v4.js?v=state-fix-9f5e9597");
