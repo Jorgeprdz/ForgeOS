@@ -1,0 +1,62 @@
+name: Activity Foundational Authorities CI
+
+on:
+  push:
+    branches:
+      - feature/activity-foundational-authorities-closure-001
+  pull_request:
+    branches:
+      - feature/aura-clean-runtime-productive-pipeline
+    paths:
+      - "platform/event-evidence/**"
+      - "platform/operational-calendar/**"
+      - "platform/productivity/**"
+      - "supabase/migrations/20260805000100_activity_operational_calendar_authority.sql"
+      - "tests/activity-foundational-*.mjs"
+      - ".github/workflows/activity-foundational-authorities-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  foundational-authorities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Focused foundational tests
+        run: |
+          node tests/activity-foundational-operational-calendar-test.mjs
+          node tests/activity-foundational-fes-taxonomy-test.mjs
+          node tests/activity-foundational-productivity-conversion-test.mjs
+          node tests/activity-foundational-points-adapter-test.mjs
+      - name: Existing FES and Activity regressions
+        run: |
+          node tests/fes-02c-activity-ledger-browser-runtime-test.mjs
+          node tests/rep-16d-productive-activity-delivery-test.mjs
+          node tests/activity-reports-productive-ui-completion-test.mjs
+      - name: Shared constitutional regressions
+        run: |
+          node manager-os/tests/nba-reason-why-boundary-contract-master-test.js
+          node manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js
+      - name: No forbidden UI or copied baremo changes
+        run: |
+          git diff --name-only cbf493409fc9ff7787ec8da60a436cbed42dd12b...HEAD > /tmp/changed-files.txt
+          if grep -E '(^|/)(app\.js|.*\.html|.*\.css)$|forge-aura|material' /tmp/changed-files.txt; then
+            echo 'Forbidden UI/Aura/Material file changed' >&2
+            exit 1
+          fi
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const source = fs.readFileSync('platform/productivity/activity-points-authority-adapter.mjs', 'utf8');
+          const authority = fs.readFileSync('daily-points-engine.js', 'utf8');
+          const pairs = [...authority.matchAll(/^\s*([a-z_]+):\s*(\d+),?$/gm)].map(([, key, value]) => [key, value]);
+          for (const [key, value] of pairs) {
+            if (new RegExp(`${key}\\s*:\\s*${value}`).test(source)) throw new Error(`Copied points rule: ${key}`);
+          }
+          NODE
