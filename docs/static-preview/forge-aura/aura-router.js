@@ -49,7 +49,10 @@ export function createAuraRouter({ windowRef = window, onChange } = {}) {
     restoreAfterAuth() {
       const url = new URL(windowRef.location.href);
       const target = normalizeRoute(url.searchParams.get("restore") || "pipeline");
-      url.searchParams.delete("restore");
+      for (const key of ["restore", "code", "error", "error_code", "error_description"]) {
+        url.searchParams.delete(key);
+      }
+      url.hash = "";
       url.searchParams.set("route", target);
       windowRef.history.replaceState({}, "", url);
       emit();
