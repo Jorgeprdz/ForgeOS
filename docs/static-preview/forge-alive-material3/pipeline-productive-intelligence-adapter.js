@@ -377,6 +377,7 @@ export async function createProductiveIntelligenceAdapter(options = {}) {
   }
 
   async function updateStage(prospectId, status) {
+    globalThis.ForgeDemoMode?.assertNoRealMutation?.("pipeline.updateStage");
     if (!STAGE_OPTIONS.some(option => option.value === status)) {
       throw new Error("PRODUCTIVE_STAGE_NOT_ALLOWED");
     }
@@ -426,7 +427,10 @@ export async function createProductiveIntelligenceAdapter(options = {}) {
   return Object.freeze({
     service, timelineService, reload, prepareMessage, analyzeCombat,
     registerObjectionClassification, buildNba, updateStage,
-    createProspect: payload => service.createProspect(payload),
+    createProspect: payload => {
+      globalThis.ForgeDemoMode?.assertNoRealMutation?.("pipeline.createProspect");
+      return service.createProspect(payload);
+    },
     get cards() { return cards; },
     get records() { return records; },
     get confirmedStages() { return new Map(confirmedStages); },

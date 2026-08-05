@@ -252,6 +252,7 @@ function installOpenGuard() {
 }
 
 function boot() {
+  if (globalThis.ForgeDemoMode?.active === true) return;
   ensureStyles();
   ensureDemoLoginButton();
   state.observer = new MutationObserver(ensureDemoLoginButton);

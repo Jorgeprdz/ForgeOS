@@ -303,6 +303,7 @@ export function installPipelineProspectAdmin(options = {}) {
   };
 
   const service = async () => {
+    globalThis.ForgeDemoMode?.assertNoPrivateRead?.("pipeline.prospectAdmin");
     const value = await adapter();
     if (!value?.service) throw new Error("PRODUCTIVE_PROSPECT_SERVICE_UNAVAILABLE");
     return value.service;
