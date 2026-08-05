@@ -6,13 +6,15 @@ const corePath = new URL("../docs/static-preview/forge-alive-material3/pipeline-
 const modulePath = new URL("../docs/static-preview/forge-alive-material3/pipeline-module.js", import.meta.url);
 const stylesPath = new URL("../docs/static-preview/forge-alive-material3/pipeline-aura-light-2026.css", import.meta.url);
 const actionIdentityPath = new URL("../docs/static-preview/forge-alive-material3/pipeline-action-identity.js", import.meta.url);
+const appPath = new URL("../docs/static-preview/forge-alive-material3/app.js", import.meta.url);
 const authorityPath = new URL("../adr/ADR-026 — Aura Light Pipeline Productive Rebuild Execution Authority.txt", import.meta.url);
 
 const core = await import(`${pathToFileURL(corePath.pathname).href}?test=${Date.now()}`);
-const [runtime, styles, actionIdentity, authority] = await Promise.all([
+const [runtime, styles, actionIdentity, app, authority] = await Promise.all([
   readFile(modulePath, "utf8"),
   readFile(stylesPath, "utf8"),
   readFile(actionIdentityPath, "utf8"),
+  readFile(appPath, "utf8"),
   readFile(authorityPath, "utf8"),
 ]);
 
@@ -112,6 +114,20 @@ assert.doesNotMatch(
   /localStorage[^\n]*(?:fullName|phone|email|timeline|prospect)/i,
 );
 
+assert.ok(app.includes("pipeline-module.js?v=aura-native-pipeline-002"));
+assert.ok(app.includes("pipeline-action-identity.js?v=aura-native-pipeline-002"));
+for (const retiredImport of [
+  "pipeline-ui-stability.js",
+  "pipeline-interaction-authority.js",
+  "pipeline-prospect-admin.js",
+  "pipeline-context-journal.js",
+  "pipeline-public-acceptance-hotfix.js",
+  "pipeline-filter-count-authority.js",
+  "pipeline-stage-filter-authority.js",
+]) {
+  assert.equal(app.includes(retiredImport), false, `LEGACY_BOOT_IMPORT=${retiredImport}`);
+}
+
 for (const required of [
   "--aura-canvas: #f7f8fc",
   "--aura-surface: #ffffff",
@@ -166,5 +182,6 @@ console.log("AURA_LIGHT_PIPELINE_NATIVE_RENDERER=PASS");
 console.log("PIPELINE_VIEWS=CARDS_AND_LIST");
 console.log("PIPELINE_ACTIONS=WHATSAPP_CALL_TIMELINE_MORE");
 console.log("PIPELINE_LEGACY_DOM_ENHANCER=0");
+console.log("PIPELINE_LEGACY_BOOT_IMPORTS=0");
 console.log("MATERIAL_3_DESIGN_USAGE=0");
 console.log("HOME_DASHBOARD_MUTATION=0");
