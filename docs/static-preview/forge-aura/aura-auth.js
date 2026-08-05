@@ -1,4 +1,4 @@
-import { oauthRedirectUrl } from "./aura-router.js?v=oauth-callback-v2";
+import { oauthRedirectUrl } from "./aura-router.js?v=oauth-implicit-v1";
 
 const PRODUCTIVE = Object.freeze({
   config: "FORGE_AURA_PUBLIC_CONFIG_V1",
@@ -24,7 +24,10 @@ function publicConfig(env = globalThis.__ENV__) {
   return Object.freeze({
     contractId: PRODUCTIVE.config,
     state: DEMO_MODE ? "DEMO_EXPLICIT" : configured ? "READY" : "BLOCKED",
-    SUPABASE_URL, SUPABASE_KEY, DEMO_MODE, configured,
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    DEMO_MODE,
+    configured,
   });
 }
 
@@ -33,8 +36,8 @@ async function loadSupabase() {
   if (supabaseLibraryPromise) return supabaseLibraryPromise;
   supabaseLibraryPromise = new Promise((resolve, reject) => {
     const script = document.createElement("script");
-    script.src = "https://unpkg.com/@supabase/supabase-js@2.111.0/dist/umd/supabase.js";
-    script.dataset.auraSupabaseClient = "2.111.0";
+    script.src = "https://unpkg.com/@supabase/supabase-js@2.108.2/dist/umd/supabase.js";
+    script.dataset.auraSupabaseClient = "2.108.2";
     script.onload = () => globalThis.supabase?.createClient
       ? resolve(globalThis.supabase)
       : reject(new Error("AUTH_CLIENT_INVALID"));
@@ -59,8 +62,8 @@ async function getClient() {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
-        detectSessionInUrl: false,
-        flowType: "pkce",
+        detectSessionInUrl: true,
+        flowType: "implicit",
       },
     });
   })();
@@ -71,7 +74,7 @@ function cleanSensitive(form) {
   form?.querySelectorAll('input[type="password"]').forEach(input => { input.value = ""; });
 }
 
-function callbackState(windowRef) {
+function readCallback(windowRef) {
   const url = new URL(windowRef.location.href);
   const hash = new URLSearchParams(url.hash.replace(/^#/, ""));
   return Object.freeze({
@@ -93,10 +96,21 @@ function cleanCallbackUrl(windowRef) {
   windowRef.history.replaceState({}, "", url);
 }
 
-function callbackError(state) {
-  if (!state.error && !state.errorDescription) return null;
-  const message = decodeURIComponent(String(state.errorDescription || state.error || "OAUTH_CALLBACK_FAILED").replace(/\+/g, " "));
-  return Object.assign(new Error(message), { code: state.errorCode || state.error || "OAUTH_CALLBACK_FAILED" });
+function safeDecode(value) {
+  const normalized = String(value || "").replace(/\+/g, " ");
+  try {
+    return decodeURIComponent(normalized);
+  } catch {
+    return normalized;
+  }
+}
+
+function callbackToError(callback) {
+  if (!callback.error && !callback.errorDescription) return null;
+  const message = safeDecode(callback.errorDescription || callback.error || "OAUTH_CALLBACK_FAILED");
+  return Object.assign(new Error(message), {
+    code: callback.errorCode || callback.error || "OAUTH_CALLBACK_FAILED",
+  });
 }
 
 function humanAuthError(error) {
@@ -104,6 +118,7 @@ function humanAuthError(error) {
   if (/invalid login|invalid credentials/i.test(value)) return "El correo o la contraseña no son correctos.";
   if (/email not confirmed/i.test(value)) return "Confirma tu correo antes de entrar.";
   if (/redirect.*allow|not allowed|redirect_to/i.test(value)) return "La URL de regreso de Aura no está autorizada en Supabase.";
+  if (/stale_pkce_callback_retry/i.test(value)) return "La pestaña conservó un callback anterior. Vuelve a pulsar Continuar con Google.";
   if (/code verifier|exchange|pkce|flow state/i.test(value)) return "Google regresó a Forge, pero no pudimos completar la sesión. Inicia el acceso otra vez desde esta misma pestaña.";
   if (/network|fetch|load/i.test(value)) return "No pudimos conectar con Forge. Revisa tu conexión.";
   if (/config/i.test(value)) return "Falta la configuración pública de Supabase para este entorno.";
@@ -117,10 +132,24 @@ export function createAuraAuth({ windowRef = window } = {}) {
   let session = null;
   let user = null;
   const listeners = new Set();
+
   const emit = (event = "AUTH_STATE_CHANGED", error = null) => {
     const expired = event === "SESSION_EXPIRED" || (event === "TOKEN_REFRESHED" && !user?.id);
-    const authState = error ? "AUTH_ERROR" : expired ? "SESSION_EXPIRED" : user?.id ? "AUTHENTICATED" : "AUTH_REQUIRED";
-    const snapshot = Object.freeze({ event, session, user, status: user?.id ? "authenticated" : "anonymous", authState, error });
+    const authState = error
+      ? "AUTH_ERROR"
+      : expired
+        ? "SESSION_EXPIRED"
+        : user?.id
+          ? "AUTHENTICATED"
+          : "AUTH_REQUIRED";
+    const snapshot = Object.freeze({
+      event,
+      session,
+      user,
+      status: user?.id ? "authenticated" : "anonymous",
+      authState,
+      error,
+    });
     listeners.forEach(listener => listener(snapshot));
     return snapshot;
   };
@@ -140,36 +169,33 @@ export function createAuraAuth({ windowRef = window } = {}) {
     const client = await getClient();
     bindAuthEvents(client);
 
-    const callback = callbackState(windowRef);
-    const providerError = callbackError(callback);
+    const callback = readCallback(windowRef);
+    const providerError = callbackToError(callback);
     if (providerError) {
       cleanCallbackUrl(windowRef);
       throw providerError;
     }
 
-    let data;
-    let error;
-    let event = "INITIAL_SESSION";
+    let { data, error } = await client.auth.getSession();
+    if (error) throw error;
 
-    if (callback.code) {
-      ({ data, error } = await client.auth.exchangeCodeForSession(callback.code));
-      cleanCallbackUrl(windowRef);
-      event = "SIGNED_IN";
-    } else if (callback.accessToken && callback.refreshToken) {
+    if (!data?.session && callback.accessToken && callback.refreshToken) {
       ({ data, error } = await client.auth.setSession({
         access_token: callback.accessToken,
         refresh_token: callback.refreshToken,
       }));
-      cleanCallbackUrl(windowRef);
-      event = "SIGNED_IN";
-    } else {
-      ({ data, error } = await client.auth.getSession());
+      if (error) throw error;
     }
 
-    if (error) throw error;
+    if (!data?.session && callback.code) {
+      cleanCallbackUrl(windowRef);
+      throw Object.assign(new Error("STALE_PKCE_CALLBACK_RETRY"), { code: "STALE_PKCE_CALLBACK_RETRY" });
+    }
+
     session = data?.session || null;
     user = session?.user || null;
-    return emit(event);
+    if (session) cleanCallbackUrl(windowRef);
+    return emit(session ? "SIGNED_IN" : "INITIAL_SESSION");
   }
 
   async function signInWithPassword({ email, password, form } = {}) {
@@ -219,9 +245,20 @@ export function createAuraAuth({ windowRef = window } = {}) {
     signInWithGoogle,
     signOut,
     humanAuthError,
-    subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); },
-    snapshot: () => Object.freeze({ session, user, status: user?.id ? "authenticated" : "anonymous" }),
-    destroy() { subscription?.unsubscribe?.(); subscription = null; listeners.clear(); },
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    snapshot: () => Object.freeze({
+      session,
+      user,
+      status: user?.id ? "authenticated" : "anonymous",
+    }),
+    destroy() {
+      subscription?.unsubscribe?.();
+      subscription = null;
+      listeners.clear();
+    },
   });
 }
 
@@ -244,13 +281,18 @@ export function renderAuraLogin({ root, auth, onAuthenticated } = {}) {
       </div>
       <p class="aura-login__privacy">Forge no guarda tu contraseña. La identidad es verificada por Supabase Auth.</p>
     </section>`;
+
   const form = root.querySelector("[data-aura-login-form]");
   const errorNode = root.querySelector("[data-aura-auth-error]");
   const setError = message => {
     errorNode.textContent = message || "";
     errorNode.hidden = !message;
-    root.querySelector("[data-aura-auth-state]")?.setAttribute("data-aura-auth-state", message ? "AUTH_ERROR" : "AUTH_REQUIRED");
+    root.querySelector("[data-aura-auth-state]")?.setAttribute(
+      "data-aura-auth-state",
+      message ? "AUTH_ERROR" : "AUTH_REQUIRED",
+    );
   };
+
   form.addEventListener("submit", async event => {
     event.preventDefault();
     setError("");
@@ -260,7 +302,11 @@ export function renderAuraLogin({ root, auth, onAuthenticated } = {}) {
     submit.textContent = "Entrando…";
     const data = new FormData(form);
     try {
-      const snapshot = await auth.signInWithPassword({ email: data.get("email"), password: data.get("password"), form });
+      const snapshot = await auth.signInWithPassword({
+        email: data.get("email"),
+        password: data.get("password"),
+        form,
+      });
       onAuthenticated?.(snapshot);
     } catch (error) {
       setError(auth.humanAuthError(error));
@@ -270,6 +316,7 @@ export function renderAuraLogin({ root, auth, onAuthenticated } = {}) {
       submit.textContent = "Iniciar sesión";
     }
   });
+
   root.querySelector("[data-aura-google]").addEventListener("click", async event => {
     const button = event.currentTarget;
     setError("");
