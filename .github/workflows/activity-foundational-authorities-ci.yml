@@ -13,6 +13,7 @@ on:
       - "platform/productivity/**"
       - "supabase/migrations/20260805000100_activity_operational_calendar_authority.sql"
       - "tests/activity-foundational-*.mjs"
+      - "tests/activity-foundational-*.sql"
       - ".github/workflows/activity-foundational-authorities-ci.yml"
 
 permissions:
@@ -21,7 +22,20 @@ permissions:
 jobs:
   foundational-authorities:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: forge_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d forge_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,6 +51,19 @@ jobs:
           node tests/activity-foundational-fes-taxonomy-test.mjs
           node tests/activity-foundational-productivity-conversion-test.mjs
           node tests/activity-foundational-points-adapter-test.mjs
+      - name: PostgreSQL migration and RLS acceptance
+        env:
+          PGHOST: localhost
+          PGPORT: "5432"
+          PGDATABASE: forge_test
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: |
+          if ! command -v psql >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y postgresql-client
+          fi
+          psql --set=ON_ERROR_STOP=1 --file=tests/activity-foundational-operational-calendar-rls-test.sql
       - name: Existing FES and Activity regressions
         run: |
           node tests/fes-02c-activity-ledger-browser-runtime-test.mjs
