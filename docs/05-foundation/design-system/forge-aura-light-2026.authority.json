@@ -1,0 +1,16 @@
+{
+  "authorityId": "FORGE_AURA_LIGHT_2026_CANONICAL_REDESIGN_AUTHORITY_001",
+  "title": "Forge Aura Light 2026",
+  "version": "1.0",
+  "status": "RATIFIED_CANONICAL_ACTIVE_LOCKED",
+  "effectiveDate": "2026-08-04",
+  "humanOwner": "Jorge Ignacio Palacios Rodriguez",
+  "canonicalArtifact": "docs/05-foundation/design-system/Forge_Aura_Light_2026_Sistema_de_Diseno.pdf",
+  "sha256": "0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e",
+  "pages": 12,
+  "canonicalRule": "Las acciones flotan. La informacion se organiza. El color orienta.",
+  "compliance": "REQUIRED_FOR_ALL_NEW_REDESIGN_IMPLEMENTATION",
+  "legacyVisualImports": "FORBIDDEN_IN_CLEANROOM_REDESIGN",
+  "implementationAuthorization": "NOT_GRANTED_BY_THIS_AUTHORITY",
+  "changeControl": "VERSIONED_REPLACEMENT_WITH_OWNER_MIRANDA_AND_BOARD_APPROVAL"
+}
