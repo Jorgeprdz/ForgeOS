@@ -1,0 +1,14 @@
+name: Aura Light Artifact Notice
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Canonical source notice
+        run: echo 'Forge Aura Light 2026 is governed by ADR-024 and the canonical design-system documents.'
