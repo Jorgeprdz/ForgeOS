@@ -27,7 +27,9 @@ export function routeUrl(route, current = globalThis.location?.href || "http://l
 }
 
 export function oauthRedirectUrl(current = globalThis.location?.href || "http://localhost/") {
-  const url = routeUrl("pipeline", current);
+  const url = new URL(resolveRuntimeBase(current));
+  url.search = "";
+  url.searchParams.set("route", "pipeline");
   url.searchParams.set("restore", "pipeline");
   url.hash = "";
   return url.href;
