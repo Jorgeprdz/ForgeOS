@@ -46,11 +46,12 @@ jobs:
         run: |
           node manager-os/tests/nba-reason-why-boundary-contract-master-test.js
           node manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js
-      - name: No forbidden UI or copied baremo changes
+      - name: Hard acceptance guards
         shell: bash
         run: |
           set -euo pipefail
-          git diff --name-only cbf493409fc9ff7787ec8da60a436cbed42dd12b...HEAD > /tmp/changed-files.txt
+          BASE=cbf493409fc9ff7787ec8da60a436cbed42dd12b
+          git diff --name-only "$BASE"...HEAD > /tmp/changed-files.txt
           while IFS= read -r file; do
             case "$file" in
               app.js|*/app.js|*.html|*.css|*forge-aura*|*material-3*|*material3*)
@@ -59,4 +60,10 @@ jobs:
                 ;;
             esac
           done < /tmp/changed-files.txt
+          if git diff --unified=0 "$BASE"...HEAD -- . ':!package-lock.json' | grep -E '^\+.*(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}|service_role[^A-Za-z0-9].{0,20}[A-Za-z0-9._-]{20,}|BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY)' ; then
+            echo 'Potential committed secret detected' >&2
+            exit 1
+          fi
+          test "$(grep -RIl --exclude='*.test.*' --exclude='*test*' 'create table.*activity.*ledger' platform supabase 2>/dev/null | grep -v '20260726000100_fes02_activity_event_ledger.sql' | wc -l)" -eq 0
+          test "$(grep -RIl --exclude='*.test.*' --exclude='*test*' 'DAILY_POINTS_RULES[[:space:]]*=' platform 2>/dev/null | wc -l)" -eq 0
           node tests/activity-foundational-points-adapter-test.mjs >/dev/null
