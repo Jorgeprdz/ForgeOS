@@ -1,0 +1,23 @@
+.aura-login { min-height: 100vh; display: grid; place-items: center; align-content: center; gap: 24px; padding: 32px 16px; background: var(--aura-canvas); }
+.aura-login__brand { display: flex; align-items: center; gap: 10px; }
+.aura-login__brand > span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--aura-brand); color: white; font-size: 22px; font-weight: 850; box-shadow: var(--aura-shadow-sm); }
+.aura-login__brand strong { font-size: 22px; }
+.aura-login__brand small { color: var(--aura-text-muted); }
+.aura-login__panel { width: min(100%, 440px); padding: clamp(24px, 5vw, 40px); border: 1px solid var(--aura-border); border-radius: var(--aura-radius-lg); background: var(--aura-surface); box-shadow: var(--aura-shadow-md); }
+.aura-eyebrow { margin: 0 0 8px; color: var(--aura-brand-hover); font-size: 14px; font-weight: 850; letter-spacing: .12em; }
+.aura-login h1 { margin: 0; font-size: clamp(30px, 6vw, 44px); line-height: 1.05; letter-spacing: -.04em; }
+.aura-login__panel > p:not(.aura-eyebrow) { color: var(--aura-text-muted); line-height: 1.6; }
+.aura-login form, .aura-login label { display: grid; gap: 8px; }
+.aura-login form { gap: 16px; margin-top: 24px; }
+.aura-login label span { font-size: 14px; font-weight: 750; }
+.aura-login input { min-height: 48px; width: 100%; border: 1px solid var(--aura-border-strong); border-radius: 12px; padding: 0 14px; background: var(--aura-surface); color: var(--aura-text); }
+.aura-login input:focus { border-color: var(--aura-brand); }
+.aura-button { min-height: 48px; width: 100%; border-radius: 12px; padding: 0 18px; border: 1px solid transparent; font-weight: 800; cursor: pointer; }
+.aura-button--primary { background: var(--aura-brand); color: white; }
+.aura-button--primary:hover { background: var(--aura-brand-hover); }
+.aura-button--secondary { background: var(--aura-surface); color: var(--aura-text); border-color: var(--aura-border-strong); }
+.aura-login__divider { position: relative; margin: 20px 0; text-align: center; color: var(--aura-text-muted); }
+.aura-login__divider::before { content: ""; position: absolute; inset: 50% 0 auto; border-top: 1px solid var(--aura-border); }
+.aura-login__divider span { position: relative; padding: 0 12px; background: var(--aura-surface); }
+.aura-login__error { margin: 0; padding: 12px 14px; border-radius: 10px; background: var(--aura-danger-soft); color: var(--aura-danger); font-size: 14px; font-weight: 700; }
+.aura-login__privacy { margin: 0; max-width: 440px; color: var(--aura-text-muted); text-align: center; font-size: 14px; line-height: 1.5; }

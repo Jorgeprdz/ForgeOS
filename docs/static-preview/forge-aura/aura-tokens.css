@@ -1,0 +1,53 @@
+:root {
+  color-scheme: light;
+  --aura-brand: #6c3ce8;
+  --aura-brand-hover: #5630bd;
+  --aura-brand-soft: #eee9ff;
+  --aura-canvas: #f4f5fb;
+  --aura-surface: #ffffff;
+  --aura-surface-subtle: #f8f8fc;
+  --aura-text: #11152b;
+  --aura-text-muted: #5b6178;
+  --aura-border: #dfe2ed;
+  --aura-border-strong: #c9ccda;
+  --aura-success: #137a55;
+  --aura-success-soft: #e8f7f0;
+  --aura-warning: #8d5d00;
+  --aura-warning-soft: #fff4d5;
+  --aura-danger: #b4233a;
+  --aura-danger-soft: #ffeaee;
+  --aura-info: #245cc7;
+  --aura-info-soft: #eaf1ff;
+  --aura-focus: #3d70ff;
+  --aura-shadow-sm: 0 2px 10px rgba(22, 25, 48, .07);
+  --aura-shadow-md: 0 18px 48px rgba(22, 25, 48, .12);
+  --aura-radius-sm: 10px;
+  --aura-radius-md: 16px;
+  --aura-radius-lg: 24px;
+  --aura-space-1: 4px;
+  --aura-space-2: 8px;
+  --aura-space-3: 12px;
+  --aura-space-4: 16px;
+  --aura-space-5: 20px;
+  --aura-space-6: 24px;
+  --aura-space-8: 32px;
+  --aura-space-10: 40px;
+  --aura-space-12: 48px;
+  --aura-control: 44px;
+  --aura-content: 1440px;
+  --aura-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--aura-canvas); font-family: var(--aura-font); color: var(--aura-text); }
+body { margin: 0; min-height: 100vh; background: var(--aura-canvas); }
+button, input, select, textarea { font: inherit; }
+button, a, select, input { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--aura-focus); outline-offset: 3px; }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+@media (forced-colors: active) {
+  :root { --aura-border: CanvasText; --aura-border-strong: CanvasText; }
+  button, a, input, select, textarea, article, section { forced-color-adjust: auto; }
+}
