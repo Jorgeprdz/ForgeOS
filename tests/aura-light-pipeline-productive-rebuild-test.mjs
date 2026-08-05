@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
 const corePath = new URL("../docs/static-preview/forge-alive-material3/pipeline-aura-core.js", import.meta.url);
+const calendarPath = new URL("../docs/static-preview/forge-alive-material3/pipeline-aura-calendar.js", import.meta.url);
+const calendarCompatibilityPath = new URL("../docs/static-preview/forge-alive-material3/pipeline-google-calendar.js", import.meta.url);
 const modulePath = new URL("../docs/static-preview/forge-alive-material3/pipeline-module.js", import.meta.url);
 const stylesPath = new URL("../docs/static-preview/forge-alive-material3/pipeline-aura-light-2026.css", import.meta.url);
 const actionIdentityPath = new URL("../docs/static-preview/forge-alive-material3/pipeline-action-identity.js", import.meta.url);
@@ -10,9 +12,11 @@ const appPath = new URL("../docs/static-preview/forge-alive-material3/app.js", i
 const authorityPath = new URL("../adr/ADR-026 — Aura Light Pipeline Productive Rebuild Execution Authority.txt", import.meta.url);
 
 const core = await import(`${pathToFileURL(corePath.pathname).href}?test=${Date.now()}`);
-const [runtime, styles, actionIdentity, app, authority] = await Promise.all([
+const calendar = await import(`${pathToFileURL(calendarPath.pathname).href}?test=${Date.now()}`);
+const [runtime, styles, calendarCompatibility, actionIdentity, app, authority] = await Promise.all([
   readFile(modulePath, "utf8"),
   readFile(stylesPath, "utf8"),
+  readFile(calendarCompatibilityPath, "utf8"),
   readFile(actionIdentityPath, "utf8"),
   readFile(appPath, "utf8"),
   readFile(authorityPath, "utf8"),
@@ -71,6 +75,30 @@ for (const markup of [card, row]) {
   assert.match(markup, /data-aura-action="archive"/);
 }
 
+const calendarUrl = calendar.buildAuraPipelineGoogleCalendarUrl({
+  prospect: {
+    fullName: "Ana López",
+    stageLabel: "Contactado",
+    sourceSummary: "Referido · María",
+    latestActivity: "Conversación registrada",
+  },
+  date: "2026-08-06",
+  time: "10:30",
+  durationMinutes: 45,
+});
+assert.match(calendarUrl, /^https:\/\/calendar\.google\.com\/calendar\/render\?/);
+assert.match(calendarUrl, /ctz=America%2FMexico_City/);
+assert.ok(calendarUrl.includes("text=Cita+con+Ana+L%C3%B3pez"));
+assert.equal(
+  calendar.buildAuraPipelineGoogleCalendarUrl({
+    prospect: sample,
+    date: "invalid",
+    time: "10:30",
+    durationMinutes: 45,
+  }),
+  null,
+);
+
 for (const required of [
   'root.dataset.pipelineRenderer = "aura-native"',
   "createProductiveIntelligenceAdapter",
@@ -114,12 +142,30 @@ assert.doesNotMatch(
   /localStorage[^\n]*(?:fullName|phone|email|timeline|prospect)/i,
 );
 
+assert.match(calendarCompatibility, /pipeline-aura-calendar\.js\?v=aura-native-pipeline-002/);
+assert.match(calendarCompatibility, /automaticWorkspaceInstallation: false/);
+assert.match(calendarCompatibility, /material3DesignUsed: false/);
+for (const prohibited of [
+  "MutationObserver",
+  "document.body.append",
+  "pipeline-google-calendar.css",
+  "installPipelineGoogleCalendar();",
+]) {
+  assert.equal(
+    calendarCompatibility.includes(prohibited),
+    false,
+    `LEGACY_CALENDAR_OBSERVER_FOUND=${prohibited}`,
+  );
+}
+
 assert.ok(app.includes("pipeline-module.js?v=aura-native-pipeline-002"));
 assert.ok(app.includes("pipeline-action-identity.js?v=aura-native-pipeline-002"));
 for (const retiredImport of [
   "pipeline-ui-stability.js",
+  "pipeline-stage-rpc-authority.js",
   "pipeline-interaction-authority.js",
   "pipeline-prospect-admin.js",
+  "pipeline-google-calendar.js",
   "pipeline-context-journal.js",
   "pipeline-public-acceptance-hotfix.js",
   "pipeline-filter-count-authority.js",
@@ -182,6 +228,7 @@ console.log("AURA_LIGHT_PIPELINE_NATIVE_RENDERER=PASS");
 console.log("PIPELINE_VIEWS=CARDS_AND_LIST");
 console.log("PIPELINE_ACTIONS=WHATSAPP_CALL_TIMELINE_MORE");
 console.log("PIPELINE_LEGACY_DOM_ENHANCER=0");
+console.log("PIPELINE_LEGACY_CALENDAR_OBSERVER=0");
 console.log("PIPELINE_LEGACY_BOOT_IMPORTS=0");
 console.log("MATERIAL_3_DESIGN_USAGE=0");
 console.log("HOME_DASHBOARD_MUTATION=0");
