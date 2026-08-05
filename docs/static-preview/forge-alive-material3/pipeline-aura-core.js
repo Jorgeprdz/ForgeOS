@@ -10,12 +10,12 @@ export const SOURCES = Object.freeze([
 ]);
 
 export const STAGES = Object.freeze([
-  { value: "referred_new", label: "Nuevo" },
-  { value: "contacted", label: "Contactado" },
-  { value: "appointment_scheduled", label: "Cita agendada" },
-  { value: "proposal", label: "Propuesta" },
-  { value: "decision", label: "En decisión" },
-  { value: "client", label: "Cliente" },
+  Object.freeze({ value: "referred_new", label: "Nuevo" }),
+  Object.freeze({ value: "contacted", label: "Contactado" }),
+  Object.freeze({ value: "appointment_scheduled", label: "Cita agendada" }),
+  Object.freeze({ value: "proposal", label: "Propuesta" }),
+  Object.freeze({ value: "decision", label: "En decisión" }),
+  Object.freeze({ value: "client", label: "Cliente" }),
 ]);
 
 const PATHS = Object.freeze({
@@ -34,7 +34,7 @@ const PATHS = Object.freeze({
 });
 
 export function icon(name) {
-  return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${PATHS[name] || PATHS.spark}"/></svg>`;
+  return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${PATHS[name] || PATHS.spark}"/></svg>`;
 }
 
 export function escapeHtml(value) {
@@ -44,74 +44,116 @@ export function escapeHtml(value) {
 }
 
 export function normalize(value) {
-  return String(value || "").normalize("NFD").replace(/\p{Diacritic}/gu, "")
-    .toLocaleLowerCase("es-MX").trim();
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase("es-MX")
+    .trim();
 }
 
-export function formatDate(value) {
+export function formatDate(value, emptyLabel = "Sin fecha") {
   const time = Date.parse(value || "");
-  if (!Number.isFinite(time)) return "Sin fecha";
-  return new Intl.DateTimeFormat("es-MX", { dateStyle: "medium", timeStyle: "short" })
-    .format(new Date(time));
+  if (!Number.isFinite(time)) return emptyLabel;
+  return new Intl.DateTimeFormat("es-MX", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(time));
 }
 
 export function stageOptions(selected) {
-  return STAGES.map(stage => `<option value="${stage.value}" ${stage.value === selected ? "selected" : ""}>${stage.label}</option>`).join("");
+  return STAGES.map(stage => (
+    `<option value="${stage.value}" ${stage.value === selected ? "selected" : ""}>${stage.label}</option>`
+  )).join("");
 }
 
 export function sourceOptions(selected = "") {
   return [...new Set([...SOURCES, selected].filter(Boolean))]
-    .map(source => `<option value="${escapeHtml(source)}" ${source === selected ? "selected" : ""}>${escapeHtml(source)}</option>`).join("");
+    .map(source => (
+      `<option value="${escapeHtml(source)}" ${source === selected ? "selected" : ""}>${escapeHtml(source)}</option>`
+    )).join("");
 }
 
-function phoneOf(card) {
-  return String(card.phone || "").replace(/[^+\d]/g, "");
+export function phoneOf(card) {
+  return String(card?.phone || card?.prospect?.phone || card?.prospect?.whatsapp || "")
+    .replace(/[^+\d]/g, "");
 }
 
 function actionButton(action, card, iconName, label, disabled = false) {
-  return `<button class="aura-pipeline__quick aura-pipeline__quick--${action}" type="button" data-aura-action="${action}" data-id="${escapeHtml(card.id)}" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}" ${disabled ? "disabled" : ""}>${icon(iconName)}</button>`;
+  return `<button class="aura-pipeline__quick aura-pipeline__quick--${action}" type="button"
+    data-aura-action="${action}" data-id="${escapeHtml(card.id)}"
+    aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}" ${disabled ? "disabled" : ""}>${icon(iconName)}</button>`;
 }
 
 export function actionsMarkup(card) {
   const phone = phoneOf(card);
   return `<div class="aura-pipeline__actions" data-aura-actions>
     ${actionButton("whatsapp", card, "whatsapp", `Preparar WhatsApp para ${card.fullName}`, !phone)}
-    ${phone ? `<a class="aura-pipeline__quick aura-pipeline__quick--call" href="tel:${phone}" aria-label="Llamar a ${escapeHtml(card.fullName)}" title="Llamar">${icon("phone")}</a>` : actionButton("call", card, "phone", "Teléfono no disponible", true)}
+    ${phone
+      ? `<a class="aura-pipeline__quick aura-pipeline__quick--call" href="tel:${phone}"
+          aria-label="Llamar a ${escapeHtml(card.fullName)}" title="Llamar">${icon("phone")}</a>`
+      : actionButton("call", card, "phone", "Teléfono no disponible", true)}
     ${actionButton("timeline", card, "timeline", `Abrir Timeline de ${card.fullName}`)}
-    <button class="aura-pipeline__quick" type="button" data-aura-action="more" data-id="${escapeHtml(card.id)}" aria-haspopup="menu" aria-expanded="false" aria-label="Más acciones para ${escapeHtml(card.fullName)}">${icon("more")}</button>
+    <button class="aura-pipeline__quick aura-pipeline__quick--more" type="button"
+      data-aura-action="more" data-id="${escapeHtml(card.id)}" aria-haspopup="menu"
+      aria-expanded="false" aria-label="Más acciones para ${escapeHtml(card.fullName)}"
+      title="Más acciones">${icon("more")}</button>
     <div class="aura-pipeline__menu" data-aura-menu="${escapeHtml(card.id)}" role="menu" hidden>
       <button type="button" role="menuitem" data-aura-action="calendar" data-id="${escapeHtml(card.id)}">${icon("calendar")}<span>Agendar cita</span></button>
       <button type="button" role="menuitem" data-aura-action="edit" data-id="${escapeHtml(card.id)}">${icon("edit")}<span>Editar prospecto</span></button>
       <button type="button" role="menuitem" data-aura-action="combat" data-id="${escapeHtml(card.id)}">${icon("spark")}<span>NASH Combat</span></button>
       <button type="button" role="menuitem" data-aura-action="nba" data-id="${escapeHtml(card.id)}">${icon("spark")}<span>Siguiente mejor acción</span></button>
       <div role="separator"></div>
-      <button class="aura-pipeline__menu-danger" type="button" role="menuitem" data-aura-action="archive" data-id="${escapeHtml(card.id)}">${icon("archive")}<span>Retirar del Pipeline</span></button>
+      <button class="aura-pipeline__menu-danger" type="button" role="menuitem"
+        data-aura-action="archive" data-id="${escapeHtml(card.id)}">${icon("archive")}<span>Retirar del Pipeline</span></button>
     </div>
   </div>`;
 }
 
+export function searchableText(card) {
+  return normalize([
+    card.fullName,
+    card.sourceSummary,
+    card.stageLabel,
+    card.latestActivity?.label,
+    card.nextCommitment?.type,
+  ].filter(Boolean).join(" "));
+}
+
+export function matchesFilters(card, filters = {}) {
+  const query = normalize(filters.query);
+  return (!filters.source || card.sourceValue === filters.source)
+    && (!filters.status || card.status === filters.status)
+    && (!query || searchableText(card).includes(query));
+}
+
 export function cardMarkup(card) {
-  return `<article class="aura-pipeline__card" data-aura-record="${escapeHtml(card.id)}" data-aura-stage="${escapeHtml(card.status)}">
+  return `<article class="aura-pipeline__card" data-aura-record="${escapeHtml(card.id)}"
+    data-aura-stage="${escapeHtml(card.status)}" data-aura-source="${escapeHtml(card.sourceValue)}">
     <header class="aura-pipeline__identity">
       <span class="aura-pipeline__avatar" aria-hidden="true">${escapeHtml(card.fullName.slice(0, 1).toUpperCase())}</span>
       <div><strong>${escapeHtml(card.fullName)}</strong><span>${escapeHtml(card.sourceSummary)}</span></div>
       <span class="aura-pipeline__badge" data-aura-stage-label>${escapeHtml(card.stageLabel)}</span>
     </header>
-    <label class="aura-pipeline__stage"><span>Etapa</span><select data-aura-stage-select="${escapeHtml(card.id)}">${stageOptions(card.status)}</select></label>
+    <label class="aura-pipeline__stage"><span>Etapa</span>
+      <select data-aura-stage-select="${escapeHtml(card.id)}" data-confirmed-stage="${escapeHtml(card.status)}"
+        aria-label="Cambiar etapa de ${escapeHtml(card.fullName)}">${stageOptions(card.status)}</select>
+    </label>
     <div class="aura-pipeline__signals">
-      <div><span>Última actividad</span><strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong><small>${formatDate(card.latestActivity?.occurredAt)}</small></div>
-      <div><span>Próximo compromiso</span><strong>${escapeHtml(card.nextCommitment?.type || "Sin compromiso")}</strong><small>${formatDate(card.nextCommitment?.dueAt)}</small></div>
+      <div><span>Última actividad</span><strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong><small>${formatDate(card.latestActivity?.occurredAt, "Sin registro")}</small></div>
+      <div><span>Próximo compromiso</span><strong>${escapeHtml(card.nextCommitment?.type || "Sin compromiso")}</strong><small>${formatDate(card.nextCommitment?.dueAt, "Sin fecha")}</small></div>
     </div>
     ${actionsMarkup(card)}
   </article>`;
 }
 
 export function rowMarkup(card) {
-  return `<article class="aura-pipeline__row" role="row" data-aura-record="${escapeHtml(card.id)}" data-aura-stage="${escapeHtml(card.status)}">
+  return `<article class="aura-pipeline__row" role="row" data-aura-record="${escapeHtml(card.id)}"
+    data-aura-stage="${escapeHtml(card.status)}" data-aura-source="${escapeHtml(card.sourceValue)}">
     <div class="aura-pipeline__person" role="cell"><span class="aura-pipeline__avatar" aria-hidden="true">${escapeHtml(card.fullName.slice(0, 1).toUpperCase())}</span><div><strong>${escapeHtml(card.fullName)}</strong><span>${escapeHtml(card.sourceSummary)}</span></div></div>
-    <div role="cell"><select data-aura-stage-select="${escapeHtml(card.id)}">${stageOptions(card.status)}</select><span class="aura-pipeline__badge" data-aura-stage-label>${escapeHtml(card.stageLabel)}</span></div>
-    <div role="cell"><strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong><span>${formatDate(card.latestActivity?.occurredAt)}</span></div>
-    <div role="cell"><strong>${escapeHtml(card.nextCommitment?.type || "Sin compromiso")}</strong><span>${formatDate(card.nextCommitment?.dueAt)}</span></div>
+    <div role="cell"><select data-aura-stage-select="${escapeHtml(card.id)}" data-confirmed-stage="${escapeHtml(card.status)}"
+      aria-label="Cambiar etapa de ${escapeHtml(card.fullName)}">${stageOptions(card.status)}</select><span class="aura-pipeline__badge" data-aura-stage-label>${escapeHtml(card.stageLabel)}</span></div>
+    <div role="cell"><strong>${escapeHtml(card.latestActivity?.label || "Sin actividad verificada")}</strong><span>${formatDate(card.latestActivity?.occurredAt, "Sin registro")}</span></div>
+    <div role="cell"><strong>${escapeHtml(card.nextCommitment?.type || "Sin compromiso")}</strong><span>${formatDate(card.nextCommitment?.dueAt, "Sin fecha")}</span></div>
     <div role="cell">${actionsMarkup(card)}</div>
   </article>`;
 }
@@ -122,5 +164,7 @@ export function humanError(error, fallback) {
   if (/NETWORK|FETCH|LOAD/i.test(code)) return "No pudimos conectar con Forge. Revisa tu conexión.";
   if (/DUPLICATE/i.test(code)) return "Este prospecto ya existe en tu Pipeline.";
   if (/NOT_FOUND|PGRST116/i.test(code)) return "No encontramos este prospecto.";
+  if (/NOT_DEPLOYED/i.test(code)) return "Esta función todavía no está desplegada en este entorno.";
+  if (/VALIDATION/i.test(code) && error?.message) return error.message;
   return fallback;
 }
