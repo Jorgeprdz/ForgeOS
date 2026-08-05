@@ -14,7 +14,7 @@ function scrub(){
   pipeline?.destroy();pipeline=null;shell=null;root.replaceChildren();document.querySelectorAll('input[type="password"]').forEach(x=>x.value="");
 }
 async function showPipeline(snapshot){
-  const revision=++bootRevision;scrub();shell=createAuraShell({root,onLogout:async()=>{shell.setGlobalState("Cerrando sesión…");try{await auth.signOut();}finally{scrub();router.navigate("login",{replace:true});renderAuraLogin({root,auth,onAuthenticated:()=>router.navigate("pipeline",{replace:true})});}});
+  const revision=++bootRevision;scrub();shell=createAuraShell({root,onLogout:async()=>{shell.setGlobalState("Cerrando sesión…");try{await auth.signOut();}finally{scrub();router.navigate("login",{replace:true});renderAuraLogin({root,auth,onAuthenticated:()=>router.navigate("pipeline",{replace:true})});}}});
   shell.setUser(snapshot.user);
   const client=await auth.getClient();if(revision!==bootRevision)return;
   pipeline=createPipelineModule({root:shell.main,client,globalState:shell.setGlobalState});await pipeline.mount();root.setAttribute("aria-busy","false");
