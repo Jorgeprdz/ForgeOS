@@ -1,0 +1,128 @@
+ADR-025 — Aura Light Login Productive Rebuild Execution Authority
+
+Status
+
+RATIFIED / EXECUTION_AUTHORIZED
+
+Authorization
+
+AUTHORIZATION_DATE=2026-08-04
+AUTHORIZATION_ID=AURA_LIGHT_LOGIN_PRODUCTIVE_REBUILD_001
+AUTHORIZATION_SOURCE=EXPLICIT_HUMAN_OWNER_COMMAND
+AUTHORIZATION_COMMAND=NEXT=AURA_LIGHT_LOGIN_PRODUCTIVE_REBUILD
+HUMAN_OWNER=JORGE_IGNACIO_PALACIOS_RODRIGUEZ
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+IMPLEMENTATION_READINESS=READY
+
+Applicable Authority
+
+- Article 0 and the Forge Constitution.
+- ROBOCOP LOCK 001.
+- ADR-003 Human Decision Authority.
+- ADR-016 Advisor Experience Anti-Dependence Boundary.
+- ADR-020 Canonical Forge Shell authority, preserved outside the login surface.
+- ADR-023 productive authentication, session, tenant and RLS boundaries.
+- ADR-024 Forge Aura Light 2026 Canonical Redesign Design Authority.
+
+Aura Light Gate
+
+AURA_LIGHT_AUTHORITY=docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md
+AURA_LIGHT_SOURCE_PDF_SHA256=0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e
+AURA_LIGHT_VERSION=1.0
+AURA_LIGHT_COMPLIANCE=REQUIRED
+LEGACY_VISUAL_IMPORTS=FORBIDDEN
+LOCAL_UNGOVERNED_TOKENS=FORBIDDEN
+VISUAL_ACCEPTANCE_AGAINST_CANONICAL_AUTHORITY=REQUIRED
+
+Decision
+
+Authorize the productive rebuild of the canonical Forge login surface in Aura Light 2026 while preserving the current Supabase authentication authority, authenticated route guard, session restoration, canonical OAuth return path, tenant boundaries and logout scrub behavior.
+
+This is a vertical productive rebuild of the real login. It is not a scaffold, placeholder, alternate application, demo shell or visual overlay.
+
+Authorized Scope
+
+- Rebuild the canonical anonymous login experience as a complete Aura Light surface.
+- Preserve Google authentication through the current productive Supabase client.
+- Expose Supabase email/password sign-in through the existing productive authentication bootstrap.
+- Preserve test-advisor access only behind the existing governed public configuration and adapter.
+- Preserve session restoration and authentication-state subscriptions.
+- Preserve canonical redirect and requested-route restoration.
+- Preserve authenticated profile and logout behavior.
+- Add explicit loading, invalid-credentials, configuration-blocked, network/disconnected and generic error states.
+- Add keyboard, focus, reduced-motion, zoom/reflow and responsive acceptance.
+- Add or update scoped tests, evidence and build preparation required by this login surface.
+
+Authorized Files
+
+- `advisor-os/sales-pipeline/productive-prospect-bootstrap.js`
+- `docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.js`
+- `docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.css`
+- `scripts/prepare-material3-auth-entry.mjs` only when required to publish the canonical login authority.
+- login/auth-specific tests, evidence and workflow files.
+- this ADR and scoped governance evidence.
+
+Prohibited Surfaces
+
+- `app.js` mutation.
+- Home redesign.
+- navigation redesign.
+- module redesign.
+- route-registry redesign.
+- alternate frontend or scaffold creation.
+- legacy CSS import or overlay.
+- Supabase schema mutation.
+- RLS mutation or weakening.
+- auth provider configuration mutation.
+- secret handling or credential disclosure.
+- automatic account creation.
+- fake production users or metrics.
+- direct `main` mutation.
+- force push or automatic merge.
+- production deployment without separate authorization.
+
+Productive Authentication Boundary
+
+- Email/password and Google must use the current public Supabase client and productive auth authority.
+- The login UI may request credentials but must not persist, log, expose or place passwords in URLs.
+- Authentication errors must be translated into human language without exposing provider internals.
+- Anonymous users remain fail-closed from private surfaces.
+- Existing sessions must restore without requiring a new login.
+- Logout must continue to scrub private runtime state.
+- OAuth must return through `/ForgeOS/static-preview/forge-alive/` and preserve the requested route contract.
+
+Visual Boundary
+
+- The anonymous login surface is light, luminous and spatial.
+- Violet is the Forge identity color; blue, green, orange and red remain semantic.
+- Content remains organized; only actions and contextual controls may float.
+- Productive text is at least 14 px and touch targets at least 44 × 44 px.
+- No dark organic styling, gold primary actions, Material 3 visual defaults, recovery CSS or module-local palette may remain visible in the rebuilt login.
+- The profile view may remain a bounded dialog after authentication; the forced anonymous gate must behave as a complete login screen.
+
+Validation
+
+Required automated and browser evidence:
+
+- email/password successful sign-in;
+- invalid credentials;
+- Google sign-in initiation;
+- session restoration;
+- authentication-state listener;
+- canonical route return;
+- logout scrub;
+- configuration-blocked state;
+- network/disconnected state;
+- keyboard and visible focus;
+- reduced motion;
+- mobile, tablet and desktop responsive layouts;
+- zoom/reflow acceptance;
+- no secrets or credential persistence;
+- no legacy visual imports;
+- no mutation outside the authorized surface.
+
+Closure Rule
+
+The phase stops at a pushed working branch and review-ready pull request. Human merge remains required.
