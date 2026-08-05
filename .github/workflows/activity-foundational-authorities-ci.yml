@@ -45,18 +45,16 @@ jobs:
           node manager-os/tests/nba-reason-why-boundary-contract-master-test.js
           node manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js
       - name: No forbidden UI or copied baremo changes
+        shell: bash
         run: |
+          set -euo pipefail
           git diff --name-only cbf493409fc9ff7787ec8da60a436cbed42dd12b...HEAD > /tmp/changed-files.txt
-          if grep -E '(^|/)(app\.js|.*\.html|.*\.css)$|forge-aura|material' /tmp/changed-files.txt; then
-            echo 'Forbidden UI/Aura/Material file changed' >&2
-            exit 1
-          fi
-          node - <<'NODE'
-          const fs = require('node:fs');
-          const source = fs.readFileSync('platform/productivity/activity-points-authority-adapter.mjs', 'utf8');
-          const authority = fs.readFileSync('daily-points-engine.js', 'utf8');
-          const pairs = [...authority.matchAll(/^\s*([a-z_]+):\s*(\d+),?$/gm)].map(([, key, value]) => [key, value]);
-          for (const [key, value] of pairs) {
-            if (new RegExp(`${key}\\s*:\\s*${value}`).test(source)) throw new Error(`Copied points rule: ${key}`);
-          }
-          NODE
+          while IFS= read -r file; do
+            case "$file" in
+              app.js|*/app.js|*.html|*.css|*forge-aura*|*material-3*|*material3*)
+                echo "Forbidden UI/Aura/Material file changed: $file" >&2
+                exit 1
+                ;;
+            esac
+          done < /tmp/changed-files.txt
+          node tests/activity-foundational-points-adapter-test.mjs >/dev/null
