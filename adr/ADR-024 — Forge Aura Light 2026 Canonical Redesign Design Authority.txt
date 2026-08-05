@@ -1,4 +1,4 @@
-ADR-024 - Forge Aura Light 2026 Canonical Redesign Design Authority
+ADR-024 — Forge Aura Light 2026 Canonical Redesign Design Authority
 
 Status
 
@@ -8,31 +8,38 @@ Ratification Source
 
 AUTHORIZATION_DATE=2026-08-04
 AUTHORIZATION_ID=FORGE_AURA_LIGHT_2026_CANONICAL_REDESIGN_AUTHORITY_001
-AUTHORIZATION_SOURCE=EXPLICIT_HUMAN_OWNER_AND_BOARD_DECISION
+AUTHORIZATION_SOURCE=EXPLICIT_HUMAN_OWNER_DECISION
 HUMAN_OWNER=JORGE_IGNACIO_PALACIOS_RODRIGUEZ
 MIRANDA_APPROVAL=GRANTED
 BOARD_APPROVAL=GRANTED
 
 Decision
 
-Forge Aura Light 2026 is the official and canonical visual design authority for
-all new Forge redesign implementation.
+Forge Aura Light 2026 is the official and canonical visual design authority for all new Forge redesign implementation.
 
-The normative artifact is:
+Repository-native normative artifact:
 
-docs/05-foundation/design-system/Forge_Aura_Light_2026_Sistema_de_Diseno.pdf
+docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md
+
+Governance envelope:
+
+docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_AUTHORITY.md
+
+Mandatory compliance gate:
+
+docs/00-governance/FORGE_AURA_LIGHT_2026_REDESIGN_COMPLIANCE_GATE.md
+
+Owner-ratified source PDF fingerprint:
+
+SHA-256: 0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e
 
 Version: 1.0
-SHA-256: 0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e
 
 Canonical rule:
 
-Las acciones flotan. La informacion se organiza. El color orienta.
+Las acciones flotan. La información se organiza. El color orienta.
 
-All new visual redesign work MUST comply strictly with the PDF. Framework
-defaults, legacy screenshots, prior mockups, recovery CSS, Material 3 styling,
-module-specific palettes and individual implementation preference do not have
-authority to contradict it.
+All new visual redesign work MUST comply strictly with Aura Light. Framework defaults, legacy screenshots, prior mockups, recovery CSS, Material 3 styling, module-specific palettes and individual implementation preference have no authority to contradict it.
 
 Scope
 
@@ -41,8 +48,7 @@ This ADR governs the visual and interaction language of:
 - cleanroom frontend work;
 - Forge shell and navigation redesign;
 - Home and Smart Widgets;
-- Pipeline, Activity, Quotes, Cartera, Commissions, Forecast, Reports and
-  Configuration redesign;
+- Pipeline, Activity, Quotes, Cartera, Commissions, Forecast, Reports and Configuration redesign;
 - mobile, tablet and desktop layouts;
 - components, primitives, cards, lists, tables, dialogs, sheets and tooltips;
 - color, typography, spacing, radii, shadows, gradients and motion;
@@ -54,71 +60,51 @@ This ADR governs the visual and interaction language of:
 Mandatory Boundaries
 
 - Only canonical semantic tokens may govern new redesign implementation.
-- Color must communicate identity, state or priority; decorative isolated color
-  is forbidden.
-- Actions and controls may float; informational content remains stable and
-  organized.
-- Information hierarchy must answer what happened, what needs attention and
-  what the user should do now.
+- Color must communicate identity, state or priority; decorative isolated color is forbidden.
+- Actions and controls may float; informational content remains stable and organized.
+- Information hierarchy must answer what happened, what needs attention and what the user should do now.
 - Cards must not be created for every datum.
 - Gradients are restricted to the authorized set and usage rules.
 - Base productive text may not fall below 14 px.
-- Touch targets must be at least 44 x 44 px.
+- Touch targets must be at least 44 × 44 px.
 - States may not be communicated only through color.
 - Loading, empty, error, disconnected and no-permission states must be explicit.
 - Example or fixture metrics may not appear as real production truth.
-- Responsive implementation must preserve hierarchy rather than compressing a
-  desktop dashboard.
-- Legacy visual imports, recovery CSS, ad hoc inline styles and ungoverned local
-  values are forbidden in the cleanroom redesign.
+- Responsive implementation must preserve hierarchy rather than compressing a desktop dashboard.
+- Legacy visual imports, recovery CSS, ad hoc inline styles and ungoverned local values are forbidden in the cleanroom redesign.
 
 Supersession
 
-This ADR prospectively supersedes prior visual directions for new redesign work,
-including ungoverned Material 3 styling, recovery CSS conventions, dark organic
-visual language, isolated module palettes and ad hoc component variants.
+This ADR prospectively supersedes prior visual directions for new redesign work, including ungoverned Material 3 styling, recovery CSS conventions, dark organic visual language, isolated module palettes and ad hoc component variants.
 
-It does not retrospectively rewrite ADR-019, ADR-020, ADR-021 or ADR-023. Their
-historical decisions and functional, runtime, quote, product and recovery
-boundaries remain preserved.
+It does not retrospectively rewrite ADR-019, ADR-020, ADR-021 or ADR-023. Their historical decisions and functional, runtime, quote, product and recovery boundaries remain preserved.
 
-This ADR does not itself authorize code implementation, route mutation,
-deployment, schema change, RLS change, data mutation or business-logic change.
-A separately approved execution scope remains mandatory.
+This ADR does not itself authorize code implementation, route mutation, deployment, schema change, RLS change, data mutation or business-logic change. A separately approved execution scope remains mandatory.
 
 Authority Precedence
 
-Article 0, the Constitution, canonical truth and authority ADRs, security and
-accessibility requirements remain higher-order authority. Within the visual
-redesign domain, this ADR and its referenced PDF prevail over mockups, prior
-visual documents, old screenshots, framework defaults and local preference.
+Article 0, the Constitution, canonical truth and authority ADRs, security and accessibility requirements remain higher-order authority. Within the visual redesign domain, this ADR and the canonical design-system specification prevail over mockups, prior visual documents, old screenshots, framework defaults and local preference. The owner-ratified source PDF controls visual interpretation where plain text is insufficient.
 
 Required Work Gate
 
 Every redesign task must declare:
 
-AURA_LIGHT_AUTHORITY=docs/05-foundation/design-system/Forge_Aura_Light_2026_Sistema_de_Diseno.pdf
+AURA_LIGHT_AUTHORITY=docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md
+AURA_LIGHT_SOURCE_PDF_SHA256=0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e
 AURA_LIGHT_VERSION=1.0
 AURA_LIGHT_COMPLIANCE=REQUIRED
 LEGACY_VISUAL_IMPORTS=FORBIDDEN
 LOCAL_UNGOVERNED_TOKENS=FORBIDDEN
-VISUAL_ACCEPTANCE_AGAINST_CANONICAL_PDF=REQUIRED
+VISUAL_ACCEPTANCE_AGAINST_CANONICAL_AUTHORITY=REQUIRED
 
 If this declaration is absent, the task is blocked by ROBOCOP LOCK 001.
 
 Validation
 
-Visual PASS requires evidence of canonical token use, semantic color use,
-component hierarchy, responsive hierarchy, keyboard and focus behavior, zoom,
-reflow, reduced motion, honest data states, no legacy visual imports and visual
-comparison against the canonical PDF.
+Visual PASS requires evidence of canonical token use, semantic color use, component hierarchy, responsive hierarchy, keyboard and focus behavior, zoom, reflow, reduced motion, honest data states, no legacy visual imports and visual comparison against the canonical authority.
 
-Screenshots alone cannot prove interaction, accessibility, responsive behavior
-or data truth.
+Screenshots alone cannot prove interaction, accessibility, responsive behavior or data truth.
 
 Change Control
 
-Version 1.0 is locked. Any amendment requires explicit human-owner approval,
-Miranda approval, Board approval, a versioned replacement artifact, a new
-checksum and an ADR amendment or superseding ADR. Silent replacement in place
-is forbidden.
+Version 1.0 is locked. Any amendment requires explicit human-owner approval, Miranda approval, Board approval, a versioned source artifact and repository-native specification, updated integrity metadata and an ADR amendment or superseding ADR. Silent replacement in place is forbidden.
