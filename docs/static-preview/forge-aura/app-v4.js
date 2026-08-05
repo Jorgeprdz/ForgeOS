@@ -1,7 +1,7 @@
 import { createAuraRouter } from "./aura-router-v4.js";
 import { createAuraShell } from "./aura-shell.js";
 import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
-import { createPipelineModule } from "./pipeline/pipeline-module.js?v=state-fix-c7d3c02a";
+import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95";
 
 const root = document.querySelector("[data-aura-app]");
 const auth = createAuraAuth();
