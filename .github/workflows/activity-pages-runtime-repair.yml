@@ -1,0 +1,299 @@
+name: Activity Pages Runtime Repair
+
+on:
+  push:
+    branches:
+      - feature/activity-live-acceptance-001
+    paths:
+      - ".github/workflows/activity-pages-runtime-repair.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  actions: read
+
+concurrency:
+  group: activity-pages-runtime-repair
+  cancel-in-progress: false
+
+jobs:
+  repair-publish-and-browser-smoke:
+    if: github.ref_name == 'feature/activity-live-acceptance-001' && github.actor == 'Jorgeprdz'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      BRANCH: feature/activity-live-acceptance-001
+      PUBLIC_BASE: https://jorgeprdz.github.io/ForgeOS
+      RUNTIME_REVISION: activity-pages-runtime-fix-001
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/activity-live-acceptance-001
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Materialize exact Pages runtime dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+
+          exact_files = [
+              "platform/event-evidence/canonical-activity-event-contract.js",
+              "platform/event-evidence/activity-ledger-contract.js",
+              "platform/event-evidence/activity-ledger-local-store.js",
+              "platform/event-evidence/activity-ledger-sync-service.js",
+              "platform/event-evidence/activity-ledger-supabase-gateway.js",
+              "platform/event-evidence/activity-ledger-browser-runtime.js",
+              "platform/operational-calendar/operational-calendar-contract.js",
+              "platform/operational-calendar/eligible-date-evaluator.js",
+              "platform/operational-calendar/operational-calendar-repository.js",
+              "platform/productivity/activity-conversion-read-model.js",
+              "platform/productivity/activity-coaching-policy.js",
+              "platform/productivity/activity-coaching-intelligence.js",
+              "platform/productivity/activity-points-authority-adapter.mjs",
+              "platform/productivity/policies/FORGE_ACTIVITY_COACHING_POLICY_V1.json",
+          ]
+
+          for source_name in exact_files:
+              source = Path(source_name)
+              destination = Path("docs") / source
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(source, destination)
+
+          shutil.copy2("daily-points-engine.js", "docs/daily-points-engine.js")
+
+          def patch(path_name, replacements):
+              path = Path(path_name)
+              text = path.read_text(encoding="utf-8")
+              original = text
+              for before, after in replacements:
+                  text = text.replace(before, after)
+              if text == original:
+                  raise SystemExit(f"Expected replacement missing in {path_name}")
+              path.write_text(text, encoding="utf-8")
+
+          patch("docs/static-preview/forge-aura/auth-v4.html", [
+              ("../../../platform/", "../../platform/"),
+              ("./aura-bootstrap-v4.js?v=activity-productive-ui-001", "./aura-bootstrap-v4.js?v=activity-pages-runtime-fix-001"),
+          ])
+          patch("docs/static-preview/forge-aura/app-v4.js", [
+              ("./activity/activity-module.js?v=activity-productive-ui-001", "./activity/activity-module.js?v=activity-pages-runtime-fix-001"),
+          ])
+          patch("docs/static-preview/forge-aura/activity/activity-module.js", [
+              ("../../../../platform/", "../../../platform/"),
+              ("./activity-runtime-adapter.js", "./activity-runtime-adapter.js?v=activity-pages-runtime-fix-001"),
+          ])
+          patch("docs/static-preview/forge-aura/activity/activity-runtime-adapter.js", [
+              ("../../../../platform/", "../../../platform/"),
+          ])
+
+          Path("docs/static-preview/forge-aura/aura-bootstrap-v4.js").write_text('''function hasProductiveConfig() {
+            const env = globalThis.__ENV__;
+            return Boolean(env?.SUPABASE_URL && (env?.SUPABASE_KEY || env?.SUPABASE_ANON_KEY));
+          }
+
+          function escapeHtml(value) {
+            return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+          }
+
+          function renderFatalBoot(error) {
+            const root = document.querySelector("[data-aura-app]");
+            const diagnostic = [error?.name, error?.message].filter(Boolean).join(" · ") || "Error desconocido";
+            document.documentElement.dataset.auraBootState = "BOOT_FAILED_VISIBLE";
+            if (!root) return;
+            root.setAttribute("aria-busy", "false");
+            root.innerHTML = `<main style="min-height:100vh;display:grid;place-items:center;padding:24px;background:#f4f5fb;font-family:system-ui,sans-serif"><section style="max-width:680px;padding:28px;border:1px solid #d9dce8;border-radius:24px;background:#fff"><p style="font-weight:800;color:#6d7285">Forge · diagnóstico de arranque</p><h1>No se pudo iniciar Aura</h1><p>La publicación cargó, pero una dependencia falló. El error ya no queda oculto en una pantalla blanca.</p><code>${escapeHtml(diagnostic)}</code></section></main>`;
+          }
+
+          document.documentElement.dataset.auraEnvState = hasProductiveConfig() ? "PRODUCTIVE_CONFIG_READY" : "PRODUCTIVE_CONFIG_BLOCKED";
+          try {
+            await import("./app-v4.js?v=activity-pages-runtime-fix-001");
+            document.documentElement.dataset.auraBootState = "BOOT_READY";
+          } catch (error) {
+            console.error("FORGE_AURA_BOOT_FAILED", error);
+            renderFatalBoot(error);
+          }
+          ''', encoding="utf-8")
+          PY
+
+      - name: Validate materialized source and corrected paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            docs/platform/event-evidence/canonical-activity-event-contract.js
+            docs/platform/event-evidence/activity-ledger-contract.js
+            docs/platform/event-evidence/activity-ledger-local-store.js
+            docs/platform/event-evidence/activity-ledger-sync-service.js
+            docs/platform/event-evidence/activity-ledger-supabase-gateway.js
+            docs/platform/event-evidence/activity-ledger-browser-runtime.js
+            docs/platform/operational-calendar/operational-calendar-contract.js
+            docs/platform/operational-calendar/eligible-date-evaluator.js
+            docs/platform/operational-calendar/operational-calendar-repository.js
+            docs/platform/productivity/activity-conversion-read-model.js
+            docs/platform/productivity/activity-coaching-policy.js
+            docs/platform/productivity/activity-coaching-intelligence.js
+            docs/platform/productivity/activity-points-authority-adapter.mjs
+            docs/platform/productivity/policies/FORGE_ACTIVITY_COACHING_POLICY_V1.json
+            docs/daily-points-engine.js
+          )
+          for path in "${required[@]}"; do test -s "$path"; done
+          ! grep -q '../../../platform/' docs/static-preview/forge-aura/auth-v4.html
+          ! grep -R -q '../../../../platform/' docs/static-preview/forge-aura/activity
+          grep -q '../../platform/event-evidence/canonical-activity-event-contract.js' docs/static-preview/forge-aura/auth-v4.html
+          grep -q 'activity-pages-runtime-fix-001' docs/static-preview/forge-aura/aura-bootstrap-v4.js
+          node --check docs/static-preview/forge-aura/aura-bootstrap-v4.js
+          node --check docs/static-preview/forge-aura/app-v4.js
+          node --check docs/static-preview/forge-aura/activity/activity-module.js
+          node --check docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Local browser render acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/activity-pages-runtime-repair
+          python3 -m http.server 4173 --directory docs >/tmp/forge-pages-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for attempt in $(seq 1 30); do
+            curl --fail --silent http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html >/dev/null && break
+            sleep 1
+          done
+          TARGET_URL='http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html?route=actividad&v=activity-pages-runtime-fix-001' \
+          SCREENSHOT_PATH='artifacts/activity-pages-runtime-repair/local.png' \
+          node --input-type=module <<'NODE'
+          import { chromium } from '@playwright/test';
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+          const failures = [];
+          page.on('pageerror', (error) => failures.push(`PAGE_ERROR:${error.message}`));
+          page.on('response', (response) => { if (response.status() >= 400) failures.push(`HTTP_${response.status()}:${response.url()}`); });
+          await page.goto(process.env.TARGET_URL, { waitUntil: 'networkidle', timeout: 60000 });
+          await page.waitForFunction(() => {
+            const root = document.querySelector('[data-aura-app]');
+            return root && root.children.length > 0 && root.textContent.trim().length > 20;
+          }, null, { timeout: 30000 });
+          const state = await page.evaluate(() => ({
+            boot: document.documentElement.dataset.auraBootState || '',
+            env: document.documentElement.dataset.auraEnvState || '',
+            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 300) || '',
+          }));
+          await page.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
+          await browser.close();
+          if (state.boot === 'BOOT_FAILED_VISIBLE') failures.push(`BOOT_STATE:${state.boot}`);
+          if (!state.text) failures.push('EMPTY_RENDER');
+          if (failures.length) throw new Error(failures.join('\n'));
+          console.log(JSON.stringify(state));
+          NODE
+
+      - name: Commit exact runtime repair
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            docs/platform/event-evidence \
+            docs/platform/operational-calendar \
+            docs/platform/productivity \
+            docs/daily-points-engine.js \
+            docs/static-preview/forge-aura/auth-v4.html \
+            docs/static-preview/forge-aura/aura-bootstrap-v4.js \
+            docs/static-preview/forge-aura/app-v4.js \
+            docs/static-preview/forge-aura/activity/activity-module.js \
+            docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m 'fix(activity): publish Pages runtime dependencies'
+          git push origin HEAD:"$BRANCH"
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Request and wait for Pages build
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED_SHA='${{ steps.commit.outputs.sha }}'
+          code=$(curl --silent --show-error --output /tmp/pages-request.json --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/pages/builds")
+          [[ "$code" == '201' || "$code" == '202' ]]
+          for attempt in $(seq 1 90); do
+            curl --fail --silent --show-error \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/vnd.github+json" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$REPOSITORY/pages/builds/latest" > /tmp/pages-latest.json
+            state=$(node -e "const v=require('/tmp/pages-latest.json'); process.stdout.write(String(v.status || 'unknown'))")
+            commit=$(node -e "const v=require('/tmp/pages-latest.json'); process.stdout.write(String(v.commit || ''))")
+            echo "PAGES_ATTEMPT=$attempt STATUS=$state COMMIT=$commit"
+            if [[ "$state" == 'built' && "$commit" == "$EXPECTED_SHA" ]]; then exit 0; fi
+            [[ "$state" != 'errored' ]]
+            sleep 4
+          done
+          exit 1
+
+      - name: Public browser render acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET_URL="$PUBLIC_BASE/static-preview/forge-aura/auth-v4.html?route=actividad&v=${{ steps.commit.outputs.sha }}" \
+          SCREENSHOT_PATH='artifacts/activity-pages-runtime-repair/public.png' \
+          node --input-type=module <<'NODE'
+          import { chromium } from '@playwright/test';
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+          const failures = [];
+          page.on('pageerror', (error) => failures.push(`PAGE_ERROR:${error.message}`));
+          page.on('response', (response) => { if (response.status() >= 400) failures.push(`HTTP_${response.status()}:${response.url()}`); });
+          await page.goto(process.env.TARGET_URL, { waitUntil: 'networkidle', timeout: 90000 });
+          await page.waitForFunction(() => {
+            const root = document.querySelector('[data-aura-app]');
+            return root && root.children.length > 0 && root.textContent.trim().length > 20;
+          }, null, { timeout: 45000 });
+          const state = await page.evaluate(() => ({
+            boot: document.documentElement.dataset.auraBootState || '',
+            env: document.documentElement.dataset.auraEnvState || '',
+            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 300) || '',
+          }));
+          await page.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
+          await browser.close();
+          if (state.boot === 'BOOT_FAILED_VISIBLE') failures.push(`BOOT_STATE:${state.boot}`);
+          if (!state.text) failures.push('EMPTY_RENDER');
+          if (failures.length) throw new Error(failures.join('\n'));
+          console.log(`ACTIVITY_PUBLIC_BROWSER_RENDER=PASS`);
+          console.log(`ACTIVITY_LIVE_URL=${process.env.TARGET_URL}`);
+          console.log(JSON.stringify(state));
+          NODE
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: activity-pages-runtime-repair-browser-evidence
+          path: artifacts/activity-pages-runtime-repair
+          if-no-files-found: warn
+          retention-days: 30
