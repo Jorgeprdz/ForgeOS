@@ -81,6 +81,12 @@ function normalizeLedgerEntries(entries, tenantId) {
   });
 }
 
+function classifyCanonicalAppointment(event) {
+  const purpose = event?.payload?.appointment_purpose;
+  if (purpose === "INITIAL" || purpose === "CLOSING") return purpose;
+  return null;
+}
+
 export async function createProductiveActivityReportingBridge({
   bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B,
   ledgerRuntimeApi = globalThis.ForgeActivityLedgerBrowserRuntimeFES02C,
@@ -127,6 +133,7 @@ export async function createProductiveActivityReportingBridge({
     organizationId: tenantId,
     advisorId,
     timeZone: zone,
+    classifyAppointment: classifyCanonicalAppointment,
 
     async readEvents() {
       if (closed) {
