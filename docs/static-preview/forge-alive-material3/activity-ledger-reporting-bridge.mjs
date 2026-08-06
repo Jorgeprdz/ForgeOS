@@ -1,11 +1,11 @@
 import {
   createFesActivityReportSourceAdapter,
   FES_ACTIVITY_EVENT_AUTHORITY_SNAPSHOT_SCHEMA_VERSION,
-} from "../../../advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs";
+} from "../../advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs";
 
 import {
   createActivityReportingRuntime,
-} from "../../../advisor-os/reporting/runtime/activity-reporting-runtime.mjs";
+} from "../../advisor-os/reporting/runtime/activity-reporting-runtime.mjs";
 
 export const PRODUCTIVE_ACTIVITY_REPORTING_BRIDGE_SCHEMA_VERSION =
   "productive-activity-reporting-bridge.v1";
@@ -42,7 +42,11 @@ function canonicalTimeZone(value) {
   try {
     new Intl.DateTimeFormat("en", { timeZone: zone }).format(new Date(0));
   } catch (error) {
-    fail("ACTIVITY_REPORTING_TIME_ZONE_INVALID", "timeZone must be an IANA zone", error);
+    fail(
+      "ACTIVITY_REPORTING_TIME_ZONE_INVALID",
+      "timeZone must be an IANA zone",
+      error,
+    );
   }
   return zone;
 }
@@ -137,7 +141,10 @@ export async function createProductiveActivityReportingBridge({
 
     async readEvents() {
       if (closed) {
-        fail("ACTIVITY_REPORTING_BRIDGE_CLOSED", "the productive bridge is closed");
+        fail(
+          "ACTIVITY_REPORTING_BRIDGE_CLOSED",
+          "the productive bridge is closed",
+        );
       }
 
       let syncResult;
