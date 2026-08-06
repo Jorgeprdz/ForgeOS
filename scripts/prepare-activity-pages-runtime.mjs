@@ -9,7 +9,7 @@ import {
 import { dirname, join, relative } from "node:path";
 
 const root = process.cwd();
-const revision = "activity-pages-runtime-fix-003";
+const revision = "activity-pages-runtime-fix-004";
 
 const exactFiles = Object.freeze([
   "platform/event-evidence/canonical-activity-event-contract.js",
@@ -99,6 +99,10 @@ for (const file of reportingFiles) {
 
 await patchFile("docs/static-preview/forge-aura/auth-v4.html", (source) => source
   .replaceAll("../../../platform/", "../../platform/")
+  .replace(
+    /<script type="importmap">[^<]+<\/script>/u,
+    '<script type="importmap" data-activity-reporting-crypto-import-map>{"imports":{"node:crypto":"../forge-alive-material3/node-crypto-shim.mjs?v=rep-16e-001","./pipeline/pipeline-adapter.js":"./pipeline/pipeline-adapter-pages-v1.js"}}</script>',
+  )
   .replace(/\.\/aura-bootstrap-v4\.js\?v=[^"']+/u, `./aura-bootstrap-v4.js?v=${revision}`));
 
 await patchFile("docs/static-preview/forge-aura/app-v4.js", (source) => source
@@ -167,12 +171,22 @@ const required = [
   "docs/advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.js",
   "docs/advisor-os/reporting/runtime/activity-reporting-runtime.js",
   "docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js",
+  "docs/static-preview/forge-alive-material3/node-crypto-shim.mjs",
 ];
 for (const file of required) {
   const content = await readFile(join(root, file));
   if (!content.length) throw new Error(`ACTIVITY_PAGES_REQUIRED_FILE_EMPTY=${file}`);
 }
 
+const authEntry = await readFile(
+  join(root, "docs/static-preview/forge-aura/auth-v4.html"),
+  "utf8",
+);
+if (!authEntry.includes('"node:crypto":"../forge-alive-material3/node-crypto-shim.mjs?v=rep-16e-001"')) {
+  throw new Error("ACTIVITY_PAGES_CRYPTO_IMPORT_MAP_MISSING");
+}
+
 console.log(`ACTIVITY_PAGES_RUNTIME_PREPARED=${revision}`);
 console.log(`ACTIVITY_PAGES_REPORTING_MODULES=${reportingFiles.length}`);
+console.log("ACTIVITY_PAGES_BROWSER_CRYPTO_AUTHORITY=PASS");
 console.log(`ACTIVITY_PAGES_OUTPUT=${relative(root, join(root, "docs"))}`);
