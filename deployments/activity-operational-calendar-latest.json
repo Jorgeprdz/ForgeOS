@@ -3,9 +3,9 @@
   "migrationVersion": "20260805000100",
   "migrationName": "activity_operational_calendar_authority",
   "projectRef": "rmlxigxysujsuwzgoimv",
-  "sourceSha": "0e2c49c25b61d558deb366373754d6f573ea4b0f",
-  "workflowRunId": "31064897031",
-  "verifiedAt": "2026-08-06T02:11:40.030Z",
+  "sourceSha": "eb10cc2ab6d87808dedc2784be6fa535090c8fa1",
+  "workflowRunId": "31065369005",
+  "verifiedAt": "2026-08-06T02:21:36.608Z",
   "productionConfiguration": {
     "profileCount": 0,
     "overrideCount": 0,
@@ -16,10 +16,10 @@
     {
       "name": "predeployment_inventory",
       "status": "PASS",
-      "state": "ABSENT"
+      "state": "COMPLETE"
     },
     {
-      "name": "migration_applied",
+      "name": "migration_already_satisfied",
       "status": "PASS"
     },
     {
