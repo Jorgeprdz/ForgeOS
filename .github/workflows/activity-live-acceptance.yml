@@ -1,0 +1,169 @@
+name: Activity Production Calendar and Live Acceptance
+
+on:
+  push:
+    branches:
+      - feature/activity-live-acceptance-001
+    paths:
+      - "scripts/deploy-activity-operational-calendar-production.mjs"
+      - "supabase/migrations/20260805000100_activity_operational_calendar_authority.sql"
+      - "docs/static-preview/forge-aura/**"
+      - "platform/operational-calendar/**"
+      - "platform/productivity/**"
+      - "platform/event-evidence/**"
+      - "tests/activity-*.mjs"
+      - ".github/workflows/activity-live-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: activity-live-acceptance
+  cancel-in-progress: false
+
+jobs:
+  migrate-and-validate:
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'feature/activity-live-acceptance-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Verify exact authorized source and migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          test -f supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
+          test -f scripts/deploy-activity-operational-calendar-production.mjs
+          node --check scripts/deploy-activity-operational-calendar-production.mjs
+          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
+            supabase/migrations/20260805000100_activity_operational_calendar_authority.sql; then
+            echo "Destructive SQL rejected"
+            exit 1
+          fi
+          grep -Eq "force row level security" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
+          grep -Eq "OPCAL_APPEND_ONLY_MUTATION_DENIED" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
+
+      - name: Run foundational and UI regressions
+        run: |
+          node tests/activity-foundational-operational-calendar-test.mjs
+          node tests/activity-foundational-fes-taxonomy-test.mjs
+          node tests/activity-foundational-productivity-conversion-test.mjs
+          node tests/activity-foundational-points-adapter-test.mjs
+          node --test tests/activity-aura-productive-ui-test.mjs
+
+      - name: Apply exact migration and validate production authority
+        run: node scripts/deploy-activity-operational-calendar-production.mjs
+
+      - name: Upload redacted migration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: activity-calendar-production-ledger
+          path: artifacts/activity-calendar-production/ledger.jsonl
+          if-no-files-found: error
+          retention-days: 30
+
+  deploy-pages-acceptance:
+    needs: migrate-and-validate
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Re-run Activity route acceptance before publication
+        run: node --test tests/activity-aura-productive-ui-test.mjs
+
+      - name: Build isolated acceptance artifact
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          GITHUB_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_ANON_KEY"
+          rm -rf _site
+          mkdir -p _site
+          cp -R docs/. _site/
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const envPath = path.join('_site', 'static-preview', 'forge-aura', 'env.js');
+          fs.mkdirSync(path.dirname(envPath), { recursive: true });
+          const env = {
+            SUPABASE_URL: process.env.SUPABASE_URL,
+            SUPABASE_KEY: process.env.SUPABASE_ANON_KEY,
+            DEMO_MODE: 'false',
+            ENABLE_TEST_ADVISOR_LOGIN: 'false',
+          };
+          fs.writeFileSync(envPath, `window.__ENV__ = Object.freeze(${JSON.stringify(env, null, 2)});\n`);
+          fs.writeFileSync(path.join('_site', 'activity-live-build-info.json'), `${JSON.stringify({
+            commitSha: process.env.GITHUB_SHA,
+            generatedAt: new Date().toISOString(),
+            artifact: 'forge-aura-activity-live-acceptance',
+            route: 'static-preview/forge-aura/auth-v4.html?route=actividad',
+            calendarMigration: '20260805000100',
+          }, null, 2)}\n`);
+          NODE
+          test -f _site/static-preview/forge-aura/auth-v4.html
+          test -f _site/static-preview/forge-aura/app-v4.js
+          test -f _site/static-preview/forge-aura/activity/activity-module.js
+          test -f _site/static-preview/forge-aura/activity/activity-module.css
+          grep -q 'actividad' _site/static-preview/forge-aura/aura-router-v4.js
+          grep -q 'createActivityModule' _site/static-preview/forge-aura/app-v4.js
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy acceptance branch to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Public asset smoke test
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${PAGE_URL%/}"
+          for path in \
+            "static-preview/forge-aura/auth-v4.html?route=actividad" \
+            "static-preview/forge-aura/app-v4.js" \
+            "static-preview/forge-aura/activity/activity-module.js" \
+            "static-preview/forge-aura/activity/activity-module.css" \
+            "activity-live-build-info.json"; do
+            curl --fail --location --retry 5 --retry-delay 3 --max-time 30 "$base/$path" -o /tmp/asset
+            test -s /tmp/asset
+          done
+          echo "ACTIVITY_LIVE_PAGES_ASSETS=PASS"
+          echo "ACTIVITY_LIVE_URL=$base/static-preview/forge-aura/auth-v4.html?route=actividad"
