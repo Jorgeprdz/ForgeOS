@@ -1,0 +1,185 @@
+name: Activity Production Calendar and Live Acceptance
+
+on:
+  push:
+    branches:
+      - feature/activity-live-acceptance-001
+    paths:
+      - "scripts/deploy-activity-operational-calendar-production.mjs"
+      - "supabase/migrations/20260805000100_activity_operational_calendar_authority.sql"
+      - "docs/static-preview/forge-aura/**"
+      - "platform/operational-calendar/**"
+      - "platform/productivity/**"
+      - "platform/event-evidence/**"
+      - "tests/activity-*.mjs"
+      - ".github/workflows/activity-live-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+
+concurrency:
+  group: activity-live-acceptance
+  cancel-in-progress: false
+
+jobs:
+  migrate-and-validate:
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'feature/activity-live-acceptance-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify exact authorized source and migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
+          node --check scripts/deploy-activity-operational-calendar-production.mjs
+          grep -Eq "force row level security" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
+          grep -Eq "OPCAL_APPEND_ONLY_MUTATION_DENIED" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
+          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql; then
+            exit 1
+          fi
+      - name: Run foundational and UI regressions
+        run: |
+          node tests/activity-foundational-operational-calendar-test.mjs
+          node tests/activity-foundational-fes-taxonomy-test.mjs
+          node tests/activity-foundational-productivity-conversion-test.mjs
+          node tests/activity-foundational-points-adapter-test.mjs
+          node --test tests/activity-aura-productive-ui-test.mjs
+      - name: Apply exact migration and validate production authority
+        run: node scripts/deploy-activity-operational-calendar-production.mjs
+      - name: Upload redacted migration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: activity-calendar-production-ledger
+          path: artifacts/activity-calendar-production/ledger.jsonl
+          if-no-files-found: error
+          retention-days: 30
+
+  pages-source-gate:
+    needs: migrate-and-validate
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.source.outputs.ready }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      ACCEPTANCE_BRANCH: feature/activity-live-acceptance-001
+    steps:
+      - id: source
+        name: Verify configured Pages source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/pages" > /tmp/pages.json
+          branch=$(node -e "const v=require('/tmp/pages.json'); process.stdout.write(String(v.source?.branch || ''))")
+          path=$(node -e "const v=require('/tmp/pages.json'); process.stdout.write(String(v.source?.path || ''))")
+          echo "PAGES_SOURCE_BRANCH=$branch"
+          echo "PAGES_SOURCE_PATH=$path"
+          if [[ "$branch" == "$ACCEPTANCE_BRANCH" && "$path" == "/docs" ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "PAGES_SOURCE_GATE=PASS" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Pages source gate"
+              echo
+              echo "Production calendar migration: **PASS**"
+              echo "Activity live publication: **BLOCKED_BY_PAGES_SOURCE**"
+              echo
+              echo "Current source: \`$branch $path\`"
+              echo "Required source: \`$ACCEPTANCE_BRANCH /docs\`"
+              echo
+              echo "No branch or PR was overwritten. Change the Pages source in repository Settings, then dispatch this workflow again."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  publish-and-smoke:
+    needs: pages-source-gate
+    if: needs.pages-source-gate.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      PUBLIC_BASE: https://jorgeprdz.github.io/ForgeOS
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Re-run Activity route acceptance
+        run: node --test tests/activity-aura-productive-ui-test.mjs
+      - name: Verify branch assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f docs/static-preview/forge-aura/auth-v4.html
+          test -f docs/static-preview/forge-aura/app-v4.js
+          test -f docs/static-preview/forge-aura/activity/activity-module.js
+          test -f docs/static-preview/forge-aura/activity/activity.css
+          grep -q 'actividad' docs/static-preview/forge-aura/aura-router-v4.js
+          grep -q 'createActivityModule' docs/static-preview/forge-aura/app-v4.js
+      - name: Request and wait for Pages build
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl --silent --show-error --output /tmp/request.json --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/pages/builds")
+          [[ "$code" == "201" || "$code" == "202" ]]
+          for attempt in $(seq 1 60); do
+            curl --fail --silent --show-error \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/vnd.github+json" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$REPOSITORY/pages/builds/latest" > /tmp/latest.json
+            state=$(node -e "const v=require('/tmp/latest.json'); process.stdout.write(String(v.status || 'unknown'))")
+            commit=$(node -e "const v=require('/tmp/latest.json'); process.stdout.write(String(v.commit || ''))")
+            echo "PAGES_BUILD_ATTEMPT=$attempt STATUS=$state COMMIT=$commit"
+            if [[ "$state" == "built" ]]; then
+              test "$commit" = "$GITHUB_SHA"
+              exit 0
+            fi
+            [[ "$state" != "errored" ]]
+            sleep 5
+          done
+          exit 1
+      - name: Public Activity smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in \
+            "static-preview/forge-aura/auth-v4.html?route=actividad&v=$GITHUB_SHA" \
+            "static-preview/forge-aura/app-v4.js?v=$GITHUB_SHA" \
+            "static-preview/forge-aura/aura-router-v4.js?v=$GITHUB_SHA" \
+            "static-preview/forge-aura/activity/activity-module.js?v=$GITHUB_SHA" \
+            "static-preview/forge-aura/activity/activity.css?v=$GITHUB_SHA"; do
+            curl --fail --location --retry 8 --retry-delay 4 --max-time 30 "$PUBLIC_BASE/$path" -o /tmp/asset
+            test -s /tmp/asset
+          done
+          curl --fail --location "$PUBLIC_BASE/static-preview/forge-aura/aura-router-v4.js?v=$GITHUB_SHA" | grep -q actividad
+          curl --fail --location "$PUBLIC_BASE/static-preview/forge-aura/app-v4.js?v=$GITHUB_SHA" | grep -q createActivityModule
+          echo "ACTIVITY_LIVE_PAGES_ASSETS=PASS"
+          echo "ACTIVITY_LIVE_URL=$PUBLIC_BASE/static-preview/forge-aura/auth-v4.html?route=actividad&v=$GITHUB_SHA"

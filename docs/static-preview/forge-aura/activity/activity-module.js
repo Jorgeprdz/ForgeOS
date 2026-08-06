@@ -1,7 +1,7 @@
-import { createActivityRuntimeAdapter } from "./activity-runtime-adapter.js";
+import { createActivityRuntimeAdapter } from "./activity-runtime-adapter.js?v=activity-pages-runtime-fix-004";
 import { createActivityTipPresenter } from "./activity-tip-presenter.js";
 
-const POLICY_URL = new URL("../../../../platform/productivity/policies/FORGE_ACTIVITY_COACHING_POLICY_V1.json", import.meta.url);
+const POLICY_URL = new URL("../../../platform/productivity/policies/FORGE_ACTIVITY_COACHING_POLICY_V1.json", import.meta.url);
 const LOCALE_URL = new URL("./es-MX.json", import.meta.url);
 
 const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);

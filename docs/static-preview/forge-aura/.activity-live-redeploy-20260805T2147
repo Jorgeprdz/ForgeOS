@@ -1,0 +1,9 @@
+ACTIVITY_LIVE_REDEPLOY=COMMITTEE_AUTHORIZED
+AUTHORIZED_BY=Jorge Palacios
+AUTHORIZED_AT_LOCAL=2026-08-05T21:47:00-06:00
+ACCEPTANCE_BRANCH=feature/activity-live-acceptance-001
+PAGES_SOURCE=feature/activity-live-acceptance-001:/docs
+PURPOSE=Retrigger activity-live-acceptance after manual Pages source Save
+MUTATION_SCOPE=control-trigger-only
+MAIN_MUTATION=FORBIDDEN
+MERGE=NOT_AUTHORIZED

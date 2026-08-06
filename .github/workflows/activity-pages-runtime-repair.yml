@@ -1,0 +1,212 @@
+name: Activity Pages Runtime Repair
+
+on:
+  push:
+    branches:
+      - feature/activity-live-acceptance-001
+    paths:
+      - ".github/workflows/activity-pages-runtime-repair.yml"
+      - "scripts/prepare-activity-pages-runtime.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  actions: read
+
+concurrency:
+  group: activity-pages-runtime-repair
+  cancel-in-progress: false
+
+jobs:
+  repair-publish-and-browser-smoke:
+    if: github.ref_name == 'feature/activity-live-acceptance-001' && github.actor == 'Jorgeprdz'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      BRANCH: feature/activity-live-acceptance-001
+      PUBLIC_BASE: https://jorgeprdz.github.io/ForgeOS
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/activity-live-acceptance-001
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build complete Activity Pages runtime
+        run: node scripts/prepare-activity-pages-runtime.mjs
+
+      - name: Validate generated module graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s docs/advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.js
+          test -s docs/advisor-os/reporting/runtime/activity-reporting-runtime.js
+          test -s docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
+          ! grep -R -E '(from[[:space:]]+|import\()["'"'][^"'"']+\.mjs["'"']' docs/advisor-os/reporting
+          ! grep -q 'advisor-os/reporting/.*\.mjs' docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
+          grep -q 'activity-ledger-reporting-bridge.js' docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
+          node --check docs/static-preview/forge-aura/aura-bootstrap-v4.js
+          node --check docs/static-preview/forge-aura/app-v4.js
+          node --check docs/static-preview/forge-aura/activity/activity-module.js
+          node --check docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
+          node --check docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Local browser render acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/activity-pages-runtime-repair
+          python3 -m http.server 4173 --directory docs >/tmp/forge-pages-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for attempt in $(seq 1 30); do
+            curl --fail --silent http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html >/dev/null && break
+            sleep 1
+          done
+          TARGET_URL='http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html?route=actividad&v=activity-pages-runtime-fix-003' \
+          EXPECTED_ORIGIN='http://127.0.0.1:4173' \
+          SCREENSHOT_PATH='artifacts/activity-pages-runtime-repair/local.png' \
+          node --input-type=module <<'NODE'
+          import { chromium } from '@playwright/test';
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+          const failures = [];
+          page.on('response', response => {
+            if (response.url().startsWith(process.env.EXPECTED_ORIGIN) && response.status() >= 400) {
+              failures.push(`HTTP_${response.status()}:${response.url()}`);
+            }
+          });
+          page.on('requestfailed', request => {
+            if (request.url().startsWith(process.env.EXPECTED_ORIGIN)) {
+              failures.push(`REQUEST_FAILED:${request.url()}:${request.failure()?.errorText || 'unknown'}`);
+            }
+          });
+          await page.goto(process.env.TARGET_URL, { waitUntil: 'networkidle', timeout: 60000 });
+          await page.waitForFunction(() => {
+            const root = document.querySelector('[data-aura-app]');
+            return root && root.children.length > 0 && root.textContent.trim().length > 20;
+          }, null, { timeout: 30000 });
+          const state = await page.evaluate(() => ({
+            boot: document.documentElement.dataset.auraBootState || '',
+            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 500) || '',
+          }));
+          await page.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
+          await browser.close();
+          if (state.boot !== 'BOOT_READY') failures.push(`BOOT_STATE:${state.boot}:${state.text}`);
+          if (!state.text) failures.push('EMPTY_RENDER');
+          if (failures.length) throw new Error(failures.join('\n'));
+          console.log(`LOCAL_BROWSER_RENDER=PASS ${JSON.stringify(state)}`);
+          NODE
+
+      - name: Commit complete runtime graph
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -f -- \
+            docs/platform/event-evidence \
+            docs/platform/operational-calendar \
+            docs/platform/productivity \
+            docs/advisor-os/reporting \
+            docs/daily-points-engine.js \
+            docs/static-preview/forge-aura/auth-v4.html \
+            docs/static-preview/forge-aura/aura-bootstrap-v4.js \
+            docs/static-preview/forge-aura/app-v4.js \
+            docs/static-preview/forge-aura/activity/activity-module.js \
+            docs/static-preview/forge-aura/activity/activity-runtime-adapter.js \
+            docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
+          git diff --cached --check
+          git commit -m 'fix(activity): publish browser-safe Pages runtime graph'
+          git push origin HEAD:"$BRANCH"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Request and wait for Pages build
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED_SHA='${{ steps.commit.outputs.sha }}'
+          code=$(curl --silent --show-error --output /tmp/pages-request.json --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/pages/builds")
+          [[ "$code" == '201' || "$code" == '202' ]]
+          for attempt in $(seq 1 90); do
+            curl --fail --silent --show-error \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/vnd.github+json" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$REPOSITORY/pages/builds/latest" > /tmp/pages-latest.json
+            state=$(node -e "const v=require('/tmp/pages-latest.json'); process.stdout.write(String(v.status || 'unknown'))")
+            commit=$(node -e "const v=require('/tmp/pages-latest.json'); process.stdout.write(String(v.commit || ''))")
+            echo "PAGES_ATTEMPT=$attempt STATUS=$state COMMIT=$commit"
+            if [[ "$state" == 'built' && "$commit" == "$EXPECTED_SHA" ]]; then exit 0; fi
+            [[ "$state" != 'errored' ]]
+            sleep 4
+          done
+          exit 1
+
+      - name: Public browser render acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET_URL="$PUBLIC_BASE/static-preview/forge-aura/auth-v4.html?route=actividad&v=${{ steps.commit.outputs.sha }}" \
+          EXPECTED_ORIGIN="$PUBLIC_BASE" \
+          SCREENSHOT_PATH='artifacts/activity-pages-runtime-repair/public.png' \
+          node --input-type=module <<'NODE'
+          import { chromium } from '@playwright/test';
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+          const failures = [];
+          page.on('response', response => {
+            if (response.url().startsWith(process.env.EXPECTED_ORIGIN) && response.status() >= 400) {
+              failures.push(`HTTP_${response.status()}:${response.url()}`);
+            }
+          });
+          page.on('requestfailed', request => {
+            if (request.url().startsWith(process.env.EXPECTED_ORIGIN)) {
+              failures.push(`REQUEST_FAILED:${request.url()}:${request.failure()?.errorText || 'unknown'}`);
+            }
+          });
+          await page.goto(process.env.TARGET_URL, { waitUntil: 'networkidle', timeout: 90000 });
+          await page.waitForFunction(() => {
+            const root = document.querySelector('[data-aura-app]');
+            return root && root.children.length > 0 && root.textContent.trim().length > 20;
+          }, null, { timeout: 45000 });
+          const state = await page.evaluate(() => ({
+            boot: document.documentElement.dataset.auraBootState || '',
+            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 500) || '',
+          }));
+          await page.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
+          await browser.close();
+          if (state.boot !== 'BOOT_READY') failures.push(`BOOT_STATE:${state.boot}:${state.text}`);
+          if (!state.text) failures.push('EMPTY_RENDER');
+          if (failures.length) throw new Error(failures.join('\n'));
+          console.log('ACTIVITY_PUBLIC_BROWSER_RENDER=PASS');
+          console.log(`ACTIVITY_LIVE_URL=${process.env.TARGET_URL}`);
+          console.log(JSON.stringify(state));
+          NODE
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: activity-pages-runtime-repair-browser-evidence
+          path: artifacts/activity-pages-runtime-repair
+          if-no-files-found: warn
+          retention-days: 30
