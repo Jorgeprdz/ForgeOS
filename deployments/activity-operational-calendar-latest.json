@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "migrationVersion": "20260805000100",
+  "migrationName": "activity_operational_calendar_authority",
+  "projectRef": "rmlxigxysujsuwzgoimv",
+  "sourceSha": "0e2c49c25b61d558deb366373754d6f573ea4b0f",
+  "workflowRunId": "31064897031",
+  "verifiedAt": "2026-08-06T02:11:40.030Z",
+  "productionConfiguration": {
+    "profileCount": 0,
+    "overrideCount": 0,
+    "timeOffCount": 0,
+    "inventedSeedData": false
+  },
+  "checks": [
+    {
+      "name": "predeployment_inventory",
+      "status": "PASS",
+      "state": "ABSENT"
+    },
+    {
+      "name": "migration_applied",
+      "status": "PASS"
+    },
+    {
+      "name": "postdeployment_security_inventory",
+      "status": "PASS"
+    },
+    {
+      "name": "production_configuration_inventory",
+      "status": "PASS"
+    },
+    {
+      "name": "migration_history",
+      "status": "PASS"
+    }
+  ]
+}
