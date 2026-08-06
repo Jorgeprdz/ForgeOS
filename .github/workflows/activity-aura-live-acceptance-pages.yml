@@ -40,7 +40,11 @@ jobs:
           test -d docs/static-preview/forge-aura/activity
           grep -Eq 'actividad' docs/static-preview/forge-aura/aura-router-v4.js
           grep -Eq 'createActivityModule|activity' docs/static-preview/forge-aura/app-v4.js
-          ! grep -RInE 'actividad\.js|forge-alive-material3' docs/static-preview/forge-aura/activity docs/static-preview/forge-aura/app-v4.js
+          ! grep -RInE \
+            'actividad\.js|forge-alive-material3/(activity-module\.js|activity-operational-module\.js|activity-manual-entry\.js|activity-module\.css)' \
+            docs/static-preview/forge-aura/activity docs/static-preview/forge-aura/app-v4.js
+          grep -Eq 'activity-ledger-reporting-bridge\.mjs' \
+            docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
 
       - name: Build exact docs artifact
         shell: bash
