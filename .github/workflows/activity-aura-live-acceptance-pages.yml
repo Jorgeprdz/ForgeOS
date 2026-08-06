@@ -61,22 +61,38 @@ jobs:
           ! grep -Eq '\.\./\.\./\.\./advisor-os/' \
             docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
 
-      - name: Focused live-acceptance tests
-        run: |
-          node --test tests/activity-aura-productive-ui-test.mjs
-          node --test tests/activity-calendar-self-service-repository-test.mjs
-          node --test tests/activity-fes12-reporting-convergence-test.mjs
-          node tests/activity-foundational-operational-calendar-test.mjs
-          node tests/activity-foundational-fes-taxonomy-test.mjs
-          node tests/activity-foundational-productivity-conversion-test.mjs
-          node tests/activity-foundational-points-adapter-test.mjs
-          node tests/rep-16d-productive-activity-delivery-test.mjs
+      - name: Aura Activity productive UI acceptance
+        run: node --test tests/activity-aura-productive-ui-test.mjs
 
-      - name: Pipeline and constitutional regressions
-        run: |
-          node tests/pipeline-public-acceptance-hotfix-regression.mjs
-          node manager-os/tests/nba-reason-why-boundary-contract-master-test.js
-          node manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js
+      - name: Calendar self-service repository acceptance
+        run: node --test tests/activity-calendar-self-service-repository-test.mjs
+
+      - name: FES 01.2 reporting convergence acceptance
+        run: node --test tests/activity-fes12-reporting-convergence-test.mjs
+
+      - name: Foundational operational calendar regression
+        run: node tests/activity-foundational-operational-calendar-test.mjs
+
+      - name: Foundational FES taxonomy regression
+        run: node tests/activity-foundational-fes-taxonomy-test.mjs
+
+      - name: Foundational conversion regression
+        run: node tests/activity-foundational-productivity-conversion-test.mjs
+
+      - name: Foundational points regression
+        run: node tests/activity-foundational-points-adapter-test.mjs
+
+      - name: Productive Activity reporting bridge regression
+        run: node tests/rep-16d-productive-activity-delivery-test.mjs
+
+      - name: Pipeline regression
+        run: node tests/pipeline-public-acceptance-hotfix-regression.mjs
+
+      - name: NBA constitutional regression
+        run: node manager-os/tests/nba-reason-why-boundary-contract-master-test.js
+
+      - name: NASH Mick constitutional regression
+        run: node manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js
 
       - name: Build reproducible Pages authority artifact
         env:
