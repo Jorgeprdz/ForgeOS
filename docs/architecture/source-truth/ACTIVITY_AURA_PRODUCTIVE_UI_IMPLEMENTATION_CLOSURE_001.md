@@ -4,7 +4,9 @@
 **Repository:** `Jorgeprdz/ForgeOS`  
 **Date:** 2026-08-05  
 **Base:** `feature/activity-foundational-authorities-closure-001@c0c589b156004c6fb9431c48a57309653ccdbe8e`  
-**Head:** `feature/aura-activity-productive-ui-001@8c7d527f13fb908266172aea0271e61a00778f09`  
+**Branch:** `feature/aura-activity-productive-ui-001`  
+**Implementation commit:** `8c7d527f13fb908266172aea0271e61a00778f09`  
+**CI guard repair:** `87f2e049f33dc25dcb1a30813837931f252013d7`  
 **Draft PR:** `#276`  
 **Merge:** `NOT_AUTHORIZED`
 
@@ -94,5 +96,6 @@ PR_274=UNMODIFIED
 PR_275=UNMODIFIED
 DRAFT_PR=OPEN_#276
 BRANCH_PUSHED=YES
+CI_ACTIVITY_AURA_PRODUCTIVE_UI=PASS
 MERGE=NOT_AUTHORIZED
 ```
