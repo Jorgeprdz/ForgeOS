@@ -6,9 +6,13 @@ on:
       - feature/activity-calendar-production-live-acceptance-001
     paths:
       - "docs/static-preview/forge-aura/**"
+      - "docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs"
       - "platform/operational-calendar/**"
       - "platform/productivity/**"
       - "platform/event-evidence/**"
+      - "advisor-os/reporting/**"
+      - "scripts/build-activity-aura-pages-artifact.mjs"
+      - "tests/activity-*.mjs"
       - ".github/workflows/activity-aura-live-acceptance-pages.yml"
   workflow_dispatch:
 
@@ -25,10 +29,17 @@ jobs:
   build:
     if: github.actor == 'Jorgeprdz' && github.ref_name == 'feature/activity-calendar-production-live-acceptance-001'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout authorized live-acceptance branch
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Validate Aura Activity publication boundary
         shell: bash
@@ -45,17 +56,47 @@ jobs:
             docs/static-preview/forge-aura/activity docs/static-preview/forge-aura/app-v4.js
           grep -Eq 'activity-ledger-reporting-bridge\.mjs' \
             docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
+          ! grep -Eq '\.\./\.\./\.\./platform/' \
+            docs/static-preview/forge-aura/auth-v4.html
+          ! grep -Eq '\.\./\.\./\.\./advisor-os/' \
+            docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
 
-      - name: Build exact docs artifact
-        shell: bash
+      - name: Focused live-acceptance tests
+        run: |
+          node --test tests/activity-aura-productive-ui-test.mjs
+          node --test tests/activity-calendar-self-service-repository-test.mjs
+          node --test tests/activity-fes12-reporting-convergence-test.mjs
+          node tests/activity-foundational-operational-calendar-test.mjs
+          node tests/activity-foundational-fes-taxonomy-test.mjs
+          node tests/activity-foundational-productivity-conversion-test.mjs
+          node tests/activity-foundational-points-adapter-test.mjs
+          node tests/rep-16d-productive-activity-delivery-test.mjs
+
+      - name: Pipeline and constitutional regressions
+        run: |
+          node tests/pipeline-public-acceptance-hotfix-regression.mjs
+          node manager-os/tests/nba-reason-why-boundary-contract-master-test.js
+          node manager-os/tests/nash-mick-nba-reconnection-engine-master-test.js
+
+      - name: Build reproducible Pages authority artifact
         env:
           BUILD_SHA: ${{ github.sha }}
+        run: node scripts/build-activity-aura-pages-artifact.mjs _site
+
+      - name: Validate generated authority artifact
+        shell: bash
         run: |
           set -euo pipefail
-          rm -rf _site
-          cp -a docs _site
-          printf '%s\n' '{"commitSha":"'"$BUILD_SHA"'","artifact":"activity-aura-live-acceptance","calendarMigration":"20260805000100"}' > _site/activity-live-build-info.json
-          touch _site/.nojekyll
+          test -f _site/activity-authority-manifest.json
+          test -f _site/activity-live-build-info.json
+          test -f _site/platform/event-evidence/canonical-activity-event-contract.js
+          test -f _site/platform/operational-calendar/operational-calendar-repository.js
+          test -f _site/platform/productivity/activity-points-authority-adapter.mjs
+          test -f _site/advisor-os/reporting/runtime/activity-reporting-runtime.mjs
+          test -f _site/static-preview/forge-aura/activity/activity-calendar-controller.js
+          test -f _site/static-preview/forge-aura/activity/activity-metrics-adapter.js
+          grep -q '"businessRulesManuallyCopied": false' _site/activity-authority-manifest.json
+          grep -q "$GITHUB_SHA" _site/activity-live-build-info.json
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -84,7 +125,7 @@ jobs:
     needs: deploy
     timeout-minutes: 10
     steps:
-      - name: Public Activity route and asset smoke test
+      - name: Public Activity route and authority smoke test
         shell: bash
         env:
           BASE_URL: https://jorgeprdz.github.io/ForgeOS
@@ -102,17 +143,34 @@ jobs:
             sleep 5
           done
           grep -q "$EXPECTED_SHA" /tmp/build-info.json
-          curl --fail --silent --show-error --location \
-            "$BASE_URL/static-preview/forge-aura/auth-v4.html?route=actividad&v=$EXPECTED_SHA" \
-            -o /tmp/activity.html
-          curl --fail --silent --show-error --location \
-            "$BASE_URL/static-preview/forge-aura/app-v4.js?v=$EXPECTED_SHA" \
-            -o /tmp/app-v4.js
-          curl --fail --silent --show-error --location \
-            "$BASE_URL/static-preview/forge-aura/aura-router-v4.js?v=$EXPECTED_SHA" \
-            -o /tmp/router-v4.js
-          grep -Eq 'data-aura-app|app-v4\.js' /tmp/activity.html
-          grep -Eq 'actividad|createActivityModule' /tmp/app-v4.js
-          grep -Eq 'actividad' /tmp/router-v4.js
+
+          urls=(
+            "$BASE_URL/activity-authority-manifest.json"
+            "$BASE_URL/static-preview/forge-aura/auth-v4.html?route=actividad&v=$EXPECTED_SHA"
+            "$BASE_URL/static-preview/forge-aura/app-v4.js?v=$EXPECTED_SHA"
+            "$BASE_URL/static-preview/forge-aura/aura-router-v4.js?v=$EXPECTED_SHA"
+            "$BASE_URL/static-preview/forge-aura/activity/activity-module.js?v=$EXPECTED_SHA"
+            "$BASE_URL/static-preview/forge-aura/activity/activity-runtime-adapter.js?v=$EXPECTED_SHA"
+            "$BASE_URL/static-preview/forge-aura/activity/activity-calendar-controller.js?v=$EXPECTED_SHA"
+            "$BASE_URL/static-preview/forge-aura/activity/activity-metrics-adapter.js?v=$EXPECTED_SHA"
+            "$BASE_URL/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs?v=$EXPECTED_SHA"
+            "$BASE_URL/platform/event-evidence/canonical-activity-event-contract.js?v=$EXPECTED_SHA"
+            "$BASE_URL/platform/operational-calendar/operational-calendar-repository.js?v=$EXPECTED_SHA"
+            "$BASE_URL/platform/productivity/activity-points-authority-adapter.mjs?v=$EXPECTED_SHA"
+            "$BASE_URL/advisor-os/reporting/runtime/activity-reporting-runtime.mjs?v=$EXPECTED_SHA"
+          )
+          index=0
+          for url in "${urls[@]}"; do
+            curl --fail --silent --show-error --location "$url" -o "/tmp/asset-$index"
+            test -s "/tmp/asset-$index"
+            index=$((index + 1))
+          done
+
+          grep -Eq 'data-aura-app|app-v4\.js' /tmp/asset-1
+          grep -Eq 'actividad|createActivityModule' /tmp/asset-2
+          grep -Eq 'actividad' /tmp/asset-3
+          grep -Eq 'createActivityCalendarController' /tmp/asset-4
+          grep -Eq 'appendAdvisorProfile|appendTimeOff' /tmp/asset-10
           echo "ACTIVITY_AURA_PUBLIC_ROUTE=PASS"
+          echo "ACTIVITY_AURA_AUTHORITY_ASSETS=PASS"
           echo "ACTIVITY_AURA_BUILD_SHA=$EXPECTED_SHA"
