@@ -1,0 +1,51 @@
+name: Activity Pages Import Diagnostic
+
+on:
+  push:
+    branches:
+      - feature/activity-live-acceptance-001
+    paths:
+      - ".github/workflows/activity-pages-import-diagnostic.yml"
+      - "scripts/diagnose-activity-pages-imports.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    if: github.ref_name == 'feature/activity-live-acceptance-001' && github.actor == 'Jorgeprdz'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/activity-live-acceptance-001
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/prepare-activity-pages-runtime.mjs
+      - run: npx playwright install --with-deps chromium
+      - name: Serve generated Pages runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory docs >/tmp/forge-pages-diagnostic-server.log 2>&1 &
+          echo $! > /tmp/forge-pages-diagnostic-server.pid
+          for attempt in $(seq 1 30); do
+            curl --fail --silent http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/forge-pages-diagnostic-server.log
+          exit 1
+      - name: Diagnose each browser module import
+        env:
+          BASE_URL: http://127.0.0.1:4173
+        run: node scripts/diagnose-activity-pages-imports.mjs
+      - name: Stop server
+        if: always()
+        shell: bash
+        run: kill "$(cat /tmp/forge-pages-diagnostic-server.pid)" || true
