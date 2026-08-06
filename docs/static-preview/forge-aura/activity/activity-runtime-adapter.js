@@ -1,5 +1,5 @@
-import { calculateActivityPoints, findPointCombinations } from "../../../../platform/productivity/activity-points-authority-adapter.mjs";
-import { createProductiveActivityReportingBridge } from "../../forge-alive-material3/activity-ledger-reporting-bridge.mjs";
+import { calculateActivityPoints, findPointCombinations } from "../../../platform/productivity/activity-points-authority-adapter.mjs";
+import { createProductiveActivityReportingBridge } from "../../forge-alive-material3/activity-ledger-reporting-bridge.js";
 
 const freeze = (value) => {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
