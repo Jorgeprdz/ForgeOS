@@ -66,24 +66,12 @@ const APPOINTMENT_EVENTS = new Set([
 ]);
 
 const DIRECT_ACTIVITY_MAP = Object.freeze({
-  REFERRAL_RECEIVED: Object.freeze([
-    "REFERRAL_RECEIVED",
-  ]),
-  CALL_COMPLETED: Object.freeze([
-    "CALL_COMPLETED",
-  ]),
-  ADVISOR_REFERRAL_RECEIVED: Object.freeze([
-    "ADVISOR_REFERRAL_RECEIVED",
-  ]),
-  DUE_ACTION_COMPLETED: Object.freeze([
-    "FOLLOW_UP_COMPLETED",
-  ]),
-  MESSAGE_SENT_CONFIRMED: Object.freeze([
-    "CONTACT_ATTEMPTED",
-  ]),
-  CALL_NOT_ANSWERED_CONFIRMED: Object.freeze([
-    "CONTACT_ATTEMPTED",
-  ]),
+  REFERRAL_RECEIVED: Object.freeze(["REFERRAL_RECEIVED"]),
+  CALL_COMPLETED: Object.freeze(["CALL_COMPLETED"]),
+  ADVISOR_REFERRAL_RECEIVED: Object.freeze(["ADVISOR_REFERRAL_RECEIVED"]),
+  DUE_ACTION_COMPLETED: Object.freeze(["FOLLOW_UP_COMPLETED"]),
+  MESSAGE_SENT_CONFIRMED: Object.freeze(["CONTACT_ATTEMPTED"]),
+  CALL_NOT_ANSWERED_CONFIRMED: Object.freeze(["CONTACT_ATTEMPTED"]),
   CALL_CONNECTED_CONFIRMED: Object.freeze([
     "CONTACT_ATTEMPTED",
     "CONVERSATION_COMPLETED",
@@ -94,10 +82,7 @@ const NON_COUNTABLE_EVENTS = new Set(
   FES_ACTIVITY_EVENT_TYPES.filter(
     (eventType) =>
       !APPOINTMENT_EVENTS.has(eventType) &&
-      !Object.prototype.hasOwnProperty.call(
-        DIRECT_ACTIVITY_MAP,
-        eventType,
-      ),
+      !Object.prototype.hasOwnProperty.call(DIRECT_ACTIVITY_MAP, eventType),
   ),
 );
 
@@ -148,67 +133,43 @@ function freeze(value) {
   return Object.freeze(value);
 }
 
-function decision({
-  eventId,
-  status,
-  reason,
-  activityTypes = [],
-}) {
+function decision({ eventId, status, reason, activityTypes = [] }) {
   const normalizedTypes = [...activityTypes];
   return freeze({
     schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
     eventId,
     status,
     reason,
-    activityType:
-      normalizedTypes.length === 1
-        ? normalizedTypes[0]
-        : null,
+    activityType: normalizedTypes.length === 1 ? normalizedTypes[0] : null,
     activityTypes: normalizedTypes,
   });
 }
 
 export function assertCanonicalFesActivityEvent(value) {
   plain(value, "event");
-
   if (value.schema_version !== FES_ACTIVITY_EVENT_SCHEMA_VERSION) {
     fail("event schema_version is unsupported");
   }
-
   string(value.event_id, "event.event_id");
   string(value.event_type, "event.event_type");
   string(value.tenant_id, "event.tenant_id");
   string(value.idempotency_key, "event.idempotency_key");
   instant(value.occurred_at, "event.occurred_at");
   instant(value.recorded_at, "event.recorded_at");
-
   if (!FES_ACTIVITY_EVENT_TYPES.includes(value.event_type)) {
     fail(`event type ${value.event_type} is unsupported`);
   }
-
-  if (
-    ![
-      "UNCONFIRMED",
-      "REPORTED",
-      "CONFIRMED",
-      "DISPUTED",
-    ].includes(value.confirmation_state)
-  ) {
+  if (!["UNCONFIRMED", "REPORTED", "CONFIRMED", "DISPUTED"].includes(value.confirmation_state)) {
     fail("event confirmation_state is unsupported");
   }
-
   plain(value.actor, "event.actor");
   string(value.actor.type, "event.actor.type");
   string(value.actor.id, "event.actor.id");
   plain(value.payload, "event.payload");
-
   if (value.correction_of !== null && value.correction_of !== undefined) {
     string(value.correction_of, "event.correction_of");
-    if (value.correction_of === value.event_id) {
-      fail("event cannot correct itself");
-    }
+    if (value.correction_of === value.event_id) fail("event cannot correct itself");
   }
-
   return value;
 }
 
@@ -220,12 +181,17 @@ function appointmentActivityTypes(event, classifyAppointment) {
       reason: "APPOINTMENT_STAGE_NOT_IN_CANONICAL_ENVELOPE",
     });
   }
-
   const stage = classifyAppointment(event);
-  if (stage !== "INITIAL" && stage !== "CLOSING") {
-    fail("classifyAppointment must return INITIAL or CLOSING");
+  if (stage === null || stage === undefined || stage === "") {
+    return decision({
+      eventId: event.event_id,
+      status: "REQUIRES_DOMAIN_CONTEXT",
+      reason: "APPOINTMENT_STAGE_NOT_IN_CANONICAL_ENVELOPE",
+    });
   }
-
+  if (stage !== "INITIAL" && stage !== "CLOSING") {
+    fail("classifyAppointment must return INITIAL, CLOSING, or null");
+  }
   const completed = event.event_type === "APPOINTMENT_HELD";
   return decision({
     eventId: event.event_id,
@@ -243,12 +209,8 @@ function appointmentActivityTypes(event, classifyAppointment) {
   });
 }
 
-export function mapCanonicalEventToActivity(
-  eventInput,
-  { classifyAppointment } = {},
-) {
+export function mapCanonicalEventToActivity(eventInput, { classifyAppointment } = {}) {
   const event = assertCanonicalFesActivityEvent(eventInput);
-
   if (event.confirmation_state === "DISPUTED") {
     return decision({
       eventId: event.event_id,
@@ -256,7 +218,6 @@ export function mapCanonicalEventToActivity(
       reason: "DISPUTED_EVENT",
     });
   }
-
   const directTypes = DIRECT_ACTIVITY_MAP[event.event_type];
   if (directTypes) {
     if (event.confirmation_state !== "CONFIRMED") {
@@ -266,7 +227,6 @@ export function mapCanonicalEventToActivity(
         reason: "DIRECT_ACTIVITY_NOT_CONFIRMED",
       });
     }
-
     return decision({
       eventId: event.event_id,
       status: "COUNTABLE",
@@ -274,7 +234,6 @@ export function mapCanonicalEventToActivity(
       activityTypes: directTypes,
     });
   }
-
   if (APPOINTMENT_EVENTS.has(event.event_type)) {
     if (event.confirmation_state !== "CONFIRMED") {
       return decision({
@@ -283,10 +242,8 @@ export function mapCanonicalEventToActivity(
         reason: "APPOINTMENT_NOT_CONFIRMED",
       });
     }
-
     return appointmentActivityTypes(event, classifyAppointment);
   }
-
   if (NON_COUNTABLE_EVENTS.has(event.event_type)) {
     return decision({
       eventId: event.event_id,
@@ -294,51 +251,35 @@ export function mapCanonicalEventToActivity(
       reason: "EVENT_IS_TIMELINE_EVIDENCE_ONLY",
     });
   }
-
   fail(`event type ${event.event_type} lacks an explicit mapping policy`);
 }
 
 function eventOrder(left, right) {
-  const recorded =
-    new Date(left.recorded_at).getTime() -
-    new Date(right.recorded_at).getTime();
+  const recorded = new Date(left.recorded_at).getTime() - new Date(right.recorded_at).getTime();
   if (recorded !== 0) return recorded;
   return left.event_id.localeCompare(right.event_id);
 }
 
 export function resolveCountableActivityFacts(eventsInput, options = {}) {
-  if (!Array.isArray(eventsInput)) {
-    fail("events must be an array");
-  }
-
-  const events = eventsInput
-    .map(assertCanonicalFesActivityEvent)
-    .sort(eventOrder);
+  if (!Array.isArray(eventsInput)) fail("events must be an array");
+  const events = eventsInput.map(assertCanonicalFesActivityEvent).sort(eventOrder);
   const eventIds = new Set();
   const byId = new Map();
-
   for (const event of events) {
-    if (eventIds.has(event.event_id)) {
-      fail(`duplicate event_id ${event.event_id}`);
-    }
+    if (eventIds.has(event.event_id)) fail(`duplicate event_id ${event.event_id}`);
     eventIds.add(event.event_id);
     byId.set(event.event_id, event);
   }
-
   const corrected = new Set();
   for (const event of events) {
     if (event.correction_of) {
-      if (!byId.has(event.correction_of)) {
-        fail(`correction target ${event.correction_of} is absent`);
-      }
+      if (!byId.has(event.correction_of)) fail(`correction target ${event.correction_of} is absent`);
       corrected.add(event.correction_of);
     }
   }
-
   const replayKeys = new Set();
   const facts = [];
   const exclusions = [];
-
   for (const event of events) {
     if (corrected.has(event.event_id)) {
       exclusions.push(freeze({
@@ -348,12 +289,7 @@ export function resolveCountableActivityFacts(eventsInput, options = {}) {
       }));
       continue;
     }
-
-    const replayKey = [
-      event.event_type,
-      event.idempotency_key,
-    ].join("\u001f");
-
+    const replayKey = [event.event_type, event.idempotency_key].join("\u001f");
     if (replayKeys.has(replayKey)) {
       exclusions.push(freeze({
         eventId: event.event_id,
@@ -363,7 +299,6 @@ export function resolveCountableActivityFacts(eventsInput, options = {}) {
       continue;
     }
     replayKeys.add(replayKey);
-
     const mapped = mapCanonicalEventToActivity(event, options);
     if (mapped.status === "COUNTABLE") {
       for (const activityType of mapped.activityTypes) {
@@ -386,7 +321,6 @@ export function resolveCountableActivityFacts(eventsInput, options = {}) {
       }));
     }
   }
-
   return freeze({
     schemaVersion: ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION,
     facts,
