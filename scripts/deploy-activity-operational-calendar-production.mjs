@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { appendFileSync, createHash, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const PROJECT_REF = "rmlxigxysujsuwzgoimv";
 const MIGRATION_PATH = "supabase/migrations/20260805000100_activity_operational_calendar_authority.sql";
