@@ -122,7 +122,7 @@ jobs:
           test -f _site/static-preview/forge-aura/auth-v4.html
           test -f _site/static-preview/forge-aura/app-v4.js
           test -f _site/static-preview/forge-aura/activity/activity-module.js
-          test -f _site/static-preview/forge-aura/activity/activity-module.css
+          test -f _site/static-preview/forge-aura/activity/activity.css
           grep -q 'actividad' _site/static-preview/forge-aura/aura-router-v4.js
           grep -q 'createActivityModule' _site/static-preview/forge-aura/app-v4.js
       - uses: actions/configure-pages@v5
@@ -143,7 +143,7 @@ jobs:
             "static-preview/forge-aura/auth-v4.html?route=actividad" \
             "static-preview/forge-aura/app-v4.js" \
             "static-preview/forge-aura/activity/activity-module.js" \
-            "static-preview/forge-aura/activity/activity-module.css" \
+            "static-preview/forge-aura/activity/activity.css" \
             "activity-live-build-info.json"; do
             curl --fail --location --retry 5 --retry-delay 3 --max-time 30 "$base/$path" -o /tmp/asset
             test -s /tmp/asset
