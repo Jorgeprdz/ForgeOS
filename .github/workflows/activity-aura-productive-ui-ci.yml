@@ -1,0 +1,76 @@
+name: Activity Aura Productive UI CI
+
+on:
+  push:
+    branches:
+      - feature/aura-activity-productive-ui-001
+  pull_request:
+    branches:
+      - feature/activity-foundational-authorities-closure-001
+    paths:
+      - "docs/static-preview/forge-aura/**"
+      - "platform/productivity/activity-coaching-*.js"
+      - "platform/productivity/policies/FORGE_ACTIVITY_COACHING_POLICY_V1.json"
+      - "tests/activity-aura-productive-ui-test.mjs"
+      - "docs/architecture/source-truth/ACTIVITY_AURA_PRODUCTIVE_UI_IMPLEMENTATION_CLOSURE_001.md"
+      - "docs/architecture/source-truth/SLIDER_CAPTURE_SEMANTICS_REPORT.md"
+      - ".github/workflows/activity-aura-productive-ui-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  activity-aura-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Activity Aura focused acceptance
+        run: node --test tests/activity-aura-productive-ui-test.mjs
+      - name: Foundational regressions
+        run: |
+          node tests/activity-foundational-fes-taxonomy-test.mjs
+          node tests/activity-foundational-productivity-conversion-test.mjs
+          node tests/activity-foundational-points-adapter-test.mjs
+          node tests/fes-02c-activity-ledger-browser-runtime-test.mjs
+          node tests/rep-16d-productive-activity-delivery-test.mjs
+      - name: Pipeline regression
+        run: |
+          node --check docs/static-preview/forge-aura/app-v4.js
+          node --check docs/static-preview/forge-aura/aura-router-v4.js
+          node --check docs/static-preview/forge-aura/aura-shell.js
+          node --check docs/static-preview/forge-aura/activity/activity-module.js
+          node --check docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
+      - name: Hard cleanroom and policy guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=c0c589b156004c6fb9431c48a57309653ccdbe8e
+          git diff --name-only "$BASE"...HEAD > /tmp/activity-ui-files.txt
+          if grep -E 'forge-alive-material3/(activity-module|activity-operational-module|activity-module\.css)|(^|/)actividad\.js$' /tmp/activity-ui-files.txt; then
+            echo 'Legacy or Material 3 UI surface changed' >&2
+            exit 1
+          fi
+          if grep -RInE 'Te faltan|Llevas cinco|semana laboral no aparecen' platform/productivity/activity-coaching-*.js docs/static-preview/forge-aura/activity/*.js; then
+            echo 'Acceptance example copy leaked into logic' >&2
+            exit 1
+          fi
+          if grep -RInE '(consecutiveEligibleDays|strictlyGreaterThanPoints|completedEligibleWeeks|maxVisibleTips)[[:space:]]*[:=][[:space:]]*[0-9]+' docs/static-preview/forge-aura/activity platform/productivity/activity-coaching-*.js; then
+            echo 'Coaching threshold hardcoded in JavaScript' >&2
+            exit 1
+          fi
+          if grep -RInE "create[[:space:]]+table.*activity|from\\([\"']activity_" docs/static-preview/forge-aura/activity; then
+            echo 'Parallel Activity persistence detected' >&2
+            exit 1
+          fi
+          if git diff --unified=0 "$BASE"...HEAD -- . ':!package-lock.json' | grep -E '^\+.*(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}|BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY)'; then
+            echo 'Potential secret detected' >&2
+            exit 1
+          fi
