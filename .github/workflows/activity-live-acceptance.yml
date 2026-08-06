@@ -34,14 +34,11 @@ jobs:
       SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
       - run: npm ci
-
       - name: Verify exact authorized source and migration
         shell: bash
         run: |
@@ -58,7 +55,6 @@ jobs:
           fi
           grep -Eq "force row level security" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
           grep -Eq "OPCAL_APPEND_ONLY_MUTATION_DENIED" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
-
       - name: Run foundational and UI regressions
         run: |
           node tests/activity-foundational-operational-calendar-test.mjs
@@ -66,10 +62,8 @@ jobs:
           node tests/activity-foundational-productivity-conversion-test.mjs
           node tests/activity-foundational-points-adapter-test.mjs
           node --test tests/activity-aura-productive-ui-test.mjs
-
       - name: Apply exact migration and validate production authority
         run: node scripts/deploy-activity-operational-calendar-production.mjs
-
       - name: Upload redacted migration evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -81,24 +75,17 @@ jobs:
 
   deploy-pages-acceptance:
     needs: migrate-and-validate
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
       - run: npm ci
-
       - name: Re-run Activity route acceptance before publication
         run: node --test tests/activity-aura-productive-ui-test.mjs
-
       - name: Build isolated acceptance artifact
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -138,17 +125,13 @@ jobs:
           test -f _site/static-preview/forge-aura/activity/activity-module.css
           grep -q 'actividad' _site/static-preview/forge-aura/aura-router-v4.js
           grep -q 'createActivityModule' _site/static-preview/forge-aura/app-v4.js
-
       - uses: actions/configure-pages@v5
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-
       - name: Deploy acceptance branch to Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
       - name: Public asset smoke test
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
