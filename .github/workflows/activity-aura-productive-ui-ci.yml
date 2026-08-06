@@ -66,7 +66,7 @@ jobs:
             echo 'Coaching threshold hardcoded in JavaScript' >&2
             exit 1
           fi
-          if grep -RInE 'create[[:space:]]+table.*activity|from\(["'"']activity_' docs/static-preview/forge-aura/activity; then
+          if grep -RInE "create[[:space:]]+table.*activity|from\\([\"']activity_" docs/static-preview/forge-aura/activity; then
             echo 'Parallel Activity persistence detected' >&2
             exit 1
           fi
