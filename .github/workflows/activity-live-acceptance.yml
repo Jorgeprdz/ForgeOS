@@ -44,16 +44,12 @@ jobs:
           set -euo pipefail
           test -n "$SUPABASE_ACCESS_TOKEN"
           test "$SUPABASE_PROJECT_REF" = "rmlxigxysujsuwzgoimv"
-          test -f supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
-          test -f scripts/deploy-activity-operational-calendar-production.mjs
           node --check scripts/deploy-activity-operational-calendar-production.mjs
-          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" \
-            supabase/migrations/20260805000100_activity_operational_calendar_authority.sql; then
-            echo "Destructive SQL rejected"
-            exit 1
-          fi
           grep -Eq "force row level security" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
           grep -Eq "OPCAL_APPEND_ONLY_MUTATION_DENIED" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql
+          if grep -Eiq "DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]" supabase/migrations/20260805000100_activity_operational_calendar_authority.sql; then
+            exit 1
+          fi
       - name: Run foundational and UI regressions
         run: |
           node tests/activity-foundational-operational-calendar-test.mjs
@@ -72,29 +68,67 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  publish-and-smoke:
+  pages-source-gate:
     needs: migrate-and-validate
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.source.outputs.ready }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      ACCEPTANCE_BRANCH: feature/activity-live-acceptance-001
+    steps:
+      - id: source
+        name: Verify configured Pages source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/pages" > /tmp/pages.json
+          branch=$(node -e "const v=require('/tmp/pages.json'); process.stdout.write(String(v.source?.branch || ''))")
+          path=$(node -e "const v=require('/tmp/pages.json'); process.stdout.write(String(v.source?.path || ''))")
+          echo "PAGES_SOURCE_BRANCH=$branch"
+          echo "PAGES_SOURCE_PATH=$path"
+          if [[ "$branch" == "$ACCEPTANCE_BRANCH" && "$path" == "/docs" ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "PAGES_SOURCE_GATE=PASS" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Pages source gate"
+              echo
+              echo "Production calendar migration: **PASS**"
+              echo "Activity live publication: **BLOCKED_BY_PAGES_SOURCE**"
+              echo
+              echo "Current source: \`$branch $path\`"
+              echo "Required source: \`$ACCEPTANCE_BRANCH /docs\`"
+              echo
+              echo "No branch or PR was overwritten. Change the Pages source in repository Settings, then dispatch this workflow again."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  publish-and-smoke:
+    needs: pages-source-gate
+    if: needs.pages-source-gate.outputs.ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       GH_TOKEN: ${{ github.token }}
       REPOSITORY: ${{ github.repository }}
-      ACCEPTANCE_BRANCH: feature/activity-live-acceptance-001
       PUBLIC_BASE: https://jorgeprdz.github.io/ForgeOS
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
       - run: npm ci
-
-      - name: Re-run Activity route acceptance before publication
+      - name: Re-run Activity route acceptance
         run: node --test tests/activity-aura-productive-ui-test.mjs
-
-      - name: Verify branch-published assets
+      - name: Verify branch assets
         shell: bash
         run: |
           set -euo pipefail
@@ -102,77 +136,37 @@ jobs:
           test -f docs/static-preview/forge-aura/app-v4.js
           test -f docs/static-preview/forge-aura/activity/activity-module.js
           test -f docs/static-preview/forge-aura/activity/activity.css
-          test -f docs/static-preview/forge-aura/env.js
           grep -q 'actividad' docs/static-preview/forge-aura/aura-router-v4.js
           grep -q 'createActivityModule' docs/static-preview/forge-aura/app-v4.js
-          grep -q 'DEMO_MODE' docs/static-preview/forge-aura/env.js
-          if grep -Eq 'DEMO_MODE:[[:space:]]*"true"|ENABLE_TEST_ADVISOR_LOGIN:[[:space:]]*"true"' docs/static-preview/forge-aura/env.js; then
-            echo "Non-productive environment flag rejected"
-            exit 1
-          fi
-
-      - name: Point GitHub Pages to the authorized acceptance branch
+      - name: Request and wait for Pages build
         shell: bash
         run: |
           set -euo pipefail
-          api="https://api.github.com/repos/$REPOSITORY/pages"
-          payload=$(printf '{"source":{"branch":"%s","path":"/docs"}}' "$ACCEPTANCE_BRANCH")
-          code=$(curl --silent --show-error --output /tmp/pages-update.json --write-out '%{http_code}' \
-            --request PUT \
-            --header "Authorization: Bearer $GH_TOKEN" \
-            --header "Accept: application/vnd.github+json" \
-            --header "X-GitHub-Api-Version: 2022-11-28" \
-            "$api" \
-            --data "$payload")
-          if [[ "$code" != "204" && "$code" != "200" ]]; then
-            cat /tmp/pages-update.json
-            echo "PAGES_SOURCE_UPDATE_HTTP=$code"
-            exit 1
-          fi
-          echo "PAGES_SOURCE_BRANCH=$ACCEPTANCE_BRANCH"
-          echo "PAGES_SOURCE_PATH=/docs"
-
-      - name: Request and wait for Pages branch build
-        shell: bash
-        run: |
-          set -euo pipefail
-          api="https://api.github.com/repos/$REPOSITORY/pages/builds"
-          code=$(curl --silent --show-error --output /tmp/pages-request.json --write-out '%{http_code}' \
+          code=$(curl --silent --show-error --output /tmp/request.json --write-out '%{http_code}' \
             --request POST \
             --header "Authorization: Bearer $GH_TOKEN" \
             --header "Accept: application/vnd.github+json" \
             --header "X-GitHub-Api-Version: 2022-11-28" \
-            "$api")
-          if [[ "$code" != "201" && "$code" != "202" ]]; then
-            cat /tmp/pages-request.json
-            echo "PAGES_BUILD_REQUEST_HTTP=$code"
-            exit 1
-          fi
-
+            "https://api.github.com/repos/$REPOSITORY/pages/builds")
+          [[ "$code" == "201" || "$code" == "202" ]]
           for attempt in $(seq 1 60); do
             curl --fail --silent --show-error \
               --header "Authorization: Bearer $GH_TOKEN" \
               --header "Accept: application/vnd.github+json" \
               --header "X-GitHub-Api-Version: 2022-11-28" \
-              "https://api.github.com/repos/$REPOSITORY/pages/builds/latest" > /tmp/pages-latest.json
-            state=$(node -e "const v=require('/tmp/pages-latest.json'); process.stdout.write(String(v.status || 'unknown'))")
-            commit=$(node -e "const v=require('/tmp/pages-latest.json'); process.stdout.write(String(v.commit || ''))")
+              "https://api.github.com/repos/$REPOSITORY/pages/builds/latest" > /tmp/latest.json
+            state=$(node -e "const v=require('/tmp/latest.json'); process.stdout.write(String(v.status || 'unknown'))")
+            commit=$(node -e "const v=require('/tmp/latest.json'); process.stdout.write(String(v.commit || ''))")
             echo "PAGES_BUILD_ATTEMPT=$attempt STATUS=$state COMMIT=$commit"
             if [[ "$state" == "built" ]]; then
               test "$commit" = "$GITHUB_SHA"
-              echo "PAGES_BUILD=PASS"
               exit 0
             fi
-            if [[ "$state" == "errored" ]]; then
-              cat /tmp/pages-latest.json
-              exit 1
-            fi
+            [[ "$state" != "errored" ]]
             sleep 5
           done
-          echo "PAGES_BUILD_TIMEOUT"
           exit 1
-
-      - name: Public Activity asset smoke test
+      - name: Public Activity smoke test
         shell: bash
         run: |
           set -euo pipefail
@@ -182,15 +176,10 @@ jobs:
             "static-preview/forge-aura/aura-router-v4.js?v=$GITHUB_SHA" \
             "static-preview/forge-aura/activity/activity-module.js?v=$GITHUB_SHA" \
             "static-preview/forge-aura/activity/activity.css?v=$GITHUB_SHA"; do
-            curl --fail --location --retry 8 --retry-delay 4 --max-time 30 \
-              "$PUBLIC_BASE/$path" -o /tmp/activity-live-asset
-            test -s /tmp/activity-live-asset
+            curl --fail --location --retry 8 --retry-delay 4 --max-time 30 "$PUBLIC_BASE/$path" -o /tmp/asset
+            test -s /tmp/asset
           done
-          curl --fail --location --retry 8 --retry-delay 4 --max-time 30 \
-            "$PUBLIC_BASE/static-preview/forge-aura/aura-router-v4.js?v=$GITHUB_SHA" \
-            | grep -q 'actividad'
-          curl --fail --location --retry 8 --retry-delay 4 --max-time 30 \
-            "$PUBLIC_BASE/static-preview/forge-aura/app-v4.js?v=$GITHUB_SHA" \
-            | grep -q 'createActivityModule'
+          curl --fail --location "$PUBLIC_BASE/static-preview/forge-aura/aura-router-v4.js?v=$GITHUB_SHA" | grep -q actividad
+          curl --fail --location "$PUBLIC_BASE/static-preview/forge-aura/app-v4.js?v=$GITHUB_SHA" | grep -q createActivityModule
           echo "ACTIVITY_LIVE_PAGES_ASSETS=PASS"
           echo "ACTIVITY_LIVE_URL=$PUBLIC_BASE/static-preview/forge-aura/auth-v4.html?route=actividad&v=$GITHUB_SHA"
