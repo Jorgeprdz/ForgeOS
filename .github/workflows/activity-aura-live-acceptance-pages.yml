@@ -1,0 +1,114 @@
+name: Activity Aura Live Acceptance Pages
+
+on:
+  push:
+    branches:
+      - feature/activity-calendar-production-live-acceptance-001
+    paths:
+      - "docs/static-preview/forge-aura/**"
+      - "platform/operational-calendar/**"
+      - "platform/productivity/**"
+      - "platform/event-evidence/**"
+      - ".github/workflows/activity-aura-live-acceptance-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'feature/activity-calendar-production-live-acceptance-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout authorized live-acceptance branch
+        uses: actions/checkout@v4
+
+      - name: Validate Aura Activity publication boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f docs/static-preview/forge-aura/auth-v4.html
+          test -f docs/static-preview/forge-aura/app-v4.js
+          test -f docs/static-preview/forge-aura/aura-router-v4.js
+          test -d docs/static-preview/forge-aura/activity
+          grep -Eq 'actividad' docs/static-preview/forge-aura/aura-router-v4.js
+          grep -Eq 'createActivityModule|activity' docs/static-preview/forge-aura/app-v4.js
+          ! grep -RInE 'actividad\.js|forge-alive-material3' docs/static-preview/forge-aura/activity docs/static-preview/forge-aura/app-v4.js
+
+      - name: Build exact docs artifact
+        shell: bash
+        env:
+          BUILD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          cp -a docs _site
+          printf '%s\n' '{"commitSha":"'"$BUILD_SHA"'","artifact":"activity-aura-live-acceptance","calendarMigration":"20260805000100"}' > _site/activity-live-build-info.json
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'feature/activity-calendar-production-live-acceptance-001'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 15
+    steps:
+      - name: Deploy successor branch to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  smoke:
+    if: github.actor == 'Jorgeprdz' && github.ref_name == 'feature/activity-calendar-production-live-acceptance-001'
+    runs-on: ubuntu-latest
+    needs: deploy
+    timeout-minutes: 10
+    steps:
+      - name: Public Activity route and asset smoke test
+        shell: bash
+        env:
+          BASE_URL: https://jorgeprdz.github.io/ForgeOS
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent --show-error --location \
+              "$BASE_URL/activity-live-build-info.json?attempt=$attempt" \
+              -o /tmp/build-info.json; then
+              if grep -q "$EXPECTED_SHA" /tmp/build-info.json; then
+                break
+              fi
+            fi
+            sleep 5
+          done
+          grep -q "$EXPECTED_SHA" /tmp/build-info.json
+          curl --fail --silent --show-error --location \
+            "$BASE_URL/static-preview/forge-aura/auth-v4.html?route=actividad&v=$EXPECTED_SHA" \
+            -o /tmp/activity.html
+          curl --fail --silent --show-error --location \
+            "$BASE_URL/static-preview/forge-aura/app-v4.js?v=$EXPECTED_SHA" \
+            -o /tmp/app-v4.js
+          curl --fail --silent --show-error --location \
+            "$BASE_URL/static-preview/forge-aura/aura-router-v4.js?v=$EXPECTED_SHA" \
+            -o /tmp/router-v4.js
+          grep -Eq 'data-aura-app|app-v4\.js' /tmp/activity.html
+          grep -Eq 'actividad|createActivityModule' /tmp/app-v4.js
+          grep -Eq 'actividad' /tmp/router-v4.js
+          echo "ACTIVITY_AURA_PUBLIC_ROUTE=PASS"
+          echo "ACTIVITY_AURA_BUILD_SHA=$EXPECTED_SHA"
