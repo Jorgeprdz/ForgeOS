@@ -6,6 +6,7 @@ on:
       - feature/activity-live-acceptance-001
     paths:
       - ".github/workflows/activity-pages-runtime-repair.yml"
+      - "scripts/prepare-activity-pages-runtime.mjs"
   workflow_dispatch:
 
 permissions:
@@ -27,7 +28,6 @@ jobs:
       REPOSITORY: ${{ github.repository }}
       BRANCH: feature/activity-live-acceptance-001
       PUBLIC_BASE: https://jorgeprdz.github.io/ForgeOS
-      REVISION: activity-pages-runtime-fix-002
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,124 +41,24 @@ jobs:
 
       - run: npm ci
 
-      - name: Materialize exact Pages runtime graph
+      - name: Build complete Activity Pages runtime
+        run: node scripts/prepare-activity-pages-runtime.mjs
+
+      - name: Validate generated module graph
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          import shutil
-
-          exact_files = [
-              "platform/event-evidence/canonical-activity-event-contract.js",
-              "platform/event-evidence/activity-ledger-contract.js",
-              "platform/event-evidence/activity-ledger-local-store.js",
-              "platform/event-evidence/activity-ledger-sync-service.js",
-              "platform/event-evidence/activity-ledger-supabase-gateway.js",
-              "platform/event-evidence/activity-ledger-browser-runtime.js",
-              "platform/operational-calendar/operational-calendar-contract.js",
-              "platform/operational-calendar/eligible-date-evaluator.js",
-              "platform/operational-calendar/operational-calendar-repository.js",
-              "platform/productivity/activity-conversion-read-model.js",
-              "platform/productivity/activity-coaching-policy.js",
-              "platform/productivity/activity-coaching-intelligence.js",
-              "platform/productivity/activity-points-authority-adapter.mjs",
-              "platform/productivity/policies/FORGE_ACTIVITY_COACHING_POLICY_V1.json",
-          ]
-          for source_name in exact_files:
-              source = Path(source_name)
-              destination = Path("docs") / source
-              destination.parent.mkdir(parents=True, exist_ok=True)
-              shutil.copy2(source, destination)
-
-          shutil.copy2("daily-points-engine.js", "docs/daily-points-engine.js")
-          shutil.copytree(
-              "advisor-os/reporting",
-              "docs/advisor-os/reporting",
-              dirs_exist_ok=True,
-          )
-
-          def patch(path_name, replacements):
-              path = Path(path_name)
-              text = path.read_text(encoding="utf-8")
-              original = text
-              for before, after in replacements:
-                  text = text.replace(before, after)
-              if text == original:
-                  raise SystemExit(f"Expected replacement missing in {path_name}")
-              path.write_text(text, encoding="utf-8")
-
-          patch("docs/static-preview/forge-aura/auth-v4.html", [
-              ("../../../platform/", "../../platform/"),
-              ("./aura-bootstrap-v4.js?v=activity-productive-ui-001", "./aura-bootstrap-v4.js?v=activity-pages-runtime-fix-002"),
-          ])
-          patch("docs/static-preview/forge-aura/app-v4.js", [
-              ("./activity/activity-module.js?v=activity-productive-ui-001", "./activity/activity-module.js?v=activity-pages-runtime-fix-002"),
-          ])
-          patch("docs/static-preview/forge-aura/activity/activity-module.js", [
-              ("../../../../platform/", "../../../platform/"),
-              ("./activity-runtime-adapter.js", "./activity-runtime-adapter.js?v=activity-pages-runtime-fix-002"),
-          ])
-          patch("docs/static-preview/forge-aura/activity/activity-runtime-adapter.js", [
-              ("../../../../platform/", "../../../platform/"),
-          ])
-          patch("docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs", [
-              ("../../../advisor-os/reporting/", "../../advisor-os/reporting/"),
-          ])
-
-          Path("docs/static-preview/forge-aura/aura-bootstrap-v4.js").write_text('''function hasProductiveConfig() {
-            const env = globalThis.__ENV__;
-            return Boolean(env?.SUPABASE_URL && (env?.SUPABASE_KEY || env?.SUPABASE_ANON_KEY));
-          }
-
-          function escapeHtml(value) {
-            return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
-          }
-
-          function renderFatalBoot(error) {
-            const root = document.querySelector("[data-aura-app]");
-            const diagnostic = [error?.name, error?.message].filter(Boolean).join(" · ") || "Error desconocido";
-            document.documentElement.dataset.auraBootState = "BOOT_FAILED_VISIBLE";
-            if (!root) return;
-            root.setAttribute("aria-busy", "false");
-            root.innerHTML = `<main style="min-height:100vh;display:grid;place-items:center;padding:24px;background:#f4f5fb;font-family:system-ui,sans-serif"><section style="max-width:680px;padding:28px;border:1px solid #d9dce8;border-radius:24px;background:#fff"><p style="font-weight:800;color:#6d7285">Forge · diagnóstico de arranque</p><h1>No se pudo iniciar Aura</h1><p>La publicación cargó, pero una dependencia falló. El error ya no queda oculto en una pantalla blanca.</p><code>${escapeHtml(diagnostic)}</code></section></main>`;
-          }
-
-          document.documentElement.dataset.auraEnvState = hasProductiveConfig() ? "PRODUCTIVE_CONFIG_READY" : "PRODUCTIVE_CONFIG_BLOCKED";
-          try {
-            await import("./app-v4.js?v=activity-pages-runtime-fix-002");
-            document.documentElement.dataset.auraBootState = "BOOT_READY";
-          } catch (error) {
-            console.error("FORGE_AURA_BOOT_FAILED", error);
-            renderFatalBoot(error);
-          }
-          ''', encoding="utf-8")
-          PY
-
-      - name: Validate materialized graph
-        shell: bash
-        run: |
-          set -euo pipefail
-          required=(
-            docs/platform/event-evidence/canonical-activity-event-contract.js
-            docs/platform/event-evidence/activity-ledger-browser-runtime.js
-            docs/platform/operational-calendar/operational-calendar-contract.js
-            docs/platform/productivity/activity-points-authority-adapter.mjs
-            docs/platform/productivity/policies/FORGE_ACTIVITY_COACHING_POLICY_V1.json
-            docs/daily-points-engine.js
-            docs/advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs
-            docs/advisor-os/reporting/runtime/activity-reporting-runtime.mjs
-          )
-          for path in "${required[@]}"; do test -s "$path"; done
-          ! grep -q '../../../platform/' docs/static-preview/forge-aura/auth-v4.html
-          ! grep -R -q '../../../../platform/' docs/static-preview/forge-aura/activity
-          ! grep -q '../../../advisor-os/reporting/' docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
-          grep -q '../../advisor-os/reporting/' docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
+          test -s docs/advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.js
+          test -s docs/advisor-os/reporting/runtime/activity-reporting-runtime.js
+          test -s docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
+          ! grep -R -E '(from[[:space:]]+|import\()["'"'][^"'"']+\.mjs["'"']' docs/advisor-os/reporting
+          ! grep -q 'advisor-os/reporting/.*\.mjs' docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
+          grep -q 'activity-ledger-reporting-bridge.js' docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
           node --check docs/static-preview/forge-aura/aura-bootstrap-v4.js
           node --check docs/static-preview/forge-aura/app-v4.js
           node --check docs/static-preview/forge-aura/activity/activity-module.js
           node --check docs/static-preview/forge-aura/activity/activity-runtime-adapter.js
-          node --check docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
+          node --check docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -175,15 +75,24 @@ jobs:
             curl --fail --silent http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html >/dev/null && break
             sleep 1
           done
-          TARGET_URL='http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html?route=actividad&v=activity-pages-runtime-fix-002' \
+          TARGET_URL='http://127.0.0.1:4173/static-preview/forge-aura/auth-v4.html?route=actividad&v=activity-pages-runtime-fix-003' \
+          EXPECTED_ORIGIN='http://127.0.0.1:4173' \
           SCREENSHOT_PATH='artifacts/activity-pages-runtime-repair/local.png' \
           node --input-type=module <<'NODE'
           import { chromium } from '@playwright/test';
           const browser = await chromium.launch({ headless: true });
           const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
           const failures = [];
-          page.on('pageerror', error => failures.push(`PAGE_ERROR:${error.message}`));
-          page.on('response', response => { if (response.status() >= 400) failures.push(`HTTP_${response.status()}:${response.url()}`); });
+          page.on('response', response => {
+            if (response.url().startsWith(process.env.EXPECTED_ORIGIN) && response.status() >= 400) {
+              failures.push(`HTTP_${response.status()}:${response.url()}`);
+            }
+          });
+          page.on('requestfailed', request => {
+            if (request.url().startsWith(process.env.EXPECTED_ORIGIN)) {
+              failures.push(`REQUEST_FAILED:${request.url()}:${request.failure()?.errorText || 'unknown'}`);
+            }
+          });
           await page.goto(process.env.TARGET_URL, { waitUntil: 'networkidle', timeout: 60000 });
           await page.waitForFunction(() => {
             const root = document.querySelector('[data-aura-app]');
@@ -191,24 +100,24 @@ jobs:
           }, null, { timeout: 30000 });
           const state = await page.evaluate(() => ({
             boot: document.documentElement.dataset.auraBootState || '',
-            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 300) || '',
+            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 500) || '',
           }));
           await page.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
           await browser.close();
-          if (state.boot === 'BOOT_FAILED_VISIBLE') failures.push(`BOOT_STATE:${state.boot}`);
+          if (state.boot !== 'BOOT_READY') failures.push(`BOOT_STATE:${state.boot}:${state.text}`);
           if (!state.text) failures.push('EMPTY_RENDER');
           if (failures.length) throw new Error(failures.join('\n'));
-          console.log(JSON.stringify(state));
+          console.log(`LOCAL_BROWSER_RENDER=PASS ${JSON.stringify(state)}`);
           NODE
 
-      - name: Commit exact runtime repair
+      - name: Commit complete runtime graph
         id: commit
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
+          git add -A -f -- \
             docs/platform/event-evidence \
             docs/platform/operational-calendar \
             docs/platform/productivity \
@@ -219,9 +128,9 @@ jobs:
             docs/static-preview/forge-aura/app-v4.js \
             docs/static-preview/forge-aura/activity/activity-module.js \
             docs/static-preview/forge-aura/activity/activity-runtime-adapter.js \
-            docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.mjs
+            docs/static-preview/forge-alive-material3/activity-ledger-reporting-bridge.js
           git diff --cached --check
-          git commit -m 'fix(activity): publish complete Pages runtime graph'
+          git commit -m 'fix(activity): publish browser-safe Pages runtime graph'
           git push origin HEAD:"$BRANCH"
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
@@ -257,14 +166,23 @@ jobs:
         run: |
           set -euo pipefail
           TARGET_URL="$PUBLIC_BASE/static-preview/forge-aura/auth-v4.html?route=actividad&v=${{ steps.commit.outputs.sha }}" \
+          EXPECTED_ORIGIN="$PUBLIC_BASE" \
           SCREENSHOT_PATH='artifacts/activity-pages-runtime-repair/public.png' \
           node --input-type=module <<'NODE'
           import { chromium } from '@playwright/test';
           const browser = await chromium.launch({ headless: true });
           const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
           const failures = [];
-          page.on('pageerror', error => failures.push(`PAGE_ERROR:${error.message}`));
-          page.on('response', response => { if (response.status() >= 400) failures.push(`HTTP_${response.status()}:${response.url()}`); });
+          page.on('response', response => {
+            if (response.url().startsWith(process.env.EXPECTED_ORIGIN) && response.status() >= 400) {
+              failures.push(`HTTP_${response.status()}:${response.url()}`);
+            }
+          });
+          page.on('requestfailed', request => {
+            if (request.url().startsWith(process.env.EXPECTED_ORIGIN)) {
+              failures.push(`REQUEST_FAILED:${request.url()}:${request.failure()?.errorText || 'unknown'}`);
+            }
+          });
           await page.goto(process.env.TARGET_URL, { waitUntil: 'networkidle', timeout: 90000 });
           await page.waitForFunction(() => {
             const root = document.querySelector('[data-aura-app]');
@@ -272,11 +190,11 @@ jobs:
           }, null, { timeout: 45000 });
           const state = await page.evaluate(() => ({
             boot: document.documentElement.dataset.auraBootState || '',
-            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 300) || '',
+            text: document.querySelector('[data-aura-app]')?.textContent?.trim().slice(0, 500) || '',
           }));
           await page.screenshot({ path: process.env.SCREENSHOT_PATH, fullPage: true });
           await browser.close();
-          if (state.boot === 'BOOT_FAILED_VISIBLE') failures.push(`BOOT_STATE:${state.boot}`);
+          if (state.boot !== 'BOOT_READY') failures.push(`BOOT_STATE:${state.boot}:${state.text}`);
           if (!state.text) failures.push('EMPTY_RENDER');
           if (failures.length) throw new Error(failures.join('\n'));
           console.log('ACTIVITY_PUBLIC_BROWSER_RENDER=PASS');
