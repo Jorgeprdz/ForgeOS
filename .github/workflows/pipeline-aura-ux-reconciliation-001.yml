@@ -1,0 +1,95 @@
+name: Pipeline Aura UX Reconciliation 001
+
+on:
+  push:
+    branches:
+      - codex/forge-aura-pipeline-ux-reconciliation-001
+    paths:
+      - "docs/static-preview/forge-aura/pipeline/**"
+      - "tests/**/*pipeline*"
+      - "docs/architecture/source-truth/**/*PIPELINE*"
+      - "docs/evidence/**/*PIPELINE*"
+      - ".github/workflows/**/*pipeline*"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-aura/pipeline/**"
+      - "tests/**/*pipeline*"
+      - "docs/architecture/source-truth/**/*PIPELINE*"
+      - "docs/evidence/**/*PIPELINE*"
+      - ".github/workflows/**/*pipeline*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-aura-ux-reconciliation-001-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract-and-scope:
+    name: Pipeline UX contracts and scope guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax check Pipeline modules
+        run: |
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-core.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-priority.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v1.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-module.js
+
+      - name: Run Pipeline UX contracts
+        run: |
+          node --test \
+            tests/pipeline-aura-ux-reconciliation.test.mjs \
+            tests/pipeline-scope-guard.test.mjs
+
+  browser-acceptance:
+    name: Pipeline responsive and accessibility acceptance
+    runs-on: ubuntu-latest
+    needs: contract-and-scope
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run mobile, tablet, desktop, zoom, reduced-motion and keyboard acceptance
+        run: npx playwright test --config tests/pipeline-playwright.config.mjs
+
+      - name: Upload Pipeline evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-aura-ux-reconciliation-001-${{ github.sha }}
+          path: test-results/pipeline-aura-ux-reconciliation
+          if-no-files-found: warn
+          retention-days: 30
