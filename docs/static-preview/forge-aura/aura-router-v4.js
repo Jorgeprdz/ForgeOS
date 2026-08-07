@@ -21,14 +21,51 @@ export function readRoute(urlLike = globalThis.location?.href || "http://localho
 
 export function routeUrl(route, current = globalThis.location?.href || "http://localhost/") {
   const url = new URL(current, "http://localhost/");
-  url.searchParams.delete("nav"); url.searchParams.delete("auth"); url.searchParams.set("route", normalizeRoute(route)); return url;
+  url.searchParams.delete("nav");
+  url.searchParams.delete("auth");
+  url.searchParams.set("route", normalizeRoute(route));
+  return url;
 }
 
-export function oauthCallbackUrl(current = globalThis.location?.href || "http://localhost/") { return new URL("oauth-callback-v4.html", resolveRuntimeBase(current)).href; }
+export function oauthCallbackUrl(current = globalThis.location?.href || "http://localhost/") {
+  return new URL("oauth-callback-v4.html", resolveRuntimeBase(current)).href;
+}
 
 export function createAuraRouter({ windowRef = window, onChange } = {}) {
-  const emit = () => onChange?.(readRoute(windowRef.location.href));
-  const navigate = (route, { replace = false } = {}) => { const url = routeUrl(route, windowRef.location.href); windowRef.history[replace ? "replaceState" : "pushState"]({}, "", url); emit(); };
+  let returnRoute = readRoute(windowRef.location.href);
+  if (returnRoute === ROUTES.login) returnRoute = ROUTES.pipeline;
+
+  const remember = route => {
+    if (route !== ROUTES.login) returnRoute = route;
+    return route;
+  };
+
+  const emit = () => {
+    const route = remember(readRoute(windowRef.location.href));
+    onChange?.(route);
+  };
+
+  const navigate = (route, { replace = false } = {}) => {
+    const normalized = normalizeRoute(route);
+    remember(normalized);
+    const url = routeUrl(normalized, windowRef.location.href);
+    windowRef.history[replace ? "replaceState" : "pushState"]({}, "", url);
+    emit();
+  };
+
   windowRef.addEventListener("popstate", emit);
-  return Object.freeze({ current: () => readRoute(windowRef.location.href), navigate, restoreAfterAuth() { const url = routeUrl("pipeline", windowRef.location.href); windowRef.history.replaceState({}, "", url); emit(); }, destroy() { windowRef.removeEventListener("popstate", emit); } });
+
+  return Object.freeze({
+    current: () => readRoute(windowRef.location.href),
+    navigate,
+    restoreAfterAuth() {
+      const target = returnRoute === ROUTES.login ? ROUTES.pipeline : returnRoute;
+      const url = routeUrl(target, windowRef.location.href);
+      windowRef.history.replaceState({}, "", url);
+      emit();
+    },
+    destroy() {
+      windowRef.removeEventListener("popstate", emit);
+    },
+  });
 }

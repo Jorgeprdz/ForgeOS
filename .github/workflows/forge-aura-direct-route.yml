@@ -1,0 +1,37 @@
+name: Forge Aura Direct Route
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'tests/forge-aura-direct-route.test.mjs'
+      - '.github/workflows/forge-aura-direct-route.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'tests/forge-aura-direct-route.test.mjs'
+      - '.github/workflows/forge-aura-direct-route.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  direct-route-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and direct-route contract
+        run: |
+          node --check docs/static-preview/forge-aura/aura-router-v4.js
+          node --test tests/forge-aura-direct-route.test.mjs
+          git diff --check HEAD^ HEAD || true
