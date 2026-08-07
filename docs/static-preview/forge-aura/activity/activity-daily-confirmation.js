@@ -48,7 +48,10 @@ export function deriveActivityMetricSuggestions(result = {}) {
     activityDate,
     counts: {
       referidos: null,
-      llamadas: withValue(sum(rows, activityDate, ["CONVERSATION_COMPLETED"]), [`rep:${activityDate}:CONVERSATION_COMPLETED`]),
+      // REP CONVERSATION_COMPLETED is not equivalent to a phone call. Until the
+      // productive runtime exposes canonical FES CALL_COMPLETED facts, calls stay
+      // unknown and require explicit advisor confirmation rather than a false suggestion.
+      llamadas: null,
       citas_agendadas: withValue(sum(rows, activityDate, ["INITIAL_APPOINTMENT_SCHEDULED", "CLOSING_APPOINTMENT_SCHEDULED"]), [`rep:${activityDate}:APPOINTMENT_SCHEDULED`]),
       citas_iniciales: withValue(sum(rows, activityDate, ["INITIAL_APPOINTMENT_COMPLETED"]), [`rep:${activityDate}:INITIAL_APPOINTMENT_COMPLETED`]),
       citas_cierre: withValue(sum(rows, activityDate, ["CLOSING_APPOINTMENT_COMPLETED"]), [`rep:${activityDate}:CLOSING_APPOINTMENT_COMPLETED`]),
