@@ -15,9 +15,9 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "npx vite --host 127.0.0.1 --port 4173 --strictPort",
-    url: "http://127.0.0.1:4173",
+    command: "python3 -m http.server 4173 --bind 127.0.0.1 --directory .",
+    url: "http://127.0.0.1:4173/package.json",
     reuseExistingServer: false,
-    timeout: 120_000,
+    timeout: 30_000,
   },
 });
