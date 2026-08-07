@@ -61,3 +61,113 @@ test("daily confirmation uses precise minus-number-plus controls and keeps zero 
   await expect(page.getByText("Un cero no cuenta como confirmado hasta que guardes.")).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("ACTIVITY-DAILY-CONFIRMATION-MOBILE.png"), fullPage: true });
 });
+
+test("manual-only mode reaches official 25 points without Gmail or Outlook", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.setContent(`<!doctype html><html lang="es"><head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  </head><body><main id="manual-only-root"></main></body></html>`);
+
+  await page.evaluate(async () => {
+    const confirmations = [];
+    const emptyResult = { data: [], error: null };
+
+    function queryFor(table) {
+      const chain = {
+        select() { return chain; },
+        eq() { return chain; },
+        gte() { return chain; },
+        lte() { return chain; },
+        order() { return chain; },
+        then(resolve) {
+          if (table === "activity_metric_confirmations") {
+            return Promise.resolve({ data: confirmations.map(row => ({ ...row })), error: null }).then(resolve);
+          }
+          return Promise.resolve(emptyResult).then(resolve);
+        },
+      };
+      return chain;
+    }
+
+    const client = {
+      from(table) { return queryFor(table); },
+      async rpc(name, { p_payload: payload }) {
+        if (name !== "forge_activity_confirm_daily_metrics") return { data: null, error: new Error("UNEXPECTED_RPC") };
+        confirmations.length = 0;
+        for (const [index, metric] of payload.metrics.entries()) {
+          confirmations.push({
+            id: `00000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+            metric_key: metric.metricKey,
+            suggested_value: metric.suggestedValue,
+            confirmed_value: metric.confirmedValue,
+            confirmation_kind: "CONFIRMED",
+            confirmed_at: `2026-08-07T16:0${index}:00Z`,
+            correction_of: null,
+          });
+        }
+        window.__manualOnlyPayload = structuredClone(payload);
+        return { data: { state: "RECORDED", metricCount: 8 }, error: null };
+      },
+    };
+
+    const bootstrap = { async getClient() { return client; } };
+    const { createActivityDailyConfirmation } = await import(`/docs/static-preview/forge-aura/activity/activity-daily-confirmation.js?manualOnly=${Date.now()}`);
+    const component = createActivityDailyConfirmation({
+      root: document.querySelector("#manual-only-root"),
+      bootstrap,
+      onConfirmed: input => { window.__manualOnlyPointInput = input; },
+    });
+    await component.mount();
+    await component.load({
+      result: {
+        generatedAt: "2026-08-07T16:00:00Z",
+        timeZone: "America/Mexico_City",
+        activity: { current: { chartReady: { series: [] } } },
+      },
+    });
+    window.__manualOnlyComponent = component;
+  });
+
+  await expect(page.locator("[data-metric]")).toHaveCount(8);
+  await expect(page.locator('[data-metric="referidos"]')).toContainText("Sin sugerencia · confirma manualmente");
+  await expect(page.locator('[data-metric="polizas_pagadas"]')).toContainText("Sin sugerencia · confirma manualmente");
+  await expect(page.locator('[data-metric="referido_asesor"]')).toContainText("Sin sugerencia · confirma manualmente");
+
+  const values = {
+    referidos: 0,
+    llamadas: 5,
+    citas_agendadas: 0,
+    citas_iniciales: 0,
+    citas_cierre: 0,
+    solicitudes_firmadas: 2,
+    polizas_pagadas: 1,
+    referido_asesor: 0,
+  };
+  for (const [metric, value] of Object.entries(values)) {
+    await page.locator(`[data-metric="${metric}"] input`).fill(String(value));
+  }
+
+  await page.getByRole("button", { name: "Confirmar actividad de hoy" }).click();
+  await expect(page.getByText("Actividad confirmada. Los puntos usan estos valores, no la sugerencia.")).toBeVisible();
+  await expect(page.locator("[data-day-state]")).toHaveText("Confirmado");
+
+  const acceptance = await page.evaluate(async () => {
+    const payload = window.__manualOnlyPayload;
+    const pointInput = window.__manualOnlyPointInput;
+    const { projectOfficialActivityPoints } = await import(`/docs/static-preview/forge-aura/activity/activity-points-projection.js?manualOnly=${Date.now()}`);
+    return {
+      payloadMetricCount: payload?.metrics?.length || 0,
+      allConfirmed: Object.keys(pointInput?.counts || {}).length,
+      points: projectOfficialActivityPoints({ activityPointsInput: pointInput }),
+    };
+  });
+
+  expect(acceptance.payloadMetricCount).toBe(8);
+  expect(acceptance.allConfirmed).toBe(8);
+  expect(acceptance.points.state).toBe("READY");
+  expect(acceptance.points.total).toBe(25);
+  expect(acceptance.points.objective).toBe(25);
+  expect(acceptance.points.remaining).toBe(0);
+});
