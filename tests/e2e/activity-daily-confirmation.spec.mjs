@@ -49,12 +49,18 @@ test("daily confirmation uses precise minus-number-plus controls and keeps zero 
   await mount(page);
   await expect(page.getByRole("heading", { name: "¿Qué hiciste hoy?" })).toBeVisible();
   await expect(page.locator("[data-metric]")).toHaveCount(8);
+
   const calls = page.locator('[data-metric="llamadas"]');
-  await expect(calls.locator("input")).toHaveValue("4");
-  await expect(calls).toContainText("Sugerido por Forge: 4");
-  await calls.getByRole("button", { name: /Sumar uno/ }).click();
-  await expect(calls.locator("input")).toHaveValue("5");
-  await expect(calls).toContainText("Modificado");
+  await expect(calls.locator("input")).toHaveValue("0");
+  await expect(calls).toContainText("Sin sugerencia · confirma manualmente");
+
+  const scheduled = page.locator('[data-metric="citas_agendadas"]');
+  await expect(scheduled.locator("input")).toHaveValue("2");
+  await expect(scheduled).toContainText("Sugerido por Forge: 2");
+  await scheduled.getByRole("button", { name: /Sumar uno/ }).click();
+  await expect(scheduled.locator("input")).toHaveValue("3");
+  await expect(scheduled).toContainText("Modificado");
+
   const referrals = page.locator('[data-metric="referidos"]');
   await expect(referrals.locator("input")).toHaveValue("0");
   await expect(referrals).toContainText("Sin sugerencia · confirma manualmente");
@@ -132,6 +138,7 @@ test("manual-only mode reaches official 25 points without Gmail or Outlook", asy
 
   await expect(page.locator("[data-metric]")).toHaveCount(8);
   await expect(page.locator('[data-metric="referidos"]')).toContainText("Sin sugerencia · confirma manualmente");
+  await expect(page.locator('[data-metric="llamadas"]')).toContainText("Sin sugerencia · confirma manualmente");
   await expect(page.locator('[data-metric="polizas_pagadas"]')).toContainText("Sin sugerencia · confirma manualmente");
   await expect(page.locator('[data-metric="referido_asesor"]')).toContainText("Sin sugerencia · confirma manualmente");
 
