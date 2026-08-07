@@ -1,7 +1,7 @@
 import {
   calculateActivityPoints,
   POINTS_AUTHORITY_METADATA,
-} from "../../../../platform/productivity/activity-points-authority-adapter.mjs";
+} from "../../../platform/productivity/activity-points-authority-adapter.js";
 
 const LABELS = Object.freeze({
   referidos: "Referidos",

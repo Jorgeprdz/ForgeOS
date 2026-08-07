@@ -1,0 +1,1 @@
+../../../platform/productivity/activity-points-authority-adapter.mjs
