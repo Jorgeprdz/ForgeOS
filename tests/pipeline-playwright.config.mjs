@@ -15,7 +15,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "python3 -m http.server 4173 --bind 127.0.0.1 --directory .",
+    command: "python3 -m http.server 4173 --bind 127.0.0.1 --directory ..",
     url: "http://127.0.0.1:4173/package.json",
     reuseExistingServer: false,
     timeout: 30_000,
