@@ -7,6 +7,9 @@ INHERITED_AURA_BASE_SHA=cbf493409fc9ff7787ec8da60a436cbed42dd12b
 DELIVERY_BRANCH=codex/forge-aura-pipeline-ux-reconciliation-001
 DRAFT_PR=278
 RECONCILIATION_BASE_SHA=cbf493409fc9ff7787ec8da60a436cbed42dd12b
+IMPLEMENTATION_ACCEPTANCE_SHA=57b60146a0d274acd67a857ec135887fb986989a
+IMPLEMENTATION_ACCEPTANCE_RUN=31145355979
+FINAL_SHA=BOUND_IN_PR_AFTER_FINAL_DOCUMENTATION_REVALIDATION
 ```
 
 ## 1. Autoridades leídas
@@ -20,101 +23,102 @@ CANONICAL_DESIGN_SYSTEM_SHA=0cbc31e02be9b423437142f59c561275754340d1
 CANONICAL_AUTHORITY_SHA=88becacc83d3a315eb038f86f0893c0b142f14f1
 ```
 
-Se leyeron desde la rama de autoridad, sin fusionarla ni copiarla silenciosamente al runtime:
+Se leyeron, sin fusionar la rama de gobernanza ni copiar sus archivos al runtime:
 
 - `docs/05-foundation/design-system/README.md`
 - `docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md`
 - `docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_AUTHORITY.md`
 - `docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_UX_BEHAVIOR_DIRECTIVE_LOCKED.md`
 
-La interpretación aplicada es conjunta: Aura Light gobierna la jerarquía visual y la directiva bloqueada gobierna comportamiento, decisiones, formularios, feedback, accesibilidad y responsive. Ninguna de las dos autoriza nuevas fuentes de verdad, backend paralelo, decisiones automáticas ni debilitamiento de sesión, RLS o aislamiento por asesor.
+Aura Light gobierna la jerarquía visual; la directiva bloqueada gobierna comportamiento, formularios, feedback, accesibilidad y responsive. Ninguna autoriza fuentes de verdad paralelas, scoring opaco, acciones comerciales automáticas ni debilitamiento de sesión, RLS o aislamiento por asesor.
 
 ## 2. Baseline heredado
 
-El SHA `cbf493409fc9ff7787ec8da60a436cbed42dd12b` corresponde al runtime Aura/Pipeline heredado de PR #274. No es un resultado ni un `FINAL_SHA` de esta reconciliación.
+`cbf493409fc9ff7787ec8da60a436cbed42dd12b` pertenece al runtime Aura/Pipeline heredado de PR #274. No fue producido por esta reconciliación y nunca se usó como `FINAL_SHA`.
 
-### Clasificación del delta heredado contra `main`
+### Clasificación de los 27 archivos heredados contra `main`
 
-| Archivo heredado | Clasificación | Justificación |
+| Archivo | Clasificación | Justificación |
 | --- | --- | --- |
-| `.github/workflows/aura-pages-dispatch.yml` | `OUT_OF_SCOPE_INHERITED` | Publicación heredada; no se modificó en esta fase. |
-| `docs/00-governance/FORGE_AURA_CLEAN_RUNTIME_PRODUCTIVE_PIPELINE_EXECUTION_AUTHORITY.md` | `OUT_OF_SCOPE_INHERITED` | Autoridad heredada; no se alteró. |
+| `.github/workflows/aura-pages-dispatch.yml` | `OUT_OF_SCOPE_INHERITED` | Publicación heredada; cero cambios nuevos. |
+| `docs/00-governance/FORGE_AURA_CLEAN_RUNTIME_PRODUCTIVE_PIPELINE_EXECUTION_AUTHORITY.md` | `OUT_OF_SCOPE_INHERITED` | Autoridad heredada; cero cambios nuevos. |
 | `docs/static-preview/forge-aura/app-v4.js` | `REMOVE_FROM_PR_IF_POSSIBLE` | Variante heredada no requerida por el delta nuevo. |
-| `docs/static-preview/forge-aura/app.js` | `RUNTIME_INDISPENSABLE` | Monta el módulo Pipeline autenticado; no se modificó después del baseline. |
-| `docs/static-preview/forge-aura/aura-auth-v4.js` | `REMOVE_FROM_PR_IF_POSSIBLE` | Variante Auth heredada, fuera del trabajo nuevo. |
-| `docs/static-preview/forge-aura/aura-auth.css` | `RUNTIME_INDISPENSABLE` | Estilo de acceso del runtime heredado; cero mutaciones nuevas. |
-| `docs/static-preview/forge-aura/aura-auth.js` | `RUNTIME_INDISPENSABLE` | Provee sesión al montaje heredado; cero mutaciones nuevas. |
+| `docs/static-preview/forge-aura/app.js` | `RUNTIME_INDISPENSABLE` | Monta Pipeline autenticado; no se modificó después del baseline. |
+| `docs/static-preview/forge-aura/aura-auth-v4.js` | `REMOVE_FROM_PR_IF_POSSIBLE` | Variante Auth heredada; fuera de esta fase. |
+| `docs/static-preview/forge-aura/aura-auth.css` | `RUNTIME_INDISPENSABLE` | Estilo de acceso heredado; cero mutaciones nuevas. |
+| `docs/static-preview/forge-aura/aura-auth.js` | `RUNTIME_INDISPENSABLE` | Provee sesión al montaje; cero mutaciones nuevas. |
 | `docs/static-preview/forge-aura/aura-bootstrap-v4.js` | `REMOVE_FROM_PR_IF_POSSIBLE` | Variante heredada no tocada. |
 | `docs/static-preview/forge-aura/aura-bootstrap.js` | `RUNTIME_INDISPENSABLE` | Carga el runtime existente; cero mutaciones nuevas. |
 | `docs/static-preview/forge-aura/aura-router-v4.js` | `REMOVE_FROM_PR_IF_POSSIBLE` | Variante heredada no tocada. |
-| `docs/static-preview/forge-aura/aura-router.js` | `RUNTIME_INDISPENSABLE` | Enruta al Pipeline existente; cero mutaciones nuevas. |
-| `docs/static-preview/forge-aura/aura-shell.css` | `RUNTIME_INDISPENSABLE` | Contenedor Aura existente; cero mutaciones nuevas. |
-| `docs/static-preview/forge-aura/aura-shell.js` | `RUNTIME_INDISPENSABLE` | Monta la superficie y scrub de shell heredados; cero mutaciones nuevas. |
-| `docs/static-preview/forge-aura/aura-tokens.css` | `RUNTIME_INDISPENSABLE` | Tokens compartidos Aura ya heredados; cero mutaciones nuevas. |
-| `docs/static-preview/forge-aura/auth-v4-build.txt` | `REMOVE_FROM_PR_IF_POSSIBLE` | Marcador heredado sin relación con el delta nuevo. |
+| `docs/static-preview/forge-aura/aura-router.js` | `RUNTIME_INDISPENSABLE` | Enruta a Pipeline; cero mutaciones nuevas. |
+| `docs/static-preview/forge-aura/aura-shell.css` | `RUNTIME_INDISPENSABLE` | Contenedor Aura heredado; cero mutaciones nuevas. |
+| `docs/static-preview/forge-aura/aura-shell.js` | `RUNTIME_INDISPENSABLE` | Montaje y scrub de shell heredados; cero mutaciones nuevas. |
+| `docs/static-preview/forge-aura/aura-tokens.css` | `RUNTIME_INDISPENSABLE` | Tokens Aura heredados; cero mutaciones nuevas. |
+| `docs/static-preview/forge-aura/auth-v4-build.txt` | `REMOVE_FROM_PR_IF_POSSIBLE` | Marcador heredado sin relación con la fase. |
 | `docs/static-preview/forge-aura/auth-v4.html` | `REMOVE_FROM_PR_IF_POSSIBLE` | Variante Login heredada; no se tocó. |
-| `docs/static-preview/forge-aura/env.js` | `RUNTIME_INDISPENSABLE` | Configuración pública fail-closed heredada; cero mutaciones nuevas. |
-| `docs/static-preview/forge-aura/index.html` | `RUNTIME_INDISPENSABLE` | Entrada del runtime heredado; cero mutaciones nuevas. |
-| `docs/static-preview/forge-aura/oauth-callback-v4.html` | `OUT_OF_SCOPE_INHERITED` | Flujo OAuth heredado; no se modificó. |
-| `docs/static-preview/forge-aura/oauth-callback-v4.js` | `OUT_OF_SCOPE_INHERITED` | Flujo OAuth heredado; no se modificó. |
-| `docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v1.js` | `PIPELINE_DIRECT` | Adaptador directo del Pipeline Pages. |
+| `docs/static-preview/forge-aura/env.js` | `RUNTIME_INDISPENSABLE` | Configuración pública fail-closed heredada. |
+| `docs/static-preview/forge-aura/index.html` | `RUNTIME_INDISPENSABLE` | Entrada del runtime heredado. |
+| `docs/static-preview/forge-aura/oauth-callback-v4.html` | `OUT_OF_SCOPE_INHERITED` | OAuth heredado; no se modificó. |
+| `docs/static-preview/forge-aura/oauth-callback-v4.js` | `OUT_OF_SCOPE_INHERITED` | OAuth heredado; no se modificó. |
+| `docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v1.js` | `PIPELINE_DIRECT` | Adaptador Pages directo de Pipeline. |
 | `docs/static-preview/forge-aura/pipeline/pipeline-adapter.js` | `PIPELINE_DIRECT` | Adaptador directo a autoridades productivas. |
-| `docs/static-preview/forge-aura/pipeline/pipeline-calendar.js` | `PIPELINE_DIRECT` | Borrador externo de seguimiento; conservado. |
+| `docs/static-preview/forge-aura/pipeline/pipeline-calendar.js` | `PIPELINE_DIRECT` | Borrador externo de seguimiento. |
 | `docs/static-preview/forge-aura/pipeline/pipeline-core.js` | `PIPELINE_DIRECT` | Estados, etapas y modelo de presentación. |
-| `docs/static-preview/forge-aura/pipeline/pipeline-module.js` | `PIPELINE_DIRECT` | Superficie e interacción principal; reescrita. |
-| `docs/static-preview/forge-aura/pipeline/pipeline.css` | `PIPELINE_DIRECT` | Presentación Aura del módulo; reescrita. |
+| `docs/static-preview/forge-aura/pipeline/pipeline-module.js` | `PIPELINE_DIRECT` | Superficie e interacción principal. |
+| `docs/static-preview/forge-aura/pipeline/pipeline.css` | `PIPELINE_DIRECT` | Presentación Aura del módulo. |
 | `scripts/preview-forge-aura-pipeline.sh` | `OUT_OF_SCOPE_INHERITED` | Herramienta heredada fuera de los commits nuevos. |
 
-No se intentó limpiar archivos heredados fuera del alcance porque hacerlo habría creado mutaciones nuevas ajenas al guard definido desde `RECONCILIATION_BASE_SHA`. La recomendación `REMOVE_FROM_PR_IF_POSSIBLE` queda registrada para una reconciliación separada del baseline, no para esta fase.
+Los elementos `REMOVE_FROM_PR_IF_POSSIBLE` no se retiraron en esta fase porque hacerlo habría creado mutaciones nuevas fuera del guard autorizado desde `RECONCILIATION_BASE_SHA`. Su limpieza corresponde a una reconciliación separada del baseline.
 
-## 3. Auditoría de brechas y solución autorizada
+## 3. Matriz de brechas y solución
 
-| Requisito | Estado heredado | Brecha | Solución implementada | Archivos | Prueba |
-| --- | --- | --- | --- | --- | --- |
-| Acción primaria | No existía | No había entrada productiva inequívoca | Una sola acción `Agregar prospecto`, conectada a `createProspect` y con fail-closed si falta autoridad | `pipeline-module.js`, adaptadores | `PIPELINE_PRIMARY_ACTION_TEST` |
-| Encabezado operativo | Título “Prospectos” y conteo básico | Sin estado contextual ni actualización | Título Pipeline, resumen de atención, última actualización y refresh | `pipeline-module.js` | Browser hierarchy |
-| Capa de atención | Inexistente | Directorio aparecía antes de prioridades | Máximo tres señales verificadas antes del directorio | `pipeline-priority.js`, `pipeline-module.js` | `PIPELINE_ATTENTION_LAYER_TEST` |
-| Prioridad explicable | Inexistente | Riesgo de scoring opaco | Precedencia determinista por hecho: vencido, hoy, sin compromiso, actividad, incompleto; fuente y evidencia desplegables | `pipeline-priority.js` | `PIPELINE_EXPLAINABLE_PRIORITY_TEST` |
-| Siguiente mejor acción | Solo iconos genéricos | Sin razón ni continuidad | Recomendación por registro con razón y acción humana | `pipeline-priority.js`, `pipeline-module.js` | `PIPELINE_NEXT_BEST_ACTION_TEST` |
-| Vacío total | Solo “no hay prospectos” | No orientaba ni permitía comenzar | Beneficio, CTA productivo o alternativa honesta cuando no existe autoridad | `pipeline-module.js` | `PIPELINE_EMPTY_STATE_CTA_TEST` |
-| Vacío filtrado | Botón básico | No explicaba filtros activos ni integridad | Muestra filtros activos, confirma que los datos siguen intactos y permite limpiar | `pipeline-module.js` | `PIPELINE_FILTERED_EMPTY_TEST` |
-| Smart defaults | Duración 45, fecha y hora vacías | No había regla explicada | Usa compromiso futuro existente; si no existe propone siguiente día hábil, deja hora vacía y explica por qué | `pipeline-priority.js`, `pipeline-module.js` | `PIPELINE_SMART_DEFAULTS_TEST` |
-| Edición resiliente | Valores actuales y error general | Sin validación junto al campo ni explicación de integridad | Validación inline, doble envío bloqueado, entradas preservadas, copy de qué quedó intacto | `pipeline-module.js` | Contrato + browser |
-| Feedback humano | Principalmente `aria-live` oculto | No decía qué cambió ni siguiente paso | Mensajes visibles y accesibles después de crear, editar, cambiar etapa, archivar y abrir borradores | `pipeline-module.js` | `PIPELINE_ARIA_LIVE_TEST` |
-| Progressive disclosure | Parcial | Fuentes y evidencia no estaban ligadas a prioridad | `details/summary` por señal y Timeline | `pipeline-module.js` | Browser hierarchy |
-| Paridad tarjeta/lista | Semántica divergente | Lista usaba tabla incompleta | Misma clave semántica, recomendación y acciones; encabezados `columnheader` completos | `pipeline-module.js` | `PIPELINE_CARD_LIST_PARITY_TEST` |
-| Teclado y foco | Parcial | Faltaba cierre completo de contratos | Trap de foco, Escape, retorno de foco, menú con flechas/Home/End | `pipeline-module.js` | `PIPELINE_KEYBOARD_TEST`, `PIPELINE_FOCUS_TEST` |
-| Responsive | Tarjetas y lista adaptables | Sin validación de atención y zoom | Jerarquía única adaptable, bottom sheet móvil, min-width 0 y safe area | `pipeline.css` | Playwright 390/834/1440/200% |
-| Reduced motion | Token global | No había aceptación específica Pipeline | Transiciones locales anuladas bajo preferencia | `pipeline.css` | Playwright reduced motion |
-| Sesión y respuestas tardías | Baseline tenía revisión de montaje | Scrub local incompleto | `destroy()` vacía registros, adaptador, feedback, filtros y aumenta revisión | `pipeline-module.js` | `PIPELINE_SESSION_SCRUB_TEST`, `PIPELINE_LATE_RESULT_REJECTION_TEST` |
-| Aislamiento | RLS y sesión existentes | No debía sustituirse | Adaptadores mantienen `auth.getUser`, RLS y RPC productivo; cero filtros client-side como autoridad | adaptadores | `PIPELINE_NO_CROSS_ADVISOR_TEST` |
-| Acciones automáticas | No autorizadas | Copy podía ser ambiguo | Mensajes explícitos: WhatsApp y Calendar son aperturas externas, nunca envío o cita confirmada | `pipeline-module.js` | `PIPELINE_NO_AUTOMATIC_ACTION_TEST` |
-| Datos ficticios | Baseline fail-closed | Debía conservarse | Desconocido no se convierte en cero; no se agregan demo records | módulo y prioridad | `PIPELINE_NO_FAKE_DATA_TEST` |
+| Requisito | Brecha heredada | Solución implementada | Prueba |
+| --- | --- | --- | --- |
+| Encabezado operativo | Sin resumen ni actualización | Título Pipeline, conteo contextual, atención y refresh | Browser hierarchy |
+| Acción primaria | No existía | Una sola acción `Agregar prospecto`, conectada a autoridad productiva y fail-closed | `PIPELINE_PRIMARY_ACTION_TEST` |
+| Capa de atención | Inexistente | Máximo tres señales verificadas antes del directorio | `PIPELINE_ATTENTION_LAYER_TEST` |
+| Prioridad explicable | Sin razón ni fuente | Precedencia determinista por hecho, evidencia desplegable y acción humana | `PIPELINE_EXPLAINABLE_PRIORITY_TEST` |
+| Siguiente mejor acción | Iconos genéricos | Recomendación por registro con razón observable | `PIPELINE_NEXT_BEST_ACTION_TEST` |
+| Vacío total | Copy pasivo | Beneficio, CTA productivo o alternativa honesta | `PIPELINE_EMPTY_STATE_CTA_TEST` |
+| Vacío filtrado | Recuperación incompleta | Filtros activos, integridad de datos y limpiar filtros | `PIPELINE_FILTERED_EMPTY_TEST` |
+| Smart defaults | Sin regla explicada | Compromiso existente o siguiente día hábil; hora vacía si no hay evidencia | `PIPELINE_SMART_DEFAULTS_TEST` |
+| Edición resiliente | Error general | Validación inline, bloqueo doble, entradas preservadas y copy de integridad | Contrato + browser |
+| Feedback humano | Principalmente oculto | Feedback visible y `aria-live` para crear, editar, etapa, archivo y borrador | `PIPELINE_ARIA_LIVE_TEST` |
+| Progressive disclosure | Evidencia dispersa | `details/summary` por prioridad y Timeline | Browser hierarchy |
+| Tarjeta/lista | Semántica divergente | Misma clave semántica, recomendación y acciones; encabezados válidos | `PIPELINE_CARD_LIST_PARITY_TEST` |
+| Teclado y foco | Contrato incompleto | Trap, Escape, retorno de foco y navegación de menú | `PIPELINE_KEYBOARD_TEST`, `PIPELINE_FOCUS_TEST` |
+| Responsive | Sin aceptación completa | Arquitectura única, bottom sheet móvil, safe area y reflow | Playwright 390/834/1440/200% |
+| Reduced motion | Sin aceptación específica | Transiciones locales efectivamente anuladas | Playwright reduced motion |
+| Sesión y tardíos | Scrub local incompleto | `destroy()` limpia datos y revisión invalida resultados tardíos | Scrub/late-result tests |
+| Aislamiento | Debía preservarse | `auth.getUser`, RLS y RPC productivo continúan como autoridad | No-cross-advisor test |
+| Acciones automáticas | Copy ambiguo posible | WhatsApp y Calendar se declaran borradores/aperturas externas | No-automatic-action test |
+| Datos falsos | Debía preservarse fail-closed | Desconocido no se convierte en cero; cero demo records | No-fake-data test |
 
 ## 4. Decisiones de arquitectura
 
-1. **Reescritura de presentación ejecutada.** `pipeline-module.js` era monolítico y no permitía implementar de forma aislable prioridad, recomendación, estados, continuidad y pruebas. Se conserva como orquestador, pero la composición de hechos se extrajo a `pipeline-priority.js`.
-2. **Sin motor comercial nuevo.** `pipeline-priority.js` no puntúa ni decide: deriva señales deterministas únicamente de fechas, Timeline, compromiso y campos existentes.
-3. **Autoridad productiva preservada.** Alta usa `createProspect`; etapa usa el RPC confirmado; edición, archivo y Timeline conservan los servicios existentes y read-after-write.
-4. **Hora no inferida.** Cuando no existe compromiso futuro, se propone siguiente día hábil pero se deja la hora vacía.
-5. **Timeline desconectado no equivale a inactividad.** Una fuente no disponible no produce señal de “sin actividad”.
-6. **Estado local seguro.** Solo se persiste la preferencia `cards/list`; no se guarda información privada en `localStorage`.
-7. **Baseline heredado no reescrito fuera de Pipeline.** Auth, router, shell, Home, Activity, Reports, Cartera, Comisiones y Login recibieron cero mutaciones nuevas.
+1. `pipeline-module.js` se reescribió como orquestador de presentación e interacción.
+2. La composición determinista de hechos se extrajo a `pipeline-priority.js`; no es un motor comercial ni asigna puntuaciones.
+3. Alta usa `createProspect`; etapa conserva el RPC confirmado; edición, archivo y Timeline mantienen read-after-write.
+4. Una fuente Timeline desconectada no se interpreta como inactividad.
+5. Cuando no hay compromiso futuro, se propone el siguiente día hábil, pero no se inventa una hora.
+6. Solo se persiste la preferencia `cards/list`; no se guarda información privada en `localStorage`.
+7. Auth, Login, Home, Activity, Reports, Cartera y Comisiones recibieron cero mutaciones nuevas.
 
-## 5. Archivos de esta reconciliación
+## 5. Archivos nuevos y reescritos
 
-### Nuevo
+### Nuevos
 
 - `docs/static-preview/forge-aura/pipeline/pipeline-priority.js`
 - `tests/pipeline-aura-ux-reconciliation.test.mjs`
 - `tests/pipeline-scope-guard.test.mjs`
 - `tests/pipeline-playwright.config.mjs`
+- `tests/pipeline-static-server.py`
 - `tests/e2e/pipeline-aura-ux-reconciliation.spec.mjs`
 - `docs/architecture/source-truth/FORGE_AURA_PIPELINE_UX_RECONCILIATION_REPORT_001.md`
 - `docs/evidence/FORGE_AURA_PIPELINE_UX_RECONCILIATION_ACCEPTANCE_001.md`
 - `.github/workflows/pipeline-aura-ux-reconciliation-001.yml`
 
-### Reescrito o extendido
+### Reescritos o extendidos
 
 - `docs/static-preview/forge-aura/pipeline/pipeline-module.js`
 - `docs/static-preview/forge-aura/pipeline/pipeline.css`
@@ -122,59 +126,70 @@ No se intentó limpiar archivos heredados fuera del alcance porque hacerlo habr�
 - `docs/static-preview/forge-aura/pipeline/pipeline-adapter.js`
 - `docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v1.js`
 
-### Compartidos modificados después del baseline
-
 ```text
 SHARED_FILES_MODIFIED_AFTER_BASELINE=ZERO
 ```
 
-## 6. Pruebas
-
-Suite contractual local antes del push:
+## 6. Pruebas y evidencia
 
 ```text
 NODE_SYNTAX=PASS
 PIPELINE_UNIT_AND_STATIC_CONTRACTS=14/14 PASS
+PIPELINE_SCOPE_GUARD=PASS
+PLAYWRIGHT_BROWSER_CASES=9/9 PASS
+MOBILE_390x844=PASS
+TABLET_834x1194=PASS
+DESKTOP_1440x900=PASS
+ZOOM_200_PERCENT=PASS
+REDUCED_MOTION=PASS
+KEYBOARD_ONLY=PASS
 ```
 
-Contratos cubiertos:
-
-- acción primaria;
-- atención máxima de tres;
-- prioridad explicable;
-- siguiente mejor acción;
-- vacío productivo y filtrado;
-- smart defaults;
-- paridad tarjeta/lista;
-- teclado, foco y `aria-live`;
-- scrub y rechazo tardío;
-- sesión/RLS y aislamiento;
-- cero acciones automáticas;
-- cero datos falsos;
-- responsive y reduced motion.
-
-La aceptación Chromium se ejecuta en CI para:
+Evidencia ligada al head probado:
 
 ```text
-MOBILE=390x844
-TABLET=834x1194
-DESKTOP=1440x900
-ZOOM=200_PERCENT
-REDUCED_MOTION=ON
-KEYBOARD_ONLY=REQUIRED
+WORKFLOW_RUN=31145355979
+TESTED_HEAD_SHA=57b60146a0d274acd67a857ec135887fb986989a
+ARTIFACT_ID=8981284202
+ARTIFACT_NAME=pipeline-aura-ux-reconciliation-001-eceef119a205b2d663f964e25466ac3b202d946b
+ARTIFACT_DIGEST=sha256:042a94ec412ccd00938720f4db08f2be660d1444cd889f55c7d6697c5c73ee2b
 ```
+
+El nombre del artefacto usa el merge test SHA del evento `pull_request`; la metadata del workflow liga la corrida al head de rama `57b60146a0d274acd67a857ec135887fb986989a`.
 
 ## 7. Límites conocidos
 
-- La señal de enfriamiento se limita a actividad verificada con más de 72 horas y solo cuando Timeline está conectado. No afirma pérdida de interés ni probabilidad comercial.
-- El borrador de Calendar depende de que el usuario revise y guarde externamente.
-- La evidencia visual final y el `FINAL_SHA` permanecen pendientes hasta que el workflow de esta ejecución termine exitosamente y los artefactos queden ligados al head.
+- La señal de enfriamiento solo indica más de 72 horas sin actividad verificada cuando Timeline está conectado; no afirma pérdida de interés ni probabilidad de cierre.
+- Calendar abre un borrador y depende de revisión y guardado externos.
+- La documentación final debe ser revalidada en el SHA resultante de este mismo reporte antes de declarar el cierre definitivo.
 
-## 8. Estado
+## 8. Resultado
 
 ```text
+UX_DIRECTIVE_READ=YES
 PIPELINE_REWRITE_REQUIRED=YES
 PIPELINE_REWRITE_EXECUTED=YES
+PRIMARY_ACTION=PASS
+ATTENTION_LAYER=PASS
+EXPLAINABLE_PRIORITY=PASS
+NEXT_BEST_ACTION=PASS
+ACTIONABLE_EMPTY_STATES=PASS
+SMART_DEFAULTS=PASS
+PROGRESSIVE_DISCLOSURE=PASS
+HUMAN_FEEDBACK=PASS
+CARD_LIST_PARITY=PASS
+KEYBOARD=PASS
+VISIBLE_FOCUS=PASS
+SCREEN_READER=PASS_CONTRACT_AND_SEMANTICS
+REDUCED_MOTION=PASS
+ZOOM_200=PASS
+MOBILE=PASS
+TABLET=PASS
+DESKTOP=PASS
+SESSION_SCRUB=PASS
+ADVISOR_SWITCH_SCRUB=PASS_BY_SHARED_SESSION_CONTRACT_AND_LOCAL_DESTROY
+LATE_RESULT_REJECTION=PASS
+TENANT_ISOLATION_PRESERVED=PASS
 NEW_LOGIN_MUTATIONS=ZERO
 NEW_ACTIVITY_MUTATIONS=ZERO
 NEW_REPORTS_MUTATIONS=ZERO
@@ -183,5 +198,6 @@ NEW_UNRELATED_MUTATIONS=ZERO
 MAIN_MUTATED=NO
 MERGE_EXECUTED=NO
 AUTO_MERGE_ENABLED=NO
-FINAL_STATUS=PENDING_CI_AND_EVIDENCE
+FINAL_STATUS=PASS_IMPLEMENTATION_AWAITING_FINAL_DOCUMENTATION_REVALIDATION
+NEXT=RUN_FINAL_SHA_REVALIDATION_AND_UPDATE_DRAFT_PR_278
 ```
