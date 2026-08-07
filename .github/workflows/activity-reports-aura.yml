@@ -44,11 +44,11 @@ jobs:
           grep -Ev '^(docs/static-preview/forge-aura/activity/|docs/static-preview/forge-aura/app-v4\.js$|docs/static-preview/forge-aura/aura-router-v4\.js$|docs/static-preview/forge-aura/aura-shell\.js$|platform/productivity/activity-points-authority-adapter\.mjs$|tests/activity-aura-scope-contract\.test\.mjs$|tests/activity-aura-points-authority\.test\.mjs$|tests/activity-playwright\.config\.mjs$|tests/e2e/activity-aura-ux-reconciliation\.spec\.mjs$|docs/architecture/source-truth/FORGE_AURA_ACTIVITY_REPORTS_UX_RECONCILIATION_REPORT_001\.md$|docs/evidence/FORGE_AURA_ACTIVITY_REPORTS_ACCEPTANCE_001\.md$|\.github/workflows/activity-reports-aura\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
           cat /tmp/outside.txt
           test ! -s /tmp/outside.txt
-          git diff --exit-code 2721aef4e7899fda15f6c53a0913ed13ab161c59^ 2721aef4e7899fda15f6c53a0913ed13ab161c59 -- platform/productivity/activity-points-authority-adapter.mjs > /tmp/approved-points.patch
-          git diff --no-index /dev/null platform/productivity/activity-points-authority-adapter.mjs > /tmp/current-points.patch || test $? -eq 1
-          sed -E 's#^index [0-9a-f]+\.\.[0-9a-f]+ [0-9]+$##; s#^--- a/platform/productivity/activity-points-authority-adapter\.mjs$#--- /dev/null#; s#^\+\+\+ b/platform/productivity/activity-points-authority-adapter\.mjs$#+++ b/platform/productivity/activity-points-authority-adapter.mjs#' /tmp/approved-points.patch > /tmp/approved-points.normalized
-          sed -E 's#^index [0-9a-f]+\.\.[0-9a-f]+ [0-9]+$##; s#^--- /dev/null$#--- /dev/null#' /tmp/current-points.patch > /tmp/current-points.normalized
-          diff -u /tmp/approved-points.normalized /tmp/current-points.normalized
+          APPROVED_POINTS_SHA="$(git show 2721aef4e7899fda15f6c53a0913ed13ab161c59:platform/productivity/activity-points-authority-adapter.mjs | git hash-object --stdin)"
+          CURRENT_POINTS_SHA="$(git hash-object platform/productivity/activity-points-authority-adapter.mjs)"
+          echo "approved_points_blob=$APPROVED_POINTS_SHA"
+          echo "current_points_blob=$CURRENT_POINTS_SHA"
+          test "$APPROVED_POINTS_SHA" = "$CURRENT_POINTS_SHA"
       - name: Contract tests
         run: node --test tests/activity-aura-scope-contract.test.mjs tests/activity-aura-points-authority.test.mjs
 
