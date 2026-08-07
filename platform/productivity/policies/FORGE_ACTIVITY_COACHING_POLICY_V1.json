@@ -1,0 +1,54 @@
+{
+  "policyId": "FORGE_ACTIVITY_COACHING_POLICY_V1",
+  "version": "1.0.0",
+  "owner": "PRODUCTIVITY_ADVISOR_EXPERIENCE",
+  "humanAuthorizationId": "FORGE_ACTIVITY_AURA_PRODUCTIVE_UI_IMPLEMENTATION_001",
+  "effectiveFrom": "2026-08-05T00:00:00.000Z",
+  "effectiveTo": null,
+  "status": "ACTIVE",
+  "source": {
+    "type": "HUMAN_OWNER_INSTRUCTION",
+    "reference": "TIP_COPY_AND_POLICY_RULE:2026-08-05"
+  },
+  "thresholds": {
+    "dailyGoalGap": {
+      "enabled": true,
+      "goalSource": "ACTIVITY_POINTS_AUTHORITY_ADAPTER_V1"
+    },
+    "positiveStreak": {
+      "consecutiveEligibleDays": 5,
+      "strictlyGreaterThanPoints": 30
+    },
+    "appointmentDrought": {
+      "completedEligibleWeeks": 1
+    },
+    "maxVisibleTips": 3
+  },
+  "evidenceRequirements": {
+    "dailyGoalGap": ["POINTS_STATE_READY", "CURRENT_PERIOD"],
+    "positiveStreak": ["CALENDAR_READY", "DAILY_POINTS_CONFIRMED", "NO_UNKNOWN_ELIGIBLE_DAY"],
+    "appointmentDrought": ["CALENDAR_READY", "COMPLETED_ELIGIBLE_WEEK", "SCHEDULED_APPOINTMENTS_COMPLETE"],
+    "conversionObservation": ["PRODUCTIVITY_CONVERSION_OUTPUT"]
+  },
+  "priorityRules": [
+    { "tipType": "CONFIGURATION_EVIDENCE", "priority": 100 },
+    { "tipType": "DAILY_GOAL_GAP", "priority": 80 },
+    { "tipType": "APPOINTMENT_DROUGHT", "priority": 70 },
+    { "tipType": "POSITIVE_STREAK", "priority": 60 },
+    { "tipType": "CONVERSION_OBSERVATION", "priority": 40 }
+  ],
+  "allowedUses": [
+    "VOLUNTARY_ACTIVITY_COACHING",
+    "EXPLAINABLE_OBSERVATION",
+    "HUMAN_REVIEW"
+  ],
+  "prohibitedUses": [
+    "HUMAN_RANKING",
+    "PUNISHMENT",
+    "AUTOMATIC_TASK",
+    "AUTOMATIC_CALENDAR_EVENT",
+    "AUTOMATIC_MESSAGE",
+    "CAUSAL_CLAIM",
+    "SILENT_DEFAULT"
+  ]
+}

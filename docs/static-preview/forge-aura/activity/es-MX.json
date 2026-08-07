@@ -1,0 +1,11 @@
+{
+  "tip.DAILY_GOAL_GAP.title": "Brecha frente a la meta vigente",
+  "tip.DAILY_GOAL_GAP.body": "Faltan {remaining} puntos para completar la meta respaldada por la autoridad productiva.",
+  "tip.POSITIVE_STREAK.title": "Consistencia confirmada",
+  "tip.POSITIVE_STREAK.body": "La actividad confirmada cumple la regla vigente durante los días elegibles.",
+  "tip.APPOINTMENT_DROUGHT.title": "Periodo sin citas nuevas confirmadas",
+  "tip.APPOINTMENT_DROUGHT.body": "El periodo elegible terminó sin citas nuevas confirmadas; revisa la evidencia antes de cambiar tu estrategia.",
+  "tip.CONVERSION_OBSERVATION.title": "Conversión disponible para revisión",
+  "tip.CONVERSION_OBSERVATION.body": "La observación conserva numerador, denominador, estado y limitaciones de Productividad.",
+  "tip.combination": "Una combinación autorizada suma {totalPoints} puntos y supera la meta por {excessPoints}."
+}
