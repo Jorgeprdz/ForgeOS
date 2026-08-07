@@ -135,9 +135,12 @@ export function createActivityDailyConfirmation({ root, bootstrap = globalThis.F
       .eq("suggested_metric", "polizas_pagadas")
       .gte("received_at", from)
       .lte("received_at", to);
-    if (!mail.error) {
+    const mailRows = mail.error ? [] : (mail.data || []);
+    // An empty suggestion table does not prove zero paid policies: the advisor may
+    // have no mail provider connected or may not have scanned yet. Keep it unknown.
+    if (mailRows.length > 0) {
       const uniquePayments = new Map();
-      for (const row of mail.data || []) {
+      for (const row of mailRows) {
         const policyHint = String(row.policy_reference_hint || "").trim().toUpperCase();
         const sourceScope = String(row.sender_domain || row.provider || "mail").toLowerCase();
         const dedupeKey = policyHint
