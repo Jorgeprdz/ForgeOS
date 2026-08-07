@@ -1,4 +1,6 @@
 import { createManualActivityEntry } from "../../forge-alive-material3/activity-manual-entry.js";
+import { createActivityDailyConfirmation } from "./activity-daily-confirmation.js";
+import { createActivityMailConnection } from "./activity-mail-connection.js";
 import {
   pointRuleRows,
   projectOfficialActivityPoints,
@@ -51,6 +53,8 @@ function chrome(root) {
       <section role="tabpanel" id="activity-panel" aria-labelledby="activity-tab" data-panel="activity">
         <div class="activity-status" data-status role="status" aria-live="polite"></div>
         <div class="activity-summary-grid" data-summary hidden></div>
+        <section data-mail-connection-host></section>
+        <section data-daily-confirmation-host></section>
         <section class="activity-capture-host" data-capture-host></section>
       </section>
       <section role="tabpanel" id="reports-panel" aria-labelledby="reports-tab" data-panel="reports" hidden>
@@ -225,6 +229,8 @@ export function createActivityModule({
 
   let reporting = null;
   let manual = null;
+  let daily = null;
+  let mail = null;
   let mounted = false;
   let revision = 0;
 
@@ -254,7 +260,17 @@ export function createActivityModule({
         renderState(root.querySelector('[data-report-status]'), "Reporte no disponible", "No mostraremos ceros mientras la autoridad principal no pueda sincronizarse.", "Reintentar");
         return;
       }
-      renderReady(root, result);
+      let effective = result;
+      try {
+        const confirmationInput = await daily?.load({ result });
+        if (!result.activityPointsInput && confirmationInput) {
+          effective = Object.freeze({ ...result, activityPointsInput: confirmationInput });
+        }
+      } catch (confirmationError) {
+        console.warn?.("Activity daily confirmation unavailable", confirmationError);
+      }
+      if (!mounted || selected !== revision) return;
+      renderReady(root, effective);
     } catch (error) {
       if (!mounted || selected !== revision) return;
       renderState(root.querySelector('[data-status]'), "No pudimos validar la actividad", "La captura permanece disponible; los datos de lectura no se presentarán como confirmados.", "Reintentar");
@@ -293,6 +309,16 @@ export function createActivityModule({
       bind();
       manual = createManualActivityEntry({ root: root.querySelector('[data-capture-host]') });
       manual.mount();
+      daily = createActivityDailyConfirmation({
+        root: root.querySelector('[data-daily-confirmation-host]'),
+        onConfirmed: async () => { if (mounted) await load(); },
+      });
+      await daily.mount();
+      mail = createActivityMailConnection({
+        root: root.querySelector('[data-mail-connection-host]'),
+        onSuggestionsChanged: async () => { if (mounted) await load(); },
+      });
+      await mail.mount();
       globalState?.("Actividad conectada a autoridades productivas existentes");
       await load();
     },
@@ -305,12 +331,16 @@ export function createActivityModule({
     async scrub() {
       revision += 1;
       await manual?.scrub?.();
+      await daily?.scrub?.();
+      await mail?.scrub?.();
       await reporting?.scrub?.("aura-activity-scrub");
       reporting = null;
     },
     async destroy() {
       await api.scrub();
       await manual?.destroy?.();
+      await daily?.destroy?.();
+      await mail?.destroy?.();
       root.replaceChildren();
       delete root[STATE];
     },
