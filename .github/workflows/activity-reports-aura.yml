@@ -8,13 +8,16 @@ on:
       - 'supabase/functions/mail-evidence-connect/**'
       - 'supabase/migrations/20260807000100_activity_confirmation_mail_evidence.sql'
       - 'supabase/migrations/20260807000110_activity_mail_oauth_connections.sql'
+      - 'scripts/deploy-activity-mail-evidence.mjs'
       - 'tests/mail-evidence-engine.test.mjs'
       - 'tests/mail-evidence-oauth-broker-contract.test.mjs'
       - 'tests/activity-daily-confirmation-contract.test.mjs'
       - 'tests/activity-confirmation-migration-contract.test.mjs'
+      - 'tests/activity-mail-evidence-deployment-contract.test.mjs'
       - 'tests/activity-playwright.config.mjs'
       - 'tests/e2e/activity-daily-confirmation.spec.mjs'
       - '.github/workflows/activity-reports-aura.yml'
+      - '.github/workflows/activity-mail-evidence-deployment.yml'
   push:
     branches:
       - 'codex/activity-confirmation-mail-evidence-001'
@@ -41,7 +44,7 @@ jobs:
             echo 'Forbidden Pipeline/Login mutation detected' >&2
             exit 1
           fi
-          grep -Ev '^(docs/static-preview/forge-aura/activity/activity-module\.js$|docs/static-preview/forge-aura/activity/activity-daily-confirmation\.js$|docs/static-preview/forge-aura/activity/activity-mail-connection\.js$|platform/mail-evidence/|supabase/functions/mail-evidence-connect/|supabase/migrations/20260807000100_activity_confirmation_mail_evidence\.sql$|supabase/migrations/20260807000110_activity_mail_oauth_connections\.sql$|tests/mail-evidence-engine\.test\.mjs$|tests/mail-evidence-oauth-broker-contract\.test\.mjs$|tests/activity-daily-confirmation-contract\.test\.mjs$|tests/activity-confirmation-migration-contract\.test\.mjs$|tests/activity-playwright\.config\.mjs$|tests/e2e/activity-daily-confirmation\.spec\.mjs$|\.github/workflows/activity-reports-aura\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
+          grep -Ev '^(docs/static-preview/forge-aura/activity/activity-module\.js$|docs/static-preview/forge-aura/activity/activity-daily-confirmation\.js$|docs/static-preview/forge-aura/activity/activity-mail-connection\.js$|platform/mail-evidence/|supabase/functions/mail-evidence-connect/|supabase/migrations/20260807000100_activity_confirmation_mail_evidence\.sql$|supabase/migrations/20260807000110_activity_mail_oauth_connections\.sql$|scripts/deploy-activity-mail-evidence\.mjs$|tests/mail-evidence-engine\.test\.mjs$|tests/mail-evidence-oauth-broker-contract\.test\.mjs$|tests/activity-daily-confirmation-contract\.test\.mjs$|tests/activity-confirmation-migration-contract\.test\.mjs$|tests/activity-mail-evidence-deployment-contract\.test\.mjs$|tests/activity-playwright\.config\.mjs$|tests/e2e/activity-daily-confirmation\.spec\.mjs$|\.github/workflows/activity-reports-aura\.yml$|\.github/workflows/activity-mail-evidence-deployment\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
           cat /tmp/outside.txt
           test ! -s /tmp/outside.txt
       - name: Activity and mail evidence contract tests
@@ -53,6 +56,7 @@ jobs:
           tests/mail-evidence-oauth-broker-contract.test.mjs
           tests/activity-daily-confirmation-contract.test.mjs
           tests/activity-confirmation-migration-contract.test.mjs
+          tests/activity-mail-evidence-deployment-contract.test.mjs
 
   oauth-readiness:
     name: OAuth secret readiness (presence only)
