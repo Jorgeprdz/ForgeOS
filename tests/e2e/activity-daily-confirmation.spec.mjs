@@ -108,6 +108,7 @@ test("manual-only mode reaches official 25 points without Gmail or Outlook", asy
             metric_key: metric.metricKey,
             suggested_value: metric.suggestedValue,
             confirmed_value: metric.confirmedValue,
+            suggestion_sources: [...(metric.suggestionSources || [])],
             confirmation_kind: "CONFIRMED",
             confirmed_at: `2026-08-07T16:0${index}:00Z`,
             correction_of: null,
@@ -167,14 +168,62 @@ test("manual-only mode reaches official 25 points without Gmail or Outlook", asy
     return {
       payloadMetricCount: payload?.metrics?.length || 0,
       allConfirmed: Object.keys(pointInput?.counts || {}).length,
+      scheduledRefs: pointInput?.counts?.citas_agendadas?.sourceRefs || [],
       points: projectOfficialActivityPoints({ activityPointsInput: pointInput }),
     };
   });
 
   expect(acceptance.payloadMetricCount).toBe(8);
   expect(acceptance.allConfirmed).toBe(8);
+  expect(acceptance.scheduledRefs.some(ref => ref.startsWith("activity-confirmation:"))).toBe(true);
+  expect(acceptance.scheduledRefs).toContain("rep:2026-08-07:APPOINTMENT_SCHEDULED");
   expect(acceptance.points.state).toBe("READY");
   expect(acceptance.points.total).toBe(25);
   expect(acceptance.points.objective).toBe(25);
   expect(acceptance.points.remaining).toBe(0);
+});
+
+test("connected Gmail can be disconnected from Activity without affecting manual capture", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.setContent(`<!doctype html><html lang="es"><head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  </head><body><main id="mail-root"></main><section id="manual-fallback">La captura manual sigue disponible</section></body></html>`);
+
+  await page.evaluate(async () => {
+    const calls = [];
+    let connected = true;
+    const client = {
+      functions: {
+        async invoke(name, { body }) {
+          calls.push({ name, body: structuredClone(body) });
+          if (body.action === "STATUS") {
+            return { data: { ok: true, connections: connected ? [{ provider: "GMAIL" }] : [] }, error: null };
+          }
+          if (body.action === "DISCONNECT" && body.provider === "GMAIL") {
+            connected = false;
+            return { data: { ok: true, provider: "GMAIL", disconnected: true }, error: null };
+          }
+          return { data: { ok: false, code: "UNEXPECTED_ACTION" }, error: null };
+        },
+      },
+    };
+    const bootstrap = { async getClient() { return client; } };
+    const { createActivityMailConnection } = await import(`/docs/static-preview/forge-aura/activity/activity-mail-connection.js?disconnect=${Date.now()}`);
+    const component = createActivityMailConnection({ root: document.querySelector("#mail-root"), bootstrap });
+    await component.mount();
+    window.__mailCalls = calls;
+  });
+
+  const gmail = page.getByRole("button", { name: "Desconectar Gmail" });
+  await expect(gmail).toBeVisible();
+  await expect(gmail).toHaveAttribute("aria-pressed", "true");
+  await gmail.click();
+  await expect(page.getByRole("button", { name: "Conectar Gmail" })).toBeVisible();
+  await expect(page.getByText(/Gmail desconectado/)).toBeVisible();
+  await expect(page.getByText("La captura manual sigue disponible")).toBeVisible();
+
+  const calls = await page.evaluate(() => window.__mailCalls);
+  expect(calls.some(call => call.body?.action === "DISCONNECT" && call.body?.provider === "GMAIL")).toBe(true);
 });
