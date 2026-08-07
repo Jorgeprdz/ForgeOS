@@ -102,7 +102,7 @@ test("desktop Activity hierarchy and capture surface", async ({ page }, testInfo
   await expect(page.getByRole("button", { name: "Registrar actividad" }).first()).toBeVisible();
   await expect(page.getByRole("tab", { name: "Actividad" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByText("Actividad del periodo")).toBeVisible();
-  await expect(page.getByText("Meta diaria completada con evidencia confirmada")).toBeVisible();
+  await expect(page.locator('[data-panel="activity"] small').filter({ hasText: "Meta diaria completada con evidencia confirmada" })).toBeVisible();
   await assertNoOverflow(page);
   await page.screenshot({ path: testInfo.outputPath("ACTIVITY-DESKTOP-1440x900.png"), fullPage: true });
 });
