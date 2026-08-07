@@ -1,5 +1,6 @@
 import { createManualActivityEntry } from "../../forge-alive-material3/activity-manual-entry.js";
 import { createActivityDailyConfirmation } from "./activity-daily-confirmation.js";
+import { createActivityMailConnection } from "./activity-mail-connection.js";
 import {
   pointRuleRows,
   projectOfficialActivityPoints,
@@ -52,6 +53,7 @@ function chrome(root) {
       <section role="tabpanel" id="activity-panel" aria-labelledby="activity-tab" data-panel="activity">
         <div class="activity-status" data-status role="status" aria-live="polite"></div>
         <div class="activity-summary-grid" data-summary hidden></div>
+        <section data-mail-connection-host></section>
         <section data-daily-confirmation-host></section>
         <section class="activity-capture-host" data-capture-host></section>
       </section>
@@ -228,6 +230,7 @@ export function createActivityModule({
   let reporting = null;
   let manual = null;
   let daily = null;
+  let mail = null;
   let mounted = false;
   let revision = 0;
 
@@ -311,6 +314,11 @@ export function createActivityModule({
         onConfirmed: async () => { if (mounted) await load(); },
       });
       await daily.mount();
+      mail = createActivityMailConnection({
+        root: root.querySelector('[data-mail-connection-host]'),
+        onSuggestionsChanged: async () => { if (mounted) await load(); },
+      });
+      await mail.mount();
       globalState?.("Actividad conectada a autoridades productivas existentes");
       await load();
     },
@@ -324,6 +332,7 @@ export function createActivityModule({
       revision += 1;
       await manual?.scrub?.();
       await daily?.scrub?.();
+      await mail?.scrub?.();
       await reporting?.scrub?.("aura-activity-scrub");
       reporting = null;
     },
@@ -331,6 +340,7 @@ export function createActivityModule({
       await api.scrub();
       await manual?.destroy?.();
       await daily?.destroy?.();
+      await mail?.destroy?.();
       root.replaceChildren();
       delete root[STATE];
     },
