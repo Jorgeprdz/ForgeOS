@@ -70,26 +70,43 @@ jobs:
       FORGE_MICROSOFT_OAUTH_CLIENT_ID: ${{ secrets.FORGE_MICROSOFT_OAUTH_CLIENT_ID }}
       FORGE_MICROSOFT_OAUTH_CLIENT_SECRET: ${{ secrets.FORGE_MICROSOFT_OAUTH_CLIENT_SECRET }}
       FORGE_MAIL_TOKEN_ENCRYPTION_SECRET: ${{ secrets.FORGE_MAIL_TOKEN_ENCRYPTION_SECRET }}
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
     steps:
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
       - name: Report configured secret names only
         shell: bash
         run: |
           set -euo pipefail
-          check() {
+          check_env() {
             local name="$1"
-            if [ -n "${!name:-}" ]; then
-              printf '%s=CONFIGURED\n' "$name"
-            else
-              printf '%s=MISSING\n' "$name"
-            fi
+            if [ -n "${!name:-}" ]; then printf 'GITHUB_%s=CONFIGURED\n' "$name"; else printf 'GITHUB_%s=MISSING\n' "$name"; fi
           }
-          check SUPABASE_ACCESS_TOKEN
-          check SUPABASE_ANON_KEY
-          check FORGE_GOOGLE_OAUTH_CLIENT_ID
-          check FORGE_GOOGLE_OAUTH_CLIENT_SECRET
-          check FORGE_MICROSOFT_OAUTH_CLIENT_ID
-          check FORGE_MICROSOFT_OAUTH_CLIENT_SECRET
-          check FORGE_MAIL_TOKEN_ENCRYPTION_SECRET
+          check_env SUPABASE_ACCESS_TOKEN
+          check_env SUPABASE_ANON_KEY
+          check_env FORGE_GOOGLE_OAUTH_CLIENT_ID
+          check_env FORGE_GOOGLE_OAUTH_CLIENT_SECRET
+          check_env FORGE_MICROSOFT_OAUTH_CLIENT_ID
+          check_env FORGE_MICROSOFT_OAUTH_CLIENT_SECRET
+          check_env FORGE_MAIL_TOKEN_ENCRYPTION_SECRET
+
+          if [ -n "$SUPABASE_ACCESS_TOKEN" ]; then
+            supabase secrets list --project-ref "$SUPABASE_PROJECT_REF" > /tmp/supabase-secret-names.txt
+            check_remote() {
+              local name="$1"
+              if grep -q "$name" /tmp/supabase-secret-names.txt; then printf 'SUPABASE_%s=CONFIGURED\n' "$name"; else printf 'SUPABASE_%s=MISSING\n' "$name"; fi
+            }
+            check_remote FORGE_GOOGLE_OAUTH_CLIENT_ID
+            check_remote FORGE_GOOGLE_OAUTH_CLIENT_SECRET
+            check_remote FORGE_MICROSOFT_OAUTH_CLIENT_ID
+            check_remote FORGE_MICROSOFT_OAUTH_CLIENT_SECRET
+            check_remote FORGE_MAIL_TOKEN_ENCRYPTION_SECRET
+            check_remote FORGE_APP_ORIGIN
+            check_remote FORGE_MAIL_OAUTH_CALLBACK_URL
+            check_remote FORGE_MAIL_OAUTH_RETURN_URL
+            rm -f /tmp/supabase-secret-names.txt
+          fi
           echo 'READINESS_CHECK=COMPLETE_VALUES_NEVER_PRINTED'
 
   browser-acceptance:
