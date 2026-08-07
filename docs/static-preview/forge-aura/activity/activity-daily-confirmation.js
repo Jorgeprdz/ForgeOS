@@ -158,7 +158,7 @@ export function createActivityDailyConfirmation({ root, bootstrap = globalThis.F
     const db = await getClient();
     if (!db) { latest = new Map(); return; }
     const result = await db.from("activity_metric_confirmations")
-      .select("id,metric_key,suggested_value,confirmed_value,confirmation_kind,confirmed_at,correction_of")
+      .select("id,metric_key,suggested_value,confirmed_value,suggestion_sources,confirmation_kind,confirmed_at,correction_of")
       .eq("activity_date", activityDate)
       .order("confirmed_at", { ascending: true });
     if (result.error) throw result.error;
@@ -188,12 +188,15 @@ export function createActivityDailyConfirmation({ root, bootstrap = globalThis.F
     for (const [key] of METRICS) {
       const row = latest.get(key);
       if (!row) continue;
+      const suggestionRefs = Array.isArray(row.suggestion_sources)
+        ? row.suggestion_sources.filter(ref => typeof ref === "string" && ref.trim())
+        : [];
       counts[key] = freeze({
         value: Number(row.confirmed_value),
         completeness: "COMPLETE",
         evidenceState: "CONFIRMED",
         metricOwner: OWNER,
-        sourceRefs: [`activity-confirmation:${row.id}`],
+        sourceRefs: [...new Set([`activity-confirmation:${row.id}`, ...suggestionRefs])],
       });
     }
     return freeze({
