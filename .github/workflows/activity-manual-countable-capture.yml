@@ -1,0 +1,39 @@
+name: Activity Manual Countable Capture
+
+on:
+  pull_request:
+    paths:
+      - 'docs/static-preview/forge-alive-material3/activity-manual-entry.js'
+      - 'docs/static-preview/forge-alive-material3/activity-manual-fact-adapter.js'
+      - 'tests/activity-manual-countable-capture.test.mjs'
+      - '.github/workflows/activity-manual-countable-capture.yml'
+  push:
+    branches:
+      - 'codex/activity-manual-countable-capture'
+
+permissions:
+  contents: read
+
+jobs:
+  countable-capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scope guard against REP compatibility prerequisite
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=480a74958671d9e9c13570ab3a4d8912949ba2c2
+          git diff --name-only "$BASE" HEAD > /tmp/changed.txt
+          cat /tmp/changed.txt
+          grep -Ev '^(docs/static-preview/forge-alive-material3/activity-manual-entry\.js$|docs/static-preview/forge-alive-material3/activity-manual-fact-adapter\.js$|tests/activity-manual-countable-capture\.test\.mjs$|\.github/workflows/activity-manual-countable-capture\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
+          cat /tmp/outside.txt
+          test ! -s /tmp/outside.txt
+      - name: Validate module syntax
+        run: |
+          node --check docs/static-preview/forge-alive-material3/activity-manual-fact-adapter.js
+          node --check docs/static-preview/forge-alive-material3/activity-manual-entry.js
+      - name: Canonical FES-01.2 capture tests
+        run: node --test tests/activity-manual-countable-capture.test.mjs tests/activity-fes-01-2-reporting-compatibility.test.mjs

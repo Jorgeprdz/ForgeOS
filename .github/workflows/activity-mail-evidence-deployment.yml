@@ -1,0 +1,159 @@
+name: Activity Mail Evidence Deployment
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/mail-evidence-connect/**'
+      - 'supabase/migrations/20260807000100_activity_confirmation_mail_evidence.sql'
+      - 'supabase/migrations/20260807000110_activity_mail_oauth_connections.sql'
+      - 'scripts/deploy-activity-mail-evidence.mjs'
+      - 'tests/activity-mail-evidence-deployment-contract.test.mjs'
+      - '.github/workflows/activity-mail-evidence-deployment.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/mail-evidence-connect/**'
+      - 'supabase/migrations/20260807000100_activity_confirmation_mail_evidence.sql'
+      - 'supabase/migrations/20260807000110_activity_mail_oauth_connections.sql'
+      - 'scripts/deploy-activity-mail-evidence.mjs'
+      - '.github/workflows/activity-mail-evidence-deployment.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  statuses: write
+
+concurrency:
+  group: activity-mail-evidence-deployment-${{ github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate deployment surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/deploy-activity-mail-evidence.mjs
+          test -f supabase/functions/mail-evidence-connect/index.ts
+          test -f supabase/migrations/20260807000100_activity_confirmation_mail_evidence.sql
+          test -f supabase/migrations/20260807000110_activity_mail_oauth_connections.sql
+          if grep -Eiq 'DROP[[:space:]]+TABLE|TRUNCATE[[:space:]]' \
+            supabase/migrations/20260807000100_activity_confirmation_mail_evidence.sql \
+            supabase/migrations/20260807000110_activity_mail_oauth_connections.sql; then
+            echo 'Destructive SQL rejected' >&2
+            exit 1
+          fi
+          node --test tests/activity-mail-evidence-deployment-contract.test.mjs
+
+  deploy:
+    needs: validate
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.actor == 'Jorgeprdz' &&
+      (github.ref_name == 'main' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      GOOGLE_CLIENT_ID: ${{ secrets.FORGE_GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.FORGE_GOOGLE_OAUTH_CLIENT_SECRET }}
+      MICROSOFT_CLIENT_ID: ${{ secrets.FORGE_MICROSOFT_OAUTH_CLIENT_ID }}
+      MICROSOFT_CLIENT_SECRET: ${{ secrets.FORGE_MICROSOFT_OAUTH_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Guard project and credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN"
+          test "$SUPABASE_PROJECT_REF" = 'rmlxigxysujsuwzgoimv'
+          supabase --version
+
+      - name: Apply exact Activity Mail Evidence migrations
+        run: node scripts/deploy-activity-mail-evidence.mjs
+
+      - name: Initialize stable mail broker secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          CALLBACK_URL="https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/mail-evidence-connect/oauth/callback"
+          APP_ORIGIN='https://jorgeprdz.github.io'
+          RETURN_URL='https://jorgeprdz.github.io/ForgeOS/'
+
+          supabase secrets set \
+            FORGE_APP_ORIGIN="$APP_ORIGIN" \
+            FORGE_MAIL_OAUTH_CALLBACK_URL="$CALLBACK_URL" \
+            FORGE_MAIL_OAUTH_RETURN_URL="$RETURN_URL" \
+            --project-ref "$SUPABASE_PROJECT_REF"
+
+          if supabase secrets list --project-ref "$SUPABASE_PROJECT_REF" | grep -q 'FORGE_MAIL_TOKEN_ENCRYPTION_SECRET'; then
+            echo 'MAIL_ENCRYPTION_SECRET=PRESERVED'
+          else
+            GENERATED_SECRET="$(openssl rand -hex 48)"
+            supabase secrets set FORGE_MAIL_TOKEN_ENCRYPTION_SECRET="$GENERATED_SECRET" --project-ref "$SUPABASE_PROJECT_REF"
+            unset GENERATED_SECRET
+            echo 'MAIL_ENCRYPTION_SECRET=INITIALIZED'
+          fi
+
+          if [ -n "$GOOGLE_CLIENT_ID" ] && [ -n "$GOOGLE_CLIENT_SECRET" ]; then
+            supabase secrets set \
+              FORGE_GOOGLE_OAUTH_CLIENT_ID="$GOOGLE_CLIENT_ID" \
+              FORGE_GOOGLE_OAUTH_CLIENT_SECRET="$GOOGLE_CLIENT_SECRET" \
+              --project-ref "$SUPABASE_PROJECT_REF"
+            echo 'GOOGLE_OAUTH=CONFIGURED'
+          else
+            echo 'GOOGLE_OAUTH=PENDING_EXTERNAL_APP_REGISTRATION'
+          fi
+
+          if [ -n "$MICROSOFT_CLIENT_ID" ] && [ -n "$MICROSOFT_CLIENT_SECRET" ]; then
+            supabase secrets set \
+              FORGE_MICROSOFT_OAUTH_CLIENT_ID="$MICROSOFT_CLIENT_ID" \
+              FORGE_MICROSOFT_OAUTH_CLIENT_SECRET="$MICROSOFT_CLIENT_SECRET" \
+              --project-ref "$SUPABASE_PROJECT_REF"
+            echo 'MICROSOFT_OAUTH=CONFIGURED'
+          else
+            echo 'MICROSOFT_OAUTH=PENDING_EXTERNAL_APP_REGISTRATION'
+          fi
+
+      - name: Deploy mail-evidence-connect
+        run: supabase functions deploy mail-evidence-connect --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt --debug
+
+      - name: Smoke auth boundary and OAuth callback
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/mail-evidence-connect"
+          STATUS_CODE="$(curl --max-time 30 -sS -o status.json -w '%{http_code}' -X POST "$BASE" -H 'Content-Type: application/json' --data '{"action":"STATUS"}')"
+          test "$STATUS_CODE" = '401'
+          grep -q 'MAIL_AUTH_REQUIRED' status.json
+          CALLBACK_CODE="$(curl --max-time 30 -sS -o /dev/null -w '%{http_code}' "$BASE/oauth/callback")"
+          test "$CALLBACK_CODE" = '302'
+          echo 'MAIL_EVIDENCE_EDGE_SMOKE=PASS'
+
+      - name: Upload redacted deployment ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: activity-mail-evidence-deployment-ledger
+          path: artifacts/activity-mail-evidence-deployment/ledger.jsonl
+          if-no-files-found: error
+          retention-days: 30
